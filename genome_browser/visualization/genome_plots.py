@@ -14,12 +14,15 @@ import re
 
 # Color schemes
 COLORS = {
-    'syntenic': 'rgba(255, 99, 71, 0.8)',      # Tomato
-    'non_syntenic': 'rgba(135, 206, 235, 0.8)', # Sky blue
-    'forward_strand': '#2E8B57',               # Sea green
-    'reverse_strand': '#FF6347',               # Tomato
-    'scale_bar': '#2F4F4F',                    # Dark slate gray
-    'background': '#F8F9FA'                    # Light gray
+    'core_aligned': 'rgba(255, 99, 71, 0.9)',     # Bright tomato - core syntenic
+    'syntenic': 'rgba(255, 99, 71, 0.8)',         # Tomato - legacy support
+    'boundary': 'rgba(255, 165, 0, 0.8)',         # Orange - boundary genes
+    'context': 'rgba(135, 206, 235, 0.6)',        # Light sky blue - context
+    'non_syntenic': 'rgba(135, 206, 235, 0.8)',   # Sky blue - legacy support
+    'forward_strand': '#2E8B57',                   # Sea green
+    'reverse_strand': '#FF6347',                   # Tomato
+    'scale_bar': '#2F4F4F',                        # Dark slate gray
+    'background': '#F8F9FA'                        # Light gray
 }
 
 def generate_domain_color(domain: str) -> str:
@@ -135,6 +138,7 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
                 marker=dict(symbol='line-ns', size=10, color=COLORS['scale_bar']),
                 text=[label],
                 textposition='bottom center',
+                textfont=dict(color='black'),
                 showlegend=False,
                 hoverinfo='skip'
             ),
@@ -152,10 +156,38 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
             # This would need actual coordinate mapping in practice
             syntenic_regions.update(range(block.get('start', 0), block.get('end', 0)))
     
+    # Find boundary positions for aligned region markers
+    core_aligned_genes = genes_df[genes_df.get('synteny_role') == 'core_aligned'] if 'synteny_role' in genes_df.columns else pd.DataFrame()
+    aligned_start_pos = aligned_end_pos = None
+    
+    if not core_aligned_genes.empty:
+        aligned_start_pos = core_aligned_genes['start_pos'].min()
+        aligned_end_pos = core_aligned_genes['end_pos'].max()
+    
     for _, gene in genes_df.iterrows():
-        # Determine gene color and properties
-        is_syntenic = bool(syntenic_regions.intersection(range(gene['start_pos'], gene['end_pos'])))
-        gene_color = COLORS['syntenic'] if is_syntenic else COLORS['non_syntenic']
+        # Determine gene color and properties based on synteny role
+        if 'synteny_role' in gene and pd.notna(gene['synteny_role']):
+            role = gene['synteny_role']
+            if role == 'core_aligned':
+                gene_color = COLORS['core_aligned']
+                line_width = 2  # Thicker border for core aligned
+            elif role == 'boundary':
+                gene_color = COLORS['boundary']
+                line_width = 1.5
+            elif role == 'context':
+                gene_color = COLORS['context']
+                line_width = 1
+            elif role == 'syntenic':  # Legacy support
+                gene_color = COLORS['syntenic']
+                line_width = 1.5
+            else:
+                gene_color = '#CCCCCC'  # Unknown/gray
+                line_width = 1
+        else:
+            # Fallback to old syntenic regions logic
+            is_syntenic = bool(syntenic_regions.intersection(range(gene['start_pos'], gene['end_pos'])))
+            gene_color = COLORS['syntenic'] if is_syntenic else COLORS['non_syntenic']
+            line_width = 1
         
         # Determine y position based on strand
         y_center = 1.3 if gene['strand'] == 1 else 0.7
@@ -163,12 +195,12 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
         # Create gene arrow path
         arrow_path = create_gene_arrow_path(gene, y_center, height=0.25)
         
-        # Add gene shape
+        # Add gene shape with variable line width
         fig.add_shape(
             type="path",
             path=arrow_path,
             fillcolor=gene_color,
-            line=dict(color="black", width=1),
+            line=dict(color="black", width=line_width),
             row=2, col=1
         )
         
@@ -184,12 +216,53 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
                     f"Position: {gene['start_pos']:,}-{gene['end_pos']:,} bp<br>"
                     f"Strand: {'+' if gene['strand'] == 1 else '-'}<br>"
                     f"Length: {gene['gene_length']:,} bp<br>"
+                    f"Block Role: {gene.get('position_in_block', gene.get('synteny_role', 'unknown'))}<br>"
+                    f"Gene Index: {gene.get('gene_index', 'N/A')}<br>"
                     f"PFAM: {gene['pfam_domains'] if gene['pfam_domains'] else 'None'}"
                     "<extra></extra>"
                 ),
                 showlegend=False,
                 name=gene['gene_id']
             ),
+            row=2, col=1
+        )
+    
+    # Add vertical boundary lines for aligned region
+    if aligned_start_pos is not None and aligned_end_pos is not None:
+        # Start boundary line
+        fig.add_shape(
+            type="line",
+            x0=aligned_start_pos, x1=aligned_start_pos,
+            y0=0.2, y1=1.8,
+            line=dict(color="red", width=2, dash="dash"),
+            row=2, col=1
+        )
+        
+        # End boundary line
+        fig.add_shape(
+            type="line",
+            x0=aligned_end_pos, x1=aligned_end_pos,
+            y0=0.2, y1=1.8,
+            line=dict(color="red", width=2, dash="dash"),
+            row=2, col=1
+        )
+        
+        # Add boundary labels
+        fig.add_annotation(
+            x=aligned_start_pos,
+            y=1.9,
+            text="Aligned Start",
+            showarrow=False,
+            font=dict(size=10, color="red"),
+            row=2, col=1
+        )
+        
+        fig.add_annotation(
+            x=aligned_end_pos,
+            y=1.9,
+            text="Aligned End",
+            showarrow=False,
+            font=dict(size=10, color="red"),
             row=2, col=1
         )
     

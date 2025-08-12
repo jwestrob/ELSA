@@ -103,8 +103,8 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
     return pd.read_sql_query(query, conn, params=params)
 
 @st.cache_data
-def load_genes_for_locus(locus_id: str) -> pd.DataFrame:
-    """Load genes for a specific locus."""
+def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_role: Optional[str] = None) -> pd.DataFrame:
+    """Load genes for a specific locus, optionally filtered to aligned regions."""
     conn = get_database_connection()
     
     # Parse locus ID format: "1313.30775:1313.30775_accn|1313.30775.con.0001"
@@ -120,6 +120,11 @@ def load_genes_for_locus(locus_id: str) -> pd.DataFrame:
         # Fallback: treat entire string as contig
         contig_id = locus_id
     
+    # If we have block info, load only the aligned region + context
+    if block_id is not None and locus_role is not None:
+        return load_aligned_genes_for_block(conn, contig_id, block_id, locus_role)
+    
+    # Default: load all genes for the locus
     query = """
         SELECT g.*, c.length as contig_length
         FROM genes g
@@ -129,6 +134,95 @@ def load_genes_for_locus(locus_id: str) -> pd.DataFrame:
     """
     
     return pd.read_sql_query(query, conn, params=[contig_id])
+
+@st.cache_data  
+def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_role: str) -> pd.DataFrame:
+    """Load only the genes that are part of the aligned region for a specific block."""
+    
+    # Get block alignment info
+    cursor = _conn.cursor()
+    cursor.execute("""
+        SELECT query_window_start, query_window_end, target_window_start, target_window_end
+        FROM syntenic_blocks 
+        WHERE block_id = ?
+    """, (block_id,))
+    
+    result = cursor.fetchone()
+    if not result:
+        # Fallback to all genes if no alignment info
+        return load_genes_for_locus(contig_id)
+    
+    query_start, query_end, target_start, target_end = result
+    
+    # Determine which window range to use based on locus role
+    if locus_role == 'query' and query_start is not None and query_end is not None:
+        window_start, window_end = query_start, query_end
+    elif locus_role == 'target' and target_start is not None and target_end is not None:
+        window_start, window_end = target_start, target_end
+    else:
+        # No alignment info available, load all genes
+        query = """
+            SELECT g.*, c.length as contig_length, 'unknown' as synteny_role
+            FROM genes g
+            JOIN contigs c ON g.contig_id = c.contig_id
+            WHERE g.contig_id = ?
+            ORDER BY g.start_pos
+        """
+        return pd.read_sql_query(query, conn, params=[contig_id])
+    
+    # Convert window indices to gene ranges
+    # Each window contains 5 genes with stride 1: window N covers genes N to N+4
+    gene_start_idx = window_start  # Gene index of first gene in first window
+    gene_end_idx = window_end + 4  # Gene index of last gene in last window (window contains 5 genes)
+    
+    # Add context genes (±3 genes around the aligned region)
+    context_buffer = 3
+    gene_start_idx = max(0, gene_start_idx - context_buffer)
+    gene_end_idx = gene_end_idx + context_buffer
+    
+    # Load genes in the range, using ROW_NUMBER to get positional indices
+    query = """
+        SELECT g.*, c.length as contig_length,
+               ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1 as gene_index,
+               CASE 
+                   WHEN (ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1) BETWEEN ? AND ? 
+                   THEN 'core_aligned'
+                   WHEN (ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1) BETWEEN ? AND ?
+                   THEN 'boundary'
+                   ELSE 'context'
+               END as synteny_role,
+               CASE 
+                   WHEN (ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1) BETWEEN ? AND ? 
+                   THEN 'Conserved Block'
+                   WHEN (ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1) BETWEEN ? AND ?
+                   THEN 'Block Edge'
+                   ELSE 'Flanking Region'
+               END as position_in_block
+        FROM genes g
+        JOIN contigs c ON g.contig_id = c.contig_id
+        WHERE g.contig_id = ?
+        ORDER BY g.start_pos
+        LIMIT ? OFFSET ?
+    """
+    
+    # Calculate the actual aligned gene range (without context)
+    core_aligned_start = window_start
+    core_aligned_end = window_end + 4
+    
+    # Boundary genes are those within the windows but not in the tightest alignment
+    boundary_start = max(0, window_start - 1)  
+    boundary_end = window_end + 5
+    
+    limit = gene_end_idx - gene_start_idx + 1
+    offset = gene_start_idx
+    
+    return pd.read_sql_query(query, _conn, params=[
+        core_aligned_start, core_aligned_end,  # Core aligned range
+        boundary_start, boundary_end,          # Boundary range  
+        core_aligned_start, core_aligned_end,  # For display label
+        boundary_start, boundary_end,          # For display label
+        contig_id, limit, offset
+    ])
 
 @st.cache_data
 def get_block_count(genome_filter: Optional[List[str]] = None,
@@ -391,11 +485,113 @@ def display_block_explorer(filters: Dict):
             st.write("**Query Locus:**", selected_block['query_locus'])
             st.write("**Length:**", f"{selected_block['length']:,} gene windows")
             st.write("**Query Windows:**", f"{selected_block['n_query_windows']:,}")
+            
+            # Show window range information if available
+            if selected_block.get('query_window_start') is not None:
+                window_range = f"Windows {selected_block['query_window_start']}-{selected_block['query_window_end']}"
+                gene_range = f"Genes {selected_block['query_window_start']}-{selected_block['query_window_end'] + 4}"
+                st.write("**Query Range:**", f"{window_range} ({gene_range})")
         
         with col2:
             st.write("**Target Locus:**", selected_block['target_locus'])
             st.write("**Identity:**", f"{selected_block['identity']:.3f}")
             st.write("**Target Windows:**", f"{selected_block['n_target_windows']:,}")
+            
+            # Show window range information if available
+            if selected_block.get('target_window_start') is not None:
+                window_range = f"Windows {selected_block['target_window_start']}-{selected_block['target_window_end']}"
+                gene_range = f"Genes {selected_block['target_window_start']}-{selected_block['target_window_end'] + 4}"
+                st.write("**Target Range:**", f"{window_range} ({gene_range})")
+        
+        # Add debugging section for window-level analysis
+        if st.checkbox("🔍 Show Detailed Window Analysis", key=f"debug_{selected_block['block_id']}"):
+            st.subheader("Window-Level Similarity Analysis")
+            
+            # Parse window information from the block
+            query_windows_json = selected_block.get('query_windows_json')
+            target_windows_json = selected_block.get('target_windows_json')
+            
+            if query_windows_json and target_windows_json:
+                import json
+                
+                try:
+                    query_windows = json.loads(query_windows_json)
+                    target_windows = json.loads(target_windows_json)
+                    
+                    st.write(f"**Total Matched Windows:** {len(query_windows)}")
+                    
+                    # Create window mapping table
+                    window_debug_data = []
+                    for i, (q_win, t_win) in enumerate(zip(query_windows, target_windows)):
+                        # Extract window indices
+                        q_idx = q_win.split('_')[-1] if '_' in q_win else 'N/A'
+                        t_idx = t_win.split('_')[-1] if '_' in t_win else 'N/A'
+                        
+                        # Calculate gene ranges (window N = genes N to N+4)
+                        try:
+                            q_gene_start = int(q_idx)
+                            q_gene_end = q_gene_start + 4
+                            q_gene_range = f"{q_gene_start}-{q_gene_end}"
+                        except:
+                            q_gene_range = "N/A"
+                        
+                        try:
+                            t_gene_start = int(t_idx)
+                            t_gene_end = t_gene_start + 4
+                            t_gene_range = f"{t_gene_start}-{t_gene_end}"
+                        except:
+                            t_gene_range = "N/A"
+                        
+                        window_debug_data.append({
+                            'Match #': i + 1,
+                            'Query Window': q_win,
+                            'Query Genes': q_gene_range,
+                            'Target Window': t_win,
+                            'Target Genes': t_gene_range,
+                            'Position Offset': abs(int(q_idx) - int(t_idx)) if q_idx.isdigit() and t_idx.isdigit() else 'N/A'
+                        })
+                    
+                    debug_df = pd.DataFrame(window_debug_data)
+                    st.dataframe(debug_df, hide_index=True)
+                    
+                    # Analysis insights
+                    st.subheader("🧠 Algorithm Insights")
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("**Window Matches**", len(query_windows))
+                        st.metric("**Avg Identity**", f"{selected_block['identity']:.3f}")
+                    
+                    with col2:
+                        # Calculate positional conservation
+                        if debug_df['Position Offset'].dtype != 'object':
+                            avg_offset = debug_df['Position Offset'].mean()
+                            st.metric("**Avg Position Offset**", f"{avg_offset:.1f}")
+                        
+                        # Show block size ratio
+                        size_ratio = selected_block['n_target_windows'] / selected_block['n_query_windows']
+                        st.metric("**Size Ratio (T/Q)**", f"{size_ratio:.2f}")
+                    
+                    # Highlight potential issues
+                    issues = []
+                    if len(query_windows) < 3:
+                        issues.append("⚠️ Few window matches - may be spurious")
+                    if debug_df['Position Offset'].dtype != 'object' and debug_df['Position Offset'].max() > 5:
+                        issues.append("⚠️ Large positional offsets - poor gene order conservation") 
+                    if abs(size_ratio - 1.0) > 0.5:
+                        issues.append("⚠️ Significant size difference between blocks")
+                    
+                    if issues:
+                        st.warning("**Potential Algorithm Issues:**")
+                        for issue in issues:
+                            st.write(issue)
+                    else:
+                        st.success("✅ Block appears to have good syntenic characteristics")
+                        
+                except json.JSONDecodeError:
+                    st.error("Could not parse window information")
+            else:
+                st.info("No detailed window information available for this block")
         
         # Option to view genome diagram
         if st.button("🧬 View Genome Diagram", key=f"view_{selected_block['block_id']}"):
@@ -424,12 +620,34 @@ def display_genome_viewer():
     # Debug info
     st.write(f"**Debug**: Loading genes for query locus: {block['query_locus']}")
     
-    # Load genes for both loci
-    with st.spinner("Loading genes..."):
-        query_genes = load_genes_for_locus(block['query_locus'])
-        target_genes = load_genes_for_locus(block['target_locus'])
+    # Load genes for both loci - now showing only aligned regions + context
+    with st.spinner("Loading aligned gene regions..."):
+        query_genes = load_genes_for_locus(block['query_locus'], block['block_id'], 'query')
+        target_genes = load_genes_for_locus(block['target_locus'], block['block_id'], 'target')
     
     st.write(f"**Debug**: Query genes loaded: {len(query_genes)}, Target genes loaded: {len(target_genes)}")
+    
+    # Add comprehensive biological legend
+    with st.expander("📖 **Understanding Syntenic Block Visualization**", expanded=True):
+        st.markdown("""
+        **Syntenic blocks** represent genomic regions with **conserved gene order** between different bacterial strains or species, 
+        indicating evolutionary relatedness and functional importance.
+        
+        **Gene Classification:**
+        - 🔴 **Conserved Block** (thick border): Core genes in the syntenic region showing evolutionary conservation
+        - 🟠 **Block Edge**: Genes at the boundaries of the conserved region  
+        - 🔵 **Flanking Region**: Neighboring genes outside the conserved block, shown for genomic context
+        
+        **Gene Orientation:**
+        - ➡️ **Forward strand** (+): Gene transcribed left-to-right
+        - ⬅️ **Reverse strand** (−): Gene transcribed right-to-left
+        
+        **Vertical Red Lines**: Mark the precise boundaries of the conserved syntenic block
+        
+        **PFAM Domains**: Protein family annotations showing functional conservation across the alignment
+        """)
+    
+    st.markdown("---")
     
     # Display genome diagrams using proper visualization
     col1, col2 = st.columns(2)
@@ -439,20 +657,49 @@ def display_genome_viewer():
         if not query_genes.empty:
             st.info(f"{len(query_genes)} genes found")
             
-            # Create professional genome diagram
+            # Create professional genome diagram showing aligned region
             with st.spinner("Generating genome diagram..."):
                 query_fig = create_genome_diagram(
-                    query_genes.head(50),  # Limit to first 50 genes for performance
-                    block['query_locus'],
+                    query_genes,  # Now pre-filtered to aligned region + context
+                    f"{block['query_locus']} (Aligned Region)",
                     width=600,
                     height=400
                 )
                 st.plotly_chart(query_fig, use_container_width=True)
             
-            # Show summary data table
+            # Show summary data table with enhanced alignment information
             st.write("**Gene Summary:**")
-            summary_df = query_genes[['gene_id', 'start_pos', 'end_pos', 'strand', 'pfam_domains']].head(10)
-            st.dataframe(summary_df, hide_index=True)
+            display_cols = ['gene_id', 'start_pos', 'end_pos', 'strand']
+            
+            # Add alignment-specific columns if available
+            if 'position_in_block' in query_genes.columns:
+                display_cols.append('position_in_block')
+            if 'gene_index' in query_genes.columns:
+                display_cols.append('gene_index')
+            if 'synteny_role' in query_genes.columns:
+                display_cols.append('synteny_role')
+                
+            display_cols.append('pfam_domains')
+            
+            # Create a more informative summary
+            summary_df = query_genes[display_cols].copy()
+            
+            # Color-code the dataframe based on alignment role
+            if 'position_in_block' in summary_df.columns:
+                def highlight_alignment_role(row):
+                    role = row.get('position_in_block', '')
+                    if role == 'Conserved Block':
+                        return ['background-color: #8B0000; color: white'] * len(row)  # Dark red with white text
+                    elif role == 'Block Edge':
+                        return ['background-color: #CC6600; color: white'] * len(row)  # Dark orange with white text
+                    elif role == 'Flanking Region':
+                        return ['background-color: #000080; color: white'] * len(row)  # Dark blue with white text
+                    return [''] * len(row)
+                
+                styled_df = summary_df.style.apply(highlight_alignment_role, axis=1)
+                st.dataframe(styled_df, hide_index=True)
+            else:
+                st.dataframe(summary_df, hide_index=True)
         else:
             st.warning("No genes found for query locus")
     
@@ -461,20 +708,49 @@ def display_genome_viewer():
         if not target_genes.empty:
             st.info(f"{len(target_genes)} genes found")
             
-            # Create professional genome diagram
+            # Create professional genome diagram showing aligned region
             with st.spinner("Generating genome diagram..."):
                 target_fig = create_genome_diagram(
-                    target_genes.head(50),  # Limit to first 50 genes for performance
-                    block['target_locus'],
+                    target_genes,  # Now pre-filtered to aligned region + context
+                    f"{block['target_locus']} (Aligned Region)",
                     width=600,
                     height=400
                 )
                 st.plotly_chart(target_fig, use_container_width=True)
             
-            # Show summary data table
+            # Show summary data table with enhanced alignment information
             st.write("**Gene Summary:**")
-            summary_df = target_genes[['gene_id', 'start_pos', 'end_pos', 'strand', 'pfam_domains']].head(10)
-            st.dataframe(summary_df, hide_index=True)
+            display_cols = ['gene_id', 'start_pos', 'end_pos', 'strand']
+            
+            # Add alignment-specific columns if available
+            if 'position_in_block' in target_genes.columns:
+                display_cols.append('position_in_block')
+            if 'gene_index' in target_genes.columns:
+                display_cols.append('gene_index')
+            if 'synteny_role' in target_genes.columns:
+                display_cols.append('synteny_role')
+                
+            display_cols.append('pfam_domains')
+            
+            # Create a more informative summary
+            summary_df = target_genes[display_cols].copy()
+            
+            # Color-code the dataframe based on alignment role
+            if 'position_in_block' in summary_df.columns:
+                def highlight_alignment_role(row):
+                    role = row.get('position_in_block', '')
+                    if role == 'Conserved Block':
+                        return ['background-color: #8B0000; color: white'] * len(row)  # Dark red with white text
+                    elif role == 'Block Edge':
+                        return ['background-color: #CC6600; color: white'] * len(row)  # Dark orange with white text
+                    elif role == 'Flanking Region':
+                        return ['background-color: #000080; color: white'] * len(row)  # Dark blue with white text
+                    return [''] * len(row)
+                
+                styled_df = summary_df.style.apply(highlight_alignment_role, axis=1)
+                st.dataframe(styled_df, hide_index=True)
+            else:
+                st.dataframe(summary_df, hide_index=True)
         else:
             st.warning("No genes found for target locus")
     

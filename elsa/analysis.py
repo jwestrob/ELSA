@@ -117,8 +117,8 @@ class AllVsAllComparator:
         similarities = cosine_similarity(locus_a.embeddings, locus_b.embeddings)
         
         # Find high-similarity window pairs
-        similarity_threshold = 0.7  # TODO: Make configurable
-        matches = []
+        similarity_threshold = 0.8  # Raised from 0.7 to be more stringent
+        initial_matches = []
         
         for i, j in np.argwhere(similarities > similarity_threshold):
             match = WindowMatch(
@@ -127,23 +127,113 @@ class AllVsAllComparator:
                 similarity_score=similarities[i, j],
                 method='cosine'
             )
-            matches.append(match)
+            initial_matches.append((i, j, match))
         
-        if len(matches) >= 2:  # Require at least 2 matching windows
-            # Create syntenic block
-            block = SyntenicBlock(
-                query_locus=f"{locus_a.sample_id}:{locus_a.locus_id}",
-                target_locus=f"{locus_b.sample_id}:{locus_b.locus_id}",
-                query_windows=[m.query_window_id for m in matches],
-                target_windows=[m.target_window_id for m in matches],
-                matches=matches,
-                chain_score=sum(m.similarity_score for m in matches),
-                alignment_length=len(matches),
-                identity=sum(m.similarity_score for m in matches) / len(matches)
-            )
-            return block
+        if len(initial_matches) < 2:
+            return None  # Not enough matches
+        
+        # Apply positional conservation filtering
+        filtered_matches = self._filter_positional_conservation(initial_matches)
+        
+        if len(filtered_matches) >= 2:  # Require at least 2 conserved matches
+            matches = [match for _, _, match in filtered_matches]
+            
+            # Calculate gene order conservation score
+            gene_order_score = self._calculate_gene_order_score(filtered_matches)
+            
+            # Only accept blocks with reasonable gene order conservation
+            if gene_order_score >= 0.3:  # Configurable threshold
+                # Create syntenic block
+                block = SyntenicBlock(
+                    query_locus=f"{locus_a.sample_id}:{locus_a.locus_id}",
+                    target_locus=f"{locus_b.sample_id}:{locus_b.locus_id}",
+                    query_windows=[m.query_window_id for m in matches],
+                    target_windows=[m.target_window_id for m in matches],
+                    matches=matches,
+                    chain_score=sum(m.similarity_score for m in matches) * gene_order_score,  # Weight by gene order
+                    alignment_length=len(matches),
+                    identity=sum(m.similarity_score for m in matches) / len(matches)
+                )
+                return block
         
         return None
+    
+    def _filter_positional_conservation(self, matches, max_offset=3):
+        """Filter matches to require positional conservation."""
+        if len(matches) < 2:
+            return matches
+        
+        # Group matches by their position offset
+        offset_groups = {}
+        for query_pos, target_pos, match in matches:
+            offset = target_pos - query_pos
+            if offset not in offset_groups:
+                offset_groups[offset] = []
+            offset_groups[offset].append((query_pos, target_pos, match))
+        
+        # Find the largest group of matches with consistent offset
+        best_group = []
+        best_size = 0
+        
+        for offset, group in offset_groups.items():
+            if abs(offset) <= max_offset:  # Only consider reasonable offsets
+                # Check for consecutive windows within this offset group
+                consecutive_matches = self._find_consecutive_matches(group)
+                if len(consecutive_matches) > best_size:
+                    best_group = consecutive_matches
+                    best_size = len(consecutive_matches)
+        
+        return best_group
+    
+    def _find_consecutive_matches(self, matches, min_consecutive=2):
+        """Find the longest consecutive sequence of window matches."""
+        if len(matches) < min_consecutive:
+            return matches
+        
+        # Sort matches by query position
+        sorted_matches = sorted(matches, key=lambda x: x[0])
+        
+        # Find longest consecutive sequence
+        best_sequence = []
+        current_sequence = [sorted_matches[0]]
+        
+        for i in range(1, len(sorted_matches)):
+            prev_query, prev_target, _ = sorted_matches[i-1]
+            curr_query, curr_target, _ = sorted_matches[i]
+            
+            # Check if windows are consecutive and have consistent offset
+            if (curr_query == prev_query + 1 and 
+                curr_target == prev_target + 1):
+                current_sequence.append(sorted_matches[i])
+            else:
+                # Sequence broken, check if it's the best so far
+                if len(current_sequence) > len(best_sequence):
+                    best_sequence = current_sequence[:]
+                current_sequence = [sorted_matches[i]]
+        
+        # Check final sequence
+        if len(current_sequence) > len(best_sequence):
+            best_sequence = current_sequence
+        
+        # Return the best sequence if it meets minimum length
+        return best_sequence if len(best_sequence) >= min_consecutive else []
+    
+    def _calculate_gene_order_score(self, matches):
+        """Calculate gene order conservation score (0-1)."""
+        if len(matches) < 2:
+            return 1.0
+        
+        # Calculate position offsets
+        offsets = [target_pos - query_pos for query_pos, target_pos, _ in matches]
+        
+        # Perfect conservation = all offsets identical
+        offset_std = np.std(offsets)
+        
+        # Convert to score (lower std = higher score)
+        # Use exponential decay: score = exp(-std)
+        gene_order_score = np.exp(-offset_std)
+        
+        return min(gene_order_score, 1.0)
     
     def find_all_blocks(self, loci: List[LocusInfo]) -> List[SyntenicBlock]:
         """Find all syntenic blocks via all-vs-all comparison."""
@@ -358,27 +448,42 @@ class SyntenicAnalyzer:
         
         return statistics
     
+    def _extract_window_index(self, window_id: str) -> Optional[int]:
+        """Extract window index from window ID like 'sample_locus_123' -> 123."""
+        try:
+            # Window IDs end with '_<window_index>'
+            parts = window_id.split('_')
+            if len(parts) >= 2:
+                return int(parts[-1])
+        except (ValueError, IndexError):
+            logger.warning(f"Could not extract window index from: {window_id}")
+        return None
+    
     def save_results(self, landscape: SyntenicLandscape, output_dir: Path):
         """Save comprehensive analysis results."""
         output_dir.mkdir(exist_ok=True)
         
-        # Save main results
-        results = {
-            'landscape': asdict(landscape),
-            'metadata': {
-                'version': '0.1.0',
-                'config': self.config.dict()
-            }
-        }
+        # Skip saving the massive JSON file - it's too big and slow
+        # We'll extract window details directly in the database population step
+        console.print("[yellow]Skipping syntenic_landscape.json (too large for practical use)[/yellow]")
         
-        results_file = output_dir / 'syntenic_landscape.json'
-        with open(results_file, 'w') as f:
-            json.dump(results, f, indent=2, default=str)
-        
-        # Save blocks table
+        # Save blocks table with embedded window information
         if landscape.blocks:
             blocks_data = []
             for i, block in enumerate(landscape.blocks):
+                # Extract window indices from window IDs
+                query_indices = [self._extract_window_index(w) for w in block.query_windows]
+                target_indices = [self._extract_window_index(w) for w in block.target_windows]
+                
+                # Filter out None values and calculate ranges
+                query_indices = [idx for idx in query_indices if idx is not None]
+                target_indices = [idx for idx in target_indices if idx is not None]
+                
+                query_start = min(query_indices) if query_indices else None
+                query_end = max(query_indices) if query_indices else None
+                target_start = min(target_indices) if target_indices else None
+                target_end = max(target_indices) if target_indices else None
+                
                 blocks_data.append({
                     'block_id': i,
                     'query_locus': block.query_locus,
@@ -387,7 +492,13 @@ class SyntenicAnalyzer:
                     'identity': block.identity,
                     'score': block.chain_score,
                     'n_query_windows': len(block.query_windows),  # Number of matching query windows
-                    'n_target_windows': len(block.target_windows)  # Number of matching target windows
+                    'n_target_windows': len(block.target_windows),  # Number of matching target windows
+                    'query_window_start': query_start,
+                    'query_window_end': query_end,
+                    'target_window_start': target_start,
+                    'target_window_end': target_end,
+                    'query_windows_json': ';'.join(block.query_windows),  # Use semicolon instead of JSON
+                    'target_windows_json': ';'.join(block.target_windows)
                 })
             
             blocks_df = pd.DataFrame(blocks_data)
@@ -411,7 +522,6 @@ class SyntenicAnalyzer:
             clusters_df.to_csv(output_dir / 'syntenic_clusters.csv', index=False)
         
         console.print(f"✓ Results saved to: {output_dir}")
-        console.print(f"  - {results_file}")
         console.print(f"  - syntenic_blocks.csv")
         console.print(f"  - syntenic_clusters.csv")
 

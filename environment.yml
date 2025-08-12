@@ -1,0 +1,59 @@
+name: elsa
+channels:
+  - conda-forge
+  - bioconda
+  - pytorch
+  - defaults
+dependencies:
+  # Core Python
+  - python=3.10
+  - pip
+  
+  # ML/Deep Learning
+  - pytorch>=2.0
+  - transformers>=4.30.0
+  - scikit-learn
+  - numpy
+  - scipy
+  
+  # Data handling
+  - pandas
+  - pyarrow
+  - h5py
+  - numba
+  
+  # Bioinformatics
+  - biopython
+  - prodigal
+  
+  # Web/API
+  - fastapi
+  - uvicorn
+  
+  # CLI/UI
+  - click
+  - rich
+  - tqdm
+  
+  # Indexing/Search
+  - datasketch  # MinHash
+  - faiss-cpu   # fallback for HNSW if needed
+  
+  # Dev/Test
+  - pytest
+  - pytest-benchmark
+  - black
+  - isort
+  
+  # Viz/QC
+  - matplotlib
+  - seaborn
+  
+  # Config/Validation  
+  - pydantic>=2.0
+  - pyyaml
+  
+  # Additional pip dependencies
+  - pip:
+    - fair-esm  # ESM2 models from Meta
+    # - sentence-transformers  # if we need ProtT5

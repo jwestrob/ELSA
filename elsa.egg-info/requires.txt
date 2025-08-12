@@ -1,0 +1,15 @@
+torch>=2.0.0
+transformers>=4.30.0
+scikit-learn
+numpy
+pandas
+pyarrow
+biopython
+click
+rich
+pydantic>=2.0
+pyyaml
+datasketch
+fair-esm
+fastapi
+uvicorn

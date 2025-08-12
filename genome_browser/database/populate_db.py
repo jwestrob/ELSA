@@ -297,21 +297,32 @@ class ELSADataIngester:
         return None
     
     def ingest_syntenic_blocks(self, blocks_file: Path, landscape_file: Optional[Path] = None) -> None:
-        """Ingest syntenic blocks from CSV file with optional detailed window data from JSON."""
+        """Ingest syntenic blocks from CSV file with embedded window data."""
         logger.info(f"Loading syntenic blocks from {blocks_file}")
         
         df = pd.read_csv(blocks_file)
         cursor = self.conn.cursor()
         
-        # Load detailed window data from landscape JSON if available
-        detailed_blocks = {}
-        if landscape_file and landscape_file.exists():
-            logger.info(f"Loading detailed window data from {landscape_file}")
-            with open(landscape_file, 'r') as f:
-                landscape_data = json.load(f)
-                # Index blocks by their position in the array (block_id)
-                for i, block in enumerate(landscape_data.get('landscape', {}).get('blocks', [])):
-                    detailed_blocks[i] = block
+        # Check if the CSV has the new embedded window columns
+        has_embedded_windows = all(col in df.columns for col in [
+            'query_window_start', 'query_window_end', 'target_window_start', 'target_window_end',
+            'query_windows_json', 'target_windows_json'
+        ])
+        
+        if has_embedded_windows:
+            logger.info("Using embedded window information from CSV")
+        else:
+            logger.info("CSV does not have embedded window info - using landscape file if available")
+            
+            # Load detailed window data from landscape JSON if available (legacy support)
+            detailed_blocks = {}
+            if landscape_file and landscape_file.exists():
+                logger.info(f"Loading detailed window data from {landscape_file}")
+                with open(landscape_file, 'r') as f:
+                    landscape_data = json.load(f)
+                    # Index blocks by their position in the array (block_id)
+                    for i, block in enumerate(landscape_data.get('landscape', {}).get('blocks', [])):
+                        detailed_blocks[i] = block
         
         for _, row in df.iterrows():
             # Parse locus IDs
@@ -327,34 +338,59 @@ class ELSADataIngester:
             else:
                 block_type = 'large'
             
-            # Extract window information from detailed data
+            # Extract window information - prioritize embedded data over legacy JSON
             block_id = row['block_id']
-            query_window_start = query_window_end = None
-            target_window_start = target_window_end = None
-            query_windows_json = target_windows_json = None
             
-            if block_id in detailed_blocks:
-                detailed_block = detailed_blocks[block_id]
+            if has_embedded_windows:
+                # Use embedded window information from CSV
+                query_window_start = row.get('query_window_start')
+                query_window_end = row.get('query_window_end')
+                target_window_start = row.get('target_window_start')
+                target_window_end = row.get('target_window_end')
                 
-                # Extract window indices from window IDs
-                query_windows = detailed_block.get('query_windows', [])
-                target_windows = detailed_block.get('target_windows', [])
+                # Convert semicolon-separated format back to JSON for storage
+                query_windows_str = row.get('query_windows_json', '')
+                target_windows_str = row.get('target_windows_json', '')
                 
-                if query_windows:
-                    query_indices = [self._extract_window_index(w) for w in query_windows]
-                    query_indices = [idx for idx in query_indices if idx is not None]
-                    if query_indices:
-                        query_window_start = min(query_indices)
-                        query_window_end = max(query_indices)
-                    query_windows_json = json.dumps(query_windows)
+                if query_windows_str:
+                    query_windows_list = query_windows_str.split(';')
+                    query_windows_json = json.dumps(query_windows_list)
+                else:
+                    query_windows_json = None
                 
-                if target_windows:
-                    target_indices = [self._extract_window_index(w) for w in target_windows]
-                    target_indices = [idx for idx in target_indices if idx is not None]
-                    if target_indices:
-                        target_window_start = min(target_indices)
-                        target_window_end = max(target_indices)
-                    target_windows_json = json.dumps(target_windows)
+                if target_windows_str:
+                    target_windows_list = target_windows_str.split(';')
+                    target_windows_json = json.dumps(target_windows_list)
+                else:
+                    target_windows_json = None
+            else:
+                # Legacy: extract from landscape JSON
+                query_window_start = query_window_end = None
+                target_window_start = target_window_end = None
+                query_windows_json = target_windows_json = None
+                
+                if 'detailed_blocks' in locals() and block_id in detailed_blocks:
+                    detailed_block = detailed_blocks[block_id]
+                    
+                    # Extract window indices from window IDs
+                    query_windows = detailed_block.get('query_windows', [])
+                    target_windows = detailed_block.get('target_windows', [])
+                    
+                    if query_windows:
+                        query_indices = [self._extract_window_index(w) for w in query_windows]
+                        query_indices = [idx for idx in query_indices if idx is not None]
+                        if query_indices:
+                            query_window_start = min(query_indices)
+                            query_window_end = max(query_indices)
+                        query_windows_json = json.dumps(query_windows)
+                    
+                    if target_windows:
+                        target_indices = [self._extract_window_index(w) for w in target_windows]
+                        target_indices = [idx for idx in target_indices if idx is not None]
+                        if target_indices:
+                            target_window_start = min(target_indices)
+                            target_window_end = max(target_indices)
+                        target_windows_json = json.dumps(target_windows)
             
             cursor.execute("""
                 INSERT INTO syntenic_blocks
@@ -373,7 +409,7 @@ class ELSADataIngester:
             ))
         
         self.conn.commit()
-        logger.info(f"Ingested {len(df)} syntenic blocks with detailed window information")
+        logger.info(f"Ingested {len(df)} syntenic blocks with window information")
     
     def ingest_clusters(self, clusters_file: Path) -> None:
         """Ingest cluster information from CSV file."""

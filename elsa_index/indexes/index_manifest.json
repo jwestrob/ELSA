@@ -1,0 +1,30 @@
+{
+  "version": "0.1.0",
+  "created_at": "2025-08-11T23:38:55.689087",
+  "config": {
+    "discrete": {
+      "K": 4096,
+      "minhash_hashes": 192,
+      "bands_rows": [
+        24,
+        8
+      ],
+      "emit_skipgram": true,
+      "idf_min_df": 5,
+      "idf_max_df_frac": 0.05
+    },
+    "continuous": {
+      "srp_bits": 256,
+      "srp_seed": 13,
+      "hnsw_enable": false
+    }
+  },
+  "statistics": {
+    "total_windows": 10487,
+    "embedding_dim": 273,
+    "discrete_buckets": 230420,
+    "continuous_patterns": 7170,
+    "discrete_index_file": "elsa_index/indexes/discrete_index.json",
+    "continuous_index_file": "elsa_index/indexes/continuous_index.json"
+  }
+}

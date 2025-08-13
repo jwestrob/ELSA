@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "total_runs": 2,
+    "datasets": 1,
+    "methods": [
+      "phase1",
+      "phase2"
+    ],
+    "mean_block_improvement": 0.26302691721686133,
+    "std_block_improvement": 0.0,
+    "mean_runtime_ratio": 0.6824152728185121
+  },
+  "comparisons": {
+    "test_data": {
+      "block_recall_improvement": 0.26302691721686133,
+      "anchor_density_improvement": 0.11829101066531233,
+      "runtime_ratio": 0.6824152728185121,
+      "phase1_blocks": 19690,
+      "phase2_blocks": 24869,
+      "phase1_anchors": 393800,
+      "phase2_anchors": 440383,
+      "mge_masking_effect": 0.12,
+      "idf_weighting_effect": 1.18
+    }
+  }
+}

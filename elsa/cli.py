@@ -71,7 +71,8 @@ def init(config: str, force: bool):
 @click.argument("input_dir", type=click.Path(exists=True, file_okay=False, dir_okay=True))
 @click.option("--fasta-pattern", default="*.fasta", help="Pattern for nucleotide FASTA files (default: *.fasta,*.fa,*.fna)")
 @click.option("--resume", is_flag=True, help="Resume from checkpoint")
-def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool):
+@click.option("--force-pfam", is_flag=True, help="Force PFAM annotation even if embeddings exist")
+def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool, force_pfam: bool):
     """Generate protein embeddings from nucleotide FASTA files in a directory.
     
     This command runs the complete pipeline on all nucleotide FASTA files:
@@ -150,6 +151,39 @@ def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool):
         # Stage 1: Protein ingestion (gene calling/translation)
         console.print("\n[bold blue]Stage 1: Protein Ingestion[/bold blue]")
         sample_proteins = ingester.ingest_multiple(sample_data)
+        
+        # Stage 1.5: PFAM Annotation (if weighted sketching enabled)
+        use_weighted_sketching = (
+            hasattr(config_obj, 'phase2') and 
+            config_obj.phase2.enable and 
+            config_obj.phase2.weighted_sketch
+        )
+        
+        if use_weighted_sketching:
+            console.print("\n[bold blue]Stage 1.5: PFAM Annotation[/bold blue]")
+            from .pfam_annotation import run_pfam_annotation_pipeline
+            
+            pfam_summary = run_pfam_annotation_pipeline(
+                config_obj, manifest, config_obj.data.work_dir, 
+                threads=config_obj.system.jobs if config_obj.system.jobs != 'auto' else 8,
+                force_annotation=force_pfam
+            )
+            
+            if pfam_summary:
+                # Handle both result formats
+                if 'summary' in pfam_summary:
+                    successful = pfam_summary['summary']['successful_genomes']
+                    total = pfam_summary['summary']['total_genomes']
+                    hits = pfam_summary['summary']['total_domains']
+                else:
+                    successful = pfam_summary.get('successful_samples', 0)
+                    total = pfam_summary.get('total_samples', 0)
+                    hits = pfam_summary.get('total_hits', 0)
+                
+                console.print(f"✓ PFAM annotation: {successful}/{total} samples")
+                console.print(f"  Total domains found: {hits:,}")
+            else:
+                console.print("⚠️  PFAM annotation skipped or failed")
         
         # Stage 2: Embedding generation  
         console.print("\n[bold blue]Stage 2: Protein Embedding[/bold blue]")

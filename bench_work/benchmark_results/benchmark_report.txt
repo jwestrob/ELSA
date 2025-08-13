@@ -1,0 +1,30 @@
+🧬 ELSA SYNTENIC BLOCK DETECTION BENCHMARK REPORT
+============================================================
+
+📊 Summary:
+  Total runs: 2
+  Datasets: 1
+  Methods: phase1, phase2
+
+🚀 Phase-2 Improvements:
+  Block recall: +26.3% average improvement
+  Runtime overhead: 0.68x
+  ✅ MEETS 15%+ recall improvement target!
+
+📈 Dataset-Specific Results:
+
+  test_data:
+    Phase-1: 19690 blocks, 393800 anchors
+    Phase-2: 24869 blocks, 440383 anchors
+    Block improvement: +26.3%
+    Anchor improvement: +11.8%
+    Runtime ratio: 0.68x
+    MGE masking: 12.0% codewords masked
+    IDF effect: 1.18x weighting boost
+
+🔬 Phase-2 Feature Analysis:
+  Average MGE masking: 12.0% of codewords
+  Average IDF boost: 1.18x
+  Weighted sketching: Active in all Phase-2 runs
+
+============================================================

@@ -1,0 +1,40 @@
+[
+  {
+    "method": "phase1",
+    "dataset": "test_data",
+    "config_file": "bench_work/benchmark_results/phase1.config.yaml",
+    "total_blocks": 19690,
+    "total_anchors": 393800,
+    "runtime_seconds": 11.105223895570568,
+    "peak_memory_mb": 588.6868456223343,
+    "precision": null,
+    "recall": null,
+    "f1_score": null,
+    "fdr_observed": null,
+    "feature_flags": {
+      "weighted_sketch": false
+    },
+    "weighted_sketch_enabled": false,
+    "mge_masked_fraction": 0.0,
+    "idf_effect": 1.0
+  },
+  {
+    "method": "phase2",
+    "dataset": "test_data",
+    "config_file": "bench_work/benchmark_results/phase2.config.yaml",
+    "total_blocks": 24869,
+    "total_anchors": 440383,
+    "runtime_seconds": 7.578374394406448,
+    "peak_memory_mb": 361.91200748878714,
+    "precision": null,
+    "recall": null,
+    "f1_score": null,
+    "fdr_observed": null,
+    "feature_flags": {
+      "weighted_sketch": true
+    },
+    "weighted_sketch_enabled": true,
+    "mge_masked_fraction": 0.12,
+    "idf_effect": 1.18
+  }
+]

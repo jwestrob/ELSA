@@ -1,0 +1,149 @@
+{
+  "run_id": "elsa_20250812_233500",
+  "start_time": 1755066900.4645572,
+  "elsa_version": "0.2.0-phase2",
+  "python_version": "3.10.18 | packaged by conda-forge | (main, Jun  4 2025, 14:46:00) [Clang 18.1.8 ]",
+  "platform": "macOS-15.4.1-arm64-arm-64bit",
+  "hostname": "Mac.attlocal.net",
+  "config_snapshot": {
+    "data": {
+      "work_dir": "elsa_index",
+      "allow_overwrite": false
+    },
+    "ingest": {
+      "gene_caller": "prodigal",
+      "prodigal_mode": "single",
+      "min_cds_aa": 60,
+      "keep_partial": false
+    },
+    "plm": {
+      "model": "esm2_t12",
+      "device": "auto",
+      "batch_amino_acids": 16000,
+      "fp16": true,
+      "project_to_D": 256,
+      "l2_normalize": true
+    },
+    "shingles": {
+      "n": 5,
+      "stride": 1,
+      "pos_dim": 16,
+      "weights": "triangular",
+      "strand_flag": "signed"
+    },
+    "discrete": {
+      "K": 4096,
+      "minhash_hashes": 192,
+      "bands_rows": [
+        24,
+        8
+      ],
+      "emit_skipgram": true,
+      "idf_min_df": 5,
+      "idf_max_df_frac": 0.05
+    },
+    "continuous": {
+      "srp_bits": 256,
+      "srp_seed": 13,
+      "hnsw_enable": false
+    },
+    "chain": {
+      "offset_band": 10,
+      "gap_open": 2.0,
+      "gap_extend": 0.5,
+      "slope_penalty": 0.05,
+      "alpha": 0.1,
+      "beta": 1.0,
+      "gamma": 2.0
+    },
+    "dtw": {
+      "enable": true,
+      "band": 10,
+      "refine_enable": false,
+      "refine_band": 2
+    },
+    "score": {
+      "alpha": 1.0,
+      "beta": 0.1,
+      "gamma": 0.2,
+      "delta": 0.1,
+      "fdr_target": 0.01
+    },
+    "system": {
+      "jobs": "auto",
+      "mmap": true,
+      "rng_seed": 17
+    },
+    "phase2": {
+      "enable": true,
+      "weighted_sketch": true,
+      "multiscale": false,
+      "flip_dp": false,
+      "calibration": false,
+      "hnsw": false
+    },
+    "sketch": {
+      "type": "weighted_minhash",
+      "bits": 64,
+      "size": 96,
+      "idf": {
+        "max": 10.0
+      }
+    },
+    "mge_mask": {
+      "path": null
+    },
+    "window": {
+      "micro": {
+        "size": 5,
+        "stride": 1
+      },
+      "macro": {
+        "size": 12,
+        "stride": 3
+      },
+      "adaptive": {
+        "enable": false
+      }
+    },
+    "hnsw": {
+      "M": 16,
+      "efConstruction": 200,
+      "efSearch": 50
+    },
+    "retrieval": {
+      "dense": "srp"
+    },
+    "calib": {
+      "null": {
+        "iters": 100
+      },
+      "target_fdr": 0.05
+    }
+  },
+  "phase2_enabled": true,
+  "active_feature_flags": {
+    "weighted_sketch": true,
+    "multiscale": false,
+    "flip_dp": false,
+    "calibration": false,
+    "hnsw": false
+  },
+  "global_seed": 17,
+  "stage_seeds": {
+    "ingest": 1265576559,
+    "embed": 780729585,
+    "project": 131369103,
+    "shingle": 1478473094,
+    "index": 822575510,
+    "search": 1670161721,
+    "chain": 291629808,
+    "calibrate": 1317787565
+  },
+  "stages": [],
+  "end_time": null,
+  "total_loci": null,
+  "total_blocks": null,
+  "total_clusters": null,
+  "success": true
+}

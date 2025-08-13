@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "created_at": "2025-08-11T23:38:55.689087",
+  "created_at": "2025-08-13T01:28:18.079914",
   "config": {
     "discrete": {
       "K": 4096,
@@ -16,7 +16,7 @@
     "continuous": {
       "srp_bits": 256,
       "srp_seed": 13,
-      "hnsw_enable": false
+      "hnsw_enable": true
     }
   },
   "statistics": {

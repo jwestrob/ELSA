@@ -51,7 +51,9 @@ class MinHashLSH:
         
     def _hash_function(self, x: int, a: int, b: int) -> int:
         """Single hash function for MinHash."""
-        return ((a * x + b) % (2**32 - 1)) % (2**32)
+        # Use Python's unlimited precision integers to prevent overflow
+        PRIME = 2**32 - 1
+        return ((a * x + b) % PRIME)
     
     def _compute_minhash(self, features: Set[int]) -> np.ndarray:
         """Compute MinHash signature for a set of features."""
@@ -240,6 +242,27 @@ class IndexBuilder:
         """Build discrete and continuous indexes from shingles."""
         console.print("[bold blue]Building ELSA Indexes[/bold blue]")
         
+        # Check if weighted sketching is enabled
+        use_weighted_sketching = (
+            hasattr(self.config, 'phase2') and 
+            self.config.phase2.enable and 
+            self.config.phase2.weighted_sketch
+        )
+        
+        # Load PFAM annotations if weighted sketching is enabled
+        pfam_annotations = {}
+        if use_weighted_sketching:
+            console.print("Loading PFAM annotations for weighted sketching...")
+            from .pfam_annotation import PfamAnnotator
+            
+            pfam_dir = Path(self.manifest.work_dir) / "pfam_annotations"
+            if pfam_dir.exists():
+                annotator = PfamAnnotator()
+                pfam_annotations = annotator.load_pfam_annotations(pfam_dir)
+                console.print(f"✓ Loaded PFAM annotations for {len(pfam_annotations)} samples")
+            else:
+                console.print("⚠️  No PFAM annotations found, weighted sketching will use uniform weights")
+        
         # Load shingles  
         shingles_path = Path(self.manifest.data['artifacts']['windows']['path'])
         if not shingles_path.exists():
@@ -248,7 +271,10 @@ class IndexBuilder:
         console.print(f"Loading shingles from: {shingles_path}")
         shingles_df = pd.read_parquet(shingles_path)
         
-        console.print(f"Found {len(shingles_df):,} windows to index")
+        if use_weighted_sketching:
+            console.print(f"Found {len(shingles_df):,} windows to index with weighted sketching")
+        else:
+            console.print(f"Found {len(shingles_df):,} windows to index")
         
         # Get embedding columns (emb_000, emb_001, etc.)
         emb_cols = [col for col in shingles_df.columns if col.startswith('emb_')]

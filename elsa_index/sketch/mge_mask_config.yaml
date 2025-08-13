@@ -1,0 +1,89 @@
+mge_patterns:
+- category: transposon
+  description: Transposase families
+  pattern: Transposase
+  type: prefix
+- category: transposon
+  description: DDE transposase superfamily
+  pattern: DDE_Tnp
+  type: prefix
+- category: transposon
+  description: Insertion sequence families
+  pattern: IS
+  type: prefix
+- category: transposon
+  description: Transposon families
+  pattern: Tn
+  type: prefix
+- category: integrase
+  description: Integrase families
+  pattern: Integrase
+  type: prefix
+- category: phage
+  description: Phage integrase
+  pattern: Phage_integrase
+  type: exact
+- category: integrase
+  description: Site-specific recombinases
+  pattern: Recombinase
+  type: prefix
+- category: phage
+  description: Phage-related proteins
+  pattern: Phage
+  type: prefix
+- category: phage
+  description: Phage tail proteins
+  pattern: Tail_
+  type: prefix
+- category: phage
+  description: Phage head proteins
+  pattern: Head_
+  type: prefix
+- category: phage
+  description: Phage portal proteins
+  pattern: Portal
+  type: prefix
+- category: phage
+  description: Phage terminases
+  pattern: Terminase
+  type: prefix
+- category: plasmid
+  description: Replication proteins
+  pattern: Rep_
+  type: prefix
+- category: plasmid
+  description: Mobilization proteins
+  pattern: Mob
+  type: prefix
+- category: plasmid
+  description: Conjugal transfer protein
+  pattern: TraG
+  type: exact
+- category: defense
+  description: CRISPR-associated proteins
+  pattern: Cas
+  type: prefix
+- category: defense
+  description: CRISPR-related
+  pattern: CRISPR
+  type: prefix
+- category: defense
+  description: Methyltransferases
+  pattern: Methylase
+  type: prefix
+- category: defense
+  description: Restriction endonucleases
+  pattern: Endonuclease
+  type: prefix
+- category: transposon
+  description: General transposition
+  pattern: .*[Tt]ranspos.*
+  type: regex
+- category: mobile
+  description: Mobile genetic elements
+  pattern: .*[Mm]obile.*
+  type: regex
+- category: transposon
+  description: Insertion elements
+  pattern: .*[Ii]nsertion.*
+  type: regex

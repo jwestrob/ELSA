@@ -63119,98 +63119,98 @@
     {
       "genome_id": "1313.30775",
       "scan_result": {
-        "protein_file": "../test_data/proteins/1313.30775.faa",
+        "protein_file": "test_data/proteins/1313.30775.faa",
         "execution_status": "success",
-        "execution_time_seconds": 560.92,
+        "execution_time_seconds": 73.92,
         "error_message": null,
-        "hits_file": "pfam_annotations/1313.30775_pfam/PFAM_hits_df.tsv",
+        "hits_file": "elsa_index/pfam_annotations/1313.30775_pfam/PFAM_hits_df.tsv",
         "total_hits": 21522,
         "unique_proteins": 10527,
         "unique_domains": 1910
       },
       "annotated_proteins": 10517,
       "total_domains": 21475,
-      "annotation_timestamp": "2025-08-12T15:39:17.238844"
+      "annotation_timestamp": "2025-08-13T01:15:55.332758"
     },
     {
       "genome_id": "JBBKAE000000000",
       "scan_result": {
-        "protein_file": "../test_data/proteins/JBBKAE000000000.faa",
+        "protein_file": "test_data/proteins/JBBKAE000000000.faa",
         "execution_status": "success",
-        "execution_time_seconds": 561.51,
+        "execution_time_seconds": 74.29,
         "error_message": null,
-        "hits_file": "pfam_annotations/JBBKAE000000000_pfam/PFAM_hits_df.tsv",
+        "hits_file": "elsa_index/pfam_annotations/JBBKAE000000000_pfam/PFAM_hits_df.tsv",
         "total_hits": 21522,
         "unique_proteins": 10527,
         "unique_domains": 1910
       },
       "annotated_proteins": 10517,
       "total_domains": 21475,
-      "annotation_timestamp": "2025-08-12T15:39:18.129839"
+      "annotation_timestamp": "2025-08-13T01:15:56.153737"
     },
     {
       "genome_id": "JALJEL000000000",
       "scan_result": {
-        "protein_file": "../test_data/proteins/JALJEL000000000.faa",
+        "protein_file": "test_data/proteins/JALJEL000000000.faa",
         "execution_status": "success",
-        "execution_time_seconds": 105.78,
+        "execution_time_seconds": 73.27,
         "error_message": null,
-        "hits_file": "pfam_annotations/JALJEL000000000_pfam/PFAM_hits_df.tsv",
+        "hits_file": "elsa_index/pfam_annotations/JALJEL000000000_pfam/PFAM_hits_df.tsv",
         "total_hits": 21522,
         "unique_proteins": 10527,
         "unique_domains": 1910
       },
       "annotated_proteins": 10517,
       "total_domains": 21475,
-      "annotation_timestamp": "2025-08-12T15:41:03.955264"
+      "annotation_timestamp": "2025-08-13T01:17:09.547598"
     },
     {
       "genome_id": "JBJIAH000000000",
       "scan_result": {
-        "protein_file": "../test_data/proteins/JBJIAH000000000.faa",
+        "protein_file": "test_data/proteins/JBJIAH000000000.faa",
         "execution_status": "success",
-        "execution_time_seconds": 105.84,
+        "execution_time_seconds": 73.3,
         "error_message": null,
-        "hits_file": "pfam_annotations/JBJIAH000000000_pfam/PFAM_hits_df.tsv",
+        "hits_file": "elsa_index/pfam_annotations/JBJIAH000000000_pfam/PFAM_hits_df.tsv",
         "total_hits": 21522,
         "unique_proteins": 10527,
         "unique_domains": 1910
       },
       "annotated_proteins": 10517,
       "total_domains": 21475,
-      "annotation_timestamp": "2025-08-12T15:41:04.865606"
+      "annotation_timestamp": "2025-08-13T01:17:10.435506"
     },
     {
       "genome_id": "JBLTKP000000000",
       "scan_result": {
-        "protein_file": "../test_data/proteins/JBLTKP000000000.faa",
+        "protein_file": "test_data/proteins/JBLTKP000000000.faa",
         "execution_status": "success",
-        "execution_time_seconds": 108.95,
+        "execution_time_seconds": 75.1,
         "error_message": null,
-        "hits_file": "pfam_annotations/JBLTKP000000000_pfam/PFAM_hits_df.tsv",
+        "hits_file": "elsa_index/pfam_annotations/JBLTKP000000000_pfam/PFAM_hits_df.tsv",
         "total_hits": 21522,
         "unique_proteins": 10527,
         "unique_domains": 1910
       },
       "annotated_proteins": 10517,
       "total_domains": 21475,
-      "annotation_timestamp": "2025-08-12T15:42:53.841529"
+      "annotation_timestamp": "2025-08-13T01:18:25.590275"
     },
     {
       "genome_id": "CAYEVI000000000",
       "scan_result": {
-        "protein_file": "../test_data/proteins/CAYEVI000000000.faa",
+        "protein_file": "test_data/proteins/CAYEVI000000000.faa",
         "execution_status": "success",
-        "execution_time_seconds": 108.98,
+        "execution_time_seconds": 75.11,
         "error_message": null,
-        "hits_file": "pfam_annotations/CAYEVI000000000_pfam/PFAM_hits_df.tsv",
+        "hits_file": "elsa_index/pfam_annotations/CAYEVI000000000_pfam/PFAM_hits_df.tsv",
         "total_hits": 21522,
         "unique_proteins": 10527,
         "unique_domains": 1910
       },
       "annotated_proteins": 10517,
       "total_domains": 21475,
-      "annotation_timestamp": "2025-08-12T15:42:54.719747"
+      "annotation_timestamp": "2025-08-13T01:18:26.449376"
     }
   ],
   "summary": {

@@ -125,17 +125,17 @@ class MetadataTracker:
             run_id = f"elsa_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         
         # Extract Phase-2 feature flags
-        phase2_config = getattr(self.config, 'phase2', {})
-        phase2_enabled = phase2_config.get('enable', False)
+        phase2_config = getattr(self.config, 'phase2', None)
+        phase2_enabled = phase2_config.enable if phase2_config else False
         
         active_flags = {}
-        if phase2_enabled:
+        if phase2_enabled and phase2_config:
             active_flags = {
-                'weighted_sketch': phase2_config.get('weighted_sketch', False),
-                'multiscale': phase2_config.get('multiscale', False),
-                'flip_dp': phase2_config.get('flip_dp', False),
-                'calibration': phase2_config.get('calibration', False),
-                'hnsw': phase2_config.get('hnsw', False),
+                'weighted_sketch': phase2_config.weighted_sketch,
+                'multiscale': phase2_config.multiscale,
+                'flip_dp': phase2_config.flip_dp,
+                'calibration': phase2_config.calibration,
+                'hnsw': phase2_config.hnsw,
             }
         
         # Generate deterministic stage seeds from global seed
@@ -159,7 +159,7 @@ class MetadataTracker:
             python_version=sys.version,
             platform=platform.platform(),
             hostname=platform.node(),
-            config_snapshot=self.config.to_dict(),
+            config_snapshot=self.config.model_dump(),
             phase2_enabled=phase2_enabled,
             active_feature_flags=active_flags,
             global_seed=global_seed,

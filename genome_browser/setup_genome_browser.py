@@ -222,16 +222,36 @@ def main():
         # Run PFAM annotation if requested and available
         pfam_results = None
         if not args.skip_pfam and req_status != "no_astra":
-            # Check if PFAM results already exist
+            # First check if ELSA already generated PFAM results
+            elsa_pfam_results = Path("../elsa_index/pfam_annotations/pfam_annotation_results.json")
             pfam_results_file = args.pfam_output / "pfam_annotation_results.json"
             
-            if pfam_results_file.exists() and not args.force:
+            if elsa_pfam_results.exists():
+                logger.info(f"Using existing ELSA PFAM results: {elsa_pfam_results}")
+                logger.info("Copying ELSA PFAM annotations to genome browser...")
+                
+                # Copy the entire PFAM annotation directory
+                elsa_pfam_dir = Path("../elsa_index/pfam_annotations")
+                if elsa_pfam_dir.exists():
+                    import shutil
+                    if args.pfam_output.exists():
+                        shutil.rmtree(args.pfam_output)
+                    shutil.copytree(elsa_pfam_dir, args.pfam_output)
+                    pfam_results = args.pfam_output / "pfam_annotation_results.json"
+                    logger.info("✓ Successfully copied ELSA PFAM annotations")
+                else:
+                    logger.warning("ELSA PFAM directory not found, will regenerate")
+                    pfam_results = None
+            elif pfam_results_file.exists() and not args.force:
                 logger.info(f"PFAM annotation results already exist: {pfam_results_file}")
                 logger.info("Use --force to regenerate PFAM annotations")
                 pfam_results = pfam_results_file
             else:
-                if args.force and pfam_results_file.exists():
+                if args.force and (pfam_results_file.exists() or elsa_pfam_results.exists()):
                     logger.info("--force specified, regenerating PFAM annotations")
+                elif not elsa_pfam_results.exists():
+                    logger.info("No existing PFAM results found, generating new annotations")
+                
                 pfam_results = run_pfam_annotation(
                     genome_data_paths['proteins_dir'], args.pfam_output, 
                     args.threads, args.max_workers

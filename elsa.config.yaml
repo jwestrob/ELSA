@@ -3,6 +3,10 @@ chain:
   gap_open: 2.0
   offset_band: 10
   slope_penalty: 0.05
+  # Phase-2 chaining parameters
+  alpha: 0.1      # position deviation penalty
+  beta: 1.0       # gap penalty
+  gamma: 2.0      # strand flip penalty
 continuous:
   hnsw_enable: false
   srp_bits: 256
@@ -22,6 +26,9 @@ discrete:
 dtw:
   band: 10
   enable: true
+  # Phase-2 DTW refinement  
+  refine_enable: false            # bounded DTW on final chain only
+  refine_band: 2                  # DTW band width in genes
 ingest:
   gene_caller: prodigal
   keep_partial: false
@@ -50,3 +57,51 @@ system:
   jobs: auto
   mmap: true
   rng_seed: 17
+
+# Phase-2 Feature Flags and Configuration
+phase2:
+  enable: false                    # Master switch for all Phase-2 features
+  weighted_sketch: false          # Use weighted MinHash with IDF/MGE masking
+  multiscale: false               # Enable macro→micro windowing
+  flip_dp: false                  # Use flip-aware affine-gap chaining
+  calibration: false              # Enable null models and FDR control
+  hnsw: false                     # Use HNSW dense retrieval
+
+# Weighted sketching configuration
+sketch:
+  type: "minhash"                 # "minhash" or "weighted_minhash"
+  bits: 64                        # 64, 2, or 1 for compression
+  size: 96                        # sketch size
+  idf:
+    max: 10.0                     # clamp IDF values
+  
+# MGE masking configuration  
+mge_mask:
+  path: null                      # YAML list of PFAM accessions to mask
+
+# Multi-scale windowing
+window:
+  micro:
+    size: 5
+    stride: 1
+  macro:
+    size: 12
+    stride: 3
+  adaptive:
+    enable: false                 # future: CUSUM change-point detection
+
+# HNSW configuration
+hnsw:
+  M: 16
+  efConstruction: 200
+  efSearch: 50
+
+# Retrieval method selection
+retrieval:
+  dense: "srp"                    # "srp" or "hnsw"
+
+# Calibration parameters
+calib:
+  null:
+    iters: 100                    # null model iterations
+  target_fdr: 0.05                # FDR threshold

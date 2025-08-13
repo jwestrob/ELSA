@@ -76,12 +76,19 @@ class ChainConfig(BaseModel):
     gap_open: float = Field(default=2.0, description="Gap opening penalty")
     gap_extend: float = Field(default=0.5, description="Gap extension penalty")
     slope_penalty: float = Field(default=0.05, description="Slope deviation penalty")
+    # Phase-2 chaining parameters
+    alpha: float = Field(default=0.1, description="Position deviation penalty")
+    beta: float = Field(default=1.0, description="Gap penalty")
+    gamma: float = Field(default=2.0, description="Strand flip penalty")
 
 
 class DTWConfig(BaseModel):
     """Dynamic time warping refinement."""
     enable: bool = Field(default=True, description="Enable DTW refinement")
     band: int = Field(default=10, description="DTW band width")
+    # Phase-2 DTW refinement
+    refine_enable: bool = Field(default=False, description="Bounded DTW on final chain only")
+    refine_band: int = Field(default=2, description="DTW band width in genes")
 
 
 class ScoreConfig(BaseModel):
@@ -106,6 +113,62 @@ class SystemConfig(BaseModel):
     rng_seed: int = Field(default=17, description="Global random seed")
 
 
+# Phase-2 Configuration Classes
+
+class Phase2Config(BaseModel):
+    """Phase-2 feature flags."""
+    enable: bool = Field(default=False, description="Master switch for all Phase-2 features")
+    weighted_sketch: bool = Field(default=False, description="Use weighted MinHash with IDF/MGE masking")
+    multiscale: bool = Field(default=False, description="Enable macro→micro windowing")
+    flip_dp: bool = Field(default=False, description="Use flip-aware affine-gap chaining")
+    calibration: bool = Field(default=False, description="Enable null models and FDR control")
+    hnsw: bool = Field(default=False, description="Use HNSW dense retrieval")
+
+
+class SketchConfig(BaseModel):
+    """Weighted sketching configuration."""
+    type: Literal["minhash", "weighted_minhash"] = Field(default="minhash")
+    bits: Literal[64, 2, 1] = Field(default=64, description="Compression level")
+    size: int = Field(default=96, description="Sketch size")
+    idf: dict = Field(default_factory=lambda: {"max": 10.0}, description="IDF parameters")
+
+
+class MGEMaskConfig(BaseModel):
+    """MGE masking configuration."""
+    path: Optional[str] = Field(default=None, description="YAML list of PFAM accessions to mask")
+
+
+class WindowConfig(BaseModel):
+    """Multi-scale windowing configuration."""
+    micro: dict = Field(default_factory=lambda: {"size": 5, "stride": 1})
+    macro: dict = Field(default_factory=lambda: {"size": 12, "stride": 3})
+    adaptive: dict = Field(default_factory=lambda: {"enable": False})
+
+
+class HNSWConfig(BaseModel):
+    """HNSW configuration."""
+    M: int = Field(default=16, description="Max connections per element")
+    efConstruction: int = Field(default=200, description="Construction parameter")
+    efSearch: int = Field(default=50, description="Search parameter")
+
+
+class RetrievalConfig(BaseModel):
+    """Retrieval method configuration."""
+    dense: Literal["srp", "hnsw"] = Field(default="srp")
+
+
+class CalibConfig(BaseModel):
+    """Calibration configuration."""
+    null: dict = Field(default_factory=lambda: {"iters": 100})
+    target_fdr: float = Field(default=0.05, description="FDR threshold")
+    
+    @validator("target_fdr")
+    def validate_target_fdr(cls, v):
+        if not 0.0 < v < 1.0:
+            raise ValueError("target_fdr must be between 0 and 1")
+        return v
+
+
 class ELSAConfig(BaseModel):
     """Complete ELSA configuration."""
     data: DataConfig = Field(default_factory=DataConfig)
@@ -118,6 +181,15 @@ class ELSAConfig(BaseModel):
     dtw: DTWConfig = Field(default_factory=DTWConfig)
     score: ScoreConfig = Field(default_factory=ScoreConfig)
     system: SystemConfig = Field(default_factory=SystemConfig)
+    
+    # Phase-2 configurations (optional, backwards compatible)
+    phase2: Optional[Phase2Config] = Field(default_factory=Phase2Config)
+    sketch: Optional[SketchConfig] = Field(default_factory=SketchConfig)
+    mge_mask: Optional[MGEMaskConfig] = Field(default_factory=MGEMaskConfig)
+    window: Optional[WindowConfig] = Field(default_factory=WindowConfig)
+    hnsw: Optional[HNSWConfig] = Field(default_factory=HNSWConfig)
+    retrieval: Optional[RetrievalConfig] = Field(default_factory=RetrievalConfig)
+    calib: Optional[CalibConfig] = Field(default_factory=CalibConfig)
     
     @model_validator(mode='after')
     def validate_consistency(self):

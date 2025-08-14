@@ -13,7 +13,7 @@ from collections import defaultdict
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 
-from .params import ShingleConfig
+from .params import ShingleConfig, ELSAConfig
 from .projection import ProjectedProtein
 from .manifest import ELSAManifest
 
@@ -35,8 +35,9 @@ class WindowEmbedding:
 class ShingleSystem:
     """Creates order-aware window embeddings from projected proteins."""
     
-    def __init__(self, config: ShingleConfig, work_dir: Path, manifest: ELSAManifest):
+    def __init__(self, config: ShingleConfig, work_dir: Path, manifest: ELSAManifest, full_config: ELSAConfig = None):
         self.config = config
+        self.full_config = full_config  # For accessing phase2 settings
         self.work_dir = Path(work_dir)
         self.manifest = manifest
         
@@ -278,13 +279,67 @@ class ShingleSystem:
             # Could convert back to WindowEmbedding objects if needed
             return []
         
-        # Create windows
-        windows = self.create_windows(proteins)
+        # Check if multi-scale windowing is enabled
+        use_multiscale = (
+            self.full_config and
+            hasattr(self.full_config, 'phase2') and
+            self.full_config.phase2 and 
+            self.full_config.phase2.enable and 
+            self.full_config.phase2.multiscale
+        )
         
-        # Save to Parquet
-        self.save_windows_parquet(windows)
+        if use_multiscale:
+            console.print("🔄 Multi-scale windowing enabled")
+            return self._process_multiscale_windows(proteins)
+        else:
+            # Standard single-scale windowing
+            windows = self.create_windows(proteins)
+            self.save_windows_parquet(windows)
+            return windows
+    
+    def _process_multiscale_windows(self, proteins: List[ProjectedProtein]) -> List[WindowEmbedding]:
+        """Process proteins using multi-scale windowing approach."""
+        from .windowing import MultiScaleWindowGenerator
         
-        return windows
+        # Create multi-scale window generator
+        generator = MultiScaleWindowGenerator(self.full_config)
+        
+        # Generate multi-scale windows
+        multiscale_windows, mappings = generator.generate_multiscale_windows(proteins)
+        
+        # Save multi-scale windows to separate directory
+        multiscale_dir = self.work_dir / "multiscale_windows"
+        generator.save_multiscale_windows(multiscale_windows, mappings, multiscale_dir)
+        
+        # Convert to standard WindowEmbedding format for compatibility
+        # For now, we'll use the micro windows as the primary windows
+        micro_windows = [w for w in multiscale_windows if w.scale == 'micro']
+        
+        standard_windows = []
+        for i, window in enumerate(micro_windows):
+            # Create gene IDs from window range (simplified for now)
+            gene_ids = [f"gene_{j}" for j in range(window.start_gene_idx, window.end_gene_idx + 1)]
+            # Create relative positions within window
+            gene_positions = list(range(len(gene_ids)))
+            
+            standard_window = WindowEmbedding(
+                sample_id=window.sample_id,
+                locus_id=window.locus_id,
+                window_idx=window.window_idx,
+                embedding=window.embedding,
+                gene_ids=gene_ids,
+                gene_positions=gene_positions,
+                strand_sign=1 if window.strand_composition.get('+', 0) >= window.strand_composition.get('-', 0) else -1
+            )
+            standard_windows.append(standard_window)
+        
+        # Save in standard format for downstream compatibility
+        self.save_windows_parquet(standard_windows)
+        
+        console.print(f"✓ Multi-scale windowing complete: {len([w for w in multiscale_windows if w.scale == 'macro'])} macro, {len(micro_windows)} micro windows")
+        console.print(f"✓ Using {len(standard_windows)} micro windows for indexing")
+        
+        return standard_windows
     
     def get_window_stats(self, windows: List[WindowEmbedding]) -> Dict[str, Any]:
         """Get statistics about windows."""

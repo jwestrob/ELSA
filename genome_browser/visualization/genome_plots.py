@@ -81,6 +81,7 @@ def create_scale_bar(start_pos: int, end_pos: int, num_ticks: int = 5) -> Tuple[
 
 def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str, 
                          syntenic_blocks: Optional[List[Dict]] = None,
+                         homology_data: Optional[Dict] = None,
                          width: int = 1200, height: int = 500) -> go.Figure:
     """
     Create interactive genome diagram with genes and PFAM domains.
@@ -89,6 +90,7 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
         genes_df: DataFrame with gene information
         locus_id: Locus identifier for title
         syntenic_blocks: Optional list of syntenic block regions to highlight
+        homology_data: Optional homology analysis data for domain conservation
         width: Plot width
         height: Plot height
     
@@ -271,6 +273,16 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
     domain_height = 0.4
     unique_domains = set()
     
+    # Extract conserved domain information from homology data
+    conserved_domains = set()
+    domain_conservation = {}
+    if homology_data and 'functional_groups' in homology_data:
+        for group in homology_data['functional_groups']:
+            if 'conserved_domains' in group:
+                for domain in group['conserved_domains']:
+                    conserved_domains.add(domain)
+                    domain_conservation[domain] = group.get('conservation_score', 0.5)
+    
     for _, gene in genes_df.iterrows():
         if not gene['pfam_domains']:
             continue
@@ -283,23 +295,48 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
         
         for i, domain in enumerate(domains):
             unique_domains.add(domain)
-            domain_color = generate_domain_color(domain)
+            
+            # Determine domain color based on conservation status
+            if domain in conserved_domains:
+                # Use conservation score to determine intensity
+                conservation_score = domain_conservation.get(domain, 0.5)
+                # Make conserved domains more prominent with red/orange tones
+                if conservation_score > 0.8:
+                    domain_color = 'rgba(220, 20, 60, 0.9)'  # Crimson - highly conserved
+                    border_width = 3
+                elif conservation_score > 0.6:
+                    domain_color = 'rgba(255, 140, 0, 0.8)'  # Orange - moderately conserved
+                    border_width = 2
+                else:
+                    domain_color = 'rgba(255, 215, 0, 0.7)'  # Gold - weakly conserved
+                    border_width = 2
+                border_color = "red"
+            else:
+                # Standard hash-based coloring for non-conserved domains
+                domain_color = generate_domain_color(domain)
+                border_width = 1
+                border_color = "black"
             
             domain_start = gene['start_pos'] + (i * domain_width)
             domain_end = domain_start + domain_width
             
-            # Add domain rectangle
+            # Add domain rectangle with conservation styling
             fig.add_shape(
                 type="rect",
                 x0=domain_start, x1=domain_end,
                 y0=domain_y_pos - domain_height/2,
                 y1=domain_y_pos + domain_height/2,
                 fillcolor=domain_color,
-                line=dict(color="black", width=1),
+                line=dict(color=border_color, width=border_width),
                 row=3, col=1
             )
             
-            # Add domain hover
+            # Enhanced domain hover with conservation information
+            conservation_text = ""
+            if domain in conserved_domains:
+                conservation_score = domain_conservation.get(domain, 0.5)
+                conservation_text = f"<br>Conservation: {conservation_score:.1%} (conserved across homologs)"
+            
             fig.add_trace(
                 go.Scatter(
                     x=[(domain_start + domain_end) / 2],
@@ -310,6 +347,7 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
                         f"<b>{domain}</b><br>"
                         f"Gene: {gene['gene_id']}<br>"
                         f"Position: {domain_start:.0f}-{domain_end:.0f}"
+                        f"{conservation_text}"
                         "<extra></extra>"
                     ),
                     showlegend=False,
@@ -358,6 +396,10 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
         if len(unique_domains) > 10:
             legend_text += f" + {len(unique_domains) - 10} more"
         
+        # Add conservation legend if homology data available
+        if len(conserved_domains) > 0:
+            legend_text += f"\n<b>Conservation:</b> <span style='color:crimson'>■</span> Highly conserved (>80%)  <span style='color:orange'>■</span> Moderate (60-80%)  <span style='color:gold'>■</span> Weak (<60%)"
+        
         fig.add_annotation(
             text=legend_text,
             xref="paper", yref="paper",
@@ -371,6 +413,8 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
 def create_comparative_genome_view(query_genes: pd.DataFrame, target_genes: pd.DataFrame,
                                   query_locus: str, target_locus: str,
                                   syntenic_connections: Optional[List[Dict]] = None,
+                                  homology_data: Optional[Dict] = None,
+                                  conserved_cassettes: Optional[List] = None,
                                   width: int = 1200, height: int = 600) -> go.Figure:
     """
     Create side-by-side comparison of two genomic loci.
@@ -381,6 +425,8 @@ def create_comparative_genome_view(query_genes: pd.DataFrame, target_genes: pd.D
         query_locus: Query locus identifier
         target_locus: Target locus identifier
         syntenic_connections: Optional list of connections between loci
+        homology_data: Optional homology analysis data for domain conservation
+        conserved_cassettes: Optional list of conserved functional cassettes
         width: Plot width
         height: Plot height
     
@@ -396,16 +442,20 @@ def create_comparative_genome_view(query_genes: pd.DataFrame, target_genes: pd.D
     
     # Plot query locus (top)
     if not query_genes.empty:
-        _add_genes_to_subplot(fig, query_genes, row=1, y_offset=1.0)
+        _add_genes_to_subplot(fig, query_genes, row=1, y_offset=1.0, homology_data=homology_data)
     
     # Plot target locus (bottom)  
     if not target_genes.empty:
-        _add_genes_to_subplot(fig, target_genes, row=2, y_offset=1.0)
+        _add_genes_to_subplot(fig, target_genes, row=2, y_offset=1.0, homology_data=homology_data)
     
     # Add syntenic connections if provided
     if syntenic_connections and not query_genes.empty and not target_genes.empty:
         _add_syntenic_connections(fig, syntenic_connections, 
                                 query_genes, target_genes)
+    
+    # Add conserved cassettes if provided
+    if conserved_cassettes and not query_genes.empty and not target_genes.empty:
+        _add_conserved_cassettes(fig, conserved_cassettes)
     
     # Configure layout
     fig.update_layout(
@@ -424,8 +474,18 @@ def create_comparative_genome_view(query_genes: pd.DataFrame, target_genes: pd.D
     return fig
 
 def _add_genes_to_subplot(fig: go.Figure, genes_df: pd.DataFrame, 
-                         row: int, y_offset: float = 1.0):
+                         row: int, y_offset: float = 1.0, homology_data: Optional[Dict] = None):
     """Helper function to add genes to a subplot."""
+    # Extract conserved domain information from homology data
+    conserved_domains = set()
+    domain_conservation = {}
+    if homology_data and 'functional_groups' in homology_data:
+        for group in homology_data['functional_groups']:
+            if 'conserved_domains' in group:
+                for domain in group['conserved_domains']:
+                    conserved_domains.add(domain)
+                    domain_conservation[domain] = group.get('conservation_score', 0.5)
+    
     for _, gene in genes_df.iterrows():
         # Determine gene color and y position
         gene_color = COLORS['forward_strand'] if gene['strand'] == 1 else COLORS['reverse_strand']
@@ -441,6 +501,47 @@ def _add_genes_to_subplot(fig: go.Figure, genes_df: pd.DataFrame,
             line=dict(color="black", width=1),
             row=row, col=1
         )
+        
+        # Add PFAM domains if present
+        if gene['pfam_domains']:
+            domains = gene['pfam_domains'].split(';')
+            gene_length = gene['end_pos'] - gene['start_pos']
+            domain_width = gene_length / len(domains)
+            domain_height = 0.06  # Smaller domains for comparative view
+            
+            for i, domain in enumerate(domains):
+                # Determine domain color based on conservation
+                if domain in conserved_domains:
+                    conservation_score = domain_conservation.get(domain, 0.5)
+                    if conservation_score > 0.8:
+                        domain_color = 'rgba(220, 20, 60, 0.9)'  # Crimson
+                        border_width = 2
+                    elif conservation_score > 0.6:
+                        domain_color = 'rgba(255, 140, 0, 0.8)'  # Orange
+                        border_width = 1.5
+                    else:
+                        domain_color = 'rgba(255, 215, 0, 0.7)'  # Gold
+                        border_width = 1.5
+                    border_color = "red"
+                else:
+                    domain_color = generate_domain_color(domain)
+                    border_width = 1
+                    border_color = "black"
+                
+                domain_start = gene['start_pos'] + (i * domain_width)
+                domain_end = domain_start + domain_width
+                domain_y = y_center + (0.3 if gene['strand'] == 1 else -0.3)
+                
+                # Add domain rectangle above/below gene
+                fig.add_shape(
+                    type="rect",
+                    x0=domain_start, x1=domain_end,
+                    y0=domain_y - domain_height/2,
+                    y1=domain_y + domain_height/2,
+                    fillcolor=domain_color,
+                    line=dict(color=border_color, width=border_width),
+                    row=row, col=1
+                )
         
         # Add hover
         fig.add_trace(
@@ -463,10 +564,251 @@ def _add_genes_to_subplot(fig: go.Figure, genes_df: pd.DataFrame,
 def _add_syntenic_connections(fig: go.Figure, connections: List[Dict],
                             query_genes: pd.DataFrame, target_genes: pd.DataFrame):
     """Helper function to add syntenic connection lines between loci."""
-    # This would implement bezier curves or straight lines connecting
-    # syntenic genes between the two tracks
-    # Implementation depends on the specific connection data format
-    pass
+    if not connections:
+        return
+        
+    # Create gene position lookup dictionaries
+    query_positions = {}
+    target_positions = {}
+    
+    for _, gene in query_genes.iterrows():
+        gene_id = gene['gene_id']
+        query_positions[gene_id] = (gene['start_pos'] + gene['end_pos']) / 2
+    
+    for _, gene in target_genes.iterrows():
+        gene_id = gene['gene_id']
+        target_positions[gene_id] = (gene['start_pos'] + gene['end_pos']) / 2
+    
+    # Add connection lines based on homology strength
+    for conn in connections:
+        query_gene = conn.get('query_gene')
+        target_gene = conn.get('target_gene')
+        identity = conn.get('identity', 0)
+        relationship = conn.get('relationship', 'ortholog')
+        
+        # Skip if genes not found in position lookups
+        if query_gene not in query_positions or target_gene not in target_positions:
+            continue
+            
+        query_x = query_positions[query_gene]
+        target_x = target_positions[target_gene]
+        
+        # Determine connection color and style based on identity
+        if identity >= 95:
+            line_color = 'rgba(255, 0, 0, 0.8)'    # Strong red for high identity
+            line_width = 3
+            line_dash = 'solid'
+        elif identity >= 80:
+            line_color = 'rgba(255, 140, 0, 0.7)'  # Orange for medium identity
+            line_width = 2
+            line_dash = 'solid'
+        elif identity >= 50:
+            line_color = 'rgba(255, 215, 0, 0.6)'  # Gold for low identity
+            line_width = 1.5
+            line_dash = 'dot'
+        else:
+            line_color = 'rgba(128, 128, 128, 0.5)' # Gray for very low identity
+            line_width = 1
+            line_dash = 'dash'
+        
+        # Add connection line between the two tracks
+        # Use bezier curve for smoother connections
+        fig.add_shape(
+            type="path",
+            path=f"M {query_x},1.2 Q {(query_x + target_x)/2},0 {target_x},0.8",
+            line=dict(
+                color=line_color,
+                width=line_width,
+                dash=line_dash
+            ),
+            layer="below"  # Draw connections below genes
+        )
+        
+        # Add invisible hover point at midpoint for connection details
+        mid_x = (query_x + target_x) / 2
+        mid_y = 1.0  # Midpoint between tracks
+        
+        fig.add_trace(
+            go.Scatter(
+                x=[mid_x],
+                y=[mid_y],
+                mode='markers',
+                marker=dict(size=5, opacity=0),  # Invisible but hoverable
+                hovertemplate=(
+                    f"<b>Homolog Connection</b><br>"
+                    f"Query: {query_gene}<br>"
+                    f"Target: {target_gene}<br>"
+                    f"Identity: {identity:.1f}%<br>"
+                    f"Relationship: {relationship}"
+                    "<extra></extra>"
+                ),
+                showlegend=False,
+                name=f"{query_gene}-{target_gene}"
+            )
+        )
+    
+    # Add legend for connection types
+    legend_y = -0.15
+    fig.add_annotation(
+        text="<b>Homology Connections:</b> " +
+             "<span style='color:red'>■</span> >95% identity  " +
+             "<span style='color:orange'>■</span> 80-95%  " +
+             "<span style='color:gold'>■</span> 50-80%  " +
+             "<span style='color:gray'>■</span> <50%",
+        xref="paper", yref="paper",
+        x=0, y=legend_y, xanchor='left', yanchor='top',
+        showarrow=False,
+        font=dict(size=10)
+    )
+
+def _add_conserved_cassettes(fig: go.Figure, conserved_cassettes: List):
+    """Helper function to add conserved functional cassette highlights and connections."""
+    if not conserved_cassettes:
+        return
+    
+    cassette_colors = {
+        'perfect': 'rgba(0, 255, 0, 0.3)',    # Light green for perfect conservation
+        'rearranged': 'rgba(255, 255, 0, 0.3)',  # Light yellow for rearranged
+        'partial': 'rgba(255, 165, 0, 0.3)'   # Light orange for partial
+    }
+    
+    for i, cassette in enumerate(conserved_cassettes[:5]):  # Limit to top 5 cassettes
+        cassette_color = cassette_colors.get(cassette.cassette_type, 'rgba(128, 128, 128, 0.3)')
+        border_color = cassette_color.replace('0.3', '0.8')  # More opaque border
+        
+        # Add highlighting rectangles for query region
+        fig.add_shape(
+            type="rect",
+            x0=cassette.query_start, x1=cassette.query_end,
+            y0=0.1, y1=1.9,  # Cover entire query track height
+            fillcolor=cassette_color,
+            line=dict(color=border_color, width=2, dash="dash"),
+            layer="below",
+            row=1, col=1
+        )
+        
+        # Add highlighting rectangles for target region
+        fig.add_shape(
+            type="rect",
+            x0=cassette.target_start, x1=cassette.target_end,
+            y0=0.1, y1=1.9,  # Cover entire target track height
+            fillcolor=cassette_color,
+            line=dict(color=border_color, width=2, dash="dash"),
+            layer="below",
+            row=2, col=1
+        )
+        
+        # Add connection between cassette regions
+        query_center = (cassette.query_start + cassette.query_end) / 2
+        target_center = (cassette.target_start + cassette.target_end) / 2
+        
+        # Determine connection style based on conservation score
+        if cassette.domain_conservation_score > 0.8:
+            line_width = 4
+            line_dash = 'solid'
+        elif cassette.domain_conservation_score > 0.6:
+            line_width = 3
+            line_dash = 'solid'
+        else:
+            line_width = 2
+            line_dash = 'dot'
+        
+        # Add connection line on query subplot (pointing down)
+        fig.add_trace(
+            go.Scatter(
+                x=[query_center, query_center],
+                y=[0.3, 0.1],  # Draw line downward from genes
+                mode='lines',
+                line=dict(
+                    color=border_color,
+                    width=line_width,
+                    dash=line_dash
+                ),
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=1, col=1
+        )
+        
+        # Add connection line on target subplot (pointing up)  
+        fig.add_trace(
+            go.Scatter(
+                x=[target_center, target_center],
+                y=[1.7, 1.9],  # Draw line upward to genes
+                mode='lines',
+                line=dict(
+                    color=border_color,
+                    width=line_width,
+                    dash=line_dash
+                ),
+                showlegend=False,
+                hoverinfo='skip'
+            ),
+            row=2, col=1
+        )
+        
+        # Add invisible hover point for cassette details
+        mid_x = (query_center + target_center) / 2
+        mid_y = 1.0
+        
+        shared_domains_text = ", ".join(cassette.shared_domains[:5])
+        if len(cassette.shared_domains) > 5:
+            shared_domains_text += f" + {len(cassette.shared_domains) - 5} more"
+        
+        fig.add_trace(
+            go.Scatter(
+                x=[mid_x],
+                y=[mid_y],
+                mode='markers',
+                marker=dict(size=8, opacity=0),  # Invisible but hoverable
+                hovertemplate=(
+                    f"<b>Conserved Cassette #{i+1}</b><br>"
+                    f"Type: {cassette.cassette_type.title()}<br>"
+                    f"Conservation: {cassette.domain_conservation_score:.1%}<br>"
+                    f"Query region: {cassette.query_start:,}-{cassette.query_end:,} bp<br>"
+                    f"Target region: {cassette.target_start:,}-{cassette.target_end:,} bp<br>"
+                    f"Shared domains: {shared_domains_text}<br>"
+                    f"Query genes: {', '.join(cassette.query_genes[:3])}{'...' if len(cassette.query_genes) > 3 else ''}<br>"
+                    f"Target genes: {', '.join(cassette.target_genes[:3])}{'...' if len(cassette.target_genes) > 3 else ''}"
+                    "<extra></extra>"
+                ),
+                showlegend=False,
+                name=f"Cassette-{i+1}"
+            )
+        )
+        
+        # Add cassette labels
+        fig.add_annotation(
+            x=query_center,
+            y=1.95,
+            text=f"C{i+1}",
+            showarrow=False,
+            font=dict(size=12, color=border_color.replace('0.8', '1.0')),
+            row=1, col=1
+        )
+        
+        fig.add_annotation(
+            x=target_center,
+            y=1.95,
+            text=f"C{i+1}",
+            showarrow=False,
+            font=dict(size=12, color=border_color.replace('0.8', '1.0')),
+            row=2, col=1
+        )
+    
+    # Add cassette legend
+    if conserved_cassettes:
+        cassette_legend_y = -0.25
+        fig.add_annotation(
+            text="<b>Conserved Cassettes:</b> " +
+                 "<span style='background-color:rgba(0,255,0,0.3)'>■</span> Perfect  " +
+                 "<span style='background-color:rgba(255,255,0,0.3)'>■</span> Rearranged  " +
+                 "<span style='background-color:rgba(255,165,0,0.3)'>■</span> Partial",
+            xref="paper", yref="paper",
+            x=0, y=cassette_legend_y, xanchor='left', yanchor='top',
+            showarrow=False,
+            font=dict(size=10)
+        )
 
 def create_cluster_overview(cluster_data: Dict, member_blocks: List[Dict],
                           width: int = 1000, height: int = 400) -> go.Figure:

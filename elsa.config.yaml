@@ -1,12 +1,15 @@
 chain:
-  gap_extend: 0.5
-  gap_open: 2.0
-  offset_band: 10
-  slope_penalty: 0.05
-  # Phase-2 chaining parameters
-  alpha: 0.1      # position deviation penalty
-  beta: 1.0       # gap penalty
-  gamma: 2.0      # strand flip penalty
+  gap_extend: 1.5          # *** INCREASED: Higher gap extension penalty ***
+  gap_open: 4.0            # *** INCREASED: Higher gap opening penalty ***
+  offset_band: 3           # *** DECREASED: Tighter positional constraints ***
+  slope_penalty: 0.1       # *** INCREASED: Higher slope penalty ***
+  # Phase-2 chaining parameters - MORE RESTRICTIVE
+  alpha: 0.5               # *** INCREASED: Higher position deviation penalty ***
+  beta: 2.0                # *** INCREASED: Higher gap penalty ***
+  gamma: 3.0               # *** INCREASED: Higher strand flip penalty ***
+  # NEW: Chain length limits for small cassettes
+  max_chain_length: 8      # *** NEW: Maximum 8 windows (24 genes max) ***
+  min_chain_length: 2      # *** NEW: Minimum 2 windows (6 genes min) ***
 continuous:
   hnsw_enable: true
   srp_bits: 256
@@ -48,7 +51,7 @@ score:
   fdr_target: 0.01
   gamma: 0.2
 shingles:
-  n: 5
+  n: 3                   # *** REDUCED: 3-gene shingles for finer resolution ***
   pos_dim: 16
   strand_flag: signed
   stride: 1
@@ -61,10 +64,10 @@ system:
 # Phase-2 Feature Flags and Configuration
 phase2:
   enable: true                    # Master switch for all Phase-2 features
-  weighted_sketch: true          # Use weighted MinHash with IDF/MGE masking
-  multiscale: false               # Enable macro→micro windowing
+  weighted_sketch: true          # Use weighted MinHash with IDF weighting
+  multiscale: false               # *** DISABLED: No macro windows for small cassettes ***
   flip_dp: false                  # Use flip-aware affine-gap chaining
-  calibration: false              # Enable null models and FDR control
+  calibration: true               # Enable null models and FDR control
   hnsw: false                     # Use HNSW dense retrieval
 
 # Weighted sketching configuration
@@ -75,20 +78,16 @@ sketch:
   idf:
     max: 10.0                     # clamp IDF values
   
-# MGE masking configuration  
-mge_mask:
-  path: null                      # YAML list of PFAM accessions to mask
+# Note: MGE masking has been removed from Phase-2
 
-# Multi-scale windowing
+# Micro-only windowing (macro disabled)
 window:
   micro:
-    size: 5
+    size: 3              # *** REDUCED: 3 genes per micro window ***
     stride: 1
-  macro:
-    size: 12
-    stride: 3
+  # macro: REMOVED - multiscale disabled above
   adaptive:
-    enable: true                 # future: CUSUM change-point detection
+    enable: false        # *** DISABLED: Keep simple for cassettes ***
 
 # HNSW configuration
 hnsw:

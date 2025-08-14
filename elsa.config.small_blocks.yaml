@@ -1,0 +1,127 @@
+# ELSA Configuration Optimized for Small Syntenic Blocks (2-10 genes)
+# Based on original elsa.config.yaml but tuned for cassette-level synteny detection
+
+chain:
+  gap_extend: 1.5      # INCREASED: Higher penalty for extending gaps (was 0.5)
+  gap_open: 4.0        # INCREASED: Higher penalty for opening gaps (was 2.0) 
+  offset_band: 3       # DECREASED: Tighter positional constraints (was 10)
+  slope_penalty: 0.1   # INCREASED: Higher penalty for slope deviations (was 0.05)
+  # Phase-2 chaining parameters - MORE RESTRICTIVE
+  alpha: 0.5           # INCREASED: Higher position deviation penalty (was 0.1)
+  beta: 2.0            # INCREASED: Higher gap penalty (was 1.0)
+  gamma: 3.0           # INCREASED: Higher strand flip penalty (was 2.0)
+  
+  # NEW: Maximum chain length constraints
+  max_chain_length: 15   # Limit chains to 15 windows max (~75 genes)
+  min_chain_length: 2    # Require at least 2 windows
+
+continuous:
+  hnsw_enable: true
+  srp_bits: 256
+  srp_seed: 13
+
+data:
+  allow_overwrite: false
+  work_dir: ./elsa_index
+
+discrete:
+  K: 2048              # DECREASED: Smaller codebook for more specificity (was 4096)
+  bands_rows:
+  - 16                 # DECREASED: Fewer bands for stricter matching (was 24)
+  - 6                  # DECREASED: Fewer rows per band (was 8)
+  emit_skipgram: false # DISABLED: No skipgrams for stricter matching (was true)
+  idf_max_df_frac: 0.02 # DECREASED: More restrictive frequency filter (was 0.05)
+  idf_min_df: 3        # DECREASED: Lower minimum frequency (was 5)
+  minhash_hashes: 128  # DECREASED: Fewer hashes for higher precision (was 192)
+
+dtw:
+  band: 5              # DECREASED: Tighter DTW band (was 10)
+  enable: true
+  # Phase-2 DTW refinement  
+  refine_enable: true
+  refine_band: 1       # DECREASED: Very tight DTW refinement (was 2)
+
+ingest:
+  gene_caller: prodigal
+  keep_partial: false
+  min_cds_aa: 60
+  prodigal_mode: single
+
+plm:
+  batch_amino_acids: 16000
+  device: auto
+  fp16: true
+  l2_normalize: true
+  model: esm2_t12
+  project_to_D: 256
+
+score:
+  alpha: 2.0           # INCREASED: Higher weight on similarity (was 1.0)
+  beta: 0.05           # DECREASED: Lower weight on length (was 0.1)
+  delta: 0.05          # DECREASED: Lower weight on gaps (was 0.1)
+  fdr_target: 0.001    # DECREASED: Stricter FDR control (was 0.01)
+  gamma: 0.3           # INCREASED: Higher weight on conservation (was 0.2)
+
+shingles:
+  n: 3                 # DECREASED: Smaller shingles for finer resolution (was 5)
+  pos_dim: 16
+  strand_flag: signed
+  stride: 1
+  weights: triangular
+
+system:
+  jobs: auto
+  mmap: true
+  rng_seed: 17
+
+# Phase-2 Feature Flags and Configuration
+phase2:
+  enable: true
+  weighted_sketch: true
+  multiscale: true
+  flip_dp: false
+  calibration: true      # ENABLED: Use FDR control for quality (was false)
+  hnsw: false
+
+# Weighted sketching configuration - MORE CONSERVATIVE
+sketch:
+  type: "weighted_minhash"
+  bits: 64
+  size: 64             # DECREASED: Smaller sketch size for precision (was 96)
+  idf:
+    max: 5.0           # DECREASED: Lower IDF clamping (was 10.0)
+  
+# Multi-scale windowing - SMALLER WINDOWS
+window:
+  micro:
+    size: 3            # DECREASED: 3 genes per micro window (was 5)
+    stride: 1
+  macro:
+    size: 4            # DECREASED: 4 micro windows per macro (was 12)
+    stride: 2          # DECREASED: Less overlap (was 3)
+  adaptive:
+    enable: true
+
+# HNSW configuration - MORE SELECTIVE
+hnsw:
+  M: 8               # DECREASED: Fewer connections (was 16)
+  efConstruction: 100  # DECREASED: Less construction effort (was 200)
+  efSearch: 25         # DECREASED: Less search effort (was 50)
+
+# Retrieval method selection
+retrieval:
+  dense: "srp"
+
+# Calibration parameters - STRICTER
+calib:
+  null:
+    iters: 200         # INCREASED: More null model iterations (was 100)
+  target_fdr: 0.01     # DECREASED: Stricter FDR (was 0.05)
+
+# NEW: Small block optimization parameters
+small_blocks:
+  enable: true
+  max_block_size_genes: 30      # Hard limit on syntenic block size
+  min_block_identity: 0.8       # Minimum sequence identity required
+  max_positional_drift: 2       # Maximum gene position drift allowed
+  require_strand_conservation: true  # Require strand conservation

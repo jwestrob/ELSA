@@ -163,9 +163,16 @@ def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool, force_p
             console.print("\n[bold blue]Stage 1.5: PFAM Annotation[/bold blue]")
             from .pfam_annotation import run_pfam_annotation_pipeline
             
+            # Handle 'auto' threads properly
+            if config_obj.system.jobs == 'auto':
+                import os
+                pfam_threads = os.cpu_count() or 8
+            else:
+                pfam_threads = config_obj.system.jobs
+            
             pfam_summary = run_pfam_annotation_pipeline(
                 config_obj, manifest, config_obj.data.work_dir, 
-                threads=config_obj.system.jobs if config_obj.system.jobs != 'auto' else 8,
+                threads=pfam_threads,
                 force_annotation=force_pfam
             )
             
@@ -229,7 +236,7 @@ def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool, force_p
         console.print("\n[bold blue]Stage 4: Window Shingling[/bold blue]")
         from .shingling import ShingleSystem
         
-        shingle_system = ShingleSystem(config_obj.shingles, config_obj.data.work_dir, manifest)
+        shingle_system = ShingleSystem(config_obj.shingles, config_obj.data.work_dir, manifest, config_obj)
         windows = shingle_system.process_proteins(projected_proteins)
         
         if windows:  # Only if we created new windows
@@ -417,6 +424,10 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
         
         console.print(f"\n[green]✓ Comprehensive analysis completed successfully![/green]")
         
+        # Automatically set up genome browser
+        console.print(f"\n[bold blue]🧬 Setting up Genome Browser...[/bold blue]")
+        setup_genome_browser(config_obj, output_path)
+        
     except Exception as e:
         console.print(f"[red]Analysis failed: {e}[/red]")
         import traceback
@@ -468,6 +479,64 @@ def stats(config: str):
     
     # TODO: Add actual index statistics
     console.print("\n[yellow]Index statistics not yet available![/yellow]")
+
+
+def setup_genome_browser(config_obj: ELSAConfig, results_path: Path):
+    """Automatically set up genome browser after analysis."""
+    try:
+        import subprocess
+        import sys
+        
+        # Paths
+        genome_browser_dir = Path("genome_browser")
+        setup_script = genome_browser_dir / "setup_genome_browser.py"
+        
+        if not setup_script.exists():
+            console.print("[yellow]⚠️  Genome browser setup script not found, skipping[/yellow]")
+            return
+        
+        # Find required files
+        blocks_file = results_path / "syntenic_blocks.csv"
+        clusters_file = results_path / "syntenic_clusters.csv"
+        sequences_dir = Path("test_data/genomes")
+        proteins_dir = Path("test_data/proteins")
+        
+        if not all([blocks_file.exists(), clusters_file.exists(), sequences_dir.exists(), proteins_dir.exists()]):
+            console.print("[yellow]⚠️  Missing required files for genome browser setup[/yellow]")
+            console.print(f"     Blocks: {blocks_file.exists()}")
+            console.print(f"     Clusters: {clusters_file.exists()}")
+            console.print(f"     Sequences: {sequences_dir.exists()}")
+            console.print(f"     Proteins: {proteins_dir.exists()}")
+            return
+        
+        # Prepare command
+        cmd = [
+            sys.executable,
+            str(setup_script),
+            "--sequences-dir", str(sequences_dir),
+            "--proteins-dir", str(proteins_dir),
+            "--blocks-file", str(blocks_file),
+            "--clusters-file", str(clusters_file),
+            "--skip-pfam"  # Use existing ELSA PFAM results
+        ]
+        
+        console.print(f"Running: {' '.join(cmd)}")
+        
+        # Run setup
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        
+        if result.returncode == 0:
+            console.print("[green]✅ Genome browser setup completed successfully![/green]")
+            console.print(f"\n[bold cyan]🚀 Ready to start genome browser:[/bold cyan]")
+            console.print(f"  cd genome_browser")
+            console.print(f"  streamlit run app.py")
+        else:
+            console.print(f"[red]❌ Genome browser setup failed (exit {result.returncode})[/red]")
+            if result.stderr:
+                console.print(f"Error: {result.stderr[:200]}...")
+                
+    except Exception as e:
+        console.print(f"[red]❌ Genome browser setup failed: {e}[/red]")
 
 
 if __name__ == "__main__":

@@ -1,0 +1,128 @@
+# ELSA Configuration: Micro Windows Only (No Macro)
+# Optimized for small functional cassettes (2-10 genes)
+
+chain:
+  gap_extend: 2.0        # High penalty for extending gaps
+  gap_open: 5.0          # High penalty for opening gaps
+  offset_band: 2         # Very tight positional constraints
+  slope_penalty: 0.2     # High penalty for slope deviations
+  # Phase-2 chaining parameters - VERY RESTRICTIVE
+  alpha: 1.0             # High position deviation penalty
+  beta: 3.0              # High gap penalty
+  gamma: 4.0             # High strand flip penalty
+  
+  # Chain length limits for small cassettes
+  max_chain_length: 8    # Maximum 8 windows (24 genes max)
+  min_chain_length: 2    # Minimum 2 windows (6 genes min)
+
+continuous:
+  hnsw_enable: false     # Disable for simplicity
+  srp_bits: 128          # Smaller signature
+  srp_seed: 13
+
+data:
+  allow_overwrite: true  # Allow rebuilding
+  work_dir: ./elsa_index
+
+discrete:
+  K: 1024                # Smaller codebook for specificity
+  bands_rows:
+  - 12                   # Fewer bands
+  - 4                    # Fewer rows per band
+  emit_skipgram: false   # No skipgrams - exact matches only
+  idf_max_df_frac: 0.01  # Very restrictive frequency filter
+  idf_min_df: 2          # Lower minimum frequency
+  minhash_hashes: 64     # Fewer hashes, higher precision
+
+dtw:
+  band: 3                # Tight DTW band
+  enable: true
+  # Phase-2 DTW refinement  
+  refine_enable: true
+  refine_band: 1         # Very tight refinement
+
+ingest:
+  gene_caller: prodigal
+  keep_partial: false
+  min_cds_aa: 60
+  prodigal_mode: single
+
+plm:
+  batch_amino_acids: 16000
+  device: auto
+  fp16: true
+  l2_normalize: true
+  model: esm2_t12
+  project_to_D: 256
+
+score:
+  alpha: 3.0             # High weight on similarity
+  beta: 0.02             # Very low weight on length
+  delta: 0.02            # Very low weight on gaps
+  fdr_target: 0.001      # Strict FDR control
+  gamma: 0.5             # Moderate weight on conservation
+
+shingles:
+  n: 3                   # 3-gene shingles
+  pos_dim: 16
+  strand_flag: signed
+  stride: 1              # Every gene
+  weights: triangular
+
+system:
+  jobs: auto
+  mmap: true
+  rng_seed: 17
+
+# Phase-2 Feature Flags - DISABLE MACRO WINDOWS
+phase2:
+  enable: true
+  weighted_sketch: true
+  multiscale: false      # *** DISABLED: No macro windows ***
+  flip_dp: false
+  calibration: true      # Enable FDR control
+  hnsw: false
+
+# Weighted sketching - smaller, more precise
+sketch:
+  type: "weighted_minhash"
+  bits: 64
+  size: 48               # Smaller sketch size
+  idf:
+    max: 3.0             # Lower IDF clamping
+  
+# Micro windows ONLY - no macro layer
+window:
+  micro:
+    size: 3              # 3 genes per window (small cassettes)
+    stride: 1            # Every gene starts a new window
+  # macro: REMOVED ENTIRELY
+  adaptive:
+    enable: false        # Disable adaptive windowing
+
+# HNSW disabled for simplicity
+hnsw:
+  M: 4
+  efConstruction: 50
+  efSearch: 10
+
+# Retrieval method
+retrieval:
+  dense: "srp"
+
+# Strict calibration for small cassettes
+calib:
+  null:
+    iters: 500           # Many null iterations
+  target_fdr: 0.005      # Very strict FDR
+
+# Small cassette optimization
+small_cassettes:
+  enable: true
+  max_cassette_genes: 15          # Hard limit: 15 genes max
+  min_cassette_genes: 3           # Minimum: 3 genes
+  max_cassette_windows: 5         # Maximum 5 windows per cassette
+  min_identity: 0.85              # High identity requirement
+  max_positional_drift: 1         # Maximum 1 gene position drift
+  require_strand_conservation: true
+  require_functional_annotation: false

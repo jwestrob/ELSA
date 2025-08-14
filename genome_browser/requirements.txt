@@ -13,6 +13,10 @@ plotly>=5.15.0
 # Bioinformatics
 biopython>=1.81
 
+# AI Analysis with GPT-5
+dspy-ai>=2.0.0
+openai>=1.0.0
+
 # Note: The following are built into Python and don't need installation:
 # sqlite3, pathlib, logging, argparse, json, re, typing, math, colorsys
 

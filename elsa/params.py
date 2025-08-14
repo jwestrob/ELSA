@@ -118,7 +118,7 @@ class SystemConfig(BaseModel):
 class Phase2Config(BaseModel):
     """Phase-2 feature flags."""
     enable: bool = Field(default=False, description="Master switch for all Phase-2 features")
-    weighted_sketch: bool = Field(default=False, description="Use weighted MinHash with IDF/MGE masking")
+    weighted_sketch: bool = Field(default=False, description="Use weighted MinHash with IDF weighting")
     multiscale: bool = Field(default=False, description="Enable macro→micro windowing")
     flip_dp: bool = Field(default=False, description="Use flip-aware affine-gap chaining")
     calibration: bool = Field(default=False, description="Enable null models and FDR control")
@@ -133,9 +133,7 @@ class SketchConfig(BaseModel):
     idf: dict = Field(default_factory=lambda: {"max": 10.0}, description="IDF parameters")
 
 
-class MGEMaskConfig(BaseModel):
-    """MGE masking configuration."""
-    path: Optional[str] = Field(default=None, description="YAML list of PFAM accessions to mask")
+# Removed MGEMaskConfig - no longer using MGE masking
 
 
 class WindowConfig(BaseModel):
@@ -185,7 +183,6 @@ class ELSAConfig(BaseModel):
     # Phase-2 configurations (optional, backwards compatible)
     phase2: Optional[Phase2Config] = Field(default_factory=Phase2Config)
     sketch: Optional[SketchConfig] = Field(default_factory=SketchConfig)
-    mge_mask: Optional[MGEMaskConfig] = Field(default_factory=MGEMaskConfig)
     window: Optional[WindowConfig] = Field(default_factory=WindowConfig)
     hnsw: Optional[HNSWConfig] = Field(default_factory=HNSWConfig)
     retrieval: Optional[RetrievalConfig] = Field(default_factory=RetrievalConfig)

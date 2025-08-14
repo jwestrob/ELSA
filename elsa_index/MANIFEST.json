@@ -1,12 +1,12 @@
 {
   "version": "0.1.0",
-  "created": "2025-08-11T12:46:04.128763",
-  "config_hash": "25593a4c814ec9e5",
+  "created": "2025-08-14T02:42:13.713302",
+  "config_hash": "324fb0078b888850",
   "artifacts": {
     "pca_model": {
       "name": "pca_model",
       "path": "elsa_index/ingest/pca_model.pkl",
-      "created": "2025-08-11T23:01:51.320974",
+      "created": "2025-08-14T02:47:07.379418",
       "size_bytes": 497265,
       "checksum": "d9ef55677d94c0e1",
       "stage": "projection",
@@ -277,7 +277,7 @@
     "genes": {
       "name": "genes",
       "path": "elsa_index/ingest/genes.parquet",
-      "created": "2025-08-13T01:26:03.960387",
+      "created": "2025-08-14T02:47:07.566529",
       "size_bytes": 7932328,
       "checksum": "fe8989032cbbdfa9",
       "stage": "projection",
@@ -286,27 +286,27 @@
         "embedding_dim": 256,
         "total_aa": 3448432,
         "samples": [
-          "JBLTKP000000000",
           "CAYEVI000000000",
-          "JBBKAE000000000",
           "JBJIAH000000000",
+          "JBBKAE000000000",
           "1313.30775",
-          "JALJEL000000000"
+          "JALJEL000000000",
+          "JBLTKP000000000"
         ]
       }
     },
     "windows": {
       "name": "windows",
       "path": "elsa_index/shingles/windows.parquet",
-      "created": "2025-08-11T23:01:52.877054",
-      "size_bytes": 7841158,
-      "checksum": "6cd380dc8a6a590a",
+      "created": "2025-08-14T02:47:07.924818",
+      "size_bytes": 7563987,
+      "checksum": "a27ba86afb37699e",
       "stage": "shingling",
       "metadata": {
-        "n_windows": 10487,
-        "n_loci": 232,
+        "n_windows": 10965,
+        "n_loci": 242,
         "n_samples": 6,
-        "window_size": 5,
+        "window_size": 3,
         "stride": 1,
         "embedding_dim": 273,
         "weighting": "triangular",
@@ -314,19 +314,19 @@
       }
     },
     "indexes/discrete_index.json": {
-      "created": "2025-08-13T01:28:18.083896",
+      "created": "2025-08-14T02:51:42.573724",
       "type": "discrete_index",
       "file_path": "elsa_index/indexes/discrete_index.json",
-      "num_buckets": 230420
+      "num_buckets": 177853
     },
     "indexes/continuous_index.json": {
-      "created": "2025-08-13T01:28:18.084318",
+      "created": "2025-08-14T02:51:42.574114",
       "type": "continuous_index",
       "file_path": "elsa_index/indexes/continuous_index.json",
-      "num_patterns": 7170
+      "num_patterns": 6933
     },
     "indexes/index_manifest.json": {
-      "created": "2025-08-13T01:28:18.084681",
+      "created": "2025-08-14T02:51:42.574447",
       "type": "index_manifest",
       "file_path": "elsa_index/indexes/index_manifest.json"
     }
@@ -336,7 +336,7 @@
   "checksums": {
     "pca_model": "d9ef55677d94c0e1",
     "genes": "fe8989032cbbdfa9",
-    "windows": "6cd380dc8a6a590a"
+    "windows": "a27ba86afb37699e"
   },
   "config": {
     "data": {
@@ -358,7 +358,7 @@
       "l2_normalize": true
     },
     "shingles": {
-      "n": 5,
+      "n": 3,
       "stride": 1,
       "pos_dim": 16,
       "weights": "triangular",
@@ -381,13 +381,13 @@
       "hnsw_enable": true
     },
     "chain": {
-      "offset_band": 10,
-      "gap_open": 2.0,
-      "gap_extend": 0.5,
-      "slope_penalty": 0.05,
-      "alpha": 0.1,
-      "beta": 1.0,
-      "gamma": 2.0
+      "offset_band": 3,
+      "gap_open": 4.0,
+      "gap_extend": 1.5,
+      "slope_penalty": 0.1,
+      "alpha": 0.5,
+      "beta": 2.0,
+      "gamma": 3.0
     },
     "dtw": {
       "enable": true,
@@ -412,7 +412,7 @@
       "weighted_sketch": true,
       "multiscale": false,
       "flip_dp": false,
-      "calibration": false,
+      "calibration": true,
       "hnsw": false
     },
     "sketch": {
@@ -423,12 +423,9 @@
         "max": 10.0
       }
     },
-    "mge_mask": {
-      "path": null
-    },
     "window": {
       "micro": {
-        "size": 5,
+        "size": 3,
         "stride": 1
       },
       "macro": {
@@ -436,7 +433,7 @@
         "stride": 3
       },
       "adaptive": {
-        "enable": true
+        "enable": false
       }
     },
     "hnsw": {
@@ -454,5 +451,5 @@
       "target_fdr": 0.05
     }
   },
-  "updated": "2025-08-13T01:20:34.876215"
+  "updated": "2025-08-14T02:42:13.713444"
 }

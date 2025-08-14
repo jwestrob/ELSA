@@ -24,9 +24,9 @@ class PfamAnnotationError(Exception):
 class PfamAnnotator:
     """PFAM domain annotation using astra command-line tool."""
     
-    def __init__(self, threads: int = 8, evalue_threshold: float = 1e-5):
+    def __init__(self, threads: int = 8):
         self.threads = threads
-        self.evalue_threshold = evalue_threshold
+        # Using --cut_ga flag instead of e-value threshold for better quality
         
     def check_astra_installation(self) -> bool:
         """Check if astra is installed and available."""
@@ -57,19 +57,21 @@ class PfamAnnotator:
         sample_output_dir = output_dir / f"{sample_name}_pfam"
         sample_output_dir.mkdir(parents=True, exist_ok=True)
         
-        # Astra command
+        # Astra command (matches genome browser format)
         cmd = [
             'astra', 'search',
-            '--input', str(protein_file),
-            '--output_directory', str(sample_output_dir),
+            '--prot_in', str(protein_file.parent),  # Directory containing protein file
+            '--installed_hmms', 'PFAM',
+            '--outdir', str(sample_output_dir),
             '--threads', str(self.threads),
-            '--evalue', str(self.evalue_threshold)
+            '--cut_ga'  # Use gathering cutoffs (more stringent than e-value)
         ]
         
         log_file = sample_output_dir / "astra_search_log.txt"
         
         try:
             logger.info(f"Running astra scan for {sample_name}...")
+            print(f"🔧 Astra command: {' '.join(cmd)}")  # Print to terminal for debugging
             logger.debug(f"Command: {' '.join(cmd)}")
             
             with open(log_file, 'w') as f:
@@ -207,7 +209,7 @@ class PfamAnnotator:
             'failed_samples': len(failed_results),
             'total_hits': total_hits,
             'total_runtime_seconds': total_runtime,
-            'evalue_threshold': self.evalue_threshold,
+            'cutoff_method': 'ga_cutoffs',  # Using PFAM gathering cutoffs
             'parallel_execution': parallel,
             'results': results
         }
@@ -223,6 +225,114 @@ class PfamAnnotator:
             logger.warning(f"Failed samples: {[r['sample_name'] for r in failed_results]}")
         
         return summary
+    
+    def annotate_proteins_single_command(self, protein_dir: Path, output_dir: Path) -> Dict:
+        """
+        Run PFAM annotation on entire protein directory with single Astra command.
+        
+        Args:
+            protein_dir: Directory containing all protein FASTA files
+            output_dir: Output directory for annotations
+            
+        Returns:
+            Dict with aggregated results and statistics
+        """
+        if not self.check_astra_installation():
+            raise PfamAnnotationError(
+                "astra not found in PATH. Please install astra for PFAM annotation."
+            )
+        
+        output_dir = Path(output_dir)
+        output_dir.mkdir(parents=True, exist_ok=True)
+        
+        start_time = time.time()
+        
+        # Single Astra command for all proteins
+        cmd = [
+            'astra', 'search',
+            '--prot_in', str(protein_dir),
+            '--installed_hmms', 'PFAM',
+            '--outdir', str(output_dir),
+            '--threads', str(self.threads),
+            '--cut_ga'  # Use gathering cutoffs
+        ]
+        
+        log_file = output_dir / "astra_search_log.txt"
+        
+        try:
+            logger.info(f"Running single astra command for all proteins...")
+            print(f"🔧 Astra command: {' '.join(cmd)}")  # Print to terminal for debugging
+            
+            with open(log_file, 'w') as f:
+                result = subprocess.run(
+                    cmd, 
+                    stdout=f, 
+                    stderr=subprocess.STDOUT,
+                    timeout=1800,  # 30 minutes timeout
+                    text=True
+                )
+            
+            runtime = time.time() - start_time
+            
+            if result.returncode != 0:
+                with open(log_file, 'r') as f:
+                    error_log = f.read()
+                raise PfamAnnotationError(
+                    f"Astra failed (exit {result.returncode}): {error_log[-500:]}"
+                )
+            
+            # Check for output file - Astra should create PFAM_hits_df.tsv
+            hits_file = output_dir / "PFAM_hits_df.tsv"
+            if not hits_file.exists():
+                raise PfamAnnotationError(f"Expected output file not found: {hits_file}")
+            
+            # Parse the combined results
+            try:
+                hits_df = pd.read_csv(hits_file, sep='\t')
+                total_hits = len(hits_df)
+                
+                # Count unique samples from sequence IDs
+                if 'sequence_id' in hits_df.columns:
+                    # Extract sample names from sequence IDs (format: accn|SAMPLE_NAME.con.XXXX_GENE)
+                    hits_df['sample_name'] = hits_df['sequence_id'].str.extract(r'accn\|([^.]+)')
+                    unique_samples = hits_df['sample_name'].nunique()
+                    unique_proteins = hits_df['sequence_id'].nunique() 
+                    unique_domains = hits_df['hmm_name'].nunique()
+                else:
+                    unique_samples = 1  # Fallback
+                    unique_proteins = 0
+                    unique_domains = 0
+                
+                logger.info(f"✓ PFAM annotation complete: {total_hits:,} hits across {unique_samples} samples")
+                logger.info(f"  Unique proteins: {unique_proteins:,}")
+                logger.info(f"  Unique domains: {unique_domains:,}")
+                
+            except Exception as e:
+                raise PfamAnnotationError(f"Could not parse PFAM results: {e}")
+            
+            # Create summary in expected format
+            summary = {
+                'timestamp': datetime.now().isoformat(),
+                'total_samples': unique_samples,
+                'successful_samples': unique_samples, 
+                'failed_samples': 0,
+                'total_hits': total_hits,
+                'unique_proteins': unique_proteins,
+                'unique_domains': unique_domains,
+                'total_runtime_seconds': runtime,
+                'cutoff_method': 'ga_cutoffs',  # Using PFAM gathering cutoffs
+                'parallel_execution': False,  # Single command
+                'hits_file': str(hits_file)
+            }
+            
+            return summary
+            
+        except subprocess.TimeoutExpired:
+            logger.error(f"Astra command timeout after 1800s")
+            raise PfamAnnotationError("Astra annotation timed out")
+        except Exception as e:
+            logger.error(f"Astra annotation failed: {e}")
+            raise PfamAnnotationError(f"Astra annotation failed: {e}")
     
     def load_pfam_annotations(self, annotation_dir: Path) -> Dict[str, pd.DataFrame]:
         """
@@ -312,7 +422,7 @@ def run_pfam_annotation_pipeline(config, manifest, work_dir: Path,
             'failed_samples': 0,
             'total_hits': sum(len(df) for df in annotations.values()) if annotations else 0,
             'total_runtime_seconds': 0,
-            'evalue_threshold': 1e-5,
+            'cutoff_method': 'ga_cutoffs',  # Using PFAM gathering cutoffs
             'parallel_execution': False,
             'results': [{'sample_name': name, 'success': True, 'n_hits': len(df)} 
                        for name, df in annotations.items()]
@@ -342,81 +452,37 @@ def run_pfam_annotation_pipeline(config, manifest, work_dir: Path,
     
     logger.info(f"Found {len(protein_files)} protein files for PFAM annotation")
     
-    # Run PFAM annotation using the genome browser approach
+    # Run PFAM annotation using ELSA's own PfamAnnotator with GA cutoffs
     try:
         # Handle 'auto' threads value
         if threads == 'auto':
             import os
             threads = os.cpu_count() or 8
         
-        # Use the genome browser's PFAM annotation processor
-        annotation_script = Path("genome_browser/annotation/pfam_processor.py")
+        # Use ELSA's own PFAM annotator with GA cutoffs
+        logger.info("Using ELSA's PfamAnnotator with GA cutoffs")
+        annotator = PfamAnnotator(threads=threads)
         
-        if not annotation_script.exists():
-            logger.warning("PFAM annotation script not found, skipping")
+        if not annotator.check_astra_installation():
+            logger.warning("Astra not available, skipping PFAM annotation")
             return None
         
-        # Run the PFAM annotation processor directly
-        cmd = [
-            'python', str(annotation_script),
-            '--protein-dir', str(protein_dir),  # Use --protein-dir not --input-dir
-            '--output-dir', str(pfam_dir),
-            '--threads', str(threads),
-            '--max-workers', '2'  # Add max-workers parameter
-        ]
-        
-        logger.info(f"Running PFAM annotation: {' '.join(cmd)}")
+        # Run single PFAM annotation command on entire proteins directory
+        logger.info(f"Running PFAM annotation with GA cutoffs on {len(protein_files)} files...")
         logger.info(f"This may take several minutes...")
         
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        summary = annotator.annotate_proteins_single_command(protein_dir, pfam_dir)
         
-        if result.returncode == 0:
-            logger.info("PFAM annotation completed successfully")
-            logger.info(f"STDOUT: {result.stdout}")
-            
-            # The pfam_processor.py creates its own results file
-            results_file = pfam_dir / "pfam_annotation_results.json"
-            if results_file.exists():
-                try:
-                    with open(results_file) as f:
-                        summary = json.load(f)
-                    logger.info(f"Loaded PFAM results: {summary['summary']['successful_genomes']} successful genomes")
-                    return summary
-                except Exception as e:
-                    logger.error(f"Could not load PFAM results: {e}")
-            
-            # Fallback: create summary from annotations directory
-            annotator = PfamAnnotator()
-            annotations = annotator.load_pfam_annotations(pfam_dir)
-            
-            summary = {
-                'timestamp': datetime.now().isoformat(),
-                'total_samples': len(protein_files),
-                'successful_samples': len(annotations),
-                'failed_samples': len(protein_files) - len(annotations),
-                'total_hits': sum(len(df) for df in annotations.values()) if annotations else 0,
-                'total_runtime_seconds': 0,
-                'evalue_threshold': 1e-5,
-                'parallel_execution': True,
-                'summary': {
-                    'successful_genomes': len(annotations),
-                    'total_genomes': len(protein_files)
-                }
-            }
-            
-            # Save summary
-            with open(summary_file, 'w') as f:
-                json.dump(summary, f, indent=2)
-            
-            logger.info(f"PFAM annotation completed: {len(annotations)} samples annotated")
-            return summary
-        else:
-            logger.error(f"PFAM annotation failed (exit {result.returncode})")
-            if result.stdout:
-                logger.error(f"STDOUT: {result.stdout}")
-            if result.stderr:
-                logger.error(f"STDERR: {result.stderr}")
-            return None
+        # Save summary with the expected filename
+        summary_file = pfam_dir / "pfam_annotation_results.json"
+        with open(summary_file, 'w') as f:
+            json.dump(summary, f, indent=2)
+        
+        logger.info(f"✓ ELSA PFAM annotation completed: {summary['successful_samples']}/{summary['total_samples']} samples")
+        logger.info(f"  Total PFAM domains found: {summary['total_hits']:,}")
+        logger.info(f"  Using GA cutoffs for high-quality annotations")
+        
+        return summary
         
     except Exception as e:
         logger.error(f"PFAM annotation failed: {e}")

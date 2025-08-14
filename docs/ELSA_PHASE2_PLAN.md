@@ -6,9 +6,9 @@ Phase-2 upgrades ELSA's syntenic block detection with weighted sketches, multi-s
 
 ## Core Improvements
 
-### 1. Weighted Sketching + IDF + MGE Masking
-**Problem**: Current MinHash treats all genes equally, causing repetitive elements to dominate similarity.
-**Solution**: Weight codewords by IDF; mask MGE-associated PFAM domains; use b-bit compression.
+### 1. Weighted Sketching + IDF Weighting
+**Problem**: Current MinHash treats all genes equally, causing common/repetitive elements to dominate similarity.
+**Solution**: Weight codewords by IDF (inverse document frequency); use b-bit compression for efficiency.
 
 ### 2. Multi-Scale Windowing
 **Problem**: Fixed 5-gene windows miss both fine-grained and coarse-grained synteny patterns.
@@ -31,7 +31,7 @@ Phase-2 upgrades ELSA's syntenic block detection with weighted sketches, multi-s
 | Flag | Default | Purpose |
 |------|---------|---------|
 | `elsa.phase2.enable` | `false` | Master switch for all Phase-2 features |
-| `elsa.phase2.weighted_sketch` | `false` | Use weighted MinHash with IDF/MGE masking |
+| `elsa.phase2.weighted_sketch` | `false` | Use weighted MinHash with IDF weighting |
 | `elsa.phase2.multiscale` | `false` | Enable macro→micro windowing |
 | `elsa.phase2.flip_dp` | `false` | Use flip-aware affine-gap chaining |
 | `elsa.phase2.calibration` | `false` | Enable null models and FDR control |
@@ -46,8 +46,7 @@ elsa:
     size: 96        # sketch size
     idf:
       max: 10.0     # clamp IDF values
-  mge_mask:
-    path: null      # YAML list of PFAM accessions to mask
+  # Note: MGE masking has been removed - focus on IDF weighting only
 ```
 
 ### Multi-Scale Window Parameters
@@ -107,7 +106,7 @@ Input Genomes
       ↓ (macro)        ↓ (micro)
   Weighted Sketching   Dense Embedding
       ↓                    ↓
-  IDF + MGE Masking    HNSW Index
+  IDF Weighting        HNSW Index
       ↓                    ↓
   Candidate Retrieval ←────┘
       ↓
@@ -140,12 +139,10 @@ Transitions:
 **Files:**
 - `elsa_index/sketch/weighted_minhash.py`
 - `elsa_index/sketch/idf_stats.py`
-- `elsa_index/sketch/mge_mask.py`
 
 **Tests:**
 - Estimator accuracy vs exact Jaccard
 - IDF deterministic propagation
-- MGE masking effect on repetitive domains
 
 ### Phase 2: Multi-Scale Windowing (Priority 2)
 **Files:**

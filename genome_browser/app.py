@@ -20,6 +20,12 @@ import math
 # Import genome visualization functions
 from visualization.genome_plots import create_genome_diagram, create_comparative_genome_view
 
+# Import AI analysis components
+from components.ai_analysis_panel import AIAnalysisPanel
+from analysis.data_collector import SyntenicDataCollector
+from analysis.gpt5_analyzer import GPT5SyntenicAnalyzer
+from analysis.cassette_analyzer import analyze_conserved_cassettes
+
 # Configure page
 st.set_page_config(
     page_title="ELSA Genome Browser",
@@ -135,94 +141,174 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
     
     return pd.read_sql_query(query, conn, params=[contig_id])
 
+def _find_matching_contig_id(_conn, target_contig_id: str) -> str:
+    """Find the actual contig_id in genes table that matches the target format."""
+    cursor = _conn.cursor()
+    
+    # Try exact match first
+    cursor.execute("SELECT contig_id FROM genes WHERE contig_id = ? LIMIT 1", (target_contig_id,))
+    if cursor.fetchone():
+        return target_contig_id
+    
+    # Try alternative formats
+    alternatives = []
+    
+    # If it has genome prefix, try without: "1313.30775_accn|..." -> "accn|..."
+    if '_' in target_contig_id:
+        alt = target_contig_id.split('_', 1)[-1]
+        alternatives.append(alt)
+    
+    # If it doesn't have genome prefix, try finding one that does
+    else:
+        cursor.execute("SELECT DISTINCT contig_id FROM genes WHERE contig_id LIKE ? LIMIT 5", (f"%{target_contig_id}",))
+        for (contig_id,) in cursor.fetchall():
+            alternatives.append(contig_id)
+    
+    # Test each alternative
+    for alt in alternatives:
+        cursor.execute("SELECT contig_id FROM genes WHERE contig_id = ? LIMIT 1", (alt,))
+        if cursor.fetchone():
+            return alt
+    
+    # Return original if no match found
+    return target_contig_id
+
 @st.cache_data  
 def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_role: str) -> pd.DataFrame:
-    """Load only the genes that are part of the aligned region for a specific block."""
+    """Get core aligned genes for a syntenic block using gene_block_mappings."""
     
-    # Get block alignment info
-    cursor = _conn.cursor()
-    cursor.execute("""
-        SELECT query_window_start, query_window_end, target_window_start, target_window_end
-        FROM syntenic_blocks 
-        WHERE block_id = ?
-    """, (block_id,))
-    
-    result = cursor.fetchone()
-    if not result:
-        # Fallback to all genes if no alignment info
-        return load_genes_for_locus(contig_id)
-    
-    query_start, query_end, target_start, target_end = result
-    
-    # Determine which window range to use based on locus role
-    if locus_role == 'query' and query_start is not None and query_end is not None:
-        window_start, window_end = query_start, query_end
-    elif locus_role == 'target' and target_start is not None and target_end is not None:
-        window_start, window_end = target_start, target_end
-    else:
-        # No alignment info available, load all genes
-        query = """
-            SELECT g.*, c.length as contig_length, 'unknown' as synteny_role
+    try:
+        # Normalize contig_id to match genes table format
+        actual_contig_id = _find_matching_contig_id(_conn, contig_id)
+        # First try using gene_block_mappings table if it exists
+        cursor = _conn.cursor()
+        
+        # Check if gene_block_mappings table exists
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='gene_block_mappings'")
+        has_mappings_table = bool(cursor.fetchone())
+        
+        if has_mappings_table:
+            # Use gene_block_mappings to get only genes that are actually in this block
+            query = """
+            SELECT g.*, gbm.block_role, gbm.relative_position
             FROM genes g
-            JOIN contigs c ON g.contig_id = c.contig_id
-            WHERE g.contig_id = ?
-            ORDER BY g.start_pos
-        """
-        return pd.read_sql_query(query, conn, params=[contig_id])
-    
-    # Convert window indices to gene ranges
-    # Each window contains 5 genes with stride 1: window N covers genes N to N+4
-    gene_start_idx = window_start  # Gene index of first gene in first window
-    gene_end_idx = window_end + 4  # Gene index of last gene in last window (window contains 5 genes)
-    
-    # Add context genes (±3 genes around the aligned region)
-    context_buffer = 3
-    gene_start_idx = max(0, gene_start_idx - context_buffer)
-    gene_end_idx = gene_end_idx + context_buffer
-    
-    # Load genes in the range, using ROW_NUMBER to get positional indices
-    query = """
-        SELECT g.*, c.length as contig_length,
-               ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1 as gene_index,
-               CASE 
-                   WHEN (ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1) BETWEEN ? AND ? 
-                   THEN 'core_aligned'
-                   WHEN (ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1) BETWEEN ? AND ?
-                   THEN 'boundary'
-                   ELSE 'context'
-               END as synteny_role,
-               CASE 
-                   WHEN (ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1) BETWEEN ? AND ? 
-                   THEN 'Conserved Block'
-                   WHEN (ROW_NUMBER() OVER (ORDER BY g.start_pos) - 1) BETWEEN ? AND ?
-                   THEN 'Block Edge'
-                   ELSE 'Flanking Region'
-               END as position_in_block
-        FROM genes g
-        JOIN contigs c ON g.contig_id = c.contig_id
-        WHERE g.contig_id = ?
-        ORDER BY g.start_pos
-        LIMIT ? OFFSET ?
-    """
-    
-    # Calculate the actual aligned gene range (without context)
-    core_aligned_start = window_start
-    core_aligned_end = window_end + 4
-    
-    # Boundary genes are those within the windows but not in the tightest alignment
-    boundary_start = max(0, window_start - 1)  
-    boundary_end = window_end + 5
-    
-    limit = gene_end_idx - gene_start_idx + 1
-    offset = gene_start_idx
-    
-    return pd.read_sql_query(query, _conn, params=[
-        core_aligned_start, core_aligned_end,  # Core aligned range
-        boundary_start, boundary_end,          # Boundary range  
-        core_aligned_start, core_aligned_end,  # For display label
-        boundary_start, boundary_end,          # For display label
-        contig_id, limit, offset
-    ])
+            JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
+            WHERE gbm.block_id = ? 
+            AND g.contig_id = ?
+            AND (gbm.block_role = ? OR gbm.block_role = 'both')
+            ORDER BY gbm.relative_position, g.start_pos
+            """
+            
+            aligned_genes = pd.read_sql_query(query, _conn, params=[block_id, actual_contig_id, locus_role])
+            
+            if not aligned_genes.empty:
+                aligned_genes['synteny_role'] = 'core_aligned'
+                logger.info(f"Block {block_id} {locus_role}: Found {len(aligned_genes)} genes via gene_block_mappings")
+                return aligned_genes
+        
+        # Fallback 1: Get genes from syntenic_blocks metadata using window information
+        cursor.execute("""
+        SELECT query_locus, target_locus, length, query_window_start, query_window_end, 
+               target_window_start, target_window_end
+        FROM syntenic_blocks WHERE block_id = ?
+        """, (block_id,))
+        block_info = cursor.fetchone()
+        
+        if not block_info:
+            # Check valid block range for debugging
+            cursor.execute("SELECT MIN(block_id), MAX(block_id), COUNT(*) FROM syntenic_blocks")
+            min_id, max_id, count = cursor.fetchone()
+            raise Exception(f"Block {block_id} not found (valid range: {min_id}-{max_id}, total: {count})")
+        
+        query_locus, target_locus, length, query_window_start, query_window_end, target_window_start, target_window_end = block_info
+        
+        # Use window indices to estimate gene ranges (assuming ~5 genes per window)
+        if locus_role == 'query':
+            if query_window_start is not None and query_window_end is not None:
+                # Estimate gene range from window indices
+                start_gene_idx = query_window_start
+                end_gene_idx = query_window_end + 4  # Windows overlap, add some genes
+            else:
+                start_gene_idx, end_gene_idx = None, None
+        else:  # target
+            if target_window_start is not None and target_window_end is not None:
+                start_gene_idx = target_window_start
+                end_gene_idx = target_window_end + 4
+            else:
+                start_gene_idx, end_gene_idx = None, None
+        
+        # Get genes from the contig within the estimated gene index range
+        if start_gene_idx is not None and end_gene_idx is not None:
+            query = """
+            SELECT *, ROW_NUMBER() OVER (ORDER BY start_pos) - 1 as gene_index
+            FROM genes 
+            WHERE contig_id = ?
+            ORDER BY start_pos
+            """
+            all_genes = pd.read_sql_query(query, _conn, params=[actual_contig_id])
+            
+            if not all_genes.empty:
+                # Filter to the gene index range
+                aligned_genes = all_genes[
+                    (all_genes['gene_index'] >= start_gene_idx) & 
+                    (all_genes['gene_index'] <= end_gene_idx)
+                ].copy()
+                
+                if not aligned_genes.empty:
+                    aligned_genes.drop(columns=['gene_index'], inplace=True)
+            else:
+                aligned_genes = pd.DataFrame()
+        else:
+            # Fallback 2: Get a reasonable subset of genes from the middle of the contig
+            # First count total genes in contig
+            cursor.execute("SELECT COUNT(*) FROM genes WHERE contig_id = ?", (actual_contig_id,))
+            total_genes = cursor.fetchone()[0]
+            
+            if total_genes > 100:
+                # Take genes from the middle portion - this gives us a focused region
+                offset = total_genes // 4  # Skip first quarter
+                limit = min(80, total_genes // 2)  # Take up to 80 genes from middle
+                
+                query = """
+                SELECT * FROM genes 
+                WHERE contig_id = ?
+                ORDER BY start_pos
+                LIMIT ? OFFSET ?
+                """
+                aligned_genes = pd.read_sql_query(query, _conn, params=[actual_contig_id, limit, offset])
+            else:
+                # Small contig, take all genes
+                query = """
+                SELECT * FROM genes 
+                WHERE contig_id = ?
+                ORDER BY start_pos
+                """
+                aligned_genes = pd.read_sql_query(query, _conn, params=[actual_contig_id])
+        
+        if not aligned_genes.empty:
+            aligned_genes['synteny_role'] = 'aligned_region'
+            aligned_genes['block_role'] = locus_role
+            
+            # Ensure span is reasonable (< 50kb for focused view)
+            span = aligned_genes['end_pos'].max() - aligned_genes['start_pos'].min()
+            if span > 50000:
+                # Take consecutive genes from the middle
+                mid_idx = len(aligned_genes) // 2
+                start_idx = max(0, mid_idx - 40)
+                end_idx = min(len(aligned_genes), mid_idx + 40)
+                aligned_genes = aligned_genes.iloc[start_idx:end_idx].copy()
+            
+            logger.info(f"Block {block_id} {locus_role}: Found {len(aligned_genes)} genes (focused region)")
+            return aligned_genes
+        
+        raise Exception(f"No genes found for {locus_role} in block {block_id}")
+        
+    except Exception as e:
+        logger.error(f"Failed to load aligned genes for block {block_id}, {locus_role}: {e}")
+        # Return empty DataFrame instead of crashing
+        return pd.DataFrame(columns=['gene_id', 'genome_id', 'contig_id', 'start_pos', 'end_pos', 'strand', 
+                                   'gene_length', 'protein_id', 'protein_sequence', 'pfam_domains', 
+                                   'synteny_role', 'block_role'])
 
 @st.cache_data
 def get_block_count(genome_filter: Optional[List[str]] = None,
@@ -308,6 +394,38 @@ def create_sidebar_filters() -> Dict:
         placeholder="e.g., PF00001, kinase, transferase",
         help="Search for specific PFAM domains or keywords"
     )
+    
+    # AI Analysis Configuration
+    st.sidebar.subheader("🧠 AI Analysis")
+    
+    # Check for environment variable first
+    import os
+    env_api_key = os.getenv("OPENAI_API_KEY")
+    
+    if env_api_key:
+        st.sidebar.success("✅ Using OPENAI_API_KEY from environment")
+        openai_api_key = env_api_key
+    else:
+        openai_api_key = st.sidebar.text_input(
+            "OpenAI API Key",
+            type="password",
+            help="Enter your OpenAI API key or set OPENAI_API_KEY environment variable",
+            placeholder="sk-..."
+        )
+    
+    # Initialize AI analyzer if API key available
+    if openai_api_key and not st.session_state.ai_analyzer:
+        try:
+            st.session_state.ai_analyzer = GPT5SyntenicAnalyzer(api_key=openai_api_key)
+            if not env_api_key:
+                st.sidebar.success("✅ AI Analysis enabled!")
+        except Exception as e:
+            st.sidebar.error(f"❌ API key failed: {e}")
+            st.session_state.ai_analyzer = None
+    
+    ai_enabled = bool(st.session_state.ai_analyzer)
+    if not ai_enabled and not env_api_key:
+        st.sidebar.info("💡 Set OPENAI_API_KEY environment variable or enter your API key above to enable AI analysis")
     
     return {
         'genomes': selected_genomes,
@@ -610,12 +728,130 @@ def display_genome_viewer():
     
     block = st.session_state.selected_block
     
+    # Validate that the selected block still exists (data might have changed)
+    conn = get_database_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM syntenic_blocks WHERE block_id = ?", (block['block_id'],))
+    if cursor.fetchone()[0] == 0:
+        # Block no longer exists, clear selection
+        cursor.execute("SELECT MIN(block_id), MAX(block_id), COUNT(*) FROM syntenic_blocks")
+        min_id, max_id, count = cursor.fetchone()
+        
+        st.error(f"⚠️ Selected block {block['block_id']} no longer exists in database. Valid range: {min_id}-{max_id} ({count} total blocks)")
+        st.info("Please select a new block from the Block Explorer.")
+        
+        # Clear invalid selection
+        if 'selected_block' in st.session_state:
+            del st.session_state.selected_block
+        
+        if st.button("← Back to Block Explorer"):
+            st.session_state.current_page = 'block_explorer'
+            st.rerun()
+        return
+    
     st.header(f"🧬 Genome Viewer - Block {block['block_id']}")
     
     # Back button
     if st.button("← Back to Block Explorer"):
         st.session_state.current_page = 'block_explorer'
         st.rerun()
+    
+    # AI Analysis Section
+    st.markdown("---")
+    ai_enabled = bool(st.session_state.ai_analyzer)
+    
+    if ai_enabled:
+        # Check if we have cached analysis
+        block_id = block['block_id']
+        cached_analysis = st.session_state.ai_panel.get_cached_analysis(block_id)
+        
+        col1, col2, col3 = st.columns([2, 1, 1])
+        with col1:
+            st.markdown("### 🧠 AI Analysis")
+        with col2:
+            analyze_button = st.button(
+                "🤖 Analyze with GPT-5" if not cached_analysis else "🔄 Re-analyze", 
+                key=f"ai_analyze_{block_id}",
+                help="Get biological insights about this syntenic block"
+            )
+        with col3:
+            if cached_analysis:
+                st.success("✅ Analyzed")
+            else:
+                st.info("💭 Ready")
+        
+        # Handle analysis trigger
+        if analyze_button:
+            with st.spinner("🤖 Analyzing with GPT-5..."):
+                try:
+                    # Collect block data
+                    block_data = st.session_state.data_collector.collect_block_data(block_id)
+                    
+                    if block_data:
+                        # Run AI analysis
+                        analysis_result = st.session_state.ai_analyzer.analyze_block(block_data)
+                        
+                        # Store result
+                        st.session_state.ai_panel.store_analysis_result(block_id, analysis_result)
+                        
+                        st.success("✨ Analysis complete!")
+                        st.rerun()
+                    else:
+                        st.error("❌ Could not collect block data for analysis")
+                        
+                except Exception as e:
+                    st.error(f"❌ Analysis failed: {e}")
+                    logger.error(f"AI analysis failed for block {block_id}: {e}")
+        
+        # Display analysis results if available
+        if cached_analysis:
+            if "error" not in cached_analysis:
+                analysis_data = cached_analysis.get("analysis", {})
+                
+                # Functional Summary (most prominent)
+                if "functional_summary" in analysis_data:
+                    st.markdown("#### ✨ Summary")
+                    st.info(analysis_data["functional_summary"])
+                
+                # Key insights in columns
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    if "key_genes" in analysis_data:
+                        st.markdown("**🔬 Key Genes:**")
+                        st.write(analysis_data["key_genes"])
+                
+                with col2:
+                    if "biological_significance" in analysis_data:
+                        st.markdown("**🎯 Significance:**")
+                        st.write(analysis_data["biological_significance"])
+                
+                # Conservation rationale
+                if "conservation_rationale" in analysis_data:
+                    with st.expander("🧬 Conservation Analysis", expanded=False):
+                        st.write(analysis_data["conservation_rationale"])
+                
+                # Export option
+                metadata = cached_analysis.get("metadata", {})
+                if metadata:
+                    with st.expander("📊 Analysis Details", expanded=False):
+                        col1, col2, col3 = st.columns(3)
+                        with col1:
+                            st.metric("Model", metadata.get("model", "unknown"))
+                        with col2:
+                            st.metric("Genomes", metadata.get("num_genomes", "unknown"))
+                        with col3:
+                            st.metric("PFAM Domains", metadata.get("num_pfam_domains", "unknown"))
+            else:
+                st.error(f"❌ Previous analysis failed: {cached_analysis.get('error', 'Unknown error')}")
+    else:
+        import os
+        if not os.getenv("OPENAI_API_KEY"):
+            st.info("🧠 **AI Analysis Available** - Set OPENAI_API_KEY environment variable or add your API key in the sidebar to enable GPT-5 powered biological insights.")
+        else:
+            st.info("🧠 **AI Analysis** - Initializing GPT-5 analyzer...")
+    
+    st.markdown("---")
     
     # Debug info
     st.write(f"**Debug**: Loading genes for query locus: {block['query_locus']}")
@@ -626,6 +862,23 @@ def display_genome_viewer():
         target_genes = load_genes_for_locus(block['target_locus'], block['block_id'], 'target')
     
     st.write(f"**Debug**: Query genes loaded: {len(query_genes)}, Target genes loaded: {len(target_genes)}")
+    
+    if not query_genes.empty:
+        q_span = query_genes['end_pos'].max() - query_genes['start_pos'].min()
+        st.write(f"**Debug**: Query span: {query_genes['start_pos'].min():,} - {query_genes['end_pos'].max():,} = {q_span:,} bp")
+    
+    if not target_genes.empty:
+        t_span = target_genes['end_pos'].max() - target_genes['start_pos'].min()
+        st.write(f"**Debug**: Target span: {target_genes['start_pos'].min():,} - {target_genes['end_pos'].max():,} = {t_span:,} bp")
+    
+    # Check if spans are reasonable (should be handled by the filtering function now)
+    if not query_genes.empty:
+        q_span = query_genes['end_pos'].max() - query_genes['start_pos'].min()
+        st.success(f"✅ Query region span: {q_span:,} bp ({len(query_genes)} genes)")
+    
+    if not target_genes.empty:
+        t_span = target_genes['end_pos'].max() - target_genes['start_pos'].min()
+        st.success(f"✅ Target region span: {t_span:,} bp ({len(target_genes)} genes)")
     
     # Add comprehensive biological legend
     with st.expander("📖 **Understanding Syntenic Block Visualization**", expanded=True):
@@ -672,8 +925,8 @@ def display_genome_viewer():
             display_cols = ['gene_id', 'start_pos', 'end_pos', 'strand']
             
             # Add alignment-specific columns if available
-            if 'position_in_block' in query_genes.columns:
-                display_cols.append('position_in_block')
+            if 'relative_position' in query_genes.columns:
+                display_cols.append('relative_position')
             if 'gene_index' in query_genes.columns:
                 display_cols.append('gene_index')
             if 'synteny_role' in query_genes.columns:
@@ -685,15 +938,14 @@ def display_genome_viewer():
             summary_df = query_genes[display_cols].copy()
             
             # Color-code the dataframe based on alignment role
-            if 'position_in_block' in summary_df.columns:
+            if 'relative_position' in summary_df.columns:
                 def highlight_alignment_role(row):
-                    role = row.get('position_in_block', '')
-                    if role == 'Conserved Block':
-                        return ['background-color: #8B0000; color: white'] * len(row)  # Dark red with white text
-                    elif role == 'Block Edge':
-                        return ['background-color: #CC6600; color: white'] * len(row)  # Dark orange with white text
-                    elif role == 'Flanking Region':
-                        return ['background-color: #000080; color: white'] * len(row)  # Dark blue with white text
+                    rel_pos = row.get('relative_position', 0.5)
+                    # Color based on position within block (0.0 = start, 1.0 = end)
+                    if 0.2 <= rel_pos <= 0.8:
+                        return ['background-color: #8B0000; color: white'] * len(row)  # Dark red - core region
+                    elif rel_pos < 0.2 or rel_pos > 0.8:
+                        return ['background-color: #CC6600; color: white'] * len(row)  # Orange - edges
                     return [''] * len(row)
                 
                 styled_df = summary_df.style.apply(highlight_alignment_role, axis=1)
@@ -723,8 +975,8 @@ def display_genome_viewer():
             display_cols = ['gene_id', 'start_pos', 'end_pos', 'strand']
             
             # Add alignment-specific columns if available
-            if 'position_in_block' in target_genes.columns:
-                display_cols.append('position_in_block')
+            if 'relative_position' in target_genes.columns:
+                display_cols.append('relative_position')
             if 'gene_index' in target_genes.columns:
                 display_cols.append('gene_index')
             if 'synteny_role' in target_genes.columns:
@@ -736,15 +988,14 @@ def display_genome_viewer():
             summary_df = target_genes[display_cols].copy()
             
             # Color-code the dataframe based on alignment role
-            if 'position_in_block' in summary_df.columns:
+            if 'relative_position' in summary_df.columns:
                 def highlight_alignment_role(row):
-                    role = row.get('position_in_block', '')
-                    if role == 'Conserved Block':
-                        return ['background-color: #8B0000; color: white'] * len(row)  # Dark red with white text
-                    elif role == 'Block Edge':
-                        return ['background-color: #CC6600; color: white'] * len(row)  # Dark orange with white text
-                    elif role == 'Flanking Region':
-                        return ['background-color: #000080; color: white'] * len(row)  # Dark blue with white text
+                    rel_pos = row.get('relative_position', 0.5)
+                    # Color based on position within block (0.0 = start, 1.0 = end)
+                    if 0.2 <= rel_pos <= 0.8:
+                        return ['background-color: #8B0000; color: white'] * len(row)  # Dark red - core region
+                    elif rel_pos < 0.2 or rel_pos > 0.8:
+                        return ['background-color: #CC6600; color: white'] * len(row)  # Orange - edges
                     return [''] * len(row)
                 
                 styled_df = summary_df.style.apply(highlight_alignment_role, axis=1)
@@ -760,15 +1011,127 @@ def display_genome_viewer():
         if st.button("📊 Show Comparative Genome View", key="comparative_view"):
             st.subheader("Comparative Genome Analysis")
             with st.spinner("Generating comparative view..."):
+                
+                # Collect homology data for this block
+                homology_connections = []
+                try:
+                    # Get block data with homology analysis
+                    block_data = st.session_state.data_collector.collect_block_data(block_id)
+                    if block_data and block_data.homology_analysis:
+                        homology = block_data.homology_analysis
+                        
+                        # Extract ortholog pairs for visualization
+                        for pair in homology.get('ortholog_pairs', []):
+                            homology_connections.append({
+                                'query_gene': pair.get('query_id'),
+                                'target_gene': pair.get('target_id'),
+                                'identity': pair.get('identity', 0),
+                                'relationship': pair.get('relationship', 'unknown'),
+                                'conservation': pair.get('functional_conservation', 'unknown'),
+                                'evalue': pair.get('evalue', 1.0)
+                            })
+                        
+                        st.info(f"Found {len(homology_connections)} homologous gene pairs to display")
+                    else:
+                        st.info("No homology data available for connection visualization")
+                        
+                except Exception as e:
+                    st.warning(f"Could not load homology data: {e}")
+                
+                # Analyze conserved functional cassettes
+                conserved_cassettes = []
+                cassette_summary = ""
+                try:
+                    with st.spinner("Analyzing conserved functional cassettes..."):
+                        cassette_analysis = analyze_conserved_cassettes(
+                            query_genes, 
+                            target_genes
+                        )
+                        conserved_cassettes = cassette_analysis.get('cassettes', [])
+                        cassette_summary = cassette_analysis.get('conservation_summary', 'No analysis available')
+                        
+                        if conserved_cassettes:
+                            st.success(f"🎯 {cassette_summary}")
+                        else:
+                            st.info("🎯 No conserved functional cassettes detected between these genomic regions")
+                            
+                except Exception as e:
+                    st.warning(f"Could not analyze functional cassettes: {e}")
+                
                 comparative_fig = create_comparative_genome_view(
-                    query_genes.head(30), 
-                    target_genes.head(30),
+                    query_genes, 
+                    target_genes,
                     block['query_locus'],
                     block['target_locus'],
+                    syntenic_connections=homology_connections,
+                    homology_data=block_data.homology_analysis if block_data and block_data.homology_analysis else None,
+                    conserved_cassettes=conserved_cassettes,
                     width=1200,
                     height=600
                 )
                 st.plotly_chart(comparative_fig, use_container_width=True)
+                
+                # Show connection details if available
+                if homology_connections:
+                    st.subheader("🔗 Homologous Gene Connections")
+                    connections_df = pd.DataFrame(homology_connections)
+                    
+                    # Add connection strength visualization
+                    def connection_strength(row):
+                        if row['identity'] >= 0.9:
+                            return "🟢 Very Strong"
+                        elif row['identity'] >= 0.7:
+                            return "🟡 Strong" 
+                        elif row['identity'] >= 0.5:
+                            return "🟠 Moderate"
+                        else:
+                            return "🔴 Weak"
+                    
+                    connections_df['Connection Strength'] = connections_df.apply(connection_strength, axis=1)
+                    connections_df['Identity %'] = (connections_df['identity'] * 100).round(1)
+                    
+                    # Display connection table
+                    display_cols = ['query_gene', 'target_gene', 'Identity %', 'Connection Strength', 'relationship', 'conservation']
+                    st.dataframe(
+                        connections_df[display_cols].rename(columns={
+                            'query_gene': 'Query Gene',
+                            'target_gene': 'Target Gene', 
+                            'relationship': 'Relationship Type',
+                            'conservation': 'Functional Conservation'
+                        }),
+                        hide_index=True
+                    )
+                
+                # Show conserved cassette details if available
+                if conserved_cassettes:
+                    st.subheader("🎯 Conserved Functional Cassettes")
+                    
+                    for i, cassette in enumerate(conserved_cassettes[:5]):  # Show top 5 cassettes
+                        with st.expander(f"Cassette #{i+1}: {cassette.cassette_type.title()} Conservation ({cassette.domain_conservation_score:.1%})"):
+                            col1, col2 = st.columns(2)
+                            
+                            with col1:
+                                st.write("**Query Region**")
+                                st.write(f"Position: {cassette.query_start:,} - {cassette.query_end:,} bp")
+                                st.write(f"Genes: {', '.join(cassette.query_genes)}")
+                            
+                            with col2:
+                                st.write("**Target Region**")
+                                st.write(f"Position: {cassette.target_start:,} - {cassette.target_end:,} bp")
+                                st.write(f"Genes: {', '.join(cassette.target_genes)}")
+                            
+                            st.write("**Shared PFAM Domains**")
+                            domains_text = ", ".join(cassette.shared_domains)
+                            st.code(domains_text)
+                            
+                            # Conservation metrics
+                            metrics_col1, metrics_col2, metrics_col3 = st.columns(3)
+                            with metrics_col1:
+                                st.metric("Domain Conservation", f"{cassette.domain_conservation_score:.1%}")
+                            with metrics_col2:
+                                st.metric("Synteny Score", f"{cassette.synteny_score:.1%}")  
+                            with metrics_col3:
+                                st.metric("Cassette Type", cassette.cassette_type.title())
 
 def main():
     """Main Streamlit application."""
@@ -779,6 +1142,15 @@ def main():
     # Initialize session state
     if 'current_page' not in st.session_state:
         st.session_state.current_page = 'dashboard'
+    
+    # Initialize AI analysis components
+    if 'ai_panel' not in st.session_state:
+        st.session_state.ai_panel = AIAnalysisPanel()
+    if 'data_collector' not in st.session_state:
+        st.session_state.data_collector = SyntenicDataCollector()
+    if 'ai_analyzer' not in st.session_state:
+        # Will be initialized when user provides API key
+        st.session_state.ai_analyzer = None
     
     # Navigation tabs
     tab1, tab2, tab3 = st.tabs(["📊 Dashboard", "🔍 Block Explorer", "🧬 Genome Viewer"])

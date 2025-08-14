@@ -42,7 +42,6 @@ class BenchmarkResult:
     # Phase-2 specific metrics
     feature_flags: Dict[str, bool] = None
     weighted_sketch_enabled: bool = False
-    mge_masked_fraction: Optional[float] = None
     idf_effect: Optional[float] = None
     
 

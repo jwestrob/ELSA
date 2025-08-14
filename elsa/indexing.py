@@ -249,19 +249,7 @@ class IndexBuilder:
             self.config.phase2.weighted_sketch
         )
         
-        # Load PFAM annotations if weighted sketching is enabled
-        pfam_annotations = {}
-        if use_weighted_sketching:
-            console.print("Loading PFAM annotations for weighted sketching...")
-            from .pfam_annotation import PfamAnnotator
-            
-            pfam_dir = Path(self.manifest.work_dir) / "pfam_annotations"
-            if pfam_dir.exists():
-                annotator = PfamAnnotator()
-                pfam_annotations = annotator.load_pfam_annotations(pfam_dir)
-                console.print(f"✓ Loaded PFAM annotations for {len(pfam_annotations)} samples")
-            else:
-                console.print("⚠️  No PFAM annotations found, weighted sketching will use uniform weights")
+        # Note: Weighted sketching uses IDF weighting only (MGE masking removed)
         
         # Load shingles  
         shingles_path = Path(self.manifest.data['artifacts']['windows']['path'])

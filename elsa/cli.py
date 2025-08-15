@@ -3,6 +3,7 @@ ELSA command-line interface.
 """
 
 import sys
+import subprocess
 from pathlib import Path
 from typing import Optional
 
@@ -23,6 +24,116 @@ def print_banner():
 [bold blue]ELSA[/bold blue] [dim]v{__version__}[/dim]
 [italic]Embedding Locus Shingle Alignment[/italic]
 """)
+
+
+def setup_genome_browser_integration(config: ELSAConfig, analysis_output_dir: Path, 
+                                   genome_browser_db: str, sequences_dir: Optional[str], 
+                                   proteins_dir: Optional[str]) -> bool:
+    """Set up genome browser with analysis results and existing PFAM annotations."""
+    
+    # Find the genome browser setup script
+    genome_browser_dir = Path(__file__).parent.parent / "genome_browser"
+    setup_script = genome_browser_dir / "setup_genome_browser.py"
+    
+    if not setup_script.exists():
+        console.print(f"[red]Genome browser setup script not found: {setup_script}[/red]")
+        return False
+    
+    # Check for required analysis output files
+    blocks_file = analysis_output_dir / "syntenic_blocks.csv"
+    clusters_file = analysis_output_dir / "syntenic_clusters.csv"
+    
+    if not blocks_file.exists():
+        console.print(f"[red]Syntenic blocks file not found: {blocks_file}[/red]")
+        return False
+    
+    if not clusters_file.exists():
+        console.print(f"[red]Syntenic clusters file not found: {clusters_file}[/red]")
+        return False
+    
+    # Auto-detect sequences and proteins directories if not provided
+    if not sequences_dir or not proteins_dir:
+        console.print("Auto-detecting genome data directories...")
+        
+        # Look for common directory patterns (use absolute paths)
+        cwd = Path.cwd()
+        possible_sequences = ["test_data/genomes", "data/genomes", "genomes"]
+        possible_proteins = ["test_data/proteins", "data/proteins", "proteins", "test_data/genomes"]
+        
+        if not sequences_dir:
+            for candidate in possible_sequences:
+                candidate_path = cwd / candidate
+                if candidate_path.exists() and list(candidate_path.glob("*.fna")):
+                    sequences_dir = str(candidate_path.absolute())
+                    console.print(f"Found nucleotide sequences: {sequences_dir}")
+                    break
+        
+        if not proteins_dir:
+            for candidate in possible_proteins:
+                candidate_path = cwd / candidate
+                if candidate_path.exists() and list(candidate_path.glob("*.faa")):
+                    proteins_dir = str(candidate_path.absolute())
+                    console.print(f"Found protein sequences: {proteins_dir}")
+                    break
+    
+    if not sequences_dir or not proteins_dir:
+        console.print("[yellow]Could not auto-detect genome directories.[/yellow]")
+        console.print("[yellow]Specify --sequences-dir and --proteins-dir for genome browser setup[/yellow]")
+        return False
+    
+    # Check if directories exist and contain expected files (convert to absolute paths)
+    sequences_path = Path(sequences_dir).absolute()
+    proteins_path = Path(proteins_dir).absolute()
+    
+    if not sequences_path.exists():
+        console.print(f"[red]Sequences directory not found: {sequences_path}[/red]")
+        return False
+    
+    if not proteins_path.exists():
+        console.print(f"[red]Proteins directory not found: {proteins_path}[/red]")
+        return False
+    
+    # Check for existing PFAM annotations from elsa embed
+    pfam_results_file = genome_browser_dir / "pfam_annotations" / "pfam_annotation_results.json"
+    
+    # Build setup command (use absolute paths for all files)
+    cmd = [
+        sys.executable, str(setup_script),
+        "--sequences-dir", str(sequences_path),
+        "--proteins-dir", str(proteins_path),
+        "--blocks-file", str(blocks_file.absolute()),
+        "--clusters-file", str(clusters_file.absolute()),
+        "--db-path", str(Path(genome_browser_db).absolute()),
+        "--force"  # Force regeneration to pick up new analysis results
+    ]
+    
+    # Use existing PFAM annotations if available
+    if pfam_results_file.exists():
+        console.print(f"Using existing PFAM annotations: {pfam_results_file}")
+        cmd.extend(["--skip-pfam"])  # Skip PFAM regeneration
+    else:
+        console.print("No existing PFAM annotations found - will generate fresh annotations")
+    
+    console.print(f"Setting up genome browser database: {genome_browser_db}")
+    
+    try:
+        result = subprocess.run(
+            cmd, 
+            check=True, 
+            capture_output=True, 
+            text=True,
+            cwd=genome_browser_dir  # Run from genome_browser directory
+        )
+        console.print("✓ Genome browser setup completed successfully")
+        return True
+        
+    except subprocess.CalledProcessError as e:
+        console.print(f"[red]Genome browser setup failed (return code {e.returncode})[/red]")
+        if e.stdout:
+            console.print(f"STDOUT: {e.stdout}")
+        if e.stderr:
+            console.print(f"STDERR: {e.stderr}")
+        return False
 
 
 @click.group(invoke_without_command=True)
@@ -331,7 +442,12 @@ def find(config: str, query_locus: str, target_scope: str, output: Optional[str]
 @click.option("--min-windows", default=3, help="Minimum windows per locus")
 @click.option("--min-similarity", default=0.7, help="Minimum similarity threshold")
 @click.option("--output-dir", "-o", default="syntenic_analysis", help="Output directory")
-def analyze(config: str, min_windows: int, min_similarity: float, output_dir: str):
+@click.option("--setup-genome-browser", is_flag=True, default=True, help="Set up genome browser after analysis")
+@click.option("--genome-browser-db", default="genome_browser/genome_browser.db", help="Genome browser database path")
+@click.option("--sequences-dir", help="Directory containing nucleotide sequences (.fna)")
+@click.option("--proteins-dir", help="Directory containing proteins (.faa)")
+def analyze(config: str, min_windows: int, min_similarity: float, output_dir: str, 
+           setup_genome_browser: bool, genome_browser_db: str, sequences_dir: Optional[str], proteins_dir: Optional[str]):
     """Perform comprehensive syntenic block analysis of entire dataset."""
     console.print("[bold]ELSA Comprehensive Syntenic Analysis[/bold]")
     
@@ -382,6 +498,24 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
         analyzer.save_results(landscape, output_path)
         
         console.print(f"\n[green]✓ Comprehensive analysis completed successfully![/green]")
+        
+        # Set up genome browser if requested
+        if setup_genome_browser:
+            console.print(f"\n[bold blue]Setting up genome browser...[/bold blue]")
+            try:
+                success = setup_genome_browser_integration(
+                    config_obj, output_path, genome_browser_db, 
+                    sequences_dir, proteins_dir
+                )
+                if success:
+                    console.print(f"\n[green]✓ Genome browser setup completed![/green]")
+                    console.print(f"Database: {genome_browser_db}")
+                    console.print(f"To start the browser: cd genome_browser && streamlit run app.py")
+                else:
+                    console.print(f"\n[yellow]⚠ Genome browser setup skipped (see messages above)[/yellow]")
+            except Exception as e:
+                console.print(f"\n[red]Genome browser setup failed: {e}[/red]")
+                console.print("[yellow]Analysis results are still available - you can set up the browser manually[/yellow]")
         
     except Exception as e:
         console.print(f"[red]Analysis failed: {e}[/red]")

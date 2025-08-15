@@ -221,7 +221,11 @@ class CollinearChainer:
         
     def chain_matches(self, matches: List[WindowMatch]) -> List[SyntenicBlock]:
         """Apply collinear chaining to find syntenic blocks."""
-        # Group matches by target locus
+        # NOTE: This simplified implementation is being deprecated.
+        # For production use, the sophisticated chaining logic in analysis.py
+        # should be used with _filter_positional_conservation() and local gain.
+        
+        # Group matches by target locus for basic chaining
         target_groups = {}
         for match in matches:
             # Extract target locus from window ID 
@@ -238,8 +242,6 @@ class CollinearChainer:
         blocks = []
         for target_locus, locus_matches in target_groups.items():
             if len(locus_matches) >= 2:  # Require at least 2 windows for a block
-                # Simple chaining: sort by window index and group consecutive matches
-                # TODO: Implement proper dynamic programming chaining
                 block = SyntenicBlock(
                     query_locus="query",  # TODO: Extract from matches
                     target_locus=target_locus,

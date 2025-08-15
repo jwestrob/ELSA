@@ -106,6 +106,83 @@ class SystemConfig(BaseModel):
     rng_seed: int = Field(default=17, description="Global random seed")
 
 
+class WindowConfig(BaseModel):
+    """Multi-scale windowing configuration."""
+    micro: 'MicroWindowConfig' = Field(default_factory=lambda: MicroWindowConfig())
+    macro: 'MacroWindowConfig' = Field(default_factory=lambda: MacroWindowConfig())
+    adaptive: 'AdaptiveWindowConfig' = Field(default_factory=lambda: AdaptiveWindowConfig())
+
+
+class MicroWindowConfig(BaseModel):
+    """Micro window configuration."""
+    size: int = Field(default=3, description="Genes per micro window")
+    stride: int = Field(default=1, description="Micro window stride")
+
+
+class MacroWindowConfig(BaseModel):
+    """Macro window configuration."""
+    size: int = Field(default=4, description="Micro windows per macro window")
+    stride: int = Field(default=2, description="Macro window stride")
+
+
+class AdaptiveWindowConfig(BaseModel):
+    """Adaptive windowing configuration."""
+    enable: bool = Field(default=False, description="Enable adaptive windowing")
+
+
+class Phase2Config(BaseModel):
+    """Phase-2 feature flags."""
+    enable: bool = Field(default=True, description="Enable phase-2 features")
+    weighted_sketch: bool = Field(default=True, description="Use weighted sketching")
+    multiscale: bool = Field(default=True, description="Enable multiscale windowing")
+    flip_dp: bool = Field(default=False, description="Flip dynamic programming")
+    calibration: bool = Field(default=True, description="Enable FDR calibration")
+    hnsw: bool = Field(default=False, description="Enable HNSW indexing")
+
+
+class CassetteModeConfig(BaseModel):
+    """Cassette mode configuration for fine-grained syntenic blocks."""
+    enable: bool = Field(default=False, description="Enable cassette mode")
+    anchors: 'CassetteAnchorsConfig' = Field(default_factory=lambda: CassetteAnchorsConfig())
+    chain: 'CassetteChainConfig' = Field(default_factory=lambda: CassetteChainConfig())
+    segmenter: 'CassetteSegmenterConfig' = Field(default_factory=lambda: CassetteSegmenterConfig())
+
+
+class CassetteAnchorsConfig(BaseModel):
+    """Cassette mode anchor filtering configuration."""
+    cosine_min: float = Field(default=0.91, description="Minimum cosine similarity threshold")
+    jaccard_min: float = Field(default=0.30, description="Minimum Jaccard similarity threshold")
+    reciprocal_topk: int = Field(default=2, description="Reciprocal top-k filtering")
+    blacklist_top_pct: float = Field(default=1.0, description="Blacklist top collision windows percentage")
+    lambda_jaccard: float = Field(default=0.5, description="Jaccard weight in chain scoring")
+    
+    @validator("cosine_min", "jaccard_min")
+    def validate_similarity_thresholds(cls, v):
+        if not 0.0 <= v <= 1.0:
+            raise ValueError("Similarity thresholds must be between 0 and 1")
+        return v
+
+
+class CassetteChainConfig(BaseModel):
+    """Cassette mode chaining configuration."""
+    delta_min: float = Field(default=0.02, description="Minimum local gain per step")
+    density_window_genes: int = Field(default=10, description="Window size for density calculation")
+    density_min_anchors_per_gene: float = Field(default=0.3, description="Minimum anchor density")
+    pos_band_genes: int = Field(default=1, description="Position drift tolerance in genes")
+    max_gap_genes: int = Field(default=1, description="Maximum gap size in genes")
+    
+    @validator("delta_min")
+    def validate_delta_min(cls, v):
+        if v <= 0:
+            raise ValueError("delta_min must be positive")
+        return v
+
+
+class CassetteSegmenterConfig(BaseModel):
+    """Cassette mode segmentation method configuration."""
+    method: Literal["chain", "ransac"] = Field(default="chain", description="Segmentation method")
+
+
 class ELSAConfig(BaseModel):
     """Complete ELSA configuration."""
     data: DataConfig = Field(default_factory=DataConfig)
@@ -118,6 +195,9 @@ class ELSAConfig(BaseModel):
     dtw: DTWConfig = Field(default_factory=DTWConfig)
     score: ScoreConfig = Field(default_factory=ScoreConfig)
     system: SystemConfig = Field(default_factory=SystemConfig)
+    window: WindowConfig = Field(default_factory=WindowConfig)
+    phase2: Phase2Config = Field(default_factory=Phase2Config)
+    cassette_mode: CassetteModeConfig = Field(default_factory=CassetteModeConfig)
     
     @model_validator(mode='after')
     def validate_consistency(self):

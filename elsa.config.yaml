@@ -1,8 +1,8 @@
 chain:
-  gap_extend: 0.5
-  gap_open: 2.0
-  offset_band: 10
-  slope_penalty: 0.05
+  gap_extend: 2.0        # INCREASED: Higher gap extension penalty
+  gap_open: 5.0          # INCREASED: Higher gap opening penalty  
+  offset_band: 1         # DECREASED: Tight positional constraints
+  slope_penalty: 0.2     # INCREASED: Higher slope penalty
 continuous:
   hnsw_enable: false
   srp_bits: 256
@@ -20,8 +20,8 @@ discrete:
   idf_min_df: 5
   minhash_hashes: 192
 dtw:
-  band: 10
-  enable: true
+  band: 1                # CONSTRAINED: Very tight DTW band
+  enable: false          # DISABLED: No DTW for cassette mode
 ingest:
   gene_caller: prodigal
   keep_partial: false
@@ -41,11 +41,50 @@ score:
   fdr_target: 0.01
   gamma: 0.2
 shingles:
-  n: 5
+  n: 2                   # REDUCED: 2-gene shingles for fine resolution
   pos_dim: 16
   strand_flag: signed
   stride: 1
   weights: triangular
+
+# Multi-scale windowing configuration
+window:
+  micro:
+    size: 2              # REDUCED: 2 genes per micro window  
+    stride: 1
+  macro:
+    size: 4              # Small macro windows if needed
+    stride: 2
+  adaptive:
+    enable: false        # Keep simple for cassettes
+
+# Phase-2 Feature Flags - DISABLE MACRO WINDOWS
+phase2:
+  enable: true
+  weighted_sketch: true
+  multiscale: false      # DISABLED: No macro windows for cassettes
+  flip_dp: false
+  calibration: true      # Enable FDR control
+  hnsw: false
+
+# Cassette mode configuration
+cassette_mode:
+  enable: true           # ENABLED: Use cassette mode for smaller blocks
+  anchors:
+    cosine_min: 0.91     # High cosine similarity threshold
+    jaccard_min: 0.30    # Jaccard similarity threshold
+    reciprocal_topk: 2   # Mutual top-k filtering
+    blacklist_top_pct: 1.0  # Blacklist top collision windows
+    lambda_jaccard: 0.5  # Jaccard weight in chain scoring
+  chain:
+    delta_min: 0.02      # Minimum local gain per step
+    density_window_genes: 10    # Window for density calculation
+    density_min_anchors_per_gene: 0.3  # Min anchor density
+    pos_band_genes: 1    # Position drift tolerance
+    max_gap_genes: 1     # Maximum gap size
+  segmenter:
+    method: chain        # Use improved chaining (vs ransac)
+
 system:
   jobs: auto
   mmap: true

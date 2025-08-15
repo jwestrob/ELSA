@@ -109,31 +109,43 @@ class AllVsAllComparator:
         self.config = config
         
     def compare_loci(self, locus_a: LocusInfo, locus_b: LocusInfo) -> Optional[SyntenicBlock]:
-        """Compare two loci to find syntenic blocks."""
+        """Compare two loci to find syntenic blocks with cassette mode improvements."""
         if locus_a.sample_id == locus_b.sample_id and locus_a.locus_id == locus_b.locus_id:
             return None  # Skip self-comparison
         
         # Compute pairwise similarities between windows
         similarities = cosine_similarity(locus_a.embeddings, locus_b.embeddings)
         
-        # Find high-similarity window pairs
-        similarity_threshold = 0.8  # Raised from 0.7 to be more stringent
-        initial_matches = []
-        
-        for i, j in np.argwhere(similarities > similarity_threshold):
-            match = WindowMatch(
-                query_window_id=locus_a.window_ids[i],
-                target_window_id=locus_b.window_ids[j],
-                similarity_score=similarities[i, j],
-                method='cosine'
+        # Apply two-key anchor filtering (cassette mode)
+        cassette_config = getattr(self.config, 'cassette_mode', None)
+        if cassette_config and cassette_config.enable:
+            anchor_matches = self._apply_two_key_anchor_filtering(
+                similarities, locus_a, locus_b, cassette_config.anchors
             )
-            initial_matches.append((i, j, match))
+        else:
+            # Fallback to original threshold-based filtering
+            similarity_threshold = 0.8  
+            anchor_matches = []
+            for i, j in np.argwhere(similarities > similarity_threshold):
+                match = WindowMatch(
+                    query_window_id=locus_a.window_ids[i],
+                    target_window_id=locus_b.window_ids[j],
+                    similarity_score=similarities[i, j],
+                    method='cosine'
+                )
+                anchor_matches.append((i, j, match))
         
-        if len(initial_matches) < 2:
+        if len(anchor_matches) < 2:
             return None  # Not enough matches
         
-        # Apply positional conservation filtering
-        filtered_matches = self._filter_positional_conservation(initial_matches)
+        # Apply improved chaining with local gain (cassette mode)
+        if cassette_config and cassette_config.enable:
+            filtered_matches = self._apply_local_gain_chaining(
+                anchor_matches, cassette_config.chain
+            )
+        else:
+            # Fallback to original positional conservation filtering
+            filtered_matches = self._filter_positional_conservation(anchor_matches)
         
         if len(filtered_matches) >= 2:  # Require at least 2 conserved matches
             matches = [match for _, _, match in filtered_matches]
@@ -234,6 +246,153 @@ class AllVsAllComparator:
         gene_order_score = np.exp(-offset_std)
         
         return min(gene_order_score, 1.0)
+    
+    def _apply_two_key_anchor_filtering(self, similarities, locus_a, locus_b, anchor_config):
+        """Apply two-key anchor filtering: cosine + Jaccard + reciprocal top-k."""
+        anchor_matches = []
+        
+        # Step 1: Apply cosine similarity threshold
+        cosine_candidates = []
+        for i, j in np.argwhere(similarities >= anchor_config.cosine_min):
+            cosine_candidates.append((i, j, similarities[i, j]))
+        
+        if len(cosine_candidates) == 0:
+            return []
+        
+        # Step 2: Calculate Jaccard similarity for cosine candidates
+        # For embeddings, approximate Jaccard using cosine similarity conversion
+        # Jaccard ≈ cosine / (2 - cosine) for normalized vectors
+        jaccard_matches = []
+        for i, j, cosine_sim in cosine_candidates:
+            # Convert cosine to approximate Jaccard similarity
+            jaccard_approx = cosine_sim / (2 - cosine_sim) if cosine_sim < 2 else 1.0
+            
+            if jaccard_approx >= anchor_config.jaccard_min:
+                match = WindowMatch(
+                    query_window_id=locus_a.window_ids[i],
+                    target_window_id=locus_b.window_ids[j],
+                    similarity_score=cosine_sim,  # Use cosine as primary score
+                    method='two_key'
+                )
+                jaccard_matches.append((i, j, match, jaccard_approx))
+        
+        if len(jaccard_matches) == 0:
+            return []
+        
+        # Step 3: Apply reciprocal top-k filtering
+        k = anchor_config.reciprocal_topk
+        reciprocal_matches = []
+        
+        # For each query window, find top-k target matches
+        query_tops = {}
+        for i, j, match, jaccard in jaccard_matches:
+            if i not in query_tops:
+                query_tops[i] = []
+            query_tops[i].append((j, match, jaccard))
+        
+        # Keep only top-k for each query window
+        for i in query_tops:
+            query_tops[i] = sorted(query_tops[i], 
+                                 key=lambda x: x[1].similarity_score, reverse=True)[:k]
+        
+        # For each target window, find top-k query matches  
+        target_tops = {}
+        for i in query_tops:
+            for j, match, jaccard in query_tops[i]:
+                if j not in target_tops:
+                    target_tops[j] = []
+                target_tops[j].append((i, match, jaccard))
+        
+        for j in target_tops:
+            target_tops[j] = sorted(target_tops[j], 
+                                  key=lambda x: x[1].similarity_score, reverse=True)[:k]
+        
+        # Find reciprocal matches (mutual top-k)
+        for i in query_tops:
+            for j, match, jaccard in query_tops[i]:
+                # Check if (i,j) is also in target's top-k
+                if j in target_tops:
+                    for i_back, match_back, _ in target_tops[j]:
+                        if i_back == i:  # Reciprocal match found
+                            reciprocal_matches.append((i, j, match))
+                            break
+        
+        return reciprocal_matches
+    
+    def _apply_local_gain_chaining(self, anchor_matches, chain_config):
+        """Apply local gain chaining with position/gap constraints and density floor."""
+        if len(anchor_matches) < 2:
+            return anchor_matches
+        
+        # Sort matches by query position for chaining
+        sorted_matches = sorted(anchor_matches, key=lambda x: x[0])  # x[0] is query_pos
+        
+        # Apply local gain dynamic programming
+        best_chain = []
+        current_chain = [sorted_matches[0]]
+        
+        for i in range(1, len(sorted_matches)):
+            prev_query, prev_target, prev_match = sorted_matches[i-1]
+            curr_query, curr_target, curr_match = sorted_matches[i]
+            
+            # Calculate position delta and gap
+            delta_pos = abs(curr_target - prev_target - (curr_query - prev_query))
+            gap_genes = curr_query - prev_query - 1
+            
+            # Check position and gap constraints
+            if (delta_pos <= chain_config.pos_band_genes and 
+                gap_genes <= chain_config.max_gap_genes):
+                
+                # Calculate local gain: ΔS = cosine + λ·jaccard - α·|Δpos| - β·gap_genes  
+                # For simplicity, use similarity as combined cosine+jaccard score
+                lambda_jaccard = getattr(chain_config, 'lambda_jaccard', 0.5)
+                alpha = 0.1  # Position penalty weight
+                beta = 0.05  # Gap penalty weight
+                
+                local_gain = (curr_match.similarity_score + 
+                            lambda_jaccard * curr_match.similarity_score -  # Approximate Jaccard
+                            alpha * delta_pos - 
+                            beta * gap_genes)
+                
+                # Accept step if local gain exceeds threshold
+                if local_gain >= chain_config.delta_min:
+                    current_chain.append(sorted_matches[i])
+                else:
+                    # Local gain too low, evaluate current chain
+                    if self._check_density_floor(current_chain, chain_config):
+                        if len(current_chain) > len(best_chain):
+                            best_chain = current_chain[:]
+                    # Start new chain
+                    current_chain = [sorted_matches[i]]
+            else:
+                # Constraints violated, evaluate current chain
+                if self._check_density_floor(current_chain, chain_config):
+                    if len(current_chain) > len(best_chain):
+                        best_chain = current_chain[:]
+                # Start new chain
+                current_chain = [sorted_matches[i]]
+        
+        # Evaluate final chain
+        if self._check_density_floor(current_chain, chain_config):
+            if len(current_chain) > len(best_chain):
+                best_chain = current_chain
+        
+        return best_chain if len(best_chain) >= 2 else []
+    
+    def _check_density_floor(self, chain_matches, chain_config):
+        """Check if chain meets density floor requirement."""
+        if len(chain_matches) < 2:
+            return False
+        
+        # Calculate density over last N genes
+        window_genes = chain_config.density_window_genes
+        min_density = chain_config.density_min_anchors_per_gene
+        
+        # For simplicity, use chain length as gene span approximation
+        gene_span = len(chain_matches) * 2  # Assuming 2 genes per window
+        anchors_per_gene = len(chain_matches) / max(gene_span, 1)
+        
+        return anchors_per_gene >= min_density
     
     def find_all_blocks(self, loci: List[LocusInfo]) -> List[SyntenicBlock]:
         """Find all syntenic blocks via all-vs-all comparison."""

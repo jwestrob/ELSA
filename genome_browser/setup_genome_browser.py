@@ -219,12 +219,19 @@ def main():
         # Setup database
         setup_database(args.db_path)
         
-        # Run PFAM annotation if requested and available
+        # Handle PFAM annotations
+        pfam_results_file = args.pfam_output / "pfam_annotation_results.json"
         pfam_results = None
-        if not args.skip_pfam and req_status != "no_astra":
-            # Check if PFAM results already exist
-            pfam_results_file = args.pfam_output / "pfam_annotation_results.json"
-            
+        
+        if args.skip_pfam:
+            # Skip PFAM generation but use existing results if available
+            if pfam_results_file.exists():
+                logger.info(f"Skipping PFAM generation but using existing results: {pfam_results_file}")
+                pfam_results = pfam_results_file
+            else:
+                logger.info("Skipping PFAM annotation (--skip-pfam flag) - no existing results found")
+        elif req_status != "no_astra":
+            # Run PFAM annotation if astra is available
             if pfam_results_file.exists() and not args.force:
                 logger.info(f"PFAM annotation results already exist: {pfam_results_file}")
                 logger.info("Use --force to regenerate PFAM annotations")
@@ -236,10 +243,13 @@ def main():
                     genome_data_paths['proteins_dir'], args.pfam_output, 
                     args.threads, args.max_workers
                 )
-        elif args.skip_pfam:
-            logger.info("Skipping PFAM annotation (--skip-pfam flag)")
         else:
-            logger.info("Skipping PFAM annotation (astra not available)")
+            # Astra not available, but check for existing results
+            if pfam_results_file.exists():
+                logger.info(f"Astra not available, but using existing PFAM results: {pfam_results_file}")
+                pfam_results = pfam_results_file
+            else:
+                logger.info("Skipping PFAM annotation (astra not available)")
         
         # Ingest all data
         ingest_data(args.db_path, genome_data_paths, args.blocks_file, 

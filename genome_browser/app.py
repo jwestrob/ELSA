@@ -617,6 +617,79 @@ def display_genome_viewer():
         st.session_state.current_page = 'block_explorer'
         st.rerun()
     
+    # GPT-5 Analysis Section (full width at top)
+    st.divider()
+    st.subheader("🤖 GPT-5 Functional Analysis")
+    
+    # Initialize GPT analysis state
+    gpt_state_key = f"gpt_analysis_{block['block_id']}"
+    if gpt_state_key not in st.session_state:
+        st.session_state[gpt_state_key] = {"analyzed": False, "data": None, "report": None}
+    
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        if st.button("🤖 Analyze with GPT-5", key="gpt_analysis_btn"):
+            with st.spinner("Analyzing syntenic block with GPT-5..."):
+                try:
+                    from gpt5_analyzer import analyze_syntenic_block
+                    analysis_data, gpt_report = analyze_syntenic_block(block['block_id'])
+                    
+                    if analysis_data and gpt_report:
+                        st.session_state[gpt_state_key] = {
+                            "analyzed": True,
+                            "data": analysis_data,
+                            "report": gpt_report
+                        }
+                        st.success("✅ GPT-5 analysis completed!")
+                    else:
+                        st.error("❌ Failed to generate GPT-5 analysis")
+                        if gpt_report:
+                            st.write(f"Error: {gpt_report}")
+                
+                except ImportError:
+                    st.error("❌ GPT-5 analyzer module not found")
+                except Exception as e:
+                    st.error(f"❌ Analysis failed: {str(e)}")
+                    logger.error(f"GPT analysis error: {e}")
+    
+    with col2:
+        if st.session_state[gpt_state_key]["analyzed"]:
+            st.info("GPT-5 analysis available below")
+        else:
+            st.info("Click 'Analyze with GPT-5' to generate functional analysis")
+    
+    # Display GPT analysis if available
+    if st.session_state[gpt_state_key]["analyzed"]:
+        analysis_data = st.session_state[gpt_state_key]["data"]
+        gpt_report = st.session_state[gpt_state_key]["report"]
+        
+        # Show block summary
+        with st.expander("📋 **Block Summary**", expanded=True):
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Identity", f"{analysis_data.identity:.1%}")
+            with col2:
+                st.metric("Score", f"{analysis_data.score:.2f}")
+            with col3:
+                st.metric("Length", f"{analysis_data.block_length} windows")
+            
+            st.write(f"**Query**: {analysis_data.query_locus.organism_name} ({analysis_data.query_locus.gene_count} genes)")
+            st.write(f"**Target**: {analysis_data.target_locus.organism_name} ({analysis_data.target_locus.gene_count} genes)")
+        
+        # Display GPT analysis
+        with st.expander("🧠 **GPT-5 Functional Analysis Report**", expanded=True):
+            st.markdown(gpt_report)
+        
+        # Download button
+        st.download_button(
+            label="📄 Download Analysis Report",
+            data=f"# GPT-5 Analysis Report - Block {block['block_id']}\n\n{gpt_report}",
+            file_name=f"gpt5_analysis_block_{block['block_id']}.md",
+            mime="text/markdown"
+        )
+    
+    st.divider()
+    
     # Debug info
     st.write(f"**Debug**: Loading genes for query locus: {block['query_locus']}")
     

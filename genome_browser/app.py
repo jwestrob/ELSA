@@ -96,7 +96,7 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
         query += " AND sb.block_type = ?"
         params.append(block_type)
     
-    query += " ORDER BY sb.length DESC, sb.identity DESC"
+    query += " ORDER BY sb.identity DESC, sb.block_id"  # Show high-quality alignments in a more representative order
     query += " LIMIT ? OFFSET ?"
     params.extend([limit, offset])
     
@@ -285,12 +285,12 @@ def create_sidebar_filters() -> Dict:
     
     # Identity threshold
     identity_threshold = st.sidebar.slider(
-        "Min Identity",
+        "Min Embedding Similarity",
         min_value=0.0,
         max_value=1.0,
         value=0.7,
         step=0.05,
-        help="Minimum identity score for syntenic blocks"
+        help="Minimum cosine similarity in ESM2 embedding space"
     )
     
     # Results per page
@@ -454,14 +454,19 @@ def display_block_explorer(filters: Dict):
     # Display blocks table
     st.subheader(f"Blocks {offset + 1}-{offset + len(blocks_df)} of {total_blocks:,}")
     
-    # Format display columns
+    # Format display columns - keep length as numeric for proper sorting
     display_df = blocks_df[['block_id', 'query_locus', 'target_locus', 
                            'length', 'identity', 'score', 'block_type']].copy()
     
-    # Format numbers
-    display_df['length'] = display_df['length'].apply(lambda x: f"{x:,} gene windows")
+    # Format other columns but keep length numeric
     display_df['identity'] = display_df['identity'].apply(lambda x: f"{x:.3f}")
     display_df['score'] = display_df['score'].apply(lambda x: f"{x:.1f}")
+    
+    # Rename columns to show proper units and clarify data types
+    display_df = display_df.rename(columns={
+        'length': 'length (gene windows)',
+        'identity': 'embedding_similarity'
+    })
     
     # Add selection
     event = st.dataframe(
@@ -494,7 +499,7 @@ def display_block_explorer(filters: Dict):
         
         with col2:
             st.write("**Target Locus:**", selected_block['target_locus'])
-            st.write("**Identity:**", f"{selected_block['identity']:.3f}")
+            st.write("**Embedding Similarity:**", f"{selected_block['identity']:.3f}")
             st.write("**Target Windows:**", f"{selected_block['n_target_windows']:,}")
             
             # Show window range information if available
@@ -560,7 +565,7 @@ def display_block_explorer(filters: Dict):
                     col1, col2 = st.columns(2)
                     with col1:
                         st.metric("**Window Matches**", len(query_windows))
-                        st.metric("**Avg Identity**", f"{selected_block['identity']:.3f}")
+                        st.metric("**Embedding Similarity**", f"{selected_block['identity']:.3f}")
                     
                     with col2:
                         # Calculate positional conservation
@@ -667,7 +672,7 @@ def display_genome_viewer():
         with st.expander("📋 **Block Summary**", expanded=True):
             col1, col2, col3 = st.columns(3)
             with col1:
-                st.metric("Identity", f"{analysis_data.identity:.1%}")
+                st.metric("Embedding Similarity", f"{analysis_data.identity:.3f}")
             with col2:
                 st.metric("Score", f"{analysis_data.score:.2f}")
             with col3:
@@ -843,6 +848,484 @@ def display_genome_viewer():
                 )
                 st.plotly_chart(comparative_fig, use_container_width=True)
 
+@st.cache_data
+def load_cluster_stats():
+    """Load precomputed cluster statistics."""
+    try:
+        from cluster_analyzer import get_all_cluster_stats
+        return get_all_cluster_stats()
+    except Exception as e:
+        logger.error(f"Error loading cluster stats: {e}")
+        return []
+
+@st.cache_data
+def generate_cluster_summaries(cluster_stats):
+    """Generate GPT-4.1-mini summaries for all clusters."""
+    try:
+        from cluster_analyzer import ClusterAnalyzer
+        analyzer = ClusterAnalyzer(Path("genome_browser.db"))
+        
+        summaries = {}
+        for stats in cluster_stats:
+            summary = analyzer.generate_cluster_summary(stats)
+            summaries[stats.cluster_id] = summary
+        
+        return summaries
+    except Exception as e:
+        logger.error(f"Error generating cluster summaries: {e}")
+        return {}
+
+def display_cluster_explorer():
+    """Display cluster explorer interface."""
+    st.header("🧩 Syntenic Block Clusters")
+    st.markdown("*Explore clusters of related syntenic blocks with AI-generated functional summaries*")
+    
+    # Load cluster data
+    with st.spinner("Loading cluster analysis..."):
+        cluster_stats = load_cluster_stats()
+    
+    if not cluster_stats:
+        st.error("No cluster data available. Please run cluster analysis first.")
+        return
+    
+    st.success(f"Found {len(cluster_stats)} clusters")
+    
+    # Cluster overview metrics
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        total_blocks = sum(stats.size for stats in cluster_stats)
+        st.metric("Total Blocks", f"{total_blocks:,}")
+    with col2:
+        avg_cluster_size = np.mean([stats.size for stats in cluster_stats])
+        st.metric("Avg Cluster Size", f"{avg_cluster_size:.1f}")
+    with col3:
+        total_organisms = len(set(org for stats in cluster_stats for org in stats.organisms))
+        st.metric("Organisms Involved", total_organisms)
+    with col4:
+        large_clusters = len([s for s in cluster_stats if s.size >= 100])
+        st.metric("Large Clusters (≥100)", large_clusters)
+    
+    # Filter controls
+    st.subheader("🔍 Filter Clusters")
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        size_filter = st.selectbox(
+            "Cluster Size",
+            ["All", "Large (≥100)", "Medium (10-99)", "Small (<10)"],
+            index=0
+        )
+    
+    with col2:
+        type_filter = st.selectbox(
+            "Cluster Type", 
+            ["All"] + list(set(stats.cluster_type for stats in cluster_stats)),
+            index=0
+        )
+    
+    with col3:
+        organism_filter = st.selectbox(
+            "Organism",
+            ["All"] + sorted(set(org for stats in cluster_stats for org in stats.organisms)),
+            index=0
+        )
+    
+    # Apply filters
+    filtered_stats = cluster_stats
+    if size_filter != "All":
+        if size_filter == "Large (≥100)":
+            filtered_stats = [s for s in filtered_stats if s.size >= 100]
+        elif size_filter == "Medium (10-99)":
+            filtered_stats = [s for s in filtered_stats if 10 <= s.size < 100]
+        elif size_filter == "Small (<10)":
+            filtered_stats = [s for s in filtered_stats if s.size < 10]
+    
+    if type_filter != "All":
+        filtered_stats = [s for s in filtered_stats if s.cluster_type == type_filter]
+    
+    if organism_filter != "All":
+        filtered_stats = [s for s in filtered_stats if organism_filter in s.organisms]
+    
+    st.info(f"Showing {len(filtered_stats)} clusters")
+    
+    # Display clusters immediately with plots, generate AI summaries individually
+    if filtered_stats:
+        st.subheader("📋 Cluster Overview")
+        
+        # Display clusters in a grid
+        for i in range(0, len(filtered_stats), 2):
+            col1, col2 = st.columns(2)
+            
+            # First cluster card
+            stats = filtered_stats[i]
+            with col1:
+                display_cluster_card_with_async_summary(stats)
+            
+            # Second cluster card (if exists)
+            if i + 1 < len(filtered_stats):
+                stats = filtered_stats[i + 1]
+                with col2:
+                    display_cluster_card_with_async_summary(stats)
+
+def find_representative_block_for_cluster(stats):
+    """Find a representative syntenic block for the cluster."""
+    try:
+        conn = sqlite3.connect("genome_browser.db")
+        
+        # Try to find a block matching the representative loci
+        if stats.representative_query and stats.representative_target:
+            # Search for blocks involving the representative loci
+            block_query = """
+                SELECT block_id, query_locus, target_locus, identity, score, length
+                FROM syntenic_blocks 
+                WHERE (query_locus LIKE ? OR target_locus LIKE ?)
+                   OR (query_locus LIKE ? OR target_locus LIKE ?)
+                ORDER BY score DESC 
+                LIMIT 1
+            """
+            cursor = conn.execute(block_query, (
+                f"%{stats.representative_query}%", f"%{stats.representative_query}%",
+                f"%{stats.representative_target}%", f"%{stats.representative_target}%"
+            ))
+            block_row = cursor.fetchone()
+            
+            if block_row:
+                # Create a block dict for the genome viewer
+                selected_block = {
+                    'block_id': block_row[0],
+                    'query_locus': block_row[1],
+                    'target_locus': block_row[2],
+                    'identity': block_row[3],
+                    'score': block_row[4],
+                    'length': block_row[5]
+                }
+                conn.close()
+                return selected_block
+        
+        # Fallback: find any high-scoring block
+        fallback_query = """
+            SELECT block_id, query_locus, target_locus, identity, score, length
+            FROM syntenic_blocks 
+            ORDER BY score DESC 
+            LIMIT 1
+            OFFSET ?
+        """
+        offset = stats.cluster_id % 100  # Vary by cluster
+        cursor = conn.execute(fallback_query, (offset,))
+        block_row = cursor.fetchone()
+        
+        if block_row:
+            selected_block = {
+                'block_id': block_row[0],
+                'query_locus': block_row[1],
+                'target_locus': block_row[2],
+                'identity': block_row[3],
+                'score': block_row[4],
+                'length': block_row[5]
+            }
+            conn.close()
+            return selected_block
+            
+        conn.close()
+        return None
+        
+    except Exception as e:
+        logger.error(f"Error finding representative block: {e}")
+        return None
+
+def create_domain_frequency_chart(domain_counts, cluster_id):
+    """Create a mini domain frequency chart for cluster cards."""
+    if not domain_counts:
+        return None
+    
+    # Take top 8 domains for the mini chart
+    top_domain_data = domain_counts[:8]
+    domains = [item[0] for item in top_domain_data]
+    counts = [item[1] for item in top_domain_data]
+    
+    # Reverse order so most common domains appear at the top
+    domains.reverse()
+    counts.reverse()
+    
+    # Create a horizontal bar chart with dark colors and actual counts
+    fig = go.Figure(go.Bar(
+        x=counts,
+        y=domains,
+        orientation='h',
+        marker=dict(
+            color='#2E5CAF',  # Dark blue for contrast
+            line=dict(color='#1E3A6F', width=1)
+        ),
+        showlegend=False,
+        text=counts,  # Show counts on bars
+        textposition='inside',
+        textfont=dict(color='white', size=10)
+    ))
+    
+    fig.update_layout(
+        height=200,
+        margin=dict(l=120, r=10, t=10, b=20),  # Increased left margin for bigger labels
+        xaxis=dict(showticklabels=True, showgrid=True, gridcolor='lightgray', 
+                   tickfont=dict(size=9, color='#333333')),
+        yaxis=dict(tickfont=dict(size=12, color='#333333', family='Arial Black')),  # Bigger, bold labels
+        plot_bgcolor='white',
+        paper_bgcolor='white'
+    )
+    
+    return fig
+
+def display_cluster_card_with_async_summary(stats):
+    """Display a cluster card with immediate plot rendering and async AI summary."""
+    with st.container():
+        # Header
+        st.markdown(f"""
+        <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin: 10px 0; background-color: #f9f9f9;">
+            <h4 style="color: #2E5CAF; margin: 0 0 10px 0;">🧩 Cluster {stats.cluster_id}</h4>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Stats summary
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.write(f"**Size:** {stats.size} blocks ({stats.cluster_type})")
+            st.write(f"**Length:** {stats.consensus_length} windows (avg)")
+        with col2:
+            st.write(f"**Identity:** {stats.avg_identity:.1%} ± {stats.diversity:.3f}")
+            st.write(f"**Organisms:** {stats.organism_count} ({', '.join(stats.organisms[:2])}{'...' if len(stats.organisms) > 2 else ''})")
+        
+        # Domain frequency mini-chart (renders immediately)
+        if hasattr(stats, 'domain_counts') and stats.domain_counts:
+            st.markdown("**Top PFAM Domains:**")
+            chart = create_domain_frequency_chart(stats.domain_counts, stats.cluster_id)
+            if chart:
+                st.plotly_chart(chart, use_container_width=True, config={'displayModeBar': False}, key=f"domain_chart_{stats.cluster_id}")
+        
+        # AI Summary (generated on demand when expanded)
+        with st.expander("🤖 **AI Functional Summary**", expanded=False):
+            # Use session state to cache AI summaries per cluster
+            summary_key = f"cluster_summary_{stats.cluster_id}"
+            
+            if summary_key not in st.session_state:
+                st.session_state[summary_key] = {"generated": False, "content": ""}
+            
+            if not st.session_state[summary_key]["generated"]:
+                with st.spinner("Generating AI analysis..."):
+                    try:
+                        from cluster_analyzer import ClusterAnalyzer
+                        analyzer = ClusterAnalyzer(Path("genome_browser.db"))
+                        summary = analyzer.generate_cluster_summary(stats)
+                        st.session_state[summary_key] = {"generated": True, "content": summary}
+                    except Exception as e:
+                        st.session_state[summary_key] = {"generated": True, "content": f"Error generating summary: {e}"}
+            
+            st.markdown(st.session_state[summary_key]["content"])
+        
+        # Action buttons
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button(f"📊 Explore Cluster {stats.cluster_id}", key=f"explore_{stats.cluster_id}"):
+                # Find a representative block and go to genome viewer
+                representative_block = find_representative_block_for_cluster(stats)
+                if representative_block:
+                    st.session_state.selected_block = representative_block
+                    st.session_state.current_page = 'genome_viewer'
+                    st.rerun()
+                else:
+                    # Fallback to cluster detail if no block found
+                    st.session_state.selected_cluster = stats.cluster_id
+                    st.session_state.current_page = 'cluster_detail'
+                    st.rerun()
+        
+        with col2:
+            if st.button(f"🧬 View Representative", key=f"repr_{stats.cluster_id}"):
+                # Find a representative block ID and jump to genome viewer
+                # This is simplified - would need to query the actual block
+                st.info(f"Representative: {stats.representative_query} ↔ {stats.representative_target}")
+
+def display_cluster_card(stats, summary):
+    """Legacy function - Display a single cluster card with pre-generated summary."""
+    with st.container():
+        # Header
+        st.markdown(f"""
+        <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin: 10px 0; background-color: #f9f9f9;">
+            <h4 style="color: #2E5CAF; margin: 0 0 10px 0;">🧩 Cluster {stats.cluster_id}</h4>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Stats summary
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.write(f"**Size:** {stats.size} blocks ({stats.cluster_type})")
+            st.write(f"**Length:** {stats.consensus_length} windows (avg)")
+        with col2:
+            st.write(f"**Identity:** {stats.avg_identity:.1%} ± {stats.diversity:.3f}")
+            st.write(f"**Organisms:** {stats.organism_count} ({', '.join(stats.organisms[:2])}{'...' if len(stats.organisms) > 2 else ''})")
+        
+        # Domain frequency mini-chart
+        if hasattr(stats, 'domain_counts') and stats.domain_counts:
+            st.markdown("**Top PFAM Domains:**")
+            chart = create_domain_frequency_chart(stats.domain_counts, stats.cluster_id)
+            if chart:
+                st.plotly_chart(chart, use_container_width=True, config={'displayModeBar': False}, key=f"domain_chart_{stats.cluster_id}")
+        
+        # AI Summary
+        with st.expander("🤖 **AI Functional Summary**", expanded=False):
+            st.markdown(summary)
+        
+        # Action buttons
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button(f"📊 Explore Cluster {stats.cluster_id}", key=f"explore_{stats.cluster_id}"):
+                # Find a representative block and go to genome viewer
+                representative_block = find_representative_block_for_cluster(stats)
+                if representative_block:
+                    st.session_state.selected_block = representative_block
+                    st.session_state.current_page = 'genome_viewer'
+                    st.rerun()
+                else:
+                    # Fallback to cluster detail if no block found
+                    st.session_state.selected_cluster = stats.cluster_id
+                    st.session_state.current_page = 'cluster_detail'
+                    st.rerun()
+        
+        with col2:
+            if st.button(f"🧬 View Representative", key=f"repr_{stats.cluster_id}"):
+                # Find a representative block ID and jump to genome viewer
+                # This is simplified - would need to query the actual block
+                st.info(f"Representative: {stats.representative_query} ↔ {stats.representative_target}")
+
+def display_cluster_detail():
+    """Display detailed view of a specific cluster."""
+    if 'selected_cluster' not in st.session_state:
+        st.error("No cluster selected")
+        if st.button("← Back to Cluster Explorer"):
+            st.session_state.current_page = 'cluster_explorer'
+            st.rerun()
+        return
+    
+    cluster_id = st.session_state.selected_cluster
+    
+    # Back button
+    if st.button("← Back to Cluster Explorer"):
+        st.session_state.current_page = 'cluster_explorer'
+        st.rerun()
+    
+    st.header(f"🧩 Cluster {cluster_id} - Detailed Analysis")
+    
+    # Load cluster data
+    with st.spinner("Loading cluster details..."):
+        try:
+            from cluster_analyzer import ClusterAnalyzer
+            analyzer = ClusterAnalyzer(Path("genome_browser.db"))
+            stats = analyzer.get_cluster_stats(cluster_id)
+            
+            if not stats:
+                st.error(f"Cluster {cluster_id} not found")
+                return
+                
+        except Exception as e:
+            st.error(f"Error loading cluster details: {e}")
+            return
+    
+    # Cluster overview
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Cluster Size", f"{stats.size} blocks")
+    with col2:
+        st.metric("Consensus Length", f"{stats.consensus_length} windows")
+    with col3:
+        st.metric("Average Identity", f"{stats.avg_identity:.1%}")
+    with col4:
+        st.metric("Organisms", f"{stats.organism_count}")
+    
+    # Generate and display AI analysis
+    st.subheader("🤖 AI Functional Analysis")
+    with st.spinner("Generating comprehensive GPT-4.1-mini analysis..."):
+        summary = analyzer.generate_cluster_summary(stats)
+    
+    st.markdown(summary)
+    
+    # Cluster composition
+    st.subheader("📊 Cluster Composition")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("**Basic Statistics:**")
+        st.write(f"• **Type:** {stats.cluster_type}")
+        st.write(f"• **Size range:** {stats.length_range[0]} - {stats.length_range[1]} windows")
+        st.write(f"• **Identity range:** {stats.identity_range[0]:.1%} - {stats.identity_range[1]:.1%}")
+        st.write(f"• **Diversity:** {stats.diversity:.3f}")
+        st.write(f"• **Total genes:** ~{stats.total_genes}")
+        st.write(f"• **Unique PFAM domains:** {stats.unique_pfam_domains}")
+    
+    with col2:
+        st.markdown("**Organisms Involved:**")
+        for org in stats.organisms:
+            st.write(f"• {org}")
+    
+    # Representative block
+    st.subheader("🧬 Representative Block")
+    if stats.representative_query and stats.representative_target:
+        st.write(f"**Query:** {stats.representative_query}")
+        st.write(f"**Target:** {stats.representative_target}")
+        
+        # Try to find and display the representative block
+        conn = sqlite3.connect("genome_browser.db")
+        try:
+            # Simple query to find a block between these loci
+            repr_query = """
+                SELECT block_id, identity, score, length 
+                FROM syntenic_blocks 
+                WHERE (query_locus LIKE ? OR target_locus LIKE ?)
+                   OR (query_locus LIKE ? OR target_locus LIKE ?)
+                ORDER BY score DESC 
+                LIMIT 1
+            """
+            cursor = conn.execute(repr_query, (
+                f"%{stats.representative_query}%", f"%{stats.representative_query}%",
+                f"%{stats.representative_target}%", f"%{stats.representative_target}%"
+            ))
+            repr_block = cursor.fetchone()
+            
+            if repr_block:
+                st.write(f"**Block ID:** {repr_block[0]}")
+                st.write(f"**Identity:** {repr_block[1]:.1%}")
+                st.write(f"**Score:** {repr_block[2]:.2f}")
+                st.write(f"**Length:** {repr_block[3]} windows")
+                
+                if st.button("🧬 View Representative Block", key="view_repr_block"):
+                    # Create a mock block dict for navigation
+                    selected_block = {
+                        'block_id': repr_block[0],
+                        'query_locus': stats.representative_query,
+                        'target_locus': stats.representative_target,
+                        'identity': repr_block[1],
+                        'score': repr_block[2],
+                        'length': repr_block[3]
+                    }
+                    st.session_state.selected_block = selected_block
+                    st.session_state.current_page = 'genome_viewer'
+                    st.rerun()
+            else:
+                st.warning("Representative block not found in database")
+                
+        except Exception as e:
+            st.warning(f"Could not load representative block: {e}")
+        finally:
+            conn.close()
+    
+    # PFAM domain analysis
+    if stats.dominant_functions:
+        st.subheader("🔬 PFAM Domain Analysis")
+        st.markdown("**Most frequent domains in this cluster:**")
+        
+        # Display domains in a nice format
+        for i, domain in enumerate(stats.dominant_functions[:20], 1):  # Show top 20
+            st.write(f"{i}. {domain}")
+        
+        if len(stats.dominant_functions) > 20:
+            st.write(f"... and {len(stats.dominant_functions) - 20} more domains")
+
 def main():
     """Main Streamlit application."""
     # Title and navigation
@@ -854,7 +1337,7 @@ def main():
         st.session_state.current_page = 'dashboard'
     
     # Navigation tabs
-    tab1, tab2, tab3 = st.tabs(["📊 Dashboard", "🔍 Block Explorer", "🧬 Genome Viewer"])
+    tab1, tab2, tab3, tab4 = st.tabs(["📊 Dashboard", "🔍 Block Explorer", "🧬 Genome Viewer", "🧩 Cluster Explorer"])
     
     with tab1:
         if st.session_state.current_page != 'genome_viewer':
@@ -870,6 +1353,13 @@ def main():
     with tab3:
         st.session_state.current_page = 'genome_viewer'
         display_genome_viewer()
+    
+    with tab4:
+        if st.session_state.get('current_page') == 'cluster_detail':
+            display_cluster_detail()
+        else:
+            st.session_state.current_page = 'cluster_explorer'
+            display_cluster_explorer()
 
 if __name__ == "__main__":
     main()

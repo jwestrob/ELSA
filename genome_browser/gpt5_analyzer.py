@@ -85,15 +85,14 @@ class GPT5Analyzer:
     
     def __init__(self, db_path: Path):
         self.db_path = db_path
-        # Initialize GPT-5 with DSPy and LiteLLM
+        # Initialize GPT-5 with DSPy and LiteLLM (no global configuration)
         self.lm = dspy.LM(
             "openai/gpt-5",
             temperature=1.0,
             max_tokens=20000
         )
-        dspy.configure(lm=self.lm)
         
-        # Initialize the signature
+        # Initialize the signature without direct LM (use context switching)
         self.analyzer = dspy.Predict(SyntenicBlockAnalyzer)
     
     def get_syntenic_block_analysis(self, block_id: int) -> Optional[SyntenicBlockAnalysis]:
@@ -247,17 +246,18 @@ class GPT5Analyzer:
         """Generate GPT-5 analysis of the syntenic block using DSPy."""
         try:
             # Prepare structured data for GPT-5
-            block_summary = f"Block ID: {analysis.block_id}, Identity: {analysis.identity:.1%}, Score: {analysis.score:.2f}, Length: {analysis.block_length} windows"
+            block_summary = f"Block ID: {analysis.block_id}, Embedding Similarity: {analysis.identity:.3f} (cosine), Score: {analysis.score:.2f}, Length: {analysis.block_length} windows"
             
             query_data = self._format_locus_for_analysis(analysis.query_locus, "Query")
             target_data = self._format_locus_for_analysis(analysis.target_locus, "Target")
             
-            # Call GPT-5 using DSPy signature
-            result = self.analyzer(
-                block_summary=block_summary,
-                query_locus_data=query_data,
-                target_locus_data=target_data
-            )
+            # Call GPT-5 using DSPy signature with explicit LM context
+            with dspy.context(lm=self.lm):
+                result = self.analyzer(
+                    block_summary=block_summary,
+                    query_locus_data=query_data,
+                    target_locus_data=target_data
+                )
             
             # Format the structured output into a comprehensive report
             report = f"""# GPT-5 Syntenic Block Analysis

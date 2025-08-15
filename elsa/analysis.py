@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import json
 from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple, Set
+from typing import Dict, List, Any, Optional, Tuple, Set, Callable
 from dataclasses import dataclass, asdict
 import itertools
 from collections import defaultdict
@@ -22,6 +22,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from .params import ELSAConfig
 from .manifest import ELSAManifest
 from .search import SearchEngine, SyntenicBlock, WindowMatch
+from .analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
 
 console = Console()
 logger = logging.getLogger(__name__)
@@ -431,7 +432,7 @@ class SyntenicClusterer:
         self.config = config
     
     def extract_block_features(self, blocks: List[SyntenicBlock]) -> np.ndarray:
-        """Extract feature vectors for clustering."""
+        """Extract feature vectors for clustering (legacy method)."""
         features = []
         
         for block in blocks:
@@ -447,13 +448,55 @@ class SyntenicClusterer:
         
         return np.array(features)
     
-    def cluster_blocks(self, blocks: List[SyntenicBlock]) -> List[SyntenicCluster]:
-        """Cluster syntenic blocks using DBSCAN."""
+    def cluster_blocks(self, blocks: List[SyntenicBlock], window_embed_lookup: Callable = None) -> Tuple[List[SyntenicCluster], Dict[int, int]]:
+        """Cluster syntenic blocks using configurable method."""
         if len(blocks) < 2:
-            return []
+            return [], {}
         
-        console.print(f"\n[bold]Clustering {len(blocks)} syntenic blocks...[/bold]")
+        clustering_config = getattr(self.config, 'analyze', None)
+        if clustering_config:
+            clustering_config = getattr(clustering_config, 'clustering', None)
         
+        # Get clustering method from config
+        method = getattr(clustering_config, 'method', 'mutual_jaccard') if clustering_config else 'mutual_jaccard'
+        
+        if method == 'mutual_jaccard' and window_embed_lookup is not None:
+            console.print(f"\n[bold]Clustering {len(blocks)} syntenic blocks with Mutual-k Jaccard...[/bold]")
+            
+            # Use new Mutual-k Jaccard clustering
+            cluster_assignments = cluster_blocks_jaccard(blocks, window_embed_lookup, clustering_config)
+            
+            # Convert to legacy cluster format for compatibility
+            clusters = self._convert_assignments_to_clusters(blocks, cluster_assignments)
+            
+            console.print(f"Found {len(clusters)} non-sink clusters")
+            return clusters, cluster_assignments
+            
+        elif method == 'dbscan' or window_embed_lookup is None:
+            console.print(f"\n[bold]Clustering {len(blocks)} syntenic blocks with DBSCAN (legacy)...[/bold]")
+            
+            # Fall back to legacy DBSCAN clustering
+            clusters = self._cluster_blocks_dbscan(blocks)
+            
+            # Create cluster assignments (no sink cluster for DBSCAN)
+            cluster_assignments = {}
+            for i, block in enumerate(blocks):
+                # Find which cluster this block belongs to
+                for cluster in clusters:
+                    if block in cluster.blocks:
+                        cluster_assignments[i] = cluster.cluster_id + 1  # Offset by 1 to avoid sink
+                        break
+                else:
+                    cluster_assignments[i] = -1  # DBSCAN noise
+            
+            return clusters, cluster_assignments
+            
+        else:
+            console.print(f"\n[bold]Clustering disabled[/bold]")
+            return [], {}
+    
+    def _cluster_blocks_dbscan(self, blocks: List[SyntenicBlock]) -> List[SyntenicCluster]:
+        """Legacy DBSCAN clustering method."""
         # Extract features
         features = self.extract_block_features(blocks)
         
@@ -496,7 +539,41 @@ class SyntenicClusterer:
             )
             clusters.append(cluster)
         
-        console.print(f"Found {len(clusters)} clusters")
+        return clusters
+    
+    def _convert_assignments_to_clusters(self, blocks: List[SyntenicBlock], cluster_assignments: Dict[int, int]) -> List[SyntenicCluster]:
+        """Convert cluster assignments to SyntenicCluster objects."""
+        # Group blocks by cluster ID (excluding sink cluster 0)
+        cluster_groups = defaultdict(list)
+        
+        for i, block in enumerate(blocks):
+            cluster_id = cluster_assignments.get(i, 0)
+            if cluster_id != 0:  # Skip sink cluster
+                cluster_groups[cluster_id].append(block)
+        
+        clusters = []
+        for cluster_id, cluster_blocks in cluster_groups.items():
+            # Find representative block (highest scoring)
+            representative = max(cluster_blocks, key=lambda b: b.chain_score)
+            
+            # Calculate consensus metrics
+            consensus_length = int(np.mean([b.alignment_length for b in cluster_blocks]))
+            consensus_score = np.mean([b.chain_score for b in cluster_blocks])
+            
+            # Calculate diversity (coefficient of variation of scores)
+            scores = [b.chain_score for b in cluster_blocks]
+            diversity = np.std(scores) / np.mean(scores) if np.mean(scores) > 0 else 0
+            
+            cluster = SyntenicCluster(
+                cluster_id=cluster_id,
+                blocks=cluster_blocks,
+                consensus_length=consensus_length,
+                consensus_score=consensus_score,
+                representative_block=representative,
+                diversity=diversity
+            )
+            clusters.append(cluster)
+        
         return clusters
 
 
@@ -524,13 +601,18 @@ class SyntenicAnalyzer:
         
         # Step 3: Cluster blocks
         console.print("\n[bold]Step 3: Clustering syntenic blocks...[/bold]")
-        clusters = self.clusterer.cluster_blocks(blocks)
+        
+        # Create window embedding lookup from loaded data
+        window_embed_lookup = self._create_window_embed_lookup()
+        
+        # Cluster with assignments
+        clusters, cluster_assignments = self.clusterer.cluster_blocks(blocks, window_embed_lookup)
         
         # Step 4: Generate statistics
         console.print("\n[bold]Step 4: Computing statistics...[/bold]")
         statistics = self._compute_statistics(loci, blocks, clusters)
         
-        # Create landscape summary
+        # Create landscape summary with cluster assignments
         landscape = SyntenicLandscape(
             total_loci=len(loci),
             total_blocks=len(blocks),
@@ -539,6 +621,9 @@ class SyntenicAnalyzer:
             clusters=clusters,
             statistics=statistics
         )
+        
+        # Store cluster assignments for save_results
+        landscape.cluster_assignments = cluster_assignments
         
         return landscape
     
@@ -607,6 +692,43 @@ class SyntenicAnalyzer:
         
         return statistics
     
+    def _create_window_embed_lookup(self) -> Callable[[str], Optional[np.ndarray]]:
+        """Create a window embedding lookup function from loaded window data."""
+        try:
+            # Load window embeddings from manifest
+            if not self.manifest.has_artifact('windows'):
+                console.print("[yellow]No window embeddings found - clustering will use DBSCAN fallback[/yellow]")
+                return None
+                
+            windows_path = Path(self.manifest.data['artifacts']['windows']['path'])
+            windows_df = pd.read_parquet(windows_path)
+            
+            # Extract embedding columns
+            emb_cols = [col for col in windows_df.columns if col.startswith('emb_')]
+            
+            if not emb_cols:
+                console.print("[yellow]No embedding columns found - clustering will use DBSCAN fallback[/yellow]")
+                return None
+            
+            # Create window ID to embedding mapping
+            window_embeddings = {}
+            for _, row in windows_df.iterrows():
+                window_id = f"{row['sample_id']}_{row['locus_id']}_{row['window_idx']}"
+                embedding = np.array([row[col] for col in emb_cols])
+                window_embeddings[window_id] = embedding
+            
+            console.print(f"Loaded {len(window_embeddings)} window embeddings for clustering")
+            
+            def lookup_func(window_id: str) -> Optional[np.ndarray]:
+                return window_embeddings.get(window_id)
+            
+            return lookup_func
+            
+        except Exception as e:
+            logger.warning(f"Failed to create window embedding lookup: {e}")
+            console.print("[yellow]Failed to load window embeddings - clustering will use DBSCAN fallback[/yellow]")
+            return None
+    
     def _extract_window_index(self, window_id: str) -> Optional[int]:
         """Extract window index from window ID like 'sample_locus_123' -> 123."""
         try:
@@ -643,8 +765,13 @@ class SyntenicAnalyzer:
                 target_start = min(target_indices) if target_indices else None
                 target_end = max(target_indices) if target_indices else None
                 
+                # Get cluster assignment for this block
+                cluster_assignments = getattr(landscape, 'cluster_assignments', {})
+                cluster_id = cluster_assignments.get(i, 0)  # Default to sink (0) if no assignment
+                
                 blocks_data.append({
                     'block_id': i,
+                    'cluster_id': cluster_id,
                     'query_locus': block.query_locus,
                     'target_locus': block.target_locus,
                     'length': block.alignment_length,  # This is gene-window count, not genomic bp

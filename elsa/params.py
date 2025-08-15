@@ -5,7 +5,7 @@ Configuration system for ELSA with strict validation.
 from pathlib import Path
 from typing import List, Optional, Union, Literal
 import yaml
-from pydantic import BaseModel, Field, validator, model_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
 
 
 class DataConfig(BaseModel):
@@ -31,7 +31,8 @@ class PLMConfig(BaseModel):
     project_to_D: int = Field(default=256, description="PCA target dimension")
     l2_normalize: bool = Field(default=True, description="L2 normalize embeddings")
     
-    @validator("batch_amino_acids")
+    @field_validator("batch_amino_acids")
+    @classmethod
     def validate_batch_size(cls, v):
         if v < 1000 or v > 100000:
             raise ValueError("batch_amino_acids should be between 1000 and 100000")
@@ -56,7 +57,8 @@ class DiscreteConfig(BaseModel):
     idf_min_df: int = Field(default=5, description="Minimum document frequency")
     idf_max_df_frac: float = Field(default=0.05, description="Maximum document frequency fraction")
     
-    @validator("bands_rows")
+    @field_validator("bands_rows")
+    @classmethod
     def validate_bands_rows(cls, v):
         if len(v) != 2 or v[0] * v[1] <= 0:
             raise ValueError("bands_rows must be [bands, rows] with positive integers")
@@ -92,7 +94,8 @@ class ScoreConfig(BaseModel):
     delta: float = Field(default=0.1, description="Offset variance penalty weight")
     fdr_target: float = Field(default=0.01, description="False discovery rate target")
     
-    @validator("fdr_target")
+    @field_validator("fdr_target")
+    @classmethod
     def validate_fdr(cls, v):
         if not 0.0 < v < 1.0:
             raise ValueError("fdr_target must be between 0 and 1")
@@ -156,7 +159,8 @@ class CassetteAnchorsConfig(BaseModel):
     blacklist_top_pct: float = Field(default=1.0, description="Blacklist top collision windows percentage")
     lambda_jaccard: float = Field(default=0.5, description="Jaccard weight in chain scoring")
     
-    @validator("cosine_min", "jaccard_min")
+    @field_validator("cosine_min", "jaccard_min")
+    @classmethod
     def validate_similarity_thresholds(cls, v):
         if not 0.0 <= v <= 1.0:
             raise ValueError("Similarity thresholds must be between 0 and 1")
@@ -171,7 +175,8 @@ class CassetteChainConfig(BaseModel):
     pos_band_genes: int = Field(default=1, description="Position drift tolerance in genes")
     max_gap_genes: int = Field(default=1, description="Maximum gap size in genes")
     
-    @validator("delta_min")
+    @field_validator("delta_min")
+    @classmethod
     def validate_delta_min(cls, v):
         if v <= 0:
             raise ValueError("delta_min must be positive")
@@ -181,6 +186,59 @@ class CassetteChainConfig(BaseModel):
 class CassetteSegmenterConfig(BaseModel):
     """Cassette mode segmentation method configuration."""
     method: Literal["chain", "ransac"] = Field(default="chain", description="Segmentation method")
+
+
+class AnalyzeConfig(BaseModel):
+    """Analysis stage configuration."""
+    clustering: 'ClusteringConfig' = Field(default_factory=lambda: ClusteringConfig())
+
+
+class ClusteringConfig(BaseModel):
+    """Clustering configuration for syntenic block analysis."""
+    method: Literal["mutual_jaccard", "dbscan", "disabled"] = Field(default="mutual_jaccard", description="Clustering method")
+    sink_label: int = Field(default=0, description="Label for sink cluster (non-robust blocks)")
+    keep_singletons: bool = Field(default=False, description="Keep robust singleton blocks (don't send to sink)")
+    
+    # Robustness gate (per block)
+    min_anchors: int = Field(default=4, description="Minimum alignment length (number of anchors)")
+    min_span_genes: int = Field(default=8, description="Minimum span in genes on both query and target")
+    v_mad_max_genes: int = Field(default=1, description="Maximum MAD of diagonal offset (genes)")
+    
+    # SRP + shingling
+    srp_bits: int = Field(default=256, description="Total SRP projection bits")
+    srp_bands: int = Field(default=32, description="Number of SRP bands")
+    srp_band_bits: int = Field(default=8, description="Bits per SRP band")
+    srp_seed: int = Field(default=1337, description="SRP random seed for determinism")
+    shingle_k: int = Field(default=3, description="k-gram shingle size")
+    
+    # Graph construction
+    jaccard_tau: float = Field(default=0.5, description="Minimum Jaccard similarity threshold")
+    mutual_k: int = Field(default=3, description="Mutual top-k parameter")
+    df_max: int = Field(default=200, description="Maximum document frequency for shingles")
+    
+    # Prefilters
+    size_ratio_min: float = Field(default=0.5, description="Minimum size ratio for candidates")
+    size_ratio_max: float = Field(default=2.0, description="Maximum size ratio for candidates")
+    
+    @model_validator(mode='after')
+    def validate_srp_params(self):
+        if self.srp_bands * self.srp_band_bits != self.srp_bits:
+            raise ValueError(f"srp_bands * srp_band_bits ({self.srp_bands} * {self.srp_band_bits}) must equal srp_bits ({self.srp_bits})")
+        return self
+    
+    @field_validator("jaccard_tau")
+    @classmethod
+    def validate_jaccard_tau(cls, v):
+        if not 0.0 <= v <= 1.0:
+            raise ValueError("jaccard_tau must be between 0 and 1")
+        return v
+    
+    @field_validator("size_ratio_min", "size_ratio_max")
+    @classmethod
+    def validate_size_ratios(cls, v):
+        if v <= 0:
+            raise ValueError("Size ratios must be positive")
+        return v
 
 
 class ELSAConfig(BaseModel):
@@ -198,6 +256,7 @@ class ELSAConfig(BaseModel):
     window: WindowConfig = Field(default_factory=WindowConfig)
     phase2: Phase2Config = Field(default_factory=Phase2Config)
     cassette_mode: CassetteModeConfig = Field(default_factory=CassetteModeConfig)
+    analyze: AnalyzeConfig = Field(default_factory=AnalyzeConfig)
     
     @model_validator(mode='after')
     def validate_consistency(self):

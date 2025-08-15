@@ -78,6 +78,41 @@ elsa find "strain001_contig1_1:100000"
 - **Collinear chaining**: Dynamic programming with gap penalties
 - **DTW refinement**: Optional dynamic time warping alignment
 
+### Stage 6: Block Clustering — Mutual-k Jaccard over Order-Aware Shingles
+
+We cluster syntenic blocks into cassette families using **Mutual-k Jaccard** over order-aware shingles derived from SRP tokens of the existing window embeddings.
+
+**Why:** Clustering on coarse scalars (e.g., DBSCAN on length/identity) collapses unrelated blocks into a single mode. We need both *content* and *order*, but without heavy all-vs-all alignment.
+
+**Sketch → tokens:** For each window's embedding x, we compute a 256-bit SRP sign sketch (fixed seed), split into 32 bands of 8 bits, and hash each band to a 64-bit token. Similar windows share band tokens with high probability.
+
+**Order-aware shingles:** Per block, we derive one stable token per window, then form k-gram shingles (default k=3) over the ordered token sequence and hash these into a set S_b. For strand −, we reverse order before shingling (internal only).
+
+**Robustness gate (per block):** keep blocks with:
+- alignment_length ≥ 4; spans ≥ 8 genes on both genomes; diagonal purity MAD(v=q_idx−t_idx) ≤ 1. Others go to sink.
+
+**Graph construction:** Build an inverted index shingle→blocks; drop hub shingles with df>200. For each block b, enumerate candidates via postings; compute Jaccard J(S_b,S_c); keep top-k (k=3). Undirected edge b--c exists iff mutual-k holds and J ≥ 0.5.
+
+**Clusters & labels:** Connected components of this sparse graph are clusters. Robust singletons (degree 0) are sent to the sink by default. Labels are deterministic:
+- **0 = sink** (non-robust + singletons)
+- 1..K assigned by decreasing component size, then increasing representative block id.
+
+**Configuration:** see `analyze.clustering.*` in params (SRP bits/bands, k, jaccard_tau, mutual_k, df_max, robustness thresholds, sink semantics).
+
+**Determinism:** All randomness is seeded; ordering keys are fixed; re-runs produce identical cluster IDs.
+
+## Comprehensive Analysis
+
+To run the complete analysis pipeline:
+
+```bash
+elsa analyze --output-dir results/
+```
+
+This performs all-vs-all locus comparison, finds syntenic blocks, clusters them with the new method, and outputs:
+- `syntenic_blocks.csv` - All discovered blocks with cluster assignments
+- `syntenic_clusters.csv` - Cluster summaries and statistics
+
 ## Configuration
 
 Key parameters in `elsa.config.yaml`:
@@ -95,6 +130,29 @@ ingest:
 discrete:
   K: 4096               # Codebook centroids
   minhash_hashes: 192   # MinHash functions
+
+analyze:
+  clustering:
+    method: mutual_jaccard    # mutual_jaccard, dbscan, disabled
+    sink_label: 0             # Sink cluster ID
+    keep_singletons: false    # Keep robust singletons vs send to sink
+    
+    # Robustness gate
+    min_anchors: 4            # Min alignment length
+    min_span_genes: 8         # Min span on both genomes
+    v_mad_max_genes: 1        # Max diagonal offset MAD
+    
+    # SRP tokenization
+    srp_bits: 256             # Total projection bits
+    srp_bands: 32             # Number of bands  
+    srp_band_bits: 8          # Bits per band
+    srp_seed: 1337            # Deterministic seed
+    shingle_k: 3              # k-gram shingle size
+    
+    # Graph construction
+    jaccard_tau: 0.5          # Min Jaccard similarity
+    mutual_k: 3               # Mutual top-k parameter
+    df_max: 200               # Max document frequency
   
 system:
   rng_seed: 17          # Reproducibility seed

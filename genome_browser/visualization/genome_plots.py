@@ -101,9 +101,22 @@ def create_genome_diagram(genes_df: pd.DataFrame, locus_id: str,
         fig.add_annotation(text="No genes found", x=0.5, y=0.5, showarrow=False)
         return fig
     
-    # Get genomic coordinates
-    start_pos = genes_df['start_pos'].min()
-    end_pos = genes_df['end_pos'].max()
+    # Get genomic coordinates - focus on syntenic region + flanking context only
+    if 'synteny_role' in genes_df.columns:
+        # Filter to core syntenic region + flanking context (3 genes on each side)
+        focused_genes = genes_df[genes_df['synteny_role'].isin(['core_aligned', 'boundary', 'context'])]
+        if not focused_genes.empty:
+            start_pos = focused_genes['start_pos'].min()
+            end_pos = focused_genes['end_pos'].max()
+        else:
+            # Fallback if no synteny role data
+            start_pos = genes_df['start_pos'].min()
+            end_pos = genes_df['end_pos'].max()
+    else:
+        # Fallback for genes without synteny role information
+        start_pos = genes_df['start_pos'].min()
+        end_pos = genes_df['end_pos'].max()
+    
     total_length = end_pos - start_pos
     
     # Create subplot with 4 tracks: scale, genes, pfam domains, legend

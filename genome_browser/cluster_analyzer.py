@@ -120,8 +120,8 @@ class ClusterAnalyzer:
                 organism_count=len(set(organisms)),
                 organisms=list(set(organisms)),
                 
-                # Multi-dimensional scope metrics
-                total_alignments=cluster_row[1],  # Total syntenic blocks
+                # Multi-dimensional scope metrics - count from current syntenic_blocks table
+                total_alignments=self._get_actual_block_count(conn, cluster_id),
                 unique_contigs=unique_contigs,
                 unique_genes=unique_genes,
                 unique_pfam_domains=unique_pfam,
@@ -135,6 +135,12 @@ class ClusterAnalyzer:
         except Exception as e:
             logger.error(f"Error computing cluster stats: {e}")
             return None
+    
+    def _get_actual_block_count(self, conn, cluster_id: int) -> int:
+        """Get actual block count from syntenic_blocks table instead of legacy clusters table."""
+        cursor = conn.execute("SELECT COUNT(*) FROM syntenic_blocks WHERE cluster_id = ?", (cluster_id,))
+        result = cursor.fetchone()
+        return result[0] if result else 0
     
     def _create_basic_cluster_stats(self, cluster_row) -> ClusterStats:
         """Create basic stats when detailed block info isn't available."""

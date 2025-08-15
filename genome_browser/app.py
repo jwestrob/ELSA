@@ -18,6 +18,7 @@ from typing import Dict, List, Tuple, Optional
 import math
 
 # Import genome visualization functions
+from cluster_analyzer import ClusterAnalyzer
 from visualization.genome_plots import create_genome_diagram, create_comparative_genome_view
 
 # Configure page
@@ -51,6 +52,11 @@ def get_database_connection():
         st.stop()
     
     return sqlite3.connect(DB_PATH, check_same_thread=False)
+
+@st.cache_resource
+def get_cluster_analyzer():
+    """Get cached cluster analyzer instance."""
+    return ClusterAnalyzer(DB_PATH)
 
 @st.cache_data
 def load_genomes() -> pd.DataFrame:
@@ -102,12 +108,12 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
     
     return pd.read_sql_query(query, conn, params=params)
 
-@st.cache_data
-def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_role: Optional[str] = None) -> pd.DataFrame:
+def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_role: Optional[str] = None, extended_context: bool = False) -> pd.DataFrame:
     """Load genes for a specific locus, optionally filtered to aligned regions."""
     conn = get_database_connection()
     
     # Parse locus ID format: "1313.30775:1313.30775_accn|1313.30775.con.0001"
+    # Need to extract contig_id to match genes table format: "accn|1313.30775.con.0001"
     if ':' in locus_id:
         genome_part, contig_part = locus_id.split(':', 1)
         # Extract the actual contig_id from the second part
@@ -122,7 +128,7 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
     
     # If we have block info, load only the aligned region + context
     if block_id is not None and locus_role is not None:
-        return load_aligned_genes_for_block(conn, contig_id, block_id, locus_role)
+        return load_aligned_genes_for_block(conn, contig_id, block_id, locus_role, extended_context)
     
     # Default: load all genes for the locus
     query = """
@@ -135,12 +141,15 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
     
     return pd.read_sql_query(query, conn, params=[contig_id])
 
-@st.cache_data  
-def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_role: str) -> pd.DataFrame:
+def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_role: str, extended_context: bool = False) -> pd.DataFrame:
     """Load only the genes that are part of the aligned region for a specific block."""
     
-    # Get block alignment info
-    cursor = _conn.cursor()
+    # Convert numpy integer to regular Python integer to avoid SQLite issues
+    block_id = int(block_id)
+    
+    # Get fresh database connection instead of using potentially stale _conn
+    fresh_conn = get_database_connection()
+    cursor = fresh_conn.cursor()
     cursor.execute("""
         SELECT query_window_start, query_window_end, target_window_start, target_window_end
         FROM syntenic_blocks 
@@ -175,8 +184,8 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
     gene_start_idx = window_start  # Gene index of first gene in first window
     gene_end_idx = window_end + 4  # Gene index of last gene in last window (window contains 5 genes)
     
-    # Add context genes (±3 genes around the aligned region)
-    context_buffer = 3
+    # Add context genes around the aligned region (amount depends on extended_context setting)
+    context_buffer = 10 if extended_context else 3  # More context if extended_context is True
     gene_start_idx = max(0, gene_start_idx - context_buffer)
     gene_end_idx = gene_end_idx + context_buffer
     
@@ -216,7 +225,7 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
     limit = gene_end_idx - gene_start_idx + 1
     offset = gene_start_idx
     
-    return pd.read_sql_query(query, _conn, params=[
+    return pd.read_sql_query(query, fresh_conn, params=[
         core_aligned_start, core_aligned_end,  # Core aligned range
         boundary_start, boundary_end,          # Boundary range  
         core_aligned_start, core_aligned_end,  # For display label
@@ -1155,17 +1164,12 @@ def display_cluster_card_with_async_summary(stats):
         # Action buttons
         col1, col2 = st.columns(2)
         with col1:
-            if st.button(f"📊 Explore Cluster {stats.cluster_id}", key=f"explore_{stats.cluster_id}"):
-                # Find a representative block and go to genome viewer
-                representative_block = find_representative_block_for_cluster(stats)
-                if representative_block:
-                    st.session_state.selected_block = representative_block
-                    st.session_state.current_page = 'genome_viewer'
-                    st.rerun()
-                else:
-                    # Fallback to cluster detail if no block found
+            if st.button(f"📊 Explore Cluster {stats.cluster_id}", key=f"explore_{stats.cluster_id}", type="secondary"):
+                with st.spinner("🔄 Loading cluster detail view..."):
+                    # Go to dedicated cluster detail view with genome diagrams
                     st.session_state.selected_cluster = stats.cluster_id
                     st.session_state.current_page = 'cluster_detail'
+                    st.success(f"✅ Navigating to Cluster {stats.cluster_id} detail view...")
                     st.rerun()
         
         with col2:
@@ -1208,17 +1212,12 @@ def display_cluster_card(stats, summary):
         # Action buttons
         col1, col2 = st.columns(2)
         with col1:
-            if st.button(f"📊 Explore Cluster {stats.cluster_id}", key=f"explore_{stats.cluster_id}"):
-                # Find a representative block and go to genome viewer
-                representative_block = find_representative_block_for_cluster(stats)
-                if representative_block:
-                    st.session_state.selected_block = representative_block
-                    st.session_state.current_page = 'genome_viewer'
-                    st.rerun()
-                else:
-                    # Fallback to cluster detail if no block found
+            if st.button(f"📊 Explore Cluster {stats.cluster_id}", key=f"explore_{stats.cluster_id}", type="secondary"):
+                with st.spinner("🔄 Loading cluster detail view..."):
+                    # Go to dedicated cluster detail view with genome diagrams
                     st.session_state.selected_cluster = stats.cluster_id
                     st.session_state.current_page = 'cluster_detail'
+                    st.success(f"✅ Navigating to Cluster {stats.cluster_id} detail view...")
                     st.rerun()
         
         with col2:
@@ -1227,10 +1226,56 @@ def display_cluster_card(stats, summary):
                 # This is simplified - would need to query the actual block
                 st.info(f"Representative: {stats.representative_query} ↔ {stats.representative_target}")
 
+@st.cache_data
+def load_cluster_blocks(cluster_id: int) -> pd.DataFrame:
+    """Load all syntenic blocks belonging to a specific cluster."""
+    conn = get_database_connection()
+    
+    # Primary query: Use cluster_id column directly
+    query = """
+        SELECT sb.*, 
+               g1.organism_name as query_organism,
+               g2.organism_name as target_organism
+        FROM syntenic_blocks sb
+        LEFT JOIN genomes g1 ON sb.query_genome_id = g1.genome_id
+        LEFT JOIN genomes g2 ON sb.target_genome_id = g2.genome_id
+        WHERE sb.cluster_id = ?
+        ORDER BY sb.score DESC, sb.block_id
+    """
+    
+    result = pd.read_sql_query(query, conn, params=[cluster_id])
+    
+    # Fallback query: Use cluster_assignments table if cluster_id column is empty
+    if result.empty and cluster_id > 0:
+        fallback_query = """
+            SELECT sb.*, 
+                   g1.organism_name as query_organism,
+                   g2.organism_name as target_organism
+            FROM syntenic_blocks sb
+            LEFT JOIN genomes g1 ON sb.query_genome_id = g1.genome_id
+            LEFT JOIN genomes g2 ON sb.target_genome_id = g2.genome_id
+            INNER JOIN cluster_assignments ca ON sb.block_id = ca.block_id
+            WHERE ca.cluster_id = ?
+            ORDER BY sb.score DESC, sb.block_id
+        """
+        result = pd.read_sql_query(fallback_query, conn, params=[cluster_id])
+    
+    return result
+
+def extract_unique_loci_from_cluster(cluster_blocks: pd.DataFrame) -> List[str]:
+    """Extract all unique loci involved in a cluster."""
+    all_loci = set()
+    
+    for _, block in cluster_blocks.iterrows():
+        all_loci.add(block['query_locus'])
+        all_loci.add(block['target_locus'])
+    
+    return sorted(list(all_loci))
+
 def display_cluster_detail():
-    """Display detailed view of a specific cluster."""
+    """Display detailed view of a specific cluster with genome diagrams for each locus."""
     if 'selected_cluster' not in st.session_state:
-        st.error("No cluster selected")
+        st.error("❌ No cluster selected")
         if st.button("← Back to Cluster Explorer"):
             st.session_state.current_page = 'cluster_explorer'
             st.rerun()
@@ -1238,152 +1283,292 @@ def display_cluster_detail():
     
     cluster_id = st.session_state.selected_cluster
     
-    # Back button
-    if st.button("← Back to Cluster Explorer"):
-        st.session_state.current_page = 'cluster_explorer'
-        st.rerun()
+    # Header with navigation breadcrumb
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        st.header(f"🧩 Cluster {cluster_id} - Genome Diagrams View")
+        st.caption("🔍 Cluster Explorer → Cluster Detail")
+    with col2:
+        if st.button("← Back to Cluster Explorer", type="primary"):
+            st.session_state.current_page = 'cluster_explorer'
+            if 'selected_cluster' in st.session_state:
+                del st.session_state.selected_cluster
+            st.rerun()
     
-    st.header(f"🧩 Cluster {cluster_id} - Detailed Analysis")
-    
-    # Load cluster data
-    with st.spinner("Loading cluster details..."):
+    # Load cluster blocks and unique loci
+    with st.spinner("Loading cluster data..."):
         try:
-            from cluster_analyzer import ClusterAnalyzer
-            analyzer = ClusterAnalyzer(Path("genome_browser.db"))
-            stats = analyzer.get_cluster_stats(cluster_id)
+            # Load blocks in this cluster
+            cluster_blocks = load_cluster_blocks(cluster_id)
             
-            if not stats:
-                st.error(f"Cluster {cluster_id} not found")
+            if cluster_blocks.empty:
+                if cluster_id == 0:
+                    st.warning(f"🔄 Cluster 0 is the **sink cluster** containing non-robust or singleton blocks.")
+                    st.info("💡 Try exploring a cluster with ID > 0 for meaningful syntenic relationships.")
+                else:
+                    st.error(f"❌ No blocks found for cluster {cluster_id}")
+                st.info("This could mean:")
+                st.write("• The clustering analysis hasn't been run yet")
+                st.write("• The cluster ID doesn't exist")  
+                st.write("• Database connectivity issues")
                 return
+            
+            # Extract unique loci
+            unique_loci = extract_unique_loci_from_cluster(cluster_blocks)
+            
+            # Load cluster stats if available
+            try:
+                from cluster_analyzer import ClusterAnalyzer
+                analyzer = ClusterAnalyzer(Path("genome_browser.db"))
+                stats = analyzer.get_cluster_stats(cluster_id)
+            except:
+                stats = None
                 
         except Exception as e:
-            st.error(f"Error loading cluster details: {e}")
+            st.error(f"Error loading cluster data: {e}")
             return
     
-    # Cluster overview with multi-dimensional metrics
+    # Cluster overview
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Alignments", f"{stats.total_alignments:,}")
+        st.metric("📊 Blocks", f"{len(cluster_blocks):,}")
     with col2:
-        st.metric("Genomic Scope", f"{stats.unique_genes:,} genes")
+        st.metric("🧬 Unique Loci", f"{len(unique_loci):,}")
     with col3:
-        st.metric("Average Identity", f"{stats.avg_identity:.1%}")
+        avg_identity = cluster_blocks['identity'].mean()
+        st.metric("📈 Avg Identity", f"{avg_identity:.1%}")
     with col4:
-        st.metric("Organisms", f"{stats.organism_count}")
+        avg_length = cluster_blocks['length'].mean()
+        st.metric("📏 Avg Length", f"{avg_length:.1f}")
     
-    # AI analysis (generated on demand)
-    st.subheader("🤖 AI Functional Analysis")
+    # Display summary info
+    if stats:
+        st.info(f"**Organisms:** {', '.join(stats.organisms[:3])}{'...' if len(stats.organisms) > 3 else ''}")
     
-    detail_summary_key = f"cluster_detail_summary_{cluster_id}"
+    # Show cluster composition table
+    with st.expander("📋 **Cluster Block Details**", expanded=False):
+        display_cols = ['block_id', 'query_locus', 'target_locus', 'length', 'identity', 'score']
+        display_df = cluster_blocks[display_cols].copy()
+        display_df['identity'] = display_df['identity'].apply(lambda x: f"{x:.3f}")
+        display_df['score'] = display_df['score'].apply(lambda x: f"{x:.1f}")
+        st.dataframe(display_df, hide_index=True, use_container_width=True)
     
-    if detail_summary_key not in st.session_state:
-        st.session_state[detail_summary_key] = {"generated": False, "content": ""}
-    
-    # Show button to generate AI summary or loading state
-    detail_loading_key = f"cluster_detail_loading_{cluster_id}"
-    
-    if not st.session_state[detail_summary_key]["generated"]:
-        if st.session_state.get(detail_loading_key, False):
-            # Show loading state and perform API call
-            with st.status("🤖 Generating comprehensive GPT-5-mini analysis...", expanded=False) as status:
-                try:
-                    summary = analyzer.generate_cluster_summary(stats)
-                    st.session_state[detail_summary_key] = {"generated": True, "content": summary}
-                    st.session_state[detail_loading_key] = False
-                    status.update(label="✅ Analysis complete!", state="complete")
-                except Exception as e:
-                    st.session_state[detail_summary_key] = {"generated": True, "content": f"Error generating summary: {e}"}
-                    st.session_state[detail_loading_key] = False
-                    status.update(label="❌ Analysis failed!", state="error")
-        else:
-            # Show button to start generation
-            if st.button("🤖 Generate Detailed AI Analysis", key=f"ai_detail_button_{cluster_id}"):
-                st.session_state[detail_loading_key] = True
-                st.rerun()
-    else:
-        # Show the generated summary
-        st.markdown(st.session_state[detail_summary_key]["content"])
-    
-    # Cluster composition
-    st.subheader("📊 Cluster Composition")
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("**Basic Statistics:**")
-        st.write(f"• **Type:** {stats.cluster_type}")
-        st.write(f"• **Size range:** {stats.length_range[0]} - {stats.length_range[1]} windows")
-        st.write(f"• **Identity range:** {stats.identity_range[0]:.1%} - {stats.identity_range[1]:.1%}")
-        st.write(f"• **Diversity:** {stats.diversity:.3f}")
-        st.write(f"• **Total genes:** ~{stats.total_genes}")
-        st.write(f"• **Unique PFAM domains:** {stats.unique_pfam_domains}")
-    
-    with col2:
-        st.markdown("**Organisms Involved:**")
-        for org in stats.organisms:
-            st.write(f"• {org}")
-    
-    # Representative block
-    st.subheader("🧬 Representative Block")
-    if stats.representative_query and stats.representative_target:
-        st.write(f"**Query:** {stats.representative_query}")
-        st.write(f"**Target:** {stats.representative_target}")
+    # AI Summary (if available)
+    if stats:
+        detail_summary_key = f"cluster_detail_summary_{cluster_id}"
         
-        # Try to find and display the representative block
-        conn = sqlite3.connect("genome_browser.db")
-        try:
-            # Simple query to find a block between these loci
-            repr_query = """
-                SELECT block_id, identity, score, length 
-                FROM syntenic_blocks 
-                WHERE (query_locus LIKE ? OR target_locus LIKE ?)
-                   OR (query_locus LIKE ? OR target_locus LIKE ?)
-                ORDER BY score DESC 
-                LIMIT 1
-            """
-            cursor = conn.execute(repr_query, (
-                f"%{stats.representative_query}%", f"%{stats.representative_query}%",
-                f"%{stats.representative_target}%", f"%{stats.representative_target}%"
-            ))
-            repr_block = cursor.fetchone()
-            
-            if repr_block:
-                st.write(f"**Block ID:** {repr_block[0]}")
-                st.write(f"**Identity:** {repr_block[1]:.1%}")
-                st.write(f"**Score:** {repr_block[2]:.2f}")
-                st.write(f"**Length:** {repr_block[3]} windows")
-                
-                if st.button("🧬 View Representative Block", key="view_repr_block"):
-                    # Create a mock block dict for navigation
-                    selected_block = {
-                        'block_id': repr_block[0],
-                        'query_locus': stats.representative_query,
-                        'target_locus': stats.representative_target,
-                        'identity': repr_block[1],
-                        'score': repr_block[2],
-                        'length': repr_block[3]
-                    }
-                    st.session_state.selected_block = selected_block
-                    st.session_state.current_page = 'genome_viewer'
-                    st.rerun()
+        if detail_summary_key not in st.session_state:
+            st.session_state[detail_summary_key] = {"generated": False, "content": ""}
+        
+        detail_loading_key = f"cluster_detail_loading_{cluster_id}"
+        
+        with st.expander("🤖 **AI Functional Analysis**", expanded=False):
+            if not st.session_state[detail_summary_key]["generated"]:
+                if st.session_state.get(detail_loading_key, False):
+                    with st.status("🤖 Generating analysis...", expanded=False) as status:
+                        try:
+                            summary = get_cluster_analyzer().generate_cluster_summary(stats)
+                            st.session_state[detail_summary_key] = {"generated": True, "content": summary}
+                            st.session_state[detail_loading_key] = False
+                            status.update(label="✅ Analysis complete!", state="complete")
+                            st.rerun()
+                        except Exception as e:
+                            st.session_state[detail_summary_key] = {"generated": True, "content": f"Error: {e}"}
+                            st.session_state[detail_loading_key] = False
+                            status.update(label="❌ Analysis failed!", state="error")
+                else:
+                    if st.button("🤖 Generate AI Analysis", key=f"ai_detail_button_{cluster_id}"):
+                        st.session_state[detail_loading_key] = True
+                        st.rerun()
             else:
-                st.warning("Representative block not found in database")
-                
-        except Exception as e:
-            st.warning(f"Could not load representative block: {e}")
-        finally:
-            conn.close()
+                st.markdown(st.session_state[detail_summary_key]["content"])
     
-    # PFAM domain analysis
-    if stats.dominant_functions:
-        st.subheader("🔬 PFAM Domain Analysis")
-        st.markdown("**Most frequent domains in this cluster:**")
+    # Main section: Genome diagrams for each locus
+    st.divider()
+    st.subheader("🧬 Genome Diagrams by Locus")
+    st.markdown(f"*Showing genome diagrams for all {len(unique_loci)} loci involved in this cluster*")
+    
+    # Display options
+    col1, col2 = st.columns(2)
+    with col1:
+        show_extended_context = st.checkbox("Show extended context", value=False, 
+                                           help="Show additional flanking genes beyond the syntenic region")
+    with col2:
+        max_loci_per_page = st.selectbox("Loci per page", options=[5, 10, 20, 50], index=1,
+                                        help="Number of loci to display per page")
+    
+    # Pagination for loci
+    total_pages = math.ceil(len(unique_loci) / max_loci_per_page)
+    if total_pages > 1:
+        current_page = st.number_input(f"Page (1-{total_pages})", 
+                                     min_value=1, max_value=total_pages, value=1, step=1)
+        start_idx = (current_page - 1) * max_loci_per_page
+        end_idx = min(start_idx + max_loci_per_page, len(unique_loci))
+        page_loci = unique_loci[start_idx:end_idx]
+        st.info(f"Showing loci {start_idx + 1}-{end_idx} of {len(unique_loci)}")
+    else:
+        page_loci = unique_loci
+    
+    # Display genome diagram for each locus
+    for i, locus_id in enumerate(page_loci):
+        st.markdown("---")
         
-        # Display domains in a nice format
-        for i, domain in enumerate(stats.dominant_functions[:20], 1):  # Show top 20
-            st.write(f"{i}. {domain}")
+        # Locus header with organism info
+        organism_info = ""
+        sample_blocks = cluster_blocks[
+            (cluster_blocks['query_locus'] == locus_id) | 
+            (cluster_blocks['target_locus'] == locus_id)
+        ]
         
-        if len(stats.dominant_functions) > 20:
-            st.write(f"... and {len(stats.dominant_functions) - 20} more domains")
+        if not sample_blocks.empty:
+            first_block = sample_blocks.iloc[0]
+            if first_block['query_locus'] == locus_id:
+                organism_info = f" ({first_block.get('query_organism', 'Unknown organism')})"
+            else:
+                organism_info = f" ({first_block.get('target_organism', 'Unknown organism')})"
+        
+        st.subheader(f"🧬 Locus {i+1}: {locus_id}{organism_info}")
+        
+        # Count blocks involving this locus
+        involving_blocks = len(sample_blocks)
+        if involving_blocks > 0:
+            best_block = sample_blocks.loc[sample_blocks['score'].idxmax()]
+            st.caption(f"Participates in {involving_blocks} syntenic block(s) | Representative block: {best_block['block_id']} (score: {best_block['score']:.1f})")
+        else:
+            st.caption(f"No syntenic blocks found for this locus")
+        
+        # Load genes for this locus
+        with st.spinner(f"Loading genes for {locus_id}..."):
+            try:
+                # Always try to get genes with syntenic block context (like regular genome viewer)
+                representative_block = None
+                locus_role = None
+                
+                if not sample_blocks.empty:
+                    # Find best block for this locus (highest scoring)
+                    best_block = sample_blocks.loc[sample_blocks['score'].idxmax()]
+                    
+                    # Determine if this locus is query or target in the best block
+                    if best_block['query_locus'] == locus_id:
+                        locus_role = 'query'
+                        representative_block = best_block
+                    elif best_block['target_locus'] == locus_id:
+                        locus_role = 'target'
+                        representative_block = best_block
+                
+                # Always use syntenic block context when available (matches genome viewer behavior)
+                if representative_block is not None and locus_role is not None:
+                    # Load syntenic region with context (matches regular genome viewer behavior)
+                    genes_df = load_genes_for_locus(locus_id, representative_block['block_id'], locus_role)
+                    
+                    # Show context info to user
+                    st.caption(f"🎯 Showing focused syntenic region ({len(genes_df)} genes)")
+                else:
+                    # Fallback: try to find ANY syntenic block for this locus (not just in this cluster)
+                    fallback_query = """
+                        SELECT block_id, query_locus, target_locus, score
+                        FROM syntenic_blocks 
+                        WHERE query_locus = ? OR target_locus = ?
+                        ORDER BY score DESC 
+                        LIMIT 1
+                    """
+                    fallback_result = pd.read_sql_query(fallback_query, conn, params=[locus_id, locus_id])
+                    
+                    if not fallback_result.empty:
+                        fallback_block = fallback_result.iloc[0]
+                        fallback_role = 'query' if fallback_block['query_locus'] == locus_id else 'target'
+                        genes_df = load_genes_for_locus(locus_id, fallback_block['block_id'], fallback_role)
+                        st.caption(f"🎯 Using fallback syntenic block {fallback_block['block_id']} ({len(genes_df)} genes)")
+                        st.info("ℹ️ This locus doesn't participate in blocks within this cluster, showing representative syntenic region from another cluster")
+                    else:
+                        # Last resort: load a reasonable subset (center ~50 genes) instead of entire contig
+                        genes_df = load_genes_for_locus(locus_id)
+                        if len(genes_df) > 50:
+                            mid_point = len(genes_df) // 2
+                            start_idx = max(0, mid_point - 25)
+                            end_idx = min(len(genes_df), mid_point + 25)
+                            genes_df = genes_df.iloc[start_idx:end_idx].copy()
+                            st.caption(f"⚠️ Showing center region of locus ({len(genes_df)} genes)")
+                            st.warning("No syntenic blocks found for this locus - showing representative center region")
+                        else:
+                            st.caption(f"⚠️ Showing entire small locus ({len(genes_df)} genes)")
+                            st.warning("No syntenic blocks found for this locus")
+                
+                if genes_df.empty:
+                    st.warning(f"No genes found for locus {locus_id}")
+                    continue
+                
+            except Exception as e:
+                st.error(f"Error loading genes for {locus_id}: {e}")
+                continue
+        
+        # Create and display genome diagram
+        try:
+            with st.spinner("Generating genome diagram..."):
+                fig = create_genome_diagram(
+                    genes_df,
+                    f"{locus_id} - Cluster {cluster_id}",
+                    width=1000,
+                    height=300
+                )
+                st.plotly_chart(fig, use_container_width=True, key=f"genome_{cluster_id}_{i}")
+            
+            # Expandable gene annotation table
+            with st.expander(f"📋 **Gene Annotations for {locus_id}**", expanded=False):
+                st.caption(f"Showing {len(genes_df)} genes")
+                
+                # Prepare display columns
+                display_cols = ['gene_id', 'start_pos', 'end_pos', 'strand', 'pfam_domains']
+                if 'position_in_block' in genes_df.columns:
+                    display_cols.insert(-1, 'position_in_block')
+                
+                annotation_df = genes_df[display_cols].copy()
+                
+                # Truncate long PFAM domain lists for display
+                if 'pfam_domains' in annotation_df.columns:
+                    annotation_df['pfam_domains'] = annotation_df['pfam_domains'].apply(
+                        lambda x: x[:100] + '...' if isinstance(x, str) and len(x) > 100 else x
+                    )
+                
+                # Color-code by syntenic role if available
+                if 'position_in_block' in annotation_df.columns:
+                    def highlight_syntenic_role(row):
+                        role = row.get('position_in_block', '')
+                        if role == 'Conserved Block':
+                            return ['background-color: #ffebee; color: #c62828'] * len(row)  # Light red
+                        elif role == 'Block Edge':
+                            return ['background-color: #fff3e0; color: #ef6c00'] * len(row)  # Light orange
+                        elif role == 'Flanking Region':
+                            return ['background-color: #e3f2fd; color: #1565c0'] * len(row)  # Light blue
+                        return [''] * len(row)
+                    
+                    styled_df = annotation_df.style.apply(highlight_syntenic_role, axis=1)
+                    st.dataframe(styled_df, hide_index=True, use_container_width=True)
+                else:
+                    st.dataframe(annotation_df, hide_index=True, use_container_width=True)
+                
+                # Additional gene statistics
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    forward_genes = len(genes_df[genes_df['strand'] == '+'])
+                    st.metric("➡️ Forward strand", forward_genes)
+                with col2:
+                    reverse_genes = len(genes_df[genes_df['strand'] == '-'])
+                    st.metric("⬅️ Reverse strand", reverse_genes)
+                with col3:
+                    annotated_genes = len(genes_df[genes_df['pfam_domains'].notna() & (genes_df['pfam_domains'] != '')])
+                    st.metric("🏷️ PFAM annotated", annotated_genes)
+        
+        except Exception as e:
+            st.error(f"Error creating genome diagram for {locus_id}: {e}")
+            logger.error(f"Genome diagram error for {locus_id}: {e}")
+    
+    # Navigation footer
+    if total_pages > 1:
+        st.divider()
+        col1, col2, col3 = st.columns([1, 2, 1])
+        with col2:
+            st.info(f"Page {current_page} of {total_pages} | {len(unique_loci)} total loci in cluster")
 
 def main():
     """Main Streamlit application."""
@@ -1395,17 +1580,32 @@ def main():
     if 'current_page' not in st.session_state:
         st.session_state.current_page = 'dashboard'
     
-    # Navigation tabs
+    # Debug session state (can be removed later)
+    if st.sidebar.checkbox("🔧 Debug Mode", value=False):
+        st.sidebar.write("**Session State:**")
+        st.sidebar.json({
+            "current_page": st.session_state.get('current_page'),
+            "selected_cluster": st.session_state.get('selected_cluster'),
+            "selected_block": bool(st.session_state.get('selected_block'))
+        })
+    
+    # Handle special pages that override tab behavior
+    if st.session_state.get('current_page') == 'cluster_detail':
+        display_cluster_detail()
+        return
+    elif st.session_state.get('current_page') == 'genome_viewer' and 'selected_block' in st.session_state:
+        display_genome_viewer()
+        return
+    
+    # Standard tab navigation for main pages
     tab1, tab2, tab3, tab4 = st.tabs(["📊 Dashboard", "🔍 Block Explorer", "🧬 Genome Viewer", "🧩 Cluster Explorer"])
     
     with tab1:
-        if st.session_state.current_page != 'genome_viewer':
-            st.session_state.current_page = 'dashboard'
+        st.session_state.current_page = 'dashboard'
         display_dashboard()
     
     with tab2:
-        if st.session_state.current_page != 'genome_viewer':
-            st.session_state.current_page = 'block_explorer'
+        st.session_state.current_page = 'block_explorer'
         filters = create_sidebar_filters()
         display_block_explorer(filters)
     
@@ -1414,11 +1614,8 @@ def main():
         display_genome_viewer()
     
     with tab4:
-        if st.session_state.get('current_page') == 'cluster_detail':
-            display_cluster_detail()
-        else:
-            st.session_state.current_page = 'cluster_explorer'
-            display_cluster_explorer()
+        st.session_state.current_page = 'cluster_explorer'
+        display_cluster_explorer()
 
 if __name__ == "__main__":
     main()

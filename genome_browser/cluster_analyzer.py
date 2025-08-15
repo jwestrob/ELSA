@@ -7,10 +7,12 @@ import sqlite3
 import pandas as pd
 import numpy as np
 import logging
+import random
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 import dspy
+from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
@@ -33,8 +35,10 @@ class ClusterStats:
     representative_query: str
     representative_target: str
     
-    # Block composition
-    total_genes: int
+    # Multi-dimensional scope metrics
+    total_alignments: int      # Total syntenic blocks (was 'size')
+    unique_contigs: int        # Distinct contigs involved
+    unique_genes: int          # Distinct genes participating
     unique_pfam_domains: int
     dominant_functions: List[str]
     domain_counts: List[Tuple[str, int]]  # Domain names with their frequencies
@@ -45,22 +49,17 @@ class ClusterSummarizer(dspy.Signature):
     cluster_stats = dspy.InputField(desc="Cluster statistics: size, organisms, consensus length, identity range")
     conserved_domains = dspy.InputField(desc="PFAM domains found in these syntenic alignments, ordered by frequency")
     
-    conserved_genes = dspy.OutputField(desc="Identify the hallmark functional categories that define this syntenic block arrangement (focus on process types, not specific enzyme names)")
-    functional_theme = dspy.OutputField(desc="Concise functional theme based on conserved gene arrangement (focus on biological process or pathway)")
-    evolutionary_significance = dspy.OutputField(desc="Why this specific gene arrangement pattern is conserved across organisms")
+    molecular_mechanism = dspy.OutputField(desc="Specific molecular pathway with key PFAM domains and enzyme functions. Include biochemical context and conservation rationale")
+    conservation_basis = dspy.OutputField(desc="Molecular constraints explaining synteny preservation. Avoid generic terms")
 
 class ClusterAnalyzer:
     """Analyzer for syntenic block clusters."""
     
     def __init__(self, db_path: Path):
         self.db_path = db_path
-        # Initialize GPT-4.1-mini for fast cluster summaries (no global configuration)
-        self.lm = dspy.LM(
-            "openai/gpt-4o-mini",
-            temperature=0.3,
-            max_tokens=300
-        )
-        # Initialize signature without direct LM (use context switching)
+        # Initialize OpenAI client for GPT-5-mini Responses API
+        self.openai_client = OpenAI()
+        # Keep DSPy signature for prompt structure reference
         self.summarizer = dspy.Predict(ClusterSummarizer)
     
     def get_cluster_stats(self, cluster_id: int) -> Optional[ClusterStats]:
@@ -96,7 +95,11 @@ class ClusterAnalyzer:
             # Get cluster-specific functional data
             dominant_functions = self._get_cluster_functions(conn, cluster_row[0])
             domain_counts = self._get_cluster_functions_with_counts(conn, cluster_row[0])
-            total_genes, unique_pfam = self._get_cluster_gene_statistics(conn, cluster_row[0])
+            
+            # Get multi-dimensional scope metrics
+            unique_contigs = self._get_cluster_contig_count(conn, cluster_row[0])
+            unique_genes = self._get_cluster_gene_count(conn, cluster_row[0])
+            unique_pfam = self._get_cluster_pfam_count(conn, cluster_row[0])
             
             # Estimate identity based on consensus score (rough approximation)
             estimated_identity = min(cluster_row[3] / 10.0, 1.0)  # Rough conversion
@@ -117,7 +120,10 @@ class ClusterAnalyzer:
                 organism_count=len(set(organisms)),
                 organisms=list(set(organisms)),
                 
-                total_genes=total_genes,
+                # Multi-dimensional scope metrics
+                total_alignments=cluster_row[1],  # Total syntenic blocks
+                unique_contigs=unique_contigs,
+                unique_genes=unique_genes,
                 unique_pfam_domains=unique_pfam,
                 dominant_functions=dominant_functions,
                 domain_counts=domain_counts
@@ -290,9 +296,9 @@ class ClusterAnalyzer:
     def _get_cluster_functions_with_counts(self, conn, cluster_id: int) -> List[Tuple[str, int]]:
         """Get PFAM functions with counts specific to this cluster."""
         try:
-            # First try to get cluster-specific data via cluster_assignments
+            # Get all distinct genes in this cluster with their PFAM domains
             cluster_query = """
-                SELECT g.pfam_domains, COUNT(DISTINCT g.gene_id) as gene_count
+                SELECT DISTINCT g.gene_id, g.pfam_domains
                 FROM genes g
                 JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
                 JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
@@ -300,29 +306,30 @@ class ClusterAnalyzer:
                 WHERE ca.cluster_id = ? 
                   AND g.pfam_domains IS NOT NULL 
                   AND g.pfam_domains != ''
-                GROUP BY g.pfam_domains
-                ORDER BY gene_count DESC
             """
             
             cursor = conn.execute(cluster_query, (cluster_id,))
-            pfam_rows = cursor.fetchall()
+            gene_rows = cursor.fetchall()
             
             # If cluster_assignments table is empty, fall back to representative-based sampling
-            if not pfam_rows:
+            if not gene_rows:
+                logger.info(f"No genes found for cluster {cluster_id}, falling back to representative-based domains")
                 return self._get_representative_based_domains(conn, cluster_id)
             
-            # Count individual domain frequencies
+            logger.info(f"Cluster {cluster_id}: Found {len(gene_rows)} unique genes for PFAM analysis")
+            
+            # Count individual domain frequencies (each domain counted once per gene)
             domain_counts = {}
-            for row in pfam_rows:
-                domains = row[0].split(';')
-                gene_count = row[1]
+            for gene_id, pfam_domains in gene_rows:
+                domains = pfam_domains.split(';')
                 for domain in domains:
                     domain = domain.strip()
                     if domain:
-                        domain_counts[domain] = domain_counts.get(domain, 0) + gene_count
+                        domain_counts[domain] = domain_counts.get(domain, 0) + 1
             
             # Return domains with counts sorted by frequency
             sorted_domains = sorted(domain_counts.items(), key=lambda x: x[1], reverse=True)
+            logger.info(f"Cluster {cluster_id}: Top 5 domains: {sorted_domains[:5]}")
             return sorted_domains
             
         except Exception as e:
@@ -348,32 +355,30 @@ class ClusterAnalyzer:
             query_genome = repr_query.split(':')[0] if ':' in repr_query else repr_query
             target_genome = repr_target.split(':')[0] if ':' in repr_target and repr_target else query_genome
             
-            # Get domains from genes in these genomes, weighted by cluster_id for variation
+            # Get genes from these genomes, weighted by cluster_id for variation
             domains_query = """
-                SELECT g.pfam_domains, COUNT(*) as freq
+                SELECT DISTINCT g.gene_id, g.pfam_domains
                 FROM genes g
                 WHERE (g.genome_id = ? OR g.genome_id = ?)
                   AND g.pfam_domains IS NOT NULL 
                   AND g.pfam_domains != ''
-                GROUP BY g.pfam_domains
-                ORDER BY freq DESC
+                ORDER BY g.gene_id
                 LIMIT 50
                 OFFSET ?
             """
             
             offset = cluster_id * 5  # Different offset for each cluster
             cursor = conn.execute(domains_query, (query_genome, target_genome, offset))
-            pfam_rows = cursor.fetchall()
+            gene_rows = cursor.fetchall()
             
-            # Count individual domain frequencies
+            # Count individual domain frequencies (each domain counted once per gene)
             domain_counts = {}
-            for row in pfam_rows:
-                domains = row[0].split(';')
-                freq = row[1]
+            for gene_id, pfam_domains in gene_rows:
+                domains = pfam_domains.split(';')
                 for domain in domains:
                     domain = domain.strip()
                     if domain:
-                        domain_counts[domain] = domain_counts.get(domain, 0) + freq
+                        domain_counts[domain] = domain_counts.get(domain, 0) + 1
             
             # Return domains with counts sorted by frequency
             sorted_domains = sorted(domain_counts.items(), key=lambda x: x[1], reverse=True)
@@ -387,27 +392,25 @@ class ClusterAnalyzer:
         """Get sample domains with offset for variation between clusters."""
         try:
             domains_query = """
-                SELECT g.pfam_domains, COUNT(*) as freq
+                SELECT DISTINCT g.gene_id, g.pfam_domains
                 FROM genes g
                 WHERE g.pfam_domains IS NOT NULL 
                   AND g.pfam_domains != ''
-                GROUP BY g.pfam_domains
-                ORDER BY freq DESC
+                ORDER BY g.gene_id
                 LIMIT 20
                 OFFSET ?
             """
             
             cursor = conn.execute(domains_query, (offset,))
-            pfam_rows = cursor.fetchall()
+            gene_rows = cursor.fetchall()
             
             domain_counts = {}
-            for row in pfam_rows:
-                domains = row[0].split(';')
-                freq = row[1]
+            for gene_id, pfam_domains in gene_rows:
+                domains = pfam_domains.split(';')
                 for domain in domains:
                     domain = domain.strip()
                     if domain:
-                        domain_counts[domain] = domain_counts.get(domain, 0) + freq
+                        domain_counts[domain] = domain_counts.get(domain, 0) + 1
             
             sorted_domains = sorted(domain_counts.items(), key=lambda x: x[1], reverse=True)
             return sorted_domains[:10]
@@ -416,22 +419,147 @@ class ClusterAnalyzer:
             logger.error(f"Error getting sample domains with offset: {e}")
             return [("ABC_transporter", 10), ("DNA_binding", 8), ("Kinase", 6)]
     
-    def _get_cluster_gene_statistics(self, conn, cluster_id: int) -> Tuple[int, int]:
-        """Get gene and PFAM statistics specific to this cluster."""
+    def _extract_locus_info(self, conn, genome_id: str, locus_id: str, organism_name: str) -> Optional['LocusInfo']:
+        """Extract detailed information about a genomic locus."""
         try:
-            # Count genes in this cluster
+            # Parse locus_id to get contig
+            # Format: "genome_id:genome_id_contig_id" like "1313.30775:1313.30775_accn|1313.30775.con.0001"
+            # Contig_id in genes table: "accn|1313.30775.con.0001"
+            logger.info(f"Parsing locus_id: {locus_id}")
+            if ':' in locus_id:
+                _, full_contig_part = locus_id.split(':', 1)
+                # full_contig_part is like "1313.30775_accn|1313.30775.con.0001"
+                # We need to convert this to "accn|1313.30775.con.0001"
+                if '_accn|' in full_contig_part:
+                    # Split on "_accn|" and reconstruct as "accn|..."
+                    parts = full_contig_part.split('_accn|')
+                    contig_id = f"accn|{parts[1]}"
+                elif '|' in full_contig_part:
+                    # If there's a pipe, take everything after the last "_"
+                    contig_id = full_contig_part.split('_', 1)[1] if '_' in full_contig_part else full_contig_part
+                else:
+                    contig_id = full_contig_part
+            else:
+                contig_id = locus_id
+            
+            logger.info(f"Extracted contig_id: {contig_id} for genome_id: {genome_id}")
+            
+            # Get all genes in this locus (contig)
+            genes_query = """
+                SELECT gene_id, genome_id, contig_id, start_pos, end_pos, strand,
+                       gene_length, protein_sequence, pfam_domains, pfam_count, gc_content
+                FROM genes 
+                WHERE genome_id = ? AND contig_id = ?
+                ORDER BY start_pos
+            """
+            
+            cursor = conn.execute(genes_query, (genome_id, contig_id))
+            gene_rows = cursor.fetchall()
+            
+            logger.info(f"Found {len(gene_rows)} genes for genome {genome_id}, contig {contig_id}")
+            
+            if not gene_rows:
+                logger.warning(f"No genes found for locus {locus_id} (genome: {genome_id}, contig: {contig_id})")
+                return None
+            
+            # Create gene info objects - use absolute import to avoid issues
+            try:
+                from gpt5_analyzer import GeneInfo, LocusInfo
+            except ImportError:
+                # Fallback for relative import
+                from .gpt5_analyzer import GeneInfo, LocusInfo
+            genes = []
+            for row in gene_rows:
+                gene = GeneInfo(
+                    gene_id=row[0],
+                    genome_id=row[1], 
+                    contig_id=row[2],
+                    start=row[3],  # start_pos from database
+                    end=row[4],    # end_pos from database
+                    strand=row[5],
+                    length=row[6] or 0,
+                    protein_sequence=row[7] or "",
+                    pfam_domains=row[8] or "",
+                    pfam_count=row[9] or 0,
+                    gc_content=row[10] or 0.0
+                )
+                genes.append(gene)
+            
+            # Calculate locus boundaries
+            locus_start = min(gene.start for gene in genes)
+            locus_end = max(gene.end for gene in genes)
+            locus_length = locus_end - locus_start + 1
+            
+            locus_info = LocusInfo(
+                genome_id=genome_id,
+                organism_name=organism_name,
+                contig_id=contig_id,
+                locus_start=locus_start,
+                locus_end=locus_end,
+                locus_length=locus_length,
+                gene_count=len(genes),
+                genes=genes
+            )
+            
+            return locus_info
+            
+        except Exception as e:
+            logger.error(f"Error extracting locus info: {e}")
+            return None
+    
+    def _get_cluster_contig_count(self, conn, cluster_id: int) -> int:
+        """Get count of unique contigs involved in this cluster."""
+        try:
+            contig_count_query = """
+                SELECT COUNT(DISTINCT query_contig_id) + COUNT(DISTINCT target_contig_id) 
+                FROM syntenic_blocks sb
+                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
+                WHERE ca.cluster_id = ?
+                  AND sb.query_contig_id IS NOT NULL 
+                  AND sb.target_contig_id IS NOT NULL
+            """
+            cursor = conn.execute(contig_count_query, (cluster_id,))
+            unique_contigs = cursor.fetchone()[0] or 0
+            return unique_contigs
+            
+        except Exception as e:
+            logger.error(f"Error getting cluster {cluster_id} contig count: {e}")
+            return 0
+    
+    def _get_cluster_gene_count(self, conn, cluster_id: int) -> int:
+        """Get count of unique genes involved in this cluster."""
+        try:
+            # Try cluster_assignments first
             gene_count_query = """
-                SELECT COUNT(DISTINCT g.gene_id) 
-                FROM genes g
-                JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
+                SELECT COUNT(DISTINCT gbm.gene_id) 
+                FROM gene_block_mappings gbm
                 JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
                 JOIN cluster_assignments ca ON sb.block_id = ca.block_id
                 WHERE ca.cluster_id = ?
             """
             cursor = conn.execute(gene_count_query, (cluster_id,))
-            total_genes = cursor.fetchone()[0] or 0
+            unique_genes = cursor.fetchone()[0] or 0
             
-            # Count unique PFAM domains in this cluster
+            # If cluster_assignments is empty, estimate from cluster size
+            if unique_genes == 0:
+                logger.debug(f"No gene mappings found for cluster {cluster_id}, using size-based estimate")
+                cluster_query = "SELECT size, consensus_length FROM clusters WHERE cluster_id = ?"
+                cursor = conn.execute(cluster_query, (cluster_id,))
+                cluster_row = cursor.fetchone()
+                if cluster_row:
+                    # Rough estimate: size * consensus_length * 2 (avg genes per window)
+                    estimated_genes = cluster_row[0] * cluster_row[1] * 2
+                    return min(estimated_genes, 10000)  # Cap at reasonable max
+            
+            return unique_genes
+            
+        except Exception as e:
+            logger.error(f"Error getting cluster {cluster_id} gene count: {e}")
+            return 0
+    
+    def _get_cluster_pfam_count(self, conn, cluster_id: int) -> int:
+        """Get count of unique PFAM domains in this cluster."""
+        try:
             pfam_count_query = """
                 SELECT COUNT(DISTINCT g.pfam_domains) 
                 FROM genes g
@@ -444,12 +572,121 @@ class ClusterAnalyzer:
             """
             cursor = conn.execute(pfam_count_query, (cluster_id,))
             unique_pfam = cursor.fetchone()[0] or 0
-            
-            return total_genes, unique_pfam
+            return unique_pfam
             
         except Exception as e:
-            logger.error(f"Error getting cluster {cluster_id} gene statistics: {e}")
-            return 0, 0
+            logger.error(f"Error getting cluster {cluster_id} PFAM count: {e}")
+            return 0
+    
+    def _get_cluster_block_lengths(self, conn, cluster_id: int) -> Dict:
+        """Get block length statistics for this cluster."""
+        try:
+            # Get all block lengths in this cluster
+            length_query = """
+                SELECT sb.length
+                FROM syntenic_blocks sb
+                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
+                WHERE ca.cluster_id = ?
+            """
+            cursor = conn.execute(length_query, (cluster_id,))
+            lengths = [row[0] for row in cursor.fetchall()]
+            
+            if not lengths:
+                # Fallback to consensus_length from clusters table
+                cluster_query = "SELECT consensus_length FROM clusters WHERE cluster_id = ?"
+                cursor = conn.execute(cluster_query, (cluster_id,))
+                consensus = cursor.fetchone()
+                if consensus:
+                    return {
+                        "avg": consensus[0],
+                        "std": 0.0,
+                        "min": consensus[0], 
+                        "max": consensus[0],
+                        "count": 1
+                    }
+                return {"avg": 0, "std": 0, "min": 0, "max": 0, "count": 0}
+            
+            lengths_array = np.array(lengths)
+            return {
+                "avg": np.mean(lengths_array),
+                "std": np.std(lengths_array),
+                "min": np.min(lengths_array),
+                "max": np.max(lengths_array),
+                "count": len(lengths)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error getting cluster {cluster_id} block lengths: {e}")
+            return {"avg": 0, "std": 0, "min": 0, "max": 0, "count": 0}
+    
+    def _get_sample_loci(self, conn, cluster_id: int, sample_size: int = 5) -> List:
+        """Get random sample of loci from this cluster with full gene details."""
+        try:
+            logger.info(f"=== DEBUG: _get_sample_loci for cluster {cluster_id} ===")
+            
+            # Get random blocks from this cluster
+            blocks_query = """
+                SELECT sb.block_id, sb.query_locus, sb.target_locus, sb.query_genome_id, sb.target_genome_id
+                FROM syntenic_blocks sb
+                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
+                WHERE ca.cluster_id = ?
+                ORDER BY RANDOM()
+                LIMIT ?
+            """
+            cursor = conn.execute(blocks_query, (cluster_id, sample_size * 2))  # Get more blocks to extract loci
+            blocks = cursor.fetchall()
+            
+            logger.info(f"Found {len(blocks)} blocks for cluster {cluster_id}")
+            if not blocks:
+                logger.warning(f"No blocks found for cluster {cluster_id} - cluster_assignments may be empty")
+                return []
+            
+            sample_loci = []
+            seen_loci = set()
+            
+            for i, block in enumerate(blocks):
+                if len(sample_loci) >= sample_size:
+                    break
+                    
+                block_id, query_locus, target_locus, query_genome_id, target_genome_id = block
+                logger.info(f"Processing block {i+1}/{len(blocks)}: {block_id}, query: {query_locus}, target: {target_locus}")
+                
+                # Try query locus first
+                if query_locus not in seen_loci:
+                    logger.info(f"Attempting to extract query locus: {query_locus} (genome: {query_genome_id})")
+                    try:
+                        locus_info = self._extract_locus_info(conn, query_genome_id, query_locus, f"Genome_{query_genome_id}")
+                        if locus_info:
+                            logger.info(f"Successfully extracted query locus with {locus_info.gene_count} genes")
+                            sample_loci.append(locus_info)
+                            seen_loci.add(query_locus)
+                        else:
+                            logger.warning(f"_extract_locus_info returned None for query locus {query_locus}")
+                    except Exception as e:
+                        logger.error(f"Error extracting query locus {query_locus}: {e}")
+                
+                # Try target locus if we need more samples
+                if len(sample_loci) < sample_size and target_locus not in seen_loci:
+                    logger.info(f"Attempting to extract target locus: {target_locus} (genome: {target_genome_id})")
+                    try:
+                        locus_info = self._extract_locus_info(conn, target_genome_id, target_locus, f"Genome_{target_genome_id}")
+                        if locus_info:
+                            logger.info(f"Successfully extracted target locus with {locus_info.gene_count} genes")
+                            sample_loci.append(locus_info)
+                            seen_loci.add(target_locus)
+                        else:
+                            logger.warning(f"_extract_locus_info returned None for target locus {target_locus}")
+                    except Exception as e:
+                        logger.error(f"Error extracting target locus {target_locus}: {e}")
+            
+            logger.info(f"=== FINAL: Extracted {len(sample_loci)} sample loci for cluster {cluster_id} ===")
+            return sample_loci[:sample_size]
+            
+        except Exception as e:
+            logger.error(f"Error getting sample loci for cluster {cluster_id}: {e}")
+            import traceback
+            logger.error(f"Full traceback: {traceback.format_exc()}")
+            return []
     
     def _get_sample_gene_statistics(self, conn) -> Tuple[int, int]:
         """Get sample gene and PFAM statistics."""
@@ -489,33 +726,108 @@ class ClusterAnalyzer:
             return 0, 0
     
     def generate_cluster_summary(self, stats: ClusterStats) -> Optional[str]:
-        """Generate GPT-4.1-mini summary for a cluster."""
+        """Generate GPT-5-mini summary for a cluster using Responses API."""
         try:
-            # Format cluster statistics for GPT with syntenic context
-            cluster_info = f"""Syntenic block cluster analysis:
-- {stats.size} conserved gene arrangements (syntenic blocks)
-- Found across {stats.organism_count} organisms: {', '.join(stats.organisms[:3])}{'...' if len(stats.organisms) > 3 else ''}
-- Average block length: {stats.consensus_length} gene windows
-- Sequence identity range: {stats.identity_range[0]:.1%} - {stats.identity_range[1]:.1%}
-- Cluster diversity: {stats.diversity:.3f}"""
+            # Get enhanced cluster data
+            conn = sqlite3.connect(self.db_path)
             
-            # Provide domain context as conserved elements
-            conserved_info = f"""PFAM domains conserved in these syntenic alignments (ordered by frequency): {', '.join(stats.dominant_functions)}
+            # Get block length variance
+            length_stats = self._get_cluster_block_lengths(conn, stats.cluster_id)
+            
+            # Get sample loci
+            sample_loci = self._get_sample_loci(conn, stats.cluster_id, sample_size=5)
+            
+            conn.close()
+            
+            # Format length variance
+            if length_stats["count"] > 1:
+                length_desc = f"{length_stats['avg']:.1f} ± {length_stats['std']:.1f} gene windows (range: {int(length_stats['min'])}-{int(length_stats['max'])})"
+            else:
+                length_desc = f"{length_stats['avg']:.0f} gene windows"
+            
+            # Format sample loci
+            sample_text = ""
+            if sample_loci:
+                sample_text = "\n\nREPRESENTATIVE LOCI:\n"
+                for i, locus in enumerate(sample_loci, 1):
+                    sample_text += f"\nLocus {i}: {locus.organism_name} - {locus.contig_id}:{locus.locus_start}-{locus.locus_end}\n"
+                    for j, gene in enumerate(locus.genes, 1):
+                        strand_symbol = "+" if gene.strand >= 0 else "-"
+                        pfam_info = gene.pfam_domains[:50] + "..." if len(gene.pfam_domains) > 50 else gene.pfam_domains
+                        if not pfam_info:
+                            pfam_info = "None"
+                        sample_text += f"  Gene {j}: {gene.gene_id} ({strand_symbol}, {gene.length} aa) - PFAM: {pfam_info}\n"
+            
+            # Format comprehensive prompt for GPT-5-mini
+            prompt = f"""Analyze this syntenic block cluster:
 
-These represent gene arrangements that are preserved across different organisms, suggesting functional importance."""
+CLUSTER OVERVIEW:
+- Found across {stats.organism_count} organisms
+- Block length: {length_desc}
+- {length_stats['count']} similar syntenic arrangements
+
+CONSERVED PFAM DOMAINS (most frequent):
+{', '.join(stats.dominant_functions[:10])}{sample_text}
+
+Provide two concise analyses (under 100 words total):
+
+1. MOLECULAR MECHANISM: Specific molecular pathway with key PFAM domains and enzyme functions. Include biochemical context and conservation rationale.
+
+2. CONSERVATION BASIS: Molecular constraints explaining synteny preservation. Avoid generic terms.
+
+Format as:
+**Function:** [analysis 1]
+**Conservation:** [analysis 2]"""
+
+            # Comprehensive debug logging
+            logger.info(f"=== DEBUG: CLUSTER DATA COMPONENTS ===")
+            logger.info(f"Cluster ID: {stats.cluster_id}")
+            logger.info(f"Length stats: {length_stats}")
+            logger.info(f"Sample loci count: {len(sample_loci)}")
+            logger.info(f"PFAM domains: {stats.dominant_functions[:10]}")
             
-            # Call GPT-4.1-mini with explicit LM context
-            with dspy.context(lm=self.lm):
-                result = self.summarizer(
-                    cluster_stats=cluster_info,
-                    conserved_domains=conserved_info
-                )
+            # Log each sample locus in detail
+            for i, locus in enumerate(sample_loci):
+                logger.info(f"Sample locus {i+1}: {locus.organism_name} - {len(locus.genes)} genes")
+                for j, gene in enumerate(locus.genes):
+                    logger.info(f"  Gene {j+1}: {gene.gene_id} - PFAM: '{gene.pfam_domains}' - Length: {gene.length}aa")
             
-            return f"**Cluster:** {stats.size} syntenic block alignments\n\n**Conserved Functions:** {result.conserved_genes}\n\n**Theme:** {result.functional_theme}\n\n**Evolutionary Significance:** {result.evolutionary_significance}"
+            logger.info(f"=== FULL GPT-5 PROMPT ===")
+            logger.info(f"COMPLETE PROMPT:\n{prompt}")
+            logger.info(f"=== END PROMPT ===")
+            
+            # Call GPT-5-mini using Responses API
+            response = self.openai_client.responses.create(
+                model="gpt-5-mini",
+                input=prompt,
+                reasoning={"effort": "low"},
+                max_output_tokens=500  # Increased from 300
+            )
+            
+            # Debug response structure
+            logger.info(f"GPT-5 response object type: {type(response)}")
+            logger.info(f"GPT-5 response attributes: {dir(response)}")
+            
+            # Try different possible response attributes
+            result_text = ""
+            if hasattr(response, 'output_text'):
+                result_text = response.output_text.strip()
+                logger.info(f"GPT-5 output_text: '{result_text}' (length: {len(result_text)})")
+            elif hasattr(response, 'text'):
+                result_text = response.text.strip()
+                logger.info(f"GPT-5 text: '{result_text}' (length: {len(result_text)})")
+            elif hasattr(response, 'content'):
+                result_text = response.content.strip()
+                logger.info(f"GPT-5 content: '{result_text}' (length: {len(result_text)})")
+            else:
+                logger.error(f"Unknown GPT-5 response format: {response}")
+                result_text = "Unable to parse GPT-5 response"
+            
+            return f"**Cluster:** {stats.total_alignments:,} alignments ({stats.unique_genes:,} genes)\n\n{result_text}"
             
         except Exception as e:
             logger.error(f"Error generating cluster summary: {e}")
-            return f"Cluster {stats.cluster_id}: {stats.size} syntenic blocks with {stats.consensus_length} average windows. Analysis pending."
+            return f"Cluster {stats.cluster_id}: {stats.total_alignments:,} alignments spanning {stats.unique_genes:,} genes. Analysis pending."
 
 def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[ClusterStats]:
     """Get statistics for all clusters."""

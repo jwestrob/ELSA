@@ -71,8 +71,8 @@ class SyntenicBlockAnalyzer(dspy.Signature):
     """DSPy signature for GPT-5 syntenic block analysis."""
     
     block_summary = dspy.InputField(desc="Summary of the syntenic block including identity, score, and length")
-    query_locus_data = dspy.InputField(desc="Detailed information about the query locus including genes and PFAM domains")
-    target_locus_data = dspy.InputField(desc="Detailed information about the target locus including genes and PFAM domains")
+    query_locus_data = dspy.InputField(desc="Detailed information about the query locus including genes and PFAM domains. Consider assembly breaks for genes at contig boundaries")
+    target_locus_data = dspy.InputField(desc="Detailed information about the target locus including genes and PFAM domains. Consider assembly breaks for genes at contig boundaries")
     
     functional_conservation = dspy.OutputField(desc="Analysis of functional similarities based on PFAM domain conservation and gene orthologs")
     gene_organization = dspy.OutputField(desc="How gene organization (order, orientation) is conserved or different")
@@ -294,7 +294,15 @@ class GPT5Analyzer:
         summary += f"Genes in {label} locus:\n"
         for i, gene in enumerate(locus.genes, 1):
             strand_symbol = "+" if gene.strand >= 0 else "-"
-            summary += f"{i}. {gene.gene_id} ({strand_symbol} strand, {gene.length} aa)\n"
+            
+            # Add boundary position information for assembly break detection
+            boundary_info = ""
+            if i == 1:
+                boundary_info = " (first gene on contig)"
+            elif i == len(locus.genes):
+                boundary_info = " (last gene on contig)"
+            
+            summary += f"{i}. {gene.gene_id} ({strand_symbol} strand, {gene.length} aa){boundary_info}\n"
             if gene.pfam_domains:
                 pfam_summary = gene.pfam_domains[:200] + "..." if len(gene.pfam_domains) > 200 else gene.pfam_domains
                 summary += f"   PFAM: {pfam_summary}\n"

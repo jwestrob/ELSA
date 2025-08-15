@@ -848,7 +848,6 @@ def display_genome_viewer():
                 )
                 st.plotly_chart(comparative_fig, use_container_width=True)
 
-@st.cache_data
 def load_cluster_stats():
     """Load precomputed cluster statistics."""
     try:
@@ -1084,12 +1083,13 @@ def display_cluster_card_with_async_summary(stats):
         </div>
         """, unsafe_allow_html=True)
         
-        # Stats summary
+        # Multi-dimensional stats summary
         col1, col2 = st.columns([1, 1])
         with col1:
-            st.write(f"**Size:** {stats.size} blocks ({stats.cluster_type})")
-            st.write(f"**Length:** {stats.consensus_length} windows (avg)")
+            st.write(f"**Alignments:** {stats.total_alignments:,} blocks")
+            st.write(f"**Genomic Scope:** {stats.unique_contigs} contigs, {stats.unique_genes:,} genes")
         with col2:
+            st.write(f"**Length:** {stats.consensus_length} windows (avg)")
             st.write(f"**Identity:** {stats.avg_identity:.1%} ± {stats.diversity:.3f}")
             st.write(f"**Organisms:** {stats.organism_count} ({', '.join(stats.organisms[:2])}{'...' if len(stats.organisms) > 2 else ''})")
         
@@ -1100,25 +1100,57 @@ def display_cluster_card_with_async_summary(stats):
             if chart:
                 st.plotly_chart(chart, use_container_width=True, config={'displayModeBar': False}, key=f"domain_chart_{stats.cluster_id}")
         
-        # AI Summary (generated on demand when expanded)
-        with st.expander("🤖 **AI Functional Summary**", expanded=False):
-            # Use session state to cache AI summaries per cluster
-            summary_key = f"cluster_summary_{stats.cluster_id}"
-            
-            if summary_key not in st.session_state:
-                st.session_state[summary_key] = {"generated": False, "content": ""}
-            
-            if not st.session_state[summary_key]["generated"]:
-                with st.spinner("Generating AI analysis..."):
+        # AI Summary (generated on demand with button)
+        summary_key = f"cluster_summary_{stats.cluster_id}"
+        
+        if summary_key not in st.session_state:
+            st.session_state[summary_key] = {"generated": False, "content": ""}
+        
+        # Show button to generate AI summary or loading state
+        loading_key = f"cluster_loading_{stats.cluster_id}"
+        
+        if not st.session_state[summary_key]["generated"]:
+            if st.session_state.get(loading_key, False):
+                # Show loading state and perform API call
+                with st.status("🤖 Generating AI analysis...", expanded=False) as status:
                     try:
                         from cluster_analyzer import ClusterAnalyzer
                         analyzer = ClusterAnalyzer(Path("genome_browser.db"))
                         summary = analyzer.generate_cluster_summary(stats)
+                        
+                        # Update session state
                         st.session_state[summary_key] = {"generated": True, "content": summary}
+                        st.session_state[loading_key] = False
+                        
+                        # Update status
+                        status.update(label="✅ Analysis complete!", state="complete")
+                        
                     except Exception as e:
                         st.session_state[summary_key] = {"generated": True, "content": f"Error generating summary: {e}"}
-            
-            st.markdown(st.session_state[summary_key]["content"])
+                        st.session_state[loading_key] = False
+                        status.update(label="❌ Analysis failed!", state="error")
+                        
+                # Display content immediately after generation (whether success or error)
+                if st.session_state[summary_key]["generated"]:
+                    with st.expander("🤖 **AI Functional Summary**", expanded=True):
+                        content = st.session_state[summary_key]["content"]
+                        if content:
+                            st.markdown(content)
+                        else:
+                            st.error("No content generated!")
+            else:
+                # Show button to start generation
+                if st.button(f"🤖 Generate AI Analysis", key=f"ai_button_{stats.cluster_id}"):
+                    st.session_state[loading_key] = True
+                    st.rerun()
+        else:
+            # Show the generated summary (for when page reloads after generation)
+            with st.expander("🤖 **AI Functional Summary**", expanded=True):
+                content = st.session_state[summary_key]["content"]
+                if content:
+                    st.markdown(content)
+                else:
+                    st.error("No content in session state!")
         
         # Action buttons
         col1, col2 = st.columns(2)
@@ -1152,12 +1184,13 @@ def display_cluster_card(stats, summary):
         </div>
         """, unsafe_allow_html=True)
         
-        # Stats summary
+        # Multi-dimensional stats summary
         col1, col2 = st.columns([1, 1])
         with col1:
-            st.write(f"**Size:** {stats.size} blocks ({stats.cluster_type})")
-            st.write(f"**Length:** {stats.consensus_length} windows (avg)")
+            st.write(f"**Alignments:** {stats.total_alignments:,} blocks")
+            st.write(f"**Genomic Scope:** {stats.unique_contigs} contigs, {stats.unique_genes:,} genes")
         with col2:
+            st.write(f"**Length:** {stats.consensus_length} windows (avg)")
             st.write(f"**Identity:** {stats.avg_identity:.1%} ± {stats.diversity:.3f}")
             st.write(f"**Organisms:** {stats.organism_count} ({', '.join(stats.organisms[:2])}{'...' if len(stats.organisms) > 2 else ''})")
         
@@ -1227,23 +1260,49 @@ def display_cluster_detail():
             st.error(f"Error loading cluster details: {e}")
             return
     
-    # Cluster overview
+    # Cluster overview with multi-dimensional metrics
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Cluster Size", f"{stats.size} blocks")
+        st.metric("Alignments", f"{stats.total_alignments:,}")
     with col2:
-        st.metric("Consensus Length", f"{stats.consensus_length} windows")
+        st.metric("Genomic Scope", f"{stats.unique_genes:,} genes")
     with col3:
         st.metric("Average Identity", f"{stats.avg_identity:.1%}")
     with col4:
         st.metric("Organisms", f"{stats.organism_count}")
     
-    # Generate and display AI analysis
+    # AI analysis (generated on demand)
     st.subheader("🤖 AI Functional Analysis")
-    with st.spinner("Generating comprehensive GPT-4.1-mini analysis..."):
-        summary = analyzer.generate_cluster_summary(stats)
     
-    st.markdown(summary)
+    detail_summary_key = f"cluster_detail_summary_{cluster_id}"
+    
+    if detail_summary_key not in st.session_state:
+        st.session_state[detail_summary_key] = {"generated": False, "content": ""}
+    
+    # Show button to generate AI summary or loading state
+    detail_loading_key = f"cluster_detail_loading_{cluster_id}"
+    
+    if not st.session_state[detail_summary_key]["generated"]:
+        if st.session_state.get(detail_loading_key, False):
+            # Show loading state and perform API call
+            with st.status("🤖 Generating comprehensive GPT-5-mini analysis...", expanded=False) as status:
+                try:
+                    summary = analyzer.generate_cluster_summary(stats)
+                    st.session_state[detail_summary_key] = {"generated": True, "content": summary}
+                    st.session_state[detail_loading_key] = False
+                    status.update(label="✅ Analysis complete!", state="complete")
+                except Exception as e:
+                    st.session_state[detail_summary_key] = {"generated": True, "content": f"Error generating summary: {e}"}
+                    st.session_state[detail_loading_key] = False
+                    status.update(label="❌ Analysis failed!", state="error")
+        else:
+            # Show button to start generation
+            if st.button("🤖 Generate Detailed AI Analysis", key=f"ai_detail_button_{cluster_id}"):
+                st.session_state[detail_loading_key] = True
+                st.rerun()
+    else:
+        # Show the generated summary
+        st.markdown(st.session_state[detail_summary_key]["content"])
     
     # Cluster composition
     st.subheader("📊 Cluster Composition")

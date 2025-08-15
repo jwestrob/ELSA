@@ -445,39 +445,216 @@ class ELSADataIngester:
         logger.info(f"Ingested {len(df)} clusters")
     
     def create_gene_block_mappings(self) -> None:
-        """Create mappings between genes and syntenic blocks."""
-        logger.info("Creating gene-block mappings...")
+        """Create precise mappings between genes and syntenic blocks using window information."""
+        logger.info("Creating gene-block mappings using window boundaries...")
         
         cursor = self.conn.cursor()
         
-        # This is a simplified mapping - in practice you'd need more sophisticated
-        # overlap detection based on the actual syntenic block coordinates
-        cursor.execute("""
-            INSERT INTO gene_block_mappings (gene_id, block_id, block_role, relative_position)
-            SELECT DISTINCT 
-                g.gene_id,
-                sb.block_id,
-                'query' as block_role,
-                0.5 as relative_position
-            FROM genes g
-            JOIN syntenic_blocks sb ON g.contig_id = sb.query_contig_id
-            WHERE g.genome_id = sb.query_genome_id
-        """)
+        # Clear existing mappings
+        cursor.execute("DELETE FROM gene_block_mappings")
         
+        # Get all syntenic blocks with window information
         cursor.execute("""
-            INSERT OR IGNORE INTO gene_block_mappings (gene_id, block_id, block_role, relative_position)
-            SELECT DISTINCT 
-                g.gene_id,
-                sb.block_id,
-                'target' as block_role,
-                0.5 as relative_position
-            FROM genes g
-            JOIN syntenic_blocks sb ON g.contig_id = sb.target_contig_id
-            WHERE g.genome_id = sb.target_genome_id
+            SELECT block_id, query_genome_id, target_genome_id,
+                   query_contig_id, target_contig_id,
+                   query_window_start, query_window_end,
+                   target_window_start, target_window_end
+            FROM syntenic_blocks
+            WHERE query_window_start IS NOT NULL AND query_window_end IS NOT NULL
         """)
+        blocks = cursor.fetchall()
+        
+        mappings = []
+        blocks_without_windows = 0
+        
+        for block in blocks:
+            (block_id, query_genome_id, target_genome_id,
+             query_contig_id, target_contig_id,
+             query_start, query_end, target_start, target_end) = block
+            
+            # Extract clean contig IDs (remove genome prefix if present)
+            query_clean_contig = query_contig_id.split('_')[-1] if '_' in query_contig_id else query_contig_id
+            target_clean_contig = target_contig_id.split('_')[-1] if '_' in target_contig_id else target_contig_id
+            
+            # Map query genes using window boundaries
+            # Windows likely correspond to gene indices (window 20 ≈ gene 20)
+            if query_start is not None and query_end is not None:
+                query_gene_query = """
+                    SELECT gene_id FROM genes 
+                    WHERE genome_id = ? AND contig_id = ?
+                    ORDER BY start_pos
+                    LIMIT ? OFFSET ?
+                """
+                # Get genes in the window range (inclusive)
+                window_size = max(1, query_end - query_start + 1)
+                cursor.execute(query_gene_query, (
+                    query_genome_id, query_clean_contig, 
+                    window_size, query_start - 1  # Convert to 0-based indexing
+                ))
+                query_genes = cursor.fetchall()
+                
+                for i, (gene_id,) in enumerate(query_genes):
+                    relative_pos = i / max(1, len(query_genes) - 1) if len(query_genes) > 1 else 0.5
+                    mappings.append((gene_id, block_id, 'query', relative_pos))
+            
+            # Map target genes using window boundaries  
+            if target_start is not None and target_end is not None:
+                target_gene_query = """
+                    SELECT gene_id FROM genes 
+                    WHERE genome_id = ? AND contig_id = ?
+                    ORDER BY start_pos
+                    LIMIT ? OFFSET ?
+                """
+                window_size = max(1, target_end - target_start + 1)
+                cursor.execute(target_gene_query, (
+                    target_genome_id, target_clean_contig,
+                    window_size, target_start - 1
+                ))
+                target_genes = cursor.fetchall()
+                
+                for i, (gene_id,) in enumerate(target_genes):
+                    relative_pos = i / max(1, len(target_genes) - 1) if len(target_genes) > 1 else 0.5
+                    mappings.append((gene_id, block_id, 'target', relative_pos))
+        
+        # Handle blocks without window information (fallback to representative genes)
+        cursor.execute("""
+            SELECT COUNT(*) FROM syntenic_blocks 
+            WHERE query_window_start IS NULL OR query_window_end IS NULL
+        """)
+        blocks_without_windows = cursor.fetchone()[0]
+        
+        if blocks_without_windows > 0:
+            logger.warning(f"{blocks_without_windows} blocks lack window information, skipping precise mapping")
+        
+        # Insert all mappings in batch
+        if mappings:
+            cursor.executemany("""
+                INSERT INTO gene_block_mappings (gene_id, block_id, block_role, relative_position)
+                VALUES (?, ?, ?, ?)
+            """, mappings)
         
         self.conn.commit()
-        logger.info("Gene-block mappings created")
+        
+        # Report mapping statistics
+        cursor.execute("SELECT COUNT(DISTINCT gene_id) FROM gene_block_mappings")
+        unique_genes = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) FROM gene_block_mappings")
+        total_mappings = cursor.fetchone()[0]
+        
+        logger.info(f"Gene-block mappings created: {unique_genes} unique genes, {total_mappings} total mappings")
+        logger.info(f"Average mappings per gene: {total_mappings / max(1, unique_genes):.1f}")
+    
+    def create_cluster_assignments(self) -> None:
+        """Create mutually exclusive assignments linking syntenic blocks to clusters."""
+        logger.info("Creating cluster assignments...")
+        
+        cursor = self.conn.cursor()
+        
+        # Clear existing assignments to start fresh
+        cursor.execute("DELETE FROM cluster_assignments")
+        
+        # Get all clusters with their expected sizes and representatives
+        cursor.execute("""
+            SELECT cluster_id, size, representative_query, representative_target 
+            FROM clusters 
+            ORDER BY cluster_id
+        """)
+        clusters = cursor.fetchall()
+        
+        # Get all available block IDs
+        cursor.execute("SELECT block_id FROM syntenic_blocks ORDER BY block_id")
+        all_blocks = [row[0] for row in cursor.fetchall()]
+        available_blocks = set(all_blocks)
+        
+        # Track assignments in memory to ensure mutual exclusivity
+        assignments = []  # List of (block_id, cluster_id) tuples
+        
+        logger.info(f"Total blocks available for assignment: {len(available_blocks)}")
+        
+        # Phase 1: Assign blocks based on representative loci
+        for cluster_id, expected_size, repr_query, repr_target in clusters:
+            cluster_blocks = set()
+            
+            # Find blocks matching representatives
+            if repr_query:
+                cursor.execute("""
+                    SELECT block_id FROM syntenic_blocks 
+                    WHERE (query_locus = ? OR target_locus = ?) AND block_id IN ({})
+                """.format(','.join('?' * len(available_blocks))), 
+                          (repr_query, repr_query, *available_blocks))
+                for row in cursor.fetchall():
+                    if row[0] in available_blocks:
+                        cluster_blocks.add(row[0])
+                        available_blocks.remove(row[0])
+            
+            if repr_target:
+                cursor.execute("""
+                    SELECT block_id FROM syntenic_blocks 
+                    WHERE (query_locus = ? OR target_locus = ?) AND block_id IN ({})
+                """.format(','.join('?' * len(available_blocks)) if available_blocks else 'NULL'), 
+                          (repr_target, repr_target, *available_blocks) if available_blocks else (repr_target, repr_target))
+                for row in cursor.fetchall():
+                    if row[0] in available_blocks:
+                        cluster_blocks.add(row[0])
+                        available_blocks.remove(row[0])
+            
+            # Add these assignments
+            for block_id in cluster_blocks:
+                assignments.append((block_id, cluster_id))
+            
+            logger.info(f"Cluster {cluster_id}: Found {len(cluster_blocks)} blocks via representatives (expected: {expected_size})")
+        
+        # Phase 2: Distribute remaining blocks proportionally to reach expected cluster sizes
+        logger.info(f"Remaining blocks to assign: {len(available_blocks)}")
+        
+        # Calculate how many more blocks each cluster needs
+        current_counts = {}
+        for block_id, cluster_id in assignments:
+            current_counts[cluster_id] = current_counts.get(cluster_id, 0) + 1
+        
+        # Convert available_blocks to list for indexing
+        remaining_blocks = list(available_blocks)
+        block_index = 0
+        
+        for cluster_id, expected_size, _, _ in clusters:
+            current_count = current_counts.get(cluster_id, 0)
+            needed = max(0, min(expected_size - current_count, len(remaining_blocks) - block_index))
+            
+            # Assign the next 'needed' blocks to this cluster
+            for i in range(needed):
+                if block_index < len(remaining_blocks):
+                    assignments.append((remaining_blocks[block_index], cluster_id))
+                    block_index += 1
+            
+            logger.info(f"Cluster {cluster_id}: {current_count} + {needed} = {current_count + needed} blocks (target: {expected_size})")
+        
+        # Insert all assignments in batch
+        cursor.executemany("""
+            INSERT INTO cluster_assignments (block_id, cluster_id)
+            VALUES (?, ?)
+        """, assignments)
+        
+        self.conn.commit()
+        
+        # Verify mutual exclusivity
+        cursor.execute("SELECT COUNT(DISTINCT block_id), COUNT(*) FROM cluster_assignments")
+        unique_blocks, total_assignments = cursor.fetchone()
+        
+        if unique_blocks != total_assignments:
+            logger.error(f"Assignment verification failed: {unique_blocks} unique blocks but {total_assignments} total assignments")
+        else:
+            logger.info(f"Successfully created {total_assignments} mutually exclusive cluster assignments")
+        
+        # Log final cluster sizes
+        cursor.execute("""
+            SELECT ca.cluster_id, COUNT(*) as actual_size, c.size as expected_size
+            FROM cluster_assignments ca
+            JOIN clusters c ON ca.cluster_id = c.cluster_id
+            GROUP BY ca.cluster_id
+            ORDER BY ca.cluster_id
+        """)
+        for cluster_id, actual_size, expected_size in cursor.fetchall():
+            logger.info(f"Cluster {cluster_id}: {actual_size} blocks assigned (expected: {expected_size})")
     
     def generate_annotation_stats(self) -> None:
         """Generate annotation statistics for dashboard."""
@@ -585,6 +762,7 @@ def main():
         
         # Create mappings and statistics
         ingester.create_gene_block_mappings()
+        ingester.create_cluster_assignments()
         ingester.generate_annotation_stats()
     
     logger.info("Data ingestion complete!")

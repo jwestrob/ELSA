@@ -45,10 +45,17 @@ elsa embed data/ --fasta-pattern "*.genomic.fna"
 elsa build
 ```
 
-### 5. Find syntenic blocks
+### 5. Run analysis pipeline
 
 ```bash
-elsa find "strain001_contig1_1:100000"
+elsa analyze
+```
+
+Then launch the genome browser:
+
+```bash
+cd genome_browser
+streamlit run app.py
 ```
 
 ## Pipeline Architecture
@@ -78,7 +85,10 @@ elsa find "strain001_contig1_1:100000"
 - **Collinear chaining**: Dynamic programming with gap penalties
 - **DTW refinement**: Optional dynamic time warping alignment
 
-### Stage 6: Block Clustering — Mutual-k Jaccard over Order-Aware Shingles
+### Stage 6: Block Clustering
+
+<details>
+<summary><strong>Mutual-k Jaccard over Order-Aware Shingles</strong></summary>
 
 We cluster syntenic blocks into cassette families using **Mutual-k Jaccard** over order-aware shingles derived from SRP tokens of the existing window embeddings.
 
@@ -101,6 +111,8 @@ We cluster syntenic blocks into cassette families using **Mutual-k Jaccard** ove
 
 **Determinism:** All randomness is seeded; ordering keys are fixed; re-runs produce identical cluster IDs.
 
+</details>
+
 ## Comprehensive Analysis
 
 To run the complete analysis pipeline:
@@ -112,6 +124,55 @@ elsa analyze --output-dir results/
 This performs all-vs-all locus comparison, finds syntenic blocks, clusters them with the new method, and outputs:
 - `syntenic_blocks.csv` - All discovered blocks with cluster assignments
 - `syntenic_clusters.csv` - Cluster summaries and statistics
+
+## Genome Browser
+
+After running `elsa analyze`, launch the interactive genome browser to explore your results:
+
+```bash
+cd genome_browser
+streamlit run app.py
+```
+
+The browser will be available at `http://localhost:8501` and provides:
+
+### 🎯 Key Features
+
+- **📊 Dashboard**: Overview statistics, size distributions, and genome comparison matrices
+- **🔍 Block Explorer**: Advanced filtering, pagination, and detailed block information  
+- **🧬 Genome Viewer**: Interactive genome diagrams with gene arrows and domain tracks
+- **🧩 Cluster Explorer**: Explore syntenic block clusters with functional analysis
+- **🤖 AI Analysis**: GPT-powered functional interpretation of clusters
+
+### 🔧 Navigation
+
+1. **Dashboard Tab**: View overall statistics and data quality metrics
+2. **Block Explorer Tab**: Filter and browse individual syntenic blocks
+   - Use size sliders, identity thresholds, and genome selection
+   - Search by PFAM domains
+   - Click blocks to view detailed genome context
+3. **Genome Viewer Tab**: Visualize specific genomic loci
+   - Enter locus coordinates (e.g., `genome1:100000-200000`)
+   - View gene annotations with PFAM domain tracks
+4. **Cluster Explorer Tab**: Analyze syntenic block clusters
+   - Browse cluster overview cards
+   - Click "Explore Cluster X" for detailed views
+   - Generate AI functional analysis for each cluster
+
+### 🧬 Genome Visualization
+
+The genome diagrams show:
+- **Gene arrows**: Strand-aware shapes colored by synteny role
+- **PFAM domains**: Functional domain annotations below genes
+- **Scale bars**: Genomic coordinates with smart labeling
+- **Interactive elements**: Hover for gene details, zoom/pan navigation
+
+### 🤖 AI-Powered Analysis
+
+Each cluster can be analyzed using GPT-5 to provide:
+- **Molecular mechanisms**: Specific pathways and enzyme functions
+- **Conservation rationale**: Why these blocks are syntenic
+- **Functional coherence**: Biological significance of co-localization
 
 ## Configuration
 

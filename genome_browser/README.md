@@ -29,13 +29,16 @@ cd genome_browser
 # Install Python dependencies
 pip install -r requirements.txt
 
+# Run ELSA analysis to generate syntenic blocks and clusters
+elsa analyze
+
 # Set up the genome browser with your ELSA data
 python setup_genome_browser.py \
     --genome-dir ../test_data/genomes \
     --blocks-file ../syntenic_analysis/syntenic_blocks.csv \
     --clusters-file ../syntenic_analysis/syntenic_clusters.csv
 
-# Start the web application
+# Start the genome browser web application
 streamlit run app.py
 ```
 
@@ -243,6 +246,30 @@ python setup_genome_browser.py \
   - 🤖 AI-powered functional analysis
 - **Focused Visualization**: Shows only syntenic regions + context genes
 - **Pagination**: Handle clusters with hundreds of loci
+
+<details>
+<summary><strong>🔗 Clustering Algorithm: Mutual-k Jaccard</strong></summary>
+
+The ELSA genome browser uses a **Mutual-k Jaccard clustering algorithm** to group syntenic blocks into functionally coherent clusters:
+
+#### Algorithm Overview
+1. **Jaccard Similarity**: For each pair of syntenic blocks, calculate the Jaccard index based on shared PFAM domains and genomic context
+2. **Mutual k-Nearest Neighbors**: Identify blocks that are mutually in each other's k-nearest neighbor sets
+3. **Connected Components**: Form clusters by finding connected components in the mutual-k graph
+4. **Refinement**: Apply additional filters based on block length, identity scores, and genomic proximity
+
+#### Benefits
+- **Functional Coherence**: Groups blocks with similar domain compositions and biological functions
+- **Noise Reduction**: Mutual-k requirement filters out spurious similarities
+- **Scalability**: Efficiently handles large numbers of syntenic blocks
+- **Biological Relevance**: Produces clusters that often correspond to conserved operons or functional modules
+
+#### Parameters
+- **k-value**: Typically 3-5 nearest neighbors for optimal clustering
+- **Jaccard Threshold**: Minimum similarity score (default: 0.3)
+- **Domain Weight**: Emphasis on PFAM domain overlap vs. positional similarity
+
+</details>
 
 ---
 

@@ -7,6 +7,7 @@ Converts nucleotide FASTA files to protein sequences via Prodigal gene calling.
 import subprocess
 import tempfile
 import shutil
+import os
 from pathlib import Path
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
@@ -20,6 +21,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 
 from .params import IngestConfig
 from .embeddings import ProteinSequence
+from .pfam_annotation import run_pfam_annotation_pipeline
 
 console = Console()
 
@@ -274,6 +276,12 @@ class ProteinIngester:
         self.config = config
         self.prodigal = ProdigalRunner(config) if config.gene_caller != "none" else None
         self.gff_parser = GFFParser(config)
+        
+        # Create organized directory structure
+        self.data_dir = Path("data")
+        self.genomes_dir = self.data_dir / "genomes"
+        self.proteins_dir = self.data_dir / "proteins"
+        self.annotations_dir = self.data_dir / "annotations"
     
     def ingest_sample(self, fasta_path: Path, sample_id: str, 
                      gff_path: Optional[Path] = None, 
@@ -361,7 +369,104 @@ class ProteinIngester:
         total_proteins = sum(len(proteins) for proteins in results.values())
         console.print(f"✓ Processed {len(sample_data)} samples, {total_proteins:,} total proteins")
         
+        # Organize output files into structured directories
+        console.print("\n[bold blue]Organizing output files...[/bold blue]")
+        for sample_id, fasta_path, _, _ in sample_data:
+            self.organize_output_files(fasta_path, sample_id)
+        
         return results
+    
+    def create_organized_directories(self):
+        """Create organized directory structure for outputs."""
+        self.data_dir.mkdir(exist_ok=True)
+        self.genomes_dir.mkdir(exist_ok=True)
+        self.proteins_dir.mkdir(exist_ok=True)
+        self.annotations_dir.mkdir(exist_ok=True)
+        console.print(f"✓ Created organized directory structure: {self.data_dir}")
+    
+    def organize_output_files(self, fasta_path: Path, sample_id: str) -> Dict[str, Path]:
+        """
+        Organize Prodigal output files into structured directories.
+        
+        Args:
+            fasta_path: Original input FASTA file
+            sample_id: Sample identifier
+            
+        Returns:
+            Dictionary with paths to organized files
+        """
+        self.create_organized_directories()
+        
+        # Expected Prodigal outputs in input directory
+        input_dir = fasta_path.parent
+        gff_file = input_dir / f"{fasta_path.stem}.gff"
+        faa_file = input_dir / f"{fasta_path.stem}.faa"
+        
+        # Target paths in organized structure
+        target_genome = self.genomes_dir / f"{fasta_path.name}"
+        target_protein = self.proteins_dir / f"{fasta_path.stem}.faa"
+        target_annotation = self.annotations_dir / f"{fasta_path.stem}.gff"
+        
+        organized_paths = {}
+        
+        # Create symlink to original genome file
+        if not target_genome.exists():
+            # Create relative symlink
+            relative_source = os.path.relpath(fasta_path, self.genomes_dir)
+            target_genome.symlink_to(relative_source)
+            console.print(f"✓ Created genome symlink: {target_genome}")
+        organized_paths['genome'] = target_genome
+        
+        # Move protein file if it exists
+        if faa_file.exists() and not target_protein.exists():
+            shutil.move(str(faa_file), str(target_protein))
+            console.print(f"✓ Moved proteins: {target_protein}")
+        organized_paths['proteins'] = target_protein
+        
+        # Move annotation file if it exists
+        if gff_file.exists() and not target_annotation.exists():
+            shutil.move(str(gff_file), str(target_annotation))
+            console.print(f"✓ Moved annotations: {target_annotation}")
+        organized_paths['annotations'] = target_annotation
+        
+        return organized_paths
+    
+    def get_organized_protein_files(self) -> List[Path]:
+        """Get all protein files from organized directory structure."""
+        if not self.proteins_dir.exists():
+            return []
+        return list(self.proteins_dir.glob("*.faa"))
+    
+    def run_pfam_annotation(self, protein_files: List[Path], output_dir: Path, threads: int) -> Optional[Path]:
+        """
+        Run PFAM annotation on protein files using astra.
+        
+        Args:
+            protein_files: List of paths to protein FASTA files (.faa)
+            output_dir: Directory to store PFAM annotation results
+            threads: Number of threads to use for astra
+            
+        Returns:
+            Path to PFAM results JSON file, or None if disabled/failed
+        """
+        if not self.config.run_pfam:
+            console.print("[yellow]PFAM annotation disabled in configuration[/yellow]")
+            return None
+        
+        console.print(f"[green]Running PFAM annotation on {len(protein_files)} protein files...[/green]")
+        
+        try:
+            results_file = run_pfam_annotation_pipeline(
+                protein_files=protein_files,
+                output_dir=output_dir,
+                threads=threads
+            )
+            return results_file
+            
+        except Exception as e:
+            console.print(f"[red]PFAM annotation failed: {e}[/red]")
+            console.print("[yellow]Continuing without PFAM annotations...[/yellow]")
+            return None
 
 
 if __name__ == "__main__":

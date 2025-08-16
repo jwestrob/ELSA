@@ -20,6 +20,9 @@ class IngestConfig(BaseModel):
     prodigal_mode: Literal["single", "meta"] = Field(default="single")
     min_cds_aa: int = Field(default=60, description="Minimum CDS length in amino acids")
     keep_partial: bool = Field(default=False, description="Keep partial genes at contig ends")
+    
+    # PFAM annotation settings
+    run_pfam: bool = Field(default=True, description="Run PFAM annotation with astra")
 
 
 class PLMConfig(BaseModel):

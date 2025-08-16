@@ -55,29 +55,49 @@ def setup_genome_browser_integration(config: ELSAConfig, analysis_output_dir: Pa
     if not sequences_dir or not proteins_dir:
         console.print("Auto-detecting genome data directories...")
         
-        # Look for common directory patterns (use absolute paths)
+        # Look for directory patterns - prioritize organized structure
         cwd = Path.cwd()
-        possible_sequences = ["test_data/genomes", "data/genomes", "genomes"]
-        possible_proteins = ["test_data/proteins", "data/proteins", "proteins", "test_data/genomes"]
+        
+        # Prioritize organized structure, then fall back to legacy patterns
+        sequences_patterns = ["data/genomes", "test_data/genomes", "data", "test_data", "genomes"]
+        proteins_patterns = ["data/proteins", "test_data/proteins", "data", "test_data", "proteins"]
         
         if not sequences_dir:
-            for candidate in possible_sequences:
+            for candidate in sequences_patterns:
                 candidate_path = cwd / candidate
-                if candidate_path.exists() and list(candidate_path.glob("*.fna")):
-                    sequences_dir = str(candidate_path.absolute())
-                    console.print(f"Found nucleotide sequences: {sequences_dir}")
-                    break
+                if candidate_path.exists():
+                    fna_files = list(candidate_path.glob("*.fna"))
+                    if fna_files:
+                        sequences_dir = str(candidate_path.absolute())
+                        console.print(f"Found nucleotide sequences: {sequences_dir} ({len(fna_files)} .fna files)")
+                        break
         
         if not proteins_dir:
-            for candidate in possible_proteins:
+            for candidate in proteins_patterns:
                 candidate_path = cwd / candidate
-                if candidate_path.exists() and list(candidate_path.glob("*.faa")):
-                    proteins_dir = str(candidate_path.absolute())
-                    console.print(f"Found protein sequences: {proteins_dir}")
-                    break
+                if candidate_path.exists():
+                    faa_files = list(candidate_path.glob("*.faa"))
+                    if faa_files:
+                        proteins_dir = str(candidate_path.absolute())
+                        console.print(f"Found protein sequences: {proteins_dir} ({len(faa_files)} .faa files)")
+                        break
     
     if not sequences_dir or not proteins_dir:
         console.print("[yellow]Could not auto-detect genome directories.[/yellow]")
+        console.print(f"[dim]  sequences_dir: {sequences_dir}[/dim]")
+        console.print(f"[dim]  proteins_dir: {proteins_dir}[/dim]")
+        console.print(f"[dim]  current working directory: {Path.cwd()}[/dim]")
+        
+        # Show what directories exist for debugging
+        cwd = Path.cwd()
+        console.print("[dim]Available directories:[/dim]")
+        for candidate in possible_directories:
+            candidate_path = cwd / candidate
+            if candidate_path.exists():
+                fna_count = len(list(candidate_path.glob("*.fna")))
+                faa_count = len(list(candidate_path.glob("*.faa")))
+                console.print(f"[dim]  {candidate}: {fna_count} .fna, {faa_count} .faa files[/dim]")
+        
         console.print("[yellow]Specify --sequences-dir and --proteins-dir for genome browser setup[/yellow]")
         return False
     
@@ -261,6 +281,30 @@ def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool):
         # Stage 1: Protein ingestion (gene calling/translation)
         console.print("\n[bold blue]Stage 1: Protein Ingestion[/bold blue]")
         sample_proteins = ingester.ingest_multiple(sample_data)
+        
+        # Stage 1.5: PFAM domain annotation (if enabled)
+        if config_obj.ingest.run_pfam:
+            console.print("\n[bold blue]Stage 1.5: PFAM Domain Annotation[/bold blue]")
+            
+            # Get organized protein files
+            protein_files = ingester.get_organized_protein_files()
+            
+            if protein_files:
+                console.print(f"Found {len(protein_files)} protein files in organized structure")
+                # Create standard PFAM output directory in genome_browser
+                pfam_output_dir = Path("genome_browser/pfam_annotations")
+                # Use system thread count from config
+                threads = config_obj.system.jobs if isinstance(config_obj.system.jobs, int) else 4
+                pfam_results_file = ingester.run_pfam_annotation(protein_files, pfam_output_dir, threads)
+                
+                if pfam_results_file:
+                    console.print(f"✓ PFAM annotation completed: {pfam_results_file}")
+                else:
+                    console.print("[yellow]PFAM annotation skipped or failed[/yellow]")
+            else:
+                console.print("[yellow]No protein files found for PFAM annotation[/yellow]")
+        else:
+            console.print("\n[dim]Stage 1.5: PFAM annotation disabled[/dim]")
         
         # Stage 2: Embedding generation  
         console.print("\n[bold blue]Stage 2: Protein Embedding[/bold blue]")

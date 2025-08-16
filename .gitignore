@@ -4,3 +4,27 @@ syntenic_analysis/
 elsa_index/
 *.db
 genome_browser/pfam_annotations/
+
+# Large data files
+*.fna
+*.faa
+*.gff
+*.parquet
+*.json
+*.csv
+*.tsv
+
+# Model files
+*.pkl
+*.pt
+*.pth
+*.h5
+*.hdf5
+
+# Temporary and cache files
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+.DS_Store

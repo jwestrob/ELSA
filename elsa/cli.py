@@ -91,7 +91,8 @@ def setup_genome_browser_integration(config: ELSAConfig, analysis_output_dir: Pa
         # Show what directories exist for debugging
         cwd = Path.cwd()
         console.print("[dim]Available directories:[/dim]")
-        for candidate in possible_directories:
+        all_patterns = list(set(sequences_patterns + proteins_patterns))
+        for candidate in all_patterns:
             candidate_path = cwd / candidate
             if candidate_path.exists():
                 fna_count = len(list(candidate_path.glob("*.fna")))

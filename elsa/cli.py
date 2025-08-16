@@ -288,8 +288,12 @@ def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool):
             
             # Create standard PFAM output directory in genome_browser
             pfam_output_dir = Path("genome_browser/pfam_annotations")
-            # Use system thread count from config
-            threads = config_obj.system.jobs if isinstance(config_obj.system.jobs, int) else 4
+            # Use system thread count from config - resolve "auto" to actual CPU count
+            if isinstance(config_obj.system.jobs, int):
+                threads = config_obj.system.jobs
+            else:  # "auto"
+                import os
+                threads = os.cpu_count() or 4
             pfam_results_file = ingester.run_pfam_annotation(pfam_output_dir, threads)
                 
             if pfam_results_file:

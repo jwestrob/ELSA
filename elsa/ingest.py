@@ -437,12 +437,11 @@ class ProteinIngester:
             return []
         return list(self.proteins_dir.glob("*.faa"))
     
-    def run_pfam_annotation(self, protein_files: List[Path], output_dir: Path, threads: int) -> Optional[Path]:
+    def run_pfam_annotation(self, output_dir: Path, threads: int) -> Optional[Path]:
         """
-        Run PFAM annotation on protein files using astra.
+        Run PFAM annotation on organized protein files using astra.
         
         Args:
-            protein_files: List of paths to protein FASTA files (.faa)
             output_dir: Directory to store PFAM annotation results
             threads: Number of threads to use for astra
             
@@ -453,11 +452,20 @@ class ProteinIngester:
             console.print("[yellow]PFAM annotation disabled in configuration[/yellow]")
             return None
         
+        if not self.proteins_dir.exists():
+            console.print(f"[red]Proteins directory not found: {self.proteins_dir}[/red]")
+            return None
+        
+        protein_files = list(self.proteins_dir.glob("*.faa"))
+        if not protein_files:
+            console.print(f"[yellow]No protein files found in {self.proteins_dir}[/yellow]")
+            return None
+        
         console.print(f"[green]Running PFAM annotation on {len(protein_files)} protein files...[/green]")
         
         try:
             results_file = run_pfam_annotation_pipeline(
-                protein_files=protein_files,
+                proteins_dir=self.proteins_dir,
                 output_dir=output_dir,
                 threads=threads
             )

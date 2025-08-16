@@ -286,23 +286,16 @@ def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool):
         if config_obj.ingest.run_pfam:
             console.print("\n[bold blue]Stage 1.5: PFAM Domain Annotation[/bold blue]")
             
-            # Get organized protein files
-            protein_files = ingester.get_organized_protein_files()
-            
-            if protein_files:
-                console.print(f"Found {len(protein_files)} protein files in organized structure")
-                # Create standard PFAM output directory in genome_browser
-                pfam_output_dir = Path("genome_browser/pfam_annotations")
-                # Use system thread count from config
-                threads = config_obj.system.jobs if isinstance(config_obj.system.jobs, int) else 4
-                pfam_results_file = ingester.run_pfam_annotation(protein_files, pfam_output_dir, threads)
+            # Create standard PFAM output directory in genome_browser
+            pfam_output_dir = Path("genome_browser/pfam_annotations")
+            # Use system thread count from config
+            threads = config_obj.system.jobs if isinstance(config_obj.system.jobs, int) else 4
+            pfam_results_file = ingester.run_pfam_annotation(pfam_output_dir, threads)
                 
-                if pfam_results_file:
-                    console.print(f"✓ PFAM annotation completed: {pfam_results_file}")
-                else:
-                    console.print("[yellow]PFAM annotation skipped or failed[/yellow]")
+            if pfam_results_file:
+                console.print(f"✓ PFAM annotation completed: {pfam_results_file}")
             else:
-                console.print("[yellow]No protein files found for PFAM annotation[/yellow]")
+                console.print("[yellow]PFAM annotation skipped or failed[/yellow]")
         else:
             console.print("\n[dim]Stage 1.5: PFAM annotation disabled[/dim]")
         

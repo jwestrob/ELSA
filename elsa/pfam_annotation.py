@@ -178,78 +178,112 @@ class PFAMAnnotator:
         return scan_result
 
 
-def run_pfam_annotation_pipeline(protein_files: List[Path], output_dir: Path,
-                                threads: int = 4) -> Path:
+def run_pfam_annotation_pipeline(proteins_dir: Path, output_dir: Path, threads: int = 4) -> Path:
     """
-    Run PFAM annotation pipeline on multiple protein files.
+    Run PFAM annotation pipeline on all protein files in a directory.
     
     Args:
-        protein_files: List of protein FASTA files
+        proteins_dir: Directory containing protein FASTA files (.faa)
         output_dir: Directory for PFAM annotation results
-        threads: Threads per astra process
+        threads: Threads for astra process
         
     Returns:
         Path to results JSON file
     """
-    console.print(f"[green]Running PFAM annotation on {len(protein_files)} genomes...[/green]")
+    protein_files = list(proteins_dir.glob("*.faa"))
+    console.print(f"[green]Running PFAM annotation on {len(protein_files)} genomes in {proteins_dir}...[/green]")
     
     # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Initialize annotator
-    annotator = PFAMAnnotator(threads=threads)
-    
     # Check astra installation
+    annotator = PFAMAnnotator(threads=threads)
     if not annotator.check_astra_installation():
         raise RuntimeError("Astra is not installed or not in PATH. "
                           "Please install astra and ensure it's accessible.")
     
-    # Annotate each genome
-    results = {}
+    # Run astra on entire proteins directory
+    console.print(f"Running astra on directory: {proteins_dir}")
     
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        console=console
-    ) as progress:
-        task = progress.add_task("Annotating genomes...", total=len(protein_files))
+    # Build astra command - single run on entire directory
+    cmd = [
+        "astra", "search",
+        "--prot_in", str(proteins_dir),
+        "--installed_hmms", "PFAM", 
+        "--outdir", str(output_dir),
+        "--threads", str(threads),
+        "--cut_ga"  # Use gathering cutoffs
+    ]
+    
+    logger.info(f"Running: {' '.join(cmd)}")
+    console.print(f"Command: {' '.join(cmd)}")
+    
+    start_time = time.time()
+    
+    try:
+        # Execute astra
+        process = subprocess.run(
+            cmd, 
+            capture_output=True, 
+            text=True
+        )
         
-        for protein_file in protein_files:
-            genome_name = protein_file.stem
-            progress.update(task, description=f"Processing {genome_name}")
-            
-            try:
-                result = annotator.annotate_genome(protein_file, output_dir)
-                results[genome_name] = result
-                
-                if result["success"]:
-                    console.print(f"✓ {genome_name}: {result['num_hits']} domains found")
-                else:
-                    console.print(f"✗ {genome_name}: {result.get('error_message', 'Unknown error')}")
-                    
-            except Exception as e:
-                console.print(f"✗ {genome_name}: Unexpected error: {e}")
-                results[genome_name] = {
-                    "genome": genome_name,
-                    "success": False,
-                    "error_message": str(e)
-                }
-            
-            progress.advance(task)
-    
-    # Save results summary
-    results_file = output_dir / "pfam_annotation_results.json"
-    with open(results_file, 'w') as f:
-        json.dump(results, f, indent=2)
-    
-    # Print summary
-    successful = sum(1 for r in results.values() if r["success"])
-    total_hits = sum(r.get("num_hits", 0) for r in results.values() if r["success"])
-    
-    console.print(f"[green]PFAM annotation completed![/green]")
-    console.print(f"  • {successful}/{len(protein_files)} genomes annotated successfully")
-    console.print(f"  • {total_hits:,} total domain hits found")
-    console.print(f"  • Results saved to: {results_file}")
-    
-    return results_file
+        runtime = time.time() - start_time
+        
+        if process.returncode != 0:
+            error_msg = f"Astra failed: {process.stderr}"
+            logger.error(error_msg)
+            raise RuntimeError(error_msg)
+        
+        # Look for hits file
+        hits_file = output_dir / "PFAM_hits_df.tsv"
+        if not hits_file.exists():
+            raise RuntimeError("Astra completed but no hits file found")
+        
+        # Count hits
+        with open(hits_file) as f:
+            num_hits = sum(1 for _ in f) - 1  # Exclude header
+        
+        # Create results summary
+        results = {
+            "method": "astra_bulk",
+            "proteins_dir": str(proteins_dir),
+            "output_dir": str(output_dir),
+            "num_genomes": len(protein_files),
+            "total_hits": num_hits,
+            "runtime_seconds": runtime,
+            "success": True,
+            "hits_file": str(hits_file)
+        }
+        
+        # Save results summary
+        results_file = output_dir / "pfam_annotation_results.json"
+        with open(results_file, 'w') as f:
+            json.dump(results, f, indent=2)
+        
+        console.print(f"[green]PFAM annotation completed![/green]")
+        console.print(f"  • {len(protein_files)} genomes processed")
+        console.print(f"  • {num_hits:,} total domain hits found")
+        console.print(f"  • Runtime: {runtime:.1f} seconds")
+        console.print(f"  • Results saved to: {results_file}")
+        
+        return results_file
+        
+    except Exception as e:
+        error_msg = f"PFAM annotation failed: {e}"
+        console.print(f"[red]{error_msg}[/red]")
+        
+        # Save error results
+        results = {
+            "method": "astra_bulk",
+            "proteins_dir": str(proteins_dir),
+            "success": False,
+            "error_message": str(e),
+            "runtime_seconds": time.time() - start_time
+        }
+        
+        results_file = output_dir / "pfam_annotation_results.json"
+        with open(results_file, 'w') as f:
+            json.dump(results, f, indent=2)
+        
+        raise

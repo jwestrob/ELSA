@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS genes (
 -- Syntenic blocks from ELSA analysis
 CREATE TABLE IF NOT EXISTS syntenic_blocks (
     block_id INTEGER PRIMARY KEY,
+    cluster_id INTEGER DEFAULT 0, -- Cluster assignment from ELSA clustering
     query_locus TEXT NOT NULL,
     target_locus TEXT NOT NULL,
     query_genome_id TEXT,
@@ -152,6 +153,7 @@ CREATE INDEX IF NOT EXISTS idx_blocks_length ON syntenic_blocks(length);
 CREATE INDEX IF NOT EXISTS idx_blocks_identity ON syntenic_blocks(identity);
 CREATE INDEX IF NOT EXISTS idx_blocks_score ON syntenic_blocks(score);
 CREATE INDEX IF NOT EXISTS idx_blocks_type ON syntenic_blocks(block_type);
+CREATE INDEX IF NOT EXISTS idx_blocks_cluster ON syntenic_blocks(cluster_id);
 
 -- Cluster indexes
 CREATE INDEX IF NOT EXISTS idx_cluster_assignments_block ON cluster_assignments(block_id);

@@ -29,6 +29,7 @@ dependencies:
   # Web/API
   - fastapi
   - uvicorn
+  - streamlit>=1.28.0
   
   # CLI/UI
   - click
@@ -48,6 +49,7 @@ dependencies:
   # Viz/QC
   - matplotlib
   - seaborn
+  - plotly>=5.15.0
   
   # Config/Validation  
   - pydantic>=2.0
@@ -56,4 +58,6 @@ dependencies:
   # Additional pip dependencies
   - pip:
     - fair-esm  # ESM2 models from Meta
+    - openai>=1.0.0  # For GPT analysis in genome browser
+    - dspy-ai  # DSPy framework
     # - sentence-transformers  # if we need ProtT5

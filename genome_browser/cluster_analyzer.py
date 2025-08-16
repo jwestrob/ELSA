@@ -67,9 +67,6 @@ class ClusterAnalyzer:
         try:
             conn = sqlite3.connect(self.db_path)
             
-            # DEBUG: Log database path and cluster lookup
-            logger.info(f"DEBUG: Looking up cluster {cluster_id} in database: {self.db_path}")
-            
             # Get basic cluster info
             cluster_query = """
                 SELECT cluster_id, size, consensus_length, consensus_score, diversity,
@@ -79,14 +76,7 @@ class ClusterAnalyzer:
             cursor = conn.execute(cluster_query, (cluster_id,))
             cluster_row = cursor.fetchone()
             
-            # DEBUG: Log what we found
-            logger.info(f"DEBUG: Cluster {cluster_id} lookup result: {cluster_row}")
-            
             if not cluster_row:
-                # DEBUG: Check what clusters exist
-                cursor = conn.execute("SELECT cluster_id FROM clusters ORDER BY cluster_id LIMIT 10")
-                existing_clusters = cursor.fetchall()
-                logger.info(f"DEBUG: No cluster {cluster_id} found. Existing clusters: {existing_clusters}")
                 return None
             
             # For now, create enhanced basic stats with sample data from all blocks
@@ -150,22 +140,7 @@ class ClusterAnalyzer:
         """Get actual block count from syntenic_blocks table instead of legacy clusters table."""
         cursor = conn.execute("SELECT COUNT(*) FROM syntenic_blocks WHERE cluster_id = ?", (cluster_id,))
         result = cursor.fetchone()
-        count = result[0] if result else 0
-        
-        # DEBUG: Log what we're finding
-        logger.info(f"DEBUG: Cluster {cluster_id} block count query returned: {count}")
-        
-        # DEBUG: Check total blocks and cluster_id distribution
-        cursor = conn.execute("SELECT COUNT(*) FROM syntenic_blocks")
-        total_blocks = cursor.fetchone()[0]
-        
-        cursor = conn.execute("SELECT cluster_id, COUNT(*) FROM syntenic_blocks GROUP BY cluster_id ORDER BY cluster_id LIMIT 10")
-        cluster_dist = cursor.fetchall()
-        
-        logger.info(f"DEBUG: Total blocks in database: {total_blocks}")
-        logger.info(f"DEBUG: Cluster distribution (first 10): {cluster_dist}")
-        
-        return count
+        return result[0] if result else 0
     
     def _create_basic_cluster_stats(self, cluster_row) -> ClusterStats:
         """Create basic stats when detailed block info isn't available."""
@@ -864,16 +839,8 @@ def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[Clu
     """Get statistics for all clusters."""
     try:
         conn = sqlite3.connect(db_path)
-        
-        # DEBUG: Log database path and cluster loading
-        logger.info(f"DEBUG: Loading all clusters from database: {db_path}")
-        
         cursor = conn.execute("SELECT cluster_id FROM clusters ORDER BY size DESC")
         cluster_ids = [row[0] for row in cursor.fetchall()]
-        
-        # DEBUG: Log what cluster IDs we found
-        logger.info(f"DEBUG: Found {len(cluster_ids)} clusters with IDs: {cluster_ids[:10]}")
-        
         conn.close()
         
         analyzer = ClusterAnalyzer(db_path)

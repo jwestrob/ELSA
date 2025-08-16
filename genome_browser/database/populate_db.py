@@ -141,6 +141,7 @@ class ELSADataIngester:
             
             # Get PFAM annotations for this genome
             genome_pfam = pfam_annotations.get(genome_id, {}) if pfam_annotations else {}
+            logger.info(f"DEBUG: Genome {genome_id} has {len(genome_pfam)} PFAM annotations")
             
             # Process genome sequence file
             contigs = []
@@ -258,6 +259,10 @@ class ELSADataIngester:
             # Get PFAM domains for this protein
             pfam_domains = pfam_annotations.get(protein_id, "")
             pfam_count = len(pfam_domains.split(';')) if pfam_domains else 0
+            
+            # DEBUG: Log PFAM annotation for first few proteins
+            if len(genes) < 3:
+                logger.info(f"DEBUG: Protein {protein_id} -> PFAM: '{pfam_domains}' (count: {pfam_count})")
             
             gene = {
                 "gene_id": protein_id,  # Use protein_id as gene_id for simplicity
@@ -774,10 +779,22 @@ def main():
     # Load PFAM annotations if provided
     pfam_annotations = None
     if args.pfam_results and args.pfam_results.exists():
+        logger.info(f"DEBUG: Loading PFAM results from: {args.pfam_results}")
         with open(args.pfam_results, 'r') as f:
             pfam_data = json.load(f)
             pfam_annotations = pfam_data.get("genome_annotations", {})
-        logger.info(f"Loaded PFAM annotations for {len(pfam_annotations)} genomes")
+        logger.info(f"DEBUG: Loaded PFAM annotations for {len(pfam_annotations)} genomes")
+        
+        # DEBUG: Show sample data
+        if pfam_annotations:
+            first_genome = next(iter(pfam_annotations.keys()))
+            sample_proteins = list(pfam_annotations[first_genome].keys())[:3]
+            logger.info(f"DEBUG: Sample genome '{first_genome}' has {len(pfam_annotations[first_genome])} proteins")
+            for protein_id in sample_proteins:
+                domains = pfam_annotations[first_genome][protein_id]
+                logger.info(f"DEBUG: Sample protein '{protein_id}': {domains}")
+    else:
+        logger.info(f"DEBUG: No PFAM results file provided or file doesn't exist: {args.pfam_results}")
     
     # Ingest data
     with ELSADataIngester(args.db_path) as ingester:

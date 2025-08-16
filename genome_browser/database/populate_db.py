@@ -550,6 +550,11 @@ class ELSADataIngester:
         
         cursor = self.conn.cursor()
         
+        # DEBUG: Check existing cluster_id distribution before assignment
+        cursor.execute("SELECT cluster_id, COUNT(*) FROM syntenic_blocks GROUP BY cluster_id ORDER BY cluster_id LIMIT 10")
+        pre_distribution = cursor.fetchall()
+        logger.info(f"DEBUG: Pre-assignment cluster distribution: {pre_distribution}")
+        
         # Clear existing assignments to start fresh
         cursor.execute("DELETE FROM cluster_assignments")
         
@@ -560,6 +565,7 @@ class ELSADataIngester:
             ORDER BY cluster_id
         """)
         clusters = cursor.fetchall()
+        logger.info(f"DEBUG: Found {len(clusters)} clusters to process")
         
         # Get all available block IDs
         cursor.execute("SELECT block_id FROM syntenic_blocks ORDER BY block_id")
@@ -653,8 +659,31 @@ class ELSADataIngester:
             GROUP BY ca.cluster_id
             ORDER BY ca.cluster_id
         """)
-        for cluster_id, actual_size, expected_size in cursor.fetchall():
+        assignment_counts = cursor.fetchall()
+        for cluster_id, actual_size, expected_size in assignment_counts:
             logger.info(f"Cluster {cluster_id}: {actual_size} blocks assigned (expected: {expected_size})")
+        
+        logger.info("DEBUG: Updating syntenic_blocks table with cluster assignments...")
+        
+        # CRITICAL: Update the cluster_id column in syntenic_blocks table
+        # This is what the cluster analyzer actually queries!
+        cursor.execute("""
+            UPDATE syntenic_blocks 
+            SET cluster_id = (
+                SELECT ca.cluster_id 
+                FROM cluster_assignments ca 
+                WHERE ca.block_id = syntenic_blocks.block_id
+            )
+            WHERE block_id IN (SELECT block_id FROM cluster_assignments)
+        """)
+        
+        updated_count = cursor.rowcount
+        logger.info(f"DEBUG: Updated cluster_id for {updated_count} blocks in syntenic_blocks table")
+        
+        # Verify the update worked
+        cursor.execute("SELECT cluster_id, COUNT(*) FROM syntenic_blocks GROUP BY cluster_id ORDER BY cluster_id LIMIT 10")
+        cluster_distribution = cursor.fetchall()
+        logger.info(f"DEBUG: Post-update cluster distribution: {cluster_distribution}")
     
     def generate_annotation_stats(self) -> None:
         """Generate annotation statistics for dashboard."""

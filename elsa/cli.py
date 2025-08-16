@@ -58,9 +58,9 @@ def setup_genome_browser_integration(config: ELSAConfig, analysis_output_dir: Pa
         # Look for directory patterns - prioritize organized structure
         cwd = Path.cwd()
         
-        # Prioritize organized structure, then fall back to legacy patterns
-        sequences_patterns = ["data/genomes", "test_data/genomes", "data", "test_data", "genomes"]
-        proteins_patterns = ["data/proteins", "test_data/proteins", "data", "test_data", "proteins"]
+        # Use organized structure only - fail if not found
+        sequences_patterns = ["data/genomes"]
+        proteins_patterns = ["data/proteins"]
         
         if not sequences_dir:
             for candidate in sequences_patterns:

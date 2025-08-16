@@ -131,7 +131,7 @@ def setup_genome_browser_integration(config: ELSAConfig, analysis_output_dir: Pa
     # Use existing PFAM annotations if available
     if pfam_results_file.exists():
         console.print(f"Using existing PFAM annotations: {pfam_results_file}")
-        cmd.extend(["--skip-pfam"])  # Skip PFAM regeneration
+        cmd.extend(["--skip-pfam", "--pfam-results", str(pfam_results_file.absolute())])  # Skip PFAM regeneration but use existing results
     else:
         console.print("No existing PFAM annotations found - will generate fresh annotations")
     

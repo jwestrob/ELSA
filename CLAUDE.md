@@ -77,6 +77,48 @@ Key config sections: data, ingest, plm, shingles, discrete, continuous, chain, d
 4. **Refinement** - Optional DTW banded alignment
 5. **Scoring** - Combined anchor strength + chain length - gap penalties
 
+## Clustering (Updated)
+
+We use a multi-stage, cassette-friendly clustering pipeline designed to keep 2–3 gene cassettes while avoiding “fold-only” co-clustering of unrelated loci:
+
+1. Robustness gate (per block)
+   - Compute window index sequences and assess collinearity (MAD of diagonal v = q_idx - t_idx).
+   - Require: min_anchors (≥4), min_span_genes (≥8), v_mad_max_genes (default 0.5).
+   - Cassette mode: allow very small blocks (n ≤ 4) to pass if perfectly collinear (v_mad=0).
+
+2. Order-aware shingling over SRP tokens
+   - Tokenize window embeddings (SRP), build k-gram shingles (k=3 by default), normalize orientation.
+   - Drop high-DF shingles aggressively (df_max default 30; optional max_df_percentile ban).
+
+3. Similarity and mutual-k graph
+   - Compute IDF-weighted Jaccard over shingle sets (idf = log(1 + N/df)).
+   - Edge candidates must satisfy:
+     - mutual-k top-k condition,
+     - Jaccard ≥ jaccard_tau (default 0.75),
+     - at least min_low_df_anchors low-DF shingles in intersection (default 3),
+     - intersection mean IDF ≥ idf_mean_min (default 1.0).
+
+4. Graph refinement (anti-hub + cohesion filters)
+   - Degree cap: keep top-N weighted edges per node (degree_cap default 10).
+   - k-core pruning: require node degree ≥ k (k_core_min_degree default 3).
+   - Triangle support: keep edges that participate in ≥ T triangles (triangle_support_min default 1).
+
+5. Community detection
+   - Build a weighted graph (edge weight = IDF-weighted Jaccard) and detect communities using greedy modularity (NetworkX).
+   - Fallback to connected components if community detection is unavailable.
+
+Key config knobs (analyze.clustering.*):
+- df_max (int, default 30), max_df_percentile (float in 0–1 or None)
+- jaccard_tau (float, default 0.75), mutual_k (int, default 3)
+- min_low_df_anchors (int, default 3), idf_mean_min (float, default 1.0)
+- v_mad_max_genes (float, default 0.5), enable_cassette_mode (bool, default True), cassette_max_len (int, default 4)
+- degree_cap (int, default 10), k_core_min_degree (int, default 3), triangle_support_min (int, default 1)
+- use_community_detection (bool, default True), community_method ('greedy')
+
+Notes:
+- This approach preserves sensitivity to small cassettes, but heavily penalizes high-frequency “service” signals (e.g., generic HTH regulators, ABC transport machinery, mobile element motifs) through IDF weighting and low-DF anchor requirements.
+- For very large components, increase jaccard_tau, min_low_df_anchors, k_core_min_degree, or set max_df_percentile to ban the top-most frequent shingles entirely.
+
 ## Technical Constraints
 
 - **Memory**: Memory-mapped arrays, float16 storage, batchable processing within 48GB envelope

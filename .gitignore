@@ -21,6 +21,15 @@ genome_browser/pfam_annotations/
 *.h5
 *.hdf5
 
+# Image files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.tiff
+*.bmp
+*.svg
+
 # Temporary and cache files
 __pycache__/
 *.pyc

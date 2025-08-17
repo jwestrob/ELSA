@@ -139,8 +139,48 @@ class ELSADataIngester:
         for genome_id, files in genome_files.items():
             logger.info(f"Processing genome: {genome_id}")
             
-            # Get PFAM annotations for this genome
-            genome_pfam = pfam_annotations.get(genome_id, {}) if pfam_annotations else {}
+            # Get PFAM annotations for this genome by collecting from all sources
+            genome_pfam = {}
+            if pfam_annotations:
+                # Method 1: Direct genome_id lookup (works for 1313.30775)
+                if genome_id in pfam_annotations:
+                    genome_pfam.update(pfam_annotations[genome_id])
+                
+                # Method 2: Collect from contig-based keys (works for other genomes)
+                for pfam_key, pfam_proteins in pfam_annotations.items():
+                    # Skip if we already got this from direct lookup
+                    if pfam_key == genome_id:
+                        continue
+                    
+                    # Check if any proteins in this pfam_key belong to our genome
+                    # Look for proteins that match our genome pattern
+                    for protein_id in pfam_proteins:
+                        # Extract genome from protein_id using multiple strategies
+                        protein_matches_genome = False
+                        
+                        # Strategy 1: Direct substring match (works for 1313.30775)
+                        if genome_id in protein_id:
+                            protein_matches_genome = True
+                        
+                        # Strategy 2: Extract genome from protein ID pattern like "accn|CAYEVI010000001_1"
+                        # Match the base part: CAYEVI000000000 should match CAYEVI*
+                        elif '|' in protein_id:
+                            contig_part = protein_id.split('|')[1] if '|' in protein_id else protein_id
+                            # Extract pattern like "CAYEVI010000001" from "CAYEVI010000001_1"
+                            if '_' in contig_part:
+                                contig_base = contig_part.split('_')[0]
+                                # Check if genome_id shares a common prefix (handle CAYEVI000000000 vs CAYEVI010000001)
+                                if len(genome_id) >= 6 and len(contig_base) >= 6:
+                                    genome_prefix = genome_id[:6]  # Get "CAYEVI" part
+                                    contig_prefix = contig_base[:6]  # Get "CAYEVI" part
+                                    if genome_prefix == contig_prefix:
+                                        protein_matches_genome = True
+                        
+                        if protein_matches_genome:
+                            # This looks like it belongs to our genome, add all proteins from this key
+                            genome_pfam.update(pfam_proteins)
+                            break
+            
             logger.info(f"DEBUG: Genome {genome_id} has {len(genome_pfam)} PFAM annotations")
             
             # Process genome sequence file
@@ -229,7 +269,7 @@ class ELSADataIngester:
         self.conn.commit()
     
     def parse_protein_fasta(self, faa_file: Path, genome_id: str, 
-                           pfam_annotations: Dict[str, str]) -> List[Dict]:
+                           genome_pfam: Dict[str, str]) -> List[Dict]:
         """Parse protein FASTA file to extract gene information from headers."""
         genes = []
         
@@ -257,7 +297,7 @@ class ELSADataIngester:
             contig_id = protein_id.rsplit('_', 1)[0] if '_' in protein_id else protein_id
             
             # Get PFAM domains for this protein
-            pfam_domains = pfam_annotations.get(protein_id, "")
+            pfam_domains = genome_pfam.get(protein_id, "")
             pfam_count = len(pfam_domains.split(';')) if pfam_domains else 0
             
             # DEBUG: Log PFAM annotation for first few proteins
@@ -478,8 +518,16 @@ class ELSADataIngester:
              query_start, query_end, target_start, target_end) = block
             
             # Extract clean contig IDs (remove genome prefix if present)
-            query_clean_contig = query_contig_id.split('_')[-1] if '_' in query_contig_id else query_contig_id
-            target_clean_contig = target_contig_id.split('_')[-1] if '_' in target_contig_id else target_contig_id
+            # Handle format like "1313.30775_accn|1313.30775.con.0001" -> "accn|1313.30775.con.0001"
+            if '_' in query_contig_id and '|' in query_contig_id:
+                query_clean_contig = query_contig_id.split('_', 1)[1]  # Take everything after first underscore
+            else:
+                query_clean_contig = query_contig_id
+                
+            if '_' in target_contig_id and '|' in target_contig_id:
+                target_clean_contig = target_contig_id.split('_', 1)[1]  # Take everything after first underscore
+            else:
+                target_clean_contig = target_contig_id
             
             # Map query genes using window boundaries
             # Windows likely correspond to gene indices (window 20 ≈ gene 20)

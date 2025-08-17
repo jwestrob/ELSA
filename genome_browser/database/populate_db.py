@@ -530,41 +530,48 @@ class ELSADataIngester:
                 target_clean_contig = target_contig_id
             
             # Map query genes using window boundaries
-            # Windows likely correspond to gene indices (window 20 ≈ gene 20)
+            # Convert window indices to approximate gene indices:
+            # Each window of size 5 genes (stride 1) spans 5 gene indices.
             if query_start is not None and query_end is not None:
+                # Inclusive gene index range: [query_start, query_end + 4]
+                gene_start_idx = int(query_start)
+                gene_end_idx = int(query_end) + 4
+                num_genes = max(1, gene_end_idx - gene_start_idx + 1)
+
                 query_gene_query = """
                     SELECT gene_id FROM genes 
                     WHERE genome_id = ? AND contig_id = ?
                     ORDER BY start_pos
                     LIMIT ? OFFSET ?
                 """
-                # Get genes in the window range (inclusive)
-                window_size = max(1, query_end - query_start + 1)
                 cursor.execute(query_gene_query, (
-                    query_genome_id, query_clean_contig, 
-                    window_size, query_start - 1  # Convert to 0-based indexing
+                    query_genome_id, query_clean_contig,
+                    num_genes, gene_start_idx
                 ))
                 query_genes = cursor.fetchall()
-                
+
                 for i, (gene_id,) in enumerate(query_genes):
                     relative_pos = i / max(1, len(query_genes) - 1) if len(query_genes) > 1 else 0.5
                     mappings.append((gene_id, block_id, 'query', relative_pos))
             
             # Map target genes using window boundaries  
             if target_start is not None and target_end is not None:
+                gene_start_idx = int(target_start)
+                gene_end_idx = int(target_end) + 4
+                num_genes = max(1, gene_end_idx - gene_start_idx + 1)
+
                 target_gene_query = """
                     SELECT gene_id FROM genes 
                     WHERE genome_id = ? AND contig_id = ?
                     ORDER BY start_pos
                     LIMIT ? OFFSET ?
                 """
-                window_size = max(1, target_end - target_start + 1)
                 cursor.execute(target_gene_query, (
                     target_genome_id, target_clean_contig,
-                    window_size, target_start - 1
+                    num_genes, gene_start_idx
                 ))
                 target_genes = cursor.fetchall()
-                
+
                 for i, (gene_id,) in enumerate(target_genes):
                     relative_pos = i / max(1, len(target_genes) - 1) if len(target_genes) > 1 else 0.5
                     mappings.append((gene_id, block_id, 'target', relative_pos))

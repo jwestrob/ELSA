@@ -141,6 +141,75 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
     
     return pd.read_sql_query(query, conn, params=[contig_id])
 
+def load_genes_for_region(contig_id: str, start_bp: int, end_bp: int, extended_context: bool = False) -> pd.DataFrame:
+    """Load genes for a contig focused on a bp interval, with flanking context and synteny roles.
+
+    This is region-centric (not tied to a single block) and works even on single-contig genomes.
+    """
+    conn = get_database_connection()
+
+    # Load all genes on this contig in order
+    all_genes = pd.read_sql_query(
+        """
+        SELECT g.*, c.length as contig_length
+        FROM genes g
+        JOIN contigs c ON g.contig_id = c.contig_id
+        WHERE g.contig_id = ?
+        ORDER BY g.start_pos
+        """,
+        conn,
+        params=[contig_id],
+    )
+
+    if all_genes.empty:
+        return all_genes
+
+    # Compute gene_index 0-based
+    all_genes = all_genes.copy()
+    all_genes["gene_index"] = range(len(all_genes))
+
+    # Determine indices spanning the interval
+    # First gene whose end covers the start, last gene whose start is before the end
+    core_start_candidates = all_genes.index[all_genes["end_pos"] >= int(start_bp)].tolist()
+    core_end_candidates = all_genes.index[all_genes["start_pos"] <= int(end_bp)].tolist()
+    if not core_start_candidates or not core_end_candidates:
+        # No overlap; return a small slice around the nearest region
+        mid = len(all_genes) // 2
+        slice_df = all_genes.iloc[max(0, mid - 25) : min(len(all_genes), mid + 25)].copy()
+        slice_df["synteny_role"] = "context"
+        slice_df["position_in_block"] = "Flanking Region"
+        return slice_df
+
+    core_start_idx = core_start_candidates[0]
+    core_end_idx = core_end_candidates[-1]
+
+    buffer = 10 if extended_context else 3
+    start_idx = max(0, core_start_idx - buffer)
+    end_idx = min(len(all_genes) - 1, core_end_idx + buffer)
+
+    genes_df = all_genes.iloc[start_idx : end_idx + 1].copy()
+
+    # Assign roles
+    roles = []
+    positions = []
+    for gi, idx in enumerate(genes_df["gene_index"]):
+        if core_start_idx <= idx <= core_end_idx:
+            role = "core_aligned"
+            pos_label = "Conserved Block"
+        elif idx == core_start_idx - 1 or idx == core_end_idx + 1:
+            role = "boundary"
+            pos_label = "Block Edge"
+        else:
+            role = "context"
+            pos_label = "Flanking Region"
+        roles.append(role)
+        positions.append(pos_label)
+
+    genes_df["synteny_role"] = roles
+    genes_df["position_in_block"] = positions
+
+    return genes_df
+
 def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_role: str, extended_context: bool = False) -> pd.DataFrame:
     """Load only the genes that are part of the aligned region for a specific block."""
     
@@ -975,6 +1044,87 @@ def display_cluster_explorer():
                 with col2:
                     display_cluster_card_with_async_summary(stats)
 
+def _merge_intervals(intervals: List[Dict], gap_bp: int = 1000) -> List[Dict]:
+    """Merge overlapping/nearby intervals and aggregate block support.
+
+    intervals: list of dicts with keys: start_bp, end_bp, block_id
+    Returns merged list with keys: start_bp, end_bp, blocks (set)
+    """
+    if not intervals:
+        return []
+    # Sort by start
+    sorted_ints = sorted(intervals, key=lambda x: (x["start_bp"], x["end_bp"]))
+    merged = []
+    curr = {
+        "start_bp": sorted_ints[0]["start_bp"],
+        "end_bp": sorted_ints[0]["end_bp"],
+        "blocks": {sorted_ints[0]["block_id"]},
+    }
+
+    for iv in sorted_ints[1:]:
+        if iv["start_bp"] <= curr["end_bp"] + gap_bp:
+            curr["end_bp"] = max(curr["end_bp"], iv["end_bp"])
+            curr["blocks"].add(iv["block_id"])
+        else:
+            merged.append(curr)
+            curr = {"start_bp": iv["start_bp"], "end_bp": iv["end_bp"], "blocks": {iv["block_id"]}}
+    merged.append(curr)
+    return merged
+
+def compute_display_regions_for_cluster(cluster_id: int, gap_bp: int = 1000, min_support: int = 1) -> List[Dict]:
+    """Compute block-supported display regions for a cluster, robust to single-contig genomes.
+
+    Returns list of dicts: {genome_id, contig_id, organism_name, start_bp, end_bp, support, blocks}
+    """
+    conn = get_database_connection()
+    try:
+        # Per-block per-role intervals (in bp) for this cluster
+        per_block_query = """
+            SELECT gbm.block_id, gbm.block_role, g.genome_id, g.contig_id,
+                   MIN(g.start_pos) AS start_bp, MAX(g.end_pos) AS end_bp
+            FROM gene_block_mappings gbm
+            JOIN genes g ON gbm.gene_id = g.gene_id
+            JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
+            WHERE sb.cluster_id = ?
+            GROUP BY gbm.block_id, gbm.block_role, g.genome_id, g.contig_id
+        """
+        per_block = pd.read_sql_query(per_block_query, conn, params=[int(cluster_id)])
+        if per_block.empty:
+            return []
+
+        # Map genome_id -> organism_name
+        genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
+        org_map = dict(zip(genomes_df["genome_id"], genomes_df["organism_name"]))
+
+        regions = []
+        # Group by (genome_id, contig_id)
+        for (genome_id, contig_id), group in per_block.groupby(["genome_id", "contig_id"]):
+            intervals = [
+                {"start_bp": int(row.start_bp), "end_bp": int(row.end_bp), "block_id": int(row.block_id)}
+                for _, row in group.iterrows()
+            ]
+            merged = _merge_intervals(intervals, gap_bp=gap_bp)
+            for iv in merged:
+                support = len(iv["blocks"])  # number of distinct blocks supporting
+                if support >= min_support:
+                    regions.append(
+                        {
+                            "genome_id": genome_id,
+                            "contig_id": contig_id,
+                            "organism_name": org_map.get(genome_id, "Unknown organism"),
+                            "start_bp": iv["start_bp"],
+                            "end_bp": iv["end_bp"],
+                            "support": support,
+                            "blocks": iv["blocks"],
+                        }
+                    )
+        # Order deterministic: by genome_id, contig_id, start
+        regions.sort(key=lambda r: (r["genome_id"], r["contig_id"], r["start_bp"]))
+        return regions
+    except Exception as e:
+        logger.error(f"Error computing display regions: {e}")
+        return []
+
 def find_representative_block_for_cluster(stats):
     """Find a representative syntenic block for the cluster."""
     try:
@@ -1295,7 +1445,7 @@ def display_cluster_detail():
                 del st.session_state.selected_cluster
             st.rerun()
     
-    # Load cluster blocks and unique loci
+    # Load cluster blocks and display regions
     with st.spinner("Loading cluster data..."):
         try:
             # Load blocks in this cluster
@@ -1313,8 +1463,11 @@ def display_cluster_detail():
                 st.write("• Database connectivity issues")
                 return
             
-            # Extract unique loci
-            unique_loci = extract_unique_loci_from_cluster(cluster_blocks)
+            # Compute display regions; if unavailable, fall back to unique loci
+            regions = compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
+            use_regions = len(regions) > 0
+            if not use_regions:
+                unique_loci = extract_unique_loci_from_cluster(cluster_blocks)
             
             # Load cluster stats if available
             try:
@@ -1333,7 +1486,10 @@ def display_cluster_detail():
     with col1:
         st.metric("📊 Blocks", f"{len(cluster_blocks):,}")
     with col2:
-        st.metric("🧬 Unique Loci", f"{len(unique_loci):,}")
+        if 'regions' in locals() and regions:
+            st.metric("🧬 Display Regions", f"{len(regions):,}")
+        else:
+            st.metric("🧬 Unique Loci", f"{len(unique_loci):,}")
     with col3:
         avg_identity = cluster_blocks['identity'].mean()
         st.metric("📈 Avg Identity", f"{avg_identity:.1%}")
@@ -1385,8 +1541,12 @@ def display_cluster_detail():
     
     # Main section: Genome diagrams for each locus
     st.divider()
-    st.subheader("🧬 Genome Diagrams by Locus")
-    st.markdown(f"*Showing genome diagrams for all {len(unique_loci)} loci involved in this cluster*")
+    if use_regions:
+        st.subheader("🧬 Genome Diagrams by Display Region")
+        st.markdown(f"*Showing genome diagrams for all {len(regions)} block-supported regions in this cluster*")
+    else:
+        st.subheader("🧬 Genome Diagrams by Locus")
+        st.markdown(f"*Showing genome diagrams for all {len(unique_loci)} loci involved in this cluster*")
     
     # Display options
     col1, col2 = st.columns(2)
@@ -1398,123 +1558,154 @@ def display_cluster_detail():
                                         help="Number of loci to display per page")
     
     # Pagination for loci
-    total_pages = math.ceil(len(unique_loci) / max_loci_per_page)
+    total_items = len(regions) if use_regions else len(unique_loci)
+    total_pages = math.ceil(total_items / max_loci_per_page)
     if total_pages > 1:
         current_page = st.number_input(f"Page (1-{total_pages})", 
                                      min_value=1, max_value=total_pages, value=1, step=1)
         start_idx = (current_page - 1) * max_loci_per_page
-        end_idx = min(start_idx + max_loci_per_page, len(unique_loci))
-        page_loci = unique_loci[start_idx:end_idx]
-        st.info(f"Showing loci {start_idx + 1}-{end_idx} of {len(unique_loci)}")
+        end_idx = min(start_idx + max_loci_per_page, total_items)
+        if use_regions:
+            page_regions = regions[start_idx:end_idx]
+            st.info(f"Showing regions {start_idx + 1}-{end_idx} of {total_items}")
+        else:
+            page_loci = unique_loci[start_idx:end_idx]
+            st.info(f"Showing loci {start_idx + 1}-{end_idx} of {total_items}")
     else:
-        page_loci = unique_loci
+        if use_regions:
+            page_regions = regions
+        else:
+            page_loci = unique_loci
     
     # Display genome diagram for each locus
-    for i, locus_id in enumerate(page_loci):
+    if use_regions:
+        items_iter = enumerate(page_regions)
+    else:
+        items_iter = enumerate(page_loci)
+
+    for i, item in items_iter:
         st.markdown("---")
-        
-        # Locus header with organism info
-        organism_info = ""
-        sample_blocks = cluster_blocks[
-            (cluster_blocks['query_locus'] == locus_id) | 
-            (cluster_blocks['target_locus'] == locus_id)
-        ]
-        
-        if not sample_blocks.empty:
-            first_block = sample_blocks.iloc[0]
-            if first_block['query_locus'] == locus_id:
-                organism_info = f" ({first_block.get('query_organism', 'Unknown organism')})"
+        if use_regions:
+            region = item
+            # Header
+            org = region.get("organism_name", "Unknown organism")
+            contig_id = region["contig_id"]
+            genome_id = region["genome_id"]
+            start_bp = region["start_bp"]
+            end_bp = region["end_bp"]
+            support = region["support"]
+            display_title = f"{genome_id}:{contig_id} [{start_bp:,}-{end_bp:,}]"
+            st.subheader(f"🧬 Region {i+1}: {display_title} ({org})")
+
+            # Determine representative block among supporting blocks
+            rep_block = None
+            if region.get("blocks"):
+                blocks_subset = cluster_blocks[cluster_blocks["block_id"].isin(list(region["blocks"]))]
+                if not blocks_subset.empty:
+                    rep_block = blocks_subset.loc[blocks_subset["score"].idxmax()]
+
+            if rep_block is not None:
+                st.caption(
+                    f"Supported by {support} block(s) | Representative block: {int(rep_block['block_id'])} (score: {rep_block['score']:.1f})"
+                )
             else:
-                organism_info = f" ({first_block.get('target_organism', 'Unknown organism')})"
-        
-        st.subheader(f"🧬 Locus {i+1}: {locus_id}{organism_info}")
-        
-        # Count blocks involving this locus
-        involving_blocks = len(sample_blocks)
-        if involving_blocks > 0:
-            best_block = sample_blocks.loc[sample_blocks['score'].idxmax()]
-            st.caption(f"Participates in {involving_blocks} syntenic block(s) | Representative block: {best_block['block_id']} (score: {best_block['score']:.1f})")
+                st.caption(f"Supported by {support} block(s)")
         else:
-            st.caption(f"No syntenic blocks found for this locus")
+            locus_id = item
+            display_title = locus_id
+            # Locus header with organism info
+            organism_info = ""
+            sample_blocks = cluster_blocks[
+                (cluster_blocks['query_locus'] == locus_id) | 
+                (cluster_blocks['target_locus'] == locus_id)
+            ]
+            if not sample_blocks.empty:
+                first_block = sample_blocks.iloc[0]
+                if first_block['query_locus'] == locus_id:
+                    organism_info = f" ({first_block.get('query_organism', 'Unknown organism')})"
+                else:
+                    organism_info = f" ({first_block.get('target_organism', 'Unknown organism')})"
+            st.subheader(f"🧬 Locus {i+1}: {locus_id}{organism_info}")
+            # Count blocks involving this locus
+            involving_blocks = len(sample_blocks)
+            if involving_blocks > 0:
+                best_block = sample_blocks.loc[sample_blocks['score'].idxmax()]
+                st.caption(f"Participates in {involving_blocks} syntenic block(s) | Representative block: {best_block['block_id']} (score: {best_block['score']:.1f})")
+            else:
+                st.caption(f"No syntenic blocks found for this locus")
         
         # Load genes for this locus
-        with st.spinner(f"Loading genes for {locus_id}..."):
+        with st.spinner("Loading genes..."):
             try:
-                # Always try to get genes with syntenic block context (like regular genome viewer)
-                representative_block = None
-                locus_role = None
-                
-                if not sample_blocks.empty:
-                    # Find best block for this locus (highest scoring)
-                    best_block = sample_blocks.loc[sample_blocks['score'].idxmax()]
-                    
-                    # Determine if this locus is query or target in the best block
-                    if best_block['query_locus'] == locus_id:
-                        locus_role = 'query'
-                        representative_block = best_block
-                    elif best_block['target_locus'] == locus_id:
-                        locus_role = 'target'
-                        representative_block = best_block
-                
-                # Always use syntenic block context when available (matches genome viewer behavior)
-                if representative_block is not None and locus_role is not None:
-                    # Load syntenic region with context (matches regular genome viewer behavior)
-                    genes_df = load_genes_for_locus(locus_id, representative_block['block_id'], locus_role)
-                    
-                    # Show context info to user
-                    st.caption(f"🎯 Showing focused syntenic region ({len(genes_df)} genes)")
+                if use_regions:
+                    genes_df = load_genes_for_region(contig_id, start_bp, end_bp, extended_context=show_extended_context)
+                    st.caption(f"🎯 Showing block-supported region ({len(genes_df)} genes)")
                 else:
-                    # Fallback: try to find ANY syntenic block for this locus (not just in this cluster)
-                    fallback_query = """
-                        SELECT block_id, query_locus, target_locus, score
-                        FROM syntenic_blocks 
-                        WHERE query_locus = ? OR target_locus = ?
-                        ORDER BY score DESC 
-                        LIMIT 1
-                    """
-                    fallback_result = pd.read_sql_query(fallback_query, conn, params=[locus_id, locus_id])
-                    
-                    if not fallback_result.empty:
-                        fallback_block = fallback_result.iloc[0]
-                        fallback_role = 'query' if fallback_block['query_locus'] == locus_id else 'target'
-                        genes_df = load_genes_for_locus(locus_id, fallback_block['block_id'], fallback_role)
-                        st.caption(f"🎯 Using fallback syntenic block {fallback_block['block_id']} ({len(genes_df)} genes)")
-                        st.info("ℹ️ This locus doesn't participate in blocks within this cluster, showing representative syntenic region from another cluster")
+                    # Original behavior (per-locus)
+                    representative_block = None
+                    locus_role = None
+                    sample_blocks = cluster_blocks[
+                        (cluster_blocks['query_locus'] == locus_id) | 
+                        (cluster_blocks['target_locus'] == locus_id)
+                    ]
+                    if not sample_blocks.empty:
+                        best_block = sample_blocks.loc[sample_blocks['score'].idxmax()]
+                        if best_block['query_locus'] == locus_id:
+                            locus_role = 'query'
+                            representative_block = best_block
+                        elif best_block['target_locus'] == locus_id:
+                            locus_role = 'target'
+                            representative_block = best_block
+                    if representative_block is not None and locus_role is not None:
+                        genes_df = load_genes_for_locus(locus_id, representative_block['block_id'], locus_role)
+                        st.caption(f"🎯 Showing focused syntenic region ({len(genes_df)} genes)")
                     else:
-                        # Last resort: load a reasonable subset (center ~50 genes) instead of entire contig
-                        genes_df = load_genes_for_locus(locus_id)
-                        if len(genes_df) > 50:
-                            mid_point = len(genes_df) // 2
-                            start_idx = max(0, mid_point - 25)
-                            end_idx = min(len(genes_df), mid_point + 25)
-                            genes_df = genes_df.iloc[start_idx:end_idx].copy()
-                            st.caption(f"⚠️ Showing center region of locus ({len(genes_df)} genes)")
-                            st.warning("No syntenic blocks found for this locus - showing representative center region")
+                        # Fallback paths
+                        fallback_query = """
+                            SELECT block_id, query_locus, target_locus, score
+                            FROM syntenic_blocks 
+                            WHERE query_locus = ? OR target_locus = ?
+                            ORDER BY score DESC 
+                            LIMIT 1
+                        """
+                        conn = get_database_connection()
+                        fallback_result = pd.read_sql_query(fallback_query, conn, params=[locus_id, locus_id])
+                        if not fallback_result.empty:
+                            fallback_block = fallback_result.iloc[0]
+                            fallback_role = 'query' if fallback_block['query_locus'] == locus_id else 'target'
+                            genes_df = load_genes_for_locus(locus_id, fallback_block['block_id'], fallback_role)
+                            st.caption(f"🎯 Using fallback syntenic block {fallback_block['block_id']} ({len(genes_df)} genes)")
+                            st.info("ℹ️ This locus doesn't participate in blocks within this cluster, showing representative syntenic region from another cluster")
                         else:
-                            st.caption(f"⚠️ Showing entire small locus ({len(genes_df)} genes)")
-                            st.warning("No syntenic blocks found for this locus")
+                            genes_df = load_genes_for_locus(locus_id)
+                            if len(genes_df) > 50:
+                                mid_point = len(genes_df) // 2
+                                s_idx = max(0, mid_point - 25)
+                                e_idx = min(len(genes_df), mid_point + 25)
+                                genes_df = genes_df.iloc[s_idx:e_idx].copy()
+                                st.caption(f"⚠️ Showing center region of locus ({len(genes_df)} genes)")
+                                st.warning("No syntenic blocks found for this locus - showing representative center region")
+                            else:
+                                st.caption(f"⚠️ Showing entire small locus ({len(genes_df)} genes)")
+                                st.warning("No syntenic blocks found for this locus")
                 
                 if genes_df.empty:
-                    st.warning(f"No genes found for locus {locus_id}")
+                    st.warning(f"No genes found for {display_title}")
                     continue
                 
             except Exception as e:
-                st.error(f"Error loading genes for {locus_id}: {e}")
+                st.error(f"Error loading genes for {display_title}: {e}")
                 continue
         
         # Create and display genome diagram
         try:
             with st.spinner("Generating genome diagram..."):
-                fig = create_genome_diagram(
-                    genes_df,
-                    f"{locus_id} - Cluster {cluster_id}",
-                    width=1000,
-                    height=300
-                )
+                title = f"{display_title} - Cluster {cluster_id}"
+                fig = create_genome_diagram(genes_df, title, width=1000, height=300)
                 st.plotly_chart(fig, use_container_width=True, key=f"genome_{cluster_id}_{i}")
             
             # Expandable gene annotation table
-            with st.expander(f"📋 **Gene Annotations for {locus_id}**", expanded=False):
+            with st.expander(f"📋 **Gene Annotations for {display_title}**", expanded=False):
                 st.caption(f"Showing {len(genes_df)} genes")
                 
                 # Prepare display columns
@@ -1560,15 +1751,18 @@ def display_cluster_detail():
                     st.metric("🏷️ PFAM annotated", annotated_genes)
         
         except Exception as e:
-            st.error(f"Error creating genome diagram for {locus_id}: {e}")
-            logger.error(f"Genome diagram error for {locus_id}: {e}")
+            st.error(f"Error creating genome diagram for {display_title}: {e}")
+            logger.error(f"Genome diagram error for {display_title}: {e}")
     
     # Navigation footer
     if total_pages > 1:
         st.divider()
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.info(f"Page {current_page} of {total_pages} | {len(unique_loci)} total loci in cluster")
+            if use_regions:
+                st.info(f"Page {current_page} of {total_pages} | {len(regions)} total regions in cluster")
+            else:
+                st.info(f"Page {current_page} of {total_pages} | {len(unique_loci)} total loci in cluster")
 
 def main():
     """Main Streamlit application."""

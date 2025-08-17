@@ -752,9 +752,22 @@ class SyntenicAnalyzer:
         if landscape.blocks:
             blocks_data = []
             for i, block in enumerate(landscape.blocks):
-                # Extract window indices from window IDs
-                query_indices = [self._extract_window_index(w) for w in block.query_windows]
-                target_indices = [self._extract_window_index(w) for w in block.target_windows]
+                # Deduplicate and preserve order of window IDs to avoid repeated entries
+                def _dedupe_preserve_order(seq):
+                    seen = set()
+                    out = []
+                    for x in seq:
+                        if x not in seen:
+                            seen.add(x)
+                            out.append(x)
+                    return out
+
+                query_windows_dedup = _dedupe_preserve_order(block.query_windows)
+                target_windows_dedup = _dedupe_preserve_order(block.target_windows)
+
+                # Extract window indices from deduplicated window IDs
+                query_indices = [self._extract_window_index(w) for w in query_windows_dedup]
+                target_indices = [self._extract_window_index(w) for w in target_windows_dedup]
                 
                 # Filter out None values and calculate ranges
                 query_indices = [idx for idx in query_indices if idx is not None]
@@ -777,14 +790,14 @@ class SyntenicAnalyzer:
                     'length': block.alignment_length,  # This is gene-window count, not genomic bp
                     'identity': block.identity,
                     'score': block.chain_score,
-                    'n_query_windows': len(block.query_windows),  # Number of matching query windows
-                    'n_target_windows': len(block.target_windows),  # Number of matching target windows
+                    'n_query_windows': len(query_windows_dedup),  # Use deduplicated counts
+                    'n_target_windows': len(target_windows_dedup),
                     'query_window_start': query_start,
                     'query_window_end': query_end,
                     'target_window_start': target_start,
                     'target_window_end': target_end,
-                    'query_windows_json': ';'.join(block.query_windows),  # Use semicolon instead of JSON
-                    'target_windows_json': ';'.join(block.target_windows)
+                    'query_windows_json': ';'.join(query_windows_dedup),  # Use semicolon instead of JSON
+                    'target_windows_json': ';'.join(target_windows_dedup)
                 })
             
             blocks_df = pd.DataFrame(blocks_data)

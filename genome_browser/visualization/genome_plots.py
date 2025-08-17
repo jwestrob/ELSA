@@ -521,8 +521,8 @@ def create_cluster_overview(cluster_data: Dict, member_blocks: List[Dict],
         text=[f"Block {b['block_id']}" for b in member_blocks],
         hovertemplate=(
             "<b>%{text}</b><br>"
-            "Length: %{x:,} bp<br>"
-            "Identity: %{y:.3f}<br>"
+            "Length: %{x:,} gene windows<br>"
+            "Embedding similarity: %{y:.3f}<br>"
             "Score: %{marker.color:.1f}"
             "<extra></extra>"
         )
@@ -530,8 +530,8 @@ def create_cluster_overview(cluster_data: Dict, member_blocks: List[Dict],
     
     fig.update_layout(
         title=f"Cluster {cluster_data['cluster_id']} Overview ({len(member_blocks)} blocks)",
-        xaxis_title="Block Length (bp)",
-        yaxis_title="Identity Score",
+        xaxis_title="Block Length (gene windows)",
+        yaxis_title="Embedding similarity",
         width=width,
         height=height,
         xaxis_type="log"

@@ -15,6 +15,7 @@ import numpy as np
 from pathlib import Path
 import logging
 from typing import Dict, List, Tuple, Optional
+from types import SimpleNamespace
 import math
 
 # Import genome visualization functions
@@ -1810,6 +1811,228 @@ def main():
     with tab4:
         st.session_state.current_page = 'cluster_explorer'
         display_cluster_explorer()
+    
+    # Optional fifth tab: clustering tuner
+    if st.sidebar.checkbox("🛠️ Show Clustering Tuner", value=False, help="Tune clustering parameters and re-cluster without re-running all-vs-all"):
+        st.session_state.current_page = 'clustering_tuner'
+        display_clustering_tuner()
+
+
+def display_clustering_tuner():
+    """Interactive interface to re-run clustering only with adjustable parameters.
+    This uses existing syntenic_blocks.csv and window embeddings to recompute cluster assignments,
+    then updates the genome browser database and reloads the app.
+    """
+    st.header("🛠️ Clustering Tuner")
+    st.markdown("Tune clustering parameters and re-run clustering without re-doing all-vs-all.")
+
+    # Locate analysis outputs
+    default_blocks = Path("syntenic_analysis/syntenic_blocks.csv")
+    default_config = Path("elsa.config.yaml")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        blocks_csv = st.text_input("Path to syntenic_blocks.csv", value=str(default_blocks))
+        config_yaml = st.text_input("Path to ELSA config (to find windows parquet)", value=str(default_config))
+    with col2:
+        db_path = st.text_input("Genome browser DB path", value=str(DB_PATH))
+        method = st.selectbox("Clustering method", ["mutual_jaccard"], index=0)
+
+    st.subheader("Parameters")
+    pcol1, pcol2, pcol3 = st.columns(3)
+    with pcol1:
+        jaccard_tau = st.number_input("jaccard_tau", value=0.75, min_value=0.0, max_value=1.0, step=0.05)
+        df_max = st.number_input("df_max (max DF for shingles)", value=30, min_value=1, step=1)
+        min_low_df_anchors = st.number_input("min_low_df_anchors", value=3, min_value=0, step=1)
+        idf_mean_min = st.number_input("idf_mean_min", value=1.0, min_value=0.0, step=0.1)
+        mutual_k = st.number_input("mutual_k", value=3, min_value=1, step=1)
+        max_df_percentile = st.text_input("max_df_percentile (optional, e.g., 0.9)", value="")
+    with pcol2:
+        v_mad_max_genes = st.number_input("v_mad_max_genes", value=0.5, min_value=0.0, step=0.1)
+        enable_cassette_mode = st.checkbox("enable_cassette_mode", value=True)
+        cassette_max_len = st.number_input("cassette_max_len", value=4, min_value=2, step=1)
+        degree_cap = st.number_input("degree_cap (per-node top edges)", value=10, min_value=0, step=1)
+        k_core_min_degree = st.number_input("k_core_min_degree", value=3, min_value=0, step=1)
+        triangle_support_min = st.number_input("triangle_support_min", value=1, min_value=0, step=1)
+    with pcol3:
+        use_weighted_jaccard = st.checkbox("use_weighted_jaccard", value=True)
+        use_community_detection = st.checkbox("use_community_detection", value=True)
+        community_method = st.selectbox("community_method", ["greedy"], index=0)
+        shingle_k = st.number_input("shingle_k (SRP k-gram)", value=3, min_value=2, step=1)
+        srp_bits = st.number_input("srp_bits", value=256, min_value=32, step=32)
+        srp_bands = st.number_input("srp_bands", value=32, min_value=1, step=1)
+
+    if st.button("Re-run clustering", type="primary"):
+        try:
+            # Validate inputs
+            blocks_path = Path(blocks_csv)
+            if not blocks_path.exists():
+                st.error(f"Blocks CSV not found: {blocks_path}")
+                return
+            cfg_path = Path(config_yaml)
+            if not cfg_path.exists():
+                st.error(f"Config file not found: {cfg_path}")
+                return
+
+            # Build config namespace for clustering
+            cfg = SimpleNamespace(
+                jaccard_tau=float(jaccard_tau),
+                df_max=int(df_max),
+                min_low_df_anchors=int(min_low_df_anchors),
+                idf_mean_min=float(idf_mean_min),
+                mutual_k=int(mutual_k),
+                max_df_percentile=(float(max_df_percentile) if max_df_percentile.strip() else None),
+                v_mad_max_genes=float(v_mad_max_genes),
+                enable_cassette_mode=bool(enable_cassette_mode),
+                cassette_max_len=int(cassette_max_len),
+                degree_cap=int(degree_cap),
+                k_core_min_degree=int(k_core_min_degree),
+                triangle_support_min=int(triangle_support_min),
+                use_weighted_jaccard=bool(use_weighted_jaccard),
+                use_community_detection=bool(use_community_detection),
+                community_method=community_method,
+                srp_bits=int(srp_bits), srp_bands=int(srp_bands), srp_band_bits=8, srp_seed=1337,
+                shingle_k=int(shingle_k),
+                min_anchors=4, min_span_genes=8,
+                size_ratio_min=0.5, size_ratio_max=2.0,
+                keep_singletons=False, sink_label=0
+            )
+
+            with st.status("Re-clustering blocks...", expanded=True) as status:
+                st.write("Loading blocks and window embeddings...")
+                blocks = _load_blocks_from_csv(blocks_path)
+                window_lookup = _create_window_lookup_from_config(cfg_path)
+                if window_lookup is None:
+                    st.error("Failed to create window embedding lookup. Check config/work_dir.")
+                    return
+                
+                st.write(f"Clustering {len(blocks)} blocks with updated parameters...")
+                from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
+                assignments = cluster_blocks_jaccard(blocks, window_lookup, cfg)
+
+                if not assignments:
+                    st.error("Re-clustering produced no assignments.")
+                    return
+
+                st.write("Updating genome browser database with new cluster assignments...")
+                _apply_cluster_assignments_to_db(assignments, Path(db_path))
+
+                status.update(label="✅ Re-clustering complete", state="complete")
+                st.success("Clusters updated. Reloading app...")
+                st.rerun()
+        except Exception as e:
+            st.error(f"Re-clustering failed: {e}")
+            logger.exception("Re-clustering error")
+
+
+def _load_blocks_from_csv(blocks_csv_path: Path):
+    """Load blocks from syntenic_blocks.csv and construct minimal block objects suitable for clustering.
+    Reconstruct matches by pairing query/target window IDs in order.
+    """
+    import pandas as pd
+    df = pd.read_csv(blocks_csv_path)
+    blocks = []
+
+    class _Match:
+        __slots__ = ("query_window_id", "target_window_id")
+        def __init__(self, q, t):
+            self.query_window_id = q
+            self.target_window_id = t
+
+    class _Block:
+        def __init__(self, idx, row):
+            self.id = int(row['block_id']) if 'block_id' in row else idx
+            qws = str(row.get('query_windows_json', '') or '')
+            tws = str(row.get('target_windows_json', '') or '')
+            self.query_windows = [w for w in qws.split(';') if w]
+            self.target_windows = [w for w in tws.split(';') if w]
+            n = min(len(self.query_windows), len(self.target_windows))
+            self.matches = [_Match(self.query_windows[i], self.target_windows[i]) for i in range(n)]
+            self.alignment_length = n
+            self.identity = float(row.get('identity', 0.0) or 0.0)
+            self.chain_score = float(row.get('score', 0.0) or 0.0)
+            # Optional strand if available
+            self.strand = 1
+
+    for idx, row in df.iterrows():
+        blocks.append(_Block(idx, row))
+    return blocks
+
+
+def _create_window_lookup_from_config(config_path: Path):
+    """Create a window embedding lookup from ELSA config and manifest.
+    Returns a callable window_id -> np.ndarray or None on failure.
+    """
+    try:
+        from elsa.params import load_config
+        from elsa.manifest import ELSAManifest
+        import pandas as pd
+        import numpy as np
+
+        cfg = load_config(str(config_path))
+        manifest = ELSAManifest(cfg.data.work_dir)
+        windows_path = Path(manifest.data['artifacts']['windows']['path'])
+        if not windows_path.exists():
+            logger.error(f"Windows parquet not found: {windows_path}")
+            return None
+        windows_df = pd.read_parquet(windows_path)
+        emb_cols = [c for c in windows_df.columns if c.startswith('emb_')]
+        lookup = {}
+        for _, row in windows_df.iterrows():
+            win_id = f"{row['sample_id']}_{row['locus_id']}_{int(row['window_idx'])}"
+            lookup[win_id] = np.array([row[c] for c in emb_cols])
+
+        def _lookup_fn(window_id: str):
+            return lookup.get(window_id)
+
+        return _lookup_fn
+    except Exception as e:
+        logger.error(f"Failed to create window lookup: {e}")
+        return None
+
+
+def _apply_cluster_assignments_to_db(assignments: Dict[int, int], db_path: Path):
+    """Apply new cluster assignments to the genome_browser.db without re-ingesting all data."""
+    conn = sqlite3.connect(db_path)
+    try:
+        cur = conn.cursor()
+        # Reset cluster assignments and clusters
+        cur.execute("DELETE FROM cluster_assignments")
+        cur.execute("DELETE FROM clusters")
+
+        # Build cluster sizes
+        cluster_sizes: Dict[int, int] = {}
+        for block_id, cl in assignments.items():
+            if cl is None or cl == 0:
+                continue
+            cluster_sizes[cl] = cluster_sizes.get(cl, 0) + 1
+
+        # Insert clusters with minimal info
+        for cl, size in sorted(cluster_sizes.items()):
+            cur.execute(
+                """
+                INSERT INTO clusters (cluster_id, size, consensus_length, consensus_score, diversity,
+                                      representative_query, representative_target, cluster_type)
+                VALUES (?, ?, NULL, NULL, NULL, NULL, NULL, 'unknown')
+                """,
+                (int(cl), int(size))
+            )
+
+        # Insert cluster assignments
+        rows = [(int(bid), int(cl)) for bid, cl in assignments.items() if cl and cl > 0]
+        if rows:
+            cur.executemany("INSERT INTO cluster_assignments (block_id, cluster_id) VALUES (?, ?)", rows)
+
+        # Update syntenic_blocks.cluster_id based on assignments
+        cur.execute(
+            """
+            UPDATE syntenic_blocks
+            SET cluster_id = COALESCE((SELECT ca.cluster_id FROM cluster_assignments ca WHERE ca.block_id = syntenic_blocks.block_id), 0)
+            """
+        )
+        conn.commit()
+    finally:
+        conn.close()
 
 if __name__ == "__main__":
     main()

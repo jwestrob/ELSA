@@ -60,6 +60,11 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
     k_core_min_degree = getattr(cfg, 'k_core_min_degree', 3)
     enable_cassette_mode = getattr(cfg, 'enable_cassette_mode', True)
     cassette_max_len = getattr(cfg, 'cassette_max_len', 4)
+    # New: graph coherence and community detection controls
+    degree_cap = getattr(cfg, 'degree_cap', 10)  # keep top-N edges per node by weight
+    triangle_support_min = getattr(cfg, 'triangle_support_min', 1)  # require >= T triangles per edge
+    use_community_detection = getattr(cfg, 'use_community_detection', True)
+    community_method = getattr(cfg, 'community_method', 'greedy')  # 'greedy' (networkx)
     
     console_print(f"Processing {len(blocks_list)} blocks with mutual-k Jaccard clustering")
     
@@ -246,6 +251,7 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
     
     # Step 6: Similarity computation and mutual-k graph construction
     edges = set()
+    edge_weights: Dict[Tuple[int, int], float] = {}
     
     for block_id, candidates in block_candidates.items():
         if block_id not in filtered_shingles_map:
@@ -304,8 +310,29 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                         if low_df_count >= min_low_df_anchors and mean_idf >= idf_mean_min:
                             edge = tuple(sorted([block_id, cand_id]))
                             edges.add(edge)
+                            # Store weight as the similarity value
+                            edge_weights[edge] = max(edge_weights.get(edge, 0.0), j_sim)
     
     console_print(f"Constructed graph with {len(edges)} mutual-k edges")
+
+    # Optional: cap per-node degree to break hubs (keep top-N edges by weight)
+    def _degree_cap(edge_set: Set[Tuple[int, int]], weights: Dict[Tuple[int, int], float], cap: int) -> Set[Tuple[int, int]]:
+        if cap is None or cap <= 0:
+            return edge_set
+        inc: Dict[int, List[Tuple[Tuple[int, int], float]]] = defaultdict(list)
+        for e in edge_set:
+            u, v = e
+            w = weights.get(e, 0.0)
+            inc[u].append((e, w))
+            inc[v].append((e, w))
+        keep: Set[Tuple[int, int]] = set()
+        for node, lst in inc.items():
+            lst.sort(key=lambda x: -x[1])
+            for e, _ in lst[:cap]:
+                keep.add(e)
+        return keep
+
+    capped_edges = _degree_cap(edges, edge_weights, degree_cap)
 
     # Optional: prune graph by k-core to reduce transitive glue
     def _k_core(edge_set: Set[Tuple[int, int]], k: int) -> Set[Tuple[int, int]]:
@@ -334,10 +361,44 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                     new_edges.add((u, v))
         return new_edges
 
-    pruned_edges = _k_core(edges, k_core_min_degree)
+    pruned_edges = _k_core(capped_edges, k_core_min_degree)
 
-    # Step 7: Connected components
-    components = _find_connected_components(pruned_edges, list(filtered_shingles_map.keys()))
+    # Optional: require edges to be supported by triangles (shared neighbors)
+    def _triangle_filter(edge_set: Set[Tuple[int, int]], min_tri: int) -> Set[Tuple[int, int]]:
+        if min_tri is None or min_tri <= 0:
+            return edge_set
+        adj = defaultdict(set)
+        for u, v in edge_set:
+            adj[u].add(v)
+            adj[v].add(u)
+        keep = set()
+        for u, v in edge_set:
+            common = adj[u].intersection(adj[v])
+            if len(common) >= min_tri:
+                keep.add((u, v))
+        return keep
+
+    coherent_edges = _triangle_filter(pruned_edges, triangle_support_min)
+
+    # Step 7: Community detection (fallback to connected components if unavailable)
+    nodes = list(filtered_shingles_map.keys())
+    components: List[Set[int]] = []
+    if use_community_detection:
+        try:
+            import networkx as nx
+            G = nx.Graph()
+            G.add_nodes_from(nodes)
+            for u, v in coherent_edges:
+                w = edge_weights.get((u, v), 1.0)
+                G.add_edge(u, v, weight=w)
+            # Greedy modularity communities (weight-aware)
+            comms = nx.algorithms.community.greedy_modularity_communities(G, weight='weight')
+            components = [set(c) for c in comms if len(c) > 0]
+        except Exception as e:
+            console_print(f"Community detection unavailable or failed ({e}), using connected components")
+            components = _find_connected_components(coherent_edges, nodes)
+    else:
+        components = _find_connected_components(coherent_edges, nodes)
     
     # Step 8: Assign cluster IDs deterministically
     cluster_assignment = {}

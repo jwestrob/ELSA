@@ -32,10 +32,10 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
     
     console_print = lambda msg: print(f"[Clustering] {msg}")
     
-    # Extract configuration
+    # Extract configuration (stricter defaults to reduce fold-only clustering)
     min_anchors = getattr(cfg, 'min_anchors', 4)
     min_span_genes = getattr(cfg, 'min_span_genes', 8)
-    v_mad_max_genes = getattr(cfg, 'v_mad_max_genes', 1)
+    v_mad_max_genes = getattr(cfg, 'v_mad_max_genes', 0.5)
     
     srp_bits = getattr(cfg, 'srp_bits', 256)
     srp_bands = getattr(cfg, 'srp_bands', 32)
@@ -43,14 +43,21 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
     srp_seed = getattr(cfg, 'srp_seed', 1337)
     shingle_k = getattr(cfg, 'shingle_k', 3)
     
-    jaccard_tau = getattr(cfg, 'jaccard_tau', 0.5)
+    jaccard_tau = getattr(cfg, 'jaccard_tau', 0.7)
     mutual_k = getattr(cfg, 'mutual_k', 3)
-    df_max = getattr(cfg, 'df_max', 200)
+    df_max = getattr(cfg, 'df_max', 50)
+    use_weighted_jaccard = getattr(cfg, 'use_weighted_jaccard', True)
+    low_df_threshold = getattr(cfg, 'low_df_threshold', max(10, df_max // 5))
+    min_low_df_anchors = getattr(cfg, 'min_low_df_anchors', 2)
+    idf_mean_min = getattr(cfg, 'idf_mean_min', 0.0)
     
     size_ratio_min = getattr(cfg, 'size_ratio_min', 0.5)
     size_ratio_max = getattr(cfg, 'size_ratio_max', 2.0)
     keep_singletons = getattr(cfg, 'keep_singletons', False)
     sink_label = getattr(cfg, 'sink_label', 0)
+    k_core_min_degree = getattr(cfg, 'k_core_min_degree', 2)
+    enable_cassette_mode = getattr(cfg, 'enable_cassette_mode', True)
+    cassette_max_len = getattr(cfg, 'cassette_max_len', 4)
     
     console_print(f"Processing {len(blocks_list)} blocks with mutual-k Jaccard clustering")
     
@@ -80,12 +87,16 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
         v_median = np.median(v_values) if v_values else 0
         v_mad = np.median([abs(v - v_median) for v in v_values]) if v_values else 0
         
-        # Apply robustness criteria
+        # Apply robustness criteria (allow very small, tightly collinear cassettes)
         is_robust = (n >= min_anchors and 
                     span_q >= min_span_genes and 
                     span_t >= min_span_genes and 
                     v_mad <= v_mad_max_genes)
-        
+
+        if not is_robust and enable_cassette_mode:
+            if 2 <= n <= cassette_max_len and v_mad <= 0.0:
+                is_robust = True
+
         if is_robust:
             robust_blocks.append((block_id, block))
         else:
@@ -175,6 +186,11 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
             filtered_shingle_to_blocks[shingle_id].add(block_id)
     
     console_print(f"After DF filtering: {len(filtered_shingle_to_blocks)} unique shingles")
+
+    # Build IDF map for weighted Jaccard: idf = log(1 + N / df)
+    import math
+    n_docs = max(1, len(filtered_shingles_map))
+    shingle_idf = {sid: math.log(1.0 + (n_docs / max(1, shingle_df.get(sid, 1)))) for sid in filtered_shingle_to_blocks.keys()}
     
     # Step 5: Candidate generation with size ratio prefilter
     block_candidates = {}
@@ -223,7 +239,17 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
         for cand_id in candidates:
             if cand_id in filtered_shingles_map:
                 shingles_c = filtered_shingles_map[cand_id]
-                j_sim = jaccard(shingles_b, shingles_c)
+                if use_weighted_jaccard:
+                    inter = shingles_b & shingles_c
+                    union = shingles_b | shingles_c
+                    if union:
+                        inter_w = sum(shingle_idf.get(s, 0.0) for s in inter)
+                        union_w = sum(shingle_idf.get(s, 0.0) for s in union)
+                        j_sim = (inter_w / union_w) if union_w > 0 else 0.0
+                    else:
+                        j_sim = 0.0
+                else:
+                    j_sim = jaccard(shingles_b, shingles_c)
                 similarities.append((cand_id, j_sim))
         
         # Keep top-k by Jaccard similarity (ties broken by lower block id)
@@ -248,18 +274,51 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                     
                     cand_similarities.sort(key=lambda x: (-x[1], x[0]))
                     cand_top_k = cand_similarities[:mutual_k]
-                    
+
                     # Check if block_id is in candidate's top-k
                     if any(other_id == block_id and other_j_sim >= jaccard_tau 
                           for other_id, other_j_sim in cand_top_k):
-                        # Add undirected edge
-                        edge = tuple(sorted([block_id, cand_id]))
-                        edges.add(edge)
+                        # Enforce informative-overlap checks before adding edge
+                        inter = shingles_b & shingles_c
+                        low_df_count = sum(1 for s in inter if shingle_df.get(s, 0) <= low_df_threshold)
+                        mean_idf = (sum(shingle_idf.get(s, 0.0) for s in inter) / max(1, len(inter))) if inter else 0.0
+                        if low_df_count >= min_low_df_anchors and mean_idf >= idf_mean_min:
+                            edge = tuple(sorted([block_id, cand_id]))
+                            edges.add(edge)
     
     console_print(f"Constructed graph with {len(edges)} mutual-k edges")
-    
+
+    # Optional: prune graph by k-core to reduce transitive glue
+    def _k_core(edge_set: Set[Tuple[int, int]], k: int) -> Set[Tuple[int, int]]:
+        if k <= 0:
+            return edge_set
+        adj = defaultdict(set)
+        for u, v in edge_set:
+            adj[u].add(v)
+            adj[v].add(u)
+        changed = True
+        active = set(adj.keys())
+        while changed:
+            changed = False
+            to_remove = [n for n in list(active) if len(adj[n]) < k]
+            if to_remove:
+                changed = True
+                for n in to_remove:
+                    for nbr in list(adj[n]):
+                        adj[nbr].discard(n)
+                    adj.pop(n, None)
+                active = set(adj.keys())
+        new_edges = set()
+        for u in adj:
+            for v in adj[u]:
+                if u < v:
+                    new_edges.add((u, v))
+        return new_edges
+
+    pruned_edges = _k_core(edges, k_core_min_degree)
+
     # Step 7: Connected components
-    components = _find_connected_components(edges, list(filtered_shingles_map.keys()))
+    components = _find_connected_components(pruned_edges, list(filtered_shingles_map.keys()))
     
     # Step 8: Assign cluster IDs deterministically
     cluster_assignment = {}

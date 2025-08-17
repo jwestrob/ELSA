@@ -240,11 +240,47 @@ def run_pfam_annotation_pipeline(proteins_dir: Path, output_dir: Path, threads: 
         if not hits_file.exists():
             raise RuntimeError("Astra completed but no hits file found")
         
-        # Count hits
-        with open(hits_file) as f:
-            num_hits = sum(1 for _ in f) - 1  # Exclude header
+        # Count hits and process into genome_annotations structure
+        import pandas as pd
+        from collections import defaultdict
         
-        # Create results summary
+        df = pd.read_csv(hits_file, sep='\t')
+        num_hits = len(df)
+        
+        # Process TSV into genome_annotations structure
+        protein_domains = defaultdict(list)
+        for _, row in df.iterrows():
+            protein_id = row['sequence_id']
+            domain = row['hmm_name']
+            protein_domains[protein_id].append(domain)
+        
+        # Group proteins by genome using filename matching
+        genome_annotations = defaultdict(dict)
+        protein_file_stems = [f.stem for f in protein_files]  # Remove .faa extension
+        
+        for protein_id, domains in protein_domains.items():
+            # Extract genome ID by matching against protein file names
+            genome_id = None
+            if '|' in protein_id:
+                after_pipe = protein_id.split('|', 1)[1]
+                # Find best matching genome file
+                for stem in protein_file_stems:
+                    if after_pipe.startswith(stem):
+                        genome_id = stem
+                        break
+            
+            if not genome_id:
+                # Fallback: extract before '.con' pattern
+                if '.con' in protein_id:
+                    before_con = protein_id.split('.con')[0]
+                    genome_id = before_con.split('|')[-1] if '|' in before_con else before_con
+                else:
+                    genome_id = protein_id.split('_')[0]
+            
+            domain_string = ';'.join(sorted(set(domains)))  # Remove duplicates and sort
+            genome_annotations[genome_id][protein_id] = domain_string
+        
+        # Create results summary with genome_annotations
         results = {
             "method": "astra_bulk",
             "proteins_dir": str(proteins_dir),
@@ -253,7 +289,8 @@ def run_pfam_annotation_pipeline(proteins_dir: Path, output_dir: Path, threads: 
             "total_hits": num_hits,
             "runtime_seconds": runtime,
             "success": True,
-            "hits_file": str(hits_file)
+            "hits_file": str(hits_file),
+            "genome_annotations": dict(genome_annotations)
         }
         
         # Save results summary

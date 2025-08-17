@@ -43,19 +43,21 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
     srp_seed = getattr(cfg, 'srp_seed', 1337)
     shingle_k = getattr(cfg, 'shingle_k', 3)
     
-    jaccard_tau = getattr(cfg, 'jaccard_tau', 0.7)
+    jaccard_tau = getattr(cfg, 'jaccard_tau', 0.75)
     mutual_k = getattr(cfg, 'mutual_k', 3)
-    df_max = getattr(cfg, 'df_max', 50)
+    df_max = getattr(cfg, 'df_max', 30)
     use_weighted_jaccard = getattr(cfg, 'use_weighted_jaccard', True)
     low_df_threshold = getattr(cfg, 'low_df_threshold', max(10, df_max // 5))
-    min_low_df_anchors = getattr(cfg, 'min_low_df_anchors', 2)
-    idf_mean_min = getattr(cfg, 'idf_mean_min', 0.0)
+    min_low_df_anchors = getattr(cfg, 'min_low_df_anchors', 3)
+    idf_mean_min = getattr(cfg, 'idf_mean_min', 1.0)
+    # Optional: ban top-percentile DF shingles entirely (e.g., 0.9)
+    max_df_percentile = getattr(cfg, 'max_df_percentile', None)
     
     size_ratio_min = getattr(cfg, 'size_ratio_min', 0.5)
     size_ratio_max = getattr(cfg, 'size_ratio_max', 2.0)
     keep_singletons = getattr(cfg, 'keep_singletons', False)
     sink_label = getattr(cfg, 'sink_label', 0)
-    k_core_min_degree = getattr(cfg, 'k_core_min_degree', 2)
+    k_core_min_degree = getattr(cfg, 'k_core_min_degree', 3)
     enable_cassette_mode = getattr(cfg, 'enable_cassette_mode', True)
     cassette_max_len = getattr(cfg, 'cassette_max_len', 4)
     
@@ -185,6 +187,23 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
         for shingle_id in shingles:
             filtered_shingle_to_blocks[shingle_id].add(block_id)
     
+    # Optional additional ban of top-percentile DF shingles
+    if max_df_percentile is not None and 0.0 < max_df_percentile < 1.0:
+        # Compute DF values list
+        dfs = np.array([shingle_df.get(sid, 0) for sid in filtered_shingle_to_blocks.keys()])
+        cutoff = np.quantile(dfs, max_df_percentile)
+        banned = {sid for sid, dfv in shingle_df.items() if dfv >= cutoff}
+        if banned:
+            new_map = {}
+            for block_id, shingles in filtered_shingles_map.items():
+                new_map[block_id] = {s for s in shingles if s not in banned}
+            filtered_shingles_map = new_map
+            # Rebuild postings
+            filtered_shingle_to_blocks = defaultdict(set)
+            for block_id, shingles in filtered_shingles_map.items():
+                for shingle_id in shingles:
+                    filtered_shingle_to_blocks[shingle_id].add(block_id)
+
     console_print(f"After DF filtering: {len(filtered_shingle_to_blocks)} unique shingles")
 
     # Build IDF map for weighted Jaccard: idf = log(1 + N / df)

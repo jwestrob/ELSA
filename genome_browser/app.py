@@ -1837,6 +1837,7 @@ def display_clustering_tuner():
     with col2:
         db_path = st.text_input("Genome browser DB path", value=str(DB_PATH))
         method = st.selectbox("Clustering method", ["mutual_jaccard"], index=0)
+        windows_override = st.text_input("Windows parquet override (optional)", value="", help="Full path to *windows*.parquet if manifest/work_dir lookup fails")
 
     st.subheader("Parameters")
     pcol1, pcol2, pcol3 = st.columns(3)
@@ -1901,10 +1902,11 @@ def display_clustering_tuner():
             with st.status("Re-clustering blocks...", expanded=True) as status:
                 st.write("Loading blocks and window embeddings...")
                 blocks = _load_blocks_from_csv(blocks_path)
-                window_lookup = _create_window_lookup_from_config(cfg_path)
-                if window_lookup is None:
-                    st.error("Failed to create window embedding lookup. Check config/work_dir.")
-                    return
+            override_path = Path(windows_override) if windows_override.strip() else None
+            window_lookup = _create_window_lookup_from_config(cfg_path, override_path)
+            if window_lookup is None:
+                st.error("Failed to create window embedding lookup. Check config/work_dir.")
+                return
                 
                 st.write(f"Clustering {len(blocks)} blocks with updated parameters...")
                 from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
@@ -1959,7 +1961,7 @@ def _load_blocks_from_csv(blocks_csv_path: Path):
     return blocks
 
 
-def _create_window_lookup_from_config(config_path: Path):
+def _create_window_lookup_from_config(config_path: Path, windows_override: Optional[Path] = None):
     """Create a window embedding lookup from ELSA config and manifest.
     Returns a callable window_id -> np.ndarray or None on failure.
     """
@@ -1971,8 +1973,10 @@ def _create_window_lookup_from_config(config_path: Path):
 
         cfg = load_config(str(config_path))
         manifest = ELSAManifest(cfg.data.work_dir)
-        # Try manifest artifact first, else glob for a plausible windows parquet
+        # Try explicit override, then manifest artifact, else glob for a plausible windows parquet
         windows_path = None
+        if windows_override and windows_override.exists():
+            windows_path = windows_override
         if manifest.has_artifact('windows'):
             try:
                 windows_path = Path(manifest.data['artifacts']['windows']['path'])
@@ -1980,12 +1984,13 @@ def _create_window_lookup_from_config(config_path: Path):
                 windows_path = None
         if not windows_path or not windows_path.exists():
             # Fallback: search work_dir for *windows*.parquet
-            candidates = list(Path(cfg.data.work_dir).rglob("*windows*.parquet"))
+            work_dir = Path(cfg.data.work_dir)
+            candidates = list(work_dir.rglob("*windows*.parquet"))
             if candidates:
                 windows_path = candidates[0]
                 logger.info(f"Using discovered windows parquet: {windows_path}")
             else:
-                logger.error("No windows parquet found in manifest or work_dir; cannot build lookup")
+                logger.error(f"No windows parquet found in manifest or work_dir ({work_dir}); cannot build lookup")
                 return None
         windows_df = pd.read_parquet(windows_path)
         emb_cols = [c for c in windows_df.columns if c.startswith('emb_')]

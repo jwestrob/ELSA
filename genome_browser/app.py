@@ -1983,8 +1983,7 @@ def _create_window_lookup_from_config(config_path: Path):
             candidates = list(Path(cfg.data.work_dir).rglob("*windows*.parquet"))
             if candidates:
                 windows_path = candidates[0]
-                logger.info(f"Using discovered windows parquet: {windows_path}
-")
+                logger.info(f"Using discovered windows parquet: {windows_path}")
             else:
                 logger.error("No windows parquet found in manifest or work_dir; cannot build lookup")
                 return None

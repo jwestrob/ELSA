@@ -1826,9 +1826,9 @@ def display_clustering_tuner():
     st.header("🛠️ Clustering Tuner")
     st.markdown("Tune clustering parameters and re-run clustering without re-doing all-vs-all.")
 
-    # Locate analysis outputs
-    default_blocks = Path("syntenic_analysis/syntenic_blocks.csv")
-    default_config = Path("elsa.config.yaml")
+    # Locate analysis outputs (app runs from genome_browser/ by default)
+    default_blocks = Path("../syntenic_analysis/syntenic_blocks.csv")
+    default_config = Path("../elsa.config.yaml")
 
     col1, col2 = st.columns(2)
     with col1:

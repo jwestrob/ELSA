@@ -361,7 +361,8 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                     new_edges.add((u, v))
         return new_edges
 
-    pruned_edges = _k_core(capped_edges, k_core_min_degree)
+    # Remove k-core pruning (too strict for cassette exploration)
+    pruned_edges = capped_edges
 
     # Optional: require edges to be supported by triangles (shared neighbors)
     def _triangle_filter(edge_set: Set[Tuple[int, int]], min_tri: int) -> Set[Tuple[int, int]]:
@@ -378,7 +379,8 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                 keep.add((u, v))
         return keep
 
-    coherent_edges = _triangle_filter(pruned_edges, triangle_support_min)
+    # Remove triangle support requirement (overly strict)
+    coherent_edges = pruned_edges
 
     # Step 7: Community detection (fallback to connected components if unavailable)
     nodes = list(filtered_shingles_map.keys())

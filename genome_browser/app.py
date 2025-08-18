@@ -1907,6 +1907,12 @@ def display_clustering_tuner():
                 st.write(f"✓ Loaded {len(blocks)} blocks from CSV")
                 logger.info("[TUNER] Loaded %d blocks", len(blocks))
 
+                # Stitch adjacent blocks to recover split operons/cassettes
+                pre_n = len(blocks)
+                blocks = _stitch_blocks(blocks, max_gap=1)
+                st.write(f"✓ Stitching: {pre_n} → {len(blocks)} blocks after merging adjacents")
+                logger.info("[TUNER] Stitching reduced blocks: %d -> %d", pre_n, len(blocks))
+
                 override_path = Path(windows_override) if windows_override.strip() else None
                 window_lookup, lookup_meta = _create_window_lookup_from_config(cfg_path, override_path)
                 if window_lookup is None:
@@ -1982,10 +1988,88 @@ def _load_blocks_from_csv(blocks_csv_path: Path):
             self.chain_score = float(row.get('score', 0.0) or 0.0)
             # Optional strand if available
             self.strand = 1
+            # For stitching
+            self.query_locus = row.get('query_locus', '')
+            self.target_locus = row.get('target_locus', '')
+            self.q_start = int(row.get('query_window_start')) if not pd.isna(row.get('query_window_start')) else None
+            self.q_end = int(row.get('query_window_end')) if not pd.isna(row.get('query_window_end')) else None
+            self.t_start = int(row.get('target_window_start')) if not pd.isna(row.get('target_window_start')) else None
+            self.t_end = int(row.get('target_window_end')) if not pd.isna(row.get('target_window_end')) else None
 
     for idx, row in df.iterrows():
         blocks.append(_Block(idx, row))
     return blocks
+
+
+def _stitch_blocks(blocks: List, max_gap: int = 1) -> List:
+    """Stitch adjacent blocks from the same query/target locus pair if window ranges are contiguous/overlapping.
+
+    Args:
+        blocks: list of _Block objects loaded from CSV
+        max_gap: maximum allowed gap (in window indices) between blocks to stitch
+    Returns:
+        New list of stitched _Block objects
+    """
+    # Group by (query_locus, target_locus)
+    from collections import defaultdict
+    groups = defaultdict(list)
+    for b in blocks:
+        key = (b.query_locus, b.target_locus)
+        groups[key].append(b)
+
+    stitched = []
+    for key, blist in groups.items():
+        # Sort by query start (fallback to window index from first query window)
+        def start_key(b):
+            return b.q_start if b.q_start is not None else (int(b.query_windows[0].split('_')[-1]) if b.query_windows else 0)
+        blist.sort(key=start_key)
+
+        current = None
+        for b in blist:
+            if current is None:
+                current = b
+                continue
+            # Determine adjacency on both query and target ranges
+            q_adj = (current.q_end is not None and b.q_start is not None and b.q_start <= (current.q_end + max_gap))
+            t_adj = (current.t_end is not None and b.t_start is not None and b.t_start <= (current.t_end + max_gap))
+            if q_adj and t_adj:
+                # Stitch: merge windows and ranges
+                current.query_windows = list(dict.fromkeys(current.query_windows + b.query_windows))
+                current.target_windows = list(dict.fromkeys(current.target_windows + b.target_windows))
+                n = min(len(current.query_windows), len(current.target_windows))
+                current.matches = [
+                    _Match(current.query_windows[i], current.target_windows[i]) for i in range(n)
+                ]
+                current.alignment_length = n
+                # Update ranges
+                if current.q_start is not None and b.q_start is not None:
+                    current.q_start = min(current.q_start, b.q_start)
+                else:
+                    current.q_start = current.q_start or b.q_start
+                if current.q_end is not None and b.q_end is not None:
+                    current.q_end = max(current.q_end, b.q_end)
+                else:
+                    current.q_end = current.q_end or b.q_end
+                if current.t_start is not None and b.t_start is not None:
+                    current.t_start = min(current.t_start, b.t_start)
+                else:
+                    current.t_start = current.t_start or b.t_start
+                if current.t_end is not None and b.t_end is not None:
+                    current.t_end = max(current.t_end, b.t_end)
+                else:
+                    current.t_end = current.t_end or b.t_end
+                # Combine scores conservatively (take max)
+                current.chain_score = max(current.chain_score, b.chain_score)
+                current.identity = max(current.identity, b.identity)
+            else:
+                stitched.append(current)
+                current = b
+        if current is not None:
+            stitched.append(current)
+
+    # Preserve blocks in groups with missing locus info
+    anon = [b for b in blocks if (b.query_locus, b.target_locus) not in groups]
+    return stitched + anon
 
 
 def _create_window_lookup_from_config(config_path: Path, windows_override: Optional[Path] = None):

@@ -277,41 +277,20 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                     j_sim = jaccard(shingles_b, shingles_c)
                 similarities.append((cand_id, j_sim))
         
-        # Keep top-k by Jaccard similarity (ties broken by lower block id)
+        # Remove mutual-top-k filtering: evaluate all candidates directly
         similarities.sort(key=lambda x: (-x[1], x[0]))
-        top_k = similarities[:mutual_k]
-        
-        # Check mutual-k condition and similarity threshold
-        for cand_id, j_sim in top_k:
+        for cand_id, j_sim in similarities:
             if j_sim >= jaccard_tau:
-                # Check if the edge is mutual
-                if (cand_id in block_candidates and 
-                    block_id in block_candidates[cand_id]):
-                    
-                    # Verify reciprocal top-k
-                    cand_similarities = []
-                    shingles_c = filtered_shingles_map[cand_id]
-                    for other_id in block_candidates[cand_id]:
-                        if other_id in filtered_shingles_map:
-                            shingles_other = filtered_shingles_map[other_id]
-                            other_j_sim = jaccard(shingles_c, shingles_other)
-                            cand_similarities.append((other_id, other_j_sim))
-                    
-                    cand_similarities.sort(key=lambda x: (-x[1], x[0]))
-                    cand_top_k = cand_similarities[:mutual_k]
-
-                    # Check if block_id is in candidate's top-k
-                    if any(other_id == block_id and other_j_sim >= jaccard_tau 
-                          for other_id, other_j_sim in cand_top_k):
-                        # Enforce informative-overlap checks before adding edge
-                        inter = shingles_b & shingles_c
-                        low_df_count = sum(1 for s in inter if shingle_df.get(s, 0) <= low_df_threshold)
-                        mean_idf = (sum(shingle_idf.get(s, 0.0) for s in inter) / max(1, len(inter))) if inter else 0.0
-                        if low_df_count >= min_low_df_anchors and mean_idf >= idf_mean_min:
-                            edge = tuple(sorted([block_id, cand_id]))
-                            edges.add(edge)
-                            # Store weight as the similarity value
-                            edge_weights[edge] = max(edge_weights.get(edge, 0.0), j_sim)
+                # Enforce informative-overlap checks before adding edge
+                shingles_c = filtered_shingles_map[cand_id]
+                inter = shingles_b & shingles_c
+                low_df_count = sum(1 for s in inter if shingle_df.get(s, 0) <= low_df_threshold)
+                mean_idf = (sum(shingle_idf.get(s, 0.0) for s in inter) / max(1, len(inter))) if inter else 0.0
+                if low_df_count >= min_low_df_anchors and mean_idf >= idf_mean_min:
+                    edge = tuple(sorted([block_id, cand_id]))
+                    edges.add(edge)
+                    # Store weight as the similarity value
+                    edge_weights[edge] = max(edge_weights.get(edge, 0.0), j_sim)
     
     console_print(f"Constructed graph with {len(edges)} mutual-k edges")
 

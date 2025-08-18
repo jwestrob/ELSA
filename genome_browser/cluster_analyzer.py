@@ -102,21 +102,27 @@ class ClusterAnalyzer:
             unique_pfam = self._get_cluster_pfam_count(conn, cluster_row[0])
             
             # Estimate identity based on consensus score (rough approximation)
-            estimated_identity = min(cluster_row[3] / 10.0, 1.0)  # Rough conversion
+            try:
+                consensus_score = cluster_row[3] if cluster_row[3] is not None else 0.0
+                estimated_identity = min(float(consensus_score) / 10.0, 1.0)
+            except Exception:
+                estimated_identity = 0.0
+            # Handle None length
+            consensus_length = cluster_row[2] if cluster_row[2] is not None else 0
             
             stats = ClusterStats(
                 cluster_id=cluster_row[0],
                 size=cluster_row[1],
-                consensus_length=cluster_row[2],
-                consensus_score=cluster_row[3],
-                diversity=cluster_row[4],
+                consensus_length=consensus_length,
+                consensus_score=consensus_score,
+                diversity=cluster_row[4] if cluster_row[4] is not None else 0.0,
                 representative_query=cluster_row[5],
                 representative_target=cluster_row[6],
                 cluster_type=cluster_row[7],
                 
                 avg_identity=estimated_identity,
                 identity_range=(max(0.0, estimated_identity - 0.1), min(1.0, estimated_identity + 0.1)),
-                length_range=(max(1, cluster_row[2] - 5), cluster_row[2] + 5),
+                length_range=(max(1, int(consensus_length) - 5), int(consensus_length) + 5),
                 organism_count=len(set(organisms)),
                 organisms=list(set(organisms)),
                 

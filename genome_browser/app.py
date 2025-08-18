@@ -62,6 +62,49 @@ def get_cluster_analyzer():
     return ClusterAnalyzer(DB_PATH)
 
 @st.cache_data
+def load_gene_embeddings_df(parquet_path: Optional[str] = None) -> Tuple[Optional[pd.DataFrame], Optional[str]]:
+    """Load projected gene embeddings (genes.parquet) if available.
+
+    Tries multiple candidate roots to resolve relative path issues.
+
+    Returns (DataFrame or None, resolved_path or None)
+    DataFrame columns include: gene_id, contig_id (if present), start, end, emb_*
+    """
+    candidates = []
+    if parquet_path:
+        candidates.append(Path(parquet_path))
+    # Common relative locations
+    here = Path(__file__).resolve()
+    repo_root = here.parents[1]  # ELSA/
+    candidates.extend([
+        Path('elsa_index/ingest/genes.parquet'),
+        repo_root / 'elsa_index/ingest/genes.parquet',
+        Path.cwd() / 'elsa_index/ingest/genes.parquet',
+        Path.cwd().parent / 'elsa_index/ingest/genes.parquet',
+    ])
+    tried = []
+    for path in candidates:
+        try:
+            p = Path(path)
+            tried.append(str(p))
+            if p.exists():
+                df = pd.read_parquet(p)
+                # Keep standard metadata if present
+                cols = df.columns.tolist()
+                emb_cols = [c for c in cols if c.startswith('emb_')]
+                keep = ['gene_id']
+                for c in ['contig_id', 'start', 'end']:
+                    if c in cols:
+                        keep.append(c)
+                keep += emb_cols
+                return df[keep], str(p)
+        except Exception as e:
+            logger.error(f"Error reading embeddings parquet {path}: {e}")
+            continue
+    logger.warning(f"Embeddings parquet not found. Tried: {tried}")
+    return None, None
+
+@st.cache_data
 def load_genomes() -> pd.DataFrame:
     """Load genome information."""
     conn = get_database_connection()
@@ -913,17 +956,54 @@ def display_genome_viewer():
         else:
             st.warning("No genes found for target locus")
     
-    # Add comparative view option
+    # Comparative genome view (render above diagrams)
     st.divider()
     if not query_genes.empty and not target_genes.empty:
-        if st.button("📊 Show Comparative Genome View", key="comparative_view"):
-            st.subheader("Comparative Genome Analysis")
-            with st.spinner("Generating comparative view..."):
+        st.subheader("Comparative Genome Analysis")
+        # Slider to calibrate cosine threshold
+        col_thr, col_sp = st.columns([1, 3])
+        with col_thr:
+            cos_thr = st.slider(
+                "Embedding cosine threshold",
+                min_value=0.70, max_value=0.99, value=0.90, step=0.01,
+                help="Draw cosine homology edges for pairs with similarity ≥ threshold"
+            )
+        with st.spinner("Rendering comparative view..."):
+            try:
+                comp_data = _build_comparative_json(block['block_id'], query_genes, target_genes, cos_threshold=cos_thr)
+                comp_data['query_name'] = block.get('query_locus', 'Query locus')
+                comp_data['target_name'] = block.get('target_locus', 'Target locus')
+                # Debug preview: show small summary to confirm data built
                 try:
-                    comp_data = _build_comparative_json(block['block_id'], query_genes, target_genes)
-                    _render_comparative_d3(comp_data, width=1200, height=500)
-                except Exception as e:
-                    st.error(f"Comparative view failed: {e}")
+                    _preview = {
+                        'q': len(comp_data.get('query_locus', [])),
+                        't': len(comp_data.get('target_locus', [])),
+                        'e': len(comp_data.get('edges', []))
+                    }
+                    st.caption(f"Comparative data: q={_preview['q']} t={_preview['t']} edges={_preview['e']}")
+                    dbg = comp_data.get('debug', {}) or {}
+                    with st.expander("Embedding debug", expanded=False):
+                        st.write({
+                            'embeddings_loaded': dbg.get('embeddings_loaded'),
+                            'embedding_dim': dbg.get('embedding_dim'),
+                            'present_q': dbg.get('present_q'),
+                            'present_t': dbg.get('present_t'),
+                            'cos_threshold': dbg.get('cos_threshold'),
+                            'cos_pairs_at_threshold': dbg.get('cos_pairs'),
+                            'embeddings_path': dbg.get('emb_path'),
+                        })
+                        top_list = dbg.get('top_cos_pairs') or []
+                        if top_list:
+                            import pandas as _pd
+                            st.dataframe(_pd.DataFrame(top_list, columns=['query_gene','target_gene','cosine']).head(10))
+                        else:
+                            st.caption("No top cosine pairs available (embeddings missing or empty subset)")
+                except Exception:
+                    pass
+                _render_comparative_d3_v2(comp_data, height=540)
+                st.caption("Legend: green=forward strand, red=reverse strand; thicker/stronger lines = higher homology; hover highlights linked genes and shows PFAM/length/strand.")
+            except Exception as e:
+                st.error(f"Comparative view failed: {e}")
 
 def load_cluster_stats():
     """Load precomputed cluster statistics."""
@@ -2178,9 +2258,13 @@ def _apply_cluster_assignments_to_db(assignments: Dict[int, int], db_path: Path)
         conn.close()
 
 
-def _build_comparative_json(block_id: int, query_genes_df: pd.DataFrame, target_genes_df: pd.DataFrame) -> Dict:
-    """Build clinker-like JSON for comparative view using DB gene_block_mappings order.
-    Links are derived by relative_position order within the block (no edit distance).
+def _build_comparative_json(block_id: int, query_genes_df: pd.DataFrame, target_genes_df: pd.DataFrame, cos_threshold: float = 0.95) -> Dict:
+    """Build clinker-like JSON for comparative view.
+
+    Preference order for edges:
+    - Compute PFAM and cosine edges independently.
+    - Tag each edge with type: 'cos', 'pfam', or 'both' (if present in both).
+    - If neither set available, fall back to window/rank pairing (type 'fallback').
     """
     conn = get_database_connection()
     # Map DataFrame order to indices
@@ -2188,6 +2272,13 @@ def _build_comparative_json(block_id: int, query_genes_df: pd.DataFrame, target_
     t_ids = target_genes_df['gene_id'].tolist()
     q_index = {gid: i for i, gid in enumerate(q_ids)}
     t_index = {gid: i for i, gid in enumerate(t_ids)}
+    # Optional: map absolute gene_index -> local position
+    q_abs_to_local = {}
+    t_abs_to_local = {}
+    if 'gene_index' in query_genes_df.columns:
+        q_abs_to_local = {int(gi): pos for pos, gi in enumerate(query_genes_df['gene_index'].tolist())}
+    if 'gene_index' in target_genes_df.columns:
+        t_abs_to_local = {int(gi): pos for pos, gi in enumerate(target_genes_df['gene_index'].tolist())}
 
     # Fetch ordered genes by relative_position in this block
     q_rows = pd.read_sql_query(
@@ -2225,110 +2316,744 @@ def _build_comparative_json(block_id: int, query_genes_df: pd.DataFrame, target_
     q_genes = _genes_payload(query_genes_df)
     t_genes = _genes_payload(target_genes_df)
 
-    # Pair by rank (relative_position order), restricted to genes present in our view
-    n = min(len(q_rows), len(t_rows), len(q_genes), len(t_genes))
     edges = []
-    for i in range(n):
-        qg = q_rows.iloc[i]['gene_id']
-        tg = t_rows.iloc[i]['gene_id']
-        if qg in q_index and tg in t_index:
-            edges.append({
-                'source': q_index[qg],
-                'target': t_index[tg],
-                'score': 1.0,  # placeholder weight; can map from block identity
-            })
+    cos_edges: Dict[Tuple[int,int], float] = {}
+    pf_edges: Dict[Tuple[int,int], int] = {}
+    debug_info: Dict[str, any] = {
+        'cos_threshold': float(cos_threshold),
+        'embeddings_loaded': False,
+        'embedding_dim': None,
+        'present_q': 0,
+        'present_t': 0,
+        'cos_pairs': 0,
+        'top_cos_pairs': []
+    }
+
+    # Attempt 0: Embedding-based cosine similarity matching
+    # Reads projected embeddings from elsa_index/ingest/genes.parquet
+    try:
+        import numpy as _np
+        emb_df_tuple = load_gene_embeddings_df()
+        # Back-compat: function now returns (df, path)
+        if isinstance(emb_df_tuple, tuple):
+            emb_df, emb_path = emb_df_tuple
+        else:
+            emb_df, emb_path = emb_df_tuple, None
+        if emb_df is not None:
+            # Ensure we have metadata columns for fallback mapping
+            meta_cols = []
+            for c in ['contig_id', 'start', 'end']:
+                if c in emb_df.columns:
+                    meta_cols.append(c)
+            emb_cols = [c for c in emb_df.columns if c.startswith('emb_')]
+            if emb_cols:
+                # Subset for displayed genes
+                emb_small = emb_df[['gene_id'] + meta_cols + emb_cols]
+                emb_small = emb_small.copy()
+                # Direct ID subset
+                emb_direct = emb_small[emb_small['gene_id'].isin(q_ids + t_ids)]
+                # Fallback mapping by contig_id and nearest start if direct is empty or partial
+                missing_q = [gid for gid in q_ids if gid not in set(emb_direct['gene_id'])]
+                missing_t = [gid for gid in t_ids if gid not in set(emb_direct['gene_id'])]
+                mapped_ids = {}
+                if (missing_q or missing_t) and all(x in emb_small.columns for x in ['contig_id','start']):
+                    # Build helper map: for faster per-contig filtering
+                    # Note: emb_small may be large; but per-locus we filter minimal
+                    emb_by_contig = None  # defer, simple filter per gene is fine here
+                    # Map query
+                    for _, row in query_genes_df.iterrows():
+                        gid = row.get('gene_id')
+                        if gid in mapped_ids or gid in set(emb_direct['gene_id']):
+                            continue
+                        cont = row.get('contig_id')
+                        sp = row.get('start_pos')
+                        if pd.isna(cont) or pd.isna(sp):
+                            continue
+                        cand = emb_small[(emb_small['contig_id'] == cont)]
+                        if cand.empty:
+                            continue
+                        # Choose nearest start
+                        idx = (cand['start'] - int(sp)).abs().astype('int64').idxmin()
+                        mapped_ids[gid] = cand.loc[idx, 'gene_id']
+                    # Map target
+                    for _, row in target_genes_df.iterrows():
+                        gid = row.get('gene_id')
+                        if gid in mapped_ids or gid in set(emb_direct['gene_id']):
+                            continue
+                        cont = row.get('contig_id')
+                        sp = row.get('start_pos')
+                        if pd.isna(cont) or pd.isna(sp):
+                            continue
+                        cand = emb_small[(emb_small['contig_id'] == cont)]
+                        if cand.empty:
+                            continue
+                        idx = (cand['start'] - int(sp)).abs().astype('int64').idxmin()
+                        mapped_ids[gid] = cand.loc[idx, 'gene_id']
+                # Build present lists using direct or mapped ids
+                emb_indexed = emb_small.set_index('gene_id')
+                def resolve_ids(ids):
+                    out = []
+                    for gid in ids:
+                        egid = gid if gid in emb_indexed.index else mapped_ids.get(gid)
+                        if egid is not None and egid in emb_indexed.index:
+                            out.append(egid)
+                    return out
+                present_q_ids = resolve_ids(q_ids)
+                present_t_ids = resolve_ids(t_ids)
+                debug_info.update({
+                    'embeddings_loaded': True,
+                    'embedding_dim': len(emb_cols),
+                    'present_q': len(present_q_ids),
+                    'present_t': len(present_t_ids),
+                    'mapped_ids': len(mapped_ids),
+                    'emb_path': emb_path
+                })
+                if present_q_ids and present_t_ids:
+                    A = emb_indexed.loc[present_q_ids, emb_cols].to_numpy(dtype='float32', copy=False)
+                    B = emb_indexed.loc[present_t_ids, emb_cols].to_numpy(dtype='float32', copy=False)
+                    # L2-normalize rows
+                    def _l2n(X):
+                        denom = _np.linalg.norm(X, axis=1, keepdims=True) + 1e-8
+                        return X / denom
+                    A = _l2n(A)
+                    B = _l2n(B)
+                    # Cosine similarity matrix
+                    S = A @ B.T
+                    tau = float(cos_threshold)
+                    # Map back to local indices
+                    present_q_map = {gid: i for i, gid in enumerate(present_q_ids)}
+                    present_t_map = {gid: i for i, gid in enumerate(present_t_ids)}
+                    # Build reverse map from embedding gid to local locus index
+                    emb_to_local_q = {}
+                    for gid in q_ids:
+                        egid = gid if gid in present_q_map else mapped_ids.get(gid)
+                        if egid in present_q_map:
+                            emb_to_local_q[egid] = q_index[gid]
+                    emb_to_local_t = {}
+                    for gid in t_ids:
+                        egid = gid if gid in present_t_map else mapped_ids.get(gid)
+                        if egid in present_t_map:
+                            emb_to_local_t[egid] = t_index[gid]
+                    pairs_count = 0
+                    for egq, i in present_q_map.items():
+                        sims = S[i]
+                        for egt, j in present_t_map.items():
+                            sim = float(sims[j])
+                            if sim >= tau:
+                                # Map to local indices
+                                s_loc = emb_to_local_q.get(egq)
+                                t_loc = emb_to_local_t.get(egt)
+                                if s_loc is not None and t_loc is not None:
+                                    cos_edges[(int(s_loc), int(t_loc))] = max(sim, cos_edges.get((int(s_loc), int(t_loc)), 0.0))
+                                    pairs_count += 1
+                    debug_info['cos_pairs'] = pairs_count
+                    # Top cosine pairs regardless of threshold
+                    try:
+                        flat = []
+                        for egq, i in present_q_map.items():
+                            for egt, j in present_t_map.items():
+                                flat.append((egq, egt, float(S[i, j])))
+                        flat.sort(key=lambda x: x[2], reverse=True)
+                        debug_info['top_cos_pairs'] = flat[:10]
+                    except Exception:
+                        pass
+                    
+    except Exception:
+        # If any error occurs, silently fall back to other methods
+        pass
+
+    # Attempt 1: PFAM-based matching within displayed loci (greedy)
+    try:
+        def domset(val: str):
+            if not val:
+                return set()
+            return {d.strip() for d in str(val).split(';') if d.strip()}
+
+        q_pf = [domset(row.get('pfam_domains', '')) for _, row in query_genes_df.iterrows()]
+        t_pf = [domset(row.get('pfam_domains', '')) for _, row in target_genes_df.iterrows()]
+
+        # Build all candidate pairs with overlap > 0
+        candidates = []
+        for qi, qset in enumerate(q_pf):
+            if not qset:
+                continue
+            for ti, tset in enumerate(t_pf):
+                if not tset:
+                    continue
+                inter = qset & tset
+                if inter:
+                    # Score by overlap size; tie-breaker by proximity in index
+                    score = len(inter)
+                    candidates.append((score, -abs(qi - ti), qi, ti))
+        # Greedy selection by score then proximity
+        if candidates:
+            candidates.sort(reverse=True)
+            used_q = set()
+            used_t = set()
+            for score, _, qi, ti in candidates:
+                if qi in used_q or ti in used_t:
+                    continue
+                pf_edges[(int(qi), int(ti))] = int(score)
+                used_q.add(qi)
+                used_t.add(ti)
+    except Exception:
+        pass
+
+    # Attempt 2: derive edges from window-paired indices if both sets are empty
+    try:
+        win_row = pd.read_sql_query(
+            """
+            SELECT query_windows_json, target_windows_json
+            FROM syntenic_blocks WHERE block_id = ?
+            """,
+            conn, params=[int(block_id)]
+        )
+        if (not cos_edges and not pf_edges) and (not win_row.empty) and ('gene_index' in query_genes_df.columns) and ('gene_index' in target_genes_df.columns):
+            import json as _json
+            qw = _json.loads(win_row.iloc[0]['query_windows_json'] or '[]') if 'query_windows_json' in win_row.columns else []
+            tw = _json.loads(win_row.iloc[0]['target_windows_json'] or '[]') if 'target_windows_json' in win_row.columns else []
+            pair_count = min(len(qw), len(tw))
+            seen = set()
+            for i in range(pair_count):
+                # Extract numeric window indices
+                try:
+                    qwi = int(str(qw[i]).split('_')[-1])
+                    twi = int(str(tw[i]).split('_')[-1])
+                except Exception:
+                    continue
+                # Each window covers 5 genes: indices [wi .. wi+4]
+                for k in range(5):
+                    q_abs = qwi + k
+                    t_abs = twi + k
+                    if q_abs in q_abs_to_local and t_abs in t_abs_to_local:
+                        s = q_abs_to_local[q_abs]
+                        t = t_abs_to_local[t_abs]
+                        key = (s, t)
+                        if key not in seen:
+                            pf_edges[key] = max(1, pf_edges.get(key, 0))
+                            seen.add(key)
+    except Exception:
+        pass
+
+    # Fallback: Pair by rank (relative_position order) if no edges found
+    if not cos_edges and not pf_edges:
+        n = min(len(q_rows), len(t_rows), len(q_genes), len(t_genes))
+        for i in range(n):
+            qg = q_rows.iloc[i]['gene_id']
+            tg = t_rows.iloc[i]['gene_id']
+            if qg in q_index and tg in t_index:
+                pf_edges[(q_index[qg], t_index[tg])] = pf_edges.get((q_index[qg], t_index[tg]), 0)
+
+    # Merge edge sets and annotate type/metrics
+    all_keys = set(cos_edges.keys()) | set(pf_edges.keys())
+    for (s, t) in sorted(all_keys):
+        c = cos_edges.get((s, t))
+        p = pf_edges.get((s, t))
+        if c is not None and p is not None:
+            edges.append({'source': s, 'target': t, 'type': 'both', 'cos': float(c), 'pf': int(p)})
+        elif c is not None:
+            edges.append({'source': s, 'target': t, 'type': 'cos', 'cos': float(c)})
+        elif p is not None:
+            # If pf comes from fallback/rank with zero, tag as 'fallback'
+            et = 'pfam' if p > 0 else 'fallback'
+            edges.append({'source': s, 'target': t, 'type': et, 'pf': int(p)})
 
     return {
         'query_locus': q_genes,
         'target_locus': t_genes,
-        'edges': edges
+        'edges': edges,
+        'debug': debug_info
     }
 
 
-def _render_comparative_d3(data: Dict, width: int = 1000, height: int = 500):
-    """Render clinker-like comparative view using D3 in a Streamlit component."""
+def _render_comparative_d3(data: Dict, width: int = 0, height: int = 500):
+    """Render clinker-like comparative view using D3 in a Streamlit component.
+
+    Notes:
+    - Width is responsive to the container (100%). The `width` arg is ignored.
+    - X positions are normalized per locus to fill available width while preserving
+      intra-locus genomic spacing (bp-proportional within each track).
+    """
+    import streamlit.components.v1 as components
+    import json
+    import base64
+    payload = json.dumps(data)
+    payload_b64 = base64.b64encode(payload.encode('utf-8')).decode('ascii')
+    html = """
+    <div id=\"cmp\" style=\"width:100%; height:__HEIGHT__px;\" data-payload=\"__PAYLOAD_B64__\"></div>
+    <script src=\"https://d3js.org/d3.v7.min.js\"></script>
+    <script>
+    (function(){
+      const container = document.getElementById('cmp');
+      let data;
+      try {
+        const payloadB64 = container.dataset.payload || '';
+        data = JSON.parse(atob(payloadB64));
+      } catch (e) {
+        container.innerHTML = '<div style="color:red; font-family:monospace">Failed to parse data: ' + (e && e.message ? e.message : e) + '</div>';
+        return;
+      }
+      const fixedHeight = __HEIGHT__;
+      const margin = {top: 20, right: 260, bottom: 100, left: 20};
+
+
+      function arrowPath(x, y, w, h, strand) {
+        if (strand >= 0) {
+          return 'M' + x + ',' + y + ' h' + (w - h/2) + ' l' + (h/2) + ',' + (h/2) + ' l-' + (h/2) + ',' + (h/2) + ' h-' + (w - h/2) + ' z';
+        } else {
+          return 'M' + (x + w) + ',' + y + ' h-' + (w - h/2) + ' l-' + (h/2) + ',' + (h/2) + ' l' + (h/2) + ',' + (h/2) + ' h' + (w - h/2) + ' z';
+        }
+      }
+
+      function render() {
+        const width = container.clientWidth || 800;
+        const height = fixedHeight;
+        container.innerHTML = '';
+
+        const svg = d3.select(container).append('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .style('background', '#fff');
+
+        const innerW = Math.max(10, width - margin.left - margin.right);
+        const innerH = Math.max(10, height - margin.top - margin.bottom);
+
+        const g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+        // Y anchors (leave space for labels and legend)
+        const qY = 90;
+        const tY = innerH - 70;
+        const geneH = 12;
+        const minGeneW = 6; // minimum pixel width for visibility
+
+        // Scales: normalize bp per locus to full width
+        const qMin = d3.min(data.query_locus, d => d.start) || 0;
+        const qMax = d3.max(data.query_locus, d => d.end) || 1;
+        const tMin = d3.min(data.target_locus, d => d.start) || 0;
+        const tMax = d3.max(data.target_locus, d => d.end) || 1;
+        const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, innerW]);
+        const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, innerW]);
+
+        // Draw query genes (top)
+        const q = g.append('g');
+        try {
+          q.selectAll('path.gene')
+            .data(data.query_locus || [])
+            .enter().append('path')
+            .attr('class','gene')
+            .attr('d', d => {
+              const x0 = qX(d.start);
+              const x1 = qX(d.end);
+              const w = Math.max(minGeneW, Math.abs(x1 - x0));
+              const x = Math.min(x0, x1); // handle any reversed coords
+              return arrowPath(x, qY, w, geneH, d.strand);
+            })
+            .attr('fill', d=> d.strand>=0 ? '#2E8B57' : '#FF6347')
+            .attr('stroke','#000').attr('stroke-width',0.5)
+            .append('title').text(d=> (d.id + '\nPFAM: ' + (d.pfam || 'None')));
+        } catch (e) {
+          q.append('text').attr('x',10).attr('y',qY).attr('fill','red').text('Render error (query): ' + e);
+        }
+
+        // Draw target genes (bottom)
+        const t = g.append('g');
+        try {
+          t.selectAll('path.gene')
+            .data(data.target_locus || [])
+            .enter().append('path')
+            .attr('class','gene')
+            .attr('d', d => {
+              const x0 = tX(d.start);
+              const x1 = tX(d.end);
+              const w = Math.max(minGeneW, Math.abs(x1 - x0));
+              const x = Math.min(x0, x1);
+              return arrowPath(x, tY, w, geneH, d.strand);
+            })
+            .attr('fill', d=> d.strand>=0 ? '#2E8B57' : '#FF6347')
+            .attr('stroke','#000').attr('stroke-width',0.5)
+            .append('title').text(d=> (d.id + '\nPFAM: ' + (d.pfam || 'None')));
+        } catch (e) {
+          t.append('text').attr('x',10).attr('y',tY).attr('fill','red').text('Render error (target): ' + e);
+        }
+
+        // Edges (curves between centers)
+        const edges = g.append('g').attr('opacity',0.7);
+        try {
+          edges.selectAll('path.edge')
+            .data(data.edges || [])
+            .enter().append('path')
+            .attr('class','edge')
+            .attr('fill','none')
+            .attr('stroke', d=> d.score>0.8? '#2c7bb6' : d.score>0.5? '#abd9e9':'#fdae61')
+            .attr('stroke-width', d=> 1 + 2*(d.score||0.5))
+            .attr('d', d=> {
+              const qs = data.query_locus[d.source] || {start: qMin, end: qMin};
+              const ts = data.target_locus[d.target] || {start: tMin, end: tMin};
+              const x1 = (qX(qs.start) + qX(qs.end)) / 2, y1 = qY + geneH/2;
+              const x2 = (tX(ts.start) + tX(ts.end)) / 2, y2 = tY + geneH/2;
+              const mx = (x1 + x2) / 2;
+              return 'M' + x1 + ',' + y1 + ' C' + mx + ',' + (y1-60) + ' ' + mx + ',' + (y2+60) + ' ' + x2 + ',' + y2;
+            })
+          .append('title').text(d=> ('score=' + ((d.score != null) ? d.score : '')));
+        } catch (e) {
+          g.append('text').attr('x',10).attr('y',(qY+tY)/2).attr('fill','red').text('Render error (edges): ' + e);
+        }
+      }
+
+      // Initial render and resize handling
+      render();
+      if ('ResizeObserver' in window) {
+        const ro = new ResizeObserver(() => render());
+        ro.observe(container);
+      } else {
+        window.addEventListener('resize', render);
+      }
+    })();
+    </script>
+    """
+    html = html.replace('__PAYLOAD_B64__', payload_b64).replace('__HEIGHT__', str(height))
+    components.html(html, height=height+20)
+
+
+def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
+    """Alternate renderer using inline JSON script tag (safer for parsing)."""
     import streamlit.components.v1 as components
     import json
     payload = json.dumps(data)
-    html = f"""
-    <div id="cmp" style="width:100%; height:{height}px;"></div>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    html = """
+    <div id=\"cmp\" style=\"width:100%; height:__HEIGHT__px;\"></div>
+    <script id=\"cmp-data\" type=\"application/json\">__PAYLOAD_JSON__</script>
+    <script src=\"https://d3js.org/d3.v7.min.js\"></script>
     <script>
-    const data = {payload};
-    const width = {width};
-    const height = {height};
-    const margin = {{top: 20, right: 20, bottom: 20, left: 20}};
-    const innerW = width - margin.left - margin.right;
-    const innerH = height - margin.top - margin.bottom;
-    const trackH = innerH/2 - 40;
+    (function(){
+      try {
+        const container = document.getElementById('cmp');
+        const dataText = document.getElementById('cmp-data').textContent || '{}';
+        const data = JSON.parse(dataText);
+        const fixedHeight = __HEIGHT__;
+        // Add extra bottom margin to make room for tooltips below bottom track
+        const margin = {top: 20, right: 20, bottom: 100, left: 20};
 
-    const svg = d3.select('#cmp').append('svg')
-      .attr('width', width)
-      .attr('height', height)
-      .style('background', '#fff');
+        function arrowPath(x, y, w, h, strand) {
+          if (strand >= 0) {
+            return 'M' + x + ',' + y + ' h' + (w - h/2) + ' l' + (h/2) + ',' + (h/2) + ' l-' + (h/2) + ',' + (h/2) + ' h-' + (w - h/2) + ' z';
+          } else {
+            return 'M' + (x + w) + ',' + y + ' h-' + (w - h/2) + ' l-' + (h/2) + ',' + (h/2) + ' l' + (h/2) + ',' + (h/2) + ' h' + (w - h/2) + ' z';
+          }
+        }
 
-    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+        function render() {
+          const width = container.clientWidth || 800;
+          const height = fixedHeight;
+          container.innerHTML = '';
 
-    // Scales: map gene index to x
-    const qN = data.query_locus.length;
-    const tN = data.target_locus.length;
-    const qX = d3.scaleLinear().domain([0, Math.max(1,qN-1)]).range([0, innerW]);
-    const tX = d3.scaleLinear().domain([0, Math.max(1,tN-1)]).range([0, innerW]);
+          const svg = d3.select(container).append('svg')
+            .attr('width', width)
+            .attr('height', height)
+            .style('background', '#fff');
 
-    // Draw query genes (top)
-    const qY = 40;
-    const geneW = Math.max(6, innerW / Math.max(qN, tN) * 0.6);
-    const geneH = 12;
+          const innerW = Math.max(10, width - margin.left - margin.right);
+          const innerH = Math.max(10, height - margin.top - margin.bottom);
 
-    function arrowPath(x, y, w, h, strand) {{
-      if (strand >= 0) {{
-        return `M${x},${y} h${w-h/2} l${h/2},${h/2} l-${h/2},${h/2} h-${w-h/2} z`;
-      }} else {{
-        return `M${x+w},${y} h-${w-h/2} l-${h/2},${h/2} l${h/2},${h/2} h${w-h/2} z`;
-      }}
-    }}
+          const g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
-    const q = g.append('g');
-    q.selectAll('path.gene')
-      .data(data.query_locus)
-      .enter().append('path')
-      .attr('class','gene')
-      .attr('d', (d,i)=>arrowPath(qX(i), qY, geneW, geneH, d.strand))
-      .attr('fill', d=> d.strand>=0 ? '#2E8B57' : '#FF6347')
-      .attr('stroke','#000').attr('stroke-width',0.5)
-      .append('title').text(d=>`${d.id}\nPFAM: ${d.pfam||'None'}`);
+          const qY = 40;
+          const tY = innerH - 40;
+          const geneH = 12;
+          const minGeneW = 6;
 
-    // Draw target genes (bottom)
-    const tY = innerH - 40;
-    const t = g.append('g');
-    t.selectAll('path.gene')
-      .data(data.target_locus)
-      .enter().append('path')
-      .attr('class','gene')
-      .attr('d', (d,i)=>arrowPath(tX(i), tY, geneW, geneH, d.strand))
-      .attr('fill', d=> d.strand>=0 ? '#2E8B57' : '#FF6347')
-      .attr('stroke','#000').attr('stroke-width',0.5)
-      .append('title').text(d=>`${d.id}\nPFAM: ${d.pfam||'None'}`);
+          const qMin = d3.min(data.query_locus || [], d => d.start) || 0;
+          const qMax = d3.max(data.query_locus || [], d => d.end) || 1;
+          const tMin = d3.min(data.target_locus || [], d => d.start) || 0;
+          const tMax = d3.max(data.target_locus || [], d => d.end) || 1;
+          const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, innerW]);
+          const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, innerW]);
 
-    // Edges
-    const edges = g.append('g').attr('opacity',0.7);
-    edges.selectAll('path.edge')
-      .data(data.edges)
-      .enter().append('path')
-      .attr('class','edge')
-      .attr('fill','none')
-      .attr('stroke', d=> d.score>0.8? '#2c7bb6' : d.score>0.5? '#abd9e9':'#fdae61')
-      .attr('stroke-width', d=> 1 + 2*(d.score||0.5))
-      .attr('d', d=> {{
-        const x1 = qX(d.source)+geneW/2, y1=qY+geneH/2;
-        const x2 = tX(d.target)+geneW/2, y2=tY+geneH/2;
-        const mx = (x1+x2)/2;
-        return `M${x1},${y1} C${mx},${y1-60} ${mx},${y2+60} ${x2},${y2}`;
-      }})
-      .append('title').text(d=>`score=${d.score}`);
+          // Tooltip
+          container.style.position = 'relative';
+          const tooltip = d3.select(container).append('div')
+            .attr('class','cmp-tooltip')
+            .style('position','absolute')
+            .style('pointer-events','none')
+            .style('background','#fff')
+            .style('border','1px solid #ccc')
+            .style('padding','6px 8px')
+            .style('font','12px monospace')
+            .style('border-radius','4px')
+            .style('box-shadow','0 2px 6px rgba(0,0,0,0.15)')
+            .style('display','none')
+            .style('z-index','10');
 
+          const qData = (data.query_locus || []).map((d,i)=>Object.assign({_idx:i}, d));
+          const tData = (data.target_locus || []).map((d,i)=>Object.assign({_idx:i}, d));
+
+          const q = g.append('g');
+          const qGenes = q.selectAll('path.gene')
+            .data(qData)
+            .enter().append('path')
+            .attr('class','gene')
+            .attr('d', d => {
+              const x0 = qX(d.start);
+              const x1 = qX(d.end);
+              const w = Math.max(minGeneW, Math.abs(x1 - x0));
+              const x = Math.min(x0, x1);
+              return arrowPath(x, qY, w, geneH, d.strand);
+            })
+            .attr('fill', d=> d.strand>=0 ? '#2E8B57' : '#FF6347')
+            .attr('stroke','#000').attr('stroke-width',0.5);
+
+          qGenes
+            .on('mouseover', function(event, d){
+              const strand = (d.strand>=0? '+':'-');
+              const len = Math.max(0, Math.round(Math.abs(d.end - d.start)));
+              // Cosine similarity (max across connected edges)
+              let simLine = '';
+              try {
+                const matches = (data.edges || []).filter(ed => ed.source === d._idx);
+                if (matches.length) {
+                  const maxSim = d3.max(matches, ed => (ed.cos != null ? +ed.cos : -Infinity));
+                  if (maxSim != null && isFinite(maxSim)) simLine = '<br>Cosine: ' + (+maxSim).toFixed(3);
+                }
+              } catch (e) {}
+              // PFAM overlap (max across connected edges)
+              let pfLine = '';
+              try {
+                const matches = (data.edges || []).filter(ed => ed.source === d._idx && ed.pf != null);
+                if (matches.length) {
+                  const maxPf = d3.max(matches, ed => (+ed.pf || 0));
+                  if (maxPf != null && isFinite(maxPf) && maxPf > 0) pfLine = '<br>PFAM overlap: ' + maxPf;
+                }
+              } catch (e) {}
+              tooltip.style('display','block')
+                     .html('<b>' + d.id + '</b><br>' +
+                           'Length: ' + len.toLocaleString() + ' bp<br>' +
+                           'Strand: ' + strand + '<br>' +
+                           'PFAM: ' + (d.pfam || 'None') + simLine + pfLine);
+              d3.select(this).attr('stroke-width',2);
+              highlightFor('q', d._idx);
+            })
+            .on('mousemove', function(event){
+              const pt = d3.pointer(event, container);
+              // Keep tooltip within container bounds and away from labels
+              const cw = container.clientWidth || 0;
+              const ch = container.clientHeight || 0;
+              const tw = tooltip.node().offsetWidth || 0;
+              const th = tooltip.node().offsetHeight || 0;
+              let left = pt[0] + 12;
+              let top = pt[1] + 12;
+              // Avoid overlapping top label band (~30px) and bottom label band (~30px)
+              if (top < 30) top = 34;
+              if (top > ch - 34 - th) top = ch - 34 - th;
+              if (left + tw > cw - 4) left = Math.max(4, pt[0] - 12 - tw);
+              if (top + th > ch - 4) top = Math.max(4, pt[1] - 12 - th);
+              tooltip.style('left', left + 'px').style('top', top + 'px');
+            })
+            .on('mouseout', function(){
+              tooltip.style('display','none');
+              d3.select(this).attr('stroke-width',0.5);
+              clearHighlight();
+            });
+
+          const t = g.append('g');
+          const tGenes = t.selectAll('path.gene')
+            .data(tData)
+            .enter().append('path')
+            .attr('class','gene')
+            .attr('d', d => {
+              const x0 = tX(d.start);
+              const x1 = tX(d.end);
+              const w = Math.max(minGeneW, Math.abs(x1 - x0));
+              const x = Math.min(x0, x1);
+              return arrowPath(x, tY, w, geneH, d.strand);
+            })
+            .attr('fill', d=> d.strand>=0 ? '#2E8B57' : '#FF6347')
+            .attr('stroke','#000').attr('stroke-width',0.5);
+
+          tGenes
+            .on('mouseover', function(event, d){
+              const strand = (d.strand>=0? '+':'-');
+              const len = Math.max(0, Math.round(Math.abs(d.end - d.start)));
+              // Cosine similarity (max across connected edges)
+              let simLine = '';
+              try {
+                const matches = (data.edges || []).filter(ed => ed.target === d._idx);
+                if (matches.length) {
+                  const maxSim = d3.max(matches, ed => (ed.cos != null ? +ed.cos : -Infinity));
+                  if (maxSim != null && isFinite(maxSim)) simLine = '<br>Cosine: ' + (+maxSim).toFixed(3);
+                }
+              } catch (e) {}
+              // PFAM overlap (max across connected edges)
+              let pfLine = '';
+              try {
+                const matches = (data.edges || []).filter(ed => ed.target === d._idx && ed.pf != null);
+                if (matches.length) {
+                  const maxPf = d3.max(matches, ed => (+ed.pf || 0));
+                  if (maxPf != null && isFinite(maxPf) && maxPf > 0) pfLine = '<br>PFAM overlap: ' + maxPf;
+                }
+              } catch (e) {}
+              tooltip.style('display','block')
+                     .html('<b>' + d.id + '</b><br>' +
+                           'Length: ' + len.toLocaleString() + ' bp<br>' +
+                           'Strand: ' + strand + '<br>' +
+                           'PFAM: ' + (d.pfam || 'None') + simLine + pfLine);
+              d3.select(this).attr('stroke-width',2);
+              highlightFor('t', d._idx);
+            })
+            .on('mousemove', function(event){
+              const pt = d3.pointer(event, container);
+              // Keep tooltip within container bounds and away from labels
+              const cw = container.clientWidth || 0;
+              const ch = container.clientHeight || 0;
+              const tw = tooltip.node().offsetWidth || 0;
+              const th = tooltip.node().offsetHeight || 0;
+              let left = pt[0] + 12;
+              let top = pt[1] + 12;
+              if (top < 30) top = 34;
+              if (top > ch - 34 - th) top = ch - 34 - th;
+              if (left + tw > cw - 4) left = Math.max(4, pt[0] - 12 - tw);
+              if (top + th > ch - 4) top = Math.max(4, pt[1] - 12 - th);
+              tooltip.style('left', left + 'px').style('top', top + 'px');
+            })
+            .on('mouseout', function(){
+              tooltip.style('display','none');
+              d3.select(this).attr('stroke-width',0.5);
+              clearHighlight();
+            });
+
+          const edges = g.append('g').attr('opacity',0.7);
+          const eSel = edges.selectAll('path.edge')
+            .data(data.edges || [])
+            .enter().append('path')
+            .attr('class','edge')
+            .attr('fill','none')
+            .attr('stroke', d=> {
+              if (d.type === 'both') return '#7b3294';       // purple
+              if (d.type === 'cos') return '#2c7bb6';        // blue
+              if (d.type === 'pfam') return '#fdae61';       // orange
+              return '#999999';                               // fallback/grey
+            })
+            .attr('stroke-width', d=> {
+              if (d.type === 'cos' || d.type === 'both') {
+                const c = Math.max(0, Math.min(1, +d.cos || 0.5));
+                return 2 + 4*c; // thicker scaling for cosine/both
+              }
+              if (d.type === 'pfam') {
+                const p = Math.max(0, Math.min(3, +d.pf || 1));
+                return 2 + 2*(p/3); // thicker PFAM lines
+              }
+              return 2.0; // fallback thickness
+            })
+            .attr('stroke-opacity', 0.6)
+            .attr('d', d=> {
+              const qs = data.query_locus[d.source] || {start: qMin, end: qMin};
+              const ts = data.target_locus[d.target] || {start: tMin, end: tMin};
+              const x1 = (qX(qs.start) + qX(qs.end)) / 2, y1 = qY + geneH/2;
+              const x2 = (tX(ts.start) + tX(ts.end)) / 2, y2 = tY + geneH/2;
+              // Straight line connection
+              return 'M' + x1 + ',' + y1 + ' L' + x2 + ',' + y2;
+            })
+            .append('title').text(d=> {
+              let parts = [];
+              if (d.cos != null) parts.push('cosine=' + (+d.cos).toFixed(3));
+              if (d.pf != null) parts.push('pfam_overlap=' + d.pf);
+              if (!parts.length) parts.push('fallback');
+              return parts.join(', ');
+            });
+
+          // Labels for loci
+          const topLabel = (data.query_name || 'Query locus');
+          const botLabel = (data.target_name || 'Target locus');
+          g.append('text')
+            .attr('x', 0)
+            .attr('y', qY - 20)
+            .attr('fill', '#000')
+            .attr('font-size', 12)
+            .attr('font-family', 'sans-serif')
+            .text(topLabel);
+          g.append('text')
+            .attr('x', 0)
+            .attr('y', tY + geneH + 18)
+            .attr('fill', '#000')
+            .attr('font-size', 12)
+            .attr('font-family', 'sans-serif')
+            .text(botLabel);
+
+          // Legend (top-right)
+          const legend = g.append('g');
+          const lx = Math.max(0, innerW - 260), ly = 8;
+          legend.append('rect').attr('x', lx-6).attr('y', ly-6).attr('width', 252).attr('height', 60)
+                .attr('fill', 'rgba(255,255,255,0.85)').attr('stroke', '#ccc');
+          legend.append('rect').attr('x', lx).attr('y', ly).attr('width', 14).attr('height', 14).attr('fill', '#2E8B57').attr('stroke','#000');
+          legend.append('rect').attr('x', lx+18).attr('y', ly).attr('width', 14).attr('height', 14).attr('fill', '#FF6347').attr('stroke','#000');
+          legend.append('text').attr('x', lx+36).attr('y', ly+11).attr('font-size', 12).text('Gene arrows (strand color)');
+          // Cosine edge
+          legend.append('line').attr('x1', lx).attr('y1', ly+26).attr('x2', lx+36).attr('y2', ly+26).attr('stroke', '#2c7bb6').attr('stroke-width', 3);
+          legend.append('text').attr('x', lx+44).attr('y', ly+29).attr('font-size', 12).text('Cosine homology');
+          // PFAM edge
+          legend.append('line').attr('x1', lx).attr('y1', ly+42).attr('x2', lx+36).attr('y2', ly+42).attr('stroke', '#fdae61').attr('stroke-width', 3);
+          legend.append('text').attr('x', lx+44).attr('y', ly+45).attr('font-size', 12).text('PFAM homology');
+          // Both edge
+          legend.append('line').attr('x1', lx+130).attr('y1', ly+34).attr('x2', lx+166).attr('y2', ly+34).attr('stroke', '#7b3294').attr('stroke-width', 3);
+          legend.append('text').attr('x', lx+174).attr('y', ly+37).attr('font-size', 12).text('Both');
+
+          // Cross-track highlighting
+          function clearHighlight() {
+            eSel.attr('stroke-opacity', 0.6).attr('stroke-width', d=> 1 + 2*(d.score||0.5));
+            qGenes.attr('opacity', 1.0).attr('stroke-width', 0.5);
+            tGenes.attr('opacity', 1.0).attr('stroke-width', 0.5);
+          }
+
+          function highlightFor(side, idx) {
+            // Determine matching edges and counterpart indices
+            const matches = [];
+            (data.edges || []).forEach((ed, i) => {
+              if (side === 'q' && ed.source === idx) matches.push({ed, i});
+              if (side === 't' && ed.target === idx) matches.push({ed, i});
+            });
+
+            // Dim everything
+            eSel.attr('stroke-opacity', 0.15);
+            qGenes.attr('opacity', 0.4).attr('stroke-width', 0.5);
+            tGenes.attr('opacity', 0.4).attr('stroke-width', 0.5);
+
+            // Highlight hovered gene
+            if (side === 'q') {
+              qGenes.filter(d => d._idx === idx).attr('opacity', 1.0).attr('stroke-width', 2);
+            } else {
+              tGenes.filter(d => d._idx === idx).attr('opacity', 1.0).attr('stroke-width', 2);
+            }
+
+            // Highlight counterpart genes and edges
+            matches.forEach(({ed}) => {
+              eSel.filter(d => d.source === ed.source && d.target === ed.target)
+                  .attr('stroke-opacity', 0.95)
+                  .attr('stroke-width', d=> 2.5 + 2*(d.score||0.5));
+              qGenes.filter(d => d._idx === ed.source).attr('opacity', 1.0).attr('stroke-width', 2);
+              tGenes.filter(d => d._idx === ed.target).attr('opacity', 1.0).attr('stroke-width', 2);
+            });
+          }
+
+        }
+
+        render();
+        if ('ResizeObserver' in window) {
+          const ro = new ResizeObserver(() => render());
+          ro.observe(container);
+        } else {
+          window.addEventListener('resize', render);
+        }
+      } catch (e) {
+        const el = document.getElementById('cmp');
+        if (el) {
+          el.innerHTML = '<div style=\\"color:red; font-family:monospace\\">Component error: ' + (e && e.message ? e.message : e) + '</div>';
+        }
+      }
+    })();
     </script>
     """
+    # Escape closing tag sequences in JSON
+    safe_json = payload.replace('</', '<\\/')
+    html = html.replace('__PAYLOAD_JSON__', safe_json).replace('__HEIGHT__', str(height))
     components.html(html, height=height+20)
 
 

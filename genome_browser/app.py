@@ -1971,10 +1971,23 @@ def _create_window_lookup_from_config(config_path: Path):
 
         cfg = load_config(str(config_path))
         manifest = ELSAManifest(cfg.data.work_dir)
-        windows_path = Path(manifest.data['artifacts']['windows']['path'])
-        if not windows_path.exists():
-            logger.error(f"Windows parquet not found: {windows_path}")
-            return None
+        # Try manifest artifact first, else glob for a plausible windows parquet
+        windows_path = None
+        if manifest.has_artifact('windows'):
+            try:
+                windows_path = Path(manifest.data['artifacts']['windows']['path'])
+            except Exception:
+                windows_path = None
+        if not windows_path or not windows_path.exists():
+            # Fallback: search work_dir for *windows*.parquet
+            candidates = list(Path(cfg.data.work_dir).rglob("*windows*.parquet"))
+            if candidates:
+                windows_path = candidates[0]
+                logger.info(f"Using discovered windows parquet: {windows_path}
+")
+            else:
+                logger.error("No windows parquet found in manifest or work_dir; cannot build lookup")
+                return None
         windows_df = pd.read_parquet(windows_path)
         emb_cols = [c for c in windows_df.columns if c.startswith('emb_')]
         lookup = {}

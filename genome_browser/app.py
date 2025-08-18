@@ -1971,27 +1971,12 @@ def _create_window_lookup_from_config(config_path: Path, windows_override: Optio
         import pandas as pd
         import numpy as np
 
-        cfg = load_config(str(config_path))
-        manifest = ELSAManifest(cfg.data.work_dir)
-        # Try explicit override, then manifest artifact, else glob for a plausible windows parquet
-        windows_path = None
-        if windows_override and windows_override.exists():
-            windows_path = windows_override
-        if manifest.has_artifact('windows'):
-            try:
-                windows_path = Path(manifest.data['artifacts']['windows']['path'])
-            except Exception:
-                windows_path = None
-        if not windows_path or not windows_path.exists():
-            # Fallback: search work_dir for *windows*.parquet
-            work_dir = Path(cfg.data.work_dir)
-            candidates = list(work_dir.rglob("*windows*.parquet"))
-            if candidates:
-                windows_path = candidates[0]
-                logger.info(f"Using discovered windows parquet: {windows_path}")
-            else:
-                logger.error(f"No windows parquet found in manifest or work_dir ({work_dir}); cannot build lookup")
-                return None
+        # Use explicit path only; default to ../elsa_index/shingles/windows.parquet relative to repo.
+        _default = Path(__file__).resolve().parent.parent / "elsa_index/shingles/windows.parquet"
+        windows_path = Path(windows_override) if windows_override else _default
+        if not windows_path.exists():
+            logger.error(f"Windows parquet not found at: {windows_path}")
+            return None
         windows_df = pd.read_parquet(windows_path)
         emb_cols = [c for c in windows_df.columns if c.startswith('emb_')]
         lookup = {}

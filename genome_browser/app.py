@@ -1901,20 +1901,46 @@ def display_clustering_tuner():
 
             with st.status("Re-clustering blocks...", expanded=True) as status:
                 st.write("Loading blocks and window embeddings...")
+                logger.info("[TUNER] Loading blocks CSV: %s", blocks_path)
                 blocks = _load_blocks_from_csv(blocks_path)
-            override_path = Path(windows_override) if windows_override.strip() else None
-            window_lookup = _create_window_lookup_from_config(cfg_path, override_path)
-            if window_lookup is None:
-                st.error("Failed to create window embedding lookup. Check config/work_dir.")
-                return
-                
+                st.write(f"✓ Loaded {len(blocks)} blocks from CSV")
+                logger.info("[TUNER] Loaded %d blocks", len(blocks))
+
+                override_path = Path(windows_override) if windows_override.strip() else None
+                window_lookup, lookup_meta = _create_window_lookup_from_config(cfg_path, override_path)
+                if window_lookup is None:
+                    st.error("Failed to create window embedding lookup. Check the windows parquet path.")
+                    return
+                st.write(f"✓ Windows parquet: {lookup_meta.get('path','?')} | rows={lookup_meta.get('n_windows',0)} | emb_dim={lookup_meta.get('emb_dim',0)}")
+                logger.info("[TUNER] Windows parquet: %s rows=%s emb_dim=%s", lookup_meta.get('path'), lookup_meta.get('n_windows'), lookup_meta.get('emb_dim'))
+
+                # Quick coverage check over a sample of window IDs from blocks
+                sample_ids = []
+                for b in blocks:
+                    sample_ids.extend(b.query_windows[:2])
+                    sample_ids.extend(b.target_windows[:2])
+                    if len(sample_ids) >= 400:
+                        break
+                found = sum(1 for wid in sample_ids if window_lookup(wid) is not None)
+                st.write(f"Coverage check: {found}/{len(sample_ids)} sampled window IDs found in embeddings")
+                logger.info("[TUNER] Coverage check: %d/%d", found, len(sample_ids))
+
                 st.write(f"Clustering {len(blocks)} blocks with updated parameters...")
                 from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
+                t0 = time.time()
                 assignments = cluster_blocks_jaccard(blocks, window_lookup, cfg)
+                dt = time.time() - t0
+                st.write(f"✓ Clustering finished in {dt:.2f}s")
+                logger.info("[TUNER] clustering finished in %.2fs", dt)
 
                 if not assignments:
                     st.error("Re-clustering produced no assignments.")
                     return
+
+                from collections import Counter
+                ctr = Counter([cl for cl in assignments.values() if cl and cl > 0])
+                st.write(f"Found {len(ctr)} clusters (non-sink). Top sizes: {sorted(ctr.values(), reverse=True)[:10]}")
+                logger.info("[TUNER] clusters=%d top_sizes=%s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
 
                 st.write("Updating genome browser database with new cluster assignments...")
                 _apply_cluster_assignments_to_db(assignments, Path(db_path))
@@ -1987,7 +2013,8 @@ def _create_window_lookup_from_config(config_path: Path, windows_override: Optio
         def _lookup_fn(window_id: str):
             return lookup.get(window_id)
 
-        return _lookup_fn
+        meta = {"path": str(windows_path), "n_windows": len(windows_df), "emb_dim": len(emb_cols)}
+        return _lookup_fn, meta
     except Exception as e:
         logger.error(f"Failed to create window lookup: {e}")
         return None

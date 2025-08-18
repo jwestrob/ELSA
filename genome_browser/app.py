@@ -22,6 +22,7 @@ import time
 # Import genome visualization functions
 from cluster_analyzer import ClusterAnalyzer
 from visualization.genome_plots import create_genome_diagram, create_comparative_genome_view
+from elsa.analyze.shingles import srp_tokens, block_shingles
 
 # Configure page
 st.set_page_config(
@@ -1864,6 +1865,20 @@ def display_clustering_tuner():
         srp_bits = st.number_input("srp_bits", value=256, min_value=32, step=32)
         srp_bands = st.number_input("srp_bands", value=32, min_value=1, step=1)
 
+    st.subheader("Expansion (optional)")
+    e1, e2, e3 = st.columns(3)
+    with e1:
+        enable_expansion = st.checkbox("Enable expansion", value=True)
+        tau_expand = st.number_input("tau_expand (medoid)", value=0.5, min_value=0.0, max_value=1.0, step=0.05)
+        tau_peer = st.number_input("tau_peer", value=0.5, min_value=0.0, max_value=1.0, step=0.05)
+    with e2:
+        m_peers = st.number_input("min peer support", value=2, min_value=0, step=1)
+        M_expand = st.number_input("min low-DF anchors", value=2, min_value=0, step=1)
+        max_added_per_cluster = st.number_input("max add/cluster", value=10, min_value=0, step=1)
+    with e3:
+        allow_degree_relax = st.checkbox("Relax degree cap for adds", value=True)
+        waves = st.number_input("Expansion waves", value=1, min_value=1, step=1)
+
     if st.button("Re-run clustering", type="primary"):
         try:
             # Validate inputs
@@ -1948,6 +1963,24 @@ def display_clustering_tuner():
                 ctr = Counter([cl for cl in assignments.values() if cl and cl > 0])
                 st.write(f"Found {len(ctr)} clusters (non-sink). Top sizes: {sorted(ctr.values(), reverse=True)[:10]}")
                 logger.info("[TUNER] clusters=%d top_sizes=%s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
+
+                # Optional expansion
+                if enable_expansion:
+                    st.write("Running expansion phase...")
+                    t1 = time.time()
+                    assignments = _expand_clusters(
+                        blocks, assignments, window_lookup,
+                        df_max=int(df_max), shingle_k=int(shingle_k),
+                        srp_bits=int(srp_bits), srp_bands=int(srp_bands), srp_band_bits=8, srp_seed=1337,
+                        tau_expand=float(tau_expand), tau_peer=float(tau_peer),
+                        m_peers=int(m_peers), M_expand=int(M_expand),
+                        max_added_per_cluster=int(max_added_per_cluster),
+                        allow_degree_relax=bool(allow_degree_relax), waves=int(waves)
+                    )
+                    dt1 = time.time() - t1
+                    ctr2 = Counter([cl for cl in assignments.values() if cl and cl > 0])
+                    st.write(f"✓ Expansion finished in {dt1:.2f}s → clusters: {len(ctr2)} (Top sizes: {sorted(ctr2.values(), reverse=True)[:10]})")
+                    logger.info("[TUNER] expansion finished in %.2fs clusters=%d", dt1, len(ctr2))
 
                 st.write("Updating genome browser database with new cluster assignments...")
                 _apply_cluster_assignments_to_db(assignments, Path(db_path))
@@ -2147,6 +2180,114 @@ def _apply_cluster_assignments_to_db(assignments: Dict[int, int], db_path: Path)
         conn.commit()
     finally:
         conn.close()
+
+
+def _compute_shingles_for_block(block, window_lookup, srp_bits, srp_bands, srp_band_bits, srp_seed, shingle_k):
+    # Build embedding matrix from query_windows
+    win_ids = block.query_windows if getattr(block, 'query_windows', None) else []
+    embs = []
+    for wid in win_ids:
+        emb = window_lookup(wid)
+        if emb is not None:
+            embs.append(emb)
+    if not embs:
+        return set()
+    import numpy as np
+    emb_mat = np.vstack(embs)
+    toks = srp_tokens(emb_mat, n_bits=srp_bits, n_bands=srp_bands, band_bits=srp_band_bits, seed=srp_seed)
+    return block_shingles(toks, k=shingle_k)
+
+
+def _expand_clusters(blocks, assignments, window_lookup,
+                     df_max, shingle_k, srp_bits, srp_bands, srp_band_bits, srp_seed,
+                     tau_expand, tau_peer, m_peers, M_expand,
+                     max_added_per_cluster, allow_degree_relax, waves):
+    # Build id->block map
+    id2block = {int(b.id): b for b in blocks}
+    # Build cluster map
+    from collections import defaultdict
+    clusters = defaultdict(list)
+    for bid, cl in assignments.items():
+        if cl and cl > 0:
+            clusters[int(cl)].append(int(bid))
+
+    # Compute shingles per block and df
+    shingle_map = {}
+    for b in blocks:
+        S = _compute_shingles_for_block(b, window_lookup, srp_bits, srp_bands, srp_band_bits, srp_seed, shingle_k)
+        shingle_map[int(b.id)] = S
+    # DF across all blocks
+    df = {}
+    for S in shingle_map.values():
+        for s in S:
+            df[s] = df.get(s, 0) + 1
+    # Filter shingles by df_max and build IDF
+    import math
+    N = max(1, len(shingle_map))
+    idf = {s: math.log(1.0 + (N / max(1, c))) for s, c in df.items()}
+
+    def filtered(S):
+        return {s for s in S if df.get(s, 0) <= df_max}
+
+    def wjacc(A, B):
+        if not A and not B:
+            return 1.0
+        inter = A & B
+        union = A | B
+        if not union:
+            return 0.0
+        inter_w = sum(idf.get(s, 0.0) for s in inter)
+        union_w = sum(idf.get(s, 0.0) for s in union)
+        return (inter_w / union_w) if union_w > 0 else 0.0
+
+    # Precompute filtered shingles
+    fsh = {bid: filtered(S) for bid, S in shingle_map.items()}
+
+    # One-wave expansion
+    added_total = 0
+    for cl_id, members in list(clusters.items()):
+        if not members:
+            continue
+        # Compute medoid by max sum of wJaccard
+        best_bid = None
+        best_sum = -1.0
+        for bid in members:
+            s = sum(wjacc(fsh[bid], fsh[x]) for x in members if x != bid)
+            if s > best_sum:
+                best_sum = s
+                best_bid = bid
+        medoid = best_bid if best_bid is not None else members[0]
+
+        # Candidate pool: unassigned/sink blocks
+        unassigned = [int(b.id) for b in blocks if (assignments.get(int(b.id), 0) == 0)]
+        accepted = 0
+        for bid in unassigned:
+            # Medoid score
+            mscore = wjacc(fsh[bid], fsh[medoid])
+            if mscore < tau_expand:
+                continue
+            # Low-DF anchors
+            low_df_count = sum(1 for s in (fsh[bid] & fsh[medoid]) if df.get(s, 0) <= max(1, df_max // 5))
+            if low_df_count < M_expand:
+                continue
+            # Peer support
+            peer_count = 0
+            for x in members:
+                if wjacc(fsh[bid], fsh[x]) >= tau_peer:
+                    peer_count += 1
+                    if peer_count >= m_peers:
+                        break
+            if peer_count < m_peers:
+                continue
+            # Accept
+            assignments[bid] = cl_id
+            clusters[cl_id].append(bid)
+            accepted += 1
+            added_total += 1
+            if max_added_per_cluster and accepted >= max_added_per_cluster:
+                break
+    logger.info("[TUNER] expansion added %d blocks", added_total)
+    return assignments
 
 if __name__ == "__main__":
     main()

@@ -919,15 +919,11 @@ def display_genome_viewer():
         if st.button("📊 Show Comparative Genome View", key="comparative_view"):
             st.subheader("Comparative Genome Analysis")
             with st.spinner("Generating comparative view..."):
-                comparative_fig = create_comparative_genome_view(
-                    query_genes.head(30), 
-                    target_genes.head(30),
-                    block['query_locus'],
-                    block['target_locus'],
-                    width=1200,
-                    height=600
-                )
-                st.plotly_chart(comparative_fig, use_container_width=True)
+                try:
+                    comp_data = _build_comparative_json(block['block_id'], query_genes, target_genes)
+                    _render_comparative_d3(comp_data, width=1200, height=500)
+                except Exception as e:
+                    st.error(f"Comparative view failed: {e}")
 
 def load_cluster_stats():
     """Load precomputed cluster statistics."""
@@ -2180,6 +2176,160 @@ def _apply_cluster_assignments_to_db(assignments: Dict[int, int], db_path: Path)
         conn.commit()
     finally:
         conn.close()
+
+
+def _build_comparative_json(block_id: int, query_genes_df: pd.DataFrame, target_genes_df: pd.DataFrame) -> Dict:
+    """Build clinker-like JSON for comparative view using DB gene_block_mappings order.
+    Links are derived by relative_position order within the block (no edit distance).
+    """
+    conn = get_database_connection()
+    # Map DataFrame order to indices
+    q_ids = query_genes_df['gene_id'].tolist()
+    t_ids = target_genes_df['gene_id'].tolist()
+    q_index = {gid: i for i, gid in enumerate(q_ids)}
+    t_index = {gid: i for i, gid in enumerate(t_ids)}
+
+    # Fetch ordered genes by relative_position in this block
+    q_rows = pd.read_sql_query(
+        """
+        SELECT gbm.gene_id, gbm.relative_position
+        FROM gene_block_mappings gbm
+        WHERE gbm.block_id = ? AND gbm.block_role = 'query'
+        ORDER BY gbm.relative_position
+        """,
+        conn, params=[int(block_id)]
+    )
+    t_rows = pd.read_sql_query(
+        """
+        SELECT gbm.gene_id, gbm.relative_position
+        FROM gene_block_mappings gbm
+        WHERE gbm.block_id = ? AND gbm.block_role = 'target'
+        ORDER BY gbm.relative_position
+        """,
+        conn, params=[int(block_id)]
+    )
+
+    # Build gene arrays for rendering
+    def _genes_payload(df: pd.DataFrame) -> List[Dict]:
+        out = []
+        for _, row in df.iterrows():
+            out.append({
+                'id': row['gene_id'],
+                'start': int(row['start_pos']),
+                'end': int(row['end_pos']),
+                'strand': int(1 if row['strand'] in (1, '+') else -1),
+                'pfam': row.get('pfam_domains', '') or ''
+            })
+        return out
+
+    q_genes = _genes_payload(query_genes_df)
+    t_genes = _genes_payload(target_genes_df)
+
+    # Pair by rank (relative_position order), restricted to genes present in our view
+    n = min(len(q_rows), len(t_rows), len(q_genes), len(t_genes))
+    edges = []
+    for i in range(n):
+        qg = q_rows.iloc[i]['gene_id']
+        tg = t_rows.iloc[i]['gene_id']
+        if qg in q_index and tg in t_index:
+            edges.append({
+                'source': q_index[qg],
+                'target': t_index[tg],
+                'score': 1.0,  # placeholder weight; can map from block identity
+            })
+
+    return {
+        'query_locus': q_genes,
+        'target_locus': t_genes,
+        'edges': edges
+    }
+
+
+def _render_comparative_d3(data: Dict, width: int = 1000, height: int = 500):
+    """Render clinker-like comparative view using D3 in a Streamlit component."""
+    import streamlit.components.v1 as components
+    import json
+    payload = json.dumps(data)
+    html = f"""
+    <div id="cmp" style="width:100%; height:{height}px;"></div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+    const data = {payload};
+    const width = {width};
+    const height = {height};
+    const margin = {{top: 20, right: 20, bottom: 20, left: 20}};
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+    const trackH = innerH/2 - 40;
+
+    const svg = d3.select('#cmp').append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .style('background', '#fff');
+
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Scales: map gene index to x
+    const qN = data.query_locus.length;
+    const tN = data.target_locus.length;
+    const qX = d3.scaleLinear().domain([0, Math.max(1,qN-1)]).range([0, innerW]);
+    const tX = d3.scaleLinear().domain([0, Math.max(1,tN-1)]).range([0, innerW]);
+
+    // Draw query genes (top)
+    const qY = 40;
+    const geneW = Math.max(6, innerW / Math.max(qN, tN) * 0.6);
+    const geneH = 12;
+
+    function arrowPath(x, y, w, h, strand) {{
+      if (strand >= 0) {{
+        return `M${x},${y} h${w-h/2} l${h/2},${h/2} l-${h/2},${h/2} h-${w-h/2} z`;
+      }} else {{
+        return `M${x+w},${y} h-${w-h/2} l-${h/2},${h/2} l${h/2},${h/2} h${w-h/2} z`;
+      }}
+    }}
+
+    const q = g.append('g');
+    q.selectAll('path.gene')
+      .data(data.query_locus)
+      .enter().append('path')
+      .attr('class','gene')
+      .attr('d', (d,i)=>arrowPath(qX(i), qY, geneW, geneH, d.strand))
+      .attr('fill', d=> d.strand>=0 ? '#2E8B57' : '#FF6347')
+      .attr('stroke','#000').attr('stroke-width',0.5)
+      .append('title').text(d=>`${d.id}\nPFAM: ${d.pfam||'None'}`);
+
+    // Draw target genes (bottom)
+    const tY = innerH - 40;
+    const t = g.append('g');
+    t.selectAll('path.gene')
+      .data(data.target_locus)
+      .enter().append('path')
+      .attr('class','gene')
+      .attr('d', (d,i)=>arrowPath(tX(i), tY, geneW, geneH, d.strand))
+      .attr('fill', d=> d.strand>=0 ? '#2E8B57' : '#FF6347')
+      .attr('stroke','#000').attr('stroke-width',0.5)
+      .append('title').text(d=>`${d.id}\nPFAM: ${d.pfam||'None'}`);
+
+    // Edges
+    const edges = g.append('g').attr('opacity',0.7);
+    edges.selectAll('path.edge')
+      .data(data.edges)
+      .enter().append('path')
+      .attr('class','edge')
+      .attr('fill','none')
+      .attr('stroke', d=> d.score>0.8? '#2c7bb6' : d.score>0.5? '#abd9e9':'#fdae61')
+      .attr('stroke-width', d=> 1 + 2*(d.score||0.5))
+      .attr('d', d=> {{
+        const x1 = qX(d.source)+geneW/2, y1=qY+geneH/2;
+        const x2 = tX(d.target)+geneW/2, y2=tY+geneH/2;
+        const mx = (x1+x2)/2;
+        return `M${x1},${y1} C${mx},${y1-60} ${mx},${y2+60} ${x2},${y2}`;
+      }})
+      .append('title').text(d=>`score=${d.score}`);
+
+    </script>
+    """
+    components.html(html, height=height+20)
 
 
 def _compute_shingles_for_block(block, window_lookup, srp_bits, srp_bands, srp_band_bits, srp_seed, shingle_k):

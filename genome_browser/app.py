@@ -17,6 +17,7 @@ import logging
 from typing import Dict, List, Tuple, Optional
 from types import SimpleNamespace
 import math
+import time
 
 # Import genome visualization functions
 from cluster_analyzer import ClusterAnalyzer

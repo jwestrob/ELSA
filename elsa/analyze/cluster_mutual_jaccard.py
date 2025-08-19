@@ -42,6 +42,9 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
     srp_band_bits = getattr(cfg, 'srp_band_bits', 8)
     srp_seed = getattr(cfg, 'srp_seed', 1337)
     shingle_k = getattr(cfg, 'shingle_k', 3)
+    shingle_method = getattr(cfg, 'shingle_method', 'xor')
+    bands_per_window = getattr(cfg, 'bands_per_window', 4)
+    band_stride = getattr(cfg, 'band_stride', 7)
     
     jaccard_tau = getattr(cfg, 'jaccard_tau', 0.75)
     mutual_k = getattr(cfg, 'mutual_k', 3)
@@ -65,6 +68,13 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
     triangle_support_min = getattr(cfg, 'triangle_support_min', 1)  # require >= T triangles per edge
     use_community_detection = getattr(cfg, 'use_community_detection', True)
     community_method = getattr(cfg, 'community_method', 'greedy')  # 'greedy' (networkx)
+
+    # Hybrid bandset augmentation
+    enable_hybrid_bandset = getattr(cfg, 'enable_hybrid_bandset', False)
+    bandset_tau = getattr(cfg, 'bandset_tau', 0.25)
+    bandset_df_max = getattr(cfg, 'bandset_df_max', 2000)
+    bandset_min_len = getattr(cfg, 'bandset_min_len', 20)
+    bandset_min_identity = getattr(cfg, 'bandset_min_identity', 0.98)
     
     console_print(f"Processing {len(blocks_list)} blocks with mutual-k Jaccard clustering")
     
@@ -117,6 +127,7 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
     
     # Step 2 & 3: Build per-block shingles with orientation normalization
     block_shingles_map = {}
+    bandset_map = {} if enable_hybrid_bandset else None
     
     for block_id, block in robust_blocks:
         try:
@@ -162,8 +173,22 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
             )
             
             # Generate k-gram shingles
-            shingles = block_shingles(window_tokens, k=shingle_k)
+            shingles = block_shingles(
+                window_tokens,
+                k=shingle_k,
+                method=shingle_method,
+                bands_per_window=bands_per_window,
+                band_stride=band_stride,
+            )
             block_shingles_map[block_id] = shingles
+            if enable_hybrid_bandset:
+                # Build bandset (order-agnostic) too
+                bandset = block_shingles(
+                    window_tokens,
+                    k=1,
+                    method='bandset',
+                )
+                bandset_map[block_id] = bandset
             
         except Exception as e:
             logger.warning(f"Failed to process block {block_id}: {e}")
@@ -211,43 +236,90 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
 
     console_print(f"After DF filtering: {len(filtered_shingle_to_blocks)} unique shingles")
 
+    # Pre-index robust blocks for quick lookup
+    robust_map = {bid: b for bid, b in robust_blocks}
+
     # Build IDF map for weighted Jaccard: idf = log(1 + N / df)
     import math
     n_docs = max(1, len(filtered_shingles_map))
     shingle_idf = {sid: math.log(1.0 + (n_docs / max(1, shingle_df.get(sid, 1)))) for sid in filtered_shingle_to_blocks.keys()}
+
+    # Optional bandset postings/IDF
+    if enable_hybrid_bandset:
+        bandset_to_blocks = defaultdict(set)
+        for block_id, bandset in bandset_map.items():
+            for token in bandset:
+                bandset_to_blocks[token].add(block_id)
+        bandset_df = {tok: len(v) for tok, v in bandset_to_blocks.items()}
+        # Filter high-DF bandset tokens more permissively
+        filtered_bandset_map = {}
+        for block_id, bandset in bandset_map.items():
+            filtered_bandset = {t for t in bandset if bandset_df.get(t, 0) <= bandset_df_max}
+            filtered_bandset_map[block_id] = filtered_bandset
+        filtered_bandset_to_blocks = defaultdict(set)
+        for block_id, bandset in filtered_bandset_map.items():
+            for t in bandset:
+                filtered_bandset_to_blocks[t].add(block_id)
+        n_docs_b = max(1, len(filtered_bandset_map))
+        bandset_idf = {tok: math.log(1.0 + (n_docs_b / max(1, bandset_df.get(tok, 1)))) for tok in filtered_bandset_to_blocks.keys()}
     
-    # Step 5: Candidate generation with size ratio prefilter
+    # Step 5: Candidate generation with shared-count and size filters
     block_candidates = {}
-    
+    min_shared_sh = getattr(cfg, 'min_shared_shingles', 2)
+    max_cands = getattr(cfg, 'max_candidates_per_block', 500)
+    min_shared_bt = getattr(cfg, 'min_shared_band_tokens', 2)
+    band_topk = getattr(cfg, 'bandset_topk_candidates', 100)
+
     for block_id, shingles in filtered_shingles_map.items():
-        candidates = set()
-        
-        # Union postings of all shingles for this block
+        # Count shared shingles per candidate
+        cand_counts = defaultdict(int)
         for shingle_id in shingles:
-            candidates.update(filtered_shingle_to_blocks[shingle_id])
-        
-        # Remove self
-        candidates.discard(block_id)
-        
-        # Apply size ratio prefilter
-        n_b = len([b for b_id, b in robust_blocks if b_id == block_id][0].matches)  # alignment length
+            for cand_id in filtered_shingle_to_blocks[shingle_id]:
+                if cand_id != block_id:
+                    cand_counts[cand_id] += 1
+
+        # Hybrid: add bandset candidates for qualifying blocks (bounded top-K by shared tokens)
+        band_candidates = []
+        if enable_hybrid_bandset:
+            try:
+                block_ref = robust_map[block_id]
+                length_ok = len(getattr(block_ref, 'matches', [])) >= bandset_min_len
+                ident_ok = getattr(block_ref, 'identity', None)
+                identity_ok = (ident_ok is not None and ident_ok >= bandset_min_identity)
+            except Exception:
+                length_ok = False
+                identity_ok = False
+            if length_ok and identity_ok:
+                bandset = filtered_bandset_map.get(block_id, set())
+                cand_band_counts = defaultdict(int)
+                for tok in bandset:
+                    for cid in filtered_bandset_to_blocks.get(tok, set()):
+                        if cid != block_id:
+                            cand_band_counts[cid] += 1
+                band_list = [(cid, cnt) for cid, cnt in cand_band_counts.items() if cnt >= min_shared_bt]
+                band_list.sort(key=lambda x: (-x[1], x[0]))
+                band_candidates = [cid for cid, _ in band_list[:band_topk]]
+
+        # Combine candidates
+        candidates = set([cid for cid, cnt in cand_counts.items() if cnt >= min_shared_sh])
+        candidates.update(band_candidates)
+
+        # Apply size ratio prefilter and cap candidate list
+        n_b = len(robust_map[block_id].matches)
         s_b_size = len(shingles)
-        
-        filtered_candidates = []
+        filtered_list = []
         for cand_id in candidates:
-            if cand_id in filtered_shingles_map:
-                n_c = len([b for b_id, b in robust_blocks if b_id == cand_id][0].matches)
+            if cand_id in filtered_shingles_map and cand_id in robust_map:
+                n_c = len(robust_map[cand_id].matches)
                 s_c_size = len(filtered_shingles_map[cand_id])
-                
-                # Size ratio checks
                 shingle_ratio = s_b_size / max(s_c_size, 1)
                 length_ratio = n_b / max(n_c, 1)
-                
                 if (size_ratio_min <= shingle_ratio <= size_ratio_max and 
                     size_ratio_min <= length_ratio <= size_ratio_max):
-                    filtered_candidates.append(cand_id)
-        
-        block_candidates[block_id] = filtered_candidates
+                    # Prefer higher shared count (0 if from bandset-only)
+                    filtered_list.append((cand_id, cand_counts.get(cand_id, 0)))
+        filtered_list.sort(key=lambda x: (-x[1], x[0]))
+        block_candidates[block_id] = [cid for cid, _ in filtered_list[:max_cands]]
     
     # Step 6: Similarity computation and mutual-k graph construction
     edges = set()
@@ -277,9 +349,13 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                     j_sim = jaccard(shingles_b, shingles_c)
                 similarities.append((cand_id, j_sim))
         
-        # Remove mutual-top-k filtering: evaluate all candidates directly
+        # Evaluate candidates sorted by similarity; optionally cap to mutual_k for speed
         similarities.sort(key=lambda x: (-x[1], x[0]))
+        if getattr(cfg, 'enable_mutual_topk_filter', False):
+            k = int(getattr(cfg, 'mutual_k', 3))
+            similarities = similarities[:max(1, k)]
         for cand_id, j_sim in similarities:
+            added = False
             if j_sim >= jaccard_tau:
                 # Enforce informative-overlap checks before adding edge
                 shingles_c = filtered_shingles_map[cand_id]
@@ -289,8 +365,37 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                 if low_df_count >= min_low_df_anchors and mean_idf >= idf_mean_min:
                     edge = tuple(sorted([block_id, cand_id]))
                     edges.add(edge)
-                    # Store weight as the similarity value
                     edge_weights[edge] = max(edge_weights.get(edge, 0.0), j_sim)
+                    added = True
+            # Hybrid fall-back: bandset Jaccard for qualifying blocks/pairs
+            if enable_hybrid_bandset and not added:
+                # Qualify both blocks
+                try:
+                    b_ref = [b for b_id, b in robust_blocks if b_id == block_id][0]
+                    c_ref = [b for b_id, b in robust_blocks if b_id == cand_id][0]
+                    len_ok = (len(getattr(b_ref, 'matches', [])) >= bandset_min_len and
+                              len(getattr(c_ref, 'matches', [])) >= bandset_min_len)
+                    id_ok = (getattr(b_ref, 'identity', None) is not None and getattr(b_ref, 'identity') >= bandset_min_identity and
+                             getattr(c_ref, 'identity', None) is not None and getattr(c_ref, 'identity') >= bandset_min_identity)
+                except Exception:
+                    len_ok = False
+                    id_ok = False
+                if len_ok and id_ok:
+                    B = filtered_bandset_map.get(block_id, set())
+                    C = filtered_bandset_map.get(cand_id, set())
+                    if B and C:
+                        inter = B & C
+                        union = B | C
+                        if union:
+                            inter_w = sum(bandset_idf.get(s, 0.0) for s in inter)
+                            union_w = sum(bandset_idf.get(s, 0.0) for s in union)
+                            j_bw = (inter_w / union_w) if union_w > 0 else 0.0
+                        else:
+                            j_bw = 0.0
+                        if j_bw >= bandset_tau:
+                            edge = tuple(sorted([block_id, cand_id]))
+                            edges.add(edge)
+                            edge_weights[edge] = max(edge_weights.get(edge, 0.0), float(j_bw))
     
     console_print(f"Constructed graph with {len(edges)} mutual-k edges")
 

@@ -1,0 +1,38 @@
+analyze:
+  clustering:
+    method: mutual_jaccard
+    sink_label: 0
+    keep_singletons: false
+
+    # Robustness gate
+    min_anchors: 4
+    min_span_genes: 8
+    v_mad_max_genes: 1
+
+    # SRP shingling
+    srp_bits: 256
+    srp_bands: 32
+    srp_band_bits: 8
+    srp_seed: 1337
+    shingle_k: 3
+    shingle_method: xor
+
+    # Graph construction (XOR path)
+    jaccard_tau: 0.5
+    mutual_k: 3
+    df_max: 200
+
+    # Hybrid bandset augmentation (enabled)
+    enable_hybrid_bandset: true
+    bandset_tau: 0.25
+    bandset_df_max: 3000
+    bandset_min_len: 20
+    bandset_min_identity: 0.98
+
+    # Candidate pruning (tighter to reduce mega-clusters)
+    enable_mutual_topk_filter: true
+    max_candidates_per_block: 1000
+    min_shared_shingles: 3
+    bandset_topk_candidates: 300
+    min_shared_band_tokens: 2
+    degree_cap: 10

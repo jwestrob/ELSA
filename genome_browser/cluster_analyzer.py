@@ -279,8 +279,7 @@ class ClusterAnalyzer:
                 FROM genes g
                 JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
                 JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
-                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
-                WHERE ca.cluster_id = ? 
+                WHERE sb.cluster_id = ? 
                   AND g.pfam_domains IS NOT NULL 
                   AND g.pfam_domains != ''
             """
@@ -314,8 +313,7 @@ class ClusterAnalyzer:
                 FROM genes g
                 JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
                 JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
-                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
-                WHERE ca.cluster_id = ? 
+                WHERE sb.cluster_id = ? 
                   AND g.pfam_domains IS NOT NULL 
                   AND g.pfam_domains != ''
             """
@@ -523,10 +521,10 @@ class ClusterAnalyzer:
         """Get count of unique contigs involved in this cluster."""
         try:
             contig_count_query = """
-                SELECT COUNT(DISTINCT query_contig_id) + COUNT(DISTINCT target_contig_id) 
+                SELECT 
+                  COUNT(DISTINCT sb.query_contig_id) + COUNT(DISTINCT sb.target_contig_id)
                 FROM syntenic_blocks sb
-                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
-                WHERE ca.cluster_id = ?
+                WHERE sb.cluster_id = ?
                   AND sb.query_contig_id IS NOT NULL 
                   AND sb.target_contig_id IS NOT NULL
             """
@@ -546,8 +544,7 @@ class ClusterAnalyzer:
                 SELECT COUNT(DISTINCT gbm.gene_id) 
                 FROM gene_block_mappings gbm
                 JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
-                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
-                WHERE ca.cluster_id = ?
+                WHERE sb.cluster_id = ?
             """
             cursor = conn.execute(gene_count_query, (cluster_id,))
             unique_genes = cursor.fetchone()[0] or 0
@@ -577,8 +574,7 @@ class ClusterAnalyzer:
                 FROM genes g
                 JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
                 JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
-                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
-                WHERE ca.cluster_id = ? 
+                WHERE sb.cluster_id = ? 
                   AND g.pfam_domains IS NOT NULL 
                   AND g.pfam_domains != ''
             """
@@ -597,8 +593,7 @@ class ClusterAnalyzer:
             length_query = """
                 SELECT sb.length
                 FROM syntenic_blocks sb
-                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
-                WHERE ca.cluster_id = ?
+                WHERE sb.cluster_id = ?
             """
             cursor = conn.execute(length_query, (cluster_id,))
             lengths = [row[0] for row in cursor.fetchall()]
@@ -640,12 +635,11 @@ class ClusterAnalyzer:
             blocks_query = """
                 SELECT sb.block_id, sb.query_locus, sb.target_locus, sb.query_genome_id, sb.target_genome_id
                 FROM syntenic_blocks sb
-                JOIN cluster_assignments ca ON sb.block_id = ca.block_id
-                WHERE ca.cluster_id = ?
+                WHERE sb.cluster_id = ?
                 ORDER BY RANDOM()
                 LIMIT ?
             """
-            cursor = conn.execute(blocks_query, (cluster_id, sample_size * 2))  # Get more blocks to extract loci
+            cursor = conn.execute(blocks_query, (cluster_id, sample_size * 2))
             blocks = cursor.fetchall()
             
             logger.info(f"Found {len(blocks)} blocks for cluster {cluster_id}")

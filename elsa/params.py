@@ -213,6 +213,23 @@ class ClusteringConfig(BaseModel):
     srp_band_bits: int = Field(default=8, description="Bits per SRP band")
     srp_seed: int = Field(default=1337, description="SRP random seed for determinism")
     shingle_k: int = Field(default=3, description="k-gram shingle size")
+    shingle_method: Literal["xor", "subset", "bandset"] = Field(default="xor", description="Per-window tokenization method for shingles")
+    bands_per_window: int = Field(default=4, description="Bands per window when using 'subset' shingling")
+    band_stride: int = Field(default=7, description="Stride for rotating band selection per window when using 'subset'")
+
+    # Hybrid bandset augmentation (order-agnostic band-token Jaccard)
+    enable_hybrid_bandset: bool = Field(default=False, description="Augment edges using bandset Jaccard for robust long/high-identity blocks")
+    bandset_tau: float = Field(default=0.25, description="Minimum (weighted) Jaccard for bandset edges")
+    bandset_df_max: int = Field(default=2000, description="Max DF for bandset tokens (more permissive than main df_max)")
+    bandset_min_len: int = Field(default=20, description="Minimum alignment length to consider bandset augmentation")
+    bandset_min_identity: float = Field(default=0.98, description="Minimum identity to consider bandset augmentation")
+
+    # Performance controls
+    enable_mutual_topk_filter: bool = Field(default=False, description="Apply mutual-top-k gating on similarities")
+    max_candidates_per_block: int = Field(default=500, description="Cap on total candidates evaluated per block (after filtering)")
+    min_shared_shingles: int = Field(default=2, description="Minimum shared shingles in postings before Jaccard")
+    bandset_topk_candidates: int = Field(default=100, description="Max bandset candidates per block (top by shared tokens)")
+    min_shared_band_tokens: int = Field(default=2, description="Minimum shared band tokens before bandset Jaccard")
     
     # Graph construction
     jaccard_tau: float = Field(default=0.5, description="Minimum Jaccard similarity threshold")

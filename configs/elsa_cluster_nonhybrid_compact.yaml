@@ -1,0 +1,38 @@
+analyze:
+  clustering:
+    method: mutual_jaccard
+    sink_label: 0
+    keep_singletons: false
+
+    # Robustness gate
+    min_anchors: 4
+    min_span_genes: 8
+    v_mad_max_genes: 1
+
+    # SRP shingling
+    srp_bits: 256
+    srp_bands: 32
+    srp_band_bits: 8
+    srp_seed: 1337
+    shingle_k: 3
+    shingle_method: xor
+
+    # Graph construction (non-hybrid XOR path)
+    jaccard_tau: 0.5
+    mutual_k: 3
+    df_max: 200
+
+    # Hybrid disabled (non-hybrid sweep)
+    enable_hybrid_bandset: false
+    bandset_tau: 0.25         # ignored when hybrid disabled
+    bandset_df_max: 3000      # ignored when hybrid disabled
+    bandset_min_len: 20       # ignored when hybrid disabled
+    bandset_min_identity: 0.98  # ignored when hybrid disabled
+
+    # Candidate pruning (compact but permissive enough to recover RP 6/6)
+    enable_mutual_topk_filter: false   # may set true for extra compactness
+    max_candidates_per_block: 1000
+    min_shared_shingles: 2
+    bandset_topk_candidates: 0         # ensure hybrid path contributes nothing
+    min_shared_band_tokens: 9          # irrelevant when hybrid disabled
+    degree_cap: 8

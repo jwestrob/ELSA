@@ -63,50 +63,84 @@ def srp_tokens(emb: np.ndarray, *, n_bits: int = 256, n_bands: int = 32, band_bi
     return window_tokens
 
 
-def block_shingles(window_tokens: List[List[int]], k: int = 3) -> Set[int]:
+def block_shingles(
+    window_tokens: List[List[int]],
+    k: int = 3,
+    *,
+    method: str = "xor",
+    bands_per_window: int = 4,
+    band_stride: int = 7,
+) -> Set[int]:
     """
-    Build order-aware k-gram shingles from per-window token lists.
-    
+    Build order-aware k-gram shingles from per-window band-token lists.
+
     Args:
         window_tokens: List of per-window token lists (each length = n_bands)
         k: Shingle size (number of consecutive windows)
-        
+        method: How to derive a single token per window before shingling.
+            - 'xor' (default): XOR all band tokens in the window (legacy behavior)
+            - 'subset': Hash a deterministic subset of bands per window for stability
+        bands_per_window: When method='subset', number of bands to include per window
+        band_stride: When method='subset', stride to rotate band selection across windows
+
     Returns:
-        Set of shingle hash IDs
+        Set of shingle hash IDs (or band tokens if method='bandset')
     """
-    if not window_tokens or k <= 0:
+    if not window_tokens or k <= 0 and method != 'bandset':
         return set()
-    
+
     n_windows = len(window_tokens)
-    if n_windows < k:
+    if method != 'bandset' and n_windows < k:
         return set()
-    
-    # Derive one stable token per window by XORing all band tokens
-    window_sequence = []
-    for band_tokens in window_tokens:
-        if not band_tokens:
-            # If no tokens for this window, use 0
-            window_token = 0
-        else:
-            # XOR all band tokens to get one token per window
-            window_token = 0
-            for token in band_tokens:
-                window_token ^= token
-        window_sequence.append(window_token)
-    
+
+    # Derive one token per window according to method
+    window_sequence: List[int] = []
+    n_bands = len(window_tokens[0]) if window_tokens[0] else 0
+
+    if method == "bandset" and n_bands > 0:
+        # Return the union of all band tokens across all windows (order-agnostic)
+        bandset = set()
+        for band_tokens in window_tokens:
+            for t in band_tokens:
+                bandset.add(int(t))
+        return bandset
+    elif method == "subset" and n_bands > 0 and bands_per_window > 0:
+        # Deterministic rotating subset of bands per window index
+        bpw = max(1, min(bands_per_window, n_bands))
+        stride = max(1, band_stride)
+        for i, band_tokens in enumerate(window_tokens):
+            if not band_tokens or len(band_tokens) != n_bands:
+                window_sequence.append(0)
+                continue
+            # Choose bpw bands starting at offset (i*stride) mod n_bands
+            start = (i * stride) % n_bands
+            idxs = [(start + j) % n_bands for j in range(bpw)]
+            sel = [band_tokens[j] for j in idxs]
+            # Hash the selected band tokens into one 64-bit token
+            payload = b"".join(int(t).to_bytes(8, byteorder="big") for t in sel)
+            h = hashlib.blake2b(payload, digest_size=8).digest()
+            token = int(np.frombuffer(h, dtype="<u8")[0])
+            window_sequence.append(token)
+    else:
+        # Legacy: XOR all band tokens per window
+        for band_tokens in window_tokens:
+            if not band_tokens:
+                window_sequence.append(0)
+                continue
+            token = 0
+            for t in band_tokens:
+                token ^= int(t)
+            window_sequence.append(token)
+
     # Build k-gram shingles over the ordered token sequence
-    shingles = set()
+    shingles: Set[int] = set()
     for i in range(n_windows - k + 1):
-        # Create k-gram tuple
-        shingle_tuple = tuple(window_sequence[i:i+k])
-        
-        # Hash the tuple to 64-bit int using blake2b
-        shingle_bytes = b''.join(token.to_bytes(8, byteorder='big') for token in shingle_tuple)
+        shingle_tuple = tuple(window_sequence[i:i + k])
+        shingle_bytes = b"".join(int(token).to_bytes(8, byteorder="big") for token in shingle_tuple)
         hash_obj = hashlib.blake2b(shingle_bytes, digest_size=8)
-        shingle_id = np.frombuffer(hash_obj.digest(), dtype='<u8')[0]
-        
-        shingles.add(int(shingle_id))
-    
+        shingle_id = int(np.frombuffer(hash_obj.digest(), dtype="<u8")[0])
+        shingles.add(shingle_id)
+
     return shingles
 
 

@@ -152,6 +152,15 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
             # Stack into matrix (n_windows, d)
             emb_matrix = np.stack(window_embeddings, axis=0)
             
+            # Make SRP tokens strand-insensitive by nulling the strand-sign dimension
+            # (last column added by shingling). This preserves content while removing
+            # orientation from per-window tokens so reverse/forward loci can collide.
+            try:
+                if emb_matrix.shape[1] > 0:
+                    emb_matrix[:, -1] = 0
+            except Exception:
+                pass
+
             # Compute SRP tokens
             window_tokens = srp_tokens(
                 emb_matrix, 

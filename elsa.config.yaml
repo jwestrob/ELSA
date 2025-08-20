@@ -1,3 +1,4 @@
+
 chain:
   gap_extend: 2.0
   gap_open: 5.0
@@ -12,9 +13,7 @@ data:
   work_dir: ./elsa_index
 discrete:
   K: 4096
-  bands_rows:
-  - 24
-  - 8
+  bands_rows: [24, 8]
   emit_skipgram: true
   idf_max_df_frac: 0.05
   idf_min_df: 5
@@ -47,14 +46,9 @@ shingles:
   stride: 1
   weights: triangular
 window:
-  micro:
-    size: 2
-    stride: 1
-  macro:
-    size: 4
-    stride: 2
-  adaptive:
-    enable: false
+  micro: { size: 2, stride: 1 }
+  macro: { size: 4, stride: 2 }
+  adaptive: { enable: false }
 phase2:
   enable: true
   weighted_sketch: true
@@ -64,20 +58,9 @@ phase2:
   hnsw: false
 cassette_mode:
   enable: true
-  anchors:
-    cosine_min: 0.91
-    jaccard_min: 0.3
-    reciprocal_topk: 2
-    blacklist_top_pct: 1.0
-    lambda_jaccard: 0.5
-  chain:
-    delta_min: 0.02
-    density_window_genes: 10
-    density_min_anchors_per_gene: 0.3
-    pos_band_genes: 1
-    max_gap_genes: 1
-  segmenter:
-    method: chain
+  anchors: { cosine_min: 0.91, jaccard_min: 0.3, reciprocal_topk: 2, blacklist_top_pct: 1.0, lambda_jaccard: 0.5 }
+  chain: { delta_min: 0.02, density_window_genes: 10, density_min_anchors_per_gene: 0.3, pos_band_genes: 1, max_gap_genes: 1 }
+  segmenter: { method: chain }
 system:
   jobs: auto
   mmap: true
@@ -87,8 +70,8 @@ analyze:
     method: mutual_jaccard
     sink_label: 0
     keep_singletons: false
-    min_anchors: 4
-    min_span_genes: 8
+    min_anchors: 5
+    min_span_genes: 10
     v_mad_max_genes: 1
     srp_bits: 256
     srp_bands: 32
@@ -96,6 +79,9 @@ analyze:
     srp_seed: 1337
     shingle_k: 3
     shingle_method: xor
+    ignore_strand_in_tokens: true
+    strand_canonical_shingles: true
+    shingle_pattern: [0, 2, 5]
     jaccard_tau: 0.5
     mutual_k: 3
     df_max: 200
@@ -109,3 +95,26 @@ analyze:
     min_shared_shingles: 1
     bandset_topk_candidates: 100000
     min_shared_band_tokens: 1
+
+  attach:
+    enable: true
+    member_sample: 5
+    k1_method: xor
+    icws_r: 8
+    icws_bbit: 0
+    enable_stitch: true
+    stitch_gap: 2
+    stitch_max_neighbors: 2
+    bandset_contain_tau: 0.65
+    k1_contain_tau: 0.65
+    k1_inter_min: 2
+    margin_min: 0.10
+    triangle_min: 1
+    triangle_member_tau: 0.50
+    tiny_window_cap: 3
+    bandset_contain_tau_tiny: 0.55
+    k1_contain_tau_tiny: 0.55
+    k1_inter_min_tiny: 1
+    margin_min_tiny: 0.05
+    triangle_min_tiny: 1
+    triangle_member_tau_tiny: 0.50

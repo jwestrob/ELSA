@@ -6,13 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ELSA (Embedding Locus Shingle Alignment) is a bioinformatics tool for order-aware syntenic-block discovery from protein language-model embeddings. It processes assembled genomes or metagenomes to find similar syntenic blocks via collinearity chaining.
+ELSA (Embedding Locus Shingle Alignment) is a bioinformatics tool for order-aware syntenic-block discovery from protein language-model embeddings. It processes assembled genomes or metagenomes to find similar syntenic blocks via collinearity chaining and clusters them via mutual-Jaccard over order-aware shingles.
 
 **Key Architecture:**
 - **GPU-optimized** for M4 Max MacBook Pro (48GB unified memory) with CPU fallback
 - Memory-mapped arrays for large datasets 
-- Dual indexing system: discrete MinHash + continuous signed-random-projection
-- Pipeline stages: Ingest → PLM embeddings → Projection → Shingling → Indexing → Search
+- SRP-based order-aware shingling (strand-insensitive tokens) + mutual-Jaccard clustering
+- Minimal default: no hybrid augmentation; optional narrow post-cluster attach (PFAM-agnostic)
 
 ## Development Commands
 

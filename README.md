@@ -2,6 +2,12 @@
 
 Order-aware syntenic-block discovery from protein language-model embeddings.
 
+Current default focuses on robust, compact clustering with:
+- Strand-insensitive tokens (null strand-sign before SRP)
+- Order-aware shingles with k=3 + skip-gram pattern [0,2,5]
+- Strict alignment gate (min_anchors=5, min_span_genes=10)
+- Safe, PFAM-agnostic post-cluster attach for tiny sink blocks
+
 ## Quick Start
 
 ### 1. Installation
@@ -21,7 +27,7 @@ pip install -e .
 elsa init
 ```
 
-This creates `elsa.config.yaml` with sensible defaults.
+This creates `elsa.config.yaml`. The repository ships a tuned default (token-fix + attach). Use it as-is unless you have a reason to change parameters.
 
 ### 3. Run embedding pipeline
 
@@ -74,7 +80,8 @@ streamlit run app.py
 ### Stage 3: Projection & Shingling
 - **PCA projection**: Reduce to configurable dimension (default 256D)
 - **Window shingling**: Sliding windows with positional encoding
-- **Strand awareness**: Handle forward/reverse gene orientations
+- **Strand-insensitive tokens**: Before SRP tokenization, the strand-sign feature is nulled so per-window tokens match across forward/reverse loci; order-awareness is preserved via k-grams
+- **Skip-gram shingles**: k=3 with [0,2,5] for robustness to small local reorders
 
 ### Stage 4: Dual Indexing
 - **Discrete**: MinHash LSH on protein sequence codewords
@@ -85,7 +92,7 @@ streamlit run app.py
 - **Collinear chaining**: Dynamic programming with gap penalties
 - **DTW refinement**: Optional dynamic time warping alignment
 
-### Stage 6: Block Clustering
+### Stage 6: Block Clustering (Mutual-Jaccard over shingles)
 
 <details>
 <summary><strong>Mutual-k Jaccard over Order-Aware Shingles</strong></summary>
@@ -96,22 +103,26 @@ We cluster syntenic blocks into cassette families using **Mutual-k Jaccard** ove
 
 **Sketch → tokens:** For each window's embedding x, we compute a 256-bit SRP sign sketch (fixed seed), split into 32 bands of 8 bits, and hash each band to a 64-bit token. Similar windows share band tokens with high probability.
 
-**Order-aware shingles:** Per block, we derive one stable token per window, then form k-gram shingles (default k=3) over the ordered token sequence and hash these into a set S_b. For strand −, we reverse order before shingling (internal only).
+**Order-aware shingles:** Per block, derive one token per window and form k-gram shingles (k=3, skip-gram). Tokens are strand-insensitive; order is preserved by the shingle sequence.
 
-**Robustness gate (per block):** keep blocks with:
-- alignment_length ≥ 4; spans ≥ 8 genes on both genomes; diagonal purity MAD(v=q_idx−t_idx) ≤ 1. Others go to sink.
+**Robustness gate (per block):** strict defaults
+- alignment_length ≥ 5; spans ≥ 10 genes on both genomes; diagonal purity MAD(v=q_idx−t_idx) ≤ 1. Others go to sink.
 
-**Graph construction:** Build an inverted index shingle→blocks; drop hub shingles with df>200. For each block b, enumerate candidates via postings; compute Jaccard J(S_b,S_c); keep top-k (k=3). Undirected edge b--c exists iff mutual-k holds and J ≥ 0.5.
+**Graph construction:** Build an inverted index shingle→blocks; drop hub shingles with df>200. For each block b, enumerate candidates via postings; compute weighted Jaccard; require informative (low-DF) overlap.
 
-**Clusters & labels:** Connected components of this sparse graph are clusters. Robust singletons (degree 0) are sent to the sink by default. Labels are deterministic:
+**Clusters & labels:** Connected components of this sparse graph are clusters. Robust singletons (degree 0) go to sink by default. Labels are deterministic:
 - **0 = sink** (non-robust + singletons)
 - 1..K assigned by decreasing component size, then increasing representative block id.
 
-**Configuration:** see `analyze.clustering.*` in params (SRP bits/bands, k, jaccard_tau, mutual_k, df_max, robustness thresholds, sink semantics).
+**Configuration:** see `analyze.clustering.*` in params (SRP bits/bands, k, df_max, thresholds). Defaults are tuned; avoid changing unless necessary.
 
 **Determinism:** All randomness is seeded; ordering keys are fixed; re-runs produce identical cluster IDs.
 
 </details>
+
+### Post-cluster Attach (sink rescue)
+
+A narrow, PFAM-agnostic attach step safely promotes tiny sink blocks into existing clusters when strongly supported by union signatures (bandset and k=1), preserving compactness and purity.
 
 ## Comprehensive Analysis
 
@@ -139,7 +150,7 @@ The browser will be available at `http://localhost:8501` and provides:
 ### 🎯 Key Features
 
 - **📊 Dashboard**: Overview statistics, size distributions, and genome comparison matrices
-- **🔍 Block Explorer**: Advanced filtering, pagination, and detailed block information  
+- **🔍 Block Explorer**: Advanced filtering (including Contig/PFAM substring filters), pagination, and detailed block information
 - **🧬 Genome Viewer**: Interactive genome diagrams with gene arrows and domain tracks
 - **🧩 Cluster Explorer**: Explore syntenic block clusters with functional analysis
 - **🤖 AI Analysis**: GPT-powered functional interpretation of clusters
@@ -149,7 +160,7 @@ The browser will be available at `http://localhost:8501` and provides:
 1. **Dashboard Tab**: View overall statistics and data quality metrics
 2. **Block Explorer Tab**: Filter and browse individual syntenic blocks
    - Use size sliders, identity thresholds, and genome selection
-   - Search by PFAM domains
+   - Search by PFAM domain substrings (comma-delimited) and/or contig substrings
    - Click blocks to view detailed genome context
 3. **Genome Viewer Tab**: Visualize specific genomic loci
    - Enter locus coordinates (e.g., `genome1:100000-200000`)
@@ -174,9 +185,13 @@ Each cluster can be analyzed using GPT-5 to provide:
 - **Conservation rationale**: Why these blocks are syntenic
 - **Functional coherence**: Biological significance of co-localization
 
-## Configuration
+## Configuration (practical defaults)
 
-Key parameters in `elsa.config.yaml`:
+`elsa.config.yaml` is pre-tuned for robust defaults. Key aspects:
+- Strict alignment (min_anchors=5; min_span_genes=10)
+- Strand-insensitive SRP tokens; k=3 skip-gram [0,2,5]
+- Weighted Jaccard with df_max=200
+- Post-cluster attach enabled (exp8 thresholds)
 
 ```yaml
 plm:
@@ -225,20 +240,13 @@ system:
 - **Recommended**: 32GB RAM, GPU (MPS/CUDA)
 - **Optimal**: 48GB RAM, Apple M4 Max or RTX 4090
 
-## Testing
+## Diagnostics
 
-Use the provided test genomes:
-
-```bash
-# Download S. pneumoniae test data
-wget https://example.com/spneumoniae_strain1.fasta
-wget https://example.com/spneumoniae_strain2.fasta
-
-# Run pipeline
-elsa embed spneumoniae_strain*.fasta
-elsa build
-elsa find "strain1_contig1_10000:20000"
-```
+Useful scripts under `tools/`:
+- `diagnose_block_vs_cluster.py`: explains why a specific block lacks edges to a target cluster (order modes, pre/post-DF overlap, bandset J)
+- `evaluate_curated_rp_purity.py`: cluster compactness + curated RP purity
+- `check_canonical_rp_alignment.py`: flags canonical RP loci aligned to non-canonical partners (should be 0)
+- `attach_by_cluster_signatures.py`: PFAM-agnostic post-cluster attach
 
 ## API Usage
 

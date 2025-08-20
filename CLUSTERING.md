@@ -57,6 +57,15 @@ Methods:
 - subset: per window, select a deterministic rotating subset of bands (bands_per_window, band_stride), hash their concatenation; then k-grams. More stable than XOR, still brittle in some corpora.
 - bandset (auxiliary only): union of all band tokens across windows (order-agnostic). Used for hybrid augmentation (Section 9), not as the primary graph signal.
 
+### ICWS-r window sketch (tokenizer.mode = icws)
+We replace XOR band collapsing with r (default 8) ICWS samples per window. Each sample selects one band-id with collision probability proportional to its weight (currently uniform). The ordered r-tuple is serialized as the window token and consumed by shingling.
+
+- Skip-gram shingling: Enable k=3 skip-grams using offsets like (0,2,5) via `shingle_pattern`. This increases robustness to small insertions/deletions while preserving order/orientation semantics. If `shingle_pattern` is not set, contiguous k-grams are used (legacy behavior).
+- Parameters: `shingle_method ∈ {xor, subset, bandset, icws}`, `icws_r`, `icws_bbit`, `shingle_pattern`.
+- Determinism: A global seed (`srp_seed`) deterministically derives per-window/per-sample sub-seeds.
+
+Migration: keep `shingle_method: xor` to reproduce legacy behavior. To try ICWS while preserving defaults elsewhere, set `shingle_method: icws` and optionally `shingle_pattern: "0,2,5"`.
+
 ---
 
 ## 6. DF Filtering + IDF (F)
@@ -271,4 +280,3 @@ Emit JSON:
 - Experiment harness in tools/ supports rapid param exploration.
 
 [EOF]
-

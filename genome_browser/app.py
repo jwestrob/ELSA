@@ -1105,30 +1105,55 @@ def display_cluster_explorer():
     # PFAM substring filter (case-insensitive matches against any domain in the cluster)
     with st.expander("PFAM filter", expanded=False):
         pfam_query = st.text_input(
-            "PFAM substring",
-            placeholder="e.g., ribosomal, AAA, ABC_transporter, PF00005",
-            help="Show only clusters containing PFAM domains whose name contains this substring (case-insensitive)"
+            "PFAM substrings",
+            placeholder="Comma-separated, e.g., ribosomal, AAA, ABC_transporter, PF00005",
+            help="Show clusters containing any of the comma-separated substrings (case-insensitive) in PFAM domain names"
         )
     if pfam_query:
-        q = pfam_query.strip().lower()
-        if q:
+        # Support multiple comma-delimited substrings (OR semantics)
+        terms = [t.strip().lower() for t in pfam_query.split(',') if t.strip()]
+        if terms:
             def _matches(stats):
                 try:
-                    if hasattr(stats, 'domain_counts') and stats.domain_counts:
+                    # Check domain_counts first (list of (name, count))
+                    if getattr(stats, 'domain_counts', None):
                         for name, cnt in stats.domain_counts:
-                            if q in str(name).lower():
+                            lname = str(name).lower()
+                            if any(term in lname for term in terms):
                                 return True
-                    # Fallback to dominant_functions if present
-                    if hasattr(stats, 'dominant_functions') and stats.dominant_functions:
+                    # Fallback to dominant_functions (list of names)
+                    if getattr(stats, 'dominant_functions', None):
                         for name in stats.dominant_functions:
-                            if q in str(name).lower():
+                            lname = str(name).lower()
+                            if any(term in lname for term in terms):
                                 return True
                 except Exception:
                     pass
                 return False
             filtered_stats = [s for s in filtered_stats if _matches(s)]
     
-    st.info(f"Showing {len(filtered_stats)} clusters")
+    # Default-limit the number of clusters rendered to keep UI responsive
+    if 'cluster_limit' not in st.session_state:
+        st.session_state.cluster_limit = 20
+    with st.expander("Display options", expanded=False):
+        col_l, col_r = st.columns([3,1])
+        with col_l:
+            new_limit = st.number_input(
+                "Max clusters to display",
+                min_value=1,
+                max_value=max(20, len(filtered_stats)),
+                value=int(st.session_state.cluster_limit),
+                step=10,
+                help="Limit the number of clusters shown to avoid heavy reloads",
+            )
+            st.session_state.cluster_limit = int(new_limit)
+        with col_r:
+            if st.button("Show more", help="Increase limit by 20"):
+                st.session_state.cluster_limit = min(len(filtered_stats), int(st.session_state.cluster_limit) + 20)
+    total_after_filter = len(filtered_stats)
+    render_limit = max(1, min(total_after_filter, int(st.session_state.cluster_limit)))
+    st.info(f"Showing {render_limit} of {total_after_filter} clusters")
+    filtered_stats = filtered_stats[:render_limit]
     
     # Display clusters immediately with plots, generate AI summaries individually
     if filtered_stats:

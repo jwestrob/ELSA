@@ -484,7 +484,8 @@ def find(config: str, query_locus: str, target_scope: str, output: Optional[str]
 @click.option("--min-windows", default=3, help="Minimum windows per locus")
 @click.option("--min-similarity", default=0.7, help="Minimum similarity threshold")
 @click.option("--output-dir", "-o", default="syntenic_analysis", help="Output directory")
-@click.option("--setup-genome-browser", is_flag=True, default=True, help="Set up genome browser after analysis")
+@click.option("--setup-genome-browser/--no-setup-genome-browser", default=True,
+              help="Set up genome browser after analysis (use --no-setup-genome-browser to skip)")
 @click.option("--genome-browser-db", default="genome_browser/genome_browser.db", help="Genome browser database path")
 @click.option("--sequences-dir", help="Directory containing nucleotide sequences (.fna)")
 @click.option("--proteins-dir", help="Directory containing proteins (.faa)")

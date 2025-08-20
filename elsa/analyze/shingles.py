@@ -1,10 +1,83 @@
 """
 Utilities to discretize window embeddings to tokens and build order-aware shingles per block.
+
+Adds an ICWS-r (Consistent Weighted Sampling) per-window combiner and
+optional skip-gram shingling pattern while preserving legacy XOR behavior.
 """
 
 import numpy as np
 import hashlib
-from typing import List, Set, Dict
+from typing import List, Set, Dict, Iterable, Tuple, Sequence
+
+
+def _hash_u64_bytes(value: int) -> bytes:
+    return int(value).to_bytes(8, byteorder="big", signed=False)
+
+
+def _derive_seed(base_seed: int, window_index: int, band_tokens: Sequence[int]) -> int:
+    """Derive a deterministic per-window seed from base seed, index, and band tokens."""
+    h = hashlib.blake2b(digest_size=8)
+    h.update(int(base_seed).to_bytes(8, "big", signed=False))
+    h.update(int(window_index).to_bytes(8, "big", signed=False))
+    for t in band_tokens:
+        h.update(_hash_u64_bytes(int(t)))
+    return int(np.frombuffer(h.digest(), dtype="<u8")[0])
+
+
+def icws_sample_indices(
+    band_ids: np.ndarray,
+    band_weights: np.ndarray,
+    r: int,
+    seed: int,
+) -> np.ndarray:
+    """
+    Consistent Weighted Sampling (Ioffe) to select r band-ids with probability
+    proportional to their weights. Returns an ordered tuple of r selected band_ids.
+
+    Preconditions: len(band_ids) == len(band_weights) > 0, weights > 0.
+    Deterministic via numpy.random.Generator seeded from `seed` and sample index.
+    """
+    band_ids = np.asarray(band_ids)
+    band_weights = np.asarray(band_weights, dtype=np.float64)
+    if band_ids.ndim != 1 or band_weights.ndim != 1:
+        raise ValueError("band_ids and band_weights must be 1D arrays")
+    if band_ids.size == 0:
+        return np.empty((0,), dtype=band_ids.dtype)
+    if band_ids.size != band_weights.size:
+        raise ValueError("band_ids and band_weights must have same length")
+    if np.any(band_weights <= 0):
+        raise ValueError("band_weights must be positive")
+
+    out = np.empty((r,), dtype=band_ids.dtype)
+    # Use PCG64 via default_rng with deterministic seeds per sample
+    INV_GOLDEN = 0x9E3779B97F4A7C15
+    logw = np.log(band_weights)
+    for l in range(r):
+        sub_seed = (int(seed) ^ ((l + 1) * INV_GOLDEN)) & 0xFFFFFFFFFFFFFFFF
+        rng = np.random.default_rng(sub_seed)
+        a = rng.gamma(shape=2.0, scale=1.0, size=band_ids.shape[0])
+        b = rng.random(band_ids.shape[0])
+        c = rng.gamma(shape=2.0, scale=1.0, size=band_ids.shape[0])
+        t = np.floor(logw / a + b)
+        y = np.exp(a * (t - b))
+        key = c / (y * np.exp(a))
+        out[l] = band_ids[int(np.argmin(key))]
+    return out
+
+
+_SRP_CACHE: Dict[Tuple[int, int, int], np.ndarray] = {}
+
+
+def _get_srp_matrix(d: int, n_bits: int, seed: int) -> np.ndarray:
+    """Memoize SRP projection matrix by (d, n_bits, seed) to avoid recomputation per block."""
+    key = (int(d), int(n_bits), int(seed))
+    R = _SRP_CACHE.get(key)
+    if R is None:
+        rng = np.random.RandomState(seed)
+        R = rng.normal(0, 1, size=(d, n_bits))
+        R = R / np.linalg.norm(R, axis=0, keepdims=True)
+        _SRP_CACHE[key] = R
+    return R
 
 
 def srp_tokens(emb: np.ndarray, *, n_bits: int = 256, n_bands: int = 32, band_bits: int = 8, seed: int = 1337) -> List[List[int]]:
@@ -29,12 +102,8 @@ def srp_tokens(emb: np.ndarray, *, n_bits: int = 256, n_bands: int = 32, band_bi
     if n_bands * band_bits != n_bits:
         raise ValueError(f"n_bands * band_bits ({n_bands} * {band_bits}) must equal n_bits ({n_bits})")
     
-    # Generate random projection matrix R (d x n_bits) with fixed seed
-    rng = np.random.RandomState(seed)
-    R = rng.normal(0, 1, size=(d, n_bits))
-    
-    # L2-normalize columns
-    R = R / np.linalg.norm(R, axis=0, keepdims=True)
+    # Get memoized random projection matrix R (d x n_bits) with fixed seed
+    R = _get_srp_matrix(d, n_bits, seed)
     
     # Compute sign bits: (emb @ R >= 0) -> bool matrix (n_windows x n_bits)
     bits = (emb @ R >= 0)
@@ -70,6 +139,16 @@ def block_shingles(
     method: str = "xor",
     bands_per_window: int = 4,
     band_stride: int = 7,
+    fixed_bands: List[int] | None = None,
+    # ICWS parameters
+    icws_r: int = 8,
+    icws_bbit: int = 0,
+    icws_weighting: str = "uniform",
+    seed: int = 1337,
+    # Skip-gram pattern (e.g., (0,2,5)); if None, use contiguous k-grams
+    skipgram_offsets: Tuple[int, int, int] | None = None,
+    # Orientation handling
+    strand_canonical_shingles: bool = False,
 ) -> Set[int]:
     """
     Build order-aware k-gram shingles from per-window band-token lists.
@@ -93,8 +172,8 @@ def block_shingles(
     if method != 'bandset' and n_windows < k:
         return set()
 
-    # Derive one token per window according to method
-    window_sequence: List[int] = []
+    # Derive one token per window according to method. Tokens can be ints or bytes.
+    window_sequence: List[object] = []
     n_bands = len(window_tokens[0]) if window_tokens[0] else 0
 
     if method == "bandset" and n_bands > 0:
@@ -104,6 +183,23 @@ def block_shingles(
             for t in band_tokens:
                 bandset.add(int(t))
         return bandset
+    elif method == "fixed_subset" and n_bands > 0:
+        # Use a fixed set of band indices for every window to build a stable per-window token
+        idxs = fixed_bands if fixed_bands is not None else []
+        if not idxs:
+            # Default to 4 evenly spaced bands
+            idxs = [0, n_bands // 4, n_bands // 2, (3 * n_bands) // 4]
+        # Clamp and unique
+        idxs = sorted({int(i) % n_bands for i in idxs})
+        for i, band_tokens in enumerate(window_tokens):
+            if not band_tokens or len(band_tokens) != n_bands:
+                window_sequence.append(0)
+                continue
+            sel = [band_tokens[j] for j in idxs]
+            payload = b"".join(int(t).to_bytes(8, byteorder="big") for t in sel)
+            h = hashlib.blake2b(payload, digest_size=8).digest()
+            token = int(np.frombuffer(h, dtype="<u8")[0])
+            window_sequence.append(token)
     elif method == "subset" and n_bands > 0 and bands_per_window > 0:
         # Deterministic rotating subset of bands per window index
         bpw = max(1, min(bands_per_window, n_bands))
@@ -121,6 +217,28 @@ def block_shingles(
             h = hashlib.blake2b(payload, digest_size=8).digest()
             token = int(np.frombuffer(h, dtype="<u8")[0])
             window_sequence.append(token)
+    elif method == "icws" and n_bands > 0 and icws_r > 0:
+        # ICWS-r ordered tuple per window, optionally b-bit packed
+        r = int(icws_r)
+        mask = (1 << int(icws_bbit)) - 1 if int(icws_bbit) > 0 else None
+        for i, band_tokens in enumerate(window_tokens):
+            if not band_tokens or len(band_tokens) != n_bands:
+                window_sequence.append(b"\x00" * 8)
+                continue
+            band_arr = np.asarray(band_tokens, dtype=np.uint64)
+            if icws_weighting == "uniform":
+                weights = np.ones_like(band_arr, dtype=np.float64)
+            else:
+                # Fallback to uniform for unknown weighting modes
+                weights = np.ones_like(band_arr, dtype=np.float64)
+            w_seed = _derive_seed(seed, i, band_tokens)
+            samples = icws_sample_indices(band_arr, weights, r, w_seed)
+            if mask is not None:
+                samples = samples & np.uint64(mask)
+            # Serialize ordered r-tuple deterministically as bytes
+            payload = b"".join(_hash_u64_bytes(int(x)) for x in samples)
+            # Store bytes to preserve order; shingles will hash these bytes
+            window_sequence.append(payload)
     else:
         # Legacy: XOR all band tokens per window
         for band_tokens in window_tokens:
@@ -132,14 +250,55 @@ def block_shingles(
                 token ^= int(t)
             window_sequence.append(token)
 
-    # Build k-gram shingles over the ordered token sequence
+    # Build shingles over the ordered token sequence
     shingles: Set[int] = set()
-    for i in range(n_windows - k + 1):
-        shingle_tuple = tuple(window_sequence[i:i + k])
-        shingle_bytes = b"".join(int(token).to_bytes(8, byteorder="big") for token in shingle_tuple)
-        hash_obj = hashlib.blake2b(shingle_bytes, digest_size=8)
-        shingle_id = int(np.frombuffer(hash_obj.digest(), dtype="<u8")[0])
-        shingles.add(shingle_id)
+    if skipgram_offsets is not None:
+        # Validate offsets: 3-tuple with first == 0, nondecreasing
+        if not (isinstance(skipgram_offsets, tuple) and len(skipgram_offsets) == 3):
+            raise ValueError("skipgram_offsets must be a 3-tuple (o0,o1,o2)")
+        o0, o1, o2 = skipgram_offsets
+        if o0 != 0 or o1 < o0 or o2 < o1:
+            raise ValueError("skipgram offsets must satisfy o0==0 and o0<=o1<=o2")
+        max_off = o2
+        if n_windows >= (max_off + 1):
+            for i in range(0, n_windows - max_off):
+                idxs = (i + o0, i + o1, i + o2)
+                toks = window_sequence[idxs[0]], window_sequence[idxs[1]], window_sequence[idxs[2]]
+                # Serialize: handle int and bytes
+                parts: List[bytes] = []
+                for tok in toks:
+                    if isinstance(tok, (bytes, bytearray)):
+                        parts.append(bytes(tok))
+                    else:
+                        parts.append(_hash_u64_bytes(int(tok)))
+                shingle_bytes = b"".join(parts)
+                if strand_canonical_shingles:
+                    # Reverse the tuple orientation and take canonical bytes
+                    rev_bytes = b"".join(reversed(parts))
+                    if rev_bytes < shingle_bytes:
+                        shingle_bytes = rev_bytes
+                h = hashlib.blake2b(shingle_bytes, digest_size=8).digest()
+                shingle_id = int(np.frombuffer(h, dtype="<u8")[0])
+                shingles.add(shingle_id)
+    else:
+        # Contiguous k-grams over ints/bytes
+        if method != 'bandset' and n_windows >= k:
+            for i in range(n_windows - k + 1):
+                shingle_tuple = tuple(window_sequence[i:i + k])
+                parts: List[bytes] = []
+                for tok in shingle_tuple:
+                    if isinstance(tok, (bytes, bytearray)):
+                        parts.append(bytes(tok))
+                    else:
+                        parts.append(_hash_u64_bytes(int(tok)))
+                shingle_bytes = b"".join(parts)
+                if strand_canonical_shingles:
+                    rev_bytes = b"".join(reversed(parts))
+                    if rev_bytes < shingle_bytes:
+                        shingle_bytes = rev_bytes
+                hash_obj = hashlib.blake2b(shingle_bytes, digest_size=8)
+                shingle_id = int(np.frombuffer(hash_obj.digest(), dtype="<u8")[0])
+                shingles.add(shingle_id)
 
     return shingles
 

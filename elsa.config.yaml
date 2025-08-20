@@ -1,8 +1,8 @@
 chain:
-  gap_extend: 2.0        # INCREASED: Higher gap extension penalty
-  gap_open: 5.0          # INCREASED: Higher gap opening penalty  
-  offset_band: 1         # DECREASED: Tight positional constraints
-  slope_penalty: 0.2     # INCREASED: Higher slope penalty
+  gap_extend: 2.0
+  gap_open: 5.0
+  offset_band: 1
+  slope_penalty: 0.2
 continuous:
   hnsw_enable: false
   srp_bits: 256
@@ -20,8 +20,8 @@ discrete:
   idf_min_df: 5
   minhash_hashes: 192
 dtw:
-  band: 1                # CONSTRAINED: Very tight DTW band
-  enable: false          # DISABLED: No DTW for cassette mode
+  band: 1
+  enable: false
 ingest:
   gene_caller: prodigal
   keep_partial: false
@@ -41,89 +41,71 @@ score:
   fdr_target: 0.01
   gamma: 0.2
 shingles:
-  n: 2                   # REDUCED: 2-gene shingles for fine resolution
+  n: 2
   pos_dim: 16
   strand_flag: signed
   stride: 1
   weights: triangular
-
-# Multi-scale windowing configuration
 window:
   micro:
-    size: 2              # REDUCED: 2 genes per micro window  
+    size: 2
     stride: 1
   macro:
-    size: 4              # Small macro windows if needed
+    size: 4
     stride: 2
   adaptive:
-    enable: false        # Keep simple for cassettes
-
-# Phase-2 Feature Flags - DISABLE MACRO WINDOWS
+    enable: false
 phase2:
   enable: true
   weighted_sketch: true
-  multiscale: false      # DISABLED: No macro windows for cassettes
+  multiscale: false
   flip_dp: false
-  calibration: true      # Enable FDR control
+  calibration: true
   hnsw: false
-
-# Cassette mode configuration
 cassette_mode:
-  enable: true           # ENABLED: Use cassette mode for smaller blocks
+  enable: true
   anchors:
-    cosine_min: 0.91     # High cosine similarity threshold
-    jaccard_min: 0.30    # Jaccard similarity threshold
-    reciprocal_topk: 2   # Mutual top-k filtering
-    blacklist_top_pct: 1.0  # Blacklist top collision windows
-    lambda_jaccard: 0.5  # Jaccard weight in chain scoring
+    cosine_min: 0.91
+    jaccard_min: 0.3
+    reciprocal_topk: 2
+    blacklist_top_pct: 1.0
+    lambda_jaccard: 0.5
   chain:
-    delta_min: 0.02      # Minimum local gain per step
-    density_window_genes: 10    # Window for density calculation
-    density_min_anchors_per_gene: 0.3  # Min anchor density
-    pos_band_genes: 1    # Position drift tolerance
-    max_gap_genes: 1     # Maximum gap size
+    delta_min: 0.02
+    density_window_genes: 10
+    density_min_anchors_per_gene: 0.3
+    pos_band_genes: 1
+    max_gap_genes: 1
   segmenter:
-    method: chain        # Use improved chaining (vs ransac)
-
+    method: chain
 system:
   jobs: auto
   mmap: true
   rng_seed: 17
-
 analyze:
   clustering:
     method: mutual_jaccard
     sink_label: 0
     keep_singletons: false
-
-    # Robustness gate
     min_anchors: 4
     min_span_genes: 8
     v_mad_max_genes: 1
-
-    # SRP shingling
     srp_bits: 256
     srp_bands: 32
     srp_band_bits: 8
     srp_seed: 1337
     shingle_k: 3
     shingle_method: xor
-
-    # Graph construction (XOR path)
     jaccard_tau: 0.5
     mutual_k: 3
     df_max: 200
-
-    # Hybrid bandset augmentation
-    enable_hybrid_bandset: true
+    enable_hybrid_bandset: false
     bandset_tau: 0.25
     bandset_df_max: 3000
     bandset_min_len: 20
     bandset_min_identity: 0.98
-    
-    # Candidate pruning (hybrid_mid default)
     enable_mutual_topk_filter: false
-    max_candidates_per_block: 2000
-    min_shared_shingles: 2
-    bandset_topk_candidates: 500
-    min_shared_band_tokens: 2
+    max_candidates_per_block: 100000
+    min_shared_shingles: 1
+    bandset_topk_candidates: 100000
+    min_shared_band_tokens: 1

@@ -1,0 +1,32 @@
+analyze:
+  clustering:
+    method: mutual_jaccard
+    sink_label: 0
+    keep_singletons: false
+    min_anchors: 4
+    min_span_genes: 8
+    v_mad_max_genes: 1
+    srp_bits: 256
+    srp_bands: 32
+    srp_band_bits: 8
+    srp_seed: 1337
+    shingle_method: icws
+    shingle_k: 3
+    shingle_pattern: "0,2,5"
+    icws_r: 8
+    icws_bbit: 0
+    strand_canonical_shingles: true
+    jaccard_tau: 0.5
+    mutual_k: 3
+    df_max: 1200
+    enable_hybrid_bandset: false
+    bandset_tau: 0.25
+    bandset_df_max: 3000
+    bandset_min_len: 20
+    bandset_min_identity: 0.98
+    enable_mutual_topk_filter: false
+    max_candidates_per_block: 100000
+    min_shared_shingles: 1
+    bandset_topk_candidates: 100000
+    min_shared_band_tokens: 1
+

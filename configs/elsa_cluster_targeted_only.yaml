@@ -1,0 +1,5 @@
+analyze:
+  clustering:
+    # Only toggle the targeted acceptor; inherit everything else
+    enable_targeted_bandset_acceptor: true
+

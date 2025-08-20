@@ -7,7 +7,7 @@ This document describes the clustering subsystem that assigns syntenic blocks to
 ## 1. Objectives and Scope
 
 - Group collinear syntenic blocks into “cassette” families across genomes.
-- Leverage continuous embeddings (SRP) to obtain order-aware, orientation-stable token sequences.
+- Leverage continuous embeddings (SRP) to obtain order-aware, strand-insensitive token sequences.
 - Use a sparse similarity graph with conservative pruning; detect communities via modularity.
 - Preserve determinism and re-runnability across machines and seeds.
 - Optional: augment edges for long, high-identity operons where XOR shingling is brittle.
@@ -21,7 +21,7 @@ Non-goals: Inferring evolutionary history; gene-by-gene orthology; plasmid-level
 Block b has:
 - `query_windows`, `target_windows`: ordered IDs of windows in the collinear chain.
 - `matches`: list of paired windows (query_window_id, target_window_id) used for robustness gating.
-- `alignment_length` (|matches|), `identity` (mean match similarity), `strand` (+1 or -1).
+- `alignment_length` (|matches|), `identity` (mean match similarity), 
 
 Windows W have embeddings E ∈ ℝ^D (post-PLM projection). Per-sample, windows are indexed in Parquet.
 
@@ -29,7 +29,7 @@ Windows W have embeddings E ∈ ℝ^D (post-PLM projection). Per-sample, windows
 
 ## 3. Robustness Gate (R)
 
-Filter blocks before tokenization:
+Filter blocks before tokenization (strict defaults):
 - anchors: n ≥ `min_anchors`
 - span: both query and target spans (in window indices) ≥ `min_span_genes`
 - collinearity: MAD of (q_idx - t_idx) ≤ `v_mad_max_genes`
@@ -57,8 +57,10 @@ Methods:
 - subset: per window, select a deterministic rotating subset of bands (bands_per_window, band_stride), hash their concatenation; then k-grams. More stable than XOR, still brittle in some corpora.
 - bandset (auxiliary only): union of all band tokens across windows (order-agnostic). Used for hybrid augmentation (Section 9), not as the primary graph signal.
 
-### ICWS-r window sketch (tokenizer.mode = icws)
-We replace XOR band collapsing with r (default 8) ICWS samples per window. Each sample selects one band-id with collision probability proportional to its weight (currently uniform). The ordered r-tuple is serialized as the window token and consumed by shingling.
+Strand-insensitive tokens and skip-gram shingling
+Before SRP, we null the strand-sign dimension in window embeddings so per-window tokens are the same on forward/reverse loci. Order-awareness is preserved via k-grams.
+
+Skip-gram shingling: Enable k=3 skip-grams using offsets like (0,2,5). This increases robustness to small insertions/deletions while preserving order semantics. If `shingle_pattern` is not set, contiguous k-grams are used. with r (default 8) ICWS samples per window. Each sample selects one band-id with collision probability proportional to its weight (currently uniform). The ordered r-tuple is serialized as the window token and consumed by shingling.
 
 - Skip-gram shingling: Enable k=3 skip-grams using offsets like (0,2,5) via `shingle_pattern`. This increases robustness to small insertions/deletions while preserving order/orientation semantics. If `shingle_pattern` is not set, contiguous k-grams are used (legacy behavior).
 - Parameters: `shingle_method ∈ {xor, subset, bandset, icws}`, `icws_r`, `icws_bbit`, `shingle_pattern`.
@@ -78,7 +80,7 @@ Migration: keep `shingle_method: xor` to reproduce legacy behavior. To try ICWS 
 
 Optionally ban top-percentile DF (max_df_percentile), then rebuild.
 
-For hybrid bandset: repeat DF/IDF on band tokens with looser `bandset_df_max` (Section 9).
+For diagnostics only: we may compute order-agnostic bandset overlap to confirm content similarity; the default workflow does not add bandset-derived edges.
 
 ---
 
@@ -90,7 +92,9 @@ For each block b with filtered S_b:
 - Size prefilter: let s_b = |S_b|, s_x = |S_x|; and alignment lengths n_b, n_x. Accept if `size_ratio_min` ≤ s_b/s_x ≤ `size_ratio_max` and same for n_b/n_x.
 - Keep top-`max_candidates_per_block` by c[x].
 
-Hybrid augmentation (qualified b): add up to `bandset_topk_candidates` candidates x by shared band tokens ≥ `min_shared_band_tokens`, with same size prefilters. Qualification: n_b ≥ `bandset_min_len` and identity ≥ `bandset_min_identity`.
+No hybrid augmentation in the default path.
+
+Former hybrid augmentation (qualified b): add up to `bandset_topk_candidates` candidates x by shared band tokens ≥ `min_shared_band_tokens`, with same size prefilters. Qualification: n_b ≥ `bandset_min_len` and identity ≥ `bandset_min_identity`.
 
 Qualification is symmetric per-pair in scoring; augmentation is per-node in candidate assembly.
 
@@ -184,12 +188,14 @@ Pruning/community:
 
 ---
 
-## 14. Recommended Profiles (R*)
+## 14. Recommended Profile (Default)
 
-- control (fastest, brittle): xor + k=3; df_max=200; no hybrid; min_shared_shingles=1; no mutual-top-k; yields partial RP (≤5/6).
-- hybrid_mid (balanced; default): enable_hybrid_bandset; bandset_tau=0.25; bandset_df_max=3000; (min_len=20, id≥0.98); min_shared_shingles=2; min_shared_band_tokens=2; caps: 2000/500; degree_cap=10. Recovers RP 6/6.
-- hybrid_loose (max recall): as above with bandset_tau=0.20, bandset_df_max=5000, min_shared=1; slightly larger graphs, still fast on test set.
-- hybrid_mutual (fewer edges): add enable_mutual_topk_filter with mutual_k=3; may reduce extra 6/6 duplicates.
+- Strict alignment gate: min_anchors=5; min_span_genes=10; v_mad_max_genes=1.
+- Strand-insensitive tokens (null last embedding dim before SRP).
+- XOR shingling with k=3 and skip-gram pattern [0,2,5]; contiguous if unset.
+- Weighted Jaccard with df_max=200; low-DF anchor and IDF-mean checks.
+- No hybrid augmentation.
+- Post-cluster attach (PFAM-agnostic): exp8-like thresholds; stitches tiny sink blocks when strongly supported; cluster count unchanged; purity preserved.
 
 ---
 
@@ -201,11 +207,12 @@ Pruning/community:
 
 ---
 
-## 16. Validation Harness (V)
+## 16. Validation & Diagnostics (V)
 
-- tools/test_rp_cluster.py: A/B profiles; asserts presence of a 6-genome RP cluster.
-- tools/experiment_rp_params.py: grid search; reports runtime, cluster counts, and best RP coverage.
-- Quick CSV check: count non-sink clusters and coverage sets pre-browser.
+- tools/diagnose_block_vs_cluster.py: explains why a block lacks edges to a target cluster (overlap pre/post-DF, bandset J, order modes).
+- tools/evaluate_curated_rp_purity.py: reports non-sink cluster count and curated-RP cluster purity/size.
+- tools/check_canonical_rp_alignment.py: flags canonical RP loci aligning to non-canonical partners (should be 0 after alignment strictness).
+- tools/attach_by_cluster_signatures.py: post-cluster attach (exp8 thresholds), preserving compactness and purity.
 
 ---
 

@@ -6,6 +6,7 @@ and builds a complete catalog of syntenic relationships.
 """
 
 import numpy as np
+import math
 import pandas as pd
 import json
 from pathlib import Path
@@ -156,6 +157,31 @@ class AllVsAllComparator:
             
             # Only accept blocks with reasonable gene order conservation
             if gene_order_score >= 0.3:  # Configurable threshold
+                # Additional strictness: enforce min anchors and span in windows using clustering thresholds
+                try:
+                    min_anchors = int(getattr(self.config.analyze.clustering, 'min_anchors', 2))
+                    min_span_genes = int(getattr(self.config.analyze.clustering, 'min_span_genes', 0))
+                except Exception:
+                    min_anchors = 2
+                    min_span_genes = 0
+                # Determine minimum required consecutive windows to approximate span in genes
+                # Using shingle window size n as proxy: need ceil(min_span_genes / n) windows on both sides
+                try:
+                    shingle_n = int(getattr(self.config.shingles, 'n', 2))
+                except Exception:
+                    shingle_n = 2
+                min_wins_span = math.ceil(min_span_genes / max(1, shingle_n)) if min_span_genes > 0 else 0
+
+                # Compute spans in window indices for query and target
+                q_positions = [q for (q, _t, _m) in filtered_matches]
+                t_positions = [t for (_q, t, _m) in filtered_matches]
+                q_span_wins = (max(q_positions) - min(q_positions) + 1) if q_positions else 0
+                t_span_wins = (max(t_positions) - min(t_positions) + 1) if t_positions else 0
+
+                if len(filtered_matches) < max(2, min_anchors):
+                    return None
+                if min_wins_span > 0 and (q_span_wins < min_wins_span or t_span_wins < min_wins_span):
+                    return None
                 # Create syntenic block
                 block = SyntenicBlock(
                     query_locus=f"{locus_a.sample_id}:{locus_a.locus_id}",

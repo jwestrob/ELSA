@@ -539,7 +539,53 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
         # Save results
         output_path = Path(output_dir)
         analyzer.save_results(landscape, output_path)
-        
+
+        # Optional: post-clustering attach stage (PFAM-agnostic), driven by config
+        attach_cfg = getattr(config_obj.analyze, 'attach', None)
+        if attach_cfg and getattr(attach_cfg, 'enable', False):
+            try:
+                console.print("\n[bold]Post-process: Attaching sink blocks to clusters...[/bold]")
+                blocks_csv = str(output_path / 'syntenic_blocks.csv')
+                cmd = [
+                    sys.executable, 'tools/attach_by_cluster_signatures.py',
+                    '--config', str(Path(config).absolute()),
+                    '--blocks', blocks_csv,
+                    '--out', blocks_csv,
+                    '--member_sample', str(attach_cfg.member_sample),
+                    '--k1_method', str(attach_cfg.k1_method),
+                    '--icws_r', str(attach_cfg.icws_r),
+                    '--icws_bbit', str(attach_cfg.icws_bbit),
+                    '--bandset_contain_tau', str(attach_cfg.bandset_contain_tau),
+                    '--k1_contain_tau', str(attach_cfg.k1_contain_tau),
+                    '--k1_inter_min', str(attach_cfg.k1_inter_min),
+                    '--margin_min', str(attach_cfg.margin_min),
+                    '--triangle_min', str(attach_cfg.triangle_min),
+                    '--triangle_member_tau', str(attach_cfg.triangle_member_tau),
+                    '--tiny_window_cap', str(attach_cfg.tiny_window_cap),
+                    '--bandset_contain_tau_tiny', str(attach_cfg.bandset_contain_tau_tiny),
+                    '--k1_contain_tau_tiny', str(attach_cfg.k1_contain_tau_tiny),
+                    '--k1_inter_min_tiny', str(attach_cfg.k1_inter_min_tiny),
+                    '--margin_min_tiny', str(attach_cfg.margin_min_tiny),
+                    '--triangle_min_tiny', str(attach_cfg.triangle_min_tiny),
+                    '--triangle_member_tau_tiny', str(attach_cfg.triangle_member_tau_tiny),
+                ]
+                if getattr(attach_cfg, 'enable_stitch', True):
+                    cmd += ['--enable_stitch', '--stitch_gap', str(attach_cfg.stitch_gap), '--stitch_max_neighbors', str(attach_cfg.stitch_max_neighbors)]
+                if getattr(attach_cfg, 'load_signatures', None):
+                    cmd += ['--load_signatures', str(Path(attach_cfg.load_signatures))]
+                    if getattr(attach_cfg, 'limit_member_sample', 0):
+                        cmd += ['--limit_member_sample', str(attach_cfg.limit_member_sample)]
+
+                # Run attach stage in repo root
+                result = subprocess.run(cmd, check=True, capture_output=True, text=True)
+                console.print(result.stdout)
+            except subprocess.CalledProcessError as e:
+                console.print("[yellow]Attachment stage failed; proceeding without it.[/yellow]")
+                if e.stdout:
+                    console.print(f"STDOUT: {e.stdout}")
+                if e.stderr:
+                    console.print(f"STDERR: {e.stderr}")
+
         console.print(f"\n[green]✓ Comprehensive analysis completed successfully![/green]")
         
         # Set up genome browser if requested

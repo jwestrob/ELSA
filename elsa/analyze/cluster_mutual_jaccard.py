@@ -199,11 +199,17 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
             # Stack into matrix (n_windows, d)
             emb_matrix = np.stack(window_embeddings, axis=0)
             
+            # Optionally ignore strand dimension to make tokens strand-insensitive
+            if getattr(cfg, 'ignore_strand_in_tokens', False) and emb_matrix.shape[1] > 0:
+                try:
+                    emb_matrix[:, -1] = 0
+                except Exception:
+                    pass
             # Compute SRP tokens
             window_tokens = srp_tokens(
-                emb_matrix, 
+                emb_matrix,
                 n_bits=srp_bits,
-                n_bands=srp_bands, 
+                n_bands=srp_bands,
                 band_bits=srp_band_bits,
                 seed=srp_seed
             )
@@ -231,7 +237,7 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                 icws_bbit=icws_bbit,
                 icws_weighting=icws_weighting,
                 seed=srp_seed,
-                skipgram_offsets=skipgram_offsets if use_method == 'icws' else None,
+                skipgram_offsets=skipgram_offsets,
                 strand_canonical_shingles=strand_canonical_shingles,
             )
             block_shingles_map[block_id] = shingles

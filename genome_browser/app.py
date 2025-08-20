@@ -115,7 +115,9 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
                         genome_filter: Optional[List[str]] = None,
                         size_range: Optional[Tuple[int, int]] = None,
                         identity_threshold: float = 0.0,
-                        block_type: Optional[str] = None) -> pd.DataFrame:
+                        block_type: Optional[str] = None,
+                        contig_search: Optional[str] = None,
+                        pfam_search: Optional[str] = None) -> pd.DataFrame:
     """Load syntenic blocks with filters and pagination."""
     conn = get_database_connection()
     
@@ -147,6 +149,29 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
     if block_type:
         query += " AND sb.block_type = ?"
         params.append(block_type)
+
+    # Contig substring filter (comma-delimited OR)
+    if contig_search:
+        toks = [t.strip() for t in contig_search.split(',') if t.strip()]
+        if toks:
+            ors = []
+            for t in toks:
+                ors.append("sb.query_locus LIKE ?")
+                params.append(f"%{t}%")
+                ors.append("sb.target_locus LIKE ?")
+                params.append(f"%{t}%")
+            query += " AND (" + " OR ".join(ors) + ")"
+
+    # PFAM substring filter via EXISTS (comma-delimited OR)
+    if pfam_search:
+        toks = [t.strip().lower() for t in pfam_search.split(',') if t.strip()]
+        if toks:
+            ors = []
+            for t in toks:
+                ors.append("LOWER(g.pfam_domains) LIKE ?")
+                params.append(f"%{t}%")
+            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = sb.block_id AND (" + " OR ".join(ors) + ")"
+            query += f" AND EXISTS ({sub})"
     
     query += " ORDER BY sb.identity DESC, sb.block_id"  # Show high-quality alignments in a more representative order
     query += " LIMIT ? OFFSET ?"
@@ -350,9 +375,11 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
 
 @st.cache_data
 def get_block_count(genome_filter: Optional[List[str]] = None,
-                   size_range: Optional[Tuple[int, int]] = None,
-                   identity_threshold: float = 0.0,
-                   block_type: Optional[str] = None) -> int:
+                    size_range: Optional[Tuple[int, int]] = None,
+                    identity_threshold: float = 0.0,
+                    block_type: Optional[str] = None,
+                    contig_search: Optional[str] = None,
+                    pfam_search: Optional[str] = None) -> int:
     """Get total count of blocks matching filters."""
     conn = get_database_connection()
     
@@ -375,6 +402,29 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
     if block_type:
         query += " AND block_type = ?"
         params.append(block_type)
+
+    # Contig substring filter
+    if contig_search:
+        toks = [t.strip() for t in contig_search.split(',') if t.strip()]
+        if toks:
+            ors = []
+            for t in toks:
+                ors.append("query_locus LIKE ?")
+                params.append(f"%{t}%")
+                ors.append("target_locus LIKE ?")
+                params.append(f"%{t}%")
+            query += " AND (" + " OR ".join(ors) + ")"
+
+    # PFAM substring filter via EXISTS
+    if pfam_search:
+        toks = [t.strip().lower() for t in pfam_search.split(',') if t.strip()]
+        if toks:
+            ors = []
+            for t in toks:
+                ors.append("LOWER(g.pfam_domains) LIKE ?")
+                params.append(f"%{t}%")
+            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = syntenic_blocks.block_id AND (" + " OR ".join(ors) + ")"
+            query += f" AND EXISTS ({sub})"
     
     result = conn.execute(query, params).fetchone()
     return result[0] if result else 0
@@ -425,12 +475,20 @@ def create_sidebar_filters() -> Dict:
         help="Number of blocks to show per page"
     )
     
-    # PFAM domain search
-    st.sidebar.subheader("🎯 PFAM Search")
-    domain_search = st.sidebar.text_input(
-        "Search domains",
-        placeholder="e.g., PF00001, kinase, transferase",
-        help="Search for specific PFAM domains or keywords"
+    # Contig substring filter
+    st.sidebar.subheader("🧬 Contig Filter")
+    contig_search = st.sidebar.text_input(
+        "Contig substrings (comma-separated)",
+        placeholder="e.g., accn|JBBKAE010000002, JALJEL000000000",
+        help="Filter blocks whose query or target locus contains any of these substrings"
+    )
+
+    # PFAM domain search (substring, comma-delimited)
+    st.sidebar.subheader("🎯 PFAM Filter")
+    pfam_search = st.sidebar.text_input(
+        "PFAM substrings (comma-separated)",
+        placeholder="e.g., Ribosomal_S10, L3, tRNA-synt",
+        help="Show blocks having genes annotated with any of these substrings"
     )
     
     return {
@@ -439,7 +497,8 @@ def create_sidebar_filters() -> Dict:
         'identity_threshold': identity_threshold,
         'block_type': block_type,
         'page_size': page_size,
-        'domain_search': domain_search
+        'contig_search': contig_search,
+        'pfam_search': pfam_search
     }
 
 def display_dashboard():
@@ -568,7 +627,9 @@ def display_block_explorer(filters: Dict):
         genome_filter=filters['genomes'],
         size_range=filters['size_range'],
         identity_threshold=filters['identity_threshold'],
-        block_type=filters['block_type']
+        block_type=filters['block_type'],
+        contig_search=filters.get('contig_search') or None,
+        pfam_search=filters.get('pfam_search') or None
     )
     
     if blocks_df.empty:

@@ -194,6 +194,7 @@ class CassetteSegmenterConfig(BaseModel):
 class AnalyzeConfig(BaseModel):
     """Analysis stage configuration."""
     clustering: 'ClusteringConfig' = Field(default_factory=lambda: ClusteringConfig())
+    attach: 'AttachConfig' = Field(default_factory=lambda: AttachConfig())
 
 
 class ClusteringConfig(BaseModel):
@@ -214,6 +215,7 @@ class ClusteringConfig(BaseModel):
     srp_seed: int = Field(default=1337, description="SRP random seed for determinism")
     shingle_k: int = Field(default=3, description="k-gram shingle size")
     shingle_method: Literal["xor", "subset", "bandset", "icws"] = Field(default="xor", description="Per-window tokenization method for shingles")
+    ignore_strand_in_tokens: bool = Field(default=False, description="Zero the strand dimension before SRP tokenization")
     strand_canonical_shingles: bool = Field(default=False, description="Make k-gram shingles strand-invariant by canonicalizing forward/reverse tuples")
     # ICWS + skip-gram parameters (defaults preserve legacy XOR behavior)
     icws_r: int = Field(default=8, description="ICWS samples per window (tuple length)")
@@ -266,6 +268,37 @@ class ClusteringConfig(BaseModel):
             raise ValueError("Size ratios must be positive")
         return v
 
+
+class AttachConfig(BaseModel):
+    """Post-clustering attachment stage configuration (PFAM-agnostic)."""
+    enable: bool = Field(default=False, description="Enable sink-block attachment stage")
+    # Method and sampling
+    member_sample: int = Field(default=5, description="Sample up to this many members per cluster for triangle checks")
+    k1_method: Literal["xor", "icws"] = Field(default="xor", description="Per-window tokenization for k=1 shingles")
+    icws_r: int = Field(default=8, description="ICWS r samples per window (when k1_method=icws)")
+    icws_bbit: int = Field(default=0, description="ICWS b-bit compression (0 disables)")
+    # Stitching
+    enable_stitch: bool = Field(default=True, description="Enable stitching of adjacent sink blocks")
+    stitch_gap: int = Field(default=2, description="Max gap (windows) for stitching neighbors")
+    stitch_max_neighbors: int = Field(default=2, description="Max neighbors to stitch")
+    # Thresholds (main)
+    bandset_contain_tau: float = Field(default=0.65)
+    k1_contain_tau: float = Field(default=0.65)
+    k1_inter_min: int = Field(default=2)
+    margin_min: float = Field(default=0.10)
+    triangle_min: int = Field(default=1)
+    triangle_member_tau: float = Field(default=0.50)
+    # Thresholds (tiny blocks)
+    tiny_window_cap: int = Field(default=3)
+    bandset_contain_tau_tiny: float = Field(default=0.55)
+    k1_contain_tau_tiny: float = Field(default=0.55)
+    k1_inter_min_tiny: int = Field(default=1)
+    margin_min_tiny: float = Field(default=0.05)
+    triangle_min_tiny: int = Field(default=1)
+    triangle_member_tau_tiny: float = Field(default=0.50)
+    # Signatures cache (optional)
+    load_signatures: Optional[Path] = Field(default=None, description="Path to precomputed union signatures pickle")
+    limit_member_sample: int = Field(default=5, description="Cap triangle member samples when loading signatures")
 
 class ELSAConfig(BaseModel):
     """Complete ELSA configuration."""

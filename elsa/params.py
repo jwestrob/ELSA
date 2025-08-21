@@ -72,7 +72,6 @@ class ContinuousConfig(BaseModel):
     """Continuous indexing (SRP) parameters."""
     srp_bits: int = Field(default=256, description="Signed random projection bits")
     srp_seed: int = Field(default=13, description="SRP random seed")
-    hnsw_enable: bool = Field(default=False, description="Enable HNSW approximate search")
 
 
 class ChainConfig(BaseModel):
@@ -194,6 +193,7 @@ class CassetteSegmenterConfig(BaseModel):
 class AnalyzeConfig(BaseModel):
     """Analysis stage configuration."""
     clustering: 'ClusteringConfig' = Field(default_factory=lambda: ClusteringConfig())
+    attach: 'AttachConfig' = Field(default_factory=lambda: AttachConfig())
 
 
 class ClusteringConfig(BaseModel):
@@ -213,6 +213,30 @@ class ClusteringConfig(BaseModel):
     srp_band_bits: int = Field(default=8, description="Bits per SRP band")
     srp_seed: int = Field(default=1337, description="SRP random seed for determinism")
     shingle_k: int = Field(default=3, description="k-gram shingle size")
+    shingle_method: Literal["xor", "subset", "bandset", "icws"] = Field(default="xor", description="Per-window tokenization method for shingles")
+    ignore_strand_in_tokens: bool = Field(default=False, description="Zero the strand dimension before SRP tokenization")
+    strand_canonical_shingles: bool = Field(default=False, description="Make k-gram shingles strand-invariant by canonicalizing forward/reverse tuples")
+    # ICWS + skip-gram parameters (defaults preserve legacy XOR behavior)
+    icws_r: int = Field(default=8, description="ICWS samples per window (tuple length)")
+    icws_bbit: int = Field(default=0, description="If >0, pack sampled band-id to b bits (b-bit MinHash style)")
+    icws_weighting: Literal["uniform"] = Field(default="uniform", description="Band-level weighting for ICWS; currently 'uniform' only")
+    shingle_pattern: Optional[Union[str, List[int]]] = Field(default=None, description="Skip-gram offsets as '0,2,5' or [0,2,5]; if None, use contiguous k-grams")
+    bands_per_window: int = Field(default=4, description="Bands per window when using 'subset' shingling")
+    band_stride: int = Field(default=7, description="Stride for rotating band selection per window when using 'subset'")
+
+    # Hybrid bandset augmentation (order-agnostic band-token Jaccard)
+    enable_hybrid_bandset: bool = Field(default=False, description="Augment edges using bandset Jaccard for robust long/high-identity blocks")
+    bandset_tau: float = Field(default=0.25, description="Minimum (weighted) Jaccard for bandset edges")
+    bandset_df_max: int = Field(default=2000, description="Max DF for bandset tokens (more permissive than main df_max)")
+    bandset_min_len: int = Field(default=20, description="Minimum alignment length to consider bandset augmentation")
+    bandset_min_identity: float = Field(default=0.98, description="Minimum identity to consider bandset augmentation")
+
+    # Performance controls
+    enable_mutual_topk_filter: bool = Field(default=False, description="Apply mutual-top-k gating on similarities")
+    max_candidates_per_block: int = Field(default=500, description="Cap on total candidates evaluated per block (after filtering)")
+    min_shared_shingles: int = Field(default=2, description="Minimum shared shingles in postings before Jaccard")
+    bandset_topk_candidates: int = Field(default=100, description="Max bandset candidates per block (top by shared tokens)")
+    min_shared_band_tokens: int = Field(default=2, description="Minimum shared band tokens before bandset Jaccard")
     
     # Graph construction
     jaccard_tau: float = Field(default=0.5, description="Minimum Jaccard similarity threshold")
@@ -243,6 +267,37 @@ class ClusteringConfig(BaseModel):
             raise ValueError("Size ratios must be positive")
         return v
 
+
+class AttachConfig(BaseModel):
+    """Post-clustering attachment stage configuration (PFAM-agnostic)."""
+    enable: bool = Field(default=False, description="Enable sink-block attachment stage")
+    # Method and sampling
+    member_sample: int = Field(default=5, description="Sample up to this many members per cluster for triangle checks")
+    k1_method: Literal["xor", "icws"] = Field(default="xor", description="Per-window tokenization for k=1 shingles")
+    icws_r: int = Field(default=8, description="ICWS r samples per window (when k1_method=icws)")
+    icws_bbit: int = Field(default=0, description="ICWS b-bit compression (0 disables)")
+    # Stitching
+    enable_stitch: bool = Field(default=True, description="Enable stitching of adjacent sink blocks")
+    stitch_gap: int = Field(default=2, description="Max gap (windows) for stitching neighbors")
+    stitch_max_neighbors: int = Field(default=2, description="Max neighbors to stitch")
+    # Thresholds (main)
+    bandset_contain_tau: float = Field(default=0.65)
+    k1_contain_tau: float = Field(default=0.65)
+    k1_inter_min: int = Field(default=2)
+    margin_min: float = Field(default=0.10)
+    triangle_min: int = Field(default=1)
+    triangle_member_tau: float = Field(default=0.50)
+    # Thresholds (tiny blocks)
+    tiny_window_cap: int = Field(default=3)
+    bandset_contain_tau_tiny: float = Field(default=0.55)
+    k1_contain_tau_tiny: float = Field(default=0.55)
+    k1_inter_min_tiny: int = Field(default=1)
+    margin_min_tiny: float = Field(default=0.05)
+    triangle_min_tiny: int = Field(default=1)
+    triangle_member_tau_tiny: float = Field(default=0.50)
+    # Signatures cache (optional)
+    load_signatures: Optional[Path] = Field(default=None, description="Path to precomputed union signatures pickle")
+    limit_member_sample: int = Field(default=5, description="Cap triangle member samples when loading signatures")
 
 class ELSAConfig(BaseModel):
     """Complete ELSA configuration."""

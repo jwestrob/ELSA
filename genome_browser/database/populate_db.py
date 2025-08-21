@@ -342,9 +342,17 @@ class ELSADataIngester:
         return None
     
     def ingest_syntenic_blocks(self, blocks_file: Path, landscape_file: Optional[Path] = None) -> None:
-        """Ingest syntenic blocks from CSV file with embedded window data."""
+        """Ingest syntenic blocks from CSV file with embedded window data.
+
+        Clears existing syntenic_blocks/cluster_assignments to allow reruns without
+        UNIQUE constraint failures.
+        """
         logger.info(f"Loading syntenic blocks from {blocks_file}")
-        
+        # Clear previous data for reruns (respect FK order)
+        self.conn.execute("DELETE FROM cluster_assignments")
+        self.conn.execute("DELETE FROM gene_block_mappings")
+        self.conn.execute("DELETE FROM syntenic_blocks")
+
         df = pd.read_csv(blocks_file)
         cursor = self.conn.cursor()
         
@@ -439,13 +447,13 @@ class ELSADataIngester:
             
             cursor.execute("""
                 INSERT INTO syntenic_blocks
-                (block_id, query_locus, target_locus, query_genome_id, target_genome_id,
+                (block_id, cluster_id, query_locus, target_locus, query_genome_id, target_genome_id,
                  query_contig_id, target_contig_id, length, identity, score,
                  n_query_windows, n_target_windows, query_window_start, query_window_end,
                  target_window_start, target_window_end, query_windows_json, target_windows_json, block_type)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
-                row['block_id'], row['query_locus'], row['target_locus'],
+                row['block_id'], row.get('cluster_id', 0), row['query_locus'], row['target_locus'],
                 query_genome_id, target_genome_id, query_contig_id, target_contig_id,
                 row['length'], row['identity'], row['score'],
                 row['n_query_windows'], row['n_target_windows'],
@@ -457,9 +465,13 @@ class ELSADataIngester:
         logger.info(f"Ingested {len(df)} syntenic blocks with window information")
     
     def ingest_clusters(self, clusters_file: Path) -> None:
-        """Ingest cluster information from CSV file."""
+        """Ingest cluster information from CSV file (legacy summary, optional).
+
+        Clears existing clusters to avoid duplicate inserts on reruns.
+        """
         logger.info(f"Loading clusters from {clusters_file}")
-        
+        # Clear previous cluster table to avoid duplicates
+        self.conn.execute("DELETE FROM clusters")
         df = pd.read_csv(clusters_file)
         cursor = self.conn.cursor()
         
@@ -604,146 +616,234 @@ class ELSADataIngester:
         logger.info(f"Gene-block mappings created: {unique_genes} unique genes, {total_mappings} total mappings")
         logger.info(f"Average mappings per gene: {total_mappings / max(1, unique_genes):.1f}")
     
-    def create_cluster_assignments(self) -> None:
-        """Create mutually exclusive assignments linking syntenic blocks to clusters."""
-        logger.info("Creating cluster assignments...")
-        
-        cursor = self.conn.cursor()
-        
-        # DEBUG: Check existing cluster_id distribution before assignment
-        cursor.execute("SELECT cluster_id, COUNT(*) FROM syntenic_blocks GROUP BY cluster_id ORDER BY cluster_id LIMIT 10")
-        pre_distribution = cursor.fetchall()
-        logger.info(f"DEBUG: Pre-assignment cluster distribution: {pre_distribution}")
-        
-        # Clear existing assignments to start fresh
-        cursor.execute("DELETE FROM cluster_assignments")
-        
-        # Get all clusters with their expected sizes and representatives
-        cursor.execute("""
-            SELECT cluster_id, size, representative_query, representative_target 
-            FROM clusters 
-            ORDER BY cluster_id
-        """)
-        clusters = cursor.fetchall()
-        logger.info(f"DEBUG: Found {len(clusters)} clusters to process")
-        
-        # Get all available block IDs
-        cursor.execute("SELECT block_id FROM syntenic_blocks ORDER BY block_id")
-        all_blocks = [row[0] for row in cursor.fetchall()]
-        available_blocks = set(all_blocks)
-        
-        # Track assignments in memory to ensure mutual exclusivity
-        assignments = []  # List of (block_id, cluster_id) tuples
-        
-        logger.info(f"Total blocks available for assignment: {len(available_blocks)}")
-        
-        # Phase 1: Assign blocks based on representative loci
-        for cluster_id, expected_size, repr_query, repr_target in clusters:
-            cluster_blocks = set()
-            
-            # Find blocks matching representatives
-            if repr_query:
-                cursor.execute("""
-                    SELECT block_id FROM syntenic_blocks 
-                    WHERE (query_locus = ? OR target_locus = ?) AND block_id IN ({})
-                """.format(','.join('?' * len(available_blocks))), 
-                          (repr_query, repr_query, *available_blocks))
-                for row in cursor.fetchall():
-                    if row[0] in available_blocks:
-                        cluster_blocks.add(row[0])
-                        available_blocks.remove(row[0])
-            
-            if repr_target:
-                cursor.execute("""
-                    SELECT block_id FROM syntenic_blocks 
-                    WHERE (query_locus = ? OR target_locus = ?) AND block_id IN ({})
-                """.format(','.join('?' * len(available_blocks)) if available_blocks else 'NULL'), 
-                          (repr_target, repr_target, *available_blocks) if available_blocks else (repr_target, repr_target))
-                for row in cursor.fetchall():
-                    if row[0] in available_blocks:
-                        cluster_blocks.add(row[0])
-                        available_blocks.remove(row[0])
-            
-            # Add these assignments
-            for block_id in cluster_blocks:
-                assignments.append((block_id, cluster_id))
-            
-            logger.info(f"Cluster {cluster_id}: Found {len(cluster_blocks)} blocks via representatives (expected: {expected_size})")
-        
-        # Phase 2: Distribute remaining blocks proportionally to reach expected cluster sizes
-        logger.info(f"Remaining blocks to assign: {len(available_blocks)}")
-        
-        # Calculate how many more blocks each cluster needs
-        current_counts = {}
-        for block_id, cluster_id in assignments:
-            current_counts[cluster_id] = current_counts.get(cluster_id, 0) + 1
-        
-        # Convert available_blocks to list for indexing
-        remaining_blocks = list(available_blocks)
-        block_index = 0
-        
-        for cluster_id, expected_size, _, _ in clusters:
-            current_count = current_counts.get(cluster_id, 0)
-            needed = max(0, min(expected_size - current_count, len(remaining_blocks) - block_index))
-            
-            # Assign the next 'needed' blocks to this cluster
-            for i in range(needed):
-                if block_index < len(remaining_blocks):
-                    assignments.append((remaining_blocks[block_index], cluster_id))
-                    block_index += 1
-            
-            logger.info(f"Cluster {cluster_id}: {current_count} + {needed} = {current_count + needed} blocks (target: {expected_size})")
-        
-        # Insert all assignments in batch
-        cursor.executemany("""
-            INSERT INTO cluster_assignments (block_id, cluster_id)
-            VALUES (?, ?)
-        """, assignments)
-        
-        self.conn.commit()
-        
-        # Verify mutual exclusivity
-        cursor.execute("SELECT COUNT(DISTINCT block_id), COUNT(*) FROM cluster_assignments")
-        unique_blocks, total_assignments = cursor.fetchone()
-        
-        if unique_blocks != total_assignments:
-            logger.error(f"Assignment verification failed: {unique_blocks} unique blocks but {total_assignments} total assignments")
-        else:
-            logger.info(f"Successfully created {total_assignments} mutually exclusive cluster assignments")
-        
-        # Log final cluster sizes
-        cursor.execute("""
-            SELECT ca.cluster_id, COUNT(*) as actual_size, c.size as expected_size
-            FROM cluster_assignments ca
-            JOIN clusters c ON ca.cluster_id = c.cluster_id
-            GROUP BY ca.cluster_id
-            ORDER BY ca.cluster_id
-        """)
-        assignment_counts = cursor.fetchall()
-        for cluster_id, actual_size, expected_size in assignment_counts:
-            logger.info(f"Cluster {cluster_id}: {actual_size} blocks assigned (expected: {expected_size})")
-        
-        logger.info("DEBUG: Updating syntenic_blocks table with cluster assignments...")
-        
-        # CRITICAL: Update the cluster_id column in syntenic_blocks table
-        # This is what the cluster analyzer actually queries!
-        cursor.execute("""
-            UPDATE syntenic_blocks 
+    def create_cluster_assignments(self,
+                                  jaccard_tau: float = 0.60,
+                                  mutual_k: int = 5,
+                                  degree_cap: int = 15,
+                                  df_max: int = 30) -> None:
+        """Compute SRP mutual-Jaccard clusters (no PFAM, no size targets) and persist to DB.
+
+        Uses window-level embeddings from windows.parquet to form SRP shingles per block,
+        builds a sparse mutual-k Jaccard graph, runs community detection, and writes
+        cluster_assignments + updates syntenic_blocks.cluster_id.
+        """
+        import pandas as _pd
+        import numpy as _np
+        from types import SimpleNamespace as _NS
+        from pathlib import Path as _Path
+        from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard as _cluster
+
+        logger.info("Creating cluster assignments via SRP mutual-Jaccard…")
+
+        # If syntenic_blocks already carries non-zero cluster_id from CSV, just rebuild clusters summary
+        existing = _pd.read_sql_query("SELECT COUNT(*) AS n FROM syntenic_blocks WHERE cluster_id > 0", self.conn)['n'].iloc[0]
+        if existing and int(existing) > 0:
+            logger.info("Detected existing cluster_id assignments (%d). Rebuilding clusters summary and skipping recluster.", int(existing))
+            try:
+                self.conn.execute("DELETE FROM clusters")
+                agg = _pd.read_sql_query(
+                    """
+                    SELECT cluster_id, COUNT(*) AS size, CAST(AVG(length) AS INT) AS consensus_length, AVG(identity) AS consensus_score
+                    FROM syntenic_blocks WHERE cluster_id > 0 GROUP BY cluster_id
+                    """,
+                    self.conn,
+                )
+                rep = _pd.read_sql_query(
+                    "SELECT cluster_id, block_id, query_locus, target_locus, score FROM syntenic_blocks WHERE cluster_id > 0 AND score IS NOT NULL",
+                    self.conn,
+                )
+                rep = rep.sort_values(['cluster_id','score'], ascending=[True, False]).groupby('cluster_id').head(1)
+                merged = agg.merge(rep[['cluster_id','query_locus','target_locus']], on='cluster_id', how='left')
+                merged = merged.fillna({'query_locus':'', 'target_locus':''})
+                cur = self.conn.cursor()
+                for row in merged.itertuples(index=False):
+                    cur.execute(
+                        """
+                        INSERT INTO clusters
+                        (cluster_id, size, consensus_length, consensus_score, diversity,
+                         representative_query, representative_target, cluster_type)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            int(row.cluster_id), int(row.size), int(row.consensus_length or 0), float(row.consensus_score or 0.0), 0.0,
+                            str(row.query_locus), str(row.target_locus), 'unknown'
+                        )
+                    )
+                self.conn.commit()
+                logger.info("Clusters summary rebuilt from existing assignments: %d rows", len(merged))
+            except Exception as e:
+                logger.warning("Failed to rebuild clusters summary from existing assignments: %s", e)
+            return
+
+        # 1) Load blocks from DB (with window JSON)
+        df = _pd.read_sql_query(
+            """
+            SELECT block_id, query_windows_json, target_windows_json
+            FROM syntenic_blocks
+            """,
+            self.conn,
+        )
+        blocks = []
+
+        class _Block:
+            __slots__ = ("id", "query_windows", "target_windows", "strand", "matches")
+            def __init__(self, bid, qw, tw):
+                self.id = int(bid)
+                self.query_windows = list(qw)
+                self.target_windows = list(tw)
+                self.strand = 1
+                self.matches = [
+                    _NS(query_window_id=qq, target_window_id=tt) for qq, tt in zip(self.query_windows, self.target_windows)
+                ]
+
+        for row in df.itertuples(index=False):
+            bid = int(row.block_id)
+            qwins = [x for x in str(row.query_windows_json or '').split(';') if x]
+            twins = [x for x in str(row.target_windows_json or '').split(';') if x]
+            n = min(len(qwins), len(twins))
+            if n <= 0:
+                continue
+            blocks.append(_Block(bid, qwins[:n], twins[:n]))
+
+        logger.info("Loaded %d blocks with window info", len(blocks))
+        if not blocks:
+            logger.warning("No blocks found; skipping clustering")
+            return
+
+        # 2) Create window embedding lookup from windows.parquet
+        def _find_windows_parquet() -> _Path | None:
+            here = _Path(__file__).resolve()
+            candidates = [
+                here.parents[2] / 'elsa_index/shingles/windows.parquet',
+                here.parents[1] / 'elsa_index/shingles/windows.parquet',
+                _Path('elsa_index/shingles/windows.parquet').resolve(),
+            ]
+            for p in candidates:
+                if p.exists():
+                    return p
+            return None
+
+        win_pq = _find_windows_parquet()
+        if not win_pq:
+            logger.error("windows.parquet not found. Expected at elsa_index/shingles/windows.parquet")
+            return
+        win_df = _pd.read_parquet(win_pq)
+        emb_cols = [c for c in win_df.columns if str(c).startswith('emb_')]
+        if not emb_cols:
+            logger.error("windows.parquet missing emb_* columns: %s", win_pq)
+            return
+        win_df = win_df[['sample_id', 'locus_id', 'window_idx'] + emb_cols].copy()
+        win_df['wid'] = win_df['sample_id'].astype(str) + '_' + win_df['locus_id'].astype(str) + '_' + win_df['window_idx'].astype(str)
+        mat = win_df[emb_cols].to_numpy(dtype=_np.float32)
+        wid2i = {w: i for i, w in enumerate(win_df['wid'].tolist())}
+
+        def lookup(wid: str):
+            i = wid2i.get(str(wid))
+            if i is None:
+                return None
+            return mat[i]
+
+        # 3) Build clustering config
+        cfg = _NS(
+            jaccard_tau=float(jaccard_tau),
+            mutual_k=int(mutual_k),
+            df_max=int(df_max),
+            use_weighted_jaccard=True,
+            min_low_df_anchors=2,
+            idf_mean_min=1.0,
+            max_df_percentile=None,
+            v_mad_max_genes=0.5,
+            min_anchors=2,
+            min_span_genes=4,
+            enable_cassette_mode=True,
+            cassette_max_len=4,
+            degree_cap=int(degree_cap),
+            k_core_min_degree=3,
+            triangle_support_min=1,
+            use_community_detection=True,
+            community_method='greedy',
+            srp_bits=256, srp_bands=32, srp_band_bits=8, srp_seed=1337,
+            shingle_k=3,
+            keep_singletons=False, sink_label=0,
+            size_ratio_min=0.5, size_ratio_max=2.0,
+        )
+
+        # 4) Cluster and persist
+        logger.info("Clustering %d blocks (SRP mutual-Jaccard)…", len(blocks))
+        assignments = _cluster(blocks, lookup, cfg)
+        from collections import Counter as _Counter
+        ctr = _Counter([c for c in assignments.values() if c and c > 0])
+        logger.info("Found %d non-sink clusters. Top sizes: %s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
+
+        cur = self.conn.cursor()
+        cur.execute("DELETE FROM cluster_assignments")
+        rows = [(int(bid), int(cid)) for bid, cid in assignments.items() if cid and cid > 0]
+        if rows:
+            cur.executemany("INSERT INTO cluster_assignments (block_id, cluster_id) VALUES (?, ?)", rows)
+        # Reset and update
+        cur.execute("UPDATE syntenic_blocks SET cluster_id = 0")
+        cur.execute(
+            """
+            UPDATE syntenic_blocks
             SET cluster_id = (
-                SELECT ca.cluster_id 
-                FROM cluster_assignments ca 
-                WHERE ca.block_id = syntenic_blocks.block_id
+                SELECT ca.cluster_id FROM cluster_assignments ca WHERE ca.block_id = syntenic_blocks.block_id
             )
             WHERE block_id IN (SELECT block_id FROM cluster_assignments)
-        """)
-        
-        updated_count = cursor.rowcount
-        logger.info(f"DEBUG: Updated cluster_id for {updated_count} blocks in syntenic_blocks table")
-        
-        # Verify the update worked
-        cursor.execute("SELECT cluster_id, COUNT(*) FROM syntenic_blocks GROUP BY cluster_id ORDER BY cluster_id LIMIT 10")
-        cluster_distribution = cursor.fetchall()
-        logger.info(f"DEBUG: Post-update cluster distribution: {cluster_distribution}")
+            """
+        )
+        self.conn.commit()
+        logger.info("Cluster assignments persisted: %d assigned", len(rows))
+
+        # Rebuild clusters summary table from current assignments so the UI has consistent metadata
+        logger.info("Rebuilding clusters summary table from assignments…")
+        try:
+            # Clear previous summary
+            self.conn.execute("DELETE FROM clusters")
+            # Aggregate per-cluster stats from syntenic_blocks
+            agg_query = """
+                SELECT cluster_id,
+                       COUNT(*) AS size,
+                       CAST(AVG(length) AS INT) AS consensus_length,
+                       AVG(identity) AS consensus_score
+                FROM syntenic_blocks
+                WHERE cluster_id > 0
+                GROUP BY cluster_id
+            """
+            clusters_df = _pd.read_sql_query(agg_query, self.conn)
+            rep_df = _pd.read_sql_query(
+                """
+                SELECT sb.cluster_id, sb.block_id, sb.query_locus, sb.target_locus, sb.score
+                FROM syntenic_blocks sb
+                WHERE sb.cluster_id > 0 AND sb.score IS NOT NULL
+            """, self.conn)
+            rep_block = rep_df.sort_values(['cluster_id','score'], ascending=[True, False]).groupby('cluster_id').head(1)
+
+            merged = clusters_df.merge(rep_block[['cluster_id','query_locus','target_locus']], on='cluster_id', how='left')
+            merged['diversity'] = 0.0
+            merged['cluster_type'] = 'unknown'
+            merged = merged.fillna({'query_locus':'', 'target_locus':''})
+
+            cur = self.conn.cursor()
+            for row in merged.itertuples(index=False):
+                cur.execute(
+                    """
+                    INSERT INTO clusters
+                    (cluster_id, size, consensus_length, consensus_score, diversity,
+                     representative_query, representative_target, cluster_type)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        int(row.cluster_id), int(row.size), int(row.consensus_length or 0),
+                        float(row.consensus_score or 0.0), float(row.diversity),
+                        str(row.query_locus), str(row.target_locus), str(row.cluster_type)
+                    )
+                )
+            self.conn.commit()
+            logger.info("Clusters summary rebuilt: %d rows", len(merged))
+        except Exception as e:
+            logger.warning("Failed to rebuild clusters summary: %s", e)
+
+        # If CSV already provided cluster_ids, we can skip re-clustering.
     
     def generate_annotation_stats(self) -> None:
         """Generate annotation statistics for dashboard."""

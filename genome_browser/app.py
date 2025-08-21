@@ -115,7 +115,9 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
                         genome_filter: Optional[List[str]] = None,
                         size_range: Optional[Tuple[int, int]] = None,
                         identity_threshold: float = 0.0,
-                        block_type: Optional[str] = None) -> pd.DataFrame:
+                        block_type: Optional[str] = None,
+                        contig_search: Optional[str] = None,
+                        pfam_search: Optional[str] = None) -> pd.DataFrame:
     """Load syntenic blocks with filters and pagination."""
     conn = get_database_connection()
     
@@ -147,6 +149,29 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
     if block_type:
         query += " AND sb.block_type = ?"
         params.append(block_type)
+
+    # Contig substring filter (comma-delimited OR)
+    if contig_search:
+        toks = [t.strip() for t in contig_search.split(',') if t.strip()]
+        if toks:
+            ors = []
+            for t in toks:
+                ors.append("sb.query_locus LIKE ?")
+                params.append(f"%{t}%")
+                ors.append("sb.target_locus LIKE ?")
+                params.append(f"%{t}%")
+            query += " AND (" + " OR ".join(ors) + ")"
+
+    # PFAM substring filter via EXISTS (comma-delimited OR)
+    if pfam_search:
+        toks = [t.strip().lower() for t in pfam_search.split(',') if t.strip()]
+        if toks:
+            ors = []
+            for t in toks:
+                ors.append("LOWER(g.pfam_domains) LIKE ?")
+                params.append(f"%{t}%")
+            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = sb.block_id AND (" + " OR ".join(ors) + ")"
+            query += f" AND EXISTS ({sub})"
     
     query += " ORDER BY sb.identity DESC, sb.block_id"  # Show high-quality alignments in a more representative order
     query += " LIMIT ? OFFSET ?"
@@ -350,9 +375,11 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
 
 @st.cache_data
 def get_block_count(genome_filter: Optional[List[str]] = None,
-                   size_range: Optional[Tuple[int, int]] = None,
-                   identity_threshold: float = 0.0,
-                   block_type: Optional[str] = None) -> int:
+                    size_range: Optional[Tuple[int, int]] = None,
+                    identity_threshold: float = 0.0,
+                    block_type: Optional[str] = None,
+                    contig_search: Optional[str] = None,
+                    pfam_search: Optional[str] = None) -> int:
     """Get total count of blocks matching filters."""
     conn = get_database_connection()
     
@@ -375,6 +402,29 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
     if block_type:
         query += " AND block_type = ?"
         params.append(block_type)
+
+    # Contig substring filter
+    if contig_search:
+        toks = [t.strip() for t in contig_search.split(',') if t.strip()]
+        if toks:
+            ors = []
+            for t in toks:
+                ors.append("query_locus LIKE ?")
+                params.append(f"%{t}%")
+                ors.append("target_locus LIKE ?")
+                params.append(f"%{t}%")
+            query += " AND (" + " OR ".join(ors) + ")"
+
+    # PFAM substring filter via EXISTS
+    if pfam_search:
+        toks = [t.strip().lower() for t in pfam_search.split(',') if t.strip()]
+        if toks:
+            ors = []
+            for t in toks:
+                ors.append("LOWER(g.pfam_domains) LIKE ?")
+                params.append(f"%{t}%")
+            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = syntenic_blocks.block_id AND (" + " OR ".join(ors) + ")"
+            query += f" AND EXISTS ({sub})"
     
     result = conn.execute(query, params).fetchone()
     return result[0] if result else 0
@@ -425,12 +475,20 @@ def create_sidebar_filters() -> Dict:
         help="Number of blocks to show per page"
     )
     
-    # PFAM domain search
-    st.sidebar.subheader("🎯 PFAM Search")
-    domain_search = st.sidebar.text_input(
-        "Search domains",
-        placeholder="e.g., PF00001, kinase, transferase",
-        help="Search for specific PFAM domains or keywords"
+    # Contig substring filter
+    st.sidebar.subheader("🧬 Contig Filter")
+    contig_search = st.sidebar.text_input(
+        "Contig substrings (comma-separated)",
+        placeholder="e.g., accn|JBBKAE010000002, JALJEL000000000",
+        help="Filter blocks whose query or target locus contains any of these substrings"
+    )
+
+    # PFAM domain search (substring, comma-delimited)
+    st.sidebar.subheader("🎯 PFAM Filter")
+    pfam_search = st.sidebar.text_input(
+        "PFAM substrings (comma-separated)",
+        placeholder="e.g., Ribosomal_S10, L3, tRNA-synt",
+        help="Show blocks having genes annotated with any of these substrings"
     )
     
     return {
@@ -439,7 +497,8 @@ def create_sidebar_filters() -> Dict:
         'identity_threshold': identity_threshold,
         'block_type': block_type,
         'page_size': page_size,
-        'domain_search': domain_search
+        'contig_search': contig_search,
+        'pfam_search': pfam_search
     }
 
 def display_dashboard():
@@ -568,7 +627,9 @@ def display_block_explorer(filters: Dict):
         genome_filter=filters['genomes'],
         size_range=filters['size_range'],
         identity_threshold=filters['identity_threshold'],
-        block_type=filters['block_type']
+        block_type=filters['block_type'],
+        contig_search=filters.get('contig_search') or None,
+        pfam_search=filters.get('pfam_search') or None
     )
     
     if blocks_df.empty:
@@ -1101,8 +1162,59 @@ def display_cluster_explorer():
     
     if organism_filter != "All":
         filtered_stats = [s for s in filtered_stats if organism_filter in s.organisms]
+
+    # PFAM substring filter (case-insensitive matches against any domain in the cluster)
+    with st.expander("PFAM filter", expanded=False):
+        pfam_query = st.text_input(
+            "PFAM substrings",
+            placeholder="Comma-separated, e.g., ribosomal, AAA, ABC_transporter, PF00005",
+            help="Show clusters containing any of the comma-separated substrings (case-insensitive) in PFAM domain names"
+        )
+    if pfam_query:
+        # Support multiple comma-delimited substrings (OR semantics)
+        terms = [t.strip().lower() for t in pfam_query.split(',') if t.strip()]
+        if terms:
+            def _matches(stats):
+                try:
+                    # Check domain_counts first (list of (name, count))
+                    if getattr(stats, 'domain_counts', None):
+                        for name, cnt in stats.domain_counts:
+                            lname = str(name).lower()
+                            if any(term in lname for term in terms):
+                                return True
+                    # Fallback to dominant_functions (list of names)
+                    if getattr(stats, 'dominant_functions', None):
+                        for name in stats.dominant_functions:
+                            lname = str(name).lower()
+                            if any(term in lname for term in terms):
+                                return True
+                except Exception:
+                    pass
+                return False
+            filtered_stats = [s for s in filtered_stats if _matches(s)]
     
-    st.info(f"Showing {len(filtered_stats)} clusters")
+    # Default-limit the number of clusters rendered to keep UI responsive
+    if 'cluster_limit' not in st.session_state:
+        st.session_state.cluster_limit = 20
+    with st.expander("Display options", expanded=False):
+        col_l, col_r = st.columns([3,1])
+        with col_l:
+            new_limit = st.number_input(
+                "Max clusters to display",
+                min_value=1,
+                max_value=max(20, len(filtered_stats)),
+                value=int(st.session_state.cluster_limit),
+                step=10,
+                help="Limit the number of clusters shown to avoid heavy reloads",
+            )
+            st.session_state.cluster_limit = int(new_limit)
+        with col_r:
+            if st.button("Show more", help="Increase limit by 20"):
+                st.session_state.cluster_limit = min(len(filtered_stats), int(st.session_state.cluster_limit) + 20)
+    total_after_filter = len(filtered_stats)
+    render_limit = max(1, min(total_after_filter, int(st.session_state.cluster_limit)))
+    st.info(f"Showing {render_limit} of {total_after_filter} clusters")
+    filtered_stats = filtered_stats[:render_limit]
     
     # Display clusters immediately with plots, generate AI summaries individually
     if filtered_stats:
@@ -1687,6 +1799,46 @@ def display_cluster_detail():
                 st.caption(
                     f"Supported by {support} block(s) | Representative block: {int(rep_block['block_id'])} (score: {rep_block['score']:.1f})"
                 )
+                # Quick action buttons to open genome viewer for blocks in this region
+                col_a, col_b = st.columns([1, 2])
+                with col_a:
+                    if st.button(
+                        f"🔍 View Representative Block {int(rep_block['block_id'])}",
+                        key=f"view_rep_block_{cluster_id}_{i}",
+                        help="Open genome viewer for this region's representative block"
+                    ):
+                        sel = {
+                            'block_id': int(rep_block['block_id']),
+                            'query_locus': rep_block['query_locus'],
+                            'target_locus': rep_block['target_locus'],
+                            'identity': float(rep_block['identity']),
+                            'score': float(rep_block['score']),
+                            'length': int(rep_block['length']),
+                        }
+                        st.session_state.selected_block = sel
+                        st.session_state.current_page = 'genome_viewer'
+                        st.rerun()
+                with col_b:
+                    with st.expander("View supporting blocks in genome viewer", expanded=False):
+                        if 'blocks_subset' in locals() and not blocks_subset.empty:
+                            sup_blocks = blocks_subset.sort_values('score', ascending=False)
+                            sup_blocks = sup_blocks[['block_id','query_locus','target_locus','score','identity','length']]
+                            max_list = 8
+                            for j, row in sup_blocks.head(max_list).iterrows():
+                                bid = int(row['block_id'])
+                                label = f"Block {bid} · score={row['score']:.1f} · id={row['identity']:.3f} · len={int(row['length'])}"
+                                if st.button(f"🔗 {label}", key=f"view_block_{cluster_id}_{i}_{bid}"):
+                                    sel = {
+                                        'block_id': bid,
+                                        'query_locus': row['query_locus'],
+                                        'target_locus': row['target_locus'],
+                                        'identity': float(row['identity']),
+                                        'score': float(row['score']),
+                                        'length': int(row['length']),
+                                    }
+                                    st.session_state.selected_block = sel
+                                    st.session_state.current_page = 'genome_viewer'
+                                    st.rerun()
             else:
                 st.caption(f"Supported by {support} block(s)")
         else:
@@ -1710,6 +1862,40 @@ def display_cluster_detail():
             if involving_blocks > 0:
                 best_block = sample_blocks.loc[sample_blocks['score'].idxmax()]
                 st.caption(f"Participates in {involving_blocks} syntenic block(s) | Representative block: {best_block['block_id']} (score: {best_block['score']:.1f})")
+                # Quick actions to open genome viewer for this locus's blocks
+                col_a, col_b = st.columns([1, 2])
+                with col_a:
+                    bid = int(best_block['block_id'])
+                    if st.button(f"🔍 View Representative Block {bid}", key=f"view_locus_rep_{cluster_id}_{i}"):
+                        sel = {
+                            'block_id': bid,
+                            'query_locus': best_block['query_locus'],
+                            'target_locus': best_block['target_locus'],
+                            'identity': float(best_block['identity']),
+                            'score': float(best_block['score']),
+                            'length': int(best_block['length']),
+                        }
+                        st.session_state.selected_block = sel
+                        st.session_state.current_page = 'genome_viewer'
+                        st.rerun()
+                with col_b:
+                    with st.expander("View blocks for this locus", expanded=False):
+                        sb = sample_blocks.sort_values('score', ascending=False)
+                        for j, row in sb.head(10).iterrows():
+                            bid2 = int(row['block_id'])
+                            label = f"Block {bid2} · score={row['score']:.1f} · id={row['identity']:.3f} · len={int(row['length'])}"
+                            if st.button(f"🔗 {label}", key=f"view_locus_block_{cluster_id}_{i}_{bid2}"):
+                                sel2 = {
+                                    'block_id': bid2,
+                                    'query_locus': row['query_locus'],
+                                    'target_locus': row['target_locus'],
+                                    'identity': float(row['identity']),
+                                    'score': float(row['score']),
+                                    'length': int(row['length']),
+                                }
+                                st.session_state.selected_block = sel2
+                                st.session_state.current_page = 'genome_viewer'
+                                st.rerun()
             else:
                 st.caption(f"No syntenic blocks found for this locus")
         
@@ -1914,7 +2100,7 @@ def display_clustering_tuner():
         config_yaml = st.text_input("Path to ELSA config (to find windows parquet)", value=str(default_config))
     with col2:
         db_path = st.text_input("Genome browser DB path", value=str(DB_PATH))
-        method = st.selectbox("Clustering method", ["mutual_jaccard"], index=0)
+        method = st.selectbox("Clustering method", ["pfam_idf", "mutual_jaccard"], index=0)
         windows_override = st.text_input("Windows parquet override (optional)", value="", help="Full path to *windows*.parquet if manifest/work_dir lookup fails")
 
     st.subheader("Parameters")
@@ -1998,19 +2184,20 @@ def display_clustering_tuner():
                 st.write(f"✓ Loaded {len(blocks)} blocks from CSV")
                 logger.info("[TUNER] Loaded %d blocks", len(blocks))
 
-                # Stitch adjacent blocks to recover split operons/cassettes
-                pre_n = len(blocks)
-                blocks = _stitch_blocks(blocks, max_gap=1)
-                st.write(f"✓ Stitching: {pre_n} → {len(blocks)} blocks after merging adjacents")
-                logger.info("[TUNER] Stitching reduced blocks: %d -> %d", pre_n, len(blocks))
+                if method == 'mutual_jaccard':
+                    # Existing SRP-based mutual jaccard pipeline
+                    pre_n = len(blocks)
+                    blocks = _stitch_blocks(blocks, max_gap=1)
+                    st.write(f"✓ Stitching: {pre_n} → {len(blocks)} blocks after merging adjacents")
+                    logger.info("[TUNER] Stitching reduced blocks: %d -> %d", pre_n, len(blocks))
 
-                override_path = Path(windows_override) if windows_override.strip() else None
-                window_lookup, lookup_meta = _create_window_lookup_from_config(cfg_path, override_path)
-                if window_lookup is None:
-                    st.error("Failed to create window embedding lookup. Check the windows parquet path.")
-                    return
-                st.write(f"✓ Windows parquet: {lookup_meta.get('path','?')} | rows={lookup_meta.get('n_windows',0)} | emb_dim={lookup_meta.get('emb_dim',0)}")
-                logger.info("[TUNER] Windows parquet: %s rows=%s emb_dim=%s", lookup_meta.get('path'), lookup_meta.get('n_windows'), lookup_meta.get('emb_dim'))
+                    override_path = Path(windows_override) if windows_override.strip() else None
+                    window_lookup, lookup_meta = _create_window_lookup_from_config(cfg_path, override_path)
+                    if window_lookup is None:
+                        st.error("Failed to create window embedding lookup. Check the windows parquet path.")
+                        return
+                    st.write(f"✓ Windows parquet: {lookup_meta.get('path','?')} | rows={lookup_meta.get('n_windows',0)} | emb_dim={lookup_meta.get('emb_dim',0)}")
+                    logger.info("[TUNER] Windows parquet: %s rows=%s emb_dim=%s", lookup_meta.get('path'), lookup_meta.get('n_windows'), lookup_meta.get('emb_dim'))
 
                 # Quick coverage check over a sample of window IDs from blocks
                 sample_ids = []
@@ -2023,17 +2210,29 @@ def display_clustering_tuner():
                 st.write(f"Coverage check: {found}/{len(sample_ids)} sampled window IDs found in embeddings")
                 logger.info("[TUNER] Coverage check: %d/%d", found, len(sample_ids))
 
-                st.write(f"Clustering {len(blocks)} blocks with updated parameters...")
-                from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
-                t0 = time.time()
-                assignments = cluster_blocks_jaccard(blocks, window_lookup, cfg)
-                dt = time.time() - t0
-                st.write(f"✓ Clustering finished in {dt:.2f}s")
-                logger.info("[TUNER] clustering finished in %.2fs", dt)
+                if method == 'mutual_jaccard':
+                    st.write(f"Clustering {len(blocks)} blocks with updated parameters (mutual_jaccard)…")
+                    from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
+                    t0 = time.time()
+                    assignments = cluster_blocks_jaccard(blocks, window_lookup, cfg)
+                    dt = time.time() - t0
+                    st.write(f"✓ Clustering finished in {dt:.2f}s")
+                    logger.info("[TUNER] clustering finished in %.2fs", dt)
+                else:
+                    # PFAM IDF-Jaccard over DB directly; bypass CSV/windows
+                    st.write("Clustering blocks via PFAM IDF-Jaccard (DB-backed)…")
+                    from genome_browser.database.cluster_content import cluster_blocks_by_pfam
+                    t0 = time.time()
+                    stats = cluster_blocks_by_pfam(db_path=Path(db_path), jaccard_tau=float(jaccard_tau), mutual_k=int(mutual_k), degree_cap=int(degree_cap), min_token_per_block=3, dry_run=False)
+                    dt = time.time() - t0
+                    st.write(f"✓ PFAM clustering finished in {dt:.2f}s: {stats}")
+                    logger.info("[TUNER] PFAM clustering finished in %.2fs %s", dt, stats)
+                    assignments = None
 
-                if not assignments:
-                    st.error("Re-clustering produced no assignments.")
-                    return
+                if method == 'mutual_jaccard':
+                    if not assignments:
+                        st.error("Re-clustering produced no assignments.")
+                        return
 
                 from collections import Counter
                 ctr = Counter([cl for cl in assignments.values() if cl and cl > 0])
@@ -2041,7 +2240,7 @@ def display_clustering_tuner():
                 logger.info("[TUNER] clusters=%d top_sizes=%s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
 
                 # Optional expansion
-                if enable_expansion:
+                if method == 'mutual_jaccard' and enable_expansion:
                     st.write("Running expansion phase...")
                     t1 = time.time()
                     assignments = _expand_clusters(
@@ -2058,8 +2257,9 @@ def display_clustering_tuner():
                     st.write(f"✓ Expansion finished in {dt1:.2f}s → clusters: {len(ctr2)} (Top sizes: {sorted(ctr2.values(), reverse=True)[:10]})")
                     logger.info("[TUNER] expansion finished in %.2fs clusters=%d", dt1, len(ctr2))
 
-                st.write("Updating genome browser database with new cluster assignments...")
-                _apply_cluster_assignments_to_db(assignments, Path(db_path))
+                if method == 'mutual_jaccard':
+                    st.write("Updating genome browser database with new cluster assignments...")
+                    _apply_cluster_assignments_to_db(assignments, Path(db_path))
 
                 status.update(label="✅ Re-clustering complete", state="complete")
                 st.success("Clusters updated. Reloading app...")

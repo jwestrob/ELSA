@@ -72,7 +72,6 @@ class ContinuousConfig(BaseModel):
     """Continuous indexing (SRP) parameters."""
     srp_bits: int = Field(default=256, description="Signed random projection bits")
     srp_seed: int = Field(default=13, description="SRP random seed")
-    hnsw_enable: bool = Field(default=False, description="Enable HNSW approximate search")
 
 
 class ChainConfig(BaseModel):

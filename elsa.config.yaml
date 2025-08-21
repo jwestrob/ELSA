@@ -1,11 +1,5 @@
 
-chain:
-  gap_extend: 2.0
-  gap_open: 5.0
-  offset_band: 1
-  slope_penalty: 0.2
 continuous:
-  hnsw_enable: false
   srp_bits: 256
   srp_seed: 13
 data:
@@ -15,12 +9,7 @@ discrete:
   K: 4096
   bands_rows: [24, 8]
   emit_skipgram: true
-  idf_max_df_frac: 0.05
-  idf_min_df: 5
   minhash_hashes: 192
-dtw:
-  band: 1
-  enable: false
 ingest:
   gene_caller: prodigal
   keep_partial: false
@@ -45,17 +34,6 @@ shingles:
   strand_flag: signed
   stride: 1
   weights: triangular
-window:
-  micro: { size: 2, stride: 1 }
-  macro: { size: 4, stride: 2 }
-  adaptive: { enable: false }
-phase2:
-  enable: true
-  weighted_sketch: true
-  multiscale: false
-  flip_dp: false
-  calibration: true
-  hnsw: false
 cassette_mode:
   enable: true
   anchors: { cosine_min: 0.91, jaccard_min: 0.3, reciprocal_topk: 2, blacklist_top_pct: 1.0, lambda_jaccard: 0.5 }
@@ -63,7 +41,6 @@ cassette_mode:
   segmenter: { method: chain }
 system:
   jobs: auto
-  mmap: true
   rng_seed: 17
 analyze:
   clustering:
@@ -83,18 +60,9 @@ analyze:
     strand_canonical_shingles: true
     shingle_pattern: [0, 2, 5]
     jaccard_tau: 0.5
-    mutual_k: 3
     df_max: 200
-    enable_hybrid_bandset: false
-    bandset_tau: 0.25
-    bandset_df_max: 3000
-    bandset_min_len: 20
-    bandset_min_identity: 0.98
-    enable_mutual_topk_filter: false
     max_candidates_per_block: 100000
     min_shared_shingles: 1
-    bandset_topk_candidates: 100000
-    min_shared_band_tokens: 1
 
   attach:
     enable: true

@@ -1,6 +1,6 @@
 # ELSA Syntenic Block Clustering — Technical Design (For Model Review)
 
-This document describes the clustering subsystem that assigns syntenic blocks to cassette families using mutual-Jaccard over SRP-derived shingles, with an optional hybrid augmentation. It is written in a maximally dense, implementation-proximal style designed for iterative refinement and machine review.
+This document describes the clustering subsystem that assigns syntenic blocks to cassette families using mutual-Jaccard over SRP-derived shingles. Hybrid augmentation and mutual-top-k gating exist as optional scaffolding but are not part of the default path. It is intentionally dense and implementation-proximal.
 
 ---
 
@@ -10,7 +10,7 @@ This document describes the clustering subsystem that assigns syntenic blocks to
 - Leverage continuous embeddings (SRP) to obtain order-aware, strand-insensitive token sequences.
 - Use a sparse similarity graph with conservative pruning; detect communities via modularity.
 - Preserve determinism and re-runnability across machines and seeds.
-- Optional: augment edges for long, high-identity operons where XOR shingling is brittle.
+- Optional (off by default): augment edges for long, high-identity operons where XOR shingling is brittle.
 
 Non-goals: Inferring evolutionary history; gene-by-gene orthology; plasmid-level topology.
 
@@ -60,11 +60,10 @@ Methods:
 Strand-insensitive tokens and skip-gram shingling
 Before SRP, we null the strand-sign dimension in window embeddings so per-window tokens are the same on forward/reverse loci. Order-awareness is preserved via k-grams.
 
-Skip-gram shingling: Enable k=3 skip-grams using offsets like (0,2,5). This increases robustness to small insertions/deletions while preserving order semantics. If `shingle_pattern` is not set, contiguous k-grams are used. with r (default 8) ICWS samples per window. Each sample selects one band-id with collision probability proportional to its weight (currently uniform). The ordered r-tuple is serialized as the window token and consumed by shingling.
+Skip-gram shingling: Enable k=3 skip-grams using offsets like (0,2,5). This increases robustness to small insertions/deletions while preserving order semantics. If `shingle_pattern` is not set, contiguous k-grams are used.
 
-- Skip-gram shingling: Enable k=3 skip-grams using offsets like (0,2,5) via `shingle_pattern`. This increases robustness to small insertions/deletions while preserving order/orientation semantics. If `shingle_pattern` is not set, contiguous k-grams are used (legacy behavior).
-- Parameters: `shingle_method ∈ {xor, subset, bandset, icws}`, `icws_r`, `icws_bbit`, `shingle_pattern`.
-- Determinism: A global seed (`srp_seed`) deterministically derives per-window/per-sample sub-seeds.
+Parameters: `shingle_method ∈ {xor, subset, bandset, icws}`, `icws_r`, `icws_bbit`, `shingle_pattern`.
+Determinism: A global seed (`srp_seed`) deterministically derives per-window/per-sample sub-seeds.
 
 Migration: keep `shingle_method: xor` to reproduce legacy behavior. To try ICWS while preserving defaults elsewhere, set `shingle_method: icws` and optionally `shingle_pattern: "0,2,5"`.
 
@@ -110,11 +109,11 @@ For each b and its bounded candidate list C_b:
   - mean IDF over intersection ≥ `idf_mean_min`.
 - If accepted: add undirected edge {b,x} with weight = J_w.
 
-Optional local cap: if `enable_mutual_topk_filter` true, restrict to top-`mutual_k` candidates per b before materializing edges (approximate mutual-k gating). Full symmetric mutual-k can be added if needed (requires storing per-node top lists and intersecting).
+Optional local cap (off by default): if `enable_mutual_topk_filter` true, restrict to top-`mutual_k` candidates per b before materializing edges (approximate mutual-k gating). Full symmetric mutual-k can be added if needed.
 
 ---
 
-## 9. Hybrid Bandset Augmentation (H)
+## 9. Hybrid Bandset Augmentation (H) — optional (off by default)
 
 For long, highly conserved operons, XOR/subset shingles can 0-out despite high cosine and near-identity. The bandset channel recovers a weak but robust signal.
 
@@ -124,7 +123,7 @@ For qualified pairs (b,x):
   J_bw(b,x) = Σ_{t ∈ B∩X} IDF_b(t) / Σ_{t ∈ B∪X} IDF_b(t).
 - If no shingle-edge was added and J_bw ≥ `bandset_tau` ⇒ add edge with weight = J_bw.
 
-This yields recall for conserved loci (e.g., ribosomal operons) with small runtime impact due to tight qualification and candidate bounds.
+This yields recall for conserved loci (e.g., ribosomal operons) when needed, but the default profile relies on the main shingle channel for compactness.
 
 ---
 
@@ -172,7 +171,6 @@ SRP/shingling:
 
 Filtering:
 - df_max (shingles), max_df_percentile (optional)
-- bandset_df_max (hybrid)
 
 Similarity and edges:
 - jaccard_tau, use_weighted_jaccard=True
@@ -180,8 +178,7 @@ Similarity and edges:
 
 Candidate limits:
 - min_shared_shingles, size_ratio_[min,max], max_candidates_per_block
-- enable_hybrid_bandset, bandset_min_len, bandset_min_identity, min_shared_band_tokens, bandset_topk_candidates, bandset_tau
-- enable_mutual_topk_filter, mutual_k
+- Optional knobs (off by default): enable_hybrid_bandset [+ bandset_*], enable_mutual_topk_filter [+ mutual_k]
 
 Pruning/community:
 - degree_cap, [k_core_min_degree], [triangle_support_min], use_community_detection
@@ -282,8 +279,7 @@ Emit JSON:
 
 ## 23. Status
 
-- Current default: `hybrid_mid` operational; passes RP-6/6 sanity on test dataset.
-- Control profile documented for A/B.
-- Experiment harness in tools/ supports rapid param exploration.
+- Default profile: strand-insensitive tokens + XOR k=3 skip-gram [0,2,5], weighted Jaccard with df_max=200, no hybrid augmentation, post-attach enabled.
+- Diagnostics tools in `tools/` help validate compactness and RP purity.
 
 [EOF]

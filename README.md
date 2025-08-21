@@ -1,10 +1,10 @@
 # ELSA: Embedding Locus Shingle Alignment
 
-Order-aware syntenic-block discovery from protein language-model embeddings.
+Order-aware discovery of conserved gene neighborhoods (syntenic blocks) from protein embeddings.
 
-Current default focuses on robust, compact clustering with:
-- Strand-insensitive tokens (null strand-sign before SRP)
-- Order-aware shingles with k=3 + skip-gram pattern [0,2,5]
+What you get by default:
+- Strand-insensitive tokens (we ignore strand in per-window SRP tokens)
+- Order-aware shingles (k=3) with a skip-gram pattern [0,2,5]
 - Strict alignment gate (min_anchors=5, min_span_genes=10)
 - Safe, PFAM-agnostic post-cluster attach for tiny sink blocks
 
@@ -27,7 +27,7 @@ pip install -e .
 elsa init
 ```
 
-This creates `elsa.config.yaml`. The repository ships a tuned default (token-fix + attach). Use it as-is unless you have a reason to change parameters.
+This creates `elsa.config.yaml`. The repository ships a tuned default. Use it as-is unless you have a reason to change parameters.
 
 ### 3. Run embedding pipeline
 
@@ -72,10 +72,9 @@ streamlit run app.py
 - **Resumption support**: Reuses existing .gff/.faa files if present
 
 ### Stage 2: Protein Language Model Embedding
-- **ESM2**: Meta's evolutionary scale models (650M or 3B parameters)
-- **ProtT5**: Rostlab's protein transformer (XL model)
-- **GPU optimization**: MPS acceleration on Apple Silicon, CUDA fallback
-- **Memory management**: Adaptive batch sizing based on available RAM
+- **ESM2** (t12, t33) and **ProtT5** supported
+- **GPU optimization**: MPS on Apple Silicon, CUDA on Nvidia (auto-detected)
+- **Memory management**: Adaptive batch sizing
 
 ### Stage 3: Projection & Shingling
 - **PCA projection**: Reduce to configurable dimension (default 256D)
@@ -92,31 +91,31 @@ streamlit run app.py
 - **Collinear chaining**: Dynamic programming with gap penalties
 - **DTW refinement**: Optional dynamic time warping alignment
 
-### Stage 6: Block Clustering (Mutual-Jaccard over shingles)
+### Stage 6: Block Clustering
 
 <details>
-<summary><strong>Mutual-k Jaccard over Order-Aware Shingles</strong></summary>
+<summary><strong>Mutual-Jaccard over Order-Aware Shingles (technical)</strong></summary>
 
 We cluster syntenic blocks into cassette families using **Mutual-k Jaccard** over order-aware shingles derived from SRP tokens of the existing window embeddings.
 
-**Why:** Clustering on coarse scalars (e.g., DBSCAN on length/identity) collapses unrelated blocks into a single mode. We need both *content* and *order*, but without heavy all-vs-all alignment.
+Why: Clustering on coarse scalars (e.g., length/identity alone) collapses unrelated blocks. We need both content and order without heavy all-vs-all alignment.
 
-**Sketch → tokens:** For each window's embedding x, we compute a 256-bit SRP sign sketch (fixed seed), split into 32 bands of 8 bits, and hash each band to a 64-bit token. Similar windows share band tokens with high probability.
+Sketch → tokens: For each window embedding x, compute a 256-bit SRP sign sketch (fixed seed), split into 32 bands of 8 bits, and hash each band to a 64-bit token. Similar windows share band tokens with high probability.
 
-**Order-aware shingles:** Per block, derive one token per window and form k-gram shingles (k=3, skip-gram). Tokens are strand-insensitive; order is preserved by the shingle sequence.
+Order-aware shingles: Per block, derive one token per window and form k-gram shingles (k=3, skip-gram). Tokens are strand-insensitive; order is preserved by the shingle sequence.
 
 **Robustness gate (per block):** strict defaults
 - alignment_length ≥ 5; spans ≥ 10 genes on both genomes; diagonal purity MAD(v=q_idx−t_idx) ≤ 1. Others go to sink.
 
-**Graph construction:** Build an inverted index shingle→blocks; drop hub shingles with df>200. For each block b, enumerate candidates via postings; compute weighted Jaccard; require informative (low-DF) overlap.
+Graph construction: Build an inverted index shingle→blocks; drop hub shingles with df>200. For each block b, enumerate candidates via postings; compute weighted Jaccard; require informative (low-DF) overlap.
 
-**Clusters & labels:** Connected components of this sparse graph are clusters. Robust singletons (degree 0) go to sink by default. Labels are deterministic:
+Clusters & labels: Connected components of this sparse graph are clusters. Robust singletons (degree 0) go to sink by default. Labels are deterministic:
 - **0 = sink** (non-robust + singletons)
 - 1..K assigned by decreasing component size, then increasing representative block id.
 
-**Configuration:** see `analyze.clustering.*` in params (SRP bits/bands, k, df_max, thresholds). Defaults are tuned; avoid changing unless necessary.
+Configuration: see `analyze.clustering.*` in params (SRP bits/bands, k, df_max, thresholds). Defaults are tuned; avoid changing unless necessary.
 
-**Determinism:** All randomness is seeded; ordering keys are fixed; re-runs produce identical cluster IDs.
+Determinism: All randomness is seeded; ordering keys are fixed; re-runs produce identical cluster IDs.
 
 </details>
 
@@ -187,51 +186,46 @@ Each cluster can be analyzed using GPT-5 to provide:
 
 ## Configuration (practical defaults)
 
-`elsa.config.yaml` is pre-tuned for robust defaults. Key aspects:
+`elsa.config.yaml` is pre-tuned. Key aspects:
 - Strict alignment (min_anchors=5; min_span_genes=10)
 - Strand-insensitive SRP tokens; k=3 skip-gram [0,2,5]
 - Weighted Jaccard with df_max=200
-- Post-cluster attach enabled (exp8 thresholds)
+- Post-cluster attach enabled (safe thresholds)
 
 ```yaml
 plm:
   model: esm2_t33        # esm2_t33, esm2_t12, prot_t5
   device: auto           # auto, mps, cuda, cpu
   project_to_D: 256      # PCA target dimension
-  
+
 ingest:
   gene_caller: prodigal  # prodigal, metaprodigal, none
   min_cds_aa: 60         # Minimum protein length
-  
+
 discrete:
   K: 4096               # Codebook centroids
   minhash_hashes: 192   # MinHash functions
 
 analyze:
   clustering:
-    method: mutual_jaccard    # mutual_jaccard, dbscan, disabled
-    sink_label: 0             # Sink cluster ID
-    keep_singletons: false    # Keep robust singletons vs send to sink
-    
+    method: mutual_jaccard
+    sink_label: 0
+    keep_singletons: false
     # Robustness gate
-    min_anchors: 4            # Min alignment length
-    min_span_genes: 8         # Min span on both genomes
-    v_mad_max_genes: 1        # Max diagonal offset MAD
-    
+    min_anchors: 5
+    min_span_genes: 10
+    v_mad_max_genes: 1
     # SRP tokenization
-    srp_bits: 256             # Total projection bits
-    srp_bands: 32             # Number of bands  
-    srp_band_bits: 8          # Bits per band
-    srp_seed: 1337            # Deterministic seed
-    shingle_k: 3              # k-gram shingle size
-    
-    # Graph construction
-    jaccard_tau: 0.5          # Min Jaccard similarity
-    mutual_k: 3               # Mutual top-k parameter
-    df_max: 200               # Max document frequency
-  
+    srp_bits: 256
+    srp_bands: 32
+    srp_band_bits: 8
+    srp_seed: 1337
+    shingle_k: 3
+    jaccard_tau: 0.5
+    df_max: 200
+
 system:
-  rng_seed: 17          # Reproducibility seed
+  rng_seed: 17
 ```
 
 ## Hardware Requirements
@@ -251,17 +245,18 @@ Useful scripts under `tools/`:
 ## API Usage
 
 ```python
-from elsa import ELSAConfig, ProteinEmbedder, ProteinIngester
+from elsa.params import load_config
+from elsa.ingest import ProteinIngester
+from elsa.embeddings import ProteinEmbedder
 
-# Load configuration
-config = ELSAConfig.from_yaml("elsa.config.yaml")
+cfg = load_config("elsa.config.yaml")
 
-# Process genomes
-ingester = ProteinIngester(config.ingest)
-proteins = ingester.ingest_sample("genome.fasta", "sample1")
+# Process one genome (FASTA)
+ingester = ProteinIngester(cfg.ingest)
+proteins = ingester.ingest_sample("data/genomes/GENOME.fna", sample_id="sample1")
 
 # Generate embeddings
-embedder = ProteinEmbedder(config.plm)
+embedder = ProteinEmbedder(cfg.plm)
 embeddings = list(embedder.embed_sequences(proteins))
 ```
 

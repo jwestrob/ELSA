@@ -2225,7 +2225,8 @@ def display_clustering_tuner():
                 else:
                     # PFAM IDF-Jaccard over DB directly; bypass CSV/windows
                     st.write("Clustering blocks via PFAM IDF-Jaccard (DB-backed)…")
-                    from genome_browser.database.cluster_content import cluster_blocks_by_pfam
+                    # Use relative import since app runs within genome_browser/
+                    from database.cluster_content import cluster_blocks_by_pfam
                     t0 = time.time()
                     stats = cluster_blocks_by_pfam(db_path=Path(db_path), jaccard_tau=float(jaccard_tau), mutual_k=int(mutual_k), degree_cap=int(degree_cap), min_token_per_block=3, dry_run=False)
                     dt = time.time() - t0

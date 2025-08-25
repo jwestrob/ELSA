@@ -1235,6 +1235,71 @@ def display_cluster_explorer():
                 with col2:
                     display_cluster_card_with_async_summary(stats)
 
+@st.cache_data
+def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float = 0.9, max_tok: int = 8):
+    try:
+        import sqlite3
+        try:
+            from database.cluster_content import compute_cluster_pfam_consensus
+        except Exception:
+            from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
+        conn = sqlite3.connect(str(DB_PATH))
+        payload = compute_cluster_pfam_consensus(conn, int(cluster_id), float(min_core_cov), float(df_pct), int(max_tok))
+        conn.close()
+        if isinstance(payload, dict):
+            return payload.get('consensus', []), payload.get('pairs', [])
+        else:
+            return payload or [], []
+    except Exception as e:
+        logger.warning(f"Consensus preview failed for cluster {cluster_id}: {e}")
+        return [], []
+
+def _render_consensus_strip(tokens: list, pairs: list, height: int = 70, key: str = "consensus_preview"):
+    if not tokens:
+        return
+    import plotly.graph_objects as go
+    xs = list(range(len(tokens)))
+    labels = [c['token'] for c in tokens]
+    covs = [c['coverage'] for c in tokens]
+    colors = [c['color'] for c in tokens]
+    fwd = [c.get('fwd_frac', 0.0) for c in tokens]
+    nocc = [c.get('n_occ', 0) for c in tokens]
+    fig = go.Figure()
+    # Arrow glyphs
+    shapes = []
+    y_top, y_bot = 0.8, 0.2
+    head_frac = 0.35
+    for i, (col, ff) in enumerate(zip(colors, fwd)):
+        x = xs[i]
+        x_left = x - 0.45
+        x_right = x + 0.45
+        if ff >= 0.5:
+            body_end = x_right - head_frac
+            path = f"M {x_left},{y_bot} L {body_end},{y_bot} L {x_right},0.5 L {body_end},{y_top} L {x_left},{y_top} Z"
+        else:
+            body_start = x_left + head_frac
+            path = f"M {x_right},{y_bot} L {body_start},{y_bot} L {x_left},0.5 L {body_start},{y_top} L {x_right},{y_top} Z"
+        shapes.append(dict(type='path', path=path, fillcolor=col, line=dict(color='rgba(0,0,0,0.2)', width=1)))
+    hov = [f"{lab}<br>cov={cov:.0%}<br>fwd={ff:.0%} (n={nn})" for lab, cov, ff, nn in zip(labels, covs, fwd, nocc)]
+    fig.add_trace(go.Scatter(x=xs, y=[0.5]*len(xs), mode='markers', marker=dict(size=1, opacity=0), hovertext=hov, hoverinfo='text', showlegend=False))
+    # Connectors
+    for p in pairs:
+        if p.get('same_frac') is None or p.get('support', 0) < 3:
+            continue
+        i, j = p['i'], p['j']
+        frac = p['same_frac']
+        col = 'green' if frac >= 0.8 else ('goldenrod' if frac >= 0.6 else 'gray')
+        x0 = i + 0.45
+        x1 = j - 0.45
+        fig.add_annotation(x=x1, y=0.5, ax=x0, ay=0.5, xref='x', yref='y', axref='x', ayref='y',
+                           showarrow=True, arrowhead=3, arrowsize=1, arrowwidth=2, arrowcolor=col,
+                           hovertext=f"{labels[i]}→{labels[j]} same {frac:.0%} (n={p['support']})",
+                           hoverlabel=dict(bgcolor=col), opacity=0.9)
+    fig.update_layout(height=height, margin=dict(l=6, r=6, t=4, b=4), shapes=shapes)
+    fig.update_xaxes(showticklabels=False, showgrid=False, range=[-0.5, len(xs)-0.5])
+    fig.update_yaxes(visible=False, range=[0, 1.2])
+    st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False}, key=key)
+
 def _merge_intervals(intervals: List[Dict], gap_bp: int = 1000) -> List[Dict]:
     """Merge overlapping/nearby intervals and aggregate block support.
 
@@ -1433,6 +1498,13 @@ def display_cluster_card_with_async_summary(stats):
         </div>
         """, unsafe_allow_html=True)
         
+        # Mini consensus preview (fast & cached)
+        try:
+            tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=8)
+            _render_consensus_strip(tokens, pairs, height=70, key=f"consprev_{stats.cluster_id}")
+        except Exception as e:
+            logger.debug(f"Consensus preview error for cluster {stats.cluster_id}: {e}")
+
         # Multi-dimensional stats summary
         col1, col2 = st.columns([1, 1])
         with col1:

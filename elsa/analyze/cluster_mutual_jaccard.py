@@ -215,6 +215,13 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                 band_bits=srp_band_bits,
                 seed=srp_seed
             )
+            # Track length for small-block logic
+            # window_len_map defined above loop
+            try:
+                window_len_map
+            except NameError:
+                window_len_map = {}
+            window_len_map[block_id] = len(window_tokens)
             
             # Decide shingling method per block
             use_method = shingle_method
@@ -227,10 +234,20 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                     use_method = 'fixed_subset'
                     use_k = fixed_subset_k
 
-            # Generate k-gram shingles
+            # Generate k-gram shingles (adaptive for short blocks if enabled)
+            eff_k = use_k
+            eff_offsets = skipgram_offsets
+            if getattr(cfg, 'enable_adaptive_shingles', False):
+                Lw = len(window_tokens)
+                if Lw < 4:
+                    eff_k = 2
+                    eff_offsets = None
+                elif Lw < 6:
+                    eff_k = 3
+                    eff_offsets = None
             shingles = block_shingles(
                 window_tokens,
-                k=use_k,
+                k=eff_k,
                 method=use_method,
                 bands_per_window=bands_per_window,
                 band_stride=band_stride,
@@ -239,7 +256,7 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                 icws_bbit=icws_bbit,
                 icws_weighting=icws_weighting,
                 seed=srp_seed,
-                skipgram_offsets=skipgram_offsets,
+                skipgram_offsets=eff_offsets,
                 strand_canonical_shingles=strand_canonical_shingles,
             )
             block_shingles_map[block_id] = shingles
@@ -441,7 +458,14 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                 inter = S_b & S_c
                 low_df_count = sum(1 for s in inter if shingle_df.get(s, 0) <= low_df_threshold)
                 mean_idf = (sum(shingle_idf.get(s, 0.0) for s in inter) / max(1, len(inter))) if inter else 0.0
-                if low_df_count >= min_low_df_anchors and mean_idf >= idf_mean_min:
+                accept = (low_df_count >= min_low_df_anchors and mean_idf >= idf_mean_min)
+                if getattr(cfg, 'enable_small_path', False):
+                    small_len_thresh = int(getattr(cfg, 'small_len_thresh', 6))
+                    Lb = window_len_map.get(bid, 999)
+                    Lc = window_len_map.get(cid, 999)
+                    if len(inter) <= 2 and (Lb < small_len_thresh or Lc < small_len_thresh):
+                        accept = True
+                if accept:
                     u, v = sorted((bid, cid))
                     out.append((u, v, j_sim))
         return out
@@ -603,8 +627,25 @@ def cluster_blocks_jaccard(blocks: Iterable, window_embed_lookup: Callable, cfg:
                 keep.add((u, v))
         return keep
 
-    # Remove triangle support requirement (overly strict)
+    # Optionally require triangles only for small-block edges (adaptive path)
     coherent_edges = pruned_edges
+    if getattr(cfg, 'enable_small_path', False):
+        small_len_thresh = int(getattr(cfg, 'small_len_thresh', 6))
+        small_tri_min = int(getattr(cfg, 'small_edge_triangle_min', 1))
+        if small_tri_min > 0:
+            tri_edges = _triangle_filter(pruned_edges, small_tri_min)
+            def is_small_edge(e):
+                u, v = e
+                Lu = window_len_map.get(u, 999)
+                Lv = window_len_map.get(v, 999)
+                return (Lu < small_len_thresh) or (Lv < small_len_thresh)
+            coherent_edges = set()
+            for e in pruned_edges:
+                if is_small_edge(e):
+                    if e in tri_edges:
+                        coherent_edges.add(e)
+                else:
+                    coherent_edges.add(e)
 
     # Step 7: Community detection (fallback to connected components if unavailable)
     nodes = list(filtered_shingles_map.keys())

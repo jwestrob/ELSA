@@ -1236,7 +1236,7 @@ def display_cluster_explorer():
                     display_cluster_card_with_async_summary(stats)
 
 @st.cache_data
-def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float = 0.9, max_tok: int = 8):
+def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float = 0.9, max_tok: int = 0):
     try:
         import sqlite3
         try:
@@ -1254,7 +1254,7 @@ def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float
         logger.warning(f"Consensus preview failed for cluster {cluster_id}: {e}")
         return [], []
 
-def _render_consensus_strip(tokens: list, pairs: list, height: int = 70, key: str = "consensus_preview"):
+def _render_consensus_strip(tokens: list, pairs: list, height: int | None = None, key: str = "consensus_preview"):
     if not tokens:
         return
     import plotly.graph_objects as go
@@ -1295,6 +1295,10 @@ def _render_consensus_strip(tokens: list, pairs: list, height: int = 70, key: st
                            showarrow=True, arrowhead=3, arrowsize=1, arrowwidth=2, arrowcolor=col,
                            hovertext=f"{labels[i]}→{labels[j]} same {frac:.0%} (n={p['support']})",
                            hoverlabel=dict(bgcolor=col), opacity=0.9)
+    # Dynamic height scaling with token count
+    if height is None:
+        n = max(1, len(tokens))
+        height = 70 if n <= 10 else min(140, 70 + (n - 10) * 4)
     fig.update_layout(height=height, margin=dict(l=6, r=6, t=4, b=4), shapes=shapes)
     fig.update_xaxes(showticklabels=False, showgrid=False, range=[-0.5, len(xs)-0.5])
     fig.update_yaxes(visible=False, range=[0, 1.2])
@@ -1500,8 +1504,8 @@ def display_cluster_card_with_async_summary(stats):
         
         # Mini consensus preview (fast & cached)
         try:
-            tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=8)
-            _render_consensus_strip(tokens, pairs, height=70, key=f"consprev_{stats.cluster_id}")
+            tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=0)
+            _render_consensus_strip(tokens, pairs, height=None, key=f"consprev_{stats.cluster_id}")
         except Exception as e:
             logger.debug(f"Consensus preview error for cluster {stats.cluster_id}: {e}")
 

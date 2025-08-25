@@ -183,9 +183,9 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
             'n_occ': n_occ,
         })
 
-    # Sort by mean position; pick top-N by coverage if too many
+    # Sort by mean position; optionally cap to top-N by coverage
     consensus_list.sort(key=lambda d: d['mean_pos'])
-    if len(consensus_list) > max_tokens:
+    if max_tokens and max_tokens > 0 and len(consensus_list) > max_tokens:
         consensus_list = sorted(consensus_list, key=lambda d: (-d['coverage'], d['mean_pos']))[:max_tokens]
         consensus_list.sort(key=lambda d: d['mean_pos'])
 

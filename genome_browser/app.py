@@ -1692,6 +1692,42 @@ def display_cluster_detail():
     if stats:
         st.info(f"**Organisms:** {', '.join(stats.organisms[:3])}{'...' if len(stats.organisms) > 3 else ''}")
     
+    # Consensus cassette (PFAM-based) controls and render
+    with st.expander("🧩 Consensus Cassette (PFAM)", expanded=True):
+        c1, c2, c3 = st.columns([1,1,1])
+        with c1:
+            min_core_cov = st.slider("Min coverage", min_value=0.5, max_value=0.95, value=0.7, step=0.05, help="Keep PFAMs present in at least this fraction of blocks")
+        with c2:
+            df_pct = st.slider("Ban top DF percentile", min_value=0.0, max_value=0.99, value=0.9, step=0.05, help="Filter ultra-common PFAMs")
+        with c3:
+            max_tok = st.number_input("Max tokens", min_value=3, max_value=20, value=10, step=1)
+        try:
+            import sqlite3
+            from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
+            conn = sqlite3.connect(str(DB_PATH))
+            consensus = compute_cluster_pfam_consensus(conn, int(cluster_id), min_core_cov, df_pct, int(max_tok))
+            conn.close()
+        except Exception as e:
+            consensus = []
+            st.warning(f"Consensus unavailable: {e}")
+        if consensus:
+            # Render strip with Plotly
+            import plotly.graph_objects as go
+            xs = list(range(len(consensus)))
+            labels = [c['token'] for c in consensus]
+            covs = [c['coverage'] for c in consensus]
+            colors = [c['color'] for c in consensus]
+            fig = go.Figure()
+            fig.add_trace(go.Bar(x=xs, y=[1]*len(xs), marker_color=colors, hovertext=[f"{lab}<br>coverage={cov:.0%}" for lab, cov in zip(labels, covs)], hoverinfo="text", showlegend=False))
+            fig.update_xaxes(showticklabels=False, showgrid=False)
+            fig.update_yaxes(visible=False)
+            fig.update_layout(height=90, margin=dict(l=10, r=10, t=10, b=10))
+            st.plotly_chart(fig, use_container_width=True)
+            # Legend-like text
+            st.caption("Consensus core (ordered): " + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, covs)]))
+        else:
+            st.info("No stable PFAM core detected for this cluster with current settings.")
+    
     # Show cluster composition table
     with st.expander("📋 **Cluster Block Details**", expanded=False):
         display_cols = ['block_id', 'query_locus', 'target_locus', 'length', 'identity', 'score']

@@ -24,6 +24,120 @@ DEFAULTS = {
     "min_token_per_block": 3,     # Require at least N PFAM tokens per block
 }
 
+def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
+                                   cluster_id: int,
+                                   min_core_coverage: float = 0.7,
+                                   df_percentile_ban: float = 0.9,
+                                   max_tokens: int = 10) -> list[dict]:
+    """Compute an order-aware PFAM consensus cassette for a cluster.
+
+    Returns a list of dicts: [{token, coverage, mean_pos, df, color}]
+    where mean_pos ∈ [0,1] is the mean normalized index across blocks.
+    """
+    import hashlib
+    import statistics as stats
+
+    # Load per-gene PFAM and strand for genes mapped to blocks in this cluster
+    q = pd.read_sql_query(
+        """
+        SELECT sb.block_id, gbm.block_role, g.start_pos, g.strand, g.pfam_domains
+        FROM gene_block_mappings gbm
+        JOIN genes g ON gbm.gene_id = g.gene_id
+        JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
+        WHERE sb.cluster_id = ? AND g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+        ORDER BY sb.block_id, gbm.block_role, g.start_pos
+        """,
+        conn,
+        params=(int(cluster_id),)
+    )
+    if q.empty:
+        return []
+
+    # Build one token sequence per block, preferring 'query' side; fallback to 'target'
+    by_block_role: dict[tuple[int, str], list[str]] = {}
+    for row in q.itertuples(index=False):
+        toks = [t.strip() for t in str(row.pfam_domains).split(';') if t.strip()]
+        if not toks:
+            continue
+        primary = toks[0]
+        key = (int(row.block_id), str(row.block_role))
+        by_block_role.setdefault(key, []).append(primary)
+
+    by_block: dict[int, list[str]] = {}
+    for (bid, role), seq in by_block_role.items():
+        if bid not in by_block:
+            by_block[bid] = seq
+        else:
+            # prefer query; if we already have query, ignore target; otherwise choose longer
+            if role == 'query' or len(seq) > len(by_block[bid]):
+                by_block[bid] = seq
+
+    # Remove empty sequences
+    by_block = {bid: seq for bid, seq in by_block.items() if seq}
+    if not by_block:
+        return []
+
+    blocks = list(by_block.keys())
+    n_blocks = len(blocks)
+
+    # DF over blocks (presence/absence)
+    df_counts: dict[str, int] = {}
+    for seq in by_block.values():
+        seen = set(seq)
+        for t in seen:
+            df_counts[t] = df_counts.get(t, 0) + 1
+
+    # Ban top-percentile DF tokens
+    if df_counts:
+        dfs = sorted(df_counts.values())
+        import math
+        k = max(0, min(len(dfs)-1, int(math.floor(df_percentile_ban * (len(dfs)-1)))))
+        cutoff = dfs[k]
+        banned = {t for t, c in df_counts.items() if c >= cutoff}
+    else:
+        banned = set()
+
+    # Coverage and positions
+    token_pos: dict[str, list[float]] = {}
+    for bid, seq in by_block.items():
+        L = len(seq)
+        if L == 0:
+            continue
+        # dedupe consecutive repeats to reduce noise
+        compact = [seq[0]]
+        for tok in seq[1:]:
+            if tok != compact[-1]:
+                compact.append(tok)
+        L = len(compact)
+        for i, tok in enumerate(compact):
+            token_pos.setdefault(tok, []).append(i / max(1, L-1) if L > 1 else 0.0)
+
+    consensus = []
+    for tok, positions in token_pos.items():
+        cov = (df_counts.get(tok, 0) / n_blocks) if n_blocks > 0 else 0.0
+        if cov < min_core_coverage:
+            continue
+        if tok in banned:
+            continue
+        mean_pos = stats.mean(positions) if positions else 0.0
+        # simple stable color from hash
+        h = hashlib.md5(tok.encode()).hexdigest()
+        color = f"#{h[:6]}"
+        consensus.append({
+            'token': tok,
+            'coverage': cov,
+            'mean_pos': mean_pos,
+            'df': df_counts.get(tok, 0),
+            'color': color,
+        })
+
+    # Sort by mean position; pick top-N by coverage if too many
+    consensus.sort(key=lambda d: d['mean_pos'])
+    if len(consensus) > max_tokens:
+        consensus = sorted(consensus, key=lambda d: (-d['coverage'], d['mean_pos']))[:max_tokens]
+        consensus.sort(key=lambda d: d['mean_pos'])
+    return consensus
+
 
 def _load_block_pfams(conn: sqlite3.Connection) -> Dict[int, Set[str]]:
     """Return block_id -> set of PFAM tokens (strings)."""
@@ -245,4 +359,3 @@ if __name__ == "__main__":
         dry_run=args.dry_run,
     )
     print(stats)
-

@@ -1696,9 +1696,9 @@ def display_cluster_detail():
     with st.expander("🧩 Consensus Cassette (PFAM)", expanded=True):
         c1, c2, c3 = st.columns([1,1,1])
         with c1:
-            min_core_cov = st.slider("Min coverage", min_value=0.5, max_value=0.95, value=0.7, step=0.05, help="Keep PFAMs present in at least this fraction of blocks")
+            min_core_cov = st.slider("Min coverage", min_value=0.3, max_value=0.95, value=0.7, step=0.05, help="Keep PFAMs present in at least this fraction of blocks")
         with c2:
-            df_pct = st.slider("Ban top DF percentile", min_value=0.0, max_value=0.99, value=0.9, step=0.05, help="Filter ultra-common PFAMs")
+            df_pct = st.slider("Ban top DF percentile", min_value=0.0, max_value=0.99, value=0.9, step=0.05, help="Filter ultra-common PFAMs (0 to disable)")
         with c3:
             max_tok = st.number_input("Max tokens", min_value=3, max_value=20, value=10, step=1)
         try:

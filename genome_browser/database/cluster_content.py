@@ -53,10 +53,20 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
     if q.empty:
         return []
 
+    # Simple PFAM normalization to collapse subfamilies (e.g., Ribosomal_S7_N -> Ribosomal_S7)
+    import re
+    rib_pat = re.compile(r"^(Ribosomal_[LS]\d+)", re.I)
+    def _norm(tok: str) -> str:
+        m = rib_pat.match(tok)
+        if m:
+            return m.group(1)
+        return tok
+
     # Build one token sequence per block, preferring 'query' side; fallback to 'target'
     by_block_role: dict[tuple[int, str], list[str]] = {}
     for row in q.itertuples(index=False):
-        toks = [t.strip() for t in str(row.pfam_domains).split(';') if t.strip()]
+        toks_raw = [t.strip() for t in str(row.pfam_domains).split(';') if t.strip()]
+        toks = [_norm(t) for t in toks_raw]
         if not toks:
             continue
         primary = toks[0]
@@ -87,15 +97,15 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
         for t in seen:
             df_counts[t] = df_counts.get(t, 0) + 1
 
-    # Ban top-percentile DF tokens
-    if df_counts:
+    # Ban top-percentile DF tokens (optional). If df_percentile_ban <= 0, do not ban.
+    banned = set()
+    if df_counts and df_percentile_ban is not None and df_percentile_ban > 0.0:
         dfs = sorted(df_counts.values())
         import math
-        k = max(0, min(len(dfs)-1, int(math.floor(df_percentile_ban * (len(dfs)-1)))))
-        cutoff = dfs[k]
+        # Quantile index (e.g., 0.9 → 90th percentile)
+        qidx = max(0, min(len(dfs)-1, int(math.floor(df_percentile_ban * (len(dfs)-1)))))
+        cutoff = dfs[qidx]
         banned = {t for t, c in df_counts.items() if c >= cutoff}
-    else:
-        banned = set()
 
     # Coverage and positions
     token_pos: dict[str, list[float]] = {}

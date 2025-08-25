@@ -2238,11 +2238,12 @@ def display_clustering_tuner():
                     if not assignments:
                         st.error("Re-clustering produced no assignments.")
                         return
-
-                from collections import Counter
-                ctr = Counter([cl for cl in assignments.values() if cl and cl > 0])
-                st.write(f"Found {len(ctr)} clusters (non-sink). Top sizes: {sorted(ctr.values(), reverse=True)[:10]}")
-                logger.info("[TUNER] clusters=%d top_sizes=%s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
+                    from collections import Counter
+                    ctr = Counter([cl for cl in assignments.values() if cl and cl > 0])
+                    st.write(f"Found {len(ctr)} clusters (non-sink). Top sizes: {sorted(ctr.values(), reverse=True)[:10]}")
+                    logger.info("[TUNER] clusters=%d top_sizes=%s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
+                else:
+                    st.write("PFAM clustering complete; assignments not updated in-memory. See log/DB summary above.")
 
                 # Optional expansion
                 if method == 'mutual_jaccard' and enable_expansion:

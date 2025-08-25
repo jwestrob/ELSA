@@ -1710,23 +1710,62 @@ def display_cluster_detail():
                 # Fallback when imported as a package
                 from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
             conn = sqlite3.connect(str(DB_PATH))
-            consensus = compute_cluster_pfam_consensus(conn, int(cluster_id), min_core_cov, df_pct, int(max_tok))
+            consensus_payload = compute_cluster_pfam_consensus(conn, int(cluster_id), min_core_cov, df_pct, int(max_tok))
             conn.close()
         except Exception as e:
-            consensus = []
+            consensus_payload = []
             st.warning(f"Consensus unavailable: {e}")
-        if consensus:
+        # Back-compat: allow compute to return list or dict
+        tokens = []
+        pairs = []
+        if isinstance(consensus_payload, dict):
+            tokens = consensus_payload.get('consensus', [])
+            pairs = consensus_payload.get('pairs', [])
+        elif isinstance(consensus_payload, list):
+            tokens = consensus_payload
+        if tokens:
             # Render strip with Plotly
             import plotly.graph_objects as go
-            xs = list(range(len(consensus)))
-            labels = [c['token'] for c in consensus]
-            covs = [c['coverage'] for c in consensus]
-            colors = [c['color'] for c in consensus]
+            xs = list(range(len(tokens)))
+            labels = [c['token'] for c in tokens]
+            covs = [c['coverage'] for c in tokens]
+            colors = [c['color'] for c in tokens]
+            fwd = [c.get('fwd_frac', 0.0) for c in tokens]
+            nocc = [c.get('n_occ', 0) for c in tokens]
             fig = go.Figure()
-            fig.add_trace(go.Bar(x=xs, y=[1]*len(xs), marker_color=colors, hovertext=[f"{lab}<br>coverage={cov:.0%}" for lab, cov in zip(labels, covs)], hoverinfo="text", showlegend=False))
+            hov = [f"{lab}<br>coverage={cov:.0%}<br>forward={ff:.0%} (n={nn})" for lab, cov, ff, nn in zip(labels, covs, fwd, nocc)]
+            fig.add_trace(go.Bar(x=xs, y=[1]*len(xs), marker_color=colors, hovertext=hov, hoverinfo="text", showlegend=False))
+            # Add per-token direction annotations (→ or ←) with opacity by agreement
+            ann = []
+            for i, ff in enumerate(fwd):
+                arrow = '→' if ff >= 0.5 else '←'
+                agree = ff if ff >= 0.5 else (1.0 - ff)
+                ann.append(dict(x=i, y=0.5, text=arrow, showarrow=False, font=dict(color='white', size=14), opacity=max(0.3, min(1.0, agree))))
+            # Add pair connectors using scatter segments with color by same-strand fraction
+            conn_x = []
+            conn_y = []
+            conn_text = []
+            conn_color = []
+            for p in pairs:
+                if p.get('same_frac') is None or p.get('support', 0) < 3:
+                    continue
+                i, j = p['i'], p['j']
+                frac = p['same_frac']
+                # Color map: green >=0.8, yellow 0.6-0.8, gray otherwise
+                if frac >= 0.8:
+                    col = 'green'
+                elif frac >= 0.6:
+                    col = 'goldenrod'
+                else:
+                    col = 'gray'
+                conn_x += [i, j, None]
+                conn_y += [1.05, 1.05, None]
+                conn_text.append(f"{labels[i]}→{labels[j]} same-strand {frac:.0%} (n={p['support']})")
+                # We'll add one color for the whole trace; if mixed, multiple traces would be needed. Simpler: use shapes? For now, single color per segment is not directly supported with one trace; we’ll add separate traces per segment.
+                fig.add_trace(go.Scatter(x=[i, j], y=[1.05, 1.05], mode='lines', line=dict(color=col, width=3), hovertext=[conn_text[-1], conn_text[-1]], hoverinfo='text', showlegend=False))
             fig.update_xaxes(showticklabels=False, showgrid=False)
             fig.update_yaxes(visible=False)
-            fig.update_layout(height=90, margin=dict(l=10, r=10, t=10, b=10))
+            fig.update_layout(height=110, margin=dict(l=10, r=10, t=10, b=10), annotations=ann)
             st.plotly_chart(fig, use_container_width=True)
             # Legend-like text
             st.caption("Consensus core (ordered): " + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, covs)]))

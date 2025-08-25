@@ -28,11 +28,14 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
                                    cluster_id: int,
                                    min_core_coverage: float = 0.7,
                                    df_percentile_ban: float = 0.9,
-                                   max_tokens: int = 10) -> list[dict]:
+                                   max_tokens: int = 10):
     """Compute an order-aware PFAM consensus cassette for a cluster.
 
-    Returns a list of dicts: [{token, coverage, mean_pos, df, color}]
-    where mean_pos ∈ [0,1] is the mean normalized index across blocks.
+    Returns a dict with:
+      - consensus: list of dicts for tokens [{token, coverage, mean_pos, df, color, fwd_frac, n_occ}]
+      - pairs: list of dicts for adjacent token pairs [{i, j, t1, t2, same_frac, support}]
+    where mean_pos ∈ [0,1] is the mean normalized index across blocks and fwd_frac is
+    the fraction of occurrences on the forward strand for that token.
     """
     import hashlib
     import statistics as stats
@@ -62,8 +65,8 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
             return m.group(1)
         return tok
 
-    # Build one token sequence per block, preferring 'query' side; fallback to 'target'
-    by_block_role: dict[tuple[int, str], list[str]] = {}
+    # Build one token & strand sequence per block, preferring 'query' side; fallback to 'target'
+    by_block_role: dict[tuple[int, str], list[tuple[str, int]]] = {}
     for row in q.itertuples(index=False):
         toks_raw = [t.strip() for t in str(row.pfam_domains).split(';') if t.strip()]
         toks = [_norm(t) for t in toks_raw]
@@ -71,9 +74,9 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
             continue
         primary = toks[0]
         key = (int(row.block_id), str(row.block_role))
-        by_block_role.setdefault(key, []).append(primary)
+        by_block_role.setdefault(key, []).append((primary, int(row.strand)))
 
-    by_block: dict[int, list[str]] = {}
+    by_block: dict[int, list[tuple[str, int]]] = {}
     for (bid, role), seq in by_block_role.items():
         if bid not in by_block:
             by_block[bid] = seq
@@ -136,47 +139,82 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
 
     # Coverage and positions
     token_pos: dict[str, list[float]] = {}
+    token_strand: dict[str, list[int]] = {}
     for bid, seq in by_block.items():
         L = len(seq)
         if L == 0:
             continue
         # dedupe consecutive repeats to reduce noise
         compact = [seq[0]]
-        for tok in seq[1:]:
-            if tok != compact[-1]:
-                compact.append(tok)
+        for tok_s in seq[1:]:
+            if tok_s[0] != compact[-1][0]:
+                compact.append(tok_s)
         L = len(compact)
-        for i, tok in enumerate(compact):
+        for i, (tok, strand) in enumerate(compact):
             token_pos.setdefault(tok, []).append(i / max(1, L-1) if L > 1 else 0.0)
+            token_strand.setdefault(tok, []).append(1 if int(strand) >= 0 else 0)
 
-    consensus = []
+    consensus_list = []
     for tok, positions in token_pos.items():
         cov = (df_counts.get(tok, 0) / n_blocks) if n_blocks > 0 else 0.0
         # Keep tokens that meet the in-cluster coverage requirement
         if cov < min_core_coverage:
             continue
         # Apply global DF ban unless token is core (cov high) or whitelisted (Ribosomal_*)
-        if banned_global and (tok in banned_global) and (cov < min_core_coverage) and rib_pat.match(tok) is None:
+        if banned_global and (tok in banned_global) and rib_pat.match(tok) is None:
             # Note: condition keeps cores and whitelisted tokens; others banned
-            continue
+            # But since this tok passed core coverage, do not ban
+            pass
         mean_pos = stats.mean(positions) if positions else 0.0
         # simple stable color from hash
         h = hashlib.md5(tok.encode()).hexdigest()
         color = f"#{h[:6]}"
-        consensus.append({
+        strands = token_strand.get(tok, [])
+        n_occ = len(strands)
+        fwd_frac = (sum(1 for s in strands if s == 1) / n_occ) if n_occ > 0 else 0.0
+        consensus_list.append({
             'token': tok,
             'coverage': cov,
             'mean_pos': mean_pos,
             'df': df_counts.get(tok, 0),
             'color': color,
+            'fwd_frac': fwd_frac,
+            'n_occ': n_occ,
         })
 
     # Sort by mean position; pick top-N by coverage if too many
-    consensus.sort(key=lambda d: d['mean_pos'])
-    if len(consensus) > max_tokens:
-        consensus = sorted(consensus, key=lambda d: (-d['coverage'], d['mean_pos']))[:max_tokens]
-        consensus.sort(key=lambda d: d['mean_pos'])
-    return consensus
+    consensus_list.sort(key=lambda d: d['mean_pos'])
+    if len(consensus_list) > max_tokens:
+        consensus_list = sorted(consensus_list, key=lambda d: (-d['coverage'], d['mean_pos']))[:max_tokens]
+        consensus_list.sort(key=lambda d: d['mean_pos'])
+
+    # Compute adjacency same-strand fractions between neighboring consensus tokens
+    pairs = []
+    ordered_tokens = [c['token'] for c in consensus_list]
+    if len(ordered_tokens) >= 2:
+        # Precompute per-block first occurrence and strand of each token
+        per_block_idx_strand: dict[int, dict[str, tuple[int, int]]] = {}
+        for bid, seq in by_block.items():
+            idx_map: dict[str, tuple[int, int]] = {}
+            for idx, (tok, strand) in enumerate(seq):
+                if tok not in idx_map:
+                    idx_map[tok] = (idx, int(strand))
+            per_block_idx_strand[bid] = idx_map
+        for i in range(len(ordered_tokens)-1):
+            t1, t2 = ordered_tokens[i], ordered_tokens[i+1]
+            support = 0
+            same = 0
+            for bid, idx_map in per_block_idx_strand.items():
+                if t1 in idx_map and t2 in idx_map:
+                    support += 1
+                    s1 = idx_map[t1][1]
+                    s2 = idx_map[t2][1]
+                    if (s1 >= 0 and s2 >= 0) or (s1 < 0 and s2 < 0):
+                        same += 1
+            same_frac = (same / support) if support > 0 else None
+            pairs.append({'i': i, 'j': i+1, 't1': t1, 't2': t2, 'same_frac': same_frac, 'support': support})
+
+    return {'consensus': consensus_list, 'pairs': pairs}
 
 
 def _load_block_pfams(conn: sqlite3.Connection) -> Dict[int, Set[str]]:

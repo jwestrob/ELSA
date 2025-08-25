@@ -2100,7 +2100,6 @@ def display_clustering_tuner():
         config_yaml = st.text_input("Path to ELSA config (to find windows parquet)", value=str(default_config))
     with col2:
         db_path = st.text_input("Genome browser DB path", value=str(DB_PATH))
-        method = st.selectbox("Clustering method", ["pfam_idf", "mutual_jaccard"], index=0)
         windows_override = st.text_input("Windows parquet override (optional)", value="", help="Full path to *windows*.parquet if manifest/work_dir lookup fails")
 
     # Ensure lookup vars exist regardless of branch to avoid closure NameError in generators
@@ -2188,20 +2187,19 @@ def display_clustering_tuner():
                 st.write(f"✓ Loaded {len(blocks)} blocks from CSV")
                 logger.info("[TUNER] Loaded %d blocks", len(blocks))
 
-                if method == 'mutual_jaccard':
-                    # Existing SRP-based mutual jaccard pipeline
-                    pre_n = len(blocks)
-                    blocks = _stitch_blocks(blocks, max_gap=1)
-                    st.write(f"✓ Stitching: {pre_n} → {len(blocks)} blocks after merging adjacents")
-                    logger.info("[TUNER] Stitching reduced blocks: %d -> %d", pre_n, len(blocks))
+                # SRP mutual-jaccard pipeline (same as elsa analyze)
+                pre_n = len(blocks)
+                blocks = _stitch_blocks(blocks, max_gap=1)
+                st.write(f"✓ Stitching: {pre_n} → {len(blocks)} blocks after merging adjacents")
+                logger.info("[TUNER] Stitching reduced blocks: %d -> %d", pre_n, len(blocks))
 
-                    override_path = Path(windows_override) if windows_override.strip() else None
-                    window_lookup, lookup_meta = _create_window_lookup_from_config(cfg_path, override_path)
-                    if window_lookup is None:
-                        st.error("Failed to create window embedding lookup. Check the windows parquet path.")
-                        return
-                    st.write(f"✓ Windows parquet: {lookup_meta.get('path','?')} | rows={lookup_meta.get('n_windows',0)} | emb_dim={lookup_meta.get('emb_dim',0)}")
-                    logger.info("[TUNER] Windows parquet: %s rows=%s emb_dim=%s", lookup_meta.get('path'), lookup_meta.get('n_windows'), lookup_meta.get('emb_dim'))
+                override_path = Path(windows_override) if windows_override.strip() else None
+                window_lookup, lookup_meta = _create_window_lookup_from_config(cfg_path, override_path)
+                if window_lookup is None:
+                    st.error("Failed to create window embedding lookup. Set 'Windows parquet override' to your windows.parquet.")
+                    return
+                st.write(f"✓ Windows parquet: {lookup_meta.get('path','?')} | rows={lookup_meta.get('n_windows',0)} | emb_dim={lookup_meta.get('emb_dim',0)}")
+                logger.info("[TUNER] Windows parquet: %s rows=%s emb_dim=%s", lookup_meta.get('path'), lookup_meta.get('n_windows'), lookup_meta.get('emb_dim'))
 
                 # Quick coverage check over a sample of window IDs from blocks
                 sample_ids = []
@@ -2214,39 +2212,24 @@ def display_clustering_tuner():
                 st.write(f"Coverage check: {found}/{len(sample_ids)} sampled window IDs found in embeddings")
                 logger.info("[TUNER] Coverage check: %d/%d", found, len(sample_ids))
 
-                if method == 'mutual_jaccard':
-                    st.write(f"Clustering {len(blocks)} blocks with updated parameters (mutual_jaccard)…")
-                    from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
-                    t0 = time.time()
-                    assignments = cluster_blocks_jaccard(blocks, window_lookup, cfg)
-                    dt = time.time() - t0
-                    st.write(f"✓ Clustering finished in {dt:.2f}s")
-                    logger.info("[TUNER] clustering finished in %.2fs", dt)
-                else:
-                    # PFAM IDF-Jaccard over DB directly; bypass CSV/windows
-                    st.write("Clustering blocks via PFAM IDF-Jaccard (DB-backed)…")
-                    # Use relative import since app runs within genome_browser/
-                    from database.cluster_content import cluster_blocks_by_pfam
-                    t0 = time.time()
-                    stats = cluster_blocks_by_pfam(db_path=Path(db_path), jaccard_tau=float(jaccard_tau), mutual_k=int(mutual_k), degree_cap=int(degree_cap), min_token_per_block=3, dry_run=False)
-                    dt = time.time() - t0
-                    st.write(f"✓ PFAM clustering finished in {dt:.2f}s: {stats}")
-                    logger.info("[TUNER] PFAM clustering finished in %.2fs %s", dt, stats)
-                    assignments = None
+                st.write(f"Clustering {len(blocks)} blocks with updated parameters (mutual_jaccard)…")
+                from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
+                t0 = time.time()
+                assignments = cluster_blocks_jaccard(blocks, window_lookup, cfg)
+                dt = time.time() - t0
+                st.write(f"✓ Clustering finished in {dt:.2f}s")
+                logger.info("[TUNER] clustering finished in %.2fs", dt)
 
-                if method == 'mutual_jaccard':
-                    if not assignments:
-                        st.error("Re-clustering produced no assignments.")
-                        return
-                    from collections import Counter
-                    ctr = Counter([cl for cl in assignments.values() if cl and cl > 0])
-                    st.write(f"Found {len(ctr)} clusters (non-sink). Top sizes: {sorted(ctr.values(), reverse=True)[:10]}")
-                    logger.info("[TUNER] clusters=%d top_sizes=%s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
-                else:
-                    st.write("PFAM clustering complete; assignments not updated in-memory. See log/DB summary above.")
+                if not assignments:
+                    st.error("Re-clustering produced no assignments.")
+                    return
+                from collections import Counter
+                ctr = Counter([cl for cl in assignments.values() if cl and cl > 0])
+                st.write(f"Found {len(ctr)} clusters (non-sink). Top sizes: {sorted(ctr.values(), reverse=True)[:10]}")
+                logger.info("[TUNER] clusters=%d top_sizes=%s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
 
                 # Optional expansion
-                if method == 'mutual_jaccard' and enable_expansion:
+                if enable_expansion:
                     st.write("Running expansion phase...")
                     t1 = time.time()
                     assignments = _expand_clusters(
@@ -2263,9 +2246,8 @@ def display_clustering_tuner():
                     st.write(f"✓ Expansion finished in {dt1:.2f}s → clusters: {len(ctr2)} (Top sizes: {sorted(ctr2.values(), reverse=True)[:10]})")
                     logger.info("[TUNER] expansion finished in %.2fs clusters=%d", dt1, len(ctr2))
 
-                if method == 'mutual_jaccard':
-                    st.write("Updating genome browser database with new cluster assignments...")
-                    _apply_cluster_assignments_to_db(assignments, Path(db_path))
+                st.write("Updating genome browser database with new cluster assignments...")
+                _apply_cluster_assignments_to_db(assignments, Path(db_path))
 
                 status.update(label="✅ Re-clustering complete", state="complete")
                 st.success("Clusters updated. Reloading app...")

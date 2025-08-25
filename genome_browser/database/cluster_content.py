@@ -96,7 +96,8 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
     # In-cluster DF over blocks (presence/absence)
     df_counts: dict[str, int] = {}
     for seq in by_block.values():
-        seen = set(seq)
+        # Presence/absence by token (ignore strand here)
+        seen = {tok for (tok, _strand) in seq}
         for t in seen:
             df_counts[t] = df_counts.get(t, 0) + 1
 

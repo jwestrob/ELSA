@@ -90,22 +90,49 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
     blocks = list(by_block.keys())
     n_blocks = len(blocks)
 
-    # DF over blocks (presence/absence)
+    # In-cluster DF over blocks (presence/absence)
     df_counts: dict[str, int] = {}
     for seq in by_block.values():
         seen = set(seq)
         for t in seen:
             df_counts[t] = df_counts.get(t, 0) + 1
 
-    # Ban top-percentile DF tokens (optional). If df_percentile_ban <= 0, do not ban.
-    banned = set()
-    if df_counts and df_percentile_ban is not None and df_percentile_ban > 0.0:
-        dfs = sorted(df_counts.values())
+    # Global DF over blocks (presence/absence across entire DB)
+    global_df: dict[str, int] = {}
+    if df_percentile_ban is not None and df_percentile_ban > 0.0:
+        q_all = pd.read_sql_query(
+            """
+            SELECT gbm.block_id, g.pfam_domains
+            FROM gene_block_mappings gbm
+            JOIN genes g ON gbm.gene_id = g.gene_id
+            WHERE g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+            """,
+            conn,
+        )
+        block_tokens: dict[int, set[str]] = {}
+        for row in q_all.itertuples(index=False):
+            toks_raw = [t.strip() for t in str(row.pfam_domains).split(';') if t.strip()]
+            toks = {_norm(t) for t in toks_raw}
+            if not toks:
+                continue
+            bid = int(row.block_id)
+            s = block_tokens.get(bid)
+            if s is None:
+                block_tokens[bid] = set(toks)
+            else:
+                s.update(toks)
+        for toks in block_tokens.values():
+            for t in toks:
+                global_df[t] = global_df.get(t, 0) + 1
+
+    # Ban top-percentile tokens by GLOBAL DF (optional). If df_percentile_ban <= 0, do not ban.
+    banned_global = set()
+    if global_df and df_percentile_ban is not None and df_percentile_ban > 0.0:
+        vals = sorted(global_df.values())
         import math
-        # Quantile index (e.g., 0.9 → 90th percentile)
-        qidx = max(0, min(len(dfs)-1, int(math.floor(df_percentile_ban * (len(dfs)-1)))))
-        cutoff = dfs[qidx]
-        banned = {t for t, c in df_counts.items() if c >= cutoff}
+        qidx = max(0, min(len(vals)-1, int(math.floor(df_percentile_ban * (len(vals)-1)))))
+        cutoff = vals[qidx]
+        banned_global = {t for t, c in global_df.items() if c >= cutoff}
 
     # Coverage and positions
     token_pos: dict[str, list[float]] = {}
@@ -125,9 +152,12 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
     consensus = []
     for tok, positions in token_pos.items():
         cov = (df_counts.get(tok, 0) / n_blocks) if n_blocks > 0 else 0.0
+        # Keep tokens that meet the in-cluster coverage requirement
         if cov < min_core_coverage:
             continue
-        if tok in banned:
+        # Apply global DF ban unless token is core (cov high) or whitelisted (Ribosomal_*)
+        if banned_global and (tok in banned_global) and (cov < min_core_coverage) and rib_pat.match(tok) is None:
+            # Note: condition keeps cores and whitelisted tokens; others banned
             continue
         mean_pos = stats.mean(positions) if positions else 0.0
         # simple stable color from hash

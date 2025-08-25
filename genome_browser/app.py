@@ -1724,7 +1724,7 @@ def display_cluster_detail():
         elif isinstance(consensus_payload, list):
             tokens = consensus_payload
         if tokens:
-            # Render strip with Plotly
+            # Render prettier strip with arrow-shaped genes and thin arrows between
             import plotly.graph_objects as go
             xs = list(range(len(tokens)))
             labels = [c['token'] for c in tokens]
@@ -1732,42 +1732,53 @@ def display_cluster_detail():
             colors = [c['color'] for c in tokens]
             fwd = [c.get('fwd_frac', 0.0) for c in tokens]
             nocc = [c.get('n_occ', 0) for c in tokens]
+
             fig = go.Figure()
+            # Build arrow-like shapes for each token
+            shapes = []
+            y_top, y_bot = 0.8, 0.2
+            body_frac, head_frac = 0.6, 0.3  # body and head proportion (total ~0.9)
+            for i, (col, ff) in enumerate(zip(colors, fwd)):
+                x = xs[i]
+                x_left = x - 0.45
+                x_right = x + 0.45
+                if ff >= 0.5:
+                    # Right-pointing arrow
+                    body_end = x_right - head_frac
+                    path = f"M {x_left},{y_bot} L {body_end},{y_bot} L {x_right},0.5 L {body_end},{y_top} L {x_left},{y_top} Z"
+                else:
+                    # Left-pointing arrow
+                    body_start = x_left + head_frac
+                    path = f"M {x_right},{y_bot} L {body_start},{y_bot} L {x_left},0.5 L {body_start},{y_top} L {x_right},{y_top} Z"
+                shapes.append(dict(type='path', path=path, fillcolor=col, line=dict(color='rgba(0,0,0,0.2)', width=1)))
+
+            # Invisible markers at centers for hover tooltips
             hov = [f"{lab}<br>coverage={cov:.0%}<br>forward={ff:.0%} (n={nn})" for lab, cov, ff, nn in zip(labels, covs, fwd, nocc)]
-            fig.add_trace(go.Bar(x=xs, y=[1]*len(xs), marker_color=colors, hovertext=hov, hoverinfo="text", showlegend=False))
-            # Add per-token direction annotations (→ or ←) with opacity by agreement
-            ann = []
-            for i, ff in enumerate(fwd):
-                arrow = '→' if ff >= 0.5 else '←'
-                agree = ff if ff >= 0.5 else (1.0 - ff)
-                ann.append(dict(x=i, y=0.5, text=arrow, showarrow=False, font=dict(color='white', size=14), opacity=max(0.3, min(1.0, agree))))
-            # Add pair connectors using scatter segments with color by same-strand fraction
-            conn_x = []
-            conn_y = []
-            conn_text = []
-            conn_color = []
+            fig.add_trace(go.Scatter(x=xs, y=[0.5]*len(xs), mode='markers', marker=dict(size=1, opacity=0), hovertext=hov, hoverinfo='text', showlegend=False))
+
+            # Add thin arrows between genes to indicate directionality consistency
             for p in pairs:
                 if p.get('same_frac') is None or p.get('support', 0) < 3:
                     continue
                 i, j = p['i'], p['j']
                 frac = p['same_frac']
-                # Color map: green >=0.8, yellow 0.6-0.8, gray otherwise
                 if frac >= 0.8:
                     col = 'green'
                 elif frac >= 0.6:
                     col = 'goldenrod'
                 else:
                     col = 'gray'
-                conn_x += [i, j, None]
-                conn_y += [1.05, 1.05, None]
-                conn_text.append(f"{labels[i]}→{labels[j]} same-strand {frac:.0%} (n={p['support']})")
-                # We'll add one color for the whole trace; if mixed, multiple traces would be needed. Simpler: use shapes? For now, single color per segment is not directly supported with one trace; we’ll add separate traces per segment.
-                fig.add_trace(go.Scatter(x=[i, j], y=[1.05, 1.05], mode='lines', line=dict(color=col, width=3), hovertext=[conn_text[-1], conn_text[-1]], hoverinfo='text', showlegend=False))
-            fig.update_xaxes(showticklabels=False, showgrid=False)
-            fig.update_yaxes(visible=False)
-            fig.update_layout(height=110, margin=dict(l=10, r=10, t=10, b=10), annotations=ann)
+                x0 = i + 0.45
+                x1 = j - 0.45
+                fig.add_annotation(x=x1, y=0.5, ax=x0, ay=0.5, xref='x', yref='y', axref='x', ayref='y',
+                                   showarrow=True, arrowhead=3, arrowsize=1, arrowwidth=2, arrowcolor=col,
+                                   hovertext=f"{labels[i]}→{labels[j]} same-strand {frac:.0%} (n={p['support']})",
+                                   hoverlabel=dict(bgcolor=col), opacity=0.9)
+
+            fig.update_layout(height=120, margin=dict(l=10, r=10, t=10, b=10), shapes=shapes)
+            fig.update_xaxes(showticklabels=False, showgrid=False, range=[-0.5, len(xs)-0.5])
+            fig.update_yaxes(visible=False, range=[0, 1.2])
             st.plotly_chart(fig, use_container_width=True)
-            # Legend-like text
             st.caption("Consensus core (ordered): " + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, covs)]))
         else:
             st.info("No stable PFAM core detected for this cluster with current settings.")

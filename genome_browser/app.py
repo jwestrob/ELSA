@@ -2103,6 +2103,10 @@ def display_clustering_tuner():
         method = st.selectbox("Clustering method", ["pfam_idf", "mutual_jaccard"], index=0)
         windows_override = st.text_input("Windows parquet override (optional)", value="", help="Full path to *windows*.parquet if manifest/work_dir lookup fails")
 
+    # Ensure lookup vars exist regardless of branch to avoid closure NameError in generators
+    window_lookup = (lambda _wid: None)
+    lookup_meta = {}
+
     st.subheader("Parameters")
     pcol1, pcol2, pcol3 = st.columns(3)
     with pcol1:

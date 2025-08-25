@@ -1703,7 +1703,12 @@ def display_cluster_detail():
             max_tok = st.number_input("Max tokens", min_value=3, max_value=20, value=10, step=1)
         try:
             import sqlite3
-            from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
+            try:
+                # App runs from genome_browser/, so prefer relative import
+                from database.cluster_content import compute_cluster_pfam_consensus
+            except Exception:
+                # Fallback when imported as a package
+                from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
             conn = sqlite3.connect(str(DB_PATH))
             consensus = compute_cluster_pfam_consensus(conn, int(cluster_id), min_core_cov, df_pct, int(max_tok))
             conn.close()

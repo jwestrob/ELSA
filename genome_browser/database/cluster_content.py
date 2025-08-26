@@ -64,8 +64,17 @@ def compute_cluster_explorer_summary(conn: sqlite3.Connection,
     except Exception:
         organisms = []
 
-    # Consensus cassette
-    payload = compute_cluster_pfam_consensus(conn, int(cluster_id), float(min_core_coverage), float(df_percentile_ban), int(max_tokens_preview))
+    # Consensus cassette: prefer precomputed if available
+    payload = None
+    try:
+        row = conn.execute("SELECT consensus_json FROM cluster_consensus WHERE cluster_id = ?", (int(cluster_id),)).fetchone()
+        if row and row[0]:
+            import json as _json
+            payload = _json.loads(row[0])
+    except Exception:
+        payload = None
+    if not payload:
+        payload = compute_cluster_pfam_consensus(conn, int(cluster_id), float(min_core_coverage), float(df_percentile_ban), int(max_tokens_preview))
     consensus = payload.get('consensus', []) if isinstance(payload, dict) else []
     pairs = payload.get('pairs', []) if isinstance(payload, dict) else []
 

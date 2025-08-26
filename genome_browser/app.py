@@ -1312,12 +1312,22 @@ def display_cluster_explorer():
 @st.cache_data
 def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float = 0.9, max_tok: int = 0):
     try:
-        import sqlite3
+        import sqlite3, json
+        conn = sqlite3.connect(str(DB_PATH))
+        # Try precomputed cluster_consensus first
+        try:
+            row = conn.execute("SELECT consensus_json FROM cluster_consensus WHERE cluster_id = ?", (int(cluster_id),)).fetchone()
+            if row and row[0]:
+                payload = json.loads(row[0])
+                if isinstance(payload, dict):
+                    return payload.get('consensus', []), payload.get('pairs', [])
+        except Exception:
+            pass
+        # Fallback to on-the-fly computation
         try:
             from database.cluster_content import compute_cluster_pfam_consensus
         except Exception:
             from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
-        conn = sqlite3.connect(str(DB_PATH))
         payload = compute_cluster_pfam_consensus(conn, int(cluster_id), float(min_core_cov), float(df_pct), int(max_tok))
         conn.close()
         if isinstance(payload, dict):
@@ -2639,6 +2649,13 @@ def _stitch_blocks(blocks: List, max_gap: int = 1) -> List:
     for b in blocks:
         key = (b.query_locus, b.target_locus)
         groups[key].append(b)
+
+    # Local lightweight match class for reconstructed matches
+    class _Match:
+        __slots__ = ("query_window_id", "target_window_id")
+        def __init__(self, q, t):
+            self.query_window_id = q
+            self.target_window_id = t
 
     stitched = []
     for key, blist in groups.items():

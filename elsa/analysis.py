@@ -18,7 +18,19 @@ import logging
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 from sklearn.cluster import DBSCAN
-from sklearn.metrics.pairwise import cosine_similarity
+"""Use pre-normalized float32 dot-product instead of sklearn cosine_similarity for speed."""
+from joblib import Parallel, delayed
+try:
+    from numba import njit  # optional acceleration for small numeric helpers
+    _NUMBA = True
+except Exception:
+    def njit(*args, **kwargs):  # no-op decorator when numba unavailable
+        def _wrap(f):
+            return f
+        return _wrap
+    _NUMBA = False
+from threadpoolctl import threadpool_limits
+import os
 
 from .params import ELSAConfig
 from .manifest import ELSAManifest
@@ -37,6 +49,7 @@ class LocusInfo:
     n_windows: int
     window_ids: List[str]
     embeddings: np.ndarray  # Shape: (n_windows, embedding_dim)
+    window_strands: Optional[np.ndarray] = None  # +1 / -1 per window
 
 
 @dataclass
@@ -72,6 +85,12 @@ class LocusScanner:
         """Load window data for scanning."""
         windows_path = Path(self.manifest.data['artifacts']['windows']['path'])
         self.windows_df = pd.read_parquet(windows_path)
+        # Use categorical dtypes for groupby keys to speed grouping and reduce memory
+        for col in ("sample_id", "locus_id"):
+            if col in self.windows_df.columns and self.windows_df[col].dtype != 'category':
+                self.windows_df[col] = self.windows_df[col].astype('category')
+        # Cache embedding column names
+        self.emb_cols = [col for col in self.windows_df.columns if col.startswith('emb_')]
         console.print(f"Loaded {len(self.windows_df):,} windows from {self.windows_df['sample_id'].nunique()} samples")
     
     def extract_all_loci(self, min_windows: int = 3) -> List[LocusInfo]:
@@ -80,7 +99,7 @@ class LocusScanner:
             self.load_data()
         
         loci = []
-        emb_cols = [col for col in self.windows_df.columns if col.startswith('emb_')]
+        emb_cols = getattr(self, 'emb_cols', None) or [col for col in self.windows_df.columns if col.startswith('emb_')]
         
         # Group by locus
         for (sample_id, locus_id), group in self.windows_df.groupby(['sample_id', 'locus_id']):
@@ -89,14 +108,28 @@ class LocusScanner:
                              for _, row in group.iterrows()]
                 
                 # Extract embeddings matrix
-                embeddings = np.array([[row[col] for col in emb_cols] for _, row in group.iterrows()])
+                embeddings = np.array([[row[col] for col in emb_cols] for _, row in group.iterrows()], dtype=np.float32)
+                # L2-normalize rows for fast dot-product cosine
+                if embeddings.size > 0:
+                    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+                    # Avoid divide-by-zero for degenerate rows
+                    norms[norms == 0] = 1.0
+                    embeddings = embeddings / norms.astype(np.float32)
+                # Extract window strands if present
+                strands = None
+                if 'strand_sign' in group.columns:
+                    try:
+                        strands = group['strand_sign'].astype(int).to_numpy()
+                    except Exception:
+                        strands = None
                 
                 locus_info = LocusInfo(
                     sample_id=sample_id,
                     locus_id=locus_id,
                     n_windows=len(group),
                     window_ids=window_ids,
-                    embeddings=embeddings
+                    embeddings=embeddings,
+                    window_strands=strands
                 )
                 loci.append(locus_info)
         
@@ -115,8 +148,34 @@ class AllVsAllComparator:
         if locus_a.sample_id == locus_b.sample_id and locus_a.locus_id == locus_b.locus_id:
             return None  # Skip self-comparison
         
-        # Compute pairwise similarities between windows
-        similarities = cosine_similarity(locus_a.embeddings, locus_b.embeddings)
+        # Compute pairwise cosine via pre-normalized dot product (float32)
+        try:
+            A = np.ascontiguousarray(locus_a.embeddings, dtype=np.float32)
+            B = np.ascontiguousarray(locus_b.embeddings, dtype=np.float32)
+            similarities = A @ B.T
+            # Clamp to [0,1] due to potential numerical drift
+            np.clip(similarities, 0.0, 1.0, out=similarities)
+        except Exception:
+            # Fallback to safer but slower path if matmul fails
+            similarities = (locus_a.embeddings.astype(np.float32) @ locus_b.embeddings.astype(np.float32).T)
+            similarities = np.clip(similarities, 0.0, 1.0)
+        # Optional orientation bonus/penalty (feature-flagged)
+        try:
+            align_cfg = getattr(self.config.analyze, 'align', None)
+            bonus = float(getattr(align_cfg, 'orient_bonus', 0.0)) if align_cfg else 0.0
+            penalty = float(getattr(align_cfg, 'orient_penalty', 0.0)) if align_cfg else 0.0
+        except Exception:
+            align_cfg = None
+            bonus = penalty = 0.0
+        if (bonus != 0.0 or penalty != 0.0) and locus_a.window_strands is not None and locus_b.window_strands is not None:
+            try:
+                a = locus_a.window_strands.reshape(-1, 1)
+                b = locus_b.window_strands.reshape(1, -1)
+                same = (a == b)
+                adj = np.where(same, bonus, penalty)
+                similarities = np.clip(similarities + adj, 0.0, 1.0)
+            except Exception:
+                pass
         
         # Apply two-key anchor filtering (cassette mode)
         cassette_config = getattr(self.config, 'cassette_mode', None)
@@ -125,17 +184,12 @@ class AllVsAllComparator:
                 similarities, locus_a, locus_b, cassette_config.anchors
             )
         else:
-            # Fallback to original threshold-based filtering
-            similarity_threshold = 0.8  
-            anchor_matches = []
-            for i, j in np.argwhere(similarities > similarity_threshold):
-                match = WindowMatch(
-                    query_window_id=locus_a.window_ids[i],
-                    target_window_id=locus_b.window_ids[j],
-                    similarity_score=similarities[i, j],
-                    method='cosine'
-                )
-                anchor_matches.append((i, j, match))
+            # Fallback to original threshold-based filtering (lazy object creation)
+            similarity_threshold = 0.8
+            anchor_matches = []  # store tuples (qi, tj, score)
+            idx = np.argwhere(similarities > similarity_threshold)
+            for qi, tj in idx:
+                anchor_matches.append((int(qi), int(tj), float(similarities[qi, tj])))
         
         if len(anchor_matches) < 2:
             return None  # Not enough matches
@@ -150,7 +204,29 @@ class AllVsAllComparator:
             filtered_matches = self._filter_positional_conservation(anchor_matches)
         
         if len(filtered_matches) >= 2:  # Require at least 2 conserved matches
-            matches = [match for _, _, match in filtered_matches]
+            # Materialize WindowMatch objects only for filtered anchors.
+            # Handle two shapes of filtered tuples:
+            #  - (qi, tj, float_score) from non-cassette path
+            #  - (qi, tj, WindowMatch) from cassette path
+            matches: List[WindowMatch] = []
+            for (qi, tj, third) in filtered_matches:
+                if isinstance(third, WindowMatch):
+                    # Reuse existing WindowMatch object but ensure window IDs align to locus order
+                    m = WindowMatch(
+                        query_window_id=locus_a.window_ids[qi],
+                        target_window_id=locus_b.window_ids[tj],
+                        similarity_score=third.similarity_score,
+                        method=third.method,
+                    )
+                else:
+                    # third is a float score
+                    m = WindowMatch(
+                        query_window_id=locus_a.window_ids[qi],
+                        target_window_id=locus_b.window_ids[tj],
+                        similarity_score=float(third),
+                        method='cosine',
+                    )
+                matches.append(m)
             
             # Calculate gene order conservation score
             gene_order_score = self._calculate_gene_order_score(filtered_matches)
@@ -196,6 +272,85 @@ class AllVsAllComparator:
                 return block
         
         return None
+
+    # New: reverse a locus (order + strand) to model reverse-orientation synteny
+    def _reverse_locus(self, locus: LocusInfo) -> LocusInfo:
+        rev_ids = list(reversed(locus.window_ids))
+        rev_emb = np.flipud(locus.embeddings.copy())
+        if locus.window_strands is not None:
+            rev_strand = -1 * locus.window_strands[::-1]
+        else:
+            rev_strand = None
+        return LocusInfo(
+            sample_id=locus.sample_id,
+            locus_id=locus.locus_id,
+            n_windows=locus.n_windows,
+            window_ids=rev_ids,
+            embeddings=rev_emb,
+            window_strands=rev_strand,
+        )
+
+    def compare_loci_bidirectional(self, locus_a: LocusInfo, locus_b: LocusInfo) -> List[SyntenicBlock]:
+        """Run forward and reverse(B) passes and merge results.
+
+        Default merge: if both present and overlap substantially on target windows, keep the higher-scoring one; else keep both.
+        """
+        try:
+            align_cfg = getattr(self.config.analyze, 'align', None)
+            strategy = getattr(align_cfg, 'merge_strategy', 'soft_nms') if align_cfg else 'soft_nms'
+        except Exception:
+            strategy = 'soft_nms'
+
+        out: List[SyntenicBlock] = []
+        fwd = self.compare_loci(locus_a, locus_b)
+        rev_loc = self._reverse_locus(locus_b)
+        rev = self.compare_loci(locus_a, rev_loc)
+
+        # Nothing found
+        if not fwd and not rev:
+            return out
+        if fwd and not rev:
+            return [fwd]
+        if rev and not fwd:
+            return [rev]
+
+        # Both present: deduplicate if they overlap heavily on target windows
+        def _overlap_ratio(b1: SyntenicBlock, b2: SyntenicBlock) -> float:
+            s1 = set(b1.target_windows)
+            s2 = set(b2.target_windows)
+            inter = len(s1 & s2)
+            union = len(s1 | s2)
+            return (inter / union) if union > 0 else 0.0
+
+        ov = _overlap_ratio(fwd, rev)
+        if strategy == 'hard_nms':
+            if ov >= 0.5:
+                return [fwd if fwd.chain_score >= rev.chain_score else rev]
+            return [fwd, rev]
+        # soft_nms: decay lower score when overlapping; keep both if still meaningful
+        if ov > 0.0:
+            import math
+            # Gaussian decay on lower-score block
+            hi, lo = (fwd, rev) if fwd.chain_score >= rev.chain_score else (rev, fwd)
+            sigma = 0.5
+            lo_adj = lo.chain_score * math.exp(-(ov ** 2) / sigma)
+            # Keep both, but if decayed too low relative to hi, drop
+            keep = [hi]
+            if lo_adj >= 0.25 * hi.chain_score:
+                # create a shallow copy with adjusted score
+                lo2 = SyntenicBlock(
+                    query_locus=lo.query_locus,
+                    target_locus=lo.target_locus,
+                    query_windows=lo.query_windows,
+                    target_windows=lo.target_windows,
+                    matches=lo.matches,
+                    chain_score=lo_adj,
+                    alignment_length=lo.alignment_length,
+                    identity=lo.identity,
+                )
+                keep.append(lo2)
+            return keep
+        return [fwd, rev]
     
     def _filter_positional_conservation(self, matches, max_offset=3):
         """Filter matches to require positional conservation."""
@@ -228,34 +383,38 @@ class AllVsAllComparator:
         """Find the longest consecutive sequence of window matches."""
         if len(matches) < min_consecutive:
             return matches
-        
         # Sort matches by query position
         sorted_matches = sorted(matches, key=lambda x: x[0])
-        
-        # Find longest consecutive sequence
-        best_sequence = []
-        current_sequence = [sorted_matches[0]]
-        
-        for i in range(1, len(sorted_matches)):
-            prev_query, prev_target, _ = sorted_matches[i-1]
-            curr_query, curr_target, _ = sorted_matches[i]
-            
-            # Check if windows are consecutive and have consistent offset
-            if (curr_query == prev_query + 1 and 
-                curr_target == prev_target + 1):
-                current_sequence.append(sorted_matches[i])
-            else:
-                # Sequence broken, check if it's the best so far
-                if len(current_sequence) > len(best_sequence):
-                    best_sequence = current_sequence[:]
-                current_sequence = [sorted_matches[i]]
-        
-        # Check final sequence
-        if len(current_sequence) > len(best_sequence):
-            best_sequence = current_sequence
-        
-        # Return the best sequence if it meets minimum length
-        return best_sequence if len(best_sequence) >= min_consecutive else []
+        # Use numba-accelerated longest-run if available
+        q = np.array([m[0] for m in sorted_matches], dtype=np.int64)
+        t = np.array([m[1] for m in sorted_matches], dtype=np.int64)
+
+        @njit(cache=True)
+        def _longest_run(qv, tv):
+            best_len = 1
+            best_start = 0
+            curr_len = 1
+            curr_start = 0
+            for i in range(1, qv.shape[0]):
+                if qv[i] == qv[i-1] + 1 and tv[i] == tv[i-1] + 1:
+                    curr_len += 1
+                else:
+                    if curr_len > best_len:
+                        best_len = curr_len
+                        best_start = curr_start
+                    curr_len = 1
+                    curr_start = i
+            if curr_len > best_len:
+                best_len = curr_len
+                best_start = curr_start
+            return best_start, best_len
+
+        start, length = _longest_run(q, t)
+        if length < min_consecutive:
+            return []
+        # Reconstruct slice
+        best_sequence = sorted_matches[start:start+length]
+        return best_sequence
     
     def _calculate_gene_order_score(self, matches):
         """Calculate gene order conservation score (0-1)."""
@@ -423,32 +582,80 @@ class AllVsAllComparator:
     
     def find_all_blocks(self, loci: List[LocusInfo]) -> List[SyntenicBlock]:
         """Find all syntenic blocks via all-vs-all comparison."""
-        blocks = []
-        total_comparisons = len(loci) * (len(loci) - 1) // 2
-        
+        blocks: List[SyntenicBlock] = []
+        n = len(loci)
+        total_comparisons = n * (n - 1) // 2
+
         console.print(f"\n[bold]Performing all-vs-all locus comparisons...[/bold]")
         console.print(f"Total comparisons: {total_comparisons:,}")
-        
-        with Progress(
-            SpinnerColumn(),
-            TextColumn("[progress.description]{task.description}"),
-            BarColumn(),
-            MofNCompleteColumn(),
-            console=console
-        ) as progress:
-            
-            task = progress.add_task("Comparing loci...", total=total_comparisons)
-            
-            for i, locus_a in enumerate(loci):
-                for j, locus_b in enumerate(loci[i+1:], i+1):
-                    block = self.compare_loci(locus_a, locus_b)
-                    if block:
-                        blocks.append(block)
-                    
-                    progress.advance(task)
-        
+
+        # Determine parallelism and limit math library threads in code
+        jobs_cfg = getattr(self.config.system, 'jobs', 'auto')
+        if jobs_cfg == 'auto':
+            n_jobs = os.cpu_count() or 1
+        else:
+            n_jobs = int(jobs_cfg)
+            if n_jobs <= 0:
+                n_jobs = 1
+
+        # Whether to run bidirectional alignment
+        try:
+            dual_orient = bool(getattr(self.config.analyze.align, 'dual_orient', False))
+        except Exception:
+            dual_orient = False
+
+        # Parallelize across processes to bypass GIL, and limit BLAS threads inside each
+        with threadpool_limits(limits=1 if n_jobs > 1 else None):
+            with Progress(
+                SpinnerColumn(),
+                TextColumn("[progress.description]{task.description}"),
+                BarColumn(),
+                MofNCompleteColumn(),
+                console=console
+            ) as progress:
+
+                task = progress.add_task("Comparing loci...", total=total_comparisons)
+
+                def _work_row(i: int) -> List[SyntenicBlock]:
+                    out: List[SyntenicBlock] = []
+                    a = loci[i]
+                    for j in range(i + 1, n):
+                        b = loci[j]
+                        if dual_orient:
+                            blks = self.compare_loci_bidirectional(a, b)
+                            if blks:
+                                out.extend(blks)
+                        else:
+                            blk = self.compare_loci(a, b)
+                            if blk:
+                                out.append(blk)
+                    return out
+
+                # Batch more outer rows per dispatch to amortize scheduler overhead
+                # Order outer rows by estimated cost to improve load balance: cost ~ n_i * sum_{j>i} n_j
+                nwin = np.array([loc.n_windows for loc in loci], dtype=np.int64)
+                suffix = np.zeros_like(nwin)
+                if n > 1:
+                    suffix[:-1] = np.cumsum(nwin[::-1])[::-1][1:]
+                costs = (nwin * suffix)
+                i_order = np.argsort(-costs[: n - 1])  # exclude last row (no pairs)
+
+                batch_i = max(1, min(max(16, n_jobs), n))
+                for k in range(0, len(i_order), batch_i):
+                    idxs = [int(x) for x in i_order[k:k + batch_i]]
+                    results = Parallel(n_jobs=n_jobs, prefer="processes", batch_size=1)(
+                        delayed(_work_row)(i) for i in idxs
+                    )
+                    for lst in results:
+                        if lst:
+                            blocks.extend(lst)
+                    covered = sum((n - 1 - i) for i in idxs)
+                    progress.advance(task, advance=covered)
+
         console.print(f"Found {len(blocks):,} syntenic blocks")
         return blocks
+
+    # (Removed LSH candidate generation; restore full all-vs-all behavior)
 
 
 class SyntenicClusterer:

@@ -102,6 +102,16 @@ CREATE TABLE IF NOT EXISTS cluster_assignments (
     FOREIGN KEY (cluster_id) REFERENCES clusters(cluster_id)
 );
 
+-- Precomputed per-cluster consensus (PFAM-based) for fast UI rendering
+CREATE TABLE IF NOT EXISTS cluster_consensus (
+    cluster_id INTEGER PRIMARY KEY,
+    consensus_json TEXT,              -- JSON payload with 'consensus' and 'pairs'
+    agree_frac REAL,                  -- directional consensus summary
+    core_tokens INTEGER,              -- number of core tokens (coverage-filtered in computation)
+    FOREIGN KEY (cluster_id) REFERENCES clusters(cluster_id)
+);
+CREATE INDEX IF NOT EXISTS idx_cluster_consensus_core ON cluster_consensus(core_tokens);
+
 -- PFAM domain catalog for quick lookups
 CREATE TABLE IF NOT EXISTS pfam_domains (
     pfam_id TEXT PRIMARY KEY,

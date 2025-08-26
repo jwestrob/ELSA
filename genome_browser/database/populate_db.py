@@ -693,6 +693,75 @@ class ELSADataIngester:
         cur.executescript(sql)
         self.conn.commit()
         logger.info("Block consensus length table populated")
+
+    def compute_cluster_consensus(self, min_core_coverage: float = 0.6, df_percentile_ban: float = 0.9) -> None:
+        """Pre-compute PFAM consensus cassette per cluster and persist summary for fast UI.
+
+        Creates/updates table cluster_consensus with:
+          - cluster_id INTEGER PRIMARY KEY
+          - consensus_json TEXT
+          - agree_frac REAL
+          - core_tokens INTEGER
+        """
+        # Robust import for compute_cluster_pfam_consensus
+        try:
+            from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
+        except Exception:
+            try:
+                from database.cluster_content import compute_cluster_pfam_consensus
+            except Exception:
+                import importlib.util as _ilu
+                from pathlib import Path as _Path
+                _mod_path = _Path(__file__).resolve().parent / 'cluster_content.py'
+                if not _mod_path.exists():
+                    raise ImportError("Unable to locate cluster_content.py for cluster consensus computation")
+                _spec = _ilu.spec_from_file_location('gb_cluster_content', str(_mod_path))
+                _mod = _ilu.module_from_spec(_spec)
+                assert _spec and _spec.loader
+                _spec.loader.exec_module(_mod)
+                compute_cluster_pfam_consensus = getattr(_mod, 'compute_cluster_pfam_consensus')
+
+        cur = self.conn.cursor()
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS cluster_consensus (
+                cluster_id INTEGER PRIMARY KEY,
+                consensus_json TEXT,
+                agree_frac REAL,
+                core_tokens INTEGER,
+                FOREIGN KEY (cluster_id) REFERENCES clusters(cluster_id)
+            )
+            """
+        )
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_cluster_consensus_core ON cluster_consensus(core_tokens)")
+        cur.execute("DELETE FROM cluster_consensus")
+        self.conn.commit()
+
+        cluster_ids = pd.read_sql_query("SELECT cluster_id FROM clusters ORDER BY cluster_id", self.conn)['cluster_id'].astype(int).tolist()
+        logger.info("Computing cluster-level PFAM consensus for %d clusters…", len(cluster_ids))
+        import json as _json
+        rows = []
+        for idx, cid in enumerate(cluster_ids, 1):
+            try:
+                payload = compute_cluster_pfam_consensus(self.conn, int(cid), float(min_core_coverage), float(df_percentile_ban), 0)
+                tokens = payload.get('consensus', []) if isinstance(payload, dict) else []
+                pairs = payload.get('pairs', []) if isinstance(payload, dict) else []
+                supported = [p for p in pairs if p.get('same_frac') is not None and int(p.get('support', 0)) >= 3]
+                if supported:
+                    import statistics as _st
+                    agree = _st.mean([float(p['same_frac']) for p in supported])
+                else:
+                    agree = 0.0
+                rows.append((int(cid), _json.dumps(payload), float(agree), int(len(tokens))))
+            except Exception as e:
+                logger.debug("cluster %s consensus failed: %s", cid, e)
+                rows.append((int(cid), '{}', 0.0, 0))
+            if idx % 50 == 0:
+                logger.info("Cluster consensus progress: %d/%d (%.1f%%)", idx, len(cluster_ids), 100.0*idx/len(cluster_ids))
+        if rows:
+            cur.executemany("INSERT INTO cluster_consensus (cluster_id, consensus_json, agree_frac, core_tokens) VALUES (?, ?, ?, ?)", rows)
+        self.conn.commit()
+        logger.info("Cluster consensus table populated: %d rows", len(rows))
     
     def create_cluster_assignments(self,
                                   jaccard_tau: float = 0.60,
@@ -1044,6 +1113,8 @@ def main():
         ingester.create_cluster_assignments()
         # Precompute block-level PFAM consensus (100% conserved tokens only)
         ingester.compute_block_consensus(df_percentile_ban=0.9)
+        # Precompute cluster-level consensus for fast explorer rendering
+        ingester.compute_cluster_consensus(min_core_coverage=0.6, df_percentile_ban=0.9)
         ingester.generate_annotation_stats()
     
     logger.info("Data ingestion complete!")

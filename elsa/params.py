@@ -194,6 +194,16 @@ class AnalyzeConfig(BaseModel):
     """Analysis stage configuration."""
     clustering: 'ClusteringConfig' = Field(default_factory=lambda: ClusteringConfig())
     attach: 'AttachConfig' = Field(default_factory=lambda: AttachConfig())
+    # Optional alignment behavior controls
+    align: 'AlignConfig' = Field(default_factory=lambda: AlignConfig())
+
+
+class AlignConfig(BaseModel):
+    """Pairwise alignment options (feature-flagged)."""
+    dual_orient: bool = Field(default=False, description="Run bidirectional (forward + reverse) alignment and merge results")
+    merge_strategy: Literal["soft_nms", "hard_nms"] = Field(default="soft_nms", description="Merging strategy for forward/reverse overlaps")
+    orient_bonus: float = Field(default=0.0, description="Additive score bonus for same-strand window pairs")
+    orient_penalty: float = Field(default=0.0, description="Additive score penalty for opposite-strand window pairs")
 
 
 class ClusteringConfig(BaseModel):
@@ -205,7 +215,7 @@ class ClusteringConfig(BaseModel):
     # Robustness gate (per block)
     min_anchors: int = Field(default=4, description="Minimum alignment length (number of anchors)")
     min_span_genes: int = Field(default=8, description="Minimum span in genes on both query and target")
-    v_mad_max_genes: int = Field(default=1, description="Maximum MAD of diagonal offset (genes)")
+    v_mad_max_genes: float = Field(default=1.0, description="Maximum MAD of diagonal offset (genes)")
     
     # SRP + shingling
     srp_bits: int = Field(default=256, description="Total SRP projection bits")

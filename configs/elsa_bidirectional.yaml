@@ -1,0 +1,43 @@
+# ELSA config enabling bidirectional (strand-symmetric) alignment
+# Tighter clustering guardrails for purity when dual orientation is on.
+
+data:
+  work_dir: ./elsa_index
+
+analyze:
+  align:
+    dual_orient: true            # Run forward + reverse(B) and merge
+    merge_strategy: hard_nms     # Prefer deduplication across directions
+    orient_bonus: 0.02           # Tiny nudge for co-directionality
+    orient_penalty: -0.01        # Tiny downweight for opposite
+
+  clustering:
+    # Keep baseline gates or tighten slightly
+    min_anchors: 5
+    min_span_genes: 10
+    v_mad_max_genes: 0.5
+
+    # SRP + shingles (same as baseline)
+    srp_bits: 256
+    srp_bands: 32
+    srp_band_bits: 8
+    srp_seed: 1337
+    shingle_k: 3
+    shingle_method: xor
+    ignore_strand_in_tokens: true
+    strand_canonical_shingles: true
+    shingle_pattern: [0, 2, 5]
+
+    # Graph construction with stronger guardrails
+    jaccard_tau: 0.6              # Tighten similarity to boost purity
+    df_max: 200
+    min_shared_shingles: 1
+    enable_mutual_topk_filter: true
+    mutual_k: 3
+    max_candidates_per_block: 5000
+
+    # Optional small-edge coherence (helps short loci surfaced by dual-orient)
+    enable_adaptive_shingles: false
+    enable_small_path: true
+    small_len_thresh: 6
+    small_edge_triangle_min: 1

@@ -13,6 +13,8 @@ dependencies:
   - pytorch>=2.0
   - transformers>=4.30.0
   - scikit-learn
+  - joblib
+  - threadpoolctl
   - numpy
   - scipy
   

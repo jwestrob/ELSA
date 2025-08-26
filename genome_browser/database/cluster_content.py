@@ -16,6 +16,120 @@ from typing import Dict, List, Tuple, Set
 import math
 
 import pandas as pd
+import sqlite3
+
+def compute_cluster_explorer_summary(conn: sqlite3.Connection,
+                                     cluster_id: int,
+                                     min_core_coverage: float = 0.6,
+                                     df_percentile_ban: float = 0.9,
+                                     max_tokens_preview: int = 0) -> Dict:
+    """Build a compact, versioned summary for cluster explorer cards.
+
+    Schema v1 fields:
+      - cluster_id, size, consensus_length, identity_est, organisms, representatives
+      - consensus (ordered pfam tokens with coverage/pos/df/fwd_frac/n_occ)
+      - adjacency_support (neighbor pairs with same_frac/support)
+      - directional_consensus {agree_frac, status}
+      - preview {tokens:[{pfam,coverage,pos,color}], hint}
+      - quality (heuristic 0..1)
+      - caveats (optional list)
+    """
+    # Basic cluster info
+    cur = conn.cursor()
+    row = cur.execute(
+        """
+        SELECT size, consensus_length, consensus_score, representative_query, representative_target
+        FROM clusters WHERE cluster_id = ?
+        """,
+        (int(cluster_id),)
+    ).fetchone()
+    size, consensus_length, consensus_score, rep_q, rep_t = (row if row else (0, 0, 0.0, None, None))
+    try:
+        identity_est = min(float(consensus_score) / 10.0, 1.0) if consensus_score is not None else 0.0
+    except Exception:
+        identity_est = 0.0
+
+    # Representatives and organisms (names if available)
+    reps = {"query": rep_q or "", "target": rep_t or ""}
+    organisms: List[str] = []
+    try:
+        def _extract_genome_id(rep: str) -> str:
+            return rep.split(":")[0] if rep and ":" in rep else (rep or "")
+        gq = _extract_genome_id(rep_q)
+        gt = _extract_genome_id(rep_t)
+        for gid in {gq, gt} - {""}:
+            r = cur.execute("SELECT organism_name FROM genomes WHERE genome_id = ?", (gid,)).fetchone()
+            if r and r[0]:
+                organisms.append(str(r[0]))
+    except Exception:
+        organisms = []
+
+    # Consensus cassette
+    payload = compute_cluster_pfam_consensus(conn, int(cluster_id), float(min_core_coverage), float(df_percentile_ban), int(max_tokens_preview))
+    consensus = payload.get('consensus', []) if isinstance(payload, dict) else []
+    pairs = payload.get('pairs', []) if isinstance(payload, dict) else []
+
+    # Directional consensus summary
+    supported = [p for p in pairs if p.get('same_frac') is not None and int(p.get('support', 0)) >= 3]
+    if supported:
+        import statistics as stats
+        agree = stats.mean([float(p['same_frac']) for p in supported])
+    else:
+        agree = 0.0
+    status = 'strong' if agree >= 0.6 else ('mixed' if agree >= 0.4 else 'weak')
+
+    # Preview tokens for quick rendering
+    preview_tokens = [{
+        'pfam': c.get('token'),
+        'coverage': float(c.get('coverage', 0.0)),
+        'pos': float(c.get('mean_pos', 0.0)),
+        'color': c.get('color', '#888888'),
+    } for c in consensus]
+
+    # Quality heuristic
+    core_cov = [float(c.get('coverage', 0.0)) for c in consensus if float(c.get('coverage', 0.0)) >= 0.6]
+    import statistics as stats
+    med_core = (stats.median(core_cov) if core_cov else (stats.median([float(c.get('coverage', 0.0)) for c in consensus]) if consensus else 0.0))
+    size_term = min(1.0, math.log1p(max(0, int(size))) / 5.0)
+    quality = max(0.0, min(1.0, 0.5 * med_core + 0.3 * agree + 0.2 * size_term))
+
+    # Caveats
+    caveats: List[str] = []
+    if len(consensus) < 3:
+        caveats.append('short cassette')
+
+    return {
+        'schema': 'cluster_explorer_summary.v1',
+        'cluster_id': int(cluster_id),
+        'size': int(size or 0),
+        'consensus_length': int(consensus_length or 0),
+        'identity_est': float(identity_est or 0.0),
+        'organisms': organisms[:5],
+        'representatives': reps,
+        'consensus': [{
+            'pfam': c.get('token'),
+            'coverage': float(c.get('coverage', 0.0)),
+            'pos': float(c.get('mean_pos', 0.0)),
+            'df': int(c.get('df', 0) or 0),
+            'fwd_frac': float(c.get('fwd_frac', 0.0)),
+            'n_occ': int(c.get('n_occ', 0) or 0),
+        } for c in consensus],
+        'adjacency_support': [{
+            't1': p.get('t1'), 't2': p.get('t2'),
+            'same_frac': (float(p.get('same_frac')) if p.get('same_frac') is not None else None),
+            'support': int(p.get('support', 0) or 0),
+        } for p in pairs],
+        'directional_consensus': {
+            'agree_frac': float(agree),
+            'status': status,
+        },
+        'preview': {
+            'tokens': preview_tokens,
+            'hint': f"{sum(1 for c in consensus if c.get('coverage',0)>=0.6)} core tokens, {status} directional consensus",
+        },
+        'quality': float(quality),
+        'caveats': caveats,
+    }
 
 DEFAULTS = {
     "jaccard_tau": 0.20,          # Min IDF-weighted Jaccard to keep an edge
@@ -210,6 +324,180 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
                     support += 1
                     s1 = idx_map[t1][1]
                     s2 = idx_map[t2][1]
+                    if (s1 >= 0 and s2 >= 0) or (s1 < 0 and s2 < 0):
+                        same += 1
+            same_frac = (same / support) if support > 0 else None
+            pairs.append({'i': i, 'j': i+1, 't1': t1, 't2': t2, 'same_frac': same_frac, 'support': support})
+
+    return {'consensus': consensus_list, 'pairs': pairs}
+
+
+def compute_block_pfam_consensus(conn: sqlite3.Connection,
+                                 block_id: int,
+                                 df_percentile_ban: float = 0.9) -> Dict:
+    """Compute a pairwise PFAM consensus cassette for a single syntenic block (query vs target).
+
+    Returns dict with keys:
+      - consensus: list of dicts [{token, coverage, mean_pos, df, color, fwd_frac, n_occ}]
+      - pairs: list of dicts for adjacent consensus tokens [{i, j, t1, t2, same_frac, support}]
+
+    Notes:
+      - Coverage per token is presence across sides (0.5 if present in one, 1.0 if in both).
+      - mean_pos is the mean normalized index across sides where present.
+      - Directional consensus between adjacent consensus tokens is computed over sides where both tokens are present (support ∈ {0,1,2}).
+    """
+    import hashlib
+    import statistics as stats
+    import re
+
+    # Load PFAMs and strands for genes mapped to this block, preserving order per side
+    q = pd.read_sql_query(
+        """
+        SELECT gbm.block_role, g.start_pos, g.strand, g.pfam_domains
+        FROM gene_block_mappings gbm
+        JOIN genes g ON gbm.gene_id = g.gene_id
+        WHERE gbm.block_id = ? AND g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+        ORDER BY gbm.block_role, g.start_pos
+        """,
+        conn,
+        params=(int(block_id),)
+    )
+    if q.empty:
+        return {'consensus': [], 'pairs': []}
+
+    rib_pat = re.compile(r"^(Ribosomal_[LS]\d+)", re.I)
+    def _norm(tok: str) -> str:
+        m = rib_pat.match(tok)
+        return m.group(1) if m else tok
+
+    # Build per-side token+strand sequences
+    sides = {}
+    for row in q.itertuples(index=False):
+        toks_raw = [t.strip() for t in str(row.pfam_domains).split(';') if t.strip()]
+        toks = [_norm(t) for t in toks_raw]
+        if not toks:
+            continue
+        primary = toks[0]
+        role = str(row.block_role)
+        sides.setdefault(role, []).append((primary, int(row.strand)))
+
+    if not sides:
+        return {'consensus': [], 'pairs': []}
+
+    # Compact consecutive duplicates per side to reduce noise
+    for role, seq in list(sides.items()):
+        if not seq:
+            continue
+        compact = [seq[0]]
+        for tok_s in seq[1:]:
+            if tok_s[0] != compact[-1][0]:
+                compact.append(tok_s)
+        sides[role] = compact
+
+    # Token presence and normalized positions per side
+    token_pos_side: Dict[str, Dict[str, float]] = {}
+    token_strand_side: Dict[str, Dict[str, int]] = {}
+    for role, seq in sides.items():
+        L = len(seq)
+        if L == 0:
+            continue
+        for i, (tok, strand) in enumerate(seq):
+            token_pos_side.setdefault(tok, {})[role] = (i / max(1, L-1) if L > 1 else 0.0)
+            token_strand_side.setdefault(tok, {})[role] = 1 if int(strand) >= 0 else 0
+
+    # Global DF across database for ban (optional)
+    banned_global = set()
+    if df_percentile_ban is not None and df_percentile_ban > 0.0:
+        q_all = pd.read_sql_query(
+            """
+            SELECT gbm.block_id, g.pfam_domains
+            FROM gene_block_mappings gbm
+            JOIN genes g ON gbm.gene_id = g.gene_id
+            WHERE g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+            """,
+            conn,
+        )
+        block_tokens: Dict[int, set[str]] = {}
+        for row in q_all.itertuples(index=False):
+            toks_raw = [t.strip() for t in str(row.pfam_domains).split(';') if t.strip()]
+            toks = {_norm(t) for t in toks_raw}
+            if not toks:
+                continue
+            bid = int(row.block_id)
+            s = block_tokens.get(bid)
+            if s is None:
+                block_tokens[bid] = set(toks)
+            else:
+                s.update(toks)
+        global_df: Dict[str, int] = {}
+        for toks in block_tokens.values():
+            for t in toks:
+                global_df[t] = global_df.get(t, 0) + 1
+        if global_df:
+            vals = sorted(global_df.values())
+            import math
+            qidx = max(0, min(len(vals)-1, int(math.floor(df_percentile_ban * (len(vals)-1)))))
+            cutoff = vals[qidx]
+            banned_global = {t for t, c in global_df.items() if c >= cutoff}
+
+    # Build consensus entries (tokens from union; coverage by sides present)
+    tokens = sorted(token_pos_side.keys(), key=lambda t: sum(token_pos_side[t].values())/max(1,len(token_pos_side[t])))
+    consensus_list = []
+    for tok in tokens:
+        sides_present = token_pos_side.get(tok, {})
+        if not sides_present:
+            continue
+        mean_pos = stats.mean(list(sides_present.values()))
+        cov = len(sides_present) / max(1, len(sides))  # 0.5 or 1.0
+        # simple stable color from hash
+        h = hashlib.md5(tok.encode()).hexdigest()
+        color = f"#{h[:6]}"
+        # fwd fraction over sides present
+        strands = token_strand_side.get(tok, {})
+        n_occ = len(strands)
+        fwd_frac = (sum(1 for s in strands.values() if s == 1) / n_occ) if n_occ > 0 else 0.0
+        consensus_list.append({
+            'token': tok,
+            'coverage': cov,
+            'mean_pos': mean_pos,
+            'df': len(sides_present),  # in this context, DF=number of sides present
+            'color': color,
+            'fwd_frac': fwd_frac,
+            'n_occ': n_occ,
+        })
+
+    # Filter out globally banned tokens only if they are not present on both sides
+    if banned_global:
+        consensus_list = [c for c in consensus_list if (c['token'] not in banned_global or c['coverage'] >= 1.0)]
+
+    # Keep only tokens conserved on both sides (100% within this block)
+    consensus_list = [c for c in consensus_list if float(c.get('coverage', 0.0)) >= 1.0]
+
+    # Sort by position
+    consensus_list.sort(key=lambda d: d['mean_pos'])
+
+    # Adjacency directional consensus between neighboring consensus tokens
+    pairs = []
+    ordered_tokens = [c['token'] for c in consensus_list]
+    if len(ordered_tokens) >= 2:
+        # Build per-side first-occurrence and strand
+        idx_side: Dict[str, Dict[str, tuple[int,int]]] = {}
+        for role, seq in sides.items():
+            d = {}
+            for idx, (tok, strand) in enumerate(seq):
+                if tok not in d:
+                    d[tok] = (idx, int(strand))
+            idx_side[role] = d
+        for i in range(len(ordered_tokens)-1):
+            t1, t2 = ordered_tokens[i], ordered_tokens[i+1]
+            support = 0
+            same = 0
+            for role in idx_side.keys():
+                d = idx_side[role]
+                if t1 in d and t2 in d:
+                    support += 1
+                    s1 = d[t1][1]
+                    s2 = d[t2][1]
                     if (s1 >= 0 and s2 >= 0) or (s1 < 0 and s2 < 0):
                         same += 1
             same_frac = (same / support) if support > 0 else None

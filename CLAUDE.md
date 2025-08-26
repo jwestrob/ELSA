@@ -119,6 +119,55 @@ Notes:
 - This approach preserves sensitivity to small cassettes, but heavily penalizes high-frequency “service” signals (e.g., generic HTH regulators, ABC transport machinery, mobile element motifs) through IDF weighting and low-DF anchor requirements.
 - For very large components, increase jaccard_tau, min_low_df_anchors, k_core_min_degree, or set max_df_percentile to ban the top-most frequent shingles entirely.
 
+## Small‑Loci Adaptive Path (Implementation Notes)
+
+Goal: improve recall for short loci (2–6 windows) without degrading purity for long/operon‑scale blocks. This path is off by default and can be toggled per‑run via config flags.
+
+What’s implemented (code):
+- File: `elsa/analyze/cluster_mutual_jaccard.py`
+  - `enable_adaptive_shingles` (bool):
+    - If true, shingling adapts by block length L:
+      - L < 4 → k=2 contiguous (no skip)
+      - 4 ≤ L < 6 → k=3 contiguous (no skip)
+      - L ≥ 6 → configured default (k=3 with skip‑gram `[0,2,5]`)
+  - `enable_small_path` (bool):
+    - Relax auxiliary overlap checks when intersections are tiny and a “small” block is involved (still require `jaccard_tau`).
+    - Require triangle support for edges touching small blocks:
+      - `small_len_thresh` (int, default 6) — L < threshold is “small”
+      - `small_edge_triangle_min` (int, default 1) — triangles required for small edges
+
+Config profile to try:
+- `configs/elsa_adaptive_small.yaml` — enables both paths and sets a looser source gate (min_anchors=3, min_span_genes=6), keeps default behavior for long loci.
+
+How to run:
+```bash
+# Default (long/core clusters)
+elsa analyze -c elsa.config.yaml
+
+# Adaptive small-loci pass (keeps long behavior intact; adds sensitivity for short blocks)
+elsa analyze -c configs/elsa_adaptive_small.yaml
+```
+
+Compare/merge strategy:
+- Keep default clusters and IDs.
+- Import the adaptive run; adopt only assignments for blocks that remained sink in the default run.
+- Optional safety when merging: require small‑edge triangle support ≥2 or a minimum cluster size ≥3.
+
+Purity mitigation knobs (recommended when enabling small path):
+- Increase triangle support for small edges: set `small_edge_triangle_min: 2` (or 3) to prevent RP‑only pairs from latching onto canonical RP clusters.
+- Tighten size compatibility for small→large edges (if you add this gate): require small edges to satisfy `size_ratio_min ≈ 0.7` for both shingle‑set size and alignment length.
+- Informative‑overlap guard for tiny intersections (if you add this gate): when |intersection| ≤ 2 and a small block is involved, require `low_df_count ≥ 2` and `mean_idf ≥ 1.2`.
+- Order coherence for short blocks (analysis gate): for L < 6, require perfect collinearity (v_mad == 0) or very small `v_mad_max_genes`.
+
+Configs for small‑block exploration (optional):
+- `configs/elsa_small_k2.yaml` — k=2 contiguous shingles; looser gate; mutual‑top‑k on.
+- `configs/elsa_small_k1_strict.yaml` — k=1 (strict thresholds to compensate); mutual‑top‑k on.
+- `configs/elsa_small_relaxed_gate.yaml` — only relaxes the source gate; keeps k=3 + skip‑gram.
+
+Notes:
+- Default run remains unchanged when flags are off.
+- The adaptive small path focuses on edges involving short blocks; long→long behavior stays identical.
+
 ## Technical Constraints
 
 - **Memory**: Memory-mapped arrays, float16 storage, batchable processing within 48GB envelope

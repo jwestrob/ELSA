@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS genes (
     protein_sequence TEXT,
     pfam_domains TEXT, -- semicolon-separated domain list
     pfam_count INTEGER DEFAULT 0, -- number of domains for quick filtering
+    primary_pfam TEXT, -- first PFAM token for fast consensus operations
     gc_content REAL,
     partial_gene BOOLEAN DEFAULT FALSE,
     confidence_score REAL,
@@ -164,10 +165,12 @@ CREATE INDEX IF NOT EXISTS idx_clusters_size ON clusters(size);
 CREATE INDEX IF NOT EXISTS idx_gene_blocks_gene ON gene_block_mappings(gene_id);
 CREATE INDEX IF NOT EXISTS idx_gene_blocks_block ON gene_block_mappings(block_id);
 CREATE INDEX IF NOT EXISTS idx_gene_blocks_role ON gene_block_mappings(block_role);
+CREATE INDEX IF NOT EXISTS idx_gene_blocks_block_role ON gene_block_mappings(block_id, block_role);
 
 -- PFAM search indexes
 CREATE INDEX IF NOT EXISTS idx_pfam_domains_name ON pfam_domains(pfam_name);
 CREATE INDEX IF NOT EXISTS idx_pfam_domains_count ON pfam_domains(protein_count);
+CREATE INDEX IF NOT EXISTS idx_genes_primary_pfam ON genes(primary_pfam);
 
 -- Full-text search for PFAM domains in genes (for domain search)
 CREATE VIRTUAL TABLE IF NOT EXISTS genes_pfam_fts USING fts5(

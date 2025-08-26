@@ -248,18 +248,21 @@ class ELSADataIngester:
             
             # Insert genes
             for gene in genes:
+                # Compute and attach primary PFAM token for fast consensus
+                pf = gene.get("pfam_domains", "") or ""
+                primary_pfam = pf.split(';', 1)[0].strip() if pf else ""
                 cursor.execute("""
                     INSERT OR REPLACE INTO genes
                     (gene_id, genome_id, contig_id, start_pos, end_pos, strand,
                      gene_length, protein_id, protein_sequence, pfam_domains, 
-                     pfam_count, gc_content, partial_gene, confidence_score)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                     pfam_count, primary_pfam, gc_content, partial_gene, confidence_score)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, (
                     gene["gene_id"], gene["genome_id"], gene["contig_id"],
                     gene["start_pos"], gene["end_pos"], gene["strand"],
                     gene["gene_length"], gene["protein_id"], 
                     gene.get("protein_sequence", ""),
-                    gene["pfam_domains"], gene["pfam_count"],
+                    gene["pfam_domains"], gene["pfam_count"], primary_pfam,
                     gene.get("gc_content", 0.0), gene.get("partial_gene", False),
                     gene.get("confidence_score", 0.0)
                 ))
@@ -615,6 +618,81 @@ class ELSADataIngester:
         
         logger.info(f"Gene-block mappings created: {unique_genes} unique genes, {total_mappings} total mappings")
         logger.info(f"Average mappings per gene: {total_mappings / max(1, unique_genes):.1f}")
+
+    def compute_block_consensus(self, df_percentile_ban: float = 0.9) -> None:
+        """Pre-compute pairwise PFAM consensus cassette per block and persist summary.
+
+        Creates table block_consensus if needed with columns:
+          - block_id INTEGER PRIMARY KEY
+          - consensus_len INTEGER (count of 100% conserved tokens)
+          - consensus_json TEXT (JSON payload with tokens/pairs)
+        """
+        # Import with robust package fallback when executed as a script
+        try:
+            from genome_browser.database.cluster_content import compute_block_pfam_consensus
+        except Exception:
+            try:
+                from database.cluster_content import compute_block_pfam_consensus
+            except Exception:
+                # Fallback: load module directly from file path when run as a script
+                import importlib.util as _ilu
+                from pathlib import Path as _Path
+                _mod_path = _Path(__file__).resolve().parent / 'cluster_content.py'
+                if not _mod_path.exists():
+                    raise ImportError("Unable to locate cluster_content.py for block consensus computation")
+                _spec = _ilu.spec_from_file_location('gb_cluster_content', str(_mod_path))
+                _mod = _ilu.module_from_spec(_spec)
+                assert _spec and _spec.loader
+                _spec.loader.exec_module(_mod)
+                compute_block_pfam_consensus = getattr(_mod, 'compute_block_pfam_consensus')
+        cur = self.conn.cursor()
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS block_consensus (
+                block_id INTEGER PRIMARY KEY,
+                consensus_len INTEGER,
+                consensus_json TEXT,
+                FOREIGN KEY (block_id) REFERENCES syntenic_blocks(block_id)
+            )
+            """
+        )
+        cur.execute("CREATE INDEX IF NOT EXISTS idx_block_consensus_len ON block_consensus(consensus_len)")
+        # Clear previous
+        cur.execute("DELETE FROM block_consensus")
+        self.conn.commit()
+
+        # Fast path: compute only consensus_len for all blocks via SQL (set-based)
+        logger.info("Computing block-level PFAM consensus lengths (set-based SQL)…")
+        cur.execute("DELETE FROM block_consensus")
+        self.conn.commit()
+        sql = """
+        WITH q AS (
+            SELECT gb.block_id, g.primary_pfam AS tok
+            FROM gene_block_mappings gb
+            JOIN genes g ON gb.gene_id = g.gene_id
+            WHERE gb.block_role = 'query' AND g.primary_pfam IS NOT NULL AND g.primary_pfam != ''
+            GROUP BY gb.block_id, tok
+        ),
+        t AS (
+            SELECT gb.block_id, g.primary_pfam AS tok
+            FROM gene_block_mappings gb
+            JOIN genes g ON gb.gene_id = g.gene_id
+            WHERE gb.block_role = 'target' AND g.primary_pfam IS NOT NULL AND g.primary_pfam != ''
+            GROUP BY gb.block_id, tok
+        ),
+        cnt AS (
+            SELECT q.block_id, COUNT(*) AS c
+            FROM q JOIN t ON q.block_id = t.block_id AND q.tok = t.tok
+            GROUP BY q.block_id
+        )
+        INSERT INTO block_consensus (block_id, consensus_len, consensus_json)
+        SELECT sb.block_id, COALESCE(cnt.c, 0) AS consensus_len, NULL
+        FROM syntenic_blocks sb
+        LEFT JOIN cnt ON cnt.block_id = sb.block_id;
+        """
+        cur.executescript(sql)
+        self.conn.commit()
+        logger.info("Block consensus length table populated")
     
     def create_cluster_assignments(self,
                                   jaccard_tau: float = 0.60,
@@ -964,6 +1042,8 @@ def main():
         # Create mappings and statistics
         ingester.create_gene_block_mappings()
         ingester.create_cluster_assignments()
+        # Precompute block-level PFAM consensus (100% conserved tokens only)
+        ingester.compute_block_consensus(df_percentile_ban=0.9)
         ingester.generate_annotation_stats()
     
     logger.info("Data ingestion complete!")

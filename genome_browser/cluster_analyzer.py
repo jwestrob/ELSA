@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass
 import dspy
+import json
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
@@ -44,13 +45,21 @@ class ClusterStats:
     domain_counts: List[Tuple[str, int]]  # Domain names with their frequencies
 
 class ClusterSummarizer(dspy.Signature):
-    """DSPy signature for analyzing syntenic block clusters - conserved gene arrangements."""
-    
+    """Conservative summary of a syntenic-block cluster using consensus evidence.
+
+    Base claims on measurable evidence from the consensus cassette: token coverage,
+    conserved ordering (mean_pos), and directional consensus (co-directionality across
+    adjacent consensus tokens). Prefer descriptive summaries of conserved components over
+    speculative functional narratives. Do not claim full pathways; these loci are short.
+    """
+
     cluster_stats = dspy.InputField(desc="Cluster statistics: size, organisms, consensus length, identity range")
-    conserved_domains = dspy.InputField(desc="PFAM domains found in these syntenic alignments, ordered by frequency")
-    
-    molecular_mechanism = dspy.OutputField(desc="Specific molecular pathway with key PFAM domains and enzyme functions. Include biochemical context and conservation rationale")
-    conservation_basis = dspy.OutputField(desc="Molecular constraints explaining synteny preservation. Avoid generic terms")
+    conserved_domains = dspy.InputField(desc="Context PFAMs ordered by frequency (low weight)")
+    consensus_cassette = dspy.InputField(desc="JSON with keys: consensus (ordered tokens: token, coverage, df, mean_pos, fwd_frac, n_occ) and pairs (adjacency same-strand: t1, t2, same_frac, support). Use for core selection and directional consensus.")
+
+    molecular_mechanism = dspy.OutputField(desc="Evidence-grounded description of conserved components. Cite specific PFAM tokens with coverage and ordering. Avoid pathway claims.")
+    conservation_basis = dspy.OutputField(desc="Tie claims to consensus tokens and directional consensus (co-directionality). Note ordering and any mixed signals.")
+    outputs_json = dspy.OutputField(desc="JSON: {summary, core_tokens:[{pfam,coverage,df,pos}], directional_consensus:{agree_frac,note}, adjacency_support:[{t1,t2,same_frac,support}], caveats:[...], confidence:0..1}")
 
 class ClusterAnalyzer:
     """Analyzer for syntenic block clusters."""
@@ -141,6 +150,59 @@ class ClusterAnalyzer:
         except Exception as e:
             logger.error(f"Error computing cluster stats: {e}")
             return None
+
+    def summarize_cluster(self, cluster_id: int) -> Optional[dict]:
+        """Run the DSPy ClusterSummarizer using consensus cassette evidence.
+
+        Returns a dict with keys: molecular_mechanism, conservation_basis, outputs_json (parsed if valid JSON).
+        """
+        try:
+            stats = self.get_cluster_stats(cluster_id)
+            if not stats:
+                return None
+            conn = sqlite3.connect(self.db_path)
+            # Load consensus cassette (PFAM-based)
+            try:
+                from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
+            except Exception:
+                from database.cluster_content import compute_cluster_pfam_consensus
+            payload = compute_cluster_pfam_consensus(conn, int(cluster_id), 0.6, 0.9, 0)
+
+            # Prepare inputs
+            stats_text = (
+                f"size={stats.size}; consensus_len={stats.consensus_length}; "
+                f"avg_id={stats.avg_identity:.2f}; organisms={','.join(stats.organisms)}"
+            )
+            domains = self._get_cluster_functions_with_counts(conn, cluster_id)
+            conserved_domains_text = ", ".join([f"{d} x{c}" for d, c in domains[:15]])
+            cassette_json = json.dumps(payload if isinstance(payload, dict) else {"consensus": [], "pairs": []})
+
+            # Invoke DSPy signature
+            result = self.summarizer(
+                cluster_stats=stats_text,
+                conserved_domains=conserved_domains_text,
+                consensus_cassette=cassette_json,
+            )
+
+            # Parse outputs_json if present
+            out_json = None
+            try:
+                out_json = json.loads(getattr(result, 'outputs_json', '') or '{}')
+            except Exception:
+                out_json = None
+            return {
+                "molecular_mechanism": getattr(result, 'molecular_mechanism', ''),
+                "conservation_basis": getattr(result, 'conservation_basis', ''),
+                "outputs_json": out_json or getattr(result, 'outputs_json', ''),
+            }
+        except Exception as e:
+            logger.error(f"Error summarizing cluster {cluster_id}: {e}")
+            return None
+        finally:
+            try:
+                conn.close()
+            except Exception:
+                pass
     
     def _get_actual_block_count(self, conn, cluster_id: int) -> int:
         """Get actual block count from syntenic_blocks table instead of legacy clusters table."""

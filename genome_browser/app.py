@@ -16,6 +16,7 @@ from pathlib import Path
 import logging
 from typing import Dict, List, Tuple, Optional
 from types import SimpleNamespace
+from elsa.params import load_config as load_elsa_config
 import math
 import time
 
@@ -117,17 +118,20 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
                         identity_threshold: float = 0.0,
                         block_type: Optional[str] = None,
                         contig_search: Optional[str] = None,
-                        pfam_search: Optional[str] = None) -> pd.DataFrame:
+                        pfam_search: Optional[str] = None,
+                        order_by: Optional[str] = None) -> pd.DataFrame:
     """Load syntenic blocks with filters and pagination."""
     conn = get_database_connection()
     
     query = """
         SELECT sb.*, 
                g1.organism_name as query_organism,
-               g2.organism_name as target_organism
+               g2.organism_name as target_organism,
+               bc.consensus_len as consensus_len
         FROM syntenic_blocks sb
         LEFT JOIN genomes g1 ON sb.query_genome_id = g1.genome_id
         LEFT JOIN genomes g2 ON sb.target_genome_id = g2.genome_id
+        LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id
         WHERE 1=1
     """
     params = []
@@ -173,11 +177,24 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
             sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = sb.block_id AND (" + " OR ".join(ors) + ")"
             query += f" AND EXISTS ({sub})"
     
-    query += " ORDER BY sb.identity DESC, sb.block_id"  # Show high-quality alignments in a more representative order
+    # Sorting
+    if order_by:
+        query += f" ORDER BY {order_by}"
+    else:
+        query += " ORDER BY sb.identity DESC, sb.block_id"
     query += " LIMIT ? OFFSET ?"
     params.extend([limit, offset])
-    
-    return pd.read_sql_query(query, conn, params=params)
+    try:
+        return pd.read_sql_query(query, conn, params=params)
+    except Exception as e:
+        logger.warning(f"Query with block_consensus failed ({e}); retrying without join")
+        # Fallback without consensus join
+        query2 = query.replace(
+            ",\n               bc.consensus_len as consensus_len", ""
+        ).replace(
+            "\n        LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id", ""
+        )
+        return pd.read_sql_query(query2, conn, params=params)
 
 def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_role: Optional[str] = None, extended_context: bool = False) -> pd.DataFrame:
     """Load genes for a specific locus, optionally filtered to aligned regions."""
@@ -619,6 +636,31 @@ def display_block_explorer(filters: Dict):
     with col3:
         st.info(f"Total: {total_blocks:,} blocks")
     
+    # Sorting options
+    st.subheader("Sort")
+    scol1, scol2 = st.columns(2)
+    with scol1:
+        sort_option = st.selectbox(
+            "Order by",
+            [
+                "Embedding similarity (desc)",
+                "Consensus length (desc)",
+                "Consensus length (asc)",
+                "Length (desc)",
+                "Length (asc)",
+            ],
+            index=0,
+        )
+    with scol2:
+        pass
+    order_by = {
+        "Embedding similarity (desc)": "sb.identity DESC, sb.block_id",
+        "Consensus length (desc)": "COALESCE(bc.consensus_len, 0) DESC, sb.block_id",
+        "Consensus length (asc)": "COALESCE(bc.consensus_len, 0) ASC, sb.block_id",
+        "Length (desc)": "sb.length DESC, sb.block_id",
+        "Length (asc)": "sb.length ASC, sb.block_id",
+    }[sort_option]
+    
     # Load blocks for current page
     offset = (current_page - 1) * page_size
     blocks_df = load_syntenic_blocks(
@@ -629,7 +671,8 @@ def display_block_explorer(filters: Dict):
         identity_threshold=filters['identity_threshold'],
         block_type=filters['block_type'],
         contig_search=filters.get('contig_search') or None,
-        pfam_search=filters.get('pfam_search') or None
+        pfam_search=filters.get('pfam_search') or None,
+        order_by=order_by,
     )
     
     if blocks_df.empty:
@@ -640,11 +683,15 @@ def display_block_explorer(filters: Dict):
     st.subheader(f"Blocks {offset + 1}-{offset + len(blocks_df)} of {total_blocks:,}")
     
     # Format display columns - keep length as numeric for proper sorting
-    display_df = blocks_df[['block_id', 'query_locus', 'target_locus', 
-                           'length', 'identity', 'score', 'block_type']].copy()
+    cols = ['block_id', 'query_locus', 'target_locus', 'length', 'identity', 'score', 'block_type']
+    if 'consensus_len' in blocks_df.columns:
+        cols.insert(4, 'consensus_len')
+    display_df = blocks_df[cols].copy()
     
     # Format other columns but keep length numeric
     display_df['identity'] = display_df['identity'].apply(lambda x: f"{x:.3f}")
+    if 'consensus_len' in display_df.columns:
+        display_df = display_df.rename(columns={'consensus_len': 'consensus_len (100% PFAM tokens)'})
     display_df['score'] = display_df['score'].apply(lambda x: f"{x:.1f}")
     
     # Rename columns to show proper units and clarify data types
@@ -692,6 +739,33 @@ def display_block_explorer(filters: Dict):
                 window_range = f"Windows {selected_block['target_window_start']}-{selected_block['target_window_end']}"
                 gene_range = f"Genes {selected_block['target_window_start']}-{selected_block['target_window_end'] + 4}"
                 st.write("**Target Range:**", f"{window_range} ({gene_range})")
+
+        # Pairwise consensus cassette (PFAM-based) for this block
+        with st.expander("🧩 Pairwise Consensus Cassette (PFAM)", expanded=True):
+            try:
+                import sqlite3
+                try:
+                    from database.cluster_content import compute_block_pfam_consensus
+                except Exception:
+                    from genome_browser.database.cluster_content import compute_block_pfam_consensus
+                conn = sqlite3.connect(str(DB_PATH))
+                payload = compute_block_pfam_consensus(conn, int(selected_block['block_id']), df_percentile_ban=0.9)
+                conn.close()
+                tokens = payload.get('consensus', []) if isinstance(payload, dict) else []
+                pairs = payload.get('pairs', []) if isinstance(payload, dict) else []
+                if tokens:
+                    _render_consensus_strip(tokens, pairs, height=None, key=f"pair_consprev_{selected_block['block_id']}")
+                    # Quick caption on directional consensus
+                    sup = [p for p in pairs if p.get('same_frac') is not None and int(p.get('support',0)) >= 1]
+                    if sup:
+                        import statistics as _st
+                        agree = _st.mean([float(p['same_frac']) for p in sup])
+                        status = 'strong' if agree >= 0.6 else ('mixed' if agree >= 0.4 else 'weak')
+                        st.caption(f"Directional consensus: {status} ({agree:.0%}) across adjacent token pairs")
+                else:
+                    st.info("No PFAM consensus tokens could be derived for this block.")
+            except Exception as e:
+                st.warning(f"Consensus unavailable for block {selected_block['block_id']}: {e}")
         
         # Add debugging section for window-level analysis
         if st.checkbox("🔍 Show Detailed Window Analysis", key=f"debug_{selected_block['block_id']}"):
@@ -1254,6 +1328,22 @@ def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float
         logger.warning(f"Consensus preview failed for cluster {cluster_id}: {e}")
         return [], []
 
+@st.cache_data
+def _cluster_summary_v1(cluster_id: int):
+    try:
+        import sqlite3
+        try:
+            from database.cluster_content import compute_cluster_explorer_summary
+        except Exception:
+            from genome_browser.database.cluster_content import compute_cluster_explorer_summary
+        conn = sqlite3.connect(str(DB_PATH))
+        summary = compute_cluster_explorer_summary(conn, int(cluster_id), 0.6, 0.9, 0)
+        conn.close()
+        return summary
+    except Exception as e:
+        logger.warning(f"Cluster summary v1 failed for cluster {cluster_id}: {e}")
+        return None
+
 def _render_consensus_strip(tokens: list, pairs: list, height: int | None = None, key: str = "consensus_preview"):
     if not tokens:
         return
@@ -1506,6 +1596,15 @@ def display_cluster_card_with_async_summary(stats):
         try:
             tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=0)
             _render_consensus_strip(tokens, pairs, height=None, key=f"consprev_{stats.cluster_id}")
+            # Quick directional consensus badge
+            summary = _cluster_summary_v1(int(stats.cluster_id))
+            if summary and isinstance(summary, dict):
+                dc = summary.get('directional_consensus', {})
+                agree = dc.get('agree_frac', 0.0)
+                status = dc.get('status', 'weak')
+                caveats = summary.get('caveats', [])
+                hint = summary.get('preview', {}).get('hint', '')
+                st.caption(f"Directional consensus: {status} ({agree:.0%}) • {hint}{' • ' + ', '.join(caveats) if caveats else ''}")
         except Exception as e:
             logger.debug(f"Consensus preview error for cluster {stats.cluster_id}: {e}")
 
@@ -2274,6 +2373,8 @@ def display_clustering_tuner():
     lookup_meta = {}
 
     st.subheader("Parameters")
+    psrc_col = st.columns(1)[0]
+    param_source = psrc_col.selectbox("Parameter source", ["Config YAML", "UI Overrides"], index=0, help="Use clustering parameters from the YAML (safer), or override via UI for experimentation")
     pcol1, pcol2, pcol3 = st.columns(3)
     with pcol1:
         jaccard_tau = st.number_input("jaccard_tau", value=0.75, min_value=0.0, max_value=1.0, step=0.05)
@@ -2296,6 +2397,17 @@ def display_clustering_tuner():
         shingle_k = st.number_input("shingle_k (SRP k-gram)", value=3, min_value=2, step=1)
         srp_bits = st.number_input("srp_bits", value=256, min_value=32, step=32)
         srp_bands = st.number_input("srp_bands", value=32, min_value=1, step=1)
+
+    st.subheader("Adaptive (small-loci) path")
+    a1, a2, a3, a4 = st.columns(4)
+    with a1:
+        enable_adaptive_shingles = st.checkbox("enable_adaptive_shingles", value=False, help="Adapt k/pattern by block length for short loci")
+    with a2:
+        enable_small_path = st.checkbox("enable_small_path", value=False, help="Require triangles for edges touching small blocks")
+    with a3:
+        small_len_thresh = st.number_input("small_len_thresh", value=6, min_value=1, step=1)
+    with a4:
+        small_edge_triangle_min = st.number_input("small_edge_triangle_min", value=1, min_value=0, step=1)
 
     st.subheader("Expansion (optional)")
     e1, e2, e3 = st.columns(3)
@@ -2324,28 +2436,75 @@ def display_clustering_tuner():
                 return
 
             # Build config namespace for clustering
-            cfg = SimpleNamespace(
-                jaccard_tau=float(jaccard_tau),
-                df_max=int(df_max),
-                min_low_df_anchors=int(min_low_df_anchors),
-                idf_mean_min=float(idf_mean_min),
-                mutual_k=int(mutual_k),
-                max_df_percentile=(float(max_df_percentile) if max_df_percentile.strip() else None),
-                v_mad_max_genes=float(v_mad_max_genes),
-                enable_cassette_mode=bool(enable_cassette_mode),
-                cassette_max_len=int(cassette_max_len),
-                degree_cap=int(degree_cap),
-                k_core_min_degree=int(k_core_min_degree),
-                triangle_support_min=int(triangle_support_min),
-                use_weighted_jaccard=bool(use_weighted_jaccard),
-                use_community_detection=bool(use_community_detection),
-                community_method=community_method,
-                srp_bits=int(srp_bits), srp_bands=int(srp_bands), srp_band_bits=8, srp_seed=1337,
-                shingle_k=int(shingle_k),
-                min_anchors=4, min_span_genes=8,
-                size_ratio_min=0.5, size_ratio_max=2.0,
-                keep_singletons=False, sink_label=0
-            )
+            if param_source == "Config YAML":
+                try:
+                    full_cfg = load_elsa_config(cfg_path)
+                    cc = full_cfg.analyze.clustering
+                except Exception as e:
+                    st.error(f"Failed to load clustering params from YAML: {e}")
+                    return
+                cfg = SimpleNamespace(
+                    jaccard_tau=float(getattr(cc, 'jaccard_tau', 0.75)),
+                    df_max=int(getattr(cc, 'df_max', 30)),
+                    min_low_df_anchors=int(getattr(cc, 'min_low_df_anchors', 3)),
+                    idf_mean_min=float(getattr(cc, 'idf_mean_min', 1.0)),
+                    mutual_k=int(getattr(cc, 'mutual_k', 3)),
+                    max_df_percentile=(float(getattr(cc, 'max_df_percentile', 0.0)) if getattr(cc, 'max_df_percentile', None) else None),
+                    v_mad_max_genes=float(getattr(cc, 'v_mad_max_genes', 0.5)),
+                    enable_cassette_mode=bool(getattr(cc, 'enable_cassette_mode', True)),
+                    cassette_max_len=int(getattr(cc, 'cassette_max_len', 4)),
+                    degree_cap=int(getattr(cc, 'degree_cap', 10)),
+                    k_core_min_degree=int(getattr(cc, 'k_core_min_degree', 3)),
+                    triangle_support_min=int(getattr(cc, 'triangle_support_min', 1)),
+                    use_weighted_jaccard=bool(getattr(cc, 'use_weighted_jaccard', True)),
+                    use_community_detection=bool(getattr(cc, 'use_community_detection', True)),
+                    community_method=str(getattr(cc, 'community_method', 'greedy')),
+                    srp_bits=int(getattr(cc, 'srp_bits', 256)),
+                    srp_bands=int(getattr(cc, 'srp_bands', 32)),
+                    srp_band_bits=int(getattr(cc, 'srp_band_bits', 8)),
+                    srp_seed=int(getattr(cc, 'srp_seed', 1337)),
+                    shingle_k=int(getattr(cc, 'shingle_k', 3)),
+                    shingle_method=str(getattr(cc, 'shingle_method', 'xor')),
+                    bands_per_window=int(getattr(cc, 'bands_per_window', 4)),
+                    band_stride=int(getattr(cc, 'band_stride', 7)),
+                    min_anchors=int(getattr(cc, 'min_anchors', 4)),
+                    min_span_genes=int(getattr(cc, 'min_span_genes', 8)),
+                    size_ratio_min=float(getattr(cc, 'size_ratio_min', 0.5)),
+                    size_ratio_max=float(getattr(cc, 'size_ratio_max', 2.0)),
+                    keep_singletons=bool(getattr(cc, 'keep_singletons', False)),
+                    sink_label=int(getattr(cc, 'sink_label', 0)),
+                    enable_adaptive_shingles=bool(getattr(cc, 'enable_adaptive_shingles', False)),
+                    enable_small_path=bool(getattr(cc, 'enable_small_path', False)),
+                    small_len_thresh=int(getattr(cc, 'small_len_thresh', 6)),
+                    small_edge_triangle_min=int(getattr(cc, 'small_edge_triangle_min', 1)),
+                )
+            else:
+                cfg = SimpleNamespace(
+                    jaccard_tau=float(jaccard_tau),
+                    df_max=int(df_max),
+                    min_low_df_anchors=int(min_low_df_anchors),
+                    idf_mean_min=float(idf_mean_min),
+                    mutual_k=int(mutual_k),
+                    max_df_percentile=(float(max_df_percentile) if max_df_percentile.strip() else None),
+                    v_mad_max_genes=float(v_mad_max_genes),
+                    enable_cassette_mode=bool(enable_cassette_mode),
+                    cassette_max_len=int(cassette_max_len),
+                    degree_cap=int(degree_cap),
+                    k_core_min_degree=int(k_core_min_degree),
+                    triangle_support_min=int(triangle_support_min),
+                    use_weighted_jaccard=bool(use_weighted_jaccard),
+                    use_community_detection=bool(use_community_detection),
+                    community_method=community_method,
+                    srp_bits=int(srp_bits), srp_bands=int(srp_bands), srp_band_bits=8, srp_seed=1337,
+                    shingle_k=int(shingle_k),
+                    min_anchors=4, min_span_genes=8,
+                    size_ratio_min=0.5, size_ratio_max=2.0,
+                    keep_singletons=False, sink_label=0,
+                    enable_adaptive_shingles=bool(enable_adaptive_shingles),
+                    enable_small_path=bool(enable_small_path),
+                    small_len_thresh=int(small_len_thresh),
+                    small_edge_triangle_min=int(small_edge_triangle_min),
+                )
 
             with st.status("Re-clustering blocks...", expanded=True) as status:
                 st.write("Loading blocks and window embeddings...")

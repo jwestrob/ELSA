@@ -138,18 +138,18 @@ def setup_genome_browser_integration(config: ELSAConfig, analysis_output_dir: Pa
     console.print(f"Setting up genome browser database: {genome_browser_db}")
     
     try:
+        # Stream logs live to console so long-running steps don't appear hung
         result = subprocess.run(
-            cmd, 
-            check=True, 
-            capture_output=True, 
+            cmd,
+            check=True,
             text=True,
             cwd=genome_browser_dir  # Run from genome_browser directory
         )
         console.print("✓ Genome browser setup completed successfully")
         return True
-        
     except subprocess.CalledProcessError as e:
         console.print(f"[red]Genome browser setup failed (return code {e.returncode})[/red]")
+        # When capture_output=False, stdout/stderr already streamed; still show summaries if available
         if e.stdout:
             console.print(f"STDOUT: {e.stdout}")
         if e.stderr:

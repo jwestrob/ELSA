@@ -224,6 +224,12 @@ class ClusteringConfig(BaseModel):
     bands_per_window: int = Field(default=4, description="Bands per window when using 'subset' shingling")
     band_stride: int = Field(default=7, description="Stride for rotating band selection per window when using 'subset'")
 
+    # Adaptive small‑loci path (optional, off by default)
+    enable_adaptive_shingles: bool = Field(default=False, description="Adapt shingle k/pattern by block length to improve short‑block recall")
+    enable_small_path: bool = Field(default=False, description="Apply extra triangle support and relaxed checks for edges touching short blocks")
+    small_len_thresh: int = Field(default=6, description="Blocks with window length < threshold are considered 'small'")
+    small_edge_triangle_min: int = Field(default=1, description="Require at least this many triangles for edges involving small blocks")
+
     # Hybrid bandset augmentation (order-agnostic band-token Jaccard)
     enable_hybrid_bandset: bool = Field(default=False, description="Augment edges using bandset Jaccard for robust long/high-identity blocks")
     bandset_tau: float = Field(default=0.25, description="Minimum (weighted) Jaccard for bandset edges")
@@ -242,6 +248,15 @@ class ClusteringConfig(BaseModel):
     jaccard_tau: float = Field(default=0.5, description="Minimum Jaccard similarity threshold")
     mutual_k: int = Field(default=3, description="Mutual top-k parameter")
     df_max: int = Field(default=200, description="Maximum document frequency for shingles")
+    min_low_df_anchors: int = Field(default=3, description="Require at least this many low-DF shingles in intersections")
+    idf_mean_min: float = Field(default=1.0, description="Minimum mean IDF of intersection shingles")
+    max_df_percentile: Optional[float] = Field(default=None, description="If set (0..1), ban shingles at or above this DF percentile")
+    use_weighted_jaccard: bool = Field(default=True, description="Use IDF-weighted Jaccard instead of plain Jaccard")
+    degree_cap: int = Field(default=10, description="Keep top-N edges per node by weight")
+    k_core_min_degree: int = Field(default=3, description="If >0, prune nodes below k in k-core (not always enforced)")
+    triangle_support_min: int = Field(default=1, description="Require at least this many triangles per edge (global)")
+    use_community_detection: bool = Field(default=True, description="Use community detection instead of connected components")
+    community_method: Literal["greedy"] = Field(default="greedy", description="Community detection method")
     
     # Prefilters
     size_ratio_min: float = Field(default=0.5, description="Minimum size ratio for candidates")

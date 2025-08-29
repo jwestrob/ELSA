@@ -32,6 +32,7 @@ setup(
     entry_points={
         "console_scripts": [
             "elsa=elsa.cli:main",
+            "micro-synteny=elsa.synteny.micro_cli:main",
         ],
     },
     classifiers=[

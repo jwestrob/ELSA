@@ -120,10 +120,10 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
                         contig_search: Optional[str] = None,
                         pfam_search: Optional[str] = None,
                         order_by: Optional[str] = None) -> pd.DataFrame:
-    """Load syntenic blocks with filters and pagination."""
+    """Load blocks from syntenic_blocks (includes imported micro with block_type='micro')."""
     conn = get_database_connection()
-    
-    query = """
+
+    base = """
         SELECT sb.*, 
                g1.organism_name as query_organism,
                g2.organism_name as target_organism,
@@ -134,39 +134,37 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
         LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id
         WHERE 1=1
     """
-    params = []
-    
-    # Apply filters
+    params: List = []
+
+    # Apply filters to unified view
     if genome_filter:
         placeholders = ','.join(['?' for _ in genome_filter])
-        query += f" AND (sb.query_genome_id IN ({placeholders}) OR sb.target_genome_id IN ({placeholders}))"
+        base += f" AND (query_genome_id IN ({placeholders}) OR target_genome_id IN ({placeholders}))"
         params.extend(genome_filter * 2)
-    
+
     if size_range:
-        query += " AND sb.length BETWEEN ? AND ?"
+        base += " AND length BETWEEN ? AND ?"
         params.extend(size_range)
-    
+
     if identity_threshold > 0:
-        query += " AND sb.identity >= ?"
+        base += " AND identity >= ?"
         params.append(identity_threshold)
-    
+
     if block_type:
-        query += " AND sb.block_type = ?"
+        base += " AND block_type = ?"
         params.append(block_type)
 
-    # Contig substring filter (comma-delimited OR)
     if contig_search:
         toks = [t.strip() for t in contig_search.split(',') if t.strip()]
         if toks:
             ors = []
             for t in toks:
-                ors.append("sb.query_locus LIKE ?")
+                ors.append("query_locus LIKE ?")
                 params.append(f"%{t}%")
-                ors.append("sb.target_locus LIKE ?")
+                ors.append("target_locus LIKE ?")
                 params.append(f"%{t}%")
-            query += " AND (" + " OR ".join(ors) + ")"
+            base += " AND (" + " OR ".join(ors) + ")"
 
-    # PFAM substring filter via EXISTS (comma-delimited OR)
     if pfam_search:
         toks = [t.strip().lower() for t in pfam_search.split(',') if t.strip()]
         if toks:
@@ -174,27 +172,23 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
             for t in toks:
                 ors.append("LOWER(g.pfam_domains) LIKE ?")
                 params.append(f"%{t}%")
-            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = sb.block_id AND (" + " OR ".join(ors) + ")"
-            query += f" AND EXISTS ({sub})"
-    
-    # Sorting
+            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = allb.block_id AND (" + " OR ".join(ors) + ")"
+            base += f" AND (block_type = 'micro' OR EXISTS ({sub}))"
+
+    # Sorting and pagination
     if order_by:
-        query += f" ORDER BY {order_by}"
+        base += f" ORDER BY {order_by}"
     else:
-        query += " ORDER BY sb.identity DESC, sb.block_id"
-    query += " LIMIT ? OFFSET ?"
+        base += " ORDER BY sb.identity DESC, sb.block_id"
+    base += " LIMIT ? OFFSET ?"
     params.extend([limit, offset])
+
     try:
-        return pd.read_sql_query(query, conn, params=params)
+        return pd.read_sql_query(base, conn, params=params)
     except Exception as e:
-        logger.warning(f"Query with block_consensus failed ({e}); retrying without join")
-        # Fallback without consensus join
-        query2 = query.replace(
-            ",\n               bc.consensus_len as consensus_len", ""
-        ).replace(
-            "\n        LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id", ""
-        )
-        return pd.read_sql_query(query2, conn, params=params)
+        logger.warning(f"Block query failed: {e}; trying without consensus join")
+        base2 = base.replace("bc.consensus_len as consensus_len", "").replace("LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id", "")
+        return pd.read_sql_query(base2, conn, params=params)
 
 def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_role: Optional[str] = None, extended_context: bool = False) -> pd.DataFrame:
     """Load genes for a specific locus, optionally filtered to aligned regions."""
@@ -204,12 +198,14 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
     # Need to extract contig_id to match genes table format: "accn|1313.30775.con.0001"
     if ':' in locus_id:
         genome_part, contig_part = locus_id.split(':', 1)
-        # Extract the actual contig_id from the second part
-        # "1313.30775_accn|1313.30775.con.0001" -> "accn|1313.30775.con.0001"
+        # Legacy format: "1313.30775_accn|..." -> after underscore
         if '_' in contig_part:
-            contig_id = contig_part.split('_', 1)[1]  # Take everything after first '_'
+            contig_id = contig_part.split('_', 1)[1]
         else:
             contig_id = contig_part
+        # Micro format may include a gene index suffix: "accn|...#start-end" -> strip suffix
+        if '#' in contig_id:
+            contig_id = contig_id.split('#', 1)[0]
     else:
         # Fallback: treat entire string as contig
         contig_id = locus_id
@@ -308,7 +304,7 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
     fresh_conn = get_database_connection()
     cursor = fresh_conn.cursor()
     cursor.execute("""
-        SELECT query_window_start, query_window_end, target_window_start, target_window_end
+        SELECT block_type, query_window_start, query_window_end, target_window_start, target_window_end
         FROM syntenic_blocks 
         WHERE block_id = ?
     """, (block_id,))
@@ -318,7 +314,7 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
         # Fallback to all genes if no alignment info
         return load_genes_for_locus(contig_id)
     
-    query_start, query_end, target_start, target_end = result
+    block_type, query_start, query_end, target_start, target_end = result
     
     # Determine which window range to use based on locus role
     if locus_role == 'query' and query_start is not None and query_end is not None:
@@ -334,12 +330,17 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
             WHERE g.contig_id = ?
             ORDER BY g.start_pos
         """
-        return pd.read_sql_query(query, conn, params=[contig_id])
+        return pd.read_sql_query(query, fresh_conn, params=[contig_id])
     
-    # Convert window indices to gene ranges
-    # Each window contains 5 genes with stride 1: window N covers genes N to N+4
-    gene_start_idx = window_start  # Gene index of first gene in first window
-    gene_end_idx = window_end + 4  # Gene index of last gene in last window (window contains 5 genes)
+    # Convert indices to gene ranges
+    if str(block_type) == 'micro':
+        # For micro, query_window_* are already gene indices
+        gene_start_idx = int(window_start) if window_start is not None else 0
+        gene_end_idx = int(window_end) if window_end is not None else gene_start_idx
+    else:
+        # Macro: window N covers genes N..N+4
+        gene_start_idx = int(window_start) if window_start is not None else 0
+        gene_end_idx = (int(window_end) + 4) if window_end is not None else (gene_start_idx + 4)
     
     # Add context genes around the aligned region (amount depends on extended_context setting)
     context_buffer = 10 if extended_context else 3  # More context if extended_context is True
@@ -397,30 +398,52 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
                     block_type: Optional[str] = None,
                     contig_search: Optional[str] = None,
                     pfam_search: Optional[str] = None) -> int:
-    """Get total count of blocks matching filters."""
+    """Get total count of blocks (macro+micro) matching filters."""
     conn = get_database_connection()
-    
-    query = "SELECT COUNT(*) FROM syntenic_blocks WHERE 1=1"
-    params = []
-    
+
+    base = """
+        WITH sb_main AS (
+            SELECT block_id, cluster_id, query_locus, target_locus, query_genome_id, target_genome_id,
+                   query_contig_id, target_contig_id, length, identity, 'macro' AS block_type
+            FROM syntenic_blocks
+        ),
+        micro AS (
+            SELECT (1000000000 + block_id) AS block_id, cluster_id,
+                   (genome_id || ':' || contig_id || '#' || CAST(start_index AS TEXT) || '-' || CAST(end_index AS TEXT)) AS query_locus,
+                   '' AS target_locus,
+                   genome_id AS query_genome_id, NULL AS target_genome_id,
+                   contig_id AS query_contig_id, NULL AS target_contig_id,
+                   (1 + end_index - start_index) AS length,
+                   0.0 AS identity,
+                   'micro' AS block_type
+            FROM micro_gene_blocks
+        ),
+        allb AS (
+            SELECT * FROM sb_main
+            UNION ALL
+            SELECT * FROM micro
+        )
+        SELECT COUNT(*) FROM allb WHERE 1=1
+    """
+    params: List = []
+
     if genome_filter:
         placeholders = ','.join(['?' for _ in genome_filter])
-        query += f" AND (query_genome_id IN ({placeholders}) OR target_genome_id IN ({placeholders}))"
+        base += f" AND (query_genome_id IN ({placeholders}) OR target_genome_id IN ({placeholders}))"
         params.extend(genome_filter * 2)
-    
+
     if size_range:
-        query += " AND length BETWEEN ? AND ?"
+        base += " AND length BETWEEN ? AND ?"
         params.extend(size_range)
-    
+
     if identity_threshold > 0:
-        query += " AND identity >= ?"
+        base += " AND (block_type = 'micro' OR identity >= ?)"
         params.append(identity_threshold)
-    
+
     if block_type:
-        query += " AND block_type = ?"
+        base += " AND block_type = ?"
         params.append(block_type)
 
-    # Contig substring filter
     if contig_search:
         toks = [t.strip() for t in contig_search.split(',') if t.strip()]
         if toks:
@@ -430,9 +453,8 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
                 params.append(f"%{t}%")
                 ors.append("target_locus LIKE ?")
                 params.append(f"%{t}%")
-            query += " AND (" + " OR ".join(ors) + ")"
+            base += " AND (" + " OR ".join(ors) + ")"
 
-    # PFAM substring filter via EXISTS
     if pfam_search:
         toks = [t.strip().lower() for t in pfam_search.split(',') if t.strip()]
         if toks:
@@ -440,11 +462,16 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
             for t in toks:
                 ors.append("LOWER(g.pfam_domains) LIKE ?")
                 params.append(f"%{t}%")
-            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = syntenic_blocks.block_id AND (" + " OR ".join(ors) + ")"
-            query += f" AND EXISTS ({sub})"
-    
-    result = conn.execute(query, params).fetchone()
-    return result[0] if result else 0
+            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = allb.block_id AND (" + " OR ".join(ors) + ")"
+            base += f" AND (block_type = 'micro' OR EXISTS ({sub}))"
+
+    try:
+        row = conn.execute(base, params).fetchone()
+        return int(row[0]) if row else 0
+    except Exception as e:
+        logger.warning(f"Unified count query failed: {e}")
+        row = conn.execute("SELECT COUNT(*) FROM syntenic_blocks").fetchone()
+        return int(row[0]) if row else 0
 
 def create_sidebar_filters() -> Dict:
     """Create sidebar filters and return filter values."""
@@ -479,7 +506,7 @@ def create_sidebar_filters() -> Dict:
         "Min Embedding Similarity",
         min_value=0.0,
         max_value=1.0,
-        value=0.7,
+        value=0.0,
         step=0.05,
         help="Minimum cosine similarity in ESM2 embedding space"
     )
@@ -654,11 +681,11 @@ def display_block_explorer(filters: Dict):
     with scol2:
         pass
     order_by = {
-        "Embedding similarity (desc)": "sb.identity DESC, sb.block_id",
-        "Consensus length (desc)": "COALESCE(bc.consensus_len, 0) DESC, sb.block_id",
-        "Consensus length (asc)": "COALESCE(bc.consensus_len, 0) ASC, sb.block_id",
-        "Length (desc)": "sb.length DESC, sb.block_id",
-        "Length (asc)": "sb.length ASC, sb.block_id",
+        "Embedding similarity (desc)": "identity DESC, block_id",
+        "Consensus length (desc)": "COALESCE(consensus_len, 0) DESC, block_id",
+        "Consensus length (asc)": "COALESCE(consensus_len, 0) ASC, block_id",
+        "Length (desc)": "length DESC, block_id",
+        "Length (asc)": "length ASC, block_id",
     }[sort_option]
     
     # Load blocks for current page
@@ -960,7 +987,12 @@ def display_genome_viewer():
     # Load genes for both loci - now showing only aligned regions + context
     with st.spinner("Loading aligned gene regions..."):
         query_genes = load_genes_for_locus(block['query_locus'], block['block_id'], 'query')
-        target_genes = load_genes_for_locus(block['target_locus'], block['block_id'], 'target')
+        # For micro blocks or empty target locus, skip loading target genes
+        if str(block.get('block_type', '')).lower() == 'micro' or not block.get('target_locus'):
+            import pandas as _pd
+            target_genes = _pd.DataFrame(columns=query_genes.columns if hasattr(query_genes, 'columns') else [])
+        else:
+            target_genes = load_genes_for_locus(block['target_locus'], block['block_id'], 'target')
     
     st.write(f"**Debug**: Query genes loaded: {len(query_genes)}, Target genes loaded: {len(target_genes)}")
     
@@ -1042,7 +1074,9 @@ def display_genome_viewer():
     
     with col2:
         st.subheader(f"Target: {block['target_locus']}")
-        if not target_genes.empty:
+        if str(block.get('block_type','')).lower() == 'micro' or not block.get('target_locus'):
+            st.info("Micro block has no target side")
+        elif not target_genes.empty:
             st.info(f"{len(target_genes)} genes found")
             
             # Create professional genome diagram showing aligned region
@@ -1309,12 +1343,14 @@ def display_cluster_explorer():
                 with col2:
                     display_cluster_card_with_async_summary(stats)
 
+    
+    # Micro clusters are merged into the main explorer feed via get_all_cluster_stats
 @st.cache_data
-def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float = 0.9, max_tok: int = 0):
+def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float = 0.9, max_tok: int = 0, cluster_type: str = 'macro'):
     try:
         import sqlite3, json
         conn = sqlite3.connect(str(DB_PATH))
-        # Try precomputed cluster_consensus first
+        # Always use unified cluster consensus table or compute on the fly
         try:
             row = conn.execute("SELECT consensus_json FROM cluster_consensus WHERE cluster_id = ?", (int(cluster_id),)).fetchone()
             if row and row[0]:
@@ -1323,7 +1359,6 @@ def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float
                     return payload.get('consensus', []), payload.get('pairs', [])
         except Exception:
             pass
-        # Fallback to on-the-fly computation
         try:
             from database.cluster_content import compute_cluster_pfam_consensus
         except Exception:
@@ -1596,25 +1631,39 @@ def display_cluster_card_with_async_summary(stats):
     """Display a cluster card with immediate plot rendering and async AI summary."""
     with st.container():
         # Header
+        label = 'micro' if str(getattr(stats, 'cluster_type', '')) == 'micro' else ''
+        badge = f" <span style=\"background:#eef;color:#2E5CAF;border-radius:6px;padding:2px 6px;margin-left:6px;font-size:12px;\">{label}</span>" if label else ''
         st.markdown(f"""
         <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin: 10px 0; background-color: #f9f9f9;">
-            <h4 style="color: #2E5CAF; margin: 0 0 10px 0;">🧩 Cluster {stats.cluster_id}</h4>
+            <h4 style="color: #2E5CAF; margin: 0 0 10px 0;">🧩 Cluster {stats.cluster_id}{badge}</h4>
         </div>
         """, unsafe_allow_html=True)
         
         # Mini consensus preview (fast & cached)
         try:
-            tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=0)
+            tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=0, cluster_type=str(getattr(stats, 'cluster_type', 'macro') or 'macro'))
             _render_consensus_strip(tokens, pairs, height=None, key=f"consprev_{stats.cluster_id}")
             # Quick directional consensus badge
-            summary = _cluster_summary_v1(int(stats.cluster_id))
-            if summary and isinstance(summary, dict):
-                dc = summary.get('directional_consensus', {})
-                agree = dc.get('agree_frac', 0.0)
-                status = dc.get('status', 'weak')
-                caveats = summary.get('caveats', [])
-                hint = summary.get('preview', {}).get('hint', '')
-                st.caption(f"Directional consensus: {status} ({agree:.0%}) • {hint}{' • ' + ', '.join(caveats) if caveats else ''}")
+            if str(getattr(stats, 'cluster_type', 'macro') or 'macro') == 'micro':
+                try:
+                    con, pr = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=0, cluster_type='micro')
+                    supported = [p for p in pr if p.get('same_frac') is not None and int(p.get('support', 0)) >= 3]
+                    import statistics as _st
+                    agree = _st.mean([float(p['same_frac']) for p in supported]) if supported else 0.0
+                    status = 'strong' if agree >= 0.6 else ('mixed' if agree >= 0.4 else 'weak')
+                    core = sum(1 for c in con if float(c.get('coverage', 0.0)) >= 0.6)
+                    st.caption(f"Directional consensus: {status} ({agree:.0%}) • {core} core tokens")
+                except Exception:
+                    pass
+            else:
+                summary = _cluster_summary_v1(int(stats.cluster_id))
+                if summary and isinstance(summary, dict):
+                    dc = summary.get('directional_consensus', {})
+                    agree = dc.get('agree_frac', 0.0)
+                    status = dc.get('status', 'weak')
+                    caveats = summary.get('caveats', [])
+                    hint = summary.get('preview', {}).get('hint', '')
+                    st.caption(f"Directional consensus: {status} ({agree:.0%}) • {hint}{' • ' + ', '.join(caveats) if caveats else ''}")
         except Exception as e:
             logger.debug(f"Consensus preview error for cluster {stats.cluster_id}: {e}")
 
@@ -1881,7 +1930,7 @@ def display_cluster_detail():
     with st.expander("🧩 Consensus Cassette (PFAM)", expanded=True):
         c1, c2, c3 = st.columns([1,1,1])
         with c1:
-            min_core_cov = st.slider("Min coverage", min_value=0.3, max_value=0.95, value=0.7, step=0.05, help="Keep PFAMs present in at least this fraction of blocks")
+            min_core_cov = st.slider("Min coverage", min_value=0.3, max_value=0.95, value=0.0, step=0.05, help="Keep PFAMs present in at least this fraction of blocks")
         with c2:
             df_pct = st.slider("Ban top DF percentile (global)", min_value=0.0, max_value=0.99, value=0.9, step=0.05, help="Filter ultra-common PFAMs computed across all blocks (0 to disable)")
         with c3:

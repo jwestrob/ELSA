@@ -228,6 +228,34 @@ system:
   rng_seed: 17
 ```
 
+## Micro‑Synteny (2–3 gene cassettes)
+
+An optional, sidecar module that detects conserved 2–3 gene cassettes as adjacency enrichment across genomes. It does not touch the long‑locus alignment or clustering pipeline and is disabled by default.
+
+- CLI: `micro-synteny --genes-tsv genes.tsv [--gap-tolerance 1] [--min-genome-support 4] [--alpha 0.05] [--permutations 200] [--seed 17] [--loose-triads] [--output-dir ./micro_synteny_out]`
+  - Or via the main CLI: `elsa micro-synteny --from-repo [flags]` (uses genome_browser DB + PFAM for OGs)
+- Input TSV schema: columns `genome_id, contig_id, index, strand, og_id` (per‑gene positional order within contig, and orthogroup ID).
+- Outputs (TSV in `--output-dir`):
+  - `edges.tsv`: `OG_u, OG_v, support_genomes, expected_support, O_over_E, q_adj, modal_orientation, orientation_consistency, params_json`
+  - `cassettes_pairs.tsv`: significant OG pairs with FDR `q_adj` and consensus orientation
+  - `cassettes_triads.tsv`: 3‑gene cassettes as strict 3‑cliques (default) or loose wedges (with `--loose-triads`)
+  - `instances_pairs.tsv`: per‑genome placements for significant pairs
+  - `instances_triads.tsv`: per‑genome placements for triads
+
+Statistics: adjacency significance is assessed by pooled permutations that shuffle OG labels within contigs per genome; p‑values are FDR‑controlled via Benjamini–Hochberg over pairs. Orientation evidence is summarized separately (binomial test) and reported but not used for FDR control.
+
+Python API:
+
+```python
+from elsa.synteny import micro_synteny_call
+edges, pairs, triads, inst_pairs, inst_triads = micro_synteny_call(
+    genes_df, gap_tolerance=1, min_genome_support=4, permutations=200, seed=17
+)
+```
+
+To drive this from in‑repo objects, implement `synteny/repo_adapter.py:get_genes_dataframe()` to produce the required DataFrame and run `micro-synteny --from-repo`.
+
+
 ## Hardware Requirements
 
 - **Minimum**: 8GB RAM, CPU-only

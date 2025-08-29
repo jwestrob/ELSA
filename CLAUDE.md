@@ -192,3 +192,35 @@ Based on specification requirements:
 - **Property tests**: Chaining invariance, DTW constraints, Jaccard unbiasedness  
 - **Metamorphic**: Gene boundary jitter tolerance
 - **Golden set**: Hand-curated loci with expected block ranges
+
+## TODOs — Micro‑Synteny Integration
+
+1) Improve PFAM‑sparse consensus for small cassettes (PFAM → None → PFAM)
+
+- Problem: Consensus currently uses per‑gene PFAM tokens. PFAM‑less genes break “consecutive proteins with shared domains”, so a true 2–3‑gene cassette can collapse to a single token in `cluster_consensus`.
+- Plan (gap‑tolerant consensus):
+  - Treat absent PFAM as a gap, not a break. When building per‑block token sequences in `compute_cluster_pfam_consensus`, skip empty tokens but allow adjacency over a small gap: max_gap=1 (i.e., use skip‑gram adjacency). This preserves PFAM₁→PFAM₂ adjacency across a PFAM‑less middle gene.
+  - Relax global DF bans for micro clusters: for `cluster_type='micro_pair'`, bypass or raise `df_percentile_ban` so frequent tokens aren’t dropped in tiny clusters.
+  - Lower minimum token requirements for micro clusters (e.g., no `min_token_per_block` enforcement) so 2‑token consensuses are retained.
+  - Optional token backfill tiers for PFAM‑less genes (future):
+    - Use orthogroup IDs when available (`ELSA_OG_COLUMN`) as fallback tokens.
+    - As a last resort, assign lightweight “codeword” tokens from protein embeddings (KMeans codebook) to preserve cassette positional structure (down‑weighted in consensus).
+  - UI: render a subtle “gap” marker between consensus tokens to signal PFAM‑less positions.
+
+Implementation sketch:
+- Add `allow_gaps: True`, `max_gap: 1` to `compute_cluster_pfam_consensus` pair construction; relax DF banning for `cluster_type='micro_pair'` (detected via a quick lookup) and skip any `min_token_per_block` gate.
+- In `ELSADataIngester.compute_cluster_consensus`, pass micro‑friendly params when computing consensus for micro clusters.
+
+2) Link small micro clusters to large clusters (future)
+
+- Goal: If a micro cassette (2–3 genes) aligns at high identity within a larger long‑locus cluster, group them. This may deprecate the micro cluster in that view or show it as a “sub‑cassette”.
+- Plan:
+  - Add a `cluster_links` table with fields: `micro_cluster_id`, `parent_cluster_id`, `evidence_json` (overlap score, identity, shared PFAM pairs, coordinate containment), `status` (linked|deprecated).
+  - Linking heuristic candidates:
+    - Coordinate overlap: representative micro loci fall within the gene index span of representative long blocks on matching contigs.
+    - PFAM consensus containment: micro consensus tokens appear as a contiguous subsequence in the long cluster’s consensus (gap‑tolerant).
+    - Optional embedding evidence: high cosine between representative windows.
+  - UI: show micro clusters under the parent cluster card; toggle to collapse “deprecated” micro clusters from the global list.
+
+Notes:
+- The default pipeline remains unchanged; these paths are opt‑in and micro‑specific. Consensus changes should not affect long‑locus clusters.

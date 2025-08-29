@@ -196,6 +196,8 @@ class AnalyzeConfig(BaseModel):
     attach: 'AttachConfig' = Field(default_factory=lambda: AttachConfig())
     # Optional alignment behavior controls
     align: 'AlignConfig' = Field(default_factory=lambda: AlignConfig())
+    # Optional micro clustering overrides (independent of macro)
+    micro_overrides: 'MicroClusteringOverrides' = Field(default_factory=lambda: MicroClusteringOverrides())
 
 
 class AlignConfig(BaseModel):
@@ -204,6 +206,14 @@ class AlignConfig(BaseModel):
     merge_strategy: Literal["soft_nms", "hard_nms"] = Field(default="soft_nms", description="Merging strategy for forward/reverse overlaps")
     orient_bonus: float = Field(default=0.0, description="Additive score bonus for same-strand window pairs")
     orient_penalty: float = Field(default=0.0, description="Additive score penalty for opposite-strand window pairs")
+
+
+class MicroClusteringOverrides(BaseModel):
+    """Optional overrides for the micro pass."""
+    jaccard_tau: float | None = Field(default=None)
+    mutual_k: int | None = Field(default=None)
+    df_max: int | None = Field(default=None)
+    min_genome_support: int | None = Field(default=None)
 
 
 class ClusteringConfig(BaseModel):

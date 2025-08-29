@@ -716,6 +716,192 @@ def cluster_blocks_by_pfam(db_path: Path | str,
         conn.close()
 
 
+def compute_micro_cluster_pfam_consensus(conn: sqlite3.Connection,
+                                         micro_cluster_id: int,
+                                         min_core_coverage: float = 0.7,
+                                         df_percentile_ban: float = 0.9,
+                                         max_tokens: int = 10):
+    """Compute PFAM consensus for a micro cluster using micro_gene_* tables.
+
+    Returns dict with keys 'consensus' and 'pairs'.
+    """
+    import statistics as stats
+    import re
+    import numpy as np
+    import pandas as pd
+    import hashlib
+
+    # Ensure micro tables exist
+    try:
+        r = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='micro_gene_blocks'").fetchone()
+        if not r:
+            return {'consensus': [], 'pairs': []}
+    except Exception:
+        return {'consensus': [], 'pairs': []}
+
+    # Ordered gene indices per genome+contig
+    conn.execute("DROP TABLE IF EXISTS _tmp_gene_order_micro")
+    conn.execute(
+        """
+        CREATE TEMP TABLE _tmp_gene_order_micro AS
+        SELECT 
+            genome_id, contig_id, gene_id,
+            start_pos, end_pos,
+            ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
+        FROM genes
+        """
+    )
+
+    # Genes per micro block for the given cluster
+    q = pd.read_sql_query(
+        """
+        WITH block_ranges AS (
+            SELECT m.block_id, m.genome_id, m.contig_id, m.start_index, m.end_index
+            FROM micro_gene_blocks m
+            WHERE m.cluster_id = ?
+        ),
+        genes_in_block AS (
+            SELECT br.block_id, go.gene_id, go.start_pos, go.end_pos
+            FROM block_ranges br
+            JOIN _tmp_gene_order_micro go
+              ON go.genome_id = br.genome_id
+             AND go.contig_id = br.contig_id
+             AND go.idx BETWEEN br.start_index AND br.end_index
+            ORDER BY br.block_id, go.start_pos, go.end_pos
+        )
+        SELECT gib.block_id, g.gene_id, g.start_pos, g.strand, g.pfam_domains
+        FROM genes_in_block gib JOIN genes g ON g.gene_id = gib.gene_id
+        ORDER BY gib.block_id, g.start_pos
+        """,
+        conn,
+        params=(int(micro_cluster_id),)
+    )
+    if q.empty:
+        return {'consensus': [], 'pairs': []}
+
+    rib_pat = re.compile(r"^(Ribosomal_[LS]\d+)", re.I)
+    def _norm(tok: str) -> str:
+        m = rib_pat.match(tok)
+        return m.group(1) if m else tok
+
+    # Build per-block token+strand sequences
+    by_block: dict[int, list[tuple[str, int]]] = {}
+    for row in q.itertuples(index=False):
+        toks_raw = [t.strip() for t in str(row.pfam_domains or '').split(';') if t.strip()]
+        if not toks_raw:
+            continue
+        primary = _norm(toks_raw[0])
+        by_block.setdefault(int(row.block_id), []).append((primary, int(row.strand or 1)))
+    by_block = {bid: seq for bid, seq in by_block.items() if seq}
+    if not by_block:
+        return {'consensus': [], 'pairs': []}
+
+    n_blocks = len(by_block)
+    # DF and normalized positions (per-block normalized like macro path)
+    df_counts: dict[str, int] = {}
+    positions: dict[str, list[float]] = {}
+    fwd_counts: dict[str, int] = {}
+    occ_counts: dict[str, int] = {}
+    for seq in by_block.values():
+        # Compact consecutive duplicates
+        compact = []
+        for tok_s in seq:
+            if not compact or tok_s[0] != compact[-1][0]:
+                compact.append(tok_s)
+        L = len(compact)
+        seen = set()
+        for idx, (tok, strand) in enumerate(compact):
+            occ_counts[tok] = occ_counts.get(tok, 0) + 1
+            fwd_counts[tok] = fwd_counts.get(tok, 0) + (1 if strand >= 0 else 0)
+            # normalized position 0..1
+            pos = (idx / max(1, L-1)) if L > 1 else 0.0
+            positions.setdefault(tok, []).append(pos)
+            if tok not in seen:
+                df_counts[tok] = df_counts.get(tok, 0) + 1
+                seen.add(tok)
+
+    # Ban top-DF percentile tokens if requested
+    banned = set()
+    if df_percentile_ban is not None and df_counts:
+        vals = list(df_counts.values())
+        thresh = np.percentile(vals, float(df_percentile_ban) * 100.0)
+        banned = {tok for tok, df in df_counts.items() if df >= thresh}
+
+    consensus = []
+    for tok, dfv in df_counts.items():
+        if tok in banned:
+            continue
+        cov = dfv / float(n_blocks)
+        if cov >= float(min_core_coverage):
+            pos = stats.mean(positions.get(tok, [0]))
+            fwd = (fwd_counts.get(tok, 0) / float(occ_counts.get(tok, 1))) if occ_counts.get(tok, 0) else 0.0
+            color = f"#{hashlib.md5(tok.encode()).hexdigest()[:6]}"
+            consensus.append({'token': tok, 'coverage': float(cov), 'df': int(dfv), 'mean_pos': float(pos), 'fwd_frac': float(fwd), 'n_occ': int(occ_counts.get(tok, 0)), 'color': color})
+
+    consensus.sort(key=lambda x: x.get('mean_pos', 0.0))
+    if max_tokens and len(consensus) > int(max_tokens):
+        consensus = consensus[:int(max_tokens)]
+
+    # Adjacent pair stats aligned to consensus token order
+    ordered_tokens = [c['token'] for c in consensus]
+    pairs = []
+    if len(ordered_tokens) >= 2:
+        # Build per-block first-occurrence and strand index
+        per_block_idx_strand: dict[int, dict[str, tuple[int, int]]] = {}
+        for bid, seq in by_block.items():
+            idx_map: dict[str, tuple[int, int]] = {}
+            for idx, (tok, strand) in enumerate(seq):
+                if tok not in idx_map:
+                    idx_map[tok] = (idx, int(strand))
+            per_block_idx_strand[bid] = idx_map
+        for i in range(len(ordered_tokens)-1):
+            t1, t2 = ordered_tokens[i], ordered_tokens[i+1]
+            support = 0
+            same = 0
+            for idx_map in per_block_idx_strand.values():
+                if t1 in idx_map and t2 in idx_map:
+                    support += 1
+                    s1 = idx_map[t1][1]
+                    s2 = idx_map[t2][1]
+                    if (s1 >= 0 and s2 >= 0) or (s1 < 0 and s2 < 0):
+                        same += 1
+            same_frac = (same / support) if support > 0 else None
+            pairs.append({'i': i, 'j': i+1, 't1': t1, 't2': t2, 'same_frac': same_frac, 'support': support})
+
+    return {'consensus': consensus, 'pairs': pairs}
+
+
+def precompute_all_micro_consensus(conn: sqlite3.Connection,
+                                   min_core_coverage: float = 0.7,
+                                   df_percentile_ban: float = 0.9,
+                                   max_tokens: int = 10) -> int:
+    """Compute and store consensus JSON for all micro clusters."""
+    conn.execute(
+        """
+        CREATE TABLE IF NOT EXISTS micro_cluster_consensus (
+            cluster_id INTEGER PRIMARY KEY,
+            consensus_json TEXT
+        )
+        """
+    )
+    conn.execute("DELETE FROM micro_cluster_consensus")
+    rows = conn.execute("SELECT cluster_id FROM micro_gene_clusters").fetchall()
+    n = 0
+    import json as _json
+    for (cid,) in rows:
+        payload = compute_micro_cluster_pfam_consensus(conn, int(cid), min_core_coverage, df_percentile_ban, max_tokens)
+        try:
+            conn.execute(
+                "INSERT OR REPLACE INTO micro_cluster_consensus(cluster_id, consensus_json) VALUES (?, ?)",
+                (int(cid), _json.dumps(payload))
+            )
+            n += 1
+        except Exception:
+            pass
+    conn.commit()
+    return n
+
+
 if __name__ == "__main__":
     import argparse
     p = argparse.ArgumentParser()

@@ -1,0 +1,137 @@
+
+data:
+  work_dir: ./elsa_index
+  allow_overwrite: false
+
+ingest:
+  gene_caller: prodigal
+  prodigal_mode: single
+  min_cds_aa: 60
+  keep_partial: false
+  run_pfam: true
+
+plm:
+  model: esm2_t12
+  device: auto
+  batch_amino_acids: 16000
+  fp16: true
+  project_to_D: 256
+  l2_normalize: true
+
+shingles:
+  n: 5
+  stride: 1
+  pos_dim: 16
+  weights: triangular
+  strand_flag: signed
+
+discrete:
+  K: 4096
+  minhash_hashes: 192
+  bands_rows: [24, 8]
+  emit_skipgram: true
+  idf_min_df: 5
+  idf_max_df_frac: 0.05
+
+continuous:
+  srp_bits: 256
+  srp_seed: 13
+
+chain:
+  offset_band: 10
+  gap_open: 2.0
+  gap_extend: 0.5
+  slope_penalty: 0.05
+
+dtw:
+  enable: true
+  band: 10
+
+score:
+  alpha: 1.0
+  beta: 0.1
+  gamma: 0.2
+  delta: 0.1
+  fdr_target: 0.01
+
+system:
+  jobs: auto
+  mmap: true
+  rng_seed: 17
+
+window:
+  micro:
+    size: 3
+    stride: 1
+  macro:
+    size: 4
+    stride: 2
+  adaptive:
+    enable: false
+
+phase2:
+  enable: true
+  weighted_sketch: true
+  multiscale: true
+  flip_dp: false
+  calibration: true
+  hnsw: false
+
+cassette_mode:
+  enable: false
+  anchors:
+    cosine_min: 0.91
+    jaccard_min: 0.30
+    reciprocal_topk: 2
+    blacklist_top_pct: 1.0
+    lambda_jaccard: 0.5
+  chain:
+    delta_min: 0.02
+    density_window_genes: 10
+    density_min_anchors_per_gene: 0.3
+    pos_band_genes: 1
+    max_gap_genes: 1
+  segmenter:
+    method: chain
+
+analyze:
+  clustering:
+    method: mutual_jaccard
+    sink_label: 0
+    keep_singletons: false
+    min_anchors: 4
+    min_span_genes: 8
+    v_mad_max_genes: 0.5
+    srp_bits: 256
+    srp_bands: 32
+    srp_band_bits: 8
+    srp_seed: 1337
+    shingle_k: 3
+    shingle_method: xor
+    icws_r: 8
+    icws_bbit: 0
+    icws_weighting: uniform
+    strand_canonical_shingles: false
+    bands_per_window: 4
+    band_stride: 7
+    jaccard_tau: 0.82
+    mutual_k: 2
+    df_max: 25
+    use_weighted_jaccard: true
+    low_df_threshold: 6
+    min_low_df_anchors: 3
+    idf_mean_min: 1.3
+    max_df_percentile: 0.90
+    size_ratio_min: 0.7
+    size_ratio_max: 1.5
+    degree_cap: 6
+    triangle_support_min: 2
+    use_community_detection: true
+    community_method: greedy
+    k_core_min_degree: 2
+
+  micro_overrides:
+    jaccard_tau: 0.82
+    mutual_k: 2
+    df_max: 25
+    min_genome_support: 4

@@ -898,23 +898,23 @@ Format as:
             return f"Cluster {stats.cluster_id}: {stats.total_alignments:,} alignments spanning {stats.unique_genes:,} genes. Analysis pending."
 
 def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[ClusterStats]:
-    """Get statistics for all clusters."""
+    """Get statistics for all clusters from unified clusters table (macro+micro)."""
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.execute("SELECT cluster_id FROM clusters ORDER BY size DESC")
         cluster_ids = [row[0] for row in cursor.fetchall()]
         conn.close()
-        
+
         analyzer = ClusterAnalyzer(db_path)
-        all_stats = []
-        
-        for cluster_id in cluster_ids:
-            stats = analyzer.get_cluster_stats(cluster_id)
+        all_stats: List[ClusterStats] = []
+
+        for cid in cluster_ids:
+            stats = analyzer.get_cluster_stats(int(cid))
             if stats:
                 all_stats.append(stats)
-        
+
         return all_stats
-        
+
     except Exception as e:
         logger.error(f"Error getting all cluster stats: {e}")
         return []

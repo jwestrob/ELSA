@@ -489,8 +489,9 @@ def find(config: str, query_locus: str, target_scope: str, output: Optional[str]
 @click.option("--genome-browser-db", default="genome_browser/genome_browser.db", help="Genome browser database path")
 @click.option("--sequences-dir", help="Directory containing nucleotide sequences (.fna)")
 @click.option("--proteins-dir", help="Directory containing proteins (.faa)")
+@click.option("--micro/--no-micro", default=False, help="Run micro-synteny (embedding-first, sidecar-only)")
 def analyze(config: str, min_windows: int, min_similarity: float, output_dir: str, 
-           setup_genome_browser: bool, genome_browser_db: str, sequences_dir: Optional[str], proteins_dir: Optional[str]):
+           setup_genome_browser: bool, genome_browser_db: str, sequences_dir: Optional[str], proteins_dir: Optional[str], micro: bool):
     """Perform comprehensive syntenic block analysis of entire dataset."""
     console.print("[bold]ELSA Comprehensive Syntenic Analysis[/bold]")
     
@@ -600,12 +601,253 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                     console.print(f"\n[green]✓ Genome browser setup completed![/green]")
                     console.print(f"Database: {genome_browser_db}")
                     console.print(f"To start the browser: cd genome_browser && streamlit run app.py")
+                    # If micro sidecar exists, import into primary tables and precompute consensus
+                    if micro:
+                        try:
+                            import sqlite3, pandas as pd
+                            from pathlib import Path as _P
+                            conn = sqlite3.connect(str(genome_browser_db))
+                            # Ensure micro CSVs exist
+                            mdir = _P(output_path) / 'micro_gene'
+                            mb_csv = mdir / 'micro_gene_blocks.csv'
+                            mc_csv = mdir / 'micro_gene_clusters.csv'
+                            if mb_csv.exists() and mc_csv.exists():
+                                # Load micro CSVs
+                                mb_df = pd.read_csv(mb_csv)
+                                mc_df = pd.read_csv(mc_csv)
+                                # Compute macro cluster offset (append after current max)
+                                cur = conn.cursor()
+                                row = cur.execute("SELECT COALESCE(MAX(cluster_id),0) FROM clusters").fetchone()
+                                start_cid = int(row[0] or 0)
+                                # Map only non-sink micro clusters (>0) and offset by number of macro clusters
+                                non_sink = mc_df[mc_df['cluster_id'] > 0].sort_values('cluster_id')
+                                cid_map = {int(r.cluster_id): (start_cid + int(r.cluster_id)) for r in non_sink.itertuples(index=False)}
+                                # Insert clusters
+                                rows = []
+                                for r in non_sink.itertuples(index=False):
+                                    rows.append((cid_map[int(r.cluster_id)], int(r.size), None, None, None, None, None, 'micro'))
+                                cur.executemany(
+                                    """
+                                    INSERT OR REPLACE INTO clusters
+                                        (cluster_id, size, consensus_length, consensus_score, diversity, representative_query, representative_target, cluster_type)
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                                    """,
+                                    rows,
+                                )
+                                # Insert micro blocks into syntenic_blocks with new block IDs
+                                # Use high offset to avoid collisions
+                                sb_rows = []
+                                for r in mb_df.itertuples(index=False):
+                                    new_bid = 1000000000 + int(r.block_id)
+                                    q_locus = f"{r.genome_id}:{r.contig_id}#" + str(int(r.start_index)) + "-" + str(int(r.end_index))
+                                    # Assign cluster: keep sink (0) as 0; offset non-sink via cid_map
+                                    src_cid = int(r.cluster_id)
+                                    dest_cid = 0 if src_cid == 0 else cid_map.get(src_cid, 0)
+                                    sb_rows.append((
+                                        new_bid,
+                                        dest_cid,
+                                        q_locus,
+                                        '',
+                                        str(r.genome_id),
+                                        None,
+                                        str(r.contig_id),
+                                        None,
+                                        int(1 + int(r.end_index) - int(r.start_index)),
+                                        0.0,
+                                        0.0,
+                                        None, None,
+                                        int(r.start_index), int(r.end_index),
+                                        None, None,
+                                        None, None,
+                                        'micro'
+                                    ))
+                                cur.executemany(
+                                    """
+                                    INSERT OR REPLACE INTO syntenic_blocks (
+                                        block_id, cluster_id, query_locus, target_locus,
+                                        query_genome_id, target_genome_id,
+                                        query_contig_id, target_contig_id,
+                                        length, identity, score,
+                                        n_query_windows, n_target_windows,
+                                        query_window_start, query_window_end,
+                                        target_window_start, target_window_end,
+                                        query_windows_json, target_windows_json,
+                                        block_type
+                                    ) VALUES (
+                                        ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+                                    )
+                                    """,
+                                    sb_rows,
+                                )
+                                # Insert gene_block_mappings for micro blocks (query role)
+                                # Build per-contig ordered gene lists cache
+                                import collections
+                                cache = {}
+                                gbm_rows = []
+                                for r in mb_df.itertuples(index=False):
+                                    gid = str(r.genome_id); cid = str(r.contig_id)
+                                    key = (gid, cid)
+                                    if key not in cache:
+                                        genes = [row[0] for row in conn.execute(
+                                            "SELECT gene_id FROM genes WHERE genome_id = ? AND contig_id = ? ORDER BY start_pos, end_pos",
+                                            (gid, cid)
+                                        ).fetchall()]
+                                        cache[key] = genes
+                                    genes = cache[key]
+                                    s = int(r.start_index); e = int(r.end_index)
+                                    s = max(0, min(len(genes)-1, s)); e = max(0, min(len(genes)-1, e))
+                                    if e < s:
+                                        continue
+                                    span = genes[s:e+1]
+                                    L = max(1, len(span)-1)
+                                    new_bid = 1000000000 + int(r.block_id)
+                                    for idx, gene_id in enumerate(span):
+                                        rel = (idx / L) if L > 0 else 0.0
+                                        gbm_rows.append((gene_id, new_bid, 'query', rel))
+                                # Ensure table exists
+                                cur.execute(
+                                    """
+                                    CREATE TABLE IF NOT EXISTS gene_block_mappings (
+                                        gene_id TEXT,
+                                        block_id INTEGER,
+                                        block_role TEXT,
+                                        relative_position REAL,
+                                        PRIMARY KEY (gene_id, block_id)
+                                    )
+                                    """
+                                )
+                                # Insert mappings in chunks
+                                for i in range(0, len(gbm_rows), 1000):
+                                    cur.executemany(
+                                        "INSERT OR REPLACE INTO gene_block_mappings (gene_id, block_id, block_role, relative_position) VALUES (?, ?, ?, ?)",
+                                        gbm_rows[i:i+1000]
+                                    )
+                                conn.commit()
+
+                                # Precompute macro-style consensus for new micro clusters into cluster_consensus
+                                try:
+                                    # Robust import by file path
+                                    import importlib.util as _ilu
+                                    from pathlib import Path as _P
+                                    mod_path = _P(__file__).parents[1] / 'genome_browser' / 'database' / 'cluster_content.py'
+                                    spec = _ilu.spec_from_file_location('gb_cluster_content', str(mod_path))
+                                    if spec and spec.loader:
+                                        gbmod = _ilu.module_from_spec(spec)
+                                        spec.loader.exec_module(gbmod)  # type: ignore
+                                        compute_cluster_pfam_consensus = getattr(gbmod, 'compute_cluster_pfam_consensus')  # type: ignore
+                                        # Create table if missing
+                                        conn.execute("""
+                                            CREATE TABLE IF NOT EXISTS cluster_consensus (
+                                                cluster_id INTEGER PRIMARY KEY,
+                                                consensus_json TEXT,
+                                                agree_frac REAL,
+                                                core_tokens INTEGER
+                                            )
+                                        """)
+                                        import json as _json
+                                        for old_cid, new_cid in cid_map.items():
+                                            payload = compute_cluster_pfam_consensus(conn, int(new_cid), 0.5, 0.9, 12)  # type: ignore
+                                            conn.execute(
+                                                "INSERT OR REPLACE INTO cluster_consensus(cluster_id, consensus_json, agree_frac, core_tokens) VALUES (?, ?, ?, ?)",
+                                                (int(new_cid), _json.dumps(payload), None, None)
+                                            )
+                                        conn.commit()
+                                except Exception as e:
+                                    console.print(f"[dim]Macro-style consensus precompute skipped for micro clusters: {e}[/dim]")
+                        except Exception as e:
+                            console.print(f"[yellow]Micro projection into browser DB failed: {e}[/yellow]")
                 else:
                     console.print(f"\n[yellow]⚠ Genome browser setup skipped (see messages above)[/yellow]")
             except Exception as e:
                 console.print(f"\n[red]Genome browser setup failed: {e}[/red]")
                 console.print("[yellow]Analysis results are still available - you can set up the browser manually[/yellow]")
-        
+
+        # Optional: run micro-synteny sidecar pipeline
+        if micro:
+            try:
+                console.print("\n[bold blue]Running micro-synteny (embedding-first) sidecar...[/bold blue]")
+                # Resolve genes.parquet
+                from .manifest import ELSAManifest
+                m = ELSAManifest(config_obj.data.work_dir)
+                genes_path = None
+                if m.has_artifact('genes'):
+                    genes_path = Path(m.data['artifacts']['genes']['path'])
+                else:
+                    # Fallback common locations
+                    candidates = [
+                        Path('elsa_index/ingest/genes.parquet'),
+                        Path.cwd() / 'elsa_index/ingest/genes.parquet',
+                        Path(__file__).parents[2] / 'elsa_index/ingest/genes.parquet',
+                    ]
+                    for p in candidates:
+                        if p.exists():
+                            genes_path = p
+                            break
+                if not genes_path or not Path(genes_path).exists():
+                    console.print("[yellow]genes.parquet not found; skipping micro-synteny[/yellow]")
+                else:
+                    from .analyze.micro_gene import run_micro_clustering
+                    macro_cl = getattr(config_obj.analyze, 'clustering', None)
+                    micro_j = float(getattr(macro_cl, 'jaccard_tau', 0.75)) if macro_cl else 0.75
+                    micro_mk = int(getattr(macro_cl, 'mutual_k', 3)) if macro_cl else 3
+                    micro_df = int(getattr(macro_cl, 'df_max', 30)) if macro_cl else 30
+                    micro_out = Path(output_path) / 'micro_gene'
+                    db_path = Path(genome_browser_db) if setup_genome_browser and Path(genome_browser_db).exists() else None
+                    # Defaults per AGENTS.md
+                    blocks_df, clusters_df = run_micro_clustering(
+                        Path(genes_path),
+                        micro_out,
+                        db_path=db_path,
+                        k_values=(2, 3),
+                        max_gap=1,
+                        jaccard_tau=micro_j,
+                        mutual_k=micro_mk,
+                        df_max=micro_df,
+                        min_genome_support=3,
+                    )
+                    # Precompute micro consensus for browser (robust import)
+                    if db_path and db_path.exists():
+                        import sqlite3
+                        conn = sqlite3.connect(str(db_path))
+                        try:
+                            # Try package import first
+                            try:
+                                from genome_browser.database.cluster_content import precompute_all_micro_consensus  # type: ignore
+                            except Exception:
+                                # Fallback: load module directly from file path
+                                import importlib.util as _ilu, sys as _sys
+                                from pathlib import Path as _P
+                                mod_path = _P(__file__).parents[1] / 'genome_browser' / 'database' / 'cluster_content.py'
+                                spec = _ilu.spec_from_file_location('gb_cluster_content', str(mod_path))
+                                if spec and spec.loader:
+                                    gbmod = _ilu.module_from_spec(spec)
+                                    spec.loader.exec_module(gbmod)  # type: ignore
+                                    precompute_all_micro_consensus = getattr(gbmod, 'precompute_all_micro_consensus')  # type: ignore
+                                else:
+                                    raise ImportError('Could not load genome_browser.database.cluster_content')
+                            nrows = precompute_all_micro_consensus(conn, 0.6, 0.9, 10)  # type: ignore
+                            console.print(f"[dim]Precomputed micro consensus for {nrows} clusters[/dim]")
+                        except Exception as e:
+                            console.print(f"[dim]Micro consensus precompute skipped: {e}[/dim]")
+                        finally:
+                            conn.close()
+                    # Report final micro counts
+                    if db_path and db_path.exists():
+                        import sqlite3
+                        try:
+                            conn = sqlite3.connect(str(db_path))
+                            nb = conn.execute("SELECT COUNT(*) FROM micro_gene_blocks").fetchone()[0]
+                            nc = conn.execute("SELECT COUNT(*) FROM micro_gene_clusters").fetchone()[0]
+                        finally:
+                            conn.close()
+                        console.print(f"[bold]Micro clusters:[/bold] {nc} (blocks: {nb})")
+                    else:
+                        # No DB: report counts from pre-dedup DataFrames
+                        console.print(f"[bold]Micro clusters:[/bold] {len(clusters_df)} (blocks: {len(blocks_df)})")
+                    console.print("[green]✓ Micro-synteny results written to sidecar and DB (if available)[/green]")
+            except Exception as e:
+                console.print(f"[yellow]Micro-synteny pass failed/skipped: {e}[/yellow]")
+
     except Exception as e:
         console.print(f"[red]Analysis failed: {e}[/red]")
         import traceback

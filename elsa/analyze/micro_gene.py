@@ -379,6 +379,23 @@ def run_micro_clustering(
             # Fail silently for DB writing; sidecar CSVs are authoritative
             pass
 
+    # Always build paired micro alignments; write sidecars and, if DB provided, persist tables
+    if not blocks_df.empty:
+        try:
+            _build_micro_alignment_pairs(
+                genes_parquet_path=Path(genes_parquet_path),
+                db_path=Path(db_path) if db_path is not None else None,  # type: ignore
+                blocks_df=blocks_df,
+                clusters_df=clusters_df,
+                output_dir=Path(output_dir),
+                cos_tau=0.85,
+                band=1,
+                top_k=2,
+            )
+        except Exception:
+            # Non-fatal; clinker/micro cluster views still work
+            pass
+
     return blocks_df, clusters_df
 
 
@@ -420,6 +437,251 @@ def _write_micro_tables_sqlite(db_path: Path, blocks_df: pd.DataFrame, clusters_
         conn.commit()
     finally:
         conn.close()
+
+
+def _compute_micro_alignment_pairs(
+    *,
+    genes_parquet_path: Path,
+    blocks_df: pd.DataFrame,
+    cos_tau: float = 0.85,
+    band: int = 1,
+    top_k: int = 2,
+) -> Tuple[List[Tuple[int,int,str,str,int,int,str,str,int,int,int,float,float]], List[Tuple[int,str,str,int,int,int]]]:
+    """Compute micro A↔B alignment pairs and per-gene mappings in-memory.
+
+    Returns (pairs_rows, mapping_rows) where:
+      pairs_rows: (block_id, cluster_id, q_gid, q_cid, q_start_bp, q_end_bp, t_gid, t_cid, t_start_bp, t_end_bp, orient, identity, score)
+      mapping_rows: (block_id, block_role, gene_id, start_pos, end_pos, strand)
+    """
+    if blocks_df is None or blocks_df.empty:
+        return [], []
+    df = pd.read_parquet(genes_parquet_path)
+    # Build gene order per contig for index→gene lookup
+    df = df.sort_values(["sample_id", "contig_id", "start", "end"]).reset_index(drop=True)
+    df["idx"] = df.groupby(["sample_id", "contig_id"]).cumcount()
+    emb_cols = [c for c in df.columns if c.startswith("emb_")]
+    # Helper: fetch genes for a micro block
+    def genes_for_block(row) -> pd.DataFrame:
+        g = str(row["genome_id"]); c = str(row["contig_id"])
+        s = int(row["start_index"]); e = int(row["end_index"])
+        sub = df[(df["sample_id"] == g) & (df["contig_id"] == c) & (df["idx"] >= s) & (df["idx"] <= e)].copy()
+        return sub
+
+    def align_pair(a: pd.DataFrame, b: pd.DataFrame) -> Tuple[float, List[Tuple[int, int, float]], int]:
+        if a.empty or b.empty:
+            return 0.0, [], 1
+        def match_with(b_oriented: pd.DataFrame) -> Tuple[float, List[Tuple[int, int, float]]]:
+            matches: List[Tuple[int, int, float]] = []
+            used_b: Set[int] = set()
+            for i, ai in enumerate(a.index):
+                cand_js: List[Tuple[int,int,float]] = []
+                for j, bj in enumerate(b_oriented.index):
+                    if abs(j - i) <= int(band):
+                        va = a.loc[ai, emb_cols].to_numpy(dtype="float32", copy=False)
+                        vb = b_oriented.loc[bj, emb_cols].to_numpy(dtype="float32", copy=False)
+                        na = np.linalg.norm(va) + 1e-8
+                        nb = np.linalg.norm(vb) + 1e-8
+                        cos = float(va.dot(vb) / (na * nb))
+                        if cos >= float(cos_tau):
+                            cand_js.append((j, bj, cos))
+                if not cand_js:
+                    continue
+                cand_js.sort(key=lambda x: x[2], reverse=True)
+                for j, bj, cos in cand_js:
+                    if j not in used_b:
+                        used_b.add(j)
+                        matches.append((i, j, cos))
+                        break
+            if not matches:
+                return 0.0, []
+            return float(np.mean([m[2] for m in matches])), matches
+
+        mean_fwd, m_fwd = match_with(b)
+        b_rev = b.iloc[::-1].copy()
+        mean_rev, m_rev = match_with(b_rev)
+        if mean_rev > mean_fwd:
+            orient = -1
+            mean_score = mean_rev
+            L = len(b)
+            m = [(i, (L - 1 - j), cos) for (i, j, cos) in m_rev]
+        else:
+            orient = 1
+            mean_score = mean_fwd
+            m = m_fwd
+        if len(m) < 2:
+            return 0.0, [], orient
+        return mean_score, m, orient
+
+    pairs_rows: List[Tuple[int,int,str,str,int,int,str,str,int,int,int,float,float]] = []
+    mapping_rows: List[Tuple[int,str,str,int,int,int]] = []
+    pair_id = 1_500_000_000
+    seen_pairs: Set[Tuple[int, int]] = set()
+    for cid, gb in blocks_df.groupby("cluster_id"):
+        by_genome: Dict[str, List[dict]] = {}
+        rows = gb.to_dict("records")
+        for r in rows:
+            by_genome.setdefault(str(r["genome_id"]), []).append(r)
+        genomes = list(by_genome.keys())
+        for i in range(len(genomes)):
+            for j in range(i + 1, len(genomes)):
+                A_list = by_genome[genomes[i]]
+                B_list = by_genome[genomes[j]]
+                for arow in A_list:
+                    a_genes = genes_for_block(arow)
+                    scored: List[Tuple[float, dict, List[Tuple[int, int, float]], int]] = []
+                    for brow in B_list:
+                        b_genes = genes_for_block(brow)
+                        s, matches, orient = align_pair(a_genes, b_genes)
+                        if s > 0.0:
+                            scored.append((s, brow, matches, orient))
+                    scored.sort(key=lambda x: x[0], reverse=True)
+                    for s, brow, matches, orient in scored[:max(1, int(top_k))]:
+                        a_id, b_id = int(arow["block_id"]), int(brow["block_id"])
+                        key = (min(a_id, b_id), max(a_id, b_id))
+                        if key in seen_pairs:
+                            continue
+                        seen_pairs.add(key)
+                        qa = genes_for_block(arow)
+                        qb = genes_for_block(brow)
+                        q_start, q_end = int(qa["start"].min()), int(qa["end"].max())
+                        t_start, t_end = int(qb["start"].min()), int(qb["end"].max())
+                        identity = float(np.mean([m[2] for m in matches]))
+                        score = identity
+                        pairs_rows.append((
+                            int(pair_id), int(cid),
+                            str(arow["genome_id"]), str(arow["contig_id"]), q_start, q_end,
+                            str(brow["genome_id"]), str(brow["contig_id"]), t_start, t_end,
+                            int(orient), float(identity), float(score),
+                        ))
+                        for _idx, grow in qa.iterrows():
+                            mapping_rows.append((
+                                int(pair_id), "query", str(grow["gene_id"]), int(grow["start"]), int(grow["end"]),
+                                int(1 if str(grow.get("strand","+")) in ("+", 1) else -1),
+                            ))
+                        for _idx, grow in qb.iterrows():
+                            mapping_rows.append((
+                                int(pair_id), "target", str(grow["gene_id"]), int(grow["start"]), int(grow["end"]),
+                                int(1 if str(grow.get("strand","+")) in ("+", 1) else -1),
+                            ))
+                        pair_id += 1
+    return pairs_rows, mapping_rows
+
+
+def _build_micro_alignment_pairs(
+    *,
+    genes_parquet_path: Path,
+    db_path: Optional[Path],
+    blocks_df: pd.DataFrame,
+    clusters_df: pd.DataFrame,
+    output_dir: Optional[Path] = None,
+    cos_tau: float = 0.85,
+    band: int = 1,
+    top_k: int = 2,
+) -> None:
+    """Construct micro A↔B alignment pairs from clustered single-locus blocks.
+
+    Always writes sidecar CSVs when output_dir is provided; also writes to DB tables
+    micro_block_pairs and micro_gene_pair_mappings if db_path is provided and exists.
+    """
+    if blocks_df is None or blocks_df.empty:
+        # Write empty CSVs for parity
+        if output_dir is not None:
+            try:
+                Path(output_dir).mkdir(parents=True, exist_ok=True)
+                pd.DataFrame(columns=[
+                    'block_id','cluster_id','query_genome_id','query_contig_id','query_start_bp','query_end_bp',
+                    'target_genome_id','target_contig_id','target_start_bp','target_end_bp','orientation','identity','score'
+                ]).to_csv(Path(output_dir) / 'micro_block_pairs.csv', index=False)
+                pd.DataFrame(columns=['block_id','block_role','gene_id','start_pos','end_pos','strand']).to_csv(
+                    Path(output_dir) / 'micro_gene_pair_mappings.csv', index=False
+                )
+            except Exception:
+                pass
+        return
+
+    pairs_rows, mapping_rows = _compute_micro_alignment_pairs(
+        genes_parquet_path=Path(genes_parquet_path),
+        blocks_df=blocks_df,
+        cos_tau=cos_tau,
+        band=band,
+        top_k=top_k,
+    )
+
+    # Sidecars
+    if output_dir is not None:
+        try:
+            out = Path(output_dir)
+            out.mkdir(parents=True, exist_ok=True)
+            pd.DataFrame(pairs_rows, columns=[
+                'block_id','cluster_id','query_genome_id','query_contig_id','query_start_bp','query_end_bp',
+                'target_genome_id','target_contig_id','target_start_bp','target_end_bp','orientation','identity','score'
+            ]).to_csv(out / 'micro_block_pairs.csv', index=False)
+            pd.DataFrame(mapping_rows, columns=['block_id','block_role','gene_id','start_pos','end_pos','strand']).to_csv(
+                out / 'micro_gene_pair_mappings.csv', index=False
+            )
+        except Exception:
+            pass
+
+    # DB persistence
+    if db_path is not None and Path(db_path).exists():
+        conn = sqlite3.connect(str(db_path))
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS micro_block_pairs (
+                    block_id INTEGER PRIMARY KEY,
+                    cluster_id INTEGER,
+                    query_genome_id TEXT,
+                    query_contig_id TEXT,
+                    query_start_bp INTEGER,
+                    query_end_bp INTEGER,
+                    target_genome_id TEXT,
+                    target_contig_id TEXT,
+                    target_start_bp INTEGER,
+                    target_end_bp INTEGER,
+                    orientation INTEGER,
+                    identity REAL,
+                    score REAL
+                )
+                """
+            )
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS micro_gene_pair_mappings (
+                    block_id INTEGER,
+                    block_role TEXT,
+                    gene_id TEXT,
+                    start_pos INTEGER,
+                    end_pos INTEGER,
+                    strand INTEGER
+                )
+                """
+            )
+            cur.execute("DELETE FROM micro_block_pairs")
+            cur.execute("DELETE FROM micro_gene_pair_mappings")
+            if pairs_rows:
+                cur.executemany(
+                    """
+                    INSERT INTO micro_block_pairs(
+                        block_id, cluster_id,
+                        query_genome_id, query_contig_id, query_start_bp, query_end_bp,
+                        target_genome_id, target_contig_id, target_start_bp, target_end_bp,
+                        orientation, identity, score
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+                    """,
+                    pairs_rows,
+                )
+            if mapping_rows:
+                cur.executemany(
+                    "INSERT INTO micro_gene_pair_mappings(block_id, block_role, gene_id, start_pos, end_pos, strand) VALUES (?,?,?,?,?,?)",
+                    mapping_rows,
+                )
+            conn.commit()
+        finally:
+            conn.close()
+
+    
 
 
 def _precluster_deduplicate_blocks(blocks: List[MicroBlock], db_path: Path) -> List[MicroBlock]:

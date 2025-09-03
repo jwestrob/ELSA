@@ -721,7 +721,10 @@ def compute_micro_cluster_pfam_consensus(conn: sqlite3.Connection,
                                          min_core_coverage: float = 0.7,
                                          df_percentile_ban: float = 0.9,
                                          max_tokens: int = 10):
-    """Compute PFAM consensus for a micro cluster using micro_gene_* tables.
+    """Compute PFAM consensus for a micro cluster.
+
+    Prefers paired mappings (micro_block_pairs + micro_gene_pair_mappings). Falls back to
+    legacy micro_gene_blocks when pairs are not available.
 
     Returns dict with keys 'consensus' and 'pairs'.
     """
@@ -731,6 +734,100 @@ def compute_micro_cluster_pfam_consensus(conn: sqlite3.Connection,
     import pandas as pd
     import hashlib
 
+    # Helper to compute from a row iterator of (block_id, block_role, start_pos, strand, pfam_domains)
+    def _consensus_from_rows(rows_iter):
+        import statistics as stats
+        import re
+        import hashlib
+        # Normalize Ribosomal subfamily names
+        rib_pat = re.compile(r"^(Ribosomal_[LS]\d+)", re.I)
+        def _norm(tok: str) -> str:
+            m = rib_pat.match(tok)
+            return m.group(1) if m else tok
+
+        # Build per-block token+strand sequences
+        by_block: dict[int, list[tuple[str, int]]] = {}
+        for block_id, role, start_pos, strand, pfams in rows_iter:
+            toks_raw = [t.strip() for t in str(pfams or '').split(';') if t.strip()]
+            toks = [_norm(t) for t in toks_raw]
+            for tok in toks:
+                by_block.setdefault(int(block_id), []).append((tok, int(strand or 1)))
+        by_block = {bid: seq for bid, seq in by_block.items() if seq}
+        if not by_block:
+            return {'consensus': [], 'pairs': []}
+
+        # Compact consecutive duplicates, compute DF, positions, strand fractions
+        df_counts: dict[str, int] = {}
+        positions: dict[str, list[float]] = {}
+        fwd_counts: dict[str, int] = {}
+        occ_counts: dict[str, int] = {}
+        for seq in by_block.values():
+            compact = []
+            for tok_s in seq:
+                if not compact or tok_s[0] != compact[-1][0]:
+                    compact.append(tok_s)
+            L = len(compact)
+            seen = set()
+            for idx, (tok, strand) in enumerate(compact):
+                occ_counts[tok] = occ_counts.get(tok, 0) + 1
+                fwd_counts[tok] = fwd_counts.get(tok, 0) + (1 if strand >= 0 else 0)
+                pos = (idx / max(1, L-1)) if L > 1 else 0.0
+                positions.setdefault(tok, []).append(pos)
+                if tok not in seen:
+                    df_counts[tok] = df_counts.get(tok, 0) + 1
+                    seen.add(tok)
+
+        # Global DF ban by simple percentile over in-cluster DF
+        banned = set()
+        if df_percentile_ban is not None and df_percentile_ban > 0 and df_counts:
+            vals = list(df_counts.values())
+            import numpy as _np
+            thresh = _np.percentile(vals, float(df_percentile_ban) * 100.0)
+            banned = {tok for tok, dfv in df_counts.items() if dfv >= thresh}
+
+        consensus = []
+        n_blocks = len(by_block)
+        for tok, dfv in df_counts.items():
+            cov = dfv / float(n_blocks)
+            if tok in banned and cov < float(min_core_coverage):
+                continue
+            if cov >= float(min_core_coverage):
+                pos = stats.mean(positions.get(tok, [0]))
+                fwd = (fwd_counts.get(tok, 0) / float(occ_counts.get(tok, 1))) if occ_counts.get(tok, 0) else 0.0
+                color = f"#{hashlib.md5(tok.encode()).hexdigest()[:6]}"
+                consensus.append({'token': tok, 'coverage': float(cov), 'df': int(dfv), 'mean_pos': float(pos), 'fwd_frac': float(fwd), 'n_occ': int(occ_counts.get(tok, 0)), 'color': color})
+
+        consensus.sort(key=lambda x: x.get('mean_pos', 0.0))
+        if max_tokens and len(consensus) > int(max_tokens):
+            consensus = consensus[:int(max_tokens)]
+
+        # Adjacency pairs
+        pairs = []
+        ordered_tokens = [c['token'] for c in consensus]
+        if len(ordered_tokens) >= 2:
+            # first occurrence per block
+            per_block_idx: dict[int, dict[str, tuple[int, int]]] = {}
+            for bid, seq in by_block.items():
+                idx_map: dict[str, tuple[int, int]] = {}
+                for idx, (tok, strand) in enumerate(seq):
+                    if tok not in idx_map:
+                        idx_map[tok] = (idx, int(strand))
+                per_block_idx[bid] = idx_map
+            for i in range(len(ordered_tokens)-1):
+                t1, t2 = ordered_tokens[i], ordered_tokens[i+1]
+                support = 0
+                same = 0
+                for idx_map in per_block_idx.values():
+                    if t1 in idx_map and t2 in idx_map:
+                        support += 1
+                        s1 = idx_map[t1][1]
+                        s2 = idx_map[t2][1]
+                        if (s1 >= 0 and s2 >= 0) or (s1 < 0 and s2 < 0):
+                            same += 1
+                same_frac = (same / support) if support > 0 else None
+                pairs.append({'i': i, 'j': i+1, 't1': t1, 't2': t2, 'same_frac': same_frac, 'support': support})
+        return {'consensus': consensus, 'pairs': pairs}
+
     # Ensure micro tables exist
     try:
         r = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='micro_gene_blocks'").fetchone()
@@ -739,7 +836,28 @@ def compute_micro_cluster_pfam_consensus(conn: sqlite3.Connection,
     except Exception:
         return {'consensus': [], 'pairs': []}
 
-    # Ordered gene indices per genome+contig
+    # Prefer paired micro mappings if present
+    try:
+        has_pairs = pd.read_sql_query("SELECT 1 FROM sqlite_master WHERE type='table' AND name='micro_gene_pair_mappings'", conn)
+        has_pairs = not has_pairs.empty
+    except Exception:
+        has_pairs = False
+
+    if has_pairs:
+        rows = conn.execute(
+            """
+            SELECT p.block_id, m.block_role, g.start_pos, g.strand, g.pfam_domains
+            FROM micro_block_pairs p
+            JOIN micro_gene_pair_mappings m ON m.block_id = p.block_id
+            JOIN genes g ON g.gene_id = m.gene_id
+            WHERE p.cluster_id = ?
+            ORDER BY p.block_id, m.block_role, g.start_pos
+            """,
+            (int(micro_cluster_id),),
+        ).fetchall()
+        return _consensus_from_rows(rows)
+
+    # Fallback to legacy micro_gene_blocks path
     conn.execute("DROP TABLE IF EXISTS _tmp_gene_order_micro")
     conn.execute(
         """

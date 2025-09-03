@@ -996,10 +996,24 @@ def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[Clu
                     disp_cid = (n_macro + cid) if cid > 0 else 0
                     org_ids = [g for g in genomes.split(';') if g]
                     # Construct ClusterStats for micro cluster
+                    # Precompute consensus length from micro_cluster_consensus if available
+                    cons_len = 0
+                    try:
+                        r = conn.execute("SELECT consensus_json FROM micro_cluster_consensus WHERE cluster_id = ?", (cid,)).fetchone()
+                        if r and r[0]:
+                            import json as _json
+                            payload = _json.loads(str(r[0]))
+                            if isinstance(payload, dict):
+                                cons = payload.get('consensus', [])
+                                if isinstance(cons, list):
+                                    cons_len = len(cons)
+                    except Exception:
+                        cons_len = 0
+
                     cs = ClusterStats(
                         cluster_id=disp_cid,
                         size=size,
-                        consensus_length=0,
+                        consensus_length=int(cons_len or 0),
                         consensus_score=0.0,
                         diversity=0.0,
                         representative_query="",

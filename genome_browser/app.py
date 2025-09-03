@@ -37,6 +37,11 @@ st.set_page_config(
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+# Reduce noisy logs from cluster_analyzer to focus on UI diagnostics
+try:
+    logging.getLogger('cluster_analyzer').setLevel(logging.WARNING)
+except Exception:
+    pass
 
 # Constants
 ROOT_DIR = Path(__file__).resolve().parent
@@ -128,9 +133,17 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
                         contig_search: Optional[str] = None,
                         pfam_search: Optional[str] = None,
                         order_by: Optional[str] = None) -> pd.DataFrame:
-    """Load blocks from syntenic_blocks (includes imported micro with block_type='micro')."""
-    conn = get_database_connection()
+    """Load blocks for the explorer, combining macro (syntenic_blocks) and micro pairs when available.
 
+    Applies filters and sorting; pagination is handled after combining sources.
+    """
+    conn = get_database_connection()
+    try:
+        logger.info(f"load_syntenic_blocks(limit={limit}, offset={offset}, id_thr={identity_threshold}, block_type={block_type}, size_range={size_range}, contig_search={bool(contig_search)}, pfam_search={bool(pfam_search)}, order_by={order_by})")
+    except Exception:
+        pass
+
+    # Load macro blocks via SQL (with joins and filters)
     base = """
         SELECT sb.*, 
                g1.organism_name as query_organism,
@@ -140,11 +153,10 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
         LEFT JOIN genomes g1 ON sb.query_genome_id = g1.genome_id
         LEFT JOIN genomes g2 ON sb.target_genome_id = g2.genome_id
         LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id
-        WHERE 1=1
+        WHERE 1=1 AND sb.block_type != 'micro'
     """
     params: List = []
 
-    # Apply filters to unified view
     if genome_filter:
         placeholders = ','.join(['?' for _ in genome_filter])
         base += f" AND (query_genome_id IN ({placeholders}) OR target_genome_id IN ({placeholders}))"
@@ -158,10 +170,12 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
         base += " AND identity >= ?"
         params.append(identity_threshold)
 
-    if block_type:
-        base += " AND block_type = ?"
-        params.append(block_type)
-
+    if block_type == 'macro':
+        base += " AND block_type = 'macro'"
+    elif block_type == 'micro':
+        # skip loading macro here; will load micro below
+        macro_df = pd.DataFrame()
+    
     if contig_search:
         toks = [t.strip() for t in contig_search.split(',') if t.strip()]
         if toks:
@@ -173,7 +187,8 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
                 params.append(f"%{t}%")
             base += " AND (" + " OR ".join(ors) + ")"
 
-    if pfam_search:
+    # We leave pfam_search applied to macro only (micro filtering is done after load if needed)
+    if pfam_search and block_type != 'micro':
         toks = [t.strip().lower() for t in pfam_search.split(',') if t.strip()]
         if toks:
             ors = []
@@ -183,20 +198,169 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
             sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = allb.block_id AND (" + " OR ".join(ors) + ")"
             base += f" AND (block_type = 'micro' OR EXISTS ({sub}))"
 
-    # Sorting and pagination
-    if order_by:
-        base += f" ORDER BY {order_by}"
+    if block_type != 'micro':
+        try:
+            macro_df = pd.read_sql_query(base, conn, params=params)
+        except Exception as e:
+            logger.warning(f"Block query failed: {e}; trying without consensus join")
+            base2 = base.replace("bc.consensus_len as consensus_len", "").replace("LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id", "")
+            macro_df = pd.read_sql_query(base2, conn, params=params)
     else:
-        base += " ORDER BY sb.identity DESC, sb.block_id"
-    base += " LIMIT ? OFFSET ?"
-    params.extend([limit, offset])
+        macro_df = pd.DataFrame()
+
+    # Load micro pairs directly (DB), with CSV fallback
+    micro_df = pd.DataFrame()
+    try:
+        q = """
+            SELECT 
+                p.block_id,
+                'micro' as block_type,
+                p.cluster_id,
+                (p.query_genome_id || ':' || p.query_contig_id || ':' || CAST(p.query_start_bp AS TEXT) || '-' || CAST(p.query_end_bp AS TEXT)) AS query_locus,
+                (p.target_genome_id || ':' || p.target_contig_id || ':' || CAST(p.target_start_bp AS TEXT) || '-' || CAST(p.target_end_bp AS TEXT)) AS target_locus,
+                p.query_genome_id,
+                p.target_genome_id,
+                p.query_contig_id,
+                p.target_contig_id,
+                (CASE WHEN (
+                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query') >=
+                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target')
+                ) THEN (
+                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query')
+                ) ELSE (
+                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target')
+                ) END) AS length,
+                p.identity,
+                p.score,
+                g1.organism_name as query_organism,
+                g2.organism_name as target_organism,
+                (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query') AS n_query_windows,
+                (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target') AS n_target_windows
+            FROM micro_block_pairs p
+            LEFT JOIN genomes g1 ON p.query_genome_id = g1.genome_id
+            LEFT JOIN genomes g2 ON p.target_genome_id = g2.genome_id
+        """
+        micro_df = pd.read_sql_query(q, conn)
+    except Exception:
+        micro_df = pd.DataFrame()
+    # Fallback to sidecar CSVs if DB table missing or empty
+    if micro_df is None or micro_df.empty:
+        try:
+            # Locate sidecar
+            here = Path(__file__).resolve()
+            repo_root = here.parents[1]
+            candidates = [
+                Path('micro_gene/micro_block_pairs.csv'),
+                repo_root / 'micro_gene' / 'micro_block_pairs.csv',
+                Path.cwd() / 'micro_gene' / 'micro_block_pairs.csv',
+            ]
+            csv_path = None
+            for p in candidates:
+                if Path(p).exists():
+                    csv_path = Path(p)
+                    break
+            if csv_path:
+                pairs = pd.read_csv(csv_path)
+                if not pairs.empty:
+                    # Build locus strings and metadata; join organism names from genomes table
+                    pairs = pairs.copy()
+                    pairs['block_type'] = 'micro'
+                    pairs['query_locus'] = pairs['query_genome_id'].astype(str) + ':' + pairs['query_contig_id'].astype(str) + ':' + pairs['query_start_bp'].astype(str) + '-' + pairs['query_end_bp'].astype(str)
+                    pairs['target_locus'] = pairs['target_genome_id'].astype(str) + ':' + pairs['target_contig_id'].astype(str) + ':' + pairs['target_start_bp'].astype(str) + '-' + pairs['target_end_bp'].astype(str)
+                    pairs['length'] = (pairs['query_end_bp'] - pairs['query_start_bp']).where(
+                        (pairs['query_end_bp'] - pairs['query_start_bp']) >= (pairs['target_end_bp'] - pairs['target_start_bp']),
+                        (pairs['target_end_bp'] - pairs['target_start_bp'])
+                    )
+                    genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
+                    gmap = dict(zip(genomes_df['genome_id'], genomes_df['organism_name']))
+                    pairs['query_organism'] = pairs['query_genome_id'].map(gmap)
+                    pairs['target_organism'] = pairs['target_genome_id'].map(gmap)
+                    # Compute length as gene windows using mappings CSV
+                    # Load mappings CSV if present to get counts
+                    maps_candidates = [
+                        Path('micro_gene/micro_gene_pair_mappings.csv'),
+                        repo_root / 'micro_gene' / 'micro_gene_pair_mappings.csv',
+                        Path.cwd() / 'micro_gene' / 'micro_gene_pair_mappings.csv',
+                    ]
+                    maps_path = None
+                    for mp in maps_candidates:
+                        if Path(mp).exists():
+                            maps_path = Path(mp)
+                            break
+                    if maps_path:
+                        maps_df = pd.read_csv(maps_path)
+                        counts = maps_df.groupby(['block_id','block_role']).size().unstack(fill_value=0)
+                        pairs['n_query_windows'] = pairs['block_id'].map(lambda b: int(counts.get('query', pd.Series()).get(int(b), 0)))
+                        pairs['n_target_windows'] = pairs['block_id'].map(lambda b: int(counts.get('target', pd.Series()).get(int(b), 0)))
+                        pairs['length'] = pairs[['n_query_windows','n_target_windows']].max(axis=1)
+                    else:
+                        pairs['n_query_windows'] = 0
+                        pairs['n_target_windows'] = 0
+                        pairs['length'] = 0
+                    micro_df = pairs[['block_id','block_type','cluster_id','query_locus','target_locus','query_genome_id','target_genome_id','query_contig_id','target_contig_id','length','identity','score','query_organism','target_organism','n_query_windows','n_target_windows']]
+        except Exception:
+            micro_df = pd.DataFrame()
+    # Normalize length for micro: use gene window count
+    if micro_df is not None and not micro_df.empty:
+        try:
+            micro_df['length'] = micro_df[['n_query_windows','n_target_windows']].max(axis=1)
+        except Exception:
+            pass
+    # Apply filters
+    if micro_df is not None and not micro_df.empty:
+        if genome_filter:
+            micro_df = micro_df[(micro_df['query_genome_id'].isin(genome_filter)) | (micro_df['target_genome_id'].isin(genome_filter))]
+        if size_range:
+            micro_df = micro_df[(micro_df['length'] >= size_range[0]) & (micro_df['length'] <= size_range[1])]
+        if identity_threshold > 0:
+            micro_df = micro_df[(micro_df['identity'] >= identity_threshold)]
+        if contig_search:
+            toks = [t.strip() for t in contig_search.split(',') if t.strip()]
+            if toks:
+                ms = pd.Series(False, index=micro_df.index)
+                for t in toks:
+                    ms = ms | micro_df['query_locus'].str.contains(t, na=False) | micro_df['target_locus'].str.contains(t, na=False)
+                micro_df = micro_df[ms]
+        # pfam_search for micro skipped for now (would require joining mappings→genes)
+    else:
+        try:
+            logger.info("Micro source empty (after DB/CSV + filters)")
+        except Exception:
+            pass
+
+    # Choose sources per block_type
+    if block_type == 'macro':
+        combined = macro_df
+    elif block_type == 'micro':
+        combined = micro_df
+    else:
+        combined = pd.concat([macro_df, micro_df], ignore_index=True, sort=False)
 
     try:
-        return pd.read_sql_query(base, conn, params=params)
-    except Exception as e:
-        logger.warning(f"Block query failed: {e}; trying without consensus join")
-        base2 = base.replace("bc.consensus_len as consensus_len", "").replace("LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id", "")
-        return pd.read_sql_query(base2, conn, params=params)
+        logger.info(f"Explorer sources → macro={0 if macro_df is None else len(macro_df)} micro={0 if micro_df is None else len(micro_df)} combined={len(combined)}")
+    except Exception:
+        pass
+
+    # Sorting (mimic order_by)
+    if order_by:
+        if 'identity DESC' in order_by:
+            combined = combined.sort_values(['identity','block_id'], ascending=[False, True])
+        elif 'consensus_len' in order_by and 'DESC' in order_by.upper():
+            if 'consensus_len' in combined.columns:
+                combined = combined.sort_values(['consensus_len','block_id'], ascending=[False, True])
+        elif 'consensus_len' in order_by and 'ASC' in order_by.upper():
+            if 'consensus_len' in combined.columns:
+                combined = combined.sort_values(['consensus_len','block_id'], ascending=[True, True])
+        elif 'length DESC' in order_by:
+            combined = combined.sort_values(['length','block_id'], ascending=[False, True])
+        elif 'length ASC' in order_by:
+            combined = combined.sort_values(['length','block_id'], ascending=[True, True])
+    else:
+        combined = combined.sort_values(['identity','block_id'], ascending=[False, True])
+
+    # Pagination
+    combined = combined.iloc[offset: offset + limit]
+    return combined
 
 def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_role: Optional[str] = None, extended_context: bool = False) -> pd.DataFrame:
     """Load genes for a specific locus, optionally filtered to aligned regions."""
@@ -211,15 +375,30 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
             contig_id = contig_part.split('_', 1)[1]
         else:
             contig_id = contig_part
-        # Micro format may include a gene index suffix: "accn|...#start-end" -> strip suffix
+        # Strip micro locus suffixes:
+        # - Legacy micro: "accn|...#start-end"
+        # - Paired micro: "accn|...:start-end"
         if '#' in contig_id:
             contig_id = contig_id.split('#', 1)[0]
+        if ':' in contig_id:
+            # Only strip if looks like a numeric range
+            tail = contig_id.rsplit(':', 1)[1]
+            try:
+                a, b = tail.split('-')
+                int(a); int(b)
+                contig_id = contig_id.rsplit(':', 1)[0]
+            except Exception:
+                pass
     else:
         # Fallback: treat entire string as contig
         contig_id = locus_id
     
     # If we have block info, load only the aligned region + context
     if block_id is not None and locus_role is not None:
+        try:
+            logger.info(f"load_genes_for_locus: block_id={block_id} role={locus_role} contig={contig_id}")
+        except Exception:
+            pass
         return load_aligned_genes_for_block(conn, contig_id, block_id, locus_role, extended_context)
     
     # Default: load all genes for the locus
@@ -311,26 +490,95 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
     # Get fresh database connection instead of using potentially stale _conn
     fresh_conn = get_database_connection()
     cursor = fresh_conn.cursor()
+    # Try macro first
     cursor.execute("""
         SELECT block_type, query_window_start, query_window_end, target_window_start, target_window_end
         FROM syntenic_blocks 
         WHERE block_id = ?
     """, (block_id,))
-    
     result = cursor.fetchone()
-    if not result:
-        # Fallback to all genes if no alignment info
-        return load_genes_for_locus(contig_id)
-    
-    block_type, query_start, query_end, target_start, target_end = result
-    
+    if result:
+        block_type, query_start, query_end, target_start, target_end = result
+    else:
+        block_type = 'micro'
+        query_start = query_end = target_start = target_end = None
+    try:
+        logger.info(f"aligned_genes: block_id={block_id} role={locus_role} block_type={block_type} macro_windows=({query_start},{query_end})/({target_start},{target_end})")
+    except Exception:
+        pass
+
     # Determine which window range to use based on locus role
     if locus_role == 'query' and query_start is not None and query_end is not None:
         window_start, window_end = query_start, query_end
     elif locus_role == 'target' and target_start is not None and target_end is not None:
         window_start, window_end = target_start, target_end
     else:
-        # No alignment info available, load all genes
+        # If macro failed, try micro pairs to get precise aligned genes from mappings
+        if str(block_type) == 'micro':
+            try:
+                role = 'query' if str(locus_role) == 'query' else 'target'
+                # Fetch mapped gene_ids for this micro pair and role
+                rows = fresh_conn.execute(
+                    """
+                    SELECT m.gene_id, g.start_pos, g.end_pos
+                    FROM micro_gene_pair_mappings m
+                    JOIN genes g ON g.gene_id = m.gene_id
+                    WHERE m.block_id = ? AND m.block_role = ?
+                    ORDER BY g.start_pos, g.end_pos
+                    """,
+                    (int(block_id), role),
+                ).fetchall()
+                if rows:
+                    starts = [int(r[1]) for r in rows]
+                    ends = [int(r[2]) for r in rows]
+                    s_bp, e_bp = (min(starts), max(ends))
+                    # Load region with context
+                    region_df = load_genes_for_region(contig_id, s_bp, e_bp, extended_context=extended_context)
+                    # Override roles: mark mapped genes as core_aligned
+                    mapped = {str(r[0]) for r in rows}
+                    if 'gene_id' in region_df.columns:
+                        region_df['synteny_role'] = region_df['gene_id'].apply(lambda gid: 'core_aligned' if str(gid) in mapped else 'context')
+                        region_df['position_in_block'] = region_df['gene_id'].apply(lambda gid: 'Conserved Block' if str(gid) in mapped else 'Flanking Region')
+                    return region_df
+                else:
+                    # Fallback to bp spans from pairs if mapping rows are missing
+                    if locus_role == 'query':
+                        row = fresh_conn.execute("SELECT query_start_bp, query_end_bp FROM micro_block_pairs WHERE block_id = ?", (int(block_id),)).fetchone()
+                    else:
+                        row = fresh_conn.execute("SELECT target_start_bp, target_end_bp FROM micro_block_pairs WHERE block_id = ?", (int(block_id),)).fetchone()
+                    if row and row[0] is not None and row[1] is not None:
+                        return load_genes_for_region(contig_id, int(row[0]), int(row[1]), extended_context=extended_context)
+                    # Sidecar fallback: read micro_gene_pair_mappings.csv
+                    try:
+                        here = Path(__file__).resolve()
+                        repo_root = here.parents[1]
+                        candidates = [
+                            Path('micro_gene/micro_gene_pair_mappings.csv'),
+                            repo_root / 'micro_gene' / 'micro_gene_pair_mappings.csv',
+                            Path.cwd() / 'micro_gene' / 'micro_gene_pair_mappings.csv',
+                        ]
+                        csv_path = None
+                        for p in candidates:
+                            if Path(p).exists():
+                                csv_path = Path(p)
+                                break
+                        if csv_path:
+                            import pandas as _pd
+                            mdf = _pd.read_csv(csv_path)
+                            mdf = mdf[(mdf['block_id'] == int(block_id)) & (mdf['block_role'] == role)]
+                            if not mdf.empty:
+                                s_bp = int(mdf['start_pos'].min())
+                                e_bp = int(mdf['end_pos'].max())
+                                try:
+                                    logger.info(f"aligned_genes: CSV fallback block_id={block_id} role={role} span=({s_bp},{e_bp})")
+                                except Exception:
+                                    pass
+                                return load_genes_for_region(contig_id, s_bp, e_bp, extended_context=extended_context)
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+        # Fallback: load all genes
         query = """
             SELECT g.*, c.length as contig_length, 'unknown' as synteny_role
             FROM genes g
@@ -391,6 +639,10 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
     limit = gene_end_idx - gene_start_idx + 1
     offset = gene_start_idx
     
+    try:
+        logger.info(f"aligned_genes: final SQL windowed fetch block_id={block_id} role={locus_role} start_idx={gene_start_idx} end_idx={gene_end_idx}")
+    except Exception:
+        pass
     return pd.read_sql_query(query, fresh_conn, params=[
         core_aligned_start, core_aligned_end,  # Core aligned range
         boundary_start, boundary_end,          # Boundary range  
@@ -412,24 +664,31 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
     base = """
         WITH sb_main AS (
             SELECT block_id, cluster_id, query_locus, target_locus, query_genome_id, target_genome_id,
-                   query_contig_id, target_contig_id, length, identity, 'macro' AS block_type
+                   query_contig_id, target_contig_id, length, identity, block_type
             FROM syntenic_blocks
         ),
-        micro AS (
-            SELECT (1000000000 + block_id) AS block_id, cluster_id,
-                   (genome_id || ':' || contig_id || '#' || CAST(start_index AS TEXT) || '-' || CAST(end_index AS TEXT)) AS query_locus,
-                   '' AS target_locus,
-                   genome_id AS query_genome_id, NULL AS target_genome_id,
-                   contig_id AS query_contig_id, NULL AS target_contig_id,
-                   (1 + end_index - start_index) AS length,
-                   0.0 AS identity,
-                   'micro' AS block_type
-            FROM micro_gene_blocks
+        micro_pairs AS (
+            SELECT 
+                p.block_id, p.cluster_id,
+                (p.query_genome_id || ':' || p.query_contig_id || ':' || CAST(p.query_start_bp AS TEXT) || '-' || CAST(p.query_end_bp AS TEXT)) AS query_locus,
+                (p.target_genome_id || ':' || p.target_contig_id || ':' || CAST(p.target_start_bp AS TEXT) || '-' || CAST(p.target_end_bp AS TEXT)) AS target_locus,
+                p.query_genome_id, p.target_genome_id,
+                p.query_contig_id, p.target_contig_id,
+                (CASE WHEN (
+                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query') >=
+                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target')
+                ) THEN (
+                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query')
+                ) ELSE (
+                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target')
+                ) END) AS length,
+                p.identity, 'micro' AS block_type
+            FROM micro_block_pairs p
         ),
         allb AS (
-            SELECT * FROM sb_main
+            SELECT * FROM sb_main WHERE block_type != 'micro'
             UNION ALL
-            SELECT * FROM micro
+            SELECT * FROM micro_pairs
         )
         SELECT COUNT(*) FROM allb WHERE 1=1
     """
@@ -475,7 +734,12 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
 
     try:
         row = conn.execute(base, params).fetchone()
-        return int(row[0]) if row else 0
+        cnt = int(row[0]) if row else 0
+        try:
+            logger.info(f"get_block_count: count={cnt} filters={{genomes:{bool(genome_filter)}, size_range:{size_range}, id_thr:{identity_threshold}, block_type:{block_type}, contig:{bool(contig_search)}, pfam:{bool(pfam_search)}}}")
+        except Exception:
+            pass
+        return cnt
     except Exception as e:
         logger.warning(f"Unified count query failed: {e}")
         row = conn.execute("SELECT COUNT(*) FROM syntenic_blocks").fetchone()
@@ -754,25 +1018,57 @@ def display_block_explorer(filters: Dict):
         col1, col2 = st.columns(2)
         
         with col1:
-            st.write("**Query Locus:**", selected_block['query_locus'])
-            st.write("**Length:**", f"{selected_block['length']:,} gene windows")
-            st.write("**Query Windows:**", f"{selected_block['n_query_windows']:,}")
+            st.write("**Query Locus:**", selected_block.get('query_locus', ''))
+            try:
+                st.write("**Length:**", f"{int(selected_block.get('length', 0)):,} gene windows")
+            except Exception:
+                st.write("**Length:**", "N/A")
+            qn = selected_block.get('n_query_windows')
+            try:
+                missing_qn = (qn is None) or (isinstance(qn, float) and math.isnan(qn))
+            except Exception:
+                missing_qn = (qn is None)
+            st.write("**Query Windows:**", f"{int(qn):,}" if not missing_qn else "N/A")
             
             # Show window range information if available
-            if selected_block.get('query_window_start') is not None:
-                window_range = f"Windows {selected_block['query_window_start']}-{selected_block['query_window_end']}"
-                gene_range = f"Genes {selected_block['query_window_start']}-{selected_block['query_window_end'] + 4}"
+            qws = selected_block.get('query_window_start')
+            qwe = selected_block.get('query_window_end')
+            try:
+                qws_missing = (qws is None) or (isinstance(qws, float) and math.isnan(qws))
+                qwe_missing = (qwe is None) or (isinstance(qwe, float) and math.isnan(qwe))
+            except Exception:
+                qws_missing = (qws is None)
+                qwe_missing = (qwe is None)
+            if not qws_missing and not qwe_missing:
+                window_range = f"Windows {int(qws)}-{int(qwe)}"
+                gene_range = f"Genes {int(qws)}-{int(qwe) + 4}"
                 st.write("**Query Range:**", f"{window_range} ({gene_range})")
         
         with col2:
-            st.write("**Target Locus:**", selected_block['target_locus'])
-            st.write("**Embedding Similarity:**", f"{selected_block['identity']:.3f}")
-            st.write("**Target Windows:**", f"{selected_block['n_target_windows']:,}")
+            st.write("**Target Locus:**", selected_block.get('target_locus', ''))
+            try:
+                st.write("**Embedding Similarity:**", f"{float(selected_block.get('identity', 0.0)):.3f}")
+            except Exception:
+                st.write("**Embedding Similarity:**", "N/A")
+            tn = selected_block.get('n_target_windows')
+            try:
+                missing_tn = (tn is None) or (isinstance(tn, float) and math.isnan(tn))
+            except Exception:
+                missing_tn = (tn is None)
+            st.write("**Target Windows:**", f"{int(tn):,}" if not missing_tn else "N/A")
             
             # Show window range information if available
-            if selected_block.get('target_window_start') is not None:
-                window_range = f"Windows {selected_block['target_window_start']}-{selected_block['target_window_end']}"
-                gene_range = f"Genes {selected_block['target_window_start']}-{selected_block['target_window_end'] + 4}"
+            tws = selected_block.get('target_window_start')
+            twe = selected_block.get('target_window_end')
+            try:
+                tws_missing = (tws is None) or (isinstance(tws, float) and math.isnan(tws))
+                twe_missing = (twe is None) or (isinstance(twe, float) and math.isnan(twe))
+            except Exception:
+                tws_missing = (tws is None)
+                twe_missing = (twe is None)
+            if not tws_missing and not twe_missing:
+                window_range = f"Windows {int(tws)}-{int(twe)}"
+                gene_range = f"Genes {int(tws)}-{int(twe) + 4}"
                 st.write("**Target Range:**", f"{window_range} ({gene_range})")
 
         # Pairwise consensus cassette (PFAM-based) for this block
@@ -995,8 +1291,8 @@ def display_genome_viewer():
     # Load genes for both loci - now showing only aligned regions + context
     with st.spinner("Loading aligned gene regions..."):
         query_genes = load_genes_for_locus(block['query_locus'], block['block_id'], 'query')
-        # For micro blocks or empty target locus, skip loading target genes
-        if str(block.get('block_type', '')).lower() == 'micro' or not block.get('target_locus'):
+        # Load target genes if a target locus is present (micro pairs have target)
+        if not block.get('target_locus'):
             import pandas as _pd
             target_genes = _pd.DataFrame(columns=query_genes.columns if hasattr(query_genes, 'columns') else [])
         else:
@@ -1082,8 +1378,12 @@ def display_genome_viewer():
     
     with col2:
         st.subheader(f"Target: {block['target_locus']}")
-        if str(block.get('block_type','')).lower() == 'micro' or not block.get('target_locus'):
-            st.info("Micro block has no target side")
+        if not block.get('target_locus'):
+            try:
+                logger.info(f"genome_viewer: missing target_locus for block_id={block.get('block_id')} block_type={block.get('block_type')}")
+            except Exception:
+                pass
+            st.info("No target locus available for this block")
         elif not target_genes.empty:
             st.info(f"{len(target_genes)} genes found")
             
@@ -1377,6 +1677,10 @@ def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float
                         pairs = payload.get('pairs', [])
                         # Only accept precomputed if it has at least one token; else compute with requested params
                         if isinstance(cons, list) and len(cons) > 0:
+                            try:
+                                logger.info(f"consensus_preview[micro]: precomputed raw_id={raw_id} tokens={len(cons)}")
+                            except Exception:
+                                pass
                             return cons, pairs
             except Exception:
                 pass
@@ -1388,7 +1692,13 @@ def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float
                     from genome_browser.database.cluster_content import compute_micro_cluster_pfam_consensus
                 payload = compute_micro_cluster_pfam_consensus(conn, raw_id, float(min_core_cov), float(df_pct), int(max_tok))
                 if isinstance(payload, dict):
-                    return payload.get('consensus', []), payload.get('pairs', [])
+                    cons = payload.get('consensus', [])
+                    prs = payload.get('pairs', [])
+                    try:
+                        logger.info(f"consensus_preview[micro]: computed raw_id={raw_id} tokens={len(cons)}")
+                    except Exception:
+                        pass
+                    return cons, prs
                 else:
                     return payload or [], []
             finally:
@@ -1937,11 +2247,62 @@ def _cluster_is_micro(cluster_id: int) -> bool:
 
 @st.cache_data
 def load_micro_cluster_blocks(cluster_id: int) -> pd.DataFrame:
-    """Load micro blocks belonging to a micro cluster and adapt columns to syntenic_blocks schema."""
+    """Load micro blocks (paired) belonging to a micro cluster.
+
+    Prefers micro_block_pairs (query+target). Falls back to single-locus micro_gene_blocks
+    (query only) if pairs are unavailable.
+    """
     conn = get_database_connection()
     ceil_id = _macro_id_ceiling(conn)
     raw_id = int(cluster_id) - int(ceil_id)
-    q = """
+    try:
+        q1 = """
+            SELECT 
+                block_id,
+                cluster_id,
+                (query_genome_id || ':' || query_contig_id || ':' || CAST(query_start_bp AS TEXT) || '-' || CAST(query_end_bp AS TEXT)) AS query_locus,
+                (target_genome_id || ':' || target_contig_id || ':' || CAST(target_start_bp AS TEXT) || '-' || CAST(target_end_bp AS TEXT)) AS target_locus,
+                query_genome_id AS query_genome_id,
+                target_genome_id AS target_genome_id,
+                query_contig_id AS query_contig_id,
+                target_contig_id AS target_contig_id,
+                (CASE WHEN (query_end_bp - query_start_bp) > (target_end_bp - target_start_bp) THEN (query_end_bp - query_start_bp) ELSE (target_end_bp - target_start_bp) END) AS length,
+                identity,
+                score
+            FROM micro_block_pairs
+            WHERE cluster_id = ?
+            ORDER BY score DESC, block_id
+        """
+        df = pd.read_sql_query(q1, conn, params=[raw_id])
+        if df is not None and not df.empty:
+            return df
+    except Exception:
+        pass
+    # Fallback: load from sidecar CSV (pairs) if available
+    try:
+        here = Path(__file__).resolve()
+        repo_root = here.parents[1]
+        candidates = [
+            Path('micro_gene/micro_block_pairs.csv'),
+            repo_root / 'micro_gene' / 'micro_block_pairs.csv',
+            Path.cwd() / 'micro_gene' / 'micro_block_pairs.csv',
+        ]
+        for p in candidates:
+            if Path(p).exists():
+                pairs = pd.read_csv(p)
+                pairs = pairs[pairs['cluster_id'] == raw_id].copy()
+                if not pairs.empty:
+                    pairs['query_locus'] = pairs['query_genome_id'].astype(str) + ':' + pairs['query_contig_id'].astype(str) + ':' + pairs['query_start_bp'].astype(str) + '-' + pairs['query_end_bp'].astype(str)
+                    pairs['target_locus'] = pairs['target_genome_id'].astype(str) + ':' + pairs['target_contig_id'].astype(str) + ':' + pairs['target_start_bp'].astype(str) + '-' + pairs['target_end_bp'].astype(str)
+                    pairs['length'] = (pairs['query_end_bp'] - pairs['query_start_bp']).where(
+                        (pairs['query_end_bp'] - pairs['query_start_bp']) >= (pairs['target_end_bp'] - pairs['target_start_bp']),
+                        (pairs['target_end_bp'] - pairs['target_start_bp'])
+                    )
+                    return pairs[['block_id','cluster_id','query_locus','target_locus','query_genome_id','target_genome_id','query_contig_id','target_contig_id','length','identity','score']]
+    except Exception:
+        pass
+    # Fallback to single-locus micro blocks (query only)
+    q2 = """
         SELECT 
             (1000000000 + block_id) AS block_id,
             cluster_id,
@@ -1956,76 +2317,127 @@ def load_micro_cluster_blocks(cluster_id: int) -> pd.DataFrame:
         WHERE cluster_id = ?
         ORDER BY genome_id, contig_id, start_index
     """
-    return pd.read_sql_query(q, conn, params=[raw_id])
+    return pd.read_sql_query(q2, conn, params=[raw_id])
 
 def compute_display_regions_for_micro_cluster(cluster_id: int, gap_bp: int = 1000, min_support: int = 1) -> List[Dict]:
-    """Compute display regions for a micro cluster using gene index spans in micro_gene_blocks."""
+    """Compute display regions for a micro cluster using paired spans in micro_block_pairs.
+
+    Returns regions keyed by genome/contig with merged intervals and the supporting micro pair block_ids.
+    """
     conn = get_database_connection()
     ceil_id = _macro_id_ceiling(conn)
     raw_id = int(cluster_id) - int(ceil_id)
     try:
-        # Build ordered gene index per contig for mapping indices→bp
-        conn.execute("DROP TABLE IF EXISTS _tmp_gene_order_micro_view")
-        conn.execute(
+        logger.info(f"multiloc: compute regions for micro cluster display_id={cluster_id}")
+        pairs = pd.read_sql_query(
             """
-            CREATE TEMP TABLE _tmp_gene_order_micro_view AS
             SELECT 
-                genome_id, contig_id, gene_id,
-                start_pos, end_pos,
-                ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
-            FROM genes
-            """
-        )
-        # For each micro block, compute min/max bp via idx mapping
-        per_block = pd.read_sql_query(
-            """
-            WITH ranges AS (
-                SELECT block_id, genome_id, contig_id, start_index, end_index
-                FROM micro_gene_blocks WHERE cluster_id = ?
-            ),
-            gene_spans AS (
-                SELECT r.block_id,
-                       r.genome_id,
-                       r.contig_id,
-                       MIN(g.start_pos) AS start_bp,
-                       MAX(g.end_pos) AS end_bp
-                FROM ranges r
-                JOIN _tmp_gene_order_micro_view g
-                  ON g.genome_id = r.genome_id AND g.contig_id = r.contig_id AND g.idx BETWEEN r.start_index AND r.end_index
-                GROUP BY r.block_id, r.genome_id, r.contig_id
-            )
-            SELECT (1000000000 + block_id) AS block_id, genome_id, contig_id, start_bp, end_bp
-            FROM gene_spans
+                block_id,
+                query_genome_id, query_contig_id, query_start_bp, query_end_bp,
+                target_genome_id, target_contig_id, target_start_bp, target_end_bp
+            FROM micro_block_pairs
+            WHERE cluster_id = ?
             """,
             conn,
-            params=[raw_id]
+            params=[raw_id],
         )
-        if per_block.empty:
-            return []
-
+        if pairs is None or pairs.empty:
+            logger.info("multiloc: no pairs found for micro cluster; falling back to legacy micro windows")
+            # Fallback: derive regions from micro_gene_blocks indices by mapping to bp via gene order
+            try:
+                conn.execute("DROP TABLE IF EXISTS _tmp_gene_order_micro_view")
+                conn.execute(
+                    """
+                    CREATE TEMP TABLE _tmp_gene_order_micro_view AS
+                    SELECT 
+                        genome_id, contig_id, gene_id,
+                        start_pos, end_pos,
+                        ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
+                    FROM genes
+                    """
+                )
+                per_block = pd.read_sql_query(
+                    """
+                    WITH ranges AS (
+                        SELECT block_id, genome_id, contig_id, start_index, end_index
+                        FROM micro_gene_blocks WHERE cluster_id = ?
+                    ),
+                    gene_spans AS (
+                        SELECT r.block_id,
+                               r.genome_id,
+                               r.contig_id,
+                               MIN(g.start_pos) AS start_bp,
+                               MAX(g.end_pos) AS end_bp
+                        FROM ranges r
+                        JOIN _tmp_gene_order_micro_view g
+                          ON g.genome_id = r.genome_id AND g.contig_id = r.contig_id AND g.idx BETWEEN r.start_index AND r.end_index
+                        GROUP BY r.block_id, r.genome_id, r.contig_id
+                    )
+                    SELECT (1000000000 + block_id) AS block_id, genome_id, contig_id, start_bp, end_bp
+                    FROM gene_spans
+                    """,
+                    conn,
+                    params=[raw_id]
+                )
+                if per_block is None or per_block.empty:
+                    return []
+                genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
+                org_map = dict(zip(genomes_df["genome_id"], genomes_df["organism_name"]))
+                regions = []
+                for (genome_id, contig_id), group in per_block.groupby(["genome_id", "contig_id"]):
+                    intervals = [
+                        {"start_bp": int(row.start_bp), "end_bp": int(row.end_bp), "block_id": int(row.block_id)}
+                        for _, row in group.iterrows()
+                    ]
+                    merged = _merge_intervals(intervals, gap_bp=gap_bp)
+                    for iv in merged:
+                        support = len(iv["blocks"])  # number of blocks supporting
+                        if support >= min_support:
+                            regions.append({
+                                "genome_id": genome_id,
+                                "contig_id": contig_id,
+                                "organism_name": org_map.get(genome_id, "Unknown organism"),
+                                "start_bp": iv["start_bp"],
+                                "end_bp": iv["end_bp"],
+                                "support": support,
+                                "blocks": iv["blocks"],
+                            })
+                regions.sort(key=lambda r: (r["genome_id"], r["contig_id"], r["start_bp"]))
+                logger.info(f"multiloc: legacy fallback built {len(regions)} regions")
+                return regions
+            except Exception as ee:
+                logger.warning(f"multiloc: legacy fallback failed: {ee}")
+                return []
         genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
         org_map = dict(zip(genomes_df["genome_id"], genomes_df["organism_name"]))
 
         regions = []
-        for (genome_id, contig_id), group in per_block.groupby(["genome_id", "contig_id"]):
-            intervals = [
-                {"start_bp": int(row.start_bp), "end_bp": int(row.end_bp), "block_id": int(row.block_id)}
-                for _, row in group.iterrows()
-            ]
-            merged = _merge_intervals(intervals, gap_bp=gap_bp)
-            for iv in merged:
-                support = len(iv["blocks"])  # number of blocks supporting
-                if support >= min_support:
-                    regions.append({
-                        "genome_id": genome_id,
-                        "contig_id": contig_id,
-                        "organism_name": org_map.get(genome_id, "Unknown organism"),
-                        "start_bp": iv["start_bp"],
-                        "end_bp": iv["end_bp"],
-                        "support": support,
-                        "blocks": iv["blocks"],
-                    })
+        # Build intervals per side
+        for role in ("query", "target"):
+            gcol = f"{role}_genome_id"; ccol = f"{role}_contig_id"; scol = f"{role}_start_bp"; ecol = f"{role}_end_bp"
+            side = pairs[["block_id", gcol, ccol, scol, ecol]].copy()
+            side = side.rename(columns={gcol: "genome_id", ccol: "contig_id", scol: "start_bp", ecol: "end_bp"})
+            side = side.dropna(subset=["genome_id", "contig_id", "start_bp", "end_bp"]).astype({"start_bp": int, "end_bp": int})
+            for (genome_id, contig_id), group in side.groupby(["genome_id", "contig_id"]):
+                intervals = [
+                    {"start_bp": int(r.start_bp), "end_bp": int(r.end_bp), "block_id": int(r.block_id)}
+                    for _, r in group.iterrows()
+                ]
+                merged = _merge_intervals(intervals, gap_bp=gap_bp)
+                for iv in merged:
+                    support = len(iv["blocks"])  # number of blocks supporting
+                    if support >= min_support:
+                        regions.append({
+                            "genome_id": genome_id,
+                            "contig_id": contig_id,
+                            "organism_name": org_map.get(genome_id, "Unknown organism"),
+                            "start_bp": iv["start_bp"],
+                            "end_bp": iv["end_bp"],
+                            "support": support,
+                            "blocks": iv["blocks"],
+                        })
         regions.sort(key=lambda r: (r["genome_id"], r["contig_id"], r["start_bp"]))
+        logger.info(f"multiloc: built {len(regions)} regions for micro cluster")
         return regions
     except Exception as e:
         logger.error(f"Error computing micro display regions: {e}")
@@ -2302,6 +2714,17 @@ def display_cluster_detail():
                 blocks_subset = cluster_blocks[cluster_blocks["block_id"].isin(list(region["blocks"]))]
                 if not blocks_subset.empty:
                     rep_block = blocks_subset.loc[blocks_subset["score"].idxmax()]
+                else:
+                    # Fallback: pick best block within same contig, else cluster-level best
+                    try:
+                        same_contig = cluster_blocks[(cluster_blocks['query_locus'].str.contains(str(contig_id), na=False)) | (cluster_blocks['target_locus'].str.contains(str(contig_id), na=False))]
+                        if not same_contig.empty:
+                            rep_block = same_contig.loc[same_contig['score'].idxmax()]
+                        elif not cluster_blocks.empty:
+                            rep_block = cluster_blocks.loc[cluster_blocks['score'].idxmax()]
+                    except Exception:
+                        if not cluster_blocks.empty:
+                            rep_block = cluster_blocks.iloc[0]
 
             if rep_block is not None:
                 st.caption(
@@ -2321,7 +2744,7 @@ def display_cluster_detail():
                             'target_locus': rep_block['target_locus'],
                             'identity': float(rep_block['identity']),
                             'score': float(rep_block['score']),
-                            'length': int(rep_block['length']),
+                            'length': int(rep_block.get('length', 0) or 0),
                             'block_type': ('micro' if is_micro else 'macro'),
                         }
                         st.session_state.selected_block = sel
@@ -2329,25 +2752,65 @@ def display_cluster_detail():
                         st.rerun()
                 with col_b:
                     with st.expander("View supporting blocks in genome viewer", expanded=False):
-                        if 'blocks_subset' in locals() and not blocks_subset.empty:
-                            sup_blocks = blocks_subset.sort_values('score', ascending=False)
-                            sup_blocks = sup_blocks[['block_id','query_locus','target_locus','score','identity','length']]
+                        # Build a list of supporting blocks for this region
+                        sup_df = None
+                        try:
+                            if 'blocks_subset' in locals() and not blocks_subset.empty:
+                                sup_df = blocks_subset.copy()
+                            else:
+                                # Fallback: match by contig substring in either locus
+                                mask = (
+                                    cluster_blocks['query_locus'].str.contains(str(contig_id), na=False) |
+                                    cluster_blocks['target_locus'].str.contains(str(contig_id), na=False)
+                                )
+                                sup_df = cluster_blocks[mask].copy()
+                            # If still empty, take top N from entire cluster as a last resort
+                            if sup_df is None or sup_df.empty:
+                                sup_df = cluster_blocks.copy()
+                        except Exception:
+                            sup_df = cluster_blocks.copy()
+
+                        if sup_df is not None and not sup_df.empty:
+                            # Ensure required columns exist; fill if missing
+                            for col in ['score','identity','length']:
+                                if col not in sup_df.columns:
+                                    sup_df[col] = 0.0
+                            # Sort by score desc then identity desc
+                            if 'score' in sup_df.columns:
+                                sup_df = sup_df.sort_values(['score','identity'], ascending=[False, False])
+                            else:
+                                sup_df = sup_df.sort_values(['identity'], ascending=[False])
+                            sup_df = sup_df[['block_id','query_locus','target_locus','score','identity','length']]
                             max_list = 8
-                            for j, row in sup_blocks.head(max_list).iterrows():
+                            for j, row in sup_df.head(max_list).iterrows():
                                 bid = int(row['block_id'])
-                                label = f"Block {bid} · score={row['score']:.1f} · id={row['identity']:.3f} · len={int(row['length'])}"
+                                try:
+                                    lbl_score = float(row.get('score', 0.0) or 0.0)
+                                except Exception:
+                                    lbl_score = 0.0
+                                try:
+                                    lbl_id = float(row.get('identity', 0.0) or 0.0)
+                                except Exception:
+                                    lbl_id = 0.0
+                                try:
+                                    lbl_len = int(row.get('length', 0) or 0)
+                                except Exception:
+                                    lbl_len = 0
+                                label = f"Block {bid} · score={lbl_score:.1f} · id={lbl_id:.3f} · len={lbl_len}"
                                 if st.button(f"🔗 {label}", key=f"view_block_{cluster_id}_{i}_{bid}"):
                                     sel = {
                                         'block_id': bid,
                                         'query_locus': row['query_locus'],
                                         'target_locus': row['target_locus'],
-                                        'identity': float(row['identity']),
-                                        'score': float(row['score']),
-                                        'length': int(row['length']),
+                                        'identity': float(lbl_id),
+                                        'score': float(lbl_score),
+                                        'length': int(lbl_len),
                                     }
                                     st.session_state.selected_block = sel
                                     st.session_state.current_page = 'genome_viewer'
                                     st.rerun()
+                        else:
+                            st.caption("No supporting blocks matched this region.")
             else:
                 st.caption(f"Supported by {support} block(s)")
         else:
@@ -3947,6 +4410,10 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
     # Choose representative regions
     regions = compute_display_regions_for_micro_cluster(cluster_id, gap_bp=1000, min_support=1) if is_micro else compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
     if not regions:
+        try:
+            logger.info(f"multiloc: no regions available (is_micro={is_micro}) for cluster {cluster_id}")
+        except Exception:
+            pass
         return {}
     # Prefer regions with highest support, then length
     regions = sorted(regions, key=lambda r: (int(r.get('support', 1)), int(r.get('end_bp', 0)) - int(r.get('start_bp', 0))), reverse=True)[:max_tracks]
@@ -3971,6 +4438,10 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
     for r in regions:
         df = _load_genes_for_region(r['genome_id'], r['contig_id'], int(r['start_bp']), int(r['end_bp']), pad_bp=0)
         if df.empty:
+            try:
+                logger.info(f"multiloc: region has no genes {r['genome_id']}:{r['contig_id']} {r['start_bp']}-{r['end_bp']}")
+            except Exception:
+                pass
             continue
         genes = []
         pfset = set()
@@ -4031,6 +4502,10 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
         })
         pfam_sets.append(pfset)
     if not loci:
+        try:
+            logger.info("multiloc: loci empty after loading genes")
+        except Exception:
+            pass
         return {}
 
     # Pairwise similarity (PFAM Jaccard; optionally add embeddings cosine matches)

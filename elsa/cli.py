@@ -724,6 +724,85 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                                     )
                                 conn.commit()
 
+                                # Also project paired micro alignments into syntenic_blocks and gene_block_mappings
+                                try:
+                                    mbp_csv = mdir / 'micro_block_pairs.csv'
+                                    mgpm_csv = mdir / 'micro_gene_pair_mappings.csv'
+                                    if mbp_csv.exists() and mgpm_csv.exists():
+                                        mbp_df = pd.read_csv(mbp_csv)
+                                        mgpm_df = pd.read_csv(mgpm_csv)
+                                        if not mbp_df.empty:
+                                            # Build counts per role for window stats
+                                            counts = mgpm_df.groupby(['block_id','block_role']).size().unstack(fill_value=0)
+                                            n_q = counts.get('query', pd.Series(dtype=int))
+                                            n_t = counts.get('target', pd.Series(dtype=int))
+                                            sb_pair_rows = []
+                                            for r in mbp_df.itertuples(index=False):
+                                                src_cid = int(r.cluster_id)
+                                                dest_cid = 0 if src_cid == 0 else cid_map.get(src_cid, 0)
+                                                q_locus = f"{r.query_genome_id}:{r.query_contig_id}:{int(r.query_start_bp)}-{int(r.query_end_bp)}"
+                                                t_locus = f"{r.target_genome_id}:{r.target_contig_id}:{int(r.target_start_bp)}-{int(r.target_end_bp)}"
+                                                q_len = int(r.query_end_bp) - int(r.query_start_bp)
+                                                t_len = int(r.target_end_bp) - int(r.target_start_bp)
+                                                length = q_len if q_len >= t_len else t_len
+                                                nqw = int(n_q.get(int(r.block_id), 0)) if isinstance(n_q, pd.Series) else 0
+                                                ntw = int(n_t.get(int(r.block_id), 0)) if isinstance(n_t, pd.Series) else 0
+                                                sb_pair_rows.append((
+                                                    int(r.block_id),
+                                                    dest_cid,
+                                                    q_locus,
+                                                    t_locus,
+                                                    str(r.query_genome_id),
+                                                    str(r.target_genome_id),
+                                                    str(r.query_contig_id),
+                                                    str(r.target_contig_id),
+                                                    int(length),
+                                                    float(r.identity) if pd.notnull(r.identity) else 0.0,
+                                                    float(r.score) if pd.notnull(r.score) else 0.0,
+                                                    nqw, ntw,
+                                                    None, None,
+                                                    None, None,
+                                                    None, None,
+                                                    'micro'
+                                                ))
+                                            if sb_pair_rows:
+                                                cur.executemany(
+                                                    """
+                                                    INSERT OR REPLACE INTO syntenic_blocks (
+                                                        block_id, cluster_id, query_locus, target_locus,
+                                                        query_genome_id, target_genome_id,
+                                                        query_contig_id, target_contig_id,
+                                                        length, identity, score,
+                                                        n_query_windows, n_target_windows,
+                                                        query_window_start, query_window_end,
+                                                        target_window_start, target_window_end,
+                                                        query_windows_json, target_windows_json,
+                                                        block_type
+                                                    ) VALUES (
+                                                        ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+                                                    )
+                                                    """,
+                                                    sb_pair_rows,
+                                                )
+                                            # Insert gene mappings for both roles with relative positions
+                                            gbm_rows2 = []
+                                            for (blk, role), g in mgpm_df.groupby(['block_id','block_role']):
+                                                g2 = g.sort_values(['start_pos','end_pos'])
+                                                n = len(g2)
+                                                L = max(1, n-1)
+                                                for idx, rr in enumerate(g2.itertuples(index=False)):
+                                                    rel = (idx / L) if L > 0 else 0.0
+                                                    gbm_rows2.append((str(rr.gene_id), int(blk), str(role), float(rel)))
+                                            for i in range(0, len(gbm_rows2), 1000):
+                                                cur.executemany(
+                                                    "INSERT OR REPLACE INTO gene_block_mappings (gene_id, block_id, block_role, relative_position) VALUES (?, ?, ?, ?)",
+                                                    gbm_rows2[i:i+1000]
+                                                )
+                                            conn.commit()
+                                except Exception as e:
+                                    # Non-fatal; pairs projection can be re-run later
+                                    pass
+
                                 # Precompute macro-style consensus for new micro clusters into cluster_consensus
                                 try:
                                     # Robust import by file path
@@ -864,6 +943,97 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                             conn = sqlite3.connect(str(db_path))
                             nb = conn.execute("SELECT COUNT(*) FROM micro_gene_blocks").fetchone()[0]
                             nc = conn.execute("SELECT COUNT(*) FROM micro_gene_clusters").fetchone()[0]
+                            # Project paired micro alignments into syntenic_blocks and mappings (post-run, ensures availability)
+                            try:
+                                import pandas as pd
+                                cur = conn.cursor()
+                                # Load sidecars if present, else try DB tables
+                                mdir = Path(output_path) / 'micro_gene'
+                                mbp_csv = mdir / 'micro_block_pairs.csv'
+                                mgpm_csv = mdir / 'micro_gene_pair_mappings.csv'
+                                if mbp_csv.exists() and mgpm_csv.exists():
+                                    mbp_df = pd.read_csv(mbp_csv)
+                                    mgpm_df = pd.read_csv(mgpm_csv)
+                                else:
+                                    # Fallback: read from DB
+                                    try:
+                                        mbp_df = pd.read_sql_query("SELECT * FROM micro_block_pairs", conn)
+                                        mgpm_df = pd.read_sql_query("SELECT * FROM micro_gene_pair_mappings", conn)
+                                    except Exception:
+                                        mbp_df = pd.DataFrame()
+                                        mgpm_df = pd.DataFrame()
+                                if not mbp_df.empty:
+                                    # Build cluster offset map (if clusters from micro not yet inserted, leave as 0)
+                                    row = conn.execute("SELECT COALESCE(MAX(cluster_id),0) FROM clusters").fetchone()
+                                    start_cid = int(row[0] or 0)
+                                    # Best-effort: compute non-sink micro IDs present in pairs
+                                    mcids = sorted({int(c) for c in mbp_df['cluster_id'].unique() if int(c) > 0})
+                                    cid_map = {c: (start_cid + c) for c in mcids}
+                                    # Counts per role
+                                    counts = mgpm_df.groupby(['block_id','block_role']).size().unstack(fill_value=0) if not mgpm_df.empty else None
+                                    def role_count(series, bid, role):
+                                        try:
+                                            return int(series.get(role, pd.Series()).get(int(bid), 0))
+                                        except Exception:
+                                            return 0
+                                    sb_pair_rows = []
+                                    for r in mbp_df.itertuples(index=False):
+                                        src_cid = int(r.cluster_id)
+                                        dest_cid = 0 if src_cid == 0 else cid_map.get(src_cid, 0)
+                                        q_locus = f"{r.query_genome_id}:{r.query_contig_id}:{int(r.query_start_bp)}-{int(r.query_end_bp)}"
+                                        t_locus = f"{r.target_genome_id}:{r.target_contig_id}:{int(r.target_start_bp)}-{int(r.target_end_bp)}"
+                                        q_len = int(r.query_end_bp) - int(r.query_start_bp)
+                                        t_len = int(r.target_end_bp) - int(r.target_start_bp)
+                                        length = q_len if q_len >= t_len else t_len
+                                        nqw = role_count(counts, r.block_id, 'query') if counts is not None else None
+                                        ntw = role_count(counts, r.block_id, 'target') if counts is not None else None
+                                        sb_pair_rows.append((
+                                            int(r.block_id), dest_cid, q_locus, t_locus,
+                                            str(r.query_genome_id), str(r.target_genome_id),
+                                            str(r.query_contig_id), str(r.target_contig_id),
+                                            int(length), float(getattr(r, 'identity', 0.0) or 0.0), float(getattr(r, 'score', 0.0) or 0.0),
+                                            nqw, ntw,
+                                            None, None, None, None,
+                                            None, None,
+                                            'micro'
+                                        ))
+                                    if sb_pair_rows:
+                                        cur.executemany(
+                                            """
+                                            INSERT OR REPLACE INTO syntenic_blocks (
+                                                block_id, cluster_id, query_locus, target_locus,
+                                                query_genome_id, target_genome_id,
+                                                query_contig_id, target_contig_id,
+                                                length, identity, score,
+                                                n_query_windows, n_target_windows,
+                                                query_window_start, query_window_end,
+                                                target_window_start, target_window_end,
+                                                query_windows_json, target_windows_json,
+                                                block_type
+                                            ) VALUES (
+                                                ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+                                            )
+                                            """,
+                                            sb_pair_rows,
+                                        )
+                                    # Mappings into gene_block_mappings with relative positions
+                                    if not mgpm_df.empty:
+                                        gbm_rows2 = []
+                                        for (blk, role), g in mgpm_df.groupby(['block_id','block_role']):
+                                            g2 = g.sort_values(['start_pos','end_pos'])
+                                            n = len(g2)
+                                            L = max(1, n-1)
+                                            for idx, rr in enumerate(g2.itertuples(index=False)):
+                                                rel = (idx / L) if L > 0 else 0.0
+                                                gbm_rows2.append((str(rr.gene_id), int(blk), str(role), float(rel)))
+                                        for i in range(0, len(gbm_rows2), 1000):
+                                            cur.executemany(
+                                                "INSERT OR REPLACE INTO gene_block_mappings (gene_id, block_id, block_role, relative_position) VALUES (?, ?, ?, ?)",
+                                                gbm_rows2[i:i+1000]
+                                            )
+                                    conn.commit()
+                            except Exception:
+                                pass
                         finally:
                             conn.close()
                         console.print(f"[bold]Micro clusters:[/bold] {nc} (blocks: {nb})")

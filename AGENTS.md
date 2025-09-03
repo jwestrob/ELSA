@@ -132,3 +132,42 @@ Quick usage tips
 - In the browser:
   - Cluster Explorer → Explore Cluster → bottom “Cluster-wide Clinker Alignment”
   - Zoom +/−, click a gene to center homologs, double-click to flip a row, adjust cosine τ.
+
+2025-09-03 — Clinker UX + Micro Alignments (Current Status)
+
+Problem summary (compact)
+- Clinker: centering/zoom drifted content off-screen; edge filtering didn’t respond; protein glyphs were inconsistently scaled across rows; edge coloring/legend unclear.
+- Micro: “blocks” were single loci (no target), yet the Block Explorer/UI implied aligned windows; inspecting clusters showed spurious groupings with no high-cosine homologs.
+
+What we changed
+- Clinker (Explore Cluster):
+  - True pan/zoom using D3 transform; fixed-size canvas; background drag pans all rows; bounded zoom.
+  - Centering uses absolute offsets and respects pan/zoom; per-row drag/flip preserved.
+  - AA-proportional glyph widths across rows; edges render beneath genes.
+  - Cosine τ slider (live filter) + white label; legend with colors: blue (cos-only), orange (PFAM-only), purple (both); usage tips.
+  - Embedding status and direct cosine from attached vectors; fixed template/JS errors.
+
+- Micro (alignments + browser parity):
+  - Added alignment stage producing two-sided micro_block_pairs and per-gene micro_gene_pair_mappings.
+  - Block Viewer now prefers micro mappings/spans to render exact aligned regions for both query and target.
+  - Explorer combines macro (syntenic_blocks) with micro pairs; excludes legacy syntenic_blocks ‘micro’ rows (query-only) to avoid confusion.
+  - Micro consensus now prefers paired mappings; falls back to legacy only if pairs absent.
+  - Fixed contig parsing for micro loci (strip “#start-end” and “:start-end” suffixes); guarded NaNs/None in details panel.
+
+Why earlier results were misleading
+- Micro discovery emitted single-locus windows only (no true pair), but the macro-centric viewer inferred “windows” from fields not defined for micro alignments. This showed apparent aligned regions with no target content.
+
+Current status
+- Clinker multi-locus view: pan/zoom/centering solid; cosine edges + legend accurate; AA scaling consistent.
+- Block Explorer: shows macro + two-sided micro pairs; selecting a micro block opens true query+target with aligned genes.
+- Micro consensus: computed from paired mappings when available.
+
+Open items / next steps
+- Purity gates for micro: global DF bans, cosine-within-±1 gate, triangle/k-core support to reduce spurious clusters.
+- Derep on micro pairs against macro (containment on both sides; favor macro).
+- pfam_search for micro in Explorer (join mappings→genes) for feature parity with macro.
+- Optional clinker UX: “Fit” zoom, edge hit-layer above genes for better hover.
+
+Operator notes
+- If micro pairs don’t appear, confirm DB: SELECT COUNT(*) FROM micro_block_pairs; the browser and analyzer must point to the same genome_browser/genome_browser.db.
+- Restart Streamlit after analyze to refresh caches.

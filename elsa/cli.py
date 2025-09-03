@@ -788,9 +788,24 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                 else:
                     from .analyze.micro_gene import run_micro_clustering
                     macro_cl = getattr(config_obj.analyze, 'clustering', None)
+                    overrides = getattr(config_obj.analyze, 'micro_overrides', None)
+                    # Base defaults derived from macro or sensible micro defaults
                     micro_j = float(getattr(macro_cl, 'jaccard_tau', 0.75)) if macro_cl else 0.75
                     micro_mk = int(getattr(macro_cl, 'mutual_k', 3)) if macro_cl else 3
                     micro_df = int(getattr(macro_cl, 'df_max', 30)) if macro_cl else 30
+                    micro_gs = 3
+                    # Apply micro-specific overrides if provided in config
+                    try:
+                        if overrides and getattr(overrides, 'jaccard_tau', None) is not None:
+                            micro_j = float(overrides.jaccard_tau)
+                        if overrides and getattr(overrides, 'mutual_k', None) is not None:
+                            micro_mk = int(overrides.mutual_k)
+                        if overrides and getattr(overrides, 'df_max', None) is not None:
+                            micro_df = int(overrides.df_max)
+                        if overrides and getattr(overrides, 'min_genome_support', None) is not None:
+                            micro_gs = int(overrides.min_genome_support)
+                    except Exception:
+                        pass
                     micro_out = Path(output_path) / 'micro_gene'
                     db_path = Path(genome_browser_db) if setup_genome_browser and Path(genome_browser_db).exists() else None
                     # Defaults per AGENTS.md
@@ -803,9 +818,20 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                         jaccard_tau=micro_j,
                         mutual_k=micro_mk,
                         df_max=micro_df,
-                        min_genome_support=3,
+                        min_genome_support=micro_gs,
                     )
-                    # Precompute micro consensus for browser (robust import)
+                    # Post-write deduplication against macro spans (both-side containment)
+                    if db_path and db_path.exists():
+                        try:
+                            from .analyze.micro_gene import deduplicate_micro_against_macro
+                            stats = deduplicate_micro_against_macro(Path(db_path))
+                            del_n = int(stats.get('deleted_blocks', 0))
+                            aff_c = int(stats.get('affected_clusters', 0))
+                            console.print(f"[dim]Micro post-dedup removed {del_n} blocks; {aff_c} clusters updated[/dim]")
+                        except Exception as e:
+                            console.print(f"[dim]Micro post-dedup skipped: {e}[/dim]")
+
+                    # Precompute micro consensus for browser (robust import) after dedup
                     if db_path and db_path.exists():
                         import sqlite3
                         conn = sqlite3.connect(str(db_path))

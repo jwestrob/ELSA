@@ -18,6 +18,7 @@ from typing import Dict, List, Tuple, Optional
 from types import SimpleNamespace
 from elsa.params import load_config as load_elsa_config
 import math
+import os
 import time
 
 # Import genome visualization functions
@@ -38,7 +39,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Constants
-DB_PATH = Path("genome_browser.db")
+ROOT_DIR = Path(__file__).resolve().parent
+DB_PATH = ROOT_DIR / "genome_browser.db"
+
+def _db_version() -> int:
+    try:
+        return int(os.path.getmtime(DB_PATH))
+    except Exception:
+        return 0
 COLORS = {
     'syntenic': 'rgba(255, 99, 71, 0.8)',      # Tomato
     'non_syntenic': 'rgba(135, 206, 235, 0.8)', # Sky blue
@@ -1178,7 +1186,7 @@ def load_cluster_stats():
     """Load precomputed cluster statistics."""
     try:
         from cluster_analyzer import get_all_cluster_stats
-        return get_all_cluster_stats()
+        return get_all_cluster_stats(DB_PATH)
     except Exception as e:
         logger.error(f"Error loading cluster stats: {e}")
         return []
@@ -1188,7 +1196,7 @@ def generate_cluster_summaries(cluster_stats):
     """Generate GPT-4.1-mini summaries for all clusters."""
     try:
         from cluster_analyzer import ClusterAnalyzer
-        analyzer = ClusterAnalyzer(Path("genome_browser.db"))
+        analyzer = ClusterAnalyzer(DB_PATH)
         
         summaries = {}
         for stats in cluster_stats:
@@ -1346,29 +1354,65 @@ def display_cluster_explorer():
     
     # Micro clusters are merged into the main explorer feed via get_all_cluster_stats
 @st.cache_data
-def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float = 0.9, max_tok: int = 0, cluster_type: str = 'macro'):
+def _consensus_preview(cluster_id: int, min_core_cov: float = 0.6, df_pct: float = 0.9, max_tok: int = 0, cluster_type: str = 'macro', cache_ver: int = 0):
+    """Return consensus tokens/pairs for macro or micro clusters.
+
+    For macro clusters, use cluster_consensus or compute on the fly.
+    For micro clusters, use micro_cluster_consensus or compute via micro tables.
+    """
     try:
         import sqlite3, json
         conn = sqlite3.connect(str(DB_PATH))
-        # Always use unified cluster consensus table or compute on the fly
-        try:
-            row = conn.execute("SELECT consensus_json FROM cluster_consensus WHERE cluster_id = ?", (int(cluster_id),)).fetchone()
-            if row and row[0]:
-                payload = json.loads(row[0])
+        if str(cluster_type).lower() == 'micro':
+            # Prefer precomputed micro consensus
+            try:
+                # Map display id -> raw micro id
+                ceil_id = _macro_id_ceiling(conn)
+                raw_id = int(cluster_id) - int(ceil_id)
+                row = conn.execute("SELECT consensus_json FROM micro_cluster_consensus WHERE cluster_id = ?", (raw_id,)).fetchone()
+                if row and row[0]:
+                    payload = json.loads(row[0])
+                    if isinstance(payload, dict):
+                        cons = payload.get('consensus', [])
+                        pairs = payload.get('pairs', [])
+                        # Only accept precomputed if it has at least one token; else compute with requested params
+                        if isinstance(cons, list) and len(cons) > 0:
+                            return cons, pairs
+            except Exception:
+                pass
+            # Compute on the fly for micro
+            try:
+                try:
+                    from database.cluster_content import compute_micro_cluster_pfam_consensus
+                except Exception:
+                    from genome_browser.database.cluster_content import compute_micro_cluster_pfam_consensus
+                payload = compute_micro_cluster_pfam_consensus(conn, raw_id, float(min_core_cov), float(df_pct), int(max_tok))
                 if isinstance(payload, dict):
                     return payload.get('consensus', []), payload.get('pairs', [])
-        except Exception:
-            pass
-        try:
-            from database.cluster_content import compute_cluster_pfam_consensus
-        except Exception:
-            from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
-        payload = compute_cluster_pfam_consensus(conn, int(cluster_id), float(min_core_cov), float(df_pct), int(max_tok))
-        conn.close()
-        if isinstance(payload, dict):
-            return payload.get('consensus', []), payload.get('pairs', [])
+                else:
+                    return payload or [], []
+            finally:
+                conn.close()
         else:
-            return payload or [], []
+            # Macro path
+            try:
+                row = conn.execute("SELECT consensus_json FROM cluster_consensus WHERE cluster_id = ?", (int(cluster_id),)).fetchone()
+                if row and row[0]:
+                    payload = json.loads(row[0])
+                    if isinstance(payload, dict):
+                        return payload.get('consensus', []), payload.get('pairs', [])
+            except Exception:
+                pass
+            try:
+                from database.cluster_content import compute_cluster_pfam_consensus
+            except Exception:
+                from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
+            payload = compute_cluster_pfam_consensus(conn, int(cluster_id), float(min_core_cov), float(df_pct), int(max_tok))
+            conn.close()
+            if isinstance(payload, dict):
+                return payload.get('consensus', []), payload.get('pairs', [])
+            else:
+                return payload or [], []
     except Exception as e:
         logger.warning(f"Consensus preview failed for cluster {cluster_id}: {e}")
         return [], []
@@ -1631,7 +1675,12 @@ def display_cluster_card_with_async_summary(stats):
     """Display a cluster card with immediate plot rendering and async AI summary."""
     with st.container():
         # Header
-        label = 'micro' if str(getattr(stats, 'cluster_type', '')) == 'micro' else ''
+        # Determine micro via DB instead of trusting stored type
+        try:
+            is_micro_card = _cluster_is_micro(int(stats.cluster_id))
+        except Exception:
+            is_micro_card = (str(getattr(stats, 'cluster_type', '')).lower() == 'micro')
+        label = 'micro' if is_micro_card else ''
         badge = f" <span style=\"background:#eef;color:#2E5CAF;border-radius:6px;padding:2px 6px;margin-left:6px;font-size:12px;\">{label}</span>" if label else ''
         st.markdown(f"""
         <div style="border: 1px solid #ddd; border-radius: 10px; padding: 15px; margin: 10px 0; background-color: #f9f9f9;">
@@ -1641,12 +1690,16 @@ def display_cluster_card_with_async_summary(stats):
         
         # Mini consensus preview (fast & cached)
         try:
-            tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=0, cluster_type=str(getattr(stats, 'cluster_type', 'macro') or 'macro'))
+            # Use a slightly lower coverage threshold for micro to surface small cassettes
+            if is_micro_card:
+                tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.5, df_pct=0.9, max_tok=0, cluster_type='micro', cache_ver=_db_version())
+            else:
+                tokens, pairs = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=0, cluster_type='macro', cache_ver=_db_version())
             _render_consensus_strip(tokens, pairs, height=None, key=f"consprev_{stats.cluster_id}")
             # Quick directional consensus badge
-            if str(getattr(stats, 'cluster_type', 'macro') or 'macro') == 'micro':
+            if is_micro_card:
                 try:
-                    con, pr = _consensus_preview(int(stats.cluster_id), min_core_cov=0.6, df_pct=0.9, max_tok=0, cluster_type='micro')
+                    con, pr = _consensus_preview(int(stats.cluster_id), min_core_cov=0.5, df_pct=0.9, max_tok=0, cluster_type='micro', cache_ver=_db_version())
                     supported = [p for p in pr if p.get('same_frac') is not None and int(p.get('support', 0)) >= 3]
                     import statistics as _st
                     agree = _st.mean([float(p['same_frac']) for p in supported]) if supported else 0.0
@@ -1699,7 +1752,7 @@ def display_cluster_card_with_async_summary(stats):
                 with st.status("🤖 Generating AI analysis...", expanded=False) as status:
                     try:
                         from cluster_analyzer import ClusterAnalyzer
-                        analyzer = ClusterAnalyzer(Path("genome_browser.db"))
+                        analyzer = ClusterAnalyzer(DB_PATH)
                         summary = analyzer.generate_cluster_summary(stats)
                         
                         # Update session state
@@ -1741,7 +1794,7 @@ def display_cluster_card_with_async_summary(stats):
         with col1:
             if st.button(f"📊 Explore Cluster {stats.cluster_id}", key=f"explore_{stats.cluster_id}", type="secondary"):
                 with st.spinner("🔄 Loading cluster detail view..."):
-                    # Go to dedicated cluster detail view with genome diagrams
+                    # Go to dedicated cluster detail view (supports macro+micro)
                     st.session_state.selected_cluster = stats.cluster_id
                     st.session_state.current_page = 'cluster_detail'
                     st.success(f"✅ Navigating to Cluster {stats.cluster_id} detail view...")
@@ -1847,6 +1900,137 @@ def extract_unique_loci_from_cluster(cluster_blocks: pd.DataFrame) -> List[str]:
     
     return sorted(list(all_loci))
 
+def _macro_id_ceiling(conn) -> int:
+    """Return 1 + max macro cluster_id (so micro display IDs won't collide).
+
+    Using COUNT(*) was wrong when macro IDs are sparse. This uses MAX(cluster_id).
+    """
+    try:
+        row = conn.execute("SELECT COALESCE(MAX(cluster_id), 0) FROM clusters WHERE cluster_id > 0").fetchone()
+        return int(row[0] or 0)
+    except Exception:
+        return 0
+
+def _cluster_is_micro(cluster_id: int) -> bool:
+    """Decide whether a display cluster_id refers to a micro cluster.
+
+    Micro display IDs are offset by n_macro (excluding sink).
+    """
+    try:
+        import sqlite3
+        conn = sqlite3.connect(str(DB_PATH))
+        # If it's present in clusters with this ID, it's macro
+        row = conn.execute("SELECT 1 FROM clusters WHERE cluster_id = ?", (int(cluster_id),)).fetchone()
+        if row:
+            conn.close()
+            return False
+        ceil_id = _macro_id_ceiling(conn)
+        raw_micro = int(cluster_id) - int(ceil_id)
+        if raw_micro <= 0:
+            conn.close()
+            return False
+        row = conn.execute("SELECT 1 FROM micro_gene_clusters WHERE cluster_id = ?", (raw_micro,)).fetchone()
+        conn.close()
+        return bool(row)
+    except Exception:
+        return False
+
+@st.cache_data
+def load_micro_cluster_blocks(cluster_id: int) -> pd.DataFrame:
+    """Load micro blocks belonging to a micro cluster and adapt columns to syntenic_blocks schema."""
+    conn = get_database_connection()
+    ceil_id = _macro_id_ceiling(conn)
+    raw_id = int(cluster_id) - int(ceil_id)
+    q = """
+        SELECT 
+            (1000000000 + block_id) AS block_id,
+            cluster_id,
+            (genome_id || ':' || contig_id || '#' || CAST(start_index AS TEXT) || '-' || CAST(end_index AS TEXT)) AS query_locus,
+            '' AS target_locus,
+            genome_id AS query_genome_id, NULL AS target_genome_id,
+            contig_id AS query_contig_id, NULL AS target_contig_id,
+            (1 + end_index - start_index) AS length,
+            0.0 AS identity,
+            0.0 AS score
+        FROM micro_gene_blocks
+        WHERE cluster_id = ?
+        ORDER BY genome_id, contig_id, start_index
+    """
+    return pd.read_sql_query(q, conn, params=[raw_id])
+
+def compute_display_regions_for_micro_cluster(cluster_id: int, gap_bp: int = 1000, min_support: int = 1) -> List[Dict]:
+    """Compute display regions for a micro cluster using gene index spans in micro_gene_blocks."""
+    conn = get_database_connection()
+    ceil_id = _macro_id_ceiling(conn)
+    raw_id = int(cluster_id) - int(ceil_id)
+    try:
+        # Build ordered gene index per contig for mapping indices→bp
+        conn.execute("DROP TABLE IF EXISTS _tmp_gene_order_micro_view")
+        conn.execute(
+            """
+            CREATE TEMP TABLE _tmp_gene_order_micro_view AS
+            SELECT 
+                genome_id, contig_id, gene_id,
+                start_pos, end_pos,
+                ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
+            FROM genes
+            """
+        )
+        # For each micro block, compute min/max bp via idx mapping
+        per_block = pd.read_sql_query(
+            """
+            WITH ranges AS (
+                SELECT block_id, genome_id, contig_id, start_index, end_index
+                FROM micro_gene_blocks WHERE cluster_id = ?
+            ),
+            gene_spans AS (
+                SELECT r.block_id,
+                       r.genome_id,
+                       r.contig_id,
+                       MIN(g.start_pos) AS start_bp,
+                       MAX(g.end_pos) AS end_bp
+                FROM ranges r
+                JOIN _tmp_gene_order_micro_view g
+                  ON g.genome_id = r.genome_id AND g.contig_id = r.contig_id AND g.idx BETWEEN r.start_index AND r.end_index
+                GROUP BY r.block_id, r.genome_id, r.contig_id
+            )
+            SELECT (1000000000 + block_id) AS block_id, genome_id, contig_id, start_bp, end_bp
+            FROM gene_spans
+            """,
+            conn,
+            params=[raw_id]
+        )
+        if per_block.empty:
+            return []
+
+        genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
+        org_map = dict(zip(genomes_df["genome_id"], genomes_df["organism_name"]))
+
+        regions = []
+        for (genome_id, contig_id), group in per_block.groupby(["genome_id", "contig_id"]):
+            intervals = [
+                {"start_bp": int(row.start_bp), "end_bp": int(row.end_bp), "block_id": int(row.block_id)}
+                for _, row in group.iterrows()
+            ]
+            merged = _merge_intervals(intervals, gap_bp=gap_bp)
+            for iv in merged:
+                support = len(iv["blocks"])  # number of blocks supporting
+                if support >= min_support:
+                    regions.append({
+                        "genome_id": genome_id,
+                        "contig_id": contig_id,
+                        "organism_name": org_map.get(genome_id, "Unknown organism"),
+                        "start_bp": iv["start_bp"],
+                        "end_bp": iv["end_bp"],
+                        "support": support,
+                        "blocks": iv["blocks"],
+                    })
+        regions.sort(key=lambda r: (r["genome_id"], r["contig_id"], r["start_bp"]))
+        return regions
+    except Exception as e:
+        logger.error(f"Error computing micro display regions: {e}")
+        return []
+
 def display_cluster_detail():
     """Display detailed view of a specific cluster with genome diagrams for each locus."""
     if 'selected_cluster' not in st.session_state:
@@ -1870,11 +2054,14 @@ def display_cluster_detail():
                 del st.session_state.selected_cluster
             st.rerun()
     
+    # Determine cluster type
+    is_micro = _cluster_is_micro(cluster_id)
+
     # Load cluster blocks and display regions
     with st.spinner("Loading cluster data..."):
         try:
             # Load blocks in this cluster
-            cluster_blocks = load_cluster_blocks(cluster_id)
+            cluster_blocks = load_micro_cluster_blocks(cluster_id) if is_micro else load_cluster_blocks(cluster_id)
             
             if cluster_blocks.empty:
                 if cluster_id == 0:
@@ -1889,7 +2076,7 @@ def display_cluster_detail():
                 return
             
             # Compute display regions; if unavailable, fall back to unique loci
-            regions = compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
+            regions = compute_display_regions_for_micro_cluster(cluster_id, gap_bp=1000, min_support=1) if is_micro else compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
             use_regions = len(regions) > 0
             if not use_regions:
                 unique_loci = extract_unique_loci_from_cluster(cluster_blocks)
@@ -1897,7 +2084,7 @@ def display_cluster_detail():
             # Load cluster stats if available
             try:
                 from cluster_analyzer import ClusterAnalyzer
-                analyzer = ClusterAnalyzer(Path("genome_browser.db"))
+                analyzer = ClusterAnalyzer(DB_PATH)
                 stats = analyzer.get_cluster_stats(cluster_id)
             except:
                 stats = None
@@ -1935,28 +2122,8 @@ def display_cluster_detail():
             df_pct = st.slider("Ban top DF percentile (global)", min_value=0.0, max_value=0.99, value=0.9, step=0.05, help="Filter ultra-common PFAMs computed across all blocks (0 to disable)")
         with c3:
             max_tok = st.number_input("Max tokens", min_value=3, max_value=20, value=10, step=1)
-        try:
-            import sqlite3
-            try:
-                # App runs from genome_browser/, so prefer relative import
-                from database.cluster_content import compute_cluster_pfam_consensus
-            except Exception:
-                # Fallback when imported as a package
-                from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
-            conn = sqlite3.connect(str(DB_PATH))
-            consensus_payload = compute_cluster_pfam_consensus(conn, int(cluster_id), min_core_cov, df_pct, int(max_tok))
-            conn.close()
-        except Exception as e:
-            consensus_payload = []
-            st.warning(f"Consensus unavailable: {e}")
-        # Back-compat: allow compute to return list or dict
-        tokens = []
-        pairs = []
-        if isinstance(consensus_payload, dict):
-            tokens = consensus_payload.get('consensus', [])
-            pairs = consensus_payload.get('pairs', [])
-        elif isinstance(consensus_payload, list):
-            tokens = consensus_payload
+        # Use unified preview helper (macro vs micro aware)
+        tokens, pairs = _consensus_preview(int(cluster_id), min_core_cov=min_core_cov, df_pct=df_pct, max_tok=int(max_tok), cluster_type=('micro' if is_micro else 'macro'), cache_ver=_db_version())
         if tokens:
             # Render prettier strip with arrow-shaped genes and thin arrows between
             import plotly.graph_objects as go
@@ -2016,7 +2183,23 @@ def display_cluster_detail():
             st.caption("Consensus core (ordered): " + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, covs)]))
         else:
             st.info("No stable PFAM core detected for this cluster with current settings.")
-    
+
+    # Clinker-like multi-locus alignment (always visible)
+    st.markdown("---")
+    st.subheader("🧷 Cluster-wide Clinker Alignment")
+    try:
+        # Choose sensible defaults for quick view
+        max_tracks = 6
+        use_embeddings = True
+        data = _build_cluster_multiloc_json(int(cluster_id), is_micro=is_micro, max_tracks=int(max_tracks), use_embeddings=use_embeddings)
+        if data and data.get('loci') and len(data['loci']) >= 2:
+            # Make the plot larger with more generous vertical spacing
+            _render_multiloc_d3(data, height=180 + 100 * len(data.get('loci', [])))
+        else:
+            st.caption("Not enough comparable regions to render a cluster-wide alignment.")
+    except Exception as e:
+        st.warning(f"Multi-locus view unavailable: {e}")
+
     # Show cluster composition table
     with st.expander("📋 **Cluster Block Details**", expanded=False):
         display_cols = ['block_id', 'query_locus', 'target_locus', 'length', 'identity', 'score']
@@ -2139,6 +2322,7 @@ def display_cluster_detail():
                             'identity': float(rep_block['identity']),
                             'score': float(rep_block['score']),
                             'length': int(rep_block['length']),
+                            'block_type': ('micro' if is_micro else 'macro'),
                         }
                         st.session_state.selected_block = sel
                         st.session_state.current_page = 'genome_viewer'
@@ -3211,8 +3395,8 @@ def _render_comparative_d3(data: Dict, width: int = 0, height: int = 500):
         const qMax = d3.max(data.query_locus, d => d.end) || 1;
         const tMin = d3.min(data.target_locus, d => d.start) || 0;
         const tMax = d3.max(data.target_locus, d => d.end) || 1;
-        const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, innerW]);
-        const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, innerW]);
+        const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, baseInnerW*zoom]);
+        const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, baseInnerW*zoom]);
 
         // Draw query genes (top)
         const q = g.append('g');
@@ -3346,8 +3530,8 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
           const qMax = d3.max(data.query_locus || [], d => d.end) || 1;
           const tMin = d3.min(data.target_locus || [], d => d.start) || 0;
           const tMax = d3.max(data.target_locus || [], d => d.end) || 1;
-          const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, innerW]);
-          const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, innerW]);
+          const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, baseInnerW*zoom]);
+          const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, baseInnerW*zoom]);
 
           // Tooltip
           container.style.position = 'relative';
@@ -3406,7 +3590,7 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
               } catch (e) {}
               tooltip.style('display','block')
                      .html('<b>' + d.id + '</b><br>' +
-                           'Length: ' + len.toLocaleString() + ' bp<br>' +
+                           'Length: ' + len.toLocaleString() + ' aa<br>' +
                            'Strand: ' + strand + '<br>' +
                            'PFAM: ' + (d.pfam || 'None') + simLine + pfLine);
               d3.select(this).attr('stroke-width',2);
@@ -3473,7 +3657,7 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
               } catch (e) {}
               tooltip.style('display','block')
                      .html('<b>' + d.id + '</b><br>' +
-                           'Length: ' + len.toLocaleString() + ' bp<br>' +
+                           'Length: ' + len.toLocaleString() + ' aa<br>' +
                            'Strand: ' + strand + '<br>' +
                            'PFAM: ' + (d.pfam || 'None') + simLine + pfLine);
               d3.select(this).attr('stroke-width',2);
@@ -3743,6 +3927,509 @@ def _expand_clusters(blocks, assignments, window_lookup,
                 break
     logger.info("[TUNER] expansion added %d blocks", added_total)
     return assignments
+
+# ----- Multi-locus clinker-like helpers (cluster-level) -----
+def _load_genes_for_region(genome_id: str, contig_id: str, start_bp: int, end_bp: int, pad_bp: int = 0) -> pd.DataFrame:
+    conn = get_database_connection()
+    s = max(0, int(start_bp) - int(pad_bp))
+    e = int(end_bp) + int(pad_bp)
+    q = """
+        SELECT gene_id, contig_id, start_pos, end_pos, strand, pfam_domains
+        FROM genes
+        WHERE genome_id = ? AND contig_id = ? AND start_pos <= ? AND end_pos >= ?
+        ORDER BY start_pos, end_pos
+    """
+    return pd.read_sql_query(q, conn, params=[str(genome_id), str(contig_id), e, s])
+
+
+def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: int = 6, use_embeddings: bool = False) -> Dict:
+    import numpy as _np
+    # Choose representative regions
+    regions = compute_display_regions_for_micro_cluster(cluster_id, gap_bp=1000, min_support=1) if is_micro else compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
+    if not regions:
+        return {}
+    # Prefer regions with highest support, then length
+    regions = sorted(regions, key=lambda r: (int(r.get('support', 1)), int(r.get('end_bp', 0)) - int(r.get('start_bp', 0))), reverse=True)[:max_tracks]
+
+    # Prepare embeddings lookup if requested
+    emb_df = None
+    emb_status = {"enabled": bool(use_embeddings), "mapped": 0}
+    if use_embeddings:
+        try:
+            emb_df, emb_path = load_gene_embeddings_df()
+            if emb_df is not None:
+                emb_df = emb_df.set_index('gene_id')
+                if not any(c.startswith('emb_') for c in emb_df.columns):
+                    emb_df = None
+                else:
+                    emb_status["path"] = emb_path
+        except Exception:
+            emb_df = None
+
+    loci = []
+    pfam_sets = []
+    for r in regions:
+        df = _load_genes_for_region(r['genome_id'], r['contig_id'], int(r['start_bp']), int(r['end_bp']), pad_bp=0)
+        if df.empty:
+            continue
+        genes = []
+        pfset = set()
+        for _, row in df.iterrows():
+            aa_len = 0
+            try:
+                aa_len = max(1, int(round((int(row['end_pos']) - int(row['start_pos']) + 1) / 3.0)))
+            except Exception:
+                aa_len = 1
+            gobj = {
+                'id': row['gene_id'],
+                'contig': str(row.get('contig_id') or ''),
+                'start': int(row['start_pos']),
+                'end': int(row['end_pos']),
+                'strand': int(1 if row['strand'] in (1, '+') else -1),
+                'pfam': row.get('pfam_domains', '') or '',
+                'aa': int(aa_len),
+            }
+            # Attach normalized embedding if available
+            if use_embeddings and emb_df is not None and row['gene_id'] in emb_df.index:
+                try:
+                    import numpy as _np
+                    cols = [c for c in emb_df.columns if c.startswith('emb_')]
+                    vec = emb_df.loc[row['gene_id'], cols].to_numpy(dtype='float32', copy=False)
+                    nv = vec / (_np.linalg.norm(vec) + 1e-8)
+                    gobj['emb'] = [float(x) for x in nv.tolist()]
+                    emb_status["mapped"] += 1
+                except Exception:
+                    pass
+            elif use_embeddings and emb_df is not None:
+                # Fallback: try contig + start coordinate match if parquet includes these columns
+                try:
+                    cols = set(emb_df.columns)
+                    if {'contig_id','start'}.issubset(cols):
+                        sub = emb_df[(emb_df['contig_id'] == str(gobj['contig'])) & (emb_df['start'] == int(gobj['start']))]
+                        if not sub.empty:
+                            import numpy as _np
+                            ecols = [c for c in emb_df.columns if c.startswith('emb_')]
+                            vec = sub.iloc[0][ecols].to_numpy(dtype='float32', copy=False)
+                            nv = vec / (_np.linalg.norm(vec) + 1e-8)
+                            gobj['emb'] = [float(x) for x in nv.tolist()]
+                            emb_status["mapped"] += 1
+                except Exception:
+                    pass
+            genes.append(gobj)
+            if row.get('pfam_domains'):
+                for t in str(row['pfam_domains']).split(';'):
+                    t = t.strip()
+                    if t:
+                        pfset.add(t)
+        loci.append({
+            'name': f"{r['genome_id']}:{r['contig_id']} [{int(r['start_bp'])}-{int(r['end_bp'])}]",
+            'genome_id': r['genome_id'],
+            'contig_id': r['contig_id'],
+            'start': int(r['start_bp']),
+            'end': int(r['end_bp']),
+            'genes': genes,
+        })
+        pfam_sets.append(pfset)
+    if not loci:
+        return {}
+
+    # Pairwise similarity (PFAM Jaccard; optionally add embeddings cosine matches)
+    L = len(loci)
+    sim = [[0.0]*L for _ in range(L)]
+    # emb_df already prepared above for gene-level embeddings
+    def pf_jacc(a: set, b: set) -> float:
+        if not a or not b:
+            return 0.0
+        u = a | b
+        if not u:
+            return 0.0
+        return len(a & b) / float(len(u))
+
+    for i in range(L):
+        for j in range(i+1, L):
+            s = pf_jacc(pfam_sets[i], pfam_sets[j])
+            if use_embeddings and emb_df is not None:
+                # Add small bonus from cosine matches above 0.92
+                a_ids = [g['id'] for g in loci[i]['genes'] if g['id'] in emb_df.index]
+                b_ids = [g['id'] for g in loci[j]['genes'] if g['id'] in emb_df.index]
+                if a_ids and b_ids:
+                    A = emb_df.loc[a_ids, [c for c in emb_df.columns if c.startswith('emb_')]].to_numpy(dtype='float32', copy=False)
+                    B = emb_df.loc[b_ids, [c for c in emb_df.columns if c.startswith('emb_')]].to_numpy(dtype='float32', copy=False)
+                    # normalize
+                    A = A / (_np.linalg.norm(A, axis=1, keepdims=True) + 1e-8)
+                    B = B / (_np.linalg.norm(B, axis=1, keepdims=True) + 1e-8)
+                    S = A @ B.T
+                    matches = int((S >= 0.92).sum())
+                    s += min(0.2, 0.02 * matches)  # cap small bonus
+            sim[i][j] = sim[j][i] = float(min(1.0, s))
+
+    # Order loci greedily by similarity (path through high-sim neighbors)
+    order = list(range(L))
+    if L > 2:
+        totals = [sum(sim[i]) for i in range(L)]
+        start = max(range(L), key=lambda i: totals[i])
+        used = {start}
+        seq = [start]
+        while len(seq) < L:
+            last = seq[-1]
+            nxt = None
+            best = -1.0
+            for j in range(L):
+                if j in used:
+                    continue
+                if sim[last][j] > best:
+                    best = sim[last][j]
+                    nxt = j
+            if nxt is None:
+                nxt = next(i for i in range(L) if i not in used)
+            seq.append(nxt)
+            used.add(nxt)
+        order = seq
+
+    loci_ordered = [loci[i] for i in order]
+
+    # Build edges between adjacent tracks: one best match per gene (cosine preferred, PFAM fallback)
+    edges = []
+    for k in range(len(loci_ordered)-1):
+        a = loci_ordered[k]
+        b = loci_ordered[k+1]
+        # pre-split PFAM tokens for speed
+        a_pf = [
+            [t.strip() for t in str(g.get('pfam','') or '').split(';') if t.strip()]
+            for g in a['genes']
+        ]
+        b_pf = [
+            [t.strip() for t in str(g.get('pfam','') or '').split(';') if t.strip()]
+            for g in b['genes']
+        ]
+        a_pf_sets = [set(lst) for lst in a_pf]
+        b_pf_sets = [set(lst) for lst in b_pf]
+
+        # Optional cosine helper using embeddings if available
+        def gene_cos_pair(ga, gb):
+            try:
+                import numpy as _np
+                # Prefer pre-attached vectors on gene objects (set during locus load)
+                va = ga.get('emb', None)
+                vb = gb.get('emb', None)
+                if isinstance(va, list) and isinstance(vb, list) and len(va) == len(vb) and len(va) > 0:
+                    return float(_np.dot(_np.array(va, dtype='float32'), _np.array(vb, dtype='float32')))
+                # Fallback: lookup in emb_df by gene_id if present
+                if emb_df is None:
+                    return None
+                ida = str(ga.get('id','')); idb = str(gb.get('id',''))
+                if ida not in emb_df.index or idb not in emb_df.index:
+                    return None
+                cols = [c for c in emb_df.columns if c.startswith('emb_')]
+                va = emb_df.loc[ida, cols].to_numpy(dtype='float32', copy=False)
+                vb = emb_df.loc[idb, cols].to_numpy(dtype='float32', copy=False)
+                va = va / (_np.linalg.norm(va) + 1e-8)
+                vb = vb / (_np.linalg.norm(vb) + 1e-8)
+                return float(va.dot(vb))
+            except Exception:
+                return None
+
+        for ai, ga in enumerate(a['genes']):
+            best_score = -1e9
+            best_bi = None
+            best_pf = 0
+            best_cos = None
+            for bi, gb in enumerate(b['genes']):
+                cosv = gene_cos_pair(ga, gb)
+                pf_cnt = len(a_pf_sets[ai] & b_pf_sets[bi])
+                # scoring: cosine dominates if present; else PFAM overlap count
+                score = (cosv if (cosv is not None and _np.isfinite(cosv)) else (0.5 if pf_cnt>0 else -1))
+                if score > best_score:
+                    best_score = score
+                    best_bi = bi
+                    best_pf = pf_cnt
+                    best_cos = cosv
+            if best_bi is not None:
+                edges.append({
+                    'a': k, 'b': k+1, 'ai': int(ai), 'bi': int(best_bi),
+                    'type': 'emb' if (best_cos is not None) else 'pfam',
+                    'pf': int(best_pf), 'cos': (float(best_cos) if best_cos is not None else None)
+                })
+
+    return {'loci': loci_ordered, 'edges': edges, 'embeddings': emb_status}
+
+
+def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):
+    """Render stacked multi-locus clinker-like view connecting adjacent tracks by PFAM matches."""
+    import streamlit.components.v1 as components
+    import json as _json
+    if not data or not data.get('loci'):
+        return
+    html = """
+    <div id=\"cluster-multiloc\" style=\"width:100%; position:relative; padding:8px 16px; box-sizing:border-box;\"></div>
+    <script src=\"https://d3js.org/d3.v7.min.js\"></script>
+    <script>
+      const container = document.getElementById('cluster-multiloc');
+      const data = __DATA__;
+      const margin = {top: 10, right: 20, bottom: 20, left: 20};
+      const W = __WIDTH__;
+      const H = __HEIGHT__;
+      const baseInnerW = (W>0?W:container.clientWidth) - margin.left - margin.right;
+      const minZoom = 0.6, maxZoom = 3.0;
+      const rowH = 60;
+      const rowGap = 20;
+      const contentH = (rowH+rowGap)*data.loci.length;
+      const svg = d3.select(container).append('svg')
+          .attr('width', baseInnerW + margin.left + margin.right)
+          .attr('height', margin.top + margin.bottom + contentH)
+          .style('background', '#fff');
+      const root = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+      const panG = root.append('g').attr('class','panzoom');
+
+      // Tooltip similar to block explorer
+      const tooltip = d3.select(container).append('div')
+        .style('position','absolute')
+        .style('pointer-events','none')
+        .style('background','#fff')
+        .style('border','1px solid #ccc')
+        .style('padding','6px 8px')
+        .style('font','12px monospace')
+        .style('border-radius','4px')
+        .style('box-shadow','0 2px 6px rgba(0,0,0,0.15)')
+        .style('display','none')
+        .style('z-index','10');
+
+      function colorPF(p) { let h=0; for (let i=0;i<p.length;i++) { h=(h*31 + p.charCodeAt(i))>>>0; } const r=(h&0xFF), g2=((h>>8)&0xFF), b=((h>>16)&0xFF); return `rgba(${r},${g2},${b},0.9)`; }
+
+      // Controls and state
+      const controls = d3.select(container).append('div').style('margin','6px 0');
+      let offsets = data.loci.map(() => 0);
+      let flips = data.loci.map(() => false);
+      let tau = 0.90;
+      let view = d3.zoomIdentity.scale(1.25);
+      controls.append('button').text('Reset alignment').on('click', () => { offsets = offsets.map(() => 0); redraw(); });
+      controls.append('button').text('Reset view').style('margin-left','8px').on('click', () => { svg.transition().duration(150).call(zoomBehavior.transform, d3.zoomIdentity.scale(1.25)); });
+      controls.append('button').text('Flip all to forward').style('margin-left','8px').on('click', () => { const refOri=rowOrientation(0); flips = flips.map((f,i)=> rowOrientation(i)===refOri?false:true); redraw(); });
+      controls.append('button').text('Zoom -').style('margin-left','8px').on('click', () => { const k = Math.max(minZoom, +(view.k-0.1).toFixed(2)); svg.transition().duration(120).call(zoomBehavior.scaleTo, k); });
+      controls.append('button').text('Zoom +').style('margin-left','4px').on('click', () => { const k = Math.min(maxZoom, +(view.k+0.1).toFixed(2)); svg.transition().duration(120).call(zoomBehavior.scaleTo, k); });
+      const zoomLbl = controls.append('span').style('margin-left','8px').style('color','#fff').text(() => ` (${(view.k).toFixed(2)}x)`);
+      controls.append('span').style('margin-left','12px').style('color','#fff').style('font-weight','600').text('Cosine τ:');
+      const tauInput = controls.append('input')
+        .attr('type','range').attr('min','0.70').attr('max','0.99').attr('step','0.01').attr('value','0.90')
+        .on('input', function(){ tau=+this.value; tauLbl.text(` ${tau.toFixed(2)}`); drawEdges(); });
+      const tauLbl = controls.append('span').style('margin-left','6px').style('color','#fff').text(` ${tau.toFixed(2)}`);
+
+      // Legend (edge meaning)
+      const legend = d3.select(container).append('div').style('margin','4px 0 8px 0').style('font','12px sans-serif').style('color','#fff');
+      function legendItem(color, label){
+        const item = legend.append('span').style('display','inline-flex').style('align-items','center').style('margin-right','14px');
+        item.append('span').style('display','inline-block').style('width','18px').style('height','3px').style('margin-right','6px').style('background', color).style('border','1px solid rgba(255,255,255,0.5)');
+        item.append('span').text(label);
+      }
+      legendItem('#2c7bb6', 'Cosine-only');
+      legendItem('#fdae61', 'PFAM-only');
+      legendItem('#7b3294', 'Both');
+      try {
+        const emb = (data.embeddings || {});
+        const msg = (emb.enabled && emb.mapped>0) ? `Embeddings ON (${emb.mapped.toLocaleString()} genes mapped)` : 'Embeddings OFF (PFAM-only)';
+        legend.append('span').style('margin-left','14px').style('opacity','0.85').text(msg);
+      } catch (e) {}
+      legend.append('div')
+        .style('margin-top','6px')
+        .style('opacity','0.85')
+        .text('Tips: drag background to pan • wheel or buttons to zoom • click a gene to center homologs • double-click a gene or click row label to flip • drag a row to nudge • use Cosine τ to filter edges.');
+
+      function rowOrientation(idx){ const genes = data.loci[idx].genes||[]; let s=0; genes.forEach(g=>{ s += (g.strand>=0?1:-1); }); return s>=0?1:-1; }
+
+      const rowsG = [];
+      const gapPx = 16; // fixed inter-gene gap in pixels
+      const minGenePx = 3; // minimal visible width per gene
+      let pxPerAA = 1; // computed from max row extent
+      data.loci.forEach((loc, idx) => {
+        const y0 = idx*(rowH+rowGap);
+        const minX = d3.min(loc.genes, d => d.start) || 0;
+        const maxX = d3.max(loc.genes, d => d.end) || 1;
+        const baseX = d3.scaleLinear().domain([minX, maxX]).range([0, baseInnerW]);
+        panG.append('text').attr('x', 0).attr('y', y0-4).text(loc.name).attr('font-size','10px').attr('fill','#333')
+          .style('cursor','pointer').on('click', () => { flips[idx] = !flips[idx]; redraw(); });
+        const rowSel = panG.append('g').attr('transform', `translate(0,${y0})`);
+        const row = rowSel.node();
+        row._baseX = baseX; rowsG.push(row);
+      });
+
+      // Precompute per-row gene layouts in pixels with a global px-per-aa so equal protein lengths have equal widths across rows
+      function computeLayouts(){
+        // determine global pxPerAA from the row with max total aa length
+        let maxSumAA = 1;
+        let maxGenes = 1;
+        data.loci.forEach(loc => {
+          const aaSum = (loc.genes||[]).reduce((s,g)=> s + Math.max(1, +g.aa || 1), 0);
+          if (aaSum > maxSumAA) maxSumAA = aaSum;
+          const n = (loc.genes||[]).length;
+          if (n > maxGenes) maxGenes = n;
+        });
+        pxPerAA = Math.max(0.05, (baseInnerW - gapPx * Math.max(0, maxGenes-1)) / maxSumAA);
+        // assign layout per row
+        data.loci.forEach((loc, idx) => {
+          const row = rowsG[idx];
+          let x = 0;
+          const lay = [];
+          (loc.genes||[]).forEach(g => {
+            const w = Math.max(minGenePx, (Math.max(1, +g.aa || 1)) * pxPerAA);
+            lay.push({start:x, w:w});
+            x += w + gapPx;
+          });
+          row._layout = lay;
+          row._rowWidth = x > 0 ? (x - gapPx) : 0;
+        });
+      }
+      computeLayouts();
+
+      function rowScale(idx){ const base = rowsG[idx]._baseX; const dom=base.domain().slice(); return d3.scaleLinear().domain(flips[idx]?dom.reverse():dom).range([0, baseInnerW]); }
+
+      const lociIndexMaps = data.loci.map(loc => { const m=new Map(); loc.genes.forEach((g,i)=>m.set(i,g)); return {map:m}; });
+      const edgesG = panG.append('g').attr('class','edges');
+      // Render edges beneath gene glyphs
+      try { edgesG.lower(); } catch (e) {}
+
+      // Background overlay for pan/zoom capture
+      const overlay = root.append('rect')
+        .attr('x',0).attr('y',0).attr('width', baseInnerW).attr('height', contentH)
+        .style('fill','transparent')
+        .style('pointer-events','none')
+        .style('cursor','grab');
+
+      const zoomBehavior = d3.zoom().scaleExtent([minZoom, maxZoom]).on('zoom', (event) => {
+        view = event.transform;
+        panG.attr('transform', view.toString());
+        zoomLbl.text(` (${(view.k).toFixed(2)}x)`);
+      });
+      svg.call(zoomBehavior).on('dblclick.zoom', null);
+      svg.call(zoomBehavior.transform, view);
+
+      function geneCenterX(rowIdx, geneIdx){
+        const row = rowsG[rowIdx];
+        const lay = (row._layout||[])[geneIdx] || {start:0,w:0};
+        const rowW = row._rowWidth || 0;
+        const local = flips[rowIdx] ? (rowW - (lay.start + lay.w/2)) : (lay.start + lay.w/2);
+        return local + offsets[rowIdx];
+      }
+
+      function drawEdges(){
+        const allEdges = data.edges || [];
+        const E = allEdges.filter(ed => {
+          const hasCos = (ed.cos != null && isFinite(ed.cos));
+          if (hasCos) return (+ed.cos) >= tau;
+          // keep PFAM-only edges regardless of tau if they have overlap
+          return ((+ed.pf || 0) > 0);
+        });
+        const esel = edgesG.selectAll('line.edge').data(E, d=> `${d.a}-${d.b}-${d.ai}-${d.bi}`);
+        esel.exit().remove();
+        const enter = esel.enter().append('line').attr('class','edge')
+          .attr('stroke', d => { const hasCos=(d.cos!=null&&isFinite(d.cos)); const hasPf=(+d.pf||0)>0; if (hasCos && hasPf) return '#7b3294'; if (hasCos) return '#2c7bb6'; if (hasPf) return '#fdae61'; return '#999'; })
+          .attr('stroke-width', 1.0)
+          .on('mouseover', function(event, ed){ d3.select(this).attr('stroke-width',2.0); const cos=(ed.cos!=null&&isFinite(ed.cos))?(+ed.cos).toFixed(3):'n/a'; const pf=(ed.pf!=null)?ed.pf:'n/a'; tooltip.style('display','block').html('Match: '+(ed.type||'pfam')+'<br>Cosine: '+cos+'<br>PFAM overlap: '+pf); })
+          .on('mousemove', function(event){ const cw=container.clientWidth||0,ch=container.clientHeight||0; const tw=tooltip.node().offsetWidth||0, th=tooltip.node().offsetHeight||0; const pt=d3.pointer(event,container); let left=pt[0]+12, top=pt[1]+12; if (left+tw>cw-4) left=Math.max(4, pt[0]-12-tw); if (top+th>ch-4) top=Math.max(4, pt[1]-12-th); tooltip.style('left', left+'px').style('top', top+'px'); })
+          .on('mouseout', function(){ d3.select(this).attr('stroke-width',1.0); tooltip.style('display','none'); });
+        enter.merge(esel)
+          .attr('stroke', d => { const hasCos=(d.cos!=null&&isFinite(d.cos)); const hasPf=(+d.pf||0)>0; if (hasCos && hasPf) return '#7b3294'; if (hasCos) return '#2c7bb6'; if (hasPf) return '#fdae61'; return '#999'; })
+          .attr('x1', d => geneCenterX(d.a, d.ai))
+          .attr('y1', d => d.a*(rowH+rowGap) + rowH/2)
+          .attr('x2', d => geneCenterX(d.b, d.bi))
+          .attr('y2', d => d.b*(rowH+rowGap) + rowH/2);
+      }
+
+      function redraw(){
+        // Keep fixed SVG size; pan/zoom handled by zoomBehavior on panG
+        zoomLbl.text(` (${(view.k).toFixed(2)}x)`);
+        data.loci.forEach((loc, idx) => {
+          const rowNode = rowsG[idx]; const row = d3.select(rowNode); const yMid=rowH/2;
+          row.attr('transform', `translate(${offsets[idx]},${idx*(rowH+rowGap)})`);
+          const genesSel = row.selectAll('path.gene').data(loc.genes, d=>d.id);
+          genesSel.enter().append('path').attr('class','gene'); genesSel.exit().remove();
+          row.selectAll('path.gene')
+            .attr('d', (d,i) => { const lay=(rowNode._layout||[])[i]||{start:0,w:0}; const rowW=rowNode._rowWidth||0; const w=lay.w; const x0 = flips[idx] ? (rowW - (lay.start + lay.w)) : lay.start; const dir=d.strand>=0?1:-1; const head=6; const x1=x0, x2=x0+w; return dir>=0? `M ${x1},${yMid-8} L ${x2-head},${yMid-8} L ${x2},${yMid} L ${x2-head},${yMid+8} L ${x1},${yMid+8} Z` : `M ${x2},${yMid-8} L ${x1+head},${yMid-8} L ${x1},${yMid} L ${x1+head},${yMid+8} L ${x2},${yMid+8} Z`; })
+            .attr('fill', d => colorPF((d.pfam||'').split(';')[0]||''))
+            .attr('stroke','rgba(0,0,0,0.2)')
+            .attr('stroke-width',0.8)
+            .style('cursor','pointer')
+            .on('click', (event,d)=> centerOn(idx,d))
+            .on('dblclick', ()=> { flips[idx] = !flips[idx]; redraw(); })
+            .on('mouseover', function(event, d){ const strand=(d.strand>=0? '+':'-'); const len=Math.max(0, Math.round(Math.abs(d.end-d.start))); tooltip.style('display','block').html('<b>'+d.id+'</b><br>Length: '+len.toLocaleString()+' aa<br>Strand: '+strand+'<br>PFAM: '+(d.pfam||'None')); })
+            .on('mousemove', function(event){ const cw=container.clientWidth||0,ch=container.clientHeight||0; const tw=tooltip.node().offsetWidth||0, th=tooltip.node().offsetHeight||0; const pt=d3.pointer(event,container); let left=pt[0]+12, top=pt[1]+12; if (left+tw>cw-4) left=Math.max(4, pt[0]-12-tw); if (top+th>ch-4) top=Math.max(4, pt[1]-12-th); tooltip.style('left', left+'px').style('top', top+'px'); })
+            .on('mouseout', ()=> tooltip.style('display','none'));
+          let base=row.selectAll('line.base').data([0]); base=base.enter().append('line').attr('class','base').merge(base); const rowW=rowNode._rowWidth||baseInnerW; base.attr('x1',0).attr('x2',Math.max(baseInnerW,rowW)).attr('y1',yMid).attr('y2',yMid).attr('stroke','#ccc').attr('stroke-width',0.5);
+        });
+        drawEdges();
+      }
+
+      function cosine(a,b){ if (!a||!b||!a.emb||!b.emb) return null; let s=0,na=0,nb=0; for (let i=0;i<a.emb.length && i<b.emb.length;i++){ s+=a.emb[i]*b.emb[i]; na+=a.emb[i]*a.emb[i]; nb+=b.emb[i]*b.emb[i]; } if (na<=0||nb<=0) return null; return s/Math.sqrt(na*nb); }
+      function pfOverlap(a,b){ const sA=new Set((a.pfam||'').split(';').map(x=>x.trim()).filter(Boolean)); const sB=new Set((b.pfam||'').split(';').map(x=>x.trim()).filter(Boolean)); let c=0; sA.forEach(x=>{ if(sB.has(x)) c++; }); return c; }
+      function centerOn(rowIndex, gene){
+        const targetX = baseInnerW/2;
+        // find index of clicked gene in its row
+        const seedIdx = (data.loci[rowIndex].genes||[]).findIndex(g => g.id === gene.id);
+        if (seedIdx < 0) { return; }
+        const matches = {}; // row -> gene index
+        matches[rowIndex] = seedIdx;
+        // helper to select best edge match between adjacent rows, preferring highest cosine
+        function bestEdge(fromRow, fromIdx, toRow){
+          let bestCos = null, bestCosScore = -Infinity;
+          let bestPf = null, bestPfScore = -Infinity;
+          (data.edges||[]).forEach(ed => {
+            if ((ed.a === fromRow && ed.b === toRow && ed.ai === fromIdx) ||
+                (ed.b === fromRow && ed.a === toRow && ed.bi === fromIdx)){
+              const toIdx = (ed.a === fromRow) ? ed.bi : ed.ai;
+              const cos = (ed.cos != null && isFinite(ed.cos)) ? +ed.cos : -Infinity;
+              const pf  = (+ed.pf || 0);
+              if (isFinite(cos) && cos > bestCosScore){ bestCosScore = cos; bestCos = {row: toRow, idx: toIdx, score: cos}; }
+              if (!isFinite(cos) && pf > bestPfScore){ bestPfScore = pf; bestPf = {row: toRow, idx: toIdx, score: pf}; }
+            }
+          });
+          if (bestCos && bestCos.score >= tau) return bestCos; // prefer cosine meeting tau
+          if (bestPf && bestPf.score > 0) return bestPf; // fallback on PFAM when cosine missing or below tau
+          return null;
+        }
+        // propagate downwards (towards row 0)
+        for (let r = rowIndex; r > 0; r--){
+          const prev = bestEdge(r, matches[r], r-1);
+          if (!prev) break;
+          matches[r-1] = prev.idx;
+        }
+        // propagate upwards (towards last row)
+        for (let r = rowIndex; r < data.loci.length-1; r++){
+          const nxt = bestEdge(r, matches[r], r+1);
+          if (!nxt) break;
+          matches[r+1] = nxt.idx;
+        }
+        // apply absolute offsets for matched rows to center the chosen genes
+        const halfW = baseInnerW/2;
+        function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+        Object.keys(matches).forEach(k => {
+          const ri = +k; const gi = matches[ri];
+          const row = rowsG[ri]; const lay = (row._layout||[])[gi] || {start:0,w:0}; const rowW=row._rowWidth||0;
+          const centerLocal = flips[ri] ? (rowW - (lay.start + lay.w/2)) : (lay.start + lay.w/2);
+          // Solve: (centerLocal + offset)*view.k + view.x = targetX
+          const desired = (targetX - view.x)/view.k - centerLocal;
+          offsets[ri] = clamp(desired, -halfW*2, halfW*2);
+        });
+        redraw();
+      }
+
+      // Enable per-row drag to manually align rows
+      function attachRowDrag(row, idx){
+        row.style('cursor','grab')
+          .call(d3.drag()
+            .on('start', function(){ d3.select(this).style('cursor','grabbing'); })
+            .on('drag', function(event){ offsets[idx] += event.dx; redraw(); })
+            .on('end', function(){ d3.select(this).style('cursor','grab'); })
+          );
+      }
+
+      redraw();
+
+      // Attach drag after first draw
+      rowsG.forEach((row, idx) => attachRowDrag(d3.select(row), idx));
+    </script>
+    """
+    html = html.replace('__DATA__', _json.dumps(data)).replace('__WIDTH__', str(width if width else 0)).replace('__HEIGHT__', str(height))
+    components.html(html, height=height)
+
 
 if __name__ == "__main__":
     main()

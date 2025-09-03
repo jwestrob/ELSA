@@ -1,0 +1,8 @@
+analyze:
+  # Stricter micro-only clustering to improve purity
+  micro_overrides:
+    jaccard_tau: 0.78        # higher edge threshold
+    mutual_k: 2              # stricter mutuality
+    df_max: 25               # penalize hub shingles
+    min_genome_support: 4    # stronger cross-genome support
+

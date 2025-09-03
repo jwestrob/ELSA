@@ -9,7 +9,7 @@ import numpy as np
 import logging
 import random
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Set
 from dataclasses import dataclass
 import dspy
 import json
@@ -898,20 +898,130 @@ Format as:
             return f"Cluster {stats.cluster_id}: {stats.total_alignments:,} alignments spanning {stats.unique_genes:,} genes. Analysis pending."
 
 def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[ClusterStats]:
-    """Get statistics for all clusters from unified clusters table (macro+micro)."""
+    """Get statistics for all clusters from macro clusters table and micro sidecar tables.
+
+    - Macro clusters come from `clusters`
+    - Micro clusters come from `micro_gene_clusters`/`micro_gene_blocks`
+    """
     try:
         conn = sqlite3.connect(db_path)
-        cursor = conn.execute("SELECT cluster_id FROM clusters ORDER BY size DESC")
-        cluster_ids = [row[0] for row in cursor.fetchall()]
-        conn.close()
+
+        # Load macro cluster IDs and count (exclude sink 0)
+        cursor = conn.execute("SELECT cluster_id FROM clusters WHERE cluster_id > 0 ORDER BY size DESC")
+        macro_rows = cursor.fetchall()
+        macro_ids = [int(row[0]) for row in macro_rows]
+        # Use ceiling (max id) so micro display ids don't collide with sparse macro ids
+        try:
+            max_macro_id = conn.execute("SELECT COALESCE(MAX(cluster_id),0) FROM clusters WHERE cluster_id > 0").fetchone()[0]
+            n_macro = int(max_macro_id or 0)
+        except Exception:
+            n_macro = len(macro_ids)
 
         analyzer = ClusterAnalyzer(db_path)
         all_stats: List[ClusterStats] = []
 
-        for cid in cluster_ids:
-            stats = analyzer.get_cluster_stats(int(cid))
+        # Add macro stats
+        for cid in macro_ids:
+            stats = analyzer.get_cluster_stats(cid)
             if stats:
+                # Force macro type to avoid mislabeled rows in DB
+                try:
+                    stats.cluster_type = 'macro'
+                except Exception:
+                    pass
                 all_stats.append(stats)
+
+        # Try to load micro clusters if present
+        try:
+            # Check existence
+            has_micro = conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='micro_gene_clusters'"
+            ).fetchone() is not None
+            if has_micro:
+                micro_rows = conn.execute(
+                    "SELECT cluster_id, size, genomes FROM micro_gene_clusters ORDER BY size DESC"
+                ).fetchall()
+                # Build quick lookups for per-cluster unique contigs and gene counts
+                # Use index spans as an approximation for gene counts
+                mb_rows = conn.execute(
+                    "SELECT cluster_id, genome_id, contig_id, start_index, end_index FROM micro_gene_blocks"
+                ).fetchall()
+                contigs_by_cid: Dict[int, Set[Tuple[str, str]]] = {}
+                genes_by_cid: Dict[int, int] = {}
+                for cid, gid, contig, s, e in mb_rows:
+                    cid = int(cid)
+                    contigs_by_cid.setdefault(cid, set()).add((str(gid), str(contig)))
+                    try:
+                        genes_by_cid[cid] = genes_by_cid.get(cid, 0) + max(1, int(e) - int(s) + 1)
+                    except Exception:
+                        genes_by_cid[cid] = genes_by_cid.get(cid, 0) + 2  # fallback small span
+
+                # Helper: compute PFAM domain counts per micro cluster from gene spans
+                def _micro_domain_counts(micro_cid: int) -> List[Tuple[str, int]]:
+                    try:
+                        cur2 = conn.cursor()
+                        cur2.execute("DROP TABLE IF EXISTS _tmp_go_m")
+                        cur2.execute(
+                            """
+                            CREATE TEMP TABLE _tmp_go_m AS
+                            SELECT genome_id, contig_id, gene_id, start_pos, end_pos,
+                                   ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
+                            FROM genes
+                            """
+                        )
+                        q = """
+                            WITH ranges AS (
+                                SELECT block_id, genome_id, contig_id, start_index, end_index
+                                FROM micro_gene_blocks WHERE cluster_id = ?
+                            )
+                            SELECT g.pfam_domains
+                            FROM ranges r
+                            JOIN _tmp_go_m go ON go.genome_id = r.genome_id AND go.contig_id = r.contig_id AND go.idx BETWEEN r.start_index AND r.end_index
+                            JOIN genes g ON g.gene_id = go.gene_id
+                            WHERE g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+                        """
+                        rows = cur2.execute(q, (micro_cid,)).fetchall()
+                        cnt: Dict[str, int] = {}
+                        for (pf,) in rows:
+                            for tok in str(pf).split(';'):
+                                tok = tok.strip()
+                                if tok:
+                                    cnt[tok] = cnt.get(tok, 0) + 1
+                        return sorted(cnt.items(), key=lambda x: x[1], reverse=True)
+                    except Exception:
+                        return []
+
+                for row in micro_rows:
+                    cid, size, genomes = int(row[0]), int(row[1] or 0), str(row[2] or "")
+                    disp_cid = (n_macro + cid) if cid > 0 else 0
+                    org_ids = [g for g in genomes.split(';') if g]
+                    # Construct ClusterStats for micro cluster
+                    cs = ClusterStats(
+                        cluster_id=disp_cid,
+                        size=size,
+                        consensus_length=0,
+                        consensus_score=0.0,
+                        diversity=0.0,
+                        representative_query="",
+                        representative_target="",
+                        cluster_type='micro',
+                        avg_identity=0.0,
+                        identity_range=(0.0, 0.0),
+                        length_range=(0, 0),
+                        organism_count=len(set(org_ids)),
+                        organisms=list(sorted(set(org_ids))),
+                        total_alignments=size,
+                        unique_contigs=len(contigs_by_cid.get(cid, set())),
+                        unique_genes=int(genes_by_cid.get(cid, 0)),
+                        unique_pfam_domains=0,
+                        dominant_functions=[d for d, _ in _micro_domain_counts(cid)[:5]],
+                        domain_counts=_micro_domain_counts(cid),
+                    )
+                    all_stats.append(cs)
+        except Exception as e:
+            logger.warning(f"Micro clusters not merged (skipping): {e}")
+        finally:
+            conn.close()
 
         return all_stats
 

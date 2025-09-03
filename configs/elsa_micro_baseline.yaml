@@ -1,0 +1,8 @@
+analyze:
+  # Baseline micro overrides mirroring current macro defaults
+  micro_overrides:
+    jaccard_tau: 0.5         # match analyze.clustering.jaccard_tau
+    mutual_k: 3              # implicit default used in code
+    df_max: 200              # match analyze.clustering.df_max
+    min_genome_support: 3    # current micro default
+

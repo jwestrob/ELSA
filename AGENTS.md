@@ -87,3 +87,48 @@ Adjust after first run on the 6‑genome set.
 - Injecting micro blocks into `syntenic_blocks`/`clusters` by default.
 - Per‑gene embedding DTW for micro edges (use weighted Jaccard first; add DTW later if needed).
 
+
+---
+
+2025-09-02 — Micro Pass + UI Integration Progress Note
+
+Summary of what we implemented and fixed since the last note to keep context compact and recoverable.
+
+What’s working now
+- Micro-only parameter overrides: Wired `analyze.micro_overrides` so micro pass can be tuned independently of macro. Added working configs:
+  - `configs/elsa_full_micro_strict.yaml` (macro preserved + strict micro)
+  - Baseline and strict YAMLs preserved in `configs/`.
+- Micro dereplication:
+  - Pre-cluster filter (DB present): keeps only micro blocks not fully contained in macro spans on both sides.
+  - Post-write dedup (CLI): runs after micro sidecar tables are written and before consensus precompute; removes redundant micro blocks and updates micro clusters.
+- Micro cluster integration in the browser:
+  - Offset micro cluster IDs by `n_macro` (excluding sink) to avoid collisions with macro cluster IDs.
+  - Type-aware consensus preview: `_consensus_preview(..., cluster_type='micro')` reads `micro_cluster_consensus` or computes on the fly.
+  - Micro card stats: `ClusterAnalyzer` now computes PFAM domain counts and contig/gene scope directly from `micro_gene_*` spans.
+  - Micro consensus uses full multi-domain PFAM content per gene (no more first-domain only).
+- Diagnostics:
+  - Micro pass prints concise “[Micro] …” diagnostics: params used, raw block counts, pre-cluster dedup removed, unique shingles/DF filter results, candidates/edges/mutual edges, and final cluster counts/support.
+
+Cluster Explorer UX
+- Multi-locus clinker view (always visible at bottom of Explore Cluster):
+  - Adjacent-row edges only; tooltips with cosine and PFAM overlap.
+  - Always-on larger rendering + padding; zoom controls (0.6x–3.0x) with dynamic width and redraw.
+  - Click-to-center homologs: centers a clicked gene and propagates to the best single neighbor in adjacent rows, chaining across the stack (uses cosine τ; PFAM fallback if no embeddings).
+  - Orientation controls: “Flip all to forward”, per-row flip via label, and double-click on a gene to flip that row.
+
+Key fixes
+- Template escaping in embedded JS (Streamlit): replaced f-strings with safe placeholders and a normalization pass to convert `{{ }}` into valid JS braces.
+- Resolved `innerW` reference after introducing zoom (`baseInnerW*zoom`).
+- Correct mapping of display micro IDs to raw IDs for consensus/regions.
+
+Known limitations / follow-ups
+- Micro PFAM bar charts use span-based counts; identity/length stats for micro cards are placeholders (macro concepts). Consider adding micro-appropriate summaries (avg genes per block, avg PFAMs per gene).
+- Optional: colored edge intensity by cosine / PFAM overlap in the clinker view; per-row “lock” toggle to prevent row motion on centering; “Fit” zoom.
+- Lean (no DB) runs skip pre-cluster dedup; consider a minimal temporary DB or alternate path to enable derep even without full browser setup.
+
+Quick usage tips
+- Run strict micro-only tuning without changing macro:
+  - `elsa analyze --micro -c configs/elsa_full_micro_strict.yaml`
+- In the browser:
+  - Cluster Explorer → Explore Cluster → bottom “Cluster-wide Clinker Alignment”
+  - Zoom +/−, click a gene to center homologs, double-click to flip a row, adjust cosine τ.

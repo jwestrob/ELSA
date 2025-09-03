@@ -784,14 +784,15 @@ def compute_micro_cluster_pfam_consensus(conn: sqlite3.Connection,
         m = rib_pat.match(tok)
         return m.group(1) if m else tok
 
-    # Build per-block token+strand sequences
+    # Build per-block token+strand sequences (use full domain content per gene)
     by_block: dict[int, list[tuple[str, int]]] = {}
     for row in q.itertuples(index=False):
         toks_raw = [t.strip() for t in str(row.pfam_domains or '').split(';') if t.strip()]
         if not toks_raw:
             continue
-        primary = _norm(toks_raw[0])
-        by_block.setdefault(int(row.block_id), []).append((primary, int(row.strand or 1)))
+        toks = [_norm(t) for t in toks_raw]
+        for tok in toks:
+            by_block.setdefault(int(row.block_id), []).append((tok, int(row.strand or 1)))
     by_block = {bid: seq for bid, seq in by_block.items() if seq}
     if not by_block:
         return {'consensus': [], 'pairs': []}
@@ -820,16 +821,46 @@ def compute_micro_cluster_pfam_consensus(conn: sqlite3.Connection,
                 df_counts[tok] = df_counts.get(tok, 0) + 1
                 seen.add(tok)
 
-    # Ban top-DF percentile tokens if requested
-    banned = set()
-    if df_percentile_ban is not None and df_counts:
-        vals = list(df_counts.values())
-        thresh = np.percentile(vals, float(df_percentile_ban) * 100.0)
-        banned = {tok for tok, df in df_counts.items() if df >= thresh}
+    # Compute a global DF ban based on PFAM presence across contigs (proxy for ubiquity)
+    banned_global: set[str] = set()
+    if df_percentile_ban is not None and float(df_percentile_ban) > 0.0:
+        try:
+            q_all = pd.read_sql_query(
+                """
+                SELECT contig_id, pfam_domains
+                FROM genes
+                WHERE pfam_domains IS NOT NULL AND pfam_domains != ''
+                """,
+                conn,
+            )
+            # Count per-contig presence of each token
+            contig_tokens: dict[str, set[str]] = {}
+            for row in q_all.itertuples(index=False):
+                toks = {t.strip() for t in str(row.pfam_domains or '').split(';') if t.strip()}
+                if not toks:
+                    continue
+                cid = str(row.contig_id)
+                s = contig_tokens.get(cid)
+                if s is None:
+                    contig_tokens[cid] = set(toks)
+                else:
+                    s.update(toks)
+            global_df: dict[str, int] = {}
+            for toks in contig_tokens.values():
+                for t in toks:
+                    global_df[t] = global_df.get(t, 0) + 1
+            if global_df:
+                vals = sorted(global_df.values())
+                qidx = max(0, min(len(vals)-1, int(np.floor(float(df_percentile_ban) * (len(vals)-1)))))
+                cutoff = vals[qidx]
+                banned_global = {t for t, c in global_df.items() if c >= cutoff}
+        except Exception:
+            banned_global = set()
 
     consensus = []
     for tok, dfv in df_counts.items():
-        if tok in banned:
+        # Apply global DF ban, but do not ban tokens that meet core-coverage within this cluster
+        if tok in banned_global and cov < float(min_core_coverage):
             continue
         cov = dfv / float(n_blocks)
         if cov >= float(min_core_coverage):

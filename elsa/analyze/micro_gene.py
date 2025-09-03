@@ -168,6 +168,17 @@ def run_micro_clustering(
     if not emb_cols:
         raise RuntimeError("genes.parquet contains no embedding columns (emb_*)")
 
+    # Diagnostics header
+    try:
+        import sys
+        print(f"[Micro] Params: k={tuple(k_values)}, max_gap={int(max_gap)}, jaccard_tau={float(jaccard_tau):.2f}, mutual_k={int(mutual_k)}, df_max={int(df_max)}, min_genome_support={int(min_genome_support)}", file=sys.stderr, flush=True)
+        n_genes = len(df)
+        n_contigs = df[["sample_id","contig_id"]].drop_duplicates().shape[0]
+        n_samples = df["sample_id"].nunique()
+        print(f"[Micro] Loaded genes: {n_genes} across {n_contigs} contigs in {n_samples} samples; emb_dim={len(emb_cols)}", file=sys.stderr, flush=True)
+    except Exception:
+        pass
+
     # Build micro blocks for all contigs
     raw_blocks: List[MicroBlock] = []
     block_id = 0
@@ -187,10 +198,22 @@ def run_micro_clustering(
                 raw_blocks.append(mb)
             block_id += 1
 
+    try:
+        import sys
+        print(f"[Micro] Raw micro blocks: {len(raw_blocks)}", file=sys.stderr, flush=True)
+    except Exception:
+        pass
+
     # Optional pre-cluster dereplication against macro spans (DB required)
     blocks: List[MicroBlock] = raw_blocks
     if db_path is not None and Path(db_path).exists() and blocks:
+        before = len(blocks)
         blocks = _precluster_deduplicate_blocks(blocks, Path(db_path))
+        try:
+            import sys
+            print(f"[Micro] Pre-cluster dedup removed: {before - len(blocks)}", file=sys.stderr, flush=True)
+        except Exception:
+            pass
 
     if not blocks:
         # Write empty CSVs and return
@@ -215,6 +238,12 @@ def run_micro_clustering(
         kept_blocks.append(mb)
 
     blocks = kept_blocks
+    try:
+        import sys
+        nsh = len(df_counts)
+        print(f"[Micro] Unique shingles before DF: {nsh}; blocks after DF filter: {len(blocks)}", file=sys.stderr, flush=True)
+    except Exception:
+        pass
     if not blocks:
         # No blocks survive DF filter
         blocks_df = pd.DataFrame(columns=["block_id", "cluster_id", "genome_id", "contig_id", "start_index", "end_index"])
@@ -237,12 +266,14 @@ def run_micro_clustering(
     # Candidate edges via postings and weighted Jaccard
     edges_by_u: Dict[int, List[Tuple[int, float]]] = defaultdict(list)
     block_map: Dict[int, MicroBlock] = {mb.block_id: mb for mb in blocks}
+    total_candidates = 0
 
     for mb in blocks:
         candidates: Set[int] = set()
         for s in mb.shingles:
             candidates.update(postings.get(s, []))
         candidates.discard(mb.block_id)
+        total_candidates += len(candidates)
         # Score
         for v in candidates:
             wj = _idf_weighted_jaccard(mb.shingles, block_map[v].shingles, idf)
@@ -251,6 +282,12 @@ def run_micro_clustering(
 
     # Mutual-top-k gating
     mutual_edges = _mutual_top_k(edges_by_u, int(mutual_k)) if mutual_k and mutual_k > 0 else set()
+    try:
+        import sys
+        n_edges = sum(len(v) for v in edges_by_u.values())
+        print(f"[Micro] Candidates enumerated: {total_candidates}; edges @tau: {n_edges}; mutual edges kept: {len(mutual_edges)}", file=sys.stderr, flush=True)
+    except Exception:
+        pass
 
     # Connected components over kept edges
     parent: Dict[int, int] = {}
@@ -310,6 +347,25 @@ def run_micro_clustering(
                 "genomes": ";".join(genomes),
             })
     clusters_df = pd.DataFrame(cluster_rows)
+
+    # Final diagnostics
+    try:
+        import sys
+        nclus = 0 if clusters_df is None or clusters_df.empty else len(clusters_df)
+        nb = 0 if blocks_df is None or blocks_df.empty else len(blocks_df)
+        gs = []
+        if not clusters_df.empty:
+            for _, r in clusters_df.iterrows():
+                try:
+                    gs.append(len(str(r.get('genomes','')).split(';')))
+                except Exception:
+                    pass
+        if gs:
+            print(f"[Micro] Final clusters: {nclus} (blocks: {nb}); genome_support median={int(sorted(gs)[len(gs)//2])} range=({min(gs)}..{max(gs)})", file=sys.stderr, flush=True)
+        else:
+            print(f"[Micro] Final clusters: {nclus} (blocks: {nb})", file=sys.stderr, flush=True)
+    except Exception:
+        pass
 
     # Write CSVs
     blocks_df.to_csv(output_dir / "micro_gene_blocks.csv", index=False)

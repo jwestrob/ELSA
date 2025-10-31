@@ -144,6 +144,12 @@ CREATE TABLE IF NOT EXISTS annotation_stats (
     annotation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (genome_id) REFERENCES genomes(genome_id)
 );
+
+-- Schema meta/versioning
+CREATE TABLE IF NOT EXISTS schema_meta (
+    key TEXT PRIMARY KEY,
+    value TEXT
+);
 """
 
 # Performance indexes
@@ -226,6 +232,35 @@ def create_database(db_path: Path, force: bool = False) -> None:
         # Create indexes
         logger.info("Creating performance indexes...")
         conn.executescript(PERFORMANCE_INDEXES)
+
+        # Views for unified access (macro+micro projections)
+        logger.info("Creating canonical views...")
+        conn.execute("""
+            CREATE VIEW IF NOT EXISTS v_clusters AS
+            SELECT cluster_id, size, consensus_length, consensus_score, diversity,
+                   representative_query, representative_target, cluster_type
+            FROM clusters
+        """)
+        conn.execute("""
+            CREATE VIEW IF NOT EXISTS v_blocks AS
+            SELECT block_id, cluster_id, query_locus, target_locus,
+                   query_genome_id, target_genome_id,
+                   query_contig_id, target_contig_id,
+                   length, identity, score, block_type
+            FROM syntenic_blocks
+        """)
+        conn.execute("""
+            CREATE VIEW IF NOT EXISTS v_block_mappings AS
+            SELECT gene_id, block_id, block_role, relative_position
+            FROM gene_block_mappings
+        """)
+
+        # Stamp schema meta
+        try:
+            conn.execute("INSERT OR REPLACE INTO schema_meta(key, value) VALUES('schema_version','1')")
+            conn.execute("INSERT OR REPLACE INTO schema_meta(key, value) VALUES('micro_pair_first','1')")
+        except Exception:
+            pass
         
         # Analyze tables for query optimization
         conn.execute("ANALYZE")

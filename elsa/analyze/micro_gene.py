@@ -86,6 +86,7 @@ def _build_blocks_for_contig(
     for i in range(0, max(0, n - 3 + 1)):
         start_i = i
         end_i = i + 2
+        # No additional gating here; window selection is unconstrained
         # Collect shingles for this locus
         parts = gene_codes[start_i:end_i + 1]
         shingles: Set[int] = set()
@@ -106,6 +107,7 @@ def _build_blocks_for_contig(
     # For very short contigs, allow 2-gene blocks
     if n >= 2 and n < 3:
         for i in range(0, n - 2 + 1):
+            # No additional gating for 2-gene windows
             parts = gene_codes[i:i + 2]
             shingles = {_hash_shingle(parts, strand_canonical=True)}
             results.append(((i, i + 1), shingles))
@@ -139,6 +141,426 @@ def _mutual_top_k(edges_by_u: Dict[int, List[Tuple[int, float]]], k: int) -> Set
     return keep
 
 
+def _build_pairs_from_windows(
+    *,
+    genes_parquet_path: Path,
+    blocks: List[MicroBlock],
+    postings: Dict[int, List[int]],
+    cos_tau: float = 0.85,
+    band: int = 1,
+    top_k: int = 2,
+    max_cands_per_genome: int = 20,
+    min_shared_shingles: int = 2,
+) -> Tuple[List[Tuple], List[Tuple]]:
+    """Generate micro A↔B pairs directly from window candidates (pair-first).
+
+    Uses shingle postings to enumerate candidates across genomes, aligns core genes
+    with a banded cosine matcher, and returns (pairs_rows, mapping_rows).
+
+    pairs_rows schema matches _build_micro_alignment_pairs (cluster_id will be 0 here):
+      (block_id, cluster_id, q_gid, q_cid, q_start_bp, q_end_bp, t_gid, t_cid,
+       t_start_bp, t_end_bp, q_core_start_bp, q_core_end_bp, t_core_start_bp, t_core_end_bp,
+       orientation, identity, score)
+
+    mapping_rows schema:
+      (block_id, block_role, gene_id, start_pos, end_pos, strand)
+    """
+    if not blocks:
+        return [], []
+
+    df = pd.read_parquet(genes_parquet_path)
+    df = df.sort_values(["sample_id", "contig_id", "start", "end"]).reset_index(drop=True)
+    df["idx"] = df.groupby(["sample_id", "contig_id"]).cumcount()
+    emb_cols = [c for c in df.columns if c.startswith("emb_")]
+
+    # Quick lookup per contig
+    def genes_for_window(mb: MicroBlock) -> pd.DataFrame:
+        sub = df[(df["sample_id"] == mb.genome_id) & (df["contig_id"] == mb.contig_id) & (df["idx"] >= mb.start_index) & (df["idx"] <= mb.end_index)].copy()
+        return sub
+
+    def align_pair(a: pd.DataFrame, b: pd.DataFrame) -> Tuple[float, List[Tuple[int, int, float]], int]:
+        if a.empty or b.empty:
+            return 0.0, [], 1
+        def match_with(b_oriented: pd.DataFrame) -> Tuple[float, List[Tuple[int, int, float]]]:
+            matches: List[Tuple[int, int, float]] = []
+            used_b: Set[int] = set()
+            for i, ai in enumerate(a.index):
+                cand_js: List[Tuple[int,int,float]] = []
+                for j, bj in enumerate(b_oriented.index):
+                    if abs(j - i) <= int(band):
+                        va = a.loc[ai, emb_cols].to_numpy(dtype="float32", copy=False)
+                        vb = b_oriented.loc[bj, emb_cols].to_numpy(dtype="float32", copy=False)
+                        na = np.linalg.norm(va) + 1e-8
+                        nb = np.linalg.norm(vb) + 1e-8
+                        cos = float(va.dot(vb) / (na * nb))
+                        if cos >= float(cos_tau):
+                            cand_js.append((j, bj, cos))
+                if not cand_js:
+                    continue
+                cand_js.sort(key=lambda x: x[2], reverse=True)
+                for j, bj, cos in cand_js:
+                    if j not in used_b:
+                        used_b.add(j)
+                        matches.append((i, j, cos))
+                        break
+            if not matches:
+                return 0.0, []
+            return float(np.mean([m[2] for m in matches])), matches
+
+        mean_fwd, m_fwd = match_with(b)
+        b_rev = b.iloc[::-1].copy()
+        mean_rev, m_rev = match_with(b_rev)
+        if mean_rev > mean_fwd:
+            orient = -1
+            mean_score = mean_rev
+            L = len(b)
+            m = [(i, (L - 1 - j), cos) for (i, j, cos) in m_rev]
+        else:
+            orient = 1
+            mean_score = mean_fwd
+            m = m_fwd
+        if len(m) < 2:
+            return 0.0, [], orient
+        return mean_score, m, orient
+
+    # Precompute candidate lists via postings
+    block_map: Dict[int, MicroBlock] = {mb.block_id: mb for mb in blocks}
+    # To avoid O(N^2), enumerate candidates from postings with DF-aware pruning
+    candidates_by_block: Dict[int, Set[int]] = defaultdict(set)
+    for mb in blocks:
+        for s in mb.shingles:
+            for v in postings.get(s, []):
+                if v != mb.block_id:
+                    candidates_by_block[mb.block_id].add(v)
+
+    # IDF weights per shingle and per-block sums (for weighted-Jaccard bound)
+    df_counts: Dict[int, int] = {s: len(postings.get(s, [])) for s in postings.keys()}
+    N_blocks = max(1, len(blocks))
+    idf: Dict[int, float] = {s: (0.0 if df <= 0 else float(np.log1p(N_blocks / float(df)))) for s, df in df_counts.items()}
+    sum_idf_block: Dict[int, float] = {}
+    for mb in blocks:
+        sum_idf_block[mb.block_id] = float(sum(idf.get(s, 0.0) for s in mb.shingles))
+
+    pairs_rows: List[Tuple] = []
+    mapping_rows: List[Tuple] = []
+    seen_pairs: Set[Tuple[int,int]] = set()
+    pair_id = 1_500_000_000
+
+    # Align top candidates per block across other genomes
+    for bid, cands in candidates_by_block.items():
+        a = block_map[bid]
+        a_genes = genes_for_window(a)
+        # Rank candidates by an IDF-weighted Jaccard upper bound; then cap per target genome
+        prelim: List[Tuple[float, int]] = []
+        for v in cands:
+            b = block_map[v]
+            if b.genome_id == a.genome_id:
+                continue
+            inter = a.shingles & b.shingles
+            if len(inter) < int(min_shared_shingles):
+                continue
+            w_inter = float(sum(idf.get(s, 0.0) for s in inter))
+            w_union = float(sum_idf_block.get(a.block_id, 0.0) + sum_idf_block.get(b.block_id, 0.0) - w_inter)
+            bound = w_inter / (w_union + 1e-9)
+            prelim.append((bound, v))
+        prelim.sort(key=lambda x: x[0], reverse=True)
+        # Group by target genome and take top-N per genome
+        by_genome: Dict[str, List[int]] = defaultdict(list)
+        seen: Set[int] = set()
+        for _score, v in prelim:
+            if v in seen:
+                continue
+            b = block_map[v]
+            lst = by_genome[b.genome_id]
+            if len(lst) < int(max_cands_per_genome):
+                lst.append(v)
+                seen.add(v)
+        for tgt_genome, vids in by_genome.items():
+            scored: List[Tuple[float, MicroBlock, List[Tuple[int,int,float]], int]] = []
+            for v in vids:
+                b = block_map[v]
+                b_genes = genes_for_window(b)
+                s, matches, orient = align_pair(a_genes, b_genes)
+                if s > 0.0:
+                    scored.append((s, b, matches, orient))
+            scored.sort(key=lambda x: x[0], reverse=True)
+            for s, b, matches, orient in scored[:max(1, int(top_k))]:
+                key = (min(a.block_id, b.block_id), max(a.block_id, b.block_id))
+                if key in seen_pairs:
+                    continue
+                seen_pairs.add(key)
+                qa = genes_for_window(a)
+                qb = genes_for_window(b)
+                q_start, q_end = int(qa["start"].min()), int(qa["end"].max())
+                t_start, t_end = int(qb["start"].min()), int(qb["end"].max())
+                a_idxs = [mi for (mi, _mj, _c) in matches]
+                b_idxs = [mj for (_mi, mj, _c) in matches]
+                q_core_start = int(qa.iloc[min(a_idxs)]["start"]) if a_idxs else q_start
+                q_core_end = int(qa.iloc[max(a_idxs)]["end"]) if a_idxs else q_end
+                t_core_start = int(qb.iloc[min(b_idxs)]["start"]) if b_idxs else t_start
+                t_core_end = int(qb.iloc[max(b_idxs)]["end"]) if b_idxs else t_end
+                identity = float(np.mean([m[2] for m in matches]))
+                score = identity
+                pairs_rows.append((
+                    int(pair_id), 0,  # cluster_id assigned later
+                    str(a.genome_id), str(a.contig_id), q_start, q_end,
+                    str(b.genome_id), str(b.contig_id), t_start, t_end,
+                    q_core_start, q_core_end, t_core_start, t_core_end,
+                    int(orient), float(identity), float(score),
+                ))
+                # mappings (core only)
+                for ai in a_idxs:
+                    grow = qa.iloc[int(ai)]
+                    mapping_rows.append((int(pair_id), "query", str(grow["gene_id"]), int(grow["start"]), int(grow["end"]), int(1 if str(grow.get("strand","+")) in ("+", 1) else -1)))
+                for bj in b_idxs:
+                    grow = qb.iloc[int(bj)]
+                    mapping_rows.append((int(pair_id), "target", str(grow["gene_id"]), int(grow["start"]), int(grow["end"]), int(1 if str(grow.get("strand","+")) in ("+", 1) else -1)))
+                pair_id += 1
+
+    return pairs_rows, mapping_rows
+
+
+def _cluster_micro_pairs(
+    *,
+    genes_parquet_path: Path,
+    pairs_rows: List[Tuple],
+    mapping_rows: List[Tuple],
+    jaccard_tau: float = 0.7,
+    mutual_k: int = 3,
+    df_max: int = 50,
+    min_genome_support: int = 3,
+) -> Tuple[Dict[int,int], pd.DataFrame]:
+    """Cluster micro pairs using core-derived signatures (macro-like graph).
+
+    Returns (pair_cluster_map, clusters_df).
+    """
+    if not pairs_rows:
+        return {}, pd.DataFrame(columns=["cluster_id","size","genomes"])
+
+    # Load embeddings for gene IDs to build per-pair signatures
+    df = pd.read_parquet(genes_parquet_path)
+    emb_cols = [c for c in df.columns if c.startswith("emb_")]
+    gene_emb: Dict[str, np.ndarray] = {}
+    for row in df[["gene_id", *emb_cols]].itertuples(index=False):
+        gene_emb[str(row[0])] = np.asarray(row[1:], dtype=np.float32)
+
+    # Build per-pair shingles using SRP tokens over query-side core genes
+    from .shingles import srp_tokens, block_shingles
+    pair_shingles: Dict[int, Set[int]] = {}
+    # Collect ordered core genes per pair for query role
+    by_pair_role: Dict[Tuple[int,str], List[Tuple[int,str,int]]] = defaultdict(list)  # (pair_id, role) -> [(start, gene_id, idx)]
+    for (pid, role, gene_id, start_pos, end_pos, strand) in mapping_rows:
+        by_pair_role[(int(pid), str(role))].append((int(start_pos), str(gene_id), int(strand)))
+    for (pid, role), rows in by_pair_role.items():
+        if role != 'query':
+            continue
+        rows.sort(key=lambda x: x[0])
+        embs: List[np.ndarray] = []
+        for _start, gid, _strand in rows:
+            v = gene_emb.get(str(gid))
+            if v is not None:
+                embs.append(v)
+        if not embs:
+            pair_shingles[int(pid)] = set()
+            continue
+        E = np.stack(embs, axis=0)
+        toks = srp_tokens(E, n_bits=256, n_bands=32, band_bits=8, seed=1337)
+        k = 3 if E.shape[0] >= 3 else (2 if E.shape[0] >= 2 else 0)
+        if k <= 0:
+            pair_shingles[int(pid)] = set()
+        else:
+            S = block_shingles(toks, k=k, method='subset', bands_per_window=4, strand_canonical_shingles=True)
+            pair_shingles[int(pid)] = S
+
+    # DF and postings across pairs
+    df_counts: Counter = Counter()
+    for S in pair_shingles.values():
+        for s in S:
+            df_counts[s] += 1
+    idf: Dict[int,float] = {s: (0.0 if c<=0 else float(np.log1p(len(pair_shingles) / float(c)))) for s,c in df_counts.items()}
+    postings: Dict[int, List[int]] = defaultdict(list)
+    for pid, S in pair_shingles.items():
+        # DF filter
+        keep = {s for s in S if df_counts[s] <= int(df_max)}
+        pair_shingles[pid] = keep
+        for s in keep:
+            postings[s].append(pid)
+
+    # Pair metadata for genome support
+    pair_meta: Dict[int, Tuple[str,str]] = {}
+    for (pid, _cid, q_gid, _qcid, _qs, _qe, t_gid, _tcid, _ts, _te, *_rest) in pairs_rows:
+        pair_meta[int(pid)] = (str(q_gid), str(t_gid))
+
+    # Candidate edges and weighted Jaccard
+    edges_by_u: Dict[int, List[Tuple[int,float]]] = defaultdict(list)
+    pids = list(pair_shingles.keys())
+    for pid in pids:
+        S = pair_shingles.get(pid, set())
+        cands: Set[int] = set()
+        for s in S:
+            cands.update(postings.get(s, []))
+        cands.discard(pid)
+        for v in cands:
+            J = _idf_weighted_jaccard(S, pair_shingles.get(v, set()), idf)
+            if J >= float(jaccard_tau):
+                edges_by_u[pid].append((v, J))
+
+    # Mutual top-k
+    keep = _mutual_top_k(edges_by_u, int(mutual_k)) if mutual_k and mutual_k > 0 else set()
+
+    # Connected components
+    parent: Dict[int,int] = {}
+    def find(x: int) -> int:
+        parent.setdefault(x, x)
+        if parent[x] != x:
+            parent[x] = find(parent[x])
+        return parent[x]
+    def union(a: int, b: int):
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[rb] = ra
+    for a,b in keep:
+        union(a,b)
+    comps: Dict[int, List[int]] = defaultdict(list)
+    for pid in pids:
+        comps[find(pid)].append(pid)
+
+    # Assign cluster IDs with genome support gating
+    pair_cluster_map: Dict[int,int] = {}
+    clusters: List[Dict] = []
+    cid = 1
+    for root, members in comps.items():
+        genomes: Set[str] = set()
+        for pid in members:
+            qg, tg = pair_meta.get(pid, (None,None))
+            if qg: genomes.add(qg)
+            if tg: genomes.add(tg)
+        if len(genomes) >= int(min_genome_support) and len(members) >= 2:
+            for pid in members:
+                pair_cluster_map[pid] = cid
+            clusters.append({"cluster_id": cid, "size": len(members), "genomes": ";".join(sorted(genomes))})
+            cid += 1
+
+    clusters_df = pd.DataFrame(clusters)
+    return pair_cluster_map, clusters_df
+
+
+def _write_micro_pair_outputs(
+    *,
+    output_dir: Path,
+    db_path: Optional[Path],
+    pairs_rows: List[Tuple],
+    mapping_rows: List[Tuple],
+    pair_cluster_map: Dict[int,int],
+    clusters_df: pd.DataFrame,
+) -> None:
+    """Write pair-first micro outputs (sidecars + DB).
+
+    Updates cluster_id in pairs according to pair_cluster_map. Writes:
+      - micro_block_pairs(.csv)
+      - micro_gene_pair_mappings(.csv)
+      - micro_gene_clusters(.csv)
+    And DB tables if db_path provided.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    # Update pairs with cluster ids
+    pairs_out: List[Tuple] = []
+    for r in pairs_rows:
+        pid = int(r[0])
+        cid = int(pair_cluster_map.get(pid, 0))
+        pairs_out.append((pid, cid, *r[2:]))
+    # Sidecars
+    pd.DataFrame(pairs_out, columns=[
+        'block_id','cluster_id','query_genome_id','query_contig_id','query_start_bp','query_end_bp',
+        'target_genome_id','target_contig_id','target_start_bp','target_end_bp',
+        'q_core_start_bp','q_core_end_bp','t_core_start_bp','t_core_end_bp',
+        'orientation','identity','score'
+    ]).to_csv(output_dir / 'micro_block_pairs.csv', index=False)
+    pd.DataFrame(mapping_rows, columns=['block_id','block_role','gene_id','start_pos','end_pos','strand']).to_csv(
+        output_dir / 'micro_gene_pair_mappings.csv', index=False
+    )
+    clusters_df.to_csv(output_dir / 'micro_gene_clusters.csv', index=False)
+
+    # DB persistence
+    if db_path is not None and Path(db_path).exists():
+        conn = sqlite3.connect(str(db_path))
+        try:
+            cur = conn.cursor()
+            # Create/clear tables
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS micro_block_pairs (
+                    block_id INTEGER PRIMARY KEY,
+                    cluster_id INTEGER,
+                    query_genome_id TEXT,
+                    query_contig_id TEXT,
+                    query_start_bp INTEGER,
+                    query_end_bp INTEGER,
+                    target_genome_id TEXT,
+                    target_contig_id TEXT,
+                    target_start_bp INTEGER,
+                    target_end_bp INTEGER,
+                    q_core_start_bp INTEGER,
+                    q_core_end_bp INTEGER,
+                    t_core_start_bp INTEGER,
+                    t_core_end_bp INTEGER,
+                    orientation INTEGER,
+                    identity REAL,
+                    score REAL
+                )
+                """
+            )
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS micro_gene_pair_mappings (
+                    block_id INTEGER,
+                    block_role TEXT,
+                    gene_id TEXT,
+                    start_pos INTEGER,
+                    end_pos INTEGER,
+                    strand INTEGER
+                )
+                """
+            )
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS micro_gene_clusters (
+                    cluster_id INTEGER PRIMARY KEY,
+                    size INTEGER,
+                    genomes TEXT
+                )
+                """
+            )
+            cur.execute("DELETE FROM micro_block_pairs")
+            cur.execute("DELETE FROM micro_gene_pair_mappings")
+            cur.execute("DELETE FROM micro_gene_clusters")
+            # Insert
+            cur.executemany(
+                """
+                INSERT INTO micro_block_pairs(
+                    block_id, cluster_id, query_genome_id, query_contig_id, query_start_bp, query_end_bp,
+                    target_genome_id, target_contig_id, target_start_bp, target_end_bp,
+                    q_core_start_bp, q_core_end_bp, t_core_start_bp, t_core_end_bp,
+                    orientation, identity, score
+                ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                """,
+                pairs_out,
+            )
+            if mapping_rows:
+                cur.executemany(
+                    "INSERT INTO micro_gene_pair_mappings(block_id, block_role, gene_id, start_pos, end_pos, strand) VALUES (?,?,?,?,?,?)",
+                    mapping_rows,
+                )
+            if clusters_df is not None and not clusters_df.empty:
+                cur.executemany(
+                    "INSERT INTO micro_gene_clusters(cluster_id, size, genomes) VALUES (?,?,?)",
+                    [(int(r.cluster_id), int(r.size), str(r.genomes)) for r in clusters_df.itertuples(index=False)]
+                )
+            conn.commit()
+        finally:
+            conn.close()
+
+
 def run_micro_clustering(
     genes_parquet_path: Path,
     output_dir: Path,
@@ -149,6 +571,7 @@ def run_micro_clustering(
     jaccard_tau: float = 0.7,
     mutual_k: int = 3,
     df_max: int = 50,
+    # Reserved for future constraints; not used
     min_genome_support: int = 3,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Execute micro-gene clustering pipeline.
@@ -182,8 +605,13 @@ def run_micro_clustering(
     # Build micro blocks for all contigs
     raw_blocks: List[MicroBlock] = []
     block_id = 0
+    kept_windows = 0
+    total_windows = 0
     for (genome_id, contig_id), sub in df.groupby(["sample_id", "contig_id"], sort=False):
-        contig_blocks = _build_blocks_for_contig(sub, k_values=k_values, max_gap=max_gap)
+        sub_sorted = sub.sort_values(["start", "end"], kind="mergesort").reset_index(drop=True)
+        contig_blocks = _build_blocks_for_contig(sub_sorted, k_values=k_values, max_gap=max_gap)
+        total_windows += max(0, len(sub_sorted) - 3 + 1)
+        kept_windows += len(contig_blocks)
         for (start_idx, end_idx), shingles in contig_blocks:
             mb = MicroBlock(
                 block_id=block_id,
@@ -200,7 +628,7 @@ def run_micro_clustering(
 
     try:
         import sys
-        print(f"[Micro] Raw micro blocks: {len(raw_blocks)}", file=sys.stderr, flush=True)
+        print(f"[Micro] Raw micro blocks: {len(raw_blocks)} (kept {kept_windows} windows of ~{total_windows} triads)", file=sys.stderr, flush=True)
     except Exception:
         pass
 
@@ -289,64 +717,43 @@ def run_micro_clustering(
     except Exception:
         pass
 
-    # Connected components over kept edges
-    parent: Dict[int, int] = {}
-    def find(x: int) -> int:
-        parent.setdefault(x, x)
-        if parent[x] != x:
-            parent[x] = find(parent[x])
-        return parent[x]
-    def union(a: int, b: int):
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            parent[rb] = ra
+    # NOTE: We no longer cluster single-locus windows; instead we build true
+    # micro alignment pairs across genomes using postings over window shingles
+    # for candidate discovery, then cluster the resulting pairs (macro-like).
 
-    for u, v in mutual_edges:
-        union(u, v)
+    # 1) Build micro alignment pairs from all surviving windows (pair-first)
+    pairs_rows, mapping_rows = _build_pairs_from_windows(
+        genes_parquet_path=Path(genes_parquet_path),
+        blocks=blocks,
+        postings=postings,
+        cos_tau=float(jaccard_tau) if jaccard_tau > 0.0 else 0.85,  # reuse tau as cosine tau if provided
+        band=int(mutual_k) if mutual_k else 1,  # reuse mutual_k as band if provided
+        top_k=2,
+    )
 
-    # Assign cluster IDs sequentially for components with min genome support
-    comp_members: Dict[int, List[int]] = defaultdict(list)
-    for mb in blocks:
-        root = find(mb.block_id)
-        comp_members[root].append(mb.block_id)
+    # 2) Cluster pairs via core-derived signatures (macro-parity)
+    pair_cluster_map, clusters_df = _cluster_micro_pairs(
+        genes_parquet_path=Path(genes_parquet_path),
+        pairs_rows=pairs_rows,
+        mapping_rows=mapping_rows,
+        jaccard_tau=float(jaccard_tau),
+        mutual_k=int(mutual_k),
+        df_max=int(df_max),
+        min_genome_support=int(min_genome_support),
+    )
 
-    clusters: Dict[int, int] = {}
-    cluster_id = 1
-    for root, members in comp_members.items():
-        genomes = {block_map[bid].genome_id for bid in members}
-        if len(genomes) >= int(min_genome_support) and len(members) >= 2:
-            for bid in members:
-                clusters[bid] = cluster_id
-            cluster_id += 1
-
-    # Prepare DataFrames
-    out_blocks = []
-    for mb in blocks:
-        cid = int(clusters.get(mb.block_id, 0))
-        if cid == 0:
-            continue  # drop blocks not in passing clusters
-        out_blocks.append({
+    # 3) Materialize blocks_df (debug-only: the window list) and write sidecars/DB for pairs/clusters
+    blocks_df = pd.DataFrame([
+        {
             "block_id": int(mb.block_id),
-            "cluster_id": cid,
+            "cluster_id": 0,  # windows are not clustered; kept for debugging only
             "genome_id": mb.genome_id,
             "contig_id": mb.contig_id,
             "start_index": int(mb.start_index),
             "end_index": int(mb.end_index),
-        })
-
-    blocks_df = pd.DataFrame(out_blocks)
-
-    # Summarize clusters
-    cluster_rows = []
-    if not blocks_df.empty:
-        for cid, g in blocks_df.groupby("cluster_id"):
-            genomes = sorted(set(g["genome_id"].astype(str).tolist()))
-            cluster_rows.append({
-                "cluster_id": int(cid),
-                "size": int(len(g)),
-                "genomes": ";".join(genomes),
-            })
-    clusters_df = pd.DataFrame(cluster_rows)
+        }
+        for mb in blocks
+    ])
 
     # Final diagnostics
     try:
@@ -367,34 +774,15 @@ def run_micro_clustering(
     except Exception:
         pass
 
-    # Write CSVs
-    blocks_df.to_csv(output_dir / "micro_gene_blocks.csv", index=False)
-    clusters_df.to_csv(output_dir / "micro_gene_clusters.csv", index=False)
-
-    # Optional: write DB tables
-    if db_path is not None:
-        try:
-            _write_micro_tables_sqlite(db_path, blocks_df, clusters_df)
-        except Exception:
-            # Fail silently for DB writing; sidecar CSVs are authoritative
-            pass
-
-    # Always build paired micro alignments; write sidecars and, if DB provided, persist tables
-    if not blocks_df.empty:
-        try:
-            _build_micro_alignment_pairs(
-                genes_parquet_path=Path(genes_parquet_path),
-                db_path=Path(db_path) if db_path is not None else None,  # type: ignore
-                blocks_df=blocks_df,
-                clusters_df=clusters_df,
-                output_dir=Path(output_dir),
-                cos_tau=0.85,
-                band=1,
-                top_k=2,
-            )
-        except Exception:
-            # Non-fatal; clinker/micro cluster views still work
-            pass
+    # Write pair-first CSVs and DB tables
+    _write_micro_pair_outputs(
+        output_dir=Path(output_dir),
+        db_path=Path(db_path) if db_path is not None else None,
+        pairs_rows=pairs_rows,
+        mapping_rows=mapping_rows,
+        pair_cluster_map=pair_cluster_map,
+        clusters_df=clusters_df,
+    )
 
     return blocks_df, clusters_df
 
@@ -450,7 +838,7 @@ def _compute_micro_alignment_pairs(
     """Compute micro A↔B alignment pairs and per-gene mappings in-memory.
 
     Returns (pairs_rows, mapping_rows) where:
-      pairs_rows: (block_id, cluster_id, q_gid, q_cid, q_start_bp, q_end_bp, t_gid, t_cid, t_start_bp, t_end_bp, orient, identity, score)
+      pairs_rows: (block_id, cluster_id, q_gid, q_cid, q_start_bp, q_end_bp, t_gid, t_cid, t_start_bp, t_end_bp, q_core_start_bp, q_core_end_bp, t_core_start_bp, t_core_end_bp, orient, identity, score)
       mapping_rows: (block_id, block_role, gene_id, start_pos, end_pos, strand)
     """
     if blocks_df is None or blocks_df.empty:
@@ -512,7 +900,7 @@ def _compute_micro_alignment_pairs(
             return 0.0, [], orient
         return mean_score, m, orient
 
-    pairs_rows: List[Tuple[int,int,str,str,int,int,str,str,int,int,int,float,float]] = []
+    pairs_rows: List[Tuple[int,int,str,str,int,int,str,str,int,int,int,int,int,int,int,float,float]] = []
     mapping_rows: List[Tuple[int,str,str,int,int,int]] = []
     pair_id = 1_500_000_000
     seen_pairs: Set[Tuple[int, int]] = set()
@@ -543,22 +931,34 @@ def _compute_micro_alignment_pairs(
                         seen_pairs.add(key)
                         qa = genes_for_block(arow)
                         qb = genes_for_block(brow)
+                        # Full window bounds
                         q_start, q_end = int(qa["start"].min()), int(qa["end"].max())
                         t_start, t_end = int(qb["start"].min()), int(qb["end"].max())
+                        # Core bounds from matched genes only
+                        a_idxs = [mi for (mi, _mj, _c) in matches]
+                        b_idxs = [mj for (_mi, mj, _c) in matches]
+                        q_core_start = int(qa.iloc[min(a_idxs)]["start"]) if a_idxs else q_start
+                        q_core_end = int(qa.iloc[max(a_idxs)]["end"]) if a_idxs else q_end
+                        t_core_start = int(qb.iloc[min(b_idxs)]["start"]) if b_idxs else t_start
+                        t_core_end = int(qb.iloc[max(b_idxs)]["end"]) if b_idxs else t_end
                         identity = float(np.mean([m[2] for m in matches]))
                         score = identity
                         pairs_rows.append((
                             int(pair_id), int(cid),
                             str(arow["genome_id"]), str(arow["contig_id"]), q_start, q_end,
                             str(brow["genome_id"]), str(brow["contig_id"]), t_start, t_end,
+                            q_core_start, q_core_end, t_core_start, t_core_end,
                             int(orient), float(identity), float(score),
                         ))
-                        for _idx, grow in qa.iterrows():
+                        # Only record matched genes for mappings (core)
+                        for ai in a_idxs:
+                            grow = qa.iloc[int(ai)]
                             mapping_rows.append((
                                 int(pair_id), "query", str(grow["gene_id"]), int(grow["start"]), int(grow["end"]),
                                 int(1 if str(grow.get("strand","+")) in ("+", 1) else -1),
                             ))
-                        for _idx, grow in qb.iterrows():
+                        for bj in b_idxs:
+                            grow = qb.iloc[int(bj)]
                             mapping_rows.append((
                                 int(pair_id), "target", str(grow["gene_id"]), int(grow["start"]), int(grow["end"]),
                                 int(1 if str(grow.get("strand","+")) in ("+", 1) else -1),
@@ -590,7 +990,9 @@ def _build_micro_alignment_pairs(
                 Path(output_dir).mkdir(parents=True, exist_ok=True)
                 pd.DataFrame(columns=[
                     'block_id','cluster_id','query_genome_id','query_contig_id','query_start_bp','query_end_bp',
-                    'target_genome_id','target_contig_id','target_start_bp','target_end_bp','orientation','identity','score'
+                    'target_genome_id','target_contig_id','target_start_bp','target_end_bp',
+                    'q_core_start_bp','q_core_end_bp','t_core_start_bp','t_core_end_bp',
+                    'orientation','identity','score'
                 ]).to_csv(Path(output_dir) / 'micro_block_pairs.csv', index=False)
                 pd.DataFrame(columns=['block_id','block_role','gene_id','start_pos','end_pos','strand']).to_csv(
                     Path(output_dir) / 'micro_gene_pair_mappings.csv', index=False
@@ -614,7 +1016,9 @@ def _build_micro_alignment_pairs(
             out.mkdir(parents=True, exist_ok=True)
             pd.DataFrame(pairs_rows, columns=[
                 'block_id','cluster_id','query_genome_id','query_contig_id','query_start_bp','query_end_bp',
-                'target_genome_id','target_contig_id','target_start_bp','target_end_bp','orientation','identity','score'
+                'target_genome_id','target_contig_id','target_start_bp','target_end_bp',
+                'q_core_start_bp','q_core_end_bp','t_core_start_bp','t_core_end_bp',
+                'orientation','identity','score'
             ]).to_csv(out / 'micro_block_pairs.csv', index=False)
             pd.DataFrame(mapping_rows, columns=['block_id','block_role','gene_id','start_pos','end_pos','strand']).to_csv(
                 out / 'micro_gene_pair_mappings.csv', index=False
@@ -640,6 +1044,10 @@ def _build_micro_alignment_pairs(
                     target_contig_id TEXT,
                     target_start_bp INTEGER,
                     target_end_bp INTEGER,
+                    q_core_start_bp INTEGER,
+                    q_core_end_bp INTEGER,
+                    t_core_start_bp INTEGER,
+                    t_core_end_bp INTEGER,
                     orientation INTEGER,
                     identity REAL,
                     score REAL
@@ -661,17 +1069,49 @@ def _build_micro_alignment_pairs(
             cur.execute("DELETE FROM micro_block_pairs")
             cur.execute("DELETE FROM micro_gene_pair_mappings")
             if pairs_rows:
-                cur.executemany(
-                    """
-                    INSERT INTO micro_block_pairs(
-                        block_id, cluster_id,
-                        query_genome_id, query_contig_id, query_start_bp, query_end_bp,
-                        target_genome_id, target_contig_id, target_start_bp, target_end_bp,
-                        orientation, identity, score
-                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
-                    """,
-                    pairs_rows,
-                )
+                # Check existing columns to support schema evolution
+                cols = [r[1] for r in cur.execute("PRAGMA table_info(micro_block_pairs)").fetchall()]
+                need_core = {"q_core_start_bp","q_core_end_bp","t_core_start_bp","t_core_end_bp"}
+                has_core = need_core.issubset(set(cols))
+                if not has_core:
+                    # Attempt to add missing core columns
+                    try:
+                        for col in sorted(list(need_core)):
+                            if col not in cols:
+                                cur.execute(f"ALTER TABLE micro_block_pairs ADD COLUMN {col} INTEGER")
+                        cols = [r[1] for r in cur.execute("PRAGMA table_info(micro_block_pairs)").fetchall()]
+                        has_core = need_core.issubset(set(cols))
+                    except Exception:
+                        has_core = False
+                if has_core:
+                    cur.executemany(
+                        """
+                        INSERT INTO micro_block_pairs(
+                            block_id, cluster_id,
+                            query_genome_id, query_contig_id, query_start_bp, query_end_bp,
+                            target_genome_id, target_contig_id, target_start_bp, target_end_bp,
+                            q_core_start_bp, q_core_end_bp, t_core_start_bp, t_core_end_bp,
+                            orientation, identity, score
+                        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                        """,
+                        pairs_rows,
+                    )
+                else:
+                    # Fallback: insert without core columns
+                    pared = [(
+                        r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8], r[9], r[14], r[15], r[16]
+                    ) for r in pairs_rows]
+                    cur.executemany(
+                        """
+                        INSERT INTO micro_block_pairs(
+                            block_id, cluster_id,
+                            query_genome_id, query_contig_id, query_start_bp, query_end_bp,
+                            target_genome_id, target_contig_id, target_start_bp, target_end_bp,
+                            orientation, identity, score
+                        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)
+                        """,
+                        pared,
+                    )
             if mapping_rows:
                 cur.executemany(
                     "INSERT INTO micro_gene_pair_mappings(block_id, block_role, gene_id, start_pos, end_pos, strand) VALUES (?,?,?,?,?,?)",
@@ -835,6 +1275,9 @@ def _precluster_deduplicate_blocks(blocks: List[MicroBlock], db_path: Path) -> L
 
     kept = [mb for mb in blocks if mb.block_id not in drop_ids]
     return kept
+
+
+# (Purification step reverted per user request)
 
 def deduplicate_micro_against_macro(db_path: Path) -> Dict[str, int]:
     """Remove micro blocks fully contained within macro spans on both sides.

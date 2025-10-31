@@ -484,14 +484,12 @@ def find(config: str, query_locus: str, target_scope: str, output: Optional[str]
 @click.option("--min-windows", default=3, help="Minimum windows per locus")
 @click.option("--min-similarity", default=0.7, help="Minimum similarity threshold")
 @click.option("--output-dir", "-o", default="syntenic_analysis", help="Output directory")
-@click.option("--setup-genome-browser/--no-setup-genome-browser", default=True,
-              help="Set up genome browser after analysis (use --no-setup-genome-browser to skip)")
 @click.option("--genome-browser-db", default="genome_browser/genome_browser.db", help="Genome browser database path")
 @click.option("--sequences-dir", help="Directory containing nucleotide sequences (.fna)")
 @click.option("--proteins-dir", help="Directory containing proteins (.faa)")
-@click.option("--micro/--no-micro", default=False, help="Run micro-synteny (embedding-first, sidecar-only)")
+@click.option("--micro/--no-micro", default=False, help="Run micro-synteny (embedding-first)")
 def analyze(config: str, min_windows: int, min_similarity: float, output_dir: str, 
-           setup_genome_browser: bool, genome_browser_db: str, sequences_dir: Optional[str], proteins_dir: Optional[str], micro: bool):
+           genome_browser_db: str, sequences_dir: Optional[str], proteins_dir: Optional[str], micro: bool):
     """Perform comprehensive syntenic block analysis of entire dataset."""
     console.print("[bold]ELSA Comprehensive Syntenic Analysis[/bold]")
     
@@ -589,8 +587,8 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
 
         console.print(f"\n[green]✓ Comprehensive analysis completed successfully![/green]")
         
-        # Set up genome browser if requested
-        if setup_genome_browser:
+        # Set up genome browser (always)
+        if True:
             console.print(f"\n[bold blue]Setting up genome browser...[/bold blue]")
             try:
                 success = setup_genome_browser_integration(
@@ -886,7 +884,7 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                     except Exception:
                         pass
                     micro_out = Path(output_path) / 'micro_gene'
-                    db_path = Path(genome_browser_db) if setup_genome_browser and Path(genome_browser_db).exists() else None
+                    db_path = Path(genome_browser_db)
                     # Defaults per AGENTS.md
                     blocks_df, clusters_df = run_micro_clustering(
                         Path(genes_path),
@@ -899,6 +897,14 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                         df_max=micro_df,
                         min_genome_support=micro_gs,
                     )
+                    # Integrate micro results into genome browser DB (single-source projection)
+                    try:
+                        if db_path and db_path.exists():
+                            from .analyze.micro_to_db import integrate_micro_into_db
+                            stats = integrate_micro_into_db(Path(db_path), Path(micro_out))
+                            console.print(f"[dim]Integrated micro into DB: clusters={stats.get('inserted_clusters',0)} blocks={stats.get('inserted_blocks',0)}[/dim]")
+                    except Exception as e:
+                        console.print(f"[yellow]Micro DB integration skipped: {e}[/yellow]")
                     # Post-write deduplication against macro spans (both-side containment)
                     if db_path and db_path.exists():
                         try:
@@ -910,11 +916,34 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                         except Exception as e:
                             console.print(f"[dim]Micro post-dedup skipped: {e}[/dim]")
 
-                    # Precompute micro consensus for browser (robust import) after dedup
+
+                    # Ensure micro clusters are present in clusters table and precompute consensus
                     if db_path and db_path.exists():
                         import sqlite3
                         conn = sqlite3.connect(str(db_path))
                         try:
+                            # Upsert micro clusters into clusters table (offset after max existing)
+                            try:
+                                cur = conn.cursor()
+                                # Load micro clusters from DB
+                                mclus = cur.execute("SELECT cluster_id, size, genomes FROM micro_gene_clusters WHERE cluster_id > 0").fetchall()
+                                if mclus:
+                                    row = cur.execute("SELECT COALESCE(MAX(cluster_id),0) FROM clusters").fetchone()
+                                    start_cid = int(row[0] or 0)
+                                    rows = []
+                                    for cid, size, genomes in mclus:
+                                        rows.append((start_cid + int(cid), int(size), None, None, None, None, None, 'micro'))
+                                    cur.executemany(
+                                        """
+                                        INSERT OR REPLACE INTO clusters
+                                            (cluster_id, size, consensus_length, consensus_score, diversity, representative_query, representative_target, cluster_type)
+                                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                                        """,
+                                        rows,
+                                    )
+                                    conn.commit()
+                            except Exception as e:
+                                console.print(f"[dim]Micro clusters upsert skipped: {e}[/dim]")
                             # Try package import first
                             try:
                                 from genome_browser.database.cluster_content import precompute_all_micro_consensus  # type: ignore
@@ -941,8 +970,18 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                         import sqlite3
                         try:
                             conn = sqlite3.connect(str(db_path))
-                            nb = conn.execute("SELECT COUNT(*) FROM micro_gene_blocks").fetchone()[0]
-                            nc = conn.execute("SELECT COUNT(*) FROM micro_gene_clusters").fetchone()[0]
+                            # Prefer pair-backed counts; fall back gracefully if tables absent
+                            try:
+                                nb = conn.execute("SELECT COUNT(*) FROM micro_block_pairs").fetchone()[0]
+                            except Exception:
+                                try:
+                                    nb = conn.execute("SELECT COUNT(*) FROM micro_gene_blocks").fetchone()[0]
+                                except Exception:
+                                    nb = 0
+                            try:
+                                nc = conn.execute("SELECT COUNT(*) FROM micro_gene_clusters").fetchone()[0]
+                            except Exception:
+                                nc = 0
                             # Project paired micro alignments into syntenic_blocks and mappings (post-run, ensures availability)
                             try:
                                 import pandas as pd
@@ -1041,6 +1080,57 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                         # No DB: report counts from pre-dedup DataFrames
                         console.print(f"[bold]Micro clusters:[/bold] {len(clusters_df)} (blocks: {len(blocks_df)})")
                     console.print("[green]✓ Micro-synteny results written to sidecar and DB (if available)[/green]")
+
+                # Post-analyze integrity check: every non-sink micro cluster must have pairs
+                try:
+                    from pathlib import Path as _P
+                    dbp = _P(genome_browser_db)
+                    missing: list[int] = []
+                    # Prefer sidecar if we did not write DB in this run (setup disabled)
+                    prefer_sidecar = (db_path is None)
+                    if dbp.exists() and not prefer_sidecar:
+                        import sqlite3
+                        conn2 = sqlite3.connect(str(dbp))
+                        cur2 = conn2.cursor()
+                        # Verify required tables
+                        have_pairs = cur2.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_block_pairs'").fetchone() is not None
+                        have_mclus = cur2.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_gene_clusters'").fetchone() is not None
+                        if have_pairs and have_mclus:
+                            rows = cur2.execute(
+                                """
+                                WITH c AS (
+                                  SELECT cluster_id FROM micro_gene_clusters WHERE cluster_id > 0
+                                ),
+                                p AS (
+                                  SELECT DISTINCT cluster_id FROM micro_block_pairs
+                                )
+                                SELECT c.cluster_id FROM c
+                                LEFT JOIN p USING(cluster_id)
+                                WHERE p.cluster_id IS NULL
+                                ORDER BY c.cluster_id
+                                """
+                            ).fetchall()
+                            missing = [int(r[0]) for r in rows]
+                        conn2.close()
+                    else:
+                        # Sidecar-only check
+                        mdir = _P(output_path) / 'micro_gene'
+                        cg = mdir / 'micro_gene_clusters.csv'
+                        pp = mdir / 'micro_block_pairs.csv'
+                        if cg.exists() and pp.exists():
+                            import pandas as _pd
+                            cg_df = _pd.read_csv(cg)
+                            pp_df = _pd.read_csv(pp)
+                            have = set(pp_df['cluster_id'].dropna().astype(int).tolist()) if not pp_df.empty else set()
+                            need = set(cg_df[cg_df['cluster_id'] > 0]['cluster_id'].astype(int).tolist()) if not cg_df.empty else set()
+                            missing = sorted(list(need - have))
+                    if missing:
+                        console.print("[red]Integrity check failed: some micro clusters have no micro pairs[/red]")
+                        console.print(f"Missing raw micro cluster_ids: {missing[:20]}{'...' if len(missing) > 20 else ''}")
+                        console.print("Run tools/diagnose_micro.py and tools/diagnose_explore_regions.py for details. Rerun analyze to generate pairs.")
+                        sys.exit(2)
+                except Exception as e:
+                    console.print(f"[yellow]Integrity check skipped due to error: {e}[/yellow]")
             except Exception as e:
                 console.print(f"[yellow]Micro-synteny pass failed/skipped: {e}[/yellow]")
 

@@ -2224,16 +2224,26 @@ def _macro_id_ceiling(conn) -> int:
 def _cluster_is_micro(cluster_id: int) -> bool:
     """Decide whether a display cluster_id refers to a micro cluster.
 
-    Micro display IDs are offset by n_macro (excluding sink).
+    Rules:
+      - If cluster exists in `clusters`, use its `cluster_type` column when present.
+      - Otherwise, treat display IDs > max(macro_id) as micro (display_id = ceil_id + raw_micro).
     """
     try:
         import sqlite3
         conn = sqlite3.connect(str(DB_PATH))
-        # If it's present in clusters with this ID, it's macro
-        row = conn.execute("SELECT 1 FROM clusters WHERE cluster_id = ?", (int(cluster_id),)).fetchone()
-        if row:
-            conn.close()
-            return False
+        # Prefer explicit cluster_type if present in clusters table
+        try:
+            row = conn.execute(
+                "SELECT cluster_type FROM clusters WHERE cluster_id = ?",
+                (int(cluster_id),)
+            ).fetchone()
+            if row is not None and len(row) > 0 and row[0] is not None:
+                ctype = str(row[0]).strip().lower()
+                conn.close()
+                return (ctype == 'micro')
+        except Exception:
+            pass
+        # Fallback: infer by display ID offset relative to max macro cluster id
         ceil_id = _macro_id_ceiling(conn)
         raw_micro = int(cluster_id) - int(ceil_id)
         if raw_micro <= 0:
@@ -2273,6 +2283,13 @@ def load_micro_cluster_blocks(cluster_id: int) -> pd.DataFrame:
             WHERE cluster_id = ?
             ORDER BY score DESC, block_id
         """
+        # Honor session source hint to avoid DB/sidecar divergence
+        try:
+            src = st.session_state.get(f"micro_pairs_source_{int(raw_id)}")
+        except Exception:
+            src = None
+        if src == 'sidecar':
+            raise RuntimeError('force_sidecar')
         df = pd.read_sql_query(q1, conn, params=[raw_id])
         if df is not None and not df.empty:
             return df
@@ -2283,9 +2300,13 @@ def load_micro_cluster_blocks(cluster_id: int) -> pd.DataFrame:
         here = Path(__file__).resolve()
         repo_root = here.parents[1]
         candidates = [
+            # Common sidecar locations
             Path('micro_gene/micro_block_pairs.csv'),
-            repo_root / 'micro_gene' / 'micro_block_pairs.csv',
+            Path('syntenic_analysis/micro_gene/micro_block_pairs.csv'),
             Path.cwd() / 'micro_gene' / 'micro_block_pairs.csv',
+            Path.cwd() / 'syntenic_analysis' / 'micro_gene' / 'micro_block_pairs.csv',
+            repo_root / 'micro_gene' / 'micro_block_pairs.csv',
+            repo_root / 'syntenic_analysis' / 'micro_gene' / 'micro_block_pairs.csv',
         ]
         for p in candidates:
             if Path(p).exists():
@@ -2301,23 +2322,10 @@ def load_micro_cluster_blocks(cluster_id: int) -> pd.DataFrame:
                     return pairs[['block_id','cluster_id','query_locus','target_locus','query_genome_id','target_genome_id','query_contig_id','target_contig_id','length','identity','score']]
     except Exception:
         pass
-    # Fallback to single-locus micro blocks (query only)
-    q2 = """
-        SELECT 
-            (1000000000 + block_id) AS block_id,
-            cluster_id,
-            (genome_id || ':' || contig_id || '#' || CAST(start_index AS TEXT) || '-' || CAST(end_index AS TEXT)) AS query_locus,
-            '' AS target_locus,
-            genome_id AS query_genome_id, NULL AS target_genome_id,
-            contig_id AS query_contig_id, NULL AS target_contig_id,
-            (1 + end_index - start_index) AS length,
-            0.0 AS identity,
-            0.0 AS score
-        FROM micro_gene_blocks
-        WHERE cluster_id = ?
-        ORDER BY genome_id, contig_id, start_index
-    """
-    return pd.read_sql_query(q2, conn, params=[raw_id])
+    # No legacy fallback: if no paired micro blocks found (DB and sidecar), return empty
+    return pd.DataFrame(columns=[
+        'block_id','cluster_id','query_locus','target_locus','query_genome_id','target_genome_id','query_contig_id','target_contig_id','length','identity','score'
+    ])
 
 def compute_display_regions_for_micro_cluster(cluster_id: int, gap_bp: int = 1000, min_support: int = 1) -> List[Dict]:
     """Compute display regions for a micro cluster using paired spans in micro_block_pairs.
@@ -2342,91 +2350,93 @@ def compute_display_regions_for_micro_cluster(cluster_id: int, gap_bp: int = 100
             params=[raw_id],
         )
         if pairs is None or pairs.empty:
-            logger.info("multiloc: no pairs found for micro cluster; falling back to legacy micro windows")
-            # Fallback: derive regions from micro_gene_blocks indices by mapping to bp via gene order
+            # Try sidecar CSVs for pairs before falling back
             try:
-                conn.execute("DROP TABLE IF EXISTS _tmp_gene_order_micro_view")
-                conn.execute(
-                    """
-                    CREATE TEMP TABLE _tmp_gene_order_micro_view AS
-                    SELECT 
-                        genome_id, contig_id, gene_id,
-                        start_pos, end_pos,
-                        ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
-                    FROM genes
-                    """
-                )
-                per_block = pd.read_sql_query(
-                    """
-                    WITH ranges AS (
-                        SELECT block_id, genome_id, contig_id, start_index, end_index
-                        FROM micro_gene_blocks WHERE cluster_id = ?
-                    ),
-                    gene_spans AS (
-                        SELECT r.block_id,
-                               r.genome_id,
-                               r.contig_id,
-                               MIN(g.start_pos) AS start_bp,
-                               MAX(g.end_pos) AS end_bp
-                        FROM ranges r
-                        JOIN _tmp_gene_order_micro_view g
-                          ON g.genome_id = r.genome_id AND g.contig_id = r.contig_id AND g.idx BETWEEN r.start_index AND r.end_index
-                        GROUP BY r.block_id, r.genome_id, r.contig_id
-                    )
-                    SELECT (1000000000 + block_id) AS block_id, genome_id, contig_id, start_bp, end_bp
-                    FROM gene_spans
-                    """,
-                    conn,
-                    params=[raw_id]
-                )
-                if per_block is None or per_block.empty:
-                    return []
-                genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
-                org_map = dict(zip(genomes_df["genome_id"], genomes_df["organism_name"]))
-                regions = []
-                for (genome_id, contig_id), group in per_block.groupby(["genome_id", "contig_id"]):
-                    intervals = [
-                        {"start_bp": int(row.start_bp), "end_bp": int(row.end_bp), "block_id": int(row.block_id)}
-                        for _, row in group.iterrows()
-                    ]
-                    merged = _merge_intervals(intervals, gap_bp=gap_bp)
-                    for iv in merged:
-                        support = len(iv["blocks"])  # number of blocks supporting
-                        if support >= min_support:
-                            regions.append({
-                                "genome_id": genome_id,
-                                "contig_id": contig_id,
-                                "organism_name": org_map.get(genome_id, "Unknown organism"),
-                                "start_bp": iv["start_bp"],
-                                "end_bp": iv["end_bp"],
-                                "support": support,
-                                "blocks": iv["blocks"],
-                            })
-                regions.sort(key=lambda r: (r["genome_id"], r["contig_id"], r["start_bp"]))
-                logger.info(f"multiloc: legacy fallback built {len(regions)} regions")
-                return regions
-            except Exception as ee:
-                logger.warning(f"multiloc: legacy fallback failed: {ee}")
-                return []
+                here = Path(__file__).resolve()
+                repo_root = here.parents[1]
+                candidates = [
+                    Path('micro_gene/micro_block_pairs.csv'),
+                    Path('syntenic_analysis/micro_gene/micro_block_pairs.csv'),
+                    Path.cwd() / 'micro_gene' / 'micro_block_pairs.csv',
+                    Path.cwd() / 'syntenic_analysis' / 'micro_gene' / 'micro_block_pairs.csv',
+                    repo_root / 'micro_gene' / 'micro_block_pairs.csv',
+                    repo_root / 'syntenic_analysis' / 'micro_gene' / 'micro_block_pairs.csv',
+                ]
+                for p in candidates:
+                    if Path(p).exists():
+                        pairs_csv = pd.read_csv(p)
+                        pairs_csv = pairs_csv[pairs_csv['cluster_id'] == raw_id].copy()
+                        if not pairs_csv.empty:
+                            pairs = pairs_csv
+                            logger.info("multiloc: loaded pairs from sidecar CSV")
+                            try:
+                                st.session_state[f"micro_pairs_source_{int(raw_id)}"] = 'sidecar'
+                            except Exception:
+                                pass
+                            break
+            except Exception:
+                pass
+        if pairs is None or pairs.empty:
+            logger.warning("multiloc: no micro pairs found (DB or sidecar); regions unavailable for this micro cluster")
+            return []
         genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
         org_map = dict(zip(genomes_df["genome_id"], genomes_df["organism_name"]))
 
         regions = []
+        # Determine pair source for UI/logging consistency
+        try:
+            src_hint = st.session_state.get(f"micro_pairs_source_{int(raw_id)}", 'db')
+        except Exception:
+            src_hint = 'db'
+        # If pairs came from DB, stamp hint
+        try:
+            if src_hint not in ('db','sidecar'):
+                st.session_state[f"micro_pairs_source_{int(raw_id)}"] = 'db'
+        except Exception:
+            pass
         # Build intervals per side
         for role in ("query", "target"):
             gcol = f"{role}_genome_id"; ccol = f"{role}_contig_id"; scol = f"{role}_start_bp"; ecol = f"{role}_end_bp"
             side = pairs[["block_id", gcol, ccol, scol, ecol]].copy()
             side = side.rename(columns={gcol: "genome_id", ccol: "contig_id", scol: "start_bp", ecol: "end_bp"})
             side = side.dropna(subset=["genome_id", "contig_id", "start_bp", "end_bp"]).astype({"start_bp": int, "end_bp": int})
+            # Optional core intervals if present
+            core_cols = [f"{role[0]}_core_start_bp", f"{role[0]}_core_end_bp"]
+            has_core = all(col in pairs.columns for col in core_cols)
+            if has_core:
+                side_core = pairs[["block_id", gcol, ccol, core_cols[0], core_cols[1]]].copy()
+                side_core = side_core.rename(columns={gcol: "genome_id", ccol: "contig_id", core_cols[0]: "start_bp", core_cols[1]: "end_bp"})
+                side_core = side_core.dropna(subset=["genome_id", "contig_id", "start_bp", "end_bp"]).astype({"start_bp": int, "end_bp": int})
             for (genome_id, contig_id), group in side.groupby(["genome_id", "contig_id"]):
                 intervals = [
                     {"start_bp": int(r.start_bp), "end_bp": int(r.end_bp), "block_id": int(r.block_id)}
                     for _, r in group.iterrows()
                 ]
                 merged = _merge_intervals(intervals, gap_bp=gap_bp)
+                # Compute core overlay by merging core intervals for this contig
+                core_overlay = None
+                if has_core:
+                    core_rows = side_core[(side_core["genome_id"] == genome_id) & (side_core["contig_id"] == contig_id)]
+                    if core_rows is not None and not core_rows.empty:
+                        core_intervals = [
+                            {"start_bp": int(r.start_bp), "end_bp": int(r.end_bp), "block_id": int(r.block_id)}
+                            for _, r in core_rows.iterrows()
+                        ]
+                        core_merged = _merge_intervals(core_intervals, gap_bp=gap_bp)
+                    else:
+                        core_merged = []
                 for iv in merged:
                     support = len(iv["blocks"])  # number of blocks supporting
                     if support >= min_support:
+                        # Derive a simple core range as union of cores overlapping this region
+                        core_start = None
+                        core_end = None
+                        if has_core:
+                            for cv in core_merged:
+                                if cv["end_bp"] < iv["start_bp"] or cv["start_bp"] > iv["end_bp"]:
+                                    continue
+                                core_start = min(core_start, cv["start_bp"]) if core_start is not None else cv["start_bp"]
+                                core_end = max(core_end, cv["end_bp"]) if core_end is not None else cv["end_bp"]
                         regions.append({
                             "genome_id": genome_id,
                             "contig_id": contig_id,
@@ -2435,6 +2445,9 @@ def compute_display_regions_for_micro_cluster(cluster_id: int, gap_bp: int = 100
                             "end_bp": iv["end_bp"],
                             "support": support,
                             "blocks": iv["blocks"],
+                            "core_start_bp": core_start,
+                            "core_end_bp": core_end,
+                            "_source": src_hint,
                         })
         regions.sort(key=lambda r: (r["genome_id"], r["contig_id"], r["start_bp"]))
         logger.info(f"multiloc: built {len(regions)} regions for micro cluster")
@@ -2487,10 +2500,14 @@ def display_cluster_detail():
                 st.write("• Database connectivity issues")
                 return
             
-            # Compute display regions; if unavailable, fall back to unique loci
+            # Compute display regions
             regions = compute_display_regions_for_micro_cluster(cluster_id, gap_bp=1000, min_support=1) if is_micro else compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
             use_regions = len(regions) > 0
-            if not use_regions:
+            if is_micro and not use_regions:
+                st.error("No micro pairs available for this micro cluster; regions are unavailable.")
+                st.caption("Run tools/diagnose_micro.py and tools/diagnose_explore_regions.py to verify pairs and region↔block linkage.")
+                return
+            if not is_micro and not use_regions:
                 unique_loci = extract_unique_loci_from_cluster(cluster_blocks)
             
             # Load cluster stats if available
@@ -2524,6 +2541,16 @@ def display_cluster_detail():
     # Display summary info
     if stats:
         st.info(f"**Organisms:** {', '.join(stats.organisms[:3])}{'...' if len(stats.organisms) > 3 else ''}")
+    # Banner for micro pair source (DB vs sidecar)
+    try:
+        if is_micro and 'regions' in locals() and regions:
+            srcs = {r.get('_source','db') for r in regions}
+            if 'sidecar' in srcs and len(srcs) == 1:
+                st.caption("Using micro pairs from sidecar CSV for this cluster.")
+            elif 'db' in srcs and len(srcs) == 1:
+                st.caption("Using micro pairs from database for this cluster.")
+    except Exception:
+        pass
     
     # Consensus cassette (PFAM-based) controls and render
     with st.expander("🧩 Consensus Cassette (PFAM)", expanded=True):
@@ -2709,22 +2736,70 @@ def display_cluster_detail():
             st.subheader(f"🧬 Region {i+1}: {display_title} ({org})")
 
             # Determine representative block among supporting blocks
+            try:
+                reg_blocks = set(region.get('blocks', []) or [])
+                cb_ids = set()
+                try:
+                    cb_ids = set(int(x) for x in cluster_blocks['block_id'].astype('int64').tolist())
+                except Exception:
+                    cb_ids = set(cluster_blocks['block_id'].tolist())
+                inter = reg_blocks & cb_ids
+                src_hint = region.get('_source')
+                logger.info(f"region-debug: cluster={cluster_id} contig={contig_id} {start_bp}-{end_bp} src={src_hint} reg_blocks={len(reg_blocks)} cluster_blocks={len(cb_ids)} intersect={len(inter)} sample_reg={(list(reg_blocks)[:5] if reg_blocks else [])}")
+                if reg_blocks and not inter:
+                    logger.critical(f"region-mismatch: cluster={cluster_id} contig={contig_id} {start_bp}-{end_bp} src={src_hint} region_blocks_do_not_intersect_cluster_blocks; example_region_blocks={list(reg_blocks)[:5]}")
+            except Exception:
+                pass
             rep_block = None
             if region.get("blocks"):
-                blocks_subset = cluster_blocks[cluster_blocks["block_id"].isin(list(region["blocks"]))]
+                # Normalize block_id dtype to numeric to avoid type-mismatch filtering
+                try:
+                    _tmp_cb = cluster_blocks.copy()
+                    import pandas as _pd
+                    _tmp_cb['block_id'] = _pd.to_numeric(_tmp_cb['block_id'], errors='coerce')
+                    _region_block_ids = list({int(b) for b in region["blocks"]})
+                    blocks_subset = _tmp_cb[_tmp_cb["block_id"].isin(_region_block_ids)].copy()
+                except Exception:
+                    blocks_subset = cluster_blocks[cluster_blocks["block_id"].isin(list(region["blocks"]))].copy()
+                # Further restrict to blocks that overlap this region on the same contig
+                if not blocks_subset.empty:
+                    import re as _re
+                    def _parse_range(loc: str):
+                        if not isinstance(loc, str) or ':' not in loc:
+                            return None, None, None, None
+                        try:
+                            parts = loc.split(':', 2)
+                            g, c, rest = parts[0], parts[1], parts[2]
+                            m = _re.search(r"(\\d+)[^-#]*[-](\\d+)$", rest)
+                            if not m:
+                                return g, c, None, None
+                            return g, c, int(m.group(1)), int(m.group(2))
+                        except Exception:
+                            return None, None, None, None
+                    def _overlaps_row(row):
+                        gq, cq, qs, qe = _parse_range(str(row.get('query_locus','')))
+                        gt, ct, ts, te = _parse_range(str(row.get('target_locus','')))
+                        hit = False
+                        if gq == genome_id and cq == contig_id and qs is not None and qe is not None:
+                            hit = hit or not (qe < start_bp or qs > end_bp)
+                        if gt == genome_id and ct == contig_id and ts is not None and te is not None:
+                            hit = hit or not (te < start_bp or ts > end_bp)
+                        return hit
+                    pre_n = len(blocks_subset)
+                    blocks_subset = blocks_subset[blocks_subset.apply(_overlaps_row, axis=1)].copy()
+                    post_n = len(blocks_subset)
+                    try:
+                        logger.info(f"supporting-debug: cluster={cluster_id} region={i+1} pre={pre_n} post_overlap={post_n}")
+                    except Exception:
+                        pass
+                    # If strict overlap filtered everything but we had id matches, fall back to id-only subset
+                    if post_n == 0 and pre_n > 0:
+                        blocks_subset = _tmp_cb[_tmp_cb["block_id"].isin(_region_block_ids)].copy()
                 if not blocks_subset.empty:
                     rep_block = blocks_subset.loc[blocks_subset["score"].idxmax()]
                 else:
-                    # Fallback: pick best block within same contig, else cluster-level best
-                    try:
-                        same_contig = cluster_blocks[(cluster_blocks['query_locus'].str.contains(str(contig_id), na=False)) | (cluster_blocks['target_locus'].str.contains(str(contig_id), na=False))]
-                        if not same_contig.empty:
-                            rep_block = same_contig.loc[same_contig['score'].idxmax()]
-                        elif not cluster_blocks.empty:
-                            rep_block = cluster_blocks.loc[cluster_blocks['score'].idxmax()]
-                    except Exception:
-                        if not cluster_blocks.empty:
-                            rep_block = cluster_blocks.iloc[0]
+                    # No fallback: if no overlapping supporting blocks, do not select a representative
+                    rep_block = None
 
             if rep_block is not None:
                 st.caption(
@@ -2746,6 +2821,8 @@ def display_cluster_detail():
                             'score': float(rep_block['score']),
                             'length': int(rep_block.get('length', 0) or 0),
                             'block_type': ('micro' if is_micro else 'macro'),
+                            # Hint to genome viewer which side corresponds to this region
+                            'focus_role': ('query' if str(rep_block['query_locus']).startswith(f"{genome_id}:{contig_id}:") else ('target' if str(rep_block['target_locus']).startswith(f"{genome_id}:{contig_id}:") else None)),
                         }
                         st.session_state.selected_block = sel
                         st.session_state.current_page = 'genome_viewer'
@@ -2753,22 +2830,7 @@ def display_cluster_detail():
                 with col_b:
                     with st.expander("View supporting blocks in genome viewer", expanded=False):
                         # Build a list of supporting blocks for this region
-                        sup_df = None
-                        try:
-                            if 'blocks_subset' in locals() and not blocks_subset.empty:
-                                sup_df = blocks_subset.copy()
-                            else:
-                                # Fallback: match by contig substring in either locus
-                                mask = (
-                                    cluster_blocks['query_locus'].str.contains(str(contig_id), na=False) |
-                                    cluster_blocks['target_locus'].str.contains(str(contig_id), na=False)
-                                )
-                                sup_df = cluster_blocks[mask].copy()
-                            # If still empty, take top N from entire cluster as a last resort
-                            if sup_df is None or sup_df.empty:
-                                sup_df = cluster_blocks.copy()
-                        except Exception:
-                            sup_df = cluster_blocks.copy()
+                        sup_df = blocks_subset.copy() if 'blocks_subset' in locals() and not blocks_subset.empty else None
 
                         if sup_df is not None and not sup_df.empty:
                             # Ensure required columns exist; fill if missing
@@ -2781,6 +2843,10 @@ def display_cluster_detail():
                             else:
                                 sup_df = sup_df.sort_values(['identity'], ascending=[False])
                             sup_df = sup_df[['block_id','query_locus','target_locus','score','identity','length']]
+                            try:
+                                st.caption(f"Supporting blocks matching this region: {len(sup_df)}")
+                            except Exception:
+                                pass
                             max_list = 8
                             for j, row in sup_df.head(max_list).iterrows():
                                 bid = int(row['block_id'])
@@ -2796,7 +2862,10 @@ def display_cluster_detail():
                                     lbl_len = int(row.get('length', 0) or 0)
                                 except Exception:
                                     lbl_len = 0
-                                label = f"Block {bid} · score={lbl_score:.1f} · id={lbl_id:.3f} · len={lbl_len}"
+                                # Determine which side matches this region
+                                focus_role = 'query' if str(row['query_locus']).startswith(f"{genome_id}:{contig_id}:") else ('target' if str(row['target_locus']).startswith(f"{genome_id}:{contig_id}:") else None)
+                                side_tag = f" ({focus_role})" if focus_role else ""
+                                label = f"Block {bid} · score={lbl_score:.1f} · id={lbl_id:.3f} · len={lbl_len}{side_tag}"
                                 if st.button(f"🔗 {label}", key=f"view_block_{cluster_id}_{i}_{bid}"):
                                     sel = {
                                         'block_id': bid,
@@ -2805,6 +2874,8 @@ def display_cluster_detail():
                                         'identity': float(lbl_id),
                                         'score': float(lbl_score),
                                         'length': int(lbl_len),
+                                        'block_type': ('micro' if is_micro else 'macro'),
+                                        'focus_role': focus_role,
                                     }
                                     st.session_state.selected_block = sel
                                     st.session_state.current_page = 'genome_viewer'
@@ -2813,6 +2884,44 @@ def display_cluster_detail():
                             st.caption("No supporting blocks matched this region.")
             else:
                 st.caption(f"Supported by {support} block(s)")
+                # Even without a representative, show the supporting blocks expander
+                with st.expander("View supporting blocks in genome viewer", expanded=False):
+                    sup_df = blocks_subset.copy() if 'blocks_subset' in locals() and not blocks_subset.empty else None
+                    if sup_df is not None and not sup_df.empty:
+                        for col in ['score','identity','length']:
+                            if col not in sup_df.columns:
+                                sup_df[col] = 0.0
+                        sup_df = sup_df.sort_values(['score','identity'], ascending=[False, False])
+                        sup_df = sup_df[['block_id','query_locus','target_locus','score','identity','length']]
+                        try:
+                            st.caption(f"Supporting blocks matching this region: {len(sup_df)}")
+                        except Exception:
+                            pass
+                        max_list = 8
+                        for j, row in sup_df.head(max_list).iterrows():
+                            bid = int(row['block_id'])
+                            lbl_score = float(row.get('score', 0.0) or 0.0)
+                            lbl_id = float(row.get('identity', 0.0) or 0.0)
+                            lbl_len = int(row.get('length', 0) or 0)
+                            focus_role = 'query' if str(row['query_locus']).startswith(f"{genome_id}:{contig_id}:") else ('target' if str(row['target_locus']).startswith(f"{genome_id}:{contig_id}:") else None)
+                            side_tag = f" ({focus_role})" if focus_role else ""
+                            label = f"Block {bid} · score={lbl_score:.1f} · id={lbl_id:.3f} · len={lbl_len}{side_tag}"
+                            if st.button(f"🔗 {label}", key=f"view_block_{cluster_id}_{i}_{bid}"):
+                                sel = {
+                                    'block_id': bid,
+                                    'query_locus': row['query_locus'],
+                                    'target_locus': row['target_locus'],
+                                    'identity': float(lbl_id),
+                                    'score': float(lbl_score),
+                                    'length': int(lbl_len),
+                                    'block_type': ('micro' if is_micro else 'macro'),
+                                    'focus_role': focus_role,
+                                }
+                                st.session_state.selected_block = sel
+                                st.session_state.current_page = 'genome_viewer'
+                                st.rerun()
+                    else:
+                        st.caption("No supporting blocks matched this region.")
         else:
             locus_id = item
             display_title = locus_id
@@ -3858,8 +3967,8 @@ def _render_comparative_d3(data: Dict, width: int = 0, height: int = 500):
         const qMax = d3.max(data.query_locus, d => d.end) || 1;
         const tMin = d3.min(data.target_locus, d => d.start) || 0;
         const tMax = d3.max(data.target_locus, d => d.end) || 1;
-        const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, baseInnerW*zoom]);
-        const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, baseInnerW*zoom]);
+        const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, innerW]);
+        const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, innerW]);
 
         // Draw query genes (top)
         const q = g.append('g');
@@ -3993,8 +4102,8 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
           const qMax = d3.max(data.query_locus || [], d => d.end) || 1;
           const tMin = d3.min(data.target_locus || [], d => d.start) || 0;
           const tMax = d3.max(data.target_locus || [], d => d.end) || 1;
-          const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, baseInnerW*zoom]);
-          const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, baseInnerW*zoom]);
+          const qX = d3.scaleLinear().domain([qMin, qMax]).range([0, innerW]);
+          const tX = d3.scaleLinear().domain([tMin, tMax]).range([0, innerW]);
 
           // Tooltip
           container.style.position = 'relative';

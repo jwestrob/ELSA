@@ -619,7 +619,9 @@ class ClusterAnalyzer:
                 cluster_row = cursor.fetchone()
                 if cluster_row:
                     # Rough estimate: size * consensus_length * 2 (avg genes per window)
-                    estimated_genes = cluster_row[0] * cluster_row[1] * 2
+                    sz = int(cluster_row[0] or 0)
+                    clen = int(cluster_row[1] or 0)
+                    estimated_genes = sz * clen * 2
                     return min(estimated_genes, 10000)  # Cap at reasonable max
             
             return unique_genes
@@ -942,45 +944,90 @@ def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[Clu
                     "SELECT cluster_id, size, genomes FROM micro_gene_clusters ORDER BY size DESC"
                 ).fetchall()
                 # Build quick lookups for per-cluster unique contigs and gene counts
-                # Use index spans as an approximation for gene counts
-                mb_rows = conn.execute(
-                    "SELECT cluster_id, genome_id, contig_id, start_index, end_index FROM micro_gene_blocks"
-                ).fetchall()
                 contigs_by_cid: Dict[int, Set[Tuple[str, str]]] = {}
                 genes_by_cid: Dict[int, int] = {}
-                for cid, gid, contig, s, e in mb_rows:
-                    cid = int(cid)
-                    contigs_by_cid.setdefault(cid, set()).add((str(gid), str(contig)))
-                    try:
-                        genes_by_cid[cid] = genes_by_cid.get(cid, 0) + max(1, int(e) - int(s) + 1)
-                    except Exception:
-                        genes_by_cid[cid] = genes_by_cid.get(cid, 0) + 2  # fallback small span
+                # Prefer pair-backed sources; fall back to legacy micro_gene_blocks if present
+                have_pairs = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_block_pairs'").fetchone() is not None
+                have_maps = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_gene_pair_mappings'").fetchone() is not None
+                if have_pairs:
+                    # Unique contigs from query and target sides
+                    rows_q = conn.execute(
+                        "SELECT cluster_id, query_genome_id, query_contig_id FROM micro_block_pairs"
+                    ).fetchall()
+                    rows_t = conn.execute(
+                        "SELECT cluster_id, target_genome_id, target_contig_id FROM micro_block_pairs"
+                    ).fetchall()
+                    for cid, gid, cid2 in rows_q:
+                        contigs_by_cid.setdefault(int(cid), set()).add((str(gid), str(cid2)))
+                    for cid, gid, cid2 in rows_t:
+                        contigs_by_cid.setdefault(int(cid), set()).add((str(gid), str(cid2)))
+                    # Gene counts from mappings joined to pairs by block_id
+                    if have_maps:
+                        rows = conn.execute(
+                            """
+                            SELECT p.cluster_id, COUNT(DISTINCT m.gene_id)
+                            FROM micro_gene_pair_mappings m
+                            JOIN micro_block_pairs p ON p.block_id = m.block_id
+                            GROUP BY p.cluster_id
+                            """
+                        ).fetchall()
+                        for cid, n in rows:
+                            genes_by_cid[int(cid)] = int(n or 0)
+                else:
+                    # Legacy fallback: approximate genes via index spans
+                    has_mgb = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_gene_blocks'").fetchone() is not None
+                    if has_mgb:
+                        mb_rows = conn.execute(
+                            "SELECT cluster_id, genome_id, contig_id, start_index, end_index FROM micro_gene_blocks"
+                        ).fetchall()
+                        for cid, gid, contig, s, e in mb_rows:
+                            cid = int(cid)
+                            contigs_by_cid.setdefault(cid, set()).add((str(gid), str(contig)))
+                            try:
+                                genes_by_cid[cid] = genes_by_cid.get(cid, 0) + max(1, int(e) - int(s) + 1)
+                            except Exception:
+                                genes_by_cid[cid] = genes_by_cid.get(cid, 0) + 2
 
                 # Helper: compute PFAM domain counts per micro cluster from gene spans
                 def _micro_domain_counts(micro_cid: int) -> List[Tuple[str, int]]:
                     try:
-                        cur2 = conn.cursor()
-                        cur2.execute("DROP TABLE IF EXISTS _tmp_go_m")
-                        cur2.execute(
+                        # Prefer pair mappings if available
+                        have_pairs = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_block_pairs'").fetchone() is not None
+                        have_maps = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_gene_pair_mappings'").fetchone() is not None
+                        rows: List[Tuple[str]] = []
+                        if have_pairs and have_maps:
+                            q = """
+                                SELECT g.pfam_domains
+                                FROM micro_gene_pair_mappings m
+                                JOIN micro_block_pairs p ON p.block_id = m.block_id
+                                JOIN genes g ON g.gene_id = m.gene_id
+                                WHERE p.cluster_id = ? AND g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
                             """
-                            CREATE TEMP TABLE _tmp_go_m AS
-                            SELECT genome_id, contig_id, gene_id, start_pos, end_pos,
-                                   ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
-                            FROM genes
-                            """
-                        )
-                        q = """
-                            WITH ranges AS (
-                                SELECT block_id, genome_id, contig_id, start_index, end_index
-                                FROM micro_gene_blocks WHERE cluster_id = ?
+                            rows = conn.execute(q, (micro_cid,)).fetchall()
+                        else:
+                            # Legacy: use micro_gene_blocks spans
+                            cur2 = conn.cursor()
+                            cur2.execute("DROP TABLE IF EXISTS _tmp_go_m")
+                            cur2.execute(
+                                """
+                                CREATE TEMP TABLE _tmp_go_m AS
+                                SELECT genome_id, contig_id, gene_id, start_pos, end_pos,
+                                       ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
+                                FROM genes
+                                """
                             )
-                            SELECT g.pfam_domains
-                            FROM ranges r
-                            JOIN _tmp_go_m go ON go.genome_id = r.genome_id AND go.contig_id = r.contig_id AND go.idx BETWEEN r.start_index AND r.end_index
-                            JOIN genes g ON g.gene_id = go.gene_id
-                            WHERE g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
-                        """
-                        rows = cur2.execute(q, (micro_cid,)).fetchall()
+                            q = """
+                                WITH ranges AS (
+                                    SELECT block_id, genome_id, contig_id, start_index, end_index
+                                    FROM micro_gene_blocks WHERE cluster_id = ?
+                                )
+                                SELECT g.pfam_domains
+                                FROM ranges r
+                                JOIN _tmp_go_m go ON go.genome_id = r.genome_id AND go.contig_id = r.contig_id AND go.idx BETWEEN r.start_index AND r.end_index
+                                JOIN genes g ON g.gene_id = go.gene_id
+                                WHERE g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+                            """
+                            rows = cur2.execute(q, (micro_cid,)).fetchall()
                         cnt: Dict[str, int] = {}
                         for (pf,) in rows:
                             for tok in str(pf).split(';'):
@@ -1005,6 +1052,17 @@ def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[Clu
                             payload = _json.loads(str(r[0]))
                             if isinstance(payload, dict):
                                 cons = payload.get('consensus', [])
+                                if isinstance(cons, list):
+                                    cons_len = len(cons)
+                        if cons_len == 0:
+                            # On-the-fly fallback using DB/sidecars
+                            try:
+                                from genome_browser.database.cluster_content import compute_micro_cluster_pfam_consensus as _cmc
+                            except Exception:
+                                from database.cluster_content import compute_micro_cluster_pfam_consensus as _cmc
+                            payload2 = _cmc(conn, int(cid), 0.6, 0.9, 0)
+                            if isinstance(payload2, dict):
+                                cons = payload2.get('consensus', [])
                                 if isinstance(cons, list):
                                     cons_len = len(cons)
                     except Exception:

@@ -855,7 +855,66 @@ def compute_micro_cluster_pfam_consensus(conn: sqlite3.Connection,
             """,
             (int(micro_cluster_id),),
         ).fetchall()
-        return _consensus_from_rows(rows)
+        if rows:
+            return _consensus_from_rows(rows)
+
+    # Sidecar fallback: load pairs/mappings from CSVs and join with DB genes
+    try:
+        import pandas as _pd
+        from pathlib import Path as _P
+        candidates_pairs = [
+            _P('syntenic_analysis/micro_gene/micro_block_pairs.csv'),
+            _P('micro_gene/micro_block_pairs.csv')
+        ]
+        candidates_map = [
+            _P('syntenic_analysis/micro_gene/micro_gene_pair_mappings.csv'),
+            _P('micro_gene/micro_gene_pair_mappings.csv')
+        ]
+        pairs_df = None
+        maps_df = None
+        for p in candidates_pairs:
+            if p.exists():
+                df = _pd.read_csv(p)
+                df = df[df['cluster_id'] == int(micro_cluster_id)].copy()
+                if not df.empty:
+                    pairs_df = df[['block_id']].drop_duplicates()
+                    break
+        for m in candidates_map:
+            if m.exists():
+                dfm = _pd.read_csv(m)
+                maps_df = dfm
+                break
+        if pairs_df is not None and maps_df is not None and not maps_df.empty:
+            bid_set = set(int(b) for b in pairs_df['block_id'].unique())
+            maps_df = maps_df[maps_df['block_id'].isin(bid_set)].copy()
+            if not maps_df.empty:
+                gene_ids = [str(g) for g in maps_df['gene_id'].astype(str).unique().tolist()]
+                # Fetch gene annotations from DB
+                if gene_ids:
+                    # Chunk IN clause to avoid SQLite limits
+                    ann: dict[str, tuple[int,int,str]] = {}
+                    for i in range(0, len(gene_ids), 500):
+                        sub = gene_ids[i:i+500]
+                        q = (
+                            "SELECT gene_id, start_pos, strand, pfam_domains FROM genes WHERE gene_id IN ("
+                            + ",".join(["?"] * len(sub)) + ")"
+                        )
+                        for row in conn.execute(q, sub).fetchall():
+                            gid = str(row[0])
+                            ann[gid] = (int(row[1] or 0), int(row[2] or 1), str(row[3] or ''))
+                    # Build rows iterator
+                    rows_sidecar = []
+                    for rec in maps_df.itertuples(index=False):
+                        gid = str(rec.gene_id)
+                        if gid in ann:
+                            sp, st, pf = ann[gid]
+                            rows_sidecar.append((int(rec.block_id), str(rec.block_role), int(sp), int(st), pf))
+                    if rows_sidecar:
+                        # Sort for stability
+                        rows_sidecar.sort(key=lambda r: (r[0], r[1], r[2]))
+                        return _consensus_from_rows(rows_sidecar)
+    except Exception:
+        pass
 
     # Fallback to legacy micro_gene_blocks path
     conn.execute("DROP TABLE IF EXISTS _tmp_gene_order_micro")
@@ -977,10 +1036,10 @@ def compute_micro_cluster_pfam_consensus(conn: sqlite3.Connection,
 
     consensus = []
     for tok, dfv in df_counts.items():
+        cov = dfv / float(n_blocks)
         # Apply global DF ban, but do not ban tokens that meet core-coverage within this cluster
         if tok in banned_global and cov < float(min_core_coverage):
             continue
-        cov = dfv / float(n_blocks)
         if cov >= float(min_core_coverage):
             pos = stats.mean(positions.get(tok, [0]))
             fwd = (fwd_counts.get(tok, 0) / float(occ_counts.get(tok, 1))) if occ_counts.get(tok, 0) else 0.0

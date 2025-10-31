@@ -109,6 +109,36 @@ What’s working now
 - Diagnostics:
   - Micro pass prints concise “[Micro] …” diagnostics: params used, raw block counts, pre-cluster dedup removed, unique shingles/DF filter results, candidates/edges/mutual edges, and final cluster counts/support.
 
+### Micro Embedding/Shingle Anomalies (Diagnosis + Next Steps)
+
+What we observed
+- In some micro clusters, clinker edges (cosine/PFAM) connect two loci but not a third “outlier”, yet micro clustering grouped all three. Recomputing shingles from `elsa_index/ingest/genes.parquet` showed per‑gene embeddings for the three 3‑gene windows were byte‑identical after float16 projection at each position across genomes, yielding identical shingles (Jaccard=1.0) and explaining the clustering.
+- PFAM overlap for the outlier can be zero, consistent with no PFAM edges at render time. Viewer‑side cosine edges can also be missing for the outlier if embedding mapping fails by gene_id and fallback contig+start misses the critical genes.
+
+Duplicate scan over embeddings parquet
+- 11,483 rows × 256 dims; 7,724 unique float16 vectors; 1,786 duplicate groups; max dup count per vector = 6 (exactly once per genome). Within‑contig duplicates ≈ 0; duplicates are cross‑sample/contig. This points to the embedding export/join broadcasting identical vectors across genomes.
+
+Hypotheses
+- Miskeyed join/broadcast during embed/build (keyed by index/window/contig ordinal instead of `gene_id` or absolute coordinates).
+- Early discretization/quantization, then float16 cast, collapsing vectors across genomes.
+- Using intermediate discrete codewords as “embeddings” instead of PLM vectors.
+- Key aliasing from contig/sample normalization causing cross‑genome collisions.
+
+Plan to audit “elsa embed” and “elsa build”
+1) Trace where PLM embeddings are computed, normalized, projected, and written to `genes.parquet`.
+   - Ensure keying by stable `gene_id` (or genome_id+contig_id+start/end), no reindex by position later.
+   - Confirm dtype/normalization order; apply float16 late; store genuine PLM vectors, not discrete surrogates.
+2) QA after embed:
+   - Hash float16 bytes per row; report global/per‑contig dup metrics; list top duplicate groups (expect no systematic six‑way duplicates).
+   - Recompute a few PLM embeddings for duplicated groups for ground truth.
+3) Viewer parity:
+   - Keep `gene_id` parity; robust contig+start/end fallback; log mapped counts per row (so missing edges are explainable).
+4) Re‑run micro; validate with clinker and PFAM consensus.
+5) Only if still needed, adjust shingle sensitivity (drop skip‑1 and/or strand canonicalization; require ≥2 matching shingles; raise τ; lower df_max; increase min_genome_support).
+
+Takeaway
+- The impurity is driven by the embeddings parquet providing identical vectors across genomes for many genes; clustering is consistent with its inputs. Fixing the embed/build path should bring micro clusters into alignment with PFAM/biology and with the clinker view.
+
 Cluster Explorer UX
 - Multi-locus clinker view (always visible at bottom of Explore Cluster):
   - Adjacent-row edges only; tooltips with cosine and PFAM overlap.
@@ -167,6 +197,60 @@ Open items / next steps
 - Derep on micro pairs against macro (containment on both sides; favor macro).
 - pfam_search for micro in Explorer (join mappings→genes) for feature parity with macro.
 - Optional clinker UX: “Fit” zoom, edge hit-layer above genes for better hover.
+
+### Micro Explore Regions/Blocks Divergence (Diagnosis)
+
+- Symptom: On Explore Cluster, “View supporting blocks” is empty or shows unrelated pairs (e.g., 1500000000…) that do not overlap the displayed region. Sometimes no representative is chosen for a region. Users observe that clinker looks correct, consensus on cards is present, but Explore’s region→blocks linkage is broken.
+- Ground truth: Display regions are computed from micro alignments (micro_block_pairs) per side by merging bp intervals on each contig. Each region carries the exact contributing block_ids. If pairs are missing for a micro cluster, the app historically “fell back” to legacy micro windows (micro_gene_blocks triads) to fabricate regions.
+- Core issues identified:
+  - Missing pairs for some micro clusters: DB and sidecars do not contain pairs for several raw micro IDs (e.g., display 77 → raw 1). Diagnostics show micro_gene_clusters contains IDs with no corresponding rows in micro_block_pairs.
+  - Source divergence (DB vs sidecar): Regions may be built from sidecar pairs while the block list used to populate supporting blocks comes from DB (or vice versa). Region.block_ids then do not exist in the list being filtered, yielding no intersection.
+  - ID namespace mismatch: Legacy fallback regions use block_ids in the 1_000_000_000+ “triad index” namespace, while pair-based blocks are in the 1_500_000_000+ namespace; these sets never intersect.
+  - Stale syntenic_blocks: The DB table may contain micro “pairs projected to syntenic_blocks” from a previous run with different cluster IDs (macro ceiling changed; different offset), further desynchronizing display IDs.
+
+- What we changed (UI/logging — non-invasive):
+  - Removed UI fallbacks when listing supporting blocks and representatives; these now rely strictly on region.blocks ∩ current block list with explicit bp overlap on the same contig. If the intersection is empty, we show “No supporting blocks…”, not a contig/cluster-wide guess.
+  - Added core spans to micro pairs and switched consensus to core-only mappings.
+  - Added region-debug logging in Explore to print, per region: source used (db/sidecar/legacy), region block count, cluster block count, and intersection size.
+  - Added tools/diagnose_micro.py (table health) and tools/diagnose_explore_regions.py (rebuild regions → measure intersection with block list) to reproduce the problem off-UI.
+
+- Current state from diagnostics (example):
+  - MAX macro cluster_id = 76 → display 77 ⇒ raw micro 1.
+  - micro_block_pairs has rows only for raw micro IDs ≥3 in this dataset; raw 1 has no pairs in DB or sidecar.
+  - compute_display_regions_for_micro_cluster(display=77) thus “fell back” historically to legacy windows to produce regions; those regions’ block IDs cannot match the pair-based block list (intersection=0), so “supporting blocks” is empty. This is not a UI bug; it’s a data mismatch and a harmful fallback.
+
+### STOP Using Legacy Fallbacks (Decision)
+
+- Fallbacks that synthesize regions from legacy windows when pairs are missing are misleading (“making stuff up”) and must be removed.
+- When micro pairs are missing for a cluster, Explore must show a clear error badge: “No micro pairs available for this micro cluster; unable to compute display regions.” and not render regions.
+
+### Next Steps (Data + Integrity)
+
+1) Pair completeness
+   - Ensure `elsa analyze --micro` builds micro_block_pairs for all non-sink micro clusters and writes both DB tables (micro_block_pairs, micro_gene_pair_mappings) and sidecars.
+   - Add a post-analyze integrity check: For every raw micro cluster_id in micro_gene_clusters, assert rows exist in micro_block_pairs; if not, exit with a non-zero status and list missing IDs.
+
+2) Single source per session
+   - Pick exactly one source per cluster (DB or sidecar) for pairs and propagate that choice to both region building and block listing. Persist the choice in session and reflect it in logs.
+   - If sidecar is used, provide an explicit banner in Explore (“using sidecar pairs”) to avoid confusion.
+
+3) Disable legacy region computation
+   - Remove compute_display_regions_for_micro_cluster’s legacy path. If pairs are absent, return no regions and show an explicit message (“No micro pairs; regions not available”).
+
+4) Projection parity
+   - During analyze, project micro pairs into syntenic_blocks (block_type='micro') consistently (fresh run) to ensure the blocks used on the Explore page mirror the active pairs. Clear/refresh stale rows to avoid ID drift when macro ceiling changes.
+
+5) Robust debugs/tests
+   - Add region→blocks intersection assertion in Explore: if regions exist but intersect=0, log a CRITICAL line with display_id, src, example missing IDs; recommend running tools/diagnose_explore_regions.py.
+   - Add unit-style test (smoke) for a small fixture: build pairs; compute regions; verify region.blocks ⊆ loaded block list for that cluster.
+
+6) Operational guidance
+   - When users rerun analyze and still see no supporting blocks, instruct to run:
+     - `python tools/diagnose_micro.py --db genome_browser/genome_browser.db`
+     - `python tools/diagnose_explore_regions.py --db genome_browser/genome_browser.db --display-id <X>`
+     and attach outputs. If pairs are missing for those raw IDs, the remedy is to rebuild pairs (not to fabricate regions.
+
+Summary: The issue is not UI “hallucinations” but bad fallbacks and source divergence. We will (a) stop legacy region synthesis entirely, (b) enforce 1-source pair usage per session, (c) add integrity checks to guarantee pairs exist for all micro clusters post-analyze, and (d) add tests/logs to surface any region→block mismatches immediately. Until then, when pairs are missing for a cluster, Explore must explicitly say so rather than showing any regions.
 
 Operator notes
 - If micro pairs don’t appear, confirm DB: SELECT COUNT(*) FROM micro_block_pairs; the browser and analyzer must point to the same genome_browser/genome_browser.db.

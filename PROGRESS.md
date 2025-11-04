@@ -8,7 +8,7 @@
 - [x] 6. Sinkhorn re-ranking
 - [x] 7. Graph + Leiden/HDBSCAN
 - [ ] 8. ITQ+MIH path [optional]
-- [ ] 9. CLI + config + evaluation
+- [x] 9. CLI + config + evaluation
 
 ## Notes
 - 2025-11-03: Created project scaffold, CLI placeholders, doc stubs, Makefile/tooling, and milestone-aware tests; ran `make fmt`, `make lint`, `make test`.
@@ -21,3 +21,4 @@
 - 2025-11-03: Merged near-duplicate operon clusters that differed only by ±2-gene offsets across member genomes; cluster count dropped from 2,031 to 956 and projected blocks from 16,945 to 7,383, eliminating redundant overlays for conserved loci.
 - 2025-11-04: Added configurable operon merge thresholds (max gap, support ratio) and conservative adjacency merging; operon clusters now default to 287 on the six-genome S. pneumoniae set with rich 10-gene cores preserved without spurious concatenation.
 - 2025-11-04: Implemented reciprocal kNN graph construction, Leiden/HDBSCAN clustering utilities, CLI subcommands, and milestone tests; `make fmt`, `make lint`, `make test` all pass.
+- 2025-11-04: Completed milestone 9 by wiring the CLI end-to-end (`retrieve`, `eval`), implementing evaluation metrics, restructuring config defaults, and documenting the workflow. CLI commands now succeed without skips and emit JSON reports driven entirely by config paths.

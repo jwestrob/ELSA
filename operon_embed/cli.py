@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import logging
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import joblib
 import numpy as np
@@ -14,7 +15,7 @@ import json
 
 from .config import load_config
 from .io import ensure_directory
-from .index_hnsw import build_hnsw_index, save_metadata
+from .index_hnsw import build_hnsw_index, load_hnsw_index, save_metadata
 from .preprocess import (
     fit_preprocessor,
     load_preprocessor,
@@ -25,6 +26,7 @@ from .shingle import build_shingles
 from .sinkhorn import sinkhorn_distance
 from .graph import build_knn_graph
 from .cluster import hdbscan_cluster, leiden_cluster
+from .evaluate import pair_metrics, cluster_metrics
 
 import igraph as ig
 
@@ -68,11 +70,18 @@ def _load_embedding_array(path: Path) -> np.ndarray:
     raise ValueError(f"Unsupported embedding format: {path.suffix}")
 
 
+def _extract_paths(config: Optional[Dict[str, Any]]) -> Dict[str, Any]:
+    if not config:
+        return {}
+    raw = config.get("paths")
+    return raw if isinstance(raw, dict) else {}
+
+
 def _resolve_embeddings_path(candidate: Optional[str], config: Dict[str, Any]) -> Path:
     if candidate:
         return Path(candidate).expanduser().resolve()
 
-    paths_cfg = config.get("paths", {}) if config else {}
+    paths_cfg = _extract_paths(config)
     embeddings_path = paths_cfg.get("embeddings")
     if embeddings_path:
         return Path(str(embeddings_path)).expanduser().resolve()
@@ -90,7 +99,7 @@ def _resolve_sinkhorn_path(candidate: Optional[str], config: Dict[str, Any]) -> 
     if candidate:
         return Path(candidate).expanduser().resolve()
 
-    paths_cfg = config.get("paths", {}) if config else {}
+    paths_cfg = _extract_paths(config)
     sinkhorn = paths_cfg.get("sinkhorn_costs")
     if sinkhorn:
         return Path(str(sinkhorn)).expanduser().resolve()
@@ -106,7 +115,7 @@ def _resolve_preprocessor_path(
     if candidate:
         return Path(candidate).expanduser().resolve()
 
-    paths_cfg = config.get("paths", {}) if config else {}
+    paths_cfg = _extract_paths(config)
     preproc = paths_cfg.get("preprocessor")
     if preproc:
         return Path(str(preproc)).expanduser().resolve()
@@ -139,13 +148,144 @@ def _resolve_shingles_path(candidate: Optional[str], config: Dict[str, Any]) -> 
     if candidate:
         return Path(candidate).expanduser().resolve()
 
-    shingles_path = config.get("paths", {}).get("shingles") if config else None
+    shingles_path = _extract_paths(config).get("shingles") if config else None
     if shingles_path:
         return Path(str(shingles_path)).expanduser().resolve()
 
     raise FileNotFoundError(
         "Provide --shingles or set paths.shingles in the config",
     )
+
+
+def _resolve_index_paths(
+    candidate: Optional[str], config: Dict[str, Any]
+) -> Tuple[Path, Path]:
+    """Resolve the HNSW index and metadata file locations."""
+
+    paths_cfg = _extract_paths(config)
+
+    if candidate:
+        resolved = Path(candidate).expanduser().resolve()
+        if resolved.is_dir():
+            index_path = resolved / "hnsw_index.bin"
+            metadata_path = resolved / "hnsw_index.json"
+        else:
+            index_path = resolved
+            metadata_path = resolved.with_suffix(".json")
+        return index_path, metadata_path
+
+    if "hnsw_index" in paths_cfg:
+        resolved = Path(str(paths_cfg["hnsw_index"]))
+        resolved = resolved.expanduser().resolve()
+        metadata = resolved.with_suffix(".json")
+        return resolved, metadata
+
+    if "index_dir" in paths_cfg:
+        resolved = Path(str(paths_cfg["index_dir"])).expanduser().resolve()
+        return resolved / "hnsw_index.bin", resolved / "hnsw_index.json"
+
+    raise FileNotFoundError(
+        "Provide --index or configure paths.hnsw_index / paths.index_dir",
+    )
+
+
+def _expand_gene_span(span: Tuple[int, int]) -> List[int]:
+    start, end = int(span[0]), int(span[1])
+    if end < start:
+        start, end = end, start
+    return list(range(start, end + 1))
+
+
+def _optional_path(*values: Optional[Any]) -> Optional[Path]:
+    for value in values:
+        if not value:
+            continue
+        return Path(str(value)).expanduser().resolve()
+    return None
+
+
+def _load_pair_labels(path: Path) -> Dict[int, int]:
+    mapping: Dict[int, int] = {}
+    resolved = path.expanduser().resolve()
+    with resolved.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        if not reader.fieldnames:
+            handle.seek(0)
+            reader = csv.DictReader(handle, fieldnames=["pair_index", "label"])
+
+        fieldnames = list(reader.fieldnames or [])
+        if not fieldnames:
+            return mapping
+
+        idx_candidates = [
+            name for name in fieldnames if name and name.lower() in {"pair_index", "index", "id"}
+        ]
+        label_candidates = [
+            name for name in fieldnames if name and name.lower() in {"label", "target", "truth"}
+        ]
+        idx_field = idx_candidates[0] if idx_candidates else fieldnames[0]
+        label_field = label_candidates[0] if label_candidates else fieldnames[-1]
+
+        for row in reader:
+            if idx_field not in row or label_field not in row:
+                continue
+            try:
+                idx = int(row[idx_field])
+                label = int(float(row[label_field]))
+            except (TypeError, ValueError):
+                continue
+            mapping[idx] = 1 if label > 0 else 0
+    return mapping
+
+
+def _load_cluster_labels(path: Path, expected: int) -> np.ndarray:
+    resolved = path.expanduser().resolve()
+    with resolved.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        label_array: Optional[np.ndarray] = None
+
+        if reader.fieldnames:
+            idx_candidates = [
+                name
+                for name in reader.fieldnames
+                if name and name.lower() in {"index", "id", "node"}
+            ]
+            label_candidates = [
+                name
+                for name in reader.fieldnames
+                if name and name.lower() in {"label", "class", "cluster"}
+            ]
+            idx_field = idx_candidates[0] if idx_candidates else reader.fieldnames[0]
+            label_field = (
+                label_candidates[0] if label_candidates else reader.fieldnames[-1]
+            )
+            labels = np.empty(expected, dtype=object)
+            labels.fill(None)
+            for row in reader:
+                if idx_field not in row or label_field not in row:
+                    continue
+                try:
+                    idx = int(row[idx_field])
+                except (TypeError, ValueError):
+                    continue
+                if idx < 0 or idx >= expected:
+                    continue
+                labels[idx] = row[label_field]
+            if np.any(labels == None):  # noqa: E711
+                raise ValueError(
+                    "Cluster label CSV must cover every assignment when provided"
+                )
+            label_array = labels
+        else:
+            handle.seek(0)
+            rows = list(csv.reader(handle))
+            if len(rows) != expected:
+                raise ValueError(
+                    "Cluster label file without headers must supply one row per assignment"
+                )
+            label_array = np.array([row[1] for row in rows], dtype=object)
+
+    return label_array
 
 
 def cmd_fit_preproc(args: argparse.Namespace) -> int:
@@ -220,7 +360,7 @@ def cmd_build_shingles(args: argparse.Namespace) -> int:
 
     try:
         contig_sizes = _load_contig_sizes(
-            args.contig_sizes or config.get("paths", {}).get("contig_sizes"),
+            args.contig_sizes or _extract_paths(config).get("contig_sizes"),
             len(transformed),
         )
     except (OSError, ValueError) as exc:
@@ -315,6 +455,94 @@ def cmd_build_index(args: argparse.Namespace) -> int:
     )
     logger.info("Saved HNSW index to %s", index_path)
     print(f"Saved HNSW index to {index_path}")  # noqa: T201
+    return 0
+
+
+def cmd_retrieve(args: argparse.Namespace) -> int:
+    config: Dict[str, Any] = {}
+    if args.config:
+        try:
+            config = load_config(args.config)
+        except (OSError, ValueError) as exc:
+            logger.error("Failed to load config %s: %s", args.config, exc)
+            return 1
+
+    try:
+        shingles_path = _resolve_shingles_path(args.shingles, config)
+    except FileNotFoundError as exc:
+        logger.error("%s", exc)
+        return 1
+
+    with np.load(shingles_path) as archive:
+        if "vectors" not in archive or "gene_indices" not in archive:
+            logger.error(
+                "Shingles file %s must contain 'vectors' and 'gene_indices' arrays",
+                shingles_path,
+            )
+            return 1
+        vectors = np.asarray(archive["vectors"], dtype=np.float32)
+        gene_indices = np.asarray(archive["gene_indices"], dtype=np.int64)
+
+    if vectors.size == 0:
+        logger.error("No shingle vectors available for retrieval")
+        return 1
+
+    if gene_indices.ndim == 1:
+        gene_indices = gene_indices.reshape(-1, 2)
+
+    limit = args.limit
+    if limit is not None:
+        vectors = vectors[:limit]
+        gene_indices = gene_indices[:limit]
+
+    try:
+        index_path, metadata_path = _resolve_index_paths(args.index, config)
+        index_cfg = config.get("index", {}).get("hnsw", {})
+        ef_search = args.ef_search or index_cfg.get("ef_search")
+        hnsw = load_hnsw_index(index_path, metadata_path, ef_search=ef_search)
+    except (FileNotFoundError, ValueError, ImportError) as exc:
+        logger.error("%s", exc)
+        return 1
+
+    top_k = int(args.top_k or config.get("index", {}).get("hnsw", {}).get("top_k", 64))
+    allow_self = bool(args.allow_self)
+
+    try:
+        indices, distances = hnsw.query(vectors, k=top_k)
+    except Exception as exc:  # pragma: no cover - propagated from hnswlib
+        logger.error("HNSW retrieval failed: %s", exc)
+        return 1
+
+    candidates: List[Dict[str, Any]] = []
+    seen: set[Tuple[int, int]] = set()
+
+    for source_idx, (nbrs, dists) in enumerate(zip(indices, distances)):
+        for target_idx, dist in zip(nbrs.tolist(), dists.tolist()):
+            if target_idx < 0:
+                continue
+            if not allow_self and target_idx == source_idx:
+                continue
+            key = (int(source_idx), int(target_idx))
+            if key in seen:
+                continue
+            seen.add(key)
+            candidates.append(
+                {
+                    "source_shingle": int(source_idx),
+                    "target_shingle": int(target_idx),
+                    "distance": float(dist),
+                    "query": _expand_gene_span(tuple(gene_indices[source_idx])),
+                    "target": _expand_gene_span(tuple(gene_indices[target_idx])),
+                }
+            )
+
+    output_path = Path(args.output).expanduser().resolve()
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8") as handle:
+        json.dump(candidates, handle, indent=2)
+
+    logger.info("Saved %d candidate pairs to %s", len(candidates), output_path)
+    print(f"Saved {len(candidates)} candidate pairs to {output_path}")  # noqa: T201
     return 0
 
 
@@ -574,21 +802,147 @@ def cmd_cluster(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_eval(args: argparse.Namespace) -> int:
+    config: Dict[str, Any] = {}
+    if args.config:
+        try:
+            config = load_config(args.config)
+        except (OSError, ValueError) as exc:
+            logger.error("Failed to load config %s: %s", args.config, exc)
+            return 1
+
+    report: Dict[str, Any] = {}
+
+    paths_cfg = _extract_paths(config)
+    eval_cfg = config.get("evaluate", {}) if config else {}
+    pairs_path = _optional_path(
+        args.pairs,
+        paths_cfg.get("pair_predictions"),
+        paths_cfg.get("sinkhorn_results"),
+    )
+
+    if pairs_path and pairs_path.exists():
+        try:
+            with pairs_path.open("r", encoding="utf-8") as handle:
+                raw_pairs = json.load(handle)
+        except (OSError, ValueError) as exc:
+            logger.error("Failed to read pair predictions: %s", exc)
+            return 1
+
+        if not isinstance(raw_pairs, list):
+            logger.error("Pair predictions must be a JSON list")
+            return 1
+
+        similarities: List[float] = []
+        pair_indices: List[int] = []
+        for idx, entry in enumerate(raw_pairs):
+            if not isinstance(entry, dict):
+                continue
+            pair_indices.append(int(entry.get("pair_index", idx)))
+            try:
+                similarities.append(float(entry.get("similarity", 0.0)))
+            except (TypeError, ValueError):
+                similarities.append(0.0)
+
+        sim_array = np.asarray(similarities, dtype=np.float64)
+        pair_report: Dict[str, Any] = pair_metrics(sim_array)
+
+        pair_labels_path = _optional_path(
+            args.pair_labels,
+            eval_cfg.get("pair_labels_csv"),
+        )
+
+        if pair_labels_path and pair_labels_path.exists():
+            try:
+                label_map = _load_pair_labels(pair_labels_path)
+            except (OSError, ValueError) as exc:
+                logger.error("Failed to load pair labels: %s", exc)
+                return 1
+
+            labeled_sim: List[float] = []
+            labeled_labels: List[int] = []
+            for idx_value, sim in zip(pair_indices, sim_array):
+                if idx_value in label_map:
+                    labeled_sim.append(float(sim))
+                    labeled_labels.append(int(label_map[idx_value]))
+
+            if labeled_sim:
+                labeled_report = pair_metrics(
+                    np.asarray(labeled_sim, dtype=np.float64),
+                    np.asarray(labeled_labels, dtype=np.int64),
+                )
+                labeled_report["label_coverage"] = float(
+                    len(labeled_sim) / len(sim_array)
+                )
+                pair_report["labeled"] = labeled_report
+            else:
+                pair_report["labeled"] = {"label_coverage": 0.0}
+
+        report["pairs"] = pair_report
+    elif pairs_path:
+        logger.warning("Pair predictions file not found: %s", pairs_path)
+
+    clusters_path = _optional_path(
+        args.clusters,
+        paths_cfg.get("cluster_assignments"),
+        paths_cfg.get("clusters"),
+    )
+
+    if clusters_path and clusters_path.exists():
+        try:
+            with clusters_path.open("r", encoding="utf-8") as handle:
+                payload = json.load(handle)
+        except (OSError, ValueError) as exc:
+            logger.error("Failed to read cluster assignments: %s", exc)
+            return 1
+
+        assignments_list = (
+            payload.get("assignments") if isinstance(payload, dict) else None
+        )
+        if assignments_list is None:
+            logger.error("Cluster assignments JSON must contain an 'assignments' list")
+            return 1
+
+        assignments = np.asarray(assignments_list)
+        cluster_report: Dict[str, Any] = cluster_metrics(assignments)
+
+        cluster_labels_path = _optional_path(
+            args.cluster_labels,
+            eval_cfg.get("cluster_labels_csv"),
+        )
+
+        if cluster_labels_path and cluster_labels_path.exists():
+            try:
+                labels = _load_cluster_labels(cluster_labels_path, assignments.size)
+            except (OSError, ValueError) as exc:
+                logger.error("Failed to load cluster labels: %s", exc)
+                return 1
+            labeled_report = cluster_metrics(assignments, labels)
+            cluster_report["labeled"] = labeled_report
+
+        report["clusters"] = cluster_report
+    elif clusters_path:
+        logger.warning("Cluster assignments file not found: %s", clusters_path)
+
+    if not report:
+        logger.error("No evaluation inputs found – nothing to report")
+        return 1
+
+    output_path = _optional_path(args.output, paths_cfg.get("eval_report"))
+    if output_path:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with output_path.open("w", encoding="utf-8") as handle:
+            json.dump(report, handle, indent=2)
+        print(f"Saved evaluation report to {output_path}")  # noqa: T201
+    else:
+        print(json.dumps(report, indent=2))  # noqa: T201
+
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Operon embedding pipeline CLI")
     subparsers = parser.add_subparsers(dest="command")
-
-    commands: Dict[str, Callable[[argparse.Namespace], int]] = {
-        "fit-preproc": cmd_fit_preproc,
-        "build-shingles": cmd_build_shingles,
-        "build-index": cmd_build_index,
-        "train-metric": _placeholder("train-metric"),
-        "retrieve": _placeholder("retrieve"),
-        "rerank": cmd_rerank,
-        "graph": cmd_graph,
-        "cluster": cmd_cluster,
-        "eval": _placeholder("eval"),
-    }
 
     fit_parser = subparsers.add_parser(
         "fit-preproc", help="Fit whitening + PCA preprocessor"
@@ -626,6 +980,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         help="Path to pipeline configuration YAML",
     )
+    fit_parser.set_defaults(func=cmd_fit_preproc)
 
     shingle_parser = subparsers.add_parser(
         "build-shingles", help="Construct order-invariant shingle vectors"
@@ -673,6 +1028,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         help="Path to pipeline configuration YAML",
     )
+    shingle_parser.set_defaults(func=cmd_build_shingles)
 
     index_parser = subparsers.add_parser(
         "build-index", help="Build an HNSW index over shingle vectors"
@@ -716,6 +1072,58 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         help="Path to pipeline configuration YAML",
     )
+    index_parser.set_defaults(func=cmd_build_index)
+
+    train_metric_parser = subparsers.add_parser(
+        "train-metric", help="Train an optional metric learning model"
+    )
+    train_metric_parser.set_defaults(func=_placeholder("train-metric"))
+
+    retrieve_parser = subparsers.add_parser(
+        "retrieve", help="Retrieve candidate neighbour shingles from the index"
+    )
+    retrieve_parser.add_argument(
+        "--shingles",
+        type=str,
+        help="Path to shingles NPZ (overrides config)",
+    )
+    retrieve_parser.add_argument(
+        "--index",
+        type=str,
+        help="Path to HNSW index (.bin) or directory containing the index",
+    )
+    retrieve_parser.add_argument(
+        "--output",
+        type=str,
+        required=True,
+        help="Destination JSON for candidate pairs",
+    )
+    retrieve_parser.add_argument(
+        "--top-k",
+        type=int,
+        help="Neighbours returned per shingle (overrides config)",
+    )
+    retrieve_parser.add_argument(
+        "--ef-search",
+        type=int,
+        help="efSearch parameter when querying the index",
+    )
+    retrieve_parser.add_argument(
+        "--limit",
+        type=int,
+        help="Optional cap on the number of shingles queried",
+    )
+    retrieve_parser.add_argument(
+        "--allow-self",
+        action="store_true",
+        help="Retain self-matches in the candidate list",
+    )
+    retrieve_parser.add_argument(
+        "--config",
+        type=str,
+        help="Pipeline configuration YAML",
+    )
+    retrieve_parser.set_defaults(func=cmd_retrieve)
 
     rerank_parser = subparsers.add_parser(
         "rerank", help="Compute Sinkhorn similarities for candidate pairs"
@@ -770,6 +1178,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         help="Path to pipeline configuration YAML",
     )
+    rerank_parser.set_defaults(func=cmd_rerank)
 
     graph_parser = subparsers.add_parser(
         "graph", help="Construct a reciprocal kNN graph from embeddings"
@@ -816,6 +1225,7 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         help="Pipeline configuration YAML",
     )
+    graph_parser.set_defaults(func=cmd_graph)
 
     cluster_parser = subparsers.add_parser(
         "cluster", help="Cluster a graph using Leiden or HDBSCAN"
@@ -863,13 +1273,43 @@ def build_parser() -> argparse.ArgumentParser:
         type=str,
         help="Pipeline configuration YAML",
     )
+    cluster_parser.set_defaults(func=cmd_cluster)
 
-    for name, handler in commands.items():
-        if name in {"fit-preproc", "build-shingles"}:
-            continue
-        subparsers.add_parser(name)
+    eval_parser = subparsers.add_parser(
+        "eval", help="Generate evaluation metrics and summary statistics"
+    )
+    eval_parser.add_argument(
+        "--pairs",
+        type=str,
+        help="Path to Sinkhorn similarity JSON (rerank output)",
+    )
+    eval_parser.add_argument(
+        "--pair-labels",
+        type=str,
+        help="CSV file containing ground-truth pair labels",
+    )
+    eval_parser.add_argument(
+        "--clusters",
+        type=str,
+        help="Cluster assignments JSON",
+    )
+    eval_parser.add_argument(
+        "--cluster-labels",
+        type=str,
+        help="CSV file containing ground-truth cluster labels",
+    )
+    eval_parser.add_argument(
+        "--output",
+        type=str,
+        help="Destination for the evaluation report JSON",
+    )
+    eval_parser.add_argument(
+        "--config",
+        type=str,
+        help="Pipeline configuration YAML",
+    )
+    eval_parser.set_defaults(func=cmd_eval)
 
-    parser.set_defaults(_commands=commands)
     return parser
 
 
@@ -881,7 +1321,11 @@ def main(argv: list[str] | None = None) -> int:
         parser.print_help()
         return 0
 
-    handler = args._commands[args.command]
+    handler = getattr(args, "func", None)
+    if handler is None:
+        parser.print_help()
+        return 1
+
     return handler(args)
 
 

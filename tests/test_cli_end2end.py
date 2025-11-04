@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import subprocess
 import sys
-import json
 from pathlib import Path
 
 import pytest
@@ -97,11 +96,9 @@ def test_cli_fit_preproc_runs(tmp_path: Path, operon_test_data: Path) -> None:
         check=False,
     )
 
-    if result.returncode != 0:
-        pytest.skip(
-            f"fit-preproc command failed: {result.stderr.strip() or result.stdout.strip()}"
-        )
-
+    assert (
+        result.returncode == 0
+    ), f"fit-preproc failed: {result.stderr.strip() or result.stdout.strip()}"
     assert preproc_output.exists()
 
     shingle_dir = tmp_path / "shingles"
@@ -130,12 +127,9 @@ def test_cli_fit_preproc_runs(tmp_path: Path, operon_test_data: Path) -> None:
         check=False,
     )
 
-    if shingle_result.returncode != 0:
-        pytest.skip(
-            "build-shingles command failed: "
-            f"{shingle_result.stderr.strip() or shingle_result.stdout.strip()}"
-        )
-
+    assert shingle_result.returncode == 0, "build-shingles failed: " + (
+        shingle_result.stderr.strip() or shingle_result.stdout.strip()
+    )
     shingles_npz = shingle_dir / "shingles.npz"
     assert shingles_npz.exists()
 
@@ -163,23 +157,43 @@ def test_cli_fit_preproc_runs(tmp_path: Path, operon_test_data: Path) -> None:
         check=False,
     )
 
-    if index_result.returncode != 0:
-        pytest.skip(
-            "build-index command failed: "
-            f"{index_result.stderr.strip() or index_result.stdout.strip()}"
-        )
-
+    assert index_result.returncode == 0, "build-index failed: " + (
+        index_result.stderr.strip() or index_result.stdout.strip()
+    )
     assert (index_dir / "hnsw_index.bin").exists()
 
-    pairs_path = tmp_path / "pairs.json"
-    pairs_path.write_text(
-        json.dumps(
-            [
-                {"query": list(range(0, 4)), "target": list(range(4, 8))},
-                {"query": list(range(8, 12)), "target": list(range(12, 16))},
-            ]
-        )
+    retrieve_output = tmp_path / "candidates.json"
+    retrieve_cmd = [
+        sys.executable,
+        "-m",
+        CLI_MODULE,
+        "retrieve",
+        "--shingles",
+        str(shingles_npz),
+        "--index",
+        str(index_dir),
+        "--output",
+        str(retrieve_output),
+        "--top-k",
+        "2",
+        "--limit",
+        "32",
+        "--config",
+        str(config_path),
+    ]
+
+    retrieve_result = subprocess.run(
+        retrieve_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False,
     )
+
+    assert retrieve_result.returncode == 0, "retrieve failed: " + (
+        retrieve_result.stderr.strip() or retrieve_result.stdout.strip()
+    )
+    assert retrieve_output.exists()
 
     rerank_output = tmp_path / "rerank.json"
     rerank_cmd = [
@@ -188,7 +202,7 @@ def test_cli_fit_preproc_runs(tmp_path: Path, operon_test_data: Path) -> None:
         CLI_MODULE,
         "rerank",
         "--pairs",
-        str(pairs_path),
+        str(retrieve_output),
         "--output",
         str(rerank_output),
         "--config",
@@ -204,11 +218,34 @@ def test_cli_fit_preproc_runs(tmp_path: Path, operon_test_data: Path) -> None:
         text=True,
         check=False,
     )
-
-    if rerank_result.returncode != 0:
-        pytest.skip(
-            "rerank command failed: "
-            f"{rerank_result.stderr.strip() or rerank_result.stdout.strip()}"
-        )
-
+    assert rerank_result.returncode == 0, "rerank failed: " + (
+        rerank_result.stderr.strip() or rerank_result.stdout.strip()
+    )
     assert rerank_output.exists()
+
+    eval_output = tmp_path / "eval.json"
+    eval_cmd = [
+        sys.executable,
+        "-m",
+        CLI_MODULE,
+        "eval",
+        "--pairs",
+        str(rerank_output),
+        "--output",
+        str(eval_output),
+        "--config",
+        str(config_path),
+    ]
+
+    eval_result = subprocess.run(
+        eval_cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False,
+    )
+
+    assert eval_result.returncode == 0, "eval failed: " + (
+        eval_result.stderr.strip() or eval_result.stdout.strip()
+    )
+    assert eval_output.exists()

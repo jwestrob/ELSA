@@ -1,0 +1,40 @@
+preprocess:
+  pca_dims: 96
+  eps: 1.0e-5
+shingle:
+  k: 10
+  stride: 1
+  use_positional_moments: true
+index:
+  method: hnsw
+  hnsw:
+    M: 32
+    ef_construction: 200
+    ef_search: 128
+    top_k: 64
+metric:
+  enabled: false
+  method: itml
+  output_dims: 64
+sinkhorn:
+  enabled: true
+  epsilon: 0.05
+  iters: 40
+  topK_per_gene: 8
+graph:
+  lambda_cosine: 0.7
+  tau: 0.1
+  prune_threshold: 0.5
+  knn: 64
+cluster:
+  method: leiden
+  leiden_resolution: 1.2
+evaluate:
+  pair_labels_csv: null
+  cluster_labels_csv: null
+paths:
+  embeddings: null
+  preprocessor: null
+  data_root: null
+  contig_sizes: null
+  small_split: null

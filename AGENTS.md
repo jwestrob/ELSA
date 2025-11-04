@@ -1,6 +1,6 @@
 # Agent TODOs: Micro-Pass (Embedding‑First) + Dereplication
 
-This doc captures the current plan for implementing a robust, PFAM‑agnostic micro pass that runs alongside the macro pipeline, and how we dereplicate micro hits against larger (macro) syntenic blocks. It replaces any prior notes/experiments and is the single source of truth for the next implementation round.
+This doc captures the current plan for implementing a robust, PFAM‑agnostic micro pass that runs alongside the macro pipeline, and how we dereplicate micro hits against larger (macro) syntenic blocks. It replaces any prior notes/experiments and is the single source of truth for the next implementation round. **Agents must consult `PROGRESS.md` before making changes** for the up-to-date milestone status and action list.
 
 ## Objectives
 

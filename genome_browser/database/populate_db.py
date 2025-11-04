@@ -518,19 +518,56 @@ class ELSADataIngester:
             SELECT block_id, query_genome_id, target_genome_id,
                    query_contig_id, target_contig_id,
                    query_window_start, query_window_end,
-                   target_window_start, target_window_end
+                   target_window_start, target_window_end,
+                   query_windows_json, target_windows_json
             FROM syntenic_blocks
             WHERE query_window_start IS NOT NULL AND query_window_end IS NOT NULL
         """)
         blocks = cursor.fetchall()
-        
+
         mappings = []
         blocks_without_windows = 0
-        
+
+        cursor.execute("SELECT gene_id FROM genes")
+        gene_id_set = {row[0] for row in cursor.fetchall()}
+
+        def _normalize_gene_id(candidate: str) -> Optional[str]:
+            """Strip dataset-specific prefixes until we find an ID present in the genes table."""
+            if candidate in gene_id_set:
+                return candidate
+            parts = candidate.split('_')
+            for idx in range(1, len(parts)):
+                trimmed = '_'.join(parts[idx:])
+                if trimmed in gene_id_set:
+                    return trimmed
+            return None
+
+        def _genes_from_windows(json_blob: Optional[str]) -> list:
+            if not json_blob:
+                return []
+            try:
+                import json as _json
+                entries = _json.loads(json_blob)
+            except Exception:
+                return []
+            genes = []
+            for entry in entries:
+                if isinstance(entry, str):
+                    genes.extend([tok.strip() for tok in entry.split(',') if tok.strip()])
+            # preserve order while dropping duplicates
+            seen = set()
+            ordered = []
+            for gid in genes:
+                if gid not in seen:
+                    seen.add(gid)
+                    ordered.append(gid)
+            return ordered
+
         for block in blocks:
             (block_id, query_genome_id, target_genome_id,
              query_contig_id, target_contig_id,
-             query_start, query_end, target_start, target_end) = block
+             query_start, query_end, target_start, target_end,
+             query_windows_json, target_windows_json) = block
             
             # Extract clean contig IDs (remove genome prefix if present)
             # Handle format like "1313.30775_accn|1313.30775.con.0001" -> "accn|1313.30775.con.0001"
@@ -544,10 +581,16 @@ class ELSADataIngester:
             else:
                 target_clean_contig = target_contig_id
             
-            # Map query genes using window boundaries
-            # Convert window indices to approximate gene indices:
-            # Each window of size 5 genes (stride 1) spans 5 gene indices.
-            if query_start is not None and query_end is not None:
+            query_gene_ids = _genes_from_windows(query_windows_json)
+
+            if query_gene_ids:
+                for i, gene_id in enumerate(query_gene_ids):
+                    lookup_id = _normalize_gene_id(gene_id)
+                    if not lookup_id:
+                        continue
+                    relative_pos = i / max(1, len(query_gene_ids) - 1) if len(query_gene_ids) > 1 else 0.5
+                    mappings.append((lookup_id, block_id, 'query', relative_pos))
+            elif query_start is not None and query_end is not None:
                 # Inclusive gene index range: [query_start, query_end + 4]
                 gene_start_idx = int(query_start)
                 gene_end_idx = int(query_end) + 4
@@ -568,9 +611,19 @@ class ELSADataIngester:
                 for i, (gene_id,) in enumerate(query_genes):
                     relative_pos = i / max(1, len(query_genes) - 1) if len(query_genes) > 1 else 0.5
                     mappings.append((gene_id, block_id, 'query', relative_pos))
-            
-            # Map target genes using window boundaries  
-            if target_start is not None and target_end is not None:
+            else:
+                blocks_without_windows += 1
+
+            target_gene_ids = _genes_from_windows(target_windows_json)
+
+            if target_gene_ids:
+                for i, gene_id in enumerate(target_gene_ids):
+                    lookup_id = _normalize_gene_id(gene_id)
+                    if not lookup_id:
+                        continue
+                    relative_pos = i / max(1, len(target_gene_ids) - 1) if len(target_gene_ids) > 1 else 0.5
+                    mappings.append((lookup_id, block_id, 'target', relative_pos))
+            elif target_start is not None and target_end is not None:
                 gene_start_idx = int(target_start)
                 gene_end_idx = int(target_end) + 4
                 num_genes = max(1, gene_end_idx - gene_start_idx + 1)
@@ -590,16 +643,10 @@ class ELSADataIngester:
                 for i, (gene_id,) in enumerate(target_genes):
                     relative_pos = i / max(1, len(target_genes) - 1) if len(target_genes) > 1 else 0.5
                     mappings.append((gene_id, block_id, 'target', relative_pos))
-        
-        # Handle blocks without window information (fallback to representative genes)
-        cursor.execute("""
-            SELECT COUNT(*) FROM syntenic_blocks 
-            WHERE query_window_start IS NULL OR query_window_end IS NULL
-        """)
-        blocks_without_windows = cursor.fetchone()[0]
-        
+            else:
+                blocks_without_windows += 1
         if blocks_without_windows > 0:
-            logger.warning(f"{blocks_without_windows} blocks lack window information, skipping precise mapping")
+            logger.warning(f"{blocks_without_windows} blocks lacked usable window information for gene mapping")
         
         # Insert all mappings in batch
         if mappings:

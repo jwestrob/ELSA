@@ -37,3 +37,19 @@ __pycache__/
 .pytest_cache/
 .coverage
 .DS_Store
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Virtual environments
+.env/
+.venv/
+
+# Editors
+.vscode/
+.idea/
+
+# Data artifacts for operon pipeline
+operon_outputs/

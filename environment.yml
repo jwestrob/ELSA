@@ -41,6 +41,7 @@ dependencies:
   # Indexing/Search
   - datasketch  # MinHash
   - faiss-cpu   # fallback for HNSW if needed
+  - hnswlib
   
   # Dev/Test
   - pytest
@@ -62,4 +63,5 @@ dependencies:
     - fair-esm  # ESM2 models from Meta
     - openai>=1.0.0  # For GPT analysis in genome browser
     - dspy-ai  # DSPy framework
+    - types-PyYAML  # typing stubs for PyYAML
     # - sentence-transformers  # if we need ProtT5

@@ -1550,9 +1550,10 @@ def display_cluster_explorer():
         )
     
     with col2:
+        type_options = sorted({(stats.cluster_type or 'macro') for stats in cluster_stats})
         type_filter = st.selectbox(
             "Cluster Type", 
-            ["All"] + list(set(stats.cluster_type for stats in cluster_stats)),
+            ["All"] + type_options,
             index=0
         )
     
@@ -2216,7 +2217,10 @@ def _macro_id_ceiling(conn) -> int:
     Using COUNT(*) was wrong when macro IDs are sparse. This uses MAX(cluster_id).
     """
     try:
-        row = conn.execute("SELECT COALESCE(MAX(cluster_id), 0) FROM clusters WHERE cluster_id > 0").fetchone()
+        row = conn.execute(
+            "SELECT COALESCE(MAX(cluster_id), 0) FROM clusters "
+            "WHERE cluster_id > 0 AND (cluster_type IS NULL OR LOWER(cluster_type) != 'micro')"
+        ).fetchone()
         return int(row[0] or 0)
     except Exception:
         return 0

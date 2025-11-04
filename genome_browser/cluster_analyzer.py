@@ -84,10 +84,10 @@ class ClusterAnalyzer:
             """
             cursor = conn.execute(cluster_query, (cluster_id,))
             cluster_row = cursor.fetchone()
-            
+
             if not cluster_row:
                 return None
-            
+
             # For now, create enhanced basic stats with sample data from all blocks
             # Extract organisms from representative loci
             repr_query = cluster_row[5] or ""
@@ -119,6 +119,14 @@ class ClusterAnalyzer:
             # Handle None length
             consensus_length = cluster_row[2] if cluster_row[2] is not None else 0
             
+            raw_type = cluster_row[7]
+            try:
+                ctype = str(raw_type).strip().lower() if raw_type is not None else 'macro'
+            except Exception:
+                ctype = 'macro'
+            if ctype in ('', 'unknown', 'none'):
+                ctype = 'macro'
+
             stats = ClusterStats(
                 cluster_id=cluster_row[0],
                 size=cluster_row[1],
@@ -127,7 +135,7 @@ class ClusterAnalyzer:
                 diversity=cluster_row[4] if cluster_row[4] is not None else 0.0,
                 representative_query=cluster_row[5],
                 representative_target=cluster_row[6],
-                cluster_type=cluster_row[7],
+                cluster_type=ctype,
                 
                 avg_identity=estimated_identity,
                 identity_range=(max(0.0, estimated_identity - 0.1), min(1.0, estimated_identity + 0.1)),
@@ -212,6 +220,14 @@ class ClusterAnalyzer:
     
     def _create_basic_cluster_stats(self, cluster_row) -> ClusterStats:
         """Create basic stats when detailed block info isn't available."""
+        raw_type = cluster_row[7]
+        try:
+            ctype = str(raw_type).strip().lower() if raw_type is not None else 'macro'
+        except Exception:
+            ctype = 'macro'
+        if ctype in ('', 'unknown', 'none'):
+            ctype = 'macro'
+
         return ClusterStats(
             cluster_id=cluster_row[0],
             size=cluster_row[1],
@@ -220,7 +236,7 @@ class ClusterAnalyzer:
             diversity=cluster_row[4],
             representative_query=cluster_row[5],
             representative_target=cluster_row[6],
-            cluster_type=cluster_row[7],
+            cluster_type=ctype,
             
             avg_identity=0.0,
             identity_range=(0.0, 0.0),
@@ -908,29 +924,49 @@ def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[Clu
     try:
         conn = sqlite3.connect(db_path)
 
-        # Load macro cluster IDs and count (exclude sink 0)
-        cursor = conn.execute("SELECT cluster_id FROM clusters WHERE cluster_id > 0 ORDER BY size DESC")
+        # Load clusters (macro + operon) while skipping micro entries (handled via sidecar)
+        macro_filter = "cluster_id > 0"
+        cursor = conn.execute(
+            "SELECT cluster_id, COALESCE(NULLIF(TRIM(cluster_type), ''), 'macro') AS cluster_type "
+            "FROM clusters WHERE cluster_id > 0 ORDER BY size DESC"
+        )
         macro_rows = cursor.fetchall()
-        macro_ids = [int(row[0]) for row in macro_rows]
-        # Use ceiling (max id) so micro display ids don't collide with sparse macro ids
+        macro_ids: List[Tuple[int, str]] = []
+        for row in macro_rows:
+            cid = int(row[0])
+            ctype = str(row[1]).strip().lower() if row[1] is not None else 'macro'
+            if ctype == 'micro':
+                continue
+            if ctype in ('', 'unknown', 'none'):
+                ctype = 'macro'
+            macro_ids.append((cid, ctype))
+
+        # Use MAX(cluster_id) among non-micro types for micro display offsets
         try:
-            max_macro_id = conn.execute("SELECT COALESCE(MAX(cluster_id),0) FROM clusters WHERE cluster_id > 0").fetchone()[0]
+            max_macro_id = conn.execute(
+                "SELECT COALESCE(MAX(cluster_id),0) FROM clusters WHERE cluster_id > 0 "
+                "AND (cluster_type IS NULL OR LOWER(cluster_type) NOT IN ('micro'))"
+            ).fetchone()[0]
             n_macro = int(max_macro_id or 0)
         except Exception:
-            n_macro = len(macro_ids)
+            n_macro = max((cid for cid, _ in macro_ids), default=0)
 
         analyzer = ClusterAnalyzer(db_path)
         all_stats: List[ClusterStats] = []
 
         # Add macro stats
-        for cid in macro_ids:
+        for cid, ctype in macro_ids:
             stats = analyzer.get_cluster_stats(cid)
             if stats:
-                # Force macro type to avoid mislabeled rows in DB
                 try:
-                    stats.cluster_type = 'macro'
+                    canonical = str(stats.cluster_type or '').strip().lower()
                 except Exception:
-                    pass
+                    canonical = ''
+                if canonical in ('', 'unknown', 'none'):
+                    canonical = ctype
+                if canonical not in ('macro', 'operon'):
+                    canonical = 'macro'
+                stats.cluster_type = canonical
                 all_stats.append(stats)
 
         # Try to load micro clusters if present

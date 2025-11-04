@@ -324,20 +324,50 @@ class ProteinIngester:
         """Parse existing protein FASTA file."""
         proteins = []
         
-        for i, record in enumerate(SeqIO.parse(aa_fasta_path, "fasta")):
-            # Clean protein sequence (remove stop codons and invalid characters)
+        for record in SeqIO.parse(aa_fasta_path, "fasta"):
+            header = record.description.strip()
+            contig_token = record.id
+            start = 0
+            end = len(record.seq)
+            strand = 1
+
+            # Prodigal FASTA headers use: contig_id_#gene # start # end # strand # attrs
+            if " # " in header:
+                parts = [p.strip() for p in header.split("#")]
+                # parts example: ['LC_0.1_scaffold_2250_1 ', ' 3 ', ' 101 ', ' -1 ', ' ID=...']
+                try:
+                    contig_token = parts[0]
+                    start = int(parts[1])
+                    end = int(parts[2])
+                    strand_val = parts[3]
+                    strand = 1 if strand_val.startswith("1") or strand_val.startswith("+") else -1
+                except (ValueError, IndexError):
+                    # Fall back to defaults if parsing fails
+                    start = 0
+                    end = len(record.seq)
+                    strand = 1
+
+            # Derive contig by trimming the trailing _<gene_idx>
+            if "_" in contig_token:
+                contig_id, _, gene_idx = contig_token.rpartition("_")
+                if not contig_id:
+                    contig_id = contig_token
+            else:
+                contig_id = contig_token
+                gene_idx = "0"
+
             clean_seq = str(record.seq).replace('*', '').replace('X', '').upper()
-            
             if len(clean_seq) < self.config.min_cds_aa:
                 continue
-                
+
+            gene_id = f"{sample_id}_{contig_token}"
             protein = ProteinSequence(
                 sample_id=sample_id,
-                contig_id=record.id,  # Use record ID as contig
-                gene_id=f"{sample_id}_{record.id}",
-                start=0,  # Unknown
-                end=len(clean_seq),
-                strand=1,  # Unknown
+                contig_id=contig_id,
+                gene_id=gene_id,
+                start=start,
+                end=end,
+                strand=strand,
                 sequence=clean_seq
             )
             proteins.append(protein)

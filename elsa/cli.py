@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Optional
 
 import click
+from click.core import ParameterSource
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
@@ -115,7 +116,9 @@ def setup_genome_browser_integration(config: ELSAConfig, analysis_output_dir: Pa
         return False
     
     # Check for existing PFAM annotations from elsa embed
-    pfam_results_file = genome_browser_dir / "pfam_annotations" / "pfam_annotation_results.json"
+    # Prefer workspace-local PFAM annotations if they exist; fall back to package default
+    local_pfam = Path("genome_browser/pfam_annotations/pfam_annotation_results.json")
+    pfam_results_file = local_pfam if local_pfam.exists() else genome_browser_dir / "pfam_annotations" / "pfam_annotation_results.json"
     
     # Build setup command (use absolute paths for all files)
     cmd = [
@@ -243,21 +246,52 @@ def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool):
     for f in fasta_files:
         console.print(f"  - {f.name}")
     
-    # Create sample data - nucleotide FASTA only, no GFF or AA files
+    # Create sample data with optional precomputed annotations / proteins
     sample_data = []
+    gff_hint_dir = Path("data/annotations")
+    proteins_hint_dir = Path("data/proteins")
+
+    console.print("\nResolved inputs:")
     for fasta_file in fasta_files:
         sample_id = fasta_file.stem
-        sample_data.append((sample_id, fasta_file, None, None))  # No GFF, no AA files
-    
-    # Show configuration and discovered files
+
+        # Prefer explicitly organized outputs, then siblings next to the FASTA
+        aa_candidates = [
+            proteins_hint_dir / f"{sample_id}.faa",
+            fasta_file.with_suffix(".faa")
+        ]
+        gff_candidates = [
+            gff_hint_dir / f"{sample_id}.gff",
+            fasta_file.with_suffix(".gff")
+        ]
+
+        aa_fasta_path = next((p for p in aa_candidates if p.exists()), None)
+        gff_path = next((p for p in gff_candidates if p.exists()), None)
+
+        sample_data.append((sample_id, fasta_file, gff_path, aa_fasta_path))
+
+        if aa_fasta_path is not None:
+            console.print(
+                f"  - [cyan]{sample_id}[/cyan]: {fasta_file.name} → "
+                f"reuse proteins [green]{aa_fasta_path.name}[/green]"
+            )
+        elif gff_path is not None:
+            console.print(
+                f"  - [cyan]{sample_id}[/cyan]: {fasta_file.name} → "
+                f"translate CDS from [green]{gff_path.name}[/green]"
+            )
+        else:
+            console.print(
+                f"  - [cyan]{sample_id}[/cyan]: {fasta_file.name} → "
+                f"[dim]Prodigal gene calling[/dim]"
+            )
+
+    # Show configuration summary
     console.print(f"\nGene caller: [green]{config_obj.ingest.gene_caller}[/green]")
     console.print(f"PLM Model: [green]{config_obj.plm.model}[/green]")
     console.print(f"Device: [green]{config_obj.plm.device}[/green]")
     console.print(f"Target dimension: [green]{config_obj.plm.project_to_D}[/green]")
-    console.print(f"\nProcessing {len(sample_data)} samples with gene calling:")
-    
-    for sample_id, fasta_file, _, _ in sample_data:
-        console.print(f"  - [cyan]{sample_id}[/cyan]: {fasta_file.name} → [dim]Prodigal gene calling[/dim]")
+    console.print(f"\nProcessing {len(sample_data)} samples...")
     
     # Run the pipeline
     try:
@@ -487,9 +521,10 @@ def find(config: str, query_locus: str, target_scope: str, output: Optional[str]
 @click.option("--genome-browser-db", default="genome_browser/genome_browser.db", help="Genome browser database path")
 @click.option("--sequences-dir", help="Directory containing nucleotide sequences (.fna)")
 @click.option("--proteins-dir", help="Directory containing proteins (.faa)")
-@click.option("--micro/--no-micro", default=False, help="Run micro-synteny (embedding-first)")
+@click.option("--micro/--no-micro", default=False, help="Run legacy micro-synteny sidecar")
+@click.option("--operon/--no-operon", default=False, help="Run operon embedding-first micro pipeline")
 def analyze(config: str, min_windows: int, min_similarity: float, output_dir: str, 
-           genome_browser_db: str, sequences_dir: Optional[str], proteins_dir: Optional[str], micro: bool):
+           genome_browser_db: str, sequences_dir: Optional[str], proteins_dir: Optional[str], micro: bool, operon: bool):
     """Perform comprehensive syntenic block analysis of entire dataset."""
     console.print("[bold]ELSA Comprehensive Syntenic Analysis[/bold]")
     
@@ -498,6 +533,16 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
     except Exception as e:
         console.print(f"[red]Error loading config: {e}[/red]")
         sys.exit(1)
+
+    # Ensure legacy micro sidecar stays available when operon mode is requested
+    try:
+        ctx = click.get_current_context()
+        micro_source = ctx.get_parameter_source("micro")
+    except Exception:
+        micro_source = ParameterSource.DEFAULT
+    if operon and not micro and micro_source == ParameterSource.DEFAULT:
+        console.print("[dim]Operon pipeline requested; enabling legacy micro sidecar for compatibility.[/dim]")
+        micro = True
     
     # Run comprehensive analysis
     try:
@@ -839,27 +884,26 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                 console.print(f"\n[red]Genome browser setup failed: {e}[/red]")
                 console.print("[yellow]Analysis results are still available - you can set up the browser manually[/yellow]")
 
+        genes_path: Optional[Path] = None
+        try:
+            if manifest.has_artifact('genes'):
+                genes_path = Path(manifest.data['artifacts']['genes']['path'])
+            else:
+                for candidate in (
+                    Path('elsa_index/ingest/genes.parquet'),
+                    Path.cwd() / 'elsa_index/ingest/genes.parquet',
+                    Path(__file__).parents[2] / 'elsa_index/ingest/genes.parquet',
+                ):
+                    if candidate.exists():
+                        genes_path = candidate
+                        break
+        except Exception:
+            genes_path = None
+
         # Optional: run micro-synteny sidecar pipeline
         if micro:
             try:
                 console.print("\n[bold blue]Running micro-synteny (embedding-first) sidecar...[/bold blue]")
-                # Resolve genes.parquet
-                from .manifest import ELSAManifest
-                m = ELSAManifest(config_obj.data.work_dir)
-                genes_path = None
-                if m.has_artifact('genes'):
-                    genes_path = Path(m.data['artifacts']['genes']['path'])
-                else:
-                    # Fallback common locations
-                    candidates = [
-                        Path('elsa_index/ingest/genes.parquet'),
-                        Path.cwd() / 'elsa_index/ingest/genes.parquet',
-                        Path(__file__).parents[2] / 'elsa_index/ingest/genes.parquet',
-                    ]
-                    for p in candidates:
-                        if p.exists():
-                            genes_path = p
-                            break
                 if not genes_path or not Path(genes_path).exists():
                     console.print("[yellow]genes.parquet not found; skipping micro-synteny[/yellow]")
                 else:
@@ -1133,6 +1177,45 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                     console.print(f"[yellow]Integrity check skipped due to error: {e}[/yellow]")
             except Exception as e:
                 console.print(f"[yellow]Micro-synteny pass failed/skipped: {e}[/yellow]")
+
+        if operon:
+            try:
+                console.print("\n[bold blue]Running operon micro pipeline...[/bold blue]")
+                if not genes_path or not Path(genes_path).exists():
+                    console.print("[yellow]genes.parquet not found; skipping operon pipeline[/yellow]")
+                else:
+                    from .analyze.micro_operon import run_operon_pipeline
+                    operon_dir = Path(output_path) / 'operon_micro'
+
+                    overrides = getattr(config_obj.analyze, 'micro_overrides', None)
+                    merge_max_gap_bp = 50
+                    merge_support_ratio = 0.8
+                    try:
+                        if overrides and getattr(overrides, 'operon_max_gap_bp', None) is not None:
+                            merge_max_gap_bp = max(0, int(overrides.operon_max_gap_bp))
+                        if overrides and getattr(overrides, 'operon_support_ratio', None) is not None:
+                            merge_support_ratio = float(overrides.operon_support_ratio)
+                            if merge_support_ratio <= 0.0 or merge_support_ratio > 1.0:
+                                raise ValueError
+                    except Exception:
+                        pass
+
+                    summary = run_operon_pipeline(
+                        Path(genes_path),
+                        operon_dir,
+                        console=console,
+                        merge_max_gap_bp=merge_max_gap_bp,
+                        merge_support_ratio=merge_support_ratio,
+                        db_path=Path(genome_browser_db) if genome_browser_db else None,
+                    )
+                    console.print(
+                        "[dim]Operon summary: "
+                        f"genes={summary.num_genes} blocks={summary.num_blocks} pairs={summary.num_pairs} "
+                        f"filtered_pairs={summary.num_filtered_pairs} clusters={summary.num_clusters} "
+                        f"index={'yes' if summary.index_built else 'no'}[/dim]"
+                    )
+            except Exception as e:
+                console.print(f"[yellow]Operon pipeline failed/skipped: {e}[/yellow]")
 
     except Exception as e:
         console.print(f"[red]Analysis failed: {e}[/red]")

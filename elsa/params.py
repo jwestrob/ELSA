@@ -214,6 +214,8 @@ class MicroClusteringOverrides(BaseModel):
     mutual_k: int | None = Field(default=None)
     df_max: int | None = Field(default=None)
     min_genome_support: int | None = Field(default=None)
+    operon_max_gap_bp: int | None = Field(default=None, description="Max bp gap when merging operon clusters")
+    operon_support_ratio: float | None = Field(default=None, description="Fraction of genomes that must support operon merges")
 
 
 class ClusteringConfig(BaseModel):

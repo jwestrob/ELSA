@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "elsa"
+version = "0.1.0"
+description = "Embedding Locus Shingle Alignment - syntenic block discovery"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "ELSA Team"}]
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.30.0",
+    "scikit-learn",
+    "numpy",
+    "pandas",
+    "pyarrow",
+    "biopython",
+    "click",
+    "rich",
+    "pydantic>=2.0",
+    "pyyaml",
+    "datasketch",
+    "fair-esm",
+    "fastapi",
+    "uvicorn",
+    "hnswlib",
+    "python-igraph",
+    "leidenalg",
+    "hdbscan",
+    "PyYAML",
+    "joblib",
+    "tqdm",
+    "metric-learn",
+]
+
+[project.scripts]
+elsa = "elsa.cli:main"
+micro-synteny = "elsa.synteny.micro_cli:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-xdist",
+    "pytest-cov",
+    "mypy",
+    "ruff",
+    "black",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["elsa*", "operon_embed*", "scripts*"]
+
+[tool.mypy]
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true

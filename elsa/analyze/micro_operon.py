@@ -536,6 +536,183 @@ def _merge_adjacent_clusters(
     return blocks_df, filtered_pairs, clusters_df
 
 
+def _enrich_operon_flanks(
+    blocks_df: pd.DataFrame,
+    clusters_df: pd.DataFrame,
+    genes_df: pd.DataFrame,
+    offsets: Dict[Tuple[str, str], int],
+    db_gene_ids: np.ndarray,
+    support_ratio: float,
+    max_genes: int,
+) -> Dict[int, Tuple[int, int]]:
+    """Extend operon blocks with conserved flank genes.
+
+    Parameters
+    ----------
+    blocks_df:
+        Data frame describing operon blocks (must include global_start/global_end).
+    clusters_df:
+        Cluster metadata with cluster_id assignments.
+    genes_df:
+        Full genes table used to build the pipeline (sorted by sample/contig/start).
+    offsets:
+        Mapping from (sample_id, contig_id) → starting global index within genes_df.
+    db_gene_ids:
+        Array mapping global index → genome-browser gene identifier.
+    support_ratio:
+        Minimum fraction of blocks in a cluster that must contain a flank gene to include it.
+    max_genes:
+        Maximum number of genes per side to consider as flank candidates.
+    """
+
+    if (
+        blocks_df is None
+        or blocks_df.empty
+        or clusters_df is None
+        or clusters_df.empty
+        or max_genes <= 0
+    ):
+        return {}
+
+    # Ensure inputs are sorted/consistent
+    genes_df = genes_df.reset_index(drop=True)
+
+    sample_arr = genes_df["sample_id"].astype(str).to_numpy()
+    contig_arr = genes_df["contig_id"].astype(str).to_numpy()
+    start_arr = genes_df["start"].to_numpy(dtype=np.int64)
+    end_arr = genes_df["end"].to_numpy(dtype=np.int64)
+    pfam_arr = genes_df.get("primary_pfam", pd.Series(["" for _ in range(len(genes_df))])).fillna("").astype(str).to_numpy()
+    db_ids_arr = db_gene_ids
+
+    updated_ranges: Dict[int, Tuple[int, int]] = {}
+
+    def entry_key(idx: int) -> Tuple[str, str]:
+        pfam = pfam_arr[idx].strip()
+        if pfam:
+            return ("pfam", pfam)
+        return ("gene", str(db_ids_arr[idx]))
+
+    for cluster_id, group in blocks_df.groupby("cluster_id"):
+        if group.empty:
+            continue
+        cluster_size = len(group)
+        if cluster_size == 0:
+            continue
+        support_min = max(1, int(np.ceil(cluster_size * support_ratio)))
+
+        candidate_support: Dict[Tuple[str, str], Set[int]] = {}
+        block_entries: Dict[int, List[Dict[str, Any]]] = {}
+
+        for row in group.itertuples(index=False):
+            block_id = int(row.block_id)
+            sample = str(row.sample_id)
+            contig = str(row.contig_id)
+            g_start = int(row.global_start)
+            g_end = int(row.global_end)
+            entries: List[Dict[str, Any]] = []
+
+            # Scan left flank
+            idx = g_start - 1
+            steps = 0
+            while steps < max_genes and idx >= 0:
+                if sample_arr[idx] != sample or contig_arr[idx] != contig:
+                    break
+                key = entry_key(idx)
+                entries.append(
+                    {
+                        "gene_index": idx,
+                        "key": key,
+                        "distance": g_start - idx,
+                        "direction": "left",
+                    }
+                )
+                steps += 1
+                idx -= 1
+
+            # Scan right flank
+            idx = g_end + 1
+            steps = 0
+            max_len = len(sample_arr)
+            while steps < max_genes and idx < max_len:
+                if sample_arr[idx] != sample or contig_arr[idx] != contig:
+                    break
+                key = entry_key(idx)
+                entries.append(
+                    {
+                        "gene_index": idx,
+                        "key": key,
+                        "distance": idx - g_end,
+                        "direction": "right",
+                    }
+                )
+                steps += 1
+                idx += 1
+
+            block_entries[block_id] = entries
+            seen_keys: Set[Tuple[str, str]] = set()
+            for entry in entries:
+                key = entry["key"]
+                if key in seen_keys:
+                    continue
+                seen_keys.add(key)
+                candidate_support.setdefault(key, set()).add(block_id)
+
+        if not candidate_support:
+            continue
+
+        consensus_keys = [
+            key for key, members in candidate_support.items() if len(members) >= support_min
+        ]
+        if not consensus_keys:
+            continue
+
+        for block_id, entries in block_entries.items():
+            selected_indices: List[int] = []
+            for key in consensus_keys:
+                candidates = [e for e in entries if e["key"] == key]
+                if not candidates:
+                    continue
+                chosen = min(
+                    candidates,
+                    key=lambda e: (e["distance"], 0 if e["direction"] == "left" else 1),
+                )
+                selected_indices.append(int(chosen["gene_index"]))
+
+            if not selected_indices:
+                continue
+
+            row = blocks_df.loc[blocks_df["block_id"] == block_id]
+            if row.empty:
+                continue
+            current_start = int(row["global_start"].iloc[0])
+            current_end = int(row["global_end"].iloc[0])
+            new_start = min([current_start] + selected_indices)
+            new_end = max([current_end] + selected_indices)
+            if new_start < current_start or new_end > current_end:
+                updated_ranges[block_id] = (new_start, new_end)
+
+    if not updated_ranges:
+        return {}
+
+    # Apply updates directly to blocks_df
+    for block_id, (new_start, new_end) in updated_ranges.items():
+        mask = blocks_df["block_id"] == block_id
+        if not mask.any():
+            continue
+        sample = str(blocks_df.loc[mask, "sample_id"].iloc[0])
+        contig = str(blocks_df.loc[mask, "contig_id"].iloc[0])
+        offset = offsets.get((sample, contig), 0)
+        blocks_df.loc[mask, "global_start"] = int(new_start)
+        blocks_df.loc[mask, "global_end"] = int(new_end)
+        blocks_df.loc[mask, "start_gene"] = int(new_start - offset)
+        blocks_df.loc[mask, "end_gene"] = int(new_end - offset)
+        blocks_df.loc[mask, "start_bp"] = int(start_arr[new_start])
+        blocks_df.loc[mask, "end_bp"] = int(end_arr[new_end])
+        blocks_df.loc[mask, "gene_count"] = int(new_end - new_start + 1)
+
+    return updated_ranges
+
+
 def _project_operon_pairs_to_db(
     conn: sqlite3.Connection,
     filtered_pairs: pd.DataFrame,
@@ -754,6 +931,8 @@ def run_operon_pipeline(
     min_genome_support: int = 2,
     merge_max_gap_bp: int = 50,
     merge_support_ratio: float = 0.8,
+    flank_support_ratio: float = 1.0,
+    flank_max_genes: int = 2,
     db_path: Optional[Path] = None,
 ) -> OperonSummary:
     output_dir = output_dir.expanduser()
@@ -1023,6 +1202,51 @@ def run_operon_pipeline(
             else:
                 blocks_df = pd.DataFrame(columns=blocks_df.columns)
                 filtered_pairs = pd.DataFrame(columns=filtered_pairs.columns)
+
+    flank_support_ratio = float(flank_support_ratio)
+    if flank_support_ratio < 0.0:
+        flank_support_ratio = 0.0
+    if flank_support_ratio > 1.0:
+        flank_support_ratio = 1.0
+    flank_max_genes = max(0, int(flank_max_genes))
+
+    flank_updates: Dict[int, Tuple[int, int]] = {}
+    if flank_max_genes > 0 and not blocks_df.empty and clusters_df is not None and not clusters_df.empty:
+        flank_updates = _enrich_operon_flanks(
+            blocks_df,
+            clusters_df,
+            df,
+            offsets,
+            db_gene_ids,
+            flank_support_ratio,
+            flank_max_genes,
+        )
+        if flank_updates:
+            for block_id, (new_start, new_end) in flank_updates.items():
+                if 0 <= block_id < len(block_gene_indices):
+                    block_gene_indices[block_id] = (new_start, new_end)
+            if not filtered_pairs.empty:
+                range_map = (
+                    blocks_df.set_index("block_id")[
+                        ["global_start", "global_end"]
+                    ]
+                    .to_dict("index")
+                )
+
+                def _indices_for(block_value: Any) -> List[int]:
+                    try:
+                        block_key = int(block_value)
+                    except Exception:
+                        return []
+                    meta = range_map.get(block_key)
+                    if not meta:
+                        return []
+                    start_idx = int(meta["global_start"])
+                    end_idx = int(meta["global_end"])
+                    return list(range(start_idx, end_idx + 1))
+
+                filtered_pairs["query_gene_indices"] = filtered_pairs["block_id"].apply(_indices_for)
+                filtered_pairs["target_gene_indices"] = filtered_pairs["neighbor_id"].apply(_indices_for)
 
     blocks_df.to_csv(output_dir / "operon_blocks.csv", index=False)
     filtered_pairs.to_csv(output_dir / "operon_pairs.csv", index=False)

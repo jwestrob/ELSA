@@ -198,6 +198,8 @@ class AnalyzeConfig(BaseModel):
     align: 'AlignConfig' = Field(default_factory=lambda: AlignConfig())
     # Optional micro clustering overrides (independent of macro)
     micro_overrides: 'MicroClusteringOverrides' = Field(default_factory=lambda: MicroClusteringOverrides())
+    # Operon micro pipeline configuration
+    operon: 'OperonConfig' = Field(default_factory=lambda: OperonConfig())
 
 
 class AlignConfig(BaseModel):
@@ -216,6 +218,8 @@ class MicroClusteringOverrides(BaseModel):
     min_genome_support: int | None = Field(default=None)
     operon_max_gap_bp: int | None = Field(default=None, description="Max bp gap when merging operon clusters")
     operon_support_ratio: float | None = Field(default=None, description="Fraction of genomes that must support operon merges")
+    operon_flank_support_ratio: float | None = Field(default=None, description="Minimum fraction of blocks required to add conserved flanks")
+    operon_flank_max_genes: int | None = Field(default=None, description="Maximum number of flank genes to consider on each side")
 
 
 class ClusteringConfig(BaseModel):
@@ -302,6 +306,65 @@ class ClusteringConfig(BaseModel):
     def validate_size_ratios(cls, v):
         if v <= 0:
             raise ValueError("Size ratios must be positive")
+        return v
+
+
+class OperonConfig(BaseModel):
+    """Operon micro pipeline configuration (embedding-first with HNSW)."""
+    # Preprocessing
+    pca_dims: int = Field(default=96, description="PCA target dimension for operon embeddings")
+    pca_eps: float = Field(default=1e-5, description="PCA regularization epsilon")
+
+    # Shingling
+    shingle_k: int = Field(default=3, description="Number of genes per shingle window")
+    shingle_stride: int = Field(default=1, description="Stride for shingle windows")
+
+    # HNSW index parameters
+    hnsw_m: int = Field(default=32, description="HNSW M parameter (bi-directional links)")
+    hnsw_ef_construction: int = Field(default=200, description="HNSW ef_construction (build-time candidates)")
+    hnsw_ef_search: int = Field(default=128, description="HNSW ef_search (query-time candidates)")
+    hnsw_top_k: int = Field(default=16, description="Top-k neighbors to retrieve from HNSW")
+    hnsw_space: Literal["cosine", "l2", "ip"] = Field(default="cosine", description="HNSW distance metric")
+
+    # Neighbor filtering
+    neighbors_per_block: int = Field(default=10, description="Max neighbors per block after filtering")
+
+    # Sinkhorn alignment
+    sinkhorn_epsilon: float = Field(default=0.05, description="Sinkhorn regularization parameter")
+    sinkhorn_iters: int = Field(default=40, description="Sinkhorn iteration limit")
+    sinkhorn_topk: int = Field(default=8, description="Top-k matches in Sinkhorn alignment")
+
+    # Clustering thresholds
+    similarity_tau: float = Field(default=0.55, description="Minimum similarity threshold for pairs")
+    min_genome_support: int = Field(default=2, description="Minimum genomes supporting a cluster")
+
+    # Cluster merging
+    merge_max_gap_bp: int = Field(default=50, description="Max bp gap when merging adjacent clusters")
+    merge_support_ratio: float = Field(default=0.8, description="Fraction of genomes required for cluster merge")
+
+    # Flank enrichment
+    flank_support_ratio: float = Field(default=1.0, description="Fraction of blocks required for flank gene inclusion")
+    flank_max_genes: int = Field(default=2, description="Max flank genes to consider per side")
+
+    @field_validator("pca_dims")
+    @classmethod
+    def validate_pca_dims(cls, v):
+        if v < 2 or v > 1024:
+            raise ValueError("pca_dims must be between 2 and 1024")
+        return v
+
+    @field_validator("similarity_tau", "merge_support_ratio", "flank_support_ratio")
+    @classmethod
+    def validate_ratios(cls, v):
+        if not 0.0 <= v <= 1.0:
+            raise ValueError("Ratio must be between 0 and 1")
+        return v
+
+    @field_validator("hnsw_m")
+    @classmethod
+    def validate_hnsw_m(cls, v):
+        if v < 2 or v > 100:
+            raise ValueError("hnsw_m should be between 2 and 100")
         return v
 
 

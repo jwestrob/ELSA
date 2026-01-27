@@ -14,12 +14,14 @@ from plotly.subplots import make_subplots
 import numpy as np
 from pathlib import Path
 import logging
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple, Optional, Set, Any
 from types import SimpleNamespace
 from elsa.params import load_config as load_elsa_config
 import math
 import os
 import time
+import hashlib
+from collections import defaultdict, Counter
 
 # Import genome visualization functions
 from cluster_analyzer import ClusterAnalyzer
@@ -1613,9 +1615,29 @@ def display_cluster_explorer():
     # Default-limit the number of clusters rendered to keep UI responsive
     if 'cluster_limit' not in st.session_state:
         st.session_state.cluster_limit = 20
+
+    order_options = [
+        "Cluster ID (ascending)",
+        "Cluster ID (descending)",
+        "Blocks (ascending)",
+        "Blocks (descending)",
+        "Cluster size (ascending)",
+        "Cluster size (descending)",
+    ]
+    if 'cluster_order' not in st.session_state:
+        st.session_state.cluster_order = order_options[0]
+
     with st.expander("Display options", expanded=False):
-        col_l, col_r = st.columns([3,1])
+        col_l, col_r = st.columns([3, 1])
         with col_l:
+            order_choice = st.selectbox(
+                "Order clusters by",
+                order_options,
+                index=order_options.index(st.session_state.cluster_order),
+                help="Sort clusters—for example, surface tiny operon hits by choosing Blocks (ascending).",
+            )
+            st.session_state.cluster_order = order_choice
+
             new_limit = st.number_input(
                 "Max clusters to display",
                 min_value=1,
@@ -1628,6 +1650,28 @@ def display_cluster_explorer():
         with col_r:
             if st.button("Show more", help="Increase limit by 20"):
                 st.session_state.cluster_limit = min(len(filtered_stats), int(st.session_state.cluster_limit) + 20)
+
+    # Apply ordering prior to slicing to the display limit
+    def _block_count(stat):
+        val = getattr(stat, 'total_alignments', None)
+        if val is None or val == 0:
+            return getattr(stat, 'size', 0)
+        return val
+
+    order_choice = st.session_state.get('cluster_order', order_options[0])
+    if order_choice == "Cluster ID (ascending)":
+        filtered_stats = sorted(filtered_stats, key=lambda s: s.cluster_id)
+    elif order_choice == "Cluster ID (descending)":
+        filtered_stats = sorted(filtered_stats, key=lambda s: s.cluster_id, reverse=True)
+    elif order_choice == "Blocks (ascending)":
+        filtered_stats = sorted(filtered_stats, key=_block_count)
+    elif order_choice == "Blocks (descending)":
+        filtered_stats = sorted(filtered_stats, key=_block_count, reverse=True)
+    elif order_choice == "Cluster size (ascending)":
+        filtered_stats = sorted(filtered_stats, key=lambda s: s.size)
+    elif order_choice == "Cluster size (descending)":
+        filtered_stats = sorted(filtered_stats, key=lambda s: s.size, reverse=True)
+
     total_after_filter = len(filtered_stats)
     render_limit = max(1, min(total_after_filter, int(st.session_state.cluster_limit)))
     st.info(f"Showing {render_limit} of {total_after_filter} clusters")
@@ -2525,7 +2569,16 @@ def display_cluster_detail():
         except Exception as e:
             st.error(f"Error loading cluster data: {e}")
             return
-    
+
+    clinker_max_tracks = 6
+    clinker_use_embeddings = True
+    cluster_clinker_data = _build_cluster_multiloc_json(
+        int(cluster_id),
+        is_micro=is_micro,
+        max_tracks=clinker_max_tracks,
+        use_embeddings=clinker_use_embeddings,
+    )
+
     # Cluster overview
     col1, col2, col3, col4 = st.columns(4)
     with col1:
@@ -2558,72 +2611,196 @@ def display_cluster_detail():
     
     # Consensus cassette (PFAM-based) controls and render
     with st.expander("🧩 Consensus Cassette (PFAM)", expanded=True):
-        c1, c2, c3 = st.columns([1,1,1])
+        c1, c2, c3 = st.columns([1, 1, 1])
         with c1:
-            min_core_cov = st.slider("Min coverage", min_value=0.3, max_value=0.95, value=0.0, step=0.05, help="Keep PFAMs present in at least this fraction of blocks")
-        with c2:
-            df_pct = st.slider("Ban top DF percentile (global)", min_value=0.0, max_value=0.99, value=0.9, step=0.05, help="Filter ultra-common PFAMs computed across all blocks (0 to disable)")
-        with c3:
-            max_tok = st.number_input("Max tokens", min_value=3, max_value=20, value=10, step=1)
-        # Use unified preview helper (macro vs micro aware)
-        tokens, pairs = _consensus_preview(int(cluster_id), min_core_cov=min_core_cov, df_pct=df_pct, max_tok=int(max_tok), cluster_type=('micro' if is_micro else 'macro'), cache_ver=_db_version())
-        if tokens:
-            # Render prettier strip with arrow-shaped genes and thin arrows between
-            import plotly.graph_objects as go
-            xs = list(range(len(tokens)))
-            labels = [c['token'] for c in tokens]
-            covs = [c['coverage'] for c in tokens]
-            colors = [c['color'] for c in tokens]
-            fwd = [c.get('fwd_frac', 0.0) for c in tokens]
-            nocc = [c.get('n_occ', 0) for c in tokens]
+            min_core_cov = st.slider(
+                "Min coverage",
+                min_value=0.3,
+                max_value=0.95,
+                value=0.5,
+                step=0.05,
+                help="Keep PFAMs present in at least this fraction of displayed loci",
+            )
 
+        df_pct = 0.9
+        max_tok = 10
+
+        tokens: List[Dict] = []
+        pairs: List[Dict] = []
+        consensus_source = 'clinker'
+
+        clinker_tokens = []
+        clinker_pairs = []
+        if cluster_clinker_data and cluster_clinker_data.get('loci'):
+            clinker_tokens, clinker_pairs = _clinker_consensus_from_data(cluster_clinker_data, min_core_cov)
+            tokens = clinker_tokens
+            pairs = clinker_pairs
+
+        if tokens:
+            with c2:
+                st.markdown("<small>PFAM consensus derived from Clinker loci</small>", unsafe_allow_html=True)
+            with c3:
+                st.markdown("<small>Bars show the fraction of loci containing each PFAM</small>", unsafe_allow_html=True)
+        else:
+            consensus_source = 'pfam'
+            with c2:
+                df_pct = st.slider(
+                    "Ban top DF percentile (global)",
+                    min_value=0.0,
+                    max_value=0.99,
+                    value=0.9,
+                    step=0.05,
+                    help="Filter ultra-common PFAMs computed across all blocks (0 disables the filter)",
+                )
+            with c3:
+                max_tok = st.number_input(
+                    "Max tokens",
+                    min_value=3,
+                    max_value=20,
+                    value=10,
+                    step=1,
+                    help="Cap the number of PFAM tokens in the consensus",
+                )
+            tokens, pairs = _consensus_preview(
+                int(cluster_id),
+                min_core_cov=min_core_cov,
+                df_pct=df_pct,
+                max_tok=int(max_tok),
+                cluster_type=('micro' if is_micro else 'macro'),
+                cache_ver=_db_version(),
+            )
+
+        if (not tokens) and is_micro:
+            consensus_source = 'operon'
+            tokens, pairs = _operon_consensus_from_blocks(int(cluster_id), float(min_core_cov))
+
+        if tokens:
+            coverages = [max(0.0, min(1.0, float(t.get('coverage', 0.0)))) for t in tokens]
+            colors = [t.get('color', '#1f77b4') for t in tokens]
+            labels = [t.get('token', f"PFAM_{i}") for i, t in enumerate(tokens)]
+            fwd = [t.get('fwd_frac', 0.0) for t in tokens]
+            nocc = [t.get('n_occ', 0) for t in tokens]
+
+            bar_fig = go.Figure(
+                go.Bar(
+                    x=list(range(len(tokens))),
+                    y=[c * 100.0 for c in coverages],
+                    marker=dict(
+                        color=[_adjust_rgba_alpha(col, 0.55) for col in colors],
+                        line=dict(color='rgba(0,0,0,0.1)', width=0.4),
+                    ),
+                    hovertemplate="<b>%{customdata[0]}</b><br>Coverage: %{y:.0f}%<extra></extra>",
+                    customdata=[[lab] for lab in labels],
+                )
+            )
+            bar_fig.update_layout(
+                height=110,
+                margin=dict(l=10, r=10, t=10, b=10),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+                xaxis=dict(
+                    tickvals=list(range(len(tokens))),
+                    ticktext=labels,
+                    tickangle=-30,
+                    showgrid=False,
+                    tickfont=dict(size=10),
+                ),
+                yaxis=dict(
+                    title=dict(text='Coverage %', font=dict(size=12)),
+                    range=[0, 100],
+                    showgrid=False,
+                    zeroline=False,
+                    tickfont=dict(size=10),
+                ),
+            )
+            st.plotly_chart(bar_fig, use_container_width=True, config={'displayModeBar': False})
+
+            xs = list(range(len(tokens)))
             fig = go.Figure()
-            # Build arrow-like shapes for each token
             shapes = []
             y_top, y_bot = 0.8, 0.2
-            body_frac, head_frac = 0.6, 0.3  # body and head proportion (total ~0.9)
-            for i, (col, ff) in enumerate(zip(colors, fwd)):
+            head_frac = 0.3
+            for i, col in enumerate(colors):
+                ff = fwd[i]
                 x = xs[i]
                 x_left = x - 0.45
                 x_right = x + 0.45
                 if ff >= 0.5:
-                    # Right-pointing arrow
                     body_end = x_right - head_frac
                     path = f"M {x_left},{y_bot} L {body_end},{y_bot} L {x_right},0.5 L {body_end},{y_top} L {x_left},{y_top} Z"
                 else:
-                    # Left-pointing arrow
                     body_start = x_left + head_frac
                     path = f"M {x_right},{y_bot} L {body_start},{y_bot} L {x_left},0.5 L {body_start},{y_top} L {x_right},{y_top} Z"
                 shapes.append(dict(type='path', path=path, fillcolor=col, line=dict(color='rgba(0,0,0,0.2)', width=1)))
 
-            # Invisible markers at centers for hover tooltips
-            hov = [f"{lab}<br>coverage={cov:.0%}<br>forward={ff:.0%} (n={nn})" for lab, cov, ff, nn in zip(labels, covs, fwd, nocc)]
-            fig.add_trace(go.Scatter(x=xs, y=[0.5]*len(xs), mode='markers', marker=dict(size=1, opacity=0), hovertext=hov, hoverinfo='text', showlegend=False))
+            hov = [
+                f"{lab}<br>coverage={cov:.0%}<br>forward={ff:.0%} (n={nn})"
+                for lab, cov, ff, nn in zip(labels, coverages, fwd, nocc)
+            ]
+            fig.add_trace(
+                go.Scatter(
+                    x=xs,
+                    y=[0.5] * len(xs),
+                    mode='markers',
+                    marker=dict(size=1, opacity=0),
+                    hovertext=hov,
+                    hoverinfo='text',
+                    showlegend=False,
+                )
+            )
 
-            # Add thin arrows between genes to indicate directionality consistency
             for p in pairs:
-                if p.get('same_frac') is None or p.get('support', 0) < 3:
+                if p.get('same_frac') is None or p.get('support', 0) < 1:
                     continue
                 i, j = p['i'], p['j']
                 frac = p['same_frac']
                 if frac >= 0.8:
-                    col = 'green'
+                    edge_col = 'green'
                 elif frac >= 0.6:
-                    col = 'goldenrod'
+                    edge_col = 'goldenrod'
                 else:
-                    col = 'gray'
+                    edge_col = 'gray'
                 x0 = i + 0.45
                 x1 = j - 0.45
-                fig.add_annotation(x=x1, y=0.5, ax=x0, ay=0.5, xref='x', yref='y', axref='x', ayref='y',
-                                   showarrow=True, arrowhead=3, arrowsize=1, arrowwidth=2, arrowcolor=col,
-                                   hovertext=f"{labels[i]}→{labels[j]} same-strand {frac:.0%} (n={p['support']})",
-                                   hoverlabel=dict(bgcolor=col), opacity=0.9)
+                fig.add_annotation(
+                    x=x1,
+                    y=0.5,
+                    ax=x0,
+                    ay=0.5,
+                    xref='x',
+                    yref='y',
+                    axref='x',
+                    ayref='y',
+                    showarrow=True,
+                    arrowhead=3,
+                    arrowsize=1,
+                    arrowwidth=2,
+                    arrowcolor=edge_col,
+                    hovertext=f"{labels[i]}→{labels[j]} same-strand {frac:.0%} (n={p['support']})",
+                    hoverlabel=dict(bgcolor=edge_col),
+                    opacity=0.9,
+                )
 
             fig.update_layout(height=120, margin=dict(l=10, r=10, t=10, b=10), shapes=shapes)
-            fig.update_xaxes(showticklabels=False, showgrid=False, range=[-0.5, len(xs)-0.5])
+            fig.update_xaxes(showticklabels=False, showgrid=False, range=[-0.5, len(xs) - 0.5])
             fig.update_yaxes(visible=False, range=[0, 1.2])
             st.plotly_chart(fig, use_container_width=True)
-            st.caption("Consensus core (ordered): " + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, covs)]))
+
+            if consensus_source == 'clinker':
+                st.caption(
+                    "Consensus core (PFAM) derived from the Clinker-aligned loci: "
+                    + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, coverages)])
+                )
+            elif consensus_source == 'operon':
+                st.caption(
+                    "Consensus core (PFAM) derived from operon gene mappings across all blocks: "
+                    + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, coverages)])
+                )
+            else:
+                st.caption(
+                    "Consensus core (PFAM) derived from block-level PFAM statistics: "
+                    + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, coverages)])
+                )
         else:
             st.info("No stable PFAM core detected for this cluster with current settings.")
 
@@ -2631,12 +2808,15 @@ def display_cluster_detail():
     st.markdown("---")
     st.subheader("🧷 Cluster-wide Clinker Alignment")
     try:
-        # Choose sensible defaults for quick view
-        max_tracks = 6
-        use_embeddings = True
-        data = _build_cluster_multiloc_json(int(cluster_id), is_micro=is_micro, max_tracks=int(max_tracks), use_embeddings=use_embeddings)
+        data = cluster_clinker_data
+        if not data or not data.get('loci'):
+            data = _build_cluster_multiloc_json(
+                int(cluster_id),
+                is_micro=is_micro,
+                max_tracks=int(clinker_max_tracks),
+                use_embeddings=clinker_use_embeddings,
+            )
         if data and data.get('loci') and len(data['loci']) >= 2:
-            # Make the plot larger with more generous vertical spacing
             _render_multiloc_d3(data, height=180 + 100 * len(data.get('loci', [])))
         else:
             st.caption("Not enough comparable regions to render a cluster-wide alignment.")
@@ -4740,6 +4920,374 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
                 })
 
     return {'loci': loci_ordered, 'edges': edges, 'embeddings': emb_status}
+
+
+def _pfam_color(label: str, alpha: float = 0.85) -> str:
+    """Generate a stable RGBA color for a PFAM label."""
+    seed = hashlib.md5(label.encode('utf-8')).hexdigest()
+    r = int(seed[0:2], 16)
+    g = int(seed[2:4], 16)
+    b = int(seed[4:6], 16)
+    return f"rgba({r},{g},{b},{alpha:.2f})"
+
+
+def _adjust_rgba_alpha(color: str, alpha: float) -> str:
+    """Adjust the alpha channel of an rgba()/rgb()/hex colour string."""
+    try:
+        if color.startswith('rgba'):
+            values = color[color.find('(') + 1 : color.find(')')].split(',')
+            r, g, b = [int(float(values[i])) for i in range(3)]
+            return f"rgba({r},{g},{b},{alpha:.2f})"
+        if color.startswith('rgb'):
+            values = color[color.find('(') + 1 : color.find(')')].split(',')
+            r, g, b = [int(float(values[i])) for i in range(3)]
+            return f"rgba({r},{g},{b},{alpha:.2f})"
+        if color.startswith('#') and len(color) == 7:
+            r = int(color[1:3], 16)
+            g = int(color[3:5], 16)
+            b = int(color[5:7], 16)
+            return f"rgba({r},{g},{b},{alpha:.2f})"
+    except Exception:
+        pass
+    return color
+
+
+def _clinker_consensus_from_data(data: Dict, min_cov: float) -> Tuple[List[Dict], List[Dict]]:
+    """Derive consensus tokens/pairs from the loci used in the Clinker view."""
+
+    loci = (data or {}).get('loci') or []
+    total_tracks = len(loci)
+    if total_tracks == 0:
+        return [], []
+
+    min_cov = max(0.0, min(1.0, float(min_cov)))
+
+    # Union-find over genes across loci using clinker edges
+    parent: Dict[Tuple[int, int], Tuple[int, int]] = {}
+
+    def _find(node: Tuple[int, int]) -> Tuple[int, int]:
+        parent.setdefault(node, node)
+        if parent[node] != node:
+            parent[node] = _find(parent[node])
+        return parent[node]
+
+    def _union(a: Tuple[int, int], b: Tuple[int, int]) -> None:
+        if a not in parent or b not in parent:
+            return
+        ra, rb = _find(a), _find(b)
+        if ra != rb:
+            parent[rb] = ra
+
+    # Initialise nodes
+    for row_idx, locus in enumerate(loci):
+        for gene_idx, _ in enumerate(locus.get('genes', [])):
+            parent[(row_idx, gene_idx)] = (row_idx, gene_idx)
+
+    # Merge via edges
+    for edge in (data or {}).get('edges', []):
+        a_row = int(edge.get('a', 0))
+        b_row = int(edge.get('b', 0))
+        a_idx = int(edge.get('ai', 0))
+        b_idx = int(edge.get('bi', 0))
+        node_a = (a_row, a_idx)
+        node_b = (b_row, b_idx)
+        if node_a in parent and node_b in parent:
+            _union(node_a, node_b)
+
+    components: Dict[Tuple[int, int], List[Tuple[int, int]]] = defaultdict(list)
+    for node in parent:
+        components[_find(node)].append(node)
+
+    comp_infos: List[Dict] = []
+    node_to_comp: Dict[Tuple[int, int], int] = {}
+    for comp_id, (root, members) in enumerate(sorted(components.items(), key=lambda item: min(item[1]))):
+        rows = set()
+        pf_counts: Counter = Counter()
+        orientation_votes: Dict[int, Counter] = defaultdict(Counter)
+        for row_idx, gene_idx in members:
+            node_to_comp[(row_idx, gene_idx)] = comp_id
+            gene = loci[row_idx]['genes'][gene_idx]
+            pf_tokens = [tok.strip() for tok in str(gene.get('pfam', '') or '').split(';') if tok.strip()]
+            if pf_tokens:
+                pf_counts.update([pf_tokens[0]])
+            else:
+                # Fallback to gene ID when PFAM missing
+                pf_counts.update([f"~{gene.get('id', 'gene')}" ] )
+            strand = gene.get('strand', 1)
+            orientation_votes[row_idx].update([1 if int(strand) >= 0 else -1])
+            rows.add(row_idx)
+
+        orient_summary = {
+            row: (1 if votes.get(1, 0) >= votes.get(-1, 0) else -1)
+            for row, votes in orientation_votes.items()
+        }
+
+        comp_infos.append(
+            {
+                'id': comp_id,
+                'members': members,
+                'rows': rows,
+                'pf_counts': pf_counts,
+                'orientations': orient_summary,
+            }
+        )
+
+    if not comp_infos:
+        return [], []
+
+    # Use first locus (highest-support ordering) as reference for token order
+    reference_row = 0
+    tokens: List[Dict] = []
+    ordered_components: List[int] = []
+    seen_components: Set[int] = set()
+    ref_genes = loci[reference_row]['genes'] if loci[reference_row]['genes'] else []
+    for gene_idx, gene in enumerate(ref_genes):
+        comp_id = node_to_comp.get((reference_row, gene_idx))
+        if comp_id is None or comp_id in seen_components:
+            continue
+        info = comp_infos[comp_id]
+        coverage = len(info['rows']) / float(total_tracks)
+        if coverage < min_cov:
+            continue
+        label_raw, _ = info['pf_counts'].most_common(1)[0] if info['pf_counts'] else (gene.get('id', f"gene_{gene_idx}"), 0)
+        label = label_raw[1:] if label_raw.startswith('~') else label_raw
+        color = _pfam_color(label)
+        orient_values = info['orientations'].values()
+        fwd_frac = (sum(1 for val in orient_values if val >= 0) / len(orient_values)) if orient_values else 0.0
+        tokens.append(
+            {
+                'token': label,
+                'color': color,
+                'coverage': coverage,
+                'fwd_frac': fwd_frac,
+                'n_occ': len(info['members']),
+                '_comp': comp_id,
+            }
+        )
+        ordered_components.append(comp_id)
+        seen_components.add(comp_id)
+
+    if not tokens:
+        return [], []
+
+    # Compute directional consensus between adjacent tokens
+    pairs: List[Dict] = []
+    for idx in range(len(tokens) - 1):
+        comp_a = comp_infos[tokens[idx]['_comp']]
+        comp_b = comp_infos[tokens[idx + 1]['_comp']]
+        shared_rows = comp_a['rows'] & comp_b['rows']
+        if not shared_rows:
+            continue
+        same = 0
+        total = 0
+        for row in shared_rows:
+            or_a = comp_a['orientations'].get(row)
+            or_b = comp_b['orientations'].get(row)
+            if or_a is None or or_b is None:
+                continue
+            if (or_a >= 0 and or_b >= 0) or (or_a < 0 and or_b < 0):
+                same += 1
+            total += 1
+        if total:
+            pairs.append({'i': idx, 'j': idx + 1, 'same_frac': same / total, 'support': total})
+
+    for token in tokens:
+        token.pop('_comp', None)
+
+    return tokens, pairs
+
+
+def _operon_consensus_from_blocks(cluster_id: int, min_cov: float) -> Tuple[List[Dict], List[Dict]]:
+    """Derive a PFAM consensus directly from operon blocks projected into the DB."""
+
+    conn = get_database_connection()
+    try:
+        df = pd.read_sql_query(
+            """
+                SELECT gbm.block_id, gbm.block_role, gbm.relative_position,
+                       g.gene_id, g.start_pos, g.end_pos, g.strand,
+                       g.pfam_domains, g.primary_pfam
+                FROM gene_block_mappings gbm
+                JOIN genes g ON gbm.gene_id = g.gene_id
+                WHERE gbm.block_id IN (
+                    SELECT block_id FROM syntenic_blocks WHERE cluster_id = ? AND block_type = 'operon'
+                )
+                ORDER BY gbm.block_id, gbm.block_role, gbm.relative_position
+            """,
+            conn,
+            params=[int(cluster_id)],
+        )
+    finally:
+        conn.close()
+
+    if df.empty:
+        return [], []
+
+    min_cov = max(0.0, min(1.0, float(min_cov)))
+
+    # Build tracks per (block_id, block_role)
+    tracks: Dict[Tuple[int, str], List[Dict[str, Any]]] = {}
+    for row in df.itertuples(index=False):
+        key = (int(row.block_id), str(row.block_role))
+        tracks.setdefault(key, []).append(
+            {
+                'gene_id': str(row.gene_id),
+                'start': int(row.start_pos),
+                'end': int(row.end_pos),
+                'strand': 1 if int(row.strand or 1) >= 0 else -1,
+                'pfam': str(row.pfam_domains or '').strip(),
+                'primary': str(row.primary_pfam or '').strip(),
+            }
+        )
+
+    if not tracks:
+        return [], []
+
+    # Sort genes in each track by genomic order
+    for genes in tracks.values():
+        genes.sort(key=lambda g: (g['start'], g['end']))
+
+    track_keys = sorted(tracks.keys())
+    track_index = {key: idx for idx, key in enumerate(track_keys)}
+    total_tracks = len(track_keys)
+
+    parent: Dict[Tuple[int, int], Tuple[int, int]] = {}
+
+    def _find(node: Tuple[int, int]) -> Tuple[int, int]:
+        parent.setdefault(node, node)
+        if parent[node] != node:
+            parent[node] = _find(parent[node])
+        return parent[node]
+
+    def _union(a: Tuple[int, int], b: Tuple[int, int]) -> None:
+        ra, rb = _find(a), _find(b)
+        if ra != rb:
+            parent[rb] = ra
+
+    # Initialise parent for every gene
+    for t_key, genes in tracks.items():
+        tidx = track_index[t_key]
+        for gidx in range(len(genes)):
+            parent[(tidx, gidx)] = (tidx, gidx)
+
+    # Union query/target genes within the same syntenic block by position
+    blocks = sorted({bid for bid, _ in track_keys})
+    for block_id in blocks:
+        q_key = (block_id, 'query')
+        t_key = (block_id, 'target')
+        if q_key not in tracks or t_key not in tracks:
+            continue
+        q_genes = tracks[q_key]
+        t_genes = tracks[t_key]
+        limit = min(len(q_genes), len(t_genes))
+        tq = track_index[q_key]
+        tt = track_index[t_key]
+        for pos in range(limit):
+            _union((tq, pos), (tt, pos))
+
+    # Gather components
+    clusters: Dict[Tuple[int, int], List[Tuple[int, int]]] = defaultdict(list)
+    for node in parent:
+        clusters[_find(node)].append(node)
+
+    if not clusters:
+        return [], []
+
+    comp_infos: List[Dict[str, Any]] = []
+    node_to_comp: Dict[Tuple[int, int], int] = {}
+    for comp_id, (root, members) in enumerate(sorted(clusters.items(), key=lambda item: item[0])):
+        pf_counts: Counter = Counter()
+        rows_present: Set[int] = set()
+        orient_votes: Dict[int, Counter] = defaultdict(Counter)
+        for track_idx, gene_idx in members:
+            node_to_comp[(track_idx, gene_idx)] = comp_id
+            track_key = track_keys[track_idx]
+            gene = tracks[track_key][gene_idx]
+            tokens = [tok.strip() for tok in gene.get('pfam', '').split(';') if tok.strip()]
+            if tokens:
+                pf_counts.update([tokens[0]])
+            else:
+                pf_counts.update([f"~{gene['gene_id']}"])
+            orient_votes[track_idx].update([1 if gene.get('strand', 1) >= 0 else -1])
+            rows_present.add(track_idx)
+        orient_summary = {
+            idx: (1 if votes.get(1, 0) >= votes.get(-1, 0) else -1)
+            for idx, votes in orient_votes.items()
+        }
+        comp_infos.append(
+            {
+                'id': comp_id,
+                'members': members,
+                'rows': rows_present,
+                'pf_counts': pf_counts,
+                'orientations': orient_summary,
+            }
+        )
+
+    if not comp_infos:
+        return [], []
+
+    # Choose reference track: the one with the most genes
+    reference_idx = max(range(total_tracks), key=lambda idx: len(tracks[track_keys[idx]]))
+    reference_track = tracks[track_keys[reference_idx]]
+
+    tokens: List[Dict[str, Any]] = []
+    ordered_comp_ids: List[int] = []
+    seen_comps: Set[int] = set()
+    for gene_idx, gene in enumerate(reference_track):
+        comp_id = node_to_comp.get((reference_idx, gene_idx))
+        if comp_id is None or comp_id in seen_comps:
+            continue
+        info = comp_infos[comp_id]
+        coverage = len(info['rows']) / float(total_tracks)
+        if coverage < min_cov:
+            continue
+        label_raw, _ = info['pf_counts'].most_common(1)[0] if info['pf_counts'] else (f"gene_{gene_idx}", 0)
+        label = label_raw[1:] if label_raw.startswith('~') else label_raw
+        color = _pfam_color(label)
+        orient_values = info['orientations'].values()
+        fwd_frac = (sum(1 for val in orient_values if val >= 0) / len(orient_values)) if orient_values else 0.0
+        tokens.append(
+            {
+                'token': label,
+                'color': color,
+                'coverage': coverage,
+                'fwd_frac': fwd_frac,
+                'n_occ': len(info['members']),
+                '_comp': comp_id,
+            }
+        )
+        ordered_comp_ids.append(comp_id)
+        seen_comps.add(comp_id)
+
+    if not tokens:
+        return [], []
+
+    # Build adjacency pairs using component orientation overlap
+    pairs: List[Dict[str, Any]] = []
+    for idx in range(len(tokens) - 1):
+        comp_a = comp_infos[tokens[idx]['_comp']]
+        comp_b = comp_infos[tokens[idx + 1]['_comp']]
+        shared = comp_a['rows'] & comp_b['rows']
+        if not shared:
+            continue
+        same = 0
+        total = 0
+        for row_idx in shared:
+            or_a = comp_a['orientations'].get(row_idx)
+            or_b = comp_b['orientations'].get(row_idx)
+            if or_a is None or or_b is None:
+                continue
+            if (or_a >= 0 and or_b >= 0) or (or_a < 0 and or_b < 0):
+                same += 1
+            total += 1
+        if total:
+            pairs.append({'i': idx, 'j': idx + 1, 'same_frac': same / total, 'support': total})
+
+    for tok in tokens:
+        tok.pop('_comp', None)
+
+    return tokens, pairs
 
 
 def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):

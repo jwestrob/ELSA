@@ -1187,16 +1187,40 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                     from .analyze.micro_operon import run_operon_pipeline
                     operon_dir = Path(output_path) / 'operon_micro'
 
+                    # Get operon config (with defaults from OperonConfig)
+                    operon_cfg = getattr(config_obj.analyze, 'operon', None)
                     overrides = getattr(config_obj.analyze, 'micro_overrides', None)
-                    merge_max_gap_bp = 50
-                    merge_support_ratio = 0.8
+
+                    # Use config values with fallback to defaults
+                    pca_dims = operon_cfg.pca_dims if operon_cfg else 96
+                    pca_eps = operon_cfg.pca_eps if operon_cfg else 1e-5
+                    shingle_k = operon_cfg.shingle_k if operon_cfg else 3
+                    shingle_stride = operon_cfg.shingle_stride if operon_cfg else 1
+                    hnsw_m = operon_cfg.hnsw_m if operon_cfg else 32
+                    hnsw_ef_construction = operon_cfg.hnsw_ef_construction if operon_cfg else 200
+                    hnsw_ef_search = operon_cfg.hnsw_ef_search if operon_cfg else 128
+                    hnsw_top_k = operon_cfg.hnsw_top_k if operon_cfg else 16
+                    neighbors_per_block = operon_cfg.neighbors_per_block if operon_cfg else 10
+                    sinkhorn_epsilon = operon_cfg.sinkhorn_epsilon if operon_cfg else 0.05
+                    sinkhorn_iters = operon_cfg.sinkhorn_iters if operon_cfg else 40
+                    sinkhorn_topk = operon_cfg.sinkhorn_topk if operon_cfg else 8
+                    similarity_tau = operon_cfg.similarity_tau if operon_cfg else 0.55
+                    min_genome_support = operon_cfg.min_genome_support if operon_cfg else 2
+                    merge_max_gap_bp = operon_cfg.merge_max_gap_bp if operon_cfg else 50
+                    merge_support_ratio = operon_cfg.merge_support_ratio if operon_cfg else 0.8
+                    flank_support_ratio = operon_cfg.flank_support_ratio if operon_cfg else 1.0
+                    flank_max_genes = operon_cfg.flank_max_genes if operon_cfg else 2
+
+                    # Apply micro_overrides if present (backwards compatibility)
                     try:
                         if overrides and getattr(overrides, 'operon_max_gap_bp', None) is not None:
                             merge_max_gap_bp = max(0, int(overrides.operon_max_gap_bp))
                         if overrides and getattr(overrides, 'operon_support_ratio', None) is not None:
                             merge_support_ratio = float(overrides.operon_support_ratio)
-                            if merge_support_ratio <= 0.0 or merge_support_ratio > 1.0:
-                                raise ValueError
+                        if overrides and getattr(overrides, 'operon_flank_support_ratio', None) is not None:
+                            flank_support_ratio = float(overrides.operon_flank_support_ratio)
+                        if overrides and getattr(overrides, 'operon_flank_max_genes', None) is not None:
+                            flank_max_genes = max(0, int(overrides.operon_flank_max_genes))
                     except Exception:
                         pass
 
@@ -1204,8 +1228,24 @@ def analyze(config: str, min_windows: int, min_similarity: float, output_dir: st
                         Path(genes_path),
                         operon_dir,
                         console=console,
+                        pca_dims=pca_dims,
+                        eps=pca_eps,
+                        shingle_k=shingle_k,
+                        shingle_stride=shingle_stride,
+                        hnsw_m=hnsw_m,
+                        hnsw_ef_construction=hnsw_ef_construction,
+                        hnsw_ef_search=hnsw_ef_search,
+                        hnsw_top_k=hnsw_top_k,
+                        neighbors_per_block=neighbors_per_block,
+                        sinkhorn_epsilon=sinkhorn_epsilon,
+                        sinkhorn_iters=sinkhorn_iters,
+                        sinkhorn_topk=sinkhorn_topk,
+                        similarity_tau=similarity_tau,
+                        min_genome_support=min_genome_support,
                         merge_max_gap_bp=merge_max_gap_bp,
                         merge_support_ratio=merge_support_ratio,
+                        flank_support_ratio=flank_support_ratio,
+                        flank_max_genes=flank_max_genes,
                         db_path=Path(genome_browser_db) if genome_browser_db else None,
                     )
                     console.print(

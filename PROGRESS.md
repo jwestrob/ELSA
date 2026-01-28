@@ -9,6 +9,7 @@
 - [x] 7. Graph + Leiden/HDBSCAN
 - [ ] 8. ITQ+MIH path [optional]
 - [x] 9. CLI + config + evaluation
+- [ ] 10. Benchmarking against ground-truth synteny — see [BENCHMARKING_PLAN.md](./BENCHMARKING_PLAN.md)
 
 ## Notes
 - 2025-11-03: Created project scaffold, CLI placeholders, doc stubs, Makefile/tooling, and milestone-aware tests; ran `make fmt`, `make lint`, `make test`.

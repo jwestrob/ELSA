@@ -53,3 +53,16 @@ dist/
 
 # Data artifacts for operon pipeline
 operon_outputs/
+
+# Benchmark data (genomes, proteins, etc.)
+benchmarks/data/
+benchmarks/elsa_output/
+benchmarks/ground_truth/
+benchmarks/evaluation/
+
+# SQLite WAL files
+*.db-shm
+*.db-wal
+
+# Test output directories
+syntenic_analysis_*/

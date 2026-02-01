@@ -23,6 +23,7 @@ The gene-level anchor chaining pipeline (`elsa/analyze/micro_chain.py` + `elsa/a
 - [x] **Cross-species ortholog validation**: 80%+ overlap for within-genus, 21% for E.coli↔others
 - [x] **MCScanX comparison**: ELSA finds 2.7x more blocks, 3.7x more cross-genus
 - [x] **gLM2 vs ESM2**: gLM2 150M achieves 83.1% operon recall (vs 82.6% ESM2), more within-species sensitivity
+- [x] **Cryptic homology discovery**: 8,069 cross-genus blocks where ELSA finds synteny that BLAST misses (44% seq id → 0.97 emb sim)
 
 ### Cross-Species Results (COMPLETE - January 2026)
 
@@ -177,6 +178,26 @@ Results: `benchmarks/results/cross_species_glm2/micro_chain/`
 Evaluation: `benchmarks/evaluation/glm2_operon_recall.csv`
 Config: `benchmarks/configs/cross_species_glm2.config.yaml`
 
+### Cryptic Homology Discovery (February 2026)
+
+ELSA's PLM embeddings detect synteny that BLAST/MCScanX miss due to sequence divergence.
+
+**Case Study: Salmonella-E.coli ~100 kb syntenic region**
+
+| Method | Genes Detected | Coverage | Identity/Similarity |
+|--------|---------------|----------|---------------------|
+| BLAST (MCScanX) | 11 | 11% | 44% sequence identity |
+| ELSA (ESM2) | 97 | 95% | 0.97 embedding similarity |
+
+**Key findings:**
+- 8,069 cross-genus ELSA blocks with <10% MCScanX overlap
+- Orthologous genes diverged below BLAST threshold (44% identity) but PLM embeddings preserve functional similarity (0.97)
+- Core housekeeping genes (*icd*, *mnmA*, *phoP/Q*, *pot* operon) correctly matched
+- Species-specific genes (*sifA* in Salmonella, *csg* in E.coli) show appropriately lower similarity (0.5-0.8)
+
+Report: `benchmarks/evaluation/CRYPTIC_HOMOLOGY_ANALYSIS.md`
+Figure: `benchmarks/evaluation/figures/cryptic_synteny_v2.png`
+
 ### Key Benchmark Files
 | File | Description |
 |------|-------------|
@@ -193,6 +214,8 @@ Config: `benchmarks/configs/cross_species_glm2.config.yaml`
 | `benchmarks/configs/cross_species_glm2.config.yaml` | Config for 30-genome run (gLM2) |
 | `benchmarks/evaluation/glm2_operon_recall.csv` | gLM2 operon recall evaluation |
 | `benchmarks/results/cross_species_glm2/micro_chain/` | gLM2 blocks and clusters |
+| `benchmarks/evaluation/CRYPTIC_HOMOLOGY_ANALYSIS.md` | **Cryptic homology case study** |
+| `benchmarks/evaluation/figures/cryptic_synteny_v2.png` | Cryptic synteny figure |
 
 ### Analysis Scripts
 | Script | Description |

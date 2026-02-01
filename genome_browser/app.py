@@ -5,6 +5,14 @@ ELSA Genome Browser - Streamlit Application
 Interactive genome browser for exploring syntenic blocks with PFAM domain annotations.
 """
 
+import sys
+from pathlib import Path
+
+# Add parent directory to path for elsa imports
+_parent = Path(__file__).resolve().parent.parent
+if str(_parent) not in sys.path:
+    sys.path.insert(0, str(_parent))
+
 import streamlit as st
 import sqlite3
 import pandas as pd
@@ -12,7 +20,6 @@ import plotly.graph_objects as go
 import plotly.express as px
 from plotly.subplots import make_subplots
 import numpy as np
-from pathlib import Path
 import logging
 from typing import Dict, List, Tuple, Optional, Set, Any
 from types import SimpleNamespace
@@ -21,6 +28,7 @@ import math
 import os
 import time
 import hashlib
+import json
 from collections import defaultdict, Counter
 
 # Import genome visualization functions
@@ -93,6 +101,12 @@ def load_gene_embeddings_df(parquet_path: Optional[str] = None) -> Tuple[Optiona
     here = Path(__file__).resolve()
     repo_root = here.parents[1]  # ELSA/
     candidates.extend([
+        # Borg-specific paths (check first since that's likely the active dataset)
+        Path('elsa_index_borg/ingest/genes.parquet'),
+        repo_root / 'elsa_index_borg/ingest/genes.parquet',
+        Path.cwd() / 'elsa_index_borg/ingest/genes.parquet',
+        Path.cwd().parent / 'elsa_index_borg/ingest/genes.parquet',
+        # Default elsa_index paths
         Path('elsa_index/ingest/genes.parquet'),
         repo_root / 'elsa_index/ingest/genes.parquet',
         Path.cwd() / 'elsa_index/ingest/genes.parquet',
@@ -174,6 +188,10 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
 
     if block_type == 'macro':
         base += " AND block_type = 'macro'"
+    elif block_type == 'chain':
+        base += " AND block_type = 'chain'"
+    elif block_type == 'operon':
+        base += " AND block_type = 'operon'"
     elif block_type == 'micro':
         # skip loading macro here; will load micro below
         macro_df = pd.DataFrame()
@@ -591,8 +609,8 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
         return pd.read_sql_query(query, fresh_conn, params=[contig_id])
     
     # Convert indices to gene ranges
-    if str(block_type) == 'micro':
-        # For micro, query_window_* are already gene indices
+    if str(block_type) in ('micro', 'chain'):
+        # For micro/chain, query_window_* are already gene indices
         gene_start_idx = int(window_start) if window_start is not None else 0
         gene_end_idx = int(window_end) if window_end is not None else gene_start_idx
     else:
@@ -749,30 +767,106 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
 
 def create_sidebar_filters() -> Dict:
     """Create sidebar filters and return filter values."""
+    # Quick Navigation section (for AI agents and power users)
+    st.sidebar.header("🚀 Quick Navigation")
+
+    col1, col2 = st.sidebar.columns(2)
+    with col1:
+        jump_block_id = st.number_input(
+            "Block ID",
+            min_value=0,
+            step=1,
+            value=0,
+            help="Enter a block ID to jump directly to it",
+            key="jump_block_input"
+        )
+    with col2:
+        if st.button("Go", key="jump_block_btn", help="Jump to block"):
+            if jump_block_id > 0:
+                conn = get_database_connection()
+                block = pd.read_sql_query(
+                    "SELECT * FROM syntenic_blocks WHERE block_id = ?",
+                    conn, params=(jump_block_id,)
+                )
+                if not block.empty:
+                    st.session_state.selected_block = block.iloc[0].to_dict()
+                    st.session_state.current_page = 'genome_viewer'
+                    st.rerun()
+                else:
+                    st.sidebar.error(f"Block {jump_block_id} not found")
+
+    col3, col4 = st.sidebar.columns(2)
+    with col3:
+        jump_cluster_id = st.number_input(
+            "Cluster ID",
+            min_value=0,
+            step=1,
+            value=0,
+            help="Enter a cluster ID to jump directly to it",
+            key="jump_cluster_input"
+        )
+    with col4:
+        if st.button("Go", key="jump_cluster_btn", help="Jump to cluster"):
+            if jump_cluster_id > 0:
+                st.session_state.selected_cluster = jump_cluster_id
+                st.session_state.current_page = 'cluster_detail'
+                st.rerun()
+
+    # Show current URL for sharing
+    with st.sidebar.expander("🔗 Share Link", expanded=False):
+        current_page = st.session_state.get('current_page', 'dashboard')
+        base_url = "http://localhost:8501"
+
+        if current_page == 'genome_viewer' and 'selected_block' in st.session_state:
+            block = st.session_state.selected_block
+            share_url = f"{base_url}?block_id={block.get('block_id', '')}"
+        elif current_page == 'cluster_detail' and 'selected_cluster' in st.session_state:
+            share_url = f"{base_url}?cluster_id={st.session_state.selected_cluster}"
+        else:
+            tab_names = ['dashboard', 'block_explorer', 'genome_viewer', 'cluster_explorer']
+            tab_idx = st.session_state.get('url_tab', 0)
+            share_url = f"{base_url}?tab={tab_names[min(tab_idx, 3)]}"
+
+        st.code(share_url, language=None)
+        st.caption("Copy this URL to share or bookmark this view")
+
+    st.sidebar.divider()
+
     st.sidebar.header("🔍 Filters")
-    
+
     # Load genomes for filter
     genomes_df = load_genomes()
-    
+
+    # Check for URL-based genome filter
+    url_genomes = st.session_state.get('url_genome_filter')
+    if url_genomes:
+        # Filter to only valid genomes
+        valid_genomes = [g for g in url_genomes if g in genomes_df['genome_id'].tolist()]
+        default_genomes = valid_genomes if valid_genomes else genomes_df['genome_id'].tolist()[:3]
+    else:
+        default_genomes = genomes_df['genome_id'].tolist()[:3]
+
     # Genome filter
     selected_genomes = st.sidebar.multiselect(
         "Select Genomes",
         options=genomes_df['genome_id'].tolist(),
-        default=genomes_df['genome_id'].tolist()[:3],  # Default to first 3
+        default=default_genomes,
         help="Select genomes to include in analysis"
     )
     
-    # Block size filter (gene windows)
+    # Block size filter (gene windows) - respect URL params
     st.sidebar.subheader("Block Size Range (Gene Windows)")
-    size_min = st.sidebar.number_input("Min size (gene windows)", value=1, min_value=1, step=1)
-    size_max = st.sidebar.number_input("Max size (gene windows)", value=100, min_value=1, step=1)
+    url_min = st.session_state.get('url_min_size', 1)
+    url_max = st.session_state.get('url_max_size', 100)
+    size_min = st.sidebar.number_input("Min size (gene windows)", value=url_min, min_value=1, step=1)
+    size_max = st.sidebar.number_input("Max size (gene windows)", value=url_max, min_value=1, step=1)
     
     # Block type filter
     block_type = st.sidebar.selectbox(
         "Block Type",
-        options=[None, 'small', 'medium', 'large'],
+        options=[None, 'small', 'medium', 'large', 'chain', 'micro', 'operon'],
         format_func=lambda x: 'All' if x is None else x.title(),
-        help="Filter by block size category"
+        help="Filter by block type: size categories (small/medium/large), chain (gene-level chaining), micro (legacy 3-gene windows), operon"
     )
     
     # Identity threshold
@@ -852,7 +946,62 @@ def display_dashboard():
     with col5:
         annotation_pct = (stats[4] / stats[3] * 100) if stats[3] > 0 else 0
         st.metric("📝 Annotated", f"{annotation_pct:.1f}%")
-    
+
+    # Machine-readable summary (for AI agents and programmatic access)
+    with st.expander("📋 Machine-Readable Summary (JSON)", expanded=False):
+        # Get additional stats for the summary
+        largest_block_query = """
+            SELECT block_id, length, query_genome_id, target_genome_id, score
+            FROM syntenic_blocks ORDER BY length DESC LIMIT 1
+        """
+        largest_block = conn.execute(largest_block_query).fetchone()
+
+        top_clusters_query = """
+            SELECT cluster_id, size FROM clusters ORDER BY size DESC LIMIT 5
+        """
+        top_clusters = conn.execute(top_clusters_query).fetchall()
+
+        genome_list_query = "SELECT genome_id FROM genomes ORDER BY genome_id"
+        genome_list = [r[0] for r in conn.execute(genome_list_query).fetchall()]
+
+        summary = {
+            "genomes": {
+                "count": stats[0],
+                "ids": genome_list
+            },
+            "syntenic_blocks": {
+                "count": stats[1],
+                "largest": {
+                    "block_id": largest_block[0] if largest_block else None,
+                    "size": largest_block[1] if largest_block else None,
+                    "query_genome": largest_block[2] if largest_block else None,
+                    "target_genome": largest_block[3] if largest_block else None,
+                    "score": largest_block[4] if largest_block else None,
+                } if largest_block else None
+            },
+            "clusters": {
+                "count": stats[2],
+                "top_5": [{"cluster_id": c[0], "size": c[1]} for c in top_clusters]
+            },
+            "genes": {
+                "total": stats[3],
+                "annotated": stats[4],
+                "annotation_pct": round(annotation_pct, 2)
+            },
+            "deep_links": {
+                "base_url": "http://localhost:8501",
+                "examples": {
+                    "block": "?block_id=123",
+                    "cluster": "?cluster_id=456",
+                    "tab": "?tab=block_explorer",
+                    "filtered": "?tab=block_explorer&min_size=10&genome=GENOME_ID"
+                }
+            }
+        }
+
+        st.code(json.dumps(summary, indent=2), language='json')
+        st.caption("Copy this JSON for programmatic access to current database state")
+
     # Block size distribution
     st.subheader("Block Size Distribution")
     
@@ -944,22 +1093,28 @@ def display_block_explorer(filters: Dict):
         sort_option = st.selectbox(
             "Order by",
             [
-                "Embedding similarity (desc)",
-                "Consensus length (desc)",
-                "Consensus length (asc)",
                 "Length (desc)",
                 "Length (asc)",
+                "Embedding similarity (desc)",
+                "Score (desc)",
+                "Consensus length (desc)",
+                "Consensus length (asc)",
             ],
-            index=0,
+            index=0,  # Default to Length (desc) to show largest blocks first
         )
     with scol2:
-        pass
+        # Quick filter buttons
+        if st.button("🔝 Show Top 10 Largest", help="Filter to show the 10 largest blocks"):
+            st.session_state.url_min_size = 1
+            st.session_state.url_max_size = 10000
+            st.rerun()
     order_by = {
-        "Embedding similarity (desc)": "identity DESC, block_id",
-        "Consensus length (desc)": "COALESCE(consensus_len, 0) DESC, block_id",
-        "Consensus length (asc)": "COALESCE(consensus_len, 0) ASC, block_id",
         "Length (desc)": "length DESC, block_id",
         "Length (asc)": "length ASC, block_id",
+        "Embedding similarity (desc)": "identity DESC, block_id",
+        "Score (desc)": "score DESC, block_id",
+        "Consensus length (desc)": "COALESCE(consensus_len, 0) DESC, block_id",
+        "Consensus length (asc)": "COALESCE(consensus_len, 0) ASC, block_id",
     }[sort_option]
     
     # Load blocks for current page
@@ -1206,13 +1361,22 @@ def display_genome_viewer():
         return
     
     block = st.session_state.selected_block
-    
+
     st.header(f"🧬 Genome Viewer - Block {block['block_id']}")
-    
-    # Back button
-    if st.button("← Back to Block Explorer"):
-        st.session_state.current_page = 'block_explorer'
-        st.rerun()
+
+    # Navigation and sharing row
+    nav_col1, nav_col2, nav_col3 = st.columns([1, 2, 1])
+    with nav_col1:
+        if st.button("← Back to Block Explorer"):
+            st.session_state.current_page = 'block_explorer'
+            st.rerun()
+    with nav_col2:
+        # Show shareable link
+        share_url = f"http://localhost:8501?block_id={block['block_id']}"
+        st.code(share_url, language=None)
+    with nav_col3:
+        # Block info
+        st.caption(f"Size: {block.get('length', 'N/A')} genes | Score: {block.get('score', 'N/A')}")
     
     # GPT-5 Analysis Section (full width at top)
     st.divider()
@@ -1484,6 +1648,7 @@ def display_genome_viewer():
             except Exception as e:
                 st.error(f"Comparative view failed: {e}")
 
+@st.cache_data(ttl=300)  # Cache for 5 minutes
 def load_cluster_stats():
     """Load precomputed cluster statistics."""
     try:
@@ -2263,7 +2428,7 @@ def _macro_id_ceiling(conn) -> int:
     try:
         row = conn.execute(
             "SELECT COALESCE(MAX(cluster_id), 0) FROM clusters "
-            "WHERE cluster_id > 0 AND (cluster_type IS NULL OR LOWER(cluster_type) != 'micro')"
+            "WHERE cluster_id > 0 AND (cluster_type IS NULL OR LOWER(cluster_type) NOT IN ('micro','operon'))"
         ).fetchone()
         return int(row[0] or 0)
     except Exception:
@@ -2288,7 +2453,8 @@ def _cluster_is_micro(cluster_id: int) -> bool:
             if row is not None and len(row) > 0 and row[0] is not None:
                 ctype = str(row[0]).strip().lower()
                 conn.close()
-                return (ctype == 'micro')
+                # Note: 'chain' blocks use gene_block_mappings like macro, not micro_block_pairs
+                return ctype in ('micro', 'operon')
         except Exception:
             pass
         # Fallback: infer by display ID offset relative to max macro cluster id
@@ -2426,7 +2592,50 @@ def compute_display_regions_for_micro_cluster(cluster_id: int, gap_bp: int = 100
                 pass
         if pairs is None or pairs.empty:
             logger.warning("multiloc: no micro pairs found (DB or sidecar); regions unavailable for this micro cluster")
-            return []
+            # Fallback: use operon blocks if available
+            try:
+                operon_blocks = pd.read_sql_query(
+                    """
+                        SELECT cluster_id, sample_id AS genome_id, contig_id, start_bp, end_bp, block_id
+                        FROM operon_micro_blocks
+                        WHERE cluster_id = ?
+                    """,
+                    conn,
+                    params=[raw_id],
+                )
+            except Exception:
+                operon_blocks = pd.DataFrame()
+            if operon_blocks is None or operon_blocks.empty:
+                return []
+            genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
+            org_map = dict(zip(genomes_df["genome_id"], genomes_df["organism_name"]))
+            regions = []
+            for (genome_id, contig_id), group in operon_blocks.groupby(["genome_id", "contig_id"]):
+                intervals = [
+                    {"start_bp": int(r.start_bp), "end_bp": int(r.end_bp), "block_id": int(r.block_id)}
+                    for _, r in group.iterrows()
+                ]
+                merged = _merge_intervals(intervals, gap_bp=gap_bp)
+                for iv in merged:
+                    if len(iv["blocks"]) < min_support:
+                        continue
+                    regions.append(
+                        {
+                            "genome_id": genome_id,
+                            "contig_id": contig_id,
+                            "organism_name": org_map.get(genome_id, "Unknown organism"),
+                            "start_bp": iv["start_bp"],
+                            "end_bp": iv["end_bp"],
+                            "support": len(iv["blocks"]),
+                            "blocks": iv["blocks"],
+                            "core_start_bp": None,
+                            "core_end_bp": None,
+                            "_source": 'operon',
+                        }
+                    )
+            regions.sort(key=lambda r: (r["genome_id"], r["contig_id"], r["start_bp"]))
+            logger.info(f"multiloc: built {len(regions)} operon-derived regions for cluster {cluster_id}")
+            return regions
         genomes_df = pd.read_sql_query("SELECT genome_id, organism_name FROM genomes", conn)
         org_map = dict(zip(genomes_df["genome_id"], genomes_df["organism_name"]))
 
@@ -2552,8 +2761,12 @@ def display_cluster_detail():
             regions = compute_display_regions_for_micro_cluster(cluster_id, gap_bp=1000, min_support=1) if is_micro else compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
             use_regions = len(regions) > 0
             if is_micro and not use_regions:
-                st.error("No micro pairs available for this micro cluster; regions are unavailable.")
-                st.caption("Run tools/diagnose_micro.py and tools/diagnose_explore_regions.py to verify pairs and region↔block linkage.")
+                # Fallback for operon clusters with no micro pair records
+                regions = compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
+                use_regions = len(regions) > 0
+            if is_micro and not use_regions:
+                st.error("No paired regions available for this micro cluster; regions are unavailable.")
+                st.caption("Run tools/diagnose_micro.py and tools/diagnose_explore_regions.py to verify pair/linkage health.")
                 return
             if not is_micro and not use_regions:
                 unique_loci = extract_unique_loci_from_cluster(cluster_blocks)
@@ -3294,12 +3507,83 @@ def display_cluster_detail():
             else:
                 st.info(f"Page {current_page} of {total_pages} | {len(unique_loci)} total loci in cluster")
 
+def handle_url_params():
+    """Handle URL query parameters for deep linking.
+
+    Supported parameters:
+    - tab: dashboard, block_explorer, genome_viewer, cluster_explorer
+    - block_id: Jump to specific block (int)
+    - cluster_id: Jump to specific cluster (int)
+    - genome: Filter to specific genome(s) (comma-separated)
+    - min_size, max_size: Block size filters (int)
+    """
+    params = st.query_params
+
+    # Handle tab navigation
+    tab_map = {
+        'dashboard': 0,
+        'block_explorer': 1,
+        'genome_viewer': 2,
+        'cluster_explorer': 3,
+    }
+    if 'tab' in params:
+        tab_name = params['tab'].lower().replace('-', '_').replace(' ', '_')
+        if tab_name in tab_map:
+            st.session_state.url_tab = tab_map[tab_name]
+
+    # Handle block_id deep link
+    if 'block_id' in params:
+        try:
+            block_id = int(params['block_id'])
+            # Load the block and set it as selected
+            conn = get_database_connection()
+            block = pd.read_sql_query(
+                "SELECT * FROM syntenic_blocks WHERE block_id = ?",
+                conn, params=(block_id,)
+            )
+            if not block.empty:
+                st.session_state.selected_block = block.iloc[0].to_dict()
+                st.session_state.current_page = 'genome_viewer'
+                st.session_state.url_tab = 2  # Genome Viewer tab
+        except (ValueError, Exception) as e:
+            st.warning(f"Invalid block_id: {params['block_id']}")
+
+    # Handle cluster_id deep link
+    if 'cluster_id' in params:
+        try:
+            cluster_id = int(params['cluster_id'])
+            st.session_state.selected_cluster = cluster_id
+            st.session_state.current_page = 'cluster_detail'
+        except ValueError:
+            st.warning(f"Invalid cluster_id: {params['cluster_id']}")
+
+    # Handle genome filter
+    if 'genome' in params:
+        genomes = [g.strip() for g in params['genome'].split(',')]
+        st.session_state.url_genome_filter = genomes
+
+    # Handle size filters
+    if 'min_size' in params:
+        try:
+            st.session_state.url_min_size = int(params['min_size'])
+        except ValueError:
+            pass
+    if 'max_size' in params:
+        try:
+            st.session_state.url_max_size = int(params['max_size'])
+        except ValueError:
+            pass
+
+
 def main():
     """Main Streamlit application."""
+    # Handle URL parameters for deep linking
+    handle_url_params()
+
     # Title and navigation
     st.title("🧬 ELSA Genome Browser")
     st.markdown("*Syntenic Block Explorer with PFAM Domain Annotations*")
-    
+
     # Initialize session state
     if 'current_page' not in st.session_state:
         st.session_state.current_page = 'dashboard'
@@ -5105,7 +5389,8 @@ def _operon_consensus_from_blocks(cluster_id: int, min_cov: float) -> Tuple[List
         df = pd.read_sql_query(
             """
                 SELECT gbm.block_id, gbm.block_role, gbm.relative_position,
-                       g.gene_id, g.start_pos, g.end_pos, g.strand,
+                       g.gene_id, g.genome_id, g.contig_id,
+                       g.start_pos, g.end_pos, g.strand,
                        g.pfam_domains, g.primary_pfam
                 FROM gene_block_mappings gbm
                 JOIN genes g ON gbm.gene_id = g.gene_id
@@ -5125,11 +5410,13 @@ def _operon_consensus_from_blocks(cluster_id: int, min_cov: float) -> Tuple[List
 
     min_cov = max(0.0, min(1.0, float(min_cov)))
 
-    # Build tracks per (block_id, block_role)
-    tracks: Dict[Tuple[int, str], List[Dict[str, Any]]] = {}
+    # Build tracks keyed by locus (genome + contig)
+    locus_tracks: Dict[Tuple[str, str], List[Dict[str, Any]]] = {}
+    block_to_locus: Dict[Tuple[int, str], Tuple[str, str]] = {}
     for row in df.itertuples(index=False):
-        key = (int(row.block_id), str(row.block_role))
-        tracks.setdefault(key, []).append(
+        locus = (str(row.genome_id), str(row.contig_id))
+        block_to_locus[(int(row.block_id), str(row.block_role))] = locus
+        locus_tracks.setdefault(locus, []).append(
             {
                 'gene_id': str(row.gene_id),
                 'start': int(row.start_pos),
@@ -5140,16 +5427,21 @@ def _operon_consensus_from_blocks(cluster_id: int, min_cov: float) -> Tuple[List
             }
         )
 
-    if not tracks:
+    if not locus_tracks:
         return [], []
 
     # Sort genes in each track by genomic order
-    for genes in tracks.values():
+    for genes in locus_tracks.values():
         genes.sort(key=lambda g: (g['start'], g['end']))
 
-    track_keys = sorted(tracks.keys())
+    track_keys = sorted(locus_tracks.keys())
     track_index = {key: idx for idx, key in enumerate(track_keys)}
     total_tracks = len(track_keys)
+
+    # Precompute gene index lookup per track for fast alignment
+    locus_gene_index: Dict[Tuple[str, str], Dict[str, int]] = {}
+    for locus, genes in locus_tracks.items():
+        locus_gene_index[locus] = {g['gene_id']: idx for idx, g in enumerate(genes)}
 
     parent: Dict[Tuple[int, int], Tuple[int, int]] = {}
 
@@ -5165,25 +5457,36 @@ def _operon_consensus_from_blocks(cluster_id: int, min_cov: float) -> Tuple[List
             parent[rb] = ra
 
     # Initialise parent for every gene
-    for t_key, genes in tracks.items():
+    for t_key, genes in locus_tracks.items():
         tidx = track_index[t_key]
         for gidx in range(len(genes)):
             parent[(tidx, gidx)] = (tidx, gidx)
 
     # Union query/target genes within the same syntenic block by position
-    blocks = sorted({bid for bid, _ in track_keys})
-    for block_id in blocks:
-        q_key = (block_id, 'query')
-        t_key = (block_id, 'target')
-        if q_key not in tracks or t_key not in tracks:
+    processed_blocks: Set[int] = set()
+    for block_id, _ in block_to_locus.keys():
+        if block_id in processed_blocks:
             continue
-        q_genes = tracks[q_key]
-        t_genes = tracks[t_key]
-        limit = min(len(q_genes), len(t_genes))
-        tq = track_index[q_key]
-        tt = track_index[t_key]
+        q_locus = block_to_locus.get((block_id, 'query'))
+        t_locus = block_to_locus.get((block_id, 'target'))
+        processed_blocks.add(block_id)
+        if q_locus is None or t_locus is None:
+            continue
+        q_rows = df[(df['block_id'] == block_id) & (df['block_role'] == 'query')]
+        t_rows = df[(df['block_id'] == block_id) & (df['block_role'] == 'target')]
+        if q_rows.empty or t_rows.empty:
+            continue
+        q_idx_list = [locus_gene_index[q_locus].get(str(r.gene_id)) for r in q_rows.itertuples(index=False)]
+        t_idx_list = [locus_gene_index[t_locus].get(str(r.gene_id)) for r in t_rows.itertuples(index=False)]
+        q_idx_list = [idx for idx in q_idx_list if idx is not None]
+        t_idx_list = [idx for idx in t_idx_list if idx is not None]
+        if not q_idx_list or not t_idx_list:
+            continue
+        limit = min(len(q_idx_list), len(t_idx_list))
+        tq = track_index[q_locus]
+        tt = track_index[t_locus]
         for pos in range(limit):
-            _union((tq, pos), (tt, pos))
+            _union((tq, q_idx_list[pos]), (tt, t_idx_list[pos]))
 
     # Gather components
     clusters: Dict[Tuple[int, int], List[Tuple[int, int]]] = defaultdict(list)
@@ -5202,7 +5505,7 @@ def _operon_consensus_from_blocks(cluster_id: int, min_cov: float) -> Tuple[List
         for track_idx, gene_idx in members:
             node_to_comp[(track_idx, gene_idx)] = comp_id
             track_key = track_keys[track_idx]
-            gene = tracks[track_key][gene_idx]
+            gene = locus_tracks[track_key][gene_idx]
             tokens = [tok.strip() for tok in gene.get('pfam', '').split(';') if tok.strip()]
             if tokens:
                 pf_counts.update([tokens[0]])
@@ -5228,8 +5531,8 @@ def _operon_consensus_from_blocks(cluster_id: int, min_cov: float) -> Tuple[List
         return [], []
 
     # Choose reference track: the one with the most genes
-    reference_idx = max(range(total_tracks), key=lambda idx: len(tracks[track_keys[idx]]))
-    reference_track = tracks[track_keys[reference_idx]]
+    reference_idx = max(range(total_tracks), key=lambda idx: len(locus_tracks[track_keys[idx]]))
+    reference_track = locus_tracks[track_keys[reference_idx]]
 
     tokens: List[Dict[str, Any]] = []
     ordered_comp_ids: List[int] = []

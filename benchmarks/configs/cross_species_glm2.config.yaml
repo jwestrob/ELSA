@@ -1,0 +1,54 @@
+# Cross-Species Benchmark Configuration - gLM2
+# Uses gLM2 (genomic language model) instead of ESM2
+# Same 30 genomes: E. coli (20) + Salmonella (5) + Klebsiella (5)
+
+data:
+  work_dir: ./benchmarks/elsa_output/cross_species_glm2
+
+ingest:
+  gene_caller: prodigal
+  run_pfam: false  # Skip PFAM to speed up embedding
+
+plm:
+  model: glm2_150m  # gLM2 150M parameter model (smaller, faster)
+  device: auto
+  batch_amino_acids: 16000  # Larger batch size for better throughput
+  project_to_D: 256
+  l2_normalize: true
+  fp16: true  # Uses bfloat16 for gLM2
+
+shingles:
+  n: 5
+  stride: 1
+  weighting: triangular
+  strand_mode: signed
+
+discrete:
+  K: 4096
+  minhash_hashes: 192
+  bands_rows: [24, 8]
+  emit_skipgram: true
+  idf_min_df: 5
+  idf_max_df_frac: 0.05
+
+continuous:
+  srp_bits: 256
+  srp_seed: 13
+
+analyze:
+  micro_chain:
+    hnsw_k: 50
+    hnsw_m: 32
+    hnsw_ef_construction: 200
+    hnsw_ef_search: 128
+    similarity_threshold: 0.9
+    max_gap_genes: 2
+    min_chain_size: 2
+    jaccard_tau: 0.5
+    mutual_k: 3
+    df_max: 200
+    min_genome_support: 2
+
+system:
+  rng_seed: 42
+  jobs: auto

@@ -1,8 +1,411 @@
 # CLAUDE.md
 
-⚠️  **IMPORTANT**: Only let the human run bash commands. Do not run long-running commands like `elsa embed` or `elsa build` - they will timeout.
+---
+## 🚀 CURRENT BEST: Gene-Level Anchor Chaining Pipeline (January 2026)
+
+**This is our most successful micro-synteny approach to date.**
+
+The gene-level anchor chaining pipeline (`elsa/analyze/micro_chain.py` + `elsa/analyze/gene_chain.py`) achieves:
+- **82.6% independent recall** on E. coli operons (98.4% any coverage)
+- **92% ortholog validation** - genes in blocks share orthogroups
+- Variable-length, non-overlapping syntenic blocks (2-4000+ genes)
+- Proper overlap-based clustering that groups related blocks across genome pairs
+
+---
+## 📋 NEXT STEPS (January 2026 Benchmarking)
+
+### Completed
+- [x] **Operon recall evaluation**: 82.6% independent recall on E. coli operons (98.4% any coverage)
+- [x] Ortholog validation: 92.4% of genes in ELSA blocks are verified orthologs
+- [x] Negative control: E. coli vs B. subtilis shows no spurious cross-phylum synteny
+- [x] Downloaded Salmonella (5) + Klebsiella (5) genomes for cross-species benchmark
+- [x] **Cross-species benchmark**: 30 Enterobacteriaceae genomes, 54,878 cross-genus blocks detected
+- [x] **Cross-species ortholog validation**: 80%+ overlap for within-genus, 21% for E.coli↔others
+- [x] **MCScanX comparison**: ELSA finds 2.7x more blocks, 3.7x more cross-genus
+- [x] **gLM2 vs ESM2**: gLM2 150M achieves 83.1% operon recall (vs 82.6% ESM2), more within-species sensitivity
+
+### Cross-Species Results (COMPLETE - January 2026)
+
+**Full Enterobacteriaceae dataset (30 genomes in unified PCA space):**
+- 20 *E. coli* + 5 *Salmonella* + 5 *Klebsiella*
+- 142,952 proteins embedded together
+- ~40 minutes embedding time on M4 Max (MPS)
+
+| Species Pair | Blocks | Mean Size | Max Size | Clusters |
+|--------------|--------|-----------|----------|----------|
+| E. coli ↔ E. coli | 19,256 | 37.2 genes | 2,793 | 19,210 |
+| E. coli ↔ Salmonella | 21,663 | 13.4 genes | 100 | 21,609 |
+| E. coli ↔ Klebsiella | 26,183 | 11.1 genes | 252 | 26,127 |
+| Salmonella ↔ Salmonella | 694 | 57.2 genes | 937 | 694 |
+| Klebsiella ↔ Klebsiella | 2,126 | 17.0 genes | 351 | 2,123 |
+| Klebsiella ↔ Salmonella | 7,032 | 9.9 genes | 106 | 6,986 |
+
+**Summary:**
+| Metric | Value |
+|--------|-------|
+| Total syntenic blocks | 76,954 |
+| Cross-genus blocks | 54,878 (71.3%) |
+| Within-species blocks | 22,076 (28.7%) |
+| Cross-genus mean size | 11.9 genes |
+| Within-species mean size | 35.9 genes |
+| Large blocks (>100 genes) | 1,856 |
+
+**Key findings:**
+- ✅ Cross-genus synteny works with unified PLM embeddings
+- ✅ Block size gradient matches phylogenetic distance (within > cross)
+- ✅ Salmonella strains are closely related (largest mean block size)
+- ✅ 75 E.coli-Klebsiella blocks with >100 genes preserved
+
+**Ortholog Validation (OrthoFinder):**
+
+| Comparison | Blocks | Mean OG Overlap | ≥90% Overlap |
+|------------|--------|-----------------|--------------|
+| Salmonella ↔ Salmonella | 694 | **84.7%** | 443 (64%) |
+| Klebsiella ↔ Klebsiella | 2,124 | **80.9%** | 1,059 (50%) |
+| Klebsiella ↔ Salmonella | 7,026 | **80.9%** | 3,119 (44%) |
+| E.coli ↔ E.coli | 15,029 | **59.7%** | 2,454 (16%) |
+| E.coli ↔ Salmonella | 21,653 | 21.8% | 99 (0.5%) |
+| E.coli ↔ Klebsiella | 26,138 | 20.2% | 200 (0.8%) |
+
+**Interpretation:**
+- Within-genus and Salmonella-Klebsiella blocks show high ortholog overlap (80%+)
+- E.coli ↔ others have lower overlap due to strain-specific genes and HGT
+- ELSA still finds conserved regions (21% orthogroups shared) even when gene content differs
+
+Results: `benchmarks/results/cross_species_chain/micro_chain/`
+Validation: `benchmarks/evaluation/cross_species_ortholog_validation.md`
+
+### MCScanX Comparison (COMPLETE - January 2026)
+
+| Metric | ELSA | MCScanX | ELSA Advantage |
+|--------|------|---------|----------------|
+| Total blocks | 76,954 | 28,196 | **2.7x more** |
+| Cross-genus blocks | 54,878 | 14,940 | **3.7x more** |
+| E.coli↔Salmonella | 21,663 | 4,430 | **4.9x more** |
+
+**Key finding**: ELSA's PLM embeddings detect distant homology that BLAST misses, enabling 4-5x more cross-genus synteny detection.
+
+**Cross-genus operon conservation (NEW)**:
+- 100% of E. coli operons show cross-genus synteny in ELSA blocks
+- 93% conserved in Salmonella (≥50% rate)
+- 98% conserved in Klebsiella (≥50% rate)
+- Essential operons (ATP synthase, ribosomal proteins) show 70-100% conservation
+
+Report: `benchmarks/evaluation/cross_genus_operon_analysis.md`
+Figures: `benchmarks/evaluation/figures/`
+
+### Operon Recall Evaluation (COMPLETE - January 2026)
+
+Evaluated ELSA and MCScanX against 58 E. coli operons from RegulonDB across 20 genomes (10,182 operon instances):
+
+| Metric | ELSA | MCScanX | Winner |
+|--------|------|---------|--------|
+| Strict recall (raw) | 47.2% | 53.3% | — (see below) |
+| **Strict recall (corrected)** | **47.2%** | **5.6%** | **ELSA (8.4x)** |
+| **Independent recall** | **82.6%** | 55.3% | **ELSA (+27%)** |
+| **Any coverage** | **98.4%** | 78.0% | **ELSA (+20%)** |
+
+**CRITICAL FINDING: 89.5% of MCScanX "strict recall" are false positives.**
+
+Deep analysis of all 5,425 MCScanX strict recall cases:
+
+| Classification | Count | Percentage |
+|----------------|-------|------------|
+| **Accidental span (0% correspondence)** | **4,550** | **83.9%** |
+| Weak correspondence (1-49%) | 308 | 5.7% |
+| Partial correspondence (50-89%) | 440 | 8.1% |
+| True correspondence (≥90%) | 127 | 2.3% |
+
+When we require actual gene-to-gene correspondence (≥50% of operon genes map to each other):
+- MCScanX adjusted strict recall: **5.6%** (down from 53.3%)
+- ELSA strict recall remains: **47.2%**
+
+**Why this happens**: MCScanX creates large blocks (mean 65 genes) that accidentally span small operons (mean 4 genes) without the operon genes being explicitly linked in the collinearity file.
+
+**Conclusion**: ELSA definitively outperforms MCScanX on all metrics when corrected for accidental spans.
+
+Reports:
+- `benchmarks/evaluation/operon_correspondence_analysis.md` - **Deep analysis of MCScanX false positives**
+- `benchmarks/evaluation/operon_recall_comparison.md` - Original comparison
+- `benchmarks/evaluation/ELSA_vs_MCScanX_FULL_REPORT.md` - **Comprehensive comparison report**
+
+### Optional Follow-ups
+- [ ] Run OrthoFinder on B. subtilis to enable ortholog validation
+- [ ] Test on more divergent species pairs (e.g., Pseudomonas)
+- [ ] Compare to ntSynt (newer minimizer-based tool)
+
+### gLM2 vs ESM2 Comparison (February 2026)
+
+Tested gLM2 150M (genomic language model) against ESM2 650M on the same 30-genome Enterobacteriaceae dataset.
+
+**Model Comparison:**
+| Property | gLM2 150M | ESM2 650M |
+|----------|-----------|-----------|
+| Parameters | 150M | 650M |
+| Training data | Genomic context | Protein sequences |
+| Embedding time | ~3.5 hrs | ~40 min |
+| Speed | 136 AA/sec | ~1000 AA/sec |
+
+**Operon Recall (E. coli):**
+| Metric | gLM2 150M | ESM2 650M | Difference |
+|--------|-----------|-----------|------------|
+| Strict recall | **49.0%** | 47.2% | +1.8% |
+| Independent recall | **83.1%** | 82.6% | +0.5% |
+| Any coverage | **98.7%** | 98.4% | +0.3% |
+
+**Block Detection:**
+| Metric | gLM2 150M | ESM2 650M | Notes |
+|--------|-----------|-----------|-------|
+| Total blocks | 78,519 | 76,954 | +2% |
+| Clusters | 31,007 | 76,724 | 60% fewer |
+| E.coli↔E.coli | 51,925 | 19,256 | **2.7x more** |
+| E.coli↔Salmonella | 11,328 | 21,663 | 48% fewer |
+| E.coli↔Klebsiella | 13,941 | 26,183 | 47% fewer |
+| Cross-genus total | 25,269 | 47,846 | 47% fewer |
+| Cross-genus mean size | 11.2 genes | 12.2 genes | Similar |
+
+**Key Findings:**
+- gLM2 achieves **slightly better operon recall** despite being 4.3x smaller
+- gLM2 is **more sensitive to within-species variation** (2.7x more E.coli↔E.coli blocks)
+- gLM2 is **more conservative across genera** (47% fewer cross-genus blocks)
+- Genomic context training may improve precision at cost of cross-genus sensitivity
+- gLM2 forms fewer, larger clusters (more block overlap)
+
+**Interpretation:** gLM2's genomic context training appears to make it better at detecting fine-grained synteny within species while being more conservative about distant homology across genera. For operon-scale validation, both models perform similarly, but gLM2 may be preferable when precision matters more than cross-genus sensitivity.
+
+Results: `benchmarks/results/cross_species_glm2/micro_chain/`
+Evaluation: `benchmarks/evaluation/glm2_operon_recall.csv`
+Config: `benchmarks/configs/cross_species_glm2.config.yaml`
+
+### Key Benchmark Files
+| File | Description |
+|------|-------------|
+| `benchmarks/evaluation/ELSA_vs_MCScanX_FULL_REPORT.md` | **Comprehensive comparison report** |
+| `benchmarks/evaluation/operon_correspondence_analysis.md` | **MCScanX false positive analysis (89.5%)** |
+| `benchmarks/evaluation/operon_recall_comparison.md` | ELSA vs MCScanX operon recall |
+| `benchmarks/evaluation/mcscanx_overprediction_analysis.md` | MCScanX block coherence analysis |
+| `benchmarks/evaluation/fragmentation_analysis.md` | ELSA vs MCScanX block fragmentation |
+| `benchmarks/evaluation/figures/` | Publication-quality comparison figures |
+| `benchmarks/evaluation/BLOCK_VALIDATION_RESULTS.md` | E.coli ortholog validation (92%) |
+| `benchmarks/evaluation/cross_species_ortholog_validation.md` | Cross-species OG validation |
+| `benchmarks/CROSS_SPECIES_BENCHMARK_PLAN.md` | Cross-species plan |
+| `benchmarks/configs/cross_species.config.yaml` | Config for 30-genome run (ESM2) |
+| `benchmarks/configs/cross_species_glm2.config.yaml` | Config for 30-genome run (gLM2) |
+| `benchmarks/evaluation/glm2_operon_recall.csv` | gLM2 operon recall evaluation |
+| `benchmarks/results/cross_species_glm2/micro_chain/` | gLM2 blocks and clusters |
+
+### Analysis Scripts
+| Script | Description |
+|--------|-------------|
+| `benchmarks/scripts/analyze_mcscanx_overprediction.py` | Analyze MCScanX block coherence |
+| `benchmarks/scripts/analyze_operon_correspondence.py` | Check if operon genes correspond in MCScanX blocks |
+| `benchmarks/scripts/analyze_fragmentation.py` | Compare ELSA/MCScanX block fragmentation |
+| `benchmarks/scripts/create_comparison_figures.py` | Generate publication figures |
+
+---
+
+### Quick Start: Running the Chain Pipeline via CLI
+
+```bash
+# Run the full pipeline with --chain flag
+elsa analyze -c elsa.config.yaml --chain -o syntenic_analysis \
+    --genome-browser-db genome_browser/genome_browser.db \
+    --sequences-dir data/genomes \
+    --proteins-dir data/proteins
+
+# Launch genome browser
+cd genome_browser && streamlit run app.py
+```
+
+### Running on Multiple/Different Datasets
+
+**CRITICAL: The manifest paths must match your work_dir!**
+
+When copying an ELSA index to a new location or using a different dataset:
+
+1. **Update config work_dir:**
+   ```yaml
+   # elsa_borg.config.yaml
+   data:
+     work_dir: ./elsa_index_borg  # Must match your index location
+   ```
+
+2. **Update MANIFEST.json paths:** The `--chain` pipeline reads gene paths from `MANIFEST.json`. If you copied an index, update all artifact paths:
+   ```json
+   // elsa_index_borg/MANIFEST.json
+   "genes": {
+     "path": "elsa_index_borg/ingest/genes.parquet",  // NOT "elsa_index/..."
+     ...
+   }
+   ```
+
+3. **Run with correct directories:**
+   ```bash
+   elsa analyze -c elsa_borg.config.yaml --chain \
+       -o syntenic_analysis_borg \
+       --genome-browser-db genome_browser/genome_browser_borg.db \
+       --sequences-dir data_borg/genomes \
+       --proteins-dir data_borg/proteins
+   ```
+
+### Cross-Species Comparison (Combining Datasets)
+
+**PROBLEM:** Datasets embedded separately have different PCA projections, making
+their embeddings incompatible. Cross-species synteny requires all genomes to
+share the same embedding space.
+
+**SOLUTION:** Use `--save-raw` to save unprojected embeddings, then combine and
+project together:
+
+```bash
+# 1. Embed each dataset with --save-raw
+elsa embed data/species_A/ --save-raw -c config_A.yaml
+elsa embed data/species_B/ --save-raw -c config_B.yaml
+
+# 2. Merge raw parquet files
+python -c "
+import pandas as pd
+a = pd.read_parquet('elsa_index_A/ingest/genes_raw.parquet')
+b = pd.read_parquet('elsa_index_B/ingest/genes_raw.parquet')
+combined = pd.concat([a, b], ignore_index=True)
+combined.to_parquet('combined_raw.parquet')
+"
+
+# 3. Project with unified PCA into a new work_dir
+elsa project --raw combined_raw.parquet -c combined.config.yaml
+
+# 4. Build index and analyze as usual
+elsa build -c combined.config.yaml
+elsa analyze -c combined.config.yaml --chain -o cross_species_analysis
+```
+
+**NOTE:** `elsa project` is only needed for this special case. Normal usage
+should use `elsa embed` which handles PCA projection automatically.
+
+### Python API (Alternative)
+
+```python
+from pathlib import Path
+from elsa.analyze.micro_chain import run_micro_chain_pipeline, MicroChainConfig
+
+config = MicroChainConfig(
+    hnsw_k=50,
+    similarity_threshold=0.9,
+    max_gap_genes=2,
+    min_chain_size=2,
+)
+
+summary = run_micro_chain_pipeline(
+    genes_parquet=Path('elsa_index/ingest/genes.parquet'),
+    output_dir=Path('syntenic_analysis/micro_chain'),
+    config=config,
+)
+print(f'Blocks: {summary.num_blocks}, Clusters: {summary.num_clusters}')
+```
+
+### Key Files
+- `elsa/analyze/gene_chain.py` - Core LIS-based chaining algorithm
+- `elsa/analyze/micro_chain.py` - Pipeline orchestration and overlap-based clustering
+- `elsa/analyze/micro_gene.py` - Legacy 3-gene window approach (deprecated)
+
+### Why This Works
+1. **Gene-level HNSW indexing** - Find similar genes across genomes via embedding similarity
+2. **LIS-based chaining** - Extract collinear anchor chains using dynamic programming
+3. **Non-overlapping extraction** - Greedy selection of highest-scoring chains
+4. **Overlap-based clustering** - Blocks sharing genes (same genome, contig, position) cluster together
+
+### Benchmark Results
+
+#### Syntenic Block Detection
+| Dataset | Genomes | Genes | Blocks | Clusters | Recall | Precision | F1 |
+|---------|---------|-------|--------|----------|--------|-----------|-----|
+| S. pneumoniae | 6 | 11,483 | 2,123 | 645 | 99.78% | 100% | 99.89% |
+| **B. subtilis** | **20** | **79,680** | **9,194** | **3,070** | **99.98%** | **99.92%** | **99.95%** |
+| Borg genomes | 15 | 12,710 | 1,901 | 1,882 | TBD | TBD | TBD |
+| **Enterobacteriaceae** | **30** | **142,952** | **76,954** | **76,724** | N/A | N/A | N/A |
+
+#### Operon-Based Validation (January 2026)
+Validated against experimentally verified operons from SubtiWiki and RegulonDB:
+
+| Organism | Unique Operons | Instances | Recall @50% | Recall @100% |
+|----------|----------------|-----------|-------------|--------------|
+| **B. subtilis** | 32 | 5,926 | **99.6%** | **99.6%** |
+| **E. coli** | 58 | 10,182 | **98.9%** | **97.6%** |
+
+Key finding: Recall is **stable across overlap thresholds** - when ELSA finds an operon, it finds the whole thing.
+
+#### Ortholog Validation (E. coli)
+ELSA blocks validated against OrthoFinder orthogroups:
+
+| Metric | Value |
+|--------|-------|
+| Blocks validated | 19,279 |
+| Mean ortholog fraction | **92.4%** |
+| Median ortholog fraction | **98.0%** |
+| Blocks with ≥90% orthologs | 80.8% |
+
+This confirms ELSA finds true synteny (genes sharing orthogroups), not embedding artifacts.
+
+#### Cross-Species Negative Control
+E. coli vs B. subtilis (different phyla):
+- Mean embedding similarity: **0.001** (random)
+- Only 0.21% of gene pairs have >0.8 similarity
+- High-similarity pairs are universal housekeeping genes only
+
+ELSA does not hallucinate synteny between distant species.
+
+---
+
+⚠️  **RESOURCE CONTENTION**: This runs on M4 Max with **unified memory** (shared CPU/GPU RAM). **ONE COMPUTE JOB AT A TIME.** Do NOT run multiple jobs in parallel - this includes:
+- Multiple `elsa embed` jobs
+- `elsa embed` + OrthoFinder
+- `elsa embed` + ground truth building (HNSW is CPU-intensive)
+- Any combination of GPU and CPU-heavy tasks
+
+Wait for one job to complete before starting another.
+
+⚠️  **IMPORTANT**: Only let the human run long-running bash commands like `elsa embed` or `elsa build` - they will timeout. Short commands like `elsa analyze` are OK.
+
+## Environment Setup
+
+```bash
+# Conda environment location
+/Users/jacob/.pyenv/versions/miniconda3-latest/envs/elsa
+
+# Activate before running any elsa commands
+source /Users/jacob/.pyenv/versions/miniconda3-latest/etc/profile.d/conda.sh
+conda activate elsa
+
+# Verify installation
+which elsa  # Should show: /Users/jacob/.pyenv/versions/miniconda3-latest/envs/elsa/bin/elsa
+```
+
+**The `elsa` package is installed in editable mode from this repo.** Changes to code in `elsa/` are immediately reflected.
+
+**Genome browser must run from the ELSA directory** (not a subdirectory) to properly import the elsa module:
+```bash
+cd /Users/jacob/Documents/Sandbox/elsa_test/ELSA/genome_browser && streamlit run app.py
+```
+
+---
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Available Datasets
+
+| Dataset | Config | Work Dir | Data Dir | Description |
+|---------|--------|----------|----------|-------------|
+| S. pneumoniae (default) | `elsa.config.yaml` | `elsa_index/` | `data/` | 6 genomes, primary test set |
+| Borg genomes | `elsa_borg.config.yaml` | `elsa_index_borg/` | `data_borg/` | 15 novel extrachromosomal elements |
+| **E. coli** | `benchmarks/` | `benchmarks/elsa_output/ecoli/` | `benchmarks/data/ecoli/` | 20 genomes, operon benchmark |
+| **B. subtilis** | `benchmarks/` | `benchmarks/elsa_output/bacillus/` | `benchmarks/data/bacillus/` | 20 genomes, operon benchmark |
+| **Cross-species** | `benchmarks/configs/cross_species.config.yaml` | `benchmarks/data/cross_species/cross_species_index/` | `benchmarks/data/cross_species/` | 30 genomes (20 E.coli + 5 Salmonella + 5 Klebsiella) |
+| **Cross-species (gLM2)** | `benchmarks/configs/cross_species_glm2.config.yaml` | `benchmarks/elsa_output/cross_species_glm2/` | `benchmarks/data/cross_species/` | Same 30 genomes, gLM2 150M embeddings |
+
+### Benchmark Files
+- Ground truth: `benchmarks/ground_truth/`
+- Evaluation results: `benchmarks/evaluation/`
+- ELSA blocks: `benchmarks/results/`
 
 ## Project Overview
 

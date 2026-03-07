@@ -918,6 +918,59 @@ def synteny(db: Optional[str], proteins: Optional[str],
         sys.exit(1)
 
 
+@main.command()
+@click.argument("output_dir", type=click.Path(exists=True, file_okay=False))
+@click.option("--store", type=click.Path(exists=True), default=None,
+              help="SyntenyStore directory (for gene metadata)")
+@click.option("--genes-parquet", type=click.Path(exists=True), default=None,
+              help="genes.parquet with metadata (alternative to --store)")
+@click.option("--db-path", type=click.Path(), default=None,
+              help="Output DB path (default: <output_dir>/genome_browser.db)")
+def browser(output_dir: str, store: Optional[str],
+            genes_parquet: Optional[str], db_path: Optional[str]):
+    """Populate a genome browser DB from existing pipeline output.
+
+    Reads micro_chain_blocks.csv and micro_chain_clusters.csv from
+    OUTPUT_DIR and populates a SQLite database for the genome browser.
+
+    Gene metadata comes from --store or --genes-parquet.
+
+    \b
+    Examples:
+      elsa browser results/ --store ./my_store
+      elsa browser results/ --genes-parquet elsa_index/ingest/genes.parquet
+    """
+    out = Path(output_dir)
+    blocks_csv = out / "micro_chain_blocks.csv"
+    clusters_csv = out / "micro_chain_clusters.csv"
+
+    if not blocks_csv.exists():
+        console.print(f"[red]Not found: {blocks_csv}[/red]")
+        sys.exit(1)
+    if not clusters_csv.exists():
+        console.print(f"[red]Not found: {clusters_csv}[/red]")
+        sys.exit(1)
+
+    import pandas as pd
+
+    if store:
+        from .store import SyntenyStore
+        ss = SyntenyStore.load(Path(store))
+        genes_df = ss.get_genes_df()
+    elif genes_parquet:
+        genes_df = pd.read_parquet(genes_parquet)
+    else:
+        console.print("[red]Provide --store or --genes-parquet for gene metadata[/red]")
+        sys.exit(1)
+
+    from .browser import populate_browser_db
+
+    target_db = Path(db_path) if db_path else out / "genome_browser.db"
+    console.print(f"[bold blue]Populating genome browser DB...[/bold blue]")
+    populate_browser_db(target_db, genes_df, blocks_csv, clusters_csv)
+    console.print(f"  [green]{target_db}[/green]")
+
+
 def _load_genes_from_sources(
     db: Optional[str],
     proteins: Optional[str],

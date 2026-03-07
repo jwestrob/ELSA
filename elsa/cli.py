@@ -897,6 +897,20 @@ def synteny(db: Optional[str], proteins: Optional[str],
         )
         console.print(f"  Output: [green]{output_dir}[/green]")
 
+        # Genome browser DB — always generated
+        if summary.num_blocks > 0 and genes_df is not None:
+            from .browser import populate_browser_db
+
+            out_path = Path(output_dir)
+            browser_db = out_path / "genome_browser.db"
+            blocks_csv = out_path / "micro_chain_blocks.csv"
+            clusters_csv = out_path / "micro_chain_clusters.csv"
+
+            if blocks_csv.exists() and clusters_csv.exists():
+                console.print(f"\n[bold blue]Populating genome browser DB...[/bold blue]")
+                populate_browser_db(browser_db, genes_df, blocks_csv, clusters_csv)
+                console.print(f"  [green]{browser_db}[/green]")
+
     except Exception as e:
         console.print(f"[red]Synteny discovery failed: {e}[/red]")
         import traceback

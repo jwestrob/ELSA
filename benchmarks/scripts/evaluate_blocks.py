@@ -71,60 +71,58 @@ def load_ground_truth(gt_path: Path) -> list[dict]:
         return blocks
 
 
-def load_elsa_blocks(blocks_path: Path) -> list[dict]:
-    """Load ELSA syntenic blocks from CSV."""
-    df = pd.read_csv(blocks_path)
+def load_elsa_blocks(blocks_path: Path, windows_path: Path = None) -> list[dict]:
+    """Load ELSA syntenic blocks from CSV.
 
-    # Group by block_id and collect genes
-    blocks = []
+    If windows_path is provided, maps window IDs to gene IDs.
+    """
+    df = pd.read_csv(blocks_path)
 
     # Check what columns we have
     if 'block_id' not in df.columns:
         print(f"Warning: No block_id column in {blocks_path}")
         return []
 
-    # Try to find gene information columns
-    gene_cols = [c for c in df.columns if 'gene' in c.lower() or 'window' in c.lower()]
+    # Build window -> genes mapping if windows.parquet provided
+    window_to_genes = {}
+    if windows_path and windows_path.exists():
+        print(f"  Loading window-gene mapping from {windows_path}")
+        windows_df = pd.read_parquet(windows_path)
+        for _, row in windows_df.iterrows():
+            # Window ID format in ELSA output: {sample_id}_{locus_id}_{window_idx}
+            window_id = f"{row['sample_id']}_{row['locus_id']}_{row['window_idx']}"
+            gene_ids = row['gene_ids'].split(',') if pd.notna(row.get('gene_ids')) else []
+            window_to_genes[window_id] = set(gene_ids)
+        print(f"  Loaded {len(window_to_genes)} window-gene mappings")
 
-    for block_id, group in df.groupby('block_id'):
+    blocks = []
+
+    for _, row in df.iterrows():
+        block_id = row['block_id']
         genes_by_genome = defaultdict(set)
 
-        # Extract genes from the block
-        # This depends on the ELSA output format
-        for _, row in group.iterrows():
-            # Try different possible column names
-            if 'query_genome' in row and 'target_genome' in row:
-                qg = row.get('query_genome', row.get('query_locus', '').split(':')[0])
-                tg = row.get('target_genome', row.get('target_locus', '').split(':')[0])
+        # Parse query locus: "sample_id:locus_id"
+        query_sample = row['query_locus'].split(':')[0] if pd.notna(row.get('query_locus')) else None
+        target_sample = row['target_locus'].split(':')[0] if pd.notna(row.get('target_locus')) else None
 
-                # Try to get gene lists
-                if 'query_windows_json' in row:
-                    try:
-                        q_windows = json.loads(row['query_windows_json'])
-                        for w in q_windows:
-                            if isinstance(w, dict) and 'gene_id' in w:
-                                genes_by_genome[qg].add(w['gene_id'])
-                            elif isinstance(w, str):
-                                genes_by_genome[qg].add(w)
-                    except (json.JSONDecodeError, TypeError):
-                        pass
+        # Parse window IDs (semicolon-separated in ELSA output)
+        query_windows = row['query_windows_json'].split(';') if pd.notna(row.get('query_windows_json')) else []
+        target_windows = row['target_windows_json'].split(';') if pd.notna(row.get('target_windows_json')) else []
 
-                if 'target_windows_json' in row:
-                    try:
-                        t_windows = json.loads(row['target_windows_json'])
-                        for w in t_windows:
-                            if isinstance(w, dict) and 'gene_id' in w:
-                                genes_by_genome[tg].add(w['gene_id'])
-                            elif isinstance(w, str):
-                                genes_by_genome[tg].add(w)
-                    except (json.JSONDecodeError, TypeError):
-                        pass
-
-            # Alternative: sample_id based
-            if 'sample_id' in row:
-                sample = row['sample_id']
-                if 'gene_id' in row:
-                    genes_by_genome[sample].add(row['gene_id'])
+        if window_to_genes:
+            # Map windows to genes
+            for wid in query_windows:
+                if wid in window_to_genes:
+                    genes_by_genome[query_sample].update(window_to_genes[wid])
+            for wid in target_windows:
+                if wid in window_to_genes:
+                    genes_by_genome[target_sample].update(window_to_genes[wid])
+        else:
+            # Fallback: use window IDs as proxy for genes (less accurate)
+            for wid in query_windows:
+                genes_by_genome[query_sample].add(wid)
+            for wid in target_windows:
+                genes_by_genome[target_sample].add(wid)
 
         if genes_by_genome:
             blocks.append({
@@ -305,6 +303,11 @@ def main():
         help="Path to ELSA syntenic_blocks.csv"
     )
     parser.add_argument(
+        "--windows",
+        type=Path,
+        help="Path to windows.parquet for window-to-gene mapping"
+    )
+    parser.add_argument(
         "-o", "--output",
         type=Path,
         help="Output path for evaluation results (JSON)"
@@ -329,7 +332,7 @@ def main():
     print(f"  Loaded {len(gt_blocks)} ground truth blocks")
 
     print(f"Loading ELSA blocks from {args.elsa_blocks}")
-    elsa_blocks = load_elsa_blocks(args.elsa_blocks)
+    elsa_blocks = load_elsa_blocks(args.elsa_blocks, args.windows)
     print(f"  Loaded {len(elsa_blocks)} ELSA blocks")
 
     # Evaluate

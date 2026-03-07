@@ -1,10 +1,11 @@
 """
-ELSA: Embedding Locus Shingle Alignment
+ELSA: Embedding Locus Search and Alignment
 
-Order-aware syntenic-block discovery from protein language-model embeddings.
+Syntenic-block discovery from protein language-model embeddings via
+gene-level anchor chaining.
 """
 
-__version__ = "0.1.0"
+__version__ = "2.0.0"
 __author__ = "Claude & Jacob"
 
 # Lazy imports to avoid loading heavy dependencies on import
@@ -24,8 +25,5 @@ def __getattr__(name):
     elif name == "projection":
         from . import projection
         return projection
-    elif name == "shingling":
-        from . import shingling
-        return shingling
     else:
         raise AttributeError(f"module '{__name__}' has no attribute '{name}'")

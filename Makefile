@@ -1,22 +1,18 @@
-.PHONY: fmt lint test
-
-OPERON_TESTS = \
-	tests/test_preprocess.py \
-	tests/test_shingle.py \
-	tests/test_hnsw.py \
-	tests/test_sinkhorn.py \
-	tests/test_graph_cluster.py \
-	tests/test_cli_end2end.py
+.PHONY: fmt lint test smoke
 
 fmt:
-	black operon_embed scripts $(OPERON_TESTS)
-	ruff check --fix operon_embed scripts $(OPERON_TESTS)
+	ruff check --fix elsa/ genome_browser/ benchmarks/scripts/
+	ruff format elsa/ genome_browser/ benchmarks/scripts/
 
 lint:
-	mypy operon_embed || true
-	ruff check operon_embed scripts $(OPERON_TESTS)
-
-default: test
+	ruff check elsa/ genome_browser/ benchmarks/scripts/
+	python -m compileall elsa genome_browser benchmarks/scripts -q
 
 test:
-	pytest -q $(OPERON_TESTS)
+	pytest -q tests/
+
+smoke:
+	python -m compileall elsa -q
+	elsa --help > /dev/null
+	elsa analyze --help > /dev/null
+	elsa search --help > /dev/null

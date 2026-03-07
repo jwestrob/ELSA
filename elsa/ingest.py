@@ -5,19 +5,16 @@ Converts nucleotide FASTA files to protein sequences via Prodigal gene calling.
 """
 
 import subprocess
-import tempfile
 import shutil
 import os
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Optional, Tuple
 from dataclasses import dataclass
-import pandas as pd
-import numpy as np
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from Bio import SeqIO
 from Bio.Seq import Seq
-from Bio.SeqRecord import SeqRecord
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, MofNCompleteColumn
 
 from .params import IngestConfig
 from .embeddings import ProteinSequence
@@ -96,10 +93,10 @@ class ProdigalRunner:
         
         # Run Prodigal
         try:
-            result = subprocess.run(
-                cmd, 
-                capture_output=True, 
-                text=True, 
+            subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
                 check=True
             )
             
@@ -217,8 +214,7 @@ class GFFParser:
                     start = int(parts[3])  # 1-based
                     end = int(parts[4])    # 1-based
                     strand = 1 if parts[6] == "+" else -1
-                    attributes = parts[8]
-                    
+
                     if contig_id not in contigs:
                         console.print(f"[yellow]Warning: Contig {contig_id} not found in FASTA[/yellow]")
                         continue
@@ -354,7 +350,6 @@ class ProteinIngester:
                     contig_id = contig_token
             else:
                 contig_id = contig_token
-                gene_idx = "0"
 
             clean_seq = str(record.seq).replace('*', '').replace('X', '').upper()
             if len(clean_seq) < self.config.min_cds_aa:
@@ -375,35 +370,57 @@ class ProteinIngester:
         console.print(f"✓ Loaded {len(proteins)} proteins from FASTA")
         return proteins
     
-    def ingest_multiple(self, sample_data: List[Tuple[str, Path, Optional[Path], Optional[Path]]]) -> Dict[str, List[ProteinSequence]]:
-        """Ingest multiple samples."""
+    def ingest_multiple(self, sample_data: List[Tuple[str, Path, Optional[Path], Optional[Path]]],
+                        max_workers: int = 8) -> Dict[str, List[ProteinSequence]]:
+        """Ingest multiple samples with parallel gene calling.
+
+        Args:
+            sample_data: List of (sample_id, fasta_path, gff_path, aa_fasta_path) tuples
+            max_workers: Maximum parallel Prodigal processes (default 8)
+        """
         results = {}
-        
+        n_samples = len(sample_data)
+
+        # Use parallel processing for gene calling
+        console.print(f"Processing {n_samples} samples with {max_workers} parallel workers...")
+
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
             BarColumn(),
+            MofNCompleteColumn(),
             console=console
         ) as progress:
-            
-            task = progress.add_task("Processing samples...", total=len(sample_data))
-            
-            for sample_id, fasta_path, gff_path, aa_fasta_path in sample_data:
-                progress.update(task, description=f"Processing {sample_id}")
-                
+
+            task = progress.add_task("Gene calling...", total=n_samples)
+
+            def process_sample(args):
+                sample_id, fasta_path, gff_path, aa_fasta_path = args
                 proteins = self.ingest_sample(fasta_path, sample_id, gff_path, aa_fasta_path)
-                results[sample_id] = proteins
-                
-                progress.advance(task)
-        
+                return sample_id, proteins
+
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                futures = {executor.submit(process_sample, s): s[0] for s in sample_data}
+
+                for future in as_completed(futures):
+                    sample_id = futures[future]
+                    try:
+                        sid, proteins = future.result()
+                        results[sid] = proteins
+                        progress.update(task, description=f"✓ {sid} ({len(proteins)} genes)")
+                        progress.advance(task)
+                    except Exception as e:
+                        console.print(f"[red]Failed to process {sample_id}: {e}[/red]")
+                        progress.advance(task)
+
         total_proteins = sum(len(proteins) for proteins in results.values())
         console.print(f"✓ Processed {len(sample_data)} samples, {total_proteins:,} total proteins")
-        
+
         # Organize output files into structured directories
         console.print("\n[bold blue]Organizing output files...[/bold blue]")
         for sample_id, fasta_path, _, _ in sample_data:
             self.organize_output_files(fasta_path, sample_id)
-        
+
         return results
     
     def create_organized_directories(self):

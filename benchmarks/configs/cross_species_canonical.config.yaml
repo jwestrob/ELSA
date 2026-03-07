@@ -1,0 +1,39 @@
+# Canonical cross-species benchmark configuration (no PCA)
+# 30 genomes: E. coli (20) + Salmonella (5) + Klebsiella (5)
+# Raw ESM2-t12 480D embeddings, L2 normalized
+# Default chain parameters (max_gap=2, no gap penalty)
+
+data:
+  work_dir: benchmarks/elsa_output/cross_species
+
+ingest:
+  gene_caller: prodigal
+  prodigal_mode: single
+  min_cds_aa: 60
+  keep_partial: false
+  run_pfam: false
+
+plm:
+  model: esm2_t12
+  device: auto
+  fp16: true
+  batch_amino_acids: 16000
+  project_to_D: 0
+  l2_normalize: true
+
+chain:
+  index_backend: faiss_ivfflat
+  faiss_nprobe: 32
+  hnsw_k: 50
+  similarity_threshold: 0.85
+  max_gap_genes: 2
+  min_chain_size: 2
+  gap_penalty_scale: 0.0
+  jaccard_tau: 0.3
+  mutual_k: 5
+  df_max: 500
+  min_genome_support: 2
+
+system:
+  jobs: auto
+  rng_seed: 17

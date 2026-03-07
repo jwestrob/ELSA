@@ -235,37 +235,41 @@ class ELSADataIngester:
                 str(files["gff"]) if files["gff"] else None
             ))
             
-            # Insert contigs
-            for contig in contigs:
-                cursor.execute("""
-                    INSERT OR REPLACE INTO contigs 
+            # Insert contigs in batch
+            if contigs:
+                cursor.executemany("""
+                    INSERT OR REPLACE INTO contigs
                     (contig_id, genome_id, contig_name, length, gc_content, gene_count)
                     VALUES (?, ?, ?, ?, ?, ?)
-                """, (
-                    contig["contig_id"], contig["genome_id"], contig["contig_name"],
-                    contig["length"], contig["gc_content"], contig["gene_count"]
-                ))
+                """, [(
+                    c["contig_id"], c["genome_id"], c["contig_name"],
+                    c["length"], c["gc_content"], c["gene_count"]
+                ) for c in contigs])
             
-            # Insert genes
+            # Insert genes in batch (much faster than individual inserts)
+            gene_tuples = []
             for gene in genes:
                 # Compute and attach primary PFAM token for fast consensus
                 pf = gene.get("pfam_domains", "") or ""
                 primary_pfam = pf.split(';', 1)[0].strip() if pf else ""
-                cursor.execute("""
-                    INSERT OR REPLACE INTO genes
-                    (gene_id, genome_id, contig_id, start_pos, end_pos, strand,
-                     gene_length, protein_id, protein_sequence, pfam_domains, 
-                     pfam_count, primary_pfam, gc_content, partial_gene, confidence_score)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """, (
+                gene_tuples.append((
                     gene["gene_id"], gene["genome_id"], gene["contig_id"],
                     gene["start_pos"], gene["end_pos"], gene["strand"],
-                    gene["gene_length"], gene["protein_id"], 
+                    gene["gene_length"], gene["protein_id"],
                     gene.get("protein_sequence", ""),
                     gene["pfam_domains"], gene["pfam_count"], primary_pfam,
                     gene.get("gc_content", 0.0), gene.get("partial_gene", False),
                     gene.get("confidence_score", 0.0)
                 ))
+
+            if gene_tuples:
+                cursor.executemany("""
+                    INSERT OR REPLACE INTO genes
+                    (gene_id, genome_id, contig_id, start_pos, end_pos, strand,
+                     gene_length, protein_id, protein_sequence, pfam_domains,
+                     pfam_count, primary_pfam, gc_content, partial_gene, confidence_score)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """, gene_tuples)
             
             logger.info(f"Ingested genome {genome_id}: {len(contigs)} contigs, {len(genes)} genes")
         
@@ -351,25 +355,35 @@ class ELSADataIngester:
         UNIQUE constraint failures.
         """
         logger.info(f"Loading syntenic blocks from {blocks_file}")
-        # Clear previous data for reruns (respect FK order)
+        # Clear previous data for reruns (disable FK checks temporarily)
+        self.conn.execute("PRAGMA foreign_keys = OFF")
         self.conn.execute("DELETE FROM cluster_assignments")
         self.conn.execute("DELETE FROM gene_block_mappings")
         self.conn.execute("DELETE FROM syntenic_blocks")
+        self.conn.execute("DELETE FROM clusters")
+        self.conn.commit()
+        self.conn.execute("PRAGMA foreign_keys = ON")
 
         df = pd.read_csv(blocks_file)
         cursor = self.conn.cursor()
-        
+
+        # Detect v2 chain pipeline format (has query_genome/target_genome instead of query_locus/target_locus)
+        is_v2 = 'query_genome' in df.columns and 'query_locus' not in df.columns
+
+        if is_v2:
+            logger.info("Detected v2 chain pipeline format — mapping to browser schema")
+
         # Check if the CSV has the new embedded window columns
         has_embedded_windows = all(col in df.columns for col in [
             'query_window_start', 'query_window_end', 'target_window_start', 'target_window_end',
             'query_windows_json', 'target_windows_json'
         ])
-        
+
         if has_embedded_windows:
             logger.info("Using embedded window information from CSV")
-        else:
+        elif not is_v2:
             logger.info("CSV does not have embedded window info - using landscape file if available")
-            
+
             # Load detailed window data from landscape JSON if available (legacy support)
             detailed_blocks = {}
             if landscape_file and landscape_file.exists():
@@ -379,96 +393,117 @@ class ELSADataIngester:
                     # Index blocks by their position in the array (block_id)
                     for i, block in enumerate(landscape_data.get('landscape', {}).get('blocks', [])):
                         detailed_blocks[i] = block
-        
+
+        # Collect all block tuples for batch insert
+        block_tuples = []
         for _, row in df.iterrows():
-            # Parse locus IDs
-            query_genome_id, query_contig_id = self.parse_locus_id(row['query_locus'])
-            target_genome_id, target_contig_id = self.parse_locus_id(row['target_locus'])
-            
-            # Categorize block by size (now using gene windows, not bp)
-            length = row['length']
+            block_id = row['block_id']
+
+            if is_v2:
+                # v2 chain pipeline: columns are query_genome, query_contig, query_start, query_end, etc.
+                query_genome_id = str(row['query_genome'])
+                target_genome_id = str(row['target_genome'])
+                query_contig_id = str(row['query_contig'])
+                target_contig_id = str(row['target_contig'])
+                length = int(row.get('n_anchors', row.get('n_genes', 0)))
+                raw_score = float(row.get('chain_score', 0.0))
+                # Normalize: chain_score is cumulative similarity sum; divide by n_anchors for per-anchor avg
+                identity = raw_score / max(1, length)
+                score = raw_score
+                query_locus = f"{query_genome_id}:{query_contig_id}:{row['query_start']}-{row['query_end']}"
+                target_locus = f"{target_genome_id}:{target_contig_id}:{row['target_start']}-{row['target_end']}"
+                n_query_windows = length
+                n_target_windows = length
+                # Use gene position indices as window boundaries for gene-block mapping
+                query_window_start = int(row['query_start'])
+                query_window_end = int(row['query_end'])
+                target_window_start = int(row['target_start'])
+                target_window_end = int(row['target_end'])
+                query_windows_json = None
+                target_windows_json = None
+            else:
+                # Legacy format: parse combined locus IDs
+                query_genome_id, query_contig_id = self.parse_locus_id(row['query_locus'])
+                target_genome_id, target_contig_id = self.parse_locus_id(row['target_locus'])
+                length = row['length']
+                identity = row['identity']
+                score = row['score']
+                query_locus = row['query_locus']
+                target_locus = row['target_locus']
+                n_query_windows = row['n_query_windows']
+                n_target_windows = row['n_target_windows']
+
+                # Extract window information - prioritize embedded data over legacy JSON
+                if has_embedded_windows:
+                    query_window_start = row.get('query_window_start')
+                    query_window_end = row.get('query_window_end')
+                    target_window_start = row.get('target_window_start')
+                    target_window_end = row.get('target_window_end')
+                    query_windows_str = row.get('query_windows_json', '')
+                    target_windows_str = row.get('target_windows_json', '')
+                    query_windows_json = json.dumps(query_windows_str.split(';')) if query_windows_str else None
+                    target_windows_json = json.dumps(target_windows_str.split(';')) if target_windows_str else None
+                else:
+                    query_window_start = query_window_end = None
+                    target_window_start = target_window_end = None
+                    query_windows_json = target_windows_json = None
+
+                    if 'detailed_blocks' in locals() and block_id in detailed_blocks:
+                        detailed_block = detailed_blocks[block_id]
+                        query_windows = detailed_block.get('query_windows', [])
+                        target_windows = detailed_block.get('target_windows', [])
+                        if query_windows:
+                            query_indices = [self._extract_window_index(w) for w in query_windows]
+                            query_indices = [idx for idx in query_indices if idx is not None]
+                            if query_indices:
+                                query_window_start = min(query_indices)
+                                query_window_end = max(query_indices)
+                            query_windows_json = json.dumps(query_windows)
+                        if target_windows:
+                            target_indices = [self._extract_window_index(w) for w in target_windows]
+                            target_indices = [idx for idx in target_indices if idx is not None]
+                            if target_indices:
+                                target_window_start = min(target_indices)
+                                target_window_end = max(target_indices)
+                            target_windows_json = json.dumps(target_windows)
+
+            # Categorize block by size
             if length <= 3:
                 block_type = 'small'
             elif length <= 10:
                 block_type = 'medium'
             else:
                 block_type = 'large'
-            
-            # Extract window information - prioritize embedded data over legacy JSON
-            block_id = row['block_id']
-            
-            if has_embedded_windows:
-                # Use embedded window information from CSV
-                query_window_start = row.get('query_window_start')
-                query_window_end = row.get('query_window_end')
-                target_window_start = row.get('target_window_start')
-                target_window_end = row.get('target_window_end')
-                
-                # Convert semicolon-separated format back to JSON for storage
-                query_windows_str = row.get('query_windows_json', '')
-                target_windows_str = row.get('target_windows_json', '')
-                
-                if query_windows_str:
-                    query_windows_list = query_windows_str.split(';')
-                    query_windows_json = json.dumps(query_windows_list)
-                else:
-                    query_windows_json = None
-                
-                if target_windows_str:
-                    target_windows_list = target_windows_str.split(';')
-                    target_windows_json = json.dumps(target_windows_list)
-                else:
-                    target_windows_json = None
-            else:
-                # Legacy: extract from landscape JSON
-                query_window_start = query_window_end = None
-                target_window_start = target_window_end = None
-                query_windows_json = target_windows_json = None
-                
-                if 'detailed_blocks' in locals() and block_id in detailed_blocks:
-                    detailed_block = detailed_blocks[block_id]
-                    
-                    # Extract window indices from window IDs
-                    query_windows = detailed_block.get('query_windows', [])
-                    target_windows = detailed_block.get('target_windows', [])
-                    
-                    if query_windows:
-                        query_indices = [self._extract_window_index(w) for w in query_windows]
-                        query_indices = [idx for idx in query_indices if idx is not None]
-                        if query_indices:
-                            query_window_start = min(query_indices)
-                            query_window_end = max(query_indices)
-                        query_windows_json = json.dumps(query_windows)
-                    
-                    if target_windows:
-                        target_indices = [self._extract_window_index(w) for w in target_windows]
-                        target_indices = [idx for idx in target_indices if idx is not None]
-                        if target_indices:
-                            target_window_start = min(target_indices)
-                            target_window_end = max(target_indices)
-                        target_windows_json = json.dumps(target_windows)
-            
-            cursor.execute("""
+
+            block_tuples.append((
+                block_id, row.get('cluster_id', 0), query_locus, target_locus,
+                query_genome_id, target_genome_id, query_contig_id, target_contig_id,
+                length, identity, score,
+                n_query_windows, n_target_windows,
+                query_window_start, query_window_end, target_window_start, target_window_end,
+                query_windows_json, target_windows_json, block_type
+            ))
+
+        # Batch insert all blocks
+        if block_tuples:
+            cursor.executemany("""
                 INSERT INTO syntenic_blocks
                 (block_id, cluster_id, query_locus, target_locus, query_genome_id, target_genome_id,
                  query_contig_id, target_contig_id, length, identity, score,
                  n_query_windows, n_target_windows, query_window_start, query_window_end,
                  target_window_start, target_window_end, query_windows_json, target_windows_json, block_type)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                row['block_id'], row.get('cluster_id', 0), row['query_locus'], row['target_locus'],
-                query_genome_id, target_genome_id, query_contig_id, target_contig_id,
-                row['length'], row['identity'], row['score'],
-                row['n_query_windows'], row['n_target_windows'],
-                query_window_start, query_window_end, target_window_start, target_window_end,
-                query_windows_json, target_windows_json, block_type
-            ))
-        
+            """, block_tuples)
+
         self.conn.commit()
         logger.info(f"Ingested {len(df)} syntenic blocks with window information")
     
     def ingest_clusters(self, clusters_file: Path) -> None:
-        """Ingest cluster information from CSV file (legacy summary, optional).
+        """Ingest cluster information from CSV file.
+
+        Supports both legacy format (consensus_length, consensus_score, diversity,
+        representative_query, representative_target) and v2 chain pipeline format
+        (genome_support, mean_chain_length, genes_json).
 
         Clears existing clusters to avoid duplicate inserts on reruns.
         """
@@ -477,32 +512,64 @@ class ELSADataIngester:
         self.conn.execute("DELETE FROM clusters")
         df = pd.read_csv(clusters_file)
         cursor = self.conn.cursor()
-        
+
+        # Detect v2 format
+        is_v2 = 'genome_support' in df.columns and 'consensus_length' not in df.columns
+
+        # Collect tuples for batch insert
+        cluster_tuples = []
         for _, row in df.iterrows():
-            # Categorize cluster
             size = row['size']
-            diversity = row['diversity']
-            
             if size > 1000:
                 cluster_type = 'large'
             elif size > 100:
                 cluster_type = 'medium'
             else:
                 cluster_type = 'small'
-            
-            cursor.execute("""
+
+            if is_v2:
+                consensus_length = int(row.get('mean_chain_length', 0))
+                consensus_score = 0.0
+                diversity = float(row.get('genome_support', 0))
+                representative_query = ''
+                representative_target = ''
+            else:
+                consensus_length = row['consensus_length']
+                consensus_score = row['consensus_score']
+                diversity = row['diversity']
+                representative_query = row['representative_query']
+                representative_target = row['representative_target']
+
+            cluster_tuples.append((
+                row['cluster_id'], size, consensus_length,
+                consensus_score, diversity, representative_query,
+                representative_target, cluster_type
+            ))
+
+        # Filter to only clusters that have corresponding syntenic_blocks entries
+        # This prevents orphan clusters that would cause zero stats in the UI
+        existing_cluster_ids = set(
+            row[0] for row in self.conn.execute(
+                "SELECT DISTINCT cluster_id FROM syntenic_blocks WHERE cluster_id > 0"
+            )
+        )
+        original_count = len(cluster_tuples)
+        cluster_tuples = [t for t in cluster_tuples if t[0] in existing_cluster_ids]
+        filtered_count = original_count - len(cluster_tuples)
+        if filtered_count > 0:
+            logger.warning(f"Filtered out {filtered_count} clusters with no syntenic_blocks entries")
+
+        # Batch insert all clusters
+        if cluster_tuples:
+            cursor.executemany("""
                 INSERT INTO clusters
                 (cluster_id, size, consensus_length, consensus_score, diversity,
                  representative_query, representative_target, cluster_type)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                row['cluster_id'], row['size'], row['consensus_length'],
-                row['consensus_score'], row['diversity'], row['representative_query'],
-                row['representative_target'], cluster_type
-            ))
-        
+            """, cluster_tuples)
+
         self.conn.commit()
-        logger.info(f"Ingested {len(df)} clusters")
+        logger.info(f"Ingested {len(cluster_tuples)} clusters (from {original_count} in CSV)")
     
     def create_gene_block_mappings(self) -> None:
         """Create precise mappings between genes and syntenic blocks using window information."""
@@ -810,213 +877,43 @@ class ELSADataIngester:
         self.conn.commit()
         logger.info("Cluster consensus table populated: %d rows", len(rows))
     
-    def create_cluster_assignments(self,
-                                  jaccard_tau: float = 0.60,
-                                  mutual_k: int = 5,
-                                  degree_cap: int = 15,
-                                  df_max: int = 30) -> None:
-        """Compute SRP mutual-Jaccard clusters (no PFAM, no size targets) and persist to DB.
+    def create_cluster_assignments(self, **kwargs) -> None:
+        """Rebuild cluster summary from existing cluster_id assignments in syntenic_blocks.
 
-        Uses window-level embeddings from windows.parquet to form SRP shingles per block,
-        builds a sparse mutual-k Jaccard graph, runs community detection, and writes
-        cluster_assignments + updates syntenic_blocks.cluster_id.
+        Legacy SRP mutual-Jaccard clustering was removed in ELSA v2.
+        This method now only rebuilds the clusters summary table from
+        cluster_id values already present in syntenic_blocks (loaded from CSV).
         """
         import pandas as _pd
-        import numpy as _np
-        from types import SimpleNamespace as _NS
-        from pathlib import Path as _Path
-        from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard as _cluster
 
-        logger.info("Creating cluster assignments via SRP mutual-Jaccard…")
+        logger.info("Rebuilding cluster summary from existing assignments...")
 
-        # If syntenic_blocks already carries non-zero cluster_id from CSV, just rebuild clusters summary
-        existing = _pd.read_sql_query("SELECT COUNT(*) AS n FROM syntenic_blocks WHERE cluster_id > 0", self.conn)['n'].iloc[0]
-        if existing and int(existing) > 0:
-            logger.info("Detected existing cluster_id assignments (%d). Rebuilding clusters summary and skipping recluster.", int(existing))
-            try:
-                self.conn.execute("DELETE FROM clusters")
-                agg = _pd.read_sql_query(
-                    """
-                    SELECT cluster_id, COUNT(*) AS size, CAST(AVG(length) AS INT) AS consensus_length, AVG(identity) AS consensus_score
-                    FROM syntenic_blocks WHERE cluster_id > 0 GROUP BY cluster_id
-                    """,
-                    self.conn,
-                )
-                rep = _pd.read_sql_query(
-                    "SELECT cluster_id, block_id, query_locus, target_locus, score FROM syntenic_blocks WHERE cluster_id > 0 AND score IS NOT NULL",
-                    self.conn,
-                )
-                rep = rep.sort_values(['cluster_id','score'], ascending=[True, False]).groupby('cluster_id').head(1)
-                merged = agg.merge(rep[['cluster_id','query_locus','target_locus']], on='cluster_id', how='left')
-                merged = merged.fillna({'query_locus':'', 'target_locus':''})
-                cur = self.conn.cursor()
-                for row in merged.itertuples(index=False):
-                    cur.execute(
-                        """
-                        INSERT INTO clusters
-                        (cluster_id, size, consensus_length, consensus_score, diversity,
-                         representative_query, representative_target, cluster_type)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                        """,
-                        (
-                            int(row.cluster_id), int(row.size), int(row.consensus_length or 0), float(row.consensus_score or 0.0), 0.0,
-                            str(row.query_locus), str(row.target_locus), 'unknown'
-                        )
-                    )
-                self.conn.commit()
-                logger.info("Clusters summary rebuilt from existing assignments: %d rows", len(merged))
-            except Exception as e:
-                logger.warning("Failed to rebuild clusters summary from existing assignments: %s", e)
+        existing = _pd.read_sql_query(
+            "SELECT COUNT(*) AS n FROM syntenic_blocks WHERE cluster_id > 0", self.conn
+        )['n'].iloc[0]
+
+        if not existing or int(existing) == 0:
+            logger.warning("No existing cluster_id assignments found; skipping cluster summary rebuild")
             return
 
-        # 1) Load blocks from DB (with window JSON)
-        df = _pd.read_sql_query(
-            """
-            SELECT block_id, query_windows_json, target_windows_json
-            FROM syntenic_blocks
-            """,
-            self.conn,
-        )
-        blocks = []
-
-        class _Block:
-            __slots__ = ("id", "query_windows", "target_windows", "strand", "matches")
-            def __init__(self, bid, qw, tw):
-                self.id = int(bid)
-                self.query_windows = list(qw)
-                self.target_windows = list(tw)
-                self.strand = 1
-                self.matches = [
-                    _NS(query_window_id=qq, target_window_id=tt) for qq, tt in zip(self.query_windows, self.target_windows)
-                ]
-
-        for row in df.itertuples(index=False):
-            bid = int(row.block_id)
-            qwins = [x for x in str(row.query_windows_json or '').split(';') if x]
-            twins = [x for x in str(row.target_windows_json or '').split(';') if x]
-            n = min(len(qwins), len(twins))
-            if n <= 0:
-                continue
-            blocks.append(_Block(bid, qwins[:n], twins[:n]))
-
-        logger.info("Loaded %d blocks with window info", len(blocks))
-        if not blocks:
-            logger.warning("No blocks found; skipping clustering")
-            return
-
-        # 2) Create window embedding lookup from windows.parquet
-        def _find_windows_parquet() -> _Path | None:
-            here = _Path(__file__).resolve()
-            candidates = [
-                here.parents[2] / 'elsa_index/shingles/windows.parquet',
-                here.parents[1] / 'elsa_index/shingles/windows.parquet',
-                _Path('elsa_index/shingles/windows.parquet').resolve(),
-            ]
-            for p in candidates:
-                if p.exists():
-                    return p
-            return None
-
-        win_pq = _find_windows_parquet()
-        if not win_pq:
-            logger.error("windows.parquet not found. Expected at elsa_index/shingles/windows.parquet")
-            return
-        win_df = _pd.read_parquet(win_pq)
-        emb_cols = [c for c in win_df.columns if str(c).startswith('emb_')]
-        if not emb_cols:
-            logger.error("windows.parquet missing emb_* columns: %s", win_pq)
-            return
-        win_df = win_df[['sample_id', 'locus_id', 'window_idx'] + emb_cols].copy()
-        win_df['wid'] = win_df['sample_id'].astype(str) + '_' + win_df['locus_id'].astype(str) + '_' + win_df['window_idx'].astype(str)
-        mat = win_df[emb_cols].to_numpy(dtype=_np.float32)
-        wid2i = {w: i for i, w in enumerate(win_df['wid'].tolist())}
-
-        def lookup(wid: str):
-            i = wid2i.get(str(wid))
-            if i is None:
-                return None
-            return mat[i]
-
-        # 3) Build clustering config
-        cfg = _NS(
-            jaccard_tau=float(jaccard_tau),
-            mutual_k=int(mutual_k),
-            df_max=int(df_max),
-            use_weighted_jaccard=True,
-            min_low_df_anchors=2,
-            idf_mean_min=1.0,
-            max_df_percentile=None,
-            v_mad_max_genes=0.5,
-            min_anchors=2,
-            min_span_genes=4,
-            enable_cassette_mode=True,
-            cassette_max_len=4,
-            degree_cap=int(degree_cap),
-            k_core_min_degree=3,
-            triangle_support_min=1,
-            use_community_detection=True,
-            community_method='greedy',
-            srp_bits=256, srp_bands=32, srp_band_bits=8, srp_seed=1337,
-            shingle_k=3,
-            keep_singletons=False, sink_label=0,
-            size_ratio_min=0.5, size_ratio_max=2.0,
-        )
-
-        # 4) Cluster and persist
-        logger.info("Clustering %d blocks (SRP mutual-Jaccard)…", len(blocks))
-        assignments = _cluster(blocks, lookup, cfg)
-        from collections import Counter as _Counter
-        ctr = _Counter([c for c in assignments.values() if c and c > 0])
-        logger.info("Found %d non-sink clusters. Top sizes: %s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
-
-        cur = self.conn.cursor()
-        cur.execute("DELETE FROM cluster_assignments")
-        rows = [(int(bid), int(cid)) for bid, cid in assignments.items() if cid and cid > 0]
-        if rows:
-            cur.executemany("INSERT INTO cluster_assignments (block_id, cluster_id) VALUES (?, ?)", rows)
-        # Reset and update
-        cur.execute("UPDATE syntenic_blocks SET cluster_id = 0")
-        cur.execute(
-            """
-            UPDATE syntenic_blocks
-            SET cluster_id = (
-                SELECT ca.cluster_id FROM cluster_assignments ca WHERE ca.block_id = syntenic_blocks.block_id
-            )
-            WHERE block_id IN (SELECT block_id FROM cluster_assignments)
-            """
-        )
-        self.conn.commit()
-        logger.info("Cluster assignments persisted: %d assigned", len(rows))
-
-        # Rebuild clusters summary table from current assignments so the UI has consistent metadata
-        logger.info("Rebuilding clusters summary table from assignments…")
         try:
-            # Clear previous summary
             self.conn.execute("DELETE FROM clusters")
-            # Aggregate per-cluster stats from syntenic_blocks
-            agg_query = """
-                SELECT cluster_id,
-                       COUNT(*) AS size,
-                       CAST(AVG(length) AS INT) AS consensus_length,
-                       AVG(identity) AS consensus_score
-                FROM syntenic_blocks
-                WHERE cluster_id > 0
-                GROUP BY cluster_id
-            """
-            clusters_df = _pd.read_sql_query(agg_query, self.conn)
-            rep_df = _pd.read_sql_query(
+            agg = _pd.read_sql_query(
                 """
-                SELECT sb.cluster_id, sb.block_id, sb.query_locus, sb.target_locus, sb.score
-                FROM syntenic_blocks sb
-                WHERE sb.cluster_id > 0 AND sb.score IS NOT NULL
-            """, self.conn)
-            rep_block = rep_df.sort_values(['cluster_id','score'], ascending=[True, False]).groupby('cluster_id').head(1)
-
-            merged = clusters_df.merge(rep_block[['cluster_id','query_locus','target_locus']], on='cluster_id', how='left')
-            merged['diversity'] = 0.0
-            merged['cluster_type'] = 'unknown'
-            merged = merged.fillna({'query_locus':'', 'target_locus':''})
-
+                SELECT cluster_id, COUNT(*) AS size, CAST(AVG(length) AS INT) AS consensus_length,
+                       AVG(identity) AS consensus_score
+                FROM syntenic_blocks WHERE cluster_id > 0 GROUP BY cluster_id
+                """,
+                self.conn,
+            )
+            rep = _pd.read_sql_query(
+                "SELECT cluster_id, block_id, query_locus, target_locus, score "
+                "FROM syntenic_blocks WHERE cluster_id > 0 AND score IS NOT NULL",
+                self.conn,
+            )
+            rep = rep.sort_values(['cluster_id', 'score'], ascending=[True, False]).groupby('cluster_id').head(1)
+            merged = agg.merge(rep[['cluster_id', 'query_locus', 'target_locus']], on='cluster_id', how='left')
+            merged = merged.fillna({'query_locus': '', 'target_locus': ''})
             cur = self.conn.cursor()
             for row in merged.itertuples(index=False):
                 cur.execute(
@@ -1028,16 +925,14 @@ class ELSADataIngester:
                     """,
                     (
                         int(row.cluster_id), int(row.size), int(row.consensus_length or 0),
-                        float(row.consensus_score or 0.0), float(row.diversity),
-                        str(row.query_locus), str(row.target_locus), str(row.cluster_type)
+                        float(row.consensus_score or 0.0), 0.0,
+                        str(row.query_locus), str(row.target_locus), 'unknown'
                     )
                 )
             self.conn.commit()
             logger.info("Clusters summary rebuilt: %d rows", len(merged))
         except Exception as e:
             logger.warning("Failed to rebuild clusters summary: %s", e)
-
-        # If CSV already provided cluster_ids, we can skip re-clustering.
     
     def generate_annotation_stats(self) -> None:
         """Generate annotation statistics for dashboard."""

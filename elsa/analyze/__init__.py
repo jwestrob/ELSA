@@ -1,14 +1,16 @@
 """
-ELSA analyze module for syntenic block clustering.
+ELSA analyze module for syntenic block analysis via gene-level anchor chaining.
 """
 
-from .shingles import srp_tokens, block_shingles, df_filter, jaccard
-from .cluster_mutual_jaccard import cluster_blocks_jaccard
+from .pipeline import run_chain_pipeline, ChainSummary, ChainConfig
+# Backward compat aliases
+from .micro_chain import run_micro_chain_pipeline, MicroChainConfig, MicroChainSummary
 
 __all__ = [
-    'srp_tokens',
-    'block_shingles', 
-    'df_filter',
-    'jaccard',
-    'cluster_blocks_jaccard'
+    'run_chain_pipeline',
+    'ChainSummary',
+    'ChainConfig',
+    'run_micro_chain_pipeline',
+    'MicroChainConfig',
+    'MicroChainSummary',
 ]

@@ -2,6 +2,8 @@
 """
 Build ground truth conserved syntenic blocks from ELSA embeddings.
 
+Uses HNSW for efficient kNN search instead of brute-force pairwise comparison.
+
 Ground truth definition:
 - Proteins are "the same" if cosine similarity > threshold (default 0.9)
 - A conserved block is a set of ≥3 adjacent proteins that are "the same"
@@ -15,26 +17,11 @@ import argparse
 import json
 from collections import defaultdict
 from dataclasses import dataclass, field
-from itertools import combinations
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
 import pandas as pd
-from scipy.spatial.distance import cdist
-
-
-@dataclass
-class Gene:
-    """A gene with its embedding and position."""
-    gene_id: str
-    sample_id: str
-    contig_id: str
-    start: int
-    end: int
-    strand: int
-    embedding: np.ndarray
-    position_index: int = 0  # Position in contig gene order
 
 
 @dataclass
@@ -55,19 +42,18 @@ class ConservedBlock:
         }
 
 
-def load_genes_parquet(genes_path: Path) -> pd.DataFrame:
+def load_genes_parquet(genes_path: Path) -> tuple[pd.DataFrame, list[str]]:
     """Load genes.parquet with embeddings."""
     df = pd.read_parquet(genes_path)
 
-    # Find embedding columns (they start with a number or are named emb_*)
+    # Find embedding columns
     emb_cols = [c for c in df.columns if c.startswith('emb_') or
-                (c.replace('.', '').replace('-', '').isdigit())]
+                c.replace('.', '').replace('-', '').lstrip('-').isdigit()]
 
     if not emb_cols:
-        # Try to find columns that look like embedding dimensions
-        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-        # Exclude known non-embedding columns
+        # Try numeric columns excluding known non-embedding ones
         exclude = {'start', 'end', 'strand', 'position_index', 'index'}
+        numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
         emb_cols = [c for c in numeric_cols if c not in exclude and
                     not c.endswith('_id') and not c.endswith('_idx')]
 
@@ -80,108 +66,163 @@ def load_genes_parquet(genes_path: Path) -> pd.DataFrame:
 def compute_gene_positions(df: pd.DataFrame) -> pd.DataFrame:
     """Compute position index for each gene within its contig."""
     df = df.copy()
-
-    # Sort by genome, contig, start position
     df = df.sort_values(['sample_id', 'contig_id', 'start'])
-
-    # Assign position index within each contig
     df['position_index'] = df.groupby(['sample_id', 'contig_id']).cumcount()
-
     return df
 
 
-def find_similar_proteins(
-    embeddings_a: np.ndarray,
-    embeddings_b: np.ndarray,
+def build_hnsw_index(embeddings: np.ndarray, ef_construction: int = 200, M: int = 32):
+    """Build HNSW index for fast kNN search."""
+    try:
+        import hnswlib
+    except ImportError:
+        print("hnswlib not available, falling back to sklearn")
+        return None
+
+    n, dim = embeddings.shape
+
+    # Normalize for cosine similarity
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    normalized = embeddings / (norms + 1e-9)
+
+    index = hnswlib.Index(space='cosine', dim=dim)
+    index.init_index(max_elements=n, ef_construction=ef_construction, M=M)
+    index.add_items(normalized, np.arange(n))
+    index.set_ef(128)
+
+    return index
+
+
+def find_similar_proteins_hnsw(
+    embeddings: np.ndarray,
+    genome_labels: np.ndarray,
+    k: int = 50,
     threshold: float = 0.9,
 ) -> list[tuple[int, int, float]]:
-    """Find pairs of similar proteins between two sets of embeddings.
+    """Find similar proteins using HNSW kNN search.
 
-    Returns list of (idx_a, idx_b, similarity) tuples.
+    Only returns cross-genome pairs (same genome pairs filtered out).
     """
-    # Normalize embeddings for cosine similarity
-    norm_a = embeddings_a / (np.linalg.norm(embeddings_a, axis=1, keepdims=True) + 1e-9)
-    norm_b = embeddings_b / (np.linalg.norm(embeddings_b, axis=1, keepdims=True) + 1e-9)
+    n, dim = embeddings.shape
 
-    # Compute cosine similarity matrix
-    sim_matrix = norm_a @ norm_b.T
+    # Normalize embeddings
+    norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
+    normalized = embeddings / (norms + 1e-9)
 
-    # Find pairs above threshold
+    # Try HNSW first
+    try:
+        import hnswlib
+
+        print(f"Building HNSW index for {n} proteins...")
+        index = hnswlib.Index(space='cosine', dim=dim)
+        index.init_index(max_elements=n, ef_construction=200, M=32)
+        index.add_items(normalized, np.arange(n))
+        index.set_ef(max(k * 2, 128))
+
+        print(f"Querying {k} nearest neighbors per protein...")
+        labels, distances = index.knn_query(normalized, k=k)
+
+        # Convert cosine distance to similarity
+        # hnswlib returns 1 - cos_sim for cosine space
+        similarities = 1 - distances
+
+    except ImportError:
+        print("hnswlib not available, using sklearn NearestNeighbors...")
+        from sklearn.neighbors import NearestNeighbors
+
+        nn = NearestNeighbors(n_neighbors=k, metric='cosine', algorithm='brute')
+        nn.fit(normalized)
+        distances, labels = nn.kneighbors(normalized)
+        similarities = 1 - distances
+
+    # Collect cross-genome pairs above threshold
     pairs = []
-    rows, cols = np.where(sim_matrix >= threshold)
-    for i, j in zip(rows, cols):
-        pairs.append((int(i), int(j), float(sim_matrix[i, j])))
+    seen = set()
 
+    print("Filtering to cross-genome pairs with similarity > threshold...")
+    for i in range(n):
+        genome_i = genome_labels[i]
+        for j_idx in range(k):
+            j = labels[i, j_idx]
+            sim = similarities[i, j_idx]
+
+            if sim < threshold:
+                continue
+            if i == j:
+                continue
+
+            genome_j = genome_labels[j]
+            if genome_i == genome_j:
+                continue  # Skip same-genome pairs
+
+            # Canonical ordering to avoid duplicates
+            pair_key = (min(i, j), max(i, j))
+            if pair_key in seen:
+                continue
+            seen.add(pair_key)
+
+            pairs.append((int(i), int(j), float(sim)))
+
+    print(f"Found {len(pairs)} cross-genome similar pairs")
     return pairs
 
 
-def find_adjacent_matches(
-    genes_a: pd.DataFrame,
-    genes_b: pd.DataFrame,
+def find_adjacent_blocks(
+    df: pd.DataFrame,
     similar_pairs: list[tuple[int, int, float]],
     max_gap: int = 2,
     min_block_size: int = 3,
 ) -> list[dict]:
-    """Find blocks of adjacent similar genes between two genomes.
+    """Find blocks of adjacent similar genes."""
 
-    Args:
-        genes_a: Genes from genome A with position_index
-        genes_b: Genes from genome B with position_index
-        similar_pairs: List of (idx_a, idx_b, similarity) tuples
-        max_gap: Maximum gap (intervening genes) allowed
-        min_block_size: Minimum number of genes in a block
-
-    Returns:
-        List of blocks, each with genes from both genomes
-    """
     if not similar_pairs:
         return []
 
-    # Build lookup from index to gene info
-    genes_a = genes_a.reset_index(drop=True)
-    genes_b = genes_b.reset_index(drop=True)
+    # Build lookup structures
+    gene_info = df[['gene_id', 'sample_id', 'contig_id', 'position_index']].reset_index(drop=True)
 
-    # Group similar pairs by contig pair
+    # Group pairs by genome pair and contig pair
     contig_pairs = defaultdict(list)
-    for idx_a, idx_b, sim in similar_pairs:
-        if idx_a >= len(genes_a) or idx_b >= len(genes_b):
-            continue
-        contig_a = genes_a.iloc[idx_a]['contig_id']
-        contig_b = genes_b.iloc[idx_b]['contig_id']
-        pos_a = genes_a.iloc[idx_a]['position_index']
-        pos_b = genes_b.iloc[idx_b]['position_index']
-        gene_id_a = genes_a.iloc[idx_a]['gene_id']
-        gene_id_b = genes_b.iloc[idx_b]['gene_id']
 
-        contig_pairs[(contig_a, contig_b)].append({
+    for idx_a, idx_b, sim in similar_pairs:
+        info_a = gene_info.iloc[idx_a]
+        info_b = gene_info.iloc[idx_b]
+
+        key = (
+            info_a['sample_id'], info_a['contig_id'],
+            info_b['sample_id'], info_b['contig_id']
+        )
+
+        contig_pairs[key].append({
             'idx_a': idx_a, 'idx_b': idx_b,
-            'pos_a': pos_a, 'pos_b': pos_b,
-            'gene_id_a': gene_id_a, 'gene_id_b': gene_id_b,
+            'pos_a': info_a['position_index'],
+            'pos_b': info_b['position_index'],
+            'gene_id_a': info_a['gene_id'],
+            'gene_id_b': info_b['gene_id'],
             'sim': sim,
         })
 
     blocks = []
 
-    for (contig_a, contig_b), matches in contig_pairs.items():
+    print(f"Finding collinear chains in {len(contig_pairs)} contig pairs...")
+
+    for key, matches in contig_pairs.items():
         if len(matches) < min_block_size:
             continue
 
-        # Sort by position in genome A
-        matches = sorted(matches, key=lambda x: x['pos_a'])
+        genome_a, contig_a, genome_b, contig_b = key
 
-        # Find chains of adjacent matches
-        # Use dynamic programming to find longest chains
+        # Find collinear chains
         chains = find_collinear_chains(matches, max_gap, min_block_size)
 
         for chain in chains:
             blocks.append({
+                'genome_a': genome_a,
+                'genome_b': genome_b,
                 'contig_a': contig_a,
                 'contig_b': contig_b,
                 'genes_a': [m['gene_id_a'] for m in chain],
                 'genes_b': [m['gene_id_b'] for m in chain],
-                'positions_a': [m['pos_a'] for m in chain],
-                'positions_b': [m['pos_b'] for m in chain],
-                'similarities': [m['sim'] for m in chain],
             })
 
     return blocks
@@ -192,51 +233,38 @@ def find_collinear_chains(
     max_gap: int,
     min_size: int,
 ) -> list[list[dict]]:
-    """Find collinear chains of matches (similar to LIS with gap constraint).
+    """Find collinear chains using dynamic programming."""
 
-    A chain is collinear if positions in both genomes are monotonically
-    increasing (allowing for strand flip = monotonically decreasing in B).
-    """
     if len(matches) < min_size:
         return []
 
-    n = len(matches)
-
-    # Try both orientations (forward and reverse in genome B)
     all_chains = []
 
+    # Try both orientations
     for reverse_b in [False, True]:
-        # Sort matches by position in A
         sorted_matches = sorted(matches, key=lambda x: x['pos_a'])
 
         if reverse_b:
-            # For reverse orientation, we want decreasing positions in B
-            # So we negate pos_b for the comparison
             for m in sorted_matches:
-                m['_pos_b_cmp'] = -m['pos_b']
+                m['_cmp'] = -m['pos_b']
         else:
             for m in sorted_matches:
-                m['_pos_b_cmp'] = m['pos_b']
+                m['_cmp'] = m['pos_b']
 
-        # Find longest increasing subsequence with gap constraint
-        # dp[i] = (chain_length, prev_index)
+        n = len(sorted_matches)
         dp = [(1, -1) for _ in range(n)]
 
         for i in range(1, n):
-            best_len = 1
-            best_prev = -1
+            best_len, best_prev = 1, -1
 
             for j in range(i):
-                # Check gap constraint in genome A
                 gap_a = sorted_matches[i]['pos_a'] - sorted_matches[j]['pos_a'] - 1
                 if gap_a > max_gap:
                     continue
 
-                # Check collinearity in genome B
-                if sorted_matches[i]['_pos_b_cmp'] <= sorted_matches[j]['_pos_b_cmp']:
+                if sorted_matches[i]['_cmp'] <= sorted_matches[j]['_cmp']:
                     continue
 
-                # Check gap constraint in genome B
                 gap_b = abs(sorted_matches[i]['pos_b'] - sorted_matches[j]['pos_b']) - 1
                 if gap_b > max_gap:
                     continue
@@ -247,62 +275,68 @@ def find_collinear_chains(
 
             dp[i] = (best_len, best_prev)
 
-        # Backtrack to find chains
+        # Backtrack
         used = set()
         for i in range(n - 1, -1, -1):
-            if i in used:
+            if i in used or dp[i][0] < min_size:
                 continue
-            if dp[i][0] >= min_size:
-                # Backtrack to get chain
-                chain = []
-                j = i
-                while j >= 0:
-                    chain.append(sorted_matches[j])
-                    used.add(j)
-                    j = dp[j][1]
-                chain.reverse()
-                all_chains.append(chain)
+
+            chain = []
+            j = i
+            while j >= 0:
+                chain.append(sorted_matches[j])
+                used.add(j)
+                j = dp[j][1]
+            chain.reverse()
+            all_chains.append(chain)
 
     return all_chains
 
 
-def merge_pairwise_blocks(
-    pairwise_blocks: dict[tuple[str, str], list[dict]],
+def pairwise_to_conserved(
+    pairwise_blocks: list[dict],
+) -> list[ConservedBlock]:
+    """Convert pairwise blocks directly to ConservedBlock format (no merging)."""
+    conserved = []
+    for i, block in enumerate(pairwise_blocks):
+        genes_by_genome = {
+            block['genome_a']: sorted(block['genes_a']),
+            block['genome_b']: sorted(block['genes_b']),
+        }
+        avg_genes = (len(block['genes_a']) + len(block['genes_b'])) // 2
+        conserved.append(ConservedBlock(
+            block_id=i,
+            genes_by_genome=genes_by_genome,
+            n_genomes=2,
+            n_genes=avg_genes,
+        ))
+    return conserved
+
+
+def merge_blocks(
+    pairwise_blocks: list[dict],
     min_genomes: int = 2,
+    merge_jaccard_threshold: float = 0.0,
 ) -> list[ConservedBlock]:
     """Merge pairwise blocks into multi-genome conserved blocks.
 
-    Two blocks are merged if they share significant gene overlap.
+    Args:
+        pairwise_blocks: List of pairwise block dicts
+        min_genomes: Minimum genomes for a valid block
+        merge_jaccard_threshold: Only merge blocks with Jaccard >= this threshold.
+            If 0, uses legacy single-gene overlap merging.
     """
-    # Collect all unique genes and their block memberships
-    gene_to_blocks = defaultdict(set)
-    block_id_counter = 0
-    raw_blocks = []
-
-    for (genome_a, genome_b), blocks in pairwise_blocks.items():
-        for block in blocks:
-            block_id = block_id_counter
-            block_id_counter += 1
-
-            raw_blocks.append({
-                'id': block_id,
-                'genomes': {genome_a, genome_b},
-                'genes': {
-                    genome_a: set(block['genes_a']),
-                    genome_b: set(block['genes_b']),
-                },
-            })
-
-            for gene in block['genes_a']:
-                gene_to_blocks[gene].add(block_id)
-            for gene in block['genes_b']:
-                gene_to_blocks[gene].add(block_id)
-
-    if not raw_blocks:
+    if not pairwise_blocks:
         return []
 
-    # Union-find to merge overlapping blocks
-    parent = list(range(len(raw_blocks)))
+    # Convert to sets for easier comparison
+    block_gene_sets = []
+    for block in pairwise_blocks:
+        genes = set(block['genes_a']) | set(block['genes_b'])
+        block_gene_sets.append(genes)
+
+    # Union-find with Jaccard threshold
+    parent = list(range(len(pairwise_blocks)))
 
     def find(x):
         if parent[x] != x:
@@ -314,194 +348,152 @@ def merge_pairwise_blocks(
         if px != py:
             parent[px] = py
 
-    # Merge blocks that share genes
-    for gene, block_ids in gene_to_blocks.items():
-        block_list = list(block_ids)
-        for i in range(1, len(block_list)):
-            union(block_list[0], block_list[i])
+    if merge_jaccard_threshold > 0:
+        # Merge only if blocks have high Jaccard overlap
+        print(f"  Using Jaccard threshold {merge_jaccard_threshold} for merging...")
+        for i in range(len(pairwise_blocks)):
+            for j in range(i + 1, len(pairwise_blocks)):
+                intersection = len(block_gene_sets[i] & block_gene_sets[j])
+                union_size = len(block_gene_sets[i] | block_gene_sets[j])
+                if union_size > 0:
+                    jaccard = intersection / union_size
+                    if jaccard >= merge_jaccard_threshold:
+                        union(i, j)
+    else:
+        # Legacy: merge if ANY gene is shared
+        gene_to_blocks = defaultdict(set)
+        for i, block in enumerate(pairwise_blocks):
+            for gene in block['genes_a']:
+                gene_to_blocks[gene].add(i)
+            for gene in block['genes_b']:
+                gene_to_blocks[gene].add(i)
 
-    # Group blocks by their root
-    merged_groups = defaultdict(list)
-    for i, block in enumerate(raw_blocks):
-        root = find(i)
-        merged_groups[root].append(block)
+        for gene, block_ids in gene_to_blocks.items():
+            block_list = list(block_ids)
+            for i in range(1, len(block_list)):
+                union(block_list[0], block_list[i])
 
-    # Create final conserved blocks
-    conserved_blocks = []
-    final_block_id = 0
+    # Group by root
+    groups = defaultdict(list)
+    for i in range(len(pairwise_blocks)):
+        groups[find(i)].append(pairwise_blocks[i])
 
-    for group in merged_groups.values():
-        # Merge all blocks in the group
-        all_genomes = set()
+    # Create conserved blocks
+    conserved = []
+
+    for group_blocks in groups.values():
         genes_by_genome = defaultdict(set)
 
-        for block in group:
-            all_genomes.update(block['genomes'])
-            for genome, genes in block['genes'].items():
-                genes_by_genome[genome].update(genes)
+        for block in group_blocks:
+            genes_by_genome[block['genome_a']].update(block['genes_a'])
+            genes_by_genome[block['genome_b']].update(block['genes_b'])
 
-        if len(all_genomes) >= min_genomes:
-            cb = ConservedBlock(
-                block_id=final_block_id,
-                genes_by_genome={g: sorted(genes) for g, genes in genes_by_genome.items()},
-                n_genomes=len(all_genomes),
-                n_genes=sum(len(genes) for genes in genes_by_genome.values()) // len(all_genomes),
-            )
-            conserved_blocks.append(cb)
-            final_block_id += 1
+        if len(genes_by_genome) >= min_genomes:
+            avg_genes = sum(len(g) for g in genes_by_genome.values()) // len(genes_by_genome)
+            conserved.append(ConservedBlock(
+                block_id=len(conserved),
+                genes_by_genome={k: sorted(v) for k, v in genes_by_genome.items()},
+                n_genomes=len(genes_by_genome),
+                n_genes=avg_genes,
+            ))
 
-    return conserved_blocks
+    return conserved
 
 
 def build_ground_truth(
     genes_path: Path,
     output_path: Path,
-    similarity_threshold: float = 0.9,
+    similarity_threshold: float = 0.85,
     max_gap: int = 2,
     min_block_size: int = 3,
     min_genomes: int = 2,
+    k_neighbors: int = 50,
+    no_merge: bool = False,
+    merge_jaccard_threshold: float = 0.0,
 ) -> list[ConservedBlock]:
-    """Build ground truth conserved blocks from ELSA embeddings.
+    """Build ground truth using HNSW for efficient search.
 
     Args:
-        genes_path: Path to genes.parquet from ELSA
-        output_path: Path to write ground truth TSV
-        similarity_threshold: Cosine similarity threshold for "same protein"
-        max_gap: Maximum intervening genes allowed
-        min_block_size: Minimum genes per block
-        min_genomes: Minimum genomes for conservation
-
-    Returns:
-        List of ConservedBlock objects
+        no_merge: If True, output pairwise blocks without merging
+        merge_jaccard_threshold: If > 0, only merge blocks with Jaccard >= threshold
     """
+
     print(f"Loading genes from {genes_path}")
     df, emb_cols = load_genes_parquet(genes_path)
 
-    # Compute gene positions within contigs
     print("Computing gene positions...")
     df = compute_gene_positions(df)
 
-    # Get list of genomes
-    genomes = df['sample_id'].unique().tolist()
+    genomes = df['sample_id'].unique()
     print(f"Found {len(genomes)} genomes")
 
-    # Extract embeddings as numpy array
+    # Extract embeddings and genome labels
     embeddings = df[emb_cols].values.astype(np.float32)
+    genome_labels = df['sample_id'].values
 
-    # Find pairwise conserved blocks
-    pairwise_blocks = {}
-    n_pairs = len(genomes) * (len(genomes) - 1) // 2
-    pair_count = 0
+    # Find similar proteins using HNSW
+    similar_pairs = find_similar_proteins_hnsw(
+        embeddings, genome_labels,
+        k=k_neighbors, threshold=similarity_threshold
+    )
 
-    print(f"Comparing {n_pairs} genome pairs...")
+    # Find adjacent blocks
+    print("Finding adjacent blocks...")
+    pairwise_blocks = find_adjacent_blocks(
+        df, similar_pairs,
+        max_gap=max_gap, min_block_size=min_block_size
+    )
+    print(f"Found {len(pairwise_blocks)} pairwise blocks")
 
-    for i, genome_a in enumerate(genomes):
-        for genome_b in genomes[i+1:]:
-            pair_count += 1
-            if pair_count % 10 == 0:
-                print(f"  Progress: {pair_count}/{n_pairs} pairs")
-
-            # Get genes for each genome
-            mask_a = df['sample_id'] == genome_a
-            mask_b = df['sample_id'] == genome_b
-
-            genes_a = df[mask_a].copy()
-            genes_b = df[mask_b].copy()
-
-            emb_a = embeddings[mask_a.values]
-            emb_b = embeddings[mask_b.values]
-
-            # Find similar proteins
-            similar_pairs = find_similar_proteins(
-                emb_a, emb_b, threshold=similarity_threshold
-            )
-
-            if not similar_pairs:
-                continue
-
-            # Find adjacent blocks
-            blocks = find_adjacent_matches(
-                genes_a, genes_b, similar_pairs,
-                max_gap=max_gap, min_block_size=min_block_size
-            )
-
-            if blocks:
-                pairwise_blocks[(genome_a, genome_b)] = blocks
-
-    print(f"Found blocks in {len(pairwise_blocks)} genome pairs")
-
-    # Merge into multi-genome conserved blocks
-    print("Merging pairwise blocks...")
-    conserved_blocks = merge_pairwise_blocks(pairwise_blocks, min_genomes=min_genomes)
-
-    print(f"Found {len(conserved_blocks)} conserved blocks")
+    # Convert/merge into conserved blocks
+    if no_merge:
+        print("Skipping merge (--no-merge), outputting pairwise blocks...")
+        conserved = pairwise_to_conserved(pairwise_blocks)
+    else:
+        print("Merging into conserved blocks...")
+        conserved = merge_blocks(
+            pairwise_blocks,
+            min_genomes=min_genomes,
+            merge_jaccard_threshold=merge_jaccard_threshold
+        )
+    print(f"Found {len(conserved)} conserved blocks")
 
     # Write output
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Write as TSV
-    rows = []
-    for block in conserved_blocks:
-        rows.append({
-            'block_id': f"GT_{block.block_id:05d}",
-            'n_genes': block.n_genes,
-            'n_genomes': block.n_genomes,
-            'genomes': ','.join(sorted(block.genes_by_genome.keys())),
-            'genes_json': json.dumps(block.genes_by_genome),
-        })
+    rows = [{
+        'block_id': f"GT_{b.block_id:05d}",
+        'n_genes': b.n_genes,
+        'n_genomes': b.n_genomes,
+        'genomes': ','.join(sorted(b.genes_by_genome.keys())),
+        'genes_json': json.dumps(b.genes_by_genome),
+    } for b in conserved]
 
-    out_df = pd.DataFrame(rows)
-    out_df.to_csv(output_path, sep='\t', index=False)
-    print(f"Wrote ground truth to {output_path}")
+    pd.DataFrame(rows).to_csv(output_path, sep='\t', index=False)
+    print(f"Wrote {output_path}")
 
-    # Also write detailed JSON
+    # Also write JSON
     json_path = output_path.with_suffix('.json')
     with open(json_path, 'w') as f:
-        json.dump([b.to_dict() for b in conserved_blocks], f, indent=2)
-    print(f"Wrote detailed JSON to {json_path}")
+        json.dump([b.to_dict() for b in conserved], f, indent=2)
+    print(f"Wrote {json_path}")
 
-    return conserved_blocks
+    return conserved
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Build ground truth conserved blocks from ELSA embeddings"
-    )
-    parser.add_argument(
-        "genes_parquet",
-        type=Path,
-        help="Path to genes.parquet from ELSA embed output"
-    )
-    parser.add_argument(
-        "-o", "--output",
-        type=Path,
-        required=True,
-        help="Output path for ground truth TSV"
-    )
-    parser.add_argument(
-        "--similarity-threshold",
-        type=float,
-        default=0.9,
-        help="Cosine similarity threshold for 'same protein' (default: 0.9)"
-    )
-    parser.add_argument(
-        "--max-gap",
-        type=int,
-        default=2,
-        help="Maximum intervening genes allowed in a block (default: 2)"
-    )
-    parser.add_argument(
-        "--min-block-size",
-        type=int,
-        default=3,
-        help="Minimum genes per block (default: 3)"
-    )
-    parser.add_argument(
-        "--min-genomes",
-        type=int,
-        default=2,
-        help="Minimum genomes for conservation (default: 2)"
-    )
+    parser = argparse.ArgumentParser(description="Build ground truth using HNSW")
+    parser.add_argument("genes_parquet", type=Path)
+    parser.add_argument("-o", "--output", type=Path, required=True)
+    parser.add_argument("--similarity-threshold", type=float, default=0.9)
+    parser.add_argument("--max-gap", type=int, default=2)
+    parser.add_argument("--min-block-size", type=int, default=3)
+    parser.add_argument("--min-genomes", type=int, default=2)
+    parser.add_argument("--k-neighbors", type=int, default=50)
+    parser.add_argument("--no-merge", action="store_true",
+                        help="Output pairwise blocks without merging (avoids mega-block problem)")
+    parser.add_argument("--merge-jaccard", type=float, default=0.0,
+                        help="Only merge blocks with Jaccard >= threshold (0 = legacy single-gene merge)")
 
     args = parser.parse_args()
 
@@ -512,6 +504,9 @@ def main():
         max_gap=args.max_gap,
         min_block_size=args.min_block_size,
         min_genomes=args.min_genomes,
+        k_neighbors=args.k_neighbors,
+        no_merge=args.no_merge,
+        merge_jaccard_threshold=args.merge_jaccard,
     )
 
 

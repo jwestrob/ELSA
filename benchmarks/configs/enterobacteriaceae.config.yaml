@@ -1,0 +1,33 @@
+# ELSA config for cross-species Enterobacteriaceae benchmark
+# 20 E. coli + 5 Salmonella + 5 Klebsiella genomes
+
+data:
+  samples_tsv: benchmarks/data/enterobacteriaceae/samples.tsv
+  work_dir: benchmarks/elsa_output/enterobacteriaceae
+
+ingest:
+  gene_caller: prodigal
+  min_protein_length: 30
+  max_protein_length: 5000
+
+plm:
+  model_name: esm2_t33_650M_UR50D
+  batch_size: 32
+  pooling: mean
+  device: auto
+
+projection:
+  target_dim: 256
+  method: pca
+  normalize: true
+
+chain:
+  hnsw_k: 50
+  similarity_threshold: 0.85
+  max_gap_genes: 2
+  min_chain_size: 2
+
+system:
+  rng_seed: 42
+  n_workers: 8
+  log_level: INFO

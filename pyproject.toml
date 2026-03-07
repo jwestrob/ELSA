@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "elsa"
-version = "0.1.0"
-description = "Embedding Locus Shingle Alignment - syntenic block discovery"
+version = "2.0.0"
+description = "Embedding Locus Search and Alignment — syntenic block discovery from protein language model embeddings"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "ELSA Team"}]
@@ -21,23 +21,15 @@ dependencies = [
     "rich",
     "pydantic>=2.0",
     "pyyaml",
-    "datasketch",
     "fair-esm",
-    "fastapi",
-    "uvicorn",
+    "faiss-cpu",
     "hnswlib",
-    "python-igraph",
-    "leidenalg",
-    "hdbscan",
-    "PyYAML",
     "joblib",
     "tqdm",
-    "metric-learn",
 ]
 
 [project.scripts]
 elsa = "elsa.cli:main"
-micro-synteny = "elsa.synteny.micro_cli:main"
 
 [project.optional-dependencies]
 dev = [
@@ -51,7 +43,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["elsa*", "operon_embed*", "scripts*"]
+include = ["elsa*"]
 
 [tool.mypy]
 ignore_missing_imports = true

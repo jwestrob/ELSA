@@ -60,6 +60,8 @@ benchmarks/elsa_output/
 benchmarks/ground_truth/
 benchmarks/evaluation/
 benchmarks/results/
+benchmarks/orthofinder/
+benchmarks/operons/
 
 # SQLite WAL files
 *.db-shm
@@ -67,3 +69,19 @@ benchmarks/results/
 
 # Test output directories
 syntenic_analysis_*/
+test_queries/
+
+# Mac resource forks
+._*
+
+# Misc artifacts
+*.zip
+*.pdf
+*.log
+*.txt
+!requirements.txt
+!QUICKSTART.txt
+phold_db/
+borg_structural_annotation/
+elsa_index_borg/
+ELSA_vs_Banfield_Borg_Report.md

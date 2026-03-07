@@ -235,3 +235,22 @@ spneumo     167     143       0.82      0.87         0.84  0.70            0.65
 - [ ] Confirm genome selection after seeing what's available on NCBI
 - [ ] Decide whether to use existing S. pneumo data or download fresh
 - [ ] Set up PFAM annotations for secondary validation
+
+---
+
+## Issues Discovered During Benchmarking
+
+### Performance Issues
+
+- [ ] **`elsa analyze` needs progress bars** - Currently silent during "all-vs-all locus comparisons", no visibility into progress for long runs
+- [ ] **O(n²) complexity in locus comparisons is brutal** - 20 E. coli genomes (90k windows, 35 loci, 595 comparisons) takes 20+ minutes vs seconds for 6-genome test set. Need to investigate:
+  - Are we doing unnecessary pairwise window comparisons?
+  - Can we use HNSW/LSH to prune candidate pairs before full comparison?
+  - Is the chaining step the bottleneck?
+
+### Ground Truth Issues
+
+- [ ] **Union-find merging too aggressive** - Block 0 contains 4,326 genes (entire core genome) because ANY shared gene causes merge. Need:
+  - Jaccard overlap threshold for merging, OR
+  - Keep pairwise blocks as separate "instances", OR
+  - Proper graph-based clustering with edge weights

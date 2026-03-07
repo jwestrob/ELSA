@@ -34,7 +34,7 @@ from collections import defaultdict, Counter
 # Import genome visualization functions
 from cluster_analyzer import ClusterAnalyzer
 from visualization.genome_plots import create_genome_diagram, create_comparative_genome_view
-from elsa.analyze.shingles import srp_tokens, block_shingles
+# Legacy shingle imports removed in ELSA v2
 
 # Configure page
 st.set_page_config(
@@ -223,7 +223,7 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
             macro_df = pd.read_sql_query(base, conn, params=params)
         except Exception as e:
             logger.warning(f"Block query failed: {e}; trying without consensus join")
-            base2 = base.replace("bc.consensus_len as consensus_len", "").replace("LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id", "")
+            base2 = base.replace("bc.consensus_len as consensus_len", "NULL as consensus_len").replace("LEFT JOIN block_consensus bc ON bc.block_id = sb.block_id", "")
             macro_df = pd.read_sql_query(base2, conn, params=params)
     else:
         macro_df = pd.DataFrame()
@@ -323,6 +323,7 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
     # Normalize length for micro: use gene window count
     if micro_df is not None and not micro_df.empty:
         try:
+            micro_df = micro_df.copy()
             micro_df['length'] = micro_df[['n_query_windows','n_target_windows']].max(axis=1)
         except Exception:
             pass
@@ -681,37 +682,48 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
     """Get total count of blocks (macro+micro) matching filters."""
     conn = get_database_connection()
 
-    base = """
-        WITH sb_main AS (
-            SELECT block_id, cluster_id, query_locus, target_locus, query_genome_id, target_genome_id,
-                   query_contig_id, target_contig_id, length, identity, block_type
-            FROM syntenic_blocks
-        ),
-        micro_pairs AS (
-            SELECT 
-                p.block_id, p.cluster_id,
-                (p.query_genome_id || ':' || p.query_contig_id || ':' || CAST(p.query_start_bp AS TEXT) || '-' || CAST(p.query_end_bp AS TEXT)) AS query_locus,
-                (p.target_genome_id || ':' || p.target_contig_id || ':' || CAST(p.target_start_bp AS TEXT) || '-' || CAST(p.target_end_bp AS TEXT)) AS target_locus,
-                p.query_genome_id, p.target_genome_id,
-                p.query_contig_id, p.target_contig_id,
-                (CASE WHEN (
-                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query') >=
-                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target')
-                ) THEN (
-                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query')
-                ) ELSE (
-                    (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target')
-                ) END) AS length,
-                p.identity, 'micro' AS block_type
-            FROM micro_block_pairs p
-        ),
-        allb AS (
-            SELECT * FROM sb_main WHERE block_type != 'micro'
-            UNION ALL
-            SELECT * FROM micro_pairs
-        )
-        SELECT COUNT(*) FROM allb WHERE 1=1
-    """
+    # Check if micro_block_pairs table exists
+    has_micro_pairs = conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='micro_block_pairs'"
+    ).fetchone() is not None
+
+    if has_micro_pairs:
+        base = """
+            WITH sb_main AS (
+                SELECT block_id, cluster_id, query_locus, target_locus, query_genome_id, target_genome_id,
+                       query_contig_id, target_contig_id, length, identity, block_type
+                FROM syntenic_blocks
+            ),
+            micro_pairs AS (
+                SELECT
+                    p.block_id, p.cluster_id,
+                    (p.query_genome_id || ':' || p.query_contig_id || ':' || CAST(p.query_start_bp AS TEXT) || '-' || CAST(p.query_end_bp AS TEXT)) AS query_locus,
+                    (p.target_genome_id || ':' || p.target_contig_id || ':' || CAST(p.target_start_bp AS TEXT) || '-' || CAST(p.target_end_bp AS TEXT)) AS target_locus,
+                    p.query_genome_id, p.target_genome_id,
+                    p.query_contig_id, p.target_contig_id,
+                    (CASE WHEN (
+                        (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query') >=
+                        (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target')
+                    ) THEN (
+                        (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'query')
+                    ) ELSE (
+                        (SELECT COUNT(*) FROM micro_gene_pair_mappings m WHERE m.block_id = p.block_id AND m.block_role = 'target')
+                    ) END) AS length,
+                    p.identity, 'micro' AS block_type
+                FROM micro_block_pairs p
+            ),
+            allb AS (
+                SELECT * FROM sb_main WHERE block_type != 'micro'
+                UNION ALL
+                SELECT * FROM micro_pairs
+            )
+            SELECT COUNT(*) FROM allb WHERE 1=1
+        """
+    else:
+        # Simpler query when micro_block_pairs doesn't exist
+        base = """
+            SELECT COUNT(*) FROM syntenic_blocks WHERE 1=1
+        """
     params: List = []
 
     if genome_filter:
@@ -724,7 +736,10 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
         params.extend(size_range)
 
     if identity_threshold > 0:
-        base += " AND (block_type = 'micro' OR identity >= ?)"
+        if has_micro_pairs:
+            base += " AND (block_type = 'micro' OR identity >= ?)"
+        else:
+            base += " AND identity >= ?"
         params.append(identity_threshold)
 
     if block_type:
@@ -749,8 +764,12 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
             for t in toks:
                 ors.append("LOWER(g.pfam_domains) LIKE ?")
                 params.append(f"%{t}%")
-            sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = allb.block_id AND (" + " OR ".join(ors) + ")"
-            base += f" AND (block_type = 'micro' OR EXISTS ({sub}))"
+            if has_micro_pairs:
+                sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = allb.block_id AND (" + " OR ".join(ors) + ")"
+                base += f" AND (block_type = 'micro' OR EXISTS ({sub}))"
+            else:
+                sub = "SELECT 1 FROM gene_block_mappings gb JOIN genes g ON gb.gene_id = g.gene_id WHERE gb.block_id = syntenic_blocks.block_id AND (" + " OR ".join(ors) + ")"
+                base += f" AND EXISTS ({sub})"
 
     try:
         row = conn.execute(base, params).fetchone()
@@ -761,7 +780,7 @@ def get_block_count(genome_filter: Optional[List[str]] = None,
             pass
         return cnt
     except Exception as e:
-        logger.warning(f"Unified count query failed: {e}")
+        logger.warning(f"Count query failed: {e}")
         row = conn.execute("SELECT COUNT(*) FROM syntenic_blocks").fetchone()
         return int(row[0]) if row else 0
 
@@ -2036,6 +2055,7 @@ def compute_display_regions_for_cluster(cluster_id: int, gap_bp: int = 1000, min
     Returns list of dicts: {genome_id, contig_id, organism_name, start_bp, end_bp, support, blocks}
     """
     conn = get_database_connection()
+    logger.info(f"DEBUG compute_display_regions_for_cluster: cluster_id={cluster_id}")
     try:
         # Per-block per-role intervals (in bp) for this cluster
         per_block_query = """
@@ -2048,7 +2068,9 @@ def compute_display_regions_for_cluster(cluster_id: int, gap_bp: int = 1000, min
             GROUP BY gbm.block_id, gbm.block_role, g.genome_id, g.contig_id
         """
         per_block = pd.read_sql_query(per_block_query, conn, params=[int(cluster_id)])
+        logger.info(f"DEBUG compute_display_regions_for_cluster: per_block query returned {len(per_block)} rows")
         if per_block.empty:
+            logger.info(f"DEBUG compute_display_regions_for_cluster: no gene_block_mappings found for cluster {cluster_id}")
             return []
 
         # Map genome_id -> organism_name
@@ -2241,6 +2263,8 @@ def display_cluster_card_with_async_summary(stats):
             logger.debug(f"Consensus preview error for cluster {stats.cluster_id}: {e}")
 
         # Multi-dimensional stats summary
+        # DEBUG: Log stats values
+        logger.info(f"DEBUG cluster_card stats: cluster_id={stats.cluster_id}, consensus_length={stats.consensus_length}, avg_identity={stats.avg_identity}, diversity={stats.diversity}, unique_genes={stats.unique_genes}, unique_contigs={stats.unique_contigs}")
         col1, col2 = st.columns([1, 1])
         with col1:
             st.write(f"**Alignments:** {stats.total_alignments:,} blocks")
@@ -2791,6 +2815,10 @@ def display_cluster_detail():
         max_tracks=clinker_max_tracks,
         use_embeddings=clinker_use_embeddings,
     )
+    logger.info(f"DEBUG display_cluster_detail: cluster_clinker_data has {len(cluster_clinker_data.get('loci', []))} loci")
+    if cluster_clinker_data.get('loci'):
+        first_locus = cluster_clinker_data['loci'][0]
+        logger.info(f"DEBUG display_cluster_detail: first locus has {len(first_locus.get('genes', []))} genes")
 
     # Cluster overview
     col1, col2, col3, col4 = st.columns(4)
@@ -3020,6 +3048,35 @@ def display_cluster_detail():
     # Clinker-like multi-locus alignment (always visible)
     st.markdown("---")
     st.subheader("🧷 Cluster-wide Clinker Alignment")
+
+    # Similarity controls above the diagram
+    clinker_ctrl_c1, clinker_ctrl_c2, clinker_ctrl_c3 = st.columns([1, 1, 1])
+    with clinker_ctrl_c1:
+        clinker_initial_tau = st.slider(
+            "Cosine similarity threshold (tau)",
+            min_value=0.50,
+            max_value=0.99,
+            value=0.85,
+            step=0.01,
+            help="Only show edges with cosine similarity >= this value. "
+                 "Lower values show more edges; higher values show only the strongest matches.",
+            key=f"clinker_tau_{cluster_id}",
+        )
+    with clinker_ctrl_c2:
+        clinker_show_labels = st.checkbox(
+            "Show similarity labels on edges",
+            value=True,
+            help="Display cosine similarity values as text labels on each edge.",
+            key=f"clinker_labels_{cluster_id}",
+        )
+    with clinker_ctrl_c3:
+        clinker_scale_width = st.checkbox(
+            "Scale edge width by similarity",
+            value=True,
+            help="Make edge lines thicker for higher cosine similarity.",
+            key=f"clinker_scale_{cluster_id}",
+        )
+
     try:
         data = cluster_clinker_data
         if not data or not data.get('loci'):
@@ -3030,7 +3087,13 @@ def display_cluster_detail():
                 use_embeddings=clinker_use_embeddings,
             )
         if data and data.get('loci') and len(data['loci']) >= 2:
-            _render_multiloc_d3(data, height=180 + 100 * len(data.get('loci', [])))
+            _render_multiloc_d3(
+                data,
+                height=180 + 100 * len(data.get('loci', [])),
+                initial_tau=clinker_initial_tau,
+                show_labels=clinker_show_labels,
+                scale_edge_width=clinker_scale_width,
+            )
         else:
             st.caption("Not enough comparable regions to render a cluster-wide alignment.")
     except Exception as e:
@@ -3040,8 +3103,10 @@ def display_cluster_detail():
     with st.expander("📋 **Cluster Block Details**", expanded=False):
         display_cols = ['block_id', 'query_locus', 'target_locus', 'length', 'identity', 'score']
         display_df = cluster_blocks[display_cols].copy()
-        display_df['identity'] = display_df['identity'].apply(lambda x: f"{x:.3f}")
-        display_df['score'] = display_df['score'].apply(lambda x: f"{x:.1f}")
+        display_df = display_df.rename(columns={'identity': 'per-anchor cosine sim', 'score': 'chain_score'})
+        display_df['per-anchor cosine sim'] = display_df['per-anchor cosine sim'].apply(lambda x: f"{x:.3f}")
+        display_df['chain_score'] = display_df['chain_score'].apply(lambda x: f"{x:.1f}")
+        st.caption("**per-anchor cosine sim** = chain_score / n_anchors (average embedding similarity per gene anchor)")
         st.dataframe(display_df, hide_index=True, use_container_width=True)
     
     # AI Summary (if available)
@@ -3625,441 +3690,8 @@ def main():
         st.session_state.current_page = 'cluster_explorer'
         display_cluster_explorer()
     
-    # Optional fifth tab: clustering tuner
-    if st.sidebar.checkbox("🛠️ Show Clustering Tuner", value=False, help="Tune clustering parameters and re-cluster without re-running all-vs-all"):
-        st.session_state.current_page = 'clustering_tuner'
-        display_clustering_tuner()
+    # Clustering tuner removed (legacy shingling-based reclustering)
 
-
-def display_clustering_tuner():
-    """Interactive interface to re-run clustering only with adjustable parameters.
-    This uses existing syntenic_blocks.csv and window embeddings to recompute cluster assignments,
-    then updates the genome browser database and reloads the app.
-    """
-    st.header("🛠️ Clustering Tuner")
-    st.markdown("Tune clustering parameters and re-run clustering without re-doing all-vs-all.")
-
-    # Locate analysis outputs (app runs from genome_browser/ by default)
-    default_blocks = Path("../syntenic_analysis/syntenic_blocks.csv")
-    default_config = Path("../elsa.config.yaml")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        blocks_csv = st.text_input("Path to syntenic_blocks.csv", value=str(default_blocks))
-        config_yaml = st.text_input("Path to ELSA config (to find windows parquet)", value=str(default_config))
-    with col2:
-        db_path = st.text_input("Genome browser DB path", value=str(DB_PATH))
-        windows_override = st.text_input("Windows parquet override (optional)", value="", help="Full path to *windows*.parquet if manifest/work_dir lookup fails")
-
-    # Ensure lookup vars exist regardless of branch to avoid closure NameError in generators
-    window_lookup = (lambda _wid: None)
-    lookup_meta = {}
-
-    st.subheader("Parameters")
-    psrc_col = st.columns(1)[0]
-    param_source = psrc_col.selectbox("Parameter source", ["Config YAML", "UI Overrides"], index=0, help="Use clustering parameters from the YAML (safer), or override via UI for experimentation")
-    pcol1, pcol2, pcol3 = st.columns(3)
-    with pcol1:
-        jaccard_tau = st.number_input("jaccard_tau", value=0.75, min_value=0.0, max_value=1.0, step=0.05)
-        df_max = st.number_input("df_max (max DF for shingles)", value=30, min_value=1, step=1)
-        min_low_df_anchors = st.number_input("min_low_df_anchors", value=3, min_value=0, step=1)
-        idf_mean_min = st.number_input("idf_mean_min", value=1.0, min_value=0.0, step=0.1)
-        mutual_k = st.number_input("mutual_k", value=3, min_value=1, step=1)
-        max_df_percentile = st.text_input("max_df_percentile (optional, e.g., 0.9)", value="")
-    with pcol2:
-        v_mad_max_genes = st.number_input("v_mad_max_genes", value=0.5, min_value=0.0, step=0.1)
-        enable_cassette_mode = st.checkbox("enable_cassette_mode", value=True)
-        cassette_max_len = st.number_input("cassette_max_len", value=4, min_value=2, step=1)
-        degree_cap = st.number_input("degree_cap (per-node top edges)", value=10, min_value=0, step=1)
-        k_core_min_degree = st.number_input("k_core_min_degree", value=3, min_value=0, step=1)
-        triangle_support_min = st.number_input("triangle_support_min", value=1, min_value=0, step=1)
-    with pcol3:
-        use_weighted_jaccard = st.checkbox("use_weighted_jaccard", value=True)
-        use_community_detection = st.checkbox("use_community_detection", value=True)
-        community_method = st.selectbox("community_method", ["greedy"], index=0)
-        shingle_k = st.number_input("shingle_k (SRP k-gram)", value=3, min_value=2, step=1)
-        srp_bits = st.number_input("srp_bits", value=256, min_value=32, step=32)
-        srp_bands = st.number_input("srp_bands", value=32, min_value=1, step=1)
-
-    st.subheader("Adaptive (small-loci) path")
-    a1, a2, a3, a4 = st.columns(4)
-    with a1:
-        enable_adaptive_shingles = st.checkbox("enable_adaptive_shingles", value=False, help="Adapt k/pattern by block length for short loci")
-    with a2:
-        enable_small_path = st.checkbox("enable_small_path", value=False, help="Require triangles for edges touching small blocks")
-    with a3:
-        small_len_thresh = st.number_input("small_len_thresh", value=6, min_value=1, step=1)
-    with a4:
-        small_edge_triangle_min = st.number_input("small_edge_triangle_min", value=1, min_value=0, step=1)
-
-    st.subheader("Expansion (optional)")
-    e1, e2, e3 = st.columns(3)
-    with e1:
-        enable_expansion = st.checkbox("Enable expansion", value=True)
-        tau_expand = st.number_input("tau_expand (medoid)", value=0.5, min_value=0.0, max_value=1.0, step=0.05)
-        tau_peer = st.number_input("tau_peer", value=0.5, min_value=0.0, max_value=1.0, step=0.05)
-    with e2:
-        m_peers = st.number_input("min peer support", value=2, min_value=0, step=1)
-        M_expand = st.number_input("min low-DF anchors", value=2, min_value=0, step=1)
-        max_added_per_cluster = st.number_input("max add/cluster", value=10, min_value=0, step=1)
-    with e3:
-        allow_degree_relax = st.checkbox("Relax degree cap for adds", value=True)
-        waves = st.number_input("Expansion waves", value=1, min_value=1, step=1)
-
-    if st.button("Re-run clustering", type="primary"):
-        try:
-            # Validate inputs
-            blocks_path = Path(blocks_csv)
-            if not blocks_path.exists():
-                st.error(f"Blocks CSV not found: {blocks_path}")
-                return
-            cfg_path = Path(config_yaml)
-            if not cfg_path.exists():
-                st.error(f"Config file not found: {cfg_path}")
-                return
-
-            # Build config namespace for clustering
-            if param_source == "Config YAML":
-                try:
-                    full_cfg = load_elsa_config(cfg_path)
-                    cc = full_cfg.analyze.clustering
-                except Exception as e:
-                    st.error(f"Failed to load clustering params from YAML: {e}")
-                    return
-                cfg = SimpleNamespace(
-                    jaccard_tau=float(getattr(cc, 'jaccard_tau', 0.75)),
-                    df_max=int(getattr(cc, 'df_max', 30)),
-                    min_low_df_anchors=int(getattr(cc, 'min_low_df_anchors', 3)),
-                    idf_mean_min=float(getattr(cc, 'idf_mean_min', 1.0)),
-                    mutual_k=int(getattr(cc, 'mutual_k', 3)),
-                    max_df_percentile=(float(getattr(cc, 'max_df_percentile', 0.0)) if getattr(cc, 'max_df_percentile', None) else None),
-                    v_mad_max_genes=float(getattr(cc, 'v_mad_max_genes', 0.5)),
-                    enable_cassette_mode=bool(getattr(cc, 'enable_cassette_mode', True)),
-                    cassette_max_len=int(getattr(cc, 'cassette_max_len', 4)),
-                    degree_cap=int(getattr(cc, 'degree_cap', 10)),
-                    k_core_min_degree=int(getattr(cc, 'k_core_min_degree', 3)),
-                    triangle_support_min=int(getattr(cc, 'triangle_support_min', 1)),
-                    use_weighted_jaccard=bool(getattr(cc, 'use_weighted_jaccard', True)),
-                    use_community_detection=bool(getattr(cc, 'use_community_detection', True)),
-                    community_method=str(getattr(cc, 'community_method', 'greedy')),
-                    srp_bits=int(getattr(cc, 'srp_bits', 256)),
-                    srp_bands=int(getattr(cc, 'srp_bands', 32)),
-                    srp_band_bits=int(getattr(cc, 'srp_band_bits', 8)),
-                    srp_seed=int(getattr(cc, 'srp_seed', 1337)),
-                    shingle_k=int(getattr(cc, 'shingle_k', 3)),
-                    shingle_method=str(getattr(cc, 'shingle_method', 'xor')),
-                    bands_per_window=int(getattr(cc, 'bands_per_window', 4)),
-                    band_stride=int(getattr(cc, 'band_stride', 7)),
-                    min_anchors=int(getattr(cc, 'min_anchors', 4)),
-                    min_span_genes=int(getattr(cc, 'min_span_genes', 8)),
-                    size_ratio_min=float(getattr(cc, 'size_ratio_min', 0.5)),
-                    size_ratio_max=float(getattr(cc, 'size_ratio_max', 2.0)),
-                    keep_singletons=bool(getattr(cc, 'keep_singletons', False)),
-                    sink_label=int(getattr(cc, 'sink_label', 0)),
-                    enable_adaptive_shingles=bool(getattr(cc, 'enable_adaptive_shingles', False)),
-                    enable_small_path=bool(getattr(cc, 'enable_small_path', False)),
-                    small_len_thresh=int(getattr(cc, 'small_len_thresh', 6)),
-                    small_edge_triangle_min=int(getattr(cc, 'small_edge_triangle_min', 1)),
-                )
-            else:
-                cfg = SimpleNamespace(
-                    jaccard_tau=float(jaccard_tau),
-                    df_max=int(df_max),
-                    min_low_df_anchors=int(min_low_df_anchors),
-                    idf_mean_min=float(idf_mean_min),
-                    mutual_k=int(mutual_k),
-                    max_df_percentile=(float(max_df_percentile) if max_df_percentile.strip() else None),
-                    v_mad_max_genes=float(v_mad_max_genes),
-                    enable_cassette_mode=bool(enable_cassette_mode),
-                    cassette_max_len=int(cassette_max_len),
-                    degree_cap=int(degree_cap),
-                    k_core_min_degree=int(k_core_min_degree),
-                    triangle_support_min=int(triangle_support_min),
-                    use_weighted_jaccard=bool(use_weighted_jaccard),
-                    use_community_detection=bool(use_community_detection),
-                    community_method=community_method,
-                    srp_bits=int(srp_bits), srp_bands=int(srp_bands), srp_band_bits=8, srp_seed=1337,
-                    shingle_k=int(shingle_k),
-                    min_anchors=4, min_span_genes=8,
-                    size_ratio_min=0.5, size_ratio_max=2.0,
-                    keep_singletons=False, sink_label=0,
-                    enable_adaptive_shingles=bool(enable_adaptive_shingles),
-                    enable_small_path=bool(enable_small_path),
-                    small_len_thresh=int(small_len_thresh),
-                    small_edge_triangle_min=int(small_edge_triangle_min),
-                )
-
-            with st.status("Re-clustering blocks...", expanded=True) as status:
-                st.write("Loading blocks and window embeddings...")
-                logger.info("[TUNER] Loading blocks CSV: %s", blocks_path)
-                blocks = _load_blocks_from_csv(blocks_path)
-                st.write(f"✓ Loaded {len(blocks)} blocks from CSV")
-                logger.info("[TUNER] Loaded %d blocks", len(blocks))
-
-                # SRP mutual-jaccard pipeline (same as elsa analyze)
-                pre_n = len(blocks)
-                blocks = _stitch_blocks(blocks, max_gap=1)
-                st.write(f"✓ Stitching: {pre_n} → {len(blocks)} blocks after merging adjacents")
-                logger.info("[TUNER] Stitching reduced blocks: %d -> %d", pre_n, len(blocks))
-
-                override_path = Path(windows_override) if windows_override.strip() else None
-                window_lookup, lookup_meta = _create_window_lookup_from_config(cfg_path, override_path)
-                if window_lookup is None:
-                    st.error("Failed to create window embedding lookup. Set 'Windows parquet override' to your windows.parquet.")
-                    return
-                st.write(f"✓ Windows parquet: {lookup_meta.get('path','?')} | rows={lookup_meta.get('n_windows',0)} | emb_dim={lookup_meta.get('emb_dim',0)}")
-                logger.info("[TUNER] Windows parquet: %s rows=%s emb_dim=%s", lookup_meta.get('path'), lookup_meta.get('n_windows'), lookup_meta.get('emb_dim'))
-
-                # Quick coverage check over a sample of window IDs from blocks
-                sample_ids = []
-                for b in blocks:
-                    sample_ids.extend(b.query_windows[:2])
-                    sample_ids.extend(b.target_windows[:2])
-                    if len(sample_ids) >= 400:
-                        break
-                found = sum(1 for wid in sample_ids if window_lookup(wid) is not None)
-                st.write(f"Coverage check: {found}/{len(sample_ids)} sampled window IDs found in embeddings")
-                logger.info("[TUNER] Coverage check: %d/%d", found, len(sample_ids))
-
-                st.write(f"Clustering {len(blocks)} blocks with updated parameters (mutual_jaccard)…")
-                from elsa.analyze.cluster_mutual_jaccard import cluster_blocks_jaccard
-                t0 = time.time()
-                assignments = cluster_blocks_jaccard(blocks, window_lookup, cfg)
-                dt = time.time() - t0
-                st.write(f"✓ Clustering finished in {dt:.2f}s")
-                logger.info("[TUNER] clustering finished in %.2fs", dt)
-
-                if not assignments:
-                    st.error("Re-clustering produced no assignments.")
-                    return
-                from collections import Counter
-                ctr = Counter([cl for cl in assignments.values() if cl and cl > 0])
-                st.write(f"Found {len(ctr)} clusters (non-sink). Top sizes: {sorted(ctr.values(), reverse=True)[:10]}")
-                logger.info("[TUNER] clusters=%d top_sizes=%s", len(ctr), sorted(ctr.values(), reverse=True)[:10])
-
-                # Optional expansion
-                if enable_expansion:
-                    st.write("Running expansion phase...")
-                    t1 = time.time()
-                    assignments = _expand_clusters(
-                        blocks, assignments, window_lookup,
-                        df_max=int(df_max), shingle_k=int(shingle_k),
-                        srp_bits=int(srp_bits), srp_bands=int(srp_bands), srp_band_bits=8, srp_seed=1337,
-                        tau_expand=float(tau_expand), tau_peer=float(tau_peer),
-                        m_peers=int(m_peers), M_expand=int(M_expand),
-                        max_added_per_cluster=int(max_added_per_cluster),
-                        allow_degree_relax=bool(allow_degree_relax), waves=int(waves)
-                    )
-                    dt1 = time.time() - t1
-                    ctr2 = Counter([cl for cl in assignments.values() if cl and cl > 0])
-                    st.write(f"✓ Expansion finished in {dt1:.2f}s → clusters: {len(ctr2)} (Top sizes: {sorted(ctr2.values(), reverse=True)[:10]})")
-                    logger.info("[TUNER] expansion finished in %.2fs clusters=%d", dt1, len(ctr2))
-
-                st.write("Updating genome browser database with new cluster assignments...")
-                _apply_cluster_assignments_to_db(assignments, Path(db_path))
-
-                status.update(label="✅ Re-clustering complete", state="complete")
-                st.success("Clusters updated. Reloading app...")
-                st.rerun()
-        except Exception as e:
-            st.error(f"Re-clustering failed: {e}")
-            logger.exception("Re-clustering error")
-
-
-def _load_blocks_from_csv(blocks_csv_path: Path):
-    """Load blocks from syntenic_blocks.csv and construct minimal block objects suitable for clustering.
-    Reconstruct matches by pairing query/target window IDs in order.
-    """
-    import pandas as pd
-    df = pd.read_csv(blocks_csv_path)
-    blocks = []
-
-    class _Match:
-        __slots__ = ("query_window_id", "target_window_id")
-        def __init__(self, q, t):
-            self.query_window_id = q
-            self.target_window_id = t
-
-    class _Block:
-        def __init__(self, idx, row):
-            self.id = int(row['block_id']) if 'block_id' in row else idx
-            qws = str(row.get('query_windows_json', '') or '')
-            tws = str(row.get('target_windows_json', '') or '')
-            self.query_windows = [w for w in qws.split(';') if w]
-            self.target_windows = [w for w in tws.split(';') if w]
-            n = min(len(self.query_windows), len(self.target_windows))
-            self.matches = [_Match(self.query_windows[i], self.target_windows[i]) for i in range(n)]
-            self.alignment_length = n
-            self.identity = float(row.get('identity', 0.0) or 0.0)
-            self.chain_score = float(row.get('score', 0.0) or 0.0)
-            # Optional strand if available
-            self.strand = 1
-            # For stitching
-            self.query_locus = row.get('query_locus', '')
-            self.target_locus = row.get('target_locus', '')
-            self.q_start = int(row.get('query_window_start')) if not pd.isna(row.get('query_window_start')) else None
-            self.q_end = int(row.get('query_window_end')) if not pd.isna(row.get('query_window_end')) else None
-            self.t_start = int(row.get('target_window_start')) if not pd.isna(row.get('target_window_start')) else None
-            self.t_end = int(row.get('target_window_end')) if not pd.isna(row.get('target_window_end')) else None
-
-    for idx, row in df.iterrows():
-        blocks.append(_Block(idx, row))
-    return blocks
-
-
-def _stitch_blocks(blocks: List, max_gap: int = 1) -> List:
-    """Stitch adjacent blocks from the same query/target locus pair if window ranges are contiguous/overlapping.
-
-    Args:
-        blocks: list of _Block objects loaded from CSV
-        max_gap: maximum allowed gap (in window indices) between blocks to stitch
-    Returns:
-        New list of stitched _Block objects
-    """
-    # Group by (query_locus, target_locus)
-    from collections import defaultdict
-    groups = defaultdict(list)
-    for b in blocks:
-        key = (b.query_locus, b.target_locus)
-        groups[key].append(b)
-
-    # Local lightweight match class for reconstructed matches
-    class _Match:
-        __slots__ = ("query_window_id", "target_window_id")
-        def __init__(self, q, t):
-            self.query_window_id = q
-            self.target_window_id = t
-
-    stitched = []
-    for key, blist in groups.items():
-        # Sort by query start (fallback to window index from first query window)
-        def start_key(b):
-            return b.q_start if b.q_start is not None else (int(b.query_windows[0].split('_')[-1]) if b.query_windows else 0)
-        blist.sort(key=start_key)
-
-        current = None
-        for b in blist:
-            if current is None:
-                current = b
-                continue
-            # Determine adjacency on both query and target ranges
-            q_adj = (current.q_end is not None and b.q_start is not None and b.q_start <= (current.q_end + max_gap))
-            t_adj = (current.t_end is not None and b.t_start is not None and b.t_start <= (current.t_end + max_gap))
-            if q_adj and t_adj:
-                # Stitch: merge windows and ranges
-                current.query_windows = list(dict.fromkeys(current.query_windows + b.query_windows))
-                current.target_windows = list(dict.fromkeys(current.target_windows + b.target_windows))
-                n = min(len(current.query_windows), len(current.target_windows))
-                current.matches = [
-                    _Match(current.query_windows[i], current.target_windows[i]) for i in range(n)
-                ]
-                current.alignment_length = n
-                # Update ranges
-                if current.q_start is not None and b.q_start is not None:
-                    current.q_start = min(current.q_start, b.q_start)
-                else:
-                    current.q_start = current.q_start or b.q_start
-                if current.q_end is not None and b.q_end is not None:
-                    current.q_end = max(current.q_end, b.q_end)
-                else:
-                    current.q_end = current.q_end or b.q_end
-                if current.t_start is not None and b.t_start is not None:
-                    current.t_start = min(current.t_start, b.t_start)
-                else:
-                    current.t_start = current.t_start or b.t_start
-                if current.t_end is not None and b.t_end is not None:
-                    current.t_end = max(current.t_end, b.t_end)
-                else:
-                    current.t_end = current.t_end or b.t_end
-                # Combine scores conservatively (take max)
-                current.chain_score = max(current.chain_score, b.chain_score)
-                current.identity = max(current.identity, b.identity)
-            else:
-                stitched.append(current)
-                current = b
-        if current is not None:
-            stitched.append(current)
-
-    # Preserve blocks in groups with missing locus info
-    anon = [b for b in blocks if (b.query_locus, b.target_locus) not in groups]
-    return stitched + anon
-
-
-def _create_window_lookup_from_config(config_path: Path, windows_override: Optional[Path] = None):
-    """Create a window embedding lookup from ELSA config and manifest.
-    Returns a callable window_id -> np.ndarray or None on failure.
-    """
-    try:
-        from elsa.params import load_config
-        from elsa.manifest import ELSAManifest
-        import pandas as pd
-        import numpy as np
-
-        # Use explicit path only; default to ../elsa_index/shingles/windows.parquet relative to repo.
-        _default = Path(__file__).resolve().parent.parent / "elsa_index/shingles/windows.parquet"
-        windows_path = Path(windows_override) if windows_override else _default
-        if not windows_path.exists():
-            logger.error(f"Windows parquet not found at: {windows_path}")
-            return None
-        windows_df = pd.read_parquet(windows_path)
-        emb_cols = [c for c in windows_df.columns if c.startswith('emb_')]
-        lookup = {}
-        for _, row in windows_df.iterrows():
-            win_id = f"{row['sample_id']}_{row['locus_id']}_{int(row['window_idx'])}"
-            lookup[win_id] = np.array([row[c] for c in emb_cols])
-
-        def _lookup_fn(window_id: str):
-            return lookup.get(window_id)
-
-        meta = {"path": str(windows_path), "n_windows": len(windows_df), "emb_dim": len(emb_cols)}
-        return _lookup_fn, meta
-    except Exception as e:
-        logger.error(f"Failed to create window lookup: {e}")
-        return None
-
-
-def _apply_cluster_assignments_to_db(assignments: Dict[int, int], db_path: Path):
-    """Apply new cluster assignments to the genome_browser.db without re-ingesting all data."""
-    conn = sqlite3.connect(db_path)
-    try:
-        cur = conn.cursor()
-        # Reset cluster assignments and clusters
-        cur.execute("DELETE FROM cluster_assignments")
-        cur.execute("DELETE FROM clusters")
-
-        # Build cluster sizes
-        cluster_sizes: Dict[int, int] = {}
-        for block_id, cl in assignments.items():
-            if cl is None or cl == 0:
-                continue
-            cluster_sizes[cl] = cluster_sizes.get(cl, 0) + 1
-
-        # Insert clusters with minimal info
-        for cl, size in sorted(cluster_sizes.items()):
-            cur.execute(
-                """
-                INSERT INTO clusters (cluster_id, size, consensus_length, consensus_score, diversity,
-                                      representative_query, representative_target, cluster_type)
-                VALUES (?, ?, NULL, NULL, NULL, NULL, NULL, 'unknown')
-                """,
-                (int(cl), int(size))
-            )
-
-        # Insert cluster assignments
-        rows = [(int(bid), int(cl)) for bid, cl in assignments.items() if cl and cl > 0]
-        if rows:
-            cur.executemany("INSERT INTO cluster_assignments (block_id, cluster_id) VALUES (?, ?)", rows)
-
-        # Update syntenic_blocks.cluster_id based on assignments
-        cur.execute(
-            """
-            UPDATE syntenic_blocks
-            SET cluster_id = COALESCE((SELECT ca.cluster_id FROM cluster_assignments ca WHERE ca.block_id = syntenic_blocks.block_id), 0)
-            """
-        )
-        conn.commit()
-    finally:
-        conn.close()
 
 
 def _build_comparative_json(block_id: int, query_genes_df: pd.DataFrame, target_genes_df: pd.DataFrame, cos_threshold: float = 0.95) -> Dict:
@@ -4861,114 +4493,6 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
     components.html(html, height=height+20)
 
 
-def _compute_shingles_for_block(block, window_lookup, srp_bits, srp_bands, srp_band_bits, srp_seed, shingle_k):
-    # Build embedding matrix from query_windows
-    win_ids = block.query_windows if getattr(block, 'query_windows', None) else []
-    embs = []
-    for wid in win_ids:
-        emb = window_lookup(wid)
-        if emb is not None:
-            embs.append(emb)
-    if not embs:
-        return set()
-    import numpy as np
-    emb_mat = np.vstack(embs)
-    toks = srp_tokens(emb_mat, n_bits=srp_bits, n_bands=srp_bands, band_bits=srp_band_bits, seed=srp_seed)
-    return block_shingles(toks, k=shingle_k)
-
-
-def _expand_clusters(blocks, assignments, window_lookup,
-                     df_max, shingle_k, srp_bits, srp_bands, srp_band_bits, srp_seed,
-                     tau_expand, tau_peer, m_peers, M_expand,
-                     max_added_per_cluster, allow_degree_relax, waves):
-    # Build id->block map
-    id2block = {int(b.id): b for b in blocks}
-    # Build cluster map
-    from collections import defaultdict
-    clusters = defaultdict(list)
-    for bid, cl in assignments.items():
-        if cl and cl > 0:
-            clusters[int(cl)].append(int(bid))
-
-    # Compute shingles per block and df
-    shingle_map = {}
-    for b in blocks:
-        S = _compute_shingles_for_block(b, window_lookup, srp_bits, srp_bands, srp_band_bits, srp_seed, shingle_k)
-        shingle_map[int(b.id)] = S
-    # DF across all blocks
-    df = {}
-    for S in shingle_map.values():
-        for s in S:
-            df[s] = df.get(s, 0) + 1
-    # Filter shingles by df_max and build IDF
-    import math
-    N = max(1, len(shingle_map))
-    idf = {s: math.log(1.0 + (N / max(1, c))) for s, c in df.items()}
-
-    def filtered(S):
-        return {s for s in S if df.get(s, 0) <= df_max}
-
-    def wjacc(A, B):
-        if not A and not B:
-            return 1.0
-        inter = A & B
-        union = A | B
-        if not union:
-            return 0.0
-        inter_w = sum(idf.get(s, 0.0) for s in inter)
-        union_w = sum(idf.get(s, 0.0) for s in union)
-        return (inter_w / union_w) if union_w > 0 else 0.0
-
-    # Precompute filtered shingles
-    fsh = {bid: filtered(S) for bid, S in shingle_map.items()}
-
-    # One-wave expansion
-    added_total = 0
-    for cl_id, members in list(clusters.items()):
-        if not members:
-            continue
-        # Compute medoid by max sum of wJaccard
-        best_bid = None
-        best_sum = -1.0
-        for bid in members:
-            s = sum(wjacc(fsh[bid], fsh[x]) for x in members if x != bid)
-            if s > best_sum:
-                best_sum = s
-                best_bid = bid
-        medoid = best_bid if best_bid is not None else members[0]
-
-        # Candidate pool: unassigned/sink blocks
-        unassigned = [int(b.id) for b in blocks if (assignments.get(int(b.id), 0) == 0)]
-        accepted = 0
-        for bid in unassigned:
-            # Medoid score
-            mscore = wjacc(fsh[bid], fsh[medoid])
-            if mscore < tau_expand:
-                continue
-            # Low-DF anchors
-            low_df_count = sum(1 for s in (fsh[bid] & fsh[medoid]) if df.get(s, 0) <= max(1, df_max // 5))
-            if low_df_count < M_expand:
-                continue
-            # Peer support
-            peer_count = 0
-            for x in members:
-                if wjacc(fsh[bid], fsh[x]) >= tau_peer:
-                    peer_count += 1
-                    if peer_count >= m_peers:
-                        break
-            if peer_count < m_peers:
-                continue
-            # Accept
-            assignments[bid] = cl_id
-            clusters[cl_id].append(bid)
-            accepted += 1
-            added_total += 1
-            if max_added_per_cluster and accepted >= max_added_per_cluster:
-                break
-    logger.info("[TUNER] expansion added %d blocks", added_total)
-    return assignments
-
-# ----- Multi-locus clinker-like helpers (cluster-level) -----
 def _load_genes_for_region(genome_id: str, contig_id: str, start_bp: int, end_bp: int, pad_bp: int = 0) -> pd.DataFrame:
     conn = get_database_connection()
     s = max(0, int(start_bp) - int(pad_bp))
@@ -4979,13 +4503,18 @@ def _load_genes_for_region(genome_id: str, contig_id: str, start_bp: int, end_bp
         WHERE genome_id = ? AND contig_id = ? AND start_pos <= ? AND end_pos >= ?
         ORDER BY start_pos, end_pos
     """
-    return pd.read_sql_query(q, conn, params=[str(genome_id), str(contig_id), e, s])
+    logger.info(f"DEBUG _load_genes_for_region: genome_id={genome_id}, contig_id={contig_id}, start_bp={start_bp}, end_bp={end_bp}, query_range=[{s}, {e}]")
+    df = pd.read_sql_query(q, conn, params=[str(genome_id), str(contig_id), e, s])
+    logger.info(f"DEBUG _load_genes_for_region: returned {len(df)} genes")
+    return df
 
 
 def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: int = 6, use_embeddings: bool = False) -> Dict:
     import numpy as _np
+    logger.info(f"DEBUG _build_cluster_multiloc_json: cluster_id={cluster_id}, is_micro={is_micro}")
     # Choose representative regions
     regions = compute_display_regions_for_micro_cluster(cluster_id, gap_bp=1000, min_support=1) if is_micro else compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
+    logger.info(f"DEBUG _build_cluster_multiloc_json: got {len(regions) if regions else 0} regions")
     if not regions:
         try:
             logger.info(f"multiloc: no regions available (is_micro={is_micro}) for cluster {cluster_id}")
@@ -5593,8 +5122,19 @@ def _operon_consensus_from_blocks(cluster_id: int, min_cov: float) -> Tuple[List
     return tokens, pairs
 
 
-def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):
-    """Render stacked multi-locus clinker-like view connecting adjacent tracks by PFAM matches."""
+def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
+                        initial_tau: float = 0.85, show_labels: bool = True,
+                        scale_edge_width: bool = True):
+    """Render stacked multi-locus clinker-like view connecting adjacent tracks by PFAM matches.
+
+    Args:
+        data: Dict with 'loci' and 'edges' from _build_cluster_multiloc_json.
+        width: Fixed width (0 = responsive to container).
+        height: Component height in pixels.
+        initial_tau: Initial cosine similarity threshold for edge filtering.
+        show_labels: Whether to show cosine similarity labels on edges.
+        scale_edge_width: Whether to scale edge line width by similarity.
+    """
     import streamlit.components.v1 as components
     import json as _json
     if not data or not data.get('loci'):
@@ -5608,6 +5148,9 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):
       const margin = {top: 10, right: 20, bottom: 20, left: 20};
       const W = __WIDTH__;
       const H = __HEIGHT__;
+      const INITIAL_TAU = __INITIAL_TAU__;
+      const SHOW_LABELS = __SHOW_LABELS__;
+      const SCALE_EDGE_WIDTH = __SCALE_EDGE_WIDTH__;
       const baseInnerW = (W>0?W:container.clientWidth) - margin.left - margin.right;
       const minZoom = 0.6, maxZoom = 3.0;
       const rowH = 60;
@@ -5639,25 +5182,39 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):
       const controls = d3.select(container).append('div').style('margin','6px 0');
       let offsets = data.loci.map(() => 0);
       let flips = data.loci.map(() => false);
-      let tau = 0.90;
+      let tau = INITIAL_TAU;
+      let showLabels = SHOW_LABELS;
+      let scaleWidth = SCALE_EDGE_WIDTH;
       let view = d3.zoomIdentity.scale(1.25);
       controls.append('button').text('Reset alignment').on('click', () => { offsets = offsets.map(() => 0); redraw(); });
       controls.append('button').text('Reset view').style('margin-left','8px').on('click', () => { svg.transition().duration(150).call(zoomBehavior.transform, d3.zoomIdentity.scale(1.25)); });
       controls.append('button').text('Flip all to forward').style('margin-left','8px').on('click', () => { const refOri=rowOrientation(0); flips = flips.map((f,i)=> rowOrientation(i)===refOri?false:true); redraw(); });
       controls.append('button').text('Zoom -').style('margin-left','8px').on('click', () => { const k = Math.max(minZoom, +(view.k-0.1).toFixed(2)); svg.transition().duration(120).call(zoomBehavior.scaleTo, k); });
       controls.append('button').text('Zoom +').style('margin-left','4px').on('click', () => { const k = Math.min(maxZoom, +(view.k+0.1).toFixed(2)); svg.transition().duration(120).call(zoomBehavior.scaleTo, k); });
-      const zoomLbl = controls.append('span').style('margin-left','8px').style('color','#fff').text(() => ` (${(view.k).toFixed(2)}x)`);
-      controls.append('span').style('margin-left','12px').style('color','#fff').style('font-weight','600').text('Cosine τ:');
+      const zoomLbl = controls.append('span').style('margin-left','8px').style('color','#333').text(() => ` (${(view.k).toFixed(2)}x)`);
+      controls.append('span').style('margin-left','12px').style('color','#333').style('font-weight','600').text('Cosine \\u03C4:');
       const tauInput = controls.append('input')
-        .attr('type','range').attr('min','0.70').attr('max','0.99').attr('step','0.01').attr('value','0.90')
+        .attr('type','range').attr('min','0.50').attr('max','0.99').attr('step','0.01').attr('value', tau.toFixed(2))
         .on('input', function(){ tau=+this.value; tauLbl.text(` ${tau.toFixed(2)}`); drawEdges(); });
-      const tauLbl = controls.append('span').style('margin-left','6px').style('color','#fff').text(` ${tau.toFixed(2)}`);
+      const tauLbl = controls.append('span').style('margin-left','6px').style('color','#333').text(` ${tau.toFixed(2)}`);
+
+      // Label toggle (in-component, mirrors the Streamlit checkbox)
+      const labelChk = controls.append('label').style('margin-left','16px').style('color','#333').style('cursor','pointer');
+      labelChk.append('input').attr('type','checkbox').property('checked', showLabels)
+        .on('change', function(){ showLabels = this.checked; drawEdges(); });
+      labelChk.append('span').style('margin-left','4px').text('Labels');
+
+      // Width-scaling toggle
+      const widthChk = controls.append('label').style('margin-left','12px').style('color','#333').style('cursor','pointer');
+      widthChk.append('input').attr('type','checkbox').property('checked', scaleWidth)
+        .on('change', function(){ scaleWidth = this.checked; drawEdges(); });
+      widthChk.append('span').style('margin-left','4px').text('Scale width');
 
       // Legend (edge meaning)
-      const legend = d3.select(container).append('div').style('margin','4px 0 8px 0').style('font','12px sans-serif').style('color','#fff');
+      const legend = d3.select(container).append('div').style('margin','4px 0 8px 0').style('font','12px sans-serif').style('color','#333');
       function legendItem(color, label){
         const item = legend.append('span').style('display','inline-flex').style('align-items','center').style('margin-right','14px');
-        item.append('span').style('display','inline-block').style('width','18px').style('height','3px').style('margin-right','6px').style('background', color).style('border','1px solid rgba(255,255,255,0.5)');
+        item.append('span').style('display','inline-block').style('width','18px').style('height','3px').style('margin-right','6px').style('background', color).style('border','1px solid rgba(0,0,0,0.2)');
         item.append('span').text(label);
       }
       legendItem('#2c7bb6', 'Cosine-only');
@@ -5666,12 +5223,12 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):
       try {
         const emb = (data.embeddings || {});
         const msg = (emb.enabled && emb.mapped>0) ? `Embeddings ON (${emb.mapped.toLocaleString()} genes mapped)` : 'Embeddings OFF (PFAM-only)';
-        legend.append('span').style('margin-left','14px').style('opacity','0.85').text(msg);
+        legend.append('span').style('margin-left','14px').style('opacity','0.7').text(msg);
       } catch (e) {}
       legend.append('div')
         .style('margin-top','6px')
-        .style('opacity','0.85')
-        .text('Tips: drag background to pan • wheel or buttons to zoom • click a gene to center homologs • double-click a gene or click row label to flip • drag a row to nudge • use Cosine τ to filter edges.');
+        .style('opacity','0.7')
+        .text('Tips: drag background to pan | wheel or buttons to zoom | click a gene to center homologs | double-click a gene or click row label to flip | drag a row to nudge | use Cosine \\u03C4 to filter edges.');
 
       function rowOrientation(idx){ const genes = data.loci[idx].genes||[]; let s=0; genes.forEach(g=>{ s += (g.strand>=0?1:-1); }); return s>=0?1:-1; }
 
@@ -5749,6 +5306,34 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):
         return local + offsets[rowIdx];
       }
 
+      function edgeColor(d) {
+        const hasCos=(d.cos!=null&&isFinite(d.cos));
+        const hasPf=(+d.pf||0)>0;
+        if (hasCos && hasPf) return '#7b3294';
+        if (hasCos) return '#2c7bb6';
+        if (hasPf) return '#fdae61';
+        return '#999';
+      }
+      function edgeWidth(d) {
+        if (!scaleWidth) return 1.2;
+        const hasCos = (d.cos != null && isFinite(d.cos));
+        if (hasCos) {
+          // Scale from 0.8 at tau to 3.5 at 1.0
+          const t = Math.max(0, Math.min(1, (+d.cos - 0.5) / 0.5));
+          return 0.8 + t * 2.7;
+        }
+        return 1.0;
+      }
+      function edgeOpacity(d) {
+        const hasCos = (d.cos != null && isFinite(d.cos));
+        if (hasCos) {
+          // Scale opacity: 0.35 at threshold, 0.9 at 1.0
+          const t = Math.max(0, Math.min(1, (+d.cos - 0.5) / 0.5));
+          return 0.35 + t * 0.55;
+        }
+        return 0.5;
+      }
+
       function drawEdges(){
         const allEdges = data.edges || [];
         const E = allEdges.filter(ed => {
@@ -5757,20 +5342,70 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):
           // keep PFAM-only edges regardless of tau if they have overlap
           return ((+ed.pf || 0) > 0);
         });
+
+        // --- Edge lines ---
         const esel = edgesG.selectAll('line.edge').data(E, d=> `${d.a}-${d.b}-${d.ai}-${d.bi}`);
         esel.exit().remove();
         const enter = esel.enter().append('line').attr('class','edge')
-          .attr('stroke', d => { const hasCos=(d.cos!=null&&isFinite(d.cos)); const hasPf=(+d.pf||0)>0; if (hasCos && hasPf) return '#7b3294'; if (hasCos) return '#2c7bb6'; if (hasPf) return '#fdae61'; return '#999'; })
-          .attr('stroke-width', 1.0)
-          .on('mouseover', function(event, ed){ d3.select(this).attr('stroke-width',2.0); const cos=(ed.cos!=null&&isFinite(ed.cos))?(+ed.cos).toFixed(3):'n/a'; const pf=(ed.pf!=null)?ed.pf:'n/a'; tooltip.style('display','block').html('Match: '+(ed.type||'pfam')+'<br>Cosine: '+cos+'<br>PFAM overlap: '+pf); })
-          .on('mousemove', function(event){ const cw=container.clientWidth||0,ch=container.clientHeight||0; const tw=tooltip.node().offsetWidth||0, th=tooltip.node().offsetHeight||0; const pt=d3.pointer(event,container); let left=pt[0]+12, top=pt[1]+12; if (left+tw>cw-4) left=Math.max(4, pt[0]-12-tw); if (top+th>ch-4) top=Math.max(4, pt[1]-12-th); tooltip.style('left', left+'px').style('top', top+'px'); })
-          .on('mouseout', function(){ d3.select(this).attr('stroke-width',1.0); tooltip.style('display','none'); });
+          .on('mouseover', function(event, ed){
+            d3.select(this).attr('stroke-width', edgeWidth(ed) + 1.5);
+            const cos=(ed.cos!=null&&isFinite(ed.cos))?(+ed.cos).toFixed(3):'n/a';
+            const pf=(ed.pf!=null)?ed.pf:'n/a';
+            tooltip.style('display','block').html(
+              '<b>Match: '+(ed.type||'pfam')+'</b><br>'+
+              'Cosine: '+cos+'<br>'+
+              'PFAM overlap: '+pf
+            );
+          })
+          .on('mousemove', function(event){
+            const cw=container.clientWidth||0,ch=container.clientHeight||0;
+            const tw=tooltip.node().offsetWidth||0, th=tooltip.node().offsetHeight||0;
+            const pt=d3.pointer(event,container);
+            let left=pt[0]+12, top=pt[1]+12;
+            if (left+tw>cw-4) left=Math.max(4, pt[0]-12-tw);
+            if (top+th>ch-4) top=Math.max(4, pt[1]-12-th);
+            tooltip.style('left', left+'px').style('top', top+'px');
+          })
+          .on('mouseout', function(event, ed){
+            d3.select(this).attr('stroke-width', edgeWidth(ed));
+            tooltip.style('display','none');
+          });
         enter.merge(esel)
-          .attr('stroke', d => { const hasCos=(d.cos!=null&&isFinite(d.cos)); const hasPf=(+d.pf||0)>0; if (hasCos && hasPf) return '#7b3294'; if (hasCos) return '#2c7bb6'; if (hasPf) return '#fdae61'; return '#999'; })
+          .attr('stroke', edgeColor)
+          .attr('stroke-width', edgeWidth)
+          .attr('stroke-opacity', edgeOpacity)
           .attr('x1', d => geneCenterX(d.a, d.ai))
           .attr('y1', d => d.a*(rowH+rowGap) + rowH/2)
           .attr('x2', d => geneCenterX(d.b, d.bi))
           .attr('y2', d => d.b*(rowH+rowGap) + rowH/2);
+
+        // --- Similarity labels on edges ---
+        // Only show labels for edges that have a cosine value
+        const labelData = showLabels ? E.filter(d => d.cos != null && isFinite(d.cos)) : [];
+        const lsel = edgesG.selectAll('text.edge-label').data(labelData, d=> `lbl-${d.a}-${d.b}-${d.ai}-${d.bi}`);
+        lsel.exit().remove();
+        const lEnter = lsel.enter().append('text').attr('class','edge-label')
+          .attr('font-size','9px')
+          .attr('font-family','monospace')
+          .attr('text-anchor','middle')
+          .attr('pointer-events','none')
+          // White outline behind text for readability over edges/genes
+          .attr('stroke','#fff')
+          .attr('stroke-width','3px')
+          .attr('paint-order','stroke');
+        lEnter.merge(lsel)
+          .attr('x', d => (geneCenterX(d.a, d.ai) + geneCenterX(d.b, d.bi)) / 2)
+          .attr('y', d => {
+            const y1 = d.a*(rowH+rowGap) + rowH/2;
+            const y2 = d.b*(rowH+rowGap) + rowH/2;
+            // Small vertical jitter based on gene index to reduce overlap
+            const jitter = ((d.ai * 7 + d.bi * 3) % 5 - 2) * 3;
+            return (y1 + y2) / 2 - 2 + jitter;
+          })
+          .attr('fill', edgeColor)
+          .attr('font-weight', 'bold')
+          .attr('opacity', 0.9)
+          .text(d => (+d.cos).toFixed(2));
       }
 
       function redraw(){
@@ -5866,7 +5501,14 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500):
       rowsG.forEach((row, idx) => attachRowDrag(d3.select(row), idx));
     </script>
     """
-    html = html.replace('__DATA__', _json.dumps(data)).replace('__WIDTH__', str(width if width else 0)).replace('__HEIGHT__', str(height))
+    html = (html
+        .replace('__DATA__', _json.dumps(data))
+        .replace('__WIDTH__', str(width if width else 0))
+        .replace('__HEIGHT__', str(height))
+        .replace('__INITIAL_TAU__', str(float(initial_tau)))
+        .replace('__SHOW_LABELS__', 'true' if show_labels else 'false')
+        .replace('__SCALE_EDGE_WIDTH__', 'true' if scale_edge_width else 'false')
+    )
     components.html(html, height=height)
 
 

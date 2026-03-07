@@ -11,8 +11,6 @@ from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, asdict
 from datetime import datetime
 
-import numpy as np
-import pandas as pd
 
 from .params import ELSAConfig
 

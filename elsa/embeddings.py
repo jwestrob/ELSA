@@ -5,13 +5,11 @@ Supports ESM2 and ProtT5 models with GPU acceleration and CPU fallback.
 """
 
 import torch
-import torch.nn as nn
-from typing import List, Dict, Any, Iterator, Tuple, Optional, Union
+from typing import List, Iterator, Optional
 from pathlib import Path
 from dataclasses import dataclass
 import numpy as np
 from Bio import SeqIO
-from Bio.SeqRecord import SeqRecord
 import logging
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, MofNCompleteColumn
 from rich.console import Console
@@ -67,13 +65,13 @@ class DeviceManager:
         """Select optimal device for inference."""
         if preference == "auto":
             if torch.backends.mps.is_available():
-                console.print(f"✓ MPS available, using GPU acceleration")
+                console.print("✓ MPS available, using GPU acceleration")
                 return torch.device("mps")
             elif torch.cuda.is_available():
-                console.print(f"✓ CUDA available, using GPU acceleration")
+                console.print("✓ CUDA available, using GPU acceleration")
                 return torch.device("cuda")
             else:
-                console.print(f"⚠️  Using CPU (no GPU available)")
+                console.print("⚠️  Using CPU (no GPU available)")
                 return torch.device("cpu")
         else:
             console.print(f"✓ Using specified device: {preference}")
@@ -94,17 +92,23 @@ class DeviceManager:
         # Rough memory estimates (in GB per 1000 AA)
         memory_per_1k_aa = {
             "esm2_t12": 0.5,   # ESM2-35M (smaller model)
-            "esm2_t33": 1.2,   # ESM2-650M  
-            "prot_t5": 2.0     # ProtT5-XL
+            "esm2_t33": 1.2,   # ESM2-650M
+            "prot_t5": 2.0,    # ProtT5-XL
+            "glm2_150m": 0.6,  # gLM2-150M
+            "glm2_650m": 1.5,  # gLM2-650M
         }
         
         base_memory = memory_per_1k_aa.get(model_size, 1.5)
         max_aa = int((self.max_memory_gb * 0.8) / base_memory * 1000)
         
-        # MPS has issues with very large batches - limit to smaller sizes
+        # MPS has issues with very large batches - limit based on model
         if self.device.type == "mps":
-            max_aa = min(max_aa, 4000)  # Very conservative limit for MPS
-            
+            # gLM2 and smaller models can handle larger batches
+            if model_size.startswith("glm2") or model_size == "esm2_t12":
+                max_aa = min(max_aa, 16000)
+            else:
+                max_aa = min(max_aa, 4000)  # Conservative limit for larger models
+
         return min(target_aa, max_aa)
 
 
@@ -397,6 +401,154 @@ class ProtT5Embedder:
         return embeddings
 
 
+class GLM2Embedder:
+    """gLM2 genomic language model embedder.
+
+    gLM2 is trained on genomic context (proteins + intergenic DNA + strand info).
+    This embedder supports two modes:
+
+    1. Simple mode (default): Each protein is embedded individually with strand indicator
+       Format: "<+>MALTK..." or "<->MALTK..."
+
+    2. Context mode (future): Full genomic context with intergenic sequences
+       Format: "<+>CDS1<+>aattgg<->CDS2..."
+
+    Reference: https://github.com/TattaBio/gLM2
+    """
+
+    def __init__(self, config: PLMConfig, device_manager: DeviceManager):
+        self.config = config
+        self.device_manager = device_manager
+        self.model = None
+        self.tokenizer = None
+        self._load_model()
+
+    def _load_model(self):
+        """Load gLM2 model and tokenizer from HuggingFace."""
+        from transformers import AutoModel, AutoTokenizer
+
+        model_name = {
+            "glm2_650m": "tattabio/gLM2_650M",
+            "glm2_150m": "tattabio/gLM2_150M"
+        }.get(self.config.model)
+
+        if not model_name:
+            raise ValueError(f"Unknown gLM2 model: {self.config.model}")
+
+        console.print(f"Loading {model_name} on {self.device_manager.device}...")
+
+        # Load model with trust_remote_code (required for gLM2)
+        # Note: MPS doesn't support bfloat16 well, use float16 instead
+        if self.config.fp16:
+            if self.device_manager.device.type == "cuda":
+                dtype = torch.bfloat16  # CUDA supports bfloat16
+            else:
+                dtype = torch.float16   # MPS/CPU use float16
+        else:
+            dtype = torch.float32
+
+        console.print(f"  Using dtype: {dtype}")
+        self.model = AutoModel.from_pretrained(
+            model_name,
+            torch_dtype=dtype,
+            trust_remote_code=True
+        )
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name,
+            trust_remote_code=True
+        )
+
+        self.model = self.model.to(self.device_manager.device)
+        self.model.eval()
+
+        # Get embedding dimension from model config
+        # gLM2 uses a transformer encoder - check hidden size
+        if hasattr(self.model.config, 'hidden_size'):
+            self.embedding_dim = self.model.config.hidden_size
+        elif hasattr(self.model.config, 'd_model'):
+            self.embedding_dim = self.model.config.d_model
+        else:
+            # Fallback: run a test forward pass
+            test_tokens = self.tokenizer(["<+>M"], return_tensors='pt')
+            with torch.no_grad():
+                test_out = self.model(
+                    test_tokens.input_ids.to(self.device_manager.device),
+                    output_hidden_states=True
+                )
+                self.embedding_dim = test_out.last_hidden_state.shape[-1]
+
+        console.print(f"✓ Loaded {model_name} (dim={self.embedding_dim})")
+
+    def _format_sequence(self, seq: ProteinSequence) -> str:
+        """Format protein sequence for gLM2 input.
+
+        gLM2 expects strand indicators before each element:
+        - <+> for positive strand
+        - <-> for negative strand
+        """
+        strand_token = "<+>" if seq.strand == 1 else "<->"
+        return f"{strand_token}{seq.sequence}"
+
+    def embed_batch(self, sequences: List[ProteinSequence]) -> List[ProteinEmbedding]:
+        """Embed a batch of protein sequences using gLM2."""
+        if not sequences:
+            return []
+
+        # Format sequences with strand indicators
+        formatted_seqs = [self._format_sequence(seq) for seq in sequences]
+
+        # Tokenize (gLM2 tokenizer handles the strand tokens)
+        encodings = self.tokenizer(
+            formatted_seqs,
+            return_tensors='pt',
+            padding=True,
+            truncation=True,
+            max_length=4096  # gLM2's context length
+        )
+
+        # Move to device
+        input_ids = encodings.input_ids.to(self.device_manager.device)
+        attention_mask = encodings.attention_mask.to(self.device_manager.device)
+
+        # Forward pass
+        with torch.no_grad():
+            outputs = self.model(
+                input_ids,
+                attention_mask=attention_mask,
+                output_hidden_states=True
+            )
+
+        # Extract embeddings
+        hidden_states = outputs.last_hidden_state
+        embeddings = []
+
+        for i, seq in enumerate(sequences):
+            # Get attention mask for this sequence
+            mask = attention_mask[i].bool()
+
+            # Mean pooling over valid tokens (excluding padding)
+            seq_hidden = hidden_states[i][mask]
+            pooled = seq_hidden.mean(dim=0).cpu().float().numpy()
+
+            embedding = ProteinEmbedding(
+                sample_id=seq.sample_id,
+                gene_id=seq.gene_id,
+                embedding=pooled,
+                sequence_length=seq.length
+            )
+            embeddings.append(embedding)
+
+        # Clean up GPU memory
+        if self.device_manager.device.type in ['cuda', 'mps']:
+            del input_ids, attention_mask, outputs, hidden_states
+            if self.device_manager.device.type == 'cuda':
+                torch.cuda.empty_cache()
+            elif self.device_manager.device.type == 'mps':
+                torch.mps.empty_cache()
+
+        return embeddings
+
+
 class ProteinEmbedder:
     """Main protein embedding interface with model switching."""
     
@@ -408,17 +560,19 @@ class ProteinEmbedder:
         # CLEAR GPU/CPU STATUS
         device_type = self.device_manager.device.type.upper()
         if device_type == "MPS":
-            console.print(f"🚀 [bold green]USING GPU (Apple Metal)[/bold green]")
+            console.print("🚀 [bold green]USING GPU (Apple Metal)[/bold green]")
         elif device_type == "CUDA":
-            console.print(f"🚀 [bold green]USING GPU (NVIDIA CUDA)[/bold green]")
+            console.print("🚀 [bold green]USING GPU (NVIDIA CUDA)[/bold green]")
         else:
-            console.print(f"🐌 [bold red]USING CPU (SLOW!)[/bold red]")
+            console.print("🐌 [bold red]USING CPU (SLOW!)[/bold red]")
         
         # Initialize the appropriate embedder
         if config.model.startswith("esm2"):
             self.embedder = ESM2Embedder(config, self.device_manager, window_size, overlap, aggregation)
         elif config.model == "prot_t5":
             self.embedder = ProtT5Embedder(config, self.device_manager)
+        elif config.model.startswith("glm2"):
+            self.embedder = GLM2Embedder(config, self.device_manager)
         else:
             raise ValueError(f"Unsupported model: {config.model}")
         
@@ -453,13 +607,39 @@ class ProteinEmbedder:
         if current_batch:
             yield current_batch
     
-    def embed_sequences(self, sequences: List[ProteinSequence]) -> Iterator[ProteinEmbedding]:
-        """Embed protein sequences in optimized batches."""
+    def embed_sequences(self, sequences: List[ProteinSequence],
+                        progress_file: Optional[Path] = None) -> Iterator[ProteinEmbedding]:
+        """Embed protein sequences in optimized batches.
+
+        Args:
+            sequences: List of protein sequences to embed
+            progress_file: Optional path to write progress updates (for background monitoring)
+        """
         total_sequences = len(sequences)
         total_aa = sum(seq.length for seq in sequences)
-        
+
         console.print(f"Embedding {total_sequences:,} proteins ({total_aa:,} amino acids)")
-        
+
+        # Set up progress file for background monitoring
+        if progress_file is None:
+            progress_file = Path("elsa_embed_progress.txt")
+
+        def write_progress(done: int, total: int, aa_done: int, aa_total: int, aa_per_sec: int):
+            """Write progress to file for background monitoring."""
+            try:
+                pct = (done / total * 100) if total > 0 else 0
+                with open(progress_file, 'w') as f:
+                    f.write(f"Proteins: {done:,}/{total:,} ({pct:.1f}%)\n")
+                    f.write(f"Amino acids: {aa_done:,}/{aa_total:,}\n")
+                    f.write(f"Speed: {aa_per_sec:,} AA/sec\n")
+                    if aa_per_sec > 0:
+                        remaining_aa = aa_total - aa_done
+                        eta_sec = remaining_aa / aa_per_sec
+                        eta_min = eta_sec / 60
+                        f.write(f"ETA: {eta_min:.1f} min\n")
+            except Exception:
+                pass  # Don't fail on progress file issues
+
         with Progress(
             SpinnerColumn(),
             TextColumn("[progress.description]{task.description}"),
@@ -468,34 +648,46 @@ class ProteinEmbedder:
             TextColumn("[blue]{task.fields[aa_per_sec]} AA/sec"),
             console=console
         ) as progress:
-            
+
             task = progress.add_task(
-                "Embedding proteins...", 
+                "Embedding proteins...",
                 total=total_sequences,
                 aa_per_sec=0
             )
-            
+
             processed_aa = 0
-            
+            processed_seqs = 0
+            last_progress_write = 0
+
             for batch in self.create_batches(sequences):
                 batch_aa = sum(seq.length for seq in batch)
-                
+
                 # Embed batch
                 embeddings = self.embedder.embed_batch(batch)
-                
+
                 # Yield embeddings
                 for embedding in embeddings:
                     yield embedding
-                
+
                 # Update progress
                 processed_aa += batch_aa
+                processed_seqs += len(batch)
                 aa_per_sec = int(processed_aa / (progress.get_time() + 1e-6))
-                
+
                 progress.update(
-                    task, 
+                    task,
                     advance=len(batch),
                     aa_per_sec=f"{aa_per_sec:,}"
                 )
+
+                # Write progress file every 5% or 10 seconds worth of work
+                if processed_seqs - last_progress_write >= total_sequences // 20 or processed_seqs == total_sequences:
+                    write_progress(processed_seqs, total_sequences, processed_aa, total_aa, aa_per_sec)
+                    last_progress_write = processed_seqs
+
+        # Final progress update
+        write_progress(total_sequences, total_sequences, total_aa, total_aa, 0)
+        console.print(f"Progress file: {progress_file}")
 
 
 def parse_fasta_to_proteins(fasta_path: Path, sample_id: str) -> List[ProteinSequence]:

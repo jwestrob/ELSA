@@ -4,15 +4,12 @@ Integrates PFAM annotation into the main ELSA pipeline.
 """
 
 import subprocess
-import tempfile
-import shutil
 import json
 import time
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any
 import pandas as pd
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 import logging
 
 console = Console()
@@ -298,7 +295,7 @@ def run_pfam_annotation_pipeline(proteins_dir: Path, output_dir: Path, threads: 
         with open(results_file, 'w') as f:
             json.dump(results, f, indent=2)
         
-        console.print(f"[green]PFAM annotation completed![/green]")
+        console.print("[green]PFAM annotation completed![/green]")
         console.print(f"  • {len(protein_files)} genomes processed")
         console.print(f"  • {num_hits:,} total domain hits found")
         console.print(f"  • Runtime: {runtime:.1f} seconds")

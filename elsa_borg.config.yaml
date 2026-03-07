@@ -1,0 +1,30 @@
+data:
+  allow_overwrite: false
+  work_dir: ./elsa_index_borg
+
+ingest:
+  gene_caller: prodigal
+  keep_partial: false
+  min_cds_aa: 60
+  prodigal_mode: single
+
+plm:
+  batch_amino_acids: 16000
+  device: auto
+  fp16: true
+  l2_normalize: true
+  model: esm2_t12
+  project_to_D: 256
+
+system:
+  jobs: auto
+  rng_seed: 17
+
+chain:
+  hnsw_k: 50
+  similarity_threshold: 0.8
+  max_gap_genes: 2
+  min_chain_size: 2
+  gap_penalty_scale: 0.0
+  jaccard_tau: 0.3
+  min_genome_support: 2

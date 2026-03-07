@@ -1,0 +1,35 @@
+# Cross-Species Benchmark: ProtT5-XL-U50
+# Same 30 genomes as ESM2 run, different PLM for model concordance comparison
+# Output kept separate from ESM2 results
+
+data:
+  work_dir: ./benchmarks/elsa_output/cross_species_prott5
+
+ingest:
+  gene_caller: prodigal
+  run_pfam: false
+
+plm:
+  model: prot_t5
+  device: auto
+  batch_amino_acids: 4000  # ProtT5 is larger, smaller batches
+  project_to_D: 0          # Raw embeddings (no PCA), same as canonical ESM2 run
+  l2_normalize: true
+  fp16: true
+
+chain:
+  hnsw_k: 50
+  hnsw_m: 32
+  hnsw_ef_construction: 200
+  hnsw_ef_search: 128
+  similarity_threshold: 0.85
+  max_gap_genes: 2
+  min_chain_size: 2
+  jaccard_tau: 0.3
+  mutual_k: 3
+  df_max: 200
+  min_genome_support: 2
+
+system:
+  rng_seed: 42
+  jobs: auto

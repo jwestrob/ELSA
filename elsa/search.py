@@ -1,309 +1,257 @@
 """
-ELSA search system for finding syntenic blocks.
+Locus-level search: find syntenic blocks matching a query locus.
 
-Implements query parsing, index searching, result ranking, and collinear chaining
-to find syntenic blocks similar to a query locus.
+Reuses the same seed -> chain -> extract pipeline but with a single
+query locus against the full indexed database.
 """
+
+from __future__ import annotations
+
+import pickle
+from pathlib import Path
+from typing import List, Any, Tuple, Dict, Set
 
 import numpy as np
 import pandas as pd
-import json
-from pathlib import Path
-from typing import Dict, List, Any, Optional, Tuple, Set
-from dataclasses import dataclass, asdict
-import re
-import logging
-from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 
-from .params import ELSAConfig
-from .manifest import ELSAManifest
-from .indexing import MinHashLSH, SignedRandomProjection
-
-console = Console()
-logger = logging.getLogger(__name__)
+from .seed import GeneAnchor
+from .chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains
 
 
-@dataclass
-class QueryLocus:
-    """A query locus specification."""
-    sample_id: str
-    contig_id: str
-    start: Optional[int] = None
-    end: Optional[int] = None
-    
-    @classmethod
-    def parse(cls, locus_str: str) -> 'QueryLocus':
-        """Parse locus string like 'sample:contig:start-end' or 'sample:contig'."""
-        parts = locus_str.split(':')
-        
-        if len(parts) < 2:
-            raise ValueError(f"Invalid locus format: {locus_str}. Expected 'sample:contig' or 'sample:contig:start-end'")
-        
-        sample_id = parts[0]
-        contig_id = parts[1]
-        
-        start, end = None, None
-        if len(parts) == 3:
-            # Parse start-end range
-            range_part = parts[2]
-            if '-' in range_part:
-                start_str, end_str = range_part.split('-', 1)
-                start = int(start_str)
-                end = int(end_str)
+def embed_query_proteins(
+    proteins: list,
+    plm_config: Any,
+    work_dir: str,
+    query_name: str = "query",
+) -> pd.DataFrame:
+    """Embed query proteins on-the-fly and return a DataFrame for search_locus().
+
+    Embeds proteins with the configured PLM, optionally projects through
+    PCA (when ``plm_config.project_to_D > 0``), and L2-normalizes to
+    match the indexed embeddings.
+
+    Args:
+        proteins: Parsed ProteinSequence objects to embed.
+        plm_config: PLMConfig instance (model, device, etc.).
+        work_dir: Path to the ELSA index work directory.
+        query_name: Label used as ``sample_id`` (defaults to "query").
+
+    Returns:
+        DataFrame with columns expected by :func:`search_locus`.
+    """
+    from .embeddings import ProteinEmbedder, AggregationStrategy
+
+    work_path = Path(work_dir)
+
+    # Embed proteins
+    embedder = ProteinEmbedder(
+        plm_config,
+        window_size=1024,
+        overlap=256,
+        aggregation=AggregationStrategy.MAX_POOL,
+    )
+    raw_embeddings = list(embedder.embed_sequences(proteins))
+    emb_matrix = np.array([e.embedding for e in raw_embeddings])
+
+    # Project through PCA only when projection is enabled
+    project_to_D = getattr(plm_config, 'project_to_D', 0)
+    if project_to_D and project_to_D > 0:
+        pca_path = work_path / "ingest" / "pca_model.pkl"
+        scaler_path = work_path / "ingest" / "scaler.pkl"
+
+        if not pca_path.exists():
+            raise FileNotFoundError(
+                f"PCA model not found at {pca_path}. Run 'elsa embed' first."
+            )
+
+        with open(pca_path, "rb") as fh:
+            pca_model = pickle.load(fh)
+
+        scaler = None
+        if scaler_path.exists():
+            with open(scaler_path, "rb") as fh:
+                scaler = pickle.load(fh)
+
+        if scaler is not None:
+            emb_matrix = scaler.transform(emb_matrix)
+        projected = pca_model.transform(emb_matrix)
+    else:
+        # No PCA — use raw embeddings directly
+        projected = emb_matrix
+
+    # L2-normalize to match indexed embeddings
+    if getattr(plm_config, 'l2_normalize', True):
+        norms = np.linalg.norm(projected, axis=1, keepdims=True)
+        projected = projected / (norms + 1e-8)
+
+    # Build DataFrame matching search_locus() expectations
+    dim = projected.shape[1]
+    data = {
+        "sample_id": [p.sample_id for p in proteins],
+        "contig_id": [p.contig_id for p in proteins],
+        "gene_id": [p.gene_id for p in proteins],
+        "start": [p.start for p in proteins],
+        "end": [p.end for p in proteins],
+        "strand": [p.strand for p in proteins],
+    }
+    for i in range(dim):
+        data[f"emb_{i:03d}"] = projected[:, i]
+
+    df = pd.DataFrame(data)
+    df = df.sort_values(["contig_id", "start"])
+    df["position_index"] = df.groupby(["sample_id", "contig_id"]).cumcount()
+
+    return df
+
+
+def search_locus(
+    query_genes: pd.DataFrame,
+    index_tuple: Any,
+    target_genes: pd.DataFrame,
+    target_embeddings: np.ndarray,
+    k: int = 50,
+    similarity_threshold: float = 0.85,
+    max_gap: int = 2,
+    min_chain_size: int = 2,
+    gap_penalty_scale: float = 0.0,
+    max_results: int = 50,
+) -> List[ChainedBlock]:
+    """
+    Search for syntenic blocks matching a query locus.
+
+    Args:
+        query_genes: DataFrame for query locus with gene_id, sample_id, contig_id,
+                     position_index, and emb_* columns
+        index_tuple: Pre-built (type, index) from build_gene_index
+        target_genes: Full target gene DataFrame (same schema as query)
+        target_embeddings: (n_target, dim) array of target gene embeddings
+        k: Number of neighbors to search
+        similarity_threshold: Minimum cosine similarity
+        max_gap: Maximum gap in chain
+        min_chain_size: Minimum anchors per block
+        gap_penalty_scale: Concave gap penalty
+        max_results: Maximum blocks to return
+
+    Returns:
+        List of ChainedBlock objects sorted by chain_score descending
+    """
+    index_type, index = index_tuple
+    if index is None:
+        return []
+
+    emb_cols = [c for c in query_genes.columns if c.startswith("emb_")]
+    if not emb_cols:
+        return []
+
+    query_embeddings = query_genes[emb_cols].values.astype(np.float32)
+    n_query = len(query_genes)
+
+    # Normalize query embeddings
+    norms = np.linalg.norm(query_embeddings, axis=1, keepdims=True)
+    query_normalized = query_embeddings / (norms + 1e-9)
+
+    # Query the index
+    k_query = min(k + 10, len(target_genes))
+
+    if index_type == "hnsw":
+        labels, distances = index.knn_query(query_normalized, k=k_query)
+        similarities = 1 - distances
+    elif index_type == "faiss":
+        similarities, labels = index.search(query_normalized.astype(np.float32), k_query)
+        labels = labels.astype(np.intp)
+    else:  # sklearn
+        distances, labels = index.kneighbors(query_normalized, n_neighbors=k_query)
+        similarities = 1 - distances
+
+    # Build target lookup arrays
+    t_genome_arr = target_genes['sample_id'].values
+    t_contig_arr = target_genes['contig_id'].values
+    t_pos_arr = target_genes['position_index'].values
+    t_gene_id_arr = target_genes['gene_id'].values
+    t_strand_arr = target_genes['strand'].values if 'strand' in target_genes.columns else None
+
+    q_genome_arr = query_genes['sample_id'].values
+    q_contig_arr = query_genes['contig_id'].values
+    q_pos_arr = query_genes['position_index'].values
+    q_gene_id_arr = query_genes['gene_id'].values
+    q_strand_arr = query_genes['strand'].values if 'strand' in query_genes.columns else None
+
+    query_genome = str(q_genome_arr[0])
+
+    # Collect cross-genome anchors from query to targets
+    anchors: List[GeneAnchor] = []
+    seen: Set[Tuple[int, int]] = set()
+
+    for qi in range(n_query):
+        for j_pos in range(k_query):
+            tj = int(labels[qi, j_pos])
+            if tj < 0:  # FAISS returns -1 when no result found
+                continue
+            sim = float(similarities[qi, j_pos])
+
+            if sim < similarity_threshold:
+                continue
+
+            if str(t_genome_arr[tj]) == query_genome:
+                continue
+
+            pair_key = (qi, tj)
+            if pair_key in seen:
+                continue
+            seen.add(pair_key)
+
+            # Compute relative orientation
+            if q_strand_arr is not None and t_strand_arr is not None:
+                sq = int(q_strand_arr[qi]) if q_strand_arr[qi] != 0 else 1
+                st = int(t_strand_arr[tj]) if t_strand_arr[tj] != 0 else 1
+                rel_orient = 1 if sq == st else -1
             else:
-                start = int(range_part)
-                end = start
-        
-        return cls(sample_id=sample_id, contig_id=contig_id, start=start, end=end)
+                rel_orient = 0
 
+            anchor = GeneAnchor(
+                query_idx=int(q_pos_arr[qi]),
+                target_idx=int(t_pos_arr[tj]),
+                query_genome=query_genome,
+                target_genome=str(t_genome_arr[tj]),
+                query_contig=str(q_contig_arr[qi]),
+                target_contig=str(t_contig_arr[tj]),
+                query_gene_id=str(q_gene_id_arr[qi]),
+                target_gene_id=str(t_gene_id_arr[tj]),
+                similarity=sim,
+                orientation=rel_orient,
+            )
+            anchors.append(anchor)
 
-@dataclass
-class WindowMatch:
-    """A match between query and target windows."""
-    query_window_id: str
-    target_window_id: str
-    similarity_score: float
-    method: str  # 'discrete' or 'continuous'
+    if not anchors:
+        return []
 
+    # Group by target contig
+    groups: Dict[Tuple[str, str], List[GeneAnchor]] = {}
+    for anchor in anchors:
+        key = (anchor.target_genome, anchor.target_contig)
+        groups.setdefault(key, []).append(anchor)
 
-@dataclass 
-class SyntenicBlock:
-    """A syntenic block found by collinear chaining."""
-    query_locus: str
-    target_locus: str
-    query_windows: List[str]
-    target_windows: List[str]
-    matches: List[WindowMatch]
-    chain_score: float
-    alignment_length: int
-    identity: float
+    # Chain each group
+    all_blocks: List[ChainedBlock] = []
+    block_id = 0
 
+    for key, group_anchors in groups.items():
+        if len(group_anchors) < min_chain_size:
+            continue
 
-class IndexLoader:
-    """Load and manage search indexes."""
-    
-    def __init__(self, manifest: ELSAManifest):
-        self.manifest = manifest
-        self.discrete_index = None
-        self.continuous_index = None
-        
-    def load_indexes(self):
-        """Load discrete and continuous indexes from disk."""
-        console.print("Loading search indexes...")
-        
-        # Load discrete index
-        discrete_path = Path(self.manifest.data['artifacts']['indexes/discrete_index.json']['file_path'])
-        with open(discrete_path) as f:
-            discrete_data = json.load(f)
-        
-        # Reconstruct discrete index
-        self.discrete_index = MinHashLSH.__new__(MinHashLSH)
-        self.discrete_index.num_hashes = discrete_data['config']['num_hashes']
-        self.discrete_index.bands = discrete_data['config']['bands']
-        self.discrete_index.rows = discrete_data['config']['rows']
-        self.discrete_index.hash_coeffs_a = np.array(discrete_data['hash_coeffs_a'])
-        self.discrete_index.hash_coeffs_b = np.array(discrete_data['hash_coeffs_b'])
-        self.discrete_index.buckets = discrete_data['buckets']
-        
-        # Load continuous index
-        continuous_path = Path(self.manifest.data['artifacts']['indexes/continuous_index.json']['file_path'])
-        with open(continuous_path) as f:
-            continuous_data = json.load(f)
-        
-        # Reconstruct continuous index
-        self.continuous_index = SignedRandomProjection.__new__(SignedRandomProjection)
-        self.continuous_index.embedding_dim = continuous_data['config']['embedding_dim']
-        self.continuous_index.num_bits = continuous_data['config']['num_bits']
-        self.continuous_index.projection_matrix = np.array(continuous_data['projection_matrix'])
-        self.continuous_index.index = continuous_data['index']
-        
-        console.print(f"✓ Loaded discrete index: {len(self.discrete_index.buckets)} bands")
-        console.print(f"✓ Loaded continuous index: {len(self.continuous_index.index)} patterns")
+        chains = chain_anchors_lis(
+            group_anchors,
+            max_gap=max_gap,
+            min_size=min_chain_size,
+            gap_penalty_scale=gap_penalty_scale,
+        )
+        if not chains:
+            continue
 
+        blocks = extract_nonoverlapping_chains(chains, block_id_start=block_id)
+        all_blocks.extend(blocks)
+        block_id += len(blocks)
 
-class QueryProcessor:
-    """Process query loci and extract windows."""
-    
-    def __init__(self, manifest: ELSAManifest):
-        self.manifest = manifest
-        self.windows_df = None
-        
-    def load_windows(self):
-        """Load window data for query processing."""
-        windows_path = Path(self.manifest.data['artifacts']['windows']['path'])
-        self.windows_df = pd.read_parquet(windows_path)
-        console.print(f"Loaded {len(self.windows_df):,} windows for search")
-        
-    def find_query_windows(self, query_locus: QueryLocus) -> List[Tuple[str, np.ndarray]]:
-        """Find windows that match the query locus specification."""
-        if self.windows_df is None:
-            self.load_windows()
-        
-        # Filter by sample and locus
-        mask = (self.windows_df['sample_id'] == query_locus.sample_id)
-        
-        if query_locus.contig_id:
-            # Check if contig_id is contained in locus_id
-            mask = mask & (self.windows_df['locus_id'].str.contains(query_locus.contig_id, regex=False))
-        
-        matching_windows = self.windows_df[mask]
-        
-        if len(matching_windows) == 0:
-            raise ValueError(f"No windows found for query locus: {query_locus}")
-        
-        # Extract embeddings
-        emb_cols = [col for col in self.windows_df.columns if col.startswith('emb_')]
-        
-        query_windows = []
-        for _, row in matching_windows.iterrows():
-            window_id = f"{row['sample_id']}_{row['locus_id']}_{row['window_idx']}"
-            embedding = np.array([row[col] for col in emb_cols])
-            query_windows.append((window_id, embedding))
-        
-        console.print(f"Found {len(query_windows)} query windows")
-        return query_windows
-
-
-class SimilaritySearcher:
-    """Search indexes for similar windows."""
-    
-    def __init__(self, index_loader: IndexLoader):
-        self.index_loader = index_loader
-        
-    def search_discrete(self, query_windows: List[Tuple[str, np.ndarray]], 
-                       max_candidates: int = 1000) -> List[WindowMatch]:
-        """Search discrete index for similar windows."""
-        matches = []
-        
-        for query_window_id, embedding in query_windows:
-            candidates = self.index_loader.discrete_index.query(embedding, max_candidates)
-            
-            for candidate_id in candidates:
-                match = WindowMatch(
-                    query_window_id=query_window_id,
-                    target_window_id=candidate_id,
-                    similarity_score=1.0,  # LSH doesn't provide similarity scores
-                    method='discrete'
-                )
-                matches.append(match)
-        
-        return matches
-    
-    def search_continuous(self, query_windows: List[Tuple[str, np.ndarray]], 
-                         max_hamming_dist: int = 10) -> List[WindowMatch]:
-        """Search continuous index for similar windows."""
-        matches = []
-        
-        for query_window_id, embedding in query_windows:
-            candidates = self.index_loader.continuous_index.query(embedding, max_hamming_dist)
-            
-            for candidate_id, hamming_dist in candidates:
-                # Convert Hamming distance to similarity score (0-1)
-                similarity = 1.0 - (hamming_dist / self.index_loader.continuous_index.num_bits)
-                
-                match = WindowMatch(
-                    query_window_id=query_window_id,
-                    target_window_id=candidate_id,
-                    similarity_score=similarity,
-                    method='continuous'
-                )
-                matches.append(match)
-        
-        return matches
-
-
-class CollinearChainer:
-    """Chain individual window matches into syntenic blocks."""
-    
-    def __init__(self, config: ELSAConfig):
-        self.config = config
-        
-    def chain_matches(self, matches: List[WindowMatch]) -> List[SyntenicBlock]:
-        """Apply collinear chaining to find syntenic blocks."""
-        # NOTE: This simplified implementation is being deprecated.
-        # For production use, the sophisticated chaining logic in analysis.py
-        # should be used with _filter_positional_conservation() and local gain.
-        
-        # Group matches by target locus for basic chaining
-        target_groups = {}
-        for match in matches:
-            # Extract target locus from window ID 
-            target_parts = match.target_window_id.split('_')
-            if len(target_parts) >= 2:
-                target_locus = f"{target_parts[0]}_{target_parts[1]}"
-            else:
-                target_locus = target_parts[0]
-                
-            if target_locus not in target_groups:
-                target_groups[target_locus] = []
-            target_groups[target_locus].append(match)
-        
-        blocks = []
-        for target_locus, locus_matches in target_groups.items():
-            if len(locus_matches) >= 2:  # Require at least 2 windows for a block
-                block = SyntenicBlock(
-                    query_locus="query",  # TODO: Extract from matches
-                    target_locus=target_locus,
-                    query_windows=[m.query_window_id for m in locus_matches],
-                    target_windows=[m.target_window_id for m in locus_matches],
-                    matches=locus_matches,
-                    chain_score=sum(m.similarity_score for m in locus_matches),
-                    alignment_length=len(locus_matches),
-                    identity=sum(m.similarity_score for m in locus_matches) / len(locus_matches)
-                )
-                blocks.append(block)
-        
-        # Sort by chain score (best first)
-        blocks.sort(key=lambda b: b.chain_score, reverse=True)
-        return blocks
-
-
-class SearchEngine:
-    """Main search engine coordinating all components."""
-    
-    def __init__(self, config: ELSAConfig, manifest: ELSAManifest):
-        self.config = config
-        self.manifest = manifest
-        self.index_loader = IndexLoader(manifest)
-        self.query_processor = QueryProcessor(manifest)
-        self.similarity_searcher = SimilaritySearcher(self.index_loader)
-        self.collinear_chainer = CollinearChainer(config)
-        
-    def search(self, query_locus_str: str, max_results: int = 50) -> List[SyntenicBlock]:
-        """Execute complete search pipeline."""
-        console.print(f"[bold blue]ELSA Search Pipeline[/bold blue]")
-        
-        # Parse query
-        query_locus = QueryLocus.parse(query_locus_str)
-        console.print(f"Query: {query_locus.sample_id}:{query_locus.contig_id}")
-        
-        # Load indexes
-        self.index_loader.load_indexes()
-        
-        # Find query windows
-        query_windows = self.query_processor.find_query_windows(query_locus)
-        
-        # Search indexes
-        console.print("\n[bold]Searching indexes...[/bold]")
-        discrete_matches = self.similarity_searcher.search_discrete(query_windows)
-        continuous_matches = self.similarity_searcher.search_continuous(query_windows)
-        
-        all_matches = discrete_matches + continuous_matches
-        console.print(f"Found {len(all_matches)} total window matches")
-        
-        # Chain into syntenic blocks
-        console.print("\n[bold]Chaining into syntenic blocks...[/bold]")
-        blocks = self.collinear_chainer.chain_matches(all_matches)
-        console.print(f"Found {len(blocks)} syntenic blocks")
-        
-        return blocks[:max_results]
-
-
-if __name__ == "__main__":
-    # Test search functionality
-    print("ELSA Search System")
-    
-    # Test query parsing
-    query = QueryLocus.parse("sample1:contig_1:1000-2000")
-    print(f"Parsed query: {query}")
+    # Sort by score and limit
+    all_blocks.sort(key=lambda b: -b.chain_score)
+    return all_blocks[:max_results]

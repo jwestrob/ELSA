@@ -2262,9 +2262,23 @@ def display_cluster_card_with_async_summary(stats):
         except Exception as e:
             logger.debug(f"Consensus preview error for cluster {stats.cluster_id}: {e}")
 
+        # Architecture badge (slot-based structural summary)
+        try:
+            try:
+                from architecture import find_schema_dir, load_architecture_summary, render_architecture_badge
+            except ImportError:
+                from genome_browser.architecture import find_schema_dir, load_architecture_summary, render_architecture_badge
+            _schema_dir = find_schema_dir()
+            if _schema_dir:
+                _arch_df = load_architecture_summary(str(_schema_dir))
+                if _arch_df is not None:
+                    _arch_row = _arch_df[_arch_df["cluster_id"] == int(stats.cluster_id)]
+                    if not _arch_row.empty:
+                        st.markdown(render_architecture_badge(_arch_row.iloc[0]), unsafe_allow_html=True)
+        except Exception:
+            pass
+
         # Multi-dimensional stats summary
-        # DEBUG: Log stats values
-        logger.info(f"DEBUG cluster_card stats: cluster_id={stats.cluster_id}, consensus_length={stats.consensus_length}, avg_identity={stats.avg_identity}, diversity={stats.diversity}, unique_genes={stats.unique_genes}, unique_contigs={stats.unique_contigs}")
         col1, col2 = st.columns([1, 1])
         with col1:
             st.write(f"**Alignments:** {stats.total_alignments:,} blocks")
@@ -3044,6 +3058,16 @@ def display_cluster_detail():
                 )
         else:
             st.info("No stable PFAM core detected for this cluster with current settings.")
+
+    # Architecture panel (slot-based structural summary)
+    try:
+        from architecture import render_architecture_panel, find_schema_dir
+    except ImportError:
+        from genome_browser.architecture import render_architecture_panel, find_schema_dir
+    schema_dir = find_schema_dir()
+    if schema_dir:
+        with st.expander("🏗 Neighborhood Architecture (Slot Analysis)", expanded=True):
+            render_architecture_panel(str(schema_dir), int(cluster_id))
 
     # Clinker-like multi-locus alignment (always visible)
     st.markdown("---")

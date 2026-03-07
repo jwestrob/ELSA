@@ -174,6 +174,15 @@ def run_chain_pipeline(
     if db_path is not None and Path(db_path).exists():
         _write_to_database(blocks_df, clusters_df, db_path)
 
+    # Run cluster architecture schema pipeline
+    try:
+        from ..schema import run_schema_pipeline
+        schema_dir = output_dir / "schema"
+        run_schema_pipeline(blocks_df, genes_df, schema_dir)
+    except Exception as e:
+        print(f"[Schema] Warning: architecture schema failed: {e}",
+              file=sys.stderr, flush=True)
+
     return ChainSummary(
         num_genes=n_genes,
         num_anchors=sum(b.n_anchors for b in blocks),

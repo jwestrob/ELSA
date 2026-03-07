@@ -7,7 +7,9 @@ and writes output CSVs + optional SQLite.
 
 from __future__ import annotations
 
+from collections import defaultdict
 from dataclasses import dataclass
+import json
 from pathlib import Path
 from typing import Optional, List
 import sqlite3
@@ -19,7 +21,7 @@ import pandas as pd
 from ..index import build_gene_index
 from ..seed import find_cross_genome_anchors, group_anchors_by_contig_pair
 from ..chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains
-from ..cluster import cluster_blocks_by_overlap
+from ..cluster import cluster_blocks_by_overlap, merge_contained_clusters
 
 
 @dataclass
@@ -130,13 +132,20 @@ def run_chain_pipeline(
         min_genome_support=config.min_genome_support,
     )
 
-    n_real_clusters = len([c for c in block_to_cluster.values() if c > 0])
-    n_singletons = sum(1 for c in block_to_cluster.values() if c == 0)
+    n_before = len(set(c for c in block_to_cluster.values() if c > 0))
 
-    print(f"[MicroChain] Formed {n_real_clusters} clusters ({n_singletons} singletons)",
+    # Merge clusters whose genomic footprints are contained within larger clusters
+    block_to_cluster = merge_contained_clusters(block_to_cluster, blocks)
+
+    n_real_clusters = len(set(c for c in block_to_cluster.values() if c > 0))
+    n_singletons = sum(1 for c in block_to_cluster.values() if c == 0)
+    n_merged = n_before - n_real_clusters
+
+    print(f"[MicroChain] Formed {n_before} clusters, merged {n_merged} contained → {n_real_clusters} final ({n_singletons} singletons)",
           file=sys.stderr, flush=True)
 
     # Build output
+    block_map = {b.block_id: b for b in blocks}
     block_rows = []
     for block in blocks:
         block_rows.append({
@@ -157,6 +166,39 @@ def run_chain_pipeline(
 
     blocks_df = pd.DataFrame(block_rows)
     blocks_df["n_genes"] = blocks_df["n_anchors"]
+
+    # Rebuild clusters_df from post-merge block_to_cluster
+    cluster_rows = []
+    clusters_by_id = defaultdict(list)
+    for bid, cid in block_to_cluster.items():
+        if cid > 0:
+            clusters_by_id[cid].append(bid)
+
+    for cid, member_bids in sorted(clusters_by_id.items()):
+        genomes = set()
+        total_genes = 0
+        genes_by_genome = defaultdict(list)
+        for bid in member_bids:
+            block = block_map[bid]
+            genomes.add(block.query_genome)
+            genomes.add(block.target_genome)
+            for idx in range(block.query_start, block.query_end + 1):
+                genes_by_genome[block.query_genome].append(f"{block.query_contig}:{idx}")
+            for idx in range(block.target_start, block.target_end + 1):
+                genes_by_genome[block.target_genome].append(f"{block.target_contig}:{idx}")
+            total_genes += block.n_anchors
+        mean_chain_len = total_genes / len(member_bids) if member_bids else 0.0
+        cluster_rows.append({
+            "cluster_id": cid,
+            "size": len(member_bids),
+            "genome_support": len(genomes),
+            "mean_chain_length": round(mean_chain_len, 2),
+            "genes_json": json.dumps({g: list(set(ids)) for g, ids in genes_by_genome.items()}),
+        })
+
+    clusters_df = pd.DataFrame(cluster_rows) if cluster_rows else pd.DataFrame(
+        columns=["cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"]
+    )
 
     blocks_path = output_dir / "micro_chain_blocks.csv"
     clusters_path = output_dir / "micro_chain_clusters.csv"

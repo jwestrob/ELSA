@@ -158,6 +158,101 @@ def cluster_blocks_by_overlap(
     return block_to_cluster, clusters_df
 
 
+def merge_contained_clusters(
+    block_to_cluster: Dict[int, int],
+    blocks: List[ChainedBlock],
+    containment_threshold: float = 0.8,
+) -> Dict[int, int]:
+    """Merge clusters whose genomic footprints are largely contained in a larger cluster.
+
+    For each pair of clusters, restrict to genomes they share, then check if
+    the smaller cluster's gene positions on those shared genomes are >= threshold
+    contained within the larger cluster. This prevents clusters with blocks in
+    many extra genomes from avoiding the merge.
+
+    Returns updated block_to_cluster mapping.
+    """
+    block_map = {b.block_id: b for b in blocks}
+
+    # Build per-cluster gene footprints and per-genome footprints
+    cluster_genes: Dict[int, Set[Tuple[str, str, int]]] = defaultdict(set)
+    cluster_genomes: Dict[int, Dict[str, Set[Tuple[str, int]]]] = defaultdict(lambda: defaultdict(set))
+    for bid, cid in block_to_cluster.items():
+        if cid == 0:
+            continue
+        block = block_map[bid]
+        for idx in range(block.query_start, block.query_end + 1):
+            cluster_genes[cid].add((block.query_genome, block.query_contig, idx))
+            cluster_genomes[cid][block.query_genome].add((block.query_contig, idx))
+        for idx in range(block.target_start, block.target_end + 1):
+            cluster_genes[cid].add((block.target_genome, block.target_contig, idx))
+            cluster_genomes[cid][block.target_genome].add((block.target_contig, idx))
+
+    if not cluster_genes:
+        return block_to_cluster
+
+    # Sort by footprint size descending — process largest first
+    sorted_cids = sorted(cluster_genes, key=lambda c: len(cluster_genes[c]), reverse=True)
+
+    # Track merges: child -> parent
+    merge_map: Dict[int, int] = {}
+
+    def resolve(c: int) -> int:
+        while c in merge_map:
+            c = merge_map[c]
+        return c
+
+    for i, small_cid in enumerate(sorted_cids):
+        small_cid_r = resolve(small_cid)
+        small_genes = cluster_genes[small_cid]
+        if not small_genes:
+            continue
+
+        for large_cid in sorted_cids[:i]:
+            large_cid_r = resolve(large_cid)
+            if large_cid_r == small_cid_r:
+                continue
+
+            large_genes = cluster_genes[large_cid_r]
+
+            # Check containment on shared genomes only
+            shared_genomes = set(cluster_genomes[small_cid_r]) & set(cluster_genomes[large_cid_r])
+            if not shared_genomes:
+                continue
+
+            small_shared = set()
+            large_shared = set()
+            for g in shared_genomes:
+                small_shared.update(cluster_genomes[small_cid_r][g])
+                large_shared.update(cluster_genomes[large_cid_r][g])
+
+            if not small_shared:
+                continue
+
+            overlap = len(small_shared & large_shared)
+            containment = overlap / len(small_shared)
+
+            if containment >= containment_threshold:
+                merge_map[small_cid_r] = large_cid_r
+                cluster_genes[large_cid_r] = large_genes | small_genes
+                # Merge per-genome footprints too
+                for g, positions in cluster_genomes[small_cid_r].items():
+                    cluster_genomes[large_cid_r][g].update(positions)
+                break
+
+    if not merge_map:
+        return block_to_cluster
+
+    # Apply merges
+    new_mapping = {}
+    for bid, cid in block_to_cluster.items():
+        if cid == 0:
+            new_mapping[bid] = 0
+        else:
+            new_mapping[bid] = resolve(cid)
+    return new_mapping
+
+
 def _mutual_top_k(edges_by_u: Dict[int, List[Tuple[int, float]]], k: int) -> Set[Tuple[int, int]]:
     """Return set of undirected edges that are mutual top-k by weight."""
     topk: Dict[int, Set[int]] = {}

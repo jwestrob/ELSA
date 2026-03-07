@@ -70,6 +70,10 @@ COLORS = {
     'pfam_domain': 'rgba(147, 112, 219, 0.8)',   # Medium slate blue
 }
 
+def _caption(text: str) -> None:
+    """Dark-mode-friendly caption: white text, 14px."""
+    st.markdown(f'<p style="font-size:14px;color:#ddd;margin:4px 0;">{text}</p>', unsafe_allow_html=True)
+
 @st.cache_resource
 def get_database_connection():
     """Get cached database connection."""
@@ -101,17 +105,29 @@ def load_gene_embeddings_df(parquet_path: Optional[str] = None) -> Tuple[Optiona
     here = Path(__file__).resolve()
     repo_root = here.parents[1]  # ELSA/
     candidates.extend([
-        # Borg-specific paths (check first since that's likely the active dataset)
-        Path('elsa_index_borg/ingest/genes.parquet'),
-        repo_root / 'elsa_index_borg/ingest/genes.parquet',
-        Path.cwd() / 'elsa_index_borg/ingest/genes.parquet',
-        Path.cwd().parent / 'elsa_index_borg/ingest/genes.parquet',
-        # Default elsa_index paths
+        # Default elsa_index paths (check first)
         Path('elsa_index/ingest/genes.parquet'),
         repo_root / 'elsa_index/ingest/genes.parquet',
         Path.cwd() / 'elsa_index/ingest/genes.parquet',
         Path.cwd().parent / 'elsa_index/ingest/genes.parquet',
+        # Borg-specific paths
+        Path('elsa_index_borg/ingest/genes.parquet'),
+        repo_root / 'elsa_index_borg/ingest/genes.parquet',
+        Path.cwd() / 'elsa_index_borg/ingest/genes.parquet',
+        Path.cwd().parent / 'elsa_index_borg/ingest/genes.parquet',
     ])
+    # Get DB contig IDs for validation
+    db_contigs = set()
+    try:
+        db_path = Path(__file__).resolve().parent / 'genome_browser.db'
+        if db_path.exists():
+            import sqlite3
+            _conn = sqlite3.connect(str(db_path))
+            db_contigs = {r[0] for r in _conn.execute("SELECT DISTINCT contig_id FROM contigs").fetchall()}
+            _conn.close()
+    except Exception:
+        pass
+
     tried = []
     for path in candidates:
         try:
@@ -119,6 +135,12 @@ def load_gene_embeddings_df(parquet_path: Optional[str] = None) -> Tuple[Optiona
             tried.append(str(p))
             if p.exists():
                 df = pd.read_parquet(p)
+                # Validate: parquet contig_ids should overlap with DB
+                if db_contigs and 'contig_id' in df.columns:
+                    pq_contigs = set(df['contig_id'].unique())
+                    if not (pq_contigs & db_contigs):
+                        logger.warning(f"Skipping {p}: no contig overlap with DB")
+                        continue
                 # Keep standard metadata if present
                 cols = df.columns.tolist()
                 emb_cols = [c for c in cols if c.startswith('emb_')]
@@ -127,6 +149,7 @@ def load_gene_embeddings_df(parquet_path: Optional[str] = None) -> Tuple[Optiona
                     if c in cols:
                         keep.append(c)
                 keep += emb_cols
+                logger.info(f"Loaded embeddings from {p} ({len(df)} genes)")
                 return df[keep], str(p)
         except Exception as e:
             logger.error(f"Error reading embeddings parquet {path}: {e}")
@@ -847,7 +870,7 @@ def create_sidebar_filters() -> Dict:
             share_url = f"{base_url}?tab={tab_names[min(tab_idx, 3)]}"
 
         st.code(share_url, language=None)
-        st.caption("Copy this URL to share or bookmark this view")
+        _caption("Copy this URL to share or bookmark this view")
 
     st.sidebar.divider()
 
@@ -1019,7 +1042,7 @@ def display_dashboard():
         }
 
         st.code(json.dumps(summary, indent=2), language='json')
-        st.caption("Copy this JSON for programmatic access to current database state")
+        _caption("Copy this JSON for programmatic access to current database state")
 
     # Block size distribution
     st.subheader("Block Size Distribution")
@@ -1268,7 +1291,7 @@ def display_block_explorer(filters: Dict):
                         import statistics as _st
                         agree = _st.mean([float(p['same_frac']) for p in sup])
                         status = 'strong' if agree >= 0.6 else ('mixed' if agree >= 0.4 else 'weak')
-                        st.caption(f"Directional consensus: {status} ({agree:.0%}) across adjacent token pairs")
+                        _caption(f"Directional consensus: {status} ({agree:.0%}) across adjacent token pairs")
                 else:
                     st.info("No PFAM consensus tokens could be derived for this block.")
             except Exception as e:
@@ -1395,78 +1418,78 @@ def display_genome_viewer():
         st.code(share_url, language=None)
     with nav_col3:
         # Block info
-        st.caption(f"Size: {block.get('length', 'N/A')} genes | Score: {block.get('score', 'N/A')}")
+        _caption(f"Size: {block.get('length', 'N/A')} genes | Score: {block.get('score', 'N/A')}")
     
-    # GPT-5 Analysis Section (full width at top)
-    st.divider()
-    st.subheader("🤖 GPT-5 Functional Analysis")
-    
-    # Initialize GPT analysis state
-    gpt_state_key = f"gpt_analysis_{block['block_id']}"
-    if gpt_state_key not in st.session_state:
-        st.session_state[gpt_state_key] = {"analyzed": False, "data": None, "report": None}
-    
-    col1, col2 = st.columns([1, 4])
-    with col1:
-        if st.button("🤖 Analyze with GPT-5", key="gpt_analysis_btn"):
-            with st.spinner("Analyzing syntenic block with GPT-5..."):
-                try:
-                    from gpt5_analyzer import analyze_syntenic_block
-                    analysis_data, gpt_report = analyze_syntenic_block(block['block_id'])
-                    
-                    if analysis_data and gpt_report:
-                        st.session_state[gpt_state_key] = {
-                            "analyzed": True,
-                            "data": analysis_data,
-                            "report": gpt_report
-                        }
-                        st.success("✅ GPT-5 analysis completed!")
-                    else:
-                        st.error("❌ Failed to generate GPT-5 analysis")
-                        if gpt_report:
-                            st.write(f"Error: {gpt_report}")
-                
-                except ImportError:
-                    st.error("❌ GPT-5 analyzer module not found")
-                except Exception as e:
-                    st.error(f"❌ Analysis failed: {str(e)}")
-                    logger.error(f"GPT analysis error: {e}")
-    
-    with col2:
-        if st.session_state[gpt_state_key]["analyzed"]:
-            st.info("GPT-5 analysis available below")
-        else:
-            st.info("Click 'Analyze with GPT-5' to generate functional analysis")
-    
-    # Display GPT analysis if available
-    if st.session_state[gpt_state_key]["analyzed"]:
-        analysis_data = st.session_state[gpt_state_key]["data"]
-        gpt_report = st.session_state[gpt_state_key]["report"]
-        
-        # Show block summary
-        with st.expander("📋 **Block Summary**", expanded=True):
-            col1, col2, col3 = st.columns(3)
-            with col1:
-                st.metric("Embedding Similarity", f"{analysis_data.identity:.3f}")
-            with col2:
-                st.metric("Score", f"{analysis_data.score:.2f}")
-            with col3:
-                st.metric("Length", f"{analysis_data.block_length} windows")
-            
-            st.write(f"**Query**: {analysis_data.query_locus.organism_name} ({analysis_data.query_locus.gene_count} genes)")
-            st.write(f"**Target**: {analysis_data.target_locus.organism_name} ({analysis_data.target_locus.gene_count} genes)")
-        
-        # Display GPT analysis
-        with st.expander("🧠 **GPT-5 Functional Analysis Report**", expanded=True):
-            st.markdown(gpt_report)
-        
-        # Download button
-        st.download_button(
-            label="📄 Download Analysis Report",
-            data=f"# GPT-5 Analysis Report - Block {block['block_id']}\n\n{gpt_report}",
-            file_name=f"gpt5_analysis_block_{block['block_id']}.md",
-            mime="text/markdown"
-        )
+    # AI Analysis Section — isolated as a fragment so clicking the button
+    # only reruns this section, not the entire page.
+    @st.fragment
+    def _ai_analysis_fragment():
+        st.divider()
+        st.subheader("AI Functional Analysis")
+
+        ai_state_key = f"ai_analysis_{block['block_id']}"
+        if ai_state_key not in st.session_state:
+            st.session_state[ai_state_key] = {"analyzed": False, "data": None, "report": None}
+
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            if st.button("Analyze with Claude", key="ai_analysis_btn"):
+                with st.spinner("Analyzing with Claude Sonnet 4.6..."):
+                    try:
+                        from gpt5_analyzer import analyze_syntenic_block
+                        analysis_data, report = analyze_syntenic_block(block['block_id'])
+
+                        if analysis_data and report:
+                            st.session_state[ai_state_key] = {
+                                "analyzed": True,
+                                "data": analysis_data,
+                                "report": report
+                            }
+                            st.success("Analysis completed!")
+                        else:
+                            st.error("Failed to generate analysis")
+                            if report:
+                                st.write(f"Error: {report}")
+
+                    except ImportError:
+                        st.error("Analyzer module not found")
+                    except Exception as e:
+                        st.error(f"Analysis failed: {str(e)}")
+                        logger.error(f"AI analysis error: {e}")
+
+        with col2:
+            if st.session_state[ai_state_key]["analyzed"]:
+                st.info("Analysis available below")
+            else:
+                st.info("Click 'Analyze with Claude' to generate functional analysis")
+
+        if st.session_state[ai_state_key]["analyzed"]:
+            analysis_data = st.session_state[ai_state_key]["data"]
+            report = st.session_state[ai_state_key]["report"]
+
+            with st.expander("**Block Summary**", expanded=True):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Embedding Similarity", f"{analysis_data.identity:.3f}")
+                with col2:
+                    st.metric("Score", f"{analysis_data.score:.2f}")
+                with col3:
+                    st.metric("Length", f"{analysis_data.block_length} windows")
+
+                st.write(f"**Query**: {analysis_data.query_locus.organism_name} ({analysis_data.query_locus.gene_count} genes)")
+                st.write(f"**Target**: {analysis_data.target_locus.organism_name} ({analysis_data.target_locus.gene_count} genes)")
+
+            with st.expander("**Functional Analysis Report**", expanded=True):
+                st.markdown(report)
+
+            st.download_button(
+                label="Download Analysis Report",
+                data=f"# Syntenic Block Analysis - Block {block['block_id']}\n\n{report}",
+                file_name=f"analysis_block_{block['block_id']}.md",
+                mime="text/markdown"
+            )
+
+    _ai_analysis_fragment()
     
     st.divider()
     
@@ -1642,7 +1665,7 @@ def display_genome_viewer():
                         't': len(comp_data.get('target_locus', [])),
                         'e': len(comp_data.get('edges', []))
                     }
-                    st.caption(f"Comparative data: q={_preview['q']} t={_preview['t']} edges={_preview['e']}")
+                    _caption(f"Comparative data: q={_preview['q']} t={_preview['t']} edges={_preview['e']}")
                     dbg = comp_data.get('debug', {}) or {}
                     with st.expander("Embedding debug", expanded=False):
                         st.write({
@@ -1659,11 +1682,11 @@ def display_genome_viewer():
                             import pandas as _pd
                             st.dataframe(_pd.DataFrame(top_list, columns=['query_gene','target_gene','cosine']).head(10))
                         else:
-                            st.caption("No top cosine pairs available (embeddings missing or empty subset)")
+                            _caption("No top cosine pairs available (embeddings missing or empty subset)")
                 except Exception:
                     pass
                 _render_comparative_d3_v2(comp_data, height=540)
-                st.caption("Legend: green=forward strand, red=reverse strand; thicker/stronger lines = higher homology; hover highlights linked genes and shows PFAM/length/strand.")
+                st.markdown('<p style="font-size:13px;color:#ccc;">Legend: <span style="color:#2ecc71;">&#9632;</span> forward strand · <span style="color:#e74c3c;">&#9632;</span> reverse strand · thicker lines = higher homology · hover for PFAM/length/strand</p>', unsafe_allow_html=True)
             except Exception as e:
                 st.error(f"Comparative view failed: {e}")
 
@@ -1679,7 +1702,7 @@ def load_cluster_stats():
 
 @st.cache_data
 def generate_cluster_summaries(cluster_stats):
-    """Generate GPT-4.1-mini summaries for all clusters."""
+    """Generate Claude Sonnet 4.6 summaries for all clusters."""
     try:
         from cluster_analyzer import ClusterAnalyzer
         analyzer = ClusterAnalyzer(DB_PATH)
@@ -2247,7 +2270,7 @@ def display_cluster_card_with_async_summary(stats):
                     agree = _st.mean([float(p['same_frac']) for p in supported]) if supported else 0.0
                     status = 'strong' if agree >= 0.6 else ('mixed' if agree >= 0.4 else 'weak')
                     core = sum(1 for c in con if float(c.get('coverage', 0.0)) >= 0.6)
-                    st.caption(f"Directional consensus: {status} ({agree:.0%}) • {core} core tokens")
+                    _caption(f"Directional consensus: {status} ({agree:.0%}) • {core} core tokens")
                 except Exception:
                     pass
             else:
@@ -2258,7 +2281,7 @@ def display_cluster_card_with_async_summary(stats):
                     status = dc.get('status', 'weak')
                     caveats = summary.get('caveats', [])
                     hint = summary.get('preview', {}).get('hint', '')
-                    st.caption(f"Directional consensus: {status} ({agree:.0%}) • {hint}{' • ' + ', '.join(caveats) if caveats else ''}")
+                    _caption(f"Directional consensus: {status} ({agree:.0%}) • {hint}{' • ' + ', '.join(caveats) if caveats else ''}")
         except Exception as e:
             logger.debug(f"Consensus preview error for cluster {stats.cluster_id}: {e}")
 
@@ -2295,57 +2318,35 @@ def display_cluster_card_with_async_summary(stats):
             if chart:
                 st.plotly_chart(chart, use_container_width=True, config={'displayModeBar': False}, key=f"domain_chart_{stats.cluster_id}")
         
-        # AI Summary (generated on demand with button)
-        summary_key = f"cluster_summary_{stats.cluster_id}"
-        
-        if summary_key not in st.session_state:
-            st.session_state[summary_key] = {"generated": False, "content": ""}
-        
-        # Show button to generate AI summary or loading state
-        loading_key = f"cluster_loading_{stats.cluster_id}"
-        
-        if not st.session_state[summary_key]["generated"]:
-            if st.session_state.get(loading_key, False):
-                # Show loading state and perform API call
-                with st.status("🤖 Generating AI analysis...", expanded=False) as status:
-                    try:
-                        from cluster_analyzer import ClusterAnalyzer
-                        analyzer = ClusterAnalyzer(DB_PATH)
-                        summary = analyzer.generate_cluster_summary(stats)
-                        
-                        # Update session state
-                        st.session_state[summary_key] = {"generated": True, "content": summary}
-                        st.session_state[loading_key] = False
-                        
-                        # Update status
-                        status.update(label="✅ Analysis complete!", state="complete")
-                        
-                    except Exception as e:
-                        st.session_state[summary_key] = {"generated": True, "content": f"Error generating summary: {e}"}
-                        st.session_state[loading_key] = False
-                        status.update(label="❌ Analysis failed!", state="error")
-                        
-                # Display content immediately after generation (whether success or error)
-                if st.session_state[summary_key]["generated"]:
-                    with st.expander("🤖 **AI Functional Summary**", expanded=True):
-                        content = st.session_state[summary_key]["content"]
-                        if content:
-                            st.markdown(content)
-                        else:
-                            st.error("No content generated!")
-            else:
-                # Show button to start generation
-                if st.button(f"🤖 Generate AI Analysis", key=f"ai_button_{stats.cluster_id}"):
-                    st.session_state[loading_key] = True
-                    st.rerun()
-        else:
-            # Show the generated summary (for when page reloads after generation)
-            with st.expander("🤖 **AI Functional Summary**", expanded=True):
-                content = st.session_state[summary_key]["content"]
-                if content:
-                    st.markdown(content)
-                else:
-                    st.error("No content in session state!")
+        # AI Summary — wrapped in fragment to avoid full-page rerun
+        @st.fragment
+        def _cluster_ai_summary():
+            summary_key = f"cluster_summary_{stats.cluster_id}"
+            if summary_key not in st.session_state:
+                st.session_state[summary_key] = {"generated": False, "content": ""}
+
+            if not st.session_state[summary_key]["generated"]:
+                if st.button(f"Generate AI Analysis", key=f"ai_button_{stats.cluster_id}"):
+                    with st.status("Generating AI analysis...", expanded=False) as status:
+                        try:
+                            from cluster_analyzer import ClusterAnalyzer
+                            analyzer = ClusterAnalyzer(DB_PATH)
+                            summary = analyzer.generate_cluster_summary(stats)
+                            st.session_state[summary_key] = {"generated": True, "content": summary}
+                            status.update(label="Analysis complete!", state="complete")
+                        except Exception as e:
+                            st.session_state[summary_key] = {"generated": True, "content": f"Error: {e}"}
+                            status.update(label="Analysis failed!", state="error")
+
+            if st.session_state[summary_key]["generated"]:
+                with st.expander("**AI Functional Summary**", expanded=True):
+                    content = st.session_state[summary_key]["content"]
+                    if content:
+                        st.markdown(content)
+                    else:
+                        st.error("No content generated!")
+
+        _cluster_ai_summary()
         
         # Action buttons
         col1, col2 = st.columns(2)
@@ -2766,7 +2767,7 @@ def display_cluster_detail():
     col1, col2 = st.columns([3, 1])
     with col1:
         st.header(f"🧩 Cluster {cluster_id} - Genome Diagrams View")
-        st.caption("🔍 Cluster Explorer → Cluster Detail")
+        _caption("🔍 Cluster Explorer → Cluster Detail")
     with col2:
         if st.button("← Back to Cluster Explorer", type="primary"):
             st.session_state.current_page = 'cluster_explorer'
@@ -2804,7 +2805,7 @@ def display_cluster_detail():
                 use_regions = len(regions) > 0
             if is_micro and not use_regions:
                 st.error("No paired regions available for this micro cluster; regions are unavailable.")
-                st.caption("Run tools/diagnose_micro.py and tools/diagnose_explore_regions.py to verify pair/linkage health.")
+                _caption("Run tools/diagnose_micro.py and tools/diagnose_explore_regions.py to verify pair/linkage health.")
                 return
             if not is_micro and not use_regions:
                 unique_loci = extract_unique_loci_from_cluster(cluster_blocks)
@@ -2821,7 +2822,7 @@ def display_cluster_detail():
             st.error(f"Error loading cluster data: {e}")
             return
 
-    clinker_max_tracks = 6
+    clinker_max_tracks = 0  # 0 = show all regions
     clinker_use_embeddings = True
     cluster_clinker_data = _build_cluster_multiloc_json(
         int(cluster_id),
@@ -2858,9 +2859,9 @@ def display_cluster_detail():
         if is_micro and 'regions' in locals() and regions:
             srcs = {r.get('_source','db') for r in regions}
             if 'sidecar' in srcs and len(srcs) == 1:
-                st.caption("Using micro pairs from sidecar CSV for this cluster.")
+                _caption("Using micro pairs from sidecar CSV for this cluster.")
             elif 'db' in srcs and len(srcs) == 1:
-                st.caption("Using micro pairs from database for this cluster.")
+                _caption("Using micro pairs from database for this cluster.")
     except Exception:
         pass
     
@@ -2936,40 +2937,6 @@ def display_cluster_detail():
             fwd = [t.get('fwd_frac', 0.0) for t in tokens]
             nocc = [t.get('n_occ', 0) for t in tokens]
 
-            bar_fig = go.Figure(
-                go.Bar(
-                    x=list(range(len(tokens))),
-                    y=[c * 100.0 for c in coverages],
-                    marker=dict(
-                        color=[_adjust_rgba_alpha(col, 0.55) for col in colors],
-                        line=dict(color='rgba(0,0,0,0.1)', width=0.4),
-                    ),
-                    hovertemplate="<b>%{customdata[0]}</b><br>Coverage: %{y:.0f}%<extra></extra>",
-                    customdata=[[lab] for lab in labels],
-                )
-            )
-            bar_fig.update_layout(
-                height=110,
-                margin=dict(l=10, r=10, t=10, b=10),
-                plot_bgcolor='rgba(0,0,0,0)',
-                paper_bgcolor='rgba(0,0,0,0)',
-                xaxis=dict(
-                    tickvals=list(range(len(tokens))),
-                    ticktext=labels,
-                    tickangle=-30,
-                    showgrid=False,
-                    tickfont=dict(size=10),
-                ),
-                yaxis=dict(
-                    title=dict(text='Coverage %', font=dict(size=12)),
-                    range=[0, 100],
-                    showgrid=False,
-                    zeroline=False,
-                    tickfont=dict(size=10),
-                ),
-            )
-            st.plotly_chart(bar_fig, use_container_width=True, config={'displayModeBar': False})
-
             xs = list(range(len(tokens)))
             fig = go.Figure()
             shapes = []
@@ -3041,21 +3008,9 @@ def display_cluster_detail():
             fig.update_yaxes(visible=False, range=[0, 1.2])
             st.plotly_chart(fig, use_container_width=True)
 
-            if consensus_source == 'clinker':
-                st.caption(
-                    "Consensus core (PFAM) derived from the Clinker-aligned loci: "
-                    + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, coverages)])
-                )
-            elif consensus_source == 'operon':
-                st.caption(
-                    "Consensus core (PFAM) derived from operon gene mappings across all blocks: "
-                    + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, coverages)])
-                )
-            else:
-                st.caption(
-                    "Consensus core (PFAM) derived from block-level PFAM statistics: "
-                    + " • ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, coverages)])
-                )
+            _source_label = {"clinker": "Clinker-aligned loci", "operon": "operon gene mappings across all blocks"}.get(consensus_source, "block-level PFAM statistics")
+            _domain_list = " · ".join([f"{lab} ({cov:.0%})" for lab, cov in zip(labels, coverages)])
+            st.markdown(f'<p style="font-size:13px;color:#ccc;">Consensus core (PFAM) from {_source_label}: {_domain_list}</p>', unsafe_allow_html=True)
         else:
             st.info("No stable PFAM core detected for this cluster with current settings.")
 
@@ -3066,8 +3021,9 @@ def display_cluster_detail():
         from genome_browser.architecture import render_architecture_panel, find_schema_dir
     schema_dir = find_schema_dir()
     if schema_dir:
-        with st.expander("🏗 Neighborhood Architecture (Slot Analysis)", expanded=True):
-            render_architecture_panel(str(schema_dir), int(cluster_id))
+        st.markdown("---")
+        st.subheader("🏗 Neighborhood Architecture (Slot Analysis)")
+        render_architecture_panel(str(schema_dir), int(cluster_id))
 
     # Clinker-like multi-locus alignment (always visible)
     st.markdown("---")
@@ -3119,7 +3075,7 @@ def display_cluster_detail():
                 scale_edge_width=clinker_scale_width,
             )
         else:
-            st.caption("Not enough comparable regions to render a cluster-wide alignment.")
+            st.markdown('<p style="font-size:14px;color:#ccc;">Not enough comparable regions to render a cluster-wide alignment.</p>', unsafe_allow_html=True)
     except Exception as e:
         st.warning(f"Multi-locus view unavailable: {e}")
 
@@ -3130,38 +3086,32 @@ def display_cluster_detail():
         display_df = display_df.rename(columns={'identity': 'per-anchor cosine sim', 'score': 'chain_score'})
         display_df['per-anchor cosine sim'] = display_df['per-anchor cosine sim'].apply(lambda x: f"{x:.3f}")
         display_df['chain_score'] = display_df['chain_score'].apply(lambda x: f"{x:.1f}")
-        st.caption("**per-anchor cosine sim** = chain_score / n_anchors (average embedding similarity per gene anchor)")
+        st.markdown('<p style="font-size:13px;color:#ccc;"><b>per-anchor cosine sim</b> = chain_score / n_anchors (average embedding similarity per gene anchor)</p>', unsafe_allow_html=True)
         st.dataframe(display_df, hide_index=True, use_container_width=True)
     
-    # AI Summary (if available)
+    # AI Summary — fragment to avoid full-page rerun
     if stats:
-        detail_summary_key = f"cluster_detail_summary_{cluster_id}"
-        
-        if detail_summary_key not in st.session_state:
-            st.session_state[detail_summary_key] = {"generated": False, "content": ""}
-        
-        detail_loading_key = f"cluster_detail_loading_{cluster_id}"
-        
-        with st.expander("🤖 **AI Functional Analysis**", expanded=False):
-            if not st.session_state[detail_summary_key]["generated"]:
-                if st.session_state.get(detail_loading_key, False):
-                    with st.status("🤖 Generating analysis...", expanded=False) as status:
-                        try:
-                            summary = get_cluster_analyzer().generate_cluster_summary(stats)
-                            st.session_state[detail_summary_key] = {"generated": True, "content": summary}
-                            st.session_state[detail_loading_key] = False
-                            status.update(label="✅ Analysis complete!", state="complete")
-                            st.rerun()
-                        except Exception as e:
-                            st.session_state[detail_summary_key] = {"generated": True, "content": f"Error: {e}"}
-                            st.session_state[detail_loading_key] = False
-                            status.update(label="❌ Analysis failed!", state="error")
+        @st.fragment
+        def _cluster_detail_ai():
+            detail_summary_key = f"cluster_detail_summary_{cluster_id}"
+            if detail_summary_key not in st.session_state:
+                st.session_state[detail_summary_key] = {"generated": False, "content": ""}
+
+            with st.expander("**AI Functional Analysis**", expanded=False):
+                if not st.session_state[detail_summary_key]["generated"]:
+                    if st.button("Generate AI Analysis", key=f"ai_detail_button_{cluster_id}"):
+                        with st.status("Generating analysis...", expanded=False) as status:
+                            try:
+                                summary = get_cluster_analyzer().generate_cluster_summary(stats)
+                                st.session_state[detail_summary_key] = {"generated": True, "content": summary}
+                                status.update(label="Analysis complete!", state="complete")
+                            except Exception as e:
+                                st.session_state[detail_summary_key] = {"generated": True, "content": f"Error: {e}"}
+                                status.update(label="Analysis failed!", state="error")
                 else:
-                    if st.button("🤖 Generate AI Analysis", key=f"ai_detail_button_{cluster_id}"):
-                        st.session_state[detail_loading_key] = True
-                        st.rerun()
-            else:
-                st.markdown(st.session_state[detail_summary_key]["content"])
+                    st.markdown(st.session_state[detail_summary_key]["content"])
+
+        _cluster_detail_ai()
     
     # Main section: Genome diagrams for each locus
     st.divider()
@@ -3288,7 +3238,7 @@ def display_cluster_detail():
                     rep_block = None
 
             if rep_block is not None:
-                st.caption(
+                _caption(
                     f"Supported by {support} block(s) | Representative block: {int(rep_block['block_id'])} (score: {rep_block['score']:.1f})"
                 )
                 # Quick action buttons to open genome viewer for blocks in this region
@@ -3330,7 +3280,7 @@ def display_cluster_detail():
                                 sup_df = sup_df.sort_values(['identity'], ascending=[False])
                             sup_df = sup_df[['block_id','query_locus','target_locus','score','identity','length']]
                             try:
-                                st.caption(f"Supporting blocks matching this region: {len(sup_df)}")
+                                _caption(f"Supporting blocks matching this region: {len(sup_df)}")
                             except Exception:
                                 pass
                             max_list = 8
@@ -3367,9 +3317,9 @@ def display_cluster_detail():
                                     st.session_state.current_page = 'genome_viewer'
                                     st.rerun()
                         else:
-                            st.caption("No supporting blocks matched this region.")
+                            _caption("No supporting blocks matched this region.")
             else:
-                st.caption(f"Supported by {support} block(s)")
+                _caption(f"Supported by {support} block(s)")
                 # Even without a representative, show the supporting blocks expander
                 with st.expander("View supporting blocks in genome viewer", expanded=False):
                     sup_df = blocks_subset.copy() if 'blocks_subset' in locals() and not blocks_subset.empty else None
@@ -3380,7 +3330,7 @@ def display_cluster_detail():
                         sup_df = sup_df.sort_values(['score','identity'], ascending=[False, False])
                         sup_df = sup_df[['block_id','query_locus','target_locus','score','identity','length']]
                         try:
-                            st.caption(f"Supporting blocks matching this region: {len(sup_df)}")
+                            _caption(f"Supporting blocks matching this region: {len(sup_df)}")
                         except Exception:
                             pass
                         max_list = 8
@@ -3407,7 +3357,7 @@ def display_cluster_detail():
                                 st.session_state.current_page = 'genome_viewer'
                                 st.rerun()
                     else:
-                        st.caption("No supporting blocks matched this region.")
+                        _caption("No supporting blocks matched this region.")
         else:
             locus_id = item
             display_title = locus_id
@@ -3428,7 +3378,7 @@ def display_cluster_detail():
             involving_blocks = len(sample_blocks)
             if involving_blocks > 0:
                 best_block = sample_blocks.loc[sample_blocks['score'].idxmax()]
-                st.caption(f"Participates in {involving_blocks} syntenic block(s) | Representative block: {best_block['block_id']} (score: {best_block['score']:.1f})")
+                _caption(f"Participates in {involving_blocks} syntenic block(s) | Representative block: {best_block['block_id']} (score: {best_block['score']:.1f})")
                 # Quick actions to open genome viewer for this locus's blocks
                 col_a, col_b = st.columns([1, 2])
                 with col_a:
@@ -3464,14 +3414,14 @@ def display_cluster_detail():
                                 st.session_state.current_page = 'genome_viewer'
                                 st.rerun()
             else:
-                st.caption(f"No syntenic blocks found for this locus")
+                _caption(f"No syntenic blocks found for this locus")
         
         # Load genes for this locus
         with st.spinner("Loading genes..."):
             try:
                 if use_regions:
                     genes_df = load_genes_for_region(contig_id, start_bp, end_bp, extended_context=show_extended_context)
-                    st.caption(f"🎯 Showing block-supported region ({len(genes_df)} genes)")
+                    _caption(f"🎯 Showing block-supported region ({len(genes_df)} genes)")
                 else:
                     # Original behavior (per-locus)
                     representative_block = None
@@ -3490,7 +3440,7 @@ def display_cluster_detail():
                             representative_block = best_block
                     if representative_block is not None and locus_role is not None:
                         genes_df = load_genes_for_locus(locus_id, representative_block['block_id'], locus_role)
-                        st.caption(f"🎯 Showing focused syntenic region ({len(genes_df)} genes)")
+                        _caption(f"🎯 Showing focused syntenic region ({len(genes_df)} genes)")
                     else:
                         # Fallback paths
                         fallback_query = """
@@ -3506,7 +3456,7 @@ def display_cluster_detail():
                             fallback_block = fallback_result.iloc[0]
                             fallback_role = 'query' if fallback_block['query_locus'] == locus_id else 'target'
                             genes_df = load_genes_for_locus(locus_id, fallback_block['block_id'], fallback_role)
-                            st.caption(f"🎯 Using fallback syntenic block {fallback_block['block_id']} ({len(genes_df)} genes)")
+                            _caption(f"🎯 Using fallback syntenic block {fallback_block['block_id']} ({len(genes_df)} genes)")
                             st.info("ℹ️ This locus doesn't participate in blocks within this cluster, showing representative syntenic region from another cluster")
                         else:
                             genes_df = load_genes_for_locus(locus_id)
@@ -3515,10 +3465,10 @@ def display_cluster_detail():
                                 s_idx = max(0, mid_point - 25)
                                 e_idx = min(len(genes_df), mid_point + 25)
                                 genes_df = genes_df.iloc[s_idx:e_idx].copy()
-                                st.caption(f"⚠️ Showing center region of locus ({len(genes_df)} genes)")
+                                _caption(f"⚠️ Showing center region of locus ({len(genes_df)} genes)")
                                 st.warning("No syntenic blocks found for this locus - showing representative center region")
                             else:
-                                st.caption(f"⚠️ Showing entire small locus ({len(genes_df)} genes)")
+                                _caption(f"⚠️ Showing entire small locus ({len(genes_df)} genes)")
                                 st.warning("No syntenic blocks found for this locus")
                 
                 if genes_df.empty:
@@ -3538,7 +3488,7 @@ def display_cluster_detail():
             
             # Expandable gene annotation table
             with st.expander(f"📋 **Gene Annotations for {display_title}**", expanded=False):
-                st.caption(f"Showing {len(genes_df)} genes")
+                _caption(f"Showing {len(genes_df)} genes")
                 
                 # Prepare display columns
                 display_cols = ['gene_id', 'start_pos', 'end_pos', 'strand', 'pfam_domains']
@@ -4073,7 +4023,7 @@ def _render_comparative_d3(data: Dict, width: int = 0, height: int = 500):
         const svg = d3.select(container).append('svg')
           .attr('width', width)
           .attr('height', height)
-          .style('background', '#fff');
+          .style('background', 'transparent');
 
         const innerW = Math.max(10, width - margin.left - margin.right);
         const innerH = Math.max(10, height - margin.top - margin.bottom);
@@ -4210,7 +4160,7 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
           const svg = d3.select(container).append('svg')
             .attr('width', width)
             .attr('height', height)
-            .style('background', '#fff');
+            .style('background', 'transparent');
 
           const innerW = Math.max(10, width - margin.left - margin.right);
           const innerH = Math.max(10, height - margin.top - margin.bottom);
@@ -4235,8 +4185,9 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
             .attr('class','cmp-tooltip')
             .style('position','absolute')
             .style('pointer-events','none')
-            .style('background','#fff')
-            .style('border','1px solid #ccc')
+            .style('background','#2a2a2a')
+            .style('color','#ddd')
+            .style('border','1px solid #555')
             .style('padding','6px 8px')
             .style('font','12px monospace')
             .style('border-radius','4px')
@@ -4426,14 +4377,14 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
           g.append('text')
             .attr('x', 0)
             .attr('y', qY - 20)
-            .attr('fill', '#000')
+            .attr('fill', '#ddd')
             .attr('font-size', 12)
             .attr('font-family', 'sans-serif')
             .text(topLabel);
           g.append('text')
             .attr('x', 0)
             .attr('y', tY + geneH + 18)
-            .attr('fill', '#000')
+            .attr('fill', '#ddd')
             .attr('font-size', 12)
             .attr('font-family', 'sans-serif')
             .text(botLabel);
@@ -4442,19 +4393,19 @@ def _render_comparative_d3_v2(data: Dict, width: int = 0, height: int = 500):
           const legend = g.append('g');
           const lx = Math.max(0, innerW - 260), ly = 8;
           legend.append('rect').attr('x', lx-6).attr('y', ly-6).attr('width', 252).attr('height', 60)
-                .attr('fill', 'rgba(255,255,255,0.85)').attr('stroke', '#ccc');
-          legend.append('rect').attr('x', lx).attr('y', ly).attr('width', 14).attr('height', 14).attr('fill', '#2E8B57').attr('stroke','#000');
-          legend.append('rect').attr('x', lx+18).attr('y', ly).attr('width', 14).attr('height', 14).attr('fill', '#FF6347').attr('stroke','#000');
-          legend.append('text').attr('x', lx+36).attr('y', ly+11).attr('font-size', 12).text('Gene arrows (strand color)');
+                .attr('fill', 'rgba(30,30,30,0.85)').attr('stroke', '#555');
+          legend.append('rect').attr('x', lx).attr('y', ly).attr('width', 14).attr('height', 14).attr('fill', '#2E8B57').attr('stroke','#666');
+          legend.append('rect').attr('x', lx+18).attr('y', ly).attr('width', 14).attr('height', 14).attr('fill', '#FF6347').attr('stroke','#666');
+          legend.append('text').attr('x', lx+36).attr('y', ly+11).attr('font-size', 12).attr('fill','#ddd').text('Gene arrows (strand color)');
           // Cosine edge
           legend.append('line').attr('x1', lx).attr('y1', ly+26).attr('x2', lx+36).attr('y2', ly+26).attr('stroke', '#2c7bb6').attr('stroke-width', 3);
-          legend.append('text').attr('x', lx+44).attr('y', ly+29).attr('font-size', 12).text('Cosine homology');
+          legend.append('text').attr('x', lx+44).attr('y', ly+29).attr('font-size', 12).attr('fill','#ddd').text('Cosine homology');
           // PFAM edge
           legend.append('line').attr('x1', lx).attr('y1', ly+42).attr('x2', lx+36).attr('y2', ly+42).attr('stroke', '#fdae61').attr('stroke-width', 3);
-          legend.append('text').attr('x', lx+44).attr('y', ly+45).attr('font-size', 12).text('PFAM homology');
+          legend.append('text').attr('x', lx+44).attr('y', ly+45).attr('font-size', 12).attr('fill','#ddd').text('PFAM homology');
           // Both edge
           legend.append('line').attr('x1', lx+130).attr('y1', ly+34).attr('x2', lx+166).attr('y2', ly+34).attr('stroke', '#7b3294').attr('stroke-width', 3);
-          legend.append('text').attr('x', lx+174).attr('y', ly+37).attr('font-size', 12).text('Both');
+          legend.append('text').attr('x', lx+174).attr('y', ly+37).attr('font-size', 12).attr('fill','#ddd').text('Both');
 
           // Cross-track highlighting
           function clearHighlight() {
@@ -4546,7 +4497,9 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
             pass
         return {}
     # Prefer regions with highest support, then length
-    regions = sorted(regions, key=lambda r: (int(r.get('support', 1)), int(r.get('end_bp', 0)) - int(r.get('start_bp', 0))), reverse=True)[:max_tracks]
+    regions = sorted(regions, key=lambda r: (int(r.get('support', 1)), int(r.get('end_bp', 0)) - int(r.get('start_bp', 0))), reverse=True)
+    if max_tracks > 0:
+        regions = regions[:max_tracks]
 
     # Prepare embeddings lookup if requested
     emb_df = None
@@ -4562,6 +4515,22 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
                     emb_status["path"] = emb_path
         except Exception:
             emb_df = None
+
+    # Build coordinate-based embedding lookup for cases where gene IDs don't match
+    emb_coord_lookup = {}  # (contig_id, start) -> normalized embedding vector
+    if use_embeddings and emb_df is not None:
+        try:
+            import numpy as _np
+            ecols = [c for c in emb_df.columns if c.startswith('emb_')]
+            if 'contig_id' in emb_df.columns and 'start' in emb_df.columns and ecols:
+                for _, erow in emb_df.iterrows():
+                    key = (str(erow['contig_id']), int(erow['start']))
+                    vec = erow[ecols].to_numpy(dtype='float32', copy=False)
+                    nv = vec / (_np.linalg.norm(vec) + 1e-8)
+                    emb_coord_lookup[key] = [float(x) for x in nv.tolist()]
+                logger.info(f"multiloc: built coordinate embedding lookup with {len(emb_coord_lookup)} entries")
+        except Exception as e:
+            logger.warning(f"multiloc: failed to build coord lookup: {e}")
 
     loci = []
     pfam_sets = []
@@ -4601,21 +4570,11 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
                     emb_status["mapped"] += 1
                 except Exception:
                     pass
-            elif use_embeddings and emb_df is not None:
-                # Fallback: try contig + start coordinate match if parquet includes these columns
-                try:
-                    cols = set(emb_df.columns)
-                    if {'contig_id','start'}.issubset(cols):
-                        sub = emb_df[(emb_df['contig_id'] == str(gobj['contig'])) & (emb_df['start'] == int(gobj['start']))]
-                        if not sub.empty:
-                            import numpy as _np
-                            ecols = [c for c in emb_df.columns if c.startswith('emb_')]
-                            vec = sub.iloc[0][ecols].to_numpy(dtype='float32', copy=False)
-                            nv = vec / (_np.linalg.norm(vec) + 1e-8)
-                            gobj['emb'] = [float(x) for x in nv.tolist()]
-                            emb_status["mapped"] += 1
-                except Exception:
-                    pass
+            elif use_embeddings and emb_coord_lookup:
+                coord_key = (str(gobj['contig']), int(gobj['start']))
+                if coord_key in emb_coord_lookup:
+                    gobj['emb'] = emb_coord_lookup[coord_key]
+                    emb_status["mapped"] += 1
             genes.append(gobj)
             if row.get('pfam_domains'):
                 for t in str(row['pfam_domains']).split(';'):
@@ -4623,7 +4582,7 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
                     if t:
                         pfset.add(t)
         loci.append({
-            'name': f"{r['genome_id']}:{r['contig_id']} [{int(r['start_bp'])}-{int(r['end_bp'])}]",
+            'name': f"{r['genome_id']}  |  {r['contig_id']}:{int(r['start_bp']):,}-{int(r['end_bp']):,} ({len(genes)} genes)",
             'genome_id': r['genome_id'],
             'contig_id': r['contig_id'],
             'start': int(r['start_bp']),
@@ -4638,122 +4597,135 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
             pass
         return {}
 
-    # Pairwise similarity (PFAM Jaccard; optionally add embeddings cosine matches)
+    # --- Pairwise locus similarity via gene embeddings ---
     L = len(loci)
-    sim = [[0.0]*L for _ in range(L)]
-    # emb_df already prepared above for gene-level embeddings
-    def pf_jacc(a: set, b: set) -> float:
-        if not a or not b:
-            return 0.0
-        u = a | b
-        if not u:
-            return 0.0
-        return len(a & b) / float(len(u))
 
+    def _locus_emb_matrix(loc):
+        """Return (N, D) numpy array of gene embeddings for a locus."""
+        vecs = [g['emb'] for g in loc['genes'] if 'emb' in g]
+        if not vecs:
+            return None
+        return _np.array(vecs, dtype='float32')
+
+    locus_mats = [_locus_emb_matrix(loc) for loc in loci]
+
+    def _locus_sim(i, j):
+        """Mean of per-gene best cosine match between two loci."""
+        A, B = locus_mats[i], locus_mats[j]
+        if A is None or B is None:
+            return 0.0
+        S = A @ B.T  # already L2-normalized
+        # mean of best match per gene in A + best match per gene in B, averaged
+        return float((S.max(axis=1).mean() + S.max(axis=0).mean()) / 2)
+
+    sim = [[0.0] * L for _ in range(L)]
     for i in range(L):
-        for j in range(i+1, L):
-            s = pf_jacc(pfam_sets[i], pfam_sets[j])
-            if use_embeddings and emb_df is not None:
-                # Add small bonus from cosine matches above 0.92
-                a_ids = [g['id'] for g in loci[i]['genes'] if g['id'] in emb_df.index]
-                b_ids = [g['id'] for g in loci[j]['genes'] if g['id'] in emb_df.index]
-                if a_ids and b_ids:
-                    A = emb_df.loc[a_ids, [c for c in emb_df.columns if c.startswith('emb_')]].to_numpy(dtype='float32', copy=False)
-                    B = emb_df.loc[b_ids, [c for c in emb_df.columns if c.startswith('emb_')]].to_numpy(dtype='float32', copy=False)
-                    # normalize
-                    A = A / (_np.linalg.norm(A, axis=1, keepdims=True) + 1e-8)
-                    B = B / (_np.linalg.norm(B, axis=1, keepdims=True) + 1e-8)
-                    S = A @ B.T
-                    matches = int((S >= 0.92).sum())
-                    s += min(0.2, 0.02 * matches)  # cap small bonus
-            sim[i][j] = sim[j][i] = float(min(1.0, s))
+        for j in range(i + 1, L):
+            s = _locus_sim(i, j)
+            sim[i][j] = sim[j][i] = s
 
-    # Order loci greedily by similarity (path through high-sim neighbors)
+    # --- MST + insertion ordering (every track adjacent to a similar track) ---
     order = list(range(L))
     if L > 2:
+        from collections import deque as _deque
+        # Prim's algorithm to build maximum spanning tree
+        in_tree = [False] * L
+        best_edge = [(-1.0, -1)] * L  # (weight, parent) for each node
         totals = [sum(sim[i]) for i in range(L)]
         start = max(range(L), key=lambda i: totals[i])
-        used = {start}
-        seq = [start]
-        while len(seq) < L:
-            last = seq[-1]
-            nxt = None
-            best = -1.0
+        in_tree[start] = True
+        for j in range(L):
+            if j != start:
+                best_edge[j] = (sim[start][j], start)
+        mst_parent = {}
+        mst_children = [[] for _ in range(L)]
+        for _ in range(L - 1):
+            nxt, bw = -1, -1.0
             for j in range(L):
-                if j in used:
-                    continue
-                if sim[last][j] > best:
-                    best = sim[last][j]
+                if not in_tree[j] and best_edge[j][0] > bw:
+                    bw = best_edge[j][0]
                     nxt = j
-            if nxt is None:
-                nxt = next(i for i in range(L) if i not in used)
-            seq.append(nxt)
-            used.add(nxt)
-        order = seq
+            if nxt == -1:
+                nxt = next(j for j in range(L) if not in_tree[j])
+            par = best_edge[nxt][1]
+            mst_parent[nxt] = par if par >= 0 else start
+            if par >= 0:
+                mst_children[par].append(nxt)
+            in_tree[nxt] = True
+            for j in range(L):
+                if not in_tree[j] and sim[nxt][j] > best_edge[j][0]:
+                    best_edge[j] = (sim[nxt][j], nxt)
+
+        # BFS from root — process children strongest-edge-first
+        bfs_q = _deque([start])
+        bfs_order = []
+        visited_bfs = {start}
+        while bfs_q:
+            u = bfs_q.popleft()
+            bfs_order.append(u)
+            children = sorted(mst_children[u], key=lambda c: sim[u][c], reverse=True)
+            for c in children:
+                if c not in visited_bfs:
+                    visited_bfs.add(c)
+                    bfs_q.append(c)
+
+        # Insert nodes one-by-one adjacent to their MST parent,
+        # choosing the side that maximises net adjacency gain.
+        order = [bfs_order[0]]
+        for node in bfs_order[1:]:
+            par = mst_parent[node]
+            pidx = order.index(par)
+            if len(order) == 1:
+                order.append(node)
+                continue
+            # Net gain = new adjacencies created − adjacency destroyed
+            if pidx == 0:
+                gain_before = sim[node][par]
+                rnb = order[pidx + 1] if pidx + 1 < len(order) else None
+                gain_after = sim[node][par] + (sim[node][rnb] - sim[par][rnb] if rnb is not None else 0)
+            elif pidx == len(order) - 1:
+                lnb = order[pidx - 1]
+                gain_before = sim[node][par] + sim[node][lnb] - sim[par][lnb]
+                gain_after = sim[node][par]
+            else:
+                lnb = order[pidx - 1]
+                rnb = order[pidx + 1]
+                gain_before = sim[node][par] + sim[node][lnb] - sim[par][lnb]
+                gain_after = sim[node][par] + sim[node][rnb] - sim[par][rnb]
+            if gain_before >= gain_after:
+                order.insert(pidx, node)
+            else:
+                order.insert(pidx + 1, node)
 
     loci_ordered = [loci[i] for i in order]
 
-    # Build edges between adjacent tracks: one best match per gene (cosine preferred, PFAM fallback)
-    edges = []
-    for k in range(len(loci_ordered)-1):
-        a = loci_ordered[k]
-        b = loci_ordered[k+1]
-        # pre-split PFAM tokens for speed
-        a_pf = [
-            [t.strip() for t in str(g.get('pfam','') or '').split(';') if t.strip()]
-            for g in a['genes']
-        ]
-        b_pf = [
-            [t.strip() for t in str(g.get('pfam','') or '').split(';') if t.strip()]
-            for g in b['genes']
-        ]
-        a_pf_sets = [set(lst) for lst in a_pf]
-        b_pf_sets = [set(lst) for lst in b_pf]
+    # --- Build edges between adjacent tracks only ---
+    def _gene_cos(ga, gb):
+        va, vb = ga.get('emb'), gb.get('emb')
+        if isinstance(va, list) and isinstance(vb, list) and len(va) == len(vb) and len(va) > 0:
+            return float(_np.dot(_np.array(va, dtype='float32'), _np.array(vb, dtype='float32')))
+        return None
 
-        # Optional cosine helper using embeddings if available
-        def gene_cos_pair(ga, gb):
-            try:
-                import numpy as _np
-                # Prefer pre-attached vectors on gene objects (set during locus load)
-                va = ga.get('emb', None)
-                vb = gb.get('emb', None)
-                if isinstance(va, list) and isinstance(vb, list) and len(va) == len(vb) and len(va) > 0:
-                    return float(_np.dot(_np.array(va, dtype='float32'), _np.array(vb, dtype='float32')))
-                # Fallback: lookup in emb_df by gene_id if present
-                if emb_df is None:
-                    return None
-                ida = str(ga.get('id','')); idb = str(gb.get('id',''))
-                if ida not in emb_df.index or idb not in emb_df.index:
-                    return None
-                cols = [c for c in emb_df.columns if c.startswith('emb_')]
-                va = emb_df.loc[ida, cols].to_numpy(dtype='float32', copy=False)
-                vb = emb_df.loc[idb, cols].to_numpy(dtype='float32', copy=False)
-                va = va / (_np.linalg.norm(va) + 1e-8)
-                vb = vb / (_np.linalg.norm(vb) + 1e-8)
-                return float(va.dot(vb))
-            except Exception:
-                return None
+    edges = []
+    for k in range(len(loci_ordered) - 1):
+        a = loci_ordered[k]
+        b = loci_ordered[k + 1]
+        a_pf = [set(t.strip() for t in str(g.get('pfam', '') or '').split(';') if t.strip()) for g in a['genes']]
+        b_pf = [set(t.strip() for t in str(g.get('pfam', '') or '').split(';') if t.strip()) for g in b['genes']]
 
         for ai, ga in enumerate(a['genes']):
-            best_score = -1e9
-            best_bi = None
-            best_pf = 0
-            best_cos = None
+            best_score, best_bi, best_pf, best_cos = -1e9, None, 0, None
             for bi, gb in enumerate(b['genes']):
-                cosv = gene_cos_pair(ga, gb)
-                pf_cnt = len(a_pf_sets[ai] & b_pf_sets[bi])
-                # scoring: cosine dominates if present; else PFAM overlap count
-                score = (cosv if (cosv is not None and _np.isfinite(cosv)) else (0.5 if pf_cnt>0 else -1))
+                cosv = _gene_cos(ga, gb)
+                pf_cnt = len(a_pf[ai] & b_pf[bi])
+                score = cosv if (cosv is not None and _np.isfinite(cosv)) else (0.5 if pf_cnt > 0 else -1)
                 if score > best_score:
-                    best_score = score
-                    best_bi = bi
-                    best_pf = pf_cnt
-                    best_cos = cosv
+                    best_score, best_bi, best_pf, best_cos = score, bi, pf_cnt, cosv
             if best_bi is not None:
                 edges.append({
-                    'a': k, 'b': k+1, 'ai': int(ai), 'bi': int(best_bi),
-                    'type': 'emb' if (best_cos is not None) else 'pfam',
-                    'pf': int(best_pf), 'cos': (float(best_cos) if best_cos is not None else None)
+                    'a': k, 'b': k + 1, 'ai': int(ai), 'bi': int(best_bi),
+                    'type': 'emb' if best_cos is not None else 'pfam',
+                    'pf': int(best_pf), 'cos': float(best_cos) if best_cos is not None else None,
                 })
 
     return {'loci': loci_ordered, 'edges': edges, 'embeddings': emb_status}
@@ -5178,12 +5150,12 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
       const baseInnerW = (W>0?W:container.clientWidth) - margin.left - margin.right;
       const minZoom = 0.6, maxZoom = 3.0;
       const rowH = 60;
-      const rowGap = 20;
+      const rowGap = 32;
       const contentH = (rowH+rowGap)*data.loci.length;
       const svg = d3.select(container).append('svg')
           .attr('width', baseInnerW + margin.left + margin.right)
           .attr('height', margin.top + margin.bottom + contentH)
-          .style('background', '#fff');
+          .style('background', 'transparent');
       const root = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
       const panG = root.append('g').attr('class','panzoom');
 
@@ -5191,8 +5163,9 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
       const tooltip = d3.select(container).append('div')
         .style('position','absolute')
         .style('pointer-events','none')
-        .style('background','#fff')
-        .style('border','1px solid #ccc')
+        .style('background','#2a2a2a')
+        .style('color','#ddd')
+        .style('border','1px solid #555')
         .style('padding','6px 8px')
         .style('font','12px monospace')
         .style('border-radius','4px')
@@ -5203,7 +5176,7 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
       function colorPF(p) { let h=0; for (let i=0;i<p.length;i++) { h=(h*31 + p.charCodeAt(i))>>>0; } const r=(h&0xFF), g2=((h>>8)&0xFF), b=((h>>16)&0xFF); return `rgba(${r},${g2},${b},0.9)`; }
 
       // Controls and state
-      const controls = d3.select(container).append('div').style('margin','6px 0');
+      const controls = d3.select(container).append('div').style('margin','6px 0').style('font-size','14px').style('color','#ddd');
       let offsets = data.loci.map(() => 0);
       let flips = data.loci.map(() => false);
       let tau = INITIAL_TAU;
@@ -5213,32 +5186,54 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
       controls.append('button').text('Reset alignment').on('click', () => { offsets = offsets.map(() => 0); redraw(); });
       controls.append('button').text('Reset view').style('margin-left','8px').on('click', () => { svg.transition().duration(150).call(zoomBehavior.transform, d3.zoomIdentity.scale(1.25)); });
       controls.append('button').text('Flip all to forward').style('margin-left','8px').on('click', () => { const refOri=rowOrientation(0); flips = flips.map((f,i)=> rowOrientation(i)===refOri?false:true); redraw(); });
+      controls.append('button').text('Export SVG').style('margin-left','8px').on('click', () => {
+        // Clone SVG, add white background for readability, set viewBox, serialize
+        const svgNode = svg.node();
+        const clone = svgNode.cloneNode(true);
+        // Set explicit dimensions and dark background
+        clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        clone.style.background = '#1a1a2e';
+        // Add a background rect as first child
+        const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bgRect.setAttribute('width', '100%');
+        bgRect.setAttribute('height', '100%');
+        bgRect.setAttribute('fill', '#1a1a2e');
+        clone.insertBefore(bgRect, clone.firstChild);
+        const serializer = new XMLSerializer();
+        const svgStr = serializer.serializeToString(clone);
+        const blob = new Blob([svgStr], {type: 'image/svg+xml;charset=utf-8'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'clinker_alignment.svg';
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
       controls.append('button').text('Zoom -').style('margin-left','8px').on('click', () => { const k = Math.max(minZoom, +(view.k-0.1).toFixed(2)); svg.transition().duration(120).call(zoomBehavior.scaleTo, k); });
       controls.append('button').text('Zoom +').style('margin-left','4px').on('click', () => { const k = Math.min(maxZoom, +(view.k+0.1).toFixed(2)); svg.transition().duration(120).call(zoomBehavior.scaleTo, k); });
-      const zoomLbl = controls.append('span').style('margin-left','8px').style('color','#333').text(() => ` (${(view.k).toFixed(2)}x)`);
-      controls.append('span').style('margin-left','12px').style('color','#333').style('font-weight','600').text('Cosine \\u03C4:');
+      const zoomLbl = controls.append('span').style('margin-left','8px').style('color','#ddd').text(() => ` (${(view.k).toFixed(2)}x)`);
+      controls.append('span').style('margin-left','12px').style('color','#ddd').style('font-weight','600').text('Cosine \\u03C4:');
       const tauInput = controls.append('input')
         .attr('type','range').attr('min','0.50').attr('max','0.99').attr('step','0.01').attr('value', tau.toFixed(2))
         .on('input', function(){ tau=+this.value; tauLbl.text(` ${tau.toFixed(2)}`); drawEdges(); });
-      const tauLbl = controls.append('span').style('margin-left','6px').style('color','#333').text(` ${tau.toFixed(2)}`);
+      const tauLbl = controls.append('span').style('margin-left','6px').style('color','#ddd').text(` ${tau.toFixed(2)}`);
 
       // Label toggle (in-component, mirrors the Streamlit checkbox)
-      const labelChk = controls.append('label').style('margin-left','16px').style('color','#333').style('cursor','pointer');
+      const labelChk = controls.append('label').style('margin-left','16px').style('color','#ddd').style('cursor','pointer');
       labelChk.append('input').attr('type','checkbox').property('checked', showLabels)
         .on('change', function(){ showLabels = this.checked; drawEdges(); });
       labelChk.append('span').style('margin-left','4px').text('Labels');
 
       // Width-scaling toggle
-      const widthChk = controls.append('label').style('margin-left','12px').style('color','#333').style('cursor','pointer');
+      const widthChk = controls.append('label').style('margin-left','12px').style('color','#ddd').style('cursor','pointer');
       widthChk.append('input').attr('type','checkbox').property('checked', scaleWidth)
         .on('change', function(){ scaleWidth = this.checked; drawEdges(); });
       widthChk.append('span').style('margin-left','4px').text('Scale width');
 
       // Legend (edge meaning)
-      const legend = d3.select(container).append('div').style('margin','4px 0 8px 0').style('font','12px sans-serif').style('color','#333');
+      const legend = d3.select(container).append('div').style('margin','4px 0 8px 0').style('font','14px sans-serif').style('color','#ddd');
       function legendItem(color, label){
         const item = legend.append('span').style('display','inline-flex').style('align-items','center').style('margin-right','14px');
-        item.append('span').style('display','inline-block').style('width','18px').style('height','3px').style('margin-right','6px').style('background', color).style('border','1px solid rgba(0,0,0,0.2)');
+        item.append('span').style('display','inline-block').style('width','18px').style('height','3px').style('margin-right','6px').style('background', color).style('border','1px solid rgba(255,255,255,0.2)');
         item.append('span').text(label);
       }
       legendItem('#2c7bb6', 'Cosine-only');
@@ -5265,8 +5260,17 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
         const minX = d3.min(loc.genes, d => d.start) || 0;
         const maxX = d3.max(loc.genes, d => d.end) || 1;
         const baseX = d3.scaleLinear().domain([minX, maxX]).range([0, baseInnerW]);
-        panG.append('text').attr('x', 0).attr('y', y0-4).text(loc.name).attr('font-size','10px').attr('fill','#333')
-          .style('cursor','pointer').on('click', () => { flips[idx] = !flips[idx]; redraw(); });
+        // Two-line label: genome ID bold on top, contig:position below
+        const labelParts = (loc.name||'').split('  |  ');
+        const labelG = panG.append('text').attr('x', 0).attr('y', y0-12)
+          .attr('fill','#ddd').style('cursor','pointer')
+          .on('click', () => { flips[idx] = !flips[idx]; redraw(); });
+        if (labelParts.length >= 2) {
+          labelG.append('tspan').text(labelParts[0]).attr('font-size','13px').attr('font-weight','bold').attr('x', 0);
+          labelG.append('tspan').text(labelParts[1]).attr('font-size','10px').attr('fill','#aaa').attr('x', 0).attr('dy', '12');
+        } else {
+          labelG.text(loc.name).attr('font-size','12px');
+        }
         const rowSel = panG.append('g').attr('transform', `translate(0,${y0})`);
         const row = rowSel.node();
         row._baseX = baseX; rowsG.push(row);
@@ -5299,6 +5303,30 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
         });
       }
       computeLayouts();
+
+      // Compute initial horizontal offsets to align matched genes between adjacent tracks
+      (function alignTracks(){
+        // For each adjacent pair, find the best-cosine edge and align on it
+        const adjEdges = (data.edges||[]).filter(e => e.b === e.a + 1 && e.cos != null && isFinite(e.cos));
+        // Group edges by (a,b) pair, pick highest cosine per pair
+        const bestByPair = new Map();
+        adjEdges.forEach(e => {
+          const key = e.a + '-' + e.b;
+          if (!bestByPair.has(key) || e.cos > bestByPair.get(key).cos) bestByPair.set(key, e);
+        });
+        // Propagate offsets from track 0 (anchor at 0)
+        for (let k = 0; k < data.loci.length - 1; k++) {
+          const key = k + '-' + (k+1);
+          const e = bestByPair.get(key);
+          if (!e) continue;
+          const rowA = rowsG[k], rowB = rowsG[k+1];
+          const layA = (rowA._layout||[])[e.ai], layB = (rowB._layout||[])[e.bi];
+          if (!layA || !layB) continue;
+          const centerA = layA.start + layA.w/2 + offsets[k];
+          const centerB = layB.start + layB.w/2 + offsets[k+1];
+          offsets[k+1] += (centerA - centerB);
+        }
+      })();
 
       function rowScale(idx){ const base = rowsG[idx]._baseX; const dom=base.domain().slice(); return d3.scaleLinear().domain(flips[idx]?dom.reverse():dom).range([0, baseInnerW]); }
 
@@ -5451,7 +5479,7 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
             .on('mouseover', function(event, d){ const strand=(d.strand>=0? '+':'-'); const len=Math.max(0, Math.round(Math.abs(d.end-d.start))); tooltip.style('display','block').html('<b>'+d.id+'</b><br>Length: '+len.toLocaleString()+' aa<br>Strand: '+strand+'<br>PFAM: '+(d.pfam||'None')); })
             .on('mousemove', function(event){ const cw=container.clientWidth||0,ch=container.clientHeight||0; const tw=tooltip.node().offsetWidth||0, th=tooltip.node().offsetHeight||0; const pt=d3.pointer(event,container); let left=pt[0]+12, top=pt[1]+12; if (left+tw>cw-4) left=Math.max(4, pt[0]-12-tw); if (top+th>ch-4) top=Math.max(4, pt[1]-12-th); tooltip.style('left', left+'px').style('top', top+'px'); })
             .on('mouseout', ()=> tooltip.style('display','none'));
-          let base=row.selectAll('line.base').data([0]); base=base.enter().append('line').attr('class','base').merge(base); const rowW=rowNode._rowWidth||baseInnerW; base.attr('x1',0).attr('x2',Math.max(baseInnerW,rowW)).attr('y1',yMid).attr('y2',yMid).attr('stroke','#ccc').attr('stroke-width',0.5);
+          let base=row.selectAll('line.base').data([0]); base=base.enter().append('line').attr('class','base').merge(base); const rowW=rowNode._rowWidth||0; base.attr('x1',0).attr('x2',rowW).attr('y1',yMid).attr('y2',yMid).attr('stroke','#ccc').attr('stroke-width',0.5);
         });
         drawEdges();
       }

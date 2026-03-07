@@ -11,8 +11,8 @@ import random
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Set
 from dataclasses import dataclass
-import dspy
 import json
+import os
 from openai import OpenAI
 
 logger = logging.getLogger(__name__)
@@ -44,32 +44,15 @@ class ClusterStats:
     dominant_functions: List[str]
     domain_counts: List[Tuple[str, int]]  # Domain names with their frequencies
 
-class ClusterSummarizer(dspy.Signature):
-    """Conservative summary of a syntenic-block cluster using consensus evidence.
-
-    Base claims on measurable evidence from the consensus cassette: token coverage,
-    conserved ordering (mean_pos), and directional consensus (co-directionality across
-    adjacent consensus tokens). Prefer descriptive summaries of conserved components over
-    speculative functional narratives. Do not claim full pathways; these loci are short.
-    """
-
-    cluster_stats = dspy.InputField(desc="Cluster statistics: size, organisms, consensus length, identity range")
-    conserved_domains = dspy.InputField(desc="Context PFAMs ordered by frequency (low weight)")
-    consensus_cassette = dspy.InputField(desc="JSON with keys: consensus (ordered tokens: token, coverage, df, mean_pos, fwd_frac, n_occ) and pairs (adjacency same-strand: t1, t2, same_frac, support). Use for core selection and directional consensus.")
-
-    molecular_mechanism = dspy.OutputField(desc="Evidence-grounded description of conserved components. Cite specific PFAM tokens with coverage and ordering. Avoid pathway claims.")
-    conservation_basis = dspy.OutputField(desc="Tie claims to consensus tokens and directional consensus (co-directionality). Note ordering and any mixed signals.")
-    outputs_json = dspy.OutputField(desc="JSON: {summary, core_tokens:[{pfam,coverage,df,pos}], directional_consensus:{agree_frac,note}, adjacency_support:[{t1,t2,same_frac,support}], caveats:[...], confidence:0..1}")
-
 class ClusterAnalyzer:
     """Analyzer for syntenic block clusters."""
-    
+
     def __init__(self, db_path: Path):
         self.db_path = db_path
-        # Initialize OpenAI client for GPT-5-mini Responses API
-        self.openai_client = OpenAI()
-        # Keep DSPy signature for prompt structure reference
-        self.summarizer = dspy.Predict(ClusterSummarizer)
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=os.environ.get("OPENROUTER_API_KEY", ""),
+        )
     
     def get_cluster_stats(self, cluster_id: int) -> Optional[ClusterStats]:
         """Compute comprehensive statistics for a cluster."""
@@ -812,7 +795,7 @@ class ClusterAnalyzer:
             return 0, 0
     
     def generate_cluster_summary(self, stats: ClusterStats) -> Optional[str]:
-        """Generate GPT-5-mini summary for a cluster using Responses API."""
+        """Generate cluster summary using Claude Sonnet 4.6."""
         try:
             # Get enhanced cluster data
             conn = sqlite3.connect(self.db_path)
@@ -844,7 +827,6 @@ class ClusterAnalyzer:
                             pfam_info = "None"
                         sample_text += f"  Gene {j}: {gene.gene_id} ({strand_symbol}, {gene.length} aa) - PFAM: {pfam_info}\n"
             
-            # Format comprehensive prompt for GPT-5-mini
             prompt = f"""Analyze this syntenic block cluster:
 
 CLUSTER OVERVIEW:
@@ -865,50 +847,17 @@ Format as:
 **Function:** [analysis 1]
 **Conservation:** [analysis 2]"""
 
-            # Comprehensive debug logging
-            logger.info(f"=== DEBUG: CLUSTER DATA COMPONENTS ===")
-            logger.info(f"Cluster ID: {stats.cluster_id}")
-            logger.info(f"Length stats: {length_stats}")
-            logger.info(f"Sample loci count: {len(sample_loci)}")
-            logger.info(f"PFAM domains: {stats.dominant_functions[:10]}")
-            
-            # Log each sample locus in detail
-            for i, locus in enumerate(sample_loci):
-                logger.info(f"Sample locus {i+1}: {locus.organism_name} - {len(locus.genes)} genes")
-                for j, gene in enumerate(locus.genes):
-                    logger.info(f"  Gene {j+1}: {gene.gene_id} - PFAM: '{gene.pfam_domains}' - Length: {gene.length}aa")
-            
-            logger.info(f"=== FULL GPT-5 PROMPT ===")
-            logger.info(f"COMPLETE PROMPT:\n{prompt}")
-            logger.info(f"=== END PROMPT ===")
-            
-            # Call GPT-5-mini using Responses API
-            response = self.openai_client.responses.create(
-                model="gpt-5-mini",
-                input=prompt,
-                reasoning={"effort": "low"},
-                max_output_tokens=500  # Increased from 300
+            logger.info(f"Cluster {stats.cluster_id}: sending prompt to Claude ({len(prompt)} chars)")
+
+            response = self.client.chat.completions.create(
+                model="anthropic/claude-sonnet-4-6",
+                max_tokens=500,
+                messages=[{"role": "user", "content": prompt}],
             )
-            
-            # Debug response structure
-            logger.info(f"GPT-5 response object type: {type(response)}")
-            logger.info(f"GPT-5 response attributes: {dir(response)}")
-            
-            # Try different possible response attributes
-            result_text = ""
-            if hasattr(response, 'output_text'):
-                result_text = response.output_text.strip()
-                logger.info(f"GPT-5 output_text: '{result_text}' (length: {len(result_text)})")
-            elif hasattr(response, 'text'):
-                result_text = response.text.strip()
-                logger.info(f"GPT-5 text: '{result_text}' (length: {len(result_text)})")
-            elif hasattr(response, 'content'):
-                result_text = response.content.strip()
-                logger.info(f"GPT-5 content: '{result_text}' (length: {len(result_text)})")
-            else:
-                logger.error(f"Unknown GPT-5 response format: {response}")
-                result_text = "Unable to parse GPT-5 response"
-            
+
+            result_text = response.choices[0].message.content.strip()
+            logger.info(f"Cluster {stats.cluster_id}: got {len(result_text)} char response")
+
             return f"**Cluster:** {stats.total_alignments:,} alignments ({stats.unique_genes:,} genes)\n\n{result_text}"
             
         except Exception as e:

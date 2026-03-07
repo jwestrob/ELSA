@@ -235,9 +235,10 @@ def _ingest_genes(conn: sqlite3.Connection, genes_df: pd.DataFrame) -> None:
         ],
     )
 
-    # Genes
+    # Genes — deduplicate by gene_id (adapter merges can produce dupes)
+    unique_genes = genes_df.drop_duplicates(subset="gene_id", keep="first")
     cursor.executemany(
-        "INSERT INTO genes (gene_id, genome_id, contig_id, start_pos, end_pos, strand, "
+        "INSERT OR IGNORE INTO genes (gene_id, genome_id, contig_id, start_pos, end_pos, strand, "
         "gene_length, protein_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         [
             (
@@ -245,7 +246,7 @@ def _ingest_genes(conn: sqlite3.Connection, genes_df: pd.DataFrame) -> None:
                 int(row.start), int(row.end), int(row.strand),
                 int(row.end - row.start), row.gene_id,
             )
-            for row in genes_df.itertuples()
+            for row in unique_genes.itertuples()
         ],
     )
     conn.commit()

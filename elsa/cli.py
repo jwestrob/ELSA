@@ -753,5 +753,200 @@ def stats(config: str):
     console.print(table)
 
 
+@main.command()
+@click.option("--db", type=click.Path(exists=True),
+              help="Sharur DuckDB database path (protein metadata)")
+@click.option("--proteins", type=click.Path(exists=True, file_okay=False),
+              help="Directory of .faa protein FASTA files (alternative to --db)")
+@click.option("--embeddings", type=click.Path(exists=True),
+              help="HDF5 file with protein embeddings (Sharur format)")
+@click.option("--embeddings-parquet", type=click.Path(exists=True),
+              help="Parquet file with emb_* embedding columns")
+@click.option("--store", type=click.Path(),
+              help="Persistent FAISS store directory (load or create)")
+@click.option("--add-db", type=click.Path(exists=True),
+              help="DuckDB with new genomes to add to existing --store")
+@click.option("--add-embeddings", type=click.Path(exists=True),
+              help="HDF5 with new embeddings to add to existing --store")
+@click.option("--output-dir", "-o", default="syntenic_output", help="Output directory")
+@click.option("--similarity-threshold", default=0.85, help="Cosine similarity threshold for anchors")
+@click.option("--max-gap", default=2, help="Maximum gene gap in chains")
+@click.option("--min-chain-size", default=2, help="Minimum anchors per chain")
+@click.option("--min-genome-support", default=2, help="Minimum genomes per cluster")
+@click.option("--gap-penalty-scale", default=0.0, help="Concave gap penalty (0=off)")
+@click.option("--jaccard-tau", default=0.3, help="Jaccard threshold for cluster overlap")
+@click.option("--index-backend", default="auto", help="Index backend (auto/faiss/hnswlib)")
+@click.option("--hnsw-k", default=50, help="k for HNSW neighbor search")
+@click.option("--no-normalize", is_flag=True, help="Skip L2 normalization of embeddings")
+def synteny(db: Optional[str], proteins: Optional[str],
+            embeddings: Optional[str], embeddings_parquet: Optional[str],
+            store: Optional[str],
+            add_db: Optional[str], add_embeddings: Optional[str],
+            output_dir: str, similarity_threshold: float, max_gap: int,
+            min_chain_size: int, min_genome_support: int,
+            gap_penalty_scale: float, jaccard_tau: float,
+            index_backend: str, hnsw_k: int, no_normalize: bool):
+    """Discover syntenic blocks from external embeddings.
+
+    Accepts protein metadata from a Sharur DuckDB or FASTA files,
+    and embeddings from HDF5 or parquet. No ELSA config file needed.
+
+    Use --store for persistent FAISS index that survives across runs.
+    Use --add-db / --add-embeddings to append new genomes to a store.
+
+    \b
+    Examples:
+      elsa synteny --db sharur.duckdb --embeddings proteins.h5 -o results/
+      elsa synteny --db sharur.duckdb --embeddings proteins.h5 --store ./my_store -o results/
+      elsa synteny --store ./my_store -o results/
+      elsa synteny --store ./my_store --add-db new.duckdb --add-embeddings new.h5 -o results/
+    """
+    console.print("[bold]ELSA Synteny Discovery[/bold]")
+
+    try:
+        from .analyze.pipeline import run_chain_pipeline, ChainConfig
+
+        genes_df = None
+        prebuilt_index = None
+
+        # --- Store mode ---
+        if store:
+            from .store import SyntenyStore
+
+            store_path = Path(store)
+            config_exists = (store_path / "config.json").exists()
+
+            if config_exists and not (db or proteins or embeddings or embeddings_parquet):
+                # Load existing store, no new data
+                console.print(f"Loading store: [green]{store}[/green]")
+                ss = SyntenyStore.load(store_path)
+
+                # Handle --add-db / --add-embeddings
+                if add_db and add_embeddings:
+                    from .adapter import (
+                        load_proteins_from_duckdb,
+                        load_embeddings_h5,
+                        build_genes_dataframe,
+                    )
+                    console.print(f"Adding genomes from: [green]{add_db}[/green]")
+                    new_proteins = load_proteins_from_duckdb(add_db)
+                    new_emb = load_embeddings_h5(add_embeddings)
+                    new_genes = build_genes_dataframe(
+                        new_proteins, new_emb, normalize=not no_normalize,
+                    )
+                    ss.add_genes(new_genes)
+
+                genes_df = ss.get_genes_df()
+                prebuilt_index = ss.get_index_tuple()
+                console.print(
+                    f"  {ss.n_vectors:,} genes, {ss.dim}D, "
+                    f"{len(ss.genomes)} genomes"
+                )
+
+            else:
+                # Build new store from provided data
+                genes_df = _load_genes_from_sources(
+                    db, proteins, embeddings, embeddings_parquet,
+                    no_normalize, console,
+                )
+                console.print(f"Creating store: [green]{store}[/green]")
+                ss = SyntenyStore.create(store_path, genes_df)
+                prebuilt_index = ss.get_index_tuple()
+
+        else:
+            # --- No store: one-shot mode ---
+            if not (db or proteins):
+                console.print("[red]Provide --db, --proteins, or --store[/red]")
+                sys.exit(1)
+            if not (embeddings or embeddings_parquet):
+                console.print("[red]Provide --embeddings or --embeddings-parquet[/red]")
+                sys.exit(1)
+
+            genes_df = _load_genes_from_sources(
+                db, proteins, embeddings, embeddings_parquet,
+                no_normalize, console,
+            )
+
+        # Run pipeline
+        config = ChainConfig(
+            index_backend=index_backend,
+            hnsw_k=hnsw_k,
+            similarity_threshold=similarity_threshold,
+            max_gap_genes=max_gap,
+            min_chain_size=min_chain_size,
+            gap_penalty_scale=gap_penalty_scale,
+            jaccard_tau=jaccard_tau,
+            min_genome_support=min_genome_support,
+        )
+
+        console.print(f"\n[bold blue]Running chain pipeline...[/bold blue]")
+        summary = run_chain_pipeline(
+            output_dir=Path(output_dir),
+            config=config,
+            genes_df=genes_df,
+            prebuilt_index=prebuilt_index,
+        )
+
+        console.print(
+            f"\n[bold green]Synteny discovery complete![/bold green]\n"
+            f"  genes={summary.num_genes} anchors={summary.num_anchors} "
+            f"blocks={summary.num_blocks} clusters={summary.num_clusters} "
+            f"singletons={summary.num_singletons} "
+            f"genome_support_median={summary.genome_support_median} "
+            f"mean_block_size={summary.mean_block_size:.1f}"
+        )
+        console.print(f"  Output: [green]{output_dir}[/green]")
+
+    except Exception as e:
+        console.print(f"[red]Synteny discovery failed: {e}[/red]")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
+
+
+def _load_genes_from_sources(
+    db: Optional[str],
+    proteins: Optional[str],
+    embeddings: Optional[str],
+    embeddings_parquet: Optional[str],
+    no_normalize: bool,
+    console,
+) -> "pd.DataFrame":
+    """Load and merge protein metadata + embeddings from CLI sources."""
+    from .adapter import (
+        load_proteins_from_duckdb,
+        load_proteins_from_fasta,
+        load_embeddings_h5,
+        load_embeddings_parquet as _load_emb_pq,
+        build_genes_dataframe,
+    )
+
+    if db:
+        console.print(f"Loading proteins from DuckDB: [green]{db}[/green]")
+        proteins_df = load_proteins_from_duckdb(db)
+    else:
+        console.print(f"Loading proteins from FASTA: [green]{proteins}[/green]")
+        proteins_df = load_proteins_from_fasta(proteins)
+
+    n_genomes = proteins_df["sample_id"].nunique()
+    console.print(f"  {len(proteins_df):,} proteins from {n_genomes} genomes")
+
+    if embeddings:
+        console.print(f"Loading embeddings from HDF5: [green]{embeddings}[/green]")
+        emb_df = load_embeddings_h5(embeddings)
+    else:
+        console.print(f"Loading embeddings from parquet: [green]{embeddings_parquet}[/green]")
+        emb_df = _load_emb_pq(embeddings_parquet)
+
+    emb_cols = [c for c in emb_df.columns if c.startswith("emb_")]
+    console.print(f"  {len(emb_df):,} vectors, {len(emb_cols)}D")
+
+    genes_df = build_genes_dataframe(
+        proteins_df, emb_df, normalize=not no_normalize,
+    )
+    console.print(f"  Merged: {len(genes_df):,} genes with embeddings")
+    return genes_df
+
+
 if __name__ == "__main__":
     main()

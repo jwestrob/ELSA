@@ -2752,6 +2752,198 @@ def compute_display_regions_for_micro_cluster(cluster_id: int, gap_bp: int = 100
         logger.error(f"Error computing micro display regions: {e}")
         return []
 
+def _render_subcluster_hierarchy(cluster_id: int, is_micro: bool):
+    """Render collapsible sub-cluster cards for clusters that were merged into this one."""
+    # Locate merge map and premerge CSVs
+    here = Path(__file__).resolve().parent
+    repo_root = here.parent
+    candidates = [
+        Path('syntenic_analysis/micro_chain'),
+        repo_root / 'syntenic_analysis' / 'micro_chain',
+        Path.cwd() / 'syntenic_analysis' / 'micro_chain',
+    ]
+    merge_map_df = None
+    premerge_df = None
+    for base in candidates:
+        mm = base / 'micro_chain_merge_map.csv'
+        pm = base / 'micro_chain_blocks_premerge.csv'
+        if mm.exists() and pm.exists():
+            merge_map_df = pd.read_csv(mm)
+            premerge_df = pd.read_csv(pm)
+            break
+
+    if merge_map_df is None or premerge_df is None:
+        return
+
+    # Resolve this cluster's raw ID (micro clusters use offset; macro use direct)
+    conn = get_database_connection()
+    if is_micro:
+        ceil_id = _macro_id_ceiling(conn)
+        raw_id = int(cluster_id) - int(ceil_id)
+    else:
+        raw_id = int(cluster_id)
+
+    # Find sub-clusters that merged into this cluster
+    children = merge_map_df[merge_map_df['merged_into'] == raw_id]
+    if children.empty:
+        return
+
+    # Build hierarchy: parent_cluster -> [child_clusters]
+    # direct_parent maps child -> immediate parent
+    direct_parent = dict(zip(children['child_cluster'], children['parent_cluster']))
+    child_ids = set(children['child_cluster'].tolist())
+
+    # Get block assignments for each sub-cluster
+    sub_blocks = {}
+    for cid in list(child_ids) + [raw_id]:
+        bids = premerge_df[premerge_df['premerge_cluster_id'] == cid]['block_id'].tolist()
+        sub_blocks[cid] = bids
+
+    # Load blocks CSV for genome/contig info
+    blocks_csv = None
+    for base in candidates:
+        bp = base / 'micro_chain_blocks.csv'
+        if bp.exists():
+            blocks_csv = pd.read_csv(bp)
+            break
+
+    if blocks_csv is None:
+        return
+
+    # For each sub-cluster, compute summary + ordered consensus tokens
+    def _sub_summary(cid):
+        bids = sub_blocks.get(cid, [])
+        if not bids:
+            return None
+        sub = blocks_csv[blocks_csv['block_id'].isin(bids)]
+        genomes = set(sub['query_genome'].tolist() + sub['target_genome'].tolist())
+        n_blocks = len(sub)
+
+        # Compute consensus using the same logic as the cluster explorer
+        consensus_tokens = []
+        consensus_pairs = []
+        try:
+            try:
+                from database.cluster_content import compute_cluster_pfam_consensus
+            except ImportError:
+                from genome_browser.database.cluster_content import compute_cluster_pfam_consensus
+            payload = compute_cluster_pfam_consensus(
+                conn, cluster_id=0, min_core_coverage=0.7,
+                df_percentile_ban=0.9, max_tokens=10, block_ids=bids,
+            )
+            if isinstance(payload, dict):
+                consensus_tokens = payload.get('consensus', [])
+                consensus_pairs = payload.get('pairs', [])
+        except Exception as e:
+            logger.warning(f"subcluster consensus failed for {cid}: {e}")
+
+        return {
+            'cid': cid,
+            'n_blocks': n_blocks,
+            'n_genomes': len(genomes),
+            'genomes': sorted(genomes),
+            'tokens': consensus_tokens,
+            'pairs': consensus_pairs,
+        }
+
+    # Build tree structure for display
+    # Nodes: raw_id (root) and all children
+    # Edges: child -> direct_parent
+    # Sort children: larger sub-clusters first
+    summaries = {}
+    for cid in list(child_ids) + [raw_id]:
+        s = _sub_summary(cid)
+        if s:
+            summaries[cid] = s
+
+    if not summaries:
+        return
+
+    # Render
+    st.markdown("---")
+    with st.expander(f"🔗 Merged Sub-clusters ({len(child_ids)} absorbed)", expanded=False):
+        st.caption(
+            "This cluster was formed by merging smaller clusters whose genomic footprints "
+            "are contained within the larger cluster. Each card shows the original sub-cluster "
+            "before merging."
+        )
+
+        def _focus_subcluster(cid, bids):
+            st.session_state['subcluster_focus'] = {
+                'parent_cluster': cluster_id,
+                'child_cluster': cid,
+                'block_ids': bids,
+            }
+            st.session_state['selected_cluster'] = cluster_id
+            st.session_state['current_page'] = 'cluster_detail'
+
+        # Root cluster card
+        root_s = summaries.get(raw_id)
+        if root_s:
+            rc1, rc2 = st.columns([6, 1])
+            with rc1:
+                st.markdown(
+                    f"**Core cluster {raw_id}** — {root_s['n_blocks']} blocks, "
+                    f"{root_s['n_genomes']} genomes"
+                )
+            with rc2:
+                st.button("View", key=f"focus_root_{raw_id}",
+                          on_click=_focus_subcluster,
+                          args=(raw_id, sub_blocks.get(raw_id, [])))
+            if root_s.get('tokens'):
+                _render_consensus_strip(
+                    root_s['tokens'], root_s.get('pairs', []),
+                    height=60, key=f"subclust_root_{raw_id}",
+                )
+
+        # Group children by their direct parent to show hierarchy
+        def _get_depth(cid, depth=0):
+            p = direct_parent.get(cid)
+            if p is None or p == raw_id or p not in child_ids:
+                return depth
+            return _get_depth(p, depth + 1)
+
+        sorted_children = sorted(
+            child_ids,
+            key=lambda c: (
+                _get_depth(c),
+                -(summaries.get(c, {}).get('n_blocks', 0)
+                  if isinstance(summaries.get(c), dict) else 0),
+            ),
+        )
+
+        for cid in sorted_children:
+            s = summaries.get(cid)
+            if not s:
+                continue
+            depth = _get_depth(cid)
+            indent = "│  " * depth + "├─ " if depth > 0 else ""
+            parent_label = (f" (via sub-{direct_parent[cid]})"
+                           if direct_parent.get(cid, raw_id) != raw_id else "")
+
+            genome_str = ", ".join(g[:12] for g in s['genomes'][:4])
+            if len(s['genomes']) > 4:
+                genome_str += f" +{len(s['genomes'])-4}"
+
+            sc1, sc2 = st.columns([6, 1])
+            with sc1:
+                st.markdown(
+                    f"{indent}**Sub-cluster {cid}**{parent_label} — "
+                    f"{s['n_blocks']} block{'s' if s['n_blocks'] != 1 else ''}, "
+                    f"{s['n_genomes']} genome{'s' if s['n_genomes'] != 1 else ''} "
+                    f"({genome_str})"
+                )
+            with sc2:
+                st.button("View", key=f"focus_sub_{cid}",
+                          on_click=_focus_subcluster,
+                          args=(cid, sub_blocks.get(cid, [])))
+            if s.get('tokens'):
+                _render_consensus_strip(
+                    s['tokens'], s.get('pairs', []),
+                    height=60, key=f"subclust_{cid}",
+                )
+
+
 def display_cluster_detail():
     """Display detailed view of a specific cluster with genome diagrams for each locus."""
     if 'selected_cluster' not in st.session_state:
@@ -2762,19 +2954,40 @@ def display_cluster_detail():
         return
     
     cluster_id = st.session_state.selected_cluster
-    
+
+    # Check for sub-cluster focus mode
+    subcluster_focus = st.session_state.get('subcluster_focus')
+    if subcluster_focus and subcluster_focus.get('parent_cluster') != cluster_id:
+        subcluster_focus = None
+        st.session_state.pop('subcluster_focus', None)
+
     # Header with navigation breadcrumb
     col1, col2 = st.columns([3, 1])
     with col1:
-        st.header(f"🧩 Cluster {cluster_id} - Genome Diagrams View")
-        _caption("🔍 Cluster Explorer → Cluster Detail")
+        if subcluster_focus:
+            st.header(f"🧩 Cluster {cluster_id} / Sub-cluster {subcluster_focus['child_cluster']}")
+            _caption("🔍 Cluster Explorer → Cluster Detail → Sub-cluster Focus")
+        else:
+            st.header(f"🧩 Cluster {cluster_id} - Genome Diagrams View")
+            _caption("🔍 Cluster Explorer → Cluster Detail")
     with col2:
-        if st.button("← Back to Cluster Explorer", type="primary"):
-            st.session_state.current_page = 'cluster_explorer'
-            if 'selected_cluster' in st.session_state:
-                del st.session_state.selected_cluster
-            st.rerun()
-    
+        if subcluster_focus:
+            if st.button("← Back to full cluster", type="primary"):
+                st.session_state.pop('subcluster_focus', None)
+                st.rerun()
+        else:
+            if st.button("← Back to Cluster Explorer", type="primary"):
+                st.session_state.current_page = 'cluster_explorer'
+                if 'selected_cluster' in st.session_state:
+                    del st.session_state.selected_cluster
+                st.rerun()
+
+    if subcluster_focus:
+        n_focus = len(subcluster_focus.get('block_ids', []))
+        st.info(f"Showing sub-cluster {subcluster_focus['child_cluster']} "
+                f"({n_focus} block{'s' if n_focus != 1 else ''}) — "
+                f"a pre-merge component of cluster {cluster_id}.")
+
     # Determine cluster type
     is_micro = _cluster_is_micro(cluster_id)
 
@@ -2783,7 +2996,13 @@ def display_cluster_detail():
         try:
             # Load blocks in this cluster
             cluster_blocks = load_micro_cluster_blocks(cluster_id) if is_micro else load_cluster_blocks(cluster_id)
-            
+
+            # Filter to sub-cluster blocks if in focus mode
+            if subcluster_focus and not cluster_blocks.empty:
+                focus_bids = set(subcluster_focus.get('block_ids', []))
+                if focus_bids and 'block_id' in cluster_blocks.columns:
+                    cluster_blocks = cluster_blocks[cluster_blocks['block_id'].isin(focus_bids)]
+
             if cluster_blocks.empty:
                 if cluster_id == 0:
                     st.warning(f"🔄 Cluster 0 is the **sink cluster** containing non-robust or singleton blocks.")
@@ -2798,6 +3017,14 @@ def display_cluster_detail():
             
             # Compute display regions
             regions = compute_display_regions_for_micro_cluster(cluster_id, gap_bp=1000, min_support=1) if is_micro else compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
+
+            # Filter regions to sub-cluster focus blocks
+            if subcluster_focus and regions:
+                focus_bids = set(subcluster_focus.get('block_ids', []))
+                if focus_bids:
+                    regions = [r for r in regions
+                               if focus_bids & set(r.get('blocks', set()))]
+
             use_regions = len(regions) > 0
             if is_micro and not use_regions:
                 # Fallback for operon clusters with no micro pair records
@@ -2824,11 +3051,13 @@ def display_cluster_detail():
 
     clinker_max_tracks = 0  # 0 = show all regions
     clinker_use_embeddings = True
+    _focus_bids = set(subcluster_focus['block_ids']) if subcluster_focus else None
     cluster_clinker_data = _build_cluster_multiloc_json(
         int(cluster_id),
         is_micro=is_micro,
         max_tracks=clinker_max_tracks,
         use_embeddings=clinker_use_embeddings,
+        focus_block_ids=_focus_bids,
     )
     logger.info(f"DEBUG display_cluster_detail: cluster_clinker_data has {len(cluster_clinker_data.get('loci', []))} loci")
     if cluster_clinker_data.get('loci'):
@@ -3013,6 +3242,9 @@ def display_cluster_detail():
             st.markdown(f'<p style="font-size:13px;color:#ccc;">Consensus core (PFAM) from {_source_label}: {_domain_list}</p>', unsafe_allow_html=True)
         else:
             st.info("No stable PFAM core detected for this cluster with current settings.")
+
+    # Sub-cluster hierarchy (merged clusters)
+    _render_subcluster_hierarchy(cluster_id, is_micro)
 
     # Architecture panel (slot-based structural summary)
     try:
@@ -4484,11 +4716,16 @@ def _load_genes_for_region(genome_id: str, contig_id: str, start_bp: int, end_bp
     return df
 
 
-def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: int = 6, use_embeddings: bool = False) -> Dict:
+def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: int = 6, use_embeddings: bool = False, focus_block_ids: set = None) -> Dict:
     import numpy as _np
     logger.info(f"DEBUG _build_cluster_multiloc_json: cluster_id={cluster_id}, is_micro={is_micro}")
     # Choose representative regions
     regions = compute_display_regions_for_micro_cluster(cluster_id, gap_bp=1000, min_support=1) if is_micro else compute_display_regions_for_cluster(cluster_id, gap_bp=1000, min_support=1)
+
+    # Filter to sub-cluster focus blocks if provided
+    if focus_block_ids and regions:
+        regions = [r for r in regions if focus_block_ids & set(r.get('blocks', set()))]
+
     logger.info(f"DEBUG _build_cluster_multiloc_json: got {len(regions) if regions else 0} regions")
     if not regions:
         try:

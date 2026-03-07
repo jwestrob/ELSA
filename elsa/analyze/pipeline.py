@@ -56,10 +56,12 @@ class ChainConfig:
 
 
 def run_chain_pipeline(
-    genes_parquet: Path,
-    output_dir: Path,
+    genes_parquet: Optional[Path] = None,
+    output_dir: Path = Path("syntenic_output"),
     config: Optional[ChainConfig] = None,
     db_path: Optional[Path] = None,
+    genes_df: Optional[pd.DataFrame] = None,
+    prebuilt_index: Optional[tuple] = None,
 ) -> ChainSummary:
     """
     Run the gene-level anchor chaining pipeline.
@@ -69,6 +71,8 @@ def run_chain_pipeline(
         output_dir: Directory for output files
         config: Pipeline configuration (defaults used if None)
         db_path: Optional SQLite database path for genome browser
+        genes_df: Pre-built DataFrame (alternative to genes_parquet)
+        prebuilt_index: Optional ("faiss", index) tuple from a SyntenyStore
 
     Returns:
         ChainSummary with pipeline statistics
@@ -80,8 +84,13 @@ def run_chain_pipeline(
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Load genes
-    print(f"[MicroChain] Loading genes from {genes_parquet}", file=sys.stderr, flush=True)
-    genes_df = pd.read_parquet(genes_parquet)
+    if genes_df is not None:
+        print(f"[MicroChain] Using provided DataFrame ({len(genes_df)} genes)", file=sys.stderr, flush=True)
+    elif genes_parquet is not None:
+        print(f"[MicroChain] Loading genes from {genes_parquet}", file=sys.stderr, flush=True)
+        genes_df = pd.read_parquet(genes_parquet)
+    else:
+        raise ValueError("Either genes_parquet or genes_df must be provided")
 
     required = {"sample_id", "contig_id", "gene_id", "start", "end"}
     if not required.issubset(set(genes_df.columns)):
@@ -108,6 +117,7 @@ def run_chain_pipeline(
         hnsw_ef_construction=config.hnsw_ef_construction,
         hnsw_ef_search=config.hnsw_ef_search,
         index_backend=config.index_backend,
+        prebuilt_index=prebuilt_index,
         faiss_nprobe=config.faiss_nprobe,
     )
 
@@ -134,8 +144,11 @@ def run_chain_pipeline(
 
     n_before = len(set(c for c in block_to_cluster.values() if c > 0))
 
+    # Save pre-merge cluster assignments for sub-cluster reconstruction
+    premerge_cluster = dict(block_to_cluster)
+
     # Merge clusters whose genomic footprints are contained within larger clusters
-    block_to_cluster = merge_contained_clusters(block_to_cluster, blocks)
+    block_to_cluster, raw_merge_map = merge_contained_clusters(block_to_cluster, blocks)
 
     n_real_clusters = len(set(c for c in block_to_cluster.values() if c > 0))
     n_singletons = sum(1 for c in block_to_cluster.values() if c == 0)
@@ -145,9 +158,19 @@ def run_chain_pipeline(
           file=sys.stderr, flush=True)
 
     # Build output
+    # Lookup table: gene_id → (start_bp, end_bp) for bp range output
+    gene_bp = {}
+    for _, row in genes_df[["gene_id", "start", "end"]].iterrows():
+        gene_bp[row["gene_id"]] = (int(row["start"]), int(row["end"]))
+
     block_map = {b.block_id: b for b in blocks}
     block_rows = []
     for block in blocks:
+        # Compute bp ranges from anchor genes
+        q_ids = block.query_gene_ids()
+        t_ids = block.target_gene_ids()
+        q_bps = [gene_bp[g] for g in q_ids if g in gene_bp]
+        t_bps = [gene_bp[g] for g in t_ids if g in gene_bp]
         block_rows.append({
             "block_id": block.block_id,
             "cluster_id": block_to_cluster.get(block.block_id, 0),
@@ -162,6 +185,12 @@ def run_chain_pipeline(
             "n_anchors": block.n_anchors,
             "chain_score": round(block.chain_score, 4),
             "orientation": block.orientation,
+            "query_anchor_genes": json.dumps(q_ids),
+            "target_anchor_genes": json.dumps(t_ids),
+            "query_start_bp": min(s for s, e in q_bps) if q_bps else 0,
+            "query_end_bp": max(e for s, e in q_bps) if q_bps else 0,
+            "target_start_bp": min(s for s, e in t_bps) if t_bps else 0,
+            "target_end_bp": max(e for s, e in t_bps) if t_bps else 0,
         })
 
     blocks_df = pd.DataFrame(block_rows)
@@ -206,6 +235,30 @@ def run_chain_pipeline(
     blocks_df.to_csv(blocks_path, index=False)
     clusters_df.to_csv(clusters_path, index=False)
 
+    # Save pre-merge cluster assignments and merge hierarchy
+    if raw_merge_map:
+        premerge_rows = [{"block_id": bid, "premerge_cluster_id": cid}
+                         for bid, cid in premerge_cluster.items() if cid > 0]
+        pd.DataFrame(premerge_rows).to_csv(
+            output_dir / "micro_chain_blocks_premerge.csv", index=False)
+
+        # Build resolved merge tree: child -> final parent
+        def _resolve(c):
+            while c in raw_merge_map:
+                c = raw_merge_map[c]
+            return c
+        merge_rows = []
+        for child, parent in raw_merge_map.items():
+            merge_rows.append({
+                "child_cluster": child,
+                "parent_cluster": parent,
+                "merged_into": _resolve(child),
+            })
+        pd.DataFrame(merge_rows).to_csv(
+            output_dir / "micro_chain_merge_map.csv", index=False)
+        print(f"[MicroChain] Saved merge hierarchy ({len(merge_rows)} merges) to {output_dir}",
+              file=sys.stderr, flush=True)
+
     print(f"[MicroChain] Wrote {len(blocks_df)} blocks to {blocks_path}", file=sys.stderr, flush=True)
     print(f"[MicroChain] Wrote {len(clusters_df)} clusters to {clusters_path}", file=sys.stderr, flush=True)
 
@@ -249,6 +302,7 @@ def _run_gene_chaining(
     hnsw_ef_search: int = 128,
     index_backend: str = "auto",
     faiss_nprobe: int = 16,
+    prebuilt_index: Optional[tuple] = None,
 ) -> List[ChainedBlock]:
     """Complete gene-level chaining pipeline (internal)."""
     genes_df = genes_df.copy()
@@ -261,13 +315,18 @@ def _run_gene_chaining(
         info_cols.append('strand')
     gene_info = genes_df[info_cols].reset_index(drop=True)
 
-    print(f"[GeneChain] Building index ({index_backend}) for {len(genes_df)} genes...",
-          file=sys.stderr, flush=True)
-    index = build_gene_index(embeddings, m=hnsw_m,
-                             ef_construction=hnsw_ef_construction,
-                             ef_search=hnsw_ef_search,
-                             index_backend=index_backend,
-                             faiss_nprobe=faiss_nprobe)
+    if prebuilt_index is not None:
+        print(f"[GeneChain] Using pre-built index for {len(genes_df)} genes...",
+              file=sys.stderr, flush=True)
+        index = prebuilt_index
+    else:
+        print(f"[GeneChain] Building index ({index_backend}) for {len(genes_df)} genes...",
+              file=sys.stderr, flush=True)
+        index = build_gene_index(embeddings, m=hnsw_m,
+                                 ef_construction=hnsw_ef_construction,
+                                 ef_search=hnsw_ef_search,
+                                 index_backend=index_backend,
+                                 faiss_nprobe=faiss_nprobe)
 
     print(f"[GeneChain] Finding cross-genome anchors (k={hnsw_k}, threshold={similarity_threshold})...",
           file=sys.stderr, flush=True)

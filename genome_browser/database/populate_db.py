@@ -419,7 +419,14 @@ class ELSADataIngester:
                 query_window_end = int(row['query_end'])
                 target_window_start = int(row['target_start'])
                 target_window_end = int(row['target_end'])
-                query_windows_json = None
+                # Store bp ranges and anchor gene IDs if available (v2 pipeline)
+                _bp_meta = {}
+                if pd.notna(row.get('query_start_bp', None)):
+                    _bp_meta['query_start_bp'] = int(row['query_start_bp'])
+                    _bp_meta['query_end_bp'] = int(row['query_end_bp'])
+                    _bp_meta['target_start_bp'] = int(row['target_start_bp'])
+                    _bp_meta['target_end_bp'] = int(row['target_end_bp'])
+                query_windows_json = json.dumps(_bp_meta) if _bp_meta else None
                 target_windows_json = None
             else:
                 # Legacy format: parse combined locus IDs
@@ -572,15 +579,20 @@ class ELSADataIngester:
         logger.info(f"Ingested {len(cluster_tuples)} clusters (from {original_count} in CSV)")
     
     def create_gene_block_mappings(self) -> None:
-        """Create precise mappings between genes and syntenic blocks using window information."""
-        logger.info("Creating gene-block mappings using window boundaries...")
-        
+        """Create precise mappings between genes and syntenic blocks.
+
+        Preferred path: use bp-range metadata (query_start_bp / query_end_bp)
+        stored in query_windows_json by the v2 chain pipeline. This finds DB
+        genes whose coordinates overlap the anchor bp range, avoiding the
+        gene-set mismatch between the pipeline parquet and the browser DB.
+
+        Fallback: ordinal OFFSET/LIMIT on genes ordered by start_pos (legacy).
+        """
+        logger.info("Creating gene-block mappings...")
+
         cursor = self.conn.cursor()
-        
-        # Clear existing mappings
         cursor.execute("DELETE FROM gene_block_mappings")
-        
-        # Get all syntenic blocks with window information
+
         cursor.execute("""
             SELECT block_id, query_genome_id, target_genome_id,
                    query_contig_id, target_contig_id,
@@ -594,12 +606,12 @@ class ELSADataIngester:
 
         mappings = []
         blocks_without_windows = 0
+        bp_mapped = 0
 
         cursor.execute("SELECT gene_id FROM genes")
         gene_id_set = {row[0] for row in cursor.fetchall()}
 
         def _normalize_gene_id(candidate: str) -> Optional[str]:
-            """Strip dataset-specific prefixes until we find an ID present in the genes table."""
             if candidate in gene_id_set:
                 return candidate
             parts = candidate.split('_')
@@ -617,11 +629,13 @@ class ELSADataIngester:
                 entries = _json.loads(json_blob)
             except Exception:
                 return []
+            # New format: bp_meta dict — not a gene list
+            if isinstance(entries, dict):
+                return []
             genes = []
             for entry in entries:
                 if isinstance(entry, str):
                     genes.extend([tok.strip() for tok in entry.split(',') if tok.strip()])
-            # preserve order while dropping duplicates
             seen = set()
             ordered = []
             for gid in genes:
@@ -630,26 +644,63 @@ class ELSADataIngester:
                     ordered.append(gid)
             return ordered
 
+        def _parse_bp_meta(json_blob: Optional[str]) -> Optional[dict]:
+            """Parse bp-range metadata from query_windows_json."""
+            if not json_blob:
+                return None
+            try:
+                import json as _json
+                data = _json.loads(json_blob)
+                if isinstance(data, dict) and 'query_start_bp' in data:
+                    return data
+            except Exception:
+                pass
+            return None
+
+        def _genes_by_bp_range(genome_id, contig_id, start_bp, end_bp, role, block_id):
+            """Find genes overlapping a bp range and add to mappings."""
+            cursor.execute("""
+                SELECT gene_id, start_pos FROM genes
+                WHERE genome_id = ? AND contig_id = ?
+                  AND end_pos >= ? AND start_pos <= ?
+                ORDER BY start_pos
+            """, (genome_id, contig_id, int(start_bp), int(end_bp)))
+            genes = cursor.fetchall()
+            for i, (gene_id, _) in enumerate(genes):
+                relative_pos = i / max(1, len(genes) - 1) if len(genes) > 1 else 0.5
+                mappings.append((gene_id, block_id, role, relative_pos))
+            return len(genes)
+
         for block in blocks:
             (block_id, query_genome_id, target_genome_id,
              query_contig_id, target_contig_id,
              query_start, query_end, target_start, target_end,
              query_windows_json, target_windows_json) = block
-            
-            # Extract clean contig IDs (remove genome prefix if present)
-            # Handle format like "1313.30775_accn|1313.30775.con.0001" -> "accn|1313.30775.con.0001"
+
+            # Clean contig IDs
             if '_' in query_contig_id and '|' in query_contig_id:
-                query_clean_contig = query_contig_id.split('_', 1)[1]  # Take everything after first underscore
+                query_clean_contig = query_contig_id.split('_', 1)[1]
             else:
                 query_clean_contig = query_contig_id
-                
             if '_' in target_contig_id and '|' in target_contig_id:
-                target_clean_contig = target_contig_id.split('_', 1)[1]  # Take everything after first underscore
+                target_clean_contig = target_contig_id.split('_', 1)[1]
             else:
                 target_clean_contig = target_contig_id
-            
-            query_gene_ids = _genes_from_windows(query_windows_json)
 
+            # Try bp-range mapping first (v2 chain pipeline with coordinates)
+            bp_meta = _parse_bp_meta(query_windows_json)
+            if bp_meta:
+                _genes_by_bp_range(query_genome_id, query_clean_contig,
+                                   bp_meta['query_start_bp'], bp_meta['query_end_bp'],
+                                   'query', block_id)
+                _genes_by_bp_range(target_genome_id, target_clean_contig,
+                                   bp_meta['target_start_bp'], bp_meta['target_end_bp'],
+                                   'target', block_id)
+                bp_mapped += 1
+                continue
+
+            # Legacy path: explicit gene lists from windows JSON
+            query_gene_ids = _genes_from_windows(query_windows_json)
             if query_gene_ids:
                 for i, gene_id in enumerate(query_gene_ids):
                     lookup_id = _normalize_gene_id(gene_id)
@@ -658,31 +709,21 @@ class ELSADataIngester:
                     relative_pos = i / max(1, len(query_gene_ids) - 1) if len(query_gene_ids) > 1 else 0.5
                     mappings.append((lookup_id, block_id, 'query', relative_pos))
             elif query_start is not None and query_end is not None:
-                # Inclusive gene index range: [query_start, query_end + 4]
                 gene_start_idx = int(query_start)
-                gene_end_idx = int(query_end) + 4
+                gene_end_idx = int(query_end)
                 num_genes = max(1, gene_end_idx - gene_start_idx + 1)
-
-                query_gene_query = """
-                    SELECT gene_id FROM genes 
+                cursor.execute("""
+                    SELECT gene_id FROM genes
                     WHERE genome_id = ? AND contig_id = ?
-                    ORDER BY start_pos
-                    LIMIT ? OFFSET ?
-                """
-                cursor.execute(query_gene_query, (
-                    query_genome_id, query_clean_contig,
-                    num_genes, gene_start_idx
-                ))
-                query_genes = cursor.fetchall()
-
-                for i, (gene_id,) in enumerate(query_genes):
-                    relative_pos = i / max(1, len(query_genes) - 1) if len(query_genes) > 1 else 0.5
+                    ORDER BY start_pos LIMIT ? OFFSET ?
+                """, (query_genome_id, query_clean_contig, num_genes, gene_start_idx))
+                for i, (gene_id,) in enumerate(cursor.fetchall()):
+                    relative_pos = i / max(1, num_genes - 1) if num_genes > 1 else 0.5
                     mappings.append((gene_id, block_id, 'query', relative_pos))
             else:
                 blocks_without_windows += 1
 
             target_gene_ids = _genes_from_windows(target_windows_json)
-
             if target_gene_ids:
                 for i, gene_id in enumerate(target_gene_ids):
                     lookup_id = _normalize_gene_id(gene_id)
@@ -692,28 +733,23 @@ class ELSADataIngester:
                     mappings.append((lookup_id, block_id, 'target', relative_pos))
             elif target_start is not None and target_end is not None:
                 gene_start_idx = int(target_start)
-                gene_end_idx = int(target_end) + 4
+                gene_end_idx = int(target_end)
                 num_genes = max(1, gene_end_idx - gene_start_idx + 1)
-
-                target_gene_query = """
-                    SELECT gene_id FROM genes 
+                cursor.execute("""
+                    SELECT gene_id FROM genes
                     WHERE genome_id = ? AND contig_id = ?
-                    ORDER BY start_pos
-                    LIMIT ? OFFSET ?
-                """
-                cursor.execute(target_gene_query, (
-                    target_genome_id, target_clean_contig,
-                    num_genes, gene_start_idx
-                ))
-                target_genes = cursor.fetchall()
-
-                for i, (gene_id,) in enumerate(target_genes):
-                    relative_pos = i / max(1, len(target_genes) - 1) if len(target_genes) > 1 else 0.5
+                    ORDER BY start_pos LIMIT ? OFFSET ?
+                """, (target_genome_id, target_clean_contig, num_genes, gene_start_idx))
+                for i, (gene_id,) in enumerate(cursor.fetchall()):
+                    relative_pos = i / max(1, num_genes - 1) if num_genes > 1 else 0.5
                     mappings.append((gene_id, block_id, 'target', relative_pos))
             else:
                 blocks_without_windows += 1
+
         if blocks_without_windows > 0:
             logger.warning(f"{blocks_without_windows} blocks lacked usable window information for gene mapping")
+        if bp_mapped > 0:
+            logger.info(f"{bp_mapped}/{len(blocks)} blocks mapped via bp-range coordinates")
         
         # Insert all mappings in batch
         if mappings:

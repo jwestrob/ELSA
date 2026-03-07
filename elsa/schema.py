@@ -602,28 +602,30 @@ def compute_slot_summaries(
     return pd.DataFrame(summaries)
 
 
-def _estimate_n_types(emb_normed: np.ndarray, threshold: float = 0.5) -> int:
+def _estimate_n_types(emb_normed: np.ndarray, threshold: float = 0.4) -> int:
     """Estimate whether a slot has 1 or 2+ occupant types.
 
-    Simple heuristic: compute pairwise similarities and check if there's
-    a bimodal split (some pairs with very low similarity).
+    Conservative heuristic: requires genuine bimodality — a substantial
+    fraction of pairs below threshold AND low mean similarity, indicating
+    two distinct protein families rather than normal sequence divergence.
     """
     n = len(emb_normed)
     if n < 3:
         return 1
 
-    # Pairwise similarities
     sim_matrix = emb_normed @ emb_normed.T
-    # Get lower triangle values
     tril_idx = np.tril_indices(n, k=-1)
     pairwise_sims = sim_matrix[tril_idx]
 
     if len(pairwise_sims) == 0:
         return 1
 
-    # If >25% of pairs have similarity below threshold, likely 2+ types
     low_sim_frac = (pairwise_sims < threshold).mean()
-    if low_sim_frac > 0.25:
+    mean_sim = float(pairwise_sims.mean())
+
+    # Require both: >40% of pairs below threshold AND mean sim below 0.6
+    # This avoids flagging single-divergent-member situations (mean ~0.8)
+    if low_sim_frac > 0.4 and mean_sim < 0.6:
         return 2
     return 1
 

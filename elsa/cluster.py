@@ -162,7 +162,7 @@ def merge_contained_clusters(
     block_to_cluster: Dict[int, int],
     blocks: List[ChainedBlock],
     containment_threshold: float = 0.8,
-) -> Dict[int, int]:
+) -> Tuple[Dict[int, int], Dict[int, int]]:
     """Merge clusters whose genomic footprints are largely contained in a larger cluster.
 
     For each pair of clusters, restrict to genomes they share, then check if
@@ -170,7 +170,9 @@ def merge_contained_clusters(
     contained within the larger cluster. This prevents clusters with blocks in
     many extra genomes from avoiding the merge.
 
-    Returns updated block_to_cluster mapping.
+    Returns:
+        block_to_cluster: updated mapping (block_id -> merged cluster_id)
+        merge_map: mapping of child_cluster -> parent_cluster (pre-resolve)
     """
     block_map = {b.block_id: b for b in blocks}
 
@@ -189,7 +191,7 @@ def merge_contained_clusters(
             cluster_genomes[cid][block.target_genome].add((block.target_contig, idx))
 
     if not cluster_genes:
-        return block_to_cluster
+        return block_to_cluster, {}
 
     # Sort by footprint size descending — process largest first
     sorted_cids = sorted(cluster_genes, key=lambda c: len(cluster_genes[c]), reverse=True)
@@ -232,7 +234,12 @@ def merge_contained_clusters(
             overlap = len(small_shared & large_shared)
             containment = overlap / len(small_shared)
 
-            if containment >= containment_threshold:
+            # Require reciprocal size ratio: if the small cluster covers
+            # only a tiny fraction of the large cluster's shared footprint,
+            # the overlap is likely incidental (mega-block artifact) rather
+            # than true nesting. Minimum ratio = 0.5.
+            reciprocal = overlap / len(large_shared) if large_shared else 0
+            if containment >= containment_threshold and reciprocal >= 0.5:
                 merge_map[small_cid_r] = large_cid_r
                 cluster_genes[large_cid_r] = large_genes | small_genes
                 # Merge per-genome footprints too
@@ -241,7 +248,7 @@ def merge_contained_clusters(
                 break
 
     if not merge_map:
-        return block_to_cluster
+        return block_to_cluster, {}
 
     # Apply merges
     new_mapping = {}
@@ -250,7 +257,7 @@ def merge_contained_clusters(
             new_mapping[bid] = 0
         else:
             new_mapping[bid] = resolve(cid)
-    return new_mapping
+    return new_mapping, dict(merge_map)
 
 
 def _mutual_top_k(edges_by_u: Dict[int, List[Tuple[int, float]]], k: int) -> Set[Tuple[int, int]]:

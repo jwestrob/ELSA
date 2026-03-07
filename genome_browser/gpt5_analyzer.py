@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-GPT-5 Analyzer for ELSA Genome Browser
+AI Analyzer for ELSA Genome Browser
 
-Analyzes syntenic blocks by extracting locus information and sending it to GPT-5 
-for comparative analysis and functional annotation interpretation.
+Analyzes syntenic blocks by extracting locus information and sending it to
+Claude Sonnet 4.6 for comparative analysis and functional annotation interpretation.
 """
 
 import sqlite3
@@ -12,8 +12,8 @@ import logging
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
 from dataclasses import dataclass
-import dspy
 import os
+from openai import OpenAI
 
 logger = logging.getLogger(__name__)
 
@@ -67,33 +67,15 @@ class SyntenicBlockAnalysis:
     score: float
     alignment_details: Dict[str, Any]
 
-class SyntenicBlockAnalyzer(dspy.Signature):
-    """DSPy signature for GPT-5 syntenic block analysis."""
-    
-    block_summary = dspy.InputField(desc="Summary of the syntenic block including identity, score, and length")
-    query_locus_data = dspy.InputField(desc="Detailed information about the query locus including genes and PFAM domains. Consider assembly breaks for genes at contig boundaries")
-    target_locus_data = dspy.InputField(desc="Detailed information about the target locus including genes and PFAM domains. Consider assembly breaks for genes at contig boundaries")
-    
-    functional_conservation = dspy.OutputField(desc="Analysis of functional similarities based on PFAM domain conservation and gene orthologs")
-    gene_organization = dspy.OutputField(desc="How gene organization (order, orientation) is conserved or different")
-    functional_modules = dspy.OutputField(desc="Identifiable functional modules, operons, or biological processes")
-    notable_features = dspy.OutputField(desc="Interesting domain architectures, unique genes, or potential HGT events")
-    biological_significance = dspy.OutputField(desc="What this conservation tells us about the importance of this genomic region")
+class BlockAnalyzer:
+    """Analyzer that uses Claude Sonnet 4.6 to interpret syntenic blocks."""
 
-class GPT5Analyzer:
-    """Analyzer that uses GPT-5 to interpret syntenic blocks."""
-    
     def __init__(self, db_path: Path):
         self.db_path = db_path
-        # Initialize GPT-5 with DSPy and LiteLLM (no global configuration)
-        self.lm = dspy.LM(
-            "openai/gpt-5",
-            temperature=1.0,
-            max_tokens=20000
+        self.client = OpenAI(
+            base_url="https://openrouter.ai/api/v1",
+            api_key=os.environ.get("OPENROUTER_API_KEY", ""),
         )
-        
-        # Initialize the signature without direct LM (use context switching)
-        self.analyzer = dspy.Predict(SyntenicBlockAnalyzer)
     
     def get_syntenic_block_analysis(self, block_id: int) -> Optional[SyntenicBlockAnalysis]:
         """Extract complete analysis data for a syntenic block."""
@@ -242,50 +224,44 @@ class GPT5Analyzer:
             logger.error(f"Error extracting locus info: {e}")
             return None
     
-    def generate_gpt_analysis(self, analysis: SyntenicBlockAnalysis) -> Optional[str]:
-        """Generate GPT-5 analysis of the syntenic block using DSPy."""
+    def generate_analysis(self, analysis: SyntenicBlockAnalysis) -> Optional[str]:
+        """Generate analysis of the syntenic block using Claude Sonnet 4.6."""
         try:
-            # Prepare structured data for GPT-5
             block_summary = f"Block ID: {analysis.block_id}, Embedding Similarity: {analysis.identity:.3f} (cosine), Score: {analysis.score:.2f}, Length: {analysis.block_length} windows"
-            
             query_data = self._format_locus_for_analysis(analysis.query_locus, "Query")
             target_data = self._format_locus_for_analysis(analysis.target_locus, "Target")
-            
-            # Call GPT-5 using DSPy signature with explicit LM context
-            with dspy.context(lm=self.lm):
-                result = self.analyzer(
-                    block_summary=block_summary,
-                    query_locus_data=query_data,
-                    target_locus_data=target_data
-                )
-            
-            # Format the structured output into a comprehensive report
-            report = f"""# GPT-5 Syntenic Block Analysis
 
-## 1. Functional Conservation
-{result.functional_conservation}
+            prompt = f"""Analyze this syntenic block comparison between two genomic loci.
 
-## 2. Gene Organization
-{result.gene_organization}
+{block_summary}
 
-## 3. Functional Modules
-{result.functional_modules}
+{query_data}
 
-## 4. Notable Features
-{result.notable_features}
+{target_data}
 
-## 5. Biological Significance
-{result.biological_significance}
-"""
-            
-            return report
-                
+Provide a structured analysis with these sections:
+1. **Functional Conservation** — PFAM domain conservation and gene orthologs
+2. **Gene Organization** — How gene order and orientation are conserved or differ
+3. **Functional Modules** — Identifiable operons or biological processes
+4. **Notable Features** — Interesting domain architectures, unique genes, or potential HGT
+5. **Biological Significance** — What this conservation tells us about the region's importance
+
+Be specific about PFAM domains and gene positions. Consider assembly breaks for genes at contig boundaries."""
+
+            response = self.client.chat.completions.create(
+                model="anthropic/claude-sonnet-4-6",
+                max_tokens=2000,
+                messages=[{"role": "user", "content": prompt}],
+            )
+
+            return response.choices[0].message.content
+
         except Exception as e:
-            logger.error(f"Error calling GPT-5: {e}")
-            return f"GPT-5 analysis failed: {str(e)}"
+            logger.error(f"Error calling Claude: {e}")
+            return f"Analysis failed: {str(e)}"
     
     def _format_locus_for_analysis(self, locus: LocusInfo, label: str) -> str:
-        """Format locus data for GPT-5 analysis."""
+        """Format locus data for analysis prompt."""
         summary = f"{label} Locus ({locus.organism_name}):\n"
         summary += f"Location: {locus.contig_id}:{locus.locus_start}-{locus.locus_end} ({locus.locus_length:,} bp)\n"
         summary += f"Gene count: {locus.gene_count}\n"
@@ -312,38 +288,30 @@ class GPT5Analyzer:
         return summary
 
 def analyze_syntenic_block(block_id: int, db_path: Path = Path("genome_browser.db")) -> Tuple[Optional[SyntenicBlockAnalysis], Optional[str]]:
-    """Main function to analyze a syntenic block with GPT-5 using DSPy.
-    
+    """Analyze a syntenic block with Claude Sonnet 4.6.
+
     Returns:
-        Tuple of (analysis_data, gpt5_report)
+        Tuple of (analysis_data, report)
     """
-    analyzer = GPT5Analyzer(db_path)
-    
-    # Extract block analysis data
+    analyzer = BlockAnalyzer(db_path)
+
     analysis = analyzer.get_syntenic_block_analysis(block_id)
     if not analysis:
         return None, "Failed to extract block analysis data"
-    
-    # Generate GPT analysis
-    gpt_report = analyzer.generate_gpt_analysis(analysis)
-    
-    return analysis, gpt_report
+
+    report = analyzer.generate_analysis(analysis)
+    return analysis, report
 
 if __name__ == "__main__":
-    # Test the analyzer
     test_block_id = 1
     analysis, report = analyze_syntenic_block(test_block_id)
-    
+
     if analysis:
         print(f"Analysis for block {test_block_id}:")
         print(f"Query: {analysis.query_locus.organism_name} - {analysis.query_locus.gene_count} genes")
         print(f"Target: {analysis.target_locus.organism_name} - {analysis.target_locus.gene_count} genes")
         print(f"Identity: {analysis.identity:.1%}")
-        
         if report:
-            print("\nGPT Analysis:")
-            print(report)
-        else:
-            print("No GPT analysis available")
+            print(f"\nAnalysis:\n{report}")
     else:
         print(f"Failed to analyze block {test_block_id}")

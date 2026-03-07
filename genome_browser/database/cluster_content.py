@@ -151,7 +151,8 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
                                    cluster_id: int,
                                    min_core_coverage: float = 0.7,
                                    df_percentile_ban: float = 0.9,
-                                   max_tokens: int = 10):
+                                   max_tokens: int = 10,
+                                   block_ids: list = None):
     """Compute an order-aware PFAM consensus cassette for a cluster.
 
     Returns a dict with:
@@ -159,23 +160,39 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
       - pairs: list of dicts for adjacent token pairs [{i, j, t1, t2, same_frac, support}]
     where mean_pos ∈ [0,1] is the mean normalized index across blocks and fwd_frac is
     the fraction of occurrences on the forward strand for that token.
+
+    If block_ids is provided, restrict to those blocks instead of using cluster_id.
     """
     import hashlib
     import statistics as stats
 
     # Load per-gene PFAM and strand for genes mapped to blocks in this cluster
-    q = pd.read_sql_query(
-        """
-        SELECT sb.block_id, gbm.block_role, g.start_pos, g.strand, g.pfam_domains
-        FROM gene_block_mappings gbm
-        JOIN genes g ON gbm.gene_id = g.gene_id
-        JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
-        WHERE sb.cluster_id = ? AND g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
-        ORDER BY sb.block_id, gbm.block_role, g.start_pos
-        """,
-        conn,
-        params=(int(cluster_id),)
-    )
+    if block_ids:
+        bid_list = ','.join(str(int(b)) for b in block_ids)
+        q = pd.read_sql_query(
+            f"""
+            SELECT gbm.block_id, gbm.block_role, g.start_pos, g.strand, g.pfam_domains
+            FROM gene_block_mappings gbm
+            JOIN genes g ON gbm.gene_id = g.gene_id
+            WHERE gbm.block_id IN ({bid_list})
+              AND g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+            ORDER BY gbm.block_id, gbm.block_role, g.start_pos
+            """,
+            conn,
+        )
+    else:
+        q = pd.read_sql_query(
+            """
+            SELECT sb.block_id, gbm.block_role, g.start_pos, g.strand, g.pfam_domains
+            FROM gene_block_mappings gbm
+            JOIN genes g ON gbm.gene_id = g.gene_id
+            JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
+            WHERE sb.cluster_id = ? AND g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+            ORDER BY sb.block_id, gbm.block_role, g.start_pos
+            """,
+            conn,
+            params=(int(cluster_id),)
+        )
     if q.empty:
         return []
 
@@ -199,14 +216,22 @@ def compute_cluster_pfam_consensus(conn: sqlite3.Connection,
         key = (int(row.block_id), str(row.block_role))
         by_block_role.setdefault(key, []).append((primary, int(row.strand)))
 
+    # When block_ids are provided (sub-cluster mode), use both sides as separate
+    # instances so conservation reflects cross-genome agreement rather than
+    # trivially being 100% for single-block sub-clusters.
     by_block: dict[int, list[tuple[str, int]]] = {}
-    for (bid, role), seq in by_block_role.items():
-        if bid not in by_block:
-            by_block[bid] = seq
-        else:
-            # prefer query; if we already have query, ignore target; otherwise choose longer
-            if role == 'query' or len(seq) > len(by_block[bid]):
+    if block_ids:
+        for (bid, role), seq in by_block_role.items():
+            instance_key = bid * 2 + (0 if role == 'query' else 1)
+            by_block[instance_key] = seq
+    else:
+        for (bid, role), seq in by_block_role.items():
+            if bid not in by_block:
                 by_block[bid] = seq
+            else:
+                # prefer query; if we already have query, ignore target; otherwise choose longer
+                if role == 'query' or len(seq) > len(by_block[bid]):
+                    by_block[bid] = seq
 
     # Remove empty sequences
     by_block = {bid: seq for bid, seq in by_block.items() if seq}

@@ -977,7 +977,7 @@ def _get_all_cluster_stats_fast(conn: sqlite3.Connection) -> List[ClusterStats]:
         cluster_pfam = pfam_by_cluster.get(cid, {})
         sorted_domains = sorted(cluster_pfam.items(), key=lambda x: x[1], reverse=True)
         dominant_functions = [d for d, _ in sorted_domains[:10]]
-        domain_counts = sorted_domains[:20]
+        domain_counts = sorted_domains
 
         stats = ClusterStats(
             cluster_id=cid,
@@ -1126,43 +1126,14 @@ def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[Clu
                 # Helper: compute PFAM domain counts per micro cluster from gene spans
                 def _micro_domain_counts(micro_cid: int) -> List[Tuple[str, int]]:
                     try:
-                        # Prefer pair mappings if available
-                        have_pairs = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_block_pairs'").fetchone() is not None
-                        have_maps = conn.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='micro_gene_pair_mappings'").fetchone() is not None
-                        rows: List[Tuple[str]] = []
-                        if have_pairs and have_maps:
-                            q = """
-                                SELECT g.pfam_domains
-                                FROM micro_gene_pair_mappings m
-                                JOIN micro_block_pairs p ON p.block_id = m.block_id
-                                JOIN genes g ON g.gene_id = m.gene_id
-                                WHERE p.cluster_id = ? AND g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
-                            """
-                            rows = conn.execute(q, (micro_cid,)).fetchall()
-                        else:
-                            # Legacy: use micro_gene_blocks spans
-                            cur2 = conn.cursor()
-                            cur2.execute("DROP TABLE IF EXISTS _tmp_go_m")
-                            cur2.execute(
-                                """
-                                CREATE TEMP TABLE _tmp_go_m AS
-                                SELECT genome_id, contig_id, gene_id, start_pos, end_pos,
-                                       ROW_NUMBER() OVER (PARTITION BY genome_id, contig_id ORDER BY start_pos, end_pos) - 1 AS idx
-                                FROM genes
-                                """
-                            )
-                            q = """
-                                WITH ranges AS (
-                                    SELECT block_id, genome_id, contig_id, start_index, end_index
-                                    FROM micro_gene_blocks WHERE cluster_id = ?
-                                )
-                                SELECT g.pfam_domains
-                                FROM ranges r
-                                JOIN _tmp_go_m go ON go.genome_id = r.genome_id AND go.contig_id = r.contig_id AND go.idx BETWEEN r.start_index AND r.end_index
-                                JOIN genes g ON g.gene_id = go.gene_id
-                                WHERE g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
-                            """
-                            rows = cur2.execute(q, (micro_cid,)).fetchall()
+                        rows = conn.execute("""
+                            SELECT g.pfam_domains
+                            FROM gene_block_mappings gbm
+                            JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
+                            JOIN genes g ON g.gene_id = gbm.gene_id
+                            WHERE sb.cluster_id = ?
+                              AND g.pfam_domains IS NOT NULL AND g.pfam_domains != ''
+                        """, (micro_cid,)).fetchall()
                         cnt: Dict[str, int] = {}
                         for (pf,) in rows:
                             for tok in str(pf).split(';'):

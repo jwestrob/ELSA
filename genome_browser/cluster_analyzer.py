@@ -865,9 +865,24 @@ Format as:
             return f"Cluster {stats.cluster_id}: {stats.total_alignments:,} alignments spanning {stats.unique_genes:,} genes. Analysis pending."
 
 def _get_all_cluster_stats_fast(conn: sqlite3.Connection) -> List[ClusterStats]:
-    """Fast batch loading for all clusters - avoids per-cluster queries."""
-    logger.info("DEBUG _get_all_cluster_stats_fast: starting")
-    # Get all clusters in one query - only include clusters that have blocks
+    """Fast batch loading for all clusters - avoids per-cluster queries.
+
+    Optimized for large datasets (800k+ blocks): uses SQL-side aggregation
+    and defers expensive gene/PFAM joins to on-demand loading.
+    """
+    import time as _time
+    t0 = _time.monotonic()
+
+    # Ensure covering index exists (speeds up GROUP_CONCAT on large DBs)
+    try:
+        conn.execute("""
+            CREATE INDEX IF NOT EXISTS idx_blocks_cluster_genomes
+            ON syntenic_blocks(cluster_id, query_genome_id, target_genome_id)
+        """)
+    except Exception:
+        pass
+
+    # 1. Load all clusters in one query
     cursor = conn.execute("""
         SELECT c.cluster_id, c.size, c.consensus_length, c.consensus_score, c.diversity,
                COALESCE(c.cluster_type, 'macro') as cluster_type
@@ -877,78 +892,35 @@ def _get_all_cluster_stats_fast(conn: sqlite3.Connection) -> List[ClusterStats]:
         ORDER BY c.size DESC
     """)
     clusters = cursor.fetchall()
-    logger.info(f"DEBUG _get_all_cluster_stats_fast: found {len(clusters)} clusters")
+    logger.info(f"_get_all_cluster_stats_fast: {len(clusters)} clusters in {_time.monotonic()-t0:.2f}s")
 
     if not clusters:
-        logger.info("DEBUG _get_all_cluster_stats_fast: no clusters found, returning empty")
         return []
 
-    # Batch load genome counts per cluster
-    genome_counts = {}
+    # 2. Organisms per cluster — SQL-side GROUP_CONCAT instead of fetching all rows
+    t1 = _time.monotonic()
+    organisms_by_cluster: Dict[int, List[str]] = {}
+    genome_counts: Dict[int, int] = {}
     cursor = conn.execute("""
-        SELECT cluster_id, COUNT(DISTINCT query_genome_id) + COUNT(DISTINCT target_genome_id) as genome_count
+        SELECT cluster_id,
+               GROUP_CONCAT(DISTINCT query_genome_id) as q_genomes,
+               GROUP_CONCAT(DISTINCT target_genome_id) as t_genomes
         FROM syntenic_blocks
         WHERE cluster_id > 0
         GROUP BY cluster_id
     """)
     for row in cursor:
-        genome_counts[row[0]] = row[1]
-
-    # Batch load organisms per cluster
-    organisms_by_cluster = {}
-    cursor = conn.execute("""
-        SELECT cluster_id, query_genome_id, target_genome_id
-        FROM syntenic_blocks
-        WHERE cluster_id > 0
-    """)
-    for row in cursor:
         cid = row[0]
-        if cid not in organisms_by_cluster:
-            organisms_by_cluster[cid] = set()
-        organisms_by_cluster[cid].add(row[1])
-        organisms_by_cluster[cid].add(row[2])
+        q_set = set(row[1].split(',')) if row[1] else set()
+        t_set = set(row[2].split(',')) if row[2] else set()
+        all_orgs = sorted(q_set | t_set)
+        organisms_by_cluster[cid] = all_orgs
+        genome_counts[cid] = len(all_orgs)
+    logger.info(f"_get_all_cluster_stats_fast: organisms in {_time.monotonic()-t1:.2f}s")
 
-    # Batch load unique gene counts per cluster
-    genes_by_cluster = {}
-    try:
-        cursor = conn.execute("""
-            SELECT sb.cluster_id, COUNT(DISTINCT gbm.gene_id) as gene_count
-            FROM gene_block_mappings gbm
-            JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
-            WHERE sb.cluster_id > 0
-            GROUP BY sb.cluster_id
-        """)
-        for row in cursor:
-            genes_by_cluster[row[0]] = row[1]
-        logger.info(f"DEBUG _get_all_cluster_stats_fast: loaded gene counts for {len(genes_by_cluster)} clusters")
-    except Exception as e:
-        logger.warning(f"Could not batch load gene counts: {e}")
-
-    # Batch load PFAM domains per cluster
-    pfam_by_cluster = {}
-    try:
-        cursor = conn.execute("""
-            SELECT sb.cluster_id, g.pfam_domains
-            FROM genes g
-            JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
-            JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
-            WHERE sb.cluster_id > 0
-              AND g.pfam_domains IS NOT NULL
-              AND g.pfam_domains != ''
-        """)
-        for row in cursor:
-            cid, pfam_str = row
-            if cid not in pfam_by_cluster:
-                pfam_by_cluster[cid] = {}
-            for domain in pfam_str.split(';'):
-                domain = domain.strip()
-                if domain:
-                    pfam_by_cluster[cid][domain] = pfam_by_cluster[cid].get(domain, 0) + 1
-    except Exception as e:
-        logger.warning(f"Could not batch load PFAM data: {e}")
-
-    # Batch load identity stats per cluster
-    identity_by_cluster = {}
+    # 3. Identity stats per cluster — lightweight GROUP BY
+    t2 = _time.monotonic()
+    identity_by_cluster: Dict[int, Tuple[float, float, float]] = {}
     try:
         cursor = conn.execute("""
             SELECT cluster_id, AVG(identity), MIN(identity), MAX(identity)
@@ -957,27 +929,24 @@ def _get_all_cluster_stats_fast(conn: sqlite3.Connection) -> List[ClusterStats]:
             GROUP BY cluster_id
         """)
         for row in cursor:
-            cid, avg_id, min_id, max_id = row
-            identity_by_cluster[cid] = (avg_id or 0.0, min_id or 0.0, max_id or 0.0)
-        logger.info(f"DEBUG _get_all_cluster_stats_fast: loaded identity stats for {len(identity_by_cluster)} clusters, sample: {list(identity_by_cluster.items())[:3]}")
+            identity_by_cluster[row[0]] = (row[1] or 0.0, row[2] or 0.0, row[3] or 0.0)
     except Exception as e:
         logger.warning(f"Could not batch load identity data: {e}")
+    logger.info(f"_get_all_cluster_stats_fast: identity in {_time.monotonic()-t2:.2f}s")
+
+    # 4. Gene counts and PFAM — DEFERRED (set to 0/[] here, loaded on demand)
+    #    These queries involve expensive JOINs across gene_block_mappings (millions of rows)
+    #    and are the primary cause of load hangs on large datasets.
 
     stats_list = []
     for row in clusters:
         cid, size, cons_len, cons_score, diversity, ctype = row
-        orgs = list(organisms_by_cluster.get(cid, set()))
+        orgs = organisms_by_cluster.get(cid, [])
 
         # Normalize cluster type
         ctype = (ctype or 'macro').strip().lower()
         if ctype in ('', 'unknown', 'none'):
             ctype = 'macro'
-
-        # Get PFAM data for this cluster
-        cluster_pfam = pfam_by_cluster.get(cid, {})
-        sorted_domains = sorted(cluster_pfam.items(), key=lambda x: x[1], reverse=True)
-        dominant_functions = [d for d, _ in sorted_domains[:10]]
-        domain_counts = sorted_domains
 
         stats = ClusterStats(
             cluster_id=cid,
@@ -987,25 +956,65 @@ def _get_all_cluster_stats_fast(conn: sqlite3.Connection) -> List[ClusterStats]:
             diversity=diversity or 0.0,
             cluster_type=ctype,
             avg_identity=identity_by_cluster.get(cid, (0.0, 0.0, 0.0))[0],
-            identity_range=(identity_by_cluster.get(cid, (0.0, 0.0, 0.0))[1], identity_by_cluster.get(cid, (0.0, 0.0, 0.0))[2]),
+            identity_range=(identity_by_cluster.get(cid, (0.0, 0.0, 0.0))[1],
+                            identity_by_cluster.get(cid, (0.0, 0.0, 0.0))[2]),
             length_range=(2, 100),
             organism_count=len(orgs),
-            organisms=orgs[:10],  # Limit to first 10
+            organisms=orgs[:10],
             representative_query='',
             representative_target='',
             total_alignments=size,
             unique_contigs=genome_counts.get(cid, 0),
-            unique_genes=genes_by_cluster.get(cid, 0),
-            unique_pfam_domains=len(cluster_pfam),
-            dominant_functions=dominant_functions,
-            domain_counts=domain_counts,
+            unique_genes=0,  # Loaded on demand via get_cluster_gene_count()
+            unique_pfam_domains=0,
+            dominant_functions=[],  # Loaded on demand via get_cluster_pfam()
+            domain_counts=[],
         )
         stats_list.append(stats)
 
-    if stats_list:
-        s = stats_list[0]
-        logger.info(f"DEBUG _get_all_cluster_stats_fast: returning {len(stats_list)} stats, first: cluster_id={s.cluster_id}, consensus_length={s.consensus_length}, avg_identity={s.avg_identity}, unique_genes={s.unique_genes}")
+    logger.info(f"_get_all_cluster_stats_fast: total {_time.monotonic()-t0:.2f}s, {len(stats_list)} clusters")
     return stats_list
+
+
+def get_cluster_pfam(db_path: Path, cluster_id: int) -> List[Tuple[str, int]]:
+    """Load PFAM domain counts for a single cluster (on demand)."""
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.execute("""
+            SELECT g.pfam_domains
+            FROM genes g
+            JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
+            JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
+            WHERE sb.cluster_id = ?
+              AND g.pfam_domains IS NOT NULL
+              AND g.pfam_domains != ''
+        """, (cluster_id,))
+        counts: Dict[str, int] = {}
+        for (pfam_str,) in cursor:
+            for domain in pfam_str.split(';'):
+                domain = domain.strip()
+                if domain:
+                    counts[domain] = counts.get(domain, 0) + 1
+        conn.close()
+        return sorted(counts.items(), key=lambda x: x[1], reverse=True)
+    except Exception:
+        return []
+
+
+def get_cluster_gene_count(db_path: Path, cluster_id: int) -> int:
+    """Load unique gene count for a single cluster (on demand)."""
+    try:
+        conn = sqlite3.connect(db_path)
+        row = conn.execute("""
+            SELECT COUNT(DISTINCT gbm.gene_id)
+            FROM gene_block_mappings gbm
+            JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
+            WHERE sb.cluster_id = ?
+        """, (cluster_id,)).fetchone()
+        conn.close()
+        return int(row[0]) if row else 0
+    except Exception:
+        return 0
 
 
 def get_all_cluster_stats(db_path: Path = Path("genome_browser.db")) -> List[ClusterStats]:

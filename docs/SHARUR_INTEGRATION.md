@@ -58,6 +58,29 @@ protein_embeddings.h5
 
 A parquet file with columns: `protein_id` (or `gene_id` or `id`) + `emb_000`, `emb_001`, ..., `emb_NNN`.
 
+### 3. Annotations — DuckDB (`--annotations-db`)
+
+ELSA reads from the Sharur `annotations` table to populate PFAM domains and a multi-source annotation table:
+
+```sql
+SELECT protein_id, source, accession, description, evalue, score
+FROM annotations
+```
+
+| Column | Type | Notes |
+|--------|------|-------|
+| `protein_id` | string | Must match `proteins.protein_id` and HDF5 `protein_ids` |
+| `source` | string | e.g., `'pfam'`, `'kofam'`, `'cazyme'`, `'defense_finder'` |
+| `accession` | string | Domain/family ID (e.g., `'PF00005'`, `'K00001'`) |
+| `description` | string | Human-readable name (optional) |
+| `evalue` | float | E-value from HMM search (optional) |
+| `score` | float | Bit score (optional) |
+
+**Behavior:**
+- Rows with `source = 'pfam'` are merged into `genes.pfam_domains` (semicolon-separated) — replaces Astra PFAM annotation
+- ALL rows (every source) are bulk-loaded into `annotations_multi` table in the browser SQLite DB
+- The `--annotations-db` can be the same DuckDB as `--db` if it has both `proteins` and `annotations` tables
+
 ---
 
 ## CLI Usage
@@ -69,6 +92,22 @@ elsa synteny \
     --db /path/to/sharur.duckdb \
     --embeddings /path/to/protein_embeddings.h5 \
     -o /path/to/results/
+```
+
+### With Sharur annotations (PFAM, KEGG, CAZy, DefenseFinder, etc.)
+
+```bash
+# Same DuckDB has both proteins + annotations tables
+elsa synteny \
+    --db /path/to/sharur.duckdb \
+    --embeddings /path/to/protein_embeddings.h5 \
+    --annotations-db /path/to/sharur.duckdb \
+    -o /path/to/results/
+
+# Or re-populate browser DB with annotations after synteny
+elsa browser results/ \
+    --store ./my_store \
+    --annotations-db /path/to/sharur.duckdb
 ```
 
 ### With persistent FAISS store
@@ -116,6 +155,9 @@ elsa synteny \
 --index-backend TEXT          auto/faiss/hnswlib [default: auto]
 --hnsw-k INTEGER              k for neighbor search [default: 50]
 --no-normalize                Skip L2 normalization
+--annotations-db PATH         Sharur DuckDB with annotations table
+                              (loads PFAM into gene table + all sources
+                              into annotations_multi table; skips Astra)
 ```
 
 ---
@@ -128,7 +170,17 @@ All outputs land in `--output-dir`:
 |------|-------------|
 | `micro_chain_blocks.csv` | One row per syntenic block. Columns: `block_id`, `cluster_id`, `query_genome`, `target_genome`, `query_contig`, `target_contig`, `query_start`/`end`, `target_start`/`end`, `n_anchors`, `chain_score`, `orientation`, `query_start_bp`/`end_bp`, `target_start_bp`/`end_bp`, `query_anchor_genes`, `target_anchor_genes` |
 | `micro_chain_clusters.csv` | One row per cluster. Columns: `cluster_id`, `size`, `genome_support`, `mean_chain_length`, `genes_json` |
+| `genome_browser.db` | SQLite DB for the genome browser UI |
 | `schema/` | (if >=3 blocks/cluster) Structural architecture summaries |
+
+### Browser DB tables (when `--annotations-db` is used)
+
+| Table | Description |
+|-------|-------------|
+| `genes.pfam_domains` | Semicolon-separated PFAM accessions per gene (from `source='pfam'`) |
+| `annotations_multi` | All annotation sources: `gene_id, source, accession, name, evalue, score` |
+
+The `annotations_multi` table enables future UI features for KEGG, CAZy, DefenseFinder, etc. without schema changes.
 
 ### Interpreting blocks
 

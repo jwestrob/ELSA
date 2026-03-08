@@ -406,37 +406,54 @@ def load_syntenic_blocks(limit: int = 1000, offset: int = 0,
     combined = combined.iloc[offset: offset + limit]
     return combined
 
+@st.cache_data(ttl=600)
 def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_role: Optional[str] = None, extended_context: bool = False) -> pd.DataFrame:
     """Load genes for a specific locus, optionally filtered to aligned regions."""
     conn = get_database_connection()
-    
-    # Parse locus ID format: "1313.30775:1313.30775_accn|1313.30775.con.0001"
-    # Need to extract contig_id to match genes table format: "accn|1313.30775.con.0001"
-    if ':' in locus_id:
-        genome_part, contig_part = locus_id.split(':', 1)
-        # Legacy format: "1313.30775_accn|..." -> after underscore
-        if '_' in contig_part:
-            contig_id = contig_part.split('_', 1)[1]
+
+    # Best path: look up contig_id directly from the block's stored metadata.
+    # The locus string format varies (genome:contig, genome:contig:range,
+    # genome_contig, etc.) so parsing is fragile.  The syntenic_blocks table
+    # stores query_contig_id / target_contig_id reliably.
+    contig_id = None
+    if block_id is not None and locus_role is not None:
+        col = 'query_contig_id' if locus_role == 'query' else 'target_contig_id'
+        try:
+            row = conn.execute(
+                f"SELECT {col} FROM syntenic_blocks WHERE block_id = ?",
+                (int(block_id),)
+            ).fetchone()
+            if row and row[0]:
+                contig_id = row[0]
+        except Exception:
+            pass
+
+    # Fallback: parse contig_id from locus string
+    if not contig_id:
+        if ':' in locus_id:
+            genome_part, contig_part = locus_id.split(':', 1)
+            # Legacy format: "1313.30775_accn|..." -> after underscore
+            if '_' in contig_part and '|' in contig_part:
+                contig_id = contig_part.split('_', 1)[1]
+            else:
+                contig_id = contig_part
+            # Strip micro locus suffixes:
+            # - Legacy micro: "accn|...#start-end"
+            # - Paired micro: "accn|...:start-end"
+            if '#' in contig_id:
+                contig_id = contig_id.split('#', 1)[0]
+            if ':' in contig_id:
+                # Only strip if looks like a numeric range
+                tail = contig_id.rsplit(':', 1)[1]
+                try:
+                    a, b = tail.split('-')
+                    int(a); int(b)
+                    contig_id = contig_id.rsplit(':', 1)[0]
+                except Exception:
+                    pass
         else:
-            contig_id = contig_part
-        # Strip micro locus suffixes:
-        # - Legacy micro: "accn|...#start-end"
-        # - Paired micro: "accn|...:start-end"
-        if '#' in contig_id:
-            contig_id = contig_id.split('#', 1)[0]
-        if ':' in contig_id:
-            # Only strip if looks like a numeric range
-            tail = contig_id.rsplit(':', 1)[1]
-            try:
-                a, b = tail.split('-')
-                int(a); int(b)
-                contig_id = contig_id.rsplit(':', 1)[0]
-            except Exception:
-                pass
-    else:
-        # Fallback: treat entire string as contig
-        contig_id = locus_id
-    
+            contig_id = locus_id
+
     # If we have block info, load only the aligned region + context
     if block_id is not None and locus_role is not None:
         try:
@@ -444,7 +461,7 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
         except Exception:
             pass
         return load_aligned_genes_for_block(conn, contig_id, block_id, locus_role, extended_context)
-    
+
     # Default: load all genes for the locus
     query = """
         SELECT g.*, c.length as contig_length
@@ -453,7 +470,7 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
         WHERE g.contig_id = ?
         ORDER BY g.start_pos
     """
-    
+
     return pd.read_sql_query(query, conn, params=[contig_id])
 
 def load_genes_for_region(contig_id: str, start_bp: int, end_bp: int, extended_context: bool = False) -> pd.DataFrame:
@@ -1492,42 +1509,36 @@ def display_genome_viewer():
     _ai_analysis_fragment()
     
     st.divider()
-    
-    # Debug info
-    st.write(f"**Debug**: Loading genes for query locus: {block['query_locus']}")
-    
-    # Load genes for both loci - now showing only aligned regions + context
-    with st.spinner("Loading aligned gene regions..."):
-        query_genes = load_genes_for_locus(block['query_locus'], block['block_id'], 'query')
-        # Load target genes if a target locus is present (micro pairs have target)
-        if not block.get('target_locus'):
-            import pandas as _pd
-            target_genes = _pd.DataFrame(columns=query_genes.columns if hasattr(query_genes, 'columns') else [])
-        else:
-            target_genes = load_genes_for_locus(block['target_locus'], block['block_id'], 'target')
-    
-    st.write(f"**Debug**: Query genes loaded: {len(query_genes)}, Target genes loaded: {len(target_genes)}")
-    
-    # Add comprehensive biological legend
-    with st.expander("📖 **Understanding Syntenic Block Visualization**", expanded=True):
+
+    # Load genes for both loci (cached — fast on re-runs)
+    query_genes = load_genes_for_locus(block['query_locus'], block['block_id'], 'query')
+    if not block.get('target_locus'):
+        import pandas as _pd
+        target_genes = _pd.DataFrame(columns=query_genes.columns if hasattr(query_genes, 'columns') else [])
+    else:
+        target_genes = load_genes_for_locus(block['target_locus'], block['block_id'], 'target')
+
+    _caption(f"Query: {len(query_genes)} genes | Target: {len(target_genes)} genes")
+
+    with st.expander("📖 **Understanding Syntenic Block Visualization**", expanded=False):
         st.markdown("""
-        **Syntenic blocks** represent genomic regions with **conserved gene order** between different bacterial strains or species, 
+        **Syntenic blocks** represent genomic regions with **conserved gene order** between different bacterial strains or species,
         indicating evolutionary relatedness and functional importance.
-        
+
         **Gene Classification:**
         - 🔴 **Conserved Block** (thick border): Core genes in the syntenic region showing evolutionary conservation
-        - 🟠 **Block Edge**: Genes at the boundaries of the conserved region  
+        - 🟠 **Block Edge**: Genes at the boundaries of the conserved region
         - 🔵 **Flanking Region**: Neighboring genes outside the conserved block, shown for genomic context
-        
+
         **Gene Orientation:**
         - ➡️ **Forward strand** (+): Gene transcribed left-to-right
         - ⬅️ **Reverse strand** (−): Gene transcribed right-to-left
-        
+
         **Vertical Red Lines**: Mark the precise boundaries of the conserved syntenic block
-        
+
         **PFAM Domains**: Protein family annotations showing functional conservation across the alignment
         """)
-    
+
     st.markdown("---")
     
     # Display genome diagrams using proper visualization
@@ -1641,54 +1652,86 @@ def display_genome_viewer():
         else:
             st.warning("No genes found for target locus")
     
-    # Comparative genome view (render above diagrams)
+    # Comparative genome view — isolated as fragment so slider/checkbox changes
+    # don't re-run the Plotly diagrams above.
     st.divider()
     if not query_genes.empty and not target_genes.empty:
-        st.subheader("Comparative Genome Analysis")
-        # Slider to calibrate cosine threshold
-        col_thr, col_sp = st.columns([1, 3])
-        with col_thr:
-            cos_thr = st.slider(
-                "Embedding cosine threshold",
-                min_value=0.70, max_value=0.99, value=0.90, step=0.01,
-                help="Draw cosine homology edges for pairs with similarity ≥ threshold"
-            )
-        with st.spinner("Rendering comparative view..."):
+        @st.fragment
+        def _comparative_fragment():
+            st.subheader("Comparative Genome Analysis")
+
+            # Interactive controls matching the cluster viewer
+            ctrl_c1, ctrl_c2, ctrl_c3 = st.columns([1, 1, 1])
+            with ctrl_c1:
+                block_tau = st.slider(
+                    "Cosine similarity threshold (τ)",
+                    min_value=0.50, max_value=0.99, value=0.85, step=0.01,
+                    help="Only show edges with cosine similarity ≥ this value.",
+                    key=f"block_tau_{block['block_id']}",
+                )
+            with ctrl_c2:
+                block_show_labels = st.checkbox(
+                    "Show similarity labels on edges",
+                    value=True,
+                    key=f"block_labels_{block['block_id']}",
+                )
+            with ctrl_c3:
+                block_scale_width = st.checkbox(
+                    "Scale edge width by similarity",
+                    value=True,
+                    key=f"block_scale_{block['block_id']}",
+                )
+
             try:
-                comp_data = _build_comparative_json(block['block_id'], query_genes, target_genes, cos_threshold=cos_thr)
+                # Build comparative data (cached by block_id — instant on re-runs)
+                comp_data = _build_comparative_json_cached(
+                    block['block_id'],
+                    block.get('query_locus', ''),
+                    block.get('target_locus', ''),
+                    cos_threshold=0.50,
+                )
                 comp_data['query_name'] = block.get('query_locus', 'Query locus')
                 comp_data['target_name'] = block.get('target_locus', 'Target locus')
-                # Debug preview: show small summary to confirm data built
-                try:
-                    _preview = {
-                        'q': len(comp_data.get('query_locus', [])),
-                        't': len(comp_data.get('target_locus', [])),
-                        'e': len(comp_data.get('edges', []))
-                    }
-                    _caption(f"Comparative data: q={_preview['q']} t={_preview['t']} edges={_preview['e']}")
+
+                _preview = {
+                    'q': len(comp_data.get('query_locus', [])),
+                    't': len(comp_data.get('target_locus', [])),
+                    'e': len(comp_data.get('edges', []))
+                }
+                _caption(f"Comparative data: q={_preview['q']} t={_preview['t']} edges={_preview['e']}")
+
+                with st.expander("Embedding debug", expanded=False):
                     dbg = comp_data.get('debug', {}) or {}
-                    with st.expander("Embedding debug", expanded=False):
-                        st.write({
-                            'embeddings_loaded': dbg.get('embeddings_loaded'),
-                            'embedding_dim': dbg.get('embedding_dim'),
-                            'present_q': dbg.get('present_q'),
-                            'present_t': dbg.get('present_t'),
-                            'cos_threshold': dbg.get('cos_threshold'),
-                            'cos_pairs_at_threshold': dbg.get('cos_pairs'),
-                            'embeddings_path': dbg.get('emb_path'),
-                        })
-                        top_list = dbg.get('top_cos_pairs') or []
-                        if top_list:
-                            import pandas as _pd
-                            st.dataframe(_pd.DataFrame(top_list, columns=['query_gene','target_gene','cosine']).head(10))
-                        else:
-                            _caption("No top cosine pairs available (embeddings missing or empty subset)")
-                except Exception:
-                    pass
-                _render_comparative_d3_v2(comp_data, height=540)
-                st.markdown('<p style="font-size:13px;color:#ccc;">Legend: <span style="color:#2ecc71;">&#9632;</span> forward strand · <span style="color:#e74c3c;">&#9632;</span> reverse strand · thicker lines = higher homology · hover for PFAM/length/strand</p>', unsafe_allow_html=True)
+                    st.write({
+                        'embeddings_loaded': dbg.get('embeddings_loaded'),
+                        'embedding_dim': dbg.get('embedding_dim'),
+                        'present_q': dbg.get('present_q'),
+                        'present_t': dbg.get('present_t'),
+                        'cos_threshold': dbg.get('cos_threshold'),
+                        'cos_pairs_at_threshold': dbg.get('cos_pairs'),
+                        'embeddings_path': dbg.get('emb_path'),
+                    })
+                    top_list = dbg.get('top_cos_pairs') or []
+                    if top_list:
+                        import pandas as _pd
+                        st.dataframe(_pd.DataFrame(top_list, columns=['query_gene','target_gene','cosine']).head(10))
+
+                # Convert to multiloc format and render with the full interactive D3
+                multiloc_data = _comparative_to_multiloc(comp_data, block)
+                if multiloc_data and multiloc_data.get('loci') and len(multiloc_data['loci']) >= 2:
+                    _render_multiloc_d3(
+                        multiloc_data,
+                        height=380,
+                        initial_tau=block_tau,
+                        show_labels=block_show_labels,
+                        scale_edge_width=block_scale_width,
+                    )
+                else:
+                    st.warning("Not enough data to render comparative view.")
             except Exception as e:
                 st.error(f"Comparative view failed: {e}")
+
+        _comparative_fragment()
 
 @st.cache_data(ttl=300)  # Cache for 5 minutes
 def load_cluster_stats():
@@ -1698,6 +1741,41 @@ def load_cluster_stats():
         return get_all_cluster_stats(DB_PATH)
     except Exception as e:
         logger.error(f"Error loading cluster stats: {e}")
+        return []
+
+@st.cache_data(ttl=300)
+def _pfam_filter_clusters(terms: list) -> set:
+    """Return set of cluster_ids whose genes contain any of the PFAM substrings.
+
+    Uses a single SQL query with LIKE instead of pre-loading all PFAM data.
+    """
+    try:
+        conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+        # Build OR conditions for each term
+        conditions = " OR ".join(["LOWER(g.pfam_domains) LIKE ?"] * len(terms))
+        params = [f"%{t}%" for t in terms]
+        rows = conn.execute(f"""
+            SELECT DISTINCT sb.cluster_id
+            FROM genes g
+            JOIN gene_block_mappings gbm ON g.gene_id = gbm.gene_id
+            JOIN syntenic_blocks sb ON gbm.block_id = sb.block_id
+            WHERE sb.cluster_id > 0
+              AND g.pfam_domains IS NOT NULL
+              AND ({conditions})
+        """, params).fetchall()
+        conn.close()
+        return {r[0] for r in rows}
+    except Exception as e:
+        logger.error(f"PFAM filter query failed: {e}")
+        return set()
+
+@st.cache_data(ttl=300)
+def _load_cluster_pfam(cluster_id: int):
+    """Load PFAM data for a single cluster on demand."""
+    try:
+        from cluster_analyzer import get_cluster_pfam
+        return get_cluster_pfam(DB_PATH, cluster_id)
+    except Exception:
         return []
 
 @st.cache_data
@@ -1789,7 +1867,7 @@ def display_cluster_explorer():
     if organism_filter != "All":
         filtered_stats = [s for s in filtered_stats if organism_filter in s.organisms]
 
-    # PFAM substring filter (case-insensitive matches against any domain in the cluster)
+    # PFAM substring filter — runs a SQL query instead of pre-loading all PFAM data
     with st.expander("PFAM filter", expanded=False):
         pfam_query = st.text_input(
             "PFAM substrings",
@@ -1797,27 +1875,10 @@ def display_cluster_explorer():
             help="Show clusters containing any of the comma-separated substrings (case-insensitive) in PFAM domain names"
         )
     if pfam_query:
-        # Support multiple comma-delimited substrings (OR semantics)
         terms = [t.strip().lower() for t in pfam_query.split(',') if t.strip()]
         if terms:
-            def _matches(stats):
-                try:
-                    # Check domain_counts first (list of (name, count))
-                    if getattr(stats, 'domain_counts', None):
-                        for name, cnt in stats.domain_counts:
-                            lname = str(name).lower()
-                            if any(term in lname for term in terms):
-                                return True
-                    # Fallback to dominant_functions (list of names)
-                    if getattr(stats, 'dominant_functions', None):
-                        for name in stats.dominant_functions:
-                            lname = str(name).lower()
-                            if any(term in lname for term in terms):
-                                return True
-                except Exception:
-                    pass
-                return False
-            filtered_stats = [s for s in filtered_stats if _matches(s)]
+            matching_cids = _pfam_filter_clusters(terms)
+            filtered_stats = [s for s in filtered_stats if s.cluster_id in matching_cids]
     
     # Default-limit the number of clusters rendered to keep UI responsive
     if 'cluster_limit' not in st.session_state:
@@ -2305,16 +2366,17 @@ def display_cluster_card_with_async_summary(stats):
         col1, col2 = st.columns([1, 1])
         with col1:
             st.write(f"**Alignments:** {stats.total_alignments:,} blocks")
-            st.write(f"**Genomic Scope:** {stats.unique_contigs} contigs, {stats.unique_genes:,} genes")
+            st.write(f"**Genomic Scope:** {stats.unique_contigs} contigs")
         with col2:
             st.write(f"**Length:** {stats.consensus_length} windows (avg)")
             st.write(f"**Identity:** {stats.avg_identity:.1%} ± {stats.diversity:.3f}")
             st.write(f"**Organisms:** {stats.organism_count} ({', '.join(stats.organisms[:2])}{'...' if len(stats.organisms) > 2 else ''})")
-        
-        # Domain frequency mini-chart (renders immediately)
-        if hasattr(stats, 'domain_counts') and stats.domain_counts:
+
+        # Domain frequency mini-chart — load PFAM on demand per cluster
+        domain_counts = stats.domain_counts if stats.domain_counts else _load_cluster_pfam(int(stats.cluster_id))
+        if domain_counts:
             st.markdown("**Top PFAM Domains:**")
-            chart = create_domain_frequency_chart(stats.domain_counts, stats.cluster_id)
+            chart = create_domain_frequency_chart(domain_counts, stats.cluster_id)
             if chart:
                 st.plotly_chart(chart, use_container_width=True, config={'displayModeBar': False}, key=f"domain_chart_{stats.cluster_id}")
         
@@ -3325,23 +3387,35 @@ def display_cluster_detail():
     if stats:
         @st.fragment
         def _cluster_detail_ai():
+            st.divider()
+            st.subheader("AI Functional Analysis")
+
             detail_summary_key = f"cluster_detail_summary_{cluster_id}"
             if detail_summary_key not in st.session_state:
                 st.session_state[detail_summary_key] = {"generated": False, "content": ""}
 
-            with st.expander("**AI Functional Analysis**", expanded=False):
+            col1, col2 = st.columns([1, 4])
+            with col1:
                 if not st.session_state[detail_summary_key]["generated"]:
-                    if st.button("Generate AI Analysis", key=f"ai_detail_button_{cluster_id}"):
-                        with st.status("Generating analysis...", expanded=False) as status:
+                    if st.button("Analyze with Claude", key=f"ai_detail_button_{cluster_id}"):
+                        with st.spinner("Analyzing with Claude..."):
                             try:
                                 summary = get_cluster_analyzer().generate_cluster_summary(stats)
                                 st.session_state[detail_summary_key] = {"generated": True, "content": summary}
-                                status.update(label="Analysis complete!", state="complete")
+                                st.success("Analysis complete!")
                             except Exception as e:
                                 st.session_state[detail_summary_key] = {"generated": True, "content": f"Error: {e}"}
-                                status.update(label="Analysis failed!", state="error")
+                                st.error("Analysis failed!")
+            with col2:
+                if st.session_state[detail_summary_key]["generated"]:
+                    st.info("Analysis available below")
                 else:
-                    st.markdown(st.session_state[detail_summary_key]["content"])
+                    st.info("Click 'Analyze with Claude' to generate functional analysis of this cluster")
+
+            if st.session_state[detail_summary_key]["generated"]:
+                content = st.session_state[detail_summary_key]["content"]
+                with st.expander("**Functional Analysis Report**", expanded=True):
+                    st.markdown(content)
 
         _cluster_detail_ai()
     
@@ -3900,6 +3974,14 @@ def main():
 
 
 
+@st.cache_data(ttl=600)
+def _build_comparative_json_cached(block_id: int, query_locus: str, target_locus: str, cos_threshold: float = 0.50) -> Dict:
+    """Cached wrapper: loads genes and builds comparative JSON from block_id alone."""
+    query_genes_df = load_genes_for_locus(query_locus, block_id, 'query')
+    target_genes_df = load_genes_for_locus(target_locus, block_id, 'target')
+    return _build_comparative_json(block_id, query_genes_df, target_genes_df, cos_threshold)
+
+
 def _build_comparative_json(block_id: int, query_genes_df: pd.DataFrame, target_genes_df: pd.DataFrame, cos_threshold: float = 0.95) -> Dict:
     """Build clinker-like JSON for comparative view.
 
@@ -4206,6 +4288,72 @@ def _build_comparative_json(block_id: int, query_genes_df: pd.DataFrame, target_
         'edges': edges,
         'debug': debug_info
     }
+
+
+def _comparative_to_multiloc(comp_data: Dict, block: Dict) -> Dict:
+    """Convert comparative JSON (2-locus) to multiloc format for _render_multiloc_d3.
+
+    Auto-detects inverted blocks by comparing strand directions of matched
+    gene pairs. If most anchor pairs have opposite strands, the target track
+    is auto-flipped so edges run parallel instead of crossing.
+    """
+    q_genes = comp_data.get('query_locus', [])
+    t_genes = comp_data.get('target_locus', [])
+
+    # Add fields expected by multiloc renderer
+    for g in q_genes + t_genes:
+        if 'aa' not in g:
+            g['aa'] = max(1, abs(g.get('end', 0) - g.get('start', 0)) // 3)
+        if 'contig' not in g:
+            g['contig'] = ''
+
+    def _locus(genes, name_key, genome_key, contig_key):
+        return {
+            'name': comp_data.get(name_key, name_key),
+            'genome_id': block.get(genome_key, ''),
+            'contig_id': block.get(contig_key, ''),
+            'start': min((g['start'] for g in genes), default=0),
+            'end': max((g['end'] for g in genes), default=0),
+            'genes': genes,
+        }
+
+    loci = [
+        _locus(q_genes, 'query_name', 'query_genome_id', 'query_contig_id'),
+        _locus(t_genes, 'target_name', 'target_genome_id', 'target_contig_id'),
+    ]
+
+    # Convert edges: comparative {source, target, cos, pf} → multiloc {a, b, ai, bi, type, cos, pf}
+    edges = []
+    for e in comp_data.get('edges', []):
+        cos_val = e.get('cos')
+        edges.append({
+            'a': 0, 'b': 1,
+            'ai': int(e.get('source', 0)),
+            'bi': int(e.get('target', 0)),
+            'type': 'emb' if cos_val is not None else ('pfam' if int(e.get('pf', 0)) > 0 else 'anchor'),
+            'cos': float(cos_val) if cos_val is not None else None,
+            'pf': int(e.get('pf', 0)),
+        })
+
+    # Auto-detect inversion: compare strand directions of matched gene pairs.
+    # If most edges connect genes with opposite strands, flip the target track.
+    auto_flips = [False, False]
+    same_strand = 0
+    opp_strand = 0
+    for e in edges:
+        qi = e['ai']
+        ti = e['bi']
+        if qi < len(q_genes) and ti < len(t_genes):
+            q_strand = q_genes[qi].get('strand', 1)
+            t_strand = t_genes[ti].get('strand', 1)
+            if q_strand == t_strand:
+                same_strand += 1
+            else:
+                opp_strand += 1
+    if opp_strand > same_strand:
+        auto_flips[1] = True
+
+    return {'loci': loci, 'edges': edges, 'auto_flips': auto_flips}
 
 
 def _render_comparative_d3(data: Dict, width: int = 0, height: int = 500):
@@ -4965,7 +5113,33 @@ def _build_cluster_multiloc_json(cluster_id: int, is_micro: bool, max_tracks: in
                     'pf': int(best_pf), 'cos': float(best_cos) if best_cos is not None else None,
                 })
 
-    return {'loci': loci_ordered, 'edges': edges, 'embeddings': emb_status}
+    # Auto-detect inversions between adjacent tracks.
+    # Track 0 is the reference (never flipped).  For each subsequent track,
+    # compare matched gene-pair strands accounting for the predecessor's flip.
+    # A flipped track reverses all its gene strands visually, so we need to
+    # track the "effective" strand when deciding whether the next track should flip.
+    auto_flips = [False] * len(loci_ordered)
+    for k in range(len(loci_ordered) - 1):
+        pair_edges = [e for e in edges if e['a'] == k and e['b'] == k + 1]
+        same, opp = 0, 0
+        for e in pair_edges:
+            ai, bi = e['ai'], e['bi']
+            a_genes = loci_ordered[k]['genes']
+            b_genes = loci_ordered[k + 1]['genes']
+            if ai < len(a_genes) and bi < len(b_genes):
+                sa = a_genes[ai].get('strand', 1)
+                sb = b_genes[bi].get('strand', 1)
+                # Account for visual flip of predecessor
+                if auto_flips[k]:
+                    sa = -sa
+                if sa == sb:
+                    same += 1
+                else:
+                    opp += 1
+        # If majority are opposite, flip next track to make edges parallel
+        auto_flips[k + 1] = (opp > same)
+
+    return {'loci': loci_ordered, 'edges': edges, 'embeddings': emb_status, 'auto_flips': auto_flips}
 
 
 def _pfam_color(label: str, alpha: float = 0.85) -> str:
@@ -5415,7 +5589,8 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
       // Controls and state
       const controls = d3.select(container).append('div').style('margin','6px 0').style('font-size','14px').style('color','#ddd');
       let offsets = data.loci.map(() => 0);
-      let flips = data.loci.map(() => false);
+      // Initialize flips from auto_flips (e.g. auto-flip inverted blocks) or default to false
+      let flips = data.loci.map((_, i) => (data.auto_flips && data.auto_flips[i]) || false);
       let tau = INITIAL_TAU;
       let showLabels = SHOW_LABELS;
       let scaleWidth = SCALE_EDGE_WIDTH;
@@ -5629,7 +5804,9 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
           const hasCos = (ed.cos != null && isFinite(ed.cos));
           if (hasCos) return (+ed.cos) >= tau;
           // keep PFAM-only edges regardless of tau if they have overlap
-          return ((+ed.pf || 0) > 0);
+          if ((+ed.pf || 0) > 0) return true;
+          // always show fallback/anchor edges (no cosine, no PFAM)
+          return !hasCos;
         });
 
         // --- Edge lines ---
@@ -5641,7 +5818,7 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
             const cos=(ed.cos!=null&&isFinite(ed.cos))?(+ed.cos).toFixed(3):'n/a';
             const pf=(ed.pf!=null)?ed.pf:'n/a';
             tooltip.style('display','block').html(
-              '<b>Match: '+(ed.type||'pfam')+'</b><br>'+
+              '<b>Match: '+(ed.type||'anchor')+'</b><br>'+
               'Cosine: '+cos+'<br>'+
               'PFAM overlap: '+pf
             );
@@ -5707,9 +5884,9 @@ def _render_multiloc_d3(data: Dict, width: int = 0, height: int = 500,
           genesSel.enter().append('path').attr('class','gene'); genesSel.exit().remove();
           row.selectAll('path.gene')
             .attr('d', (d,i) => { const lay=(rowNode._layout||[])[i]||{start:0,w:0}; const rowW=rowNode._rowWidth||0; const w=lay.w; const x0 = flips[idx] ? (rowW - (lay.start + lay.w)) : lay.start; const dir=d.strand>=0?1:-1; const head=6; const x1=x0, x2=x0+w; return dir>=0? `M ${x1},${yMid-8} L ${x2-head},${yMid-8} L ${x2},${yMid} L ${x2-head},${yMid+8} L ${x1},${yMid+8} Z` : `M ${x2},${yMid-8} L ${x1+head},${yMid-8} L ${x1},${yMid} L ${x1+head},${yMid+8} L ${x2},${yMid+8} Z`; })
-            .attr('fill', d => colorPF((d.pfam||'').split(';')[0]||''))
-            .attr('stroke','rgba(0,0,0,0.2)')
-            .attr('stroke-width',0.8)
+            .attr('fill', d => { const pf=(d.pfam||'').split(';')[0]||''; return pf ? colorPF(pf) : (d.strand>=0 ? '#2ecc71' : '#e74c3c'); })
+            .attr('stroke','rgba(255,255,255,0.6)')
+            .attr('stroke-width',1.0)
             .style('cursor','pointer')
             .on('click', (event,d)=> centerOn(idx,d))
             .on('dblclick', ()=> { flips[idx] = !flips[idx]; redraw(); })

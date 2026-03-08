@@ -778,6 +778,8 @@ def stats(config: str):
 @click.option("--index-backend", default="auto", help="Index backend (auto/faiss/hnswlib)")
 @click.option("--hnsw-k", default=50, help="k for HNSW neighbor search")
 @click.option("--no-normalize", is_flag=True, help="Skip L2 normalization of embeddings")
+@click.option("--annotations-db", type=click.Path(exists=True),
+              help="Sharur DuckDB with annotations table (loads PFAM + all sources)")
 def synteny(db: Optional[str], proteins: Optional[str],
             embeddings: Optional[str], embeddings_parquet: Optional[str],
             store: Optional[str],
@@ -785,7 +787,8 @@ def synteny(db: Optional[str], proteins: Optional[str],
             output_dir: str, similarity_threshold: float, max_gap: int,
             min_chain_size: int, min_genome_support: int,
             gap_penalty_scale: float, jaccard_tau: float,
-            index_backend: str, hnsw_k: int, no_normalize: bool):
+            index_backend: str, hnsw_k: int, no_normalize: bool,
+            annotations_db: Optional[str]):
     """Discover syntenic blocks from external embeddings.
 
     Accepts protein metadata from a Sharur DuckDB or FASTA files,
@@ -897,6 +900,28 @@ def synteny(db: Optional[str], proteins: Optional[str],
         )
         console.print(f"  Output: [green]{output_dir}[/green]")
 
+        # Load annotations from Sharur DuckDB if provided
+        annotations_all_df = None
+        ann_db = annotations_db or db  # fall back to --db if it has annotations
+        if annotations_db:
+            from .adapter import load_annotations_from_duckdb, load_all_annotations_from_duckdb
+
+            console.print(f"\n[bold blue]Loading annotations from DuckDB...[/bold blue]")
+
+            # Phase 1: PFAM → merge into genes_df for pfam_domains columns
+            pfam_df = load_annotations_from_duckdb(annotations_db, source="pfam")
+            if not pfam_df.empty and genes_df is not None:
+                # Drop existing pfam columns if any, then merge
+                for col in ["pfam_domains", "pfam_count", "primary_pfam"]:
+                    if col in genes_df.columns:
+                        genes_df = genes_df.drop(columns=[col])
+                genes_df = genes_df.merge(pfam_df, on="gene_id", how="left")
+                n_ann = genes_df["pfam_domains"].notna().sum()
+                console.print(f"  PFAM: {n_ann:,}/{len(genes_df):,} genes annotated")
+
+            # Phase 2: all sources → annotations_multi table
+            annotations_all_df = load_all_annotations_from_duckdb(annotations_db)
+
         # Genome browser DB — always generated
         if summary.num_blocks > 0 and genes_df is not None:
             from .browser import populate_browser_db
@@ -908,7 +933,10 @@ def synteny(db: Optional[str], proteins: Optional[str],
 
             if blocks_csv.exists() and clusters_csv.exists():
                 console.print(f"\n[bold blue]Populating genome browser DB...[/bold blue]")
-                populate_browser_db(browser_db, genes_df, blocks_csv, clusters_csv)
+                populate_browser_db(
+                    browser_db, genes_df, blocks_csv, clusters_csv,
+                    annotations_df=annotations_all_df,
+                )
                 console.print(f"  [green]{browser_db}[/green]")
 
     except Exception as e:
@@ -926,18 +954,23 @@ def synteny(db: Optional[str], proteins: Optional[str],
               help="genes.parquet with metadata (alternative to --store)")
 @click.option("--db-path", type=click.Path(), default=None,
               help="Output DB path (default: <output_dir>/genome_browser.db)")
+@click.option("--annotations-db", type=click.Path(exists=True), default=None,
+              help="Sharur DuckDB with annotations table (loads PFAM + all sources)")
 def browser(output_dir: str, store: Optional[str],
-            genes_parquet: Optional[str], db_path: Optional[str]):
+            genes_parquet: Optional[str], db_path: Optional[str],
+            annotations_db: Optional[str]):
     """Populate a genome browser DB from existing pipeline output.
 
     Reads micro_chain_blocks.csv and micro_chain_clusters.csv from
     OUTPUT_DIR and populates a SQLite database for the genome browser.
 
     Gene metadata comes from --store or --genes-parquet.
+    Annotations come from --annotations-db (Sharur DuckDB with annotations table).
 
     \b
     Examples:
       elsa browser results/ --store ./my_store
+      elsa browser results/ --store ./my_store --annotations-db sharur.duckdb
       elsa browser results/ --genes-parquet elsa_index/ingest/genes.parquet
     """
     out = Path(output_dir)
@@ -963,11 +996,34 @@ def browser(output_dir: str, store: Optional[str],
         console.print("[red]Provide --store or --genes-parquet for gene metadata[/red]")
         sys.exit(1)
 
+    # Load annotations from Sharur DuckDB if provided
+    annotations_all_df = None
+    if annotations_db:
+        from .adapter import load_annotations_from_duckdb, load_all_annotations_from_duckdb
+
+        console.print(f"Loading annotations from: [green]{annotations_db}[/green]")
+
+        # PFAM → merge into genes_df
+        pfam_df = load_annotations_from_duckdb(annotations_db, source="pfam")
+        if not pfam_df.empty:
+            for col in ["pfam_domains", "pfam_count", "primary_pfam"]:
+                if col in genes_df.columns:
+                    genes_df = genes_df.drop(columns=[col])
+            genes_df = genes_df.merge(pfam_df, on="gene_id", how="left")
+            n_ann = genes_df["pfam_domains"].notna().sum()
+            console.print(f"  PFAM: {n_ann:,}/{len(genes_df):,} genes annotated")
+
+        # All sources → annotations_multi
+        annotations_all_df = load_all_annotations_from_duckdb(annotations_db)
+
     from .browser import populate_browser_db
 
     target_db = Path(db_path) if db_path else out / "genome_browser.db"
     console.print(f"[bold blue]Populating genome browser DB...[/bold blue]")
-    populate_browser_db(target_db, genes_df, blocks_csv, clusters_csv)
+    populate_browser_db(
+        target_db, genes_df, blocks_csv, clusters_csv,
+        annotations_df=annotations_all_df,
+    )
     console.print(f"  [green]{target_db}[/green]")
 
 

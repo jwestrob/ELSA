@@ -191,6 +191,146 @@ def load_embeddings_parquet(parquet_path: Union[str, Path]) -> pd.DataFrame:
     return result
 
 
+def load_annotations_from_duckdb(
+    db_path: Union[str, Path],
+    source: str = "pfam",
+) -> pd.DataFrame:
+    """Load per-protein annotations from a Sharur DuckDB annotations table.
+
+    Joins proteins.protein_id = annotations.protein_id, filtering by source.
+    Returns a DataFrame with gene_id and semicolon-separated domain accessions.
+
+    Args:
+        db_path: Path to Sharur DuckDB database.
+        source: Annotation source to filter on (default: 'pfam').
+
+    Returns:
+        DataFrame with columns: gene_id, pfam_domains, pfam_count, primary_pfam
+    """
+    import duckdb
+
+    db_path = str(db_path)
+    conn = duckdb.connect(db_path, read_only=True)
+    try:
+        # Check what columns are available in annotations table
+        cols = conn.execute(
+            "SELECT column_name FROM information_schema.columns "
+            "WHERE table_name = 'annotations'"
+        ).fetchdf()["column_name"].tolist()
+
+        # Build accession column name — try 'accession', then 'name', then 'annotation_id'
+        acc_col = None
+        for candidate in ["accession", "name", "annotation_id"]:
+            if candidate in cols:
+                acc_col = candidate
+                break
+        if acc_col is None:
+            raise RuntimeError(
+                f"Cannot find accession column in annotations table. "
+                f"Available columns: {cols}"
+            )
+
+        df = conn.execute(f"""
+            SELECT
+                a.protein_id AS gene_id,
+                a.{acc_col} AS accession
+            FROM annotations a
+            WHERE a.source = ?
+            ORDER BY a.protein_id
+        """, [source]).fetchdf()
+    finally:
+        conn.close()
+
+    if df.empty:
+        import sys
+        print(
+            f"[Adapter] No '{source}' annotations found in {db_path}",
+            file=sys.stderr, flush=True,
+        )
+        return pd.DataFrame(columns=["gene_id", "pfam_domains", "pfam_count", "primary_pfam"])
+
+    # Aggregate: group by gene_id → semicolon-separated domain list
+    grouped = df.groupby("gene_id")["accession"].agg(
+        lambda x: ";".join(sorted(set(x)))
+    ).reset_index()
+    grouped.columns = ["gene_id", "pfam_domains"]
+    grouped["pfam_count"] = grouped["pfam_domains"].str.count(";") + 1
+    grouped["primary_pfam"] = grouped["pfam_domains"].str.split(";").str[0]
+
+    import sys
+    n_genes = len(grouped)
+    n_domains = grouped["pfam_count"].sum()
+    print(
+        f"[Adapter] Loaded {int(n_domains)} {source} annotations for {n_genes} proteins",
+        file=sys.stderr, flush=True,
+    )
+    return grouped
+
+
+def load_all_annotations_from_duckdb(
+    db_path: Union[str, Path],
+) -> pd.DataFrame:
+    """Load ALL annotation sources from a Sharur DuckDB annotations table.
+
+    Returns a flat DataFrame with columns:
+        gene_id, source, accession, name, evalue, score
+
+    Suitable for bulk-loading into the browser annotations_multi table.
+    """
+    import duckdb
+
+    db_path = str(db_path)
+    conn = duckdb.connect(db_path, read_only=True)
+    try:
+        cols = conn.execute(
+            "SELECT column_name FROM information_schema.columns "
+            "WHERE table_name = 'annotations'"
+        ).fetchdf()["column_name"].tolist()
+
+        # Build SELECT with available columns
+        select_parts = ["a.protein_id AS gene_id", "a.source"]
+
+        # accession
+        for candidate in ["accession", "name", "annotation_id"]:
+            if candidate in cols:
+                select_parts.append(f"a.{candidate} AS accession")
+                break
+        else:
+            select_parts.append("NULL AS accession")
+
+        # description/name
+        if "description" in cols:
+            select_parts.append("a.description AS name")
+        elif "name" in cols and "accession" in cols:
+            select_parts.append("a.name")
+        else:
+            select_parts.append("NULL AS name")
+
+        # evalue and score
+        select_parts.append(f"a.evalue" if "evalue" in cols else "NULL AS evalue")
+        select_parts.append(f"a.score" if "score" in cols else "NULL AS score")
+
+        df = conn.execute(f"""
+            SELECT {', '.join(select_parts)}
+            FROM annotations a
+            ORDER BY a.source, a.protein_id
+        """).fetchdf()
+    finally:
+        conn.close()
+
+    import sys
+    if df.empty:
+        print(f"[Adapter] No annotations found in {db_path}", file=sys.stderr, flush=True)
+    else:
+        sources = df["source"].value_counts()
+        summary = ", ".join(f"{s}={c}" for s, c in sources.items())
+        print(
+            f"[Adapter] Loaded {len(df)} annotations ({summary})",
+            file=sys.stderr, flush=True,
+        )
+    return df
+
+
 def build_genes_dataframe(
     proteins_df: pd.DataFrame,
     embeddings_df: pd.DataFrame,

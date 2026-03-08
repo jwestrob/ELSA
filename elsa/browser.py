@@ -18,6 +18,7 @@ import sqlite3
 import sys
 import time
 from pathlib import Path
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -145,6 +146,16 @@ CREATE TABLE IF NOT EXISTS pfam_domains (
     protein_count INTEGER DEFAULT 0
 );
 
+CREATE TABLE IF NOT EXISTS annotations_multi (
+    gene_id TEXT NOT NULL,
+    source TEXT NOT NULL,
+    accession TEXT,
+    name TEXT,
+    evalue REAL,
+    score REAL,
+    PRIMARY KEY (gene_id, source, accession)
+);
+
 CREATE TABLE IF NOT EXISTS schema_meta (
     key TEXT PRIMARY KEY,
     value TEXT
@@ -161,6 +172,8 @@ CREATE INDEX IF NOT EXISTS idx_contigs_genome
     ON contigs(genome_id);
 CREATE INDEX IF NOT EXISTS idx_blocks_cluster
     ON syntenic_blocks(cluster_id);
+CREATE INDEX IF NOT EXISTS idx_blocks_cluster_genomes
+    ON syntenic_blocks(cluster_id, query_genome_id, target_genome_id);
 CREATE INDEX IF NOT EXISTS idx_blocks_query_genome
     ON syntenic_blocks(query_genome_id);
 CREATE INDEX IF NOT EXISTS idx_blocks_target_genome
@@ -171,6 +184,10 @@ CREATE INDEX IF NOT EXISTS idx_gbm_gene
     ON gene_block_mappings(gene_id);
 CREATE INDEX IF NOT EXISTS idx_ca_cluster
     ON cluster_assignments(cluster_id);
+CREATE INDEX IF NOT EXISTS idx_annot_gene
+    ON annotations_multi(gene_id);
+CREATE INDEX IF NOT EXISTS idx_annot_source
+    ON annotations_multi(source, gene_id);
 """
 
 
@@ -179,6 +196,7 @@ def populate_browser_db(
     genes_df: pd.DataFrame,
     blocks_csv: Path,
     clusters_csv: Path,
+    annotations_df: Optional[pd.DataFrame] = None,
 ) -> None:
     """Populate a genome browser SQLite DB from adapter data + pipeline output.
 
@@ -187,6 +205,11 @@ def populate_browser_db(
     - Foreign keys disabled during load
     - Indexes built after all inserts complete
     - Vectorized gene-block mapping via pandas merge (no per-block SQL queries)
+
+    Args:
+        annotations_df: Optional multi-source annotations DataFrame
+            (gene_id, source, accession, name, evalue, score) for
+            bulk-loading into annotations_multi table.
     """
     t0 = time.time()
     db_path = Path(db_path)
@@ -209,6 +232,9 @@ def populate_browser_db(
         blocks_df = _ingest_blocks(conn, blocks_csv)
         _ingest_clusters(conn, clusters_csv)
         n_mappings = _create_gene_block_mappings(conn, genes_df, blocks_df)
+
+        if annotations_df is not None and not annotations_df.empty:
+            _ingest_annotations_multi(conn, annotations_df)
 
         # Build indexes after all data is loaded
         print("[Browser] Building indexes...", file=sys.stderr, flush=True)
@@ -268,18 +294,38 @@ def _ingest_genes(conn: sqlite3.Connection, genes_df: pd.DataFrame) -> None:
 
     # Genes — deduplicate by gene_id (adapter merges can produce dupes)
     unique_genes = genes_df.drop_duplicates(subset="gene_id", keep="first")
-    cursor.executemany(
-        "INSERT OR IGNORE INTO genes (gene_id, genome_id, contig_id, start_pos, end_pos, strand, "
-        "gene_length, protein_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-        [
-            (
-                row.gene_id, row.sample_id, row.contig_id,
-                int(row.start), int(row.end), int(row.strand),
-                int(row.end - row.start), row.gene_id,
-            )
-            for row in unique_genes.itertuples()
-        ],
-    )
+    has_pfam = "pfam_domains" in unique_genes.columns
+
+    if has_pfam:
+        cursor.executemany(
+            "INSERT OR IGNORE INTO genes (gene_id, genome_id, contig_id, start_pos, end_pos, strand, "
+            "gene_length, protein_id, pfam_domains, pfam_count, primary_pfam) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                (
+                    row.gene_id, row.sample_id, row.contig_id,
+                    int(row.start), int(row.end), int(row.strand),
+                    int(row.end - row.start), row.gene_id,
+                    getattr(row, "pfam_domains", None) or None,
+                    int(getattr(row, "pfam_count", 0) or 0),
+                    getattr(row, "primary_pfam", None) or None,
+                )
+                for row in unique_genes.itertuples()
+            ],
+        )
+    else:
+        cursor.executemany(
+            "INSERT OR IGNORE INTO genes (gene_id, genome_id, contig_id, start_pos, end_pos, strand, "
+            "gene_length, protein_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+                (
+                    row.gene_id, row.sample_id, row.contig_id,
+                    int(row.start), int(row.end), int(row.strand),
+                    int(row.end - row.start), row.gene_id,
+                )
+                for row in unique_genes.itertuples()
+            ],
+        )
 
     n_genomes = len(genome_stats)
     n_contigs = len(contig_stats)
@@ -492,3 +538,54 @@ def _create_gene_block_mappings(
         file=sys.stderr, flush=True,
     )
     return len(mappings)
+
+
+def _ingest_annotations_multi(
+    conn: sqlite3.Connection, annotations_df: pd.DataFrame
+) -> None:
+    """Bulk-load multi-source annotations into annotations_multi table."""
+    cursor = conn.cursor()
+
+    expected = {"gene_id", "source", "accession"}
+    if not expected.issubset(annotations_df.columns):
+        missing = expected - set(annotations_df.columns)
+        print(
+            f"[Browser] Skipping annotations_multi: missing columns {missing}",
+            file=sys.stderr, flush=True,
+        )
+        return
+
+    rows = []
+    for row in annotations_df.itertuples(index=False):
+        gene_id = row.gene_id
+        source = row.source
+        accession = row.accession
+        name = getattr(row, "name", None)
+        evalue = getattr(row, "evalue", None)
+        score = getattr(row, "score", None)
+
+        # Clean NaN → None
+        if pd.isna(evalue):
+            evalue = None
+        if pd.isna(score):
+            score = None
+        if pd.isna(name):
+            name = None
+
+        rows.append((gene_id, source, accession, name, evalue, score))
+
+    if rows:
+        cursor.executemany(
+            "INSERT OR IGNORE INTO annotations_multi "
+            "(gene_id, source, accession, name, evalue, score) "
+            "VALUES (?, ?, ?, ?, ?, ?)",
+            rows,
+        )
+    conn.commit()
+
+    sources = annotations_df["source"].value_counts()
+    summary = ", ".join(f"{s}={c}" for s, c in sources.items())
+    print(
+        f"[Browser] Ingested {len(rows)} annotations ({summary})",
+        file=sys.stderr, flush=True,
+    )

@@ -82,13 +82,15 @@ def find_cross_genome_anchors(
 
     n = len(gene_info)
 
-    # Normalize embeddings IN-PLACE as float32 (avoid float64 intermediates
-    # that double memory: 3.4M * 320 * 8 = 8.6 GB vs 4.3 GB)
+    # Normalize embeddings TRULY in-place as float32 — no second array.
+    # `query = embeddings / norms` would allocate a full copy (~4.3 GB for 3.4M genes).
     embeddings = embeddings.astype(np.float32, copy=False)
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True).astype(np.float32)
     np.maximum(norms, np.float32(1e-9), out=norms)
-    query = embeddings / norms
-    del embeddings, norms  # free original; query is now the only copy
+    embeddings /= norms          # in-place divide — no copy
+    del norms
+    query = embeddings           # alias, not a copy
+    del embeddings               # drop the name; query is now the only reference
 
     k_query = min(k + 10, n)
 

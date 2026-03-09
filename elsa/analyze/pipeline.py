@@ -62,6 +62,7 @@ def run_chain_pipeline(
     db_path: Optional[Path] = None,
     genes_df: Optional[pd.DataFrame] = None,
     prebuilt_index: Optional[tuple] = None,
+    embeddings: Optional[np.ndarray] = None,
 ) -> ChainSummary:
     """
     Run the gene-level anchor chaining pipeline.
@@ -71,8 +72,10 @@ def run_chain_pipeline(
         output_dir: Directory for output files
         config: Pipeline configuration (defaults used if None)
         db_path: Optional SQLite database path for genome browser
-        genes_df: Pre-built DataFrame (alternative to genes_parquet)
+        genes_df: Pre-built DataFrame (alternative to genes_parquet).
+                  May contain emb_* columns, or embeddings can be passed separately.
         prebuilt_index: Optional ("faiss", index) tuple from a SyntenyStore
+        embeddings: Pre-extracted float32 embedding array (avoids DataFrame copy)
 
     Returns:
         ChainSummary with pipeline statistics
@@ -96,18 +99,38 @@ def run_chain_pipeline(
     if not required.issubset(set(genes_df.columns)):
         raise RuntimeError(f"genes.parquet missing required columns: {sorted(required - set(genes_df.columns))}")
 
-    emb_cols = [c for c in genes_df.columns if c.startswith("emb_")]
-    if not emb_cols:
-        raise RuntimeError("genes.parquet contains no embedding columns (emb_*)")
+    # Extract or use pre-provided embeddings
+    import gc
+    if embeddings is not None:
+        emb_dim = embeddings.shape[1]
+        emb_array = embeddings
+        # Strip emb_ columns from genes_df if present (avoid carrying duplicates)
+        emb_cols = [c for c in genes_df.columns if c.startswith("emb_")]
+        if emb_cols:
+            genes_df = genes_df.drop(columns=emb_cols)
+    else:
+        emb_cols = [c for c in genes_df.columns if c.startswith("emb_")]
+        if not emb_cols:
+            raise RuntimeError("No embeddings provided and genes_df has no emb_* columns")
+        emb_dim = len(emb_cols)
+        emb_array = genes_df[emb_cols].values.astype(np.float32)
+        genes_df = genes_df.drop(columns=emb_cols)
+        gc.collect()
 
     n_genes = len(genes_df)
     n_genomes = genes_df["sample_id"].nunique()
-    print(f"[MicroChain] Loaded {n_genes} genes from {n_genomes} genomes (dim={len(emb_cols)})",
+    print(f"[MicroChain] Loaded {n_genes} genes from {n_genomes} genomes (dim={emb_dim})",
           file=sys.stderr, flush=True)
 
-    # Run chaining
+    # Pre-sort genes + embeddings so _run_gene_chaining doesn't need to copy.
+    # This lets us free emb_array here, avoiding a 4.3 GB duplicate during kNN.
+    genes_df = genes_df.sort_values(['sample_id', 'contig_id', 'start', 'end'])
+    genes_df['position_index'] = genes_df.groupby(['sample_id', 'contig_id']).cumcount()
+    emb_array = emb_array[genes_df.index.values]  # reorder to match sort
+    genes_df = genes_df.reset_index(drop=True)
+
     blocks = _run_gene_chaining(
-        genes_df, emb_cols,
+        genes_df, emb_array,
         hnsw_k=config.hnsw_k,
         similarity_threshold=config.similarity_threshold,
         max_gap=config.max_gap_genes,
@@ -119,6 +142,7 @@ def run_chain_pipeline(
         index_backend=config.index_backend,
         prebuilt_index=prebuilt_index,
         faiss_nprobe=config.faiss_nprobe,
+        _presorted=True,
     )
 
     if not blocks:
@@ -291,7 +315,7 @@ def run_chain_pipeline(
 
 def _run_gene_chaining(
     genes_df: pd.DataFrame,
-    emb_cols: List[str],
+    embeddings: np.ndarray,
     hnsw_k: int = 50,
     similarity_threshold: float = 0.85,
     max_gap: int = 2,
@@ -303,27 +327,39 @@ def _run_gene_chaining(
     index_backend: str = "auto",
     faiss_nprobe: int = 16,
     prebuilt_index: Optional[tuple] = None,
+    _presorted: bool = False,
 ) -> List[ChainedBlock]:
-    """Complete gene-level chaining pipeline (internal)."""
-    genes_df = genes_df.copy()
-    genes_df = genes_df.sort_values(['sample_id', 'contig_id', 'start', 'end'])
-    genes_df['position_index'] = genes_df.groupby(['sample_id', 'contig_id']).cumcount()
+    """Complete gene-level chaining pipeline (internal).
 
-    embeddings = genes_df[emb_cols].values.astype(np.float32)
+    Args:
+        genes_df: DataFrame with metadata columns (no emb_ columns needed)
+        embeddings: Pre-extracted float32 embedding array, aligned to genes_df rows
+        _presorted: If True, genes_df is already sorted with position_index assigned
+                    and embeddings are aligned. Skips the sort+copy to save ~4.3 GB.
+    """
+    if _presorted:
+        # Caller already sorted and assigned position_index — use as-is
+        pass
+    else:
+        # Sort and assign position_index (creates a copy of embeddings)
+        genes_df = genes_df.copy()
+        genes_df = genes_df.sort_values(['sample_id', 'contig_id', 'start', 'end'])
+        genes_df['position_index'] = genes_df.groupby(['sample_id', 'contig_id']).cumcount()
+        embeddings = embeddings[genes_df.index.values]
+
     info_cols = ['gene_id', 'sample_id', 'contig_id', 'position_index']
     if 'strand' in genes_df.columns:
         info_cols.append('strand')
     gene_info = genes_df[info_cols].reset_index(drop=True)
 
-    # Drop embedding columns from genes_df to free ~4 GB on large datasets
-    genes_df = genes_df.drop(columns=emb_cols)
+    n_genes = len(genes_df)
 
     if prebuilt_index is not None:
-        print(f"[GeneChain] Using pre-built index for {len(genes_df)} genes...",
+        print(f"[GeneChain] Using pre-built index for {n_genes} genes...",
               file=sys.stderr, flush=True)
         index = prebuilt_index
     else:
-        print(f"[GeneChain] Building index ({index_backend}) for {len(genes_df)} genes...",
+        print(f"[GeneChain] Building index ({index_backend}) for {n_genes} genes...",
               file=sys.stderr, flush=True)
         index = build_gene_index(embeddings, m=hnsw_m,
                                  ef_construction=hnsw_ef_construction,

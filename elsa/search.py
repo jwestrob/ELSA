@@ -14,8 +14,8 @@ from typing import List, Any, Tuple, Dict, Set
 import numpy as np
 import pandas as pd
 
-from .seed import GeneAnchor
 from .chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains
+from .seed import ANCHOR_COLS
 
 
 def embed_query_proteins(
@@ -178,14 +178,14 @@ def search_locus(
 
     query_genome = str(q_genome_arr[0])
 
-    # Collect cross-genome anchors from query to targets
-    anchors: List[GeneAnchor] = []
+    # Collect cross-genome anchors into columnar lists
+    rows = []
     seen: Set[Tuple[int, int]] = set()
 
     for qi in range(n_query):
         for j_pos in range(k_query):
             tj = int(labels[qi, j_pos])
-            if tj < 0:  # FAISS returns -1 when no result found
+            if tj < 0:
                 continue
             sim = float(similarities[qi, j_pos])
 
@@ -208,39 +208,36 @@ def search_locus(
             else:
                 rel_orient = 0
 
-            anchor = GeneAnchor(
-                query_idx=int(q_pos_arr[qi]),
-                target_idx=int(t_pos_arr[tj]),
-                query_genome=query_genome,
-                target_genome=str(t_genome_arr[tj]),
-                query_contig=str(q_contig_arr[qi]),
-                target_contig=str(t_contig_arr[tj]),
-                query_gene_id=str(q_gene_id_arr[qi]),
-                target_gene_id=str(t_gene_id_arr[tj]),
-                similarity=sim,
-                orientation=rel_orient,
-            )
-            anchors.append(anchor)
+            rows.append({
+                "query_idx": int(q_pos_arr[qi]),
+                "target_idx": int(t_pos_arr[tj]),
+                "query_genome": query_genome,
+                "target_genome": str(t_genome_arr[tj]),
+                "query_contig": str(q_contig_arr[qi]),
+                "target_contig": str(t_contig_arr[tj]),
+                "query_gene_id": str(q_gene_id_arr[qi]),
+                "target_gene_id": str(t_gene_id_arr[tj]),
+                "similarity": sim,
+                "orientation": rel_orient,
+            })
 
-    if not anchors:
+    if not rows:
         return []
 
-    # Group by target contig
-    groups: Dict[Tuple[str, str], List[GeneAnchor]] = {}
-    for anchor in anchors:
-        key = (anchor.target_genome, anchor.target_contig)
-        groups.setdefault(key, []).append(anchor)
+    anchors_df = pd.DataFrame(rows, columns=ANCHOR_COLS)
 
-    # Chain each group
+    # Group by target contig
     all_blocks: List[ChainedBlock] = []
     block_id = 0
 
-    for key, group_anchors in groups.items():
-        if len(group_anchors) < min_chain_size:
+    for (tg, tc), group_df in anchors_df.groupby(
+        ["target_genome", "target_contig"], sort=False
+    ):
+        if len(group_df) < min_chain_size:
             continue
 
         chains = chain_anchors_lis(
-            group_anchors,
+            group_df.reset_index(drop=True),
             max_gap=max_gap,
             min_size=min_chain_size,
             gap_penalty_scale=gap_penalty_scale,

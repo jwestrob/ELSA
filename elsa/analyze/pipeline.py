@@ -20,7 +20,7 @@ import pandas as pd
 
 from ..index import build_gene_index
 from ..seed import find_cross_genome_anchors, group_anchors_by_contig_pair
-from ..chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains
+from ..chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains, chain_groups_batched
 from ..cluster import cluster_blocks_by_overlap, merge_contained_clusters
 
 
@@ -315,6 +315,9 @@ def _run_gene_chaining(
         info_cols.append('strand')
     gene_info = genes_df[info_cols].reset_index(drop=True)
 
+    # Drop embedding columns from genes_df to free ~4 GB on large datasets
+    genes_df = genes_df.drop(columns=emb_cols)
+
     if prebuilt_index is not None:
         print(f"[GeneChain] Using pre-built index for {len(genes_df)} genes...",
               file=sys.stderr, flush=True)
@@ -333,10 +336,16 @@ def _run_gene_chaining(
     anchors = find_cross_genome_anchors(index, embeddings, gene_info,
                                         k=hnsw_k,
                                         similarity_threshold=similarity_threshold)
+
+    # Free large arrays no longer needed — critical for large datasets
+    del embeddings, gene_info, index
+    import gc; gc.collect()
+
     print(f"[GeneChain] Found {len(anchors)} cross-genome anchors",
           file=sys.stderr, flush=True)
 
     groups = group_anchors_by_contig_pair(anchors)
+    del anchors; gc.collect()
     print(f"[GeneChain] {len(groups)} contig pairs to process",
           file=sys.stderr, flush=True)
 
@@ -344,23 +353,19 @@ def _run_gene_chaining(
     block_id = 0
     n_chains = 0
 
-    for key, group_anchors in groups.items():
-        if len(group_anchors) < min_chain_size:
-            continue
+    # Batched chaining: preprocess all groups, run a single Numba kernel
+    chain_results = chain_groups_batched(
+        groups,
+        max_gap=max_gap,
+        min_size=min_chain_size,
+        gap_penalty_scale=gap_penalty_scale,
+    )
 
-        chains = chain_anchors_lis(
-            group_anchors,
-            max_gap=max_gap,
-            min_size=min_chain_size,
-            gap_penalty_scale=gap_penalty_scale,
-        )
-        if not chains:
-            continue
-
+    for key, chains in chain_results.items():
+        n_chains += len(chains)
         blocks = extract_nonoverlapping_chains(chains, block_id_start=block_id)
         all_blocks.extend(blocks)
         block_id += len(blocks)
-        n_chains += len(chains)
 
     print(f"[GeneChain] Extracted {len(all_blocks)} non-overlapping blocks from {n_chains} chains",
           file=sys.stderr, flush=True)

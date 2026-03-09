@@ -263,7 +263,7 @@ def main() -> None:
 
     for tau in taus:
         t0 = time.perf_counter()
-        filtered = [a for a in anchors if a.similarity >= tau]
+        filtered = anchors[anchors["similarity"] >= tau].reset_index(drop=True)
         groups = group_anchors_by_contig_pair(filtered)
 
         blocks = []

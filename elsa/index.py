@@ -14,7 +14,9 @@ import numpy as np
 # libomp which conflicts with the conda/system copy).  Must be set before
 # faiss is imported.
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
-os.environ.setdefault("OMP_NUM_THREADS", os.environ.get("OMP_NUM_THREADS", "1"))
+# NOTE: Do NOT set OMP_NUM_THREADS=1 here — it bakes into FAISS's thread pool
+# at import time and cannot be reliably overridden later.  Instead, we control
+# FAISS threading via faiss.omp_set_num_threads() in seed.py at search time.
 
 # Optional HNSW import — will fall back to FAISS or sklearn if not available
 try:

@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Dict, Set, Tuple, Union
 from collections import defaultdict
@@ -468,17 +469,31 @@ def cluster_blocks_by_overlap(
     valid_jac = jaccard[mask]
     del pairs_i, pairs_j, jaccard, mask
 
-    for idx in range(n_edges):
-        bid_i = int(block_ids_arr[valid_i[idx]])
-        bid_j = int(block_ids_arr[valid_j[idx]])
-        jac = float(valid_jac[idx])
-        edges_by_u[bid_i].append((bid_j, jac))
-        edges_by_u[bid_j].append((bid_i, jac))
+    t0 = time.time()
+    print(f"[Cluster] Building edge dict from {n_edges:,} edges...",
+          file=sys.stderr, flush=True)
+
+    # Vectorized edge building: map row indices → block_ids once
+    edge_bids_i = block_ids_arr[valid_i].astype(int)
+    edge_bids_j = block_ids_arr[valid_j].astype(int)
+    edge_jacs = valid_jac.astype(float)
     del valid_i, valid_j, valid_jac
 
+    for idx in range(n_edges):
+        bi = int(edge_bids_i[idx])
+        bj = int(edge_bids_j[idx])
+        jac = edge_jacs[idx]
+        edges_by_u[bi].append((bj, jac))
+        edges_by_u[bj].append((bi, jac))
+    del edge_bids_i, edge_bids_j, edge_jacs
+
+    print(f"[Cluster] Edge dict built in {time.time() - t0:.1f}s ({len(edges_by_u):,} nodes)",
+          file=sys.stderr, flush=True)
+
     # Apply mutual top-k filter
+    t0 = time.time()
     mutual_edges = _mutual_top_k(edges_by_u, mutual_k)
-    print(f"[Cluster] {len(mutual_edges):,} mutual top-{mutual_k} edges",
+    print(f"[Cluster] {len(mutual_edges):,} mutual top-{mutual_k} edges ({time.time() - t0:.1f}s)",
           file=sys.stderr, flush=True)
 
     # --- Phase 6: Connected components via union-find ---
@@ -512,6 +527,7 @@ def cluster_blocks_by_overlap(
 
     # --- Phase 7: Assign cluster IDs with genome support filter ---
     # Use columnar arrays directly — no block_map[bid] lookups
+    t0 = time.time()
     bid_to_row = {int(block_ids_arr[i]): i for i in range(n_blocks)}
     all_genomes = col['all_genomes']
     all_contigs = col['all_contigs']
@@ -521,7 +537,8 @@ def cluster_blocks_by_overlap(
     cluster_rows = []
     cid = 1
 
-    for root, members in components.items():
+    for root, members in tqdm(components.items(), desc="Assigning clusters",
+                               total=len(components), file=sys.stderr):
         genomes: Set[str] = set()
         total_genes = 0
         genes_by_genome: Dict[str, List[str]] = defaultdict(list)
@@ -570,6 +587,10 @@ def cluster_blocks_by_overlap(
     clusters_df = pd.DataFrame(cluster_rows) if cluster_rows else pd.DataFrame(
         columns=["cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"]
     )
+
+    n_assigned = sum(1 for c in block_to_cluster.values() if c > 0)
+    print(f"[Cluster] Assigned {n_assigned:,} blocks to {cid - 1:,} clusters in {time.time() - t0:.1f}s",
+          file=sys.stderr, flush=True)
 
     return block_to_cluster, clusters_df
 

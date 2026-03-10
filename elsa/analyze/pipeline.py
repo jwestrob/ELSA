@@ -11,6 +11,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import time
 from typing import Optional, List
 import sqlite3
 import sys
@@ -182,7 +183,11 @@ def run_chain_pipeline(
     # Save blocks checkpoint so clustering can resume without re-chaining
     blocks_ckpt = output_dir / "blocks_checkpoint.parquet"
     if not blocks_ckpt.exists():
+        print(f"[MicroChain] Saving blocks checkpoint...", file=sys.stderr, flush=True)
+        t0 = time.time()
         _save_blocks_checkpoint(blocks, blocks_ckpt)
+        print(f"[MicroChain] Checkpoint saved in {time.time() - t0:.1f}s",
+              file=sys.stderr, flush=True)
 
     print(f"[MicroChain] Found {n_blocks:,} blocks, clustering by overlap...", file=sys.stderr, flush=True)
 
@@ -210,6 +215,7 @@ def run_chain_pipeline(
 
     # Build output — blocks is already a DataFrame from chaining or checkpoint
     blocks_df = blocks
+    t_output = time.time()
 
     # Add cluster assignments
     print(f"[MicroChain] Building block output ({len(blocks_df):,} blocks)...",
@@ -229,6 +235,8 @@ def run_chain_pipeline(
                  if c in blocks_df.columns])
 
     # Compute bp ranges via position index → genomic coordinate lookup
+    print(f"[MicroChain] Computing bp ranges...", file=sys.stderr, flush=True)
+    t0 = time.time()
     pos_idx = pd.MultiIndex.from_arrays([
         genes_df['sample_id'], genes_df['contig_id'], genes_df['position_index'],
     ])
@@ -249,8 +257,12 @@ def run_chain_pipeline(
 
     del start_bp_s, end_bp_s
     blocks_df['n_genes'] = blocks_df['n_anchors']
+    print(f"[MicroChain] bp ranges computed in {time.time() - t0:.1f}s",
+          file=sys.stderr, flush=True)
 
     # Rebuild clusters_df from post-merge block_to_cluster (vectorized)
+    print(f"[MicroChain] Building cluster summaries...", file=sys.stderr, flush=True)
+    t0 = time.time()
     clustered = blocks_df[blocks_df['cluster_id'] > 0]
 
     if clustered.empty:
@@ -272,6 +284,8 @@ def run_chain_pipeline(
         stats['genome_support'] = stats['cluster_id'].map(gs).fillna(0).astype(int)
 
         # genes_json: per-cluster, per-genome position labels via numpy array iteration
+        print(f"[MicroChain] Building genes_json for {len(stats):,} clusters "
+              f"({len(clustered):,} blocks)...", file=sys.stderr, flush=True)
         _cids = clustered['cluster_id'].values
         _qg = clustered['query_genome'].values
         _qc = clustered['query_contig'].values
@@ -295,6 +309,9 @@ def run_chain_pipeline(
         )
         clusters_df = stats
 
+    print(f"[MicroChain] Cluster summaries built in {time.time() - t0:.1f}s",
+          file=sys.stderr, flush=True)
+
     blocks_path = output_dir / "micro_chain_blocks.csv"
     clusters_path = output_dir / "micro_chain_clusters.csv"
 
@@ -308,6 +325,8 @@ def run_chain_pipeline(
             columns=["cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"]
         )
 
+    print(f"[MicroChain] Writing CSVs...", file=sys.stderr, flush=True)
+    t0 = time.time()
     blocks_df.to_csv(blocks_path, index=False)
     real_clusters.to_csv(clusters_path, index=False)
 
@@ -341,9 +360,12 @@ def run_chain_pipeline(
         print(f"[MicroChain] Saved merge hierarchy ({len(merge_rows)} merges) to {output_dir}",
               file=sys.stderr, flush=True)
 
-    print(f"[MicroChain] Wrote {len(blocks_df)} blocks to {blocks_path}", file=sys.stderr, flush=True)
+    print(f"[MicroChain] Wrote {len(blocks_df):,} blocks to {blocks_path} ({time.time() - t0:.1f}s)",
+          file=sys.stderr, flush=True)
     print(f"[MicroChain] Wrote {len(real_clusters)} clusters to {clusters_path}"
           f" ({len(singleton_clusters)} singletons written separately)", file=sys.stderr, flush=True)
+    print(f"[MicroChain] Output phase completed in {time.time() - t_output:.1f}s",
+          file=sys.stderr, flush=True)
 
     n_clusters = len(real_clusters)
     genome_support_median = int(real_clusters["genome_support"].median()) if not real_clusters.empty else 0

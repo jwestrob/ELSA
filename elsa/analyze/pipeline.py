@@ -20,7 +20,7 @@ import pandas as pd
 
 from ..index import build_gene_index
 from ..seed import find_cross_genome_anchors, group_anchors_by_contig_pair
-from ..chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains, chain_groups_batched
+from ..chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains, extract_nonoverlapping_chains_df, chain_groups_batched
 from ..cluster import cluster_blocks_by_overlap, merge_contained_clusters
 
 
@@ -208,83 +208,92 @@ def run_chain_pipeline(
     print(f"[MicroChain] Formed {n_before} clusters, merged {n_merged} contained → {n_real_clusters} final ({n_singletons} singletons)",
           file=sys.stderr, flush=True)
 
-    # Build output
-    # Lookup table: gene_id → (start_bp, end_bp) for bp range output
-    _gids = genes_df["gene_id"].values
-    _starts = genes_df["start"].values.astype(int)
-    _ends = genes_df["end"].values.astype(int)
-    gene_bp = {_gids[i]: (_starts[i], _ends[i]) for i in range(len(_gids))}
-    del _gids, _starts, _ends
+    # Build output — blocks is already a DataFrame from chaining or checkpoint
+    blocks_df = blocks
 
-    # Materialize ChainedBlock list if we loaded from checkpoint as DataFrame
-    if blocks_from_checkpoint:
-        blocks = _load_blocks_checkpoint(blocks_ckpt)
+    # Add cluster assignments
+    print(f"[MicroChain] Building block output ({len(blocks_df):,} blocks)...",
+          file=sys.stderr, flush=True)
+    blocks_df['cluster_id'] = blocks_df['block_id'].map(block_to_cluster).fillna(0).astype(int)
 
-    block_map = {b.block_id: b for b in blocks}
-    block_rows = []
-    for block in blocks:
-        # Compute bp ranges from anchor genes
-        q_ids = block.query_gene_ids()
-        t_ids = block.target_gene_ids()
-        q_bps = [gene_bp[g] for g in q_ids if g in gene_bp]
-        t_bps = [gene_bp[g] for g in t_ids if g in gene_bp]
-        block_rows.append({
-            "block_id": block.block_id,
-            "cluster_id": block_to_cluster.get(block.block_id, 0),
-            "query_genome": block.query_genome,
-            "target_genome": block.target_genome,
-            "query_contig": block.query_contig,
-            "target_contig": block.target_contig,
-            "query_start": block.query_start,
-            "query_end": block.query_end,
-            "target_start": block.target_start,
-            "target_end": block.target_end,
-            "n_anchors": block.n_anchors,
-            "chain_score": round(block.chain_score, 4),
-            "orientation": block.orientation,
-            "query_anchor_genes": json.dumps(q_ids),
-            "target_anchor_genes": json.dumps(t_ids),
-            "query_start_bp": min(s for s, e in q_bps) if q_bps else 0,
-            "query_end_bp": max(e for s, e in q_bps) if q_bps else 0,
-            "target_start_bp": min(s for s, e in t_bps) if t_bps else 0,
-            "target_end_bp": max(e for s, e in t_bps) if t_bps else 0,
+    # Rename anchor gene columns for output compatibility
+    if 'anchor_query_gene_ids' in blocks_df.columns:
+        blocks_df = blocks_df.rename(columns={
+            'anchor_query_gene_ids': 'query_anchor_genes',
+            'anchor_target_gene_ids': 'target_anchor_genes',
         })
 
-    blocks_df = pd.DataFrame(block_rows)
-    blocks_df["n_genes"] = blocks_df["n_anchors"]
+    # Drop position-index anchor IDs (not needed in CSV output)
+    blocks_df = blocks_df.drop(
+        columns=[c for c in ('anchor_query_ids', 'anchor_target_ids')
+                 if c in blocks_df.columns])
 
-    # Rebuild clusters_df from post-merge block_to_cluster
-    cluster_rows = []
-    clusters_by_id = defaultdict(list)
-    for bid, cid in block_to_cluster.items():
-        if cid > 0:
-            clusters_by_id[cid].append(bid)
+    # Compute bp ranges via position index → genomic coordinate lookup
+    pos_idx = pd.MultiIndex.from_arrays([
+        genes_df['sample_id'], genes_df['contig_id'], genes_df['position_index'],
+    ])
+    start_bp_s = pd.Series(genes_df['start'].values.astype(int), index=pos_idx)
+    end_bp_s = pd.Series(genes_df['end'].values.astype(int), index=pos_idx)
 
-    for cid, member_bids in sorted(clusters_by_id.items()):
-        genomes = set()
-        total_genes = 0
-        genes_by_genome = defaultdict(list)
-        for bid in member_bids:
-            block = block_map[bid]
-            genomes.add(block.query_genome)
-            genomes.add(block.target_genome)
-            for idx in range(block.query_start, block.query_end + 1):
-                genes_by_genome[block.query_genome].append(f"{block.query_contig}:{idx}")
-            for idx in range(block.target_start, block.target_end + 1):
-                genes_by_genome[block.target_genome].append(f"{block.target_contig}:{idx}")
-            total_genes += block.n_anchors
-        mean_chain_len = total_genes / len(member_bids) if member_bids else 0.0
-        cluster_rows.append({
-            "cluster_id": cid,
-            "size": len(member_bids),
-            "genome_support": len(genomes),
-            "mean_chain_length": round(mean_chain_len, 2),
-            "genes_json": json.dumps({g: list(set(ids)) for g, ids in genes_by_genome.items()}),
-        })
+    for prefix in ('query', 'target'):
+        s_keys = pd.MultiIndex.from_arrays([
+            blocks_df[f'{prefix}_genome'], blocks_df[f'{prefix}_contig'],
+            blocks_df[f'{prefix}_start'],
+        ])
+        e_keys = pd.MultiIndex.from_arrays([
+            blocks_df[f'{prefix}_genome'], blocks_df[f'{prefix}_contig'],
+            blocks_df[f'{prefix}_end'],
+        ])
+        blocks_df[f'{prefix}_start_bp'] = start_bp_s.reindex(s_keys).fillna(0).astype(int).values
+        blocks_df[f'{prefix}_end_bp'] = end_bp_s.reindex(e_keys).fillna(0).astype(int).values
 
-    clusters_df = pd.DataFrame(cluster_rows) if cluster_rows else pd.DataFrame(
-        columns=["cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"]
-    )
+    del start_bp_s, end_bp_s
+    blocks_df['n_genes'] = blocks_df['n_anchors']
+
+    # Rebuild clusters_df from post-merge block_to_cluster (vectorized)
+    clustered = blocks_df[blocks_df['cluster_id'] > 0]
+
+    if clustered.empty:
+        clusters_df = pd.DataFrame(
+            columns=["cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"]
+        )
+    else:
+        # Numeric stats via groupby
+        stats = clustered.groupby('cluster_id').agg(
+            size=('block_id', 'count'),
+            mean_chain_length=('n_anchors', 'mean'),
+        ).reset_index()
+        stats['mean_chain_length'] = stats['mean_chain_length'].round(2)
+
+        # Genome support: unique genomes per cluster (union of query + target)
+        qg = clustered[['cluster_id', 'query_genome']].rename(columns={'query_genome': 'genome'})
+        tg = clustered[['cluster_id', 'target_genome']].rename(columns={'target_genome': 'genome'})
+        gs = pd.concat([qg, tg]).drop_duplicates().groupby('cluster_id')['genome'].nunique()
+        stats['genome_support'] = stats['cluster_id'].map(gs).fillna(0).astype(int)
+
+        # genes_json: per-cluster, per-genome position labels via numpy array iteration
+        _cids = clustered['cluster_id'].values
+        _qg = clustered['query_genome'].values
+        _qc = clustered['query_contig'].values
+        _qs = clustered['query_start'].values.astype(int)
+        _qe = clustered['query_end'].values.astype(int)
+        _tg = clustered['target_genome'].values
+        _tc = clustered['target_contig'].values
+        _ts = clustered['target_start'].values.astype(int)
+        _te = clustered['target_end'].values.astype(int)
+
+        genes_by_cluster = defaultdict(lambda: defaultdict(set))
+        for i in range(len(clustered)):
+            cid = int(_cids[i])
+            for idx in range(_qs[i], _qe[i] + 1):
+                genes_by_cluster[cid][_qg[i]].add(f"{_qc[i]}:{idx}")
+            for idx in range(_ts[i], _te[i] + 1):
+                genes_by_cluster[cid][_tg[i]].add(f"{_tc[i]}:{idx}")
+
+        stats['genes_json'] = stats['cluster_id'].map(
+            lambda cid: json.dumps({g: sorted(ids) for g, ids in genes_by_cluster.get(cid, {}).items()})
+        )
+        clusters_df = stats
 
     blocks_path = output_dir / "micro_chain_blocks.csv"
     clusters_path = output_dir / "micro_chain_clusters.csv"
@@ -354,8 +363,8 @@ def run_chain_pipeline(
 
     return ChainSummary(
         num_genes=n_genes,
-        num_anchors=sum(b.n_anchors for b in blocks),
-        num_blocks=len(blocks),
+        num_anchors=int(blocks_df['n_anchors'].sum()),
+        num_blocks=len(blocks_df),
         num_clusters=n_clusters,
         num_singletons=n_singletons,
         genome_support_median=genome_support_median,
@@ -364,24 +373,27 @@ def run_chain_pipeline(
 
 
 def _save_blocks_checkpoint(blocks, path: Path):
-    """Serialize ChainedBlock list to parquet for crash recovery."""
-    import json as _json
-    rows = []
-    for b in blocks:
-        rows.append({
-            "block_id": b.block_id,
-            "query_genome": b.query_genome, "target_genome": b.target_genome,
-            "query_contig": b.query_contig, "target_contig": b.target_contig,
-            "query_start": b.query_start, "query_end": b.query_end,
-            "target_start": b.target_start, "target_end": b.target_end,
-            "n_anchors": b.n_anchors, "chain_score": b.chain_score,
-            "orientation": b.orientation,
-            "anchor_query_ids": _json.dumps(b.anchor_query_ids),
-            "anchor_target_ids": _json.dumps(b.anchor_target_ids),
-            "anchor_query_gene_ids": _json.dumps(b.anchor_query_gene_ids),
-            "anchor_target_gene_ids": _json.dumps(b.anchor_target_gene_ids),
-        })
-    pd.DataFrame(rows).to_parquet(path, index=False)
+    """Save blocks (DataFrame or ChainedBlock list) to parquet checkpoint."""
+    if isinstance(blocks, pd.DataFrame):
+        blocks.to_parquet(path, index=False)
+    else:
+        import json as _json
+        rows = []
+        for b in blocks:
+            rows.append({
+                "block_id": b.block_id,
+                "query_genome": b.query_genome, "target_genome": b.target_genome,
+                "query_contig": b.query_contig, "target_contig": b.target_contig,
+                "query_start": b.query_start, "query_end": b.query_end,
+                "target_start": b.target_start, "target_end": b.target_end,
+                "n_anchors": b.n_anchors, "chain_score": b.chain_score,
+                "orientation": b.orientation,
+                "anchor_query_ids": _json.dumps(b.anchor_query_ids),
+                "anchor_target_ids": _json.dumps(b.anchor_target_ids),
+                "anchor_query_gene_ids": _json.dumps(b.anchor_query_gene_ids),
+                "anchor_target_gene_ids": _json.dumps(b.anchor_target_gene_ids),
+            })
+        pd.DataFrame(rows).to_parquet(path, index=False)
     print(f"[MicroChain] Saved blocks checkpoint ({len(blocks):,} blocks) to {path}",
           file=sys.stderr, flush=True)
 
@@ -425,7 +437,7 @@ def _run_gene_chaining(
     prebuilt_index: Optional[tuple] = None,
     _presorted: bool = False,
     checkpoint_dir: Optional[Path] = None,
-) -> List[ChainedBlock]:
+) -> pd.DataFrame:
     """Complete gene-level chaining pipeline (internal).
 
     Args:
@@ -435,6 +447,9 @@ def _run_gene_chaining(
                     and embeddings are aligned. Skips the sort+copy to save ~4.3 GB.
         checkpoint_dir: If set, save/load anchors.parquet checkpoint here.
                         Allows resuming after crashes without re-running kNN.
+
+    Returns:
+        DataFrame with block columns (block_id, query_genome, etc.)
     """
     import gc
 
@@ -514,7 +529,7 @@ def _run_gene_chaining(
     print(f"[GeneChain] {n_contig_pairs:,} contig pairs to process",
           file=sys.stderr, flush=True)
 
-    all_blocks = []
+    all_chain_dfs = []
     block_id = 0
     n_chains = 0
 
@@ -528,14 +543,22 @@ def _run_gene_chaining(
 
     for key, chains in chain_results.items():
         n_chains += len(chains)
-        blocks = extract_nonoverlapping_chains(chains, block_id_start=block_id)
-        all_blocks.extend(blocks)
-        block_id += len(blocks)
+        bdf = extract_nonoverlapping_chains_df(chains, block_id_start=block_id)
+        if not bdf.empty:
+            all_chain_dfs.append(bdf)
+            block_id += len(bdf)
 
-    print(f"[GeneChain] Extracted {len(all_blocks)} non-overlapping blocks from {n_chains} chains",
+    if not all_chain_dfs:
+        print("[GeneChain] No blocks extracted", file=sys.stderr, flush=True)
+        return pd.DataFrame()
+
+    all_blocks_df = pd.concat(all_chain_dfs, ignore_index=True)
+    del all_chain_dfs
+
+    print(f"[GeneChain] Extracted {len(all_blocks_df):,} non-overlapping blocks from {n_chains:,} chains",
           file=sys.stderr, flush=True)
 
-    return all_blocks
+    return all_blocks_df
 
 
 def _write_to_database(

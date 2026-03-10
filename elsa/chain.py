@@ -784,32 +784,91 @@ def chain_groups_batched(
                 result[key] = chains
         return result
 
-    # Phase 1: Preprocess all groups into partitions (numpy arrays only).
+    # Phase 1: Preprocess all groups into partitions.
+    #
+    # Two-pass approach for GroupedAnchors (fast path):
+    #   Pass 1 — count partition sizes (no large allocations)
+    #   Pass 2 — write directly into pre-allocated flat arrays
+    # This avoids collecting millions of small numpy arrays in Python lists,
+    # which at 12M+ partitions consumes ~5 GB in object overhead alone.
     from tqdm import tqdm
-    partitions = []      # (key, query_gene_ids, target_gene_ids, reverse_target)
-    sq_parts = []
-    st_parts = []
-    ss_parts = []
-    cmp_parts = []
-    part_sizes = []
 
     if is_grouped:
         # --- Fast path: GroupedAnchors (raw arrays + boundaries) ---
+        #
+        # Stream-to-flat: preprocess each group and write directly into
+        # pre-allocated flat arrays. Avoids collecting millions of small
+        # numpy arrays in Python lists (which at 12M+ partitions consumes
+        # ~5 GB in object overhead alone).
+        #
+        # Two passes:
+        #   Pass 1 — preprocess all groups, store only (sub_idx, rev, size)
+        #            per partition + group index. Total memory: ~12M small
+        #            index arrays (unavoidable) but NO sq/st/ss/cmp copies.
+        #   Pass 2 — replay group slicing, use stored sub_idx to write
+        #            sq/st/ss/cmp directly into flat arrays.
         ga = groups
-        # Pre-filter: skip groups too small to form chains (typically
-        # eliminates 99%+ of groups — e.g. 146M → ~500k for DPANN)
+
         group_sizes = np.diff(ga.group_bounds)
         valid_groups = np.where(group_sizes >= min_size)[0]
         n_skipped = ga.n_groups - len(valid_groups)
         if n_skipped > 0:
             print(f"[Chain] Skipping {n_skipped:,} / {ga.n_groups:,} groups "
                   f"with < {min_size} anchors", file=sys.stderr, flush=True)
+
+        # Pass 1: preprocess, store sub_idx + metadata (no flat copies)
+        print(f"[Chain] Pass 1: preprocessing {len(valid_groups):,} groups...",
+              file=sys.stderr, flush=True)
+        # Each entry: (group_i, sub_idx_into_group_arrays, rev, size)
+        part_specs = []
+        total_n = 0
         for i in tqdm(valid_groups, desc="Preprocessing groups", file=sys.stderr):
             start = int(ga.group_bounds[i])
             end = int(ga.group_bounds[i + 1])
             idx = ga.order[start:end]
 
-            # Build group key from code lookups
+            g_qi = ga.query_idx[idx]
+            g_ti = ga.target_idx[idx]
+            g_sim = ga.similarity[idx]
+            g_orient = ga.orientation[idx]
+
+            for sub_idx, sq, st, ss, cmp, rev in _preprocess_group_raw(
+                g_qi, g_ti, g_sim, g_orient, min_size
+            ):
+                sz = len(sq)
+                # Store sub_idx (indices into the group's local arrays)
+                part_specs.append((i, sub_idx, rev, sz))
+                total_n += sz
+
+        n_parts = len(part_specs)
+        if n_parts == 0:
+            del ga, groups
+            return {}
+
+        print(f"[Chain] {n_parts:,} partitions, {total_n:,} total elements — "
+              f"allocating flat arrays...", file=sys.stderr, flush=True)
+
+        # Pre-allocate flat arrays
+        sizes = np.empty(n_parts, dtype=np.int64)
+        offsets = np.empty(n_parts, dtype=np.int64)
+        flat_sq = np.empty(total_n, dtype=np.int64)
+        flat_st = np.empty(total_n, dtype=np.int64)
+        flat_ss = np.empty(total_n, dtype=np.float64)
+        flat_cmp = np.empty(total_n, dtype=np.int64)
+
+        partitions = []  # (key, q_gids, t_gids, reverse_target) for Phase 5
+
+        # Pass 2: re-slice group arrays using stored sub_idx, write to flat
+        print(f"[Chain] Pass 2: filling flat arrays...",
+              file=sys.stderr, flush=True)
+        write_pos = 0
+        for p_idx in tqdm(range(n_parts), desc="Packing partitions", file=sys.stderr):
+            group_i, sub_idx, rev, sz = part_specs[p_idx]
+            start = int(ga.group_bounds[group_i])
+            end = int(ga.group_bounds[group_i + 1])
+            idx = ga.order[start:end]
+
+            # Reconstruct group key
             row0 = idx[0]
             key = (
                 ga.qg_uniques[ga.qg_codes[row0]],
@@ -818,27 +877,39 @@ def chain_groups_batched(
                 ga.tc_uniques[ga.tc_codes[row0]],
             )
 
-            # Slice raw arrays for this group
+            # Slice raw arrays and apply sub_idx
             g_qi = ga.query_idx[idx]
             g_ti = ga.target_idx[idx]
             g_sim = ga.similarity[idx]
-            g_orient = ga.orientation[idx]
             g_qgid = ga.query_gene_id[idx]
             g_tgid = ga.target_gene_id[idx]
 
-            for sub_idx, sq, st, ss, cmp, rev in _preprocess_group_raw(
-                g_qi, g_ti, g_sim, g_orient, min_size
-            ):
-                partitions.append((key, g_qgid[sub_idx], g_tgid[sub_idx], rev))
-                sq_parts.append(np.ascontiguousarray(sq, dtype=np.int64))
-                st_parts.append(np.ascontiguousarray(st, dtype=np.int64))
-                ss_parts.append(np.ascontiguousarray(ss, dtype=np.float64))
-                cmp_parts.append(np.ascontiguousarray(cmp, dtype=np.int64))
-                part_sizes.append(len(sq))
+            sq = g_qi[sub_idx]
+            st = g_ti[sub_idx]
+            ss = g_sim[sub_idx]
+            cmp = -st if rev else st.copy()
 
-        del ga  # release reference to GroupedAnchors
+            flat_sq[write_pos:write_pos+sz] = sq
+            flat_st[write_pos:write_pos+sz] = st
+            flat_ss[write_pos:write_pos+sz] = ss
+            flat_cmp[write_pos:write_pos+sz] = cmp
+            sizes[p_idx] = sz
+            offsets[p_idx] = write_pos
+            partitions.append((key, g_qgid[sub_idx], g_tgid[sub_idx], rev))
+            write_pos += sz
+
+        del ga, groups, part_specs
+        import gc; gc.collect()
+
     else:
         # --- Legacy path: Dict of DataFrames ---
+        partitions = []
+        sq_parts = []
+        st_parts = []
+        ss_parts = []
+        cmp_parts = []
+        part_sizes = []
+
         group_keys = list(groups.keys())
         for key in tqdm(group_keys, desc="Preprocessing groups", file=sys.stderr):
             anchors_df = groups.pop(key)
@@ -854,34 +925,32 @@ def chain_groups_batched(
                 cmp_parts.append(np.ascontiguousarray(cmp, dtype=np.int64))
                 part_sizes.append(len(sq))
 
-            del anchors_df  # help GC
+            del anchors_df
 
-    if not partitions:
-        return {}
+        if not partitions:
+            return {}
 
-    # Phase 2: Pack into flat arrays
-    n_parts = len(partitions)
-    sizes = np.array(part_sizes, dtype=np.int64)
-    offsets = np.zeros(n_parts, dtype=np.int64)
-    if n_parts > 1:
-        np.cumsum(sizes[:-1], out=offsets[1:])
-    total_n = int(sizes.sum())
+        n_parts = len(partitions)
+        sizes = np.array(part_sizes, dtype=np.int64)
+        offsets = np.zeros(n_parts, dtype=np.int64)
+        if n_parts > 1:
+            np.cumsum(sizes[:-1], out=offsets[1:])
+        total_n = int(sizes.sum())
 
-    flat_sq = np.empty(total_n, dtype=np.int64)
-    flat_st = np.empty(total_n, dtype=np.int64)
-    flat_ss = np.empty(total_n, dtype=np.float64)
-    flat_cmp = np.empty(total_n, dtype=np.int64)
+        flat_sq = np.empty(total_n, dtype=np.int64)
+        flat_st = np.empty(total_n, dtype=np.int64)
+        flat_ss = np.empty(total_n, dtype=np.float64)
+        flat_cmp = np.empty(total_n, dtype=np.int64)
 
-    for i in range(n_parts):
-        o = int(offsets[i])
-        n = int(sizes[i])
-        flat_sq[o:o+n] = sq_parts[i]
-        flat_st[o:o+n] = st_parts[i]
-        flat_ss[o:o+n] = ss_parts[i]
-        flat_cmp[o:o+n] = cmp_parts[i]
+        for i in range(n_parts):
+            o = int(offsets[i])
+            n = int(sizes[i])
+            flat_sq[o:o+n] = sq_parts[i]
+            flat_st[o:o+n] = st_parts[i]
+            flat_ss[o:o+n] = ss_parts[i]
+            flat_cmp[o:o+n] = cmp_parts[i]
 
-    # Free per-partition arrays
-    del sq_parts, st_parts, ss_parts, cmp_parts
+        del sq_parts, st_parts, ss_parts, cmp_parts, part_sizes
 
     # Phase 3: Batched DP fill — process groups in chunks for progress tracking.
     # Groups are independent so we can call the Numba kernel on sub-slices of

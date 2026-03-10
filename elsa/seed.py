@@ -11,11 +11,28 @@ Legacy GeneAnchor dataclass is retained for backward compatibility
 from __future__ import annotations
 
 import sys
+from collections import namedtuple
 from dataclasses import dataclass
 from typing import List, Dict, Tuple, Set, Any
 
 import numpy as np
 import pandas as pd
+
+
+# ---------------------------------------------------------------------------
+# Grouped anchors — raw arrays + sort order + group boundaries
+# ---------------------------------------------------------------------------
+GroupedAnchors = namedtuple('GroupedAnchors', [
+    'order',          # (n,) int64 — sort order into the raw arrays
+    'group_bounds',   # (n_groups+1,) int64 — boundaries in sorted order
+    'n_groups',       # int
+    # Raw column arrays (original DataFrame order; use order[bounds[i]:bounds[i+1]] to index)
+    'query_idx', 'target_idx', 'similarity', 'orientation',
+    'query_gene_id', 'target_gene_id',
+    # Integer codes + uniques for reconstructing group keys
+    'qg_codes', 'tg_codes', 'qc_codes', 'tc_codes',
+    'qg_uniques', 'tg_uniques', 'qc_uniques', 'tc_uniques',
+])
 
 
 # ---------------------------------------------------------------------------
@@ -151,7 +168,10 @@ def find_cross_genome_anchors(
                 n_raw_kept += len(ri)
 
         del query  # free 4.3 GB after all chunks processed
-        _faiss.omp_set_num_threads(1)
+        # Note: do NOT call omp_set_num_threads(1) here. FAISS and Numba
+        # may use separate libomp copies (KMP_DUPLICATE_LIB_OK=TRUE), and
+        # mutating OpenMP global state between them causes thread-pool
+        # corruption → SIGKILL on macOS. Numba now uses workqueue backend.
 
     else:  # sklearn
         distances, labels = index.kneighbors(query, n_neighbors=k_query)
@@ -217,7 +237,21 @@ def find_cross_genome_anchors(
     gene_id_arr = gene_info['gene_id'].values
     strand_arr = gene_info['strand'].values if 'strand' in gene_info.columns else None
 
-    # Compute orientations vectorized
+    # Canonical ordering: ensure query_genome <= target_genome (alphabetically).
+    # Done here on raw index arrays (cheap int swaps) so the DataFrame
+    # is already canonical and group_anchors_by_contig_pair avoids
+    # expensive column-level copies that double memory at 153M rows.
+    q_gen = genome_arr[row_idx]
+    t_gen = genome_arr[col_idx]
+    swap_mask = q_gen > t_gen
+    if swap_mask.any():
+        temp = row_idx[swap_mask].copy()
+        row_idx[swap_mask] = col_idx[swap_mask]
+        col_idx[swap_mask] = temp
+        del temp
+    del q_gen, t_gen
+
+    # Compute orientations vectorized (symmetric w.r.t. query/target swap)
     if strand_arr is not None:
         si = strand_arr[row_idx].copy()
         sj = strand_arr[col_idx].copy()
@@ -227,14 +261,19 @@ def find_cross_genome_anchors(
     else:
         orientations = np.zeros(len(row_idx), dtype=np.int8)
 
-    # Build DataFrame directly — no Python object allocation per anchor
+    # Use Categorical for genome/contig columns: saves ~3 GB at 153M rows
+    # (int32 codes vs 8-byte object pointers). Ordered + shared categories
+    # enable safe column swaps downstream without category mismatches.
+    genome_cats = sorted(np.unique(genome_arr))
+    contig_cats = sorted(np.unique(contig_arr))
+
     anchors_df = pd.DataFrame({
         "query_idx": pos_arr[row_idx],
         "target_idx": pos_arr[col_idx],
-        "query_genome": genome_arr[row_idx],
-        "target_genome": genome_arr[col_idx],
-        "query_contig": contig_arr[row_idx],
-        "target_contig": contig_arr[col_idx],
+        "query_genome": pd.Categorical(genome_arr[row_idx], categories=genome_cats, ordered=True),
+        "target_genome": pd.Categorical(genome_arr[col_idx], categories=genome_cats, ordered=True),
+        "query_contig": pd.Categorical(contig_arr[row_idx], categories=contig_cats, ordered=True),
+        "target_contig": pd.Categorical(contig_arr[col_idx], categories=contig_cats, ordered=True),
         "query_gene_id": gene_id_arr[row_idx],
         "target_gene_id": gene_id_arr[col_idx],
         "similarity": sims,
@@ -255,16 +294,24 @@ def group_anchors_by_contig_pair(
 
     Uses canonical ordering (smaller genome first) to avoid duplicates.
     Operates on DataFrame; returns dict of sub-DataFrames.
+
+    Uses numpy composite-key sort instead of pandas groupby for ~5-10x
+    speedup on large DataFrames (153M+ rows).
     """
     if anchors_df.empty:
         return {}
+
+    n = len(anchors_df)
 
     # Canonical ordering: swap rows where query_genome > target_genome.
     # Swap column values via numpy arrays to avoid a full DataFrame copy
     # (critical for 100M+ row DataFrames where .copy() doubles memory).
     needs_swap = anchors_df["query_genome"].values > anchors_df["target_genome"].values
+    n_swap = int(needs_swap.sum())
 
-    if needs_swap.any():
+    if n_swap > 0:
+        print(f"[GroupAnchors] Canonical swap on {n_swap:,} / {n:,} rows...",
+              file=sys.stderr, flush=True)
         sw = needs_swap
         for qa, ta in [
             ("query_idx", "target_idx"),
@@ -277,14 +324,74 @@ def group_anchors_by_contig_pair(
             q_vals[sw], t_vals[sw] = t_vals[sw], q_vals[sw]
             anchors_df[qa] = q_vals
             anchors_df[ta] = t_vals
+    else:
+        print(f"[GroupAnchors] Already canonical ({n:,} rows), skipping swap",
+              file=sys.stderr, flush=True)
 
-    df = anchors_df
+    # --- Numpy sort-based grouping (replaces pandas groupby) ---
+    # Encode each grouping column as integer codes, then combine into a
+    # single composite key. numpy sort on int64 is vectorized and uses
+    # BLAS threads — much faster than pandas' single-threaded hash table.
+    print(f"[GroupAnchors] Encoding group keys for {n:,} anchors...",
+          file=sys.stderr, flush=True)
 
-    groups = {}
-    for key, group_df in df.groupby(
-        ["query_genome", "target_genome", "query_contig", "target_contig"],
-        sort=False,
-    ):
-        groups[key] = group_df.reset_index(drop=True)
+    def _get_codes_and_uniques(col):
+        """Get integer codes for a column (fast path for Categorical)."""
+        if hasattr(col, 'cat'):
+            codes = col.cat.codes.values.astype(np.int64)
+            uniques = col.cat.categories.values
+        else:
+            uniques, codes = np.unique(col.values, return_inverse=True)
+            codes = codes.astype(np.int64)
+        return codes, uniques
 
-    return groups
+    qg_codes, qg_uniques = _get_codes_and_uniques(anchors_df["query_genome"])
+    tg_codes, tg_uniques = _get_codes_and_uniques(anchors_df["target_genome"])
+    qc_codes, qc_uniques = _get_codes_and_uniques(anchors_df["query_contig"])
+    tc_codes, tc_uniques = _get_codes_and_uniques(anchors_df["target_contig"])
+
+    n_tg = len(tg_uniques)
+    n_qc = len(qc_uniques)
+    n_tc = len(tc_uniques)
+
+    # Composite key — fits int64 as long as product of cardinalities < 2^63
+    composite = ((qg_codes * n_tg + tg_codes) * n_qc + qc_codes) * n_tc + tc_codes
+
+    print(f"[GroupAnchors] Sorting {n:,} anchors by group key...",
+          file=sys.stderr, flush=True)
+    order = np.argsort(composite, kind='quicksort')
+    sorted_keys = composite[order]
+    del composite
+
+    # Find group boundaries
+    diffs = np.empty(n, dtype=np.bool_)
+    diffs[0] = True
+    np.not_equal(sorted_keys[1:], sorted_keys[:-1], out=diffs[1:])
+    group_starts = np.nonzero(diffs)[0]
+    del diffs, sorted_keys
+
+    n_groups = len(group_starts)
+    # Append sentinel for boundary slicing
+    group_bounds = np.empty(n_groups + 1, dtype=np.int64)
+    group_bounds[:n_groups] = group_starts
+    group_bounds[n_groups] = n
+    del group_starts
+
+    print(f"[GroupAnchors] {n_groups:,} contig pairs, extracting raw arrays...",
+          file=sys.stderr, flush=True)
+
+    return GroupedAnchors(
+        order=order,
+        group_bounds=group_bounds,
+        n_groups=n_groups,
+        query_idx=anchors_df["query_idx"].values,
+        target_idx=anchors_df["target_idx"].values,
+        similarity=anchors_df["similarity"].values,
+        orientation=anchors_df["orientation"].values,
+        query_gene_id=anchors_df["query_gene_id"].values,
+        target_gene_id=anchors_df["target_gene_id"].values,
+        qg_codes=qg_codes, tg_codes=tg_codes,
+        qc_codes=qc_codes, tc_codes=tc_codes,
+        qg_uniques=qg_uniques, tg_uniques=tg_uniques,
+        qc_uniques=qc_uniques, tc_uniques=tc_uniques,
+    )

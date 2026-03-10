@@ -466,7 +466,7 @@ def load_genes_for_locus(locus_id: str, block_id: Optional[int] = None, locus_ro
     query = """
         SELECT g.*, c.length as contig_length
         FROM genes g
-        JOIN contigs c ON g.contig_id = c.contig_id
+        JOIN contigs c ON g.contig_id = c.contig_id AND g.genome_id = c.genome_id
         WHERE g.contig_id = ?
         ORDER BY g.start_pos
     """
@@ -485,7 +485,7 @@ def load_genes_for_region(contig_id: str, start_bp: int, end_bp: int, extended_c
         """
         SELECT g.*, c.length as contig_length
         FROM genes g
-        JOIN contigs c ON g.contig_id = c.contig_id
+        JOIN contigs c ON g.contig_id = c.contig_id AND g.genome_id = c.genome_id
         WHERE g.contig_id = ?
         ORDER BY g.start_pos
         """,
@@ -643,7 +643,7 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
         query = """
             SELECT g.*, c.length as contig_length, 'unknown' as synteny_role
             FROM genes g
-            JOIN contigs c ON g.contig_id = c.contig_id
+            JOIN contigs c ON g.contig_id = c.contig_id AND g.genome_id = c.genome_id
             WHERE g.contig_id = ?
             ORDER BY g.start_pos
         """
@@ -683,7 +683,7 @@ def load_aligned_genes_for_block(_conn, contig_id: str, block_id: int, locus_rol
                    ELSE 'Flanking Region'
                END as position_in_block
         FROM genes g
-        JOIN contigs c ON g.contig_id = c.contig_id
+        JOIN contigs c ON g.contig_id = c.contig_id AND g.genome_id = c.genome_id
         WHERE g.contig_id = ?
         ORDER BY g.start_pos
         LIMIT ? OFFSET ?

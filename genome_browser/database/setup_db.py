@@ -27,12 +27,13 @@ CREATE TABLE IF NOT EXISTS genomes (
 
 -- Contig information
 CREATE TABLE IF NOT EXISTS contigs (
-    contig_id TEXT PRIMARY KEY,
+    contig_id TEXT NOT NULL,
     genome_id TEXT NOT NULL,
     contig_name TEXT,
     length INTEGER,
     gc_content REAL,
     gene_count INTEGER,
+    PRIMARY KEY (genome_id, contig_id),
     FOREIGN KEY (genome_id) REFERENCES genomes(genome_id)
 );
 

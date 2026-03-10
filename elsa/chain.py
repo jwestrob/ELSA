@@ -9,15 +9,25 @@ Uses Numba JIT for the O(n²) DP inner loop when available.
 from __future__ import annotations
 
 import math
+import sys
 from dataclasses import dataclass, field
 from typing import List, Dict, Tuple, Set
 
+import os
 import numpy as np
 import pandas as pd
 
 # ---------------------------------------------------------------------------
 # Numba-accelerated DP kernels (optional — pure-Python fallback below)
 # ---------------------------------------------------------------------------
+# Force Numba to use its own thread pool ("workqueue") instead of OpenMP.
+# FAISS also uses OpenMP via a separate libomp; KMP_DUPLICATE_LIB_OK=TRUE
+# prevents the immediate crash but having two OpenMP runtimes causes silent
+# thread-pool corruption → SIGKILL on macOS (seen at 7-22 GB RSS, well
+# under the 48 GB limit).  workqueue uses POSIX threads directly and
+# supports prange parallelism without any OpenMP interaction.
+os.environ.setdefault("NUMBA_THREADING_LAYER", "workqueue")
+
 try:
     from numba import njit, prange
 
@@ -31,10 +41,10 @@ try:
             best_prev = -1
             best_score = ss[i]
 
-            for j in range(i):
+            for j in range(i - 1, -1, -1):
                 gap_q = sq[i] - sq[j] - 1
                 if max_gap >= 0 and gap_q > max_gap:
-                    continue
+                    break
 
                 if cmp_vals[i] <= cmp_vals[j]:
                     continue
@@ -75,11 +85,11 @@ try:
                 best_prev = np.int64(-1)
                 best_score = ss[ii]
 
-                for j in range(i):
+                for j in range(i - 1, -1, -1):
                     jj = off + j
                     gap_q = sq[ii] - sq[jj] - 1
                     if max_gap >= 0 and gap_q > max_gap:
-                        continue
+                        break
                     if cmp_vals[ii] <= cmp_vals[jj]:
                         continue
                     gap_t = abs(st[ii] - st[jj]) - 1
@@ -116,11 +126,11 @@ try:
                 best_prev = np.int64(-1)
                 best_score = ss[ii]
 
-                for j in range(i):
+                for j in range(i - 1, -1, -1):
                     jj = off + j
                     gap_q = sq[ii] - sq[jj] - 1
                     if max_gap >= 0 and gap_q > max_gap:
-                        continue
+                        break
                     if cmp_vals[ii] <= cmp_vals[jj]:
                         continue
                     gap_t = abs(st[ii] - st[jj]) - 1
@@ -412,10 +422,10 @@ def chain_anchors_lis(
             # Pure-Python fallback
             for i in range(1, n):
                 best_len, best_prev, best_score = 1, -1, ss_c[i]
-                for j in range(i):
+                for j in range(i - 1, -1, -1):
                     gap_q = sq_c[i] - sq_c[j] - 1
                     if _max_gap >= 0 and gap_q > _max_gap:
-                        continue
+                        break
                     if cmp_c[i] <= cmp_c[j]:
                         continue
                     gap_t = abs(st_c[i] - st_c[j]) - 1
@@ -621,6 +631,62 @@ def _preprocess_group(anchors_df, min_size):
 # ---------------------------------------------------------------------------
 # Array-only preprocessing (avoids intermediate DataFrames)
 # ---------------------------------------------------------------------------
+def _preprocess_group_raw(q_idx, t_idx, sims, orients, min_size):
+    """Preprocess a group from raw numpy arrays (no DataFrame).
+
+    Yields (sub_idx, sq, st, ss, cmp, reverse_target) where sub_idx
+    are indices into the input arrays.
+    """
+    n = len(q_idx)
+    if n < min_size:
+        return
+
+    # Dedup by (qi, ti) pair — keep highest similarity
+    pair_keys = q_idx.astype(np.int64) * 1_000_000_000 + t_idx.astype(np.int64)
+    order = np.argsort(-sims)
+    _, first_idx = np.unique(pair_keys[order], return_index=True)
+    dedup_idx = order[first_idx]
+
+    if len(dedup_idx) < min_size:
+        return
+
+    dedup_orients = orients[dedup_idx]
+    has_strand = np.any(dedup_orients != 0)
+
+    if has_strand:
+        partitions = []
+        fwd_mask = dedup_orients >= 0
+        rev_mask = dedup_orients < 0
+        if fwd_mask.sum() >= min_size:
+            partitions.append((dedup_idx[fwd_mask], False))
+        if rev_mask.sum() >= min_size:
+            partitions.append((dedup_idx[rev_mask], True))
+    else:
+        partitions = [(dedup_idx, False), (dedup_idx.copy(), True)]
+
+    for part_idx, reverse_target in partitions:
+        pq = q_idx[part_idx]
+        ps = sims[part_idx]
+
+        q_order = np.argsort(-ps)
+        _, q_first = np.unique(pq[q_order], return_index=True)
+        sub_idx = part_idx[q_order[q_first]]
+
+        if len(sub_idx) < min_size:
+            continue
+
+        sq = q_idx[sub_idx]
+        sort_order = np.argsort(sq)
+        sub_idx = sub_idx[sort_order]
+
+        sq = q_idx[sub_idx]
+        st = t_idx[sub_idx]
+        ss = sims[sub_idx]
+        cmp = -st if reverse_target else st.copy()
+
+        yield sub_idx, sq, st, ss, cmp, reverse_target
+
+
 def _preprocess_group_arrays(anchors_df, min_size):
     """Preprocess a group using only numpy index arrays.
 
@@ -689,29 +755,28 @@ def _preprocess_group_arrays(anchors_df, min_size):
 # Batched chaining — single Numba call for all contig-pair groups
 # ---------------------------------------------------------------------------
 def chain_groups_batched(
-    groups: Dict,
+    groups,
     max_gap: int = 2,
     min_size: int = 2,
     gap_penalty_scale: float = 0.0,
 ) -> Dict:
     """Chain all contig-pair groups using batched Numba kernels.
 
-    Uses array-only preprocessing (no intermediate DataFrames), packs all
-    partitions into flat arrays, runs DP + backtracking in a single Numba
-    call, then builds chain DataFrames only for the final output.
+    Accepts either a GroupedAnchors namedtuple (fast path — raw arrays +
+    group boundaries, no DataFrame construction) or a legacy Dict mapping
+    (qg, tg, qc, tc) keys to anchor DataFrames.
 
     Falls back to per-group chain_anchors_lis if Numba is not available.
-
-    Args:
-        groups: Dict mapping (qg, tg, qc, tc) keys to anchor DataFrames
-        max_gap: Maximum gap in genes between chain members
-        min_size: Minimum anchors for a valid chain
-        gap_penalty_scale: Concave gap penalty multiplier
 
     Returns:
         Dict mapping group keys to lists of chain DataFrames
     """
+    # --- Detect input format ---
+    is_grouped = hasattr(groups, 'order')
+
     if not _NUMBA_AVAILABLE:
+        if is_grouped:
+            raise RuntimeError("GroupedAnchors requires Numba for batched chaining")
         result = {}
         for key, anchors_df in groups.items():
             chains = chain_anchors_lis(anchors_df, max_gap, min_size, gap_penalty_scale)
@@ -720,9 +785,7 @@ def chain_groups_batched(
         return result
 
     # Phase 1: Preprocess all groups into partitions (numpy arrays only).
-    # Pop from groups dict to free each group's DataFrame as we go —
-    # critical for large datasets where the groups dict holds ~12 GB.
-    # Store only the gene_id arrays needed for unpacking, not full DataFrames.
+    from tqdm import tqdm
     partitions = []      # (key, query_gene_ids, target_gene_ids, reverse_target)
     sq_parts = []
     st_parts = []
@@ -730,22 +793,68 @@ def chain_groups_batched(
     cmp_parts = []
     part_sizes = []
 
-    for key in list(groups.keys()):
-        anchors_df = groups.pop(key)
-        q_gene_ids = anchors_df["query_gene_id"].values
-        t_gene_ids = anchors_df["target_gene_id"].values
+    if is_grouped:
+        # --- Fast path: GroupedAnchors (raw arrays + boundaries) ---
+        ga = groups
+        # Pre-filter: skip groups too small to form chains (typically
+        # eliminates 99%+ of groups — e.g. 146M → ~500k for DPANN)
+        group_sizes = np.diff(ga.group_bounds)
+        valid_groups = np.where(group_sizes >= min_size)[0]
+        n_skipped = ga.n_groups - len(valid_groups)
+        if n_skipped > 0:
+            print(f"[Chain] Skipping {n_skipped:,} / {ga.n_groups:,} groups "
+                  f"with < {min_size} anchors", file=sys.stderr, flush=True)
+        for i in tqdm(valid_groups, desc="Preprocessing groups", file=sys.stderr):
+            start = int(ga.group_bounds[i])
+            end = int(ga.group_bounds[i + 1])
+            idx = ga.order[start:end]
 
-        for df_idx, sq, st, ss, cmp, rev in _preprocess_group_arrays(anchors_df, min_size):
-            # Store only the gene IDs at the partition positions (not full df)
-            idx = df_idx.astype(np.intp)
-            partitions.append((key, q_gene_ids[idx], t_gene_ids[idx], rev))
-            sq_parts.append(np.ascontiguousarray(sq, dtype=np.int64))
-            st_parts.append(np.ascontiguousarray(st, dtype=np.int64))
-            ss_parts.append(np.ascontiguousarray(ss, dtype=np.float64))
-            cmp_parts.append(np.ascontiguousarray(cmp, dtype=np.int64))
-            part_sizes.append(len(sq))
+            # Build group key from code lookups
+            row0 = idx[0]
+            key = (
+                ga.qg_uniques[ga.qg_codes[row0]],
+                ga.tg_uniques[ga.tg_codes[row0]],
+                ga.qc_uniques[ga.qc_codes[row0]],
+                ga.tc_uniques[ga.tc_codes[row0]],
+            )
 
-        del anchors_df  # help GC
+            # Slice raw arrays for this group
+            g_qi = ga.query_idx[idx]
+            g_ti = ga.target_idx[idx]
+            g_sim = ga.similarity[idx]
+            g_orient = ga.orientation[idx]
+            g_qgid = ga.query_gene_id[idx]
+            g_tgid = ga.target_gene_id[idx]
+
+            for sub_idx, sq, st, ss, cmp, rev in _preprocess_group_raw(
+                g_qi, g_ti, g_sim, g_orient, min_size
+            ):
+                partitions.append((key, g_qgid[sub_idx], g_tgid[sub_idx], rev))
+                sq_parts.append(np.ascontiguousarray(sq, dtype=np.int64))
+                st_parts.append(np.ascontiguousarray(st, dtype=np.int64))
+                ss_parts.append(np.ascontiguousarray(ss, dtype=np.float64))
+                cmp_parts.append(np.ascontiguousarray(cmp, dtype=np.int64))
+                part_sizes.append(len(sq))
+
+        del ga  # release reference to GroupedAnchors
+    else:
+        # --- Legacy path: Dict of DataFrames ---
+        group_keys = list(groups.keys())
+        for key in tqdm(group_keys, desc="Preprocessing groups", file=sys.stderr):
+            anchors_df = groups.pop(key)
+            q_gene_ids = anchors_df["query_gene_id"].values
+            t_gene_ids = anchors_df["target_gene_id"].values
+
+            for df_idx, sq, st, ss, cmp, rev in _preprocess_group_arrays(anchors_df, min_size):
+                idx = df_idx.astype(np.intp)
+                partitions.append((key, q_gene_ids[idx], t_gene_ids[idx], rev))
+                sq_parts.append(np.ascontiguousarray(sq, dtype=np.int64))
+                st_parts.append(np.ascontiguousarray(st, dtype=np.int64))
+                ss_parts.append(np.ascontiguousarray(ss, dtype=np.float64))
+                cmp_parts.append(np.ascontiguousarray(cmp, dtype=np.int64))
+                part_sizes.append(len(sq))
+
+            del anchors_df  # help GC
 
     if not partitions:
         return {}
@@ -774,18 +883,24 @@ def chain_groups_batched(
     # Free per-partition arrays
     del sq_parts, st_parts, ss_parts, cmp_parts
 
-    # Phase 3: Batched DP fill (single Numba call for all groups)
-    # Use parallel prange when total work is large enough to amortize
-    # thread scheduling overhead (~100k+ elements or groups with large n²)
+    # Phase 3: Batched DP fill — process groups in chunks for progress tracking.
+    # Groups are independent so we can call the Numba kernel on sub-slices of
+    # offsets/sizes while sharing the same flat arrays.
     dp_len = np.ones(total_n, dtype=np.int32)
     dp_prev = np.full(total_n, -1, dtype=np.int64)
     dp_score = flat_ss.copy()
 
     _max_gap = np.int64(max_gap if max_gap is not None else -1)
     _dp_func = _dp_fill_batched_parallel if total_n >= 100_000 else _dp_fill_batched
-    _dp_func(flat_sq, flat_st, flat_ss, flat_cmp,
-             offsets, sizes, _max_gap, float(gap_penalty_scale),
-             dp_len, dp_prev, dp_score)
+
+    DP_BATCH = 5_000   # groups per progress tick
+    for b_start in tqdm(range(0, n_parts, DP_BATCH), desc="Chaining DP",
+                        total=(n_parts + DP_BATCH - 1) // DP_BATCH, file=sys.stderr):
+        b_end = min(b_start + DP_BATCH, n_parts)
+        _dp_func(flat_sq, flat_st, flat_ss, flat_cmp,
+                 offsets[b_start:b_end], sizes[b_start:b_end],
+                 _max_gap, float(gap_penalty_scale),
+                 dp_len, dp_prev, dp_score)
 
     # Free arrays no longer needed after DP
     del flat_cmp

@@ -54,60 +54,94 @@ def build_block_members(
             gene_ids[i], int(strands[i])
         )
 
-    # Vectorized expansion: build arrays for both sides of all blocks
+    # Fully vectorized expansion: use numpy repeat/arange for both sides
     block_ids = blocks_df["block_id"].values
     cluster_ids = blocks_df["cluster_id"].values
     q_genomes = blocks_df["query_genome"].values
     t_genomes = blocks_df["target_genome"].values
     q_contigs = blocks_df["query_contig"].values
     t_contigs = blocks_df["target_contig"].values
-    q_starts = blocks_df["query_start"].values
-    q_ends = blocks_df["query_end"].values
-    t_starts = blocks_df["target_start"].values
-    t_ends = blocks_df["target_end"].values
+    q_starts = blocks_df["query_start"].values.astype(np.int64)
+    q_ends = blocks_df["query_end"].values.astype(np.int64)
+    t_starts = blocks_df["target_start"].values.astype(np.int64)
+    t_ends = blocks_df["target_end"].values.astype(np.int64)
 
-    out_bid = []
-    out_cid = []
-    out_side = []
-    out_genome = []
-    out_contig = []
-    out_gidx = []
-    out_gene_id = []
-    out_strand = []
-    out_order = []
+    # Compute gene counts per block-side
+    q_counts = (q_ends - q_starts + 1).astype(np.int64)
+    t_counts = (t_ends - t_starts + 1).astype(np.int64)
 
+    # Total rows we'll produce
+    total_q = int(q_counts.sum())
+    total_t = int(t_counts.sum())
+
+    # --- Query side ---
+    q_bid = np.repeat(block_ids, q_counts)
+    q_cid = np.repeat(cluster_ids, q_counts)
+    q_genome_exp = np.repeat(q_genomes, q_counts)
+    q_contig_exp = np.repeat(q_contigs, q_counts)
+
+    # Gene positions: arange per block, concatenated
+    q_positions = np.empty(total_q, dtype=np.int64)
+    q_orders = np.empty(total_q, dtype=np.int64)
+    offset = 0
     for i in range(len(blocks_df)):
-        bid = int(block_ids[i])
-        cid = int(cluster_ids[i])
+        c = int(q_counts[i])
+        if c > 0:
+            q_positions[offset:offset + c] = np.arange(q_starts[i], q_starts[i] + c)
+            q_orders[offset:offset + c] = np.arange(c)
+            offset += c
 
-        for side, genome, contig, s, e in [
-            ("query", q_genomes[i], q_contigs[i], int(q_starts[i]), int(q_ends[i])),
-            ("target", t_genomes[i], t_contigs[i], int(t_starts[i]), int(t_ends[i])),
-        ]:
-            for order, pos in enumerate(range(s, e + 1)):
-                info = gene_lookup.get((genome, contig, pos))
-                gid = info[0] if info else f"{genome}_{contig}_{pos}"
-                strand = info[1] if info else 0
-                out_bid.append(bid)
-                out_cid.append(cid)
-                out_side.append(side)
-                out_genome.append(genome)
-                out_contig.append(contig)
-                out_gidx.append(pos)
-                out_gene_id.append(gid)
-                out_strand.append(strand)
-                out_order.append(order)
+    # --- Target side ---
+    t_bid = np.repeat(block_ids, t_counts)
+    t_cid = np.repeat(cluster_ids, t_counts)
+    t_genome_exp = np.repeat(t_genomes, t_counts)
+    t_contig_exp = np.repeat(t_contigs, t_counts)
+
+    t_positions = np.empty(total_t, dtype=np.int64)
+    t_orders = np.empty(total_t, dtype=np.int64)
+    offset = 0
+    for i in range(len(blocks_df)):
+        c = int(t_counts[i])
+        if c > 0:
+            t_positions[offset:offset + c] = np.arange(t_starts[i], t_starts[i] + c)
+            t_orders[offset:offset + c] = np.arange(c)
+            offset += c
+
+    # Concatenate query + target
+    all_bid = np.concatenate([q_bid, t_bid])
+    all_cid = np.concatenate([q_cid, t_cid])
+    all_side = np.concatenate([
+        np.full(total_q, "query", dtype=object),
+        np.full(total_t, "target", dtype=object),
+    ])
+    all_genome = np.concatenate([q_genome_exp, t_genome_exp])
+    all_contig = np.concatenate([q_contig_exp, t_contig_exp])
+    all_positions = np.concatenate([q_positions, t_positions])
+    all_orders = np.concatenate([q_orders, t_orders])
+
+    # Lookup gene_id and strand from the prebuilt dict
+    total = len(all_bid)
+    all_gene_id = np.empty(total, dtype=object)
+    all_strand = np.empty(total, dtype=np.int64)
+    for i in range(total):
+        info = gene_lookup.get((all_genome[i], all_contig[i], int(all_positions[i])))
+        if info is not None:
+            all_gene_id[i] = info[0]
+            all_strand[i] = info[1]
+        else:
+            all_gene_id[i] = f"{all_genome[i]}_{all_contig[i]}_{all_positions[i]}"
+            all_strand[i] = 0
 
     return pd.DataFrame({
-        "block_id": out_bid,
-        "cluster_id": out_cid,
-        "side": out_side,
-        "genome_id": out_genome,
-        "contig_id": out_contig,
-        "gene_idx": out_gidx,
-        "gene_id": out_gene_id,
-        "strand": out_strand,
-        "anchor_order": out_order,
+        "block_id": all_bid,
+        "cluster_id": all_cid,
+        "side": all_side,
+        "genome_id": all_genome,
+        "contig_id": all_contig,
+        "gene_idx": all_positions,
+        "gene_id": all_gene_id,
+        "strand": all_strand,
+        "anchor_order": all_orders,
     })
 
 
@@ -145,37 +179,36 @@ def extract_locus_instances(
     if cluster_ids is not None:
         members_df = members_df[members_df["cluster_id"].isin(cluster_ids)]
 
-    # Group by cluster + genome + contig and collect intervals
-    grouped = members_df.groupby(["cluster_id", "genome_id", "contig_id"])
+    # First: compute per-block-side intervals using vectorized groupby
+    block_side_intervals = members_df.groupby(
+        ["cluster_id", "genome_id", "contig_id", "block_id", "side"]
+    )["gene_idx"].agg(["min", "max"]).reset_index()
+    block_side_intervals.columns = [
+        "cluster_id", "genome_id", "contig_id", "block_id", "side", "start", "end"
+    ]
+
+    # Group by cluster + genome + contig and merge intervals
+    grouped = block_side_intervals.groupby(["cluster_id", "genome_id", "contig_id"])
 
     loci = []
     locus_id = 0
 
     for (cid, genome, contig), grp in grouped:
-        # Get unique block-side intervals
-        block_sides = grp.groupby(["block_id", "side"]).agg(
-            start=("gene_idx", "min"),
-            end=("gene_idx", "max"),
-        ).reset_index()
-
-        # Merge overlapping intervals
-        intervals = list(zip(block_sides["start"], block_sides["end"]))
+        starts = grp["start"].values
+        ends = grp["end"].values
+        intervals = list(zip(starts, ends))
         merged = _merge_intervals(intervals)
 
-        for start, end in merged:
-            # Count how many block-sides overlap this merged interval
-            support = sum(
-                1 for s, e in intervals
-                if s <= end and e >= start
-            )
+        for ms, me in merged:
+            support = int(((starts <= me) & (ends >= ms)).sum())
             loci.append({
                 "locus_id": locus_id,
                 "cluster_id": int(cid),
                 "genome_id": genome,
                 "contig_id": contig,
-                "start_idx": start,
-                "end_idx": end,
-                "n_genes": end - start + 1,
+                "start_idx": ms,
+                "end_idx": me,
+                "n_genes": me - ms + 1,
                 "support": support,
             })
             locus_id += 1
@@ -211,14 +244,13 @@ def choose_reference_loci(
 
     Returns: {cluster_id: locus_id}
     """
-    refs = {}
-    for cid, grp in loci_df.groupby("cluster_id"):
-        best = grp.sort_values(
-            ["support", "n_genes", "locus_id"],
-            ascending=[False, False, True],
-        ).iloc[0]
-        refs[int(cid)] = int(best["locus_id"])
-    return refs
+    # Sort entire DataFrame once, then take first per cluster
+    sorted_df = loci_df.sort_values(
+        ["cluster_id", "support", "n_genes", "locus_id"],
+        ascending=[True, False, False, True],
+    )
+    best = sorted_df.groupby("cluster_id").first()
+    return dict(zip(best.index.astype(int), best["locus_id"].astype(int)))
 
 
 # ---------------------------------------------------------------------------
@@ -265,93 +297,105 @@ def assign_slots(
     # using the block orientation data
     locus_orientation = _compute_locus_orientations(loci_df, blocks_df)
 
+    # Pre-group loci by cluster_id to avoid repeated DataFrame filtering
+    loci_by_cluster = {}
+    l_cids = loci_df["cluster_id"].values
+    l_lids = loci_df["locus_id"].values
+    l_genomes = loci_df["genome_id"].values
+    l_contigs = loci_df["contig_id"].values
+    l_starts = loci_df["start_idx"].values
+    l_ends = loci_df["end_idx"].values
+    for i in range(len(loci_df)):
+        cid = l_cids[i]
+        if cid not in loci_by_cluster:
+            loci_by_cluster[cid] = []
+        loci_by_cluster[cid].append(i)
+
+    # Helper to gather embeddings for a position range
+    n_emb = len(emb_cols)
+    zero_emb = np.zeros(n_emb, dtype=np.float32)
+
+    def _gather_embs(genome, contig, positions):
+        """Vectorized embedding gather for a list of positions."""
+        n = len(positions)
+        embs = np.empty((n, n_emb), dtype=np.float32)
+        gids = []
+        for j in range(n):
+            row_idx = pos_to_row.get((genome, contig, positions[j]))
+            if row_idx is not None:
+                embs[j] = emb_matrix[row_idx]
+                gids.append(gene_id_arr[row_idx])
+            else:
+                embs[j] = zero_emb
+                gids.append(f"MISSING_{genome}_{contig}_{positions[j]}")
+        return embs, gids
+
     all_assignments = []
 
     for cid, ref_lid in ref_loci.items():
-        cluster_loci = loci_df[loci_df["cluster_id"] == cid]
-        if cluster_loci.empty:
+        locus_indices = loci_by_cluster.get(cid)
+        if not locus_indices:
             continue
 
-        ref_row = cluster_loci[cluster_loci["locus_id"] == ref_lid].iloc[0]
-        ref_positions = list(range(ref_row["start_idx"], ref_row["end_idx"] + 1))
+        # Find reference locus
+        ref_i = None
+        for i in locus_indices:
+            if int(l_lids[i]) == ref_lid:
+                ref_i = i
+                break
+        if ref_i is None:
+            continue
+
+        ref_genome = l_genomes[ref_i]
+        ref_contig = l_contigs[ref_i]
+        ref_positions = list(range(int(l_starts[ref_i]), int(l_ends[ref_i]) + 1))
         n_slots = len(ref_positions)
 
-        # Get reference embeddings
-        ref_embs = []
-        ref_gene_ids = []
-        for pos in ref_positions:
-            key = (ref_row["genome_id"], ref_row["contig_id"], pos)
-            row_idx = pos_to_row.get(key)
-            if row_idx is not None:
-                ref_embs.append(emb_matrix[row_idx])
-                ref_gene_ids.append(gene_id_arr[row_idx])
-            else:
-                ref_embs.append(np.zeros(len(emb_cols), dtype=np.float32))
-                ref_gene_ids.append(f"MISSING_{key}")
-
-        ref_embs = np.array(ref_embs)
-        # Normalize reference embeddings
+        ref_embs, ref_gene_ids = _gather_embs(ref_genome, ref_contig, ref_positions)
         ref_norms = np.linalg.norm(ref_embs, axis=1, keepdims=True)
         ref_embs_normed = ref_embs / (ref_norms + 1e-9)
 
         # Add reference assignments
-        for slot_idx, pos in enumerate(ref_positions):
+        for slot_idx in range(n_slots):
             all_assignments.append({
                 "cluster_id": int(cid),
                 "locus_id": int(ref_lid),
                 "slot_idx": slot_idx,
                 "gene_id": ref_gene_ids[slot_idx],
-                "gene_idx": pos,
-                "genome_id": ref_row["genome_id"],
-                "contig_id": ref_row["contig_id"],
+                "gene_idx": ref_positions[slot_idx],
+                "genome_id": ref_genome,
+                "contig_id": ref_contig,
                 "similarity": 1.0,
                 "is_reference": True,
                 "is_insertion": False,
             })
 
         # Align each other locus to reference slots
-        for _, locus in cluster_loci.iterrows():
-            lid = int(locus["locus_id"])
+        for li in locus_indices:
+            lid = int(l_lids[li])
             if lid == ref_lid:
                 continue
 
-            positions = list(range(locus["start_idx"], locus["end_idx"] + 1))
+            loc_genome = l_genomes[li]
+            loc_contig = l_contigs[li]
+            positions = list(range(int(l_starts[li]), int(l_ends[li]) + 1))
 
-            # Check if this locus is inverted relative to reference
             orient = locus_orientation.get((cid, lid), 1)
             if orient == -1:
                 positions = positions[::-1]
 
-            # Get member embeddings
-            mem_embs = []
-            mem_gene_ids = []
-            mem_positions = []
-            for pos in positions:
-                key = (locus["genome_id"], locus["contig_id"], pos)
-                row_idx = pos_to_row.get(key)
-                if row_idx is not None:
-                    mem_embs.append(emb_matrix[row_idx])
-                    mem_gene_ids.append(gene_id_arr[row_idx])
-                    mem_positions.append(pos)
-                else:
-                    mem_embs.append(np.zeros(len(emb_cols), dtype=np.float32))
-                    mem_gene_ids.append(f"MISSING_{key}")
-                    mem_positions.append(pos)
-
-            if not mem_embs:
+            mem_embs, mem_gene_ids = _gather_embs(loc_genome, loc_contig, positions)
+            if len(positions) == 0:
                 continue
 
-            mem_embs = np.array(mem_embs)
             mem_norms = np.linalg.norm(mem_embs, axis=1, keepdims=True)
             mem_embs_normed = mem_embs / (mem_norms + 1e-9)
 
-            # Compute similarity matrix
-            sim_matrix = mem_embs_normed @ ref_embs_normed.T  # (n_mem, n_slots)
+            sim_matrix = mem_embs_normed @ ref_embs_normed.T
 
-            # Monotonic alignment via DP
             assignment = _monotonic_align(sim_matrix, n_slots)
 
-            assigned_slots = set()
+            assigned_mem = set()
             for mem_idx, slot_idx in assignment:
                 sim = float(sim_matrix[mem_idx, slot_idx])
                 all_assignments.append({
@@ -359,29 +403,26 @@ def assign_slots(
                     "locus_id": lid,
                     "slot_idx": slot_idx,
                     "gene_id": mem_gene_ids[mem_idx],
-                    "gene_idx": mem_positions[mem_idx],
-                    "genome_id": locus["genome_id"],
-                    "contig_id": locus["contig_id"],
+                    "gene_idx": positions[mem_idx],
+                    "genome_id": loc_genome,
+                    "contig_id": loc_contig,
                     "similarity": sim,
                     "is_reference": False,
                     "is_insertion": False,
                 })
-                assigned_slots.add(slot_idx)
+                assigned_mem.add(mem_idx)
 
-            # Mark unassigned member genes as insertions
-            assigned_mem = {mi for mi, _ in assignment}
-            for mem_idx in range(len(mem_positions)):
+            for mem_idx in range(len(positions)):
                 if mem_idx not in assigned_mem:
-                    # Find the nearest assigned slot for insertion position
                     nearest_slot = _find_insertion_slot(mem_idx, assignment, n_slots)
                     all_assignments.append({
                         "cluster_id": int(cid),
                         "locus_id": lid,
                         "slot_idx": nearest_slot,
                         "gene_id": mem_gene_ids[mem_idx],
-                        "gene_idx": mem_positions[mem_idx],
-                        "genome_id": locus["genome_id"],
-                        "contig_id": locus["contig_id"],
+                        "gene_idx": positions[mem_idx],
+                        "genome_id": loc_genome,
+                        "contig_id": loc_contig,
                         "similarity": 0.0,
                         "is_reference": False,
                         "is_insertion": True,
@@ -401,30 +442,64 @@ def _compute_locus_orientations(
 
     Returns: {(cluster_id, locus_id): orientation}
     """
+    if loci_df.empty:
+        return {}
+
+    # Pre-extract blocks arrays for vectorized matching
+    b_cid = blocks_df["cluster_id"].values
+    b_q_genome = blocks_df["query_genome"].values
+    b_q_contig = blocks_df["query_contig"].values
+    b_q_start = blocks_df["query_start"].values
+    b_q_end = blocks_df["query_end"].values
+    b_t_genome = blocks_df["target_genome"].values
+    b_t_contig = blocks_df["target_contig"].values
+    b_t_start = blocks_df["target_start"].values
+    b_t_end = blocks_df["target_end"].values
+    b_orient = blocks_df["orientation"].values if "orientation" in blocks_df.columns else np.ones(len(blocks_df), dtype=np.int64)
+
+    # Build cluster_id -> block index array for fast filtering
+    cid_to_block_idx = {}
+    for i in range(len(blocks_df)):
+        c = b_cid[i]
+        if c not in cid_to_block_idx:
+            cid_to_block_idx[c] = []
+        cid_to_block_idx[c].append(i)
+    # Convert lists to arrays
+    for c in cid_to_block_idx:
+        cid_to_block_idx[c] = np.array(cid_to_block_idx[c], dtype=np.int64)
+
     orientations = {}
-    for cid, loci_grp in loci_df.groupby("cluster_id"):
-        cluster_blocks = blocks_df[blocks_df["cluster_id"] == cid]
-        for _, locus in loci_grp.iterrows():
-            lid = int(locus["locus_id"])
-            genome = locus["genome_id"]
-            contig = locus["contig_id"]
-            s, e = locus["start_idx"], locus["end_idx"]
+    l_cid = loci_df["cluster_id"].values
+    l_lid = loci_df["locus_id"].values
+    l_genome = loci_df["genome_id"].values
+    l_contig = loci_df["contig_id"].values
+    l_start = loci_df["start_idx"].values
+    l_end = loci_df["end_idx"].values
 
-            # Find blocks where this locus appears on either side
-            orient_votes = []
-            for _, blk in cluster_blocks.iterrows():
-                if (blk["query_genome"] == genome and blk["query_contig"] == contig
-                        and blk["query_start"] <= e and blk["query_end"] >= s):
-                    orient_votes.append(int(blk.get("orientation", 1)))
-                elif (blk["target_genome"] == genome and blk["target_contig"] == contig
-                      and blk["target_start"] <= e and blk["target_end"] >= s):
-                    # Target side: orientation is relative to query, so same
-                    orient_votes.append(int(blk.get("orientation", 1)))
+    for i in range(len(loci_df)):
+        cid = l_cid[i]
+        lid = int(l_lid[i])
+        genome = l_genome[i]
+        contig = l_contig[i]
+        s, e = l_start[i], l_end[i]
 
-            if orient_votes:
-                orientations[(cid, lid)] = 1 if sum(orient_votes) >= 0 else -1
-            else:
-                orientations[(cid, lid)] = 1
+        idx = cid_to_block_idx.get(cid)
+        if idx is None:
+            orientations[(cid, lid)] = 1
+            continue
+
+        # Vectorized: check query-side and target-side overlap
+        q_match = ((b_q_genome[idx] == genome) & (b_q_contig[idx] == contig)
+                   & (b_q_start[idx] <= e) & (b_q_end[idx] >= s))
+        t_match = ((b_t_genome[idx] == genome) & (b_t_contig[idx] == contig)
+                   & (b_t_start[idx] <= e) & (b_t_end[idx] >= s))
+
+        match_mask = q_match | t_match
+        if match_mask.any():
+            orient_sum = int(b_orient[idx[match_mask]].sum())
+            orientations[(cid, lid)] = 1 if orient_sum >= 0 else -1
+        else:
+            orientations[(cid, lid)] = 1
 
     return orientations
 
@@ -529,35 +604,41 @@ def compute_slot_summaries(
     if assignments_df.empty:
         return pd.DataFrame()
 
-    # Precompute embeddings lookup (vectorized)
+    # Precompute embeddings: map gene_id -> row index for vectorized lookup
     emb_cols = [c for c in genes_df.columns if c.startswith("emb_")]
     emb_matrix = genes_df[emb_cols].values.astype(np.float32)
     gene_ids_arr = genes_df["gene_id"].values
-    gene_to_emb = {gene_ids_arr[i]: emb_matrix[i] for i in range(len(genes_df))}
+    gene_to_row = {}
+    for i in range(len(genes_df)):
+        gene_to_row[gene_ids_arr[i]] = i
 
     # Filter out insertions for slot statistics
     slot_data = assignments_df[~assignments_df["is_insertion"]].copy()
 
+    # Precompute n_loci per cluster (avoid repeated filtering)
+    loci_per_cluster = assignments_df.groupby("cluster_id")["locus_id"].nunique()
+
+    # Map gene_ids to embedding row indices for the entire slot_data at once
+    slot_gene_ids = slot_data["gene_id"].values
+    slot_emb_rows = np.array([gene_to_row.get(g, -1) for g in slot_gene_ids], dtype=np.int64)
+    slot_data = slot_data.copy()
+    slot_data["_emb_row"] = slot_emb_rows
+
     summaries = []
     for (cid, slot_idx), grp in slot_data.groupby(["cluster_id", "slot_idx"]):
-        n_loci_in_cluster = assignments_df[
-            (assignments_df["cluster_id"] == cid)
-        ]["locus_id"].nunique()
-
+        n_loci_in_cluster = loci_per_cluster.get(cid, 1)
         n_occupants = grp["locus_id"].nunique()
         occupancy = n_occupants / max(n_loci_in_cluster, 1)
 
-        # Gather embeddings for this slot
-        embs = []
-        gene_ids = []
-        for _, row in grp.iterrows():
-            e = gene_to_emb.get(row["gene_id"])
-            if e is not None:
-                embs.append(e)
-                gene_ids.append(row["gene_id"])
+        # Vectorized embedding gather
+        emb_rows = grp["_emb_row"].values
+        valid = emb_rows >= 0
+        valid_rows = emb_rows[valid]
 
-        if embs:
-            emb_stack = np.array(embs)
+        if len(valid_rows) > 0:
+            emb_stack = emb_matrix[valid_rows]
+            valid_gene_ids = grp["gene_id"].values[valid]
+
             # Normalize
             norms = np.linalg.norm(emb_stack, axis=1, keepdims=True)
             emb_normed = emb_stack / (norms + 1e-9)
@@ -574,17 +655,14 @@ def compute_slot_summaries(
 
             # Centroid gene: closest to centroid
             centroid_idx = int(np.argmax(cosines))
-            centroid_gene_id = gene_ids[centroid_idx]
+            centroid_gene_id = valid_gene_ids[centroid_idx]
 
-            # Detect multiple types: simple heuristic
-            # If there are two groups with mean inter-group similarity < 0.5
             n_types = _estimate_n_types(emb_normed)
         else:
             dispersion = 0.0
             centroid_gene_id = grp.iloc[0]["gene_id"]
             n_types = 1
 
-        # Core: high occupancy (>=0.7) and low dispersion (<0.3)
         is_core = occupancy >= 0.7 and dispersion < 0.3
 
         summaries.append({
@@ -647,22 +725,21 @@ def compute_architecture_summary(
     if slots_df.empty:
         return pd.DataFrame()
 
+    # Precompute n_loci per cluster
+    loci_per_cluster = loci_df.groupby("cluster_id")["locus_id"].nunique()
+
     summaries = []
     for cid, grp in slots_df.groupby("cluster_id"):
         n_slots = len(grp)
         n_core = int(grp["is_core"].sum())
         n_variable = n_slots - n_core
         mean_occ = float(grp["occupancy"].mean())
-        n_loci = int(loci_df[loci_df["cluster_id"] == cid]["locus_id"].nunique())
+        n_loci = int(loci_per_cluster.get(cid, 0))
 
-        # Coherence: fraction of core slots × mean occupancy
         coherence = (n_core / max(n_slots, 1)) * mean_occ
 
-        # Replacement hotspot: any slot with >1 type and occupancy >= 0.5
-        hotspot_slots = grp[(grp["has_alternate"]) & (grp["occupancy"] >= 0.5)]
-        has_hotspot = len(hotspot_slots) > 0
+        has_hotspot = bool(((grp["has_alternate"]) & (grp["occupancy"] >= 0.5)).any())
 
-        # Architecture label
         if coherence >= 0.7 and not has_hotspot:
             arch_label = "coherent"
         elif has_hotspot:

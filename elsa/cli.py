@@ -839,8 +839,14 @@ def synteny(db: Optional[str], proteins: Optional[str],
                     )
                     ss.add_genes(new_genes)
 
-                genes_df = ss.get_genes_df()
+                # Pass metadata and embeddings SEPARATELY to avoid
+                # building a combined DataFrame that doubles memory
+                genes_df = ss._metadata.copy()
+                genes_df["strand"] = genes_df.get("strand", 0)
+                store_embeddings = ss._embeddings
                 prebuilt_index = ss.get_index_tuple()
+                # Free the store's reference to embeddings (pipeline owns it now)
+                ss._embeddings = None
                 console.print(
                     f"  {ss.n_vectors:,} genes, {ss.dim}D, "
                     f"{len(ss.genomes)} genomes"
@@ -883,11 +889,14 @@ def synteny(db: Optional[str], proteins: Optional[str],
         )
 
         console.print(f"\n[bold blue]Running chain pipeline...[/bold blue]")
+        # Pass embeddings separately if available (avoids DataFrame copy)
+        _store_emb = locals().get("store_embeddings", None)
         summary = run_chain_pipeline(
             output_dir=Path(output_dir),
             config=config,
             genes_df=genes_df,
             prebuilt_index=prebuilt_index,
+            embeddings=_store_emb,
         )
 
         console.print(

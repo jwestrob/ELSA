@@ -407,8 +407,8 @@ def project(config: str, raw: str):
 @click.option("--config", "-c", default="elsa.config.yaml",
               help="Configuration file", type=click.Path(exists=True))
 @click.option("--output-dir", "-o", default="syntenic_analysis", help="Output directory")
-@click.option("--genome-browser-db", default="genome_browser/genome_browser.db",
-              help="Genome browser database path")
+@click.option("--genome-browser-db", default=None,
+              help="Genome browser database path (disabled by default)")
 @click.option("--sequences-dir", help="Directory containing nucleotide sequences (.fna)")
 @click.option("--proteins-dir", help="Directory containing proteins (.faa)")
 def analyze(config: str, output_dir: str, genome_browser_db: str,
@@ -780,6 +780,8 @@ def stats(config: str):
 @click.option("--no-normalize", is_flag=True, help="Skip L2 normalization of embeddings")
 @click.option("--annotations-db", type=click.Path(exists=True),
               help="Sharur DuckDB with annotations table (loads PFAM + all sources)")
+@click.option("--genome-browser-db", type=click.Path(), default=None,
+              help="Genome browser DB path (disabled by default; pass path to enable)")
 def synteny(db: Optional[str], proteins: Optional[str],
             embeddings: Optional[str], embeddings_parquet: Optional[str],
             store: Optional[str],
@@ -788,7 +790,7 @@ def synteny(db: Optional[str], proteins: Optional[str],
             min_chain_size: int, min_genome_support: int,
             gap_penalty_scale: float, jaccard_tau: float,
             index_backend: str, hnsw_k: int, no_normalize: bool,
-            annotations_db: Optional[str]):
+            annotations_db: Optional[str], genome_browser_db: Optional[str]):
     """Discover syntenic blocks from external embeddings.
 
     Accepts protein metadata from a Sharur DuckDB or FASTA files,
@@ -931,14 +933,14 @@ def synteny(db: Optional[str], proteins: Optional[str],
             # Phase 2: all sources → annotations_multi table
             annotations_all_df = load_all_annotations_from_duckdb(annotations_db)
 
-        # Genome browser DB — always generated
-        if summary.num_blocks > 0 and genes_df is not None:
+        # Genome browser DB — opt-in via --genome-browser-db flag
+        if genome_browser_db and summary.num_blocks > 0 and genes_df is not None:
             from .browser import populate_browser_db
 
-            out_path = Path(output_dir)
-            browser_db = out_path / "genome_browser.db"
-            blocks_csv = out_path / "micro_chain_blocks.csv"
-            clusters_csv = out_path / "micro_chain_clusters.csv"
+            browser_db = Path(genome_browser_db)
+            _out = Path(output_dir)
+            blocks_csv = _out / "micro_chain_blocks.csv"
+            clusters_csv = _out / "micro_chain_clusters.csv"
 
             if blocks_csv.exists() and clusters_csv.exists():
                 console.print(f"\n[bold blue]Populating genome browser DB...[/bold blue]")

@@ -16,6 +16,7 @@ from typing import List, Dict, Tuple, Set
 import os
 import numpy as np
 import pandas as pd
+from ._log import tlog as _log
 
 # ---------------------------------------------------------------------------
 # Numba-accelerated DP kernels (optional — pure-Python fallback below)
@@ -491,6 +492,50 @@ def extract_nonoverlapping_chains(
     if not chains:
         return []
 
+    blocks_df = extract_nonoverlapping_chains_df(chains, block_id_start)
+    if blocks_df.empty:
+        return []
+
+    # Convert to ChainedBlock objects for backward compatibility
+    import json as _json
+    blocks = []
+    for _, row in blocks_df.iterrows():
+        blocks.append(ChainedBlock(
+            block_id=int(row["block_id"]),
+            query_genome=row["query_genome"],
+            target_genome=row["target_genome"],
+            query_contig=row["query_contig"],
+            target_contig=row["target_contig"],
+            query_start=int(row["query_start"]),
+            query_end=int(row["query_end"]),
+            target_start=int(row["target_start"]),
+            target_end=int(row["target_end"]),
+            anchor_query_ids=_json.loads(row["anchor_query_ids"]),
+            anchor_target_ids=_json.loads(row["anchor_target_ids"]),
+            anchor_query_gene_ids=_json.loads(row["anchor_query_gene_ids"]),
+            anchor_target_gene_ids=_json.loads(row["anchor_target_gene_ids"]),
+            n_anchors=int(row["n_anchors"]),
+            chain_score=float(row["chain_score"]),
+            orientation=int(row["orientation"]),
+        ))
+    return blocks
+
+
+def extract_nonoverlapping_chains_df(
+    chains: List[pd.DataFrame],
+    block_id_start: int = 0,
+) -> pd.DataFrame:
+    """
+    Extract non-overlapping blocks as a DataFrame (no Python objects).
+
+    Same greedy algorithm as extract_nonoverlapping_chains but returns
+    a DataFrame directly, avoiding 2M+ ChainedBlock object creations.
+    """
+    import json as _json
+
+    if not chains:
+        return pd.DataFrame()
+
     # Score each chain
     scored = []
     for chain_df in chains:
@@ -511,7 +556,6 @@ def extract_nonoverlapping_chains(
     scored.sort(key=lambda x: -x[0])
 
     # Greedy selection avoiding overlaps
-    blocks = []
     used_query: Dict[Tuple[str, str], List[Tuple[int, int]]] = {}
     used_target: Dict[Tuple[str, str], List[Tuple[int, int]]] = {}
 
@@ -520,6 +564,13 @@ def extract_nonoverlapping_chains(
             if not (end < s or start > e):
                 return True
         return False
+
+    # Pre-allocate lists for columnar output
+    out_bid = []
+    out_qg = []; out_tg = []; out_qc = []; out_tc = []
+    out_qs = []; out_qe = []; out_ts = []; out_te = []
+    out_na = []; out_score = []; out_orient = []
+    out_aqids = []; out_atids = []; out_aqgids = []; out_atgids = []
 
     block_id = block_id_start
     for score, chain_df, q_min, q_max, t_min, t_max, orientation in scored:
@@ -536,34 +587,39 @@ def extract_nonoverlapping_chains(
         used_query.setdefault(q_key, []).append((q_min, q_max))
         used_target.setdefault(t_key, []).append((t_min, t_max))
 
-        # Extract anchor info for the block
         qi = chain_df["query_idx"].values
         ti = chain_df["target_idx"].values
         q_sort = np.argsort(qi)
         t_sort = np.argsort(ti)
 
-        block = ChainedBlock(
-            block_id=block_id,
-            query_genome=str(chain_df["query_genome"].iloc[0]),
-            target_genome=str(chain_df["target_genome"].iloc[0]),
-            query_contig=str(chain_df["query_contig"].iloc[0]),
-            target_contig=str(chain_df["target_contig"].iloc[0]),
-            query_start=q_min,
-            query_end=q_max,
-            target_start=t_min,
-            target_end=t_max,
-            anchor_query_ids=qi[q_sort].tolist(),
-            anchor_target_ids=ti[t_sort].tolist(),
-            anchor_query_gene_ids=chain_df["query_gene_id"].values[q_sort].tolist(),
-            anchor_target_gene_ids=chain_df["target_gene_id"].values[t_sort].tolist(),
-            n_anchors=len(chain_df),
-            chain_score=score,
-            orientation=orientation,
-        )
-        blocks.append(block)
+        out_bid.append(block_id)
+        out_qg.append(q_key[0]); out_tg.append(t_key[0])
+        out_qc.append(q_key[1]); out_tc.append(t_key[1])
+        out_qs.append(q_min); out_qe.append(q_max)
+        out_ts.append(t_min); out_te.append(t_max)
+        out_na.append(len(chain_df))
+        out_score.append(round(score, 4))
+        out_orient.append(orientation)
+        out_aqids.append(_json.dumps(qi[q_sort].tolist()))
+        out_atids.append(_json.dumps(ti[t_sort].tolist()))
+        out_aqgids.append(_json.dumps(chain_df["query_gene_id"].values[q_sort].tolist()))
+        out_atgids.append(_json.dumps(chain_df["target_gene_id"].values[t_sort].tolist()))
         block_id += 1
 
-    return blocks
+    if not out_bid:
+        return pd.DataFrame()
+
+    return pd.DataFrame({
+        "block_id": out_bid,
+        "query_genome": out_qg, "target_genome": out_tg,
+        "query_contig": out_qc, "target_contig": out_tc,
+        "query_start": out_qs, "query_end": out_qe,
+        "target_start": out_ts, "target_end": out_te,
+        "n_anchors": out_na, "chain_score": out_score,
+        "orientation": out_orient,
+        "anchor_query_ids": out_aqids, "anchor_target_ids": out_atids,
+        "anchor_query_gene_ids": out_aqgids, "anchor_target_gene_ids": out_atgids,
+    })
 
 
 # ---------------------------------------------------------------------------
@@ -774,8 +830,8 @@ def _preprocess_vectorized(ga, valid_groups, min_size):
     valid_sizes = group_sizes[valid_groups].astype(np.int64)
     total_valid = int(valid_sizes.sum())
 
-    print(f"[Chain] Extracting {total_valid:,} anchors from "
-          f"{n_valid:,} valid groups...", file=sys.stderr, flush=True)
+    _log(f"[Chain] Extracting {total_valid:,} anchors from "
+          f"{n_valid:,} valid groups...")
 
     # --- Step 1: Extract valid-group anchors into contiguous arrays ---
     # Fully vectorized: no Python loop
@@ -798,7 +854,7 @@ def _preprocess_vectorized(ga, valid_groups, min_size):
     orient = ga.orientation[flat_idx]
 
     # --- Step 2: Dedup by (group, qi*1e9+ti), keep highest sim ---
-    print(f"[Chain] Dedup by (group, gene-pair)...", file=sys.stderr, flush=True)
+    _log(f"[Chain] Dedup by (group, gene-pair)...")
     pair_key = qi.astype(np.int64) * 1_000_000_000 + ti.astype(np.int64)
     sort1 = np.lexsort((-sim, pair_key, flat_gid))
     s1_gid = flat_gid[sort1]
@@ -817,7 +873,7 @@ def _preprocess_vectorized(ga, valid_groups, min_size):
     d_fidx = flat_idx[dedup]
     n_dedup = len(dedup)
     del qi, ti, sim, orient, flat_idx, flat_gid, dedup
-    print(f"[Chain] {n_dedup:,} anchors after pair dedup", file=sys.stderr, flush=True)
+    _log(f"[Chain] {n_dedup:,} anchors after pair dedup")
 
     # --- Step 3: Per-group strand check ---
     group_has_strand = np.zeros(n_valid, dtype=np.bool_)
@@ -924,8 +980,8 @@ def _preprocess_vectorized(ga, valid_groups, min_size):
     del all_gid, all_is_rev
 
     stream_label = "fwd+rev" if len([1 for r in [in_fwd, in_rev] if r.any()]) == 2 else "single"
-    print(f"[Chain] Vectorized preprocessing done: {n_parts:,} partitions, "
-          f"{total_n:,} elements ({stream_label})", file=sys.stderr, flush=True)
+    _log(f"[Chain] Vectorized preprocessing done: {n_parts:,} partitions, "
+          f"{total_n:,} elements ({stream_label})")
 
     return {
         "flat_sq": all_sq, "flat_st": all_st,
@@ -938,6 +994,214 @@ def _preprocess_vectorized(ga, valid_groups, min_size):
 
 
 # ---------------------------------------------------------------------------
+# Flat-array block extraction (replaces Phase 5 + pipeline extraction loop)
+# ---------------------------------------------------------------------------
+
+def _dict_result_to_blocks_df(result: Dict, block_id_start: int = 0) -> pd.DataFrame:
+    """Convert legacy Dict[key -> chain list] to blocks DataFrame.
+
+    Fallback for the no-Numba path when extract_blocks=True.
+    """
+    all_dfs = []
+    bid = block_id_start
+    for key, chains in result.items():
+        bdf = extract_nonoverlapping_chains_df(chains, block_id_start=bid)
+        if not bdf.empty:
+            all_dfs.append(bdf)
+            bid += len(bdf)
+    if not all_dfs:
+        return pd.DataFrame()
+    return pd.concat(all_dfs, ignore_index=True)
+
+
+def _extract_blocks_flat(
+    chain_buf, chain_group_buf, chain_len_buf, n_chains, n_elements,
+    flat_sq, flat_st, flat_ss,
+    offsets, part_gids, part_revs,
+    *,
+    flat_fidx=None,
+    ga_query_gene_id=None, ga_target_gene_id=None,
+    ga_order=None, ga_bounds=None,
+    ga_qg_codes=None, ga_tg_codes=None,
+    ga_qc_codes=None, ga_tc_codes=None,
+    ga_qg_uniques=None, ga_tg_uniques=None,
+    ga_qc_uniques=None, ga_tc_uniques=None,
+    valid_groups=None,
+    partitions=None,
+    block_id_start=0,
+) -> pd.DataFrame:
+    """Extract non-overlapping blocks directly from flat backtrack arrays.
+
+    Replaces Phase 5 (per-chain DataFrame creation) and the pipeline's
+    per-group extract_nonoverlapping_chains_df loop with a single vectorized
+    pass.  Builds exactly ONE DataFrame at the end for selected blocks only.
+
+    Overlap checking is per group key (same semantics as the original
+    per-group extraction).
+    """
+    import json as _json
+    import time as _time
+
+    _log(f"[Chain] Phase 5: extracting blocks from {n_chains:,} chains (flat-array path)...")
+    _t5 = _time.time()
+
+    if n_chains == 0:
+        _log("[Chain] Phase 5: no chains to extract")
+        return pd.DataFrame()
+
+    is_ga = partitions is None  # GroupedAnchors vs legacy path
+
+    # --- Step 1: Cumulative chain offsets + global element indices ---
+    chain_lens = chain_len_buf[:n_chains].copy()
+    chain_cum = np.zeros(n_chains + 1, dtype=np.int64)
+    np.cumsum(chain_lens, out=chain_cum[1:])
+
+    chain_part = chain_group_buf[:n_chains].astype(np.intp)
+    all_glob = (np.repeat(offsets[chain_part], chain_lens)
+                + chain_buf[:n_elements]).astype(np.intp)
+
+    # --- Step 2: Per-chain bounds and scores via reduceat ---
+    cstarts = chain_cum[:n_chains].astype(np.intp)
+    q_all = flat_sq[all_glob]
+    t_all = flat_st[all_glob]
+    s_all = flat_ss[all_glob]
+
+    q_mins = np.minimum.reduceat(q_all, cstarts)
+    q_maxs = np.maximum.reduceat(q_all, cstarts)
+    t_mins = np.minimum.reduceat(t_all, cstarts)
+    t_maxs = np.maximum.reduceat(t_all, cstarts)
+    scores = np.add.reduceat(s_all, cstarts)  # sum(sim) == len * mean_sim
+    del q_all, t_all, s_all
+
+    # --- Step 3: Per-chain group key + orientation ---
+    if is_ga:
+        chain_gvi = part_gids[chain_part]
+        chain_gi = valid_groups[chain_gvi]
+        r0 = ga_order[ga_bounds[chain_gi].astype(np.intp)]
+        chain_qg = np.asarray(ga_qg_uniques[ga_qg_codes[r0]])
+        chain_tg = np.asarray(ga_tg_uniques[ga_tg_codes[r0]])
+        chain_qc = np.asarray(ga_qc_uniques[ga_qc_codes[r0]])
+        chain_tc = np.asarray(ga_tc_uniques[ga_tc_codes[r0]])
+        chain_key_code = chain_gvi  # same group index = same key
+    else:
+        chain_qg = np.empty(n_chains, dtype=object)
+        chain_tg = np.empty(n_chains, dtype=object)
+        chain_qc = np.empty(n_chains, dtype=object)
+        chain_tc = np.empty(n_chains, dtype=object)
+        key_map: Dict[tuple, int] = {}
+        chain_key_code = np.empty(n_chains, dtype=np.int64)
+        for c in range(n_chains):
+            key = partitions[int(chain_part[c])][0]
+            chain_qg[c], chain_tg[c], chain_qc[c], chain_tc[c] = key
+            if key not in key_map:
+                key_map[key] = len(key_map)
+            chain_key_code[c] = key_map[key]
+
+    chain_orient = np.where(part_revs[chain_part], np.int32(-1), np.int32(1))
+
+    # --- Step 4: Sort by (key_code, -score) → groups ranked by score ---
+    sort_idx = np.lexsort((-scores, chain_key_code))
+    sorted_codes = chain_key_code[sort_idx]
+
+    # Group boundaries within sorted order
+    diffs = np.empty(n_chains, dtype=np.bool_)
+    diffs[0] = True
+    diffs[1:] = sorted_codes[1:] != sorted_codes[:-1]
+    grp_starts = np.nonzero(diffs)[0]
+    n_key_groups = len(grp_starts)
+    grp_ends = np.empty(n_key_groups, dtype=np.int64)
+    grp_ends[:-1] = grp_starts[1:]
+    grp_ends[-1] = n_chains
+
+    # --- Step 5: Greedy non-overlapping selection per group ---
+    selected = []
+    for gi in range(n_key_groups):
+        gs, ge = int(grp_starts[gi]), int(grp_ends[gi])
+        used_q: List[Tuple[int, int]] = []
+        used_t: List[Tuple[int, int]] = []
+
+        for ci in range(gs, ge):  # already score-descending within group
+            c = int(sort_idx[ci])
+            qmin, qmax = int(q_mins[c]), int(q_maxs[c])
+            tmin, tmax = int(t_mins[c]), int(t_maxs[c])
+
+            skip = False
+            for s, e in used_q:
+                if not (qmax < s or qmin > e):
+                    skip = True
+                    break
+            if not skip:
+                for s, e in used_t:
+                    if not (tmax < s or tmin > e):
+                        skip = True
+                        break
+            if skip:
+                continue
+
+            used_q.append((qmin, qmax))
+            used_t.append((tmin, tmax))
+            selected.append(c)
+
+    n_blocks = len(selected)
+    if n_blocks == 0:
+        _log("[Chain] Phase 5: no blocks after greedy selection")
+        return pd.DataFrame()
+
+    sel = np.array(selected, dtype=np.intp)
+    _log(f"[Chain] Phase 5: selected {n_blocks:,} non-overlapping blocks "
+         f"from {n_chains:,} chains in {n_key_groups:,} groups")
+
+    # --- Step 6: Build output — gene ID JSON only for selected blocks ---
+    block_ids = np.arange(block_id_start, block_id_start + n_blocks, dtype=np.int64)
+    aqids = [None] * n_blocks
+    atids = [None] * n_blocks
+    aqgids = [None] * n_blocks
+    atgids = [None] * n_blocks
+
+    for i, c in enumerate(sel):
+        se, ee = int(chain_cum[c]), int(chain_cum[c + 1])
+        glob = all_glob[se:ee]
+        qi = flat_sq[glob]
+        ti = flat_st[glob]
+        qs = np.argsort(qi)
+        ts = np.argsort(ti)
+
+        if is_ga:
+            rows = flat_fidx[glob]
+            qg = ga_query_gene_id[rows]
+            tg = ga_target_gene_id[rows]
+        else:
+            g = int(chain_part[c])
+            _, p_qg, p_tg, _ = partitions[g]
+            local = chain_buf[se:ee].astype(np.intp)
+            qg = p_qg[local]
+            tg = p_tg[local]
+
+        aqids[i] = _json.dumps(qi[qs].tolist())
+        atids[i] = _json.dumps(ti[ts].tolist())
+        aqgids[i] = _json.dumps(qg[qs].tolist())
+        atgids[i] = _json.dumps(tg[ts].tolist())
+
+    blocks_df = pd.DataFrame({
+        "block_id": block_ids,
+        "query_genome": chain_qg[sel], "target_genome": chain_tg[sel],
+        "query_contig": chain_qc[sel], "target_contig": chain_tc[sel],
+        "query_start": q_mins[sel].astype(int),
+        "query_end": q_maxs[sel].astype(int),
+        "target_start": t_mins[sel].astype(int),
+        "target_end": t_maxs[sel].astype(int),
+        "n_anchors": chain_lens[sel].astype(int),
+        "chain_score": np.round(scores[sel], 4),
+        "orientation": chain_orient[sel],
+        "anchor_query_ids": aqids, "anchor_target_ids": atids,
+        "anchor_query_gene_ids": aqgids, "anchor_target_gene_ids": atgids,
+    })
+
+    _log(f"[Chain] Phase 5: {n_blocks:,} blocks extracted in {_time.time() - _t5:.1f}s")
+    return blocks_df
+
+
+# ---------------------------------------------------------------------------
 # Batched chaining — single Numba call for all contig-pair groups
 # ---------------------------------------------------------------------------
 def chain_groups_batched(
@@ -945,7 +1209,9 @@ def chain_groups_batched(
     max_gap: int = 2,
     min_size: int = 2,
     gap_penalty_scale: float = 0.0,
-) -> Dict:
+    extract_blocks: bool = False,
+    block_id_start: int = 0,
+):
     """Chain all contig-pair groups using batched Numba kernels.
 
     Accepts either a GroupedAnchors namedtuple (fast path — raw arrays +
@@ -954,8 +1220,15 @@ def chain_groups_batched(
 
     Falls back to per-group chain_anchors_lis if Numba is not available.
 
+    Args:
+        extract_blocks: If True, return a single pd.DataFrame of
+            non-overlapping blocks directly (skips per-chain DataFrame
+            creation). If False, return Dict of chain lists (legacy).
+        block_id_start: Starting block_id when extract_blocks=True.
+
     Returns:
-        Dict mapping group keys to lists of chain DataFrames
+        Dict mapping group keys to lists of chain DataFrames (default),
+        or pd.DataFrame of blocks when extract_blocks=True.
     """
     # --- Detect input format ---
     is_grouped = hasattr(groups, 'order')
@@ -968,6 +1241,8 @@ def chain_groups_batched(
             chains = chain_anchors_lis(anchors_df, max_gap, min_size, gap_penalty_scale)
             if chains:
                 result[key] = chains
+        if extract_blocks:
+            return _dict_result_to_blocks_df(result, block_id_start)
         return result
 
     # Phase 1: Preprocess all groups into partitions.
@@ -987,13 +1262,13 @@ def chain_groups_batched(
         valid_groups = np.where(group_sizes >= min_size)[0]
         n_skipped = ga.n_groups - len(valid_groups)
         if n_skipped > 0:
-            print(f"[Chain] Skipping {n_skipped:,} / {ga.n_groups:,} groups "
-                  f"with < {min_size} anchors", file=sys.stderr, flush=True)
+            _log(f"[Chain] Skipping {n_skipped:,} / {ga.n_groups:,} groups "
+                  f"with < {min_size} anchors")
 
         vp = _preprocess_vectorized(ga, valid_groups, min_size)
         if vp is None:
             del ga, groups
-            return {}
+            return pd.DataFrame() if extract_blocks else {}
 
         flat_sq = vp["flat_sq"]
         flat_st = vp["flat_st"]
@@ -1051,9 +1326,11 @@ def chain_groups_batched(
             del anchors_df
 
         if not partitions:
-            return {}
+            return pd.DataFrame() if extract_blocks else {}
 
         n_parts = len(partitions)
+        # Build part_revs from partitions for extract_blocks path
+        part_revs = np.array([p[3] for p in partitions], dtype=np.bool_)
         sizes = np.array(part_sizes, dtype=np.int64)
         offsets = np.zeros(n_parts, dtype=np.int64)
         if n_parts > 1:
@@ -1098,6 +1375,10 @@ def chain_groups_batched(
     del flat_cmp
 
     # Phase 4: Batched backtrack (single Numba call)
+    import time as _time
+    _log(f"[Chain] Phase 4: backtracking {n_parts:,} partitions...")
+    _t4 = _time.time()
+
     chain_buf = np.empty(total_n, dtype=np.int64)
     chain_group_buf = np.empty(total_n, dtype=np.int64)
     chain_len_buf = np.empty(total_n, dtype=np.int64)
@@ -1110,8 +1391,40 @@ def chain_groups_batched(
 
     # Free DP arrays
     del dp_len, dp_prev, dp_score
+    _log(f"[Chain] Phase 4: {n_chains:,} chains ({n_elements:,} elements) in {_time.time() - _t4:.1f}s")
 
-    # Phase 5: Unpack — build chain DataFrames from flat arrays + gene IDs
+    if extract_blocks:
+        # Phase 5: Flat-array block extraction — no per-chain DataFrames.
+        # Scores, bounds, and greedy non-overlapping selection all operate
+        # on flat numpy arrays.  One DataFrame is built at the very end for
+        # selected blocks only.
+        blocks_df = _extract_blocks_flat(
+            chain_buf, chain_group_buf, chain_len_buf, n_chains, n_elements,
+            flat_sq, flat_st, flat_ss,
+            offsets, part_gids if partitions is None else None, part_revs,
+            # GA metadata (None for legacy path)
+            flat_fidx=flat_fidx if partitions is None else None,
+            ga_query_gene_id=_ga_query_gene_id if partitions is None else None,
+            ga_target_gene_id=_ga_target_gene_id if partitions is None else None,
+            ga_order=_ga_order if partitions is None else None,
+            ga_bounds=_ga_bounds if partitions is None else None,
+            ga_qg_codes=_ga_qg_codes if partitions is None else None,
+            ga_tg_codes=_ga_tg_codes if partitions is None else None,
+            ga_qc_codes=_ga_qc_codes if partitions is None else None,
+            ga_tc_codes=_ga_tc_codes if partitions is None else None,
+            ga_qg_uniques=_ga_qg_uniques if partitions is None else None,
+            ga_tg_uniques=_ga_tg_uniques if partitions is None else None,
+            ga_qc_uniques=_ga_qc_uniques if partitions is None else None,
+            ga_tc_uniques=_ga_tc_uniques if partitions is None else None,
+            valid_groups=_valid_groups if partitions is None else None,
+            partitions=partitions,
+            block_id_start=block_id_start,
+        )
+        return blocks_df
+
+    # Phase 5: Legacy unpack — build per-chain DataFrames
+    _log(f"[Chain] Phase 5: unpacking {n_chains:,} chains into DataFrames...")
+    _t5 = _time.time()
     result = {}
     pos = 0
 
@@ -1185,4 +1498,5 @@ def chain_groups_batched(
             })
             result.setdefault(key, []).append(chain_df)
 
+    _log(f"[Chain] Phase 5: unpacked into {len(result):,} groups in {_time.time() - _t5:.1f}s")
     return result

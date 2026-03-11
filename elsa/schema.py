@@ -14,6 +14,8 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 
+from ._log import tlog as _log
+
 
 # ---------------------------------------------------------------------------
 # Stage 1: Extract block members (gene-level detail per block side)
@@ -787,8 +789,6 @@ def run_schema_pipeline(
     Returns:
         Dict of artifact name -> path
     """
-    import sys
-
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -797,22 +797,20 @@ def run_schema_pipeline(
     eligible = cluster_sizes[cluster_sizes >= min_cluster_size].index.tolist()
     filtered_blocks = blocks_df[blocks_df["cluster_id"].isin(eligible)]
 
-    print(f"[Schema] {len(eligible)} clusters with >= {min_cluster_size} blocks",
-          file=sys.stderr, flush=True)
+    _log(f"[Schema] {len(eligible)} clusters with >= {min_cluster_size} blocks")
 
     # Stage 1: Block members
-    print("[Schema] Building block members...", file=sys.stderr, flush=True)
+    _log("[Schema] Building block members...")
     members_df = build_block_members(filtered_blocks, genes_df)
     members_path = output_dir / "syntenic_block_members.parquet"
     members_df.to_parquet(members_path, index=False)
 
     # Stage 2: Locus instances
-    print("[Schema] Extracting locus instances...", file=sys.stderr, flush=True)
+    _log("[Schema] Extracting locus instances...")
     loci_df = extract_locus_instances(members_df)
     loci_path = output_dir / "cluster_loci.parquet"
     loci_df.to_parquet(loci_path, index=False)
-    print(f"[Schema] {len(loci_df)} locus instances across {loci_df['cluster_id'].nunique()} clusters",
-          file=sys.stderr, flush=True)
+    _log(f"[Schema] {len(loci_df)} locus instances across {loci_df['cluster_id'].nunique()} clusters")
 
     # Stage 3: Reference loci
     ref_loci = choose_reference_loci(loci_df)
@@ -824,36 +822,34 @@ def run_schema_pipeline(
             del ref_loci[cid]
 
     if not ref_loci:
-        print("[Schema] No eligible clusters after filtering", file=sys.stderr, flush=True)
+        _log("[Schema] No eligible clusters after filtering")
         return {"block_members": members_path, "loci": loci_path}
 
     # Restrict loci to clusters with valid references
     loci_df = loci_df[loci_df["cluster_id"].isin(ref_loci.keys())]
 
     # Stage 4: Slot assignment
-    print(f"[Schema] Assigning slots for {len(ref_loci)} clusters...",
-          file=sys.stderr, flush=True)
+    _log(f"[Schema] Assigning slots for {len(ref_loci)} clusters...")
     assignments_df = assign_slots(loci_df, genes_df, ref_loci, filtered_blocks)
     assignments_path = output_dir / "cluster_slot_assignments.parquet"
     assignments_df.to_parquet(assignments_path, index=False)
 
     # Stage 5: Slot summaries
-    print("[Schema] Computing slot summaries...", file=sys.stderr, flush=True)
+    _log("[Schema] Computing slot summaries...")
     slots_df = compute_slot_summaries(assignments_df, genes_df)
     slots_path = output_dir / "cluster_slots.parquet"
     slots_df.to_parquet(slots_path, index=False)
 
     # Stage 6: Architecture summary
-    print("[Schema] Computing architecture summaries...", file=sys.stderr, flush=True)
+    _log("[Schema] Computing architecture summaries...")
     arch_df = compute_architecture_summary(slots_df, loci_df)
     arch_path = output_dir / "cluster_architecture_summary.parquet"
     arch_df.to_parquet(arch_path, index=False)
 
     n_coherent = int((arch_df["arch_label"] == "coherent").sum())
     n_variable = int((arch_df["arch_label"].str.contains("variable")).sum())
-    print(f"[Schema] Architecture: {len(arch_df)} clusters, "
-          f"{n_coherent} coherent, {n_variable} variable",
-          file=sys.stderr, flush=True)
+    _log(f"[Schema] Architecture: {len(arch_df)} clusters, "
+         f"{n_coherent} coherent, {n_variable} variable")
 
     return {
         "block_members": members_path,

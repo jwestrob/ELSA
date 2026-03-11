@@ -25,6 +25,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from .chain import ChainedBlock
+from ._log import tlog as _log
 
 # ---------------------------------------------------------------------------
 # Numba-accelerated interval sweep kernel (optional)
@@ -412,29 +413,24 @@ def cluster_blocks_by_overlap(
                                           "mean_chain_length", "genes_json"])
 
     # --- Phase 1: Convert to columnar arrays ---
-    print(f"[Cluster] Converting {n_blocks:,} blocks to columnar format...",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] Converting {n_blocks:,} blocks to columnar format...")
     col = _blocks_to_columnar(blocks)
 
     # --- Phase 2: Build contig index ---
     contig_groups = _build_contig_index(col)
-    print(f"[Cluster] {len(contig_groups):,} contig bins for interval sweep",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] {len(contig_groups):,} contig bins for interval sweep")
 
     # --- Phase 3: Parallel interval sweep ---
     n_workers = min(os.cpu_count() or 4, len(contig_groups))
-    print(f"[Cluster] Running interval sweep ({n_workers} threads)...",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] Running interval sweep ({n_workers} threads)...")
     raw_pairs_i, raw_pairs_j = _sweep_all_contigs(contig_groups, n_workers)
     del contig_groups
 
-    print(f"[Cluster] {len(raw_pairs_i):,} raw candidate pairs from sweep",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] {len(raw_pairs_i):,} raw candidate pairs from sweep")
 
     # Deduplicate: encode (min, max) as single int64 for fast 1D unique
     if len(raw_pairs_i) > 0:
-        print(f"[Cluster] Deduplicating {len(raw_pairs_i):,} pairs...",
-              file=sys.stderr, flush=True)
+        _log(f"[Cluster] Deduplicating {len(raw_pairs_i):,} pairs...")
         lo = np.minimum(raw_pairs_i, raw_pairs_j).astype(np.int64)
         hi = np.maximum(raw_pairs_i, raw_pairs_j).astype(np.int64)
         # Composite key: lo * n_blocks + hi (fits in int64 for n < 2^31)
@@ -444,21 +440,18 @@ def cluster_blocks_by_overlap(
         pairs_i = (composite // np.int64(n_blocks)).astype(np.int32)
         pairs_j = (composite % np.int64(n_blocks)).astype(np.int32)
         del composite
-        print(f"[Cluster] {len(pairs_i):,} unique candidate pairs after dedup",
-              file=sys.stderr, flush=True)
+        _log(f"[Cluster] {len(pairs_i):,} unique candidate pairs after dedup")
     else:
         pairs_i = raw_pairs_i
         pairs_j = raw_pairs_j
 
     # --- Phase 4: Vectorized Jaccard ---
-    print(f"[Cluster] Computing Jaccard for {len(pairs_i):,} candidate pairs...",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] Computing Jaccard for {len(pairs_i):,} candidate pairs...")
     _, _, jaccard = _compute_jaccard_vectorized(pairs_i, pairs_j, col)
 
     mask = jaccard >= jaccard_tau
     n_edges = int(mask.sum())
-    print(f"[Cluster] {n_edges:,} overlap edges above Jaccard threshold {jaccard_tau}",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] {n_edges:,} overlap edges above Jaccard threshold {jaccard_tau}")
 
     # --- Phase 5: Build edges dict for mutual top-k ---
     block_ids_arr = col['block_ids']
@@ -470,8 +463,7 @@ def cluster_blocks_by_overlap(
     del pairs_i, pairs_j, jaccard, mask
 
     t0 = time.time()
-    print(f"[Cluster] Building edge dict from {n_edges:,} edges...",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] Building edge dict from {n_edges:,} edges...")
 
     # Vectorized edge building: map row indices → block_ids once
     edge_bids_i = block_ids_arr[valid_i].astype(int)
@@ -487,14 +479,12 @@ def cluster_blocks_by_overlap(
         edges_by_u[bj].append((bi, jac))
     del edge_bids_i, edge_bids_j, edge_jacs
 
-    print(f"[Cluster] Edge dict built in {time.time() - t0:.1f}s ({len(edges_by_u):,} nodes)",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] Edge dict built in {time.time() - t0:.1f}s ({len(edges_by_u):,} nodes)")
 
     # Apply mutual top-k filter
     t0 = time.time()
     mutual_edges = _mutual_top_k(edges_by_u, mutual_k)
-    print(f"[Cluster] {len(mutual_edges):,} mutual top-{mutual_k} edges ({time.time() - t0:.1f}s)",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] {len(mutual_edges):,} mutual top-{mutual_k} edges ({time.time() - t0:.1f}s)")
 
     # --- Phase 6: Connected components via union-find ---
     block_ids_list = [int(bid) for bid in block_ids_arr]
@@ -522,50 +512,43 @@ def cluster_blocks_by_overlap(
     for bid in block_ids_list:
         components[find(bid)].append(bid)
 
-    print(f"[Cluster] {len(components):,} connected components, assigning cluster IDs...",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] {len(components):,} connected components, assigning cluster IDs...")
 
     # --- Phase 7: Assign cluster IDs with genome support filter ---
-    # Use columnar arrays directly — no block_map[bid] lookups
+    # Lightweight pass: just assign block_to_cluster + count genomes.
+    # genes_json is NOT built here — the pipeline reconstructs cluster
+    # summaries post-merge anyway, so building them here is wasted work.
     t0 = time.time()
     bid_to_row = {int(block_ids_arr[i]): i for i in range(n_blocks)}
     all_genomes = col['all_genomes']
-    all_contigs = col['all_contigs']
     n_anchors_arr = col.get('n_anchors')
 
     block_to_cluster: Dict[int, int] = {}
     cluster_rows = []
     cid = 1
 
+    # Vectorized genome lookup: pre-extract string arrays
+    q_genome_strs = col['q_genome_strs'] if 'q_genome_strs' in col else None
+    t_genome_strs = col['t_genome_strs'] if 't_genome_strs' in col else None
+
     for root, members in tqdm(components.items(), desc="Assigning clusters",
                                total=len(components), file=sys.stderr):
         genomes: Set[str] = set()
         total_genes = 0
-        genes_by_genome: Dict[str, List[str]] = defaultdict(list)
 
         for bid in members:
             row = bid_to_row[bid]
-            qg = all_genomes[col['q_genome'][row]]
-            tg = all_genomes[col['t_genome'][row]]
-            qc = all_contigs[col['q_contig'][row]]
-            tc = all_contigs[col['t_contig'][row]]
-            qs = int(col['q_start'][row])
-            qe = int(col['q_end'][row])
-            ts = int(col['t_start'][row])
-            te = int(col['t_end'][row])
-
-            genomes.add(qg)
-            genomes.add(tg)
-
-            for idx in range(qs, qe + 1):
-                genes_by_genome[qg].append(f"{qc}:{idx}")
-            for idx in range(ts, te + 1):
-                genes_by_genome[tg].append(f"{tc}:{idx}")
+            if q_genome_strs is not None:
+                genomes.add(q_genome_strs[row])
+                genomes.add(t_genome_strs[row])
+            else:
+                genomes.add(all_genomes[col['q_genome'][row]])
+                genomes.add(all_genomes[col['t_genome'][row]])
 
             if n_anchors_arr is not None:
                 total_genes += int(n_anchors_arr[row])
             else:
-                total_genes += (qe - qs + 1)
+                total_genes += (int(col['q_end'][row]) - int(col['q_start'][row]) + 1)
 
         if len(genomes) >= min_genome_support:
             for bid in members:
@@ -577,7 +560,6 @@ def cluster_blocks_by_overlap(
                 "size": len(members),
                 "genome_support": len(genomes),
                 "mean_chain_length": round(mean_chain_len, 2),
-                "genes_json": json.dumps({g: list(set(ids)) for g, ids in genes_by_genome.items()}),
             })
             cid += 1
         else:
@@ -585,12 +567,11 @@ def cluster_blocks_by_overlap(
                 block_to_cluster[bid] = 0
 
     clusters_df = pd.DataFrame(cluster_rows) if cluster_rows else pd.DataFrame(
-        columns=["cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"]
+        columns=["cluster_id", "size", "genome_support", "mean_chain_length"]
     )
 
     n_assigned = sum(1 for c in block_to_cluster.values() if c > 0)
-    print(f"[Cluster] Assigned {n_assigned:,} blocks to {cid - 1:,} clusters in {time.time() - t0:.1f}s",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] Assigned {n_assigned:,} blocks to {cid - 1:,} clusters in {time.time() - t0:.1f}s")
 
     return block_to_cluster, clusters_df
 
@@ -598,8 +579,10 @@ def cluster_blocks_by_overlap(
 def _build_cluster_footprints(block_to_cluster, blocks):
     """Build per-cluster gene footprints from blocks.
 
-    Returns (cluster_genomes, blocks_per_cluster) where cluster_genomes
-    maps cid -> {genome: set((contig, idx), ...)}.
+    Returns (cluster_positions, cluster_genome_set, blocks_per_cluster):
+      cluster_positions: cid -> {genome: sorted int64 array of composite keys}
+      cluster_genome_set: cid -> set of genome strings
+      blocks_per_cluster: cid -> int
     """
     if isinstance(blocks, pd.DataFrame):
         bid_arr = blocks['block_id'].values
@@ -607,46 +590,66 @@ def _build_cluster_footprints(block_to_cluster, blocks):
         tg_arr = blocks['target_genome'].values
         qc_arr = blocks['query_contig'].values
         tc_arr = blocks['target_contig'].values
-        qs_arr = blocks['query_start'].values
-        qe_arr = blocks['query_end'].values
-        ts_arr = blocks['target_start'].values
-        te_arr = blocks['target_end'].values
-        bid_to_row = {int(bid_arr[i]): i for i in range(len(blocks))}
+        qs_arr = blocks['query_start'].values.astype(np.int64)
+        qe_arr = blocks['query_end'].values.astype(np.int64)
+        ts_arr = blocks['target_start'].values.astype(np.int64)
+        te_arr = blocks['target_end'].values.astype(np.int64)
     else:
-        n = len(blocks)
         bid_arr = np.array([b.block_id for b in blocks])
         qg_arr = np.array([b.query_genome for b in blocks])
         tg_arr = np.array([b.target_genome for b in blocks])
         qc_arr = np.array([b.query_contig for b in blocks])
         tc_arr = np.array([b.target_contig for b in blocks])
-        qs_arr = np.array([b.query_start for b in blocks])
-        qe_arr = np.array([b.query_end for b in blocks])
-        ts_arr = np.array([b.target_start for b in blocks])
-        te_arr = np.array([b.target_end for b in blocks])
-        bid_to_row = {int(bid_arr[i]): i for i in range(n)}
+        qs_arr = np.array([b.query_start for b in blocks], dtype=np.int64)
+        qe_arr = np.array([b.query_end for b in blocks], dtype=np.int64)
+        ts_arr = np.array([b.target_start for b in blocks], dtype=np.int64)
+        te_arr = np.array([b.target_end for b in blocks], dtype=np.int64)
 
-    cluster_genomes: Dict[int, Dict[str, Set[Tuple[str, int]]]] = defaultdict(lambda: defaultdict(set))
+    # Factorize contigs → int codes for composite keys
+    all_contigs_arr = np.concatenate([qc_arr, tc_arr])
+    contig_uniques, contig_codes_all = np.unique(all_contigs_arr, return_inverse=True)
+    n_blocks_total = len(bid_arr)
+    qc_codes = contig_codes_all[:n_blocks_total].astype(np.int64)
+    tc_codes = contig_codes_all[n_blocks_total:].astype(np.int64)
+    MAX_POS = int(max(qe_arr.max(), te_arr.max())) + 1
+
+    bid_to_row = {int(bid_arr[i]): i for i in range(n_blocks_total)}
+
+    # Per-cluster: collect composite keys per genome, then sort+unique
+    _positions: Dict[int, Dict[str, list]] = defaultdict(lambda: defaultdict(list))
     blocks_per_cluster: Dict[int, int] = defaultdict(int)
+    cluster_genome_set: Dict[int, Set[str]] = defaultdict(set)
 
     for bid, cid in block_to_cluster.items():
         if cid == 0:
             continue
         blocks_per_cluster[cid] += 1
         row = bid_to_row[bid]
-        qg = str(qg_arr[row])
-        tg = str(tg_arr[row])
-        qc = str(qc_arr[row])
-        tc = str(tc_arr[row])
-        qs = int(qs_arr[row])
-        qe = int(qe_arr[row])
-        ts = int(ts_arr[row])
-        te = int(te_arr[row])
-        for idx in range(qs, qe + 1):
-            cluster_genomes[cid][qg].add((qc, idx))
-        for idx in range(ts, te + 1):
-            cluster_genomes[cid][tg].add((tc, idx))
+        qg = qg_arr[row]
+        tg = tg_arr[row]
+        qs, qe = int(qs_arr[row]), int(qe_arr[row])
+        ts, te = int(ts_arr[row]), int(te_arr[row])
+        qcc = int(qc_codes[row])
+        tcc = int(tc_codes[row])
 
-    return cluster_genomes, blocks_per_cluster
+        cluster_genome_set[cid].add(qg)
+        cluster_genome_set[cid].add(tg)
+
+        base_q = qcc * MAX_POS
+        _positions[cid][qg].extend(range(base_q + qs, base_q + qe + 1))
+        base_t = tcc * MAX_POS
+        _positions[cid][tg].extend(range(base_t + ts, base_t + te + 1))
+
+    # Convert lists → sorted unique int64 arrays
+    cluster_positions: Dict[int, Dict[str, np.ndarray]] = {}
+    for cid, gdict in _positions.items():
+        cluster_positions[cid] = {
+            g: np.unique(np.array(vals, dtype=np.int64))
+            for g, vals in gdict.items()
+        }
+    del _positions
+
+    return cluster_positions, cluster_genome_set, blocks_per_cluster
 
 
 def merge_contained_clusters(
@@ -656,112 +659,184 @@ def merge_contained_clusters(
 ) -> Tuple[Dict[int, int], Dict[int, int]]:
     """Merge clusters whose genomic footprints are largely contained in a larger cluster.
 
-    Two-phase approach for parallelism:
-      Phase 1 (parallel): Compute containment for each cluster against all larger
-        candidates using frozen (original) footprints. Embarrassingly parallel.
-      Phase 2 (serial): Process merge decisions in rank order, resolving conflicts.
-
-    Accepts List[ChainedBlock] or DataFrame.
+    Uses sparse matrix M.T @ M to compute all pairwise overlaps in one
+    vectorized pass, replacing the O(n²) Python loop over cluster pairs.
+    Shared-genome denominators are computed via a genome×cluster size matrix S
+    and its binarized form B, using sparse column extraction for the
+    overlapping pairs only.
 
     Returns:
         block_to_cluster: updated mapping (block_id -> merged cluster_id)
         merge_map: mapping of child_cluster -> parent_cluster (pre-resolve)
     """
-    # Build footprints
-    cluster_genomes, blocks_per_cluster = _build_cluster_footprints(
-        block_to_cluster, blocks)
+    from scipy.sparse import coo_matrix
 
-    if not cluster_genomes:
+    t_fp = time.time()
+    cluster_positions, cluster_genome_set, blocks_per_cluster = \
+        _build_cluster_footprints(block_to_cluster, blocks)
+    _log(f"[Cluster] Built footprints for {len(cluster_positions):,} clusters "
+         f"in {time.time() - t_fp:.1f}s")
+
+    if not cluster_positions:
         return block_to_cluster, {}
-
-    # Compute footprint sizes for sorting
-    cluster_size = {cid: sum(len(positions) for positions in gdict.values())
-                    for cid, gdict in cluster_genomes.items()}
-
-    # Sort by footprint size descending
-    sorted_cids = sorted(cluster_size, key=lambda c: cluster_size[c], reverse=True)
-    cid_to_rank = {cid: i for i, cid in enumerate(sorted_cids)}
 
     # Filter: only check clusters with 2+ blocks
-    mergeable_cids = [c for c in sorted_cids if blocks_per_cluster.get(c, 0) >= 2]
-    n_skipped = len(sorted_cids) - len(mergeable_cids)
+    mergeable_cids = sorted(c for c, n in blocks_per_cluster.items() if n >= 2)
+    n_skipped = len(cluster_positions) - len(mergeable_cids)
 
-    # Index clusters by genome — only include mergeable clusters
-    genome_to_clusters: Dict[str, Set[int]] = defaultdict(set)
+    # Genome-differentiated global position keys
+    all_genomes_sorted = sorted(set(
+        g for cid in mergeable_cids for g in cluster_positions.get(cid, {})))
+    genome_to_code = {g: i for i, g in enumerate(all_genomes_sorted)}
+    n_genomes = len(all_genomes_sorted)
+
+    _log(f"[Cluster] Merge-check {len(mergeable_cids):,} clusters for containment "
+         f"(skipped {n_skipped:,} singletons, {n_genomes:,} genomes)...")
+
+    if len(mergeable_cids) < 2:
+        return block_to_cluster, {}
+
+    # --- Build sparse position×cluster matrix + genome×cluster size matrix ---
+    cid_to_idx = {c: i for i, c in enumerate(mergeable_cids)}
+    n_clust = len(mergeable_cids)
+
+    max_composite = np.int64(1)
     for cid in mergeable_cids:
-        for g in cluster_genomes[cid]:
-            genome_to_clusters[g].add(cid)
+        for arr in cluster_positions.get(cid, {}).values():
+            if len(arr) > 0:
+                max_composite = max(max_composite, np.int64(arr.max()) + 1)
 
-    print(f"[Cluster] Merge-check {len(mergeable_cids):,} clusters for containment "
-          f"(skipped {n_skipped:,} singletons, {len(genome_to_clusters):,} genomes)...",
-          file=sys.stderr, flush=True)
+    # Collect position→cluster pairs AND genome→cluster sizes in one pass
+    pos_chunks = []
+    cidx_chunks = []
+    cluster_sizes = np.zeros(n_clust, dtype=np.int64)
+    sg_rows = []  # genome index
+    sg_cols = []  # cluster index
+    sg_vals = []  # per-genome cluster size
 
-    if not mergeable_cids:
+    for cid in mergeable_cids:
+        idx = cid_to_idx[cid]
+        for genome, positions in cluster_positions.get(cid, {}).items():
+            gc = np.int64(genome_to_code[genome])
+            global_pos = positions + gc * max_composite
+            pos_chunks.append(global_pos)
+            cidx_chunks.append(np.full(len(positions), idx, dtype=np.int32))
+            n_pos_g = len(positions)
+            cluster_sizes[idx] += n_pos_g
+            sg_rows.append(genome_to_code[genome])
+            sg_cols.append(idx)
+            sg_vals.append(n_pos_g)
+
+    del cluster_positions  # free footprint dicts
+
+    all_pos = np.concatenate(pos_chunks)
+    all_cidx = np.concatenate(cidx_chunks)
+    del pos_chunks, cidx_chunks
+
+    # Remap positions to dense row indices
+    unique_pos, pos_rows = np.unique(all_pos, return_inverse=True)
+    n_pos = len(unique_pos)
+    del all_pos, unique_pos
+
+    _log(f"[Cluster] Sparse overlap: {n_pos:,} positions × {n_clust:,} clusters, "
+         f"nnz={len(pos_rows):,}")
+
+    # Build sparse matrix M (positions × clusters) and compute M.T @ M
+    M = coo_matrix(
+        (np.ones(len(pos_rows), dtype=np.float32), (pos_rows, all_cidx)),
+        shape=(n_pos, n_clust)
+    ).tocsc()
+    del pos_rows, all_cidx
+
+    t0 = time.time()
+    MtM = (M.T @ M).tocoo()
+    del M
+    _log(f"[Cluster] Sparse M.T @ M in {time.time() - t0:.1f}s "
+         f"({MtM.nnz:,} nnz)")
+
+    # Extract upper triangle off-diagonal (avoid double-counting)
+    mask = MtM.row < MtM.col
+    ci = MtM.row[mask]
+    cj = MtM.col[mask]
+    overlap_vals = MtM.data[mask].astype(np.float64)
+    del MtM, mask
+
+    if len(ci) == 0:
         return block_to_cluster, {}
 
-    n_total = len(sorted_cids)
+    _log(f"[Cluster] {len(ci):,} overlapping cluster pairs")
 
-    # --- Phase 1: Compute containment on frozen (original) footprints ---
-    # Serial but fast: singleton skip eliminates ~90% of clusters,
-    # and we use frozen footprints (no mutation during iteration).
-    merge_candidates = []
-    n_checked = 0
+    # --- Shared-genome sizes via genome×cluster size matrix ---
+    # S[g,c] = number of positions of cluster c in genome g
+    # B[g,c] = 1 if cluster c has positions in genome g
+    # shared_size_i_wrt_j = (S[:,i] * B[:,j]).sum() = size of i in genomes shared with j
+    S = coo_matrix(
+        (np.array(sg_vals, dtype=np.float64),
+         (np.array(sg_rows, dtype=np.int32),
+          np.array(sg_cols, dtype=np.int32))),
+        shape=(n_genomes, n_clust)
+    ).tocsc()
+    del sg_rows, sg_cols, sg_vals
+    B = S.copy()
+    B.data[:] = 1.0
 
-    for small_cid in tqdm(mergeable_cids, desc="Containment check",
-                          file=sys.stderr):
-        small_rank = cid_to_rank[small_cid]
-        if small_rank == 0:
-            continue  # largest cluster can't merge into anything
+    t0 = time.time()
+    # Extract columns for pair indices and compute shared-genome sizes
+    S_ci = S[:, ci]       # (n_genomes × n_pairs) sparse
+    B_cj = B[:, cj]       # (n_genomes × n_pairs) sparse
+    shared_size_ci = np.asarray(S_ci.multiply(B_cj).sum(axis=0)).ravel()
 
-        small_genome_dict = cluster_genomes.get(small_cid)
-        if not small_genome_dict:
-            continue
+    S_cj = S[:, cj]
+    B_ci = B[:, ci]
+    shared_size_cj = np.asarray(S_cj.multiply(B_ci).sum(axis=0)).ravel()
+    del S, B, S_ci, B_cj, S_cj, B_ci
+    _log(f"[Cluster] Shared-genome sizes computed in {time.time() - t0:.1f}s")
 
-        # Find candidates sharing at least one genome
-        candidate_cids: Set[int] = set()
-        for g in small_genome_dict:
-            candidate_cids.update(genome_to_clusters.get(g, set()))
+    # Determine small/large by total footprint size
+    small_mask = cluster_sizes[ci] <= cluster_sizes[cj]
+    small_cidx = np.where(small_mask, ci, cj)
+    large_cidx = np.where(small_mask, cj, ci)
+    small_shared = np.where(small_mask, shared_size_ci, shared_size_cj)
+    large_shared = np.where(small_mask, shared_size_cj, shared_size_ci)
 
-        # Only check larger clusters (lower rank = larger footprint)
-        candidates_larger = [c for c in candidate_cids
-                             if cid_to_rank.get(c, n_total) < small_rank
-                             and c != small_cid]
+    # Containment = overlap / shared-genome size (matches original semantics)
+    containment = np.divide(overlap_vals, small_shared,
+                            out=np.zeros(len(ci), dtype=np.float64),
+                            where=small_shared > 0)
+    reciprocal = np.divide(overlap_vals, large_shared,
+                           out=np.zeros(len(ci), dtype=np.float64),
+                           where=large_shared > 0)
 
-        for large_cid in candidates_larger:
-            large_genome_dict = cluster_genomes.get(large_cid)
-            if not large_genome_dict:
-                continue
-            n_checked += 1
+    valid = (containment >= containment_threshold) & (reciprocal >= 0.5)
+    n_valid = int(valid.sum())
 
-            shared_genomes = set(small_genome_dict) & set(large_genome_dict)
-            if not shared_genomes:
-                continue
+    _log(f"[Cluster] {n_valid:,} merge candidates "
+         f"(from {len(ci):,} overlapping pairs)")
 
-            small_shared = set()
-            large_shared = set()
-            for g in shared_genomes:
-                small_shared.update(small_genome_dict[g])
-                large_shared.update(large_genome_dict[g])
-
-            if not small_shared:
-                continue
-
-            overlap = len(small_shared & large_shared)
-            containment = overlap / len(small_shared)
-            reciprocal = overlap / len(large_shared) if large_shared else 0
-
-            if containment >= containment_threshold and reciprocal >= 0.5:
-                merge_candidates.append((small_cid, large_cid, containment))
-                break  # one merge per small cluster
-
-    print(f"[Cluster] Checked {n_checked:,} candidate pairs, "
-          f"{len(merge_candidates):,} merge candidates",
-          file=sys.stderr, flush=True)
-
-    if not merge_candidates:
+    if n_valid == 0:
         return block_to_cluster, {}
 
-    # --- Phase 2: Resolve merge chain ---
+    # For each small cluster, pick the largest container
+    small_cids_v = small_cidx[valid]
+    large_cids_v = large_cidx[valid]
+    large_shared_v = large_shared[valid]
+
+    best_merge: Dict[int, Tuple[int, float]] = {}
+    for k in range(n_valid):
+        sc = int(small_cids_v[k])
+        lc = int(large_cids_v[k])
+        ls = float(large_shared_v[k])
+        if sc not in best_merge or ls > best_merge[sc][1]:
+            best_merge[sc] = (lc, ls)
+
+    merge_candidates = [
+        (mergeable_cids[sc], mergeable_cids[lc])
+        for sc, (lc, _) in best_merge.items()
+    ]
+
+    _log(f"[Cluster] {len(merge_candidates):,} unique merges after dedup")
+
+    # --- Resolve merge chains ---
     merge_map: Dict[int, int] = {}
 
     def resolve(c: int) -> int:
@@ -770,22 +845,20 @@ def merge_contained_clusters(
         return c
 
     n_applied = 0
-    for small_cid, large_cid, containment in merge_candidates:
+    for small_cid, large_cid in merge_candidates:
         small_r = resolve(small_cid)
         large_r = resolve(large_cid)
         if small_r == large_r:
             continue
-        # Always merge smaller into larger (by rank)
-        sr = cid_to_rank.get(small_r, n_total)
-        lr = cid_to_rank.get(large_r, n_total)
-        if sr < lr:
+        ss = cluster_sizes[cid_to_idx.get(small_r, 0)]
+        ls = cluster_sizes[cid_to_idx.get(large_r, 0)]
+        if ss > ls:
             merge_map[large_r] = small_r
         else:
             merge_map[small_r] = large_r
         n_applied += 1
 
-    print(f"[Cluster] Applied {n_applied:,} merges",
-          file=sys.stderr, flush=True)
+    _log(f"[Cluster] Applied {n_applied:,} merges")
 
     # Apply merges
     new_mapping = {}

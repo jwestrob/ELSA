@@ -17,6 +17,7 @@ from typing import List, Dict, Tuple, Set, Any
 
 import numpy as np
 import pandas as pd
+from ._log import tlog as _log
 
 
 # ---------------------------------------------------------------------------
@@ -197,8 +198,7 @@ def find_cross_genome_anchors(
     sims = np.concatenate([c[2] for c in chunk_rows])
     del chunk_rows
 
-    print(f"[GeneAnchor] {n_raw_kept} cross-genome pairs before dedup (n={n}, k={k_query})",
-          file=sys.stderr, flush=True)
+    _log(f"[GeneAnchor] {n_raw_kept} cross-genome pairs before dedup (n={n}, k={k_query})")
 
     # Deduplicate: canonical pair (min, max) — keep first occurrence (highest sim from sorted kNN)
     lo = np.minimum(row_idx, col_idx)
@@ -227,8 +227,7 @@ def find_cross_genome_anchors(
     sims = sims[unique_idx]
     del unique_idx
 
-    print(f"[GeneAnchor] {len(row_idx)} unique cross-genome pairs after dedup",
-          file=sys.stderr, flush=True)
+    _log(f"[GeneAnchor] {len(row_idx)} unique cross-genome pairs after dedup")
 
     # Build remaining lookup arrays (deferred to reduce peak memory —
     # only needed for the final deduped set, not the full n*k flattened arrays)
@@ -310,8 +309,7 @@ def group_anchors_by_contig_pair(
     n_swap = int(needs_swap.sum())
 
     if n_swap > 0:
-        print(f"[GroupAnchors] Canonical swap on {n_swap:,} / {n:,} rows...",
-              file=sys.stderr, flush=True)
+        _log(f"[GroupAnchors] Canonical swap on {n_swap:,} / {n:,} rows...")
         sw = needs_swap
         for qa, ta in [
             ("query_idx", "target_idx"),
@@ -325,15 +323,13 @@ def group_anchors_by_contig_pair(
             anchors_df[qa] = q_vals
             anchors_df[ta] = t_vals
     else:
-        print(f"[GroupAnchors] Already canonical ({n:,} rows), skipping swap",
-              file=sys.stderr, flush=True)
+        _log(f"[GroupAnchors] Already canonical ({n:,} rows), skipping swap")
 
     # --- Numpy sort-based grouping (replaces pandas groupby) ---
     # Encode each grouping column as integer codes, then combine into a
     # single composite key. numpy sort on int64 is vectorized and uses
     # BLAS threads — much faster than pandas' single-threaded hash table.
-    print(f"[GroupAnchors] Encoding group keys for {n:,} anchors...",
-          file=sys.stderr, flush=True)
+    _log(f"[GroupAnchors] Encoding group keys for {n:,} anchors...")
 
     def _get_codes_and_uniques(col):
         """Get integer codes for a column (fast path for Categorical)."""
@@ -357,8 +353,7 @@ def group_anchors_by_contig_pair(
     # Composite key — fits int64 as long as product of cardinalities < 2^63
     composite = ((qg_codes * n_tg + tg_codes) * n_qc + qc_codes) * n_tc + tc_codes
 
-    print(f"[GroupAnchors] Sorting {n:,} anchors by group key...",
-          file=sys.stderr, flush=True)
+    _log(f"[GroupAnchors] Sorting {n:,} anchors by group key...")
     order = np.argsort(composite, kind='quicksort')
     sorted_keys = composite[order]
     del composite
@@ -377,8 +372,7 @@ def group_anchors_by_contig_pair(
     group_bounds[n_groups] = n
     del group_starts
 
-    print(f"[GroupAnchors] {n_groups:,} contig pairs, extracting raw arrays...",
-          file=sys.stderr, flush=True)
+    _log(f"[GroupAnchors] {n_groups:,} contig pairs, extracting raw arrays...")
 
     return GroupedAnchors(
         order=order,

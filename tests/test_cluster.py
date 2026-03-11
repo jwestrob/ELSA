@@ -69,7 +69,7 @@ class TestClusterBlocksByOverlap:
         row = df.iloc[0]
         assert row["size"] >= 2
         assert row["genome_support"] >= 2
-        assert "genes_json" in row
+        assert "mean_chain_length" in row
 
     def test_large_cluster(self):
         blocks = []

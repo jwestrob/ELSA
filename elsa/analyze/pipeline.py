@@ -23,6 +23,7 @@ from ..index import build_gene_index
 from ..seed import find_cross_genome_anchors, group_anchors_by_contig_pair
 from ..chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains, extract_nonoverlapping_chains_df, chain_groups_batched
 from ..cluster import cluster_blocks_by_overlap, merge_contained_clusters
+from .._log import tlog as _log
 
 
 @dataclass
@@ -89,9 +90,9 @@ def run_chain_pipeline(
 
     # Load genes
     if genes_df is not None:
-        print(f"[MicroChain] Using provided DataFrame ({len(genes_df)} genes)", file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Using provided DataFrame ({len(genes_df)} genes)")
     elif genes_parquet is not None:
-        print(f"[MicroChain] Loading genes from {genes_parquet}", file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Loading genes from {genes_parquet}")
         genes_df = pd.read_parquet(genes_parquet)
     else:
         raise ValueError("Either genes_parquet or genes_df must be provided")
@@ -120,8 +121,7 @@ def run_chain_pipeline(
 
     n_genes = len(genes_df)
     n_genomes = genes_df["sample_id"].nunique()
-    print(f"[MicroChain] Loaded {n_genes} genes from {n_genomes} genomes (dim={emb_dim})",
-          file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Loaded {n_genes} genes from {n_genomes} genomes (dim={emb_dim})")
 
     # Pre-sort genes + embeddings so _run_gene_chaining doesn't need to copy.
     # This lets us free emb_array here, avoiding a 4.3 GB duplicate during kNN.
@@ -134,14 +134,12 @@ def run_chain_pipeline(
     blocks_ckpt = output_dir / "blocks_checkpoint.parquet"
     blocks_from_checkpoint = False
     if blocks_ckpt.exists():
-        print(f"[MicroChain] Resuming from blocks checkpoint: {blocks_ckpt}",
-              file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Resuming from blocks checkpoint: {blocks_ckpt}")
         # Load as DataFrame directly — skip ChainedBlock materialization
         blocks_df_ckpt = pd.read_parquet(blocks_ckpt)
         blocks = blocks_df_ckpt  # DataFrame for clustering (no Python objects)
-        print(f"[MicroChain] Loaded {len(blocks_df_ckpt):,} blocks from checkpoint "
-              f"(delete {blocks_ckpt} to force re-chaining)",
-              file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Loaded {len(blocks_df_ckpt):,} blocks from checkpoint "
+              f"(delete {blocks_ckpt} to force re-chaining)")
         blocks_from_checkpoint = True
         del emb_array
         gc.collect()
@@ -169,7 +167,7 @@ def run_chain_pipeline(
 
     n_blocks = len(blocks) if isinstance(blocks, (list, pd.DataFrame)) else 0
     if n_blocks == 0:
-        print("[MicroChain] No blocks found", file=sys.stderr, flush=True)
+        _log("[MicroChain] No blocks found")
         pd.DataFrame(columns=[
             "block_id", "cluster_id", "query_genome", "target_genome",
             "query_contig", "target_contig", "query_start", "query_end",
@@ -183,13 +181,12 @@ def run_chain_pipeline(
     # Save blocks checkpoint so clustering can resume without re-chaining
     blocks_ckpt = output_dir / "blocks_checkpoint.parquet"
     if not blocks_ckpt.exists():
-        print(f"[MicroChain] Saving blocks checkpoint...", file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Saving blocks checkpoint...")
         t0 = time.time()
         _save_blocks_checkpoint(blocks, blocks_ckpt)
-        print(f"[MicroChain] Checkpoint saved in {time.time() - t0:.1f}s",
-              file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Checkpoint saved in {time.time() - t0:.1f}s")
 
-    print(f"[MicroChain] Found {n_blocks:,} blocks, clustering by overlap...", file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Found {n_blocks:,} blocks, clustering by overlap...")
 
     block_to_cluster, clusters_df = cluster_blocks_by_overlap(
         blocks,
@@ -210,16 +207,14 @@ def run_chain_pipeline(
     n_singletons = sum(1 for c in block_to_cluster.values() if c == 0)
     n_merged = n_before - n_real_clusters
 
-    print(f"[MicroChain] Formed {n_before} clusters, merged {n_merged} contained → {n_real_clusters} final ({n_singletons} singletons)",
-          file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Formed {n_before} clusters, merged {n_merged} contained → {n_real_clusters} final ({n_singletons} singletons)")
 
     # Build output — blocks is already a DataFrame from chaining or checkpoint
     blocks_df = blocks
     t_output = time.time()
 
     # Add cluster assignments
-    print(f"[MicroChain] Building block output ({len(blocks_df):,} blocks)...",
-          file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Building block output ({len(blocks_df):,} blocks)...")
     blocks_df['cluster_id'] = blocks_df['block_id'].map(block_to_cluster).fillna(0).astype(int)
 
     # Rename anchor gene columns for output compatibility
@@ -235,7 +230,7 @@ def run_chain_pipeline(
                  if c in blocks_df.columns])
 
     # Compute bp ranges via position index → genomic coordinate lookup
-    print(f"[MicroChain] Computing bp ranges...", file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Computing bp ranges...")
     t0 = time.time()
     pos_idx = pd.MultiIndex.from_arrays([
         genes_df['sample_id'], genes_df['contig_id'], genes_df['position_index'],
@@ -257,11 +252,10 @@ def run_chain_pipeline(
 
     del start_bp_s, end_bp_s
     blocks_df['n_genes'] = blocks_df['n_anchors']
-    print(f"[MicroChain] bp ranges computed in {time.time() - t0:.1f}s",
-          file=sys.stderr, flush=True)
+    _log(f"[MicroChain] bp ranges computed in {time.time() - t0:.1f}s")
 
     # Rebuild clusters_df from post-merge block_to_cluster (vectorized)
-    print(f"[MicroChain] Building cluster summaries...", file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Building cluster summaries...")
     t0 = time.time()
     clustered = blocks_df[blocks_df['cluster_id'] > 0]
 
@@ -284,8 +278,8 @@ def run_chain_pipeline(
         stats['genome_support'] = stats['cluster_id'].map(gs).fillna(0).astype(int)
 
         # genes_json: per-cluster, per-genome position labels via numpy array iteration
-        print(f"[MicroChain] Building genes_json for {len(stats):,} clusters "
-              f"({len(clustered):,} blocks)...", file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Building genes_json for {len(stats):,} clusters "
+              f"({len(clustered):,} blocks)...")
         _cids = clustered['cluster_id'].values
         _qg = clustered['query_genome'].values
         _qc = clustered['query_contig'].values
@@ -309,8 +303,7 @@ def run_chain_pipeline(
         )
         clusters_df = stats
 
-    print(f"[MicroChain] Cluster summaries built in {time.time() - t0:.1f}s",
-          file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Cluster summaries built in {time.time() - t0:.1f}s")
 
     blocks_path = output_dir / "micro_chain_blocks.csv"
     clusters_path = output_dir / "micro_chain_clusters.csv"
@@ -325,7 +318,7 @@ def run_chain_pipeline(
             columns=["cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"]
         )
 
-    print(f"[MicroChain] Writing CSVs...", file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Writing CSVs...")
     t0 = time.time()
     blocks_df.to_csv(blocks_path, index=False)
     real_clusters.to_csv(clusters_path, index=False)
@@ -333,8 +326,7 @@ def run_chain_pipeline(
     if not singleton_clusters.empty:
         unclustered_path = output_dir / "micro_chain_unclustered.csv"
         singleton_clusters.to_csv(unclustered_path, index=False)
-        print(f"[MicroChain] Wrote {len(singleton_clusters)} singleton clusters to {unclustered_path}",
-              file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Wrote {len(singleton_clusters)} singleton clusters to {unclustered_path}")
 
     # Save pre-merge cluster assignments and merge hierarchy
     if raw_merge_map:
@@ -357,15 +349,12 @@ def run_chain_pipeline(
             })
         pd.DataFrame(merge_rows).to_csv(
             output_dir / "micro_chain_merge_map.csv", index=False)
-        print(f"[MicroChain] Saved merge hierarchy ({len(merge_rows)} merges) to {output_dir}",
-              file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Saved merge hierarchy ({len(merge_rows)} merges) to {output_dir}")
 
-    print(f"[MicroChain] Wrote {len(blocks_df):,} blocks to {blocks_path} ({time.time() - t0:.1f}s)",
-          file=sys.stderr, flush=True)
-    print(f"[MicroChain] Wrote {len(real_clusters)} clusters to {clusters_path}"
-          f" ({len(singleton_clusters)} singletons written separately)", file=sys.stderr, flush=True)
-    print(f"[MicroChain] Output phase completed in {time.time() - t_output:.1f}s",
-          file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Wrote {len(blocks_df):,} blocks to {blocks_path} ({time.time() - t0:.1f}s)")
+    _log(f"[MicroChain] Wrote {len(real_clusters)} clusters to {clusters_path}"
+          f" ({len(singleton_clusters)} singletons written separately)")
+    _log(f"[MicroChain] Output phase completed in {time.time() - t_output:.1f}s")
 
     n_clusters = len(real_clusters)
     genome_support_median = int(real_clusters["genome_support"].median()) if not real_clusters.empty else 0
@@ -380,8 +369,7 @@ def run_chain_pipeline(
         schema_dir = output_dir / "schema"
         run_schema_pipeline(blocks_df, genes_df, schema_dir)
     except Exception as e:
-        print(f"[Schema] Warning: architecture schema failed: {e}",
-              file=sys.stderr, flush=True)
+        _log(f"[Schema] Warning: architecture schema failed: {e}")
 
     return ChainSummary(
         num_genes=n_genes,
@@ -416,8 +404,7 @@ def _save_blocks_checkpoint(blocks, path: Path):
                 "anchor_target_gene_ids": _json.dumps(b.anchor_target_gene_ids),
             })
         pd.DataFrame(rows).to_parquet(path, index=False)
-    print(f"[MicroChain] Saved blocks checkpoint ({len(blocks):,} blocks) to {path}",
-          file=sys.stderr, flush=True)
+    _log(f"[MicroChain] Saved blocks checkpoint ({len(blocks):,} blocks) to {path}")
 
 
 def _load_blocks_checkpoint(path: Path):
@@ -492,12 +479,10 @@ def _run_gene_chaining(
 
     if anchors_path and anchors_path.exists():
         sz_gb = anchors_path.stat().st_size / (1024**3)
-        print(f"[GeneChain] Loading anchors checkpoint ({sz_gb:.1f} GB): {anchors_path}",
-              file=sys.stderr, flush=True)
+        _log(f"[GeneChain] Loading anchors checkpoint ({sz_gb:.1f} GB): {anchors_path}")
         anchors = pd.read_parquet(anchors_path)
-        print(f"[GeneChain] Loaded {len(anchors):,} anchors from checkpoint "
-              f"(delete {anchors_path} to force recomputation)",
-              file=sys.stderr, flush=True)
+        _log(f"[GeneChain] Loaded {len(anchors):,} anchors from checkpoint "
+              f"(delete {anchors_path} to force recomputation)")
         # Free resources not needed when resuming from checkpoint
         del embeddings
         gc.collect()
@@ -508,20 +493,17 @@ def _run_gene_chaining(
         gene_info = genes_df[info_cols].reset_index(drop=True)
 
         if prebuilt_index is not None:
-            print(f"[GeneChain] Using pre-built index for {n_genes} genes...",
-                  file=sys.stderr, flush=True)
+            _log(f"[GeneChain] Using pre-built index for {n_genes} genes...")
             index = prebuilt_index
         else:
-            print(f"[GeneChain] Building index ({index_backend}) for {n_genes} genes...",
-                  file=sys.stderr, flush=True)
+            _log(f"[GeneChain] Building index ({index_backend}) for {n_genes} genes...")
             index = build_gene_index(embeddings, m=hnsw_m,
                                      ef_construction=hnsw_ef_construction,
                                      ef_search=hnsw_ef_search,
                                      index_backend=index_backend,
                                      faiss_nprobe=faiss_nprobe)
 
-        print(f"[GeneChain] Finding cross-genome anchors (k={hnsw_k}, threshold={similarity_threshold})...",
-              file=sys.stderr, flush=True)
+        _log(f"[GeneChain] Finding cross-genome anchors (k={hnsw_k}, threshold={similarity_threshold})...")
         anchors = find_cross_genome_anchors(index, embeddings, gene_info,
                                             k=hnsw_k,
                                             similarity_threshold=similarity_threshold)
@@ -530,55 +512,34 @@ def _run_gene_chaining(
         del embeddings, gene_info, index
         gc.collect()
 
-        print(f"[GeneChain] Found {len(anchors)} cross-genome anchors",
-              file=sys.stderr, flush=True)
+        _log(f"[GeneChain] Found {len(anchors)} cross-genome anchors")
 
         # Save checkpoint so kNN doesn't need to be re-run on crash
         if anchors_path and not anchors.empty:
             anchors_path.parent.mkdir(parents=True, exist_ok=True)
-            print(f"[GeneChain] Saving anchors checkpoint to {anchors_path}...",
-                  file=sys.stderr, flush=True)
+            _log(f"[GeneChain] Saving anchors checkpoint to {anchors_path}...")
             anchors.to_parquet(anchors_path, index=False)
             sz_gb = anchors_path.stat().st_size / (1024**3)
-            print(f"[GeneChain] Checkpoint saved ({sz_gb:.1f} GB)",
-                  file=sys.stderr, flush=True)
+            _log(f"[GeneChain] Checkpoint saved ({sz_gb:.1f} GB)")
 
-    print(f"[GeneChain] Grouping {len(anchors):,} anchors by contig pair...",
-          file=sys.stderr, flush=True)
+    _log(f"[GeneChain] Grouping {len(anchors):,} anchors by contig pair...")
     grouped = group_anchors_by_contig_pair(anchors)
     del anchors; gc.collect()
     n_contig_pairs = grouped.n_groups if hasattr(grouped, 'n_groups') else len(grouped)
-    print(f"[GeneChain] {n_contig_pairs:,} contig pairs to process",
-          file=sys.stderr, flush=True)
+    _log(f"[GeneChain] {n_contig_pairs:,} contig pairs to process")
 
-    all_chain_dfs = []
-    block_id = 0
-    n_chains = 0
-
-    # Batched chaining: preprocess all groups, run a single Numba kernel
-    chain_results = chain_groups_batched(
+    # Batched chaining + flat-array block extraction in one pass
+    all_blocks_df = chain_groups_batched(
         grouped,
         max_gap=max_gap,
         min_size=min_chain_size,
         gap_penalty_scale=gap_penalty_scale,
+        extract_blocks=True,
     )
 
-    for key, chains in chain_results.items():
-        n_chains += len(chains)
-        bdf = extract_nonoverlapping_chains_df(chains, block_id_start=block_id)
-        if not bdf.empty:
-            all_chain_dfs.append(bdf)
-            block_id += len(bdf)
-
-    if not all_chain_dfs:
-        print("[GeneChain] No blocks extracted", file=sys.stderr, flush=True)
+    if not isinstance(all_blocks_df, pd.DataFrame) or all_blocks_df.empty:
+        _log("[GeneChain] No blocks extracted")
         return pd.DataFrame()
-
-    all_blocks_df = pd.concat(all_chain_dfs, ignore_index=True)
-    del all_chain_dfs
-
-    print(f"[GeneChain] Extracted {len(all_blocks_df):,} non-overlapping blocks from {n_chains:,} chains",
-          file=sys.stderr, flush=True)
 
     return all_blocks_df
 
@@ -635,7 +596,7 @@ def _write_to_database(
             clusters_df.to_sql("micro_chain_clusters", conn, if_exists="append", index=False)
 
         conn.commit()
-        print(f"[MicroChain] Wrote results to database: {db_path}", file=sys.stderr, flush=True)
+        _log(f"[MicroChain] Wrote results to database: {db_path}")
 
     finally:
         conn.close()

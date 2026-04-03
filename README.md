@@ -147,7 +147,7 @@ Validated on 30-genome Enterobacteriaceae dataset (21 E. coli, 5 Salmonella, 4 K
 ```bibtex
 @software{elsa2026,
   title={ELSA: Embedding Locus Search and Alignment},
-  author={Westbrook, Jacob},
+  author={West-Roberts, Jacob},
   year={2026},
 }
 ```

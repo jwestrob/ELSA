@@ -6,7 +6,7 @@ gene-level anchor chaining.
 """
 
 __version__ = "2.0.0"
-__author__ = "Claude & Jacob"
+__author__ = "Jacob Westbrook, with assistance from Claude (Anthropic) and GPT (OpenAI)"
 
 # Lazy imports to avoid loading heavy dependencies on import
 def __getattr__(name):

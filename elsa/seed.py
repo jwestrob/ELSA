@@ -13,7 +13,7 @@ from __future__ import annotations
 import sys
 from collections import namedtuple
 from dataclasses import dataclass
-from typing import List, Dict, Tuple, Set, Any
+from typing import List, Dict, Optional, Tuple, Set, Any
 
 import numpy as np
 import pandas as pd
@@ -80,6 +80,7 @@ def find_cross_genome_anchors(
     gene_info: pd.DataFrame,
     k: int = 50,
     similarity_threshold: float = 0.85,
+    n_jobs: Optional[int] = None,
 ) -> pd.DataFrame:
     """
     Find similar gene pairs across genomes using kNN search.
@@ -90,6 +91,7 @@ def find_cross_genome_anchors(
         gene_info: DataFrame with columns [gene_id, sample_id, contig_id, position_index]
         k: Number of neighbors to retrieve per gene
         similarity_threshold: Minimum cosine similarity for anchors
+        n_jobs: Number of threads for FAISS search (None = all cores)
 
     Returns:
         DataFrame with columns defined in ANCHOR_COLS
@@ -143,7 +145,7 @@ def find_cross_genome_anchors(
 
     elif index_type == "faiss":
         import os, faiss as _faiss
-        _ncpu = os.cpu_count() or 1
+        _ncpu = n_jobs if n_jobs is not None else (os.cpu_count() or 1)
         _faiss.omp_set_num_threads(_ncpu)
 
         from tqdm import trange

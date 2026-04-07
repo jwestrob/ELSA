@@ -55,6 +55,7 @@ class ChainConfig:
     mutual_k: int = 5
     df_max: int = 500
     min_genome_support: int = 2
+    n_jobs: Optional[int] = None
 
 
 def run_chain_pipeline(
@@ -159,6 +160,7 @@ def run_chain_pipeline(
             faiss_nprobe=config.faiss_nprobe,
             _presorted=True,
             checkpoint_dir=output_dir,
+            n_jobs=config.n_jobs,
         )
 
         # Free embeddings — no longer needed after chaining
@@ -193,6 +195,7 @@ def run_chain_pipeline(
         jaccard_tau=config.jaccard_tau,
         mutual_k=config.mutual_k,
         min_genome_support=config.min_genome_support,
+        n_jobs=config.n_jobs,
     )
 
     n_before = len(set(c for c in block_to_cluster.values() if c > 0))
@@ -446,6 +449,7 @@ def _run_gene_chaining(
     prebuilt_index: Optional[tuple] = None,
     _presorted: bool = False,
     checkpoint_dir: Optional[Path] = None,
+    n_jobs: Optional[int] = None,
 ) -> pd.DataFrame:
     """Complete gene-level chaining pipeline (internal).
 
@@ -456,6 +460,7 @@ def _run_gene_chaining(
                     and embeddings are aligned. Skips the sort+copy to save ~4.3 GB.
         checkpoint_dir: If set, save/load anchors.parquet checkpoint here.
                         Allows resuming after crashes without re-running kNN.
+        n_jobs: Max threads for FAISS/clustering (None = all cores).
 
     Returns:
         DataFrame with block columns (block_id, query_genome, etc.)
@@ -506,7 +511,8 @@ def _run_gene_chaining(
         _log(f"[GeneChain] Finding cross-genome anchors (k={hnsw_k}, threshold={similarity_threshold})...")
         anchors = find_cross_genome_anchors(index, embeddings, gene_info,
                                             k=hnsw_k,
-                                            similarity_threshold=similarity_threshold)
+                                            similarity_threshold=similarity_threshold,
+                                            n_jobs=n_jobs)
 
         # Free large arrays no longer needed — critical for large datasets
         del embeddings, gene_info, index

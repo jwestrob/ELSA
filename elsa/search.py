@@ -226,12 +226,13 @@ def search_locus(
 
     anchors_df = pd.DataFrame(rows, columns=ANCHOR_COLS)
 
-    # Group by target contig
+    # Group by (query_contig, target_genome, target_contig) so anchors from
+    # different query contigs are never chained together (multi-contig queries).
     all_blocks: List[ChainedBlock] = []
     block_id = 0
 
-    for (tg, tc), group_df in anchors_df.groupby(
-        ["target_genome", "target_contig"], sort=False
+    for (_qc, tg, tc), group_df in anchors_df.groupby(
+        ["query_contig", "target_genome", "target_contig"], sort=False
     ):
         if len(group_df) < min_chain_size:
             continue

@@ -174,7 +174,9 @@ def init(config: str, force: bool):
 @click.option("--fasta-pattern", default="*.fasta", help="Pattern for nucleotide FASTA files")
 @click.option("--resume", is_flag=True, help="Resume from checkpoint")
 @click.option("--save-raw", is_flag=True, help="Save raw (unprojected) embeddings for later combined projection")
-def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool, save_raw: bool):
+@click.option("--jobs", "-j", type=int, default=None,
+              help="Max threads (overrides config system.jobs; default: all cores)")
+def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool, save_raw: bool, jobs: Optional[int]):
     """Generate protein embeddings from nucleotide FASTA files.
 
     Runs: gene calling -> PLM embedding -> PCA projection.
@@ -274,11 +276,8 @@ def embed(config: str, input_dir: str, fasta_pattern: str, resume: bool, save_ra
         if config_obj.ingest.run_pfam:
             console.print("\n[bold blue]Stage 1.5: PFAM Domain Annotation[/bold blue]")
             pfam_output_dir = Path("genome_browser/pfam_annotations")
-            if isinstance(config_obj.system.jobs, int):
-                threads = config_obj.system.jobs
-            else:
-                import os
-                threads = os.cpu_count() or 4
+            from .params import resolve_jobs
+            threads = jobs if jobs is not None else resolve_jobs(config_obj.system.jobs)
             pfam_results_file = ingester.run_pfam_annotation(pfam_output_dir, threads)
             if pfam_results_file:
                 console.print(f"✓ PFAM annotation completed: {pfam_results_file}")
@@ -411,8 +410,11 @@ def project(config: str, raw: str):
               help="Genome browser database path (disabled by default)")
 @click.option("--sequences-dir", help="Directory containing nucleotide sequences (.fna)")
 @click.option("--proteins-dir", help="Directory containing proteins (.faa)")
+@click.option("--jobs", "-j", type=int, default=None,
+              help="Max threads (overrides config system.jobs; default: all cores)")
 def analyze(config: str, output_dir: str, genome_browser_db: str,
-           sequences_dir: Optional[str], proteins_dir: Optional[str]):
+           sequences_dir: Optional[str], proteins_dir: Optional[str],
+           jobs: Optional[int]):
     """Discover syntenic blocks via gene-level anchor chaining."""
     console.print("[bold]ELSA Syntenic Analysis[/bold]")
 
@@ -453,6 +455,8 @@ def analyze(config: str, output_dir: str, genome_browser_db: str,
         chain_dir = output_path / 'micro_chain'
         chain_cfg = config_obj.chain
 
+        from .params import resolve_jobs
+        _n_jobs = jobs if jobs is not None else resolve_jobs(config_obj.system.jobs)
         mc_config = MicroChainConfig(
             index_backend=chain_cfg.index_backend,
             faiss_nprobe=chain_cfg.faiss_nprobe,
@@ -468,6 +472,7 @@ def analyze(config: str, output_dir: str, genome_browser_db: str,
             df_max=chain_cfg.df_max,
             min_genome_support=chain_cfg.min_genome_support,
             gap_penalty_scale=chain_cfg.gap_penalty_scale,
+            n_jobs=_n_jobs,
         )
 
         summary = run_micro_chain_pipeline(
@@ -778,6 +783,8 @@ def stats(config: str):
 @click.option("--index-backend", default="auto", help="Index backend (auto/faiss/hnswlib)")
 @click.option("--hnsw-k", default=50, help="k for HNSW neighbor search")
 @click.option("--no-normalize", is_flag=True, help="Skip L2 normalization of embeddings")
+@click.option("--jobs", "-j", type=int, required=True,
+              help="Max threads for FAISS search and clustering (required)")
 @click.option("--annotations-db", type=click.Path(exists=True),
               help="Sharur DuckDB with annotations table (loads PFAM + all sources)")
 @click.option("--genome-browser-db", type=click.Path(), default=None,
@@ -790,6 +797,7 @@ def synteny(db: Optional[str], proteins: Optional[str],
             min_chain_size: int, min_genome_support: int,
             gap_penalty_scale: float, jaccard_tau: float,
             index_backend: str, hnsw_k: int, no_normalize: bool,
+            jobs: int,
             annotations_db: Optional[str], genome_browser_db: Optional[str]):
     """Discover syntenic blocks from external embeddings.
 
@@ -888,6 +896,7 @@ def synteny(db: Optional[str], proteins: Optional[str],
             gap_penalty_scale=gap_penalty_scale,
             jaccard_tau=jaccard_tau,
             min_genome_support=min_genome_support,
+            n_jobs=max(1, jobs),
         )
 
         console.print(f"\n[bold blue]Running chain pipeline...[/bold blue]")

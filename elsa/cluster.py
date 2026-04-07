@@ -17,7 +17,7 @@ import os
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import List, Dict, Set, Tuple, Union
+from typing import List, Dict, Optional, Set, Tuple, Union
 from collections import defaultdict
 
 import numpy as np
@@ -386,6 +386,7 @@ def cluster_blocks_by_overlap(
     jaccard_tau: float = 0.3,
     mutual_k: int = 5,
     min_genome_support: int = 2,
+    n_jobs: Optional[int] = None,
 ) -> Tuple[Dict[int, int], pd.DataFrame]:
     """
     Cluster blocks based on shared genomic regions (gene overlap).
@@ -421,7 +422,8 @@ def cluster_blocks_by_overlap(
     _log(f"[Cluster] {len(contig_groups):,} contig bins for interval sweep")
 
     # --- Phase 3: Parallel interval sweep ---
-    n_workers = min(os.cpu_count() or 4, len(contig_groups))
+    _max_workers = n_jobs if n_jobs is not None else (os.cpu_count() or 4)
+    n_workers = min(_max_workers, len(contig_groups))
     _log(f"[Cluster] Running interval sweep ({n_workers} threads)...")
     raw_pairs_i, raw_pairs_j = _sweep_all_contigs(contig_groups, n_workers)
     del contig_groups

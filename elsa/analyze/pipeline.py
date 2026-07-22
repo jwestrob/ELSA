@@ -11,6 +11,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import shutil
 import time
 from typing import Optional, List
 import sqlite3
@@ -66,6 +67,8 @@ def run_chain_pipeline(
     genes_df: Optional[pd.DataFrame] = None,
     prebuilt_index: Optional[tuple] = None,
     embeddings: Optional[np.ndarray] = None,
+    schema_embeddings_path: Optional[Path] = None,
+    run_schema: bool = True,
 ) -> ChainSummary:
     """
     Run the gene-level anchor chaining pipeline.
@@ -79,6 +82,11 @@ def run_chain_pipeline(
                   May contain emb_* columns, or embeddings can be passed separately.
         prebuilt_index: Optional ("faiss", index) tuple from a SyntenyStore
         embeddings: Pre-extracted float32 embedding array (avoids DataFrame copy)
+        schema_embeddings_path: Optional ``.npy`` source aligned to the input
+            gene rows. This is reopened with mmap after chaining so architecture
+            generation receives real embeddings without retaining the search
+            matrix in memory.
+        run_schema: Generate normalized cluster architecture artifacts.
 
     Returns:
         ChainSummary with pipeline statistics
@@ -101,6 +109,7 @@ def run_chain_pipeline(
     required = {"sample_id", "contig_id", "gene_id", "start", "end"}
     if not required.issubset(set(genes_df.columns)):
         raise RuntimeError(f"genes.parquet missing required columns: {sorted(required - set(genes_df.columns))}")
+    genes_df = genes_df.reset_index(drop=True)
 
     # Extract or use pre-provided embeddings
     import gc
@@ -126,10 +135,42 @@ def run_chain_pipeline(
 
     # Pre-sort genes + embeddings so _run_gene_chaining doesn't need to copy.
     # This lets us free emb_array here, avoiding a 4.3 GB duplicate during kNN.
-    genes_df = genes_df.sort_values(['sample_id', 'contig_id', 'start', 'end'])
+    sort_order = genes_df.sort_values(
+        ['sample_id', 'contig_id', 'start', 'end'],
+        kind='stable',
+    ).index.values
+    genes_df = genes_df.loc[sort_order]
     genes_df['position_index'] = genes_df.groupby(['sample_id', 'contig_id']).cumcount()
-    emb_array = emb_array[genes_df.index.values]  # reorder to match sort
+    identity_order = np.array_equal(
+        sort_order,
+        np.arange(len(sort_order), dtype=sort_order.dtype),
+    )
+    if not identity_order:
+        emb_array = emb_array[sort_order]  # reorder to match sort
     genes_df = genes_df.reset_index(drop=True)
+
+    schema_source_path: Optional[Path] = None
+    schema_temp_path: Optional[Path] = None
+    if run_schema and schema_embeddings_path is not None:
+        candidate = Path(schema_embeddings_path)
+        if not candidate.is_file():
+            raise FileNotFoundError(
+                f"Schema embedding source does not exist: {candidate}"
+            )
+        if identity_order:
+            schema_source_path = candidate
+
+    def _persist_schema_embeddings_if_needed() -> None:
+        nonlocal schema_source_path, schema_temp_path
+        if not run_schema or schema_source_path is not None:
+            return
+        schema_temp_path = output_dir / ".schema_embeddings.tmp.npy"
+        _log(
+            "[Schema] Persisting reordered embeddings for memory-mapped "
+            f"architecture generation: {schema_temp_path}"
+        )
+        np.save(schema_temp_path, emb_array)
+        schema_source_path = schema_temp_path
 
     # --- Blocks checkpoint: skip kNN + chaining entirely if available ---
     blocks_ckpt = output_dir / "blocks_checkpoint.parquet"
@@ -142,6 +183,7 @@ def run_chain_pipeline(
         _log(f"[MicroChain] Loaded {len(blocks_df_ckpt):,} blocks from checkpoint "
               f"(delete {blocks_ckpt} to force re-chaining)")
         blocks_from_checkpoint = True
+        _persist_schema_embeddings_if_needed()
         del emb_array
         gc.collect()
     else:
@@ -163,7 +205,8 @@ def run_chain_pipeline(
             n_jobs=config.n_jobs,
         )
 
-        # Free embeddings — no longer needed after chaining
+        # Free search embeddings; schema reopens a memory-mapped source later.
+        _persist_schema_embeddings_if_needed()
         del emb_array
         gc.collect()
 
@@ -178,6 +221,8 @@ def run_chain_pipeline(
         pd.DataFrame(columns=[
             "cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"
         ]).to_csv(output_dir / "micro_chain_clusters.csv", index=False)
+        if schema_temp_path is not None:
+            schema_temp_path.unlink(missing_ok=True)
         return ChainSummary(num_genes=n_genes)
 
     # Save blocks checkpoint so clustering can resume without re-chaining
@@ -366,13 +411,49 @@ def run_chain_pipeline(
     if db_path is not None and Path(db_path).exists():
         _write_to_database(blocks_df, clusters_df, db_path)
 
-    # Run cluster architecture schema pipeline
-    try:
-        from ..schema import run_schema_pipeline
+    # Build architecture artifacts in staging so a failed run cannot leave a
+    # partial or apparently-current schema directory.
+    if run_schema:
         schema_dir = output_dir / "schema"
-        run_schema_pipeline(blocks_df, genes_df, schema_dir)
-    except Exception as e:
-        _log(f"[Schema] Warning: architecture schema failed: {e}")
+        schema_staging_dir = output_dir / ".schema.building"
+        schema_previous_dir = output_dir / ".schema.previous"
+        if not schema_dir.exists() and schema_previous_dir.exists():
+            schema_previous_dir.replace(schema_dir)
+        elif schema_previous_dir.exists():
+            shutil.rmtree(schema_previous_dir)
+        if schema_staging_dir.exists():
+            shutil.rmtree(schema_staging_dir)
+        try:
+            from ..schema import run_schema_pipeline
+
+            if schema_source_path is None:
+                raise RuntimeError("Schema embedding source was not prepared")
+            schema_embeddings = np.load(schema_source_path, mmap_mode="r")
+            run_schema_pipeline(
+                blocks_df,
+                genes_df,
+                schema_staging_dir,
+                embeddings=schema_embeddings,
+            )
+            del schema_embeddings
+            if schema_dir.exists():
+                schema_dir.replace(schema_previous_dir)
+            try:
+                schema_staging_dir.replace(schema_dir)
+            except Exception:
+                if schema_previous_dir.exists() and not schema_dir.exists():
+                    schema_previous_dir.replace(schema_dir)
+                raise
+            if schema_previous_dir.exists():
+                shutil.rmtree(schema_previous_dir)
+        except Exception as e:
+            _log(f"[Schema] Architecture generation failed: {e}")
+            if schema_staging_dir.exists():
+                shutil.rmtree(schema_staging_dir)
+            raise
+        finally:
+            if schema_temp_path is not None:
+                schema_temp_path.unlink(missing_ok=True)
 
     return ChainSummary(
         num_genes=n_genes,

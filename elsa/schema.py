@@ -17,6 +17,68 @@ import pandas as pd
 from ._log import tlog as _log
 
 
+def _resolve_embedding_matrix(
+    genes_df: pd.DataFrame,
+    embeddings: Optional[np.ndarray] = None,
+) -> np.ndarray:
+    """Return a validated embedding matrix aligned to ``genes_df`` rows."""
+
+    if embeddings is None:
+        emb_cols = [column for column in genes_df.columns if column.startswith("emb_")]
+        if not emb_cols:
+            raise ValueError(
+                "Cluster architecture requires embeddings; pass the matrix "
+                "separately or retain emb_* columns"
+            )
+        matrix = genes_df[emb_cols].values.astype(np.float32)
+    else:
+        matrix = np.asarray(embeddings)
+        if matrix.dtype != np.float32:
+            matrix = matrix.astype(np.float32)
+    if matrix.ndim != 2:
+        raise ValueError(f"Embeddings must be two-dimensional; received {matrix.shape}")
+    if matrix.shape[0] != len(genes_df):
+        raise ValueError(
+            "Embedding rows must align one-to-one with genes_df: "
+            f"{matrix.shape[0]} versus {len(genes_df)}"
+        )
+    if matrix.shape[1] == 0:
+        raise ValueError("Embedding matrix has zero dimensions")
+    return matrix
+
+
+def _normalize_embedding_rows(
+    rows: np.ndarray,
+    *,
+    context: str,
+) -> np.ndarray:
+    """Validate and L2-normalize embedding rows for cosine calculations.
+
+    Architecture alignment operates on comparatively small locus/slot
+    matrices, so float64 arithmetic is an inexpensive way to avoid spurious
+    float32 BLAS status flags and cosine values just outside [-1, 1].
+    """
+
+    values = np.asarray(rows, dtype=np.float64)
+    if not np.isfinite(values).all():
+        bad_rows = np.flatnonzero(~np.isfinite(values).all(axis=1))
+        preview = ", ".join(map(str, bad_rows[:5]))
+        raise ValueError(
+            f"Architecture embeddings contain non-finite values in {context}; "
+            f"local row(s): {preview}"
+        )
+
+    norms = np.linalg.norm(values, axis=1, keepdims=True)
+    zero_rows = np.flatnonzero(norms[:, 0] <= np.finfo(np.float64).eps)
+    if len(zero_rows):
+        preview = ", ".join(map(str, zero_rows[:5]))
+        raise ValueError(
+            f"Architecture embeddings contain zero-norm vectors in {context}; "
+            f"local row(s): {preview}"
+        )
+    return values / norms
+
+
 # ---------------------------------------------------------------------------
 # Stage 1: Extract block members (gene-level detail per block side)
 # ---------------------------------------------------------------------------
@@ -40,7 +102,10 @@ def build_block_members(
         genes["strand"] = genes_df["strand"]
     else:
         genes["strand"] = 0
-    genes = genes.sort_values(["sample_id", "contig_id", "start", "end"])
+    genes = genes.sort_values(
+        ["sample_id", "contig_id", "start", "end"],
+        kind="stable",
+    )
     genes["position_index"] = genes.groupby(["sample_id", "contig_id"]).cumcount()
 
     # Build lookup: (genome, contig, position_index) -> (gene_id, strand)
@@ -264,6 +329,7 @@ def assign_slots(
     genes_df: pd.DataFrame,
     ref_loci: Dict[int, int],
     blocks_df: pd.DataFrame,
+    embeddings: Optional[np.ndarray] = None,
 ) -> pd.DataFrame:
     """Assign genes from each locus instance to reference-based slots.
 
@@ -277,13 +343,18 @@ def assign_slots(
         contig_id, similarity, is_reference, is_insertion
     """
     # Precompute gene embeddings and metadata
-    genes = genes_df.copy()
-    genes = genes.sort_values(["sample_id", "contig_id", "start", "end"])
+    genes = genes_df.reset_index(drop=True).copy()
+    emb_matrix = _resolve_embedding_matrix(genes, embeddings)
+    sort_order = genes.sort_values(
+        ["sample_id", "contig_id", "start", "end"],
+        kind="stable",
+    ).index.to_numpy()
+    genes = genes.iloc[sort_order]
+    if not np.array_equal(sort_order, np.arange(len(genes), dtype=sort_order.dtype)):
+        emb_matrix = emb_matrix[sort_order]
     genes["position_index"] = genes.groupby(["sample_id", "contig_id"]).cumcount()
     genes = genes.reset_index(drop=True)
 
-    emb_cols = [c for c in genes.columns if c.startswith("emb_")]
-    emb_matrix = genes[emb_cols].values.astype(np.float32)
     gene_id_arr = genes["gene_id"].values
     sample_arr = genes["sample_id"].values
     contig_arr = genes["contig_id"].values
@@ -314,8 +385,7 @@ def assign_slots(
         loci_by_cluster[cid].append(i)
 
     # Helper to gather embeddings for a position range
-    n_emb = len(emb_cols)
-    zero_emb = np.zeros(n_emb, dtype=np.float32)
+    n_emb = emb_matrix.shape[1]
 
     def _gather_embs(genome, contig, positions):
         """Vectorized embedding gather for a list of positions."""
@@ -328,8 +398,10 @@ def assign_slots(
                 embs[j] = emb_matrix[row_idx]
                 gids.append(gene_id_arr[row_idx])
             else:
-                embs[j] = zero_emb
-                gids.append(f"MISSING_{genome}_{contig}_{positions[j]}")
+                raise ValueError(
+                    "Architecture locus references a missing gene position: "
+                    f"{genome}:{contig}:{positions[j]}"
+                )
         return embs, gids
 
     all_assignments = []
@@ -354,8 +426,10 @@ def assign_slots(
         n_slots = len(ref_positions)
 
         ref_embs, ref_gene_ids = _gather_embs(ref_genome, ref_contig, ref_positions)
-        ref_norms = np.linalg.norm(ref_embs, axis=1, keepdims=True)
-        ref_embs_normed = ref_embs / (ref_norms + 1e-9)
+        ref_embs_normed = _normalize_embedding_rows(
+            ref_embs,
+            context=f"cluster {cid} reference locus {ref_lid}",
+        )
 
         # Add reference assignments
         for slot_idx in range(n_slots):
@@ -390,10 +464,16 @@ def assign_slots(
             if len(positions) == 0:
                 continue
 
-            mem_norms = np.linalg.norm(mem_embs, axis=1, keepdims=True)
-            mem_embs_normed = mem_embs / (mem_norms + 1e-9)
+            mem_embs_normed = _normalize_embedding_rows(
+                mem_embs,
+                context=f"cluster {cid} locus {lid}",
+            )
 
-            sim_matrix = mem_embs_normed @ ref_embs_normed.T
+            sim_matrix = np.clip(
+                mem_embs_normed @ ref_embs_normed.T,
+                -1.0,
+                1.0,
+            )
 
             assignment = _monotonic_align(sim_matrix, n_slots)
 
@@ -596,6 +676,7 @@ def _find_insertion_slot(
 def compute_slot_summaries(
     assignments_df: pd.DataFrame,
     genes_df: pd.DataFrame,
+    embeddings: Optional[np.ndarray] = None,
 ) -> pd.DataFrame:
     """Compute per-slot summary statistics for each cluster.
 
@@ -607,8 +688,7 @@ def compute_slot_summaries(
         return pd.DataFrame()
 
     # Precompute embeddings: map gene_id -> row index for vectorized lookup
-    emb_cols = [c for c in genes_df.columns if c.startswith("emb_")]
-    emb_matrix = genes_df[emb_cols].values.astype(np.float32)
+    emb_matrix = _resolve_embedding_matrix(genes_df, embeddings)
     gene_ids_arr = genes_df["gene_id"].values
     gene_to_row = {}
     for i in range(len(genes_df)):
@@ -641,9 +721,10 @@ def compute_slot_summaries(
             emb_stack = emb_matrix[valid_rows]
             valid_gene_ids = grp["gene_id"].values[valid]
 
-            # Normalize
-            norms = np.linalg.norm(emb_stack, axis=1, keepdims=True)
-            emb_normed = emb_stack / (norms + 1e-9)
+            emb_normed = _normalize_embedding_rows(
+                emb_stack,
+                context=f"cluster {cid} slot {slot_idx}",
+            )
 
             # Centroid
             centroid = emb_normed.mean(axis=0)
@@ -652,7 +733,7 @@ def compute_slot_summaries(
                 centroid /= centroid_norm
 
             # Dispersion: 1 - mean cosine similarity to centroid
-            cosines = emb_normed @ centroid
+            cosines = np.clip(emb_normed @ centroid, -1.0, 1.0)
             dispersion = float(1.0 - cosines.mean())
 
             # Centroid gene: closest to centroid
@@ -693,7 +774,7 @@ def _estimate_n_types(emb_normed: np.ndarray, threshold: float = 0.4) -> int:
     if n < 3:
         return 1
 
-    sim_matrix = emb_normed @ emb_normed.T
+    sim_matrix = np.clip(emb_normed @ emb_normed.T, -1.0, 1.0)
     tril_idx = np.tril_indices(n, k=-1)
     pairwise_sims = sim_matrix[tril_idx]
 
@@ -776,6 +857,7 @@ def run_schema_pipeline(
     output_dir: Path,
     min_cluster_size: int = 3,
     max_slots: int = 50,
+    embeddings: Optional[np.ndarray] = None,
 ) -> Dict[str, Path]:
     """Run the full cluster architecture schema pipeline.
 
@@ -830,13 +912,23 @@ def run_schema_pipeline(
 
     # Stage 4: Slot assignment
     _log(f"[Schema] Assigning slots for {len(ref_loci)} clusters...")
-    assignments_df = assign_slots(loci_df, genes_df, ref_loci, filtered_blocks)
+    assignments_df = assign_slots(
+        loci_df,
+        genes_df,
+        ref_loci,
+        filtered_blocks,
+        embeddings=embeddings,
+    )
     assignments_path = output_dir / "cluster_slot_assignments.parquet"
     assignments_df.to_parquet(assignments_path, index=False)
 
     # Stage 5: Slot summaries
     _log("[Schema] Computing slot summaries...")
-    slots_df = compute_slot_summaries(assignments_df, genes_df)
+    slots_df = compute_slot_summaries(
+        assignments_df,
+        genes_df,
+        embeddings=embeddings,
+    )
     slots_path = output_dir / "cluster_slots.parquet"
     slots_df.to_parquet(slots_path, index=False)
 

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Tuple, Any, List
 
@@ -72,7 +73,8 @@ class SyntenyStore:
 
         # Canonical sort order (same as pipeline)
         genes_df = genes_df.sort_values(
-            ["sample_id", "contig_id", "start", "end"]
+            ["sample_id", "contig_id", "start", "end"],
+            kind="stable",
         ).reset_index(drop=True)
 
         embeddings = genes_df[emb_cols].values.astype(np.float32)
@@ -88,6 +90,8 @@ class SyntenyStore:
         np.save(store.embeddings_path, embeddings)
 
         config = {
+            "schema_version": 1,
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "dim": int(embeddings.shape[1]),
             "n_vectors": int(embeddings.shape[0]),
             "nprobe": nprobe,
@@ -133,7 +137,7 @@ class SyntenyStore:
             store._index.nprobe = store._config.get("nprobe", 32)
 
         store._metadata = pd.read_parquet(store.metadata_path)
-        store._embeddings = np.load(store.embeddings_path)
+        store._embeddings = np.load(store.embeddings_path, mmap_mode="r")
 
         print(
             f"[Store] Loaded {store.store_dir}: "
@@ -189,7 +193,8 @@ class SyntenyStore:
 
         # Re-sort to canonical order
         sort_idx = combined_meta.sort_values(
-            ["sample_id", "contig_id", "start", "end"]
+            ["sample_id", "contig_id", "start", "end"],
+            kind="stable",
         ).index.values
         combined_meta = combined_meta.iloc[sort_idx].reset_index(drop=True)
         combined_emb = combined_emb[sort_idx]
@@ -239,6 +244,10 @@ class SyntenyStore:
         emb_cols = self._config["emb_cols"]
         emb_df = pd.DataFrame(self._embeddings, columns=emb_cols)
         return pd.concat([self._metadata.reset_index(drop=True), emb_df], axis=1)
+
+    def get_metadata_df(self, *, copy: bool = True) -> pd.DataFrame:
+        """Return gene metadata in the exact coordinate-rank order used by ELSA."""
+        return self._metadata.copy() if copy else self._metadata
 
     @property
     def genomes(self) -> List[str]:

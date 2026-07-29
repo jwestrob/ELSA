@@ -324,7 +324,10 @@ def _initialize_schema(connection: duckdb.DuckDBPyConnection) -> None:
             source_metadata_present BOOLEAN NOT NULL DEFAULT FALSE,
             reported_size BIGINT,
             reported_genome_support BIGINT,
-            reported_mean_chain_length DOUBLE
+            reported_mean_chain_length DOUBLE,
+            truncated_locus_count BIGINT,
+            locus_size_median DOUBLE,
+            locus_size_iqr DOUBLE
         );
 
         CREATE TABLE IF NOT EXISTS elsa_cluster_loci (
@@ -341,7 +344,9 @@ def _initialize_schema(connection: duckdb.DuckDBPyConnection) -> None:
             start_protein_id VARCHAR,
             end_protein_id VARCHAR,
             n_genes BIGINT NOT NULL,
-            block_support BIGINT NOT NULL
+            block_support BIGINT NOT NULL,
+            truncated_start BOOLEAN,
+            truncated_end BOOLEAN
         );
 
         CREATE TABLE IF NOT EXISTS elsa_cluster_members (
@@ -360,6 +365,20 @@ def _initialize_schema(connection: duckdb.DuckDBPyConnection) -> None:
         );
         """
     )
+    # Additive columns for sidecars created before they existed. These carry
+    # defaults, so a sidecar written by an older ELSA stays readable and simply
+    # reports zero truncation until its run is re-materialized.
+    for table, column, spec in (
+        ("elsa_cluster_loci", "truncated_start", "BOOLEAN"),
+        ("elsa_cluster_loci", "truncated_end", "BOOLEAN"),
+        ("elsa_clusters", "truncated_locus_count", "BIGINT"),
+        ("elsa_clusters", "locus_size_median", "DOUBLE"),
+        ("elsa_clusters", "locus_size_iqr", "DOUBLE"),
+    ):
+        connection.execute(
+            f"ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {column} {spec}"
+        )
+
     connection.execute(
         """
         INSERT OR IGNORE INTO elsa_schema_version
@@ -841,7 +860,10 @@ def _materialize_run(
             reported.source_cluster_id IS NOT NULL,
             reported.reported_size,
             reported.reported_genome_support,
-            reported.reported_mean_chain_length
+            reported.reported_mean_chain_length,
+            NULL,
+            NULL,
+            NULL
         FROM source_blocks AS blocks
         JOIN support USING (cluster_key)
         LEFT JOIN reported
@@ -859,7 +881,12 @@ def _materialize_run(
     connection.execute(
         """
         INSERT INTO elsa_cluster_loci
-        WITH half_loci AS (
+        WITH contig_extent AS (
+            SELECT genome_id, contig_id, MAX(position_index) AS last_position_index
+            FROM source_gene_positions
+            GROUP BY genome_id, contig_id
+        ),
+        half_loci AS (
             SELECT
                 cluster_key, block_id, query_genome AS genome_id,
                 query_contig AS contig_id, query_start AS start_idx,
@@ -933,8 +960,13 @@ def _materialize_run(
             start_gene.protein_id,
             end_gene.protein_id,
             indexed.end_idx - indexed.start_idx + 1,
-            indexed.block_support
+            indexed.block_support,
+            indexed.start_idx = 0,
+            indexed.end_idx = contig_extent.last_position_index
         FROM indexed
+        JOIN contig_extent
+          ON contig_extent.genome_id = indexed.genome_id
+         AND contig_extent.contig_id = indexed.contig_id
         LEFT JOIN source_gene_positions AS start_gene
           ON start_gene.genome_id = indexed.genome_id
          AND start_gene.contig_id = indexed.contig_id
@@ -997,26 +1029,58 @@ def _materialize_run(
         SET
             locus_count = counts.locus_count,
             member_count = counts.member_count,
-            anchor_member_count = counts.anchor_member_count
+            anchor_member_count = counts.anchor_member_count,
+            truncated_locus_count = counts.truncated_locus_count,
+            locus_size_median = counts.locus_size_median,
+            locus_size_iqr = counts.locus_size_iqr
         FROM (
+            WITH membership AS (
+                SELECT
+                    loci.run_id,
+                    loci.cluster_key,
+                    COUNT(DISTINCT loci.locus_key) AS locus_count,
+                    COUNT(DISTINCT members.protein_id) AS member_count,
+                    COUNT(DISTINCT members.protein_id)
+                        FILTER (WHERE members.member_role = 'anchor')
+                        AS anchor_member_count
+                FROM elsa_cluster_loci AS loci
+                LEFT JOIN elsa_cluster_members AS members
+                  ON members.run_id = loci.run_id
+                 AND members.locus_key = loci.locus_key
+                WHERE loci.run_id = ?
+                GROUP BY loci.run_id, loci.cluster_key
+            ),
+            -- Locus-grain statistics must not be computed across the member
+            -- join, which repeats each locus once per member protein.
+            locus_shape AS (
+                SELECT
+                    run_id,
+                    cluster_key,
+                    COUNT(*) FILTER (WHERE truncated_start OR truncated_end)
+                        AS truncated_locus_count,
+                    MEDIAN(n_genes) AS locus_size_median,
+                    quantile_cont(n_genes, 0.75)
+                        - quantile_cont(n_genes, 0.25) AS locus_size_iqr
+                FROM elsa_cluster_loci
+                WHERE run_id = ?
+                GROUP BY run_id, cluster_key
+            )
             SELECT
-                loci.run_id,
-                loci.cluster_key,
-                COUNT(DISTINCT loci.locus_key) AS locus_count,
-                COUNT(DISTINCT members.protein_id) AS member_count,
-                COUNT(DISTINCT members.protein_id)
-                    FILTER (WHERE members.member_role = 'anchor') AS anchor_member_count
-            FROM elsa_cluster_loci AS loci
-            LEFT JOIN elsa_cluster_members AS members
-              ON members.run_id = loci.run_id
-             AND members.locus_key = loci.locus_key
-            WHERE loci.run_id = ?
-            GROUP BY loci.run_id, loci.cluster_key
+                membership.run_id,
+                membership.cluster_key,
+                membership.locus_count,
+                membership.member_count,
+                membership.anchor_member_count,
+                locus_shape.truncated_locus_count,
+                locus_shape.locus_size_median,
+                locus_shape.locus_size_iqr
+            FROM membership
+            JOIN locus_shape USING (run_id, cluster_key)
         ) AS counts
         WHERE clusters.run_id = counts.run_id
           AND clusters.cluster_key = counts.cluster_key
         """,
-        [run_id],
+        [run_id, run_id],
     )
 
     missing_endpoints = int(

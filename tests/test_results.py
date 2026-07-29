@@ -316,3 +316,91 @@ def test_gene_map_preserves_exact_store_row_order_for_coordinate_ties(
         """
     ).fetchall()
     assert positions == [("a_z", 0), ("a_a", 1), ("a_m", 2)]
+
+
+def test_loci_flag_contig_edge_truncation(tmp_path):
+    """Loci abutting a contig boundary are marked, so assembly gaps are not read
+    as biology.
+
+    Every fixture contig holds 5 genes at positions 0-4. Blocks 10/11 span
+    positions 1-3, entirely interior. Block 12 spans 0-1, so it begins exactly at
+    the contig start and its true extent upstream is unknown.
+    """
+    path = tmp_path / "synteny.duckdb"
+    materialize_result_store(
+        path,
+        blocks=_blocks(),
+        genes=_genes(),
+        manifest=_manifest(),
+    )
+
+    connection = duckdb.connect(str(path), read_only=True)
+
+    interior = connection.execute(
+        """
+        SELECT truncated_start, truncated_end
+        FROM elsa_cluster_loci
+        WHERE cluster_key = 'cluster:4' AND contig_id = 'contig_a'
+        """
+    ).fetchall()
+    assert interior == [(False, False)]
+
+    edge = connection.execute(
+        """
+        SELECT contig_id, start_position_index, end_position_index,
+               truncated_start, truncated_end
+        FROM elsa_cluster_loci
+        WHERE cluster_key = 'singleton:12'
+        ORDER BY contig_id
+        """
+    ).fetchall()
+    assert edge == [
+        ("contig_b", 0, 1, True, False),
+        ("contig_c", 0, 1, True, False),
+    ]
+
+    counts = dict(
+        connection.execute(
+            """
+            SELECT cluster_key, truncated_locus_count
+            FROM elsa_clusters
+            """
+        ).fetchall()
+    )
+    assert counts == {"cluster:4": 0, "singleton:12": 2}
+    connection.close()
+
+
+def test_cluster_locus_shape_is_locus_grained(tmp_path):
+    """Locus size statistics must not be weighted by member protein count.
+
+    cluster:4 holds three loci of 3 genes each; a member-join would repeat each
+    locus once per protein and still report 3, so the singleton is the
+    discriminating case: two loci of 2 genes against 4 member proteins.
+    """
+    path = tmp_path / "synteny.duckdb"
+    materialize_result_store(
+        path,
+        blocks=_blocks(),
+        genes=_genes(),
+        manifest=_manifest(),
+    )
+
+    connection = duckdb.connect(str(path), read_only=True)
+    shape = dict(
+        connection.execute(
+            """
+            SELECT cluster_key, locus_size_median
+            FROM elsa_clusters
+            """
+        ).fetchall()
+    )
+    assert shape == {"cluster:4": 3.0, "singleton:12": 2.0}
+
+    spread = connection.execute(
+        """
+        SELECT locus_size_iqr FROM elsa_clusters WHERE cluster_key = 'cluster:4'
+        """
+    ).fetchone()[0]
+    assert spread == 0.0
+    connection.close()

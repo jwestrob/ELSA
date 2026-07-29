@@ -156,6 +156,20 @@ class EmbeddingTransform:
         detail = ", ".join(f"{k}={v}" for k, v in sorted(self.params.items()))
         return f"{self.kind}({detail})" if detail else self.kind
 
+    @property
+    def dim(self) -> Optional[int]:
+        """Input dimension this transform was fitted for, or None if it is free.
+
+        Only ``raw`` is dimension-free. Every other kind carries a fitted array
+        whose trailing axis pins the input width, and applying it to vectors of
+        another width is a mistake worth catching at the boundary rather than in
+        a matmul several frames down.
+        """
+        for key in ("mean", "direction"):
+            if key in self.state:
+                return int(np.asarray(self.state[key]).shape[-1])
+        return None
+
 
 # ---------------------------------------------------------------------------
 # Fitting

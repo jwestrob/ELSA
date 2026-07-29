@@ -64,6 +64,7 @@ class ProjectionSystem:
         self.scaler_path = self.ingest_dir / "scaler.pkl"
         self.genes_parquet_path = self.ingest_dir / "genes.parquet"
         self.raw_embeddings_path = self.ingest_dir / "genes_raw.parquet"
+        self.transform_model_path = self.ingest_dir / "embedding_transform.npz"
 
         # Models
         self.pca_model = None
@@ -86,7 +87,13 @@ class ProjectionSystem:
         return getattr(self.config, "embedding_transform", "none") or "none"
 
     def _load_or_fit_transform(self, matrix):
-        """Return the fitted post-processing transform, or None."""
+        """Return the fitted post-processing transform, or None.
+
+        A dataset-fitted transform is written to ``ingest/embedding_transform.npz``.
+        That file is what makes the space reproducible: a query embedded later has
+        to enter the same space as the index it searches, and a transform fitted
+        on this corpus cannot be re-derived from a handful of query proteins.
+        """
         from .transform import EmbeddingTransform, fit_transform
 
         kind = self.transform_kind
@@ -99,13 +106,15 @@ class ProjectionSystem:
                 raise FileNotFoundError(f"transform_path does not exist: {resolved}")
             transform = EmbeddingTransform.load(resolved)
             console.print(f"Loaded frozen transform {transform.describe()} from {resolved}")
-            return transform
-        console.print(f"Fitting {kind} transform on this dataset...")
-        return fit_transform(
-            kind, matrix,
-            k=getattr(self.config, "transform_k", 2),
-            alpha=getattr(self.config, "transform_alpha", 0.1),
-        )
+        else:
+            console.print(f"Fitting {kind} transform on this dataset...")
+            transform = fit_transform(
+                kind, matrix,
+                k=getattr(self.config, "transform_k", 2),
+                alpha=getattr(self.config, "transform_alpha", 0.1),
+            )
+        transform.save(self.transform_model_path)
+        return transform
 
     def fit_projection(self, embeddings: List[ProteinEmbedding],
                       subsample_size: int = 50000) -> None:

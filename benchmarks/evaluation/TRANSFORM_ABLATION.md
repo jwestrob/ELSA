@@ -200,18 +200,38 @@ The threshold must be recalibrated with it. Absolute cosines are not comparable
 across spaces: quantile-matched thresholds here are 0.86 raw against 0.29
 soft-ZCA, so carrying 0.85 across would retain nearly everything.
 
+### Resolved since the plan
+
+- **The query path now enters the indexed space.** `elsa/search.py` applied no
+  transform, so a query was scored against vectors from another space —
+  well-formed cosines, confidently wrong neighbours. A dataset-fitted transform
+  is now persisted to `ingest/embedding_transform.npz` at embed time and loaded
+  at query time; a config that requests a transform against an index built
+  without one raises rather than guessing.
+
+- **Re-normalisation is not a confound.** The plan flagged five unconditional
+  re-normalisation points as flattening magnitude-dependent transforms. ELSA
+  retrieves with `METRIC_INNER_PRODUCT` over L2-normalised vectors, which is
+  cosine, and cosine is invariant to per-vector scaling. Measured directly: with
+  post-whitening norms spread 6.6–10.2, top-10 neighbour lists are identical and
+  the largest cosine difference is exactly 0. No change needed.
+
 ### Open
 
 - **External fit arm.** All transforms are fitted in-corpus on a held-out split.
-  The deployable form fits once on a reference corpus at the target dimension;
-  the generalisation gap is unmeasured.
+  The deployable form fits once on a reference corpus at the target dimension,
+  and the generalisation gap is unmeasured.
+
+  This arm carries a specific risk rather than only an unknown. Soft-ZCA
+  suppresses the directions its fit corpus is spread along, so a corpus spread
+  along different directions comes back **more** anisotropic than raw — measured
+  on synthetic geometries and pinned in
+  `tests/test_transform_wiring.py::test_whitening_fitted_on_a_different_geometry_makes_things_worse`.
+  A frozen transform is safe on corpora resembling its fit corpus, so the
+  external arm has to report the gap on a corpus deliberately unlike the fit set.
+
 - **Threshold calibration.** Quantile matching makes arms comparable and does
   not produce a recommended default for the transformed space.
-- **`elsa/search.py` ignores frozen transforms** — a query would be embedded in a
-  different space from the index it searches.
-- **Five defensive re-normalisation points** (`projection.py:214`,
-  `adapter.py:373`, `store.py:280`, `index.py:75`, `seed.py:107`) flatten any
-  magnitude-dependent transform and are unconditional.
 
 ---
 

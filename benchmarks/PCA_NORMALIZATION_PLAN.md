@@ -1,5 +1,24 @@
 # PCA & Normalization Technique Comparison
 
+> **Superseded — see `benchmarks/evaluation/TRANSFORM_ABLATION.md` (July 2026).**
+>
+> The result recorded here — seven treatments within ±0.3%, therefore projection
+> choice is immaterial — holds on near-clonal bacterial cohorts and fails on
+> divergent ones. On DPANN archaeal MAGs, soft-ZCA whitening moves retrieval AUC
+> 0.880 → 0.971 and recall at 5% FPR 0.581 → 0.912.
+>
+> Two defects explain the difference. This comparison scored operon span-recall
+> against a hard-coded fallback list that a whole-contig baseline scores 100% on
+> (`docs/BENCHMARK_AUDIT_HANDOFF_2026-07-19.md`), and every row reports strict
+> recall of exactly 12.4% — the signature of the `.faa` coordinate defect, where
+> WP_ accession headers carry no genomic positions. Underneath both, it was
+> measured on a corpus whose raw retrieval already sits at AUC 0.997, leaving no
+> headroom for any treatment to show, and generalised to corpora with a great
+> deal of headroom.
+>
+> The design below is sound and the ablation was re-run against it. The numbers
+> and the conclusion are the parts to discard.
+
 ## Goal
 
 Find the optimal embedding projection for ELSA's synteny detection pipeline.

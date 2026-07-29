@@ -72,7 +72,18 @@ def build_gene_index(
     if n == 0:
         return ("empty", None)
 
-    # Normalize embeddings for cosine similarity
+    # Normalize embeddings for cosine similarity.
+    #
+    # This repeats work: the pipeline hands over vectors projection.py already
+    # L2-normalized, and find_cross_genome_anchors normalizes again on its own
+    # path, so the corpus is divided through twice and a second full copy
+    # (4.3 GB at DPANN scale) is allocated to produce roughly the array we were
+    # given. Skipping it when the input is already unit-length was measured and
+    # rejected: it saves 5.6s of an 858s run, and real embeddings arrive at
+    # norms of 0.99974-1.00026, so the guard only fires with a tolerance loose
+    # enough to change retrieval at the last ulp and reorder tied neighbours.
+    # Perturbing every downstream number to save 0.65% is not a trade worth
+    # making; revisit if the index build ever dominates.
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True)
     normalized = embeddings / (norms + 1e-9)
 

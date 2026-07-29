@@ -34,7 +34,19 @@ class PLMConfig(BaseModel):
     fp16: bool = Field(default=True, description="Use half precision")
     project_to_D: int = Field(default=0, description="PCA target dimension (0 = skip PCA, use raw embeddings)")
     l2_normalize: bool = Field(default=True, description="L2 normalize embeddings")
-    frozen_pca_path: Optional[str] = Field(default=None, description="Path to pre-fitted PCA model (e.g. from UniRef50). Skips per-dataset PCA fitting.")
+    frozen_pca_path: Optional[str] = Field(default=None, description="Deprecated alias for transform_path; a pre-fitted sklearn PCA pickle")
+
+    # Embedding post-processing. Mean-pooled PLM embeddings are strongly
+    # anisotropic — raw ESM2 measures ||mu|| ~ 0.92 across every corpus tested,
+    # meaning ~87% of each vector is one shared direction and a cosine mostly
+    # reports a constant. A fitted transform corrects this. Unlike project_to_D
+    # these need not change dimensionality, so they stay active when it is 0.
+    embedding_transform: Literal[
+        "none", "r1_center", "r2_project", "abtt", "soft_zca", "pca_whiten",
+    ] = Field(default="none", description="Post-processing applied to embeddings before indexing")
+    transform_path: Optional[str] = Field(default=None, description="Path to a fitted transform (.npz from elsa.transform). Fitted per-dataset when absent.")
+    transform_k: int = Field(default=2, description="Directions removed when embedding_transform=abtt")
+    transform_alpha: float = Field(default=0.1, description="Shrinkage when embedding_transform=soft_zca; 0 is full ZCA whitening, 1 is none")
 
     @field_validator("batch_amino_acids")
     @classmethod
@@ -87,9 +99,14 @@ class ChainConfig(BaseModel):
     # Gap penalty (Phase 2 feature)
     gap_penalty_scale: float = Field(default=0.0, description="Concave gap penalty scale (0 = disabled)")
 
+    # Seed-and-extend: recover adjacencies that top-k retrieval cannot see
+    extend_anchors: bool = Field(default=False, description="Recover collinear anchors missed by top-k retrieval (helps cohorts larger than hnsw_k)")
+    anchor_extend_radius: int = Field(default=2, description="Neighbour offsets probed on each side of a seed anchor")
+    anchor_extend_threshold: float = Field(default=0.953, description="Minimum cosine for a recovered adjacency (calibrated to ~5% false-positive rate)")
+
     # Clustering
-    jaccard_tau: float = Field(default=0.3, description="Minimum Jaccard similarity for overlap clustering")
-    mutual_k: int = Field(default=5, description="Mutual top-k parameter for clustering")
+    jaccard_tau: float = Field(default=0.9, description="Minimum shared-side interval Jaccard for overlap clustering (1.0 = identical interval)")
+    mutual_k: int = Field(default=0, description="Mutual top-k edge sparsification for clustering (0 = disabled)")
     df_max: int = Field(default=500, description="Maximum document frequency")
     min_genome_support: int = Field(default=2, description="Minimum genomes per cluster")
 

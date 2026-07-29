@@ -21,7 +21,8 @@ import numpy as np
 import pandas as pd
 
 from ..index import build_gene_index
-from ..seed import find_cross_genome_anchors, group_anchors_by_contig_pair
+from ..seed import (find_cross_genome_anchors, group_anchors_by_contig_pair,
+                    extend_anchor_adjacencies)
 from ..chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains, extract_nonoverlapping_chains_df, chain_groups_batched
 from ..cluster import cluster_blocks_by_overlap, merge_contained_clusters
 from .._log import tlog as _log
@@ -52,8 +53,11 @@ class ChainConfig:
     max_gap_genes: int = 2
     min_chain_size: int = 2
     gap_penalty_scale: float = 0.0
-    jaccard_tau: float = 0.3
-    mutual_k: int = 5
+    extend_anchors: bool = False
+    anchor_extend_radius: int = 2
+    anchor_extend_threshold: float = 0.953
+    jaccard_tau: float = 0.9
+    mutual_k: int = 0
     df_max: int = 500
     min_genome_support: int = 2
     n_jobs: Optional[int] = None
@@ -203,6 +207,9 @@ def run_chain_pipeline(
             _presorted=True,
             checkpoint_dir=output_dir,
             n_jobs=config.n_jobs,
+            extend_anchors=config.extend_anchors,
+            anchor_extend_radius=config.anchor_extend_radius,
+            anchor_extend_threshold=config.anchor_extend_threshold,
         )
 
         # Free search embeddings; schema reopens a memory-mapped source later.
@@ -531,6 +538,9 @@ def _run_gene_chaining(
     _presorted: bool = False,
     checkpoint_dir: Optional[Path] = None,
     n_jobs: Optional[int] = None,
+    extend_anchors: bool = False,
+    anchor_extend_radius: int = 2,
+    anchor_extend_threshold: float = 0.953,
 ) -> pd.DataFrame:
     """Complete gene-level chaining pipeline (internal).
 
@@ -594,6 +604,20 @@ def _run_gene_chaining(
                                             k=hnsw_k,
                                             similarity_threshold=similarity_threshold,
                                             n_jobs=n_jobs)
+
+        if extend_anchors:
+            _log(f"[GeneChain] Extending anchors (radius={anchor_extend_radius}, "
+                 f"threshold={anchor_extend_threshold})...")
+            extra = extend_anchor_adjacencies(
+                anchors, embeddings, gene_info,
+                similarity_threshold=anchor_extend_threshold,
+                max_radius=anchor_extend_radius,
+                min_chain_size=min_chain_size,
+            )
+            if len(extra) > 0:
+                anchors = pd.concat([anchors, extra], ignore_index=True)
+                _log(f"[GeneChain] {len(anchors):,} anchors after extension")
+            del extra
 
         # Free large arrays no longer needed — critical for large datasets
         del embeddings, gene_info, index

@@ -1294,5 +1294,47 @@ def _load_genes_from_sources(
     return genes_df
 
 
+@main.command()
+@click.option("--result-db", required=True, type=click.Path(exists=True, dir_okay=False),
+              help="Materialized result sidecar to serve")
+@click.option("--annotations", type=click.Path(exists=True, dir_okay=False), default=None,
+              help="Sharur database supplying domain labels, joined on exact protein IDs")
+@click.option("--store", type=click.Path(exists=True, file_okay=False), default=None,
+              help="SyntenyStore directory; enables exact per-anchor cosine so the "
+                   "diagram's similarity threshold filters on real values")
+@click.option("--host", default="127.0.0.1", show_default=True)
+@click.option("--port", default=8600, show_default=True, type=int)
+def serve(result_db, annotations, store, host, port):
+    """Serve a materialized run over HTTP for humans and agents.
+
+    The same routes back the browser page and the machine-readable API, so a
+    figure and an agent's answer come from one producer. Schema at /docs.
+    """
+    import uvicorn
+    from .serve.api import Settings, create_app
+
+    settings = Settings(
+        result_db=Path(result_db),
+        annotations_db=Path(annotations) if annotations else None,
+        store_dir=Path(store) if store else (
+            Path(os.environ["ELSA_STORE_DIR"])
+            if os.environ.get("ELSA_STORE_DIR")
+            and Path(os.environ["ELSA_STORE_DIR"]).is_dir() else None
+        ),
+    )
+    click.echo(f"Serving {settings.result_db}")
+    if settings.annotations_db:
+        click.echo(f"Annotations from {settings.annotations_db}")
+    else:
+        click.echo("No annotation database; diagrams render without domain labels")
+    if settings.store_dir:
+        click.echo(f"Store {settings.store_dir} (exact per-anchor cosine)")
+    else:
+        click.echo("No store; edge similarity falls back to block mean chain score")
+    click.echo(f"  page  http://{host}:{port}/")
+    click.echo(f"  API   http://{host}:{port}/docs")
+    uvicorn.run(create_app(settings), host=host, port=port, log_level="warning")
+
+
 if __name__ == "__main__":
     main()

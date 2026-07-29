@@ -1,0 +1,286 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>ELSA results</title>
+<style>
+  :root {
+    --bg: #fbfbfa; --panel: #fff; --ink: #1c1d1f; --muted: #6b6f76;
+    --line: #e3e4e8; --accent: #2f5d50; --warn: #8a5a1d; --warn-bg: #fdf6ec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16171a; --panel: #1e2024; --ink: #e8e9ec; --muted: #9aa0a8;
+      --line: #2c2f35; --accent: #7fb8a4; --warn: #d9a24a; --warn-bg: #2a2418;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 14px/1.5 ui-sans-serif, -apple-system, "Segoe UI", sans-serif; }
+  header { padding: 18px 24px; border-bottom: 1px solid var(--line);
+           display: flex; gap: 20px; align-items: baseline; flex-wrap: wrap; }
+  h1 { font-size: 16px; margin: 0; font-weight: 620; letter-spacing: -0.01em; }
+  .run { color: var(--muted); font-size: 12.5px; font-variant-numeric: tabular-nums; }
+  main { display: grid; grid-template-columns: minmax(340px, 420px) 1fr; gap: 0;
+         height: calc(100vh - 61px); }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; height: auto; } }
+  #list { border-right: 1px solid var(--line); overflow-y: auto; padding: 14px; }
+  #detail { overflow-y: auto; padding: 20px 24px; }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  select, button { font: inherit; padding: 5px 9px; border: 1px solid var(--line);
+                   border-radius: 6px; background: var(--panel); color: var(--ink); }
+  button { cursor: pointer; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 9px;
+          padding: 11px 13px; margin-bottom: 9px; cursor: pointer; }
+  .card:hover { border-color: var(--accent); }
+  .card.on { border-color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+  .key { font-weight: 600; font-size: 13.5px; }
+  .line { color: var(--muted); font-size: 12.5px; margin-top: 3px;
+          font-variant-numeric: tabular-nums; }
+  .tags { margin-top: 7px; display: flex; gap: 5px; flex-wrap: wrap; }
+  .tag { font-size: 11px; padding: 1.5px 7px; border-radius: 999px;
+         border: 1px solid var(--line); color: var(--muted); }
+  .tag.ev-strong, .tag.ev-very_strong { color: var(--accent); border-color: var(--accent); }
+  .tag.ev-minimal { color: var(--warn); border-color: var(--warn); }
+  .tag.trunc { color: var(--warn); border-color: var(--warn); }
+  .caveats { background: var(--warn-bg); border: 1px solid var(--line);
+             border-left: 3px solid var(--warn); border-radius: 7px;
+             padding: 10px 13px; margin: 14px 0; }
+  .caveats h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase;
+                letter-spacing: 0.06em; color: var(--warn); }
+  .caveats li { font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+  iframe { width: 100%; border: 1px solid var(--line); border-radius: 9px;
+           background: var(--panel); }
+  .empty { color: var(--muted); padding: 40px 0; text-align: center; }
+  code { font-size: 12px; background: var(--panel); border: 1px solid var(--line);
+         border-radius: 4px; padding: 1px 5px; }
+</style>
+
+<header>
+  <h1>ELSA results</h1>
+  <span class="run" id="run">loading…</span>
+  <span class="run" style="margin-left:auto"><a href="/docs" style="color:var(--accent)">API</a></span>
+</header>
+
+<main>
+  <div id="list">
+    <div class="controls" style="margin-bottom:8px">
+      <input id="q" placeholder="search domains (ribosomal) or genome/contig"
+             style="flex:1;min-width:180px;font:inherit;padding:5px 9px;
+                    border:1px solid var(--line);border-radius:6px;
+                    background:var(--panel);color:var(--ink)">
+      <select id="mode">
+        <option value="domain">domain</option>
+        <option value="genome">genome</option>
+        <option value="contig">contig</option>
+      </select>
+      <button id="go">search</button>
+      <button id="clear" title="back to ranked list">&times;</button>
+    </div>
+    <div class="controls">
+      <select id="tier">
+        <option value="">any evidence</option>
+        <option value="moderate">moderate+</option>
+        <option value="strong" selected>strong+</option>
+        <option value="very_strong">very strong</option>
+      </select>
+      <select id="support">
+        <option value="">any breadth</option>
+        <option value="5">&ge;5 genomes</option>
+        <option value="20" selected>&ge;20 genomes</option>
+        <option value="50">&ge;50 genomes</option>
+      </select>
+      <select id="limit">
+        <option>25</option><option selected>50</option><option>100</option>
+      </select>
+    </div>
+    <div id="overview" class="line" style="margin-bottom:10px"></div>
+    <div id="cards"><div class="empty">loading…</div></div>
+  </div>
+
+  <div id="detail"><div class="empty">Select a cluster.</div></div>
+</main>
+
+<script>
+const $ = s => document.querySelector(s);
+let active = null;
+
+async function json(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${r.status} ${await r.text()}`);
+  return r.json();
+}
+
+function fmtSupport(r) {
+  const extent = r.locus_size_median != null
+    ? `${Math.round(r.locus_size_median)}-gene locus`
+    : 'variable-length locus';
+  return `${extent} · ≥${r.genome_support} genomes · ${r.n_blocks.toLocaleString()} blocks`;
+}
+
+async function loadRun() {
+  const r = await json('/api/run');
+  $('#run').textContent =
+    `${r.run_id} · ${r.cluster_count.toLocaleString()} clusters · ` +
+    `${r.block_count.toLocaleString()} blocks` +
+    (r.annotations_attached ? ' · annotated' : ' · no annotations');
+}
+
+async function loadList() {
+  const p = new URLSearchParams({ limit: $('#limit').value });
+  if ($('#tier').value) p.set('tier', $('#tier').value);
+  if ($('#support').value) p.set('min_genome_support', $('#support').value);
+  $('#cards').innerHTML = '<div class="empty">loading…</div>';
+  const rows = await json('/api/clusters?' + p);
+  if (!rows.length) { $('#cards').innerHTML = '<div class="empty">Nothing at these filters.</div>'; return; }
+
+  $('#cards').innerHTML = '';
+  for (const r of rows) {
+    const el = document.createElement('div');
+    el.className = 'card';
+    const trunc = r.truncated_fraction != null && r.truncated_fraction > 0
+      ? `<span class="tag trunc">${Math.round(r.truncated_fraction * 100)}% truncated</span>` : '';
+    el.innerHTML =
+      `<div class="key">${r.cluster_key}</div>` +
+      `<div class="line">${fmtSupport(r)}</div>` +
+      `<div class="tags">` +
+        `<span class="tag ev-${r.evidence_tier}">${r.evidence_tier.replace('_', ' ')}</span>` +
+        `<span class="tag">${r.breadth_class}</span>` +
+        `<span class="tag">${r.n_loci} loci</span>${trunc}</div>`;
+    el.onclick = () => { document.querySelectorAll('.card').forEach(c => c.classList.remove('on'));
+                         el.classList.add('on'); showCluster(r); };
+    $('#cards').appendChild(el);
+  }
+}
+
+async function showCluster(r) {
+  active = r.cluster_key;
+  const caveats = r.caveats.map(c => `<li>${c}</li>`).join('');
+  $('#detail').innerHTML =
+    `<h2 style="margin:0 0 4px;font-size:17px">${r.cluster_key}</h2>` +
+    `<div class="line">${fmtSupport(r)} · ${r.evidence_tier.replace('_', ' ')} evidence · ` +
+    `${r.mean_anchor_count == null ? '?' : r.mean_anchor_count.toFixed(1)} anchors per block</div>` +
+    (caveats ? `<div class="caveats"><h3>Read with</h3><ul>${caveats}</ul></div>` : '') +
+    `<div id="diagram"><div class="empty">rendering…</div></div>`;
+
+  const detail = await json(`/api/cluster/${encodeURIComponent(r.cluster_key)}?max_loci=8`);
+  if (active !== r.cluster_key) return;   // a later click won the race
+
+  const note = detail.annotated_fraction != null
+    ? `<div class="line" style="margin-bottom:8px">domains on ` +
+      `${Math.round(detail.annotated_fraction * 100)}% of genes · ` +
+      `edge similarity is <code>${detail.similarity_source}</code></div>` : '';
+  // The slider steps through the observed cosines rather than a linear span of
+  // their range. Even centred, a conserved cluster's anchors bunch near 1.0, so
+  // a linear track leaves most positions doing nothing. Walking the sorted
+  // values means every step removes roughly the same number of connections.
+  const cosSorted = (detail.edges || [])
+    .map(e => e.cos).filter(v => v != null).sort((a, b) => a - b);
+  const nEdges = cosSorted.length;
+  const cosAt = i => nEdges ? cosSorted[Math.min(nEdges - 1, Math.max(0, i))] : 0;
+
+  $('#diagram').innerHTML = note +
+    `<div class="line" style="margin:6px 0 8px">cosine \u03C4 ` +
+    `<input id="tau" type="range" min="0" max="${Math.max(0, nEdges - 1)}" step="1" ` +
+    `value="0" style="vertical-align:middle;width:220px"> ` +
+    `<span id="taulbl"></span> ` +
+    `<span style="color:var(--muted)">of ${nEdges} connections` +
+    (detail.similarity_source ? ` \u00b7 <code>${detail.similarity_source}</code>` : '') +
+    `</span></div>` +
+    `<div id="frameholder"></div>` +
+    `<h3 style="margin:20px 0 6px;font-size:14px">Consensus architecture</h3>` +
+    `<div class="line" style="margin-bottom:6px">present in \u2265 ` +
+    `<input id="cov" type="range" min="0.1" max="1" step="0.05" value="0.5" ` +
+    `style="vertical-align:middle;width:120px"> <span id="covlbl">50%</span> of loci</div>` +
+    `<div id="consensusholder"></div>`;
+
+  function tauLabel(i) {
+    const tau = cosAt(i);
+    const kept = nEdges - i;
+    $('#taulbl').textContent = `\u2265 ${tau.toFixed(3)} \u2014 ${kept} drawn`;
+    return tau;
+  }
+
+  function drawFrame(tau) {
+    $('#frameholder').innerHTML =
+      `<iframe height="600" src="/api/cluster/${encodeURIComponent(r.cluster_key)}` +
+      `/diagram?max_loci=8&height=560&tau=${tau}"></iframe>`;
+  }
+  function drawConsensus(minCov) {
+    $('#covlbl').textContent = Math.round(minCov * 100) + '%';
+    $('#consensusholder').innerHTML =
+      `<iframe height="330" src="/api/cluster/${encodeURIComponent(r.cluster_key)}` +
+      `/consensus/diagram?max_loci=12&min_coverage=${minCov}&height=200"></iframe>`;
+  }
+
+  let tauTimer = null;
+  $('#tau').oninput = e => {
+    const tau = tauLabel(+e.target.value);       // label updates immediately
+    clearTimeout(tauTimer);                      // reload only once the drag settles
+    tauTimer = setTimeout(() => drawFrame(tau), 250);
+  };
+  $('#cov').oninput = e => drawConsensus(e.target.value);
+  tauLabel(0);
+  drawFrame(cosAt(0));
+  drawConsensus(0.5);
+}
+
+async function loadOverview() {
+  const o = await json('/api/overview');
+  const tiers = o.evidence_tiers || {};
+  const trunc = o.truncated_locus_fraction != null
+    ? ` · ${Math.round(o.truncated_locus_fraction * 100)}% of loci truncated` : '';
+  $('#overview').textContent =
+    `${o.n_clusters.toLocaleString()} clusters · ${o.n_genomes.toLocaleString()} genomes · ` +
+    `${(tiers.strong || 0) + (tiers.very_strong || 0)} strong` + trunc;
+}
+
+async function runSearch() {
+  const q = $('#q').value.trim();
+  if (!q) return loadList();
+  const mode = $('#mode').value;
+  const url = mode === 'domain'
+    ? `/api/search/domain?q=${encodeURIComponent(q)}&limit=${$('#limit').value}`
+    : `/api/search/locus?${mode}=${encodeURIComponent(q)}&limit=${$('#limit').value}`;
+  $('#cards').innerHTML = '<div class="empty">searching…</div>';
+  let rows;
+  try { rows = await json(url); }
+  catch (e) { $('#cards').innerHTML = `<div class="empty">${e}</div>`; return; }
+  if (!rows.length) { $('#cards').innerHTML = '<div class="empty">No match.</div>'; return; }
+
+  $('#cards').innerHTML = '';
+  for (const r of rows) {
+    const el = document.createElement('div');
+    el.className = 'card';
+    const hit = mode === 'domain'
+      ? `${r.n_matching_genes.toLocaleString()} genes · ${(r.domains || []).slice(0, 3).join(', ')}`
+      : `${r.n_matching_loci} matching loci`;
+    el.innerHTML =
+      `<div class="key">${r.cluster_key}</div>` +
+      `<div class="line">${fmtSupport(r)}</div>` +
+      `<div class="line" style="color:var(--accent)">${hit}</div>`;
+    // Search results carry no caveats, so fetch the full record before showing
+    // detail rather than rendering a card that silently omits its limits.
+    el.onclick = async () => {
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('on'));
+      el.classList.add('on');
+      const full = await json(`/api/clusters?limit=1&min_genome_support=${r.genome_support}`);
+      const rec = (full || []).find(x => x.cluster_key === r.cluster_key);
+      showCluster(rec || Object.assign({
+        caveats: ['record fetched from search; open the ranked list for full context'],
+        evidence_tier: 'unknown', breadth_class: '—', n_loci: r.n_matching_loci || 0,
+        mean_anchor_count: r.mean_anchor_count, truncated_fraction: null,
+      }, r));
+    };
+    $('#cards').appendChild(el);
+  }
+}
+
+$('#go').onclick = runSearch;
+$('#q').onkeydown = e => { if (e.key === 'Enter') runSearch(); };
+$('#clear').onclick = () => { $('#q').value = ''; loadList(); };
+for (const id of ['#tier', '#support', '#limit']) $(id).onchange = () => {
+  if (!$('#q').value.trim()) loadList(); else runSearch();
+};
+loadRun().catch(e => $('#run').textContent = String(e));
+loadOverview().catch(() => {});
+loadList().catch(e => $('#cards').innerHTML = `<div class="empty">${e}</div>`);
+</script>

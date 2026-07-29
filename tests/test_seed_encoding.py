@@ -86,3 +86,42 @@ def test_packed_key_stays_positive_at_the_guarded_limit():
     assert (packed > 0).all()
     np.testing.assert_array_equal(packed >> np.int64(32), lo)
     np.testing.assert_array_equal(packed & np.int64(0xFFFFFFFF), hi)
+
+
+# ---------------------------------------------------------------------------
+# Backend selection: 'auto' used to mean "spend 28% of the run on a graph"
+# ---------------------------------------------------------------------------
+
+def test_auto_prefers_ivfflat_at_scale():
+    """At DPANN scale an HNSW graph costs 253s against 9.1s for IVF-Flat, and
+    the two retrieve equivalently (recall@60 0.9916 vs 0.9913)."""
+    from elsa.index import _resolve_backend
+
+    assert _resolve_backend("auto", 3_395_472) == "faiss_ivfflat"
+    assert _resolve_backend("auto", 200_000) == "faiss_ivfflat"
+
+
+def test_auto_prefers_exact_search_on_small_corpora():
+    """Below the threshold an exact index builds faster *and* is exact, so
+    there is nothing an approximate one can win."""
+    from elsa.index import _resolve_backend
+
+    assert _resolve_backend("auto", 1_000) == "faiss_flat"
+    assert _resolve_backend("auto", 49_999) == "faiss_flat"
+
+
+def test_explicit_backend_is_never_overridden():
+    from elsa.index import _resolve_backend
+
+    for backend in ("hnsw", "faiss_flat", "faiss_ivfpq", "sklearn"):
+        assert _resolve_backend(backend, 5_000_000) == backend
+
+
+def test_pipeline_default_matches_the_validated_config():
+    """`ChainConfig` here is what the Python API and the benchmark scripts
+    construct; it drifted from params.py and silently selected hnswlib."""
+    from elsa.analyze.pipeline import ChainConfig
+    from elsa.params import ChainConfig as ValidatedChainConfig
+
+    assert ChainConfig().index_backend == ValidatedChainConfig().index_backend
+    assert ChainConfig().index_backend == "faiss_ivfflat"

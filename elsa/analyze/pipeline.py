@@ -43,7 +43,11 @@ class ChainSummary:
 @dataclass
 class ChainConfig:
     """Configuration for the chain pipeline (plain dataclass for CLI bridge)."""
-    index_backend: str = "auto"
+    # Matches PLMConfig/ChainConfig in params.py. "auto" used to resolve to
+    # hnswlib, which builds 27.8x slower than IVF-Flat at DPANN scale for
+    # equivalent recall, and this dataclass is what the Python API and every
+    # benchmark script construct by default.
+    index_backend: str = "faiss_ivfflat"
     faiss_nprobe: int = 32
     hnsw_k: int = 50
     hnsw_m: int = 32

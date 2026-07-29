@@ -184,6 +184,120 @@ retrieval headroom, and generalised to corpora that have a great deal.
 
 ---
 
+## Does the fit transfer off its own corpus?
+
+A transform is deployable when it survives leaving the corpus it was fitted on.
+Tested by fitting on one archaeal **class** and evaluating on a disjoint one, so
+the fit and evaluation sets share no genome. Soft-ZCA α=0.1, Pfam architecture
+labels.
+
+| eval clade | genomes | raw | fit in-corpus | fit on another clade | fit pooled-others |
+|---|---|---|---|---|---|
+| Nanobdellia | 1,738 | 0.9072 | 0.9781 | 0.9778–0.9781 | 0.9783 |
+| Micrarchaeia | 1,146 | 0.9317 | 0.9851 | 0.9838–0.9842 | 0.9843 |
+| Aenigmatarchaeia | 315 | 0.9185 | 0.9806 | 0.9798–0.9804 | 0.9805 |
+| Iainarchaeia | 185 | 0.9267 | 0.9818 | 0.9806–0.9812 | 0.9814 |
+
+(AUC. precision@50 tracks identically: 0.1933 in-corpus vs 0.1931–0.1946 across
+fits on Nanobdellia.)
+
+**The transform transfers.** A fit borrowed from a different archaeal class
+performs within 0.001 AUC of one fitted in-corpus, and pooling several donor
+clades matches or slightly beats the in-corpus fit. Fitting is a one-time cost
+that can be paid on any reasonably related corpus.
+
+The synthetic worry does not materialise at this distance. Soft-ZCA fitted on a
+*deliberately unrelated* geometry does come back worse than raw, and that is
+pinned in `tests/test_transform_wiring.py`. Between DPANN classes the geometries
+are close enough that it never bites — which is the useful finding, since it
+bounds where the caution applies.
+
+### The threshold transfers too
+
+Calibrated to 5% FPR on one clade, then applied as an **absolute cosine** to the
+others — the way a shipped default is actually used.
+
+| calibrated on | threshold | realized FPR elsewhere | realized recall |
+|---|---|---|---|
+| Nanobdellia | 0.1194 | 0.050 / 0.062 / 0.057 | 0.934–0.956 |
+| Micrarchaeia | 0.1317 | 0.039 / 0.047 / 0.041 | 0.924–0.951 |
+| Aenigmatarchaeia | 0.1281 | 0.042 / 0.053 / 0.043 | 0.927–0.952 |
+| Iainarchaeia | 0.1196 | 0.050 / 0.061 / 0.057 | 0.934–0.956 |
+
+Calibrated values cluster in 0.119–0.132, and any of them lands within 0.039–0.062
+of the 5% target on every other clade.
+
+### External 480-d arm
+
+The plan's frozen-UniRef50 arm cannot run as written: UniRef50 was embedded at
+480-d and the DPANN store is 320-d, so the frozen transform does not reach the
+only corpus with headroom. Run for mechanics on the bacterial cohorts:
+
+| corpus | fit | AUC | mean_norm | isotropy |
+|---|---|---|---|---|
+| E. coli | raw | 0.9989 | 0.9161 | 0.134 |
+| E. coli | UniRef50 (external) | 0.9986 | 0.1427 | 0.622 |
+| E. coli | in-corpus | 0.9987 | 0.0208 | 0.823 |
+| cross-species | UniRef50 (external) | 0.9979 | 0.1441 | 0.622 |
+
+An external fit isotropizes partially rather than fully (0.622 against 0.823),
+and on saturated corpora that difference costs nothing. Measuring an external fit
+against a divergent corpus needs UniRef50 re-embedded at 320-d.
+
+---
+
+## Calibrating `similarity_threshold`
+
+`similarity_threshold` gates **kNN neighbours**, so it calibrates on that
+population — every candidate is already a near neighbour, which makes the
+negatives hard. A threshold set against random pairs answers a different
+question and yields a different number (0.12 above, against 0.30–0.40 here).
+
+Precision is the fraction of retained neighbours sharing a Pfam architecture;
+retention is the fraction of the top-50 surviving. Mean over four clades.
+
+| soft-ZCA threshold | retention | precision | raw precision at the same retention | ratio |
+|---|---|---|---|---|
+| 0.20 | 0.975 | 0.225 | 0.157 | 1.43× |
+| 0.30 | 0.880 | 0.247 | 0.165 | 1.49× |
+| 0.35 | 0.749 | 0.279 | 0.172 | 1.63× |
+| 0.40 | 0.616 | 0.319 | 0.178 | 1.79× |
+| 0.45 | 0.503 | 0.357 | 0.188 | 1.90× |
+| 0.50 | 0.405 | 0.393 | 0.203 | 1.94× |
+| 0.55 | 0.319 | 0.427 | 0.215 | 1.99× |
+| 0.60 | 0.243 | 0.460 | 0.255 | 1.81× |
+
+**In the transformed space the threshold works, and it roughly doubles anchor
+precision at matched retention**, peaking near retention 0.3–0.5.
+
+Raw space has no usable operating point on this curve:
+
+| raw threshold | retention | precision | lift over keeping everything |
+|---|---|---|---|
+| 0.85 (current default) | 0.996 | 0.1546 | **+0.0005** |
+| 0.90 | 0.976 | 0.1570 | +0.0030 |
+| 0.95 | 0.815 | 0.1686 | +0.0146 |
+| 0.98 | 0.265 | 0.2232 | +0.0691 |
+| 0.99 | 0.024 | 0.5619 | +0.4079 |
+
+The default retains 99.6% of neighbours for a precision lift of 0.0005, and the
+first threshold that discriminates discards 97.6% of the anchor set. There is no
+setting in between, which is the practical face of the anisotropy.
+
+### Recommended value
+
+**`similarity_threshold: 0.30` with soft-ZCA α=0.1.** It retains 88% of anchors
+at 1.49× raw precision, and it is the operating point already validated
+end-to-end: the Tier-2 DPANN run used the quantile-matched equivalent of 0.2926
+and produced the ribosomal purity gain of 52.3% → 77.9%.
+
+Values of 0.40–0.55 nearly double anchor precision and are **not** validated
+downstream. Chaining needs enough surviving anchors per locus to reach
+`min_chain_size`, so discarding 40–70% of them is a change that has to be
+measured on blocks and clusters rather than inferred from this curve.
+
+---
+
 ## Recommendation
 
 Default stays `embedding_transform: none`. Enabling soft-ZCA α=0.1 by default
@@ -196,9 +310,13 @@ cohorts — MAGs, cross-phylum comparisons, anything where raw AUC sits well bel
 saturation. Leave it off for near-clonal cohorts, where it costs 45% more blocks
 and returns nothing.
 
-The threshold must be recalibrated with it. Absolute cosines are not comparable
-across spaces: quantile-matched thresholds here are 0.86 raw against 0.29
-soft-ZCA, so carrying 0.85 across would retain nearly everything.
+The threshold must be recalibrated with it: **`similarity_threshold: 0.30`**.
+Absolute cosines are not comparable across spaces, and carrying 0.85 over would
+retain essentially every neighbour.
+
+Fitting can be borrowed. A pooled fit from related clades matches an in-corpus
+fit within 0.001 AUC, so a shipped transform does not need to be refitted per
+dataset — subject to the geometry caveat above.
 
 ### Resolved since the plan
 
@@ -216,22 +334,26 @@ soft-ZCA, so carrying 0.85 across would retain nearly everything.
   post-whitening norms spread 6.6–10.2, top-10 neighbour lists are identical and
   the largest cosine difference is exactly 0. No change needed.
 
+- **Transfer and threshold calibration** — both answered above. A borrowed fit
+  costs ≤0.001 AUC between archaeal classes, and `0.30` is the calibrated
+  default.
+
 ### Open
 
-- **External fit arm.** All transforms are fitted in-corpus on a held-out split.
-  The deployable form fits once on a reference corpus at the target dimension,
-  and the generalisation gap is unmeasured.
+- **External fit at 320-d.** UniRef50 exists only at 480-d, so the frozen arm
+  ran on saturated bacterial cohorts where it cannot discriminate. Re-embedding
+  UniRef50 at 320-d would test a genuinely external fit against a divergent
+  corpus. Clade-disjoint transfer answers the same question with in-corpus data
+  and makes this a confirmation rather than a dependency.
 
-  This arm carries a specific risk rather than only an unknown. Soft-ZCA
-  suppresses the directions its fit corpus is spread along, so a corpus spread
-  along different directions comes back **more** anisotropic than raw — measured
-  on synthetic geometries and pinned in
-  `tests/test_transform_wiring.py::test_whitening_fitted_on_a_different_geometry_makes_things_worse`.
-  A frozen transform is safe on corpora resembling its fit corpus, so the
-  external arm has to report the gap on a corpus deliberately unlike the fit set.
+- **Thresholds above 0.30 are uncalibrated downstream.** 0.40–0.55 nearly double
+  anchor precision on the retrieval curve. Whether that survives chaining — which
+  needs enough anchors per locus to reach `min_chain_size` — is a Tier-2
+  question, not a Tier-1 one.
 
-- **Threshold calibration.** Quantile matching makes arms comparable and does
-  not produce a recommended default for the transformed space.
+- **Enabling the transform by default** still requires the near-clonal cost
+  (45% more blocks for no gain) to be worth paying, or dispatch on a measured
+  property of the corpus rather than a flag.
 
 ---
 
@@ -246,6 +368,13 @@ python benchmarks/scripts/ablate_near_clonal.py
 
 # Corpus sweep across ESM2/ProtT5 and dataset scale
 python benchmarks/scripts/sweep_transform_corpora.py
+
+# Does a fit transfer off its corpus? (clade-disjoint, plus the 480-d external arm)
+python benchmarks/scripts/transfer_transform_fit.py --corpus dpann
+python benchmarks/scripts/transfer_transform_fit.py --corpus bacterial
+
+# Calibrate similarity_threshold on the kNN population it gates
+python benchmarks/scripts/calibrate_similarity_threshold.py
 
 # Is the gene-name label telling the truth? (identity vs cosine)
 python benchmarks/scripts/validate_labels_by_identity.py

@@ -788,8 +788,20 @@ def compute_slot_summaries(
 # disjoint-domain pairs, so the label holds for 99.7% of the slots it calls
 # replaced. Two limits remain: mmseqs misses remote homologs below its detection
 # threshold, which is the regime a pLM is meant to reach, so 0.3% is a lower
-# bound on label error; and proteins carrying no Pfam hit are absent from the
-# labelled set entirely, leaving domain-dark slots unvalidated.
+# bound on label error.
+#
+# Domain-dark slots were then validated separately, since 39% of DPANN proteins
+# carry no Pfam hit and Pfam-based calibration covered only ~70% of slots. Using
+# mmseqs homology directly as the label (independent of the embedding, and
+# agreeing with the Pfam label where both exist: AUC 0.984 against 0.983), the
+# detector reaches AUC 0.958 raw and 0.971 soft-ZCA on fully dark slots. At the
+# raw cut-point of 0.95, precision holds across annotated, mixed and dark slots
+# (97.2%, 99.9%, 97.5%) while recall falls on the dark ones (87.1%, 94.0%,
+# 61.1%). Replaced dark slots sit at q10 0.936 against 0.897 for annotated, so
+# the embedding separates them less sharply; mmseqs detects homology equally
+# well in both, which rules out a biased label. Read `has_alternate` on dark
+# slots as conservative: its positive calls are trustworthy and it misses about
+# two fifths of the replacements there.
 #
 #   space      threshold   precision   recall
 #   raw            0.95       96.7%      89.8%

@@ -25,7 +25,8 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse, JSONResponse
 
 from ..report import EVIDENCE_TIERS, cluster_payload, cluster_records
-from ..search_index import run_overview, search_by_domain, search_by_locus
+from ..search_index import (locate_in_cluster, run_overview, search_by_domain,
+                            search_by_locus)
 from ..viz.clinker import (build_consensus_html, build_multiloc_html,
                            consensus_from_data)
 
@@ -156,6 +157,44 @@ def create_app(settings: Optional[Settings] = None) -> FastAPI:
             settings.result_db, settings.annotations_db, terms,
             limit=limit, source=source, match_all=match_all,
         )
+
+    @app.get("/api/cluster/{cluster_key}/locate",
+             summary="Where inside each locus the matching genes sit")
+    def cluster_locate(
+        cluster_key: str,
+        q: str = Query(..., description="Comma-separated domain terms"),
+        source: str = Query("pfam"),
+        max_loci: int = Query(40, ge=1, le=500),
+    ) -> Dict[str, Any]:
+        """Locate a query inside a cluster's loci.
+
+        Domain search returns the cluster; this returns the offsets within it. A
+        locus running ninety genes holds a three-gene query somewhere inside, and
+        naming the cluster leaves the caller to scan it.
+
+        ``match_fraction`` is the share of the locus the matched stretch
+        occupies — the same quantity the operon benchmark reports as boundary
+        precision, computed here against the caller's own query, so it needs no
+        ground truth and works on any dataset.
+        """
+        if settings.annotations_db is None:
+            raise HTTPException(
+                status_code=503,
+                detail="No annotation database attached; start with --annotations to locate domains",
+            )
+        terms = [term for term in q.split(",") if term.strip()]
+        if not terms:
+            raise HTTPException(status_code=422, detail="q must contain at least one term")
+        result = locate_in_cluster(
+            settings.result_db, settings.annotations_db, cluster_key, terms,
+            source=source, max_loci=max_loci,
+        )
+        if not result["n_loci_with_matches"]:
+            raise HTTPException(
+                status_code=404,
+                detail=f"no genes matching {terms} in cluster {cluster_key}",
+            )
+        return result
 
     @app.get("/api/search/locus", summary="Clusters present on a genome or contig")
     def locus_search(

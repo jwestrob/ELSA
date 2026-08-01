@@ -234,3 +234,47 @@ def test_diagram_accepts_a_cosine_threshold(client):
 def test_diagram_rejects_an_out_of_range_tau(client):
     key = client.get("/api/clusters?limit=1").json()[0]["cluster_key"]
     assert client.get(f"/api/cluster/{key}/diagram?tau=1.5").status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Locating a query inside a locus
+# ---------------------------------------------------------------------------
+
+def test_locate_reports_offsets_inside_the_locus(annotated_client):
+    """Domain search names the cluster; this says where inside it to look."""
+    body = annotated_client.get(
+        "/api/cluster/cluster:4/locate?q=ribosomal").json()
+
+    assert body["n_loci_with_matches"] >= 1
+    entry = body["loci"][0]
+    assert entry["match_first"] <= entry["match_last"]
+    assert entry["match_span"] == entry["match_last"] - entry["match_first"] + 1
+    assert entry["locus_length"] >= entry["match_span"]
+    assert all("Ribosomal_L2" in m["domains"] for m in entry["matches"])
+
+
+def test_match_fraction_is_boundary_precision_without_ground_truth(annotated_client):
+    """The benchmark measures this against curated operons. Here the caller's own
+    query supplies the reference, so it works on any dataset."""
+    entry = annotated_client.get(
+        "/api/cluster/cluster:4/locate?q=ribosomal").json()["loci"][0]
+
+    expected = entry["match_span"] / entry["locus_length"]
+    assert entry["match_fraction"] == pytest.approx(expected, abs=1e-4)
+    assert 0.0 < entry["match_fraction"] <= 1.0
+
+
+def test_locate_reports_absence_as_404(annotated_client):
+    """'Nothing matched' must stay distinguishable from 'nothing attached'."""
+    assert annotated_client.get(
+        "/api/cluster/cluster:4/locate?q=nosuchdomain").status_code == 404
+
+
+def test_locate_reports_missing_annotations_as_503(client):
+    assert client.get("/api/cluster/cluster:4/locate?q=ribosomal").status_code == 503
+
+
+def test_locate_validates_its_query(annotated_client):
+    assert annotated_client.get("/api/cluster/cluster:4/locate?q=,,").status_code == 422
+    assert annotated_client.get(
+        "/api/cluster/cluster:4/locate?q=ribosomal&max_loci=99999").status_code == 422

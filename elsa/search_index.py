@@ -242,3 +242,108 @@ def run_overview(database: str | Path) -> Dict[str, Any]:
 
 
 __all__ = ["run_overview", "search_by_domain", "search_by_locus"]
+
+
+def locate_in_cluster(
+    database: str | Path,
+    annotations_db: str | Path,
+    cluster_key: str,
+    terms: Sequence[str],
+    *,
+    source: str = "pfam",
+    max_loci: int = 40,
+) -> Dict[str, Any]:
+    """Where inside each locus do the matching genes sit?
+
+    Finding the cluster is half an answer. A cluster whose loci run 90 genes
+    holds the three a caller asked about somewhere inside, and pointing at the
+    cluster leaves them to scan it.
+
+    The benchmark measures this as boundary precision — what fraction of the
+    block is the thing you were looking for — against curated operons. The same
+    quantity is computable against the caller's own query with no ground truth
+    at all, which is what ``match_fraction`` reports here, so it works on any
+    dataset rather than only on the annotated benchmark cohorts.
+
+    Offsets are ``locus_order``: position within the locus, so 0 is its first
+    gene regardless of where the locus sits on the contig.
+    """
+    terms = [t.strip() for t in terms if t and t.strip()]
+    if not terms:
+        return {"cluster_key": cluster_key, "terms": [], "loci": [], "summary": {}}
+
+    connection = _connect(database)
+    try:
+        connection.execute(f"ATTACH '{str(annotations_db)}' AS _ann (READ_ONLY)")
+        try:
+            conditions = " OR ".join(["lower(a.name) LIKE ?"] * len(terms))
+            rows = connection.execute(
+                f"""
+                SELECT m.locus_key, m.genome_id, m.contig_id, m.protein_id,
+                       m.locus_order, string_agg(DISTINCT a.name, ';') AS domains
+                FROM current_elsa_cluster_members AS m
+                JOIN _ann.annotations AS a ON a.protein_id = m.protein_id
+                WHERE m.cluster_key = ? AND a.source = ? AND ({conditions})
+                GROUP BY m.locus_key, m.genome_id, m.contig_id, m.protein_id,
+                         m.locus_order
+                ORDER BY m.locus_key, m.locus_order
+                """,
+                [cluster_key, source, *[f"%{t.lower()}%" for t in terms]],
+            ).fetchall()
+            lengths = dict(connection.execute(
+                """
+                SELECT locus_key, COUNT(*) FROM current_elsa_cluster_members
+                WHERE cluster_key = ? GROUP BY locus_key
+                """,
+                [cluster_key],
+            ).fetchall())
+        finally:
+            connection.execute("DETACH _ann")
+    finally:
+        connection.close()
+
+    grouped: Dict[str, Dict[str, Any]] = {}
+    for locus_key, genome, contig, protein, order, domains in rows:
+        entry = grouped.setdefault(locus_key, {
+            "locus_key": locus_key, "genome_id": genome, "contig_id": contig,
+            "locus_length": int(lengths.get(locus_key, 0)), "matches": [],
+        })
+        entry["matches"].append({
+            "protein_id": protein,
+            "locus_order": int(order),
+            "domains": sorted((domains or "").split(";")),
+        })
+
+    loci: List[Dict[str, Any]] = []
+    for entry in grouped.values():
+        orders = [m["locus_order"] for m in entry["matches"]]
+        first, last = min(orders), max(orders)
+        span = last - first + 1
+        length = entry["locus_length"] or span
+        entry["match_first"] = first
+        entry["match_last"] = last
+        entry["match_span"] = span
+        # Fraction of the locus occupied by the matched stretch. Low values are
+        # the honest signal that the locus is much larger than the query.
+        entry["match_fraction"] = round(span / length, 4) if length else None
+        entry["relative_position"] = round(((first + last) / 2) / max(length - 1, 1), 4)
+        loci.append(entry)
+
+    loci.sort(key=lambda e: (-len(e["matches"]), e["locus_key"]))
+    fractions = [e["match_fraction"] for e in loci if e["match_fraction"] is not None]
+    spans = [e["match_span"] for e in loci]
+    lengths_seen = [e["locus_length"] for e in loci if e["locus_length"]]
+
+    import statistics
+    return {
+        "cluster_key": cluster_key,
+        "terms": list(terms),
+        "n_loci_with_matches": len(loci),
+        "loci": loci[:max_loci],
+        "truncated": len(loci) > max_loci,
+        "summary": {
+            "median_match_span": statistics.median(spans) if spans else None,
+            "median_locus_length": statistics.median(lengths_seen) if lengths_seen else None,
+            "median_match_fraction": round(statistics.median(fractions), 4) if fractions else None,
+        },
+    }

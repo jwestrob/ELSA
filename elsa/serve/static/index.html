@@ -102,6 +102,9 @@
 <script>
 const $ = s => document.querySelector(s);
 let active = null;
+// Last domain query, so opening a cluster can show where the match sits.
+// Cleared on a locus search or on reset, where the concept does not apply.
+let lastDomainQuery = null;
 
 async function json(url) {
   const r = await fetch(url);
@@ -159,7 +162,13 @@ async function showCluster(r) {
     `<div class="line">${fmtSupport(r)} · ${r.evidence_tier.replace('_', ' ')} evidence · ` +
     `${r.mean_anchor_count == null ? '?' : r.mean_anchor_count.toFixed(1)} anchors per block</div>` +
     (caveats ? `<div class="caveats"><h3>Read with</h3><ul>${caveats}</ul></div>` : '') +
+    `<div id="locate"></div>` +
     `<div id="diagram"><div class="empty">rendering…</div></div>`;
+
+  // A cluster whose loci run ninety genes holds a three-gene query somewhere
+  // inside it, and naming the cluster leaves the reader to scan. When a domain
+  // search brought us here, show where inside each locus the match sits.
+  if (lastDomainQuery) renderLocate(r.cluster_key, lastDomainQuery);
 
   const detail = await json(`/api/cluster/${encodeURIComponent(r.cluster_key)}?max_loci=8`);
   if (active !== r.cluster_key) return;   // a later click won the race
@@ -233,10 +242,52 @@ async function loadOverview() {
     `${(tiers.strong || 0) + (tiers.very_strong || 0)} strong` + trunc;
 }
 
+// Where inside each locus the searched domains sit. match_fraction is the share
+// of the locus the match occupies — the benchmark's boundary precision, measured
+// against the reader's own query instead of a curated operon set.
+async function renderLocate(clusterKey, query) {
+  const holder = $('#locate');
+  if (!holder) return;
+  let body;
+  try {
+    body = await json(`/api/cluster/${encodeURIComponent(clusterKey)}` +
+                      `/locate?q=${encodeURIComponent(query)}&max_loci=12`);
+  } catch (e) { holder.innerHTML = ''; return; }        // 404 = simply no hits
+  if (active !== clusterKey || !body.n_loci_with_matches) return;
+
+  const s = body.summary;
+  const pct = s.median_match_fraction == null
+    ? '' : `${Math.round(s.median_match_fraction * 100)}%`;
+  const bars = body.loci.map(e => {
+    const len = Math.max(e.locus_length, 1);
+    const left = 100 * e.match_first / len;
+    const width = Math.max(100 * e.match_span / len, 1.5);
+    return `<div style="display:flex;align-items:center;gap:8px;margin:3px 0">` +
+      `<span style="flex:0 0 165px;font-size:11px;color:var(--dim);` +
+      `overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.genome_id}</span>` +
+      `<span style="position:relative;flex:1;height:11px;background:var(--edge);border-radius:2px">` +
+      `<span style="position:absolute;left:${left}%;width:${width}%;top:0;bottom:0;` +
+      `background:var(--accent);border-radius:2px"></span></span>` +
+      `<span style="flex:0 0 96px;font-size:11px;color:var(--dim);text-align:right">` +
+      `${e.match_first}–${e.match_last} of ${e.locus_length}</span></div>`;
+  }).join('');
+
+  holder.innerHTML =
+    `<div class="caveats" style="margin-bottom:10px">` +
+    `<h3>Where “${query}” sits</h3>` +
+    `<div class="line" style="margin-bottom:6px">` +
+    `${body.n_loci_with_matches.toLocaleString()} loci match · median ` +
+    `${s.median_match_span} of ${s.median_locus_length} genes` +
+    (pct ? ` · <strong>${pct}</strong> of the locus` : '') + `</div>${bars}` +
+    (body.truncated ? `<div class="line">showing 12 of ` +
+      `${body.n_loci_with_matches.toLocaleString()}</div>` : '') + `</div>`;
+}
+
 async function runSearch() {
   const q = $('#q').value.trim();
   if (!q) return loadList();
   const mode = $('#mode').value;
+  lastDomainQuery = mode === 'domain' ? q : null;
   const url = mode === 'domain'
     ? `/api/search/domain?q=${encodeURIComponent(q)}&limit=${$('#limit').value}`
     : `/api/search/locus?${mode}=${encodeURIComponent(q)}&limit=${$('#limit').value}`;
@@ -276,7 +327,7 @@ async function runSearch() {
 
 $('#go').onclick = runSearch;
 $('#q').onkeydown = e => { if (e.key === 'Enter') runSearch(); };
-$('#clear').onclick = () => { $('#q').value = ''; loadList(); };
+$('#clear').onclick = () => { $('#q').value = ''; lastDomainQuery = null; loadList(); };
 for (const id of ['#tier', '#support', '#limit']) $(id).onchange = () => {
   if (!$('#q').value.trim()) loadList(); else runSearch();
 };

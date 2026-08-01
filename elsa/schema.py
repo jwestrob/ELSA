@@ -803,6 +803,15 @@ def compute_slot_summaries(
 # slots as conservative: its positive calls are trustworthy and it misses about
 # two fifths of the replacements there.
 #
+# Firing rises with slot size — 39.7% at 4-10 occupants to 93.3% above 100 —
+# which is real rather than a drifting statistic. Subsampling 400 large slots to
+# 20 occupants each and scoring with mmseqs: 97.8% genuinely hold a
+# non-homologous pair against the detector's 92.2%, giving 98.9% precision, and
+# under half of within-slot pairs are homologous at all (median 0.416). A
+# position occupied across hundreds of genomes spanning a phylum really does
+# carry several families. Whether that is a functional swap or slot assignment
+# growing loose at that breadth is a separate question this flag leaves open.
+#
 #   space      threshold   precision   recall
 #   raw            0.95       96.7%      89.8%
 #   soft_zca       0.40       97.4%      96.6%

@@ -347,3 +347,72 @@ def locate_in_cluster(
             "median_match_fraction": round(statistics.median(fractions), 4) if fractions else None,
         },
     }
+
+
+def cluster_architecture(
+    schema_dir: str | Path,
+    cluster_key: str,
+    *,
+    max_slots: int = 60,
+) -> Dict[str, Any]:
+    """Slot-level architecture for one cluster, including replacement hotspots.
+
+    A slot is one aligned position across a cluster's loci. ``has_alternate``
+    marks a slot whose occupants include more than one protein family — a
+    position conserved in *place* while its content is swapped, which is the
+    interesting case and the one the previous detector never reported.
+
+    Read `has_alternate` as conservative: validated against mmseqs homology it
+    holds 97.5% precision on domain-dark slots while recovering about three
+    fifths of the replacements there, so an unflagged slot is weaker evidence
+    than a flagged one.
+
+    Slots occupied across hundreds of genomes are flagged far more often (93%
+    above 100 occupants against 40% at 4-10), and that is genuine — mmseqs finds
+    a non-homologous pair in 97.8% of them. At that breadth the flag reports
+    heterogeneous content rather than a specific functional swap.
+
+    Schema artifacts live as parquet beside the run rather than in the sidecar,
+    so this takes their directory explicitly.
+    """
+    directory = Path(schema_dir)
+    slots_path = directory / "cluster_slots.parquet"
+    if not slots_path.is_file():
+        raise FileNotFoundError(f"No cluster_slots.parquet under {directory}")
+
+    try:
+        cluster_id = int(str(cluster_key).split(":")[-1])
+    except ValueError as error:
+        raise ValueError(f"cluster_key {cluster_key!r} carries no numeric id") from error
+
+    import pandas as _pd
+
+    slots = _pd.read_parquet(slots_path)
+    slots = slots[slots["cluster_id"] == cluster_id]
+    if slots.empty:
+        return {"cluster_key": cluster_key, "n_slots": 0, "slots": [],
+                "n_hotspots": 0, "coherent_fraction": None}
+
+    slots = slots.sort_values("slot_idx")
+    hotspots = slots[slots["has_alternate"].astype(bool)]
+    records = [
+        {
+            "slot_idx": int(row.slot_idx),
+            "occupancy": float(row.occupancy),
+            "n_occupants": int(row.n_occupants),
+            "dispersion": float(row.dispersion),
+            "is_core": bool(row.is_core),
+            "has_alternate": bool(row.has_alternate),
+        }
+        for row in slots.head(max_slots).itertuples(index=False)
+    ]
+    return {
+        "cluster_key": cluster_key,
+        "n_slots": int(len(slots)),
+        "n_hotspots": int(len(hotspots)),
+        "hotspot_slots": [int(i) for i in hotspots.slot_idx.tolist()[:max_slots]],
+        "n_core_slots": int(slots["is_core"].astype(bool).sum()),
+        "coherent_fraction": round(1.0 - len(hotspots) / len(slots), 4),
+        "slots": records,
+        "truncated": len(slots) > max_slots,
+    }

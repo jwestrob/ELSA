@@ -1302,9 +1302,12 @@ def _load_genes_from_sources(
 @click.option("--store", type=click.Path(exists=True, file_okay=False), default=None,
               help="SyntenyStore directory; enables exact per-anchor cosine so the "
                    "diagram's similarity threshold filters on real values")
+@click.option("--schema", type=click.Path(exists=True, file_okay=False), default=None,
+              help="Schema artifact directory (cluster_slots.parquet); enables "
+                   "architecture and replacement-hotspot views")
 @click.option("--host", default="127.0.0.1", show_default=True)
 @click.option("--port", default=8600, show_default=True, type=int)
-def serve(result_db, annotations, store, host, port):
+def serve(result_db, annotations, store, schema, host, port):
     """Serve a materialized run over HTTP for humans and agents.
 
     The same routes back the browser page and the machine-readable API, so a
@@ -1321,12 +1324,21 @@ def serve(result_db, annotations, store, host, port):
             if os.environ.get("ELSA_STORE_DIR")
             and Path(os.environ["ELSA_STORE_DIR"]).is_dir() else None
         ),
+        schema_dir=Path(schema) if schema else (
+            Path(os.environ["ELSA_SCHEMA_DIR"])
+            if os.environ.get("ELSA_SCHEMA_DIR")
+            and Path(os.environ["ELSA_SCHEMA_DIR"]).is_dir() else None
+        ),
     )
     click.echo(f"Serving {settings.result_db}")
     if settings.annotations_db:
         click.echo(f"Annotations from {settings.annotations_db}")
     else:
         click.echo("No annotation database; diagrams render without domain labels")
+    if settings.schema_dir:
+        click.echo(f"Schema {settings.schema_dir} (architecture + hotspots)")
+    else:
+        click.echo("No schema directory; architecture views are unavailable")
     if settings.store_dir:
         click.echo(f"Store {settings.store_dir} (exact per-anchor cosine)")
     else:

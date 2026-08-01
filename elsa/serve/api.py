@@ -25,8 +25,8 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import HTMLResponse, JSONResponse
 
 from ..report import EVIDENCE_TIERS, cluster_payload, cluster_records
-from ..search_index import (locate_in_cluster, run_overview, search_by_domain,
-                            search_by_locus)
+from ..search_index import (cluster_architecture, locate_in_cluster,
+                            run_overview, search_by_domain, search_by_locus)
 from ..viz.clinker import (build_consensus_html, build_multiloc_html,
                            consensus_from_data)
 
@@ -40,6 +40,9 @@ class Settings:
     result_db: Path
     annotations_db: Optional[Path] = None
     store_dir: Optional[Path] = None
+    # Schema artifacts are parquet beside the run rather than tables in the
+    # sidecar, so their directory is configured separately.
+    schema_dir: Optional[Path] = None
 
     @classmethod
     def from_env(cls) -> "Settings":
@@ -59,8 +62,12 @@ class Settings:
         store_path = Path(store) if store else None
         if store_path is not None and not store_path.is_dir():
             store_path = None
+        schema = os.environ.get("ELSA_SCHEMA_DIR")
+        schema_path = Path(schema) if schema else None
+        if schema_path is not None and not schema_path.is_dir():
+            schema_path = None
         return cls(result_db=path, annotations_db=annotations_path,
-                   store_dir=store_path)
+                   store_dir=store_path, schema_dir=schema_path)
 
 
 def create_app(settings: Optional[Settings] = None) -> FastAPI:
@@ -195,6 +202,30 @@ def create_app(settings: Optional[Settings] = None) -> FastAPI:
                 detail=f"no genes matching {terms} in cluster {cluster_key}",
             )
         return result
+
+    @app.get("/api/cluster/{cluster_key}/architecture",
+             summary="Slot architecture and replacement hotspots")
+    def cluster_arch(cluster_key: str,
+                     max_slots: int = Query(60, ge=1, le=500)) -> Dict[str, Any]:
+        """Which positions in this cluster keep their place while swapping content.
+
+        A hotspot is a slot whose occupants span more than one protein family.
+        Validated against mmseqs homology at 97% precision; on domain-dark slots
+        it recovers roughly three fifths of replacements, so an unflagged slot is
+        weaker evidence than a flagged one.
+        """
+        if settings.schema_dir is None:
+            raise HTTPException(
+                status_code=503,
+                detail="No schema directory attached; start with --schema to read architecture",
+            )
+        try:
+            return cluster_architecture(settings.schema_dir, cluster_key,
+                                        max_slots=max_slots)
+        except FileNotFoundError as error:
+            raise HTTPException(status_code=503, detail=str(error))
+        except ValueError as error:
+            raise HTTPException(status_code=422, detail=str(error))
 
     @app.get("/api/search/locus", summary="Clusters present on a genome or contig")
     def locus_search(

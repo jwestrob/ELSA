@@ -184,6 +184,48 @@ retrieval headroom, and generalised to corpora that have a great deal.
 
 ---
 
+## How much of the available headroom does the treatment recover?
+
+67 taxonomic strata of DPANN, from single species to the whole domain (9 to 2,500
+genomes), scored under raw and soft-ZCA α=0.1. One transform fitted on held-out
+genomes serves every stratum, so fit quality stays constant while difficulty
+varies. Negatives are drawn inside each stratum. Raw AUC spans 0.909–0.986.
+
+**Read the shared term first.** `gain = AUC_treated − AUC_raw` and
+`headroom = 1 − AUC_raw` both carry `AUC_raw`, so regressing one on the other is
+partly definitional — a treatment landing every stratum on one ceiling would fit
+perfectly and mean nothing. Measured, `corr(AUC_raw, AUC_treated) = +0.924` with
+a slope of +0.220, between a pure ceiling and a constant additive gain and closer
+to a ceiling: spread contracts 4.2x, sd 0.0230 raw → 0.0055 treated.
+
+The artifact-free quantity is the **fraction of headroom recovered**:
+
+| Statistic | Value |
+|---|---|
+| Median | **0.785** |
+| IQR | 0.762 – 0.812 |
+| 95% CI (bootstrap over strata) | 0.771 – 0.793 |
+
+| Rank | Strata | Median recovered |
+|---|---:|---:|
+| species | 12 | 0.787 |
+| genus | 12 | 0.783 |
+| family | 12 | 0.800 |
+| order | 12 | 0.788 |
+| class | 9 | 0.773 |
+| phylum | 9 | 0.762 |
+| whole domain | 1 | 0.755 |
+
+Independent of every candidate predictor: headroom −0.088, isotropy −0.090, mean
+norm +0.344, genome count +0.004.
+
+**Soft-ZCA removes about four fifths of whatever retrieval error the raw space
+carries**, whether that error is small or large. Note the mean norm's correlation
+with the gain turns *negative* within one corpus (−0.399 across the 67 strata),
+confirming it is a poor guide once model and dimension are held fixed.
+
+---
+
 ## Does the fit transfer off its own corpus?
 
 A transform is deployable when it survives leaving the corpus it was fitted on.
@@ -375,6 +417,9 @@ python benchmarks/scripts/transfer_transform_fit.py --corpus bacterial
 
 # Calibrate similarity_threshold on the kNN population it gates
 python benchmarks/scripts/calibrate_similarity_threshold.py
+
+# How much headroom does the treatment recover? (67 taxonomic strata)
+python benchmarks/scripts/headroom_dose_response.py
 
 # Is the gene-name label telling the truth? (identity vs cosine)
 python benchmarks/scripts/validate_labels_by_identity.py

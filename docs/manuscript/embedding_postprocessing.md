@@ -23,12 +23,13 @@ independent divergent archaeal and bacterial corpora, soft-ZCA whitening raised
 homology-detection AUC from 0.888 to 0.972 and from 0.896 to 0.968, and raised
 recall at 5% FPR from 0.587 to 0.912. On near-clonal cohorts the same treatments
 returned AUC differences of 0.0005 or less, because raw retrieval already reached
-0.998. Across all seven combinations the improvement was predicted almost
-entirely by the headroom available (r = +0.999 against 1 − AUC_raw), while the
-mean norm predicted it weakly (r = +0.477) and the covariance participation ratio
-hardly at all (r = +0.055). Two PCA-projected corpora, whose mean component was
-already removed, still benefited from whitening — locating the remaining signal
-in the covariance spectrum instead of the first moment.
+0.998. Sampling difficulty continuously across 67 taxonomic strata of one corpus,
+from single species to a whole archaeal domain, the treatment recovered a
+constant **78.5% of the available headroom** (IQR 0.762-0.812, 95% CI
+0.771-0.793), a fraction independent of taxonomic breadth, mean norm, and
+isotropy. Two PCA-projected corpora, whose mean component was already removed,
+still benefited from whitening — locating the remaining signal in the covariance
+spectrum instead of the first moment.
 
 The optimum was interior: regularised whitening at shrinkage α = 0.1 outperformed
 full-rank whitening on every divergent corpus. Fitted transforms transferred
@@ -72,7 +73,8 @@ remote homologs across phyla, which lets us ask what actually sets the size of
 the benefit.
 
 We report that ablation, and find that the governing variable is how much
-retrieval error exists to remove.
+retrieval error exists to remove, with the treatment recovering a near-constant
+fraction of it across a wide range of task difficulty.
 
 ---
 
@@ -158,6 +160,16 @@ remainder, so no transform sees its test data. Fit rows were sampled randomly
 across the fit split: a contiguous head slice draws a handful of related genomes
 whose covariance is rank-deficient, which silently destabilises whitening. §3.5
 strengthens this to a clade-disjoint split.
+
+### 2.6 Taxonomic stratification
+
+To vary task difficulty continuously (§3.4.2), evaluation sets were restricted to
+one taxon at a chosen GTDB rank, using the twelve largest taxa at each of species,
+genus, family, order, class and phylum, plus the whole corpus — 67 strata after
+requiring 2,000 labelled proteins each. Genomes contributing to the transform fit
+were held out of every stratum, and a single fit served all of them so that fit
+quality stays constant across strata whose sizes differ by three orders of
+magnitude. Positive and negative pairs were both drawn inside each stratum.
 
 ---
 
@@ -258,10 +270,64 @@ almost nothing, because the ranking it distorts is already right.
 
 **On the strength of r = +0.999.** The seven points form two clusters — two
 divergent corpora and five saturated ones — so this coefficient measures
-separation between regimes rather than a calibrated slope within either. The
-defensible claim is ordinal: headroom orders the gains correctly and the geometry
-statistics do not. Establishing a slope requires corpora sampled across
-intermediate difficulty, which we identify as the natural next experiment.
+separation between regimes rather than a calibrated slope within either. Section
+3.4.2 samples difficulty continuously to obtain the slope.
+
+### 3.4.2 The treatment recovers a constant fraction of available headroom
+
+Retrieval within a genus is easy and within a phylum is hard, so restricting the
+evaluation set to a taxon at a chosen rank varies difficulty while holding the
+embeddings, the label definition, the transform, and the pipeline fixed. We built
+67 strata from DPANN spanning single species to the whole domain (9 to 2,500
+genomes), scored each under raw and soft-ZCA α = 0.1, and used **one** transform
+fitted on held-out genomes so that fit quality stays constant — fitting per
+stratum would give small strata less data, and stratum size tracks the axis under
+study. Negatives are drawn inside each stratum, so stratum breadth sets their
+difficulty.
+
+Raw AUC ranges from 0.909 to 0.986 across the strata, giving continuous coverage
+between the two clusters of §3.4.
+
+**A shared term makes the obvious regression uninformative.** Gain is
+AUC_treated − AUC_raw and headroom is 1 − AUC_raw, so both carry AUC_raw and a
+regression of one on the other is partly definitional. Were the treatment to land
+every stratum on a single ceiling, that regression would fit perfectly while
+carrying no empirical content. Measured, AUC_treated does still track AUC_raw
+(r = +0.924, slope of treated on raw +0.220), placing the behaviour between a
+pure ceiling and a constant additive gain, and closer to a ceiling: the spread of
+retrieval quality contracts 4.2-fold, from sd 0.0230 raw to sd 0.0055 treated.
+
+The quantity free of that artifact is the **fraction of headroom recovered**,
+gain / headroom, per stratum:
+
+| Statistic | Value |
+|---|---|
+| Median | **0.785** |
+| IQR | 0.762 – 0.812 |
+| 95% CI (bootstrap over strata) | 0.771 – 0.793 |
+| Range | 0.646 – 0.927 |
+
+and it holds across three orders of magnitude of taxonomic breadth:
+
+| Rank | Strata | Median recovered |
+|---|---:|---:|
+| species | 12 | 0.787 |
+| genus | 12 | 0.783 |
+| family | 12 | 0.800 |
+| order | 12 | 0.788 |
+| class | 9 | 0.773 |
+| phylum | 9 | 0.762 |
+| whole domain | 1 | 0.755 |
+
+The recovered fraction is essentially independent of every candidate predictor:
+headroom (r = −0.088), isotropy (−0.090), mean norm (+0.344), genome count
+(+0.004), labelled-protein count (−0.394).
+
+Soft-ZCA whitening therefore removes a fixed proportion — close to four fifths —
+of whatever retrieval error the raw space carries, whether that error is small
+(a single species) or large (a whole archaeal domain). The mild decline from
+0.787 at species level to 0.755 across the domain suggests the most divergent
+comparisons retain a component the treatment leaves in place.
 
 ### 3.4.1 The residual signal lives in the covariance, not the mean
 
@@ -384,7 +450,9 @@ treatment costs additional blocks and returns a difference within noise.
 Two findings refine the account inherited from text embeddings. Benefit tracking
 mean norm holds within a family of models on a fixed task; across tasks of
 differing difficulty, headroom dominates, and two corpora with nearly identical
-‖μ‖ (0.916 and 0.919) sit at opposite ends of the gain distribution.
+‖μ‖ (0.916 and 0.919) sit at opposite ends of the gain distribution. Within a
+single corpus the mean norm loses even its ordinal value, correlating with the
+gain at −0.399 across 67 strata.
 Complementarily, spaces whose mean has already been removed by PCA still improve
 under whitening, placing the operative structure in the covariance spectrum. A
 diagnostic that measures only the first moment will therefore mark some
@@ -402,9 +470,13 @@ space alters it.
 
 ### Limitations
 
-The headroom relationship rests on seven corpus-representation combinations
-forming two clusters, which supports an ordinal claim and leaves the functional
-form open. Ordered Pfam architecture, while independent of the embedding and of
+The recovered-fraction estimate comes from taxonomic strata of one corpus, one
+model, and one dimension; whether the same four-fifths holds for other pLMs and
+other label definitions is open, and the seven-combination comparison that
+motivated it spans models at the cost of forming two clusters. Strata drawn from
+one corpus overlap in the genomes they contain at coarser ranks, so they are not
+independent samples, and the bootstrap interval treats each stratum as one
+observation. Ordered Pfam architecture, while independent of the embedding and of
 alignment search, is available only for annotated proteins and inherits Pfam's
 coverage; domain-dark proteins are absent from the labelled set. Downstream
 evaluation covers one pipeline and one locus definition. The external-fit arm ran
@@ -422,6 +494,7 @@ data.
 | Near-clonal hard negatives | `benchmarks/scripts/ablate_near_clonal.py` |
 | Corpus sweep | `benchmarks/scripts/sweep_transform_corpora.py` |
 | Transfer and external fit | `benchmarks/scripts/transfer_transform_fit.py` |
+| Headroom dose-response (67 strata) | `benchmarks/scripts/headroom_dose_response.py` |
 | Threshold calibration | `benchmarks/scripts/calibrate_similarity_threshold.py` |
 | Result tables and provenance | `benchmarks/evaluation/transform_ablation/` |
 | Full internal report | `benchmarks/evaluation/TRANSFORM_ABLATION.md` |

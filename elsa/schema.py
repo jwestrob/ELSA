@@ -781,6 +781,16 @@ def compute_slot_summaries(
 # a genuine replacement when two occupants share no domain at all. Values are the
 # 10th-percentile pairwise cosine within a slot.
 #
+# That ground truth was itself audited, because two homologs can each carry Pfam
+# hits and share none — asymmetric HMM sensitivity or families Pfam splits.
+# mmseqs over 54,901 within-slot pairs (e<1e-3, >=50% coverage of the shorter
+# protein) finds 97.2% of same-domain pairs homologous, against 0.3% of
+# disjoint-domain pairs, so the label holds for 99.7% of the slots it calls
+# replaced. Two limits remain: mmseqs misses remote homologs below its detection
+# threshold, which is the regime a pLM is meant to reach, so 0.3% is a lower
+# bound on label error; and proteins carrying no Pfam hit are absent from the
+# labelled set entirely, leaving domain-dark slots unvalidated.
+#
 #   space      threshold   precision   recall
 #   raw            0.95       96.7%      89.8%
 #   soft_zca       0.40       97.4%      96.6%

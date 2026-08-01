@@ -56,6 +56,43 @@ run is real — the chain passes through genuine orthologs in genuine order. A
 locus boundary is visible where a cohort varies, so tightening it is a question
 of cohort composition or of reporting sub-structure inside long blocks.
 
+### Trimming a block to its conserved core does nothing
+
+The natural next move — find the densely-anchored core inside a long block and
+report that instead — was built and measured. Cores were extracted as the
+contiguous window maximising `anchors − λ·length`, swept over λ ∈ {0.2 … 0.8},
+and scored with the localization metric above.
+
+| λ | recall | median boundary precision | median block span |
+|---|---:|---:|---:|
+| baseline (whole block) | 0.9888 | 0.0395 | 90 |
+| 0.2 | 0.9888 | 0.0395 | 90 |
+| 0.5 | 0.9886 | 0.0395 | 90 |
+| 0.65 | 0.9881 | 0.0395 | 90 |
+| 0.8 | 0.9755 | 0.0395 | 91 |
+
+Flat, then it starts losing recall. The reason is structural: chaining runs with
+`max_gap_genes=2`, so consecutive anchors sit at most two positions apart **by
+construction** and a block cannot contain sparse padding.
+
+Measured anchor density within blocks confirms it:
+
+| Corpus | Median span | Median density | Blocks ≥90% anchored |
+|---|---:|---:|---:|
+| *E. coli* | 90 genes | **1.000** | 84.3% |
+| DPANN | 3 genes | **1.000** | — |
+
+Every position in the median block carries an anchor. There is no padding to
+strip, because the whole block is genuinely supported — a real orthologous run
+that happens to be much longer than the operon inside it. Core extraction is
+dead on both ends: near-clonal blocks are uniformly dense, divergent blocks are
+already 3 genes long.
+
+The usable response is navigation rather than segmentation:
+`GET /api/cluster/{key}/locate?q=…` reports where inside each locus a query sits
+and what fraction of the locus it occupies — boundary precision measured against
+the caller's own query, with no ground truth required.
+
 ### Which ground truth
 
 `ecoli_operon_gt_v2.tsv` (10,182 pair rows) produces the numbers above.

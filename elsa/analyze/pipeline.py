@@ -47,6 +47,10 @@ class ChainConfig:
     # hnswlib, which builds 27.8x slower than IVF-Flat at DPANN scale for
     # equivalent recall, and this dataclass is what the Python API and every
     # benchmark script construct by default.
+    # Embedding space the vectors live in. The schema stage needs it because the
+    # replacement cut-point moves with the cosine distribution; leaving it at
+    # "none" against treated vectors would fire on every slot.
+    embedding_transform: str = "none"
     index_backend: str = "faiss_ivfflat"
     faiss_nprobe: int = 32
     hnsw_k: int = 50
@@ -445,6 +449,9 @@ def run_chain_pipeline(
                 genes_df,
                 schema_staging_dir,
                 embeddings=schema_embeddings,
+                # The replacement cut-point moves with the cosine distribution,
+                # so the schema stage has to know which space it is reading.
+                embedding_transform=getattr(config, "embedding_transform", "none"),
             )
             del schema_embeddings
             if schema_dir.exists():

@@ -677,13 +677,27 @@ def compute_slot_summaries(
     assignments_df: pd.DataFrame,
     genes_df: pd.DataFrame,
     embeddings: Optional[np.ndarray] = None,
+    embedding_transform: str = "none",
 ) -> pd.DataFrame:
     """Compute per-slot summary statistics for each cluster.
+
+    ``embedding_transform`` selects the replacement cut-point, which moves with
+    the cosine distribution of the space the embeddings live in — see
+    :data:`REPLACEMENT_Q10_THRESHOLDS`. An unrecognised name falls back to the
+    raw cut-point and says so, since a silently wrong threshold reads as
+    "no replacements found".
 
     Returns DataFrame with columns:
         cluster_id, slot_idx, occupancy, n_occupants, centroid_gene_id,
         dispersion, n_types, is_core, has_alternate
     """
+    q10_threshold = REPLACEMENT_Q10_THRESHOLDS.get(embedding_transform or "none")
+    if q10_threshold is None:
+        _log(f"[Schema] No calibrated replacement threshold for embedding space "
+             f"{embedding_transform!r}; using the raw cut-point "
+             f"{DEFAULT_REPLACEMENT_Q10}. Recalibrate against annotation before "
+             f"trusting has_alternate on this run.")
+        q10_threshold = DEFAULT_REPLACEMENT_Q10
     if assignments_df.empty:
         return pd.DataFrame()
 
@@ -740,7 +754,7 @@ def compute_slot_summaries(
             centroid_idx = int(np.argmax(cosines))
             centroid_gene_id = valid_gene_ids[centroid_idx]
 
-            n_types = _estimate_n_types(emb_normed)
+            n_types = _estimate_n_types(emb_normed, q10_threshold)
         else:
             dispersion = 0.0
             centroid_gene_id = grp.iloc[0]["gene_id"]
@@ -763,32 +777,55 @@ def compute_slot_summaries(
     return pd.DataFrame(summaries)
 
 
-def _estimate_n_types(emb_normed: np.ndarray, threshold: float = 0.4) -> int:
-    """Estimate whether a slot has 1 or 2+ occupant types.
+# Calibrated against Pfam domain architecture on 12,000 DPANN slots: a slot is
+# a genuine replacement when two occupants share no domain at all. Values are the
+# 10th-percentile pairwise cosine within a slot.
+#
+#   space      threshold   precision   recall
+#   raw            0.95       96.7%      89.8%
+#   soft_zca       0.40       97.4%      96.6%
+#
+# Both spaces separate cleanly (AUC 0.983 raw, 0.994 soft-ZCA), so the statistic
+# works either way and only the cut-point moves.
+REPLACEMENT_Q10_THRESHOLDS = {"raw": 0.95, "none": 0.95, "soft_zca": 0.40}
+DEFAULT_REPLACEMENT_Q10 = 0.95
 
-    Conservative heuristic: requires genuine bimodality — a substantial
-    fraction of pairs below threshold AND low mean similarity, indicating
-    two distinct protein families rather than normal sequence divergence.
+
+def _estimate_n_types(emb_normed: np.ndarray,
+                      q10_threshold: float = DEFAULT_REPLACEMENT_Q10) -> int:
+    """Estimate whether a slot holds one occupant family or more than one.
+
+    Fires on the 10th-percentile pairwise cosine rather than on the mean. A slot
+    where one occupant belongs to a different family keeps a high mean — the
+    other occupants still resemble each other — while its lower tail drops
+    sharply, and the lower tail is the whole signal.
+
+    The previous rule required mean cosine below 0.6, and returned ``1`` for all
+    281,004 DPANN slots. Measured against ordered Pfam architecture, slots that
+    genuinely hold two families sit at a median cosine of 0.947 in raw space, so
+    the old cut-point sat far outside the range the data occupies and could never
+    trigger. It read as a conservative guard while acting as an off switch: 51%
+    of slots with four or more annotated occupants contain a pair sharing no
+    domain at all.
+
+    A narrow absolute range says nothing about separability. Clean slots sit at a
+    median 0.9932 and replaced ones at 0.9466 — a small gap that ranks almost
+    perfectly (AUC 0.983).
+
+    ``q10_threshold`` is space-dependent; see :data:`REPLACEMENT_Q10_THRESHOLDS`.
+    Recalibrate it against annotation before trusting it in a new embedding
+    space, since the cut-point moves with the cosine distribution.
     """
     n = len(emb_normed)
     if n < 3:
         return 1
 
     sim_matrix = np.clip(emb_normed @ emb_normed.T, -1.0, 1.0)
-    tril_idx = np.tril_indices(n, k=-1)
-    pairwise_sims = sim_matrix[tril_idx]
-
+    pairwise_sims = sim_matrix[np.tril_indices(n, k=-1)]
     if len(pairwise_sims) == 0:
         return 1
 
-    low_sim_frac = (pairwise_sims < threshold).mean()
-    mean_sim = float(pairwise_sims.mean())
-
-    # Require both: >40% of pairs below threshold AND mean sim below 0.6
-    # This avoids flagging single-divergent-member situations (mean ~0.8)
-    if low_sim_frac > 0.4 and mean_sim < 0.6:
-        return 2
-    return 1
+    return 2 if float(np.quantile(pairwise_sims, 0.10)) < q10_threshold else 1
 
 
 # ---------------------------------------------------------------------------
@@ -858,6 +895,7 @@ def run_schema_pipeline(
     min_cluster_size: int = 3,
     max_slots: int = 50,
     embeddings: Optional[np.ndarray] = None,
+    embedding_transform: str = "none",
 ) -> Dict[str, Path]:
     """Run the full cluster architecture schema pipeline.
 
@@ -928,6 +966,7 @@ def run_schema_pipeline(
         assignments_df,
         genes_df,
         embeddings=embeddings,
+        embedding_transform=embedding_transform,
     )
     slots_path = output_dir / "cluster_slots.parquet"
     slots_df.to_parquet(slots_path, index=False)

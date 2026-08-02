@@ -137,6 +137,7 @@ def cluster_records(
     min_genome_support: Optional[int] = None,
     min_evidence: Optional[str] = None,
     include_singletons: bool = False,
+    cluster_keys: Optional[Sequence[str]] = None,
 ) -> List[ClusterRecord]:
     """Return a bounded, ranked slice of clusters.
 
@@ -144,6 +145,11 @@ def cluster_records(
     handing that back whole serves neither a human nor an agent. Ranking is by
     breadth then evidence, so the first page is the part of the run that can
     carry an interpretation.
+
+    ``cluster_keys`` looks up specific clusters instead, which is how anyone
+    arriving with a key in hand — from a note, a paper, or another tool — reaches
+    it. Ranking a run of 300,000 clusters cannot surface one on request, and
+    without this the key has to be typed into a URL.
     """
     connection = _connect(database)
     try:
@@ -157,6 +163,14 @@ def cluster_records(
         }
         where = [] if include_singletons else ["cluster_kind = 'cluster'"]
         params: List[Any] = []
+        if cluster_keys:
+            keys = [str(k).strip() for k in cluster_keys if str(k).strip()]
+            if not keys:
+                return []
+            # An explicit lookup overrides the singleton filter: a key the caller
+            # already holds should resolve whatever kind it turns out to be.
+            where = [f"cluster_key IN ({','.join('?' * len(keys))})"]
+            params = list(keys)
         if min_genome_support is not None:
             where.append("genome_support >= ?")
             params.append(int(min_genome_support))

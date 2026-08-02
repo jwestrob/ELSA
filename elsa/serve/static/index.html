@@ -63,12 +63,13 @@
 <main>
   <div id="list">
     <div class="controls" style="margin-bottom:8px">
-      <input id="q" placeholder="search domains (ribosomal) or genome/contig"
+      <input id="q" placeholder="ribosomal · cluster:1043 · GCA_… · contig"
              style="flex:1;min-width:180px;font:inherit;padding:5px 9px;
                     border:1px solid var(--line);border-radius:6px;
                     background:var(--panel);color:var(--ink)">
       <select id="mode">
         <option value="domain">domain</option>
+        <option value="cluster">cluster id</option>
         <option value="genome">genome</option>
         <option value="contig">contig</option>
       </select>
@@ -290,6 +291,8 @@ async function runSearch() {
   lastDomainQuery = mode === 'domain' ? q : null;
   const url = mode === 'domain'
     ? `/api/search/domain?q=${encodeURIComponent(q)}&limit=${$('#limit').value}`
+    : mode === 'cluster'
+    ? `/api/search/cluster?q=${encodeURIComponent(q)}`
     : `/api/search/locus?${mode}=${encodeURIComponent(q)}&limit=${$('#limit').value}`;
   $('#cards').innerHTML = '<div class="empty">searching…</div>';
   let rows;
@@ -303,14 +306,22 @@ async function runSearch() {
     el.className = 'card';
     const hit = mode === 'domain'
       ? `${r.n_matching_genes.toLocaleString()} genes · ${(r.domains || []).slice(0, 3).join(', ')}`
+      : mode === 'cluster'
+      ? `${r.evidence_tier.replace('_', ' ')} evidence · ${r.n_loci} loci`
       : `${r.n_matching_loci} matching loci`;
     el.innerHTML =
       `<div class="key">${r.cluster_key}</div>` +
       `<div class="line">${fmtSupport(r)}</div>` +
       `<div class="line" style="color:var(--accent)">${hit}</div>`;
-    // Search results carry no caveats, so fetch the full record before showing
-    // detail rather than rendering a card that silently omits its limits.
+    // Domain/locus hits carry no caveats, so the full record is fetched before
+    // showing detail rather than rendering a card that omits its limits. A
+    // cluster lookup already returns the full record, so it opens directly.
     el.onclick = async () => {
+      if (mode === 'cluster') {
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('on'));
+        el.classList.add('on');
+        return showCluster(r);
+      }
       document.querySelectorAll('.card').forEach(c => c.classList.remove('on'));
       el.classList.add('on');
       const full = await json(`/api/clusters?limit=1&min_genome_support=${r.genome_support}`);

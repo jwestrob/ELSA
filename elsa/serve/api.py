@@ -227,6 +227,33 @@ def create_app(settings: Optional[Settings] = None) -> FastAPI:
         except ValueError as error:
             raise HTTPException(status_code=422, detail=str(error))
 
+    @app.get("/api/search/cluster", summary="Look up clusters by key")
+    def cluster_lookup(
+        q: str = Query(..., description="Comma-separated cluster keys; the "
+                                        "'cluster:' prefix is optional"),
+    ) -> List[Dict[str, Any]]:
+        """Reach a cluster whose key you already have.
+
+        Ranking cannot surface one cluster out of 300,000 on request, so a key
+        from a note or another tool would otherwise have to be typed into a URL.
+        Bare numbers are accepted and prefixed, since that is how keys get
+        copied in practice.
+        """
+        keys = []
+        for raw in q.split(","):
+            token = raw.strip()
+            if not token:
+                continue
+            keys.append(token if ":" in token else f"cluster:{token}")
+        if not keys:
+            raise HTTPException(status_code=422, detail="q must contain at least one key")
+        records = cluster_records(settings.result_db, cluster_keys=keys,
+                                  include_singletons=True, limit=len(keys))
+        if not records:
+            raise HTTPException(status_code=404,
+                                detail=f"no cluster matching {keys}")
+        return [record.as_dict() for record in records]
+
     @app.get("/api/search/locus", summary="Clusters present on a genome or contig")
     def locus_search(
         genome: Optional[str] = Query(None),

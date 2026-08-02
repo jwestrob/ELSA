@@ -278,3 +278,40 @@ def test_locate_validates_its_query(annotated_client):
     assert annotated_client.get("/api/cluster/cluster:4/locate?q=,,").status_code == 422
     assert annotated_client.get(
         "/api/cluster/cluster:4/locate?q=ribosomal&max_loci=99999").status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Reaching a cluster by key
+# ---------------------------------------------------------------------------
+
+def test_cluster_lookup_returns_the_full_record(client):
+    """Ranking cannot surface one cluster out of hundreds of thousands on
+    request, so a key in hand needs its own route."""
+    key = client.get("/api/clusters?limit=1").json()[0]["cluster_key"]
+    body = client.get(f"/api/search/cluster?q={key}").json()
+
+    assert len(body) == 1
+    assert body[0]["cluster_key"] == key
+    # the full record, so the card can show its limits without a second fetch
+    assert body[0]["caveats"]
+    assert "evidence_tier" in body[0]
+
+
+def test_cluster_lookup_accepts_a_bare_number(client):
+    """Keys get copied as bare numbers; prefixing is a formatting detail."""
+    key = client.get("/api/clusters?limit=1").json()[0]["cluster_key"]
+    bare = key.split(":", 1)[1]
+    assert client.get(f"/api/search/cluster?q={bare}").json()[0]["cluster_key"] == key
+
+
+def test_cluster_lookup_takes_several_keys(client):
+    keys = [r["cluster_key"] for r in client.get("/api/clusters?limit=2").json()]
+    if len(keys) < 2:
+        pytest.skip("fixture has one cluster")
+    body = client.get(f"/api/search/cluster?q={','.join(keys)}").json()
+    assert {r["cluster_key"] for r in body} == set(keys)
+
+
+def test_cluster_lookup_distinguishes_missing_from_malformed(client):
+    assert client.get("/api/search/cluster?q=cluster:99999999").status_code == 404
+    assert client.get("/api/search/cluster?q=,,").status_code == 422

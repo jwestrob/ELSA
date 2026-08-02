@@ -93,6 +93,51 @@ reading from a three-component assembly to a repeat expansion.
   variant (0,0,1,2) in 4% of cases.
 - The same ranking on Omnitrophota, to see whether the cassette is DPANN-specific.
 
+## What sits beside it
+
+Flanking windows of ±10 genes around the 1,097 complete loci, scored against
+windows of matched width drawn at random positions on the same contigs
+(`benchmarks/scripts/cassette_neighbourhood_enrichment.py`).
+
+| annotation | source | loci | % of loci | null | enrichment |
+|---|---|---|---|---|---|
+| arCOG01817 | txsscan | 590 | 53.8% | 4.84% | 11.1x |
+| arCOG01818 | txsscan | 589 | 53.7% | 4.84% | 11.1x |
+| T_virB11 | txsscan | 576 | 52.5% | 4.84% | 10.9x |
+| T2SSE | pfam | 569 | 51.9% | 5.11% | 10.2x |
+| arCOG01814 | txsscan | 478 | 43.6% | 2.42% | 18.0x |
+| ComM_comGA | txsscan | 441 | 40.2% | 4.57% | 8.8x |
+| DUF357 | pfam | 111 | 10.1% | <0.01% | 75.3x |
+| Translin | pfam | 210 | 19.1% | 0.81% | 23.7x |
+| CBASS__AG_E1_ThiF | defensefinder | 68 | 6.2% | 0.27% | 23.1x |
+
+**The cassette sits in archaeal type IV pilus / secretion loci.** Read the two
+lines of evidence separately, because they license different statements.
+
+*Components* matching TXSScan pilus/secretion profiles — the assembly ATPase and
+platform proteins — flank about half of all loci at 9-18x over the null.
+
+*A curated system call* is a different matter. TXSScan completes an
+`Archaeal-T4P` call at only **4.9%** of loci, so that is the only fraction where
+the system is named rather than inferred. The gap is largely a data-completeness
+artifact: the contigs carrying the cassette run a median of 37 genes, with 59.5%
+under 50, and a quorum-based caller cannot assemble a system from a fragment.
+
+An independent check at genome level agrees without depending on the null:
+genomes carrying the cassette hold a secretion-system call somewhere 23.6% of
+the time against a 16.2% base rate across DPANN, a 1.46x enrichment on 1,086
+genomes.
+
+So: **associated with archaeal T4P machinery**, named by a curated caller in a
+minority of loci and supported by component-level evidence and a genome-level
+rate elsewhere. For the remaining loci this is a hypothesis, not a call.
+
+Two caveats on the enrichment table. The null holds 372 windows rather than
+1,097, because short contigs leave no room to place a matched window away from
+the real locus, which likely biases the ratios upward. And `DUF357` at 75x is
+itself a domain of unknown function, so the strongest single enrichment names
+nothing.
+
 ## Other candidates from the same ranking
 
 | cluster | genomes | slots | dark | dominant phylum |

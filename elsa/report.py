@@ -15,6 +15,8 @@ consumer has to actively discard them to overclaim.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+import uuid
+from contextlib import contextmanager
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence
@@ -242,6 +244,33 @@ def cluster_records(
     return records
 
 
+
+@contextmanager
+def attached_annotations(connection: duckdb.DuckDBPyConnection,
+                         annotations_db: str | Path):
+    """ATTACH the companion Sharur database under a unique alias.
+
+    DuckDB attachment aliases are **instance-wide**, not per-connection: two
+    connections opened on the same file in one process share a catalog, so a
+    fixed alias collides the moment two requests overlap. The browser loads the
+    diagram and the consensus frame together, which is exactly that case, and
+    the loser raised ``database with name "_ann" already exists``.
+
+    A per-call alias removes the collision without serializing readers. Detach
+    is best-effort: a lost alias costs a catalog entry, while raising here would
+    mask the real error from the body of the ``with``.
+    """
+    alias = f"_ann_{uuid.uuid4().hex[:12]}"
+    connection.execute(f"ATTACH '{annotations_db}' AS {alias} (READ_ONLY)")
+    try:
+        yield alias
+    finally:
+        try:
+            connection.execute(f"DETACH {alias}")
+        except Exception:
+            pass
+
+
 def _annotation_map(
     connection: duckdb.DuckDBPyConnection,
     annotations_db: str | Path,
@@ -258,22 +287,17 @@ def _annotation_map(
     """
     if not proteins:
         return {}
-    connection.execute(
-        f"ATTACH '{str(annotations_db)}' AS _ann (READ_ONLY)"
-    )
-    try:
-        placeholders = ", ".join("?" for _ in proteins)
+    placeholders = ", ".join("?" for _ in proteins)
+    with attached_annotations(connection, annotations_db) as alias:
         rows = connection.execute(
             f"""
             SELECT protein_id, string_agg(DISTINCT name, ';')
-            FROM _ann.annotations
+            FROM {alias}.annotations
             WHERE source = ? AND protein_id IN ({placeholders})
             GROUP BY protein_id
             """,
             [source, *proteins],
         ).fetchall()
-    finally:
-        connection.execute("DETACH _ann")
     return {row[0]: row[1] or "" for row in rows}
 
 

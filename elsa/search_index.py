@@ -16,6 +16,8 @@ from typing import Any, Dict, List, Optional, Sequence
 
 import duckdb
 
+from .report import attached_annotations
+
 
 def _connect(database: str | Path) -> duckdb.DuckDBPyConnection:
     return duckdb.connect(str(database), read_only=True)
@@ -47,8 +49,7 @@ def search_by_domain(
 
     connection = _connect(database)
     try:
-        connection.execute(f"ATTACH '{str(annotations_db)}' AS _ann (READ_ONLY)")
-        try:
+        with attached_annotations(connection, annotations_db) as _alias:
             conditions = " OR ".join(["lower(a.name) LIKE ?"] * len(terms))
             # The WHERE inside the CTE already guarantees at least one hit, so a
             # default HAVING would be redundant — and referencing the annotation
@@ -72,7 +73,7 @@ def search_by_domain(
                            a.name AS domain_name,
                            CASE {term_case} ELSE NULL END AS matched_term
                     FROM current_elsa_cluster_members AS m
-                    JOIN _ann.annotations AS a ON a.protein_id = m.protein_id
+                    JOIN {_alias}.annotations AS a ON a.protein_id = m.protein_id
                     WHERE a.source = ? AND ({conditions})
                 )
                 SELECT hits.cluster_key,
@@ -93,8 +94,6 @@ def search_by_domain(
                 [*case_params, source, *[f"%{t.lower()}%" for t in terms],
                  *([len(terms)] if match_all else []), int(limit)],
             ).fetchall()
-        finally:
-            connection.execute("DETACH _ann")
     finally:
         connection.close()
 
@@ -274,15 +273,14 @@ def locate_in_cluster(
 
     connection = _connect(database)
     try:
-        connection.execute(f"ATTACH '{str(annotations_db)}' AS _ann (READ_ONLY)")
-        try:
+        with attached_annotations(connection, annotations_db) as _alias:
             conditions = " OR ".join(["lower(a.name) LIKE ?"] * len(terms))
             rows = connection.execute(
                 f"""
                 SELECT m.locus_key, m.genome_id, m.contig_id, m.protein_id,
                        m.locus_order, string_agg(DISTINCT a.name, ';') AS domains
                 FROM current_elsa_cluster_members AS m
-                JOIN _ann.annotations AS a ON a.protein_id = m.protein_id
+                JOIN {_alias}.annotations AS a ON a.protein_id = m.protein_id
                 WHERE m.cluster_key = ? AND a.source = ? AND ({conditions})
                 GROUP BY m.locus_key, m.genome_id, m.contig_id, m.protein_id,
                          m.locus_order
@@ -297,8 +295,6 @@ def locate_in_cluster(
                 """,
                 [cluster_key],
             ).fetchall())
-        finally:
-            connection.execute("DETACH _ann")
     finally:
         connection.close()
 

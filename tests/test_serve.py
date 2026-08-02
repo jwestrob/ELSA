@@ -315,3 +315,54 @@ def test_cluster_lookup_takes_several_keys(client):
 def test_cluster_lookup_distinguishes_missing_from_malformed(client):
     assert client.get("/api/search/cluster?q=cluster:99999999").status_code == 404
     assert client.get("/api/search/cluster?q=,,").status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Concurrent annotation access
+# ---------------------------------------------------------------------------
+
+def test_annotation_attach_survives_concurrent_requests(annotated_client):
+    """The page loads the diagram and consensus frames at once.
+
+    DuckDB attachment aliases are instance-wide rather than per-connection, so a
+    fixed alias collided as soon as two requests overlapped and one returned 500
+    with 'database with name "_ann" already exists'. Sequential probes never
+    reproduced it.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    paths = [
+        "/api/cluster/cluster:4",
+        "/api/cluster/cluster:4/consensus?min_coverage=0.5",
+        "/api/cluster/cluster:4/diagram?height=300",
+        "/api/cluster/cluster:4/consensus/diagram?height=200",
+        "/api/search/domain?q=ribosomal",
+        "/api/cluster/cluster:4/locate?q=ribosomal",
+    ] * 4
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        codes = list(pool.map(lambda p: annotated_client.get(p).status_code, paths))
+
+    assert all(c != 500 for c in codes), f"server errors under concurrency: {codes}"
+
+
+def test_annotation_alias_is_unique_per_attach(tmp_path):
+    """Two overlapping attaches on one process must not share an alias.
+
+    The fixed alias failed here rather than merely being untidy: DuckDB refuses
+    the second ATTACH outright.
+    """
+    import duckdb
+    from elsa.report import attached_annotations
+
+    target = tmp_path / "ann.duckdb"
+    duckdb.connect(str(target)).close()
+    first_conn = duckdb.connect(str(tmp_path / "a.duckdb"))
+    second_conn = duckdb.connect(str(tmp_path / "b.duckdb"))
+    try:
+        with attached_annotations(first_conn, target) as first:
+            with attached_annotations(second_conn, target) as second:
+                assert first != second
+                assert first.startswith("_ann_") and second.startswith("_ann_")
+    finally:
+        first_conn.close(); second_conn.close()

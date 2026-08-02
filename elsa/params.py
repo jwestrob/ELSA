@@ -81,7 +81,7 @@ class ChainConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
     # Index backend
     index_backend: Literal["auto", "hnsw", "faiss_ivfflat", "faiss_ivfpq", "faiss_ivfsq", "faiss_flat", "sklearn"] = Field(
-        default="faiss_ivfflat", description="ANN index backend"
+        default="auto", description="ANN index backend; auto = exact below 50k genes, hnsw above"
     )
     faiss_nprobe: int = Field(default=32, description="IVF clusters to search (higher = better recall, slower)")
 
@@ -89,7 +89,7 @@ class ChainConfig(BaseModel):
     hnsw_k: int = Field(default=50, description="Number of neighbors to retrieve per gene")
     hnsw_m: int = Field(default=32, description="HNSW M parameter (connections per node)")
     hnsw_ef_construction: int = Field(default=200, description="HNSW build quality parameter")
-    hnsw_ef_search: int = Field(default=128, description="HNSW query quality parameter")
+    hnsw_ef_search: int = Field(default=256, description="HNSW query quality parameter; 256 is the measured knee at 3.4M genes (recall@60 0.9914 at 128, 0.9968 at 256)")
 
     # Similarity and chaining
     similarity_threshold: float = Field(default=0.85, description="Minimum cosine similarity for anchor")

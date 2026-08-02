@@ -93,10 +93,10 @@ def test_packed_key_stays_positive_at_the_guarded_limit():
 # ---------------------------------------------------------------------------
 
 def test_auto_prefers_hnsw_at_scale():
-    """Selection is on build plus all-vs-all search, since ELSA queries every
-    gene once. On DPANN: hnsw 253s + 160s = 413s against IVF-Flat 11s + ~1320s
-    = 1331s, at equal recall. Choosing on build time alone shipped a 3.2x
-    regression that a 90k-gene end-to-end test could not surface."""
+    """Swept at 3.4M genes, hnsw leads the recall/time frontier: 371s for
+    recall@60 0.9914 and 500s for 0.9968, against 1093s and 2163s for IVF-Flat
+    at 0.9913 and 0.9976. IVF granularity degrades because nlist grows as
+    sqrt(n), so a fixed nprobe scans an ever smaller share of the corpus."""
     from elsa.index import _resolve_backend
 
     assert _resolve_backend("auto", 3_395_472) == "hnsw"
@@ -121,9 +121,10 @@ def test_explicit_backend_is_never_overridden():
 
 def test_pipeline_default_matches_the_validated_config():
     """`ChainConfig` here is what the Python API and the benchmark scripts
-    construct; it drifted from params.py and silently selected hnswlib."""
+    construct. It once drifted from params.py and silently selected a different
+    backend, so the two must agree."""
     from elsa.analyze.pipeline import ChainConfig
     from elsa.params import ChainConfig as ValidatedChainConfig
 
     assert ChainConfig().index_backend == ValidatedChainConfig().index_backend
-    assert ChainConfig().index_backend == "faiss_ivfflat"
+    assert ChainConfig().index_backend == "auto"

@@ -43,20 +43,24 @@ class ChainSummary:
 @dataclass
 class ChainConfig:
     """Configuration for the chain pipeline (plain dataclass for CLI bridge)."""
-    # Matches PLMConfig/ChainConfig in params.py. "auto" used to resolve to
-    # hnswlib, which builds 27.8x slower than IVF-Flat at DPANN scale for
-    # equivalent recall, and this dataclass is what the Python API and every
-    # benchmark script construct by default.
     # Embedding space the vectors live in. The schema stage needs it because the
     # replacement cut-point moves with the cosine distribution; leaving it at
     # "none" against treated vectors would fire on every slot.
     embedding_transform: str = "none"
-    index_backend: str = "faiss_ivfflat"
+    # Must match params.py: this dataclass is what the Python API and every
+    # benchmark script construct, and the two once drifted apart silently.
+    # "auto" resolves by corpus size — exact search below 50k genes, hnsw above,
+    # which leads the recall/time frontier by 2.9-4.3x at 3.4M genes
+    # (benchmarks/evaluation/index_backend_recall_at_scale.csv). Runs made before
+    # 2026-08 used faiss_ivfflat and need it named explicitly to reproduce.
+    index_backend: str = "auto"
     faiss_nprobe: int = 32
     hnsw_k: int = 50
     hnsw_m: int = 32
     hnsw_ef_construction: int = 200
-    hnsw_ef_search: int = 128
+    # 256 is the measured knee at 3.4M genes: recall@60 0.9914 at 128,
+    # 0.9968 at 256, 0.9967 at 512.
+    hnsw_ef_search: int = 256
     similarity_threshold: float = 0.85
     max_gap_genes: int = 2
     min_chain_size: int = 2
@@ -542,7 +546,7 @@ def _run_gene_chaining(
     gap_penalty_scale: float = 0.0,
     hnsw_m: int = 32,
     hnsw_ef_construction: int = 200,
-    hnsw_ef_search: int = 128,
+    hnsw_ef_search: int = 256,
     index_backend: str = "auto",
     faiss_nprobe: int = 16,
     prebuilt_index: Optional[tuple] = None,

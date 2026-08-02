@@ -36,25 +36,42 @@ except ImportError:
 def _resolve_backend(index_backend: str, n: int = 0) -> str:
     """Resolve 'auto' to the best available backend for a corpus of ``n`` genes.
 
-    Selection is on **build plus search**, because ELSA queries every gene once:
-    the search is a single all-vs-all pass, not an amortised serving workload, so
-    a cheap index that answers slowly loses.
+    The ranking depends on corpus size, and it inverts between the two scales
+    ELSA runs at. Compare on the recall/time frontier, since either backend can
+    buy accuracy with time — reading off a single (ef, nprobe) pair says more
+    about the settings than the backends.
 
-    Measured on DPANN, 3,395,472 x 320 vectors, k=60:
+    At 90,566 genes (``index_backend_recall.csv``) IVF-Flat leads: recall@60
+    0.9895 at nprobe=32 against 0.9813 for hnsw at ef=128. That is why
+    ``faiss_ivfflat`` became the documented default.
 
-        backend         build     all-vs-all search    total
-        hnsw             253s                  160s     413s
-        faiss_ivfflat     11s                 ~1320s    1331s
+    At 3,395,472 genes (``index_backend_recall_at_scale.csv``, k=60, totals
+    covering build plus the full all-vs-all pass ELSA actually performs):
 
-    at equal accuracy (recall@60 0.9916 against 0.9913). IVF-Flat builds 27.8x
-    faster and searches roughly eight times slower, so it is **3.2x worse
-    overall** here. An earlier revision of this function preferred it on the
-    build number alone, validated end-to-end only on 90,589 genes where search
-    time is negligible, and shipped a regression that the scale of the E. coli
-    test could not reveal.
+        backend                    total    recall@60
+        hnsw ef=128                 371s       0.9914
+        hnsw ef=256                 500s       0.9968
+        faiss_ivfflat nprobe=32    1093s       0.9913
+        faiss_ivfflat nprobe=64    2163s       0.9976
 
-    Below ``FLAT_MAX`` an exact index wins outright: it builds in a fraction of
-    a second and returns exact neighbours, so there is nothing to approximate.
+    Matched on recall, hnsw is 2.9x faster at ~0.991 and 4.3x faster at ~0.997.
+    The mechanism is IVF granularity: ``nlist`` grows as sqrt(n), so cells hold
+    ~300 vectors at 90k and ~1,840 at 3.4M, and a fixed ``nprobe`` scans a
+    steadily smaller share of the corpus. HNSW has no such term and its graph
+    improves as the corpus densifies.
+
+    So ``auto`` takes hnsw above ``FLAT_MAX`` and exact search below it, where an
+    exact index builds in a fraction of a second and leaves nothing to
+    approximate. ``auto`` is now the configured default too; runs made before
+    2026-08 used ``faiss_ivfflat``, which must be named explicitly to reproduce
+    them.
+
+    Two lessons from getting here. Selecting on build time alone is wrong: an
+    earlier revision preferred IVF-Flat for its 27.8x faster build, checked
+    end-to-end only at 90,589 genes where search time hides, and inverted the
+    ranking at scale. And a single measurement is weak against a parameter
+    sweep — the fix was to repeat the sweep at the scale in question, not to
+    argue from one point.
     """
     if index_backend != "auto":
         return index_backend
@@ -73,8 +90,8 @@ def build_gene_index(
     embeddings: np.ndarray,
     m: int = 32,
     ef_construction: int = 200,
-    ef_search: int = 128,
-    index_backend: str = "faiss_ivfflat",
+    ef_search: int = 256,
+    index_backend: str = "auto",
     faiss_nprobe: int = 32,
 ) -> Tuple[str, Any]:
     """
@@ -84,7 +101,9 @@ def build_gene_index(
         embeddings: (n_genes, dim) array of L2-normalized gene embeddings
         m: HNSW M parameter (connections per node)
         ef_construction: HNSW build quality parameter
-        ef_search: HNSW query quality parameter
+        ef_search: HNSW query quality parameter. 256 is the measured knee at
+            3.4M genes: recall@60 0.9914 at 128, 0.9968 at 256, 0.9967 at 512,
+            for +129s and +178s respectively on a full all-vs-all pass.
         index_backend: "auto" | "hnsw" | "faiss_ivfflat" | "faiss_ivfpq" | "faiss_ivfsq" | "faiss_flat" | "sklearn"
         faiss_nprobe: IVF clusters to search (higher = better recall, slower)
 

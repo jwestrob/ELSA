@@ -803,6 +803,19 @@ def compute_slot_summaries(
 # slots as conservative: its positive calls are trustworthy and it misses about
 # two fifths of the replacements there.
 #
+# CUT-POINTS ARE POPULATION-SPECIFIC AND DO NOT TRANSFER ACROSS RUNS. All the
+# figures here were calibrated on slots from a raw-space run. Re-measured on a
+# run that clustered *in* soft-ZCA space at threshold 0.30, the same 0.40
+# cut-point gives precision 60.2% at recall 89.5% against aligned-occupant
+# mmseqs truth — stricter anchoring produces more homogeneous slots, and the
+# threshold over-fires on what is left. Recalibrate against annotation on the
+# slot population a run actually produces before trusting `has_alternate` on it.
+#
+# Note also what the statistic covers: `compute_slot_summaries` scores aligned
+# occupants only (see the `is_insertion` filter below), and insertions are 28%
+# of assignments. Judging the flag against truth that includes insertions
+# measures pairs it never sees.
+#
 # Firing rises with slot size — 39.7% at 4-10 occupants to 93.3% above 100 —
 # which is real rather than a drifting statistic. Subsampling 400 large slots to
 # 20 occupants each and scoring with mmseqs: 97.8% genuinely hold a

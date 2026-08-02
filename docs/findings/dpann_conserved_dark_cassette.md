@@ -1,4 +1,4 @@
-# A conserved three-gene cassette in half of DPANN, dark to every annotation source
+# A conserved tandem triplication of a dark hydrophobic protein, in half of DPANN
 
 **Status: observed, unnamed.** No curated caller fires on any member, so nothing
 here is a functional claim. The curated callers populated in
@@ -36,7 +36,23 @@ Over 1,097 loci carrying all three slots:
 - all three on the same strand — **94.8%**
 - slot order along the contig — (0,1,2) 75%, reversed (2,1,0) 12%
 
-### Each slot is one protein family
+### Each slot is one protein family — and the three are paralogs
+
+The three slots are homologous to each other, so this is a **tandem triplication
+of a single family** rather than three unrelated ones:
+
+| comparison | members hit | median identity |
+|---|---|---|
+| slot 0 vs slot 1 | 88.7% | 32.4% |
+| slot 0 vs slot 2 | 86.1% | 40.7% |
+| slot 1 vs slot 2 | 96.7% | 31.5% |
+
+Members are strongly hydrophobic — mean Kyte-Doolittle +0.88, +0.95 and +1.08
+by slot, with 84-96% of members above +0.5. That composition is consistent with
+integral membrane proteins; it is a compositional observation and no curated
+caller has assigned a family, a fold or a topology.
+
+### Slot coherence
 
 Strict clustering splits the slots into hundreds of groups (362 at 30% identity
 / 70% coverage for slot 0), which alone would suggest heterogeneity. Sensitive
@@ -55,10 +71,15 @@ which is the regime embedding-based retrieval is meant to occupy.
 
 ## What this is not
 
-Three uncharacterized families in fixed order and orientation across half a
-phylum-spanning collection is a strong pattern, and the pattern is all that is
-established. There is no evidence here for any function, and no curated call to
-borrow a name from.
+A tandem triplication of one uncharacterized hydrophobic family, in fixed order
+and orientation across half a phylum-spanning collection, is a strong and
+specific pattern — and the pattern is all that is established. There is no
+evidence here for any function, no curated call to borrow a name from, and no
+topology beyond an amino-acid composition consistent with membrane residence.
+
+An earlier revision of this document called the three slots distinct families.
+That was wrong: they are paralogs at 31-41% median identity, which changes the
+reading from a three-component assembly to a repeat expansion.
 
 ## Checks worth doing before building on it
 
@@ -67,6 +88,9 @@ borrow a name from.
 - Structure prediction on a representative from each slot, which would give
   fold-level hints where sequence gives none.
 - Whether the 12% reversed-order loci differ from the 75% in any other respect.
+- Copy number: whether genomes carry two, three or more tandem copies, and
+  whether the count tracks taxonomy — the loci table already shows a 4-gene
+  variant (0,0,1,2) in 4% of cases.
 - The same ranking on Omnitrophota, to see whether the cassette is DPANN-specific.
 
 ## Other candidates from the same ranking

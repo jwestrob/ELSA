@@ -132,6 +132,23 @@ So: **associated with archaeal T4P machinery**, named by a curated caller in a
 minority of loci and supported by component-level evidence and a genome-level
 rate elsewhere. For the remaining loci this is a hypothesis, not a call.
 
+### It is not the conserved T4P block
+
+ELSA independently recovers a curated Archaeal-T4P cluster — `cluster:508`,
+2,163 genomes, 812 proteins under a TXSScan system call, T2SSF 48% / T2SSE 31%.
+The cassette is **not** part of it and rarely near it: 901 genomes carry both,
+yet only 66 loci pairs share a contig, at a median gap of 58 genes and just 6%
+within five.
+
+The components flanking the cassette belong elsewhere. Of 1,604 T4P-component
+proteins in the flanks, the largest single ELSA cluster accounts for 8.8% and
+`cluster:508` for none — they scatter across hundreds of small clusters.
+
+So the cassette occupies T4P-component-rich neighbourhoods whose *arrangement*
+varies between genomes, distinct from the single conserved pilus locus. Whether
+that reflects genuinely labile context or ELSA fragmenting a real block is open;
+the median 37-gene contig limits what can be resolved either way.
+
 Two caveats on the enrichment table. The null holds 372 windows rather than
 1,097, because short contigs leave no room to place a matched window away from
 the real locus, which likely biases the ratios upward. And `DUF357` at 75x is

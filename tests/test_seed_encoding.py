@@ -92,13 +92,15 @@ def test_packed_key_stays_positive_at_the_guarded_limit():
 # Backend selection: 'auto' used to mean "spend 28% of the run on a graph"
 # ---------------------------------------------------------------------------
 
-def test_auto_prefers_ivfflat_at_scale():
-    """At DPANN scale an HNSW graph costs 253s against 9.1s for IVF-Flat, and
-    the two retrieve equivalently (recall@60 0.9916 vs 0.9913)."""
+def test_auto_prefers_hnsw_at_scale():
+    """Selection is on build plus all-vs-all search, since ELSA queries every
+    gene once. On DPANN: hnsw 253s + 160s = 413s against IVF-Flat 11s + ~1320s
+    = 1331s, at equal recall. Choosing on build time alone shipped a 3.2x
+    regression that a 90k-gene end-to-end test could not surface."""
     from elsa.index import _resolve_backend
 
-    assert _resolve_backend("auto", 3_395_472) == "faiss_ivfflat"
-    assert _resolve_backend("auto", 200_000) == "faiss_ivfflat"
+    assert _resolve_backend("auto", 3_395_472) == "hnsw"
+    assert _resolve_backend("auto", 200_000) == "hnsw"
 
 
 def test_auto_prefers_exact_search_on_small_corpora():

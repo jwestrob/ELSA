@@ -36,23 +36,36 @@ except ImportError:
 def _resolve_backend(index_backend: str, n: int = 0) -> str:
     """Resolve 'auto' to the best available backend for a corpus of ``n`` genes.
 
-    Preferring hnswlib here was costly at scale. On 3,395,472 x 320 vectors an
-    HNSW graph takes **253s** to build against **9.1s** for FAISS IVF-Flat, and
-    the two retrieve equivalently (recall@60 0.9916 vs 0.9913) — 28% of a full
-    DPANN run spent on a graph that answers the same queries. HNSW's advantage
-    is real but lives at small n, where build time is seconds either way.
+    Selection is on **build plus search**, because ELSA queries every gene once:
+    the search is a single all-vs-all pass, not an amortised serving workload, so
+    a cheap index that answers slowly loses.
 
-    Below ``FLAT_MAX`` an exact index is both faster to build and perfectly
-    accurate, so there is nothing to approximate.
+    Measured on DPANN, 3,395,472 x 320 vectors, k=60:
+
+        backend         build     all-vs-all search    total
+        hnsw             253s                  160s     413s
+        faiss_ivfflat     11s                 ~1320s    1331s
+
+    at equal accuracy (recall@60 0.9916 against 0.9913). IVF-Flat builds 27.8x
+    faster and searches roughly eight times slower, so it is **3.2x worse
+    overall** here. An earlier revision of this function preferred it on the
+    build number alone, validated end-to-end only on 90,589 genes where search
+    time is negligible, and shipped a regression that the scale of the E. coli
+    test could not reveal.
+
+    Below ``FLAT_MAX`` an exact index wins outright: it builds in a fraction of
+    a second and returns exact neighbours, so there is nothing to approximate.
     """
     if index_backend != "auto":
         return index_backend
 
     FLAT_MAX = 50_000
-    if FAISS_AVAILABLE:
-        return "faiss_flat" if n < FLAT_MAX else "faiss_ivfflat"
+    if n < FLAT_MAX and FAISS_AVAILABLE:
+        return "faiss_flat"
     if HNSWLIB_AVAILABLE:
         return "hnsw"
+    if FAISS_AVAILABLE:
+        return "faiss_flat" if n < FLAT_MAX else "faiss_ivfflat"
     return "sklearn"
 
 

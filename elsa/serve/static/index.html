@@ -178,23 +178,19 @@ async function showCluster(r) {
     ? `<div class="line" style="margin-bottom:8px">domains on ` +
       `${Math.round(detail.annotated_fraction * 100)}% of genes · ` +
       `edge similarity is <code>${detail.similarity_source}</code></div>` : '';
-  // The slider steps through the observed cosines rather than a linear span of
-  // their range. Even centred, a conserved cluster's anchors bunch near 1.0, so
-  // a linear track leaves most positions doing nothing. Walking the sorted
-  // values means every step removes roughly the same number of connections.
-  const cosSorted = (detail.edges || [])
-    .map(e => e.cos).filter(v => v != null).sort((a, b) => a - b);
-  const nEdges = cosSorted.length;
-  const cosAt = i => nEdges ? cosSorted[Math.min(nEdges - 1, Math.max(0, i))] : 0;
+  // Edge filtering lives inside the diagram, not here. The frame already
+  // carries a cosine slider that re-filters the drawn edges through a D3 data
+  // join, so it updates in place. A second slider on this page could only
+  // change the iframe's src, which refetches and re-renders the whole diagram
+  // and discards the reader's zoom, pan and row order — a worse control for
+  // the same job.
+  const nEdges = (detail.edges || []).filter(e => e.cos != null).length;
 
   $('#diagram').innerHTML = note +
-    `<div class="line" style="margin:6px 0 8px">cosine \u03C4 ` +
-    `<input id="tau" type="range" min="0" max="${Math.max(0, nEdges - 1)}" step="1" ` +
-    `value="0" style="vertical-align:middle;width:220px"> ` +
-    `<span id="taulbl"></span> ` +
-    `<span style="color:var(--muted)">of ${nEdges} connections` +
+    `<div class="line" style="margin:6px 0 8px">${nEdges} connection` +
+    `${nEdges === 1 ? '' : 's'} \u00b7 filter with <b>cosine \u03C4</b> inside the diagram` +
     (detail.similarity_source ? ` \u00b7 <code>${detail.similarity_source}</code>` : '') +
-    `</span></div>` +
+    `</div>` +
     `<div id="frameholder"></div>` +
     `<h3 style="margin:20px 0 6px;font-size:14px">Consensus architecture</h3>` +
     `<div class="line" style="margin-bottom:6px">present in \u2265 ` +
@@ -202,17 +198,12 @@ async function showCluster(r) {
     `style="vertical-align:middle;width:120px"> <span id="covlbl">50%</span> of loci</div>` +
     `<div id="consensusholder"></div>`;
 
-  function tauLabel(i) {
-    const tau = cosAt(i);
-    const kept = nEdges - i;
-    $('#taulbl').textContent = `\u2265 ${tau.toFixed(3)} \u2014 ${kept} drawn`;
-    return tau;
-  }
-
-  function drawFrame(tau) {
+  // tau=0 so the frame receives every edge and its own slider spans the real
+  // range; filtering server-side would cap what the in-frame control can reach.
+  function drawFrame() {
     $('#frameholder').innerHTML =
       `<iframe height="600" src="/api/cluster/${encodeURIComponent(r.cluster_key)}` +
-      `/diagram?max_loci=8&height=560&tau=${tau}"></iframe>`;
+      `/diagram?max_loci=8&height=560&tau=0"></iframe>`;
   }
   function drawConsensus(minCov) {
     $('#covlbl').textContent = Math.round(minCov * 100) + '%';
@@ -221,15 +212,8 @@ async function showCluster(r) {
       `/consensus/diagram?max_loci=12&min_coverage=${minCov}&height=200"></iframe>`;
   }
 
-  let tauTimer = null;
-  $('#tau').oninput = e => {
-    const tau = tauLabel(+e.target.value);       // label updates immediately
-    clearTimeout(tauTimer);                      // reload only once the drag settles
-    tauTimer = setTimeout(() => drawFrame(tau), 250);
-  };
   $('#cov').oninput = e => drawConsensus(e.target.value);
-  tauLabel(0);
-  drawFrame(cosAt(0));
+  drawFrame();
   drawConsensus(0.5);
 }
 

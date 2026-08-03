@@ -289,15 +289,23 @@ def _annotation_map(
         return {}
     placeholders = ", ".join("?" for _ in proteins)
     with attached_annotations(connection, annotations_db) as alias:
-        rows = connection.execute(
-            f"""
-            SELECT protein_id, string_agg(DISTINCT name, ';')
-            FROM {alias}.annotations
-            WHERE source = ? AND protein_id IN ({placeholders})
-            GROUP BY protein_id
-            """,
-            [source, *proteins],
-        ).fetchall()
+        try:
+            rows = connection.execute(
+                f"""
+                SELECT protein_id, string_agg(DISTINCT name, ';')
+                FROM {alias}.annotations
+                WHERE source = ? AND protein_id IN ({placeholders})
+                GROUP BY protein_id
+                """,
+                [source, *proteins],
+            ).fetchall()
+        except duckdb.Error:
+            # A companion database without an annotations table is a legitimate
+            # configuration. Left unguarded, DuckDB resolves the missing table
+            # through a replacement scan and reports the module-level
+            # `annotations` future-import as the offending object, which is a
+            # baffling error for "this database has no domains in it".
+            return {}
     return {row[0]: row[1] or "" for row in rows}
 
 
@@ -684,18 +692,29 @@ def cluster_payload(
                 track["lineage"] = ranks["lineage"]
                 # Narrowest informative rank, so a row reads as something a
                 # person recognises rather than an accession.
+                prefix = {name: letter for letter, name in GTDB_RANKS}
                 for rank in ("genus", "family", "order", "class", "phylum"):
-                    if rank in ranks:
-                        track["taxon_label"] = ranks[rank]
-                        track["taxon_rank"] = rank
-                        # Lead the row label with the taxon: an accession
-                        # identifies a row, a lineage lets a reader see at a
-                        # glance whether a cluster spans one clade or many.
-                        track["name"] = (
-                            f"{ranks[rank]}  |  {track['genome_id']}  |  "
-                            f"{track['contig_id']} ({len(track['genes'])} genes)"
-                        )
-                        break
+                    if rank not in ranks:
+                        continue
+                    track["taxon_label"] = ranks[rank]
+                    track["taxon_rank"] = rank
+                    # Lead with the narrowest rank, carrying its GTDB prefix so
+                    # it reads as taxonomy rather than as another accession —
+                    # many GTDB genus names are placeholders like "JAMCYW01".
+                    # Phylum and class follow, because the placeholder alone
+                    # says nothing about where in the tree the row sits.
+                    context = "  ·  ".join(
+                        f"{prefix[higher]}__{ranks[higher]}"
+                        for higher in ("phylum", "class", "order", "family")
+                        if higher in ranks and higher != rank
+                    )
+                    track["name"] = (
+                        f"{prefix[rank]}__{ranks[rank]}  |  "
+                        + (f"{context}  |  " if context else "")
+                        + f"{track['genome_id']}  ·  {track['contig_id']} "
+                          f"({len(track['genes'])} genes)"
+                    )
+                    break
             payload_taxonomy = sum(1 for t in tracks if t.get("taxon_label"))
         else:
             payload_taxonomy = 0

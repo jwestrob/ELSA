@@ -338,3 +338,87 @@ def test_taxonomy_is_absent_rather_than_empty_without_a_source(tmp_path):
     payload = cluster_payload(database, "cluster:4")
     assert "taxonomy_labelled" not in payload
     assert all("taxon_label" not in track for track in payload["loci"])
+
+
+def test_row_label_marks_the_rank_and_carries_higher_ranks(tmp_path):
+    """A GTDB genus is often a placeholder like 'JAMCYW01', which reads as an
+    accession unless the rank is marked and the lineage above it is shown."""
+    import duckdb
+    from elsa.results import materialize_result_store
+    from elsa.report import cluster_payload
+    from test_results import _blocks, _genes, _manifest
+
+    database = tmp_path / "synteny.duckdb"
+    materialize_result_store(database, blocks=_blocks(), genes=_genes(),
+                             manifest=_manifest())
+    payload = cluster_payload(database, "cluster:4")
+    genomes = sorted({track["genome_id"] for track in payload["loci"]})
+
+    ann = tmp_path / "sharur.duckdb"
+    connection = duckdb.connect(str(ann))
+    connection.execute("CREATE TABLE bins (bin_id VARCHAR, taxonomy VARCHAR)")
+    connection.executemany("INSERT INTO bins VALUES (?, ?)", [
+        (g, "d__Archaea;p__Micrarchaeota;c__Micrarchaeia;o__Micrarchaeales;"
+            "f__Micrarchaeaceae;g__JAMCYW01;s__") for g in genomes])
+    connection.execute(
+        "CREATE TABLE annotations (protein_id VARCHAR, source VARCHAR, name VARCHAR)")
+    connection.close()
+
+    labelled = cluster_payload(database, "cluster:4", annotations_db=ann)
+    assert labelled["taxonomy_labelled"] == labelled["taxonomy_total"]
+    track = labelled["loci"][0]
+    parts = track["name"].split("  |  ")
+
+    assert parts[0] == "g__JAMCYW01", "narrowest rank leads, with its prefix"
+    assert "p__Micrarchaeota" in parts[1] and "c__Micrarchaeia" in parts[1]
+    assert track["genome_id"] in parts[2], "the accession survives the label"
+    assert track["taxon_rank"] == "genus"
+    assert track["taxonomy"]["phylum"] == "Micrarchaeota"
+
+
+def test_unclassified_genomes_keep_the_plain_label(tmp_path):
+    """An empty lineage must not produce a row labelled 'g__'."""
+    import duckdb
+    from elsa.results import materialize_result_store
+    from elsa.report import cluster_payload
+    from test_results import _blocks, _genes, _manifest
+
+    database = tmp_path / "synteny.duckdb"
+    materialize_result_store(database, blocks=_blocks(), genes=_genes(),
+                             manifest=_manifest())
+    ann = tmp_path / "sharur.duckdb"
+    connection = duckdb.connect(str(ann))
+    connection.execute("CREATE TABLE bins (bin_id VARCHAR, taxonomy VARCHAR)")
+    connection.execute("INSERT INTO bins VALUES ('nope', 'd__;p__;c__')")
+    connection.execute(
+        "CREATE TABLE annotations (protein_id VARCHAR, source VARCHAR, name VARCHAR)")
+    connection.close()
+
+    payload = cluster_payload(database, "cluster:4", annotations_db=ann)
+    assert payload["taxonomy_labelled"] == 0
+    assert all("taxon_label" not in track for track in payload["loci"])
+
+
+def test_companion_database_without_annotations_still_renders(tmp_path):
+    """A Sharur database carrying taxonomy but no domains is a valid setup.
+
+    Unguarded, the missing table resolved through a DuckDB replacement scan and
+    surfaced the module's `from __future__ import annotations` as the offending
+    object — an error that says nothing about the actual situation.
+    """
+    import duckdb
+    from elsa.results import materialize_result_store
+    from elsa.report import cluster_payload
+    from test_results import _blocks, _genes, _manifest
+
+    database = tmp_path / "synteny.duckdb"
+    materialize_result_store(database, blocks=_blocks(), genes=_genes(),
+                             manifest=_manifest())
+    ann = tmp_path / "taxonomy_only.duckdb"
+    connection = duckdb.connect(str(ann))
+    connection.execute("CREATE TABLE bins (bin_id VARCHAR, taxonomy VARCHAR)")
+    connection.close()
+
+    payload = cluster_payload(database, "cluster:4", annotations_db=ann)
+    assert payload["loci"], "the diagram must still be produced"
+    assert payload["annotated_fraction"] == 0.0

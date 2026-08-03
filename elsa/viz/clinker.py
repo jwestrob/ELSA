@@ -900,14 +900,23 @@ def build_multiloc_html(data: Dict, width: int = 0, height: int = 500,
         const minX = d3.min(loc.genes, d => d.start) || 0;
         const maxX = d3.max(loc.genes, d => d.end) || 1;
         const baseX = d3.scaleLinear().domain([minX, maxX]).range([0, baseInnerW]);
-        // Two-line label: genome ID bold on top, contig:position below
-        const labelParts = (loc.name||'').split('  |  ');
-        const labelG = panG.append('text').attr('x', 0).attr('y', y0-12)
+        // Stacked label, one line per '  |  ' segment. Earlier this rendered
+        // only the first two and silently dropped the rest, so a label carrying
+        // lineage, accession and contig lost the contig without any sign.
+        const labelParts = (loc.name||'').split('  |  ').filter(t => t !== '');
+        const labelG = panG.append('text').attr('x', 0)
+          .attr('y', y0 - 12 - Math.max(0, labelParts.length - 2) * 11)
           .attr('fill','#ddd').style('cursor','pointer')
           .on('click', () => { flips[idx] = !flips[idx]; redraw(); });
         if (labelParts.length >= 2) {
-          labelG.append('tspan').text(labelParts[0]).attr('font-size','13px').attr('font-weight','bold').attr('x', 0);
-          labelG.append('tspan').text(labelParts[1]).attr('font-size','10px').attr('fill','#aaa').attr('x', 0).attr('dy', '12');
+          labelG.append('tspan').text(labelParts[0])
+            .attr('font-size','13px').attr('font-weight','bold').attr('x', 0);
+          labelParts.slice(1).forEach((part, n) => {
+            labelG.append('tspan').text(part)
+              .attr('font-size','10px')
+              .attr('fill', n === labelParts.length - 2 ? '#8a8f98' : '#aab2bd')
+              .attr('x', 0).attr('dy', n === 0 ? '12' : '11');
+          });
         } else {
           labelG.text(loc.name).attr('font-size','12px');
         }

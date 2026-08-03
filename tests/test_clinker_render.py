@@ -217,10 +217,16 @@ def test_consensus_arrow_direction_follows_orientation():
 
 
 def test_consensus_opacity_encodes_coverage():
-    """Uniform weight would imply every slot is equally attested."""
+    """Uniform weight would imply every slot is equally attested.
+
+    Matched on the arrows specifically: the conservation track beneath them
+    carries its own fill-opacity, and counting every occurrence in the document
+    would make this assertion about the wrong marks.
+    """
     import re
     html = clinker.build_consensus_html(_consensus_tokens())
-    opacities = [float(v) for v in re.findall(r'fill-opacity="([0-9.]+)"', html)]
+    opacities = [float(m.group(1)) for m in
+                 re.finditer(r'<polygon [^>]*fill-opacity="([0-9.]+)"', html)]
     assert len(opacities) == 2
     assert opacities[0] > opacities[1], "0.92 coverage must read stronger than 0.40"
 
@@ -269,3 +275,61 @@ def test_consensus_non_interactive_mode_is_bare_svg():
     svg = clinker.build_consensus_html(tokens, interactive=False)
     assert svg.startswith("<svg") and svg.rstrip().endswith("</svg>")
     assert "<script" not in svg and "data-z" not in svg
+
+
+# ---------------------------------------------------------------------------
+# Conservation track under the consensus
+# ---------------------------------------------------------------------------
+
+def _tokens():
+    return [
+        {"token": "Ribosomal_L2", "color": "#7fb8a4", "coverage": 1.00,
+         "fwd_frac": 1.0, "n_occ": 39},
+        {"token": "DUF655", "color": "#d9a24a", "coverage": 0.82,
+         "fwd_frac": 1.0, "n_occ": 32},
+        {"token": "dark_A", "color": "#888888", "coverage": 0.46,
+         "fwd_frac": 0.0, "n_occ": 18},
+        {"token": "dark_B", "color": "#666666", "coverage": 0.15,
+         "fwd_frac": 1.0, "n_occ": 6},
+    ]
+
+
+def test_conservation_bar_height_tracks_coverage():
+    """Opacity alone cannot be ranked by eye; bar height can."""
+    import re
+    from elsa.viz.clinker import build_consensus_html
+
+    html = build_consensus_html(_tokens(), [], height=190, title="demo")
+    heights = [float(m.group(1)) for m in
+               re.finditer(r'<rect [^>]*height="([\d.]+)"', html)]
+
+    assert len(heights) == 4
+    assert heights == sorted(heights, reverse=True), "bars must rank by coverage"
+    assert heights[0] > heights[-1] * 5, "a 100% slot must dwarf a 15% one"
+
+
+def test_conservation_track_fits_inside_the_svg():
+    """The track is added below the arrows, so the canvas has to grow with it."""
+    import re
+    from elsa.viz.clinker import build_consensus_html
+
+    html = build_consensus_html(_tokens(), [], height=120, title="demo")
+    svg_height = float(re.search(r'<svg[^>]*height="(\d+)"', html).group(1))
+    lowest = max(float(m.group(1)) + float(m.group(2)) for m in
+                 re.finditer(r'<rect [^>]*y="([\d.]+)"[^>]*height="([\d.]+)"', html))
+    assert svg_height > lowest, "bars must not be clipped by a small height request"
+
+
+def test_conservation_track_is_labelled_and_gridded():
+    from elsa.viz.clinker import build_consensus_html
+
+    html = build_consensus_html(_tokens(), [], height=190)
+    assert "conservation" in html
+    assert html.count('stroke-dasharray="3,3"') == 3, "25/50/75 gridlines"
+    assert "present in 100% of loci" in html
+
+
+def test_consensus_without_tokens_stays_empty():
+    from elsa.viz.clinker import build_consensus_html
+
+    assert build_consensus_html([], []) == ""

@@ -208,8 +208,10 @@ async function showCluster(r) {
   function drawConsensus(minCov) {
     $('#covlbl').textContent = Math.round(minCov * 100) + '%';
     $('#consensusholder').innerHTML =
-      `<iframe height="330" src="/api/cluster/${encodeURIComponent(r.cluster_key)}` +
-      `/consensus/diagram?max_loci=12&min_coverage=${minCov}&height=200"></iframe>`;
+      // Taller than the arrows alone need: the consensus now carries a
+      // conservation track beneath them.
+      `<iframe height="400" src="/api/cluster/${encodeURIComponent(r.cluster_key)}` +
+      `/consensus/diagram?max_loci=12&min_coverage=${minCov}&height=270"></iframe>`;
   }
 
   $('#cov').oninput = e => drawConsensus(e.target.value);

@@ -1238,6 +1238,13 @@ def build_consensus_html(
 
     ``pairs`` supply adjacency confidence between neighbouring slots and are
     drawn as the connector between arrows.
+
+    A conservation track runs beneath the arrows: one bar per slot, height and
+    colour both carrying coverage, over gridlines at 25/50/75%. Opacity alone is
+    hard to rank — telling 0.62 from 0.71 by shade is guesswork — and the
+    printed percentage has to be read slot by slot. A bar chart makes the
+    profile scannable, so the conserved core of a block is visible at a glance
+    rather than reconstructed from numbers.
     """
     if not tokens:
         return ""
@@ -1247,8 +1254,10 @@ def build_consensus_html(
 
     pad, gap, arrow_h = 18, 12, 42
     body_w = 128
+    track_h, track_gap = 46, 18   # conservation profile below the arrows
     width = pad * 2 + len(tokens) * body_w + max(0, len(tokens) - 1) * gap
     top = 54 if title else 30
+    height = max(height, top + arrow_h + 22 + track_gap + track_h + 26)
 
     parts: List[str] = [
         f'<svg id="consensus-svg" xmlns="http://www.w3.org/2000/svg" '
@@ -1305,6 +1314,55 @@ def build_consensus_html(
                 f'stroke-opacity="{0.25 + 0.65 * confidence:.2f}">'
                 f'<title>adjacent in {confidence * 100:.0f}% of loci</title></line>'
             )
+
+    # --- conservation track -------------------------------------------------
+    track_top = top + arrow_h + 22 + track_gap
+    track_bottom = track_top + track_h
+    track_right = pad + len(tokens) * body_w + max(0, len(tokens) - 1) * gap
+
+    for fraction in (0.25, 0.50, 0.75):
+        gy = track_bottom - track_h * fraction
+        parts.append(
+            f'<line x1="{pad}" y1="{gy:.1f}" x2="{track_right}" y2="{gy:.1f}" '
+            f'stroke="#2c2f35" stroke-width="1" stroke-dasharray="3,3"/>'
+        )
+        parts.append(
+            f'<text x="{pad - 4}" y="{gy + 3:.1f}" fill="#6b6f76" font-size="9" '
+            f'text-anchor="end">{int(fraction * 100)}</text>'
+        )
+    parts.append(
+        f'<line x1="{pad}" y1="{track_bottom}" x2="{track_right}" y2="{track_bottom}" '
+        f'stroke="#4a4f57" stroke-width="1"/>'
+    )
+
+    for index, token in enumerate(tokens):
+        coverage = max(0.0, min(1.0, float(token.get("coverage", 0.0))))
+        x = pad + index * (body_w + gap)
+        bar_h = max(1.0, track_h * coverage)
+        # Colour by the same quantity as height. Redundant on purpose: height
+        # ranks slots, colour makes the near-universal ones findable without
+        # comparing heights across a wide block.
+        if coverage >= 0.90:
+            fill = "#2f9e6f"
+        elif coverage >= 0.70:
+            fill = "#7fb8a4"
+        elif coverage >= 0.40:
+            fill = "#d9a24a"
+        else:
+            fill = "#8a5a1d"
+        parts.append(
+            f'<rect x="{x}" y="{track_bottom - bar_h:.1f}" width="{body_w}" '
+            f'height="{bar_h:.1f}" fill="{fill}" fill-opacity="0.85" '
+            f'stroke="#0f1016" stroke-width="0.5">'
+            f'<title>{_escape(str(token.get("token","")))} — present in '
+            f'{coverage * 100:.0f}% of loci ({token.get("n_occ", 0)} occurrences)'
+            f'</title></rect>'
+        )
+
+    parts.append(
+        f'<text x="{pad}" y="{track_bottom + 18}" fill="#9aa0a8" font-size="10">'
+        f'conservation: share of loci holding each slot</text>'
+    )
 
     parts.append("</svg>")
     svg = "".join(parts)

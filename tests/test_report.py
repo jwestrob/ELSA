@@ -244,3 +244,97 @@ def test_annotation_attach_is_released(tmp_path, sidecar):
     first = cluster_payload(sidecar, key, annotations_db=ann)
     second = cluster_payload(sidecar, key, annotations_db=ann)
     assert first["loci"] and second["loci"]
+
+
+# ---------------------------------------------------------------------------
+# Row ordering, orientation, and optional taxonomy
+# ---------------------------------------------------------------------------
+
+def test_seriation_puts_connected_loci_next_to_each_other():
+    """Ribbons are drawn only between adjacent rows, so ordering by support can
+    leave every connected pair separated and the diagram empty."""
+    from elsa.report import _order_and_orient
+
+    tracks = [{"genes": []} for _ in range(4)]
+    # 0-3 and 1-2 are the real pairs; support order 0,1,2,3 separates both.
+    edges = [
+        {"a": 0, "b": 3, "ai": 0, "bi": 0, "cos": 0.9},
+        {"a": 0, "b": 3, "ai": 1, "bi": 1, "cos": 0.9},
+        {"a": 1, "b": 2, "ai": 0, "bi": 0, "cos": 0.9},
+        {"a": 1, "b": 2, "ai": 1, "bi": 1, "cos": 0.9},
+    ]
+    order, _ = _order_and_orient(tracks, edges)
+    position = {track: index for index, track in enumerate(order)}
+    assert abs(position[0] - position[3]) == 1
+    assert abs(position[1] - position[2]) == 1
+
+
+def test_antiparallel_loci_are_flipped():
+    """One index rising while the other falls means the loci run opposite ways;
+    drawn unflipped their ribbons cross in an X."""
+    from elsa.report import _order_and_orient
+
+    tracks = [{"genes": []} for _ in range(2)]
+    inverted = [{"a": 0, "b": 1, "ai": i, "bi": 4 - i, "cos": 0.9} for i in range(5)]
+    _, flips = _order_and_orient(tracks, inverted)
+    assert flips[0] != flips[1], "an inverted pair must differ in orientation"
+
+    parallel = [{"a": 0, "b": 1, "ai": i, "bi": i, "cos": 0.9} for i in range(5)]
+    _, flips = _order_and_orient(tracks, parallel)
+    assert flips[0] == flips[1]
+
+
+def test_flips_compose_along_the_row_order():
+    """Orientation is judged against the preceding row, not against track 0.
+
+    The assertion is over adjacent pairs that actually share edges: seriation
+    may place two rows next to each other with nothing between them, and there
+    the orientation is inherited rather than invented.
+    """
+    from elsa.report import _order_and_orient
+
+    tracks = [{"genes": []} for _ in range(3)]
+    edges = []
+    for i in range(4):
+        edges.append({"a": 0, "b": 1, "ai": i, "bi": 3 - i, "cos": 0.9})
+        edges.append({"a": 1, "b": 2, "ai": i, "bi": 3 - i, "cos": 0.9})
+    order, flips = _order_and_orient(tracks, edges)
+
+    antiparallel_pairs = {(0, 1), (1, 2)}
+    checked = 0
+    for left, right in zip(order, order[1:]):
+        if (min(left, right), max(left, right)) in antiparallel_pairs:
+            assert flips[left] != flips[right], (
+                f"rows {left},{right} run opposite ways and must differ")
+            checked += 1
+    assert checked, "fixture must place at least one antiparallel pair adjacently"
+
+
+def test_ordering_is_stable_without_edges():
+    from elsa.report import _order_and_orient
+
+    tracks = [{"genes": []} for _ in range(3)]
+    order, flips = _order_and_orient(tracks, [])
+    assert sorted(order) == [0, 1, 2]
+    assert flips == [False, False, False]
+
+
+def test_single_track_needs_no_ordering():
+    from elsa.report import _order_and_orient
+
+    assert _order_and_orient([{"genes": []}], []) == ([0], [False])
+
+
+def test_taxonomy_is_absent_rather_than_empty_without_a_source(tmp_path):
+    """Most runs have no taxonomy. A payload should omit the field rather than
+    claim every genome is unclassified."""
+    from elsa.results import materialize_result_store
+    from elsa.report import cluster_payload
+    from test_results import _blocks, _genes, _manifest
+
+    database = tmp_path / "synteny.duckdb"
+    materialize_result_store(database, blocks=_blocks(), genes=_genes(),
+                             manifest=_manifest())
+    payload = cluster_payload(database, "cluster:4")
+    assert "taxonomy_labelled" not in payload
+    assert all("taxon_label" not in track for track in payload["loci"])

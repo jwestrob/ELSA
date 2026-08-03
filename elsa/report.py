@@ -380,6 +380,141 @@ def _anchor_cosines(
     return result
 
 
+
+def _order_and_orient(tracks: List[Dict[str, Any]],
+                      edges: List[Dict[str, Any]]) -> tuple[List[int], List[bool]]:
+    """Choose a track order and per-track orientation for display.
+
+    The renderer draws ribbons only between *adjacent* rows, so row order decides
+    whether the picture is readable. Ordering by block support — the previous
+    behaviour — puts the two best-supported loci side by side regardless of
+    whether they share anything, and leaves genuinely similar loci separated by
+    rows they have no edges to.
+
+    Two passes:
+
+    **Order.** Treat shared anchors as a similarity between loci and seriate:
+    start from the best-connected track, repeatedly append the unplaced track
+    most similar to the current end, then improve the total adjacent similarity
+    by 2-opt segment reversal. This is the travelling-salesman-path heuristic
+    clinker-style figures use; it is not optimal and does not need to be, since
+    the objective is only that neighbouring rows share edges.
+
+    **Orientation.** Two loci in opposite orientation produce ribbons that cross
+    in an X. Detect it from the sign of the relationship between paired gene
+    indices — when one index rises as the other falls, the pair is antiparallel —
+    and flip relative to the running orientation so flips compose along the row
+    order rather than each being judged against track 0.
+
+    Returns the new order and a flip flag per track, both in original indexing.
+    """
+    n = len(tracks)
+    if n < 2:
+        return list(range(n)), [False] * n
+
+    weight = [[0.0] * n for _ in range(n)]
+    pairs_between: Dict[tuple[int, int], List[tuple[int, int]]] = {}
+    for edge in edges:
+        a, b = edge["a"], edge["b"]
+        if a == b:
+            continue
+        # A missing cosine still evidences an anchor; weight it as an average
+        # edge rather than dropping it, which would hide unscored loci.
+        w = edge.get("cos")
+        w = float(w) if w is not None else 0.5
+        weight[a][b] += w
+        weight[b][a] += w
+        pairs_between.setdefault((min(a, b), max(a, b)), []).append(
+            (edge["ai"], edge["bi"]) if a < b else (edge["bi"], edge["ai"])
+        )
+
+    start = max(range(n), key=lambda i: sum(weight[i]))
+    order = [start]
+    remaining = set(range(n)) - {start}
+    while remaining:
+        tail = order[-1]
+        nxt = max(remaining, key=lambda j: (weight[tail][j], -j))
+        order.append(nxt)
+        remaining.discard(nxt)
+
+    def adjacency_score(seq: List[int]) -> float:
+        return sum(weight[seq[i]][seq[i + 1]] for i in range(len(seq) - 1))
+
+    best = adjacency_score(order)
+    improved = True
+    while improved:                      # 2-opt on a path, bounded by n
+        improved = False
+        for i in range(1, n - 1):
+            for j in range(i + 1, n):
+                candidate = order[:i] + order[i:j + 1][::-1] + order[j + 1:]
+                score = adjacency_score(candidate)
+                if score > best + 1e-12:
+                    order, best, improved = candidate, score, True
+    flips = [False] * n
+    for position in range(1, n):
+        left, right = order[position - 1], order[position]
+        observed = pairs_between.get((min(left, right), max(left, right)), [])
+        if not observed:
+            flips[right] = flips[left]      # nothing to judge on; stay as-is
+            continue
+        if left > right:
+            observed = [(b, a) for a, b in observed]
+        antiparallel = 0
+        for x1, y1 in observed:
+            for x2, y2 in observed:
+                if x2 > x1:
+                    antiparallel += 1 if y2 < y1 else -1
+        flips[right] = (flips[left] != (antiparallel > 0))
+    return order, flips
+
+
+
+GTDB_RANKS = (("d", "domain"), ("p", "phylum"), ("c", "class"), ("o", "order"),
+              ("f", "family"), ("g", "genus"), ("s", "species"))
+
+
+def _taxonomy_map(connection: duckdb.DuckDBPyConnection,
+                  annotations_db: str | Path,
+                  genomes: Sequence[str]) -> Dict[str, Dict[str, str]]:
+    """Parsed GTDB lineage per genome, when a companion database supplies one.
+
+    ELSA's result contract holds synteny and no taxonomy, and plenty of runs
+    have none — a fresh assembly set is unclassified until someone classifies
+    it. So this is best-effort by design: a missing table, column, or lineage
+    yields an empty mapping and the caller renders without it, rather than the
+    diagram failing because a genome was not in GTDB.
+    """
+    if not genomes:
+        return {}
+    with attached_annotations(connection, annotations_db) as alias:
+        try:
+            placeholders = ", ".join("?" for _ in genomes)
+            rows = connection.execute(
+                f"SELECT bin_id, taxonomy FROM {alias}.bins "
+                f"WHERE bin_id IN ({placeholders})",
+                list(genomes),
+            ).fetchall()
+        except duckdb.Error:
+            return {}
+
+    parsed: Dict[str, Dict[str, str]] = {}
+    for genome, lineage in rows:
+        if not lineage:
+            continue
+        ranks: Dict[str, str] = {}
+        for token in str(lineage).split(";"):
+            token = token.strip()
+            for prefix, name in GTDB_RANKS:
+                if token.startswith(f"{prefix}__"):
+                    value = token[len(prefix) + 2:].strip()
+                    if value:
+                        ranks[name] = value
+        if ranks:
+            ranks["lineage"] = str(lineage)
+            parsed[genome] = ranks
+    return parsed
+
+
 def cluster_payload(
     database: str | Path,
     cluster_key: str,
@@ -504,16 +639,67 @@ def cluster_payload(
             "cos": cosine,
         })
 
+    # Order rows so neighbours share edges, and orient them so ribbons run
+    # parallel. Ribbons are only drawn between adjacent rows, so this is what
+    # decides whether the diagram is legible; see _order_and_orient.
+    order, flips_by_original = _order_and_orient(tracks, edges)
+    position = {original: new for new, original in enumerate(order)}
+    tracks = [tracks[original] for original in order]
+    auto_flips = [flips_by_original[original] for original in order]
+    for edge in edges:
+        a, b = position[edge["a"]], position[edge["b"]]
+        if a <= b:
+            edge["a"], edge["b"] = a, b
+        else:
+            # keep a < b so the renderer's adjacency test still holds
+            edge["a"], edge["b"] = b, a
+            edge["ai"], edge["bi"] = edge["bi"], edge["ai"]
+
     payload: Dict[str, Any] = {
         "cluster_key": cluster_key,
         "similarity_source": ("anchor_cosine_centered" if exact
                               else "block_mean_chain_score"),
         "loci": tracks,
         "edges": edges,
+        "auto_flips": auto_flips,
         "annotation_source": None,
         "annotated_fraction": None,
     }
     if annotations_db is not None:
+        # Taxonomy is decoration: label the rows when a lineage exists, and say
+        # nothing when it does not.
+        connection = _connect(database)
+        try:
+            lineages = _taxonomy_map(
+                connection, annotations_db,
+                sorted({track["genome_id"] for track in tracks}))
+        finally:
+            connection.close()
+        if lineages:
+            for track in tracks:
+                ranks = lineages.get(track["genome_id"])
+                if not ranks:
+                    continue
+                track["taxonomy"] = {k: v for k, v in ranks.items() if k != "lineage"}
+                track["lineage"] = ranks["lineage"]
+                # Narrowest informative rank, so a row reads as something a
+                # person recognises rather than an accession.
+                for rank in ("genus", "family", "order", "class", "phylum"):
+                    if rank in ranks:
+                        track["taxon_label"] = ranks[rank]
+                        track["taxon_rank"] = rank
+                        # Lead the row label with the taxon: an accession
+                        # identifies a row, a lineage lets a reader see at a
+                        # glance whether a cluster spans one clade or many.
+                        track["name"] = (
+                            f"{ranks[rank]}  |  {track['genome_id']}  |  "
+                            f"{track['contig_id']} ({len(track['genes'])} genes)"
+                        )
+                        break
+            payload_taxonomy = sum(1 for t in tracks if t.get("taxon_label"))
+        else:
+            payload_taxonomy = 0
+
         proteins = [gene["id"] for track in tracks for gene in track["genes"]]
         connection = _connect(database)
         try:
@@ -527,12 +713,17 @@ def cluster_payload(
         payload["annotated_fraction"] = (
             len(mapping) / len(proteins) if proteins else 0.0
         )
+        # Stated as a count so a reader can tell "no taxonomy available" from
+        # "these particular genomes are unclassified".
+        payload["taxonomy_labelled"] = payload_taxonomy
+        payload["taxonomy_total"] = len(tracks)
     return payload
 
 
 __all__ = [
     "ClusterRecord",
     "EVIDENCE_TIERS",
+    "attached_annotations",
     "cluster_payload",
     "cluster_records",
 ]

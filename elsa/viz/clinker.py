@@ -809,9 +809,9 @@ def build_multiloc_html(data: Dict, width: int = 0, height: int = 500,
       let showLabels = SHOW_LABELS;
       let scaleWidth = SCALE_EDGE_WIDTH;
       let view = d3.zoomIdentity.scale(1.25);
-      controls.append('button').text('Reset alignment').on('click', () => { offsets = offsets.map(() => 0); redraw(); });
+      controls.append('button').text('Reset alignment').on('click', () => { alignTracks(); redraw(); });
       controls.append('button').text('Reset view').style('margin-left','8px').on('click', () => { svg.transition().duration(150).call(zoomBehavior.transform, d3.zoomIdentity.scale(1.25)); });
-      controls.append('button').text('Flip all to forward').style('margin-left','8px').on('click', () => { const refOri=rowOrientation(0); flips = flips.map((f,i)=> rowOrientation(i)===refOri?false:true); redraw(); });
+      controls.append('button').text('Flip all to forward').style('margin-left','8px').on('click', () => { const refOri=rowOrientation(0); flips = flips.map((f,i)=> rowOrientation(i)===refOri?false:true); alignTracks(); redraw(); });
       controls.append('button').text('Export SVG').style('margin-left','8px').on('click', () => {
         // Clone SVG, add white background for readability, set viewBox, serialize
         const svgNode = svg.node();
@@ -907,7 +907,7 @@ def build_multiloc_html(data: Dict, width: int = 0, height: int = 500,
         const labelG = panG.append('text').attr('x', 0)
           .attr('y', y0 - 12 - Math.max(0, labelParts.length - 2) * 11)
           .attr('fill','#ddd').style('cursor','pointer')
-          .on('click', () => { flips[idx] = !flips[idx]; redraw(); });
+          .on('click', () => { flips[idx] = !flips[idx]; alignTracks(); redraw(); });
         if (labelParts.length >= 2) {
           labelG.append('tspan').text(labelParts[0])
             .attr('font-size','13px').attr('font-weight','bold').attr('x', 0);
@@ -953,29 +953,49 @@ def build_multiloc_html(data: Dict, width: int = 0, height: int = 500,
       }
       computeLayouts();
 
-      // Compute initial horizontal offsets to align matched genes between adjacent tracks
-      (function alignTracks(){
-        // For each adjacent pair, find the best-cosine edge and align on it
-        const adjEdges = (data.edges||[]).filter(e => e.b === e.a + 1 && e.cos != null && isFinite(e.cos));
-        // Group edges by (a,b) pair, pick highest cosine per pair
-        const bestByPair = new Map();
-        adjEdges.forEach(e => {
-          const key = e.a + '-' + e.b;
-          if (!bestByPair.has(key) || e.cos > bestByPair.get(key).cos) bestByPair.set(key, e);
+      // Horizontal alignment of adjacent tracks.
+      //
+      // Two things this gets right that the previous version did not. It uses
+      // every matched pair between two rows and takes the median shift, rather
+      // than aligning the whole row on the single highest-cosine edge — one
+      // paralogous or terminal match should not decide where a track sits. And
+      // it measures from the flipped position, because a reversed row's genes
+      // are drawn mirrored; measuring unflipped placed inverted rows using
+      // coordinates the renderer never uses.
+      //
+      // Re-runnable: flipping a row invalidates every offset downstream of it.
+      function localCenter(rowIdx, geneIdx){
+        const row = rowsG[rowIdx];
+        const lay = (row._layout||[])[geneIdx];
+        if (!lay) return null;
+        const rowW = row._rowWidth || 0;
+        return flips[rowIdx] ? (rowW - (lay.start + lay.w/2)) : (lay.start + lay.w/2);
+      }
+
+      function alignTracks(){
+        const byPair = new Map();
+        (data.edges||[]).forEach(e => {
+          if (e.b !== e.a + 1) return;              // only neighbours are drawn
+          if (!byPair.has(e.a)) byPair.set(e.a, []);
+          byPair.get(e.a).push(e);
         });
-        // Propagate offsets from track 0 (anchor at 0)
+        offsets[0] = 0;
         for (let k = 0; k < data.loci.length - 1; k++) {
-          const key = k + '-' + (k+1);
-          const e = bestByPair.get(key);
-          if (!e) continue;
-          const rowA = rowsG[k], rowB = rowsG[k+1];
-          const layA = (rowA._layout||[])[e.ai], layB = (rowB._layout||[])[e.bi];
-          if (!layA || !layB) continue;
-          const centerA = layA.start + layA.w/2 + offsets[k];
-          const centerB = layB.start + layB.w/2 + offsets[k+1];
-          offsets[k+1] += (centerA - centerB);
+          const deltas = [];
+          (byPair.get(k) || []).forEach(e => {
+            const ca = localCenter(k, e.ai), cb = localCenter(k+1, e.bi);
+            if (ca == null || cb == null) return;
+            deltas.push((ca + offsets[k]) - cb);
+          });
+          if (!deltas.length) { offsets[k+1] = offsets[k]; continue; }
+          deltas.sort((x, y) => x - y);
+          const mid = deltas.length >> 1;
+          offsets[k+1] = deltas.length % 2
+            ? deltas[mid]
+            : (deltas[mid - 1] + deltas[mid]) / 2;
         }
-      })();
+      }
+      alignTracks();
 
       function rowScale(idx){ const base = rowsG[idx]._baseX; const dom=base.domain().slice(); return d3.scaleLinear().domain(flips[idx]?dom.reverse():dom).range([0, baseInnerW]); }
 
@@ -1126,7 +1146,7 @@ def build_multiloc_html(data: Dict, width: int = 0, height: int = 500,
             .attr('stroke-width',1.0)
             .style('cursor','pointer')
             .on('click', (event,d)=> centerOn(idx,d))
-            .on('dblclick', ()=> { flips[idx] = !flips[idx]; redraw(); })
+            .on('dblclick', ()=> { flips[idx] = !flips[idx]; alignTracks(); redraw(); })
             .on('mouseover', function(event, d){ const strand=(d.strand>=0? '+':'-'); const len=Math.max(0, Math.round(Math.abs(d.end-d.start))); tooltip.style('display','block').html('<b>'+d.id+'</b><br>Length: '+len.toLocaleString()+' aa<br>Strand: '+strand+'<br>PFAM: '+(d.pfam||'None')); })
             .on('mousemove', function(event){ const cw=container.clientWidth||0,ch=container.clientHeight||0; const tw=tooltip.node().offsetWidth||0, th=tooltip.node().offsetHeight||0; const pt=d3.pointer(event,container); let left=pt[0]+12, top=pt[1]+12; if (left+tw>cw-4) left=Math.max(4, pt[0]-12-tw); if (top+th>ch-4) top=Math.max(4, pt[1]-12-th); tooltip.style('left', left+'px').style('top', top+'px'); })
             .on('mouseout', ()=> tooltip.style('display','none'));

@@ -333,3 +333,51 @@ def test_consensus_without_tokens_stays_empty():
     from elsa.viz.clinker import build_consensus_html
 
     assert build_consensus_html([], []) == ""
+
+
+# ---------------------------------------------------------------------------
+# Track alignment invariants (guards on the generated script)
+# ---------------------------------------------------------------------------
+
+def _multiloc_script():
+    data = {
+        "loci": [
+            {"name": f"row{i}", "genes": [
+                {"id": f"g{i}_{j}", "start": j * 300, "end": j * 300 + 240,
+                 "strand": 1, "pfam": ""} for j in range(4)]}
+            for i in range(3)
+        ],
+        "edges": [{"a": 0, "b": 1, "ai": j, "bi": j, "cos": 0.9} for j in range(4)]
+                 + [{"a": 1, "b": 2, "ai": j, "bi": j, "cos": 0.9} for j in range(4)],
+        "auto_flips": [False, True, False],
+    }
+    return clinker.build_multiloc_html(data, height=400)
+
+
+def test_alignment_uses_every_matched_pair_not_the_best_one():
+    """Aligning on the single highest-cosine edge let one paralogous or terminal
+    match place the whole row; on cluster:32896 that was a 685 px error."""
+    html = _multiloc_script()
+    assert "bestByPair" not in html, "the single-best-edge alignment is gone"
+    assert "deltas.sort" in html and "median" in html.lower()
+
+
+def test_alignment_measures_from_the_flipped_position():
+    """A reversed row is drawn mirrored, so its offset has to be computed from
+    the mirrored centre; measuring unflipped used coordinates never rendered."""
+    html = _multiloc_script()
+    assert "function localCenter" in html
+    assert "flips[rowIdx] ? (rowW - (lay.start + lay.w/2))" in html
+
+
+def test_flipping_a_row_recomputes_the_alignment():
+    """A flip invalidates every offset downstream of it."""
+    html = _multiloc_script()
+    assert html.count("alignTracks()") >= 4, (
+        "alignTracks must run on load and after each flip control")
+    assert "flips[idx] = !flips[idx]; alignTracks(); redraw();" in html
+
+
+def test_auto_flips_reach_the_renderer():
+    html = _multiloc_script()
+    assert '"auto_flips": [false, true, false]' in html.replace("'", '"').lower()

@@ -83,6 +83,7 @@ class ChainConfig(BaseModel):
     similarity_threshold: float = Field(default=0.85, description="Minimum cosine similarity for anchor")
     max_gap_genes: int = Field(default=2, description="Maximum gap between chain members (genes)")
     min_chain_size: int = Field(default=2, description="Minimum anchors per chain")
+    neighborhood_retrieval: bool = Field(default=True, description="Select a fixed budget of targets using adjacent original-seed support")
 
     # Gap penalty (Phase 2 feature)
     gap_penalty_scale: float = Field(default=0.0, description="Concave gap penalty scale (0 = disabled)")

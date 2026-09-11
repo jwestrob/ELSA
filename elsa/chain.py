@@ -11,7 +11,7 @@ from __future__ import annotations
 import math
 import sys
 from dataclasses import dataclass, field
-from typing import List, Dict, Tuple, Set
+from typing import List, Dict
 
 import os
 import numpy as np
@@ -43,6 +43,8 @@ try:
             best_score = ss[i]
 
             for j in range(i - 1, -1, -1):
+                if sq[i] <= sq[j]:
+                    continue
                 gap_q = sq[i] - sq[j] - 1
                 if max_gap >= 0 and gap_q > max_gap:
                     break
@@ -88,6 +90,8 @@ try:
 
                 for j in range(i - 1, -1, -1):
                     jj = off + j
+                    if sq[ii] <= sq[jj]:
+                        continue
                     gap_q = sq[ii] - sq[jj] - 1
                     if max_gap >= 0 and gap_q > max_gap:
                         break
@@ -129,6 +133,8 @@ try:
 
                 for j in range(i - 1, -1, -1):
                     jj = off + j
+                    if sq[ii] <= sq[jj]:
+                        continue
                     gap_q = sq[ii] - sq[jj] - 1
                     if max_gap >= 0 and gap_q > max_gap:
                         break
@@ -154,24 +160,9 @@ try:
                 dp_score[ii] = best_score
 
     @njit(cache=True)
-    def _backtrack(dp_len, dp_prev, dp_score, min_size):
-        """Greedy backtracking: extract chains longest-first (single group)."""
+    def _backtrack_ordered(dp_len, dp_prev, min_size, order):
+        """Traverse endpoints in the supplied stable longest-first order."""
         n = len(dp_len)
-
-        # Sort indices by (-dp_len, -dp_score) — insertion sort is fine for small n
-        order = np.empty(n, dtype=np.int32)
-        for i in range(n):
-            order[i] = i
-        for i in range(1, n):
-            key = order[i]
-            j = i - 1
-            while j >= 0 and (dp_len[order[j]] < dp_len[key] or
-                              (dp_len[order[j]] == dp_len[key] and
-                               dp_score[order[j]] < dp_score[key])):
-                order[j + 1] = order[j]
-                j -= 1
-            order[j + 1] = key
-
         used = np.zeros(n, dtype=np.bool_)
         chains = []
         for idx in range(n):
@@ -197,8 +188,9 @@ try:
         return chains
 
     @njit(cache=True)
-    def _backtrack_batched(dp_len, dp_prev, dp_score, offsets, sizes, min_size,
-                           chain_buf, chain_group_buf, chain_len_buf):
+    def _backtrack_batched_ordered(dp_len, dp_prev, offsets, sizes, min_size,
+                                   chain_buf, chain_group_buf, chain_len_buf,
+                                   endpoint_order):
         """Greedy backtracking for all groups in a single call.
 
         Writes local indices into chain_buf, partition index into
@@ -213,27 +205,11 @@ try:
             off = offsets[g]
             n = sizes[g]
 
-            # Sort local indices by (-dp_len, -dp_score) via insertion sort
-            order = np.empty(n, dtype=np.int64)
-            for i in range(n):
-                order[i] = i
-            for i in range(1, n):
-                key_i = order[i]
-                ki = off + key_i
-                j = i - 1
-                while j >= 0:
-                    oj = off + order[j]
-                    if dp_len[oj] > dp_len[ki] or (dp_len[oj] == dp_len[ki] and dp_score[oj] >= dp_score[ki]):
-                        break
-                    order[j + 1] = order[j]
-                    j -= 1
-                order[j + 1] = key_i
-
             used = np.zeros(n, dtype=np.bool_)
 
             for idx in range(n):
-                i_local = order[idx]
-                i_global = off + i_local
+                i_global = endpoint_order[off + idx]
+                i_local = i_global - off
                 if used[i_local] or dp_len[i_global] < min_size:
                     continue
 
@@ -268,10 +244,116 @@ try:
 
         return total_chains, write_pos
 
+    @njit(cache=True, parallel=True)
+    def _select_paired_overlap_numba(order, group_starts, group_ends,
+                                     qmin, qmax, tmin, tmax):
+        """Greedy rectangle selection, parallel over complete contig pairs.
+
+        A static tree of query starts bounds the accepted rectangles beneath
+        each node. Bounds prune the search; only an accepted leaf can reject
+        a candidate, so both overlaps must belong to the same accepted block.
+        """
+        keep = np.zeros(len(order), dtype=np.bool_)
+        maximum = np.iinfo(np.int64).max
+        minimum = np.iinfo(np.int64).min
+        for group in prange(len(group_starts)):
+            start, end = group_starts[group], group_ends[group]
+            ids = order[start:end]
+            size = len(ids)
+            if size == 0:
+                continue
+            coordinate_order = np.argsort(qmin[ids])
+            ranks = np.empty(size, dtype=np.int64)
+            leaves, height = 1, 0
+            while leaves < size:
+                leaves *= 2
+                height += 1
+            min_query = np.full(2 * leaves, maximum, dtype=np.int64)
+            max_query = np.full(2 * leaves, minimum, dtype=np.int64)
+            min_target = np.full(2 * leaves, maximum, dtype=np.int64)
+            max_target = np.full(2 * leaves, minimum, dtype=np.int64)
+            for rank in range(size):
+                local = coordinate_order[rank]
+                ranks[local] = rank
+                min_query[leaves + rank] = qmin[ids[local]]
+            for node in range(leaves - 1, 0, -1):
+                min_query[node] = min(min_query[2 * node], min_query[2 * node + 1])
+            stack = np.empty(height + 2, dtype=np.int64)
+            for local in range(size):
+                candidate = ids[local]
+                stack[0], count, conflict = 1, 1, False
+                while count:
+                    count -= 1
+                    node = stack[count]
+                    if (min_query[node] > qmax[candidate]
+                            or max_query[node] < qmin[candidate]
+                            or min_target[node] > tmax[candidate]
+                            or max_target[node] < tmin[candidate]):
+                        continue
+                    if node >= leaves:
+                        conflict = True
+                        break
+                    stack[count], stack[count + 1] = 2 * node, 2 * node + 1
+                    count += 2
+                if conflict:
+                    continue
+                keep[candidate] = True
+                node = leaves + ranks[local]
+                max_query[node] = qmax[candidate]
+                min_target[node], max_target[node] = tmin[candidate], tmax[candidate]
+                node //= 2
+                while node:
+                    max_query[node] = max(max_query[2 * node], max_query[2 * node + 1])
+                    min_target[node] = min(min_target[2 * node], min_target[2 * node + 1])
+                    max_target[node] = max(max_target[2 * node], max_target[2 * node + 1])
+                    node //= 2
+        return keep
+
     _NUMBA_AVAILABLE = True
 
 except ImportError:
     _NUMBA_AVAILABLE = False
+
+
+def _backtrack(dp_len, dp_prev, dp_score, min_size):
+    """Stable O(n log n) endpoint sort followed by compiled traversal."""
+    order = np.lexsort((-dp_score, -dp_len))
+    return _backtrack_ordered(dp_len, dp_prev, min_size, order)
+
+
+def _backtrack_batched(dp_len, dp_prev, dp_score, offsets, sizes, min_size,
+                       chain_buf, chain_group_buf, chain_len_buf):
+    """Sort endpoints by partition, decreasing length and score, then traverse.
+
+    NumPy's stable lexsort retains original endpoint order for exact ties.
+    Traversal and claiming of truncated paths match the single-group path.
+    """
+    partition = np.repeat(np.arange(len(sizes), dtype=np.int64), sizes)
+    order = np.lexsort((-dp_score, -dp_len, partition))
+    return _backtrack_batched_ordered(
+        dp_len, dp_prev, offsets, sizes, min_size,
+        chain_buf, chain_group_buf, chain_len_buf, order)
+
+
+def _select_paired_overlap(order, group_starts, group_ends,
+                           qmin, qmax, tmin, tmax):
+    """Keep candidates unless one accepted block overlaps both inclusive axes."""
+    if _NUMBA_AVAILABLE:
+        return _select_paired_overlap_numba(
+            order, group_starts, group_ends, qmin, qmax, tmin, tmax)
+    keep = np.zeros(len(order), dtype=np.bool_)
+    for start, end in zip(group_starts, group_ends):
+        accepted = []
+        for candidate in order[start:end]:
+            if any(qmin[candidate] <= qmax[previous]
+                   and qmax[candidate] >= qmin[previous]
+                   and tmin[candidate] <= tmax[previous]
+                   and tmax[candidate] >= tmin[previous]
+                   for previous in accepted):
+                continue
+            keep[candidate] = True
+            accepted.append(candidate)
+    return keep
 
 
 @dataclass
@@ -320,7 +402,9 @@ def chain_anchors_lis(
     """
     Find collinear chains using LIS-based dynamic programming.
 
-    Accepts a DataFrame of anchors for a single contig pair.
+    Accepts a DataFrame of anchors for a single contig pair. Exact duplicate
+    pairs keep their strongest similarity; alternative targets remain
+    available to the DP. Each chain progresses strictly on both gene axes.
     Returns list of sub-DataFrames, one per chain.
 
     Args:
@@ -336,63 +420,8 @@ def chain_anchors_lis(
     if len(anchors_df) < min_size:
         return []
 
-    q_idx = anchors_df["query_idx"].values
-    t_idx = anchors_df["target_idx"].values
-    sims = anchors_df["similarity"].values
-    orients = anchors_df["orientation"].values
-
-    # Deduplicate: keep best anchor per (query_idx, target_idx) pair
-    pair_keys = q_idx.astype(np.int64) * 1_000_000_000 + t_idx.astype(np.int64)
-    order = np.argsort(-sims)  # highest sim first
-    _, first_idx = np.unique(pair_keys[order], return_index=True)
-    keep_mask = np.zeros(len(anchors_df), dtype=bool)
-    keep_mask[order[first_idx]] = True
-
-    if keep_mask.sum() < min_size:
-        return []
-
-    deduped = anchors_df.loc[keep_mask].reset_index(drop=True)
-    q_idx = deduped["query_idx"].values
-    t_idx = deduped["target_idx"].values
-    sims = deduped["similarity"].values
-    orients = deduped["orientation"].values
-
-    # Check if strand info is available
-    has_strand = np.any(orients != 0)
-
-    if has_strand:
-        partitions = []
-        fwd_mask = orients >= 0
-        rev_mask = orients < 0
-        if fwd_mask.sum() >= min_size:
-            partitions.append((deduped.loc[fwd_mask].reset_index(drop=True), False))
-        if rev_mask.sum() >= min_size:
-            partitions.append((deduped.loc[rev_mask].reset_index(drop=True), True))
-    else:
-        partitions = [(deduped, False), (deduped, True)]
-
     all_chains = []
-
-    for part_df, reverse_target in partitions:
-        pq = part_df["query_idx"].values
-        pt = part_df["target_idx"].values
-        ps = part_df["similarity"].values
-
-        # Deduplicate per query_idx (keep best match)
-        q_order = np.argsort(-ps)
-        _, q_first = np.unique(pq[q_order], return_index=True)
-        q_keep = np.zeros(len(part_df), dtype=bool)
-        q_keep[q_order[q_first]] = True
-
-        if q_keep.sum() < min_size:
-            continue
-
-        sub_df = part_df.loc[q_keep].reset_index(drop=True)
-
-        # Sort by query position
-        sort_order = np.argsort(sub_df["query_idx"].values)
-        sub_df = sub_df.iloc[sort_order].reset_index(drop=True)
-
+    for sub_df, reverse_target in _preprocess_group(anchors_df, min_size):
         sq = sub_df["query_idx"].values
         st = sub_df["target_idx"].values
         ss = sub_df["similarity"].values
@@ -424,6 +453,8 @@ def chain_anchors_lis(
             for i in range(1, n):
                 best_len, best_prev, best_score = 1, -1, ss_c[i]
                 for j in range(i - 1, -1, -1):
+                    if sq_c[i] <= sq_c[j]:
+                        continue
                     gap_q = sq_c[i] - sq_c[j] - 1
                     if _max_gap >= 0 and gap_q > _max_gap:
                         break
@@ -480,7 +511,10 @@ def extract_nonoverlapping_chains(
     block_id_start: int = 0,
 ) -> List[ChainedBlock]:
     """
-    Extract non-overlapping blocks from chains using greedy selection.
+    Extract blocks using greedy paired-span overlap selection.
+
+    Within a contig pair, a candidate is suppressed when one accepted block
+    overlaps both its query span and its target span, including boundaries.
 
     Args:
         chains: List of anchor DataFrames from chain_anchors_lis
@@ -526,7 +560,7 @@ def extract_nonoverlapping_chains_df(
     block_id_start: int = 0,
 ) -> pd.DataFrame:
     """
-    Extract non-overlapping blocks as a DataFrame (no Python objects).
+    Extract blocks with paired-span overlap selection as a DataFrame.
 
     Same greedy algorithm as extract_nonoverlapping_chains but returns
     a DataFrame directly, avoiding 2M+ ChainedBlock object creations.
@@ -545,8 +579,8 @@ def extract_nonoverlapping_chains_df(
         t = chain_df["target_idx"].values
         s = chain_df["similarity"].values
 
-        mean_sim = s.mean()
-        score = len(chain_df) * mean_sim
+        # Match the flat-array extractor's float64 accumulation and ranking.
+        score = np.add.reduceat(np.asarray(s, dtype=np.float64), [0])[0]
         q_min, q_max = int(q.min()), int(q.max())
         t_min, t_max = int(t.min()), int(t.max())
         orientation = int(chain_df["orientation"].iloc[0])
@@ -555,15 +589,24 @@ def extract_nonoverlapping_chains_df(
 
     scored.sort(key=lambda x: -x[0])
 
-    # Greedy selection avoiding overlaps
-    used_query: Dict[Tuple[str, str], List[Tuple[int, int]]] = {}
-    used_target: Dict[Tuple[str, str], List[Tuple[int, int]]] = {}
+    if not scored:
+        return pd.DataFrame()
 
-    def overlaps(intervals: List[Tuple[int, int]], start: int, end: int) -> bool:
-        for s, e in intervals:
-            if not (end < s or start > e):
-                return True
-        return False
+    # Complete contig-pair groups compete across both orientations. Grouping
+    # for selection preserves the legacy global score order of emitted rows.
+    key_codes = {}
+    group_codes = np.empty(len(scored), dtype=np.int64)
+    for i, (_, chain_df, *_) in enumerate(scored):
+        key = tuple(str(chain_df[column].iloc[0]) for column in
+                    ("query_genome", "target_genome", "query_contig", "target_contig"))
+        if key not in key_codes:
+            key_codes[key] = len(key_codes)
+        group_codes[i] = key_codes[key]
+    order = np.argsort(group_codes, kind="stable")
+    starts = np.r_[0, np.flatnonzero(np.diff(group_codes[order])) + 1].astype(np.int64)
+    ends = np.r_[starts[1:], len(scored)].astype(np.int64)
+    bounds = np.asarray([item[2:6] for item in scored], dtype=np.int64)
+    keep = _select_paired_overlap(order, starts, ends, *bounds.T)
 
     # Pre-allocate lists for columnar output
     out_bid = []
@@ -573,19 +616,13 @@ def extract_nonoverlapping_chains_df(
     out_aqids = []; out_atids = []; out_aqgids = []; out_atgids = []
 
     block_id = block_id_start
-    for score, chain_df, q_min, q_max, t_min, t_max, orientation in scored:
+    for i, (score, chain_df, q_min, q_max, t_min, t_max, orientation) in enumerate(scored):
+        if not keep[i]:
+            continue
         q_key = (str(chain_df["query_genome"].iloc[0]),
                  str(chain_df["query_contig"].iloc[0]))
         t_key = (str(chain_df["target_genome"].iloc[0]),
                  str(chain_df["target_contig"].iloc[0]))
-
-        if overlaps(used_query.get(q_key, []), q_min, q_max):
-            continue
-        if overlaps(used_target.get(t_key, []), t_min, t_max):
-            continue
-
-        used_query.setdefault(q_key, []).append((q_min, q_max))
-        used_target.setdefault(t_key, []).append((t_min, t_max))
 
         qi = chain_df["query_idx"].values
         ti = chain_df["target_idx"].values
@@ -631,57 +668,8 @@ def _preprocess_group(anchors_df, min_size):
     Yields (sub_df, reverse_target) tuples — deduplicated, partitioned
     by orientation, and sorted by query position.
     """
-    if len(anchors_df) < min_size:
-        return
-
-    q_idx = anchors_df["query_idx"].values
-    t_idx = anchors_df["target_idx"].values
-    sims = anchors_df["similarity"].values
-    orients = anchors_df["orientation"].values
-
-    # Deduplicate by (query_idx, target_idx) pair — keep highest similarity
-    pair_keys = q_idx.astype(np.int64) * 1_000_000_000 + t_idx.astype(np.int64)
-    order = np.argsort(-sims)
-    _, first_idx = np.unique(pair_keys[order], return_index=True)
-    keep_mask = np.zeros(len(anchors_df), dtype=bool)
-    keep_mask[order[first_idx]] = True
-
-    if keep_mask.sum() < min_size:
-        return
-
-    deduped = anchors_df.loc[keep_mask].reset_index(drop=True)
-    orients = deduped["orientation"].values
-    has_strand = np.any(orients != 0)
-
-    if has_strand:
-        partitions = []
-        fwd_mask = orients >= 0
-        rev_mask = orients < 0
-        if fwd_mask.sum() >= min_size:
-            partitions.append((deduped.loc[fwd_mask].reset_index(drop=True), False))
-        if rev_mask.sum() >= min_size:
-            partitions.append((deduped.loc[rev_mask].reset_index(drop=True), True))
-    else:
-        partitions = [(deduped, False), (deduped, True)]
-
-    for part_df, reverse_target in partitions:
-        pq = part_df["query_idx"].values
-        ps = part_df["similarity"].values
-
-        # Deduplicate per query_idx — keep best similarity
-        q_order = np.argsort(-ps)
-        _, q_first = np.unique(pq[q_order], return_index=True)
-        q_keep = np.zeros(len(part_df), dtype=bool)
-        q_keep[q_order[q_first]] = True
-
-        if q_keep.sum() < min_size:
-            continue
-
-        sub_df = part_df.loc[q_keep].reset_index(drop=True)
-        sort_order = np.argsort(sub_df["query_idx"].values)
-        sub_df = sub_df.iloc[sort_order].reset_index(drop=True)
-
-        yield sub_df, reverse_target
+    for indices, _, _, _, _, reverse_target in _preprocess_group_arrays(anchors_df, min_size):
+        yield anchors_df.iloc[indices].reset_index(drop=True), reverse_target
 
 
 # ---------------------------------------------------------------------------
@@ -694,14 +682,17 @@ def _preprocess_group_raw(q_idx, t_idx, sims, orients, min_size):
     are indices into the input arrays.
     """
     n = len(q_idx)
-    if n < min_size:
+    if n == 0 or n < min_size:
         return
 
-    # Dedup by (qi, ti) pair — keep highest similarity
-    pair_keys = q_idx.astype(np.int64) * 1_000_000_000 + t_idx.astype(np.int64)
-    order = np.argsort(-sims)
-    _, first_idx = np.unique(pair_keys[order], return_index=True)
-    dedup_idx = order[first_idx]
+    # Keep the strongest exact pair, retaining alternative targets per query.
+    # Stable ties retain input row order; separate keys avoid integer packing.
+    order = np.lexsort((-sims, t_idx, q_idx))
+    first = np.empty(n, dtype=np.bool_)
+    first[0] = True
+    first[1:] = ((q_idx[order[1:]] != q_idx[order[:-1]])
+                 | (t_idx[order[1:]] != t_idx[order[:-1]]))
+    dedup_idx = order[first]
 
     if len(dedup_idx) < min_size:
         return
@@ -721,19 +712,8 @@ def _preprocess_group_raw(q_idx, t_idx, sims, orients, min_size):
         partitions = [(dedup_idx, False), (dedup_idx.copy(), True)]
 
     for part_idx, reverse_target in partitions:
-        pq = q_idx[part_idx]
-        ps = sims[part_idx]
-
-        q_order = np.argsort(-ps)
-        _, q_first = np.unique(pq[q_order], return_index=True)
-        sub_idx = part_idx[q_order[q_first]]
-
-        if len(sub_idx) < min_size:
-            continue
-
-        sq = q_idx[sub_idx]
-        sort_order = np.argsort(sq)
-        sub_idx = sub_idx[sort_order]
+        sort_order = np.lexsort((t_idx[part_idx], q_idx[part_idx]))
+        sub_idx = part_idx[sort_order]
 
         sq = q_idx[sub_idx]
         st = t_idx[sub_idx]
@@ -750,61 +730,10 @@ def _preprocess_group_arrays(anchors_df, min_size):
     maps local partition positions back to rows in the original anchors_df.
     No intermediate DataFrames are created.
     """
-    n = len(anchors_df)
-    if n < min_size:
-        return
-
-    q_idx = anchors_df["query_idx"].values
-    t_idx = anchors_df["target_idx"].values
-    sims = anchors_df["similarity"].values
-    orients = anchors_df["orientation"].values
-
-    # Dedup by (qi, ti) pair — keep highest similarity
-    pair_keys = q_idx.astype(np.int64) * 1_000_000_000 + t_idx.astype(np.int64)
-    order = np.argsort(-sims)
-    _, first_idx = np.unique(pair_keys[order], return_index=True)
-    dedup_idx = order[first_idx]  # indices into original df
-
-    if len(dedup_idx) < min_size:
-        return
-
-    dedup_orients = orients[dedup_idx]
-    has_strand = np.any(dedup_orients != 0)
-
-    if has_strand:
-        partitions = []
-        fwd_mask = dedup_orients >= 0
-        rev_mask = dedup_orients < 0
-        if fwd_mask.sum() >= min_size:
-            partitions.append((dedup_idx[fwd_mask], False))
-        if rev_mask.sum() >= min_size:
-            partitions.append((dedup_idx[rev_mask], True))
-    else:
-        partitions = [(dedup_idx, False), (dedup_idx.copy(), True)]
-
-    for part_idx, reverse_target in partitions:
-        pq = q_idx[part_idx]
-        ps = sims[part_idx]
-
-        # Dedup per query_idx — keep best similarity
-        q_order = np.argsort(-ps)
-        _, q_first = np.unique(pq[q_order], return_index=True)
-        sub_idx = part_idx[q_order[q_first]]
-
-        if len(sub_idx) < min_size:
-            continue
-
-        # Sort by query position
-        sq = q_idx[sub_idx]
-        sort_order = np.argsort(sq)
-        sub_idx = sub_idx[sort_order]
-
-        sq = q_idx[sub_idx]
-        st = t_idx[sub_idx]
-        ss = sims[sub_idx]
-        cmp = -st if reverse_target else st.copy()
-
-        yield sub_idx, sq, st, ss, cmp, reverse_target
+    yield from _preprocess_group_raw(
+        anchors_df["query_idx"].values, anchors_df["target_idx"].values,
+        anchors_df["similarity"].values, anchors_df["orientation"].values,
+        min_size)
 
 
 # ---------------------------------------------------------------------------
@@ -853,17 +782,17 @@ def _preprocess_vectorized(ga, valid_groups, min_size):
     sim = ga.similarity[flat_idx]
     orient = ga.orientation[flat_idx]
 
-    # --- Step 2: Dedup by (group, qi*1e9+ti), keep highest sim ---
+    # --- Step 2: Dedup by exact (group, qi, ti), keep highest sim ---
     _log(f"[Chain] Dedup by (group, gene-pair)...")
-    pair_key = qi.astype(np.int64) * 1_000_000_000 + ti.astype(np.int64)
-    sort1 = np.lexsort((-sim, pair_key, flat_gid))
+    sort1 = np.lexsort((-sim, ti, qi, flat_gid))
     s1_gid = flat_gid[sort1]
-    s1_pk = pair_key[sort1]
+    s1_qi, s1_ti = qi[sort1], ti[sort1]
     first1 = np.empty(total_valid, dtype=np.bool_)
     first1[0] = True
-    first1[1:] = (s1_gid[1:] != s1_gid[:-1]) | (s1_pk[1:] != s1_pk[:-1])
+    first1[1:] = ((s1_gid[1:] != s1_gid[:-1])
+                  | (s1_qi[1:] != s1_qi[:-1]) | (s1_ti[1:] != s1_ti[:-1]))
     dedup = sort1[first1]
-    del sort1, s1_gid, s1_pk, first1, pair_key
+    del sort1, s1_gid, s1_qi, s1_ti, first1
 
     d_gid = flat_gid[dedup]
     d_qi = qi[dedup]
@@ -902,18 +831,10 @@ def _preprocess_vectorized(ga, valid_groups, min_size):
         s_sim = d_sim[mask]
         s_fidx = d_fidx[mask]
 
-        # Dedup per (group, qi), keep highest sim
-        # lexsort sorts by last key first: sorts by (s_gid, s_qi, -s_sim)
-        sort2 = np.lexsort((-s_sim, s_qi, s_gid))
-        s2_gid = s_gid[sort2]
-        s2_qi = s_qi[sort2]
-        first2 = np.empty(len(sort2), dtype=np.bool_)
-        first2[0] = True
-        first2[1:] = (s2_gid[1:] != s2_gid[:-1]) | (s2_qi[1:] != s2_qi[:-1])
-        keep = sort2[first2]
-        del sort2, s2_gid, s2_qi, first2
+        # Retain all exact pairs and make coordinate ties deterministic.
+        keep = np.lexsort((s_ti, s_qi, s_gid))
 
-        # Result is already sorted by (gid, qi) from lexsort order
+        # Result is sorted by (gid, qi, ti).
         k_gid = s_gid[keep]
         k_qi = s_qi[keep]
         k_ti = s_ti[keep]
@@ -1030,14 +951,13 @@ def _extract_blocks_flat(
     partitions=None,
     block_id_start=0,
 ) -> pd.DataFrame:
-    """Extract non-overlapping blocks directly from flat backtrack arrays.
+    """Extract blocks with paired-span selection from flat backtrack arrays.
 
     Replaces Phase 5 (per-chain DataFrame creation) and the pipeline's
     per-group extract_nonoverlapping_chains_df loop with a single vectorized
     pass.  Builds exactly ONE DataFrame at the end for selected blocks only.
 
-    Overlap checking is per group key (same semantics as the original
-    per-group extraction).
+    Overlap checking spans both orientations within each contig pair.
     """
     import json as _json
     import time as _time
@@ -1113,42 +1033,16 @@ def _extract_blocks_flat(
     grp_ends[:-1] = grp_starts[1:]
     grp_ends[-1] = n_chains
 
-    # --- Step 5: Greedy non-overlapping selection per group ---
-    selected = []
-    for gi in range(n_key_groups):
-        gs, ge = int(grp_starts[gi]), int(grp_ends[gi])
-        used_q: List[Tuple[int, int]] = []
-        used_t: List[Tuple[int, int]] = []
-
-        for ci in range(gs, ge):  # already score-descending within group
-            c = int(sort_idx[ci])
-            qmin, qmax = int(q_mins[c]), int(q_maxs[c])
-            tmin, tmax = int(t_mins[c]), int(t_maxs[c])
-
-            skip = False
-            for s, e in used_q:
-                if not (qmax < s or qmin > e):
-                    skip = True
-                    break
-            if not skip:
-                for s, e in used_t:
-                    if not (tmax < s or tmin > e):
-                        skip = True
-                        break
-            if skip:
-                continue
-
-            used_q.append((qmin, qmax))
-            used_t.append((tmin, tmax))
-            selected.append(c)
-
-    n_blocks = len(selected)
+    # --- Step 5: Greedy paired-span selection per complete contig pair ---
+    keep = _select_paired_overlap(
+        sort_idx, grp_starts, grp_ends, q_mins, q_maxs, t_mins, t_maxs)
+    sel = sort_idx[keep[sort_idx]]
+    n_blocks = len(sel)
     if n_blocks == 0:
         _log("[Chain] Phase 5: no blocks after greedy selection")
         return pd.DataFrame()
 
-    sel = np.array(selected, dtype=np.intp)
-    _log(f"[Chain] Phase 5: selected {n_blocks:,} non-overlapping blocks "
+    _log(f"[Chain] Phase 5: selected {n_blocks:,} blocks with paired-span selection "
          f"from {n_chains:,} chains in {n_key_groups:,} groups")
 
     # --- Step 6: Build output — gene ID JSON only for selected blocks ---
@@ -1222,7 +1116,7 @@ def chain_groups_batched(
 
     Args:
         extract_blocks: If True, return a single pd.DataFrame of
-            non-overlapping blocks directly (skips per-chain DataFrame
+            blocks after paired-span selection (skips per-chain DataFrame
             creation). If False, return Dict of chain lists (legacy).
         block_id_start: Starting block_id when extract_blocks=True.
 
@@ -1235,9 +1129,34 @@ def chain_groups_batched(
 
     if not _NUMBA_AVAILABLE:
         if is_grouped:
-            raise RuntimeError("GroupedAnchors requires Numba for batched chaining")
+            # Materialize one contig pair at a time for the Python fallback.
+            # The public grouped-array input remains usable with optional JIT.
+            def iter_groups():
+                for g in range(groups.n_groups):
+                    rows = groups.order[groups.group_bounds[g]:groups.group_bounds[g + 1]]
+                    if len(rows) < min_size or len(rows) == 0:
+                        continue
+                    row = rows[0]
+                    key = (groups.qg_uniques[groups.qg_codes[row]],
+                           groups.tg_uniques[groups.tg_codes[row]],
+                           groups.qc_uniques[groups.qc_codes[row]],
+                           groups.tc_uniques[groups.tc_codes[row]])
+                    frame = pd.DataFrame({
+                        "query_idx": groups.query_idx[rows],
+                        "target_idx": groups.target_idx[rows],
+                        "similarity": groups.similarity[rows],
+                        "orientation": groups.orientation[rows],
+                        "query_gene_id": groups.query_gene_id[rows],
+                        "target_gene_id": groups.target_gene_id[rows],
+                        "query_genome": key[0], "target_genome": key[1],
+                        "query_contig": key[2], "target_contig": key[3],
+                    })
+                    yield key, frame
+            group_items = iter_groups()
+        else:
+            group_items = groups.items()
         result = {}
-        for key, anchors_df in groups.items():
+        for key, anchors_df in group_items:
             chains = chain_anchors_lis(anchors_df, max_gap, min_size, gap_penalty_scale)
             if chains:
                 result[key] = chains
@@ -1395,7 +1314,7 @@ def chain_groups_batched(
 
     if extract_blocks:
         # Phase 5: Flat-array block extraction — no per-chain DataFrames.
-        # Scores, bounds, and greedy non-overlapping selection all operate
+        # Scores, bounds, and greedy paired-span selection all operate
         # on flat numpy arrays.  One DataFrame is built at the very end for
         # selected blocks only.
         blocks_df = _extract_blocks_flat(

@@ -7,6 +7,7 @@ query locus against the full indexed database.
 
 from __future__ import annotations
 
+import json
 import pickle
 from pathlib import Path
 from typing import List, Any, Tuple, Dict, Set
@@ -14,8 +15,8 @@ from typing import List, Any, Tuple, Dict, Set
 import numpy as np
 import pandas as pd
 
-from .chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains
-from .seed import ANCHOR_COLS
+from .chain import ChainedBlock, chain_groups_batched
+from .seed import ANCHOR_COLS, group_anchors_by_contig_pair
 
 
 def embed_query_proteins(
@@ -115,6 +116,8 @@ def search_locus(
     min_chain_size: int = 2,
     gap_penalty_scale: float = 0.0,
     max_results: int = 50,
+    neighborhood_retrieval: bool = True,
+    n_jobs: int | None = None,
 ) -> List[ChainedBlock]:
     """
     Search for syntenic blocks matching a query locus.
@@ -131,125 +134,107 @@ def search_locus(
         min_chain_size: Minimum anchors per block
         gap_penalty_scale: Concave gap penalty
         max_results: Maximum blocks to return
+        neighborhood_retrieval: Select a fixed target budget using original-seed
+            support within the supplied query locus and full reference contigs.
+        n_jobs: Threads for retrieval, neighborhood selection and chaining.
 
     Returns:
         List of ChainedBlock objects sorted by chain_score descending
     """
     index_type, index = index_tuple
-    if index is None:
+    if index is None or query_genes.empty or target_genes.empty or max_results < 1:
         return []
+    if k < 1 or max_gap < 0 or min_chain_size < 1:
+        raise ValueError("k and min_chain_size must be positive; max_gap must be nonnegative")
+    if target_embeddings.ndim != 2 or len(target_embeddings) != len(target_genes):
+        raise ValueError("Target embeddings must align with target metadata rows")
 
     emb_cols = [c for c in query_genes.columns if c.startswith("emb_")]
     if not emb_cols:
         return []
-
-    query_embeddings = query_genes[emb_cols].values.astype(np.float32)
-    n_query = len(query_genes)
-
-    # Normalize query embeddings
-    norms = np.linalg.norm(query_embeddings, axis=1, keepdims=True)
-    query_normalized = query_embeddings / (norms + 1e-9)
-
-    # Query the index
+    query_vectors = query_genes[emb_cols].to_numpy(dtype=np.float32)
+    if query_vectors.shape[1] != target_embeddings.shape[1]:
+        raise ValueError("Query and target embedding dimensions differ")
+    norms = np.linalg.norm(query_vectors, axis=1)
+    eligible = np.isfinite(query_vectors).all(axis=1) & np.isfinite(norms) & (norms > 0)
+    query_vectors /= norms[:, None] + np.float32(1e-9)
+    active = np.flatnonzero(eligible)
+    if len(active) == 0:
+        return []
     k_query = min(k + 10, len(target_genes))
-
     if index_type == "hnsw":
-        labels, distances = index.knn_query(query_normalized, k=k_query)
+        options = {"num_threads": n_jobs} if n_jobs is not None else {}
+        labels, distances = index.knn_query(query_vectors[active], k=k_query, **options)
         similarities = 1 - distances
     elif index_type == "faiss":
-        similarities, labels = index.search(query_normalized.astype(np.float32), k_query)
-        labels = labels.astype(np.intp)
-    else:  # sklearn
-        distances, labels = index.kneighbors(query_normalized, n_neighbors=k_query)
+        if n_jobs is not None:
+            import faiss
+            faiss.omp_set_num_threads(n_jobs)
+        similarities, labels = index.search(query_vectors[active], k_query)
+    else:
+        distances, labels = index.kneighbors(query_vectors[active], n_neighbors=k_query)
         similarities = 1 - distances
 
-    # Build target lookup arrays
-    t_genome_arr = target_genes['sample_id'].values
-    t_contig_arr = target_genes['contig_id'].values
-    t_pos_arr = target_genes['position_index'].values
-    t_gene_id_arr = target_genes['gene_id'].values
-    t_strand_arr = target_genes['strand'].values if 'strand' in target_genes.columns else None
-
-    q_genome_arr = query_genes['sample_id'].values
-    q_contig_arr = query_genes['contig_id'].values
-    q_pos_arr = query_genes['position_index'].values
-    q_gene_id_arr = query_genes['gene_id'].values
-    q_strand_arr = query_genes['strand'].values if 'strand' in query_genes.columns else None
-
-    query_genome = str(q_genome_arr[0])
-
-    # Collect cross-genome anchors into columnar lists
-    rows = []
-    seen: Set[Tuple[int, int]] = set()
-
-    for qi in range(n_query):
-        for j_pos in range(k_query):
-            tj = int(labels[qi, j_pos])
-            if tj < 0:
-                continue
-            sim = float(similarities[qi, j_pos])
-
-            if sim < similarity_threshold:
-                continue
-
-            if str(t_genome_arr[tj]) == query_genome:
-                continue
-
-            pair_key = (qi, tj)
-            if pair_key in seen:
-                continue
-            seen.add(pair_key)
-
-            # Compute relative orientation
-            if q_strand_arr is not None and t_strand_arr is not None:
-                sq = int(q_strand_arr[qi]) if q_strand_arr[qi] != 0 else 1
-                st = int(t_strand_arr[tj]) if t_strand_arr[tj] != 0 else 1
-                rel_orient = 1 if sq == st else -1
-            else:
-                rel_orient = 0
-
-            rows.append({
-                "query_idx": int(q_pos_arr[qi]),
-                "target_idx": int(t_pos_arr[tj]),
-                "query_genome": query_genome,
-                "target_genome": str(t_genome_arr[tj]),
-                "query_contig": str(q_contig_arr[qi]),
-                "target_contig": str(t_contig_arr[tj]),
-                "query_gene_id": str(q_gene_id_arr[qi]),
-                "target_gene_id": str(t_gene_id_arr[tj]),
-                "similarity": sim,
-                "orientation": rel_orient,
-            })
-
-    if not rows:
-        return []
-
-    anchors_df = pd.DataFrame(rows, columns=ANCHOR_COLS)
-
-    # Group by (query_contig, target_genome, target_contig) so anchors from
-    # different query contigs are never chained together (multi-contig queries).
-    all_blocks: List[ChainedBlock] = []
-    block_id = 0
-
-    for (_qc, tg, tc), group_df in anchors_df.groupby(
-        ["query_contig", "target_genome", "target_contig"], sort=False
-    ):
-        if len(group_df) < min_chain_size:
-            continue
-
-        chains = chain_anchors_lis(
-            group_df.reset_index(drop=True),
-            max_gap=max_gap,
-            min_size=min_chain_size,
-            gap_penalty_scale=gap_penalty_scale,
+    qr = np.repeat(active, k_query)
+    tr = np.asarray(labels, dtype=np.int64).ravel()
+    scores = similarities.ravel()
+    valid = (tr >= 0) & (tr < len(target_genes)) & np.isfinite(scores) & (scores >= similarity_threshold)
+    qr, tr, scores = qr[valid], tr[valid], scores[valid]
+    qsample, tsample = query_genes.sample_id.to_numpy(), target_genes.sample_id.to_numpy()
+    cross = qsample[qr] != tsample[tr]
+    qr, tr, scores = qr[cross], tr[cross], scores[cross]
+    if neighborhood_retrieval:
+        from .neighborhood import select_neighborhood_candidates
+        columns = ['sample_id', 'contig_id', 'position_index']
+        query_metadata = query_genes[columns + (['strand'] if 'strand' in query_genes else [])]
+        reference_metadata = target_genes[columns + (['strand'] if 'strand' in target_genes else [])]
+        selected = select_neighborhood_candidates(
+            query_vectors, target_embeddings, qr, tr, scores,
+            query_metadata=query_metadata, reference_metadata=reference_metadata,
+            k=k_query, threshold=similarity_threshold, max_gap=max_gap,
+            n_jobs=n_jobs, normalize_reference=True,
         )
-        if not chains:
-            continue
-
-        blocks = extract_nonoverlapping_chains(chains, block_id_start=block_id)
-        all_blocks.extend(blocks)
-        block_id += len(blocks)
-
-    # Sort by score and limit
-    all_blocks.sort(key=lambda b: -b.chain_score)
-    return all_blocks[:max_results]
+        qr, tr, scores = selected.query_rows, selected.target_rows, selected.similarities
+    if len(qr) == 0:
+        return []
+    order = np.lexsort((tr, qr))
+    qr, tr, scores = qr[order], tr[order], scores[order]
+    # Repeated ANN neighbors represent one candidate protein pair.
+    unique = np.r_[True, (qr[1:] != qr[:-1]) | (tr[1:] != tr[:-1])]
+    qr, tr, scores = qr[unique], tr[unique], scores[unique]
+    q = query_genes.iloc[qr]
+    t = target_genes.iloc[tr]
+    qs = q.strand.to_numpy() if 'strand' in q else np.zeros(len(q), dtype=np.int8)
+    ts = t.strand.to_numpy() if 'strand' in t else np.zeros(len(t), dtype=np.int8)
+    orientation = np.where(np.isin(qs, [-1, 1]) & np.isin(ts, [-1, 1]), qs*ts, 0).astype(np.int8)
+    anchors = pd.DataFrame(dict(
+        query_idx=q.position_index.to_numpy(), target_idx=t.position_index.to_numpy(),
+        query_genome=q.sample_id.to_numpy(), target_genome=t.sample_id.to_numpy(),
+        query_contig=q.contig_id.to_numpy(), target_contig=t.contig_id.to_numpy(),
+        query_gene_id=q.gene_id.to_numpy(), target_gene_id=t.gene_id.to_numpy(),
+        similarity=scores, orientation=orientation,
+    ), columns=ANCHOR_COLS)
+    if n_jobs is not None:
+        from .chain import _NUMBA_AVAILABLE
+        if _NUMBA_AVAILABLE:
+            import numba
+            numba.set_num_threads(n_jobs)
+    blocks = chain_groups_batched(
+        group_anchors_by_contig_pair(anchors, canonicalize=False),
+        max_gap=max_gap, min_size=min_chain_size, gap_penalty_scale=gap_penalty_scale,
+        extract_blocks=True,
+    )
+    output = []
+    for row in blocks.itertuples(index=False):
+        output.append(ChainedBlock(
+            block_id=int(row.block_id), query_genome=str(row.query_genome),
+            target_genome=str(row.target_genome), query_contig=str(row.query_contig),
+            target_contig=str(row.target_contig), query_start=int(row.query_start),
+            query_end=int(row.query_end), target_start=int(row.target_start),
+            target_end=int(row.target_end), n_anchors=int(row.n_anchors),
+            chain_score=float(row.chain_score), orientation=int(row.orientation),
+            **{name: json.loads(getattr(row, name)) for name in (
+                'anchor_query_ids', 'anchor_target_ids', 'anchor_query_gene_ids', 'anchor_target_gene_ids')},
+        ))
+    output.sort(key=lambda block: -block.chain_score)
+    return output[:max_results]

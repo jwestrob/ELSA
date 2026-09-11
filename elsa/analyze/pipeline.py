@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from dataclasses import dataclass
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -51,12 +52,25 @@ class ChainConfig:
     similarity_threshold: float = 0.85
     max_gap_genes: int = 2
     min_chain_size: int = 2
+    neighborhood_retrieval: bool = True
     gap_penalty_scale: float = 0.0
     jaccard_tau: float = 0.3
     mutual_k: int = 5
     df_max: int = 500
     min_genome_support: int = 2
     n_jobs: Optional[int] = None
+
+
+def _checkpoint_key(config: ChainConfig) -> str:
+    """Separate saved anchors/blocks by algorithm and computational settings."""
+    fields = (
+        'index_backend', 'faiss_nprobe', 'hnsw_k', 'hnsw_m',
+        'hnsw_ef_construction', 'hnsw_ef_search', 'similarity_threshold',
+        'max_gap_genes', 'min_chain_size', 'gap_penalty_scale', 'neighborhood_retrieval',
+    )
+    payload = {'algorithm': 'neighborhood-paired-overlap-v1',
+               **{name: getattr(config, name) for name in fields}}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:16]
 
 
 def run_chain_pipeline(
@@ -173,7 +187,8 @@ def run_chain_pipeline(
         schema_source_path = schema_temp_path
 
     # --- Blocks checkpoint: skip kNN + chaining entirely if available ---
-    blocks_ckpt = output_dir / "blocks_checkpoint.parquet"
+    checkpoint_key = _checkpoint_key(config)
+    blocks_ckpt = output_dir / f"blocks_checkpoint_{checkpoint_key}.parquet"
     blocks_from_checkpoint = False
     if blocks_ckpt.exists():
         _log(f"[MicroChain] Resuming from blocks checkpoint: {blocks_ckpt}")
@@ -203,6 +218,8 @@ def run_chain_pipeline(
             _presorted=True,
             checkpoint_dir=output_dir,
             n_jobs=config.n_jobs,
+            neighborhood_retrieval=config.neighborhood_retrieval,
+            checkpoint_key=checkpoint_key,
         )
 
         # Free search embeddings; schema reopens a memory-mapped source later.
@@ -226,7 +243,6 @@ def run_chain_pipeline(
         return ChainSummary(num_genes=n_genes)
 
     # Save blocks checkpoint so clustering can resume without re-chaining
-    blocks_ckpt = output_dir / "blocks_checkpoint.parquet"
     if not blocks_ckpt.exists():
         _log(f"[MicroChain] Saving blocks checkpoint...")
         t0 = time.time()
@@ -531,6 +547,8 @@ def _run_gene_chaining(
     _presorted: bool = False,
     checkpoint_dir: Optional[Path] = None,
     n_jobs: Optional[int] = None,
+    neighborhood_retrieval: bool = True,
+    checkpoint_key: Optional[str] = None,
 ) -> pd.DataFrame:
     """Complete gene-level chaining pipeline (internal).
 
@@ -561,7 +579,15 @@ def _run_gene_chaining(
     n_genes = len(genes_df)
 
     # --- Checkpoint: load anchors from parquet if available ---
-    anchors_path = (Path(checkpoint_dir) / "anchors.parquet") if checkpoint_dir else None
+    if checkpoint_key is None:
+        checkpoint_key = _checkpoint_key(ChainConfig(
+            index_backend=index_backend, faiss_nprobe=faiss_nprobe,
+            hnsw_k=hnsw_k, hnsw_m=hnsw_m, hnsw_ef_construction=hnsw_ef_construction,
+            hnsw_ef_search=hnsw_ef_search, similarity_threshold=similarity_threshold,
+            max_gap_genes=max_gap, min_chain_size=min_chain_size,
+            gap_penalty_scale=gap_penalty_scale, neighborhood_retrieval=neighborhood_retrieval,
+        ))
+    anchors_path = (Path(checkpoint_dir) / f"anchors_{checkpoint_key}.parquet") if checkpoint_dir else None
 
     if anchors_path and anchors_path.exists():
         sz_gb = anchors_path.stat().st_size / (1024**3)
@@ -593,7 +619,9 @@ def _run_gene_chaining(
         anchors = find_cross_genome_anchors(index, embeddings, gene_info,
                                             k=hnsw_k,
                                             similarity_threshold=similarity_threshold,
-                                            n_jobs=n_jobs)
+                                            n_jobs=n_jobs,
+                                            neighborhood_retrieval=neighborhood_retrieval,
+                                            max_gap=max_gap)
 
         # Free large arrays no longer needed — critical for large datasets
         del embeddings, gene_info, index
@@ -616,6 +644,11 @@ def _run_gene_chaining(
     _log(f"[GeneChain] {n_contig_pairs:,} contig pairs to process")
 
     # Batched chaining + flat-array block extraction in one pass
+    if n_jobs is not None:
+        from ..chain import _NUMBA_AVAILABLE
+        if _NUMBA_AVAILABLE:
+            import numba
+            numba.set_num_threads(n_jobs)
     all_blocks_df = chain_groups_batched(
         grouped,
         max_gap=max_gap,

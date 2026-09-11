@@ -13,7 +13,7 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from .params import ELSAConfig, load_config, create_default_config
+from .params import ELSAConfig, load_config, create_default_config, resolve_jobs
 from . import __version__
 
 console = Console()
@@ -469,6 +469,7 @@ def analyze(config: str, output_dir: str, genome_browser_db: str,
             similarity_threshold=chain_cfg.similarity_threshold,
             max_gap_genes=chain_cfg.max_gap_genes,
             min_chain_size=chain_cfg.min_chain_size,
+            neighborhood_retrieval=chain_cfg.neighborhood_retrieval,
             jaccard_tau=chain_cfg.jaccard_tau,
             mutual_k=chain_cfg.mutual_k,
             df_max=chain_cfg.df_max,
@@ -706,6 +707,8 @@ def search(query_locus: str, config: str, max_results: int,
             min_chain_size=config_obj.chain.min_chain_size,
             gap_penalty_scale=config_obj.chain.gap_penalty_scale,
             max_results=max_results,
+            neighborhood_retrieval=config_obj.chain.neighborhood_retrieval,
+            n_jobs=resolve_jobs(config_obj.system.jobs),
         )
 
         if not blocks:
@@ -784,6 +787,8 @@ def stats(config: str):
 @click.option("--jaccard-tau", default=0.3, help="Jaccard threshold for cluster overlap")
 @click.option("--index-backend", default="auto", help="Index backend (auto/faiss/hnswlib)")
 @click.option("--hnsw-k", default=50, help="k for HNSW neighbor search")
+@click.option("--neighborhood-retrieval/--global-retrieval", default=True,
+              help="Prioritize a fixed target budget using adjacent original seeds")
 @click.option("--no-normalize", is_flag=True, help="Skip L2 normalization of embeddings")
 @click.option("--jobs", "-j", type=int, required=True,
               help="Max threads for FAISS search and clustering (required)")
@@ -804,7 +809,7 @@ def synteny(db: Optional[str], proteins: Optional[str],
             output_dir: str, similarity_threshold: float, max_gap: int,
             min_chain_size: int, min_genome_support: int,
             gap_penalty_scale: float, jaccard_tau: float,
-            index_backend: str, hnsw_k: int, no_normalize: bool,
+            index_backend: str, hnsw_k: int, neighborhood_retrieval: bool, no_normalize: bool,
             jobs: int,
             annotations_db: Optional[str], genome_browser_db: Optional[str],
             result_db: Optional[str], no_result_db: bool,
@@ -907,6 +912,7 @@ def synteny(db: Optional[str], proteins: Optional[str],
         config = ChainConfig(
             index_backend=index_backend,
             hnsw_k=hnsw_k,
+            neighborhood_retrieval=neighborhood_retrieval,
             similarity_threshold=similarity_threshold,
             max_gap_genes=max_gap,
             min_chain_size=min_chain_size,

@@ -81,6 +81,9 @@ def find_cross_genome_anchors(
     k: int = 50,
     similarity_threshold: float = 0.85,
     n_jobs: Optional[int] = None,
+    query_batch_size: int = 100_000,
+    neighborhood_retrieval: bool = True,
+    max_gap: int = 2,
 ) -> pd.DataFrame:
     """
     Find similar gene pairs across genomes using kNN search.
@@ -91,7 +94,13 @@ def find_cross_genome_anchors(
         gene_info: DataFrame with columns [gene_id, sample_id, contig_id, position_index]
         k: Number of neighbors to retrieve per gene
         similarity_threshold: Minimum cosine similarity for anchors
-        n_jobs: Number of threads for FAISS search (None = all cores)
+        n_jobs: Number of threads for HNSW/FAISS search (None = backend default)
+        neighborhood_retrieval: Prioritize candidates supported by adjacent original seeds.
+            Selection retains at most k + 10 targets per query before reciprocal dedup.
+        max_gap: Neighbor steps span one through max_gap + 1 genes.
+        query_batch_size: Maximum queries per HNSW/FAISS search call. Bounds
+            neighbor-result scratch to O(query_batch_size * (k + 10)); retained
+            anchors still occupy O(n_kept). Use len(gene_info) for one call.
 
     Returns:
         DataFrame with columns defined in ANCHOR_COLS
@@ -101,57 +110,72 @@ def find_cross_genome_anchors(
         return _empty_anchor_df()
 
     n = len(gene_info)
+    if not isinstance(query_batch_size, (int, np.integer)) or query_batch_size < 1:
+        raise ValueError("query_batch_size must be a positive integer")
 
-    # Normalize embeddings TRULY in-place as float32 — no second array.
+    # Normalize in-place as float32 where possible — no second array.
     # `query = embeddings / norms` would allocate a full copy (~4.3 GB for 3.4M genes).
+    #
+    # In-place divide mutates the caller's array, so it is only valid on a
+    # writable one. A read-only memory map — the natural way to hand over a
+    # multi-gigabyte embedding matrix, and what a transform ablation produces —
+    # must fall back to a copy rather than raising.
     embeddings = embeddings.astype(np.float32, copy=False)
     norms = np.linalg.norm(embeddings, axis=1, keepdims=True).astype(np.float32)
     np.maximum(norms, np.float32(1e-9), out=norms)
-    embeddings /= norms          # in-place divide — no copy
+    writable = getattr(embeddings, "flags", None) is not None and embeddings.flags.writeable
+    if writable:
+        embeddings /= norms      # in-place divide — no copy
+        query = embeddings       # alias, not a copy
+    else:
+        _log("[GeneAnchor] embeddings are read-only; copying to normalize "
+             f"(~{embeddings.nbytes / 1e9:.1f} GB)")
+        query = embeddings / norms
     del norms
-    query = embeddings           # alias, not a copy
     del embeddings               # drop the name; query is now the only reference
 
     k_query = min(k + 10, n)
 
-    # Build lookup arrays (needed for per-chunk cross-genome filtering)
+    # Build lookup arrays (needed for per-chunk cross-genome filtering).
+    #
+    # The cross-genome test runs on integer codes rather than the genome strings.
+    # ``genome_arr[a] != genome_arr[b]`` over an object array dispatches a Python
+    # string compare per element, and this predicate is evaluated once per
+    # retrieved neighbour — n * k_query times, ~200M at DPANN scale. Comparing
+    # int32 codes is ~12x faster and the codes are reused below for the
+    # Categorical columns, so factorizing here costs nothing extra.
     genome_arr = gene_info['sample_id'].values
+    genome_codes, genome_cats = _category_codes(genome_arr)
 
-    # --- Streaming anchor discovery: filter each FAISS chunk immediately ---
+    # --- Streaming anchor discovery: filter each search chunk immediately ---
     # Instead of materializing the full (n * k_query) result and then filtering,
     # we process each chunk in-place and keep only valid cross-genome pairs.
-    # This reduces peak memory from O(n*k) to O(CHUNK*k + n_kept).
-    CHUNK = 100_000
+    # Neighbor-result storage is O(query_batch_size*k + n_kept).
     chunk_rows = []   # filtered (row_idx, col_idx, sims) per chunk
     n_raw_kept = 0
 
-    if index_type == "hnsw":
-        labels, distances = index.knn_query(query, k=k_query)
-        similarities = 1 - distances
-        labels = labels.astype(np.intp)
-        del query  # free after search
-        # Filter all at once (HNSW datasets are typically smaller)
-        row_idx = np.repeat(np.arange(n), k_query)
-        col_idx = labels.ravel()
-        sims_flat = similarities.ravel()
-        valid = (col_idx >= 0) & (sims_flat >= similarity_threshold) & (row_idx != col_idx)
-        row_idx = row_idx[valid]; col_idx = col_idx[valid]; sims_flat = sims_flat[valid]
-        cross = genome_arr[row_idx] != genome_arr[col_idx]
-        chunk_rows.append((row_idx[cross].astype(np.int32),
-                           col_idx[cross].astype(np.int32),
-                           sims_flat[cross]))
-        n_raw_kept = int(cross.sum())
-        del labels, distances, similarities
+    if index_type in ("hnsw", "faiss"):
+        if index_type == "faiss":
+            import os, faiss as _faiss
+            _ncpu = n_jobs if n_jobs is not None else (os.cpu_count() or 1)
+            _faiss.omp_set_num_threads(_ncpu)
 
-    elif index_type == "faiss":
-        import os, faiss as _faiss
-        _ncpu = n_jobs if n_jobs is not None else (os.cpu_count() or 1)
-        _faiss.omp_set_num_threads(_ncpu)
+        # Query rows and each row's neighbors retain their original order, so
+        # the first-occurrence reciprocal-pair dedup below is batch invariant.
+        hnsw_kwargs = {"num_threads": n_jobs} if n_jobs is not None else {}
 
         from tqdm import trange
-        for start in trange(0, n, CHUNK, desc="FAISS kNN search + filter"):
-            end = min(start + CHUNK, n)
-            chunk_sims, chunk_labels = index.search(query[start:end], k_query)
+        for start in trange(0, n, query_batch_size,
+                            desc=f"{index_type.upper()} kNN search + filter"):
+            end = min(start + query_batch_size, n)
+            if index_type == "hnsw":
+                chunk_labels, chunk_distances = index.knn_query(
+                    query[start:end], k=k_query, **hnsw_kwargs,
+                )
+                chunk_sims = 1 - chunk_distances
+                del chunk_distances
+            else:
+                chunk_sims, chunk_labels = index.search(query[start:end], k_query)
             chunk_labels = chunk_labels.astype(np.int32)
 
             # Flatten this chunk
@@ -163,14 +187,16 @@ def find_cross_genome_anchors(
             # Filter: valid, above threshold, not self, cross-genome
             valid = (ci >= 0) & (si >= similarity_threshold) & (ri != ci)
             ri = ri[valid]; ci = ci[valid]; si = si[valid]
-            cross = genome_arr[ri] != genome_arr[ci]
+            cross = genome_codes[ri] != genome_codes[ci]
             ri = ri[cross]; ci = ci[cross]; si = si[cross]
 
-            if len(ri) > 0:
+            if len(ri) > 0 or index_type == "hnsw":
+                # HNSW historically constructs typed empty columns even when
+                # every neighbor is filtered; keep that return schema.
                 chunk_rows.append((ri, ci, si))
                 n_raw_kept += len(ri)
+            del chunk_labels, chunk_sims, ri, ci, si, valid, cross
 
-        del query  # free 4.3 GB after all chunks processed
         # Note: do NOT call omp_set_num_threads(1) here. FAISS and Numba
         # may use separate libomp copies (KMP_DUPLICATE_LIB_OK=TRUE), and
         # mutating OpenMP global state between them causes thread-pool
@@ -178,7 +204,6 @@ def find_cross_genome_anchors(
 
     else:  # sklearn
         distances, labels = index.kneighbors(query, n_neighbors=k_query)
-        del query  # free after search
         similarities = 1 - distances
         labels = labels.astype(np.int32)
         row_idx = np.repeat(np.arange(n, dtype=np.int32), k_query)
@@ -186,7 +211,7 @@ def find_cross_genome_anchors(
         sims_flat = similarities.ravel()
         valid = (col_idx >= 0) & (sims_flat >= similarity_threshold) & (row_idx != col_idx)
         row_idx = row_idx[valid]; col_idx = col_idx[valid]; sims_flat = sims_flat[valid]
-        cross = genome_arr[row_idx] != genome_arr[col_idx]
+        cross = genome_codes[row_idx] != genome_codes[col_idx]
         chunk_rows.append((row_idx[cross], col_idx[cross], sims_flat[cross]))
         n_raw_kept = int(cross.sum())
         del labels, distances, similarities
@@ -200,20 +225,34 @@ def find_cross_genome_anchors(
     sims = np.concatenate([c[2] for c in chunk_rows])
     del chunk_rows
 
+    if neighborhood_retrieval and len(row_idx):
+        from .neighborhood import select_neighborhood_candidates
+        selected = select_neighborhood_candidates(
+            query, query, row_idx, col_idx, sims,
+            query_metadata=gene_info, reference_metadata=gene_info,
+            k=k_query, threshold=similarity_threshold, max_gap=max_gap,
+            n_jobs=n_jobs,
+        )
+        row_idx, col_idx, sims = selected.query_rows, selected.target_rows, selected.similarities
+        _log(f"[GeneAnchor] Neighborhood selection retained {len(row_idx):,} directional pairs")
+        del selected
+    del query
+
     _log(f"[GeneAnchor] {n_raw_kept} cross-genome pairs before dedup (n={n}, k={k_query})")
 
     # Deduplicate: canonical pair (min, max) — keep first occurrence (highest sim from sorted kNN)
     lo = np.minimum(row_idx, col_idx)
     hi = np.maximum(row_idx, col_idx)
 
-    # Use int32 structured array if indices fit (< 2^31)
-    if n < 2_000_000_000:
-        lo32 = lo.astype(np.int32)
-        hi32 = hi.astype(np.int32)
-        pairs = np.empty(len(lo32), dtype=[('lo', np.int32), ('hi', np.int32)])
-        pairs['lo'] = lo32
-        pairs['hi'] = hi32
-        del lo, hi, lo32, hi32
+    # Pack the pair into one int64 rather than sorting a two-field structured
+    # dtype. np.unique on a structured array sorts field-by-field through a
+    # comparison path; on a plain int64 it takes the fast scalar path, which
+    # measures ~1.6x quicker at the 200M-pair scale this reaches on DPANN.
+    # n < 2^31 keeps both halves addressable, which every real corpus satisfies —
+    # the fallback below is for completeness, not for a case anyone has hit.
+    if n < 2_147_483_648:
+        pairs = (lo.astype(np.int64) << np.int64(32)) | hi.astype(np.int64)
+        del lo, hi
     else:
         pairs = np.empty(len(lo), dtype=[('lo', np.int64), ('hi', np.int64)])
         pairs['lo'] = lo
@@ -242,8 +281,10 @@ def find_cross_genome_anchors(
     # Done here on raw index arrays (cheap int swaps) so the DataFrame
     # is already canonical and group_anchors_by_contig_pair avoids
     # expensive column-level copies that double memory at 153M rows.
-    q_gen = genome_arr[row_idx]
-    t_gen = genome_arr[col_idx]
+    # Codes are assigned over lexicographically sorted categories, so comparing
+    # them orders genomes exactly as comparing the strings would.
+    q_gen = genome_codes[row_idx]
+    t_gen = genome_codes[col_idx]
     swap_mask = q_gen > t_gen
     if swap_mask.any():
         temp = row_idx[swap_mask].copy()
@@ -254,27 +295,34 @@ def find_cross_genome_anchors(
 
     # Compute orientations vectorized (symmetric w.r.t. query/target swap)
     if strand_arr is not None:
-        si = strand_arr[row_idx].copy()
-        sj = strand_arr[col_idx].copy()
-        si[si == 0] = 1
-        sj[sj == 0] = 1
-        orientations = np.where(si == sj, 1, -1).astype(np.int8)
+        si = strand_arr[row_idx]
+        sj = strand_arr[col_idx]
+        known = np.isin(si, [-1, 1]) & np.isin(sj, [-1, 1])
+        orientations = np.where(known, si * sj, 0).astype(np.int8)
     else:
         orientations = np.zeros(len(row_idx), dtype=np.int8)
 
     # Use Categorical for genome/contig columns: saves ~3 GB at 153M rows
     # (int32 codes vs 8-byte object pointers). Ordered + shared categories
     # enable safe column swaps downstream without category mismatches.
-    genome_cats = sorted(np.unique(genome_arr))
-    contig_cats = sorted(np.unique(contig_arr))
+    #
+    # Built from codes rather than from the strings. ``pd.Categorical(strings,
+    # categories=...)`` hashes every element against the category index, and
+    # there are four such columns over the deduped anchor set — 40M lookups at
+    # DPANN scale. Factorizing the gene table once and gathering codes is ~12x
+    # quicker and produces an identical column.
+    contig_codes, contig_cats = _category_codes(contig_arr)
+
+    def _cat(codes: np.ndarray, categories: np.ndarray) -> pd.Categorical:
+        return pd.Categorical.from_codes(codes, categories=categories, ordered=True)
 
     anchors_df = pd.DataFrame({
         "query_idx": pos_arr[row_idx],
         "target_idx": pos_arr[col_idx],
-        "query_genome": pd.Categorical(genome_arr[row_idx], categories=genome_cats, ordered=True),
-        "target_genome": pd.Categorical(genome_arr[col_idx], categories=genome_cats, ordered=True),
-        "query_contig": pd.Categorical(contig_arr[row_idx], categories=contig_cats, ordered=True),
-        "target_contig": pd.Categorical(contig_arr[col_idx], categories=contig_cats, ordered=True),
+        "query_genome": _cat(genome_codes[row_idx], genome_cats),
+        "target_genome": _cat(genome_codes[col_idx], genome_cats),
+        "query_contig": _cat(contig_codes[row_idx], contig_cats),
+        "target_contig": _cat(contig_codes[col_idx], contig_cats),
         "query_gene_id": gene_id_arr[row_idx],
         "target_gene_id": gene_id_arr[col_idx],
         "similarity": sims,
@@ -287,17 +335,32 @@ def find_cross_genome_anchors(
 # ---------------------------------------------------------------------------
 # Grouping by contig pair — fully vectorized
 # ---------------------------------------------------------------------------
+def _category_codes(values: Any) -> Tuple[np.ndarray, np.ndarray]:
+    """Return integer codes plus their sorted category array."""
+    series = pd.Series(values)
+    if isinstance(series.dtype, pd.CategoricalDtype):
+        categories = np.asarray(series.cat.categories)
+        order = np.argsort(categories, kind="stable")
+        remap = np.empty(len(categories), dtype=np.int64)
+        remap[order] = np.arange(len(categories))
+        codes = series.cat.codes.to_numpy()
+        return np.where(codes >= 0, remap[np.maximum(codes, 0)], -1), categories[order]
+    raw = series.to_numpy()
+    categories = np.unique(raw)
+    return np.searchsorted(categories, raw), categories
+
+
 def group_anchors_by_contig_pair(
     anchors_df: pd.DataFrame,
+    *,
+    canonicalize: bool = True,
 ) -> Dict[Tuple[str, str, str, str], pd.DataFrame]:
     """
     Group anchors by (query_genome, target_genome, query_contig, target_contig).
 
-    Uses canonical ordering (smaller genome first) to avoid duplicates.
-    Operates on DataFrame; returns dict of sub-DataFrames.
-
-    Uses numpy composite-key sort instead of pandas groupby for ~5-10x
-    speedup on large DataFrames (153M+ rows).
+    Canonical ordering (smaller genome first) combines reciprocal discovery
+    anchors. Pass canonicalize=False to retain external query direction.
+    Returns GroupedAnchors arrays, or an empty dictionary for empty input.
     """
     if anchors_df.empty:
         return {}
@@ -307,7 +370,8 @@ def group_anchors_by_contig_pair(
     # Canonical ordering: swap rows where query_genome > target_genome.
     # Swap column values via numpy arrays to avoid a full DataFrame copy
     # (critical for 100M+ row DataFrames where .copy() doubles memory).
-    needs_swap = anchors_df["query_genome"].values > anchors_df["target_genome"].values
+    needs_swap = (anchors_df["query_genome"].values > anchors_df["target_genome"].values
+                  if canonicalize else np.zeros(n, dtype=bool))
     n_swap = int(needs_swap.sum())
 
     if n_swap > 0:
@@ -348,24 +412,18 @@ def group_anchors_by_contig_pair(
     qc_codes, qc_uniques = _get_codes_and_uniques(anchors_df["query_contig"])
     tc_codes, tc_uniques = _get_codes_and_uniques(anchors_df["target_contig"])
 
-    n_tg = len(tg_uniques)
-    n_qc = len(qc_uniques)
-    n_tc = len(tc_uniques)
-
-    # Composite key — fits int64 as long as product of cardinalities < 2^63
-    composite = ((qg_codes * n_tg + tg_codes) * n_qc + qc_codes) * n_tc + tc_codes
-
     _log(f"[GroupAnchors] Sorting {n:,} anchors by group key...")
-    order = np.argsort(composite, kind='quicksort')
-    sorted_keys = composite[order]
-    del composite
+    # Stable tuple ordering also handles large contig cardinalities safely.
+    order = np.lexsort((tc_codes, qc_codes, tg_codes, qg_codes))
 
     # Find group boundaries
     diffs = np.empty(n, dtype=np.bool_)
     diffs[0] = True
-    np.not_equal(sorted_keys[1:], sorted_keys[:-1], out=diffs[1:])
+    diffs[1:] = False
+    for codes in (qg_codes, tg_codes, qc_codes, tc_codes):
+        diffs[1:] |= codes[order[1:]] != codes[order[:-1]]
     group_starts = np.nonzero(diffs)[0]
-    del diffs, sorted_keys
+    del diffs
 
     n_groups = len(group_starts)
     # Append sentinel for boundary slicing

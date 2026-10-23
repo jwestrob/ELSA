@@ -781,7 +781,7 @@ def stats(config: str):
 @click.option("--min-chain-size", default=2, help="Minimum anchors per chain")
 @click.option("--min-genome-support", default=2, help="Minimum genomes per cluster")
 @click.option("--gap-penalty-scale", default=0.0, help="Concave gap penalty (0=off)")
-@click.option("--jaccard-tau", default=0.3, help="Jaccard threshold for cluster overlap")
+@click.option("--jaccard-tau", default=0.9, help="Jaccard threshold for cluster overlap (matches ChainConfig and cluster_blocks_by_overlap)")
 @click.option("--index-backend", default="auto", help="Index backend (auto/faiss/hnswlib)")
 @click.option("--hnsw-k", default=50, help="k for HNSW neighbor search")
 @click.option("--no-normalize", is_flag=True, help="Skip L2 normalization of embeddings")

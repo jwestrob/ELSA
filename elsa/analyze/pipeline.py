@@ -11,6 +11,7 @@ from collections import defaultdict
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import shutil
 import time
 from typing import Optional, List
 import sqlite3
@@ -20,7 +21,8 @@ import numpy as np
 import pandas as pd
 
 from ..index import build_gene_index
-from ..seed import find_cross_genome_anchors, group_anchors_by_contig_pair
+from ..seed import (find_cross_genome_anchors, group_anchors_by_contig_pair,
+                    extend_anchor_adjacencies)
 from ..chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chains, extract_nonoverlapping_chains_df, chain_groups_batched
 from ..cluster import cluster_blocks_by_overlap, merge_contained_clusters
 from .._log import tlog as _log
@@ -41,18 +43,33 @@ class ChainSummary:
 @dataclass
 class ChainConfig:
     """Configuration for the chain pipeline (plain dataclass for CLI bridge)."""
+    # Embedding space the vectors live in. The schema stage needs it because the
+    # replacement cut-point moves with the cosine distribution; leaving it at
+    # "none" against treated vectors would fire on every slot.
+    embedding_transform: str = "none"
+    # Must match params.py: this dataclass is what the Python API and every
+    # benchmark script construct, and the two once drifted apart silently.
+    # "auto" resolves by corpus size — exact search below 50k genes, hnsw above,
+    # which leads the recall/time frontier by 2.9-4.3x at 3.4M genes
+    # (benchmarks/evaluation/index_backend_recall_at_scale.csv). Runs made before
+    # 2026-08 used faiss_ivfflat and need it named explicitly to reproduce.
     index_backend: str = "auto"
     faiss_nprobe: int = 32
     hnsw_k: int = 50
     hnsw_m: int = 32
     hnsw_ef_construction: int = 200
-    hnsw_ef_search: int = 128
+    # 256 is the measured knee at 3.4M genes: recall@60 0.9914 at 128,
+    # 0.9968 at 256, 0.9967 at 512.
+    hnsw_ef_search: int = 256
     similarity_threshold: float = 0.85
     max_gap_genes: int = 2
     min_chain_size: int = 2
     gap_penalty_scale: float = 0.0
-    jaccard_tau: float = 0.3
-    mutual_k: int = 5
+    extend_anchors: bool = False
+    anchor_extend_radius: int = 2
+    anchor_extend_threshold: float = 0.953
+    jaccard_tau: float = 0.9
+    mutual_k: int = 0
     df_max: int = 500
     min_genome_support: int = 2
     n_jobs: Optional[int] = None
@@ -66,6 +83,8 @@ def run_chain_pipeline(
     genes_df: Optional[pd.DataFrame] = None,
     prebuilt_index: Optional[tuple] = None,
     embeddings: Optional[np.ndarray] = None,
+    schema_embeddings_path: Optional[Path] = None,
+    run_schema: bool = True,
 ) -> ChainSummary:
     """
     Run the gene-level anchor chaining pipeline.
@@ -79,6 +98,11 @@ def run_chain_pipeline(
                   May contain emb_* columns, or embeddings can be passed separately.
         prebuilt_index: Optional ("faiss", index) tuple from a SyntenyStore
         embeddings: Pre-extracted float32 embedding array (avoids DataFrame copy)
+        schema_embeddings_path: Optional ``.npy`` source aligned to the input
+            gene rows. This is reopened with mmap after chaining so architecture
+            generation receives real embeddings without retaining the search
+            matrix in memory.
+        run_schema: Generate normalized cluster architecture artifacts.
 
     Returns:
         ChainSummary with pipeline statistics
@@ -101,6 +125,7 @@ def run_chain_pipeline(
     required = {"sample_id", "contig_id", "gene_id", "start", "end"}
     if not required.issubset(set(genes_df.columns)):
         raise RuntimeError(f"genes.parquet missing required columns: {sorted(required - set(genes_df.columns))}")
+    genes_df = genes_df.reset_index(drop=True)
 
     # Extract or use pre-provided embeddings
     import gc
@@ -126,10 +151,42 @@ def run_chain_pipeline(
 
     # Pre-sort genes + embeddings so _run_gene_chaining doesn't need to copy.
     # This lets us free emb_array here, avoiding a 4.3 GB duplicate during kNN.
-    genes_df = genes_df.sort_values(['sample_id', 'contig_id', 'start', 'end'])
+    sort_order = genes_df.sort_values(
+        ['sample_id', 'contig_id', 'start', 'end'],
+        kind='stable',
+    ).index.values
+    genes_df = genes_df.loc[sort_order]
     genes_df['position_index'] = genes_df.groupby(['sample_id', 'contig_id']).cumcount()
-    emb_array = emb_array[genes_df.index.values]  # reorder to match sort
+    identity_order = np.array_equal(
+        sort_order,
+        np.arange(len(sort_order), dtype=sort_order.dtype),
+    )
+    if not identity_order:
+        emb_array = emb_array[sort_order]  # reorder to match sort
     genes_df = genes_df.reset_index(drop=True)
+
+    schema_source_path: Optional[Path] = None
+    schema_temp_path: Optional[Path] = None
+    if run_schema and schema_embeddings_path is not None:
+        candidate = Path(schema_embeddings_path)
+        if not candidate.is_file():
+            raise FileNotFoundError(
+                f"Schema embedding source does not exist: {candidate}"
+            )
+        if identity_order:
+            schema_source_path = candidate
+
+    def _persist_schema_embeddings_if_needed() -> None:
+        nonlocal schema_source_path, schema_temp_path
+        if not run_schema or schema_source_path is not None:
+            return
+        schema_temp_path = output_dir / ".schema_embeddings.tmp.npy"
+        _log(
+            "[Schema] Persisting reordered embeddings for memory-mapped "
+            f"architecture generation: {schema_temp_path}"
+        )
+        np.save(schema_temp_path, emb_array)
+        schema_source_path = schema_temp_path
 
     # --- Blocks checkpoint: skip kNN + chaining entirely if available ---
     blocks_ckpt = output_dir / "blocks_checkpoint.parquet"
@@ -142,6 +199,7 @@ def run_chain_pipeline(
         _log(f"[MicroChain] Loaded {len(blocks_df_ckpt):,} blocks from checkpoint "
               f"(delete {blocks_ckpt} to force re-chaining)")
         blocks_from_checkpoint = True
+        _persist_schema_embeddings_if_needed()
         del emb_array
         gc.collect()
     else:
@@ -161,9 +219,13 @@ def run_chain_pipeline(
             _presorted=True,
             checkpoint_dir=output_dir,
             n_jobs=config.n_jobs,
+            extend_anchors=config.extend_anchors,
+            anchor_extend_radius=config.anchor_extend_radius,
+            anchor_extend_threshold=config.anchor_extend_threshold,
         )
 
-        # Free embeddings — no longer needed after chaining
+        # Free search embeddings; schema reopens a memory-mapped source later.
+        _persist_schema_embeddings_if_needed()
         del emb_array
         gc.collect()
 
@@ -178,6 +240,8 @@ def run_chain_pipeline(
         pd.DataFrame(columns=[
             "cluster_id", "size", "genome_support", "mean_chain_length", "genes_json"
         ]).to_csv(output_dir / "micro_chain_clusters.csv", index=False)
+        if schema_temp_path is not None:
+            schema_temp_path.unlink(missing_ok=True)
         return ChainSummary(num_genes=n_genes)
 
     # Save blocks checkpoint so clustering can resume without re-chaining
@@ -366,13 +430,52 @@ def run_chain_pipeline(
     if db_path is not None and Path(db_path).exists():
         _write_to_database(blocks_df, clusters_df, db_path)
 
-    # Run cluster architecture schema pipeline
-    try:
-        from ..schema import run_schema_pipeline
+    # Build architecture artifacts in staging so a failed run cannot leave a
+    # partial or apparently-current schema directory.
+    if run_schema:
         schema_dir = output_dir / "schema"
-        run_schema_pipeline(blocks_df, genes_df, schema_dir)
-    except Exception as e:
-        _log(f"[Schema] Warning: architecture schema failed: {e}")
+        schema_staging_dir = output_dir / ".schema.building"
+        schema_previous_dir = output_dir / ".schema.previous"
+        if not schema_dir.exists() and schema_previous_dir.exists():
+            schema_previous_dir.replace(schema_dir)
+        elif schema_previous_dir.exists():
+            shutil.rmtree(schema_previous_dir)
+        if schema_staging_dir.exists():
+            shutil.rmtree(schema_staging_dir)
+        try:
+            from ..schema import run_schema_pipeline
+
+            if schema_source_path is None:
+                raise RuntimeError("Schema embedding source was not prepared")
+            schema_embeddings = np.load(schema_source_path, mmap_mode="r")
+            run_schema_pipeline(
+                blocks_df,
+                genes_df,
+                schema_staging_dir,
+                embeddings=schema_embeddings,
+                # The replacement cut-point moves with the cosine distribution,
+                # so the schema stage has to know which space it is reading.
+                embedding_transform=getattr(config, "embedding_transform", "none"),
+            )
+            del schema_embeddings
+            if schema_dir.exists():
+                schema_dir.replace(schema_previous_dir)
+            try:
+                schema_staging_dir.replace(schema_dir)
+            except Exception:
+                if schema_previous_dir.exists() and not schema_dir.exists():
+                    schema_previous_dir.replace(schema_dir)
+                raise
+            if schema_previous_dir.exists():
+                shutil.rmtree(schema_previous_dir)
+        except Exception as e:
+            _log(f"[Schema] Architecture generation failed: {e}")
+            if schema_staging_dir.exists():
+                shutil.rmtree(schema_staging_dir)
+            raise
+        finally:
+            if schema_temp_path is not None:
+                schema_temp_path.unlink(missing_ok=True)
 
     return ChainSummary(
         num_genes=n_genes,
@@ -443,13 +546,16 @@ def _run_gene_chaining(
     gap_penalty_scale: float = 0.0,
     hnsw_m: int = 32,
     hnsw_ef_construction: int = 200,
-    hnsw_ef_search: int = 128,
+    hnsw_ef_search: int = 256,
     index_backend: str = "auto",
     faiss_nprobe: int = 16,
     prebuilt_index: Optional[tuple] = None,
     _presorted: bool = False,
     checkpoint_dir: Optional[Path] = None,
     n_jobs: Optional[int] = None,
+    extend_anchors: bool = False,
+    anchor_extend_radius: int = 2,
+    anchor_extend_threshold: float = 0.953,
 ) -> pd.DataFrame:
     """Complete gene-level chaining pipeline (internal).
 
@@ -513,6 +619,20 @@ def _run_gene_chaining(
                                             k=hnsw_k,
                                             similarity_threshold=similarity_threshold,
                                             n_jobs=n_jobs)
+
+        if extend_anchors:
+            _log(f"[GeneChain] Extending anchors (radius={anchor_extend_radius}, "
+                 f"threshold={anchor_extend_threshold})...")
+            extra = extend_anchor_adjacencies(
+                anchors, embeddings, gene_info,
+                similarity_threshold=anchor_extend_threshold,
+                max_radius=anchor_extend_radius,
+                min_chain_size=min_chain_size,
+            )
+            if len(extra) > 0:
+                anchors = pd.concat([anchors, extra], ignore_index=True)
+                _log(f"[GeneChain] {len(anchors):,} anchors after extension")
+            del extra
 
         # Free large arrays no longer needed — critical for large datasets
         del embeddings, gene_info, index

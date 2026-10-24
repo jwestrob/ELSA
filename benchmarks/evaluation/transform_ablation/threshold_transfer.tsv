@@ -1,0 +1,17 @@
+calibrated_on	applied_to	threshold	realized_fpr	realized_recall
+Nanobdellia	Nanobdellia	0.1194	0.05	0.9337
+Nanobdellia	Micrarchaeia	0.1194	0.0616	0.9562
+Nanobdellia	Aenigmatarchaeia	0.1194	0.0572	0.9442
+Nanobdellia	Iainarchaeia	0.1194	0.0502	0.9474
+Micrarchaeia	Nanobdellia	0.1317	0.0389	0.9241
+Micrarchaeia	Micrarchaeia	0.1317	0.05	0.9507
+Micrarchaeia	Aenigmatarchaeia	0.1317	0.0469	0.9379
+Micrarchaeia	Iainarchaeia	0.1317	0.0411	0.9413
+Aenigmatarchaeia	Nanobdellia	0.1281	0.0418	0.9274
+Aenigmatarchaeia	Micrarchaeia	0.1281	0.0529	0.9516
+Aenigmatarchaeia	Aenigmatarchaeia	0.1281	0.05	0.9391
+Aenigmatarchaeia	Iainarchaeia	0.1281	0.0432	0.9423
+Iainarchaeia	Nanobdellia	0.1196	0.0496	0.9336
+Iainarchaeia	Micrarchaeia	0.1196	0.0614	0.9562
+Iainarchaeia	Aenigmatarchaeia	0.1196	0.057	0.9442
+Iainarchaeia	Iainarchaeia	0.1196	0.05	0.9474

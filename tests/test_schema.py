@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -15,6 +17,7 @@ from elsa.schema import (
     assign_slots,
     compute_slot_summaries,
     compute_architecture_summary,
+    run_schema_pipeline,
 )
 
 
@@ -25,7 +28,7 @@ def _make_genes(n_genomes=3, genes_per_contig=20):
     emb_dim = 8
     for g in range(n_genomes):
         genome = f"genome_{g}"
-        contig = f"contig_0"
+        contig = "contig_0"
         for i in range(genes_per_contig):
             emb = rng.randn(emb_dim).astype(np.float32)
             emb /= np.linalg.norm(emb) + 1e-9
@@ -66,6 +69,33 @@ def _make_blocks():
          "n_anchors": 3, "chain_score": 2.8, "orientation": 1, "n_genes": 3},
     ]
     return pd.DataFrame(blocks)
+
+
+def _write_blocks_checkpoint(path):
+    blocks = _make_blocks().drop(columns=["cluster_id"]).copy()
+    blocks["anchor_query_gene_ids"] = blocks.apply(
+        lambda row: [
+            f"{row.query_genome}_{row.query_contig}_{index}"
+            for index in range(row.query_start, row.query_end + 1)
+        ],
+        axis=1,
+    ).map(json.dumps)
+    blocks["anchor_target_gene_ids"] = blocks.apply(
+        lambda row: [
+            f"{row.target_genome}_{row.target_contig}_{index}"
+            for index in range(row.target_start, row.target_end + 1)
+        ],
+        axis=1,
+    ).map(json.dumps)
+    blocks["anchor_query_ids"] = blocks.apply(
+        lambda row: list(range(row.query_start, row.query_end + 1)),
+        axis=1,
+    ).map(json.dumps)
+    blocks["anchor_target_ids"] = blocks.apply(
+        lambda row: list(range(row.target_start, row.target_end + 1)),
+        axis=1,
+    ).map(json.dumps)
+    blocks.to_parquet(path / "blocks_checkpoint.parquet", index=False)
 
 
 class TestMergeIntervals:
@@ -124,6 +154,46 @@ class TestBuildBlockMembers:
         # Block 0 should have 4 genes on each side = 8 total
         b0 = members[members["block_id"] == 0]
         assert len(b0) == 8
+
+    def test_coordinate_ties_preserve_store_row_order(self):
+        genes = pd.DataFrame(
+            [
+                {
+                    "sample_id": genome,
+                    "contig_id": contig,
+                    "gene_id": gene_id,
+                    "start": 0,
+                    "end": 90,
+                    "strand": 1,
+                }
+                for genome, contig, gene_ids in (
+                    ("genome_a", "contig_a", ("a_z", "a_a", "a_m")),
+                    ("genome_b", "contig_b", ("b_z", "b_a", "b_m")),
+                )
+                for gene_id in gene_ids
+            ]
+        )
+        blocks = pd.DataFrame(
+            [
+                {
+                    "block_id": 1,
+                    "cluster_id": 1,
+                    "query_genome": "genome_a",
+                    "target_genome": "genome_b",
+                    "query_contig": "contig_a",
+                    "target_contig": "contig_b",
+                    "query_start": 0,
+                    "query_end": 2,
+                    "target_start": 0,
+                    "target_end": 2,
+                    "orientation": 1,
+                }
+            ]
+        )
+
+        members = build_block_members(blocks, genes)
+        query_ids = members.loc[members["side"] == "query", "gene_id"].tolist()
+        assert query_ids == ["a_z", "a_a", "a_m"]
 
 
 class TestExtractLoci:
@@ -205,3 +275,231 @@ class TestArchitectureSummary:
         assert row["n_slots"] == 4
         assert row["n_loci"] == 3
         assert row["arch_label"] in ("coherent", "moderate", "fragmented", "variable (replacement)")
+
+
+def test_schema_pipeline_accepts_separate_embedding_matrix(tmp_path):
+    """Regression for store-backed runs where metadata and vectors are separate."""
+    genes = _make_genes()
+    emb_cols = [column for column in genes if column.startswith("emb_")]
+    embeddings = genes[emb_cols].to_numpy(dtype=np.float32)
+    metadata = genes.drop(columns=emb_cols)
+    blocks = _make_blocks()
+
+    paths = run_schema_pipeline(
+        blocks,
+        metadata,
+        tmp_path,
+        embeddings=embeddings,
+    )
+
+    assignments = pd.read_parquet(paths["slot_assignments"])
+    slots = pd.read_parquet(paths["slots"])
+    assert (assignments["similarity"] > 0).any()
+    assert (slots["dispersion"] < 1).any()
+
+
+def test_schema_pipeline_rejects_missing_embeddings(tmp_path):
+    genes = _make_genes()
+    metadata = genes[
+        [column for column in genes if not column.startswith("emb_")]
+    ]
+
+    with pytest.raises(ValueError, match="requires embeddings"):
+        run_schema_pipeline(_make_blocks(), metadata, tmp_path)
+
+
+@pytest.mark.parametrize("bad_value", [np.nan, np.inf])
+def test_schema_pipeline_rejects_nonfinite_embeddings(tmp_path, bad_value):
+    genes = _make_genes()
+    emb_cols = [column for column in genes if column.startswith("emb_")]
+    embeddings = genes[emb_cols].to_numpy(dtype=np.float32)
+    embeddings[5, 0] = bad_value
+    metadata = genes.drop(columns=emb_cols)
+
+    with pytest.raises(ValueError, match="non-finite"):
+        run_schema_pipeline(
+            _make_blocks(),
+            metadata,
+            tmp_path,
+            embeddings=embeddings,
+        )
+
+
+def test_schema_pipeline_rejects_zero_norm_embeddings(tmp_path):
+    genes = _make_genes()
+    emb_cols = [column for column in genes if column.startswith("emb_")]
+    embeddings = genes[emb_cols].to_numpy(dtype=np.float32)
+    embeddings[5] = 0
+    metadata = genes.drop(columns=emb_cols)
+
+    with pytest.raises(ValueError, match="zero-norm"):
+        run_schema_pipeline(
+            _make_blocks(),
+            metadata,
+            tmp_path,
+            embeddings=embeddings,
+        )
+
+
+def test_chain_pipeline_passes_store_backed_embeddings_to_schema(tmp_path):
+    """Exercise the production checkpoint path that previously emitted zeros."""
+    from elsa.analyze.pipeline import ChainConfig, run_chain_pipeline
+
+    genes = _make_genes()
+    emb_cols = [column for column in genes if column.startswith("emb_")]
+    embeddings = genes[emb_cols].to_numpy(dtype=np.float32)
+    metadata = genes.drop(columns=emb_cols)
+    embedding_path = tmp_path / "embeddings.npy"
+    np.save(embedding_path, embeddings)
+
+    _write_blocks_checkpoint(tmp_path)
+
+    run_chain_pipeline(
+        output_dir=tmp_path,
+        config=ChainConfig(min_genome_support=2),
+        genes_df=metadata,
+        embeddings=embeddings,
+        schema_embeddings_path=embedding_path,
+    )
+
+    assignments = pd.read_parquet(
+        tmp_path / "schema" / "cluster_slot_assignments.parquet"
+    )
+    assert (assignments["similarity"] > 0).any()
+    assert not (tmp_path / ".schema.building").exists()
+    assert not (tmp_path / ".schema_embeddings.tmp.npy").exists()
+
+
+def test_chain_pipeline_preserves_current_schema_and_propagates_failure(
+    tmp_path,
+    monkeypatch,
+):
+    from elsa.analyze.pipeline import ChainConfig, run_chain_pipeline
+
+    genes = _make_genes()
+    emb_cols = [column for column in genes if column.startswith("emb_")]
+    embeddings = genes[emb_cols].to_numpy(dtype=np.float32)
+    metadata = genes.drop(columns=emb_cols)
+    embedding_path = tmp_path / "embeddings.npy"
+    np.save(embedding_path, embeddings)
+    _write_blocks_checkpoint(tmp_path)
+
+    schema_dir = tmp_path / "schema"
+    schema_dir.mkdir()
+    marker = schema_dir / "previous-ready.txt"
+    marker.write_text("ready")
+
+    def fail_schema(*_args, **_kwargs):
+        raise RuntimeError("synthetic architecture failure")
+
+    monkeypatch.setattr("elsa.schema.run_schema_pipeline", fail_schema)
+    with pytest.raises(RuntimeError, match="synthetic architecture failure"):
+        run_chain_pipeline(
+            output_dir=tmp_path,
+            config=ChainConfig(min_genome_support=2),
+            genes_df=metadata,
+            embeddings=embeddings,
+            schema_embeddings_path=embedding_path,
+        )
+
+    assert marker.read_text() == "ready"
+    assert not (tmp_path / ".schema.building").exists()
+    assert not (tmp_path / ".schema_embeddings.tmp.npy").exists()
+
+
+# ---------------------------------------------------------------------------
+# Replacement detection: the rule that returned 1 for all 281,004 DPANN slots
+# ---------------------------------------------------------------------------
+
+def _slot(vectors):
+    import numpy as _np
+    arr = _np.asarray(vectors, dtype=_np.float64)
+    return arr / _np.linalg.norm(arr, axis=1, keepdims=True)
+
+
+def test_replacement_fires_on_a_genuine_second_family():
+    """Two families in one slot, in raw-space geometry.
+
+    Real replaced slots sit at a median pairwise cosine of 0.947 — high in
+    absolute terms, which is exactly why a mean-below-0.6 rule never fired.
+    """
+    from elsa.schema import _estimate_n_types
+
+    rng = np.random.default_rng(0)
+    a = rng.normal(size=16); a /= np.linalg.norm(a)
+    b = rng.normal(size=16); b /= np.linalg.norm(b)
+    family_a = [a + 0.02 * rng.normal(size=16) for _ in range(6)]
+    family_b = [b + 0.02 * rng.normal(size=16) for _ in range(3)]
+
+    assert _estimate_n_types(_slot(family_a + family_b), 0.95) == 2
+
+
+def test_a_coherent_slot_stays_single():
+    from elsa.schema import _estimate_n_types
+
+    rng = np.random.default_rng(1)
+    a = rng.normal(size=16); a /= np.linalg.norm(a)
+    members = [a + 0.01 * rng.normal(size=16) for _ in range(9)]
+
+    assert _estimate_n_types(_slot(members), 0.95) == 1
+
+
+def test_detection_uses_the_lower_tail_not_the_mean():
+    """One outlier among many keeps the mean high. That is the case the old rule
+    was built to reject and the case a replacement actually looks like."""
+    from elsa.schema import _estimate_n_types
+
+    rng = np.random.default_rng(2)
+    a = rng.normal(size=16); a /= np.linalg.norm(a)
+    b = rng.normal(size=16); b /= np.linalg.norm(b)
+    members = [a + 0.01 * rng.normal(size=16) for _ in range(10)] + [b]
+    normed = _slot(members)
+
+    sims = np.clip(normed @ normed.T, -1, 1)
+    mean_sim = sims[np.tril_indices(len(normed), k=-1)].mean()
+    assert mean_sim > 0.6, "fixture must reproduce the high-mean case"
+    assert _estimate_n_types(normed, 0.95) == 2
+
+
+def test_thresholds_are_recorded_per_embedding_space():
+    """The cut-point moves with the cosine distribution; a raw threshold applied
+    to whitened vectors would fire on everything."""
+    from elsa.schema import DEFAULT_REPLACEMENT_Q10, REPLACEMENT_Q10_THRESHOLDS
+
+    assert REPLACEMENT_Q10_THRESHOLDS["raw"] == DEFAULT_REPLACEMENT_Q10
+    assert REPLACEMENT_Q10_THRESHOLDS["soft_zca"] < REPLACEMENT_Q10_THRESHOLDS["raw"]
+    assert REPLACEMENT_Q10_THRESHOLDS["none"] == REPLACEMENT_Q10_THRESHOLDS["raw"]
+
+
+def test_unknown_space_resolves_to_the_raw_cut_point():
+    """A silently wrong threshold reads as 'no replacements found', so an
+    unrecognised space falls back to a known cut-point rather than to None."""
+    from elsa.schema import DEFAULT_REPLACEMENT_Q10, REPLACEMENT_Q10_THRESHOLDS
+
+    assert REPLACEMENT_Q10_THRESHOLDS.get("not_a_space") is None
+    resolved = REPLACEMENT_Q10_THRESHOLDS.get("not_a_space") or DEFAULT_REPLACEMENT_Q10
+    assert resolved == DEFAULT_REPLACEMENT_Q10
+
+
+def test_calibrated_thresholds_reproduce_their_measured_operating_point():
+    """Guards the numbers the defaults were chosen from.
+
+    Raw q10 < 0.95 was measured at 96.7% precision and 89.8% recall against
+    disjoint-domain ground truth on 12,000 DPANN slots. A fixture reproducing
+    that geometry must still separate.
+    """
+    from elsa.schema import _estimate_n_types, REPLACEMENT_Q10_THRESHOLDS
+
+    rng = np.random.default_rng(7)
+    clean, replaced = [], []
+    for _ in range(60):
+        a = rng.normal(size=24); a /= np.linalg.norm(a)
+        clean.append(_slot([a + 0.015 * rng.normal(size=24) for _ in range(8)]))
+        b = rng.normal(size=24); b /= np.linalg.norm(b)
+        replaced.append(_slot(
+            [a + 0.015 * rng.normal(size=24) for _ in range(6)] +
+            [b + 0.015 * rng.normal(size=24) for _ in range(2)]))
+
+    tau = REPLACEMENT_Q10_THRESHOLDS["raw"]
+    assert sum(_estimate_n_types(s, tau) == 1 for s in clean) >= 57
+    assert sum(_estimate_n_types(s, tau) == 2 for s in replaced) >= 57

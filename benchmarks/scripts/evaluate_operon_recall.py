@@ -9,9 +9,14 @@ Provides multiple evaluation metrics:
 """
 
 import argparse
+import sys
 import pandas as pd
 from pathlib import Path
 from collections import defaultdict
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from elsa.localization import localize_pairs, summarize, format_summary  # noqa: E402
 
 
 def load_operon_gt(gt_path: Path) -> pd.DataFrame:
@@ -179,6 +184,37 @@ def main():
     print("\nEvaluating ELSA...")
     elsa_results = evaluate_elsa(elsa_ecoli, operon_gt, args.threshold)
 
+    # Localization, computed and reported unconditionally alongside recall.
+    # Recall on its own is satisfied by a block spanning the whole contig, so a
+    # recall figure without the boundary precision that qualifies it overstates
+    # what was found. See elsa/localization.py.
+    # Blocks are in gene-index space. The ground truth carries both spaces under
+    # confusingly similar names — `start_a` is a base-pair coordinate while
+    # `gene_idx_start_a` is a gene index — so the gene-index columns are named
+    # explicitly here. Passing the bp columns would silently compare a
+    # megabase-scale interval against a gene-count interval and report near-zero
+    # precision everywhere.
+    print("Measuring localization...")
+    locus_cols = ("genome_a", "contig_a", "gene_idx_start_a", "gene_idx_end_a",
+                  "genome_b", "contig_b", "gene_idx_start_b", "gene_idx_end_b")
+    missing = [c for c in locus_cols if c not in operon_gt.columns]
+    if missing:
+        # The audit's pair-metric tables already carry translated gene indices
+        # under the plain names.
+        locus_cols = ("genome_a", "contig_a", "start_a", "end_a",
+                      "genome_b", "contig_b", "start_b", "end_b")
+        missing = [c for c in locus_cols if c not in operon_gt.columns]
+        if missing:
+            raise SystemExit(f"ground truth lacks locus columns: {missing}")
+    localization = localize_pairs(operon_gt, elsa_ecoli, min_coverage=args.threshold,
+                                  locus_cols=locus_cols)
+    local_summary = summarize(localization, group_column="operon_id")
+    print()
+    print(format_summary(local_summary, "Localization"))
+
+    detail_path = Path(args.output).with_suffix(".localization.tsv")
+    localization.to_csv(detail_path, sep="\t", index=False)
+
     # Generate report
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -200,6 +236,22 @@ def main():
         f.write(f"| Strict recall | {elsa_results['strict_recall']:.1%} ({elsa_results['strict_found']:,}/{elsa_results['total_operons']:,}) |\n")
         f.write(f"| Independent recall | {elsa_results['independent_recall']:.1%} ({elsa_results['independent_found']:,}/{elsa_results['total_operons']:,}) |\n")
         f.write(f"| Any coverage recall | {elsa_results['any_recall']:.1%} ({elsa_results['any_found']:,}/{elsa_results['total_operons']:,}) |\n")
+
+        f.write("\n## Localization\n\n")
+        f.write("Recall asks whether the operon is inside some block. A block "
+                "spanning the whole contig satisfies that perfectly, so these "
+                "figures qualify every recall number above.\n\n")
+        f.write("| Metric | Value |\n|--------|-------|\n")
+        f.write(f"| Median boundary precision | {local_summary['median_boundary_precision']:.4f} "
+                f"(95% CI {local_summary['boundary_precision_ci_low']:.4f}–"
+                f"{local_summary['boundary_precision_ci_high']:.4f}) |\n")
+        f.write(f"| Median pair IoU | {local_summary['median_pair_iou']:.4f} |\n")
+        f.write(f"| Median block span | {local_summary['median_block_span']:.0f} genes |\n")
+        f.write(f"| Median locus span | {local_summary['median_locus_span']:.0f} genes |\n")
+        f.write(f"| Median containing excess | {local_summary['median_containing_excess_genes']:.0f} genes |\n\n")
+        f.write(f"**{local_summary['recall']:.1%} of loci sit inside some block; that block is "
+                f"{local_summary['median_boundary_precision']:.1%} locus by extent.** "
+                f"Per-locus detail in `{detail_path.name}`.\n")
 
         f.write("\n## Interpretation\n\n")
         f.write("The gap between strict and independent recall reveals an important insight:\n\n")

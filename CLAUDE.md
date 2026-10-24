@@ -6,7 +6,11 @@ This file provides guidance to Claude Code when working with code in this reposi
 ## ELSA v2: Gene-Level Anchor Chaining Pipeline
 
 The gene-level anchor chaining pipeline achieves:
-- **98.9% strict recall** on E. coli operons (99.2% any coverage)
+- **98.9% strict recall** on E. coli operons (99.2% any coverage), at a
+  **median boundary precision of 0.040** — the operon sits inside the block,
+  and the block is ~30x its span. Quote the two together; recall alone is
+  satisfied by a block covering the whole contig. See
+  `benchmarks/evaluation/CANONICAL_BENCHMARKS_NOPCA.md` § Localization.
 - **97.1% ortholog precision** - chained anchor gene pairs share orthogroups
 - **2.85x more blocks** than MCScanX, **3.85x more cross-genus**, **1.23x strict operon recall**
 - **100% search recall@50** - all operon partners found in search results

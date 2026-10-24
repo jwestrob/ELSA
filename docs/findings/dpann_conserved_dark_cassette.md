@@ -1,0 +1,168 @@
+# A conserved tandem triplication of a dark hydrophobic protein, in half of DPANN
+
+**Status: observed, unnamed.** No curated caller fires on any member, so nothing
+here is a functional claim. The curated callers populated in
+`data/dpann/sharur.duckdb` are DefenseFinder, TXSScan and HydDB; `bgc_loci` and
+`locus_proteins` are empty.
+
+## How it was found
+
+ELSA run `results_v6` (3,564 DPANN genomes, 3.4M genes, soft-ZCA α=0.1,
+threshold 0.30, hnsw ef=256). Clusters were ranked by breadth and by how little
+of their content carries a Pfam hit — the case a domain scan cannot reach and
+synteny can. 117 clusters have ≥50 genomes, ≥3 slots and ≥90% dark content; 97
+of them carry no curated system call at all.
+
+`benchmarks/scripts/find_conserved_dark_loci.py` reproduces the ranking.
+
+## cluster:1043
+
+| property | value |
+|---|---|
+| genomes | **1,668** of 3,564 (47%) |
+| phyla | 6 (85% Nanobdellota) |
+| slots | 3 |
+| proteins | 5,561 |
+| median length | 188 aa (q10 164, q90 240) |
+
+**Annotation coverage, all sources:** pfam 1%, kofam 0%, kegg 0%,
+defensefinder 0%.
+
+### It is a genuine cassette, not a clustering artifact
+
+Over 1,097 loci carrying all three slots:
+
+- genes strictly consecutive on the contig — **96.5%**
+- all three on the same strand — **94.8%**
+- slot order along the contig — (0,1,2) 75%, reversed (2,1,0) 12%
+
+### Each slot is one protein family — and the three are paralogs
+
+The three slots are homologous to each other, so this is a **tandem triplication
+of a single family** rather than three unrelated ones:
+
+| comparison | members hit | median identity |
+|---|---|---|
+| slot 0 vs slot 1 | 88.7% | 32.4% |
+| slot 0 vs slot 2 | 86.1% | 40.7% |
+| slot 1 vs slot 2 | 96.7% | 31.5% |
+
+Members are strongly hydrophobic — mean Kyte-Doolittle +0.88, +0.95 and +1.08
+by slot, with 84-96% of members above +0.5. That composition is consistent with
+integral membrane proteins; it is a compositional observation and no curated
+caller has assigned a family, a fold or a topology.
+
+### Slot coherence
+
+Strict clustering splits the slots into hundreds of groups (362 at 30% identity
+/ 70% coverage for slot 0), which alone would suggest heterogeneity. Sensitive
+search says otherwise — each slot is a single transitively-connected homology
+component:
+
+| slot | proteins | largest component |
+|---|---|---|
+| 0 | 2,444 | 2,228 (**91.2%**) |
+| 1 | 1,617 | 1,532 (**94.7%**) |
+| 2 | 1,500 | 1,411 (**94.1%**) |
+
+The gap between those two readings is the point: these are families too
+divergent for identity-threshold clustering and coherent under sensitive search,
+which is the regime embedding-based retrieval is meant to occupy.
+
+## What this is not
+
+A tandem triplication of one uncharacterized hydrophobic family, in fixed order
+and orientation across half a phylum-spanning collection, is a strong and
+specific pattern — and the pattern is all that is established. There is no
+evidence here for any function, no curated call to borrow a name from, and no
+topology beyond an amino-acid composition consistent with membrane residence.
+
+An earlier revision of this document called the three slots distinct families.
+That was wrong: they are paralogs at 31-41% median identity, which changes the
+reading from a three-component assembly to a repeat expansion.
+
+## Checks worth doing before building on it
+
+- Contamination and mobility: GC and coding density against the host contig,
+  and proximity to mobile-element or tRNA features.
+- Structure prediction on a representative from each slot, which would give
+  fold-level hints where sequence gives none.
+- Whether the 12% reversed-order loci differ from the 75% in any other respect.
+- Copy number: whether genomes carry two, three or more tandem copies, and
+  whether the count tracks taxonomy — the loci table already shows a 4-gene
+  variant (0,0,1,2) in 4% of cases.
+- The same ranking on Omnitrophota, to see whether the cassette is DPANN-specific.
+
+## What sits beside it
+
+Flanking windows of ±10 genes around the 1,097 complete loci, scored against
+windows of matched width drawn at random positions on the same contigs
+(`benchmarks/scripts/cassette_neighbourhood_enrichment.py`).
+
+| annotation | source | loci | % of loci | null | enrichment |
+|---|---|---|---|---|---|
+| arCOG01817 | txsscan | 590 | 53.8% | 4.84% | 11.1x |
+| arCOG01818 | txsscan | 589 | 53.7% | 4.84% | 11.1x |
+| T_virB11 | txsscan | 576 | 52.5% | 4.84% | 10.9x |
+| T2SSE | pfam | 569 | 51.9% | 5.11% | 10.2x |
+| arCOG01814 | txsscan | 478 | 43.6% | 2.42% | 18.0x |
+| ComM_comGA | txsscan | 441 | 40.2% | 4.57% | 8.8x |
+| DUF357 | pfam | 111 | 10.1% | <0.01% | 75.3x |
+| Translin | pfam | 210 | 19.1% | 0.81% | 23.7x |
+| CBASS__AG_E1_ThiF | defensefinder | 68 | 6.2% | 0.27% | 23.1x |
+
+**The cassette sits in archaeal type IV pilus / secretion loci.** Read the two
+lines of evidence separately, because they license different statements.
+
+*Components* matching TXSScan pilus/secretion profiles — the assembly ATPase and
+platform proteins — flank about half of all loci at 9-18x over the null.
+
+*A curated system call* is a different matter. TXSScan completes an
+`Archaeal-T4P` call at only **4.9%** of loci, so that is the only fraction where
+the system is named rather than inferred. The gap is largely a data-completeness
+artifact: the contigs carrying the cassette run a median of 37 genes, with 59.5%
+under 50, and a quorum-based caller cannot assemble a system from a fragment.
+
+An independent check at genome level agrees without depending on the null:
+genomes carrying the cassette hold a secretion-system call somewhere 23.6% of
+the time against a 16.2% base rate across DPANN, a 1.46x enrichment on 1,086
+genomes.
+
+So: **associated with archaeal T4P machinery**, named by a curated caller in a
+minority of loci and supported by component-level evidence and a genome-level
+rate elsewhere. For the remaining loci this is a hypothesis, not a call.
+
+### It is not the conserved T4P block
+
+ELSA independently recovers a curated Archaeal-T4P cluster — `cluster:508`,
+2,163 genomes, 812 proteins under a TXSScan system call, T2SSF 48% / T2SSE 31%.
+The cassette is **not** part of it and rarely near it: 901 genomes carry both,
+yet only 66 loci pairs share a contig, at a median gap of 58 genes and just 6%
+within five.
+
+The components flanking the cassette belong elsewhere. Of 1,604 T4P-component
+proteins in the flanks, the largest single ELSA cluster accounts for 8.8% and
+`cluster:508` for none — they scatter across hundreds of small clusters.
+
+So the cassette occupies T4P-component-rich neighbourhoods whose *arrangement*
+varies between genomes, distinct from the single conserved pilus locus. Whether
+that reflects genuinely labile context or ELSA fragmenting a real block is open;
+the median 37-gene contig limits what can be resolved either way.
+
+Two caveats on the enrichment table. The null holds 372 windows rather than
+1,097, because short contigs leave no room to place a matched window away from
+the real locus, which likely biases the ratios upward. And `DUF357` at 75x is
+itself a domain of unknown function, so the strongest single enrichment names
+nothing.
+
+## Other candidates from the same ranking
+
+| cluster | genomes | slots | dark | dominant phylum |
+|---|---|---|---|---|
+| 15585 | 886 | 8 | 99.1% | Micrarchaeota 97% |
+| 26 | 890 | 3 | 99.2% | Nanobdellota 100% |
+| 24952 | 644 | 8 | 92.3% | Micrarchaeota 100% |
+| 25065 | 509 | 3 | 99.6% | Micrarchaeota 100% |
+
+`cluster:15585` is the larger structure — an eight-slot neighbourhood in 886
+Micrarchaeota genomes at 99.1% dark, with 502 sequence families across its slots.

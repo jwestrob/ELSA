@@ -72,6 +72,11 @@ system:
 
 - `micro_chain_blocks.csv` — All syntenic blocks with coordinates and scores
 - `micro_chain_clusters.csv` — Cluster assignments and metadata
+- `synteny.duckdb` — Normalized, run-scoped result contract for exact agent
+  queries when using `elsa synteny`
+
+For Sharur integration, run identity, exact anchor/membership semantics, and
+checkpoint migration, see [`docs/RESULT_CONTRACT.md`](docs/RESULT_CONTRACT.md).
 
 ## Python API
 

@@ -1393,3 +1393,44 @@ Even-genome DefenseFinder queries (1,247; 200-replicate null; configurations tun
   held-out orders), `search3` (predeclared confirmation of whitened-embedding search),
   `baseline` (the old chaining pipeline with whitening on the DPANN gold loci), `boundary`
   (locus reading; split genes as one position).
+
+## 2026-11-12 13:56 UTC — Locus reading rules; every DPANN F1 so far is a best-of-11-readings figure (workstream `boundary`; `benchmarks/redesign/boundary/REPORT.txt`)
+
+**Scoring fact that qualifies all DPANN numbers above.** `score_dpann_loci.py` takes, per gold
+instance, the best locus in the whole `loci_all_genomes.parquet` table, and the engine writes 11
+readings into it (conserved at several levels, unit readings). The F1 values quoted for engine
+arms (for example DefenseFinder 0.806-0.814, TXSScan 0.753-0.758, CRISPRCasTyper 0.586-0.589)
+are best-of-11. The default single reading (conserved at level 2) on even genomes, rescue3 arm:
+DefenseFinder 0.688, TXSScan 0.409, CRISPRCasTyper 0.426; summed DefenseFinder + TXSScan excess
+0.337. Arm-against-arm comparisons were all scored the same way, so their signs stand; absolute
+values and any comparison with a method that outputs one table need the single-reading figure.
+
+**Reading rules (tuned on odd genomes, 172 configurations; even genomes against the default
+reading R1; predeclared conditions: ribosomal resolved >= 1,100 with recovery kept, summed excess
++0.02, no caller losing more than 0.01 F1).**
+
+| Rule | F1 change DF / TXSS / CCT | Summed excess change | Ribosomal resolved / recovered | Parvarchaeaceae resolved | Verdict |
+|---|---|---|---|---|---|
+| A trim ends | +.017 / +.046 / -.023 | +.084 [+.074, +.094] | 1,165 / 1,682 | 63 | fails F1 |
+| B support segmentation | +.058 / +.084 / +.030 | +.066 [+.051, +.081] | 929 / 1,680 | 106 | fails ribosomal |
+| C module cuts (Louvain resolution 0.3) | +.033 / +.097 / +.041 | +.045 [+.034, +.056] | 1,435 / 1,686 | 103 | passes |
+| D level-2 locus + level-200 core | +.001 / +.226 / +.018 | +.171 [+.150, +.191] | 1,377 / 1,686 | 13 | passes; adopted by the tie-break |
+| G C then support segmentation | +.080 / +.154 / +.057 | +.101 [+.084, +.118] | 1,448 / 1,680 | 107 | passes |
+| H C then end trimming | +.050 / +.136 / +.032 | +.113 [+.099, +.126] | 1,554 / 1,685 | 114 | passes |
+
+- Against the full 11-reading table (R2) no one- or two-reading output keeps F1 (0.06-0.32
+  lower); on summed excess D exceeds R2 by +0.058 [+0.038, +0.077] and H equals it with one
+  reading (-0.000 [-0.016, +0.016]).
+- G and H lose coverage (H: genes in loci 2,563,690 -> 2,308,785; CRISPRCasTyper covered50
+  -0.031); C and D keep every locus.
+- Module labels mark system edges (AUROC of "boundary inside a system" against overshoot: 0.83 /
+  0.75 / 0.74 by caller); support level alone points the wrong way for CRISPR-Cas (0.377). At
+  Louvain resolution 0.3, 1,547 of 1,686 ribosomal runs carry one module; at the engine's
+  resolution 10 about 1,570 carry two.
+- The excess gains have the same size on the base, rescue3 and hybrid arms (the rule does the
+  work); the ribosomal result of module-based rules depends on the families.
+- Follow-up running: level-2 locus + H core as a nested output; a per-reading inventory.
+
+**Split genes merged into one position: not adopted.** 38,651 pairs merged; 106 gold instances
+leave the >= 2-member set; F1 on instances containing a split pair +0.018 [-0.049, +0.110]
+(n = 29), unaffected instances -0.001 [-0.002, +0.001].

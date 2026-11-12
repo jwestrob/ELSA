@@ -752,3 +752,20 @@ engine runs in while igraph is absent from the elsa environment; the cost is 0.0
 A significant pair whose two tokens fall in different modules names neither. Reruns:
 77902 (DPANN, permissive base, w 3, with the gold-locus scorer) and 77903 (Spacedust,
 permissive base, w 8).
+
+## 2026-11-12 03:00 UTC — Modules on called loci (jobs 77902, 77903, 77919; engine v1.4 and v1.5)
+
+DPANN, permissive sequence base, window 3. Loci and F1 are identical across engine
+versions (932,123 conserved loci; DefenseFinder F1 0.814); only the module labels differ.
+Score: module of each instance's best locus against its system type (`lab/show_modules.py`).
+
+| Engine | Module of a locus | DefenseFinder best loci with a module | AMI | Hom. | Compl. | Plurality consistency (control) |
+|---|---|---|---|---|---|---|
+| v1.1 | union-find; plurality over boundary pairs | 2,225 / 2,472 | 0.241 | 0.19 | 0.54 | 0.903 (0.902) |
+| v1.4 | Louvain; plurality over boundary pairs, cross-module pairs unlabelled | 2,047 / 2,472 | 0.795 | 0.89 | 0.74 | 0.725 (0.317) |
+| **v1.5** | Louvain; plurality over the genes of the locus | **2,278 / 2,472** | 0.769 | 0.88 | 0.71 | 0.702 (0.253) |
+
+v1.5 labels 92% of DefenseFinder best loci (83% in v1.4), 802 / 804 for TXSScan (402) and
+3,423 / 3,820 for CRISPRCasTyper (2,176), at 0.026 lower AMI on the larger labelled set.
+On the Spacedust collection (job 77903, window 8) v1.4 gives 1,797 modules, largest 1,397
+tokens, with F1 unchanged (0.745 / 0.807). v1.5 is the engine default.

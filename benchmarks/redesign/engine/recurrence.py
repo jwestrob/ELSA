@@ -209,18 +209,18 @@ def union_find(n, a, b):
 
 
 @njit(cache=True)
-def locus_modules(s_idx, e_idx, arg, pair_module):
-    """Plurality module among the best pairs of a locus's boundaries (-1 if none)."""
+def locus_modules(s_idx, e_idx, gene_module):
+    """Plurality module among the genes of a locus, first to last gene inclusive (-1 if none)."""
     out = np.full(len(s_idx), -1, dtype=np.int64)
     for i in range(len(s_idx)):
-        n = e_idx[i] - s_idx[i]
+        n = e_idx[i] - s_idx[i] + 1
         if n <= 0:
             continue
         buf = np.empty(n, dtype=np.int64)
         m = 0
-        for k in range(s_idx[i], e_idx[i]):
-            if arg[k] >= 0 and pair_module[arg[k]] >= 0:
-                buf[m] = pair_module[arg[k]]
+        for k in range(s_idx[i], e_idx[i] + 1):
+            if gene_module[k] >= 0:
+                buf[m] = gene_module[k]
                 m += 1
         if m == 0:
             continue
@@ -426,7 +426,7 @@ def main():
     tok = tok_by_gid[u.gid]
     strand = u.genes.strand.to_numpy(dtype=np.int64)
     n_start, n_end = (u.g_start, u.g_end) if a.null == "genome" else (u.c_start, u.c_end)
-    res = dict(engine="v1.4", null=a.null, arm=a.arm, universe=str(a.universe), w=(f"a{a.w}" if grid else a.w),
+    res = dict(engine="v1.5", null=a.null, arm=a.arm, universe=str(a.universe), w=(f"a{a.w}" if grid else a.w),
                window_grid=grid, oriented=a.oriented,
                perms=a.perms, genes=u.n, genomes=u.ng, assigned=int((tok >= 0).sum()),
                tokens=int(len(np.unique(tok[tok >= 0]))))
@@ -539,6 +539,7 @@ def main():
                           largest=int(sizes.max()) if len(sizes) else 0,
                           size_quantiles=np.quantile(sizes, [.5, .9, .99]).tolist() if len(sizes) else [])
     log("modules", res["modules"])
+    gene_module = np.where(tok >= 0, token_module[np.maximum(tok, 0)], -1).astype(np.int64)
     pair_module = token_module[st["lo"][mask]].copy()
     pair_module[token_module[st["hi"][mask]] != pair_module] = -1      # a pair between two modules names neither
     sig = pd.DataFrame({k: st[k][mask] for k in ("key", "lo", "hi", "G", "L", "NP", "n_other", "J", "E", "P", "F_lo", "F_hi")})
@@ -564,7 +565,7 @@ def main():
         def frame(s_idx, e_idx, kind, level):
             return pd.DataFrame(dict(genome=genome_arr[s_idx], contig=contig_arr[s_idx],
                                      start=u.pos[s_idx], end=u.pos[e_idx], kind=kind, level=float(level),
-                                     module_id=locus_modules(s_idx, e_idx, arg, pair_module)))
+                                     module_id=locus_modules(s_idx, e_idx, gene_module)))
         for gap in gaps:
             for level in levels:
                 s_idx, e_idx = runs_at_least(b, cs, ce, float(level), gap)

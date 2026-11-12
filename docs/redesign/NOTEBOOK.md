@@ -835,3 +835,44 @@ DefenseFinder + TXSScan excess rises by at least 0.02 over the base (+0.442) on 
 
 ESM2-650M on DPANN stays queued behind the Talea scan lanes (about a week, Talea agent's
 estimate); nothing of ours is submitted to gpu_h200.
+
+## 2026-11-12 05:45 UTC — Round 1 hybrid merges on DPANN fail the predeclared criterion; co-fold screen 1
+
+**Hybrid merges of the permissive base with ESM++ small centroids (jobs 78092-78103, window 3,
+genome-level null; `engine/results_dpann_emb1/compare_vs_base.txt`).** Paired genome bootstrap
+against `results_dpann_v2/dpann__mmseqs__seq__e3c50s75__w3`; A - B, 95% interval.
+
+| Arm (centroids, CPM resolution) | Tokens | DefenseFinder F1, test | Summed DF+TXSS excess, tune | Summed excess, test |
+|---|---|---|---|---|
+| base e3c50 | 430,471 | 0.806 | +0.436 | +0.447 |
+| genome-centred, q0.5 | 301,015 | +0.012 [+0.003, +0.020] | -0.015 [-0.025, -0.005] | -0.008 [-0.017, +0.002] |
+| genome-centred, q0.9 | 319,490 | +0.009 [+0.003, +0.015] | -0.022 [-0.030, -0.013] | -0.016 [-0.025, -0.009] |
+| genome-centred, q0.99 | 347,364 | +0.003 [-0.001, +0.007] | -0.016 [-0.023, -0.010] | -0.008 [-0.014, -0.001] |
+| genome-centred, q0.999 | 375,007 | +0.003 [-0.000, +0.006] | -0.007 [-0.011, -0.003] | -0.002 [-0.007, +0.003] |
+| genome-centred, r0.05 | 204,494 | +0.012 [+0.001, +0.024] | -0.012 [-0.023, +0.000] | -0.021 [-0.033, -0.009] |
+| genome-centred, r0.1 | 218,913 | +0.020 [+0.009, +0.031] | -0.019 [-0.030, -0.008] | -0.013 [-0.025, -0.002] |
+| genome-centred zca10, q0.5 | 94,450 | +0.051 [+0.037, +0.066] | -0.019 [-0.035, -0.005] | -0.020 [-0.036, -0.006] |
+| genome-centred zca10, q0.9 | 166,703 | +0.038 [+0.026, +0.050] | -0.031 [-0.043, -0.018] | -0.032 [-0.044, -0.019] |
+| genome-centred zca10, q0.99 | 226,258 | +0.036 [+0.025, +0.048] | -0.005 [-0.015, +0.006] | +0.000 [-0.012, +0.012] |
+| genome-centred zca10, q0.999 | 263,018 | +0.032 [+0.022, +0.042] | -0.010 [-0.020, +0.002] | -0.004 [-0.015, +0.007] |
+
+**Outcome of the predeclared test: no arm gains.** The criterion was a rise of at least 0.02
+in summed DefenseFinder + TXSScan excess on even genomes; the best arm chosen on odd genomes
+(zca10 centroids, q0.99) gives +0.000 [-0.012, +0.012]. Whitened centroids raise observed
+DefenseFinder F1 by 0.032-0.051 and the random-placement control by the same amount: the
+merged families lengthen loci without localizing systems better. The DPANN default stays the
+sequence-only permissive base. The kNN job 78091 (zca10, k 50; needed for the graph arms
+78104-78108) was still running at 64 threads after one hour.
+
+**Co-fold screen 1 (workstream `cofold`; `benchmarks/redesign/cofold/REPORT.md`).** 150
+unannotated two-gene blocks called by the engine, two distant instances each, ESMFold2 through
+the Biohub API (1,047 folds), criteria written 12 s before the batch. Pass rate on the three
+structural criteria: engine-called pairs 27 / 300 (9.0%), non-cognate partner swaps 0 / 300,
+adjacent dark pairs the engine did not call 4 / 297 (1.35%; odds ratio 7.2, p = 2.2e-5),
+mates inside curated systems 19 / 150 (12.7%). Eight candidates pass in both replicates with a
+cognate-minus-non-cognate margin of at least 0.30; one is refuted as a split gene (fused
+homologs in 27% as many genomes), one is flagged for disorder zipping, six remain. Several of
+the six have homologs carrying Pfam families of two-gene addiction modules, so screen 2
+(workstream `cofold2`, running) adds a profile and structure triage before folding and extends
+to blocks of three and four genes. Protenix v2 confirmation waits for a GPU with more than the
+12 GB host memory the `gpu` partition QOS allows per job.

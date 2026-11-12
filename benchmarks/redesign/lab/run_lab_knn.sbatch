@@ -19,4 +19,4 @@ export OMP_NUM_THREADS=$T OPENBLAS_NUM_THREADS=$T MKL_NUM_THREADS=$T PYTHONDONTW
 echo "$(date -Is) host=$(hostname) threads=$T job=$SLURM_JOB_ID"
 CHECK=(); if [[ -n "${CHECKNPZ:-}" ]]; then CHECK=(--check-npz "$CHECKNPZ"); fi
 "$PY" -u $RD/lab/code/embed_tokens.py knn --emb "$EMB" --tag "$TAG" --threads "$T" --transform "${TRANSFORM:-zca10}" --k "${K:-50}" \
-    --index "${INDEX:-ivf}" --exact-n "${EXACTN:-0}" "${CHECK[@]}" --work $RD/lab/knn
+    --index "${INDEX:-hnsw}" --exact-n "${EXACTN:-0}" "${CHECK[@]}" --work $RD/lab/knn

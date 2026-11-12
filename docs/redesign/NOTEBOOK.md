@@ -907,3 +907,24 @@ and length, compared with DefenseFinder members.
 
 Round 1 verdict on DPANN: ESM++ small vectors add nothing as a merger of sequence families and
 are worse than sequence families as a stand-alone token source on the predeclared criterion.
+
+## 2026-11-12 06:41 UTC — Speed: HNSW kNN validated on the DPANN vectors (job 78277); wrapper changes
+
+Jacob asked for speed wherever possible. Changes (commit `e525b9a`):
+- `embed_tokens.py knn --index hnsw` (FAISS HNSW, M 32, efConstruction 200, efSearch 128),
+  progress stamps, `--exact-n` (recall against brute force on sampled queries) and
+  `--check-npz` (scores an earlier kNN file on the same sample).
+- `run_recurrence_dpann_arm.sbatch` runs the two scorer passes side by side and writes
+  `compare_vs_base.txt` (paired genome bootstrap against the permissive base) in the job.
+- The three workstream agents may run four jobs each.
+
+Validation, 2,547,528 ESM++ small vectors, zca10, k 50, 64 threads, 5,000 exact queries:
+
+| Index | kNN seconds | recall@1 | recall@10 | recall@50 |
+|---|---|---|---|---|
+| IVF flat, 4,096 lists, 48 probes (job 78091) | 4,436 | 0.9952 | 0.9933 | 0.9903 |
+| HNSW (job 78277) | 1,302 (build about 810, search 491) | 0.9924 | 0.9931 | 0.9910 |
+
+HNSW is 3.4 times faster at the same recall and is now the wrapper default
+(`knn__<tag>__<transform>__k<k>__hnsw.npz`). Brute force on 5,000 queries took 45 s, so an
+exact all-against-all pass would cost about 6.4 h on 64 threads.

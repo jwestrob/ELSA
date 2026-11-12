@@ -1,0 +1,133 @@
+grammar workstream notebook (append-only; times UTC)
+====================================================
+
+2026-11-12 13:05  Predeclaration written: predeclared.json (design, six configurations, baselines, G1-G3,
+  refutation readings). No code had run.
+
+2026-11-12 13:10  Design decisions recorded before any result:
+  - Negatives are in-chunk pairs of the same genome (> 50 genes apart or different contigs); every
+    chunk holds 128 positive pairs of one genome, so the genome accent cannot separate positives from
+    negatives inside a batch; it can only shift whole genomes at evaluation (the accent ablation tests
+    this).
+  - Class-balanced logistic loss -> optimal logit = PMI (density ratio adjacent / product of marginals).
+  - Opposite-strand pairs: random order in training, mean of both orders in scoring. Strand never an input.
+  - Whitening (soft-ZCA 0.1) is fitted per split on training-side genes only; genome-mean removal is per
+    genome and label-free.
+  - Validation orders: order-grouped ~18-30% of the training side (seeded); used for early stopping and
+    for choosing among the six configurations. Baseline (i) uses the whole training side (train + val),
+    which favours the baseline.
+  - Folds: orders assigned greedily to the fold with the fewest genes (largest order first). The two
+    largest orders (Woesearchaeales 921k genes, Micrarchaeales 681k) each dominate one fold.
+  Code: prep.py, train.py, run_prep.sbatch, run_train.sbatch (biotite $RD/grammar/code/).
+
+2026-11-12 13:14  Jobs: 80894 prep (24 CPUs, standard_expand); 80895 smoke test of train.py on cv0 with
+  150 genomes per role, 1 epoch, configs c1 + c4, all variants (64 CPUs, standard_expand_2,
+  afterok:80894). Output of the smoke test goes to $RD/grammar/runs/smoke and is not used for results.
+
+2026-11-12 13:20  Prep (job 80894, 173 s) done. Checks: engine statistics recomputed from the rescue3 token table
+  give 162,786 significant pairs (P <= 1e-4 & L >= 2), equal to the engine summary; l2_f32__row rows equal the
+  normalised mean_raw rows (max |diff| 8.2e-8). 3,353,826 offset-1 adjacencies; 3,231,256 with no gold member.
+  Within-instance adjacencies: DefenseFinder 2,362, TXSScan 1,328, CRISPRCasTyper 3,041 (straddle 9,430 /
+  3,777 / 103,215). rescue3 table: 363,307 tokens in use (ids up to 430,470), 227,298 singletons.
+  Folds (test genomes / genes): cv0 704 / 921,280 (Woesearchaeales), cv1 826 / 680,835 (Micrarchaeales),
+  cv2 678 / 661,428, cv3 729 / 660,976, cv4 627 / 660,784; phylum split trains on 1,738 Nanobdellota
+  genomes (1,242 train + 496 validation) and tests 1,826 genomes of 8 phyla.
+  Token pairs of held-out adjacencies never co-located (window 3) in the training orders: cv0 621k of 861k
+  (72%), cv1 70%, cv2 69%, cv3 68%, cv4 67%; phylum split 1.25 M of 1.61 M (78%).
+  Folded pairs: 597 (300 cognate, 297 uncalled), all offset 1. Under rescue3 tokens 6 of the 297 'uncalled'
+  pairs are engine-called (screen 1 used the pre-rescue base); classes are kept as folded.
+2026-11-12 13:22  Smoke test 80895 (150 genomes per role, 1 epoch, c1 + c4, all variants): passes end to end in
+  194 s. Shuffled-order critic validation AUROC 0.499. c1 0.28 s per 4,096-pair batch including validation.
+  Not a result (tiny data); no design change made.
+2026-11-12 13:24  Training jobs (64 CPUs each, standard_expand_2): 80954 cv0, 80955 cv1, 80956 cv2, 80957 cv3,
+  80958 cv4 (afterany:80954), 80959 phylum (afterany:80955). Evaluation pipeline test on the smoke output:
+  80965 (outputs in *_test directories; discarded).
+
+2026-11-12 13:30  Evaluation pipeline tested on the smoke output (jobs 80965 bug in test harness only, 80980 pass:
+  e123, loci, scorer + paired comparison + ribosomal check, learned). Numbers from the test are meaningless
+  (150 genomes, 1 epoch) and are not reported, with one design lesson taken from them: an almost untrained
+  critic (the shuffled control after 1 epoch) ranked DefenseFinder pairs above no-gold pairs at AUROC 0.77,
+  as did raw cosine (0.76). A function of two vectors carries per-gene ("marginal") terms; DefenseFinder genes
+  are an atypical population, so a per-gene property can separate the evaluation-1 classes with no pair
+  information. This bears on G3 (predeclared: shuffled control within 0.45-0.55, else G1/G2 void).
+  EXPLORATORY addition, written before any real result: 'dc' step = the critic's interaction term with the
+  marginal terms removed, s_dc(a,b) = scale (U_a - mean_genome U).(V_b - mean_genome V), which equals the score
+  minus its row and column means against the genome's genes; and its complement marg = s - s_dc. Evaluations
+  1-3 are recomputed for dc and marg of primary, w3, shuf, glob. The predeclared criteria are judged on the
+  predeclared scores only.
+2026-11-12 13:33  Real training under way: c1 validation AUROC (adjacent vs in-chunk far pairs) 0.72-0.74 after
+  2-3 epochs, ~90 s per epoch. Evaluation job 81025 (24 CPUs; steps e123 loci score learned dc) chained with
+  afterok on 80954-80959.
+
+2026-11-12 17:20  cv0-cv3 trained (jobs 80954-80957, 2 h 49 min to 2 h 57 min each on 64 CPUs). Every fold selected
+  c6 (960-512-512-128). Validation AUROC (adjacent vs in-chunk far pairs, validation orders):
+    fold  c1     c2     c3     c4     c5     c6     | w3     shuf   glob
+    cv0   0.731  0.733  0.728  0.720  0.727  0.741  | 0.693  0.501  0.741
+    cv1   0.741  0.743  0.739  0.727  0.737  0.755  | 0.713  0.501  0.754
+    cv2   0.742  0.743  0.741  0.728  0.738  0.753  | 0.697  0.500  0.752
+    cv3   0.757  0.758  0.754  0.741  0.752  0.769  | 0.720  0.501  0.768
+  Every non-shuffled model peaked at the last allowed epoch (index 7): the predeclared 8-epoch cap binds;
+  kept. Linear bilinear critic (c4) is 0.011-0.017 below the deep critic. The shuffled-order critic sits at
+  0.500-0.501 with BCE 2 ln 2; its scores are nearly constant (null-pair q99 0.05 against 1.43 for primary).
+  The genome-mean ablation (glob) equals primary on validation (differences <= 0.001).
+  Interim evaluation on cv0-cv3 (job 82446, eval_interim/) submitted while cv4 (80958) and the phylum split
+  (80959) train. Final numbers come from the full evaluation job 81025.
+
+2026-11-12 17:30  INTERIM (cv0-cv3 only, job 82446; final numbers will replace these). DefenseFinder vs no-gold,
+  1,820 vs 2,638,424 adjacencies: primary 0.837, PMI (a1) 0.793 (+0.044 [+0.033, +0.055]), PMI a0.1 0.803,
+  engine all-genome -log P 0.630, raw cosine 0.715, shuffled control 0.527, accent ablation 0.833, offsets 1-3
+  0.834. Never-co-located stratum (220 vs 1.85 M): primary 0.821, PMI 0.543. Frequent stratum (>= 5 genomes):
+  primary 0.569, PMI 0.391, engine 0.259 (counts rank conserved housekeeping adjacencies above defense pairs).
+  Straddle negatives: primary 0.843 vs PMI 0.878 overall; never stratum 0.743 vs 0.581.
+  Co-folding (437 pairs, 32 with ipTM >= 0.75): primary 0.662 [0.550, 0.763], engine 0.751 [0.669, 0.826].
+  Four uncalled co-folders rank 41, 115, 149, 160 of 218 uncalled pairs.
+  Geometry (tight co-directional vs opposite strands): primary 0.724, PMI 0.676, engine 0.660, shuffled 0.503.
+  Per fold, primary minus PMI on DefenseFinder vs no-gold: +0.028, +0.039, +0.072, +0.042.
+2026-11-12 17:58  INTERIM exploratory decomposition (job 82587): DefenseFinder vs no-gold, interaction-only
+  dc_primary 0.827 (never stratum 0.834), marginal-only marg_primary 0.280; shuffled control dc 0.491, marg 0.595.
+  TXSScan vs no-gold: dc 0.879 (never 0.865), marg 0.144. Reading: the critic's separation is carried by the
+  pair term; its per-gene part works against defense and secretion pairs. Refuted if the interaction term
+  were matched by a class-only model (u, v depending on a gene's system class alone); not run.
+
+2026-11-12 19:05  Phylum split trained (80959, 1 h 46 min; selected c6; validation c1-c6 0.742 / 0.744 / 0.739 / 0.732 /
+  0.738 / 0.751; w3 0.702; shuf 0.500; glob 0.751).
+  BUG FOUND AND FIXED (secondary baseline only): nlogP_train (training-only Poisson -log P, a declared
+  sensitivity variant) was looked up with keys on the global token base T, while recurrence.colocalization()
+  encodes keys on (max token present + 1). In the phylum split the largest token id is absent from Nanobdellota,
+  so only 364 adjacencies matched (AUROC exactly 0.5). The primary PMI baseline and the strata counts use their
+  own encoding and are unaffected. prep.py corrected; fix_nlogp.py (job 83502) recomputes nlogP_train for every
+  split, prints old-vs-new agreement, and overwrites the arrays; the final evaluation 81025 now depends on it.
+  Interim phylum numbers for nlogP_train are void.
+
+2026-11-12 19:35  cv4 trained (80958, 3 h 04 min; c6; validation c6 0.728, w3 0.683, shuf 0.501, glob 0.728).
+  FINAL evaluation 81025 (all five folds + phylum split). Predeclared outcomes:
+  G1  DefenseFinder vs no-gold, 2,362 vs 3,231,256 held-out adjacencies (pooled 5-fold CV):
+      primary 0.824 [0.815, 0.833], PMI a1 0.785 [0.777, 0.793]; difference +0.039 [+0.029, +0.048] (bar +0.05):
+      NOT MET. Never-co-located stratum (335 vs 2,251,561): 0.768 vs 0.544, +0.224 [+0.180, +0.267] (bar +0.10): met.
+      G1 requires both parts: NOT MET. Phylum split: +0.050 [+0.034, +0.064] overall and +0.239 never.
+  G2  folded unannotated pairs (597; 44 with ipTM >= 0.75): primary 0.692 [0.604, 0.770]; engine -log P 0.748
+      [0.675, 0.813]; difference -0.055 [-0.138, +0.029]. NOT MET (below 0.70 and below the engine).
+      The four uncalled co-folders rank 53, 153, 198, 211 of 297 uncalled pairs.
+  G3  shuffled-order critic on DefenseFinder vs no-gold 0.519 [0.506, 0.532]: MET (within 0.45-0.55).
+  Evaluation 3: 0.724 (PMI 0.676, engine 0.660, cosine 0.637, shuffled 0.503); phylum split 0.700.
+  Evaluation 4: critic loci (99th percentile of within-genome random pairs; 20.8% of adjacencies on; 30% of
+      genes covered) DF+TXSS summed excess +0.586 vs engine full table +0.444 (+0.142 [+0.122, +0.162]) at lower
+      F1 (DF 0.667 vs 0.833, TXSS 0.602 vs 0.753); ribosomal guard fails (1,360 / 1,686 runs; 31 / 114
+      Parvarchaeaceae). Intersection with engine level-2 boundaries +0.623; union +0.289.
+  Evaluation 5: top-30 engine-uncalled unannotated pair types have raw cosine 0.78-0.98 (median ~0.95) and
+      shared neighbour domains on both sides: mostly tandem homologs split across families (the predeclared
+      self-similarity refuter). EXPLORATORY follow-up 84198 (written after these results): evaluation 1 within
+      raw-cosine deciles and below the adjacent-pair median cosine (0.839); evaluation 5 restricted to pairs with
+      raw cosine < 0.839.
+
+2026-11-12 20:20  Final evaluation complete (81025) and exploratory follow-up (84198, 3 min 36 s).
+  Decomposition (final, 5-fold): DefenseFinder no-gold interaction-only 0.814 (never 0.779, singleton 0.831),
+  per-gene-only 0.290; TXSScan interaction 0.882 (never 0.859); shuffled interaction 0.494.
+  Cosine held fixed (deciles of raw cosine): DefenseFinder critic 0.769 vs PMI 0.746 (+0.023); never seen 0.743 vs
+  0.547 (+0.196); interaction-only 0.759 / 0.756. Below the adjacent-pair median cosine (0.839): never seen 0.687
+  vs 0.518 (116 positives). Within-system DefenseFinder pairs have median raw cosine 0.912 (no-gold 0.839).
+  Evaluation 5 restricted to raw cosine < 0.839: 28 of 30 top types are one pattern (short protein with
+  pilin-/signal-peptide-domain neighbours beside a longer protein with cell-wall-enzyme-domain neighbours); the
+  (u, v) clustering isolates exactly these 28. Observed neighbour domains only; UNVERIFIED.
+  Report written: REPORT.txt. Reading: transferable signal where counts are blind; does not replace counts;
+  does not beat the engine on co-folding; G1 and G2 not met, G3 met.

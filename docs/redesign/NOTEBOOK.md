@@ -1601,3 +1601,42 @@ called against uncalled p 3e-6; binary rate p 0.066).
 - Design flaw: choosing replicates by taxonomic distance alone picked identical or near-identical
   sequences for 12 of 94 blocks; replicate selection needs a sequence-identity ceiling.
 - Biohub items: 462 (ledger `work/s3/biohub_ledger.json`); items expire 17:00 UTC 13 November.
+
+## 2026-11-12 20:21 UTC — Neighbourhood-grammar critic (workstream `grammar`; `benchmarks/redesign/grammar/REPORT.txt`)
+
+Critic s(a, b) = u(x_a) . v(x_b) on genome-centred zca10 ESM++ small vectors, trained to tell
+adjacent gene pairs from non-adjacent pairs of the same genome; 5-fold cross-validation grouped
+by GTDB order, plus a train-on-one-phylum split. Baseline: token-pair PMI from the same training
+orders. 16.4 h of 64-CPU jobs; no GPU.
+
+| Held-out orders, AUROC of curated-system adjacencies against other adjacencies | Critic | Training-order PMI |
+|---|---|---|
+| DefenseFinder | 0.824 | 0.785 |
+| TXSScan | 0.852 | 0.811 |
+| CRISPRCasTyper | 0.685 | 0.643 |
+| Token pairs never co-located in the training orders | 0.768 | 0.544 |
+| Pairs touching a singleton family | 0.786 | 0.500 |
+| Pairs seen in 1-4 training genomes | 0.801 | 0.802 |
+
+- **Predeclared: G1 not met** (overall +0.039 [+0.029, +0.048] against a bar of +0.05; the
+  never-seen part +0.224 [+0.180, +0.267] against +0.10 is met; both were required). **G2 not
+  met** (co-folding AUROC 0.692 [0.604, 0.770] against 0.748 for the engine's significance; the
+  four uncalled pairs that co-folded rank 53, 153, 198 and 211 of 297). **G3 met** (the critic
+  trained on shuffled order scores 0.519).
+- The signal is in the pair: the interaction part alone gives 0.814, the per-gene part 0.290.
+  With raw cosine held fixed the never-seen gain holds (0.743 vs 0.547) and the overall gain
+  falls to +0.023; tandem homologs split across families account for about 40% of the overall
+  gain. Where a pair has been seen, counts mark system boundaries better (PMI 0.870, engine
+  0.845, critic 0.830).
+- Phylum split (train on Nanobdellota, score the other eight phyla): +0.050 [+0.034, +0.064]
+  overall, +0.239 on never-seen pairs.
+- Loci read from the critic: summed excess +0.586 against +0.444 for the engine default with
+  lower F1 on every caller (DefenseFinder 0.667 vs 0.833) and a failed ribosomal guard (1,360 of
+  1,686 runs; 31 of 114 Parvarchaeaceae).
+- Paralogs aside, 28 of the top 30 uncalled high-scoring pairs are one recurring pair type over
+  28 different family pairs: a protein of about 50 aa beside a longer one (180-1,070 aa); observed
+  domains on embedding neighbours only (pilin-like signal-peptide families on the short one;
+  lytic transglycosylase, M23 peptidase, PKD on the long one). UNVERIFIED as any system. Six
+  candidate pairs are listed for a co-fold screen; none folded.
+Reading: the critic complements family counts exactly where counts are blind (pairs unseen in
+other lineages, singleton families) and does not replace them.

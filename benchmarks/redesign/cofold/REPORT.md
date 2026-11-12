@@ -137,6 +137,28 @@ Near misses:
   Screen 2 therefore adds a remote-homology triage before folding and extends to blocks of three
   and four genes and longer proteins.
 
+## RPS-BLAST against CDD (orchestrator, 12 November; asked for by Jacob)
+
+`rpsblast` against `/shared/db/cdd/latest/blast/Cdd` (database of 3 April 2023), E ≤ 1, 20
+chains: both replicates of ranks 27, 9, 1 and 13 (pair and three-gene block). Hits:
+`work/cdd_check_hits.tsv`; biotite `cofold/cdd_check/`.
+
+| Candidate | Chain | Best reproducible CDD hit |
+|---|---|---|
+| Rank 27 | B (164–168 aa) | cd09879 PIN_VapC_AF0591-like, E 7.9e-07 and 2.4e-05, residues 7–116 |
+| Rank 27 | A (98–107 aa) | cd22231 RHH_NikR_HicB-like, E 0.044, residues 4–34, one replicate only |
+| Rank 13 | pair chain B (179–182 aa) | COG2405 (predicted nucleic-acid-binding protein with a PIN domain), E 0.004 and 0.029, residues 81–181 |
+| Rank 13 | pair chain A (180–190 aa) | none reproducible (homologs carry Pfam UPF0175) |
+| Rank 13 | third gene (375–391 aa) | none reproducible |
+| Rank 9 | both chains | none reproducible (all E ≥ 0.18, different models per replicate) |
+| Rank 1 | both chains | none reproducible |
+
+Rank 27 has the domain pattern of a PIN-domain nuclease with a small partner, the architecture
+of a common class of two-gene toxin–antitoxin modules; UNVERIFIED as a system (no curated
+caller emitted it). Rank 13 shows a marginal, reproducible PIN-containing-COG hit on one chain.
+Ranks 9 and 1 have no CDD similarity at E ≤ 0.1 that recurs across replicates. Protenix
+confirmation was dropped at Jacob's direction.
+
 ## Open items
 
 1. Nucleotide check of the shifted-frame overlaps of ranks 27 and 106.

@@ -1457,3 +1457,42 @@ Reading inventory (rescue3, even genomes): the unit reading at Jaccard 0.5 alone
 instances and the only best one for 12% / 39% / 33%, and resolves 149 ribosomal runs. The
 conserved level-2 reading is best for 50% / 11% / 34%. A three-reading output (neighbourhood,
 core, unit) is untested. Integration into the engine waits for the outcome of `softrec`.
+
+## 2026-11-12 14:52 UTC — The old chaining pipeline on DPANN, scored like the engine (workstream `baseline`; `benchmarks/redesign/baseline/REPORT.txt`)
+
+Legacy pipeline (kNN k 50 on ESM++ small, chaining with gap 2, minimum 2 anchors) on all 3,564
+genomes, nothing capped: raw cosine >= 0.85 gives 160.2 M anchors and 7,626,476 blocks (81.9%
+with 2-3 anchors; 33.5 min on 64 CPUs for kNN and chaining); soft-ZCA alpha 0.1 with cosine >= 0.30
+gives 155.4 M anchors and 10,750,829 blocks (80.8%). Both thresholds keep 97-98% of retrieved
+neighbours.
+
+**Like for like, even genomes, summed DefenseFinder + TXSScan excess:**
+
+| Output | Kind | Summed excess |
+|---|---|---|
+| Engine rescue3, default reading (conserved level 2) | single | 0.338 [0.313, 0.361] |
+| Engine rescue3, trimmed module reading (rule H) | single | 0.451 [0.427, 0.473] |
+| Legacy, union of blocks per contig, raw | single | 0.181 [0.160, 0.201] |
+| Legacy, union of blocks per contig, soft-ZCA | single | 0.183 [0.163, 0.203] |
+| Engine rescue3, full table | best of 11 | reference |
+| Legacy, all block intervals, raw / soft-ZCA | best of many | -0.082 [-0.098, -0.066] / -0.086 [-0.100, -0.072] against the engine full table |
+
+- Legacy all-interval tables have the highest absolute DefenseFinder F1 of anything scored (0.830
+  raw, 0.873 soft-ZCA; engine full table 0.826) with a higher random-placement control (0.60-0.64
+  against 0.55): a median 93-105 legacy intervals cover each ribosomal run against 7-8 engine loci.
+- Ribosomal check, single readings: legacy union resolves 406-444 of 1,686 runs (best union locus
+  a median 41-44 genes for 24-gene runs); engine default 704-711; rule H 1,554. Best-of-many:
+  legacy soft-ZCA 1,385, engine full table 1,370 (+15 [-27, +56]); legacy raw 1,009.
+- Boundary precision, single readings (DefenseFinder / TXSScan / CRISPRCasTyper): legacy union
+  0.375 / 0.12 / 0.13; engine default 0.67 / 0.27 / 0.32; rule H 0.75 / 0.40 / 0.375.
+- The Spacedust calibration rule fails on DPANN: permuted-order blocks have higher mean anchor
+  cosine than observed ones at every size (chance size-2 blocks fall between genomes of one
+  species 29.7% of the time against 1.0% for observed), so "calibrated" reduces to a minimum of
+  4-5 anchors and loses two-gene systems (DefenseFinder F1 0.15-0.24).
+
+**CORRECTION to the Spacedust comparison quoted on 12 November.** The engine's source207 figures
+("conserved loci, gaps 0-2": 0.745-0.801) are a best of 42 readings (3 gap rules x 14 support
+levels), and the legacy figures (0.652-0.762) are a best over all block intervals. As single
+readings: engine conserved level 2 F1 0.570-0.651 with excess +0.164 to +0.222; union of
+calibrated legacy blocks F1 0.331-0.491 with excess +0.070 to +0.125; the engine leads by +0.065
+to +0.152 excess, all 21 paired intervals above 0.

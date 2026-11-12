@@ -1381,3 +1381,15 @@ Even-genome DefenseFinder queries (1,247; 200-replicate null; configurations tun
   depth) and the phase-0 "embedding-reachable" counts, all computed on raw vectors.
 - The Mac's data volume reached 100% during this run (10:41 UTC) and was freed by another
   session's cleanup.
+
+## 2026-11-12 13:23 UTC — Direction from Jacob before the overnight runs
+
+- Omnitrophota is not next: the method is not settled. No second collection until it is.
+- The split design (MMseqs2 families for discovery, whitened embeddings for search) is a
+  compromise he does not want. Target: one method on one input, with the embeddings doing work
+  alignment cannot, serving discovery and search alike.
+- Overnight tests that bear on this: `softrec` (token-free recurrence from whitened neighbour
+  lists; the direct test of one statistic for both tasks), `grammar` (adjacency critic scored on
+  held-out orders), `search3` (predeclared confirmation of whitened-embedding search),
+  `baseline` (the old chaining pipeline with whitening on the DPANN gold loci), `boundary`
+  (locus reading; split genes as one position).

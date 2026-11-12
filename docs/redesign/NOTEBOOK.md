@@ -1099,3 +1099,39 @@ Foldseek); 1-2 genes from curated Archaeal-T4P members in 8 / 8 instances whose 
 a call; isolated pairs pass in 1 / 18; truncating the N-terminal helix keeps the interfaces in
 one replicate per block. Pilin-like control pairs stay low (72 pairs, median ipTM 0.18, none
 >= 0.75). No overlap with the earlier cluster:1043 or cluster:3913 leads.
+
+## 2026-11-12 08:52 UTC — Locus search round 2 (workstream `locus_search2`; `benchmarks/redesign/locus_search/REPORT2.txt`)
+
+Predeclaration `results/criterion2.json` written 07:58 UTC before any round-2 number. Reruns of
+round-1 configurations reproduce round 1 exactly.
+
+- **Confirmatory test of the embedding's added value: met.** DefenseFinder, 5-fold genome
+  cross-validation (2,447 queries): S3 - S2 = +0.077 AP [+0.074, +0.080] (strict +0.046); every
+  fold chose the round-1 configurations. Frozen configurations on the other callers: TXSScan
+  +0.260 [+0.250, +0.269], CRISPRCasTyper +0.013 [+0.012, +0.015].
+- **Controls on that gain.** With each gene's embedding list swapped for another gene's, S3 - S2
+  on DefenseFinder falls to +0.012; true minus shuffled is +0.064 [+0.061, +0.068], 84% of the
+  gain. CRISPRCasTyper: true minus shuffled +0.002 (the gain is non-specific there). TXSScan: at
+  matched floor (tau 3) the gain is +0.039; the rest is a floor effect in a one-type caller.
+- **Unlabelled hits carry the query type's domains.** At E <= 0.01, 92.6-96.5% of unlabelled
+  hits have a raw DefenseFinder profile hit used by curated calls of the query's type
+  (span-matched windows on the same contigs: 0.9-2.2%); 97.7-100% meet the predeclared
+  "supported" rule. Unsupported unlabelled hits per query: M0 0.000, M2 0.002, S2 0.028, S3
+  0.029, M3 grow round 3 0.064. AbiE queries give 54% of S3's unlabelled hits. Observed domains
+  only; no system is named for an unlabelled hit.
+- **Rate-constrained selection.** Counting every unlabelled hit against the rate: S2 with
+  sequence weight 0.75 (AP 0.619, +0.249 [+0.238, +0.258] over M0 at 1.53x). With supported hits
+  exempt: S3 (AP 0.698, +0.328 [+0.317, +0.339]; 0.018 unsupported per query).
+- **Fast null.** Gumbel fit to 40 replicate maxima plus a per-method calibration curve learned on
+  other genomes: observed / expected 1.00 [0.96, 1.05] at E = 0.01, 1.00 at 0.1, 1.02 at 1, 1.96
+  at 0.001. Uncalibrated small-sample tails are 1.4-2.2x anti-conservative at 0.01, and the
+  200-replicate empirical E is at its resolution limit there. Null cost falls 5x (S3: 10.4 to
+  2.1 CPU-s per query).
+- **Interactive search.** `locus_search/code/interactive.py search --gids ...`: median 4.8 s per
+  query in a session on 24 CPUs (embedding 0.44 s, indexed MMseqs2 3.22 s, scan 0.03 s, null
+  0.92 s). Deep lists carry AP: cutting embedding ranks from 20,000 to 2,000 costs 0.034 AP
+  whether exact or HNSW; a faster MMseqs2 setting costs 0.033; both 0.078-0.086.
+- **Pair library.** Odd-genome significant token pairs applied to even genomes with no statistic
+  recomputed (1.8 M genes in 11.5 s): DefenseFinder F1 0.721 (engine 0.806, module library
+  0.675) at the engine's excess (0.267 against 0.268); TXSScan F1 0.752 against 0.758.
+- Spacedust replication: source207 carries no type label; nothing run.

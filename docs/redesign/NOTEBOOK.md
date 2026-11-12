@@ -1306,3 +1306,32 @@ Reading: with ESM++ small, one flat MMseqs2 partition (now with fragment rescue)
 best family source for the engine; neither the product kernel nor the hierarchy unifies the
 inputs. Remaining route to a single input: a learned head that distils alignment evidence into
 one vector (workstream `head`).
+
+## 2026-11-12 11:55 UTC — Error rate of fragment rescue (workstream `repair`; `benchmarks/redesign/repair/REPORT_rescue_error.txt`)
+
+Prompted by the Sharur session's ground-truth test on its own families (9.5% wrong-family joins,
+22.9% false joins of singleton pieces). Same design on ELSA's rule and families: 6,000 complete
+proteins from families of >= 3 members and 2,000 complete singletons, cut to an N- or C-terminal
+piece (15-95% kept), intact original removed from the targets. Decision rule appended to
+`predeclared.json` at 11:43 UTC before computing: default = strictest variant keeping >= 80% of
+rescue3's touched-instance F1 gain with summed-excess lower bound above -0.005, wrong-family
+below 3% and false joins below 8%.
+
+| Rule | True family | Wrong family | Unplaced | False join (singletons) | Genes moved | Gain retained | Summed excess (even) |
+|---|---|---|---|---|---|---|---|
+| rescue3 (adopted earlier) | 89.3% | 5.0% | 5.7% | 13.4% | 83,466 | 100% (+0.260 F1) | +0.004 [-0.003, +0.010] |
+| a: rescued gene is the shorter protein | 89.0% | 4.5% | 6.5% | 9.0% | 71,410 | 84% | +0.003 [-0.002, +0.009] |
+| b: a + contig end or partial flag | as a | as a | as a | as a | 44,490 | 73% | +0.003 [-0.001, +0.008] |
+| c: a + alignment reaches the target's terminus on the intact side | 85.8% | 3.6% | 10.6% | 4.0% | 42,087 | 70% | +0.003 [-0.002, +0.007] |
+| d: b + c | as c | as c | as c | as c | 38,881 | 69% | +0.003 [-0.002, +0.007] |
+
+- **No variant meets both error bounds**; by the rule nothing is selected. Variant a keeps the
+  gain and misses both bounds; variant c meets the false-join bound and misses wrong-family by
+  0.6 points.
+- False joins grow with fragment length (rescue3: 4.7% under 75 aa, 26.2% at >= 300 aa; c: 2.5%
+  and 4.0%). Of the wrong joins, 103 of 301 (rescue3), 111 of 271 (a) and 111 of 218 (c) land in
+  a token whose member aligns full-length to the intact original; excluding those, wrong-family
+  is 3.3%, 2.7% and 1.8%.
+- Every variant passes the ribosomal check (1,686 / 1,686; 114 / 114). DefenseFinder F1 over all
+  even-genome instances rises +0.012 to +0.020 under every arm.
+- The default family table is a decision for Jacob (rescue3, a, c, or no rescue).

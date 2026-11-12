@@ -610,3 +610,36 @@ Relaxing coverage from 50% to 30% moves Spacedust F1 by +0.005 and lowers the su
 DefenseFinder + TXSScan excess on DPANN from +0.442 to +0.419. Further breadth from
 sequence clustering parameters is exhausted; the +0.044 from the ESM2-650M merge is beyond
 what the coverage relaxation gives. The 50% arm stays the sequence base.
+
+## 2026-11-12 02:05 UTC — Paired excess for the embedding merges (jobs 77803-77808, `results_v3/`)
+
+Engine v1.2 saves per-region random-placement F1, so the excess is paired as well. A = hybrid
+on the permissive base, B = the permissive sequence base, same window; 207 regions.
+
+| A | w | Selection | Observed F1: A, B, A - B [95% CI] | Excess A - B [95% CI] |
+|---|---|---|---|---|
+| ESM2-650M CPM r 0.05 | 5 | conserved g0-2 | 0.801, 0.758, +0.044 [+0.017, +0.070] | +0.017 [-0.009, +0.043] |
+| ESM2-650M CPM r 0.05 | 5 | all kinds | 0.832, 0.798, +0.034 [+0.014, +0.055] | +0.029 [+0.009, +0.050] |
+| ESM2-650M CPM r 0.05 | 8 | conserved g0-2 | 0.759, 0.745, +0.014 [-0.013, +0.041] | -0.019 [-0.046, +0.007] |
+| ESM2-650M CPM r 0.05 | 8 | all kinds | 0.822, 0.807, +0.015 [-0.003, +0.032] | +0.009 [-0.009, +0.028] |
+| ESM-C 300M CPM r 0.1 | 5 | conserved g0-2 | 0.777, 0.758, +0.019 [-0.007, +0.044] | +0.001 [-0.023, +0.027] |
+| ESM-C 300M CPM r 0.1 | 5 | all kinds | 0.817, 0.798, +0.019 [+0.000, +0.038] | +0.015 [-0.004, +0.035] |
+| ESM-C 300M CPM r 0.1 | 8 | conserved g0-2 | 0.733, 0.745, -0.012 [-0.036, +0.011] | -0.031 [-0.054, -0.007] |
+| ESM-C 300M CPM r 0.1 | 8 | all kinds | 0.805, 0.807, -0.002 [-0.020, +0.017] | -0.003 [-0.021, +0.017] |
+
+- **About 60% of the observed gain at window 5 is the random baseline rising.** For
+  conserved loci the paired excess gain of the ESM2-650M merge is +0.017 with an interval
+  that contains zero; for all locus kinds it is +0.029 [+0.009, +0.050].
+- **At window 8 the merge gives nothing** (ESM2-650M) or costs excess (ESM-C 300M, -0.031).
+  Merged tokens and a wide window both add support; together they over-extend loci.
+- **ESM-C 300M merges give no excess gain at either window.**
+- Best Spacedust configuration so far: permissive base + ESM2-650M CPM r 0.05 at window 5,
+  conserved g0-2 F1 0.801 (excess +0.199), all kinds 0.832 (+0.127).
+
+Reading for the DPANN run: ESM++ small is the ESM-C 300M model, the arm with zero paired
+excess gain here. Predeclared for DPANN, before the vectors exist: an ESM++ small merge of
+the permissive base counts as a gain if the summed DefenseFinder + TXSScan F1 excess at
+window 3 rises by at least 0.02 over the base (+0.442) on held-out genomes (the half of
+genomes with even `genome_code`; settings chosen on the odd half). Otherwise the DPANN
+default stays sequence-only and the vectors are used for the kNN-recurrence and
+context-merge experiments.

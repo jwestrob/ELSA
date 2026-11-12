@@ -1006,3 +1006,35 @@ single-sequence (0.84 / 0.82) and fails with the MSA (interface PAE 5.5 / 6.3 A)
 rank 1 (60 + 70 aa; 249 genomes, 21 orders, 7 phyla): no detectable similarity in any search,
 ipTM 0.856 / 0.708, fused 133-139 aa homologs in 3 genomes. Follow-up workstream `cofold3`
 examines rank 1 and the DUF cassette in depth.
+
+## 2026-11-12 07:46 UTC — Locus search on DPANN (workstream `locus_search`; `benchmarks/redesign/locus_search/REPORT.md`)
+
+Query = one gold instance, database = all genes of all other genomes; hits are windows scored
+by per-slot evidence with a circular-shift co-localization null (200 replicates). DefenseFinder
+queries with >= 2 members on even genomes (1,247); parameters tuned on odd genomes.
+
+| Method | MAP | Strict MAP | Recall E<=0.01 | Unlabelled hits per query E<=0.01 |
+|---|---|---|---|---|
+| M0 tokens | 0.370 | 0.256 | 0.094 | 0.72 |
+| M1 embedding rank | 0.442 | 0.257 | 0.093 | 2.59 |
+| M2 tokens + 0.5 x embedding rank | 0.576 | 0.362 | 0.115 | 0.92 |
+| M3 iterative profile (grow, round 3; selected on odd) | 0.615 | 0.399 | 0.174 | 2.81 |
+| S1 MMseqs2 bitscore rank (control) | 0.602 | 0.389 | 0.170 | 4.47 |
+| S2 tokens + sequence rank | 0.620 | 0.407 | 0.180 | 4.44 |
+| S3 = S2 + 0.5 x embedding rank | 0.698 | 0.454 | 0.182 | 4.51 |
+
+- Predeclared criterion (best of M1-M3 selected on odd genomes gains >= 0.02 AP over M0 at no
+  more than 1.5x the unlabelled rate): not met; the selected M3 gains +0.245 [+0.235, +0.255]
+  at 3.9x. M2 would pass (+0.206 [+0.198, +0.213] at 1.27x) and was not the selected method.
+- Graded per-gene evidence is the main lever (tokens 0.370; sequence ranks 0.602-0.620), and
+  sequence search supplies it better than ESM++ small (S2 - M2 = +0.044 [0.036, 0.052]).
+- First controlled gain for the embeddings: S3 - S2 = +0.079 AP [+0.074, +0.083] (strict
+  +0.047) with +0.08 unlabelled hits per query; recall at E <= 0.01 +0.002, so the embedding
+  reorders the deeper list. This comparison was added after the predeclaration.
+- Token-invisible targets: 120,946 even-genome pairs are embedding-reachable in phase 0; M1
+  retrieves 2.5% of them at E <= 0.01.
+- Profile library built on odd genomes and scanned on even genomes: DefenseFinder F1 0.675
+  against 0.806 for the engine, excess +0.061 [+0.045, +0.078], coverage 0.773 against 0.906;
+  298 genomes per second.
+Follow-up workstream `locus_search2`: what the unlabelled hits are, a rate-constrained
+selection, a fitted-tail null, and a token-pair library.

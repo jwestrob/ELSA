@@ -1335,3 +1335,10 @@ below 3% and false joins below 8%.
 - Every variant passes the ribosomal check (1,686 / 1,686; 114 / 114). DefenseFinder F1 over all
   even-genome instances rises +0.012 to +0.020 under every arm.
 - The default family table is a decision for Jacob (rescue3, a, c, or no rescue).
+
+## 2026-11-12 12:43 UTC — Decision (Jacob): the current fragment-rescue rule stays
+
+Jacob chose to keep rescue3 (a gene in a family of fewer than 3 members joins its best hit's
+family when the alignment covers >= 80% of the shorter protein) as the DPANN default family
+table, knowing its cut-test error (5.0% wrong family, 13.4% false joins of singleton pieces).
+The anchored variant (`rescue3c`) stays available as the conservative table.

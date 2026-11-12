@@ -1,0 +1,104 @@
+{
+ "giant_unique": 4330,
+ "giant_genes": 5034,
+ "genes_with_local_homolog_other_genome_incl_identical": 5004,
+ "frac_genes_with_local_homolog_other_genome_incl_identical": 0.9940405244338498,
+ "genes_with_identical_copy_other_genome": 1099,
+ "genes_with_nonidentical_homolog_other_genome": 5002,
+ "frac_genes_nonidentical_homolog_other_genome": 0.9936432260627731,
+ "genes_partner_giant_other_genome": 4919,
+ "genes_partner_small_other_genome": 4981,
+ "genes_partner_small_only": 83,
+ "unique_with_giant_partner_in_C": 4248,
+ "B_hits_per_giant_q50_q90_max": [
+  936.0,
+  3805.8,
+  8458
+ ],
+ "B_giants_with_hits_ge_0.8_maxseqs": 0,
+ "unique_frac_with_local_homolog_other_genome_incl_identical": 0.9930715935334873,
+ "unique_frac_nonidentical_homolog_other_genome": 0.9928406466512703,
+ "unique_frac_giant_partner_other_genome": 0.9750577367205543,
+ "unique_frac_small_partner_only": 0.017782909930715934,
+ "tiling_k_counts_unique": {
+  "0": 132,
+  "1": 1727,
+  "2": 2015,
+  "3": 367,
+  "4": 83,
+  "5": 5,
+  "6": 1
+ },
+ "unique_split_in_synteny_k_ge2": 2471,
+ "unique_split_in_synteny_k_ge3": 456,
+ "tiled_cov_frac_q25_q50_q75_k_ge2": [
+  0.298536879334532,
+  0.5631414547077198,
+  0.8314298766560073
+ ],
+ "repeat_alignments_total": 586588,
+ "repeat_self_alignments": 313761,
+ "internal_repeats": {
+  "giants_E0.001": {
+   "n": 4330,
+   "frac_any_repeat": 0.7235565819861431,
+   "frac_ge10pct": 0.6681293302540415,
+   "frac_ge25pct": 0.5528868360277136,
+   "frac_ge50pct": 0.3745958429561201,
+   "median_repeat_frac": 0.3324449017737692,
+   "mean_repeat_frac": 0.35802997386707974
+  },
+  "length_control_1000_2045aa_E0.001": {
+   "n": 4330,
+   "frac_any_repeat": 0.34295612009237875,
+   "frac_ge10pct": 0.3288683602771363,
+   "frac_ge25pct": 0.25958429561200924,
+   "frac_ge50pct": 0.1438799076212471,
+   "median_repeat_frac": 0.0,
+   "mean_repeat_frac": 0.15753255130199625
+  },
+  "window_shuffled_giants_E0.001": {
+   "n": 4330,
+   "frac_any_repeat": 0.010392609699769052,
+   "frac_ge10pct": 0.006928406466512702,
+   "frac_ge25pct": 0.002078521939953811,
+   "frac_ge50pct": 0.0006928406466512702,
+   "median_repeat_frac": 0.0,
+   "mean_repeat_frac": 0.0017137767780000615
+  },
+  "giants_E1e-05": {
+   "n": 4330,
+   "frac_any_repeat": 0.6856812933025405,
+   "frac_ge10pct": 0.6355658198614319,
+   "frac_ge25pct": 0.5228637413394919,
+   "frac_ge50pct": 0.3418013856812933,
+   "median_repeat_frac": 0.29045373231419747,
+   "mean_repeat_frac": 0.33324171508913486
+  },
+  "length_control_1000_2045aa_E1e-05": {
+   "n": 4330,
+   "frac_any_repeat": 0.30600461893764436,
+   "frac_ge10pct": 0.2953810623556582,
+   "frac_ge25pct": 0.23279445727482678,
+   "frac_ge50pct": 0.12702078521939955,
+   "median_repeat_frac": 0.0,
+   "mean_repeat_frac": 0.14003643358358117
+  },
+  "window_shuffled_giants_E1e-05": {
+   "n": 4330,
+   "frac_any_repeat": 0.003695150115473441,
+   "frac_ge10pct": 0.0023094688221709007,
+   "frac_ge25pct": 0.0,
+   "frac_ge50pct": 0.0,
+   "median_repeat_frac": 0.0,
+   "mean_repeat_frac": 0.00041543126447848025
+  },
+  "giant_repeat_abs_shift_q25_q50_q75_E1e-05": [
+   431.0,
+   932.0,
+   1764.0
+  ]
+ },
+ "giant_genes_frac_with_any_pfam": 0.5905840286054828,
+ "giant_genes_frac_unannotated": 0.39709972189114023
+}

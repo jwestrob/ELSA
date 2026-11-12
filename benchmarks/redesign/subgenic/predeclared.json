@@ -1,0 +1,44 @@
+{
+  "written_utc": "2026-11-12T04:59:09Z",
+  "status": "fixed before any measurement was computed; the analysis code reads its thresholds from this file",
+  "gate": {
+    "a_composite_gene_fraction_min": 0.01,
+    "a_definition": "genes involved in adjacent split-in-synteny events minus genes involved in non-adjacent same-genome events, divided by 3,585,303",
+    "b_gold_instance_fraction_min": 0.02,
+    "b_definition": "gold instances with >= 2 resolved members containing >= 1 adjacent-composite X gene, adjacent-event Y gene or fragment, divided by 7,096",
+    "verdict_if_met": "build sub-genic tokens for DPANN",
+    "verdict_if_not": "park sub-genic tokens until the Omnitrophota collection"
+  },
+  "hit": {"evalue_max": 1e-5, "unit": "unique sequence pair, self excluded"},
+  "composite": {
+    "x_region_min_aa": 80,
+    "y_coverage_min": 0.7,
+    "max_region_overlap_aa": 20,
+    "adjacent_max_position_diff": 3,
+    "y_genome_differs_from_x_genome": true,
+    "control_1": "same genome, not adjacent (literal gate control)",
+    "control_2": "within-genome shuffle of gene positions, seeds 17, 18, 19 (reported beside)"
+  },
+  "fragment": {
+    "self_coverage_min": 0.8,
+    "partner_coverage_max": 0.5,
+    "majority_frac_gt": 0.5,
+    "min_partners": 2,
+    "partner_set": "unique sequences in another genome with a hit where either side is covered >= 0.7",
+    "contig_edge_gene": "gene within 3 nt of a contig end (start <= 3 or end >= length_nt - 2)"
+  },
+  "token_arm": "engine/dpann_tokens/mmseqs__seq__e3c50s75__dpann.parquet",
+  "gold": {
+    "min_members": 2,
+    "scores": "engine/results_dpann_v5/dpann__mmseqs__seq__e3c50s75__w3/score_min2/instance_scores.parquet",
+    "poor_recovery": "best-locus f1 < 0.5",
+    "strata": "caller x member-count bin (2-3, 4-6, 7+)"
+  },
+  "giant": {"min_length_aa": 2046, "local_homolog_min_aln": 100},
+  "refutation": {
+    "composite": "adjacent events not above the within-genome-shuffle expectation, or adjacent Y1/Y2 co-oriented and in X-region order at about the chance rate (50 %) instead of near 100 %",
+    "fragment": "fragment rate of contig-edge genes equal to interior genes and flat across genome completeness",
+    "gold": "affected instances recover the same best-locus F1 as unaffected instances within caller x size strata",
+    "giant_split": "few giants have >= 2 adjacent partner genes in another genome tiling non-overlapping regions"
+  }
+}

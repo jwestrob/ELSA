@@ -1,0 +1,216 @@
+{
+ "1_split_loci_sample": 15320,
+ "1_dpos_counts": {
+  "1": 11916,
+  "2": 2404,
+  "3": 1000
+ },
+ "1_collinear_frac": 0.8194516971279373,
+ "1_dpos1_gap_class_x_same_frame": {
+  "0-50|shifted_frame": 4212,
+  "0-50|same_frame": 1564,
+  "51-200|shifted_frame": 938,
+  "51-200|same_frame": 463,
+  ">200|shifted_frame": 153,
+  ">200|same_frame": 84,
+  "overlap|shifted_frame": 4482,
+  "overlap|same_frame": 20
+ },
+ "1_dpos1_gap_class_counts": {
+  "0-50": 5776,
+  "overlap": 4502,
+  "51-200": 1401,
+  ">200": 237
+ },
+ "1_dpos1_same_frame_frac": 0.1788351795904666,
+ "1_baseline_neighbours_n": 226509,
+ "1_baseline_gap_class_counts": {
+  "0-50": 98187,
+  "51-200": 62846,
+  "overlap": 47182,
+  ">200": 18294
+ },
+ "1_baseline_same_frame_frac": 0.2553938254109108,
+ "1_baseline_same_frame_frac_gap_le_50": 0.20809801264368608,
+ "1_joint_cov_of_X_q10_q25_q50_q75_q90": [
+  0.7439624965145459,
+  0.8680875085207908,
+  0.9396551724137931,
+  0.9744560075685903,
+  0.9925803792250618
+ ],
+ "1_xgap_aa_q10_q25_q50_q75_q90": [
+  -1.0,
+  4.0,
+  15.0,
+  39.0,
+  88.0
+ ],
+ "1_frac_xgap_le_10aa": 0.3995430809399478,
+ "1_frac_jcov_ge_0.8": 0.83733681462141,
+ "1_broken_like_frac": 0.2733028720626632,
+ "1_broken_like_same_frame_frac": 0.17387150704561738,
+ "1_broken_like_overlap_frac": 0.42440888464294246,
+ "2_y_rate_per_genome_q10_q50_q90": [
+  0.05207315795542138,
+  0.07354998243206513,
+  0.1047918449603843
+ ],
+ "2_y_share_in_top10pct_genomes": 0.17308603286812665,
+ "2_spearman_y_rate_vs_completeness": [
+  0.02,
+  0.7017507657831856
+ ],
+ "2_spearman_y_rate_vs_contamination": [
+  -0.043,
+  0.4178814308055103
+ ],
+ "2_spearman_y_rate_vs_n_contigs": [
+  -0.046,
+  0.3828073868779378
+ ],
+ "2_spearman_y_rate_vs_n50": [
+  0.027,
+  0.6063555801786606
+ ],
+ "2_f_rate_per_genome_q10_q50_q90": [
+  0.014335087910156741,
+  0.03748307224863989,
+  0.08028709088835671
+ ],
+ "2_f_share_in_top10pct_genomes": 0.20779308028216326,
+ "2_spearman_f_rate_vs_completeness": [
+  -0.433,
+  1.0711372324975986e-17
+ ],
+ "2_spearman_f_rate_vs_contamination": [
+  0.082,
+  0.12118953083503553
+ ],
+ "2_spearman_f_rate_vs_n_contigs": [
+  0.707,
+  3.306137087044626e-55
+ ],
+ "2_spearman_f_rate_vs_n50": [
+  -0.802,
+  2.1629308158479446e-81
+ ],
+ "2_ybl_rate_per_genome_q10_q50_q90": [
+  0.01183771520085413,
+  0.020990865503060625,
+  0.034983664325630305
+ ],
+ "2_ybl_share_in_top10pct_genomes": 0.18286364210792366,
+ "2_spearman_ybl_rate_vs_completeness": [
+  0.062,
+  0.24221920264641633
+ ],
+ "2_spearman_ybl_rate_vs_contamination": [
+  -0.023,
+  0.6674814530967503
+ ],
+ "2_spearman_ybl_rate_vs_n_contigs": [
+  0.006,
+  0.9054947369701587
+ ],
+ "2_spearman_ybl_rate_vs_n50": [
+  -0.029,
+  0.5849659215118013
+ ],
+ "2_phylum_split_rate_q10_q50_q90_(>=3 genomes)": [
+  0.06280578590585134,
+  0.07224216637858441,
+  0.08330572987892361
+ ],
+ "2_phylum_frag_rate_q10_q50_q90_(>=3 genomes)": [
+  0.039167593607814376,
+  0.0422791332020003,
+  0.06497510971744525
+ ],
+ "2_phylum_n_with_ge3_genomes": 7,
+ "2_ord_split_rate_q10_q50_q90_(>=3 genomes)": [
+  0.06224895198043694,
+  0.07555309734513274,
+  0.0872137690324346
+ ],
+ "2_ord_frag_rate_q10_q50_q90_(>=3 genomes)": [
+  0.03295537792011473,
+  0.0422791332020003,
+  0.06053308839286013
+ ],
+ "2_ord_n_with_ge3_genomes": 15,
+ "3_families_with_split_form": 1916,
+ "3_families_with_both_forms": 1570,
+ "3_split_frac_per_family_q10_q25_q50_q75_q90_(both forms)": [
+  0.01694915254237288,
+  0.04878048780487805,
+  0.15954545454545455,
+  0.35714285714285715,
+  0.6
+ ],
+ "3_split_loci_by_family_split_frac": {
+  "<=0.1": 1501,
+  "0.1-0.5": 4754,
+  "0.5-<1": 7914,
+  "1 (no intact copy in sample)": 1151
+ },
+ "3_split_loci_with_>=3_member_genomes_in_order": 13205,
+ "3_frac_of_those_split_in_>=80pct_of_order_genomes": 0.4705793260128739,
+ "3_frac_of_those_split_in_<=20pct_of_order_genomes": 0.11859144263536539,
+ "3_broken_like_loci_family_split_frac_q25_q50_q75": [
+  0.2676056338028169,
+  0.6687898089171974,
+  0.8229813664596274
+ ],
+ "3_not_broken_like_loci_family_split_frac_q25_q50_q75": [
+  0.2727272727272727,
+  0.5984848484848485,
+  0.8670520231213873
+ ],
+ "4_giants_tiled_k_ge2": 2471,
+ "4_collinear": 1940,
+ "4_broken_like_(collinear, adjacent, all gaps<=50nt)": 1104,
+ "4_broken_like_any_shifted_frame": 790,
+ "4_separate_like_(collinear, all gaps>50nt)": 687,
+ "4_other_(mixed gaps, non-collinear or mixed strand)": 680,
+ "4_max_gap_nt_q25_q50_q75": [
+  9.0,
+  54.0,
+  189.0
+ ],
+ "5_scale_factor_all_genes_over_sample_genes": 10.129662853413421,
+ "5_broken_like_genes_sample": 7913,
+ "5_merged_genes_sample": 3726,
+ "5_gene_records_removed_sample": 4187,
+ "5_broken_like_genes_all_est": 80156.0221590604,
+ "5_all_split_genes_sample": 26900,
+ "5_fragments_sample": 14885,
+ "5_fragments_that_would_join_a_family_token_sample": 8948,
+ "5_of_which_singletons_now": 2786,
+ "5_fragments_join_all_est": 90640.22321234329,
+ "5_gold_instances_ge2": 7096,
+ "5_gold_touched_by_split_merge": 313,
+ "5_gold_touched_by_fragment_join": 296,
+ "5_gold_touched_any": 574,
+ "5_gold_touched_any_frac": 0.08089064261555806,
+ "5_gold_touched_by_caller": [
+  {
+   "caller": "CRISPRCasTyper",
+   "bl": 191,
+   "fj": 117,
+   "any": 292
+  },
+  {
+   "caller": "DefenseFinder",
+   "bl": 96,
+   "fj": 174,
+   "any": 253
+  },
+  {
+   "caller": "TXSScan",
+   "bl": 26,
+   "fj": 5,
+   "any": 29
+  }
+ ]
+}

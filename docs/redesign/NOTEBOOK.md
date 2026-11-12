@@ -928,3 +928,49 @@ Validation, 2,547,528 ESM++ small vectors, zca10, k 50, 64 threads, 5,000 exact 
 HNSW is 3.4 times faster at the same recall and is now the wrapper default
 (`knn__<tag>__<transform>__k<k>__hnsw.npz`). Brute force on 5,000 queries took 45 s, so an
 exact all-against-all pass would cost about 6.4 h on 64 threads.
+
+## 2026-11-12 07:09 UTC — Sub-genic sizing on DPANN (workstream `subgenic`); co-fold triage; length effect
+
+**Sub-genic sizing** (`benchmarks/redesign/subgenic/REPORT.md`; gate fixed 04:59 UTC before any
+measurement). MMseqs2 local alignments of 371,905 query sequences (10% of genomes plus every
+gold neighbourhood) and all 4,330 giants against the 2,547,528 unique sequences.
+- Split side of an adjacent split/fused relation: 7.8% of genes; fused side 25.1% (grows with
+  collection size). Adjacent groups are 49.7x a within-genome shuffle; 91.3% co-oriented and in
+  the order of the intact gene. The literal predeclared control (pieces more than 3 genes apart)
+  exceeds the adjacent rate, so gate (a) fails as written; it is not a chance null.
+- Gate (b) met: 5,006 / 7,096 gold instances contain a composite, split or fragment member
+  (fragment alone 7.5%, split side alone 14.6%).
+- Whole-gene tokens already absorb composites (0.1% lost; 85.1% share a token with a piece) and
+  composite-containing instances recover better (odds ratio of poor recovery 0.53).
+- Fragments: 4.2% of genes; 39.2% of contig-edge genes against 1.7% interior; 27.1% lost from
+  tokens (baseline 1.7%); rate tracks N50 (rho -0.80); gold instances with a fragment member
+  recover worse (odds ratio 2.50, F1 -0.088).
+- Split genes are clade-wide states: per-genome rate 5.2 / 7.4 / 10.5% (q10 / q50 / q90),
+  unrelated to completeness or N50 (|rho| <= 0.05); 59% of split loci lie in families where the
+  split form is the majority; 47.1% in families split in >= 80% of an order's genomes.
+- Giants (>= 2,046 aa): 99.4% have a local homolog in another genome; 57% are tiled by two or
+  more adjacent smaller genes elsewhere (1,104 tilings broken-call-like, 687 separate genes, 680
+  mixed); 68.6% carry internal repeats (length control 30.6%).
+- Repair estimate: merging broken-call-like split loci about 80,200 genes (2.2%); a
+  shorter-sequence coverage rule rejoins about 90,600 fragments (2.5%); 574 gold instances
+  touched (8.1%).
+Decision: residue-level sub-genic tokens are parked for DPANN; the cheap repair goes to an
+engine test (workstream `repair`).
+
+**Co-fold triage (workstream `cofold2`, part A; `benchmarks/redesign/cofold/partA_triage.tsv`).**
+HHblits/HHsearch against Pfam 39 and PDB100, RPS-BLAST against CDD, hmmsearch Pfam GA, Foldseek
+against PDB and AlphaFold Swiss-Prot: nine of the ten screen-1 dossier blocks have a chain that
+resembles a characterised family (ribbon-helix-helix + PIN, ParD/ParE-like, MazE-like,
+YoeB-like, ferritin-like pieces, a retron-effector-like protein with a helix-turn-helix
+partner); rank 1 (60 + 70 aa; 249 genomes, 21 orders, 7 phyla) has no similarity at the
+predeclared bar. All observations; no curated caller emitted a system. The shifted-frame
+overlaps of ranks 27 and 106 are two translationally coupled genes (own start codon in every
+instance, no shift motif, no fused homolog). The four high-scoring uncalled pairs are confined
+to one genus each and fail the engine's two-lineage rule. Jacob dropped Protenix confirmation.
+
+**Length effect in screen 1.** The ranking has no length term (Spearman of orders spanned
+against summed length -0.05; folded set median 406 aa against 421 aa in the pool). The strict
+pass rate falls with summed length for engine-called pairs (40% under 200 aa, n = 20; 10.7% at
+200-300; 7.0% at 300-450; 4.8% above 450, n = 124) and for curated mates (33%, 20%, 16.7%,
+10.6%); partner swaps pass 0 / 20 under 200 aa. Screen 2 folds blocks of 450 aa or more with and
+without the block MSA and reports by length class.

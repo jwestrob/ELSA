@@ -554,3 +554,43 @@ Full record: `benchmarks/redesign/ws_seqanchors/REPORT.md`, section "Whitened-em
 Together with the token result above, two independent routes (pairwise anchors, family
 tokens) give the same answer on this collection: a sensitive sequence search already
 captures what the embeddings find, and the embedding-only remainder is real but small.
+
+## 2026-11-12 01:45 UTC — Embedding merges on top of permissive sequence families (jobs 77758-77769)
+
+Spacedust source207, window 5, genome-level null. Base = MMseqs E <= 1e-3, 50% coverage
+(601,584 families). Families merged by genome-centred centroid cosine, mutual 10-NN, Leiden
+CPM. Conserved loci with gaps 0-2 / all locus kinds:
+
+| Tokens | Tokens (n) | Conserved g0-2: F1 | Random | Excess [95% CI] | Localized | All kinds: F1 | Excess |
+|---|---|---|---|---|---|---|---|
+| sequence base | 601,584 | 0.758 | 0.576 | +0.182 [+0.150, +0.213] | 0.768 | 0.798 | +0.098 |
+| + ESM2-650M, null p 1e-3 | 513,458 | 0.772 | 0.581 | +0.191 [+0.159, +0.221] | 0.802 | 0.815 | +0.112 |
+| + ESM2-650M, null p 1e-2 | 452,948 | 0.773 | 0.584 | +0.189 [+0.159, +0.217] | 0.797 | 0.811 | +0.108 |
+| + ESM2-650M, CPM r 0.2 | 287,842 | 0.791 | 0.595 | +0.195 [+0.168, +0.222] | 0.831 | 0.821 | +0.116 |
+| + ESM2-650M, CPM r 0.1 | 252,340 | 0.788 | 0.599 | +0.189 [+0.160, +0.218] | 0.826 | 0.824 | +0.120 |
+| **+ ESM2-650M, CPM r 0.05** | 227,791 | **0.801** | 0.602 | **+0.199** [+0.172, +0.225] | 0.855 | **0.832** | **+0.127** |
+| + ESM-C 300M, null p 1e-3 | 512,844 | 0.764 | 0.576 | +0.188 [+0.156, +0.219] | 0.778 | 0.805 | +0.105 |
+| + ESM-C 300M, CPM r 0.1 | 273,296 | 0.777 | 0.593 | +0.184 [+0.153, +0.212] | 0.802 | 0.817 | +0.113 |
+| + ESM-C 300M, CPM r 0.05 | 250,499 | 0.760 | 0.597 | +0.163 [+0.131, +0.194] | 0.797 | 0.816 | +0.111 |
+
+Paired per-region differences in observed F1 (`engine/paired_compare.py`, 207 regions,
+10,000 bootstrap resamples):
+
+| A minus B | Conserved g0-2 | All kinds | Win / tie / loss |
+|---|---|---|---|
+| ESM2-650M r 0.05 on permissive base minus sequence base | +0.044 [+0.017, +0.070] | +0.034 [+0.014, +0.054] | 74 / 89 / 44 |
+| ESM2-650M p 1e-3 minus sequence base | +0.015 [-0.001, +0.030] | +0.017 [+0.005, +0.029] | 31 / 156 / 20 |
+| ESM-C 300M r 0.1 minus sequence base | +0.019 [-0.007, +0.044] | +0.019 [+0.000, +0.038] | 68 / 84 / 55 |
+| ESM2-650M r 0.05 on permissive base minus the same on 30%/80% | +0.065 [+0.037, +0.092] | +0.044 [+0.024, +0.066] | 86 / 76 / 45 |
+| ESM-C 300M r 0.1 minus ESM2-650M r 0.05 | -0.025 [-0.051, +0.000] | -0.015 [-0.034, +0.003] | 46 / 81 / 80 |
+
+- **Embedding merges add F1 on top of the permissive sequence families**: +0.044 at the
+  most aggressive ESM2-650M merge, with the interval above zero. This revises the reading of
+  the previous entry: breadth by sequence explains the gain of the *old* hybrid over 30%/80%
+  clusters, and a further embedding merge still helps.
+- Random-placement F1 rises with the merge (0.576 to 0.602), so the excess gain is smaller
+  (+0.182 to +0.199). The summaries held observed per-region F1 only; engine v1.2 also saves
+  the per-region random F1, and the base and the two best hybrids are rerun at windows 5 and
+  8 into `results_v3/` for a paired interval on the excess (jobs 77803-77808).
+- ESM2-650M merges help more than ESM-C 300M merges. ESM++ small is the ESM-C 300M model, so
+  the DPANN vectors are the weaker of the two for this step.

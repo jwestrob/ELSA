@@ -540,9 +540,10 @@ def main():
                      ci_lo=float(np.quantile(boot, .025)), ci_hi=float(np.quantile(boot, .975)),
                      localized_observed=report["observed"]["localized_fraction"],
                      localized_random=report["controls"]["localized_fraction"],
-                     per_region_f1=observed.set_index("region_id").f1.round(6).to_dict())
+                     per_region_f1=observed.set_index("region_id").f1.round(6).to_dict(),
+                     per_region_random_f1=ctrl.groupby("region_id").f1.mean().round(6).to_dict())
             log(label, {k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items()
-                        if k not in ("selection", "per_region_f1")})
+                        if k not in ("selection", "per_region_f1", "per_region_random_f1")})
             return r
 
         k = loci.kind

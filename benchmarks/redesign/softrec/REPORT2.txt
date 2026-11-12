@@ -1,0 +1,234 @@
+SOFTREC ROUND 2 (softrec2): TOKEN-FREE MODULES AND STATISTICS THAT KEEP VARIABLE PAIRS (DPANN, 2026-11-12)
+=========================================================================================================
+All numbers are single outputs (one reading per output); "full table" never appears below. Even genomes = test,
+odd genomes = tuning, paired genome bootstrap (2,000 draws, seed 17). Token references reproduced exactly before any
+comparison (job 82615): R1 = conserved@2 (F1 DF .688 / TXSS .409 / CCT .426, summed DF+TXSS excess .3375,
+ribosomal 704 resolved); DH = level-2 locus + rule-H core (F1 .744 / .548 / .479, summed .4270, ribosomal 1,686
+recovered / 1,512 resolved, Parvarchaeaceae 113/114 resolved).
+
+ANSWER IN EIGHT LINES
+1. Predeclared outcome: the embedding-only nested method NEITHER MATCHES NOR BEATS token DH. Selected on odd genomes:
+   rank-weighted zca10 lists (depth 1,000, w = exp(-(t-1)/50), rule W >= 1 & L >= 2, instance FDR .0028) + validated
+   families (Leiden r2000 on the statistic's own supporting-pair graph) + Louvain res 0.3 modules + DH. Even: summed
+   excess .4669 vs .4270, +0.0398 [+0.0223, +0.0591] (would clear "beats"), but TXSScan F1 .500 vs .548 (-0.048
+   [-0.061, -0.034]), CRISPRCasTyper F1 .442 vs .479 (-0.038 [-0.048, -0.028]), ribosomal resolved 1,263 < 1,400
+   (recovered 1,681, Parvarchaeaceae 114/114 recovered, 100/114 resolved). Blocking: those three conditions.
+2. Gap 1 (reading) is not closed by validated families. It closes for TXSScan and the ribosomal locus with MMseqs2
+   families as module tokens on the same softrec landscape (control, not embedding-only): DH +0.0766 [+0.0584,
+   +0.0956], TXSScan +0.001, resolved 1,499; only CRISPR-Cas blocks (-0.039). The predeclared refuter of the success
+   reading fires: the families are the limiting part.
+3. Mechanism: deep-list validated graphs are lineage-structured. At count-matched resolutions they split each
+   ribosomal Pfam marker into a median 423 families (rescue3: 5), the largest family holds 18% of a marker's genes
+   (rescue3: 90%), 29% of ribosomal genes are singletons. Modules then cut conserved runs (Parvarchaeaceae runs with a
+   single module label 2/114 vs 114/114 with MMseqs2 modules) and mark TXSScan system edges less often (.150 vs .200)
+   while cutting more systems inside (.347 vs .285). Module count is not the cause (r1000: 3,987 modules, same
+   deficits); Louvain resolution 0.1-3 changes nothing (predeclared contingency, run on odd).
+4. Gap 2 (statistic) is not closed: no statistic restores CRISPR-Cas without losing DF/TXSS. Even R1: two-tier lists
+   raise CRISPR-Cas member genes touching support .616 -> .728 (token .774) and CCT F1 .412 -> .432 (token .426) at
+   summed excess -0.021 vs token R1 (count rule +0.050). CCT F1 at DH is -0.038 with validated and -0.039 with MMseqs2
+   modules: the CRISPR-Cas deficit sits in the landscape, and only shallow Poisson evidence restores it.
+5. Rank-weighted lists are the best statistic at the default single reading: rw200_e200 R1 +0.1055 [+0.0871,
+   +0.1246] over token R1, rw1000_e50 +0.0913 (round-1 count rule +0.050); all depth-200-1,000 statistics keep the
+   ribosomal locus at R1 (1,680-1,686 recovered, 114/114 Parvarchaeaceae).
+6. Task 3: the lineage-aware expectation on the token engine is NOT CONFIRMED on single outputs: DH -0.0093 [-0.0179,
+   -0.0003] vs token DH (predeclared refuter fires), R1 -0.0037 [-0.0129, +0.0047]. Against its matched control (same
+   machinery, G/E over genomes) it gains +0.0197 [+0.0128, +0.0268] at R1 and +0.0038 [-0.0073, +0.0146] at DH.
+7. Task 4: depth 200 and 500 keep the verdict (same three blockers; DH summed +0.032 / +0.025 vs +0.040 at 1,000;
+   R1 +0.093 / +0.091 / +0.091). Depth 200 needs ~300 unique kNN neighbours (99.85% of genes reach it), depth 1,000
+   needs ~1,000-1,500. End to end on one 64-CPU node (measured stages): ~45 min at depth 200 (kNN k 300: 34 min),
+   ~103 min at depth 1,000 (kNN k 1,000: 68 min; Leiden 24 min).
+8. Engineering: the extended kernel reproduces round 1 exactly (L, G, E equal on shared variants; rank-weighted sums
+   0/300 mismatches vs a python recount); module code reproduces the token engine's modules and DH loci exactly.
+
+------------------------------------------------------------------------------------------------------------------
+PREDECLARATION AND DEVIATIONS (predeclared2.json, 16:45 UTC, before any round-2 output existed)
+- Matches: summed >= DH - 0.01; each caller F1 >= DH - 0.02; ribosomal recovered >= 1,650, Parvarchaeaceae
+  recovered >= 110/114, resolved >= 1,400. Beats: summed >= DH + 0.02 with interval > 0; no caller F1 < DH - 0.01;
+  same ribosomal bars. Selection on odd genomes: score = (odd conditions met, odd summed excess); stage 1 picks the
+  rank-weighted weight per depth on R1; stage 2 runs validated families + modules + DH for cnt1000, tt1000,
+  rw1000_<stage-1 weight>, pois50, pois200 x {cc, Leiden grid}.
+- Deviation 1 (gold-free, 16:58, before any score): the rank-weighted threshold grid started at W >= 1.5 and the FDR
+  procedure picked that lowest value at FDR .0001-.004 (truncated); 0.25, 0.5, 0.75, 1 and 1.25 added; candidates
+  reselected (job 82724).
+- Deviation 2 (gold-free, 17:42): the predeclared Leiden calibration target (0.5x / 1x / 2x of rescue3's 136,009
+  families with >= 2 genes) is unreachable because 153,187 edgeless unique sequences have >= 2 identical gene copies.
+  Calibrated instead on genes with a validated edge, where rescue3 has 66,685 families with >= 2 genes: r1000 (aimed at
+  0.5x by extrapolation; its count was not checked), r2000 (69,504 = 1.04x), r5600 (132,259 = 1.98x), on the cnt1000 graph; same resolutions
+  for every graph.
+- Contingency used as predeclared: the selected DH failed the odd ribosomal bar while R1 passed; Louvain res {0.1,
+  0.2, 0.5, 1, 3} tuned on odd genomes; res 0.3 kept (best score).
+- Selection recorded in NOTEBOOK2.txt at 18:39 UTC before any even softrec2 score; Task 3 was its own predeclared
+  test (no tuning) and was scored at 16:53.
+
+------------------------------------------------------------------------------------------------------------------
+TASK 1. TOKEN-FREE MODULES
+Validated edges: for every significant instance, every supporting pair (a', b') (a' in N(a), b' in N(b), a' != b',
+within 3 genes on one contig, at the instance's depth) contributes (a, a') and (b, b'); collapsed to unique sequences.
+  statistic     list entries  undirected edges  sequences with edge  largest connected component
+  cnt1000       699.3 M       189.8 M           1,564,426            1,560,612 (99.8%)
+  rw1000_e50    671.0 M       183.3 M           1,787,830            1,775,479 (99.3%)
+  tt1000        702.8 M       190.8 M           1,777,934            1,686,797
+  pois200       144.1 M        43.9 M           1,689,789            1,399,747
+  pois50         30.3 M        10.6 M           1,497,605              530,001 (54,473 non-trivial components)
+  Connected components are degenerate for depth >= 200 (one giant family; 75-99.5% of significant instances become self
+  pairs); Leiden at r2000 on cnt1000: 18 min (single-threaded), graph build 3.5-7.5 min.
+
+Validated families vs MMseqs2 rescue3 (genes with a validated edge; AMI with expected MI from 3 permutations, sd 1e-4)
+  config             genes      families (>= 2 genes)  size q50/q90/q99/max  AMI   NMI   ARI  | ribosomal Pfam: purity,
+                                                                                                fams/marker, largest share, singletons
+  rescue3 (all genes) 3,585,303 363,307 (136,009)      4/24/425/7,712        -     -     -    | .980, 5, .903, .0003
+  rw1000_e50 l2000   2,588,810  269,927 (74,409)       3/61/552/2,980        .657  .816  .221 | .992, 423, .183, .286
+  cnt1000 l2000      2,246,946  266,913 (69,504)       3/45/544/3,498        .648  .811  .224 | .993, 521, .157, .297
+  cnt1000 l5600      2,246,946  501,657 (132,259)      3/16/261/2,695        .536  .792  .118 | .998, 1059, .049, .401
+  tt1000 l2000       2,571,264  291,167 (95,596)       3/29/484/3,412        .656  .821  .213 | .993, 426, .190, .287
+  pois50 l1000       2,213,955   66,386 (66,386)       6/103/330/814         .779  .879  .211 | .984, 42, .156, .023
+  pois200 l1000      2,511,287   39,300 (39,150)       9/223/596/2,588       .786  .876  .283 | .981, 27, .221, .016
+  cnt1000 cc         2,246,946       57 (57)           giant 2,239,939       .003  .006  .000 | .081, 20, .968, .023
+  Validated families are purer than MMseqs2 families on ribosomal markers but split them by lineage.
+
+Module graphs (Louvain res 0.3 on significant token pairs, weight J x log2 L): token engine 162,786 pairs / 1,381
+modules; rescue3 tokens on the rw1000_e50 landscape 237,743 / 2,952; validated l2000 742,771 / 16,921; l1000 427,739 /
+3,987; l5600 1,105,804 / 43,874. Self-pair instances (both genes in one validated family) 0.4-2% except cc.
+
+Stage 2 (odd; DH vs token DH .418, F1 .743/.544/.479; conditions o1 ribosomal, o2 summed, o3 F1):
+  rw1000_e50 l2000 .474 nYn (SELECTED) | l5600 .473 | l1000 .466 | cc .458 | pois50 l1000 .446 nYn | cc .443 |
+  l2000 .442 | l5600 .437 | cnt1000 l2000 .432 nYn | l5600 .430 | l1000 .429 | cc .423 | pois200 .392 nnn (all) |
+  tt1000 .355-.380 nnn. No configuration met o1 (best resolved 681 / 848 odd runs vs bar 705) or o3.
+  Louvain contingency (selected): res .1/.2/.3/.5/1/3 -> summed .466/.465/.474/.471/.468/.472, resolved 602-651.
+
+TEST, even genomes, selected configuration (rw1000_e50 + validated l2000, res 0.3)
+  reading  F1 DF/TXSS/CCT    control          excess            summed  vs token DH [95%]           covered50        bprec           ribo rec/res/Parv res  genes in loci
+  DH       .802/.500/.442    .426/.410/.377   .377/.090/.065    .4669   +0.0398 [+0.0223,+0.0591]   .940/.978/.790   1.00/.369/.500  1681/1263/100           2,173,246
+  H        .798/.499/.426    .414/.398/.364   .384/.101/.062    .4840   +0.0570 [+0.0391,+0.0770]   .935/.960/.773   1.00/.369/.500  1672/1228/88            2,019,009
+  C        .784/.476/.434    .418/.402/.368   .366/.074/.066    .4407   +0.0137 [-0.0040,+0.0339]   .937/.968/.789   1.00/.333/.500  1673/1124/100           2,167,144
+  R1       .767/.428/.412    .405/.361/.347   .362/.067/.066    .4288   vs token R1 +0.0913 [+0.0746,+0.1082]  .940/.978/.790  1.00/.286/.400  1681/896/100  2,173,246
+  token DH .744/.548/.479    .439/.426/.399   .305/.122/.080    .4270                               .924/.990/.890   .750/.444/.400  1686/1512/113           2,563,690
+  dF1 (DH vs token DH): DF +0.059 [+0.043, +0.073], TXSS -0.048 [-0.061, -0.034], CCT -0.038 [-0.048, -0.028].
+  DH over its own R1: +0.038 (token: +0.0895). The validated-module core adds less than half of what the MMseqs2 core adds.
+
+ATTRIBUTION (predeclared; even, DH vs token DH)
+  same landscape, module tokens:  validated l2000 +0.0398 (TXSS -.048, CCT -.038, res 1,263)
+                                  MMseqs2 rescue3 +0.0766 [+0.0584, +0.0956] (TXSS +.001, CCT -.039, res 1,499)
+  -> families: TXSScan and ribosomal resolution; landscape (statistic): CRISPR-Cas.
+  Statistic: R1 vs token R1 +0.0913 with CCT -0.014 and CRISPR-Cas member support .656 vs .774.
+  Module labels (job 83609; ribosomal runs all 1,686; gold spans odd):
+                             ribosomal runs one label / 2+ / Parv one   TXSS one / 2+ / label change at both edges
+    token engine             1547 / 139 / 114                          .718 / .282 / .195
+    rw1000_e50 + rescue3     1547 / 139 / 114                          .705 / .285 / .200
+    rw1000_e50 + l2000       1434 / 252 /   2                          .652 / .347 / .150
+    rw1000_e50 + l1000       1403 / 283 /  27                          .713 / .287 / .125
+    rw1000_e50 + l2000 r0.1  1536 / 150 /  81                          .730 / .270 / .117
+  Reading: lineage-split families give Parvarchaeum ribosomal genes their own tokens and modules (runs cut), and
+  system edges are marked less often (loci overshoot). Refuted on the way: "too many modules cause the cuts" (r1000
+  has 3,987 modules and the same deficits).
+
+------------------------------------------------------------------------------------------------------------------
+TASK 2. STATISTICS THAT KEEP VARIABLE PAIRS (same null: within-genome order shuffle, seeds 1000-1002)
+Rules (instance FDR): cnt200 L>=4 (.0095), cnt500 L>=8 (.0063), cnt1000 L>=15 (.0046, = round 1);
+  tt200 [L>=5]@200 | [P<=1e-4&L>=2]@50 (union .0062; shallow-only 0.54 M of 3.01 M), tt500 [L>=10] | .. (.0063),
+  tt1000 [L>=15] | [P<=1e-4&L>=2]@50 (.0069; shallow-only 0.78 M of 3.11 M); pois50 P<=1e-4&L>=2 (.0041), pois200
+  P<=1e-4&L>=2 (.0015); rank-weighted e.g. rw200_e200 W>=2 (.0039), rw1000_e50 W>=1 (.0028), rw1000_h20 W>=1 (.0045).
+Even genomes, R1 (single default reading) vs token R1 .3375; CRISPR-Cas member genes touching support (token .774):
+  statistic    R1 summed  d [95%]                   F1 DF/TXSS/CCT    CCT touch | DH (validated l2000) vs token DH
+  rw200_e200   .4430      +.1055 [+.0871,+.1246]    .772/.446/.412    .651      | +.0468; TXSS -.058, CCT -.047, res 1307
+  rw1000_e50   .4288      +.0913 [+.0746,+.1082]    .767/.428/.412    .656      | +.0398; -.048, -.038, 1263 (selected)
+  cnt200       .4142      +.0767 [+.0581,+.0961]    .755/.437/.421    .669      |
+  pois50       .3986      +.0611 [+.0449,+.0779]    .749/.422/.425    .670      | +.0063; -.079, -.037, 984
+  cnt1000      .3877      +.0502 [+.0280,+.0727]    .711/.448/.412    .616      | -.0026; -.055, -.049, 1286
+  tt200        .3660      +.0285 [+.0127,+.0441]    .739/.408/.427    .710      |
+  pois200      .3306      -.0069 [-.0253,+.0107]    .715/.405/.423    .730      | -.0430; -.070, -.020, 1311
+  tt1000       .3165      -.0210 [-.0396,-.0024]    .697/.402/.432    .728      | -.0509; -.052, -.009, 1249
+  (all 26 statistics in results/remote2/all_pool_R1A.json; ribosomal at R1 1,680-1,686 recovered, 744-984 resolved,
+  114/114 Parvarchaeaceae recovered for every statistic.)
+  (a) two-tier: restores CRISPR-Cas support (.728) and CCT F1 at R1 (.432 vs .426) and gives the best CCT F1 at DH
+      (tt1000 l1000 -0.005), at a summed-excess cost (R1 -0.021, DH -0.050): the shallow tier adds 0.5-0.8 M
+      low-support instances that extend loci (genes in loci 2.45 M vs 2.03 M for cnt1000).
+  (b) rank-weighted: best DF/TXSS excess at every depth; CCT F1 -0.014 at R1; support .651-.696.
+  (c) lineage-aware Poisson on embedding lists: pois50 +0.061 at R1 with CCT -0.001; pois200 support .730 but
+      summed -0.007; neither reaches token DH with validated modules (DH +0.006 / -0.043).
+
+------------------------------------------------------------------------------------------------------------------
+TASK 3. LINEAGE-AWARE EXPECTATION ON THE TOKEN ENGINE (predeclared test; even genomes)
+  lin_rescue3 = rescue3 family lists outside the genus, Poisson rule chosen by instance FDR (P<=1e-3&L>=2, FDR .0080,
+  3,198,446 instances); gen_rescue3 = matched control (G/E over other genomes; same machinery; P<=1e-3&L>=2, FDR
+  .0053, 3,528,036 instances; job 82635, 3 min 10 s on 64 CPUs).
+                     DH vs token DH            R1 vs token R1            DH F1 DF/TXSS/CCT  DH ribo rec/res/Parv res
+  lin_rescue3        -0.0093 [-0.0179,-0.0003]  -0.0037 [-0.0129,+0.0047] .742/.539/.473      1681/1478/107
+  gen_rescue3        -0.0131 [-0.0248,-0.0020]  -0.0234 [-0.0299,-0.0168] .737/.550/.476      1686/1505/113
+  lin - gen (paired) +0.0038 [-0.0073,+0.0146]  +0.0197 [+0.0128,+0.0268]
+  VERDICT: not confirmed (DH interval below 0; predeclared refuter fires). The lineage-aware expectation helps the
+  default reading against the same machinery and vanishes under the nested reading; the instance-level rule
+  selection costs about as much as it gains. Round 1's +0.014 was a full-table (best-of-11) effect.
+
+------------------------------------------------------------------------------------------------------------------
+TASK 4. COST
+Depth variants of the selected configuration (validated l2000, res 0.3; even, vs token DH):
+  depth 1,000 (selected) +0.0398 [+0.0223,+0.0591]  TXSS -.048 CCT -.038 res 1,263
+  depth   500            +0.0246 [+0.0067,+0.0438]  TXSS -.067 CCT -.037 res 1,245
+  depth   200            +0.0321 [+0.0136,+0.0508]  TXSS -.066 CCT -.040 res 1,323
+  depth 200, e200        +0.0468 [+0.0284,+0.0671]  TXSS -.058 CCT -.047 res 1,307
+  -> depth 200-500 keeps the verdict (fails on the same three conditions); R1 is unchanged (+0.093 / +0.091 / +0.091).
+Unique kNN neighbours needed for a gene's list (genes outside its genus) to reach depth K (zca10 top-2,000):
+  K 200: q50 151, q99 213 (98.2% of genes by k 200, 99.85% by 300); K 500: q50 371, q99 490 (99.25% by 500);
+  K 1,000: q50 731, q99 949 (99.5% by 1,000, 99.99% by 1,500).
+Measured stage times on one 64-CPU node (zca10, 3,585,303 genes, 9.4 M instances):
+  kNN (job 83754; FAISS HNSW M 32, efConstruction 200, efSearch k+1, unique sequences): k 300: vectors 92 s, build
+  823 s, search 1,085 s (2,348 queries/s), total 2,037 s = 34 min, recall vs exact @200 .992; k 1,000: build 813 s,
+  search 3,162 s (806 queries/s), total 4,101 s = 68 min, recall @1000 .985 (round 1, k 2,000 on 24 CPUs: 2 h 14 min).
+  HNSW build does not scale past 24 threads (924 s at 24, 813-823 s at 64).
+  lists from stored kNN (load 49-124 s, expansion 13-17 s, zca10 transform) 4.8 min; passes (observed + 3 nulls, all
+  four depth caps at once) 51 s + 3 x 36 s; rule selection 5-7 s per statistic; validated edges 80-85 s (depth 1,000),
+  44 s (500), 17 s (200); igraph graph build 398 s / 125 s / 43 s and Leiden r2000 1,047 s / 273 s / 76-84 s
+  (depth 1,000 / 500 / 200; Leiden is single-threaded); engine pair statistics + Louvain modules 76 s (depth 1,000);
+  readings and locus table < 15 s.
+  End to end, vectors -> loci, one 64-CPU node (sum of measured stages; passes measured with depth-1,000 lists, so
+  an upper bound at depth 200; the zca10 transform runs once in kNN and once in lists, ~1.5 min counted twice):
+    depth 200 (keeps the verdict):  kNN 34.0 + lists 4.8 + passes 2.7 + rules 0.1 + edges 0.3 + Leiden 2.1 +
+                                    modules 1.3 + loci 0.3 = ~45 min, 75% of it kNN.
+    depth 1,000 (selected):         kNN 68.3 + 4.8 + 2.7 + 0.1 + 1.4 + Leiden 24.1 (graph build 6.6, single-thread
+                                    Leiden 17.5) + 1.3 + 0.3 = ~103 min.
+  Round 1 (depth 1,000, 24 CPUs, no families): 2 h 14 min kNN + 29 min.
+
+------------------------------------------------------------------------------------------------------------------
+READINGS AND WHAT WOULD HAVE REFUTED THEM (written before the numbers they govern; NOTEBOOK2.txt)
+- "The selected configuration fails on TXSScan F1, CCT F1 and ribosomal resolution" (18:39, from odd): refuted by
+  even TXSS >= .528, CCT >= .459 and resolved >= 1,400. Observed .500, .442, 1,263: holds.
+- "Validated modules are limited by their families, not by the reading" (predeclared refuter ii): refuted if MMseqs2
+  families on the same landscape raised DH by <= 0.02. Observed +0.037 (TXSS -.048 -> +.001, resolved 1,263 -> 1,499).
+- "Lineage-split families cut conserved runs and blur system edges": refuted if r1000 / lower Louvain resolution
+  restored ribosomal resolution and TXSScan F1. They did not (res 0.1: TXSS edge marks .117, resolved 602 odd).
+  The sub-reading "too many modules" was refuted (r1000).
+- "The CRISPR-Cas loss is in the statistic": refuted if MMseqs2 modules on the same landscape recovered CCT F1. They
+  did not (-0.039 vs -0.038); support .656 vs .774 confirms it.
+- Task 3 "lineage-aware expectation helps the token engine": refuted (DH interval at or below 0).
+
+CAVEATS
+- zca10 mean and covariance use all 2.5 M sequences (unsupervised; as round 1).
+- The rescue3-module control uses MMseqs2 families; it is an attribution control, not an embedding-only method.
+- Validated edges of two-tier instances significant only through the shallow tier use depth-50 pairs.
+- Self-pair instances (both genes in one validated family) take their family's module (0.4-2% of instances).
+- Odd tuning used the odd shadow gold package and the 848 odd ribosomal runs (bars scaled: 830 / 54 / 705).
+- Stage 1 and 2 pools and two gold-free deviations are listed above; descriptive even scores of non-selected
+  configurations were computed after the verdict.
+
+ARTIFACTS
+Local benchmarks/redesign/softrec/: softrec2.py (extended kernel, candidates, validated edges, depth cost),
+  readings2.py (families, modules, readings, scoring, refcheck, famcmp, diag), collect2.py, run2_big.sbatch,
+  run2_py.sbatch, predeclared2.json, NOTEBOOK2.txt, REPORT2.txt, results/remote2/ (all result JSONs, candidate
+  manifests, rules, stats.json).
+Biotite $RD/softrec/r2/: stats/{obs,null0,null1,null2}.npz (L, G, E, rank-weighted W per variant), cand/<name>/
+  (sidx, value, cap, b, arg, rules.tsv, cand.json, edges_{a,b,w}.npy, fam_cc.npy, fam_l<res>.npy, families.json),
+  results/ (odd_*.json, all_*.json, family_compare.json, label_diag.json, depthcost.json, refcheck.json,
+  task3_lin_vs_gen.json), scores/{odd,all}/ per-instance scores. Code $RD/softrec/code/. Timing kNN
+  $RD/softrec/knn/zca10__k{300,1000}__{I,D}.npy + .json. Task-3 matched control
+  (this round) runs/fam_rescue3_genome and engine/results_dpann_softrec/dpann__softrec__fam_rescue3_genome__fam__poisson__w3.
+Jobs: 82614 (cancelled after stats), 82615, 82635, 82668, 82724, 82792, 82793, 82900, 82939, 83020-83022, 83172,
+  83184, 83303, 83371-83373, 83422, 83507, 83512, 83600, 83609, 83723-83725, 83748, 83749, 83754 (kNN timing).
+  Logs $RD/logs/softrec2_{big,py}_<job>.log.
+
+NEXT (not started; one line each)
+- Families that stay whole across lineages from the same evidence: Leiden on the validated graph at much lower
+  resolution (r 100-500), or communities merged when their members' validated edges cross lineages, scored on the
+  same landscape; the MMseqs2-module control sets the target (DH +0.077, TXSScan +0.001, resolved 1,499).
+- CRISPR-Cas: combine the rank-weighted deep tier with the shallow Poisson tier only for instances whose genes have
+  no deep support (a gated two-tier), to keep the shallow tier's support without its locus extension.

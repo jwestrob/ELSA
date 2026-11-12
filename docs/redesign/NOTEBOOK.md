@@ -1640,3 +1640,41 @@ orders. 16.4 h of 64-CPU jobs; no GPU.
   candidate pairs are listed for a co-fold screen; none folded.
 Reading: the critic complements family counts exactly where counts are blind (pairs unseen in
 other lineages, singleton families) and does not replace them.
+
+## 2026-11-12 20:34 UTC — Token-free recurrence, round 2 (workstream `softrec2`; `benchmarks/redesign/softrec/REPORT2.txt`)
+
+Single outputs only; even genomes; references reproduced exactly (token default reading R1:
+F1 0.688 / 0.409 / 0.426, summed excess 0.3375; token nested reading DH: 0.744 / 0.548 / 0.479,
+summed 0.4270, ribosomal 1,686 recovered and 1,512 resolved). Predeclared in `predeclared2.json`.
+
+Selected on odd genomes: rank-weighted lists (depth 1,000; rule W >= 1 and L >= 2; FDR 0.0028),
+families built from the statistic's own supporting pairs (Leiden), modules at Louvain 0.3, nested
+reading.
+
+| Output (even genomes) | Summed excess vs token DH | DefenseFinder F1 | TXSScan F1 | CRISPRCasTyper F1 | Ribosomal resolved (recovered) |
+|---|---|---|---|---|---|
+| Token engine, nested reading (reference) | 0 | 0.744 | 0.548 | 0.479 | 1,512 (1,686) |
+| Embedding only, nested reading | +0.040 [+0.022, +0.059] | 0.802 | 0.500 | 0.442 | 1,263 (1,681); Parv. 114 recovered, 100 resolved |
+| Embedding statistic + MMseqs2 families as module tokens | +0.077 [+0.058, +0.096] | | +0.001 vs DH | -0.039 vs DH | 1,499 |
+
+- **Predeclared verdict: the embedding-only method does not match the token engine's nested
+  reading.** Blocking conditions: TXSScan F1 (-0.048 [-0.061, -0.034]), CRISPRCasTyper F1 (-0.038
+  [-0.048, -0.028]) and ribosomal resolved (1,263 against a bar of 1,400). Summed excess clears
+  the "beats" bar and DefenseFinder F1 is +0.059.
+- **The validated families are the limiting part of the reading.** They split by lineage: a
+  ribosomal Pfam marker is spread over a median 423 families (MMseqs2: 5), the largest holding 18%
+  of its genes (MMseqs2: 90%); Parvarchaeaceae ribosomal runs carry one module label in 2 of 114
+  cases (MMseqs2: 114). With MMseqs2 families as module tokens on the same embedding landscape the
+  TXSScan and ribosomal deficits vanish.
+- **The CRISPR-Cas loss is in the statistic** (-0.038 with either family source). A two-tier
+  statistic restores Cas member support (0.616 -> 0.728; token 0.774) at a cost of summed excess
+  (-0.021 against token R1, where the count rule gives +0.050).
+- Rank-weighted lists are best at the default reading (depth 200: +0.106 [+0.087, +0.125] over
+  token R1) and keep the ribosomal locus at every depth.
+- The lineage-aware expectation on the token engine is not confirmed on single outputs (DH
+  -0.009 [-0.018, -0.000]); round 1's +0.014 was a best-of-11 effect.
+- Cost on one 64-CPU node, vectors to loci: about 45 min at depth 200 (kNN 34 min), 103 min at
+  depth 1,000; depths 200 and 500 keep the verdict.
+Next: neighbour lists stratified by lineage (one best match per genus), which is what the
+statistic counts, to stop lists and families from filling with close relatives (workstream
+`softrec3`).

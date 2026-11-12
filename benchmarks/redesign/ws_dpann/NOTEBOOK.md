@@ -440,3 +440,74 @@ single protein, all-token mean; single protein, residue mean. Windows: 12 for om
 - *Clean*: the single-protein residue mean reproduces >= 95 % at >= 0.999.
 - Anything else: unresolved, reported as such.
 - Negative control (srvp_archaea) must come out clean; if it does not, the test is not trusted.
+
+## 2026-11-11 17:45 MST — Results: four of five tested stores carry the defect; SR-VP is clean
+
+Cluster preflight: both rule files re-read in full at 17:2x MST (byte-identical to the 04:20
+read). Jobs: 77588 (omni_production, dummy; then FAILED on spicy_lams: 0 sequences found,
+empty table) and 77632 (spicy_lams, srvp_archaea, FAISS readback; COMPLETED, 4 min 4 s).
+Outputs: `package/embeddings/store_scope/<store>_pooling.{json,tsv}`,
+`srvp_archaea_faiss_readback.json`.
+
+**Correction during the run.** spicy_lams stores NCBI protein accessions (`ABS65260.1`,
+`WP_…`; 10,683,624 rows, 10,061,067 unique IDs, because identical-sequence `WP_` accessions recur
+across genomes). The default `sharur.duckdb` holds the Prodigal models (`CP000781.1_1`), so no ID
+matched. The store was embedded from `stage03_ncbi_proteins`; sequences came from
+`sharur_ncbi.duckdb` (10,061,067 unique IDs, equal to the manifest sum). Duplicated `WP_` IDs share
+one sequence by definition, so the lookup is exact. The script now writes an empty table instead
+of crashing.
+
+Sequence sources: omni_production 384 / 384, dummy 192 / 192 and srvp_archaea 192 / 192 from the
+store's own stage03 FASTA (manifest genome order matched h5 row order in all three);
+spicy_lams 192 / 192 from `sharur_ncbi.duckdb`. All sampled windows complete.
+
+Fraction of sampled vectors reproduced at cosine >= 0.999 (median cosine in brackets):
+
+| variant | omni_production (n=384) | dummy (n=192) | spicy_lams (n=192) | srvp_archaea (n=192) |
+|---|---|---|---|---|
+| padded batch 4, all-position mean | 0.302 (0.9901) | 0.125 (0.9811) | 0.281 (0.9915) | 0.307 (0.9589) |
+| padded batch 8, all-position mean | 0.570 (0.999999) | 0.255 (0.9921) | 0.516 (0.9991) | 0.141 (0.9236) |
+| padded batch 16, all-position mean | **1.000** (1.000000, min 1.0000) | 0.531 (0.9999) | 0.812 (1.000000) | 0.073 (0.9150) |
+| padded batch 32, all-position mean | 0.583 (0.99998) | **1.000** (1.000000, min 1.0000) | **1.000** (1.000000, min 1.0000) | 0.036 (0.9212) |
+| padded batch 32, residue mean | 0.073 (0.9292) | 0.031 (0.9225) | 0.073 (0.9156) | **1.000** (1.000000, min 1.0000) |
+| single protein, all-token mean | 0.073 (0.9308) | 0.031 (0.9244) | 0.073 (0.9179) | 0.995 (0.99996) |
+| single protein, residue mean | 0.073 (0.9292, min 0.539) | 0.031 (0.9225, min 0.763) | 0.073 (0.9156, min 0.755) | **1.000** (1.000000, min 1.0000) |
+| verdict (predeclared rule) | **defect** (batch 16: MPS) | **defect** (batch 32: CUDA) | **defect** (batch 32: CUDA) | **clean** |
+
+The 3-7 % of vectors that a single-protein embedding does reproduce in the defective stores are
+the longest protein of each batch (no padding in its mean). DPANN (job 76330): batch 16, median
+1.0000, 94.0 % >= 0.999, single residue mean 0.9315.
+
+**FAISS negative control.** The srvp_archaea `IndexIVFFlat` (1,976,915 vectors) reads back
+through its id map: all 192 sampled IDs found; reconstructed vectors equal the L2-normalized h5
+rows at cosine >= 0.9999998 (median 1.0, norm 1.0). srvp_bacteria_pb was not tested; it was
+written by the same job 21106 with the same code snapshot (log: `cuda`, batch 32).
+
+**Affected stores:** dpann (8 Mar), omni_production (10 Mar), dummy (31 Mar), spicy_lams (3 Apr).
+**Clean:** srvp_archaea (tested), srvp_bacteria_pb (same writer, untested). coronamine_boiler_100nm
+has an empty `embeddings/` directory. Any synteny, FAISS or similarity product built from the four
+affected h5 files (for example `spicy_lams/sharur_synteny.duckdb`, 30 Apr) inherits the defect;
+not audited here.
+
+**Fixed code (8f89a02 onward; HEAD 99a6306 unchanged in this respect).** Proteins stream in sorted
+genome-directory order and FASTA order (trailing `*` stripped) in fixed-size batches (16 on MPS,
+32 on CUDA, 4 on CPU), with no length sorting. The tokenizer pads to the batch maximum and
+truncates at 1,024 tokens, so proteins longer than 1,022 residues are embedded from their first
+1,022 residues and counted in the manifest's `truncated_sequences` (16,819 in srvp_archaea). The
+mean runs over `attention_mask & ~special_tokens_mask`, i.e. residues only (BOS, EOS and padding
+excluded), and is stored as float32 without L2 normalization (srvp_archaea h5 norms 3.3-6.3; the
+FAISS sidecar normalizes). Padding is masked from attention and from the mean, so batch
+neighbours can change a vector only through floating-point arithmetic: the CUDA batch-32 SR-VP
+vectors equal CPU single-protein embeddings at cosine >= 0.99999 (minimum 1.0000 to four places).
+Its pooling differs from the bacterial redesign convention only in the long-protein rule
+(truncate at 1,022 residues versus skip).
+
+Precision note on the entry above: the h5 norm range 3.3-6.3 is from the first 2,000 srvp_archaea
+rows; "cosine >= 0.99999" for the SR-VP single-protein comparison should read ">= 0.99995"
+(the minimum prints as 1.0000 at four decimals).
+
+## 2026-11-11 17:52 MST — Manifest rebuilt (job 77665)
+
+`package/MANIFEST.tsv` / `.json` now list 62 files (4,708,990,776 B), including
+`embeddings/store_scope/` and the new scripts (`diagnose_store_pooling.py`, `faiss_readback.py`,
+`store_pooling*.sbatch`). README gained a store-scope section. No re-embedding was started.

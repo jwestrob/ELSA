@@ -21,9 +21,9 @@ export NUMBA_NUM_THREADS="$T" NUMBA_THREADING_LAYER=workqueue
 export TMPDIR="$RD/tmp" NUMBA_CACHE_DIR="$RD/tmp/numba_${SLURM_JOB_ID}"
 mkdir -p "$NUMBA_CACHE_DIR"
 "$PY" -u "$RD/engine/code/recurrence.py" --arm "$ARM" --universe "$P/universe" \
-    --tokens "$P/tokens/mmseqs__seq__id30c80__dpann.parquet" --w "$W" --benchmark none --all-genome-loci \
-    --out "$RD/engine/results_dpann" --threads "$T"
-O=$RD/engine/results_dpann/${ARM}__w${W}
+    --tokens "$P/tokens/mmseqs__seq__id30c80__dpann.parquet" --w "$W" --null "${NULL:-genome}" --benchmark none --all-genome-loci \
+    --out "$RD/engine/${OUTDIR:-results_dpann}" --threads "$T"
+O=$RD/engine/${OUTDIR:-results_dpann}/${ARM}__w${W}
 "$PY" -u "$P/scorer/score_dpann_loci.py" --pkg "$P" --loci "$O/loci_all_genomes.parquet" \
     --out "$O/score_min2" --threads "$T" --min-members 2
 "$PY" -u "$P/scorer/score_dpann_loci.py" --pkg "$P" --loci "$O/loci_all_genomes.parquet" \

@@ -9,7 +9,8 @@ Step 2: per token pair, count the genomes (G), lineages (L, genus level) and phy
         in which it is co-located; J = G / (genomes carrying the rarer token);
         E = expected genomes under random gene order given per-genome copy numbers;
         P = Poisson tail of G given E.
-Step 3: null = the same computation after shuffling tokens within each contig.
+Step 3: null = the same computation after shuffling tokens within each genome
+        (default; contig sizes kept) or within each contig.
         A rule's false-discovery rate is (null pairs passing) / (observed passing).
 Step 4: modules = connected components of tokens joined by significant pairs with
         J >= `module_j`.
@@ -255,6 +256,11 @@ class Universe:
         change = np.flatnonzero(np.diff(self.cc)) + 1
         self.c_start = np.r_[0, change].astype(np.int64)
         self.c_end = np.r_[change, self.n].astype(np.int64)
+        # genome blocks: contigs of one genome are adjacent in contig_code order
+        gchange = np.flatnonzero(np.diff(self.gc)) + 1
+        self.g_start = np.r_[0, gchange].astype(np.int64)
+        self.g_end = np.r_[gchange, self.n].astype(np.int64)
+        assert len(self.g_start) == len(np.unique(self.gc)), "genes of a genome are not contiguous"
         gm = pd.read_parquet(directory / "genomes.parquet").sort_values("genome_code").reset_index(drop=True)
         assert np.array_equal(gm.genome_code.to_numpy(), np.arange(len(gm))), "genome codes must be 0..n-1"
         self.genomes = gm
@@ -314,9 +320,9 @@ def pair_statistics(u, tok, key, left, w, T, oriented=False):
                 F_lo=F[lo], F_hi=F[hi], incidence=(k_of, g_of))
 
 
-def shuffle_within_contigs(u, tok, rng):
+def shuffle_within(starts, ends, tok, rng):
     out = tok.copy()
-    for s, e in zip(u.c_start, u.c_end):
+    for s, e in zip(starts, ends):
         out[s:e] = rng.permutation(tok[s:e])
     return out
 
@@ -352,6 +358,8 @@ def main():
     ap.add_argument("--rule", help="use this rule instead of choosing by coverage at the FDR target")
     ap.add_argument("--module-j", type=float, default=0.5)
     ap.add_argument("--oriented", action="store_true")
+    ap.add_argument("--null", choices=["genome", "contig"], default="genome",
+                    help="shuffle gene order within each genome (contig sizes kept) or within each contig")
     ap.add_argument("--benchmark", choices=["source207", "none"], default="source207")
     ap.add_argument("--all-genome-loci", action="store_true")
     ap.add_argument("--out", type=Path, required=True)
@@ -371,7 +379,8 @@ def main():
     tok_by_gid[tokens.gid.to_numpy()] = tokens.token.to_numpy()
     tok = tok_by_gid[u.gid]
     strand = u.genes.strand.to_numpy(dtype=np.int64)
-    res = dict(engine="v1", arm=a.arm, universe=str(a.universe), w=a.w, oriented=a.oriented,
+    n_start, n_end = (u.g_start, u.g_end) if a.null == "genome" else (u.c_start, u.c_end)
+    res = dict(engine="v1.1", null=a.null, arm=a.arm, universe=str(a.universe), w=a.w, oriented=a.oriented,
                perms=a.perms, genes=u.n, genomes=u.ng, assigned=int((tok >= 0).sum()),
                tokens=int(len(np.unique(tok[tok >= 0]))))
     log("universe + tokens", res, f"{time.time()-t0:.0f}s")
@@ -387,11 +396,11 @@ def main():
         rng = np.random.default_rng(1000 + r)
         if a.oriented:
             order = np.arange(u.n)
-            for s, e in zip(u.c_start, u.c_end):
+            for s, e in zip(n_start, n_end):
                 order[s:e] = rng.permutation(order[s:e])
             tok_n, strand_n = tok[order], strand[order]
         else:
-            tok_n, strand_n = shuffle_within_contigs(u, tok, rng), strand
+            tok_n, strand_n = shuffle_within(n_start, n_end, tok, rng), strand
         k_n, l_n, d_n, _ = colocalization(u, tok_n, a.w, a.oriented, strand_n)
         nulls.append(pair_statistics(u, tok_n, k_n, l_n, a.w, T, a.oriented))
         log("null", r, "token pairs", len(nulls[-1]["key"]), "L>=2", int((nulls[-1]["L"] >= 2).sum()),

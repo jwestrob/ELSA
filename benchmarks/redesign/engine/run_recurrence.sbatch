@@ -21,4 +21,4 @@ mkdir -p "$NUMBA_CACHE_DIR"
 EXTRA=()
 if [[ "${ORIENTED:-0}" == 1 ]]; then EXTRA+=(--oriented); fi
 /home/jwestrob/miniconda3/envs/elsa/bin/python -u "$RD/engine/code/recurrence.py" \
-    --arm "${ARM:?}" --w "${W:-3}" --out "$RD/engine/${OUTDIR:-results}" --threads "$SLURM_CPUS_ON_NODE" "${EXTRA[@]}"
+    --arm "${ARM:?}" --w "${W:-3}" --null "${NULL:-genome}" --out "$RD/engine/${OUTDIR:-results}" --threads "$SLURM_CPUS_ON_NODE" "${EXTRA[@]}"

@@ -148,3 +148,13 @@ placements.
 Whole-contig reference values (the trivial upper bound on coverage, `scorer/example_whole_contig/`):
 mean best F1 0.119 (CRISPRCasTyper), 0.208 (DefenseFinder), 0.185 (TXSScan), each equal to its
 control.
+
+## Scope of the pooling defect across Sharur stores (follow-up, `embeddings/store_scope/`)
+
+The padded-batch all-position mean was written by Sharur `fc03c29` and `4592775`; the
+residue-masked mean starts at `8f89a02` (17 Jul 2026). Reconstruction tests (random 32-row
+windows): omni_production (10 Mar, batch 16), dummy (31 Mar, batch 32) and spicy_lams (3 Apr,
+batch 32, NCBI-protein store) reproduce at 100 % of sampled vectors >= 0.999 under the defective
+pooling and at 3-7 % under a clean single-protein embedding, like DPANN. srvp_archaea (23 Oct)
+is clean: single-protein residue means reproduce 100 %; its FAISS sidecar reads back equal to the
+normalized h5 rows. srvp_bacteria_pb shares its writer and was not tested.

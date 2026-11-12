@@ -132,7 +132,7 @@ def main():
                 h = model(**enc).last_hidden_state[0]
                 res.append(dict(row=r, variant="single_all_token_mean", cos=cos(h.mean(0).numpy(), V[r]), length=len(seq[r])))
                 res.append(dict(row=r, variant="single_residue_mean", cos=cos(h[~sm].mean(0).numpy(), V[r]), length=len(seq[r])))
-    df = pd.DataFrame(res)
+    df = pd.DataFrame(res, columns=["row", "variant", "cos", "length"])
     a.out.mkdir(parents=True, exist_ok=True)
     df.to_csv(a.out / f"{a.name}_pooling.tsv", sep="\t", index=False)
     order = ["padded_all_b4", "padded_all_b8", "padded_all_b16", "padded_all_b32", "padded_residue_b32",

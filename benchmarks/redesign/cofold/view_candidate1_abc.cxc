@@ -1,0 +1,37 @@
+# ELSA candidate 1: unrecognised A (about 60 aa) + B (about 70 aa) with the caspase-like third protein C (214 aa).
+# ESMFold2 single-sequence three-chain folds from four phyla; chains coloured by chain ID.
+# The conserved His and Cys of chain C are spheres; interface side chains are sticks.
+# Colour by confidence instead:  color bfactor palette alphafold
+# Superpose all on the first:    matchmaker #2-4 to #1
+set bgColor white
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/deepdive/work/folds_c1abc/pdb/c1_abc_02.pdb
+rename #1 "candidate 1 A+B+C | Nanobdellota (Woesearchaeales) | ipTM 0.95 | C His68 Cys102"
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/deepdive/work/folds_c1abc/pdb/c1_abc_10.pdb
+rename #2 "candidate 1 A+B+C | EX4484-52 | ipTM 0.95 | C His67 Cys101"
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/deepdive/work/folds_c1abc/pdb/c1_abc_08.pdb
+rename #3 "candidate 1 A+B+C | Iainarchaeota | ipTM 0.94 | C His65 Cys99"
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/deepdive/work/folds_c1abc/pdb/c1_abc_12.pdb
+rename #4 "candidate 1 A+B+C | Nanohalarchaeota | ipTM 0.90 | C His69 Cys103"
+
+hide atoms
+show cartoons
+color bychain
+show (#1/B & (#1/C :< 4)) | (#1/C & (#1/B :< 4)) | (#1/A & (#1/B :< 4)) | (#1/B & (#1/A :< 4)) atoms
+show (#2/B & (#2/C :< 4)) | (#2/C & (#2/B :< 4)) | (#2/A & (#2/B :< 4)) | (#2/B & (#2/A :< 4)) atoms
+show (#3/B & (#3/C :< 4)) | (#3/C & (#3/B :< 4)) | (#3/A & (#3/B :< 4)) | (#3/B & (#3/A :< 4)) atoms
+show (#4/B & (#4/C :< 4)) | (#4/C & (#4/B :< 4)) | (#4/A & (#4/B :< 4)) | (#4/B & (#4/A :< 4)) atoms
+style stick
+show #1/C:68,102 atoms
+style #1/C:68,102 sphere
+show #2/C:67,101 atoms
+style #2/C:67,101 sphere
+show #3/C:65,99 atoms
+style #3/C:65,99 sphere
+show #4/C:69,103 atoms
+style #4/C:69,103 sphere
+color byhetero
+lighting soft
+graphics silhouettes true
+tile columns 2
+view

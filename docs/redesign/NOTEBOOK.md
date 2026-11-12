@@ -1060,3 +1060,42 @@ selection, a fitted-tail null, and a token-pair library.
   to -0.095), summed DefenseFinder + TXSScan excess >= base - 0.01, and at the edge level
   AUROC(similarity x context) - AUROC(similarity) >= 0.05 for same-type against different-type
   gold pairs.
+
+## 2026-11-12 08:15 UTC — Deep dive on the two remaining co-fold candidates (workstream `cofold3`; `benchmarks/redesign/cofold/REPORT_deepdive.txt`)
+
+**Candidate 1 (tokens 81718 and 393054) is the start of a three-gene operon.** A (about 60 aa)
+and B (about 70 aa) have no detectable similarity in any search (HHblits 3 iterations against
+UniRef30, HHsearch against Pfam 39 and PDB100, hmmsearch against UniRef50, Foldseek against PDB
+and AlphaFold Swiss-Prot). The gene directly downstream of B in 258 of 267 instances
+(co-oriented in all 258, overlapping in 168) is C (token 130016 in 240; 214 aa), whose family
+resembles CD-clan (caspase-like / CHAT) cysteine proteases (Pfam DUF26930 99.6%, Peptidase_C25
+95.3%, PDB caspase-3 94.7%; Foldseek SAVED-CHAT 8tl0 E 7e-8). DefenseFinder emitted a curated
+Borvo call (component BovA) on C in 8 of 268 loci; no curated call on any A or B.
+- Folds, 12 instances over 12 orders and 7 phyla: A+B ipTM 0.653-0.937 (median 0.784), partner
+  swaps median 0.125 (max 0.473), cognate minus best swap >= 0.41 in 12 / 12; 1:1 heterodimer
+  (A2B2, A2B, AB2 add no interface). A+B+C ipTM 0.856-0.953 in 11 / 12 (median 0.905; the 12th
+  has a 104-aa C, 0.383); B-C interface passes in 11 / 12 (70-93 contacts, PAE 1.2-3.8 A); swaps
+  of C: median 0.29; B swaps against C: median 0.18.
+- C carries a His (98% of 258 rows) and a Cys (96%) 34 residues apart; B contacts both in
+  11 / 11 models (CB distance 3.7-6.6 A), A lies 25-32 A away.
+- Fused A-B single ORFs: 3 in DPANN, 2 bacterial UniProt entries (A0A661IN52, A0A2W7RED9); their
+  models match the A+B arrangement (TM 0.68-0.82; a single half reaches 0.36-0.51).
+- Distribution: 249 genomes (HMM pairs in 295), 4-21% of genomes per phylum, flat across
+  completeness bins; adjacent and co-oriented in 325 / 325 HMM pairs, ATGA overlap in 207.
+  UniRef homologs of A|B are mainly Patescibacteria (18 of 26 bacterial hits at P >= 95).
+- Context: curated DefenseFinder members in 8.8% of windows against 2.5% of length-matched
+  controls on the same contigs (p 0.0027). Engine module 1167 holds A, B, the C tokens and
+  radical-SAM families.
+- No coevolution evidence: MSA folds equal single-sequence folds; interface columns are no more
+  conserved than others (p 0.81).
+Reading: two unrecognised small proteins form a conserved heterodimer that packs, through B,
+onto the His-Cys site of a caspase-like protein in a defence-associated operon. Function
+UNVERIFIED. View script (not opened; Jacob asked for no GPU use on the laptop):
+`benchmarks/redesign/cofold/view_candidate1_abc.cxc`.
+
+**Candidate 2 (DUF7287 / DUF7288 cassette) fails as a showcase.** Recognised (those Pfam
+families by HHsearch; TXSScan component arCOG06117 on homologs of one chain; minor-pilin-like by
+Foldseek); 1-2 genes from curated Archaeal-T4P members in 8 / 8 instances whose contig carries
+a call; isolated pairs pass in 1 / 18; truncating the N-terminal helix keeps the interfaces in
+one replicate per block. Pilin-like control pairs stay low (72 pairs, median ipTM 0.18, none
+>= 0.75). No overlap with the earlier cluster:1043 or cluster:3913 leads.

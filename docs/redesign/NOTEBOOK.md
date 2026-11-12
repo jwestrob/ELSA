@@ -1717,3 +1717,18 @@ Seal 78c68b6b…, 16:38 MST 12 November. CDD hits moved from `annotations` (sour
 rescue clustering runs. Family tables unchanged. `cofold/s3_export_sharur.py` reads CDD from
 `annotations`; point it at `protein_resemblance` before any rerun of the census export. The census
 numbers already reported came from the earlier seal (f652ef47…).
+
+## 2026-11-12 23:53 UTC — Constraint from Jacob: no taxonomy needed to run the pipeline
+
+"Don't do things like per-genus matching; I don't want to make GTDB-Tk a necessary prerequisite
+to run this pipeline." The per-genus list experiment is closed (and was refuted anyway). The
+constraint reaches further than that experiment: **the engine's lineage unit is the GTDB genus**
+(`recurrence.py`: `self.lineage` from `genomes.parquet` `genus`; one lineage per genome when
+missing). The genus count L enters the significance rule (L >= 2), the support landscape and
+reading thresholds, and the module edge weights; the token-free variant also excludes a gene's
+own genus from its list. Phylum is reporting only. Taxonomy stays allowed for evaluation
+(benchmarks, the ribosomal check's family count, held-out-order splits).
+Workstream `lineagefree`: a lineage unit derived from the pipeline's own data (genome groups or
+effective genome weights from shared-family or embedding best-match similarity), threshold set
+by an internal criterion, predeclared to replace the genus if the nested reading's summed excess
+stays within 0.01, no caller loses more than 0.01 F1, and the ribosomal check holds.

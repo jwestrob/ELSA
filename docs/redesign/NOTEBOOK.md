@@ -594,3 +594,19 @@ Paired per-region differences in observed F1 (`engine/paired_compare.py`, 207 re
   8 into `results_v3/` for a paired interval on the excess (jobs 77803-77808).
 - ESM2-650M merges help more than ESM-C 300M merges. ESM++ small is the ESM-C 300M model, so
   the DPANN vectors are the weaker of the two for this step.
+
+## 2026-11-12 01:55 UTC — Sequence breadth saturates at 50% coverage (jobs 77754-77757)
+
+MMseqs E <= 1e-3 with 30% bidirectional coverage, against the 50% arm:
+
+| Data set, window | Arm | Tokens | Result |
+|---|---|---|---|
+| Spacedust, w 5 | 50% coverage | 601,584 | conserved g0-2 F1 0.758, excess +0.182; all kinds 0.798, +0.098 |
+| Spacedust, w 5 | 30% coverage | 524,727 | conserved g0-2 F1 0.763, excess +0.185 [+0.152, +0.216]; all kinds 0.809, +0.108 |
+| DPANN, w 3 | 50% coverage | 430,471 | DefenseFinder 0.814 / 0.545 / +0.269; TXSScan 0.753 / 0.580 / +0.173; CRISPRCasTyper 0.586 / 0.519 / +0.067 |
+| DPANN, w 3 | 30% coverage | 380,979 | DefenseFinder 0.824 / 0.549 / +0.275; TXSScan 0.727 / 0.584 / +0.144; CRISPRCasTyper 0.578 / 0.521 / +0.057 |
+
+Relaxing coverage from 50% to 30% moves Spacedust F1 by +0.005 and lowers the summed
+DefenseFinder + TXSScan excess on DPANN from +0.442 to +0.419. Further breadth from
+sequence clustering parameters is exhausted; the +0.044 from the ESM2-650M merge is beyond
+what the coverage relaxation gives. The 50% arm stays the sequence base.

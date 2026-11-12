@@ -45,6 +45,22 @@ KEY = {}
 K_FAST = 2000
 METHODS = {"S3": (True, 1.0, 0.5, 8, 0.0), "S2": (True, 1.0, 0.0, 8, 3.0), "M2": (True, 0.0, 0.5, 8, 0.0),
            "M0": (True, 0.0, 0.0, 8, 3.0)}
+# round 3 (search3.py): one input, zca10 vectors only (no tokens, no MMseqs2)
+OUT3 = Path(os.environ.get("LS_OUT3", ls.RD / "locus_search/out3"))
+IDIR3 = OUT3 / "interactive"
+ZROW = OUT3 / "vec/zca10_f32__row.npy"
+HNSW_Z = IDIR3 / "hnsw_m32_efc40_zca10.faiss"
+
+
+def _m1z_config():
+    p = OUT3 / "selection3.json"
+    if p.exists():
+        c = json.load(open(p))["odd"]["M1z"]
+        return (False, 0.0, 1.0, int(c["wx"]), float(c["tau"]))
+    return (False, 0.0, 1.0, 8, 3.0)
+
+
+METHODS["M1z"] = _m1z_config()
 
 
 def sh(cmd):
@@ -283,32 +299,58 @@ def _ap_task(args):
 class Engine:
     """Everything a search needs, loaded once (a persistent session amortizes this)."""
 
-    def __init__(self, threads, emb="exact", fast=False):
+    def __init__(self, threads, emb="exact", fast=False, vec="l2", k=None, ef=None, null_threads=1):
         """emb = 'exact' (brute-force top K over the vectors held in RAM) or 'hnsw40' / 'hnsw200' (HNSW, top 2,000).
         fast = False: K = 20,000 and MMseqs2 -s 7.5 --max-seqs 20000 (the benchmark's rank lists, identical results);
-        fast = True: K = 2,000 and MMseqs2 -s 5.7 --max-seqs 2000."""
+        fast = True: K = 2,000 and MMseqs2 -s 5.7 --max-seqs 2000.
+        vec = 'zca10' (round 3, method M1z): zca10 gene vectors (out3/vec) as the only input; emb 'exact' (top k,
+        default 20,000) or 'hnsw' (out3 HNSW index, top k at efSearch ef); fast-null curves of search3.py rates.
+        null_threads > 1 splits the R null replicates over threads (independent seeds; same null)."""
         import faiss
         t0 = time.time()
         self.threads = threads
         self.emb = emb
+        self.vec = vec
+        self.null_threads = null_threads
         self.K = K_FAST if (fast or emb != "exact") else 20000
         self.seq_opts = f"-s 5.7 -e 10 --max-seqs {K_FAST}" if fast else "-s 7.5 -e 10 --max-seqs 20000"
         self.Kseq = K_FAST if fast else 20000
         faiss.omp_set_num_threads(threads)
-        self.db = ls.Database(vectors="ram" if emb == "exact" else "mmap")
+        if vec == "zca10":
+            self.K = int(k or 20000)
+            self.db = ls.Database(emb=ZROW, vectors="ram" if emb == "exact" else "mmap")
+        else:
+            self.db = ls.Database(vectors="ram" if emb == "exact" else "mmap")
         t1 = time.time()
         self.index = None
-        if emb.startswith("hnsw"):
+        if vec == "zca10" and emb == "hnsw":
+            self.index = faiss.read_index(str(HNSW_Z))
+            self.index.hnsw.efSearch = int(ef or self.K + 200)
+        elif emb.startswith("hnsw"):
             self.index = faiss.read_index(str(HNSW_FILE if emb == "hnsw40" else HNSW_FILE_200))
             self.index.hnsw.efSearch = 128
-        KEY["k"] = np.load(KEY_OF_GID)
-        cf = IDIR / "fastnull_curves_gum40.npz"
-        if not cf.exists():
-            cv = fastnull.learn_curves(OUT2, "gum", 40, 1.0)
-            np.savez(cf, **cv)
-        z = np.load(cf)
+        if vec == "zca10":
+            z = np.load(OUT3 / "fastnull_curves_search3.npz")
+        else:
+            KEY["k"] = np.load(KEY_OF_GID)
+            cf = IDIR / "fastnull_curves_gum40.npz"
+            if not cf.exists():
+                cv = fastnull.learn_curves(OUT2, "gum", 40, 1.0)
+                np.savez(cf, **cv)
+            z = np.load(cf)
         self.curves = {k: z[k] for k in z.files}
         self.t_load = dict(database_and_vectors=t1 - t0, hnsw_index_and_curves=time.time() - t1)
+
+    def null(self, eg, es_, ev, n, lo, hi, W, tau, R):
+        db = self.db
+        if self.null_threads <= 1:
+            return ls.null_tail(eg, es_, ev, n, db.cc, db.pos, db.N, lo, hi, W, tau, R, 17, 16)
+        from concurrent.futures import ThreadPoolExecutor
+        parts = np.array_split(np.arange(R), min(self.null_threads, R))
+        with ThreadPoolExecutor(len(parts)) as ex:
+            outs = list(ex.map(lambda i: ls.null_tail(eg, es_, ev, n, db.cc, db.pos, db.N, lo, hi, W, tau, len(parts[i]),
+                                                      17 + 7919 * i, 16), range(len(parts))))
+        return np.vstack(outs)
 
     def search(self, gids, method="S3", R=40, max_E=10.0, workdir=None):
         db = self.db
@@ -321,7 +363,8 @@ class Engine:
         tm = {}
         t0 = time.time()
         if we > 0 and self.index is not None:
-            ei, es = hnsw_ranks(self.index, db.X[q], q, np.full(len(q), lo), np.full(len(q), hi), np.full(len(q), float(N_db)))
+            ei, es = hnsw_ranks(self.index, np.asarray(db.X[q], dtype=np.float32), q, np.full(len(q), lo), np.full(len(q), hi),
+                                np.full(len(q), float(N_db)), k=self.K)
         elif we > 0:
             ei, _, es = ls.topk_cosine(db, db.X[q], np.full(len(q), own), K=self.K, log_every=0)
         tm["embedding_ranks"] = time.time() - t0
@@ -362,7 +405,7 @@ class Engine:
         ha, hb, sc, nf = ls.scan(eg, es_, ev, len(q), db.cc, db.pos, W, tau, 0)
         tm["scan"] = time.time() - t0
         t0 = time.time()
-        tail = ls.null_tail(eg, es_, ev, len(q), db.cc, db.pos, db.N, lo, hi, W, tau, R, 17, 16)
+        tail = self.null(eg, es_, ev, len(q), lo, hi, W, tau, R)
         E = fastnull.apply_curve(fastnull.evalue_gumbel(sc, tail, R), self.curves[method])
         tm["null"] = time.time() - t0
         keep = E <= max_E
@@ -377,7 +420,12 @@ def cmd_search(a):
     import numba
     numba.set_num_threads(a.threads)
     t0 = time.time()
-    eng = Engine(a.threads, a.emb, a.fast)
+    if a.vec == "zca10":
+        eng = Engine(a.threads, "hnsw" if a.emb.startswith("hnsw") else "exact", vec="zca10", k=a.k, ef=a.ef,
+                     null_threads=a.null_threads)
+        a.method = "M1z"
+    else:
+        eng = Engine(a.threads, a.emb, a.fast)
     gids = [int(x) for x in a.gids.split(",")]
     df, tm = eng.search(gids, a.method)
     wall = time.time() - t0
@@ -525,17 +573,77 @@ def bench_cli(a):
     log("bench", json.dumps(res, default=float))
 
 
+def bench3(a):
+    """Round 3: the one-input command (M1z, zca10 vectors only) on 24 CPUs. 20 even-genome DefenseFinder queries (the
+    round-2 sample): per-query wall time in a session (exact top 20,000; HNSW at the sweep's chosen k / efSearch; with
+    and without threaded null replicates), two one-shot commands, and the benchmark windows (search3 final runs,
+    E200 <= 10) found with identical start, end and score."""
+    import numba
+    numba.set_num_threads(a.threads)
+    import bench as bn
+    res = {"threads": a.threads, "method_config": METHODS["M1z"]}
+    q = pd.read_parquet(OUT1 / "queries.parquet")
+    db0 = ls.Database(vectors=None)
+    callers = bn.load_gold(db0)
+    Q = q[(q.caller == "DefenseFinder") & (q.split == "even")].sample(20, random_state=17)
+    mem = [callers["DefenseFinder"]["mem"][r] for r in Q.row]
+    use_tok, ws, we, wx, tau = METHODS["M1z"]
+    ref = pd.concat([pd.read_parquet(p, filters=[("fam", "==", "M1z")]) for p in sorted(OUT3.glob("final_df*_hits.parquet"))],
+                    ignore_index=True)
+    ref = ref[(ref.wx == wx) & (ref.tau == tau) & (ref.E200 <= 10) & ref.qid.isin(Q.qid)]
+    sw = json.load(open(IDIR3 / "hnsw_sweep.json"))
+    ch = sw.get("chosen") or dict(k=20000, efSearch=20200)
+    res["hnsw_chosen"] = ch
+    for i in range(2):
+        t0 = time.time()
+        sh(f"{sys.executable} -u {Path(__file__).resolve()} search --vec zca10 --gids {','.join(map(str, mem[i]))} "
+           f"--threads {a.threads} > {IDIR3 / f'oneshot_m1z_{i}.txt'}")
+        res[f"oneshot_{i}_wall_seconds"] = round(time.time() - t0, 1)
+    modes = [("exact20000", "exact", 20000, None, 1), ("exact20000_nullthreads", "exact", 20000, None, a.threads),
+             ("hnsw_chosen", "hnsw", ch["k"], ch["efSearch"], 1), ("hnsw_chosen_nullthreads", "hnsw", ch["k"], ch["efSearch"], a.threads)]
+    for label, emb, k, ef, nt in modes:
+        eng = Engine(a.threads, emb, vec="zca10", k=k, ef=ef, null_threads=nt)
+        res[f"session_{label}_load_seconds"] = {kk: round(v, 1) for kk, v in eng.t_load.items()}
+        rows = []
+        for qid, m in zip(Q.qid, mem):
+            t1 = time.time()
+            df, tm = eng.search(m, "M1z", max_E=np.inf)
+            wall = time.time() - t1
+            b = ref[ref.qid == qid][["start_gid", "end_gid", "score", "E200"]]
+            mm = b.merge(df[["start_gid", "end_gid", "score", "evalue"]], on=["start_gid", "end_gid"], how="left", suffixes=("", "_cli"))
+            rows.append(dict(qid=int(qid), n_genes=len(m), wall=wall, hits_E10=int((df.evalue <= 10).sum()),
+                             hits_E001=int((df.evalue <= 0.01).sum()), bench_hits=int(len(b)), found=int(mm.score_cli.notna().sum()),
+                             same_score=int(np.isclose(mm.score, mm.score_cli).sum()), bench_E001=int((b.E200 <= 0.01).sum()),
+                             **{kk: round(v, 3) for kk, v in tm.items()}))
+        T = pd.DataFrame(rows)
+        T.to_csv(IDIR3 / f"bench_m1z_{label}.tsv", sep="\t", index=False)
+        res[f"per_query_session_{label}"] = dict(median_wall=float(T.wall.median()), mean_wall=float(T.wall.mean()),
+                                                 first_wall=float(T.wall.iloc[0]), max_wall=float(T.wall.max()),
+                                                 bench_hits=int(T.bench_hits.sum()), found=int(T.found.sum()),
+                                                 same_score=int(T.same_score.sum()), hits_E001=int(T.hits_E001.sum()),
+                                                 bench_E001=int(T.bench_E001.sum()),
+                                                 median_parts={kk: float(T[kk].median()) for kk in ("embedding_ranks", "scan", "null")})
+        log(label, json.dumps(res[f"per_query_session_{label}"], default=float))
+        del eng
+    json.dump(res, open(IDIR3 / "bench_m1z.json", "w"), indent=1, default=float)
+    log("bench3", json.dumps(res, default=float))
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=["prep", "search", "bench", "hnswef", "verify"])
+    ap.add_argument("step", choices=["prep", "search", "bench", "hnswef", "verify", "bench3"])
     ap.add_argument("--threads", type=int, default=int(os.environ.get("SLURM_CPUS_ON_NODE", "2")))
     ap.add_argument("--gids", default="")
     ap.add_argument("--method", default="S3", choices=list(METHODS))
     ap.add_argument("--fast", action="store_true", help="K = 2,000 and MMseqs2 -s 5.7 --max-seqs 2000")
     ap.add_argument("--top", type=int, default=30)
-    ap.add_argument("--emb", default="exact", choices=["exact", "hnsw40", "hnsw200"])
+    ap.add_argument("--emb", default="exact", choices=["exact", "hnsw40", "hnsw200", "hnsw"])
+    ap.add_argument("--vec", default="l2", choices=["l2", "zca10"], help="zca10: one input (method M1z), no tokens, no MMseqs2")
+    ap.add_argument("--k", type=int, default=None, help="zca10: list depth (default 20,000)")
+    ap.add_argument("--ef", type=int, default=None, help="zca10 with --emb hnsw: efSearch (default k + 200)")
+    ap.add_argument("--null-threads", type=int, default=1, help="split the 40 null replicates over this many threads")
     a = ap.parse_args()
-    {"prep": prep, "search": cmd_search, "bench": bench_cli, "hnswef": hnsw_ef, "verify": verify}[a.step](a)
+    {"prep": prep, "search": cmd_search, "bench": bench_cli, "hnswef": hnsw_ef, "verify": verify, "bench3": bench3}[a.step](a)
 
 
 if __name__ == "__main__":

@@ -1496,3 +1496,35 @@ levels), and the legacy figures (0.652-0.762) are a best over all block interval
 readings: engine conserved level 2 F1 0.570-0.651 with excess +0.164 to +0.222; union of
 calibrated legacy blocks F1 0.331-0.491 with excess +0.070 to +0.125; the engine leads by +0.065
 to +0.152 excess, all 21 paired intervals above 0.
+
+## 2026-11-12 14:58 UTC — Whitened-embedding search confirmed for ranking; a second input still buys recall at matched false-positive rate (workstream `search3`; `benchmarks/redesign/locus_search/REPORT3.txt`)
+
+Predeclared 13:10 UTC (`results/criterion3.json`). DefenseFinder, 5-fold genome cross-validation
+(2,447 queries); every fold chose the same configurations.
+
+- **Confirmed:** zca10 ranks alone (M1z) AP 0.796 against MMseqs2 ranks alone (S1) 0.610 and the
+  three-input S3 0.706; M1z - S1 = +0.186 [+0.179, +0.194], M1z - S3 = +0.090 [+0.085, +0.095];
+  strict AP +0.118 and +0.053. TXSScan: +0.390 and +0.120. CRISPRCasTyper: +0.016 and +0.002
+  [-0.000, +0.004], with wrong-subtype hits per query rising to 17.4 (S3 6.1).
+- **Controls:** shuffled lists 0.062; a length-and-composition ranker 0.194 (tokens 0.369).
+  Whitening alone 0.777, centring alone 0.483, per-genome centring 0.513, raw L2 0.445: whitening
+  does about 95% of the work. Fitting the transform on odd genomes only changes AP by +0.0002.
+  List depth: top 2,000 loses 0.098 AP, top 200 loses 0.455; exact top 10,000 is within 0.008.
+- **At a matched false-positive rate the single input trails.** At E <= 0.01 on the calibrated
+  null, unsupported unlabelled hits per query: M1z 0.070, S1 0.014, S3 0.017. At a matched 0.03
+  unsupported hits per query, recall M1z 0.122, S1 0.175, S3 0.186 (M1z - S1 -0.053
+  [-0.060, -0.046]); at matched wrong-type rates of 0.25 / 0.5 / 1 per query M1z - S1 is -0.044 /
+  -0.040 / -0.030. Adding to M1z at the matched rate: tokens +0.032 recall, MMseqs2 ranks +0.051,
+  the learned head +0.054. M1z's unsupported hits (87, from 41 queries) mostly carry a
+  DefenseFinder profile of another type (79%) and rarely have sequence homology to the query
+  (17%).
+- **Redone on whitened vectors:** 51.5% of same-type DefenseFinder instance pairs are
+  token-invisible and embedding-reachable (raw: 20.6%; different-type control 14.8%). Recall on
+  token-invisible targets at E <= 0.01 / E <= 1: M1z 0.075 / 0.276, S1 0.046 / 0.131, raw M1
+  0.017 / 0.073. The iterative profile with zca10 centroids still drifts (wrong-type hits 3.0-3.7x
+  by round 3, no AP gain).
+- **One-input command:** exact brute force over the whitened vectors in memory (13.8 GB), median
+  1.33 s per query on 24 CPUs, 0.54 s with the null replicates threaded (round-2 command 4.75 s).
+  HNSW never came within 0.01 AP of exact top-20,000.
+- The learned linear head: +0.017 [+0.013, +0.021] AP over zca10 on held-out queries and +0.054
+  recall at the matched unsupported rate.

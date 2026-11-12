@@ -20,9 +20,11 @@ export NUMBA_NUM_THREADS="$T" NUMBA_THREADING_LAYER=workqueue
 export TMPDIR="$RD/tmp" NUMBA_CACHE_DIR="$RD/tmp/numba_${SLURM_JOB_ID}"
 mkdir -p "$NUMBA_CACHE_DIR"
 OUT=$RD/engine/${OUTDIR:-results_dpann_v2}
+EXTRA=(); WTAG=$W
+if [[ -n "${ADAPTIVE:-}" ]]; then EXTRA+=(--adaptive "$ADAPTIVE"); WTAG=a${ADAPTIVE##*:}; fi   # window grid, e.g. 1:2:3:5:8
 "$PY" -u "$RD/engine/code/recurrence.py" --arm "${ARM:?}" --universe "$P/universe" --tokens "${TOKENS:?}" --w "$W" \
-    --null "${NULL:-genome}" --benchmark none --all-genome-loci --out "$OUT" --threads "$T"
-O=$OUT/${ARM}__w${W}
+    --null "${NULL:-genome}" --benchmark none --all-genome-loci --out "$OUT" --threads "$T" "${EXTRA[@]}"
+O=$OUT/${ARM}__w${WTAG}
 "$PY" -u "$P/scorer/score_dpann_loci.py" --pkg "$P" --loci "$O/loci_all_genomes.parquet" \
     --out "$O/score_min2" --threads "$T" --min-members 2
 "$PY" -u "$P/scorer/score_dpann_loci.py" --pkg "$P" --loci "$O/loci_all_genomes.parquet" \

@@ -643,3 +643,26 @@ window 3 rises by at least 0.02 over the base (+0.442) on held-out genomes (the 
 genomes with even `genome_code`; settings chosen on the odd half). Otherwise the DPANN
 default stays sequence-only and the vectors are used for the kNN-recurrence and
 context-merge experiments.
+
+## 2026-11-12 02:25 UTC — Engine v1.3: a window per token pair (predeclared test)
+
+The window is the one engine setting that differs between the data sets (8 on the
+Spacedust collection, 3 on DPANN; the predeclared global-window check failed). v1.3 adds
+`--adaptive 1:2:3:5:8`: co-locations are collected at the largest window, each token pair
+is scored at every window of the grid (genomes with the pair within w, against the Poisson
+expectation for w), and the pair keeps the window with its smallest log P. Its instances
+beyond that distance are dropped. Shuffled genomes go through the same selection, so the
+empirical FDR accounts for the choice among five windows. `poisson_logsf` keeps log P finite
+where the survival function underflows, so strongly conserved pairs are ranked too.
+
+Predeclared: the adaptive window becomes the default if, with the permissive sequence base,
+(a) on source207 its paired excess for conserved loci (gaps 0-2) is within 0.01 of the
+better fixed window (5 or 8), and (b) on DPANN its summed DefenseFinder + TXSScan excess is
+within 0.01 of window 3 (+0.442). Failing either, the window stays a per-dataset setting.
+
+Also added: `engine/dpann_compare.py`, paired comparisons on the DPANN gold loci with a
+genome-level bootstrap and a fixed split (tune = odd `genome_code`, test = even). On the
+existing runs: permissive 50% against strict 30%/80% at w 3, DefenseFinder F1 +0.094
+[+0.082, +0.106] but summed excess +0.001 [-0.010, +0.012]; w 3 against w 5 on the
+permissive base, summed excess +0.030 [+0.024, +0.036]; 50% against 30% coverage, +0.023
+[+0.014, +0.032].

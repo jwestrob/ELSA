@@ -294,6 +294,19 @@ def colocalization(u, tok, w, oriented=False, strand=None):
     return np.concatenate(keys), np.concatenate(lefts), np.concatenate(dists), T
 
 
+def poisson_logsf(G, E):
+    """log P(X >= G) for Poisson(E); finite where the survival function underflows."""
+    from scipy.special import gammaln
+    E = np.maximum(E, 1e-12)
+    p = poisson.sf(G - 1, E)
+    out = np.log(np.maximum(p, 1e-300))
+    tiny = p < 1e-290
+    if tiny.any():
+        g, e = G[tiny].astype(np.float64), E[tiny]
+        out[tiny] = g * np.log(e) - e - gammaln(g + 1) - np.log1p(-np.minimum(e / (g + 1), 0.999))
+    return out
+
+
 def pair_statistics(u, tok, key, left, w, T, oriented=False):
     g = u.gc[left]
     kg = np.unique(key * u.ng + g)
@@ -317,7 +330,32 @@ def pair_statistics(u, tok, key, left, w, T, oriented=False):
     J = G / np.minimum(F[lo], F[hi])
     P = poisson.sf(G - 1, np.maximum(E, 1e-12))
     return dict(key=ukey, lo=lo, hi=hi, G=G, L=L, NP=NP, n_other=n_other, J=J, E=E, P=P,
-                F_lo=F[lo], F_hi=F[hi], incidence=(k_of, g_of))
+                logP=poisson_logsf(G, E), F_lo=F[lo], F_hi=F[hi], incidence=(k_of, g_of))
+
+
+def adaptive_statistics(u, tok, key, left, dist, grid, T, oriented=False):
+    """Per token pair, the window of `grid` with the smallest Poisson P (ties to the smaller window).
+
+    Returns the statistics of each pair at its own window (plus `wstar`) and the mask of instances
+    that lie within their pair's window. The same procedure applied to shuffled tokens gives the
+    null, so the choice among windows is accounted for in the empirical FDR."""
+    grid = sorted(grid)
+    full = pair_statistics(u, tok, key, left, grid[-1], T, oriented)
+    wstar = np.full(len(full["key"]), grid[-1], dtype=np.int64)
+    names = ("G", "L", "NP", "n_other", "J", "E", "P", "logP")
+    for w in grid[-2::-1]:
+        m = dist <= w
+        s = pair_statistics(u, tok, key[m], left[m], w, T, oriented)
+        idx = np.searchsorted(full["key"], s["key"])
+        better = s["logP"] <= full["logP"][idx]
+        for k in names:
+            full[k][idx[better]] = s[k][better]
+        wstar[idx[better]] = w
+    keep = dist <= wstar[np.searchsorted(full["key"], key)]
+    kg = np.unique(key[keep] * u.ng + u.gc[left[keep]])
+    full["incidence"] = (kg // u.ng, kg % u.ng)
+    full["wstar"] = wstar
+    return full, keep
 
 
 def shuffle_within(starts, ends, tok, rng):
@@ -353,6 +391,8 @@ def main():
     ap.add_argument("--tokens", type=Path, help="token parquet (default: $RD/tokens/<arm>.parquet)")
     ap.add_argument("--universe", type=Path, default=RD / "universe")
     ap.add_argument("--w", type=int, default=3)
+    ap.add_argument("--adaptive", default="", help="comma-separated window grid; each token pair uses the window "
+                                                   "with its smallest P (overrides --w)")
     ap.add_argument("--perms", type=int, default=3)
     ap.add_argument("--fdr", type=float, default=0.01)
     ap.add_argument("--rule", help="use this rule instead of choosing by coverage at the FDR target")
@@ -368,7 +408,10 @@ def main():
     import numba
     numba.set_num_threads(a.threads)
 
-    tag = f"{a.arm}__w{a.w}{'__oriented' if a.oriented else ''}"
+    grid = sorted(int(x) for x in a.adaptive.replace(":", ",").split(",")) if a.adaptive else None
+    if grid:
+        a.w = grid[-1]
+    tag = f"{a.arm}__w{'a' if grid else ''}{a.w}{'__oriented' if a.oriented else ''}"
     out = a.out / tag
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
@@ -380,13 +423,18 @@ def main():
     tok = tok_by_gid[u.gid]
     strand = u.genes.strand.to_numpy(dtype=np.int64)
     n_start, n_end = (u.g_start, u.g_end) if a.null == "genome" else (u.c_start, u.c_end)
-    res = dict(engine="v1.1", null=a.null, arm=a.arm, universe=str(a.universe), w=a.w, oriented=a.oriented,
+    res = dict(engine="v1.3", null=a.null, arm=a.arm, universe=str(a.universe), w=(f"a{a.w}" if grid else a.w),
+               window_grid=grid, oriented=a.oriented,
                perms=a.perms, genes=u.n, genomes=u.ng, assigned=int((tok >= 0).sum()),
                tokens=int(len(np.unique(tok[tok >= 0]))))
     log("universe + tokens", res, f"{time.time()-t0:.0f}s")
 
     key, left, dist, T = colocalization(u, tok, a.w, a.oriented, strand)
-    st = pair_statistics(u, tok, key, left, a.w, T, a.oriented)
+    if grid:
+        st, keep_inst = adaptive_statistics(u, tok, key, left, dist, grid, T, a.oriented)
+        key, left, dist = key[keep_inst], left[keep_inst], dist[keep_inst]
+    else:
+        st = pair_statistics(u, tok, key, left, a.w, T, a.oriented)
     res.update(instances=int(len(key)), token_pairs=int(len(st["key"])),
                token_pairs_L2=int((st["L"] >= 2).sum()), stats_seconds=round(time.time() - t0, 1))
     log("observed", {k: res[k] for k in ("instances", "token_pairs", "token_pairs_L2")}, f"{time.time()-t0:.0f}s")
@@ -402,7 +450,8 @@ def main():
         else:
             tok_n, strand_n = shuffle_within(n_start, n_end, tok, rng), strand
         k_n, l_n, d_n, _ = colocalization(u, tok_n, a.w, a.oriented, strand_n)
-        nulls.append(pair_statistics(u, tok_n, k_n, l_n, a.w, T, a.oriented))
+        nulls.append(adaptive_statistics(u, tok_n, k_n, l_n, d_n, grid, T, a.oriented)[0] if grid
+                     else pair_statistics(u, tok_n, k_n, l_n, a.w, T, a.oriented))
         log("null", r, "token pairs", len(nulls[-1]["key"]), "L>=2", int((nulls[-1]["L"] >= 2).sum()),
             f"{time.time()-t0:.0f}s")
 
@@ -455,6 +504,9 @@ def main():
                query_genes_covered_other_phylum_support=int((qg_x & u.is_query).sum()),
                L_quantiles=np.quantile(st["L"][mask], [.1, .25, .5, .75, .9, .99]).tolist(),
                tokens_in_significant_pairs=int(len(np.unique(np.r_[st["lo"][mask], st["hi"][mask]]))))
+    if grid:
+        res["window_of_significant_pairs"] = {int(w): int(n) for w, n in zip(*np.unique(st["wstar"][mask], return_counts=True))}
+        log("windows of significant pairs", res["window_of_significant_pairs"])
 
     # ---- modules: tokens joined by significant, consistent pairs --------------------
     strong = mask & (st["J"] >= a.module_j)

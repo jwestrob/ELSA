@@ -351,3 +351,134 @@ all-genome locus table. Jobs 77591-77595 rerun the leading arms with v1 into
 and then the gold-locus scorer. Two more permissive sequence-family token sets
 (E <= 1e-3, coverage 80% or 50%, no identity floor) are clustering (77584, 77585) with
 engine runs behind them (77586, 77587).
+
+## 01:25 — Engine v1 results, and two changes before the next runs
+
+v1 on the Spacedust collection (jobs 77591-77595; within-contig shuffle null):
+
+| Tokens, window | Conserved loci, gaps 0-2: F1 | Random | Excess [95% CI] | All locus kinds: F1 | Excess |
+|---|---|---|---|---|---|
+| sequence clusters, w 3 | 0.571 | 0.525 | +0.046 [+0.004, +0.085] | 0.698 | +0.022 |
+| sequence clusters, w 5 | 0.622 | 0.528 | +0.094 [+0.053, +0.133] | 0.725 | +0.039 |
+| hybrid CPM 1e-4, w 3 | 0.580 | 0.530 | +0.049 [+0.009, +0.089] | 0.698 | +0.021 |
+| hybrid CPM r 0.05, w 3 | 0.672 | 0.572 | +0.099 [+0.064, +0.133] | 0.742 | +0.053 |
+| hybrid CPM r 0.05, w 5 | 0.737 | 0.576 | +0.161 [+0.127, +0.193] | 0.788 | +0.089 |
+
+Bridging gaps adds 0.04-0.05 F1 at unchanged excess. Modules as defined (components of
+tokens joined by significant pairs with J >= 0.5) have a giant component of 21,000-57,000
+tokens beside thousands of small ones; the module definition needs work.
+
+v1 on DPANN (job 77590; sequence-family tokens, w 3, within-contig shuffle): the rule
+that met FDR 1% was L >= 10 and J >= 0.4, only 8,209 significant pairs covering 25.7% of
+genes. Gold loci with at least two members, best-single-locus F1 against 200 random
+placements: TXSScan 0.657 vs 0.348 (804 instances; 84% covered at 50%); DefenseFinder
+0.401 vs 0.216 (2,472); CRISPRCasTyper 0.268 vs 0.229 (3,820).
+
+**Change 1, the null.** DPANN has 231,477 contigs for 3,585,303 genes. Shuffling within
+a contig of a few genes leaves most gene pairs within the window, so the null barely
+differs from the data and the FDR target forces a very strict rule. v1.1 shuffles within
+each genome (contig sizes kept), the null of Rogozin 2002. On the Spacedust collection
+(2,061 contigs, mostly complete genomes) the two nulls should agree; one arm is run with
+both to measure that.
+
+**Change 2, the window is tuned on the benchmark it is scored on.** The F1 gain from
+w 3 to w 5 was seen on source207, so it is a tuned value there. Predeclared check on
+independent data: the DPANN gold loci. If the summed F1 excess for DefenseFinder and
+TXSScan at w 5 is at least that at w 3, w 5 becomes the default; otherwise the window
+stays a per-dataset setting and both are reported. Runs: Spacedust hybrid r 0.05 at
+w 3, 5, 8, 12; sequence clusters at w 5, 8; ESM2-650M graph at w 5; DPANN at w 3, 5, 8.
+
+## 2026-11-12 00:57 UTC — Window sweep with the genome-level null (jobs 77649-77659, 77586-77587)
+
+(Clock note: the headings from "00:10" to "01:25" above were stamped ahead of the real UTC
+time; this heading and later ones use `date -u`.)
+
+All 13 jobs completed. Engine v1.1, shuffle within genome, rule chosen at FDR <= 1%.
+
+Spacedust collection, source207, conserved loci with gaps 0-2 (F1, random, excess [95% CI])
+and all locus kinds:
+
+| Tokens | w | Rule | Significant pairs | Conserved g0-2: F1 | Random | Excess | All kinds: F1 | Excess |
+|---|---|---|---|---|---|---|---|---|
+| hybrid CPM r 0.05 | 3 | P<=1e-4 & L>=3 | 206,063 | 0.672 | 0.572 | +0.099 [+0.064, +0.133] | 0.742 | +0.053 |
+| hybrid CPM r 0.05 | 5 | same | 270,979 | 0.737 | 0.576 | +0.161 [+0.127, +0.193] | 0.788 | +0.089 |
+| hybrid CPM r 0.05 | 8 | same | 329,844 | 0.750 | 0.566 | +0.184 [+0.154, +0.213] | 0.801 | +0.099 |
+| hybrid CPM r 0.05 | 12 | same | 373,688 | 0.714 | 0.544 | +0.170 [+0.137, +0.202] | 0.796 | +0.099 |
+| sequence clusters 30%/80% | 5 | same | 377,875 | 0.622 | 0.528 | +0.094 [+0.053, +0.133] | 0.725 | +0.039 |
+| sequence clusters 30%/80% | 8 | same | 484,760 | 0.645 | 0.516 | +0.129 [+0.090, +0.167] | 0.750 | +0.061 |
+| ESM2-650M graph r 1000 | 5 | same | 363,702 | 0.693 | 0.573 | +0.120 [+0.086, +0.153] | 0.779 | +0.078 |
+| sequence families E<=1e-3, cov 50% | 3 | same | 228,812 | 0.692 | 0.571 | +0.121 [+0.085, +0.156] | 0.754 | +0.064 |
+| sequence families E<=1e-3, cov 80% | 3 | same | 260,583 | 0.617 | 0.533 | +0.084 [+0.043, +0.123] | 0.723 | +0.044 |
+
+- **The two nulls agree on this collection.** Hybrid r 0.05 at w 5 with the within-contig
+  shuffle (job 77653): same rule, the same 270,979 pairs, identical F1 (0.7366 / 0.5760);
+  empirical FDR 0.0056 against 0.0052.
+- **w 8 is the best window here** (excess +0.184); w 12 loses precision.
+- **A permissive sequence family is as good as the hybrid tokens at equal window.**
+  E <= 1e-3 with 50% coverage (601,584 tokens) at w 3 gives F1 0.692, excess +0.121,
+  against hybrid r 0.05 at w 3 with 0.672, +0.099. The hybrid arm's gain over the 30%/80%
+  clusters is therefore largely a family-breadth effect that MMseqs alone delivers. Next
+  comparison: the E <= 1e-3 / 50% arm at w 5 and w 8 against the hybrid arm at the same
+  windows.
+
+DPANN package (sequence clusters 30%/80%, 674,172 tokens; rule P <= 1e-4 & L >= 2):
+
+| w | Significant pairs | Genes covered | DefenseFinder F1 / control / excess | TXSScan | CRISPRCasTyper |
+|---|---|---|---|---|---|
+| 3 | 176,590 | 55.4% | 0.720 / 0.463 / +0.258 | 0.731 / 0.548 / +0.183 | 0.527 / 0.466 / +0.061 |
+| 5 | 222,206 | 56.8% | 0.698 / 0.466 / +0.231 | 0.727 / 0.555 / +0.172 | 0.530 / 0.470 / +0.060 |
+| 8 | 276,099 | 57.9% | 0.687 / 0.472 / +0.215 | 0.716 / 0.554 / +0.162 | 0.527 / 0.474 / +0.053 |
+
+(instances with at least two members: DefenseFinder 2,472, TXSScan 804, CRISPRCasTyper 3,820)
+
+- **The genome-level null repaired the DPANN run.** Against the within-contig shuffle
+  (8,209 pairs, 25.7% of genes, DefenseFinder F1 0.401): 176,590 pairs, 55.4% of genes,
+  DefenseFinder F1 0.720.
+- **Predeclared window check: w 5 is rejected as a global default.** Summed F1 excess for
+  DefenseFinder + TXSScan: 0.441 at w 3, 0.403 at w 5, 0.377 at w 8. The window stays a
+  per-dataset setting: w 8 on the Spacedust collection (BGC regions of tens of genes on
+  complete genomes), w 3 on DPANN (systems with a median span of 2-8 genes on short contigs).
+  A window scaled to the target locus size or to contig length is the candidate rule.
+- Modules: the largest component still holds 33,600-36,200 tokens at every window; the
+  module definition is unchanged and still needs work.
+
+## 2026-11-12 01:00 UTC — DPANN ESM++ small embedding queue
+
+Jacob: embed DPANN with ESM++ small through a worker system of independent Slurm jobs that
+pull from a queue, on srvp2020, DPANN only.
+
+System: `benchmarks/redesign/embed_queue/` (README there), deployed at
+`/groups/banfield/projects/environmental/sr/srvp2020/Jacob/embed_queue/`. Filesystem queue
+with atomic-rename claims, heartbeats, stale-claim recovery, per-shard outputs through
+temporary files, a self-check before any work, a per-shard float32 audit on the embedding
+device, and a model-free finalize.
+
+Run `runs/dpann__esmpp_small__20261111`:
+
+- Source `ws_dpann/work/proteins_gid.faa`, 3,585,303 rows (row = gid).
+- **2,547,528 unique sequences** (1,037,775 rows, 28.9%, repeat a sequence already seen);
+  674,679,965 unique residues; 170 shards of about 4,000,000 tokens; lengths 9-24,483,
+  median 205, 4,322 unique sequences longer than 2,046; 7 `J` residues mapped to `X`.
+- Model `Synthyra/ESMplusplus_small` at revision `46c5f7d5` (17 June 2026). The current
+  revision (`37b1a0f7`) declares torch >= 2.14 and transformers >= 5.17, which no
+  environment on biotite provides; both revisions point at the same weights blob
+  (`d099223765bc...`). Environment: the Talea venv (torch 2.7.1+cu126, transformers 4.57.6).
+- Policy: bfloat16 autocast on GPU, float32 residue-only mean, whole protein in one pass.
+
+CPU smoke test (job 77703, 24 threads, 5 min 35 s; 340 rows / 320 unique / 74,802 residues):
+passed. Float32 single protein against padded batches: minimum cosine 0.9999999999998 over
+32 proteins of 47-740 residues; finalize audit of 60 proteins: minimum cosine
+0.99999999998; the 20 duplicate rows expanded correctly. CPU throughput 511 residues/s.
+The comparison against native `transformers` ESM-C 300M did not run: the elsa environment
+(transformers 5.5.0) has no `esmc` model type. Jacob objected to running the model on CPU;
+the audit now runs inside the GPU workers and finalize loads no model.
+
+Coordination with the Talea session (lanes 3-6 hold all four of Jacob's `gpu_h200_4`
+running slots, with four queued successors): it agreed to exactly one H200 job from this
+run. Pending jobs start in submission order on biotite (priority weights are 0), so that
+job starts after the queued lane successors. The H200 wrapper therefore never submits
+another job under `gpu_h200_4` (a refused successor submission ends a Talea lane chain at
+the cap of 10 submitted jobs).
+
+Submitted 00:55 UTC: 77717 on `-p gpu` (A5000, running, ascending length) and 77718 on
+`-p gpu_h200 --qos=gpu_h200_4` (pending, descending length).

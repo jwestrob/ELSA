@@ -783,3 +783,55 @@ tokens, with F1 unchanged (0.745 / 0.807). v1.5 is the engine default.
   of their stack. A family step from another lab (for example DIAMOND DeepClust) is an
   untested option for the token table; the engine takes any gene-to-token table.
 - Embedding status at 04:25 UTC: 166 / 170 shards done on job 77717; 77718 still pending.
+
+## 2026-11-12 04:52 UTC — ESM++ small vectors for DPANN are final; round 1 queued; three workstreams launched
+
+**Embedding (embed_queue run `dpann__esmpp_small__20261111`).** Finalized 20:33 PST 11 Nov by
+job 78083. One RTX A5000 (job 77717) embedded all 170 shards in 12,895 s (52,319 residues/s);
+the H200 worker 77718 never started and was cancelled by finalize. 2,547,528 unique sequences,
+0 failed, 0 rows without a vector, 0 out-of-memory splits. Worker self-check: minimum cosine
+0.99997 (gate 0.999). Shard audit, 510 proteins, float32 single-protein pass against the
+stored bf16 batched vector: minimum 0.999975, median 0.999995. Assembly check: 0 of 20,000
+rows differ. Products: `final/l2_f32__row.npy` (3,585,303 x 960), `final/mean_raw_f32__uid.npy`.
+
+**Round 1 (jobs 78091-78108, registry `lab/emb1_jobs.tsv`, results `engine/results_dpann_emb1`).**
+kNN of the unique sequences (zca10, k 50); hybrid merges of the permissive base e3c50 with
+genome-centred centroids (CPM at null quantiles 0.5, 0.9, 0.99, 0.999 and at cosine 0.05,
+0.1) and genome-centred zca10 centroids (the four quantiles); graph tokens from the mutual
+20-NN graph (modularity 100, 300, 1000, 3000); the engine at window 3 on all 14 arms. The
+criterion fixed on 12 Nov 00:57 UTC applies: a merge counts as a gain if the summed
+DefenseFinder + TXSScan excess rises by at least 0.02 over the base (+0.442) on even genomes.
+
+**Direction, after discussion with Jacob (six candidate ideas).**
+1. Locus search and iterative locus profiles: go; "search with loci" is a core goal.
+2. Synteny-supervised embedding head: check overlap with Tatta Bio first. Found: FlashPPI
+   (Cornman, Tranzillo, Zulaybar, Bouzit, Hwang, PNAS 123(25), 2026; contrastive, initialised
+   from gLM2 650M, partner retrieval plus residue contact maps; FlashPPI2 adds AlphaFold DB
+   heterodimers; weights CC BY-NC) and Gaia (Science Advances 2025; gLM2_embed, contrastive on
+   2.3 M AlphaFold DB structural clusters, context-aware retrieval over 131,744 genomes).
+   Their positives are interaction partners and structural clusters; "same syntenic slot"
+   positives are a different signal. Plan: keep it as the slot-emission model inside the locus
+   profiles, with no standalone embedding claim. FlashPPI training positives were not stated
+   on the pages read.
+3. Genomic language model as a prior: parked until the H200s are free.
+4. Sub-genic synteny: sizing measurement first (below).
+5. Adjacency survival against a neutral clock: dropped. Jacob: gene-order decay cannot be
+   modelled across divergences this deep; agreed, the clock has no dynamic range here.
+6. Annotation-free truth by co-folding: Jacob's main idea for the paper.
+
+**Workstreams (Opus agents; code under `benchmarks/redesign/<name>/`, each with REPORT.md).**
+- `locus_search`: headroom of same-type gold instances beyond tokens; retrieval benchmark
+  (token, embedding, combined, iterative profile) with a co-localization null; predeclared:
+  embeddings count as a gain if mean AP on even-genome DefenseFinder queries rises by at least
+  0.02 over tokens (paired bootstrap CI excluding 0) at no more than 1.5x the unlabelled-hit
+  rate; then a profile library built on odd genomes and scanned on even genomes.
+- `cofold`: unannotated 2-4 gene blocks from engine v1.5, ranked by divergence spanned,
+  operon geometry and foldability; ESMFold2 (Biohub API) hetero-complexes for about 150
+  candidates in two distant instances each, with non-cognate, uncalled-neighbour and positive
+  controls; criteria for "obviously co-folding" written before folding.
+- `subgenic`: split-in-synteny composites, fragments, token loss, impact on gold loci, giant
+  proteins. Predeclared gate: build sub-genic tokens for DPANN if composites involve at least
+  1% of genes or affect at least 2% of gold instances with two or more members.
+
+ESM2-650M on DPANN stays queued behind the Talea scan lanes (about a week, Talea agent's
+estimate); nothing of ours is submitted to gpu_h200.

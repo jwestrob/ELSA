@@ -1434,3 +1434,26 @@ reading R1; predeclared conditions: ribosomal resolved >= 1,100 with recovery ke
 **Split genes merged into one position: not adopted.** 38,651 pairs merged; 106 gold instances
 leave the >= 2-member set; F1 on instances containing a split pair +0.018 [-0.049, +0.110]
 (n = 29), unaffected instances -0.001 [-0.002, +0.001].
+
+## 2026-11-12 14:03 UTC — Nested reading adopted: level-2 neighbourhood + module-cut, end-trimmed core (`boundary/REPORT_followup.txt`)
+
+Predeclared 13:56 UTC, no tuning (Louvain resolution 0.3, seed 17, trimming factor 0.5).
+Rescue3 arm, even genomes, against the default single reading R1:
+
+| Caller | F1 nested / R1 | F1 change | Excess change | Covered50 nested / R1 |
+|---|---|---|---|---|
+| DefenseFinder | 0.744 / 0.688 | +0.056 [+0.048, +0.065] | +0.019 [+0.012, +0.026] | 0.924 / 0.924 |
+| TXSScan | 0.548 / 0.409 | +0.139 [+0.125, +0.154] | +0.071 [+0.060, +0.082] | 0.990 / 0.990 |
+| CRISPRCasTyper | 0.479 / 0.426 | +0.053 [+0.048, +0.059] | +0.008 [+0.004, +0.012] | 0.890 / 0.890 |
+
+Summed DefenseFinder + TXSScan excess +0.090 [+0.077, +0.102]. Ribosomal: 1,686 recovered,
+1,512 resolved (R1 704; level-200 core 1,377; trimmed module reading alone 1,554), median
+precision 0.96, Parvarchaeaceae 113 of 114 resolved. Genes in loci unchanged (2,563,690). It
+replaces the level-200 core as the adopted reading rule. Against the full 11-reading table it
+is 0.08-0.21 F1 lower per caller and -0.023 [-0.039, -0.007] on summed excess.
+
+Reading inventory (rescue3, even genomes): the unit reading at Jaccard 0.5 alone gives F1 0.809 /
+0.721 / 0.568 (full table 0.826 / 0.757 / 0.597), is the best reading for 81% / 77% / 74% of
+instances and the only best one for 12% / 39% / 33%, and resolves 149 ribosomal runs. The
+conserved level-2 reading is best for 50% / 11% / 34%. A three-reading output (neighbourhood,
+core, unit) is untested. Integration into the engine waits for the outcome of `softrec`.

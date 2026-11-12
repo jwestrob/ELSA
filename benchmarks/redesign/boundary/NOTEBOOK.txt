@@ -177,3 +177,44 @@ predeclared.json task2 before the build.
 
 2026-11-12 14:25  REPORT.txt written (local and $RD/boundary/REPORT.txt). Task 1: C, D, G, H pass vs R1; D adopted
 by the predeclared preference; H the strongest single reading. Task 2: not adopted (criterion a fails).
+
+2026-11-12 13:58  CORRECTION OF TIMESTAMPS. From the "13:45 Tuning" entry on I typed times by hand and they run ahead
+of the clock. True times (UTC) from sacct (biotite runs PST = UTC-8) and `date -u`:
+  explore 80784 13:03-13:05; predeclared.json task1 written ~13:10 (labelled 13:12); tuning F,A,E / B / C submitted
+  13:09:50, D 13:12:14; amendment_1 written just before GH job 80947 was submitted at 13:19:12 (labelled 13:52);
+  selection 13:31:36 (date -u; labelled 13:32, correct); test 81050 submitted 13:31:54, ran 13:37-13:40 (entry
+  labelled 13:45); follow-up arms + robustness submitted 13:41:46 (entry labelled 14:05); task2 predeclaration
+  written before 13:48:32 (upload) and job 81224 submitted 13:48:33 (labelled 13:58); entries labelled 14:15 and
+  14:25 were written ~13:53-13:56. The ORDER of events in every entry is unchanged and correct: amendment_1 before
+  any even number (first even number 13:37), task-2 criteria before the merged build (13:48:42).
+
+2026-11-12 13:57  Coordinator follow-ups received: (1) nested DH = level-2 locus + H core; (2) reading inventory for
+base and rescue3. Both predeclared in predeclared.json (followup_1, followup_2) at 13:56:52 UTC, before any number.
+
+2026-11-12 14:05  FOLLOW-UP 1, nested DH = level-2 locus + rule H core (job 81296, submitted 13:58 UTC after
+re-reading both cluster-rules files; results/test_rescue3_followup.json). Even genomes vs R1:
+  F1 DF .744 (R1 .688) +.056 [+.048,+.065]; TXSS .548 (.409) +.139 [+.125,+.154]; CCT .479 (.426) +.053 [+.048,+.059]
+  excess DF +.019 [+.012,+.026]; TXSS +.071 [+.060,+.082]; CCT +.008 [+.004,+.012]; control +.037/+.069/+.045
+  summed DF+TXSS excess +.090 [+.077, +.102]; vs R2 -.023 [-.039, -.007]; F1 vs R2 -.082 / -.209 / -.118
+  covered50 .924 / .990 / .890 = R1 exactly; genes in loci 2,563,690 = R1; loci 650,438; median span 4
+  ribosomal 1,512 resolved / 1,686 recovered (D 1,377; H alone 1,554), median precision .96, Parv 114/114
+  recovered, 113/114 resolved; even-run subset 743/838; resolved vs R1 +808 [+767, +848]
+Predeclared replacement conditions (followup_1): (i)(ii)(iii) met; covered50 within 0.01 of R1 for every caller
+(equal); ribosomal 1,512 > 1,377; Parvarchaeaceae resolved 113 >= 100. All met: DH REPLACES D AS THE ADOPTED RULE.
+DH resolves 42 fewer runs than H alone because, where H's core covers less than the whole run, the level-2 locus
+has the larger overlap and is chosen as best by the ribosomal rule.
+
+2026-11-12 14:05  FOLLOW-UP 2, reading inventory (jobs 81297 rescue3, 81298 base; results/inventory_<arm>.{json,tsv}).
+Checks: conserved/conserved_g2 readings recomputed in full from boundary_support.npy; level-2 sets equal the table
+rows, higher levels contain the table rows (the table stores a locus once per kind); the full-table F1 equals the
+maximum over the 11 readings for every instance (max abs difference 0) on both arms.
+Finding: unit@0.5 alone carries most of the full table's F1 (rescue3 even: DF .809 vs full .826, TXSS .721 vs .757,
+CCT .568 vs .597; it attains the full-table best F1 for 81% / 77% / 74% of instances and is the only reading that
+does for 12% / 39% / 33%), while it resolves 149 ribosomal runs. Conserved@2 attains the best for 50% / 11% / 34%.
+Conserved_g2 readings are almost never the sole best (<= 0.5% per caller). Base arm: the same pattern.
+
+2026-11-12 14:08  REPORT_followup.txt written; REPORT.txt carries an UPDATE line (DH adopted). Both mirrored to
+$RD/boundary/.
+
+2026-11-12 14:03  CORRECTION: the two entries above labelled 14:05 and 14:08 were written 14:01-14:03 UTC (date -u
+14:03:09 at the mirror step). Jobs 81296-81298 ran 13:58-14:01 UTC.

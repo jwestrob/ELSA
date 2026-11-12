@@ -199,5 +199,27 @@
     "also_reported": "the same on remaining and touched sets, per caller, odd genomes; engine significant pairs, FDR, genes covered; ribosomal check in the merged universe (runs remapped); the task-1 adopted rule D (level-2 + level-200 core) read on both universes and compared the same way",
     "caveat": "merging changes the genome-shuffle null (fewer genes per genome) and the random-placement control (spans in genes change), so merged and unmerged excess differ in both terms",
     "refutation": "if F1 on contains_pair instances rises only through instances whose span shrinks to fewer genes while the control rises equally (excess flat), the gain is a coordinate effect of merging, not localization; reported via the excess on the same set"
+  },
+  "followup_1": {
+    "written_utc": "2026-11-12T13:56:52Z",
+    "requested_by": "coordinator, after the task-1 report",
+    "seen_before": "all task-1 results (tuning, test, follow-up arms, robustness) and task 2; no number of the rule below exists",
+    "rule": "DH = nested output of two readings: the level-2 locus (conserved@2, neighbourhood) plus rule H's locus (C module segmentation at Louvain res 0.3 seed 17, then relative end trimming f 0.5) as the core; parameters fixed at the task-1 H selection, no tuning. Built as D with core H (rules.py Builder.build('D', {core: 'H', res: 0.3, f: 0.5})). Scored as a two-reading table (best locus per instance); ribosomal best = largest overlap, ties to the shorter locus.",
+    "evaluation": "rescue3 arm, even genome_code gold, paired genome bootstrap (2,000, seed 17) against R1 (conserved@2 alone) and R2 (full engine table); ribosomal on all 1,686 runs; covered50 and genes in loci",
+    "replaces_D_if": [
+      "conditions (i), (ii), (iii) of task 1 all met against R1",
+      "covered50 within 0.01 of R1 for every caller (DH covered50 >= R1 covered50 - 0.01 for DefenseFinder, TXSScan, CRISPRCasTyper)",
+      "ribosomal resolved > D's 1,377 of 1,686",
+      "Parvarchaeaceae resolved >= 100 of 114"
+    ],
+    "otherwise": "D stays the adopted rule; DH is reported with the condition that blocks it"
+  },
+  "followup_2": {
+    "written_utc": "2026-11-12T13:56:52Z",
+    "what": "descriptive reading inventory, no decision attached: for the base and rescue3 arms on even genomes, F1, control and excess per caller for each of the 11 readings of loci_all_genomes (conserved and conserved_g2 at levels 2, 5, 12, 30, 80 recomputed in full from boundary_support.npy with the engine's run rule; unit@0.5 from the table) and for the full table; per caller, the share of instances for which each reading attains the full-table best F1 (attains), is the only reading that does (sole), and the reading assigned by table order (conserved 2..80, conserved_g2 2..80, unit) among those that attain it"
+  },
+  "timestamp_correction": {
+    "written_utc": "2026-11-12T13:58:00Z",
+    "note": "Two written_utc values were typed by hand and are later than the clock. amendment_1 (labelled 13:52) was written ~13:18 UTC, before tuning job 80947 (submitted 13:19:12 UTC) and before the first even-genome number (13:37 UTC). task2 (labelled 13:58) was written before 13:48:32 UTC (upload) and the merged build (job 81224 started 13:48:42 UTC). task1 (labelled 13:12) was written ~13:10 UTC. Original labels kept above; order of events unchanged."
   }
 }

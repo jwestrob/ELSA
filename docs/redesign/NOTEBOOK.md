@@ -876,3 +876,34 @@ the six have homologs carrying Pfam families of two-gene addiction modules, so s
 (workstream `cofold2`, running) adds a profile and structure triage before folding and extends
 to blocks of three and four genes. Protenix v2 confirmation waits for a GPU with more than the
 12 GB host memory the `gpu` partition QOS allows per job.
+
+## 2026-11-12 06:02 UTC — Round 1 complete: embedding-only graph families on DPANN (jobs 78091, 78104-78108)
+
+kNN of the 2,547,528 unique ESM++ small vectors (zca10, IVF 4,096 lists, 48 probes, k 50) took
+4,519 s at 64 threads; neighbour cosine q10 / q50 / q90 is 0.602 / 0.864 / 0.991 at rank 1 and
+0.426 / 0.653 / 0.846 at rank 50, against a random-pair q99 of 0.14 and q99.9 of 0.32. The
+search is the slow step (dense families make unbalanced lists); an HNSW or a progress log is
+needed before the next kNN at this scale.
+
+Graph tokens = Leiden modularity communities of the mutual 20-NN graph, no sequence clustering.
+Engine at window 3, paired against the permissive sequence base (`compare_graph_vs_base.txt`),
+even genomes, A - B with 95% interval:
+
+| Resolution | Tokens | DefenseFinder F1 | DefenseFinder excess | TXSScan excess | CRISPRCasTyper excess | Summed DF+TXSS excess |
+|---|---|---|---|---|---|---|
+| 100 | 113,638 | -0.021 [-0.038, -0.004] | -0.049 [-0.064, -0.033] | -0.081 [-0.092, -0.068] | -0.021 [-0.030, -0.013] | -0.129 [-0.148, -0.110] |
+| 300 | 120,083 | +0.006 [-0.009, +0.021] | -0.005 [-0.020, +0.009] | -0.089 [-0.101, -0.078] | -0.026 [-0.035, -0.016] | -0.094 [-0.112, -0.076] |
+| 1000 | 132,627 | +0.003 [-0.012, +0.018] | +0.022 [+0.008, +0.037] | -0.095 [-0.108, -0.083] | -0.024 [-0.033, -0.014] | -0.073 [-0.093, -0.054] |
+| 3000 | 153,520 | +0.001 [-0.013, +0.016] | +0.044 [+0.029, +0.059] | -0.074 [-0.085, -0.062] | -0.029 [-0.039, -0.019] | -0.029 [-0.047, -0.011] |
+
+Embedding-only families fail the summed criterion at every resolution. Two facts worth
+keeping: (1) with no alignment at all they equal the sequence base on DefenseFinder F1 (0.807
+against 0.806) and, at resolution 3000, localize those systems better (excess +0.313 against
++0.268); (2) they lose 0.12 of TXSScan F1 at every resolution, so the loss is specific to
+that class of proteins and independent of community size. Untested reading: secretion and
+pilus components are short, hydrophobic, low-complexity proteins whose mean-pooled vectors
+group by composition. Test: TXSScan member genes' token purity against hydrophobic fraction
+and length, compared with DefenseFinder members.
+
+Round 1 verdict on DPANN: ESM++ small vectors add nothing as a merger of sequence families and
+are worse than sequence families as a stand-alone token source on the predeclared criterion.

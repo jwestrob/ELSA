@@ -1,0 +1,1572 @@
+[
+ {
+  "cand_rank": 27,
+  "type_key": "100239-199393",
+  "hit_predeclared": true,
+  "genomes": 15,
+  "genera": 11,
+  "families": 9,
+  "orders": 4,
+  "classes": 2,
+  "phyla": 2,
+  "phyla_list": "Nanobdellota:14;Aenigmatarchaeota:1",
+  "len_med": "104;168",
+  "fam_hyd_med": "0.377;0.423",
+  "intergenic_med_nt": "-30",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 0.8823529411764706,
+  "block_integrity": 0.882,
+  "fam_dark_frac": "1;1",
+  "fam_copies_mean": "1.04;1.02",
+  "modules": "1214;1214",
+  "completeness_med": 88.2750015258789,
+  "edge_frac": 0.062,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_035289865.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__Woesearchaeales;f__JACQNA01;g__JACQNA01;s__JACQNA01 sp035289865",
+    "completeness": 99.66999816894531,
+    "contig": "DATDVW010000103.1",
+    "proteins": [
+     "HLD07224.1",
+     "HLD07223.1"
+    ],
+    "gids": [
+     2782332,
+     2782331
+    ],
+    "coords": [
+     "25515-25838(-)",
+     "25040-25546(-)"
+    ],
+    "positions": [
+     35,
+     34
+    ],
+    "lengths": [
+     107,
+     168
+    ],
+    "iptm": 0.9122365117073059,
+    "pair_chains_iptm": [
+     [
+      0.7184327840805054,
+      0.7967243790626526
+     ],
+     [
+      0.9122574925422668,
+      0.9180845618247986
+     ]
+    ],
+    "iface_pae": 1.121,
+    "contacts": 103,
+    "interface_plddt": 91.37,
+    "chain_plddt": [
+     87.67,
+     88.72
+    ],
+    "non_iptm": 0.3406360447406769,
+    "non_iface_pae": 15.255,
+    "unc_iptm": 0.29614076018333435,
+    "unc_iface_pae": 15.697,
+    "msa_cog_iptm": 0.9176235198974609,
+    "msa_cog_iface_pae": 1.436,
+    "msa_shuf_iptm": 0.9172825813293457,
+    "msa_shuf_iface_pae": 1.458,
+    "msa_non_iptm": 0.28283339738845825,
+    "msa_non_iface_pae": 17.846,
+    "mono_A_plddt": 79.69,
+    "mono_B_plddt": 95.02
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_035290825.1",
+    "tax": "d__Archaea;p__Aenigmatarchaeota;c__Aenigmatarchaeia;o__QMZP01;f__JACQNV01;g__JACQNV01;s__JACQNV01 sp035290825",
+    "completeness": 82.6500015258789,
+    "contig": "DATDTO010000004.1",
+    "proteins": [
+     "HLD56694.1",
+     "HLD56695.1"
+    ],
+    "gids": [
+     2795819,
+     2795820
+    ],
+    "coords": [
+     "359-655(+)",
+     "642-1136(+)"
+    ],
+    "positions": [
+     1,
+     2
+    ],
+    "lengths": [
+     98,
+     164
+    ],
+    "iptm": 0.8856732249259949,
+    "pair_chains_iptm": [
+     [
+      0.6648820638656616,
+      0.6486517190933228
+     ],
+     [
+      0.8856766223907471,
+      0.9279531240463257
+     ]
+    ],
+    "iface_pae": 1.768,
+    "contacts": 79,
+    "interface_plddt": 89.81,
+    "chain_plddt": [
+     87.33,
+     89.96
+    ],
+    "non_iptm": 0.14699748158454895,
+    "non_iface_pae": 20.314,
+    "unc_iptm": 0.06387898325920105,
+    "unc_iface_pae": 27.138,
+    "msa_cog_iptm": 0.9153024554252625,
+    "msa_cog_iface_pae": 1.114,
+    "msa_shuf_iptm": 0.9104084968566895,
+    "msa_shuf_iface_pae": 1.143,
+    "msa_non_iptm": 0.162889763712883,
+    "msa_non_iface_pae": 19.632,
+    "mono_A_plddt": 76.26,
+    "mono_B_plddt": 96.83
+   }
+  ],
+  "split_gene": {
+   "type_key": "100239-199393",
+   "block_genomes": 15,
+   "transcription_order": "a_first;a_first",
+   "fused_targets": 0,
+   "fused_genomes": 0,
+   "fused_order": NaN,
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.0,
+   "split_gene_artefact": false,
+   "fused_lengths": NaN,
+   "homologs_A_outside_block": 44,
+   "homologs_A_annotated": 0,
+   "homologs_B_outside_block": 28,
+   "homologs_B_annotated": 0,
+   "pfam_on_homologs_A": NaN,
+   "pfam_on_homologs_B": NaN
+  }
+ },
+ {
+  "cand_rank": 13,
+  "type_key": "221251-351854",
+  "hit_predeclared": true,
+  "genomes": 22,
+  "genera": 12,
+  "families": 8,
+  "orders": 7,
+  "classes": 5,
+  "phyla": 5,
+  "phyla_list": "Nanobdellota:12;Altiarchaeota:4;Huberarchaeota:3;Micrarchaeota:2;Iainarchaeota:1",
+  "len_med": "186;181",
+  "fam_hyd_med": "0.349;0.415",
+  "intergenic_med_nt": "-8",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 1.0,
+  "block_integrity": 1.0,
+  "fam_dark_frac": "1;1",
+  "fam_copies_mean": "1.04;1.04",
+  "modules": "807;807",
+  "completeness_med": 86.69999694824219,
+  "edge_frac": 0.0,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_029258755.1",
+    "tax": "d__Archaea;p__Iainarchaeota;c__Iainarchaeia;o__Iainarchaeales;f__DTGL01;g__DTGL01;s__DTGL01 sp029258755",
+    "completeness": 93.69000244140625,
+    "contig": "JAPDKC010000004.1",
+    "proteins": [
+     "JAPDKC010000004.1_15",
+     "JAPDKC010000004.1_16"
+    ],
+    "gids": [
+     2536904,
+     2536905
+    ],
+    "coords": [
+     "17242-17811(+)",
+     "17789-18328(+)"
+    ],
+    "positions": [
+     14,
+     15
+    ],
+    "lengths": [
+     189,
+     179
+    ],
+    "iptm": 0.916935920715332,
+    "pair_chains_iptm": [
+     [
+      0.898893415927887,
+      0.9169456362724304
+     ],
+     [
+      0.916370153427124,
+      0.9395866990089417
+     ]
+    ],
+    "iface_pae": 1.018,
+    "contacts": 85,
+    "interface_plddt": 92.3,
+    "chain_plddt": [
+     86.77,
+     91.63
+    ],
+    "non_iptm": 0.11049151420593262,
+    "non_iface_pae": 21.685,
+    "unc_iptm": 0.10416742414236069,
+    "unc_iface_pae": 23.569,
+    "msa_cog_iptm": 0.9136499762535095,
+    "msa_cog_iface_pae": 1.295,
+    "msa_shuf_iptm": 0.9023256897926331,
+    "msa_shuf_iface_pae": 1.991,
+    "msa_non_iptm": 0.1731356531381607,
+    "msa_non_iface_pae": 23.246,
+    "mono_A_plddt": 94.65,
+    "mono_B_plddt": 93.69
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_038045705.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__Pacearchaeales;f__GW2011-AR1;g__SICU01;s__SICU01 sp038045705",
+    "completeness": 91.48999786376953,
+    "contig": "JBBSXO010000001.1",
+    "proteins": [
+     "MEK6908463.1",
+     "MEK6908464.1"
+    ],
+    "gids": [
+     2963090,
+     2963091
+    ],
+    "coords": [
+     "25743-26285(+)",
+     "26272-26820(+)"
+    ],
+    "positions": [
+     44,
+     45
+    ],
+    "lengths": [
+     180,
+     182
+    ],
+    "iptm": 0.8919386863708496,
+    "pair_chains_iptm": [
+     [
+      0.8803682923316956,
+      0.8845322728157043
+     ],
+     [
+      0.8919328451156616,
+      0.9296619296073914
+     ]
+    ],
+    "iface_pae": 1.055,
+    "contacts": 75,
+    "interface_plddt": 90.46,
+    "chain_plddt": [
+     85.22,
+     90.08
+    ],
+    "non_iptm": 0.10445475578308105,
+    "non_iface_pae": 21.82,
+    "unc_iptm": 0.07399678230285645,
+    "unc_iface_pae": 27.671,
+    "msa_cog_iptm": 0.8818138837814331,
+    "msa_cog_iface_pae": 1.137,
+    "msa_shuf_iptm": 0.8905090689659119,
+    "msa_shuf_iface_pae": 1.027,
+    "msa_non_iptm": 0.16121114790439606,
+    "msa_non_iface_pae": 17.751,
+    "mono_A_plddt": 95.71,
+    "mono_B_plddt": 88.41
+   }
+  ],
+  "split_gene": {
+   "type_key": "221251-351854",
+   "block_genomes": 22,
+   "transcription_order": "a_first;a_first",
+   "fused_targets": 0,
+   "fused_genomes": 0,
+   "fused_order": NaN,
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.0,
+   "split_gene_artefact": false,
+   "fused_lengths": NaN,
+   "homologs_A_outside_block": 38,
+   "homologs_A_annotated": 19,
+   "homologs_B_outside_block": 3,
+   "homologs_B_annotated": 0,
+   "pfam_on_homologs_A": "UPF0175:16",
+   "pfam_on_homologs_B": NaN
+  }
+ },
+ {
+  "cand_rank": 67,
+  "type_key": "229034-423021",
+  "hit_predeclared": true,
+  "genomes": 7,
+  "genera": 3,
+  "families": 3,
+  "orders": 3,
+  "classes": 3,
+  "phyla": 3,
+  "phyla_list": "Iainarchaeota:5;Micrarchaeota:1;Nanobdellota:1",
+  "len_med": "95;86",
+  "fam_hyd_med": "0.393;0.373",
+  "intergenic_med_nt": "2",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 1.0,
+  "block_integrity": 0.117,
+  "fam_dark_frac": "0.986;1",
+  "fam_copies_mean": "1.5;1.14",
+  "modules": "282;282",
+  "completeness_med": 85.83000183105469,
+  "edge_frac": 0.143,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_035451465.1",
+    "tax": "d__Archaea;p__Iainarchaeota;c__Iainarchaeia;o__Iainarchaeales;f__CSSED10-239;g__JAKQTP01;s__JAKQTP01 sp035400625",
+    "completeness": 86.45999908447266,
+    "contig": "DAOTOS010000001.1",
+    "proteins": [
+     "HRS42528.1",
+     "HRS42529.1"
+    ],
+    "gids": [
+     2833058,
+     2833059
+    ],
+    "coords": [
+     "259192-259485(+)",
+     "259482-259742(+)"
+    ],
+    "positions": [
+     284,
+     285
+    ],
+    "lengths": [
+     97,
+     86
+    ],
+    "iptm": 0.9150156378746033,
+    "pair_chains_iptm": [
+     [
+      0.4604148864746094,
+      0.5138609409332275
+     ],
+     [
+      0.9150162935256958,
+      0.8976681232452393
+     ]
+    ],
+    "iface_pae": 1.633,
+    "contacts": 94,
+    "interface_plddt": 88.45,
+    "chain_plddt": [
+     81.98,
+     85.97
+    ],
+    "non_iptm": 0.09348401427268982,
+    "non_iface_pae": 22.506,
+    "unc_iptm": 0.1254151165485382,
+    "unc_iface_pae": 17.726,
+    "msa_cog_iptm": 0.8961727619171143,
+    "msa_cog_iface_pae": 1.626,
+    "msa_shuf_iptm": 0.8879176378250122,
+    "msa_shuf_iface_pae": 1.77,
+    "msa_non_iptm": 0.08843944221735,
+    "msa_non_iface_pae": 22.557,
+    "mono_A_plddt": 77.26,
+    "mono_B_plddt": 77.52
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_041679005.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__Pacearchaeales;f__GW2011-AR1;g__ARS1285;s__ARS1285 sp041679005",
+    "completeness": 85.83000183105469,
+    "contig": "JBAYNB010000006.1",
+    "proteins": [
+     "MFA7707464.1",
+     "MFA7707465.1"
+    ],
+    "gids": [
+     3438647,
+     3438648
+    ],
+    "coords": [
+     "5745-6032(+)",
+     "6029-6289(+)"
+    ],
+    "positions": [
+     7,
+     8
+    ],
+    "lengths": [
+     95,
+     86
+    ],
+    "iptm": 0.9060975313186646,
+    "pair_chains_iptm": [
+     [
+      0.4751962423324585,
+      0.5249228477478027
+     ],
+     [
+      0.9061022996902466,
+      0.8975005745887756
+     ]
+    ],
+    "iface_pae": 2.595,
+    "contacts": 96,
+    "interface_plddt": 86.21,
+    "chain_plddt": [
+     84.16,
+     86.42
+    ],
+    "non_iptm": 0.13050661981105804,
+    "non_iface_pae": 22.399,
+    "unc_iptm": 0.30200693011283875,
+    "unc_iface_pae": 13.881,
+    "msa_cog_iptm": 0.8989673852920532,
+    "msa_cog_iface_pae": 2.49,
+    "msa_shuf_iptm": 0.8990514874458313,
+    "msa_shuf_iface_pae": 2.087,
+    "msa_non_iptm": 0.08975984156131744,
+    "msa_non_iface_pae": 21.214,
+    "mono_A_plddt": 73.07,
+    "mono_B_plddt": 74.49
+   }
+  ],
+  "split_gene": {
+   "type_key": "229034-423021",
+   "block_genomes": 7,
+   "transcription_order": "a_first;a_first",
+   "fused_targets": 0,
+   "fused_genomes": 0,
+   "fused_order": NaN,
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.0,
+   "split_gene_artefact": false,
+   "fused_lengths": NaN,
+   "homologs_A_outside_block": 182,
+   "homologs_A_annotated": 5,
+   "homologs_B_outside_block": 201,
+   "homologs_B_annotated": 7,
+   "pfam_on_homologs_A": "ParD_antitoxin:5",
+   "pfam_on_homologs_B": "HigB_toxin:3;ParE_toxin:2"
+  }
+ },
+ {
+  "cand_rank": 38,
+  "type_key": "23083-68571",
+  "hit_predeclared": true,
+  "genomes": 18,
+  "genera": 14,
+  "families": 13,
+  "orders": 3,
+  "classes": 2,
+  "phyla": 2,
+  "phyla_list": "Nanobdellota:16;Iainarchaeota:2",
+  "len_med": "81;101",
+  "fam_hyd_med": "0.383;0.387",
+  "intergenic_med_nt": "2",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 1.0,
+  "block_integrity": 1.0,
+  "fam_dark_frac": "1;1",
+  "fam_copies_mean": "1;1",
+  "modules": "362;362",
+  "completeness_med": 87.58500671386719,
+  "edge_frac": 0.0,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_016185635.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__SCGC-AAA011-G17;f__JACPIM01;g__JACPNF01;s__JACPNF01 sp016185635",
+    "completeness": 98.83000183105469,
+    "contig": "JACPNF010000074.1",
+    "proteins": [
+     "MBI2672434.1",
+     "MBI2672433.1"
+    ],
+    "gids": [
+     555500,
+     555499
+    ],
+    "coords": [
+     "6897-7142(-)",
+     "6585-6893(-)"
+    ],
+    "positions": [
+     8,
+     7
+    ],
+    "lengths": [
+     81,
+     102
+    ],
+    "iptm": 0.8817222714424133,
+    "pair_chains_iptm": [
+     [
+      0.8794080018997192,
+      0.8817393779754639
+     ],
+     [
+      0.6014631390571594,
+      0.5513293147087097
+     ]
+    ],
+    "iface_pae": 3.163,
+    "contacts": 75,
+    "interface_plddt": 85.62,
+    "chain_plddt": [
+     86.18,
+     80.87
+    ],
+    "non_iptm": 0.08444403856992722,
+    "non_iface_pae": 22.644,
+    "unc_iptm": 0.07130160182714462,
+    "unc_iface_pae": 22.304,
+    "msa_cog_iptm": 0.881459653377533,
+    "msa_cog_iface_pae": 2.474,
+    "msa_shuf_iptm": 0.875082790851593,
+    "msa_shuf_iface_pae": 3.6,
+    "msa_non_iptm": 0.13216277956962585,
+    "msa_non_iface_pae": 21.55,
+    "mono_A_plddt": 77.39,
+    "mono_B_plddt": 71.07
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_038046645.1",
+    "tax": "d__Archaea;p__Iainarchaeota;c__Iainarchaeia;o__Iainarchaeales;f__0-14-0-20-34-12;g__0-14-0-20-34-12;s__0-14-0-20-34-12 sp038046645",
+    "completeness": 89.19999694824219,
+    "contig": "JBBSVU010000017.1",
+    "proteins": [
+     "MEK6973465.1",
+     "MEK6973464.1"
+    ],
+    "gids": [
+     3005244,
+     3005243
+    ],
+    "coords": [
+     "34765-35004(-)",
+     "34454-34762(-)"
+    ],
+    "positions": [
+     41,
+     40
+    ],
+    "lengths": [
+     79,
+     102
+    ],
+    "iptm": 0.8704606890678406,
+    "pair_chains_iptm": [
+     [
+      0.8480362892150879,
+      0.8704508543014526
+     ],
+     [
+      0.6261942982673645,
+      0.5825828909873962
+     ]
+    ],
+    "iface_pae": 4.765,
+    "contacts": 80,
+    "interface_plddt": 83.02,
+    "chain_plddt": [
+     83.66,
+     80.77
+    ],
+    "non_iptm": 0.33087337017059326,
+    "non_iface_pae": 12.776,
+    "unc_iptm": 0.10360226780176163,
+    "unc_iface_pae": 21.967,
+    "msa_cog_iptm": 0.8918863534927368,
+    "msa_cog_iface_pae": 1.39,
+    "msa_shuf_iptm": 0.8844740986824036,
+    "msa_shuf_iface_pae": 1.251,
+    "msa_non_iptm": 0.45709800720214844,
+    "msa_non_iface_pae": 9.147,
+    "mono_A_plddt": 75.31,
+    "mono_B_plddt": 72.46
+   }
+  ],
+  "split_gene": {
+   "type_key": "23083-68571",
+   "block_genomes": 18,
+   "transcription_order": "a_first;a_first",
+   "fused_targets": 0,
+   "fused_genomes": 0,
+   "fused_order": NaN,
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.0,
+   "split_gene_artefact": false,
+   "fused_lengths": NaN,
+   "homologs_A_outside_block": 1,
+   "homologs_A_annotated": 0,
+   "homologs_B_outside_block": 393,
+   "homologs_B_annotated": 232,
+   "pfam_on_homologs_A": NaN,
+   "pfam_on_homologs_B": "MazE_antitoxin:180;DUF7479:2"
+  }
+ },
+ {
+  "cand_rank": 106,
+  "type_key": "27009-27010",
+  "hit_predeclared": true,
+  "genomes": 7,
+  "genera": 6,
+  "families": 4,
+  "orders": 2,
+  "classes": 1,
+  "phyla": 1,
+  "phyla_list": "Nanobdellota:7",
+  "len_med": "80;68",
+  "fam_hyd_med": "0.344;0.406",
+  "intergenic_med_nt": "-20",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 1.0,
+  "block_integrity": 1.0,
+  "fam_dark_frac": "1;1",
+  "fam_copies_mean": "1;1",
+  "modules": "403;403",
+  "completeness_med": 92.25,
+  "edge_frac": 0.143,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_002867475.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__Woesearchaeales;f__BM511;g__BM511;s__BM511 sp002867475",
+    "completeness": 95.3499984741211,
+    "contig": "PKTL01000051.1",
+    "proteins": [
+     "PLW79977.1",
+     "PLW79978.1"
+    ],
+    "gids": [
+     219694,
+     219695
+    ],
+    "coords": [
+     "23925-24164(+)",
+     "24145-24348(+)"
+    ],
+    "positions": [
+     27,
+     28
+    ],
+    "lengths": [
+     79,
+     67
+    ],
+    "iptm": 0.9261062741279602,
+    "pair_chains_iptm": [
+     [
+      0.8721814751625061,
+      0.8908474445343018
+     ],
+     [
+      0.926101803779602,
+      0.879296064376831
+     ]
+    ],
+    "iface_pae": 2.106,
+    "contacts": 81,
+    "interface_plddt": 90.33,
+    "chain_plddt": [
+     89.05,
+     91.05
+    ],
+    "non_iptm": 0.07224173098802567,
+    "non_iface_pae": 20.035,
+    "unc_iptm": 0.07289121299982071,
+    "unc_iface_pae": 22.897,
+    "msa_cog_iptm": 0.9305432438850403,
+    "msa_cog_iface_pae": 2.041,
+    "msa_shuf_iptm": 0.9309038519859314,
+    "msa_shuf_iface_pae": 1.926,
+    "msa_non_iptm": 0.08330976963043213,
+    "msa_non_iface_pae": 20.039,
+    "mono_A_plddt": 72.61,
+    "mono_B_plddt": 77.63
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_018304105.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__Pacearchaeales;f__GW2011-AR1;g__UBA73;s__UBA73 sp018304105",
+    "completeness": 89.26000213623047,
+    "contig": "JAGVWX010000017.1",
+    "proteins": [
+     "MBS3077330.1",
+     "MBS3077331.1"
+    ],
+    "gids": [
+     993470,
+     993471
+    ],
+    "coords": [
+     "27206-27448(+)",
+     "27429-27623(+)"
+    ],
+    "positions": [
+     23,
+     24
+    ],
+    "lengths": [
+     80,
+     64
+    ],
+    "iptm": 0.8017320036888123,
+    "pair_chains_iptm": [
+     [
+      0.7782561779022217,
+      0.8017333149909973
+     ],
+     [
+      0.7379092574119568,
+      0.6578349471092224
+     ]
+    ],
+    "iface_pae": 4.728,
+    "contacts": 98,
+    "interface_plddt": 77.23,
+    "chain_plddt": [
+     80.75,
+     74.44
+    ],
+    "non_iptm": 0.12458911538124084,
+    "non_iface_pae": 18.466,
+    "unc_iptm": 0.6796436309814453,
+    "unc_iface_pae": 11.566,
+    "msa_cog_iptm": 0.8435242772102356,
+    "msa_cog_iface_pae": 2.77,
+    "msa_shuf_iptm": 0.8479636311531067,
+    "msa_shuf_iface_pae": 2.496,
+    "msa_non_iptm": 0.25817689299583435,
+    "msa_non_iface_pae": 12.739,
+    "mono_A_plddt": 71.32,
+    "mono_B_plddt": 61.14
+   }
+  ],
+  "split_gene": {
+   "type_key": "27009-27010",
+   "block_genomes": 7,
+   "transcription_order": "a_first;a_first",
+   "fused_targets": 0,
+   "fused_genomes": 0,
+   "fused_order": NaN,
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.0,
+   "split_gene_artefact": false,
+   "fused_lengths": NaN,
+   "homologs_A_outside_block": 1,
+   "homologs_A_annotated": 0,
+   "homologs_B_outside_block": 0,
+   "homologs_B_annotated": 0,
+   "pfam_on_homologs_A": NaN,
+   "pfam_on_homologs_B": NaN
+  }
+ },
+ {
+  "cand_rank": 71,
+  "type_key": "171614-322104",
+  "hit_predeclared": true,
+  "genomes": 5,
+  "genera": 3,
+  "families": 3,
+  "orders": 3,
+  "classes": 2,
+  "phyla": 2,
+  "phyla_list": "Aenigmatarchaeota:4;Nanobdellota:1",
+  "len_med": "108;180",
+  "fam_hyd_med": "0.333;0.378",
+  "intergenic_med_nt": "48",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 1.0,
+  "block_integrity": 1.0,
+  "fam_dark_frac": "1;1",
+  "fam_copies_mean": "1;1",
+  "modules": "1121;1121",
+  "completeness_med": 83.08000183105469,
+  "edge_frac": 0.0,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_016187385.1",
+    "tax": "d__Archaea;p__Aenigmatarchaeota;c__Aenigmatarchaeia;o__CG10238-14;f__SCSR01;g__JACOWB01;s__JACOWB01 sp016187385",
+    "completeness": 91.31999969482422,
+    "contig": "JACPJU010000001.1",
+    "proteins": [
+     "MBI2543087.1",
+     "MBI2543086.1"
+    ],
+    "gids": [
+     579918,
+     579917
+    ],
+    "coords": [
+     "447722-448123(+)",
+     "447202-447753(+)"
+    ],
+    "positions": [
+     546,
+     545
+    ],
+    "lengths": [
+     133,
+     183
+    ],
+    "iptm": 0.7532007098197937,
+    "pair_chains_iptm": [
+     [
+      0.7422302961349487,
+      0.7532026767730713
+     ],
+     [
+      0.6092342138290405,
+      0.8773919939994812
+     ]
+    ],
+    "iface_pae": 4.81,
+    "contacts": 80,
+    "interface_plddt": 79.13,
+    "chain_plddt": [
+     77.22,
+     82.96
+    ],
+    "non_iptm": 0.1053105965256691,
+    "non_iface_pae": 24.724,
+    "unc_iptm": 0.11681583523750305,
+    "unc_iface_pae": 23.626,
+    "msa_cog_iptm": 0.7524217963218689,
+    "msa_cog_iface_pae": 5.951,
+    "msa_shuf_iptm": 0.8893524408340454,
+    "msa_shuf_iface_pae": 1.776,
+    "msa_non_iptm": 0.24321632087230682,
+    "msa_non_iface_pae": 19.892,
+    "mono_A_plddt": 84.27,
+    "mono_B_plddt": 89.24
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_035289325.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__Woesearchaeales;f__JAGLXL01;g__DATDXM01;s__DATDXM01 sp035289325",
+    "completeness": 72.5199966430664,
+    "contig": "DATDXM010000048.1",
+    "proteins": [
+     "HLC74797.1",
+     "HLC74798.1"
+    ],
+    "gids": [
+     2764285,
+     2764286
+    ],
+    "coords": [
+     "7462-7803(-)",
+     "7857-8402(-)"
+    ],
+    "positions": [
+     10,
+     11
+    ],
+    "lengths": [
+     113,
+     181
+    ],
+    "iptm": 0.8863819241523743,
+    "pair_chains_iptm": [
+     [
+      0.8698006272315979,
+      0.8863794803619385
+     ],
+     [
+      0.8463059663772583,
+      0.8165774941444397
+     ]
+    ],
+    "iface_pae": 3.156,
+    "contacts": 149,
+    "interface_plddt": 82.46,
+    "chain_plddt": [
+     84.76,
+     75.65
+    ],
+    "non_iptm": 0.12744630873203278,
+    "non_iface_pae": 22.266,
+    "unc_iptm": 0.8676328063011169,
+    "unc_iface_pae": 1.469,
+    "msa_cog_iptm": 0.9075932502746582,
+    "msa_cog_iface_pae": 2.324,
+    "msa_shuf_iptm": 0.9096937775611877,
+    "msa_shuf_iface_pae": 2.54,
+    "msa_non_iptm": 0.11488685011863708,
+    "msa_non_iface_pae": 23.942,
+    "mono_A_plddt": 82.53,
+    "mono_B_plddt": 69.56
+   }
+  ],
+  "split_gene": {
+   "type_key": "171614-322104",
+   "block_genomes": 5,
+   "transcription_order": "b_first;b_first",
+   "fused_targets": 0,
+   "fused_genomes": 0,
+   "fused_order": NaN,
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.0,
+   "split_gene_artefact": false,
+   "fused_lengths": NaN,
+   "homologs_A_outside_block": 0,
+   "homologs_A_annotated": 0,
+   "homologs_B_outside_block": 0,
+   "homologs_B_annotated": 0,
+   "pfam_on_homologs_A": NaN,
+   "pfam_on_homologs_B": NaN
+  }
+ },
+ {
+  "cand_rank": 6,
+  "type_key": "322564-326340",
+  "hit_predeclared": true,
+  "genomes": 54,
+  "genera": 32,
+  "families": 22,
+  "orders": 9,
+  "classes": 3,
+  "phyla": 3,
+  "phyla_list": "Nanobdellota:42;Micrarchaeota:7;Aenigmatarchaeota:5",
+  "len_med": "116;88",
+  "fam_hyd_med": "0.358;0.391",
+  "intergenic_med_nt": "-4",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 1.0,
+  "block_integrity": 0.651,
+  "fam_dark_frac": "1;0.99",
+  "fam_copies_mean": "1.02;1.41",
+  "modules": "190;190",
+  "completeness_med": 90.66999816894533,
+  "edge_frac": 0.167,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_018661605.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__SCGC-AAA011-G17;f__GW2011-AR17;g__BS150m-G60;s__BS150m-G60 sp018692925",
+    "completeness": 100.0,
+    "contig": "JABJHW010000002.1",
+    "proteins": [
+     "MBT5287523.1",
+     "MBT5287524.1"
+    ],
+    "gids": [
+     1104296,
+     1104297
+    ],
+    "coords": [
+     "71418-71744(-)",
+     "71741-72004(-)"
+    ],
+    "positions": [
+     83,
+     84
+    ],
+    "lengths": [
+     108,
+     87
+    ],
+    "iptm": 0.9101500511169434,
+    "pair_chains_iptm": [
+     [
+      0.9239749908447266,
+      0.9101290702819824
+     ],
+     [
+      0.8609505891799927,
+      0.8341905474662781
+     ]
+    ],
+    "iface_pae": 1.055,
+    "contacts": 88,
+    "interface_plddt": 92.37,
+    "chain_plddt": [
+     90.34,
+     86.89
+    ],
+    "non_iptm": 0.22877542674541473,
+    "non_iface_pae": 15.731,
+    "unc_iptm": 0.03790716081857681,
+    "unc_iface_pae": 28.566,
+    "msa_cog_iptm": 0.9131282567977905,
+    "msa_cog_iface_pae": 0.946,
+    "msa_shuf_iptm": 0.9157028198242188,
+    "msa_shuf_iface_pae": 0.918,
+    "msa_non_iptm": 0.07628613710403442,
+    "msa_non_iface_pae": 22.122,
+    "mono_A_plddt": 78.35,
+    "mono_B_plddt": 66.04
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_027346825.1",
+    "tax": "d__Archaea;p__Micrarchaeota;c__Micrarchaeia;o__Burarchaeales;f__JAKAKT01;g__JAKAKT01;s__JAKAKT01 sp021813385",
+    "completeness": 94.0,
+    "contig": "DAIERM010000020.1",
+    "proteins": [
+     "DAIERM010000020.1_28",
+     "DAIERM010000020.1_29"
+    ],
+    "gids": [
+     2169492,
+     2169493
+    ],
+    "coords": [
+     "22045-22386(-)",
+     "22373-22648(-)"
+    ],
+    "positions": [
+     27,
+     28
+    ],
+    "lengths": [
+     113,
+     91
+    ],
+    "iptm": 0.9016478657722473,
+    "pair_chains_iptm": [
+     [
+      0.9223621487617493,
+      0.9016469120979309
+     ],
+     [
+      0.8700507283210754,
+      0.8456987142562866
+     ]
+    ],
+    "iface_pae": 1.082,
+    "contacts": 92,
+    "interface_plddt": 92.45,
+    "chain_plddt": [
+     90.42,
+     86.94
+    ],
+    "non_iptm": 0.10341551154851913,
+    "non_iface_pae": 23.554,
+    "unc_iptm": 0.6278841495513916,
+    "unc_iface_pae": 8.636,
+    "msa_cog_iptm": 0.897785484790802,
+    "msa_cog_iface_pae": 0.992,
+    "msa_shuf_iptm": 0.8979424238204956,
+    "msa_shuf_iface_pae": 1.088,
+    "msa_non_iptm": 0.10548916459083557,
+    "msa_non_iface_pae": 21.412,
+    "mono_A_plddt": 76.84,
+    "mono_B_plddt": 64.8
+   }
+  ],
+  "split_gene": {
+   "type_key": "322564-326340",
+   "block_genomes": 54,
+   "transcription_order": "b_first;b_first",
+   "fused_targets": 1,
+   "fused_genomes": 1,
+   "fused_order": "b_first",
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.0185,
+   "split_gene_artefact": false,
+   "fused_lengths": "218",
+   "homologs_A_outside_block": 1977,
+   "homologs_A_annotated": 147,
+   "homologs_B_outside_block": 2689,
+   "homologs_B_annotated": 73,
+   "pfam_on_homologs_A": "ParE_toxin:132;YoeB_toxin:10;ParE_like:2",
+   "pfam_on_homologs_B": "NTP_transf_2:14;Polbeta:14;Mis14:12;tRNA-synt_2d:4;TBPIP:3"
+  }
+ },
+ {
+  "cand_rank": 14,
+  "type_key": "48264-404027",
+  "hit_predeclared": true,
+  "genomes": 67,
+  "genera": 27,
+  "families": 17,
+  "orders": 6,
+  "classes": 2,
+  "phyla": 2,
+  "phyla_list": "Micrarchaeota:56;Nanobdellota:11",
+  "len_med": "181;228",
+  "fam_hyd_med": "0.41;0.431",
+  "intergenic_med_nt": "1",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 0.918918918918919,
+  "block_integrity": 0.838,
+  "fam_dark_frac": "1;0.982",
+  "fam_copies_mean": "1.01;1.01",
+  "modules": "273;273",
+  "completeness_med": 88.23999786376953,
+  "edge_frac": 0.149,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_035289865.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__Woesearchaeales;f__JACQNA01;g__JACQNA01;s__JACQNA01 sp035289865",
+    "completeness": 99.66999816894531,
+    "contig": "DATDVW010000073.1",
+    "proteins": [
+     "HLD06801.1",
+     "HLD06800.1"
+    ],
+    "gids": [
+     2781891,
+     2781890
+    ],
+    "coords": [
+     "11716-12258(-)",
+     "11042-11719(-)"
+    ],
+    "positions": [
+     10,
+     9
+    ],
+    "lengths": [
+     180,
+     225
+    ],
+    "iptm": 0.9142942428588867,
+    "pair_chains_iptm": [
+     [
+      0.7753946185112,
+      0.7084349989891052
+     ],
+     [
+      0.9143076539039612,
+      0.9585047364234924
+     ]
+    ],
+    "iface_pae": 2.997,
+    "contacts": 164,
+    "interface_plddt": 90.76,
+    "chain_plddt": [
+     84.83,
+     92.95
+    ],
+    "non_iptm": 0.2185644656419754,
+    "non_iface_pae": 20.609,
+    "unc_iptm": 0.09901749342679977,
+    "unc_iface_pae": 25.694,
+    "msa_cog_iptm": 0.915726363658905,
+    "msa_cog_iface_pae": 2.51,
+    "msa_shuf_iptm": 0.8849980235099792,
+    "msa_shuf_iface_pae": 4.144,
+    "msa_non_iptm": 0.13184747099876404,
+    "msa_non_iface_pae": 21.531,
+    "mono_A_plddt": 83.34,
+    "mono_B_plddt": 97.53
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_041653315.1",
+    "tax": "d__Archaea;p__Micrarchaeota;c__Micrarchaeia;o__Anstonellales;f__JAHKLY01;g__JAHKLY01;s__JAHKLY01 sp041653315",
+    "completeness": 98.12000274658203,
+    "contig": "JBAZFO010000003.1",
+    "proteins": [
+     "MFA5381765.1",
+     "MFA5381766.1"
+    ],
+    "gids": [
+     3387284,
+     3387285
+    ],
+    "coords": [
+     "43295-43843(+)",
+     "43848-44534(+)"
+    ],
+    "positions": [
+     44,
+     45
+    ],
+    "lengths": [
+     182,
+     228
+    ],
+    "iptm": 0.9272192120552063,
+    "pair_chains_iptm": [
+     [
+      0.8678970336914062,
+      0.8675093650817871
+     ],
+     [
+      0.9272171258926392,
+      0.9413676261901855
+     ]
+    ],
+    "iface_pae": 1.844,
+    "contacts": 145,
+    "interface_plddt": 90.38,
+    "chain_plddt": [
+     84.14,
+     91.99
+    ],
+    "non_iptm": 0.10700114816427231,
+    "non_iface_pae": 23.918,
+    "unc_iptm": 0.1642804741859436,
+    "unc_iface_pae": 22.667,
+    "msa_cog_iptm": 0.8445450663566589,
+    "msa_cog_iface_pae": 7.858,
+    "msa_shuf_iptm": 0.8950687050819397,
+    "msa_shuf_iface_pae": 2.354,
+    "msa_non_iptm": 0.1129564642906189,
+    "msa_non_iface_pae": 24.071,
+    "mono_A_plddt": 87.75,
+    "mono_B_plddt": 96.19
+   }
+  ],
+  "split_gene": {
+   "type_key": "48264-404027",
+   "block_genomes": 67,
+   "transcription_order": "a_first;a_first",
+   "fused_targets": 18,
+   "fused_genomes": 18,
+   "fused_order": "a_first",
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.2687,
+   "split_gene_artefact": true,
+   "fused_lengths": "423;424;425;424;408;415;419;424;409;424",
+   "homologs_A_outside_block": 1356,
+   "homologs_A_annotated": 47,
+   "homologs_B_outside_block": 1388,
+   "homologs_B_annotated": 26,
+   "pfam_on_homologs_A": "UPF0175:1",
+   "pfam_on_homologs_B": NaN
+  }
+ },
+ {
+  "cand_rank": 9,
+  "type_key": "114055-318532",
+  "hit_predeclared": false,
+  "genomes": 18,
+  "genera": 16,
+  "families": 14,
+  "orders": 8,
+  "classes": 5,
+  "phyla": 5,
+  "phyla_list": "Micrarchaeota:7;Iainarchaeota:4;Aenigmatarchaeota:3;EX4484-52:3;Altiarchaeota:1",
+  "len_med": "89;220",
+  "fam_hyd_med": "0.409;0.344",
+  "intergenic_med_nt": "48",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 1.0,
+  "block_integrity": 0.947,
+  "fam_dark_frac": "1;1",
+  "fam_copies_mean": "1;1.06",
+  "modules": "483;483",
+  "completeness_med": 84.70999908447266,
+  "edge_frac": 0.056,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_001871475.1",
+    "tax": "d__Archaea;p__Micrarchaeota;c__Micrarchaeia;o__Anstonellales;f__CG1-02-47-40;g__CG1-02-47-40;s__CG1-02-47-40 sp001871475",
+    "completeness": 93.22000122070312,
+    "contig": "MNVE01000003.1",
+    "proteins": [
+     "OIO21780.1",
+     "OIO21779.1"
+    ],
+    "gids": [
+     44650,
+     44649
+    ],
+    "coords": [
+     "15921-16193(+)",
+     "15199-15867(+)"
+    ],
+    "positions": [
+     17,
+     16
+    ],
+    "lengths": [
+     90,
+     222
+    ],
+    "iptm": 0.8486666679382324,
+    "pair_chains_iptm": [
+     [
+      0.7907381653785706,
+      0.8486666679382324
+     ],
+     [
+      0.7856647968292236,
+      0.7942809462547302
+     ]
+    ],
+    "iface_pae": 8.407,
+    "contacts": 124,
+    "interface_plddt": 75.52,
+    "chain_plddt": [
+     80.11,
+     74.67
+    ],
+    "non_iptm": 0.10487137734889984,
+    "non_iface_pae": 24.409,
+    "unc_iptm": 0.1696251630783081,
+    "unc_iface_pae": 22.231,
+    "msa_cog_iptm": 0.9000141024589539,
+    "msa_cog_iface_pae": 4.367,
+    "msa_shuf_iptm": 0.9022955894470215,
+    "msa_shuf_iface_pae": 4.385,
+    "msa_non_iptm": 0.26156023144721985,
+    "msa_non_iface_pae": 21.663,
+    "mono_A_plddt": 68.55,
+    "mono_B_plddt": 82.88
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_018304425.1",
+    "tax": "d__Archaea;p__Iainarchaeota;c__Iainarchaeia;o__Iainarchaeales;f__UBA10219;g__UBA10219;s__UBA10219 sp10219u",
+    "completeness": 92.55000305175781,
+    "contig": "JAGVWE010000003.1",
+    "proteins": [
+     "MBS3062818.1",
+     "MBS3062817.1"
+    ],
+    "gids": [
+     1004950,
+     1004949
+    ],
+    "coords": [
+     "18418-18687(+)",
+     "17724-18383(+)"
+    ],
+    "positions": [
+     22,
+     21
+    ],
+    "lengths": [
+     89,
+     219
+    ],
+    "iptm": 0.8135735988616943,
+    "pair_chains_iptm": [
+     [
+      0.7681318521499634,
+      0.8135793805122375
+     ],
+     [
+      0.4505765438079834,
+      0.7291225790977478
+     ]
+    ],
+    "iface_pae": 6.259,
+    "contacts": 90,
+    "interface_plddt": 74.43,
+    "chain_plddt": [
+     75.39,
+     76.63
+    ],
+    "non_iptm": 0.17344683408737183,
+    "non_iface_pae": 22.018,
+    "unc_iptm": 0.20269569754600525,
+    "unc_iface_pae": 19.056,
+    "msa_cog_iptm": 0.9013803005218506,
+    "msa_cog_iface_pae": 1.981,
+    "msa_shuf_iptm": 0.8919277787208557,
+    "msa_shuf_iface_pae": 4.845,
+    "msa_non_iptm": 0.14498275518417358,
+    "msa_non_iface_pae": 21.363,
+    "mono_A_plddt": 68.91,
+    "mono_B_plddt": 87.35
+   }
+  ],
+  "split_gene": {
+   "type_key": "114055-318532",
+   "block_genomes": 18,
+   "transcription_order": "b_first;b_first",
+   "fused_targets": 0,
+   "fused_genomes": 0,
+   "fused_order": NaN,
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.0,
+   "split_gene_artefact": false,
+   "fused_lengths": NaN,
+   "homologs_A_outside_block": 3,
+   "homologs_A_annotated": 0,
+   "homologs_B_outside_block": 2,
+   "homologs_B_annotated": 0,
+   "pfam_on_homologs_A": NaN,
+   "pfam_on_homologs_B": NaN
+  }
+ },
+ {
+  "cand_rank": 1,
+  "type_key": "81718-393054",
+  "hit_predeclared": false,
+  "genomes": 249,
+  "genera": 153,
+  "families": 71,
+  "orders": 21,
+  "classes": 7,
+  "phyla": 7,
+  "phyla_list": "Nanobdellota:134;Micrarchaeota:49;Aenigmatarchaeota:30;Iainarchaeota:17;EX4484-52:9;Altiarchaeota:8;Nanohalarchaeota:2",
+  "len_med": "62;73",
+  "fam_hyd_med": "0.424;0.392",
+  "intergenic_med_nt": "-4",
+  "same_strand_frac": 1.0,
+  "gap0_frac_min": 1.0,
+  "block_integrity": 1.0,
+  "fam_dark_frac": "1;1",
+  "fam_copies_mean": "1.13;1.1",
+  "modules": "1167;1167",
+  "completeness_med": 86.97000122070312,
+  "edge_frac": 0.067,
+  "replicates": [
+   {
+    "rep": 1,
+    "genome": "GCA_013330555.1",
+    "tax": "d__Archaea;p__Nanobdellota;c__Nanobdellia;o__SCGC-AAA011-G17;f__GW2011-AR17;g__JAGVZZ01;s__JAGVZZ01 sp10136u",
+    "completeness": 100.0,
+    "contig": "DUIC01000027.1",
+    "proteins": [
+     "HIH59103.1",
+     "HIH59104.1"
+    ],
+    "gids": [
+     366161,
+     366162
+    ],
+    "coords": [
+     "38703-38885(+)",
+     "38882-39094(+)"
+    ],
+    "positions": [
+     43,
+     44
+    ],
+    "lengths": [
+     60,
+     70
+    ],
+    "iptm": 0.8562920689582825,
+    "pair_chains_iptm": [
+     [
+      0.8750486373901367,
+      0.8562742471694946
+     ],
+     [
+      0.7656353712081909,
+      0.7879184484481812
+     ]
+    ],
+    "iface_pae": 2.219,
+    "contacts": 44,
+    "interface_plddt": 85.54,
+    "chain_plddt": [
+     88.36,
+     82.18
+    ],
+    "non_iptm": 0.17267030477523804,
+    "non_iface_pae": 17.198,
+    "unc_iptm": 0.05763452872633934,
+    "unc_iface_pae": 24.117,
+    "msa_cog_iptm": 0.7898808121681213,
+    "msa_cog_iface_pae": 2.549,
+    "msa_shuf_iptm": 0.821334958076477,
+    "msa_shuf_iface_pae": 2.362,
+    "msa_non_iptm": 0.18867266178131104,
+    "msa_non_iface_pae": 16.348,
+    "mono_A_plddt": 76.39,
+    "mono_B_plddt": 70.49
+   },
+   {
+    "rep": 2,
+    "genome": "GCA_018897155.1",
+    "tax": "d__Archaea;p__EX4484-52;c__EX4484-52;o__EX4484-52;f__LFW-46;g__LFW-46;s__LFW-46 sp018897155",
+    "completeness": 95.98999786376953,
+    "contig": "JAHILE010000052.1",
+    "proteins": [
+     "MBU4300949.1",
+     "MBU4300948.1"
+    ],
+    "gids": [
+     1310380,
+     1310379
+    ],
+    "coords": [
+     "5639-5821(-)",
+     "5427-5642(-)"
+    ],
+    "positions": [
+     9,
+     8
+    ],
+    "lengths": [
+     60,
+     71
+    ],
+    "iptm": 0.7083227038383484,
+    "pair_chains_iptm": [
+     [
+      0.7605670690536499,
+      0.7083169221878052
+     ],
+     [
+      0.6242949962615967,
+      0.6734352111816406
+     ]
+    ],
+    "iface_pae": 3.212,
+    "contacts": 44,
+    "interface_plddt": 77.97,
+    "chain_plddt": [
+     81.12,
+     74.75
+    ],
+    "non_iptm": 0.10049132257699966,
+    "non_iface_pae": 19.312,
+    "unc_iptm": 0.06852700561285019,
+    "unc_iface_pae": 18.376,
+    "msa_cog_iptm": 0.7308460474014282,
+    "msa_cog_iface_pae": 3.478,
+    "msa_shuf_iptm": 0.7056049108505249,
+    "msa_shuf_iface_pae": 3.897,
+    "msa_non_iptm": 0.09252233058214188,
+    "msa_non_iface_pae": 17.43,
+    "mono_A_plddt": 78.36,
+    "mono_B_plddt": 69.51
+   }
+  ],
+  "split_gene": {
+   "type_key": "81718-393054",
+   "block_genomes": 249,
+   "transcription_order": "a_first;a_first",
+   "fused_targets": 3,
+   "fused_genomes": 3,
+   "fused_order": "a_first",
+   "fused_same_genus_as_replicate": false,
+   "fused_genome_ratio": 0.012,
+   "split_gene_artefact": false,
+   "fused_lengths": "139;133;138",
+   "homologs_A_outside_block": 63,
+   "homologs_A_annotated": 0,
+   "homologs_B_outside_block": 80,
+   "homologs_B_annotated": 3,
+   "pfam_on_homologs_A": NaN,
+   "pfam_on_homologs_B": NaN
+  }
+ }
+]

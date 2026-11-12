@@ -1169,3 +1169,42 @@ outside DPANN and B occupies C's active-site groove.
   swap fails (0 of 18).
 Two readings, both UNVERIFIED: B is a substrate-mimicking inhibitor of C, or B is cleaved by C
 after the Gly. Biohub items used across all co-fold work: 2,187.
+
+## 2026-11-12 09:16 UTC — Context-weighted similarity (workstream `context_kernel`; `benchmarks/redesign/context_kernel/REPORT.txt`)
+
+Single input: ESM++ small (zca10) kNN expanded to gene-level cross-genome edges (164.9 M
+undirected, 64 partners per gene), neighbourhood agreement per edge (dense c_a . c_a' and
+best-match forms, windows 1, 3, 5), support at 1% FDR against a random-partner null, Leiden
+families, engine at window 3. Predeclared 08:07 UTC.
+
+| Arm | Tokens | DefenseFinder F1 | TXSScan F1 | TXSScan excess vs base | Summed DF+TXSS excess vs base (even) |
+|---|---|---|---|---|---|
+| MMseqs2 base | 430,471 | 0.806 | 0.758 | 0 | 0 |
+| Context gate (dense w1), weight sim x ctx (chosen on odd) | 880,124 | 0.741 | 0.692 | -0.013 [-0.024, -0.001] | -0.004 [-0.022, +0.016] |
+| Same supported edges, weight sim | 879,919 | 0.744 | 0.682 | -0.023 | -0.014 [-0.032, +0.005] |
+| All edges, weight sim x ctx, r11000 | 177,500 | 0.841 | 0.608 | -0.114 | -0.061 [-0.082, -0.041] |
+| All edges, weight sim (V0), r19000 | 297,708 | 0.775 | 0.632 | -0.044 | +0.038 [+0.017, +0.062] |
+| Gate built on permuted gene order, weight sim | 677,277 | 0.438 | 0.346 | -0.074 | -0.094 [-0.127, -0.060] |
+| Strict gate (best-match w5), weight sim x ctx | 1,632,458 | 0.060 | 0.585 | +0.043 | -0.269 [-0.295, -0.245] |
+
+- P1 (TXSScan excess >= base - 0.04): met. P2 (summed excess >= base - 0.01): met, competitive.
+  P3 (edge AUROC of sim x ctx exceeds sim by 0.05 for same-type against different-type gold
+  pairs): not met, -0.353 [-0.371, -0.335]; context alone 0.37-0.50 against 0.841 for similarity.
+- **The multiplicative kernel is refuted as a weighting.** The gain comes from using context as
+  an edge filter under the true gene order; weighting the same edges by context adds nothing,
+  and weighting all edges by sim x ctx costs TXSScan 0.11-0.21 of excess.
+- **A strict context filter removes DefenseFinder systems** (F1 0.060): 58% of their genes have
+  no context-supported edge against 36% of all genes; their neighbourhoods vary between genomes.
+- **Single input is viable.** Context-gated families match the MMseqs2 base, and plain
+  similarity families from gene-level edges at high resolution (V0, a predeclared control
+  outside the selection pool) exceed it on the summed excess (+0.038 on even, +0.033 on odd)
+  with lower F1 on every caller. Round 1's embedding-only arms (unique-sequence mutual 20-NN,
+  resolution 100-3000) were at -0.029 to -0.129.
+- **Granularity is the trade-off.** TXSScan excess tracks keeping large families whole (base
+  mean token size 1,869 for its members); DefenseFinder localization rewards small tokens. This
+  revises round 1's reading of the TXSScan loss (fragmentation, not composition-driven merging).
+- The dense identity holds numerically (2.2e-16); at windows of 3 and 5 the dense sum falls
+  under the null tail, so only best-match context reaches 1% FDR beyond window 1.
+Next hypothesis: one hierarchy over genes in place of one flat partition, with evidence read as
+the size of the smallest shared cluster, for both the engine and locus search (workstream
+`hierarchy`).

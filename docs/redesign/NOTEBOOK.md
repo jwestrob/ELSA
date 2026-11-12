@@ -1678,3 +1678,34 @@ reading.
 Next: neighbour lists stratified by lineage (one best match per genus), which is what the
 statistic counts, to stop lists and families from filling with close relatives (workstream
 `softrec3`).
+
+## 2026-11-12 23:35 UTC — Lineage-stratified neighbour lists (workstream `softrec3`; `benchmarks/redesign/softrec/REPORT3.txt`)
+
+Hypothesis: one best match per genus (what the statistic counts) stops lists and derived
+families from filling with close relatives and lowers chance support. Predeclared 20:52 UTC;
+selection recorded before any even-genome discovery score (the agent was interrupted once by an
+account limit; order of events unaffected).
+
+- **Refuted on both parts; the selected configuration neither matches nor beats.** Even genomes
+  against the token engine's nested reading: summed excess +0.130 [+0.099, +0.162], TXSScan F1
+  +0.070, DefenseFinder F1 0.466 (-0.278), CRISPRCasTyper F1 0.272 (-0.207), ribosomal 1,648
+  recovered and 1,276 resolved (Parvarchaeaceae 1 of 114).
+- **A per-genus best match is mostly not homology at a pair-level floor.** zca10 cosines are
+  asymmetric and the per-genome maximum has no valley: in a genome lacking the query's MMseqs2
+  family the best match passes cosine 0.32 in 35% of cases, 0.45 in 14%, 0.60 in 4.2% (family
+  present: 95%, 80%, 54%). Exact stratified lists reach 95% of the genera holding a family member
+  (global top-1,000: 53%), and 57% of the genera they reach hold none.
+- Chance support falls 2.6-2.9x with a per-genus cap, but count thresholds stay at L >= 8-30 and
+  all 54 candidates fail the CRISPR-Cas bar at the default reading. Leiden families from
+  stratified pairs agree better with MMseqs2 (AMI 0.83-0.86 against 0.66) and still cut the
+  Parvarchaeaceae ribosomal runs; connected components keep the runs whole by merging markers
+  (purity 0.36).
+- Post hoc, closest to matching: rank-weighted r = 1000 with count-matched Leiden families:
+  summed +0.057, F1 -0.032 / -0.012 / -0.083, 1,341 resolved.
+- Search with the same structure: AP 0.562 against 0.792 for whitened top-20,000 ranks; recall at
+  a matched wrong-type rate +0.057. One stratified structure does not serve both tasks.
+- Exact per-genome best match for all sequences takes 8 min 43 s on one A5000 (HNSW top-1,000 on
+  64 CPUs: 68 min); vectors to loci about 20 min of compute.
+Round 2's configuration remains the best embedding-only discovery output. Reading: at long range
+the whitened ESM++ small similarity does not separate homologs from chance well enough for a
+per-lineage best match; the representation is the limit this lever ran into.

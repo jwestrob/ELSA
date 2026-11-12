@@ -321,3 +321,188 @@ Remote (`$RD/ws_seqanchors/`):
    everything.
 5. For the 3,356 queries that saturate the cap, `S-all` holds only their best 4,000 hits.
    Raising `--max-seqs` would add paralog-family anchors and chaining cost.
+
+## Whitened-embedding arms
+
+Added 11 November 2026, 16:13-17:30 PST, at the coordinator's request. The metric workstream
+found that raw cosine is a poorly calibrated similarity, and soft-ZCA whitening (alpha 0.1)
+raises the sequence-visible share of exact top-60 hits from 0.612 to 0.726 (esm2_650m) and
+from 0.388 to 0.651 (esmc600m). The comparison was therefore rerun with whitened vectors and
+with the learned 256-d head (`zlin256_t10_vis_inb`, esmc600m). Criteria were predeclared in
+`NOTEBOOK.md` (16:13 entry) before any result.
+
+### Findings
+
+1. **Whitened embeddings leave the verdict unchanged.** Over the union of the six sequence
+   arms, `HZ-seed60` (`S-top60` union whitened exact top-60) adds 0.90% (ESM2-650M) and 0.75%
+   (ESM-C 600M) accepted pairs, against a 2% bar. It adds 2.6% / 3.8% covered query genes,
+   against a 5% bar. Its no-hit additions are well supported: 70.4% [69.0, 71.7] / 62.1%
+   [60.7, 63.5] structure-confirmed, above the 50% bar, but the addition is small. The learned
+   head (`HL-seed60`) gives the same answer: 1.00% pairs, 2.7% genes, 68.1% confirmed.
+2. **Whitening improves embedding seeds; the gain disappears in the hybrid.**
+   - Whitened seeds alone (`Z-seed60`) accept 26% / 64% more blocks than exact raw seeds.
+   - They find 2.7x / 6.1x more cross-phylum blocks (30,360 vs 11,422; 23,074 vs 3,757).
+   - Paired F1 excess rises by +0.016 [+0.003, +0.032] / +0.012 [-0.009, +0.035].
+   - They still trail `S-top60` (-0.048 / -0.024, both intervals below 0).
+   - In the hybrid, whitening changes F1 excess by -0.001 / -0.002 relative to the raw-cosine
+     hybrid, and the hybrid matches `S-top60` (+0.001 / -0.002).
+3. **Whitening raises the count of structure-confirmed homologs with no sequence hit.**
+   Estimated confirmed no-hit additions over all sequence arms:
+   - ESM2-650M: 31,800 (raw hybrid) to 44,780 (whitened), x1.4.
+   - ESM-C 600M: 13,800 (raw) to 32,836 (whitened, x2.4) and 47,615 (learned head, x3.5).
+
+   These are 0.3-0.5% of the 9.82 M accepted sequence pairs.
+4. **Cross-phylum reach rises, still far below exhaustive sequence anchors.** `HZ-seed60`
+   finds 53,305 / 47,072 cross-phylum blocks and `HL-seed60` 53,887, against 44,744 / 39,164
+   for the raw hybrid and 2,488,554 for `S-all`. Predeclared expectations:
+   - `Z-seed60` exceeded the expected 1.3-2x / 2-5x gain over raw seeds.
+   - `HZ-seed60` came in at +19% / +20% over the raw hybrid, inside the expected <= 30%.
+   - At 2.14% (650M) and 2.17% (HL) of `S-all`, the hybrids slightly exceed the expected 2%;
+     ESM-C `HZ` is at 1.89%.
+5. **Exact search equals the original HNSW seeds.** The exact raw top-60 (`R-seed60`)
+   contains 99.82% / 99.85% of the ANN60 seeds, only 772 / 1,413 of its hits fall below
+   cosine 0.85, and its F1 differs from `E-seed60` by -0.0003 / +0.003. The `Z` vs `R` contrast
+   therefore isolates the metric.
+
+### Method
+
+- **Search.** faiss 1.13.2 exact `knn` (inner product) of all queries with a vector (66,212
+  for esm2_650m; 67,148 for esmc600m) against all reference rows with a vector (4,115,052 /
+  4,190,383). Top 60 per query, no similarity cut. All hits are cross-genome (query and
+  reference genomes are disjoint; asserted). 64 CPUs (Xeon E5-2683 v4):
+  - zca10: 742 s (1,280-d) and 707 s (1,152-d).
+  - zlin256: 186 s (256-d).
+  - raw: 760 s and 690 s.
+- **Replay gate.** On the metric workstream's 22,621 held-out queries, every space reproduces
+  its exact top-60 hits. Mean Jaccard is 0.99983-0.99990, 22,514-22,566 queries are
+  identical, and matched scores differ by at most 1.1e-6; the remaining differences are tied
+  rank-60 scores.
+- **Arms.**
+  - `Z-seed60`, `L-seed60` and `R-seed60` are the exact hits, weighted by the percentile of
+    their own similarity.
+  - `HZ-seed60` and `HL-seed60` are `S-top60` (G(bits)) union those hits (percentile); a
+    shared pair keeps the larger weight.
+  - Same chainer, the same three order permutations (re-chaining is a valid null because exact
+    retrieval is order-free), the same per-size 5% calibration and the same scoring.
+- **Structure.** 19,500 sample rows, 11,482 unique pairs. Per hybrid: 4,500 no-hit additions
+  over the union, 1,000 in-search additions over the union and 1,000 in-search additions over
+  `S-top60`. Scores came from `$S/work/pair_table.parquet` (7,599 pairs), this workstream's
+  round-1 sample (205) and new foldseek TM-align (3,678 pairs, 3.3 min on 64 CPUs).
+- **Code.** `code/zsearch.py`, `run_zsearch.sbatch`, `sa.py` (arm kinds Z/L/R/HZ/HL),
+  `run_zarms.sbatch`, `compare_z.py`, `run_compare_z.sbatch`. Jobs: 77597 search, 77598
+  arms, 77617 comparison/TM/paired.
+
+### Ablation table, whitened arms (5% calibration; columns as in the main table)
+
+| arm | anchors | observed blocks | perm/obs | size 2 / 3 / 4 ratio | accepted blocks | accepted pairs | expected chance blocks | covered query genes | F1 (5%) | random | excess [95% CI] | F1 (all blocks) | cross-phylum (>= 10) | chain s (obs / total) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| R-seed60@esm2_650m | 3,972,720 | 226,051 | 0.009 | 0.014 / 0.0000 / 0.00000 | 226,051 | 642,978 | 2,096 | 49,007 | 0.578 | 0.582 | -0.004 [-0.038, +0.029] | 0.578 | 11,422 (13) | 17 / 49 |
+| Z-seed60@esm2_650m | 3,972,720 | 284,974 | 0.006 | 0.010 / 0.0000 / 0.00000 | 284,974 | 823,910 | 1,828 | 49,860 | 0.602 | 0.590 | +0.012 [-0.021, +0.044] | 0.602 | 30,360 (38) | 26 / 59 |
+| HZ-seed60@esm2_650m | 5,233,451 | 374,066 | 0.008 | 0.012 / 0.0001 / 0.00002 | 374,066 | 1,124,839 | 2,833 | 52,131 | 0.668 | 0.607 | +0.061 [+0.032, +0.090] | 0.668 | 53,305 (60) | 25 / 71 |
+| R-seed60@esmc600m | 4,028,880 | 168,675 | 0.019 | 0.029 / 0.0003 / 0.00003 | 168,675 | 482,641 | 3,165 | 48,858 | 0.599 | 0.575 | +0.023 [-0.009, +0.055] | 0.599 | 3,757 (0) | 16 / 52 |
+| Z-seed60@esmc600m | 4,028,880 | 276,950 | 0.013 | 0.020 / 0.0004 / 0.00001 | 276,950 | 810,326 | 3,492 | 51,902 | 0.639 | 0.604 | +0.035 [+0.004, +0.067] | 0.639 | 23,074 (30) | 27 / 64 |
+| HZ-seed60@esmc600m | 5,401,487 | 366,165 | 0.013 | 0.020 / 0.0004 / 0.00003 | 366,165 | 1,102,548 | 4,600 | 53,393 | 0.673 | 0.615 | +0.058 [+0.028, +0.087] | 0.673 | 47,072 (50) | 26 / 78 |
+| L-seed60@esmc600m | 4,028,880 | 313,821 | 0.006 | 0.010 / 0.0001 / 0.00001 | 313,821 | 942,932 | 2,005 | 51,174 | 0.645 | 0.601 | +0.044 [+0.011, +0.076] | 0.645 | 33,945 (44) | 30 / 73 |
+| HL-seed60@esmc600m | 5,130,298 | 376,039 | 0.007 | 0.012 / 0.0002 / 0.00002 | 376,039 | 1,140,516 | 2,745 | 52,239 | 0.667 | 0.608 | +0.059 [+0.028, +0.090] | 0.667 | 53,887 (59) | 28 / 87 |
+
+Accepted blocks (5%) by target-genome stratum:
+
+| arm | Streptomyces | same class | same phylum | other phylum | no GTDB |
+|---|---|---|---|---|---|
+| R-seed60@esm2_650m | 5,166 | 202,768 | 5,989 | 11,422 | 706 |
+| Z-seed60@esm2_650m | 5,862 | 240,080 | 7,599 | 30,360 | 1,073 |
+| HZ-seed60@esm2_650m | 7,218 | 300,647 | 11,321 | 53,305 | 1,575 |
+| R-seed60@esmc600m | 5,203 | 156,124 | 3,122 | 3,757 | 469 |
+| Z-seed60@esmc600m | 7,524 | 238,304 | 6,914 | 23,074 | 1,134 |
+| HZ-seed60@esmc600m | 8,719 | 298,053 | 10,696 | 47,072 | 1,625 |
+| L-seed60@esmc600m | 5,925 | 263,235 | 9,498 | 33,945 | 1,218 |
+| HL-seed60@esmc600m | 6,939 | 301,819 | 11,748 | 53,887 | 1,646 |
+
+### Paired differences in F1 excess (arm minus reference; 95% paired region bootstrap)
+
+"E-seed60" is `E-seed60/rank` (raw HNSW ANN60 seeds), "H-seed60" is the raw-cosine seed
+hybrid, and "R-seed60" is the exact raw top-60 of the same model.
+
+| arm | S-top60/bitrank | S-all/bitrank | E-seed60 (raw ANN60) | H-seed60 (raw hybrid) | R-seed60 (exact raw) | other |
+|---|---|---|---|---|---|---|
+| R-seed60@esm2_650m | -0.064 [-0.094, -0.036] | -0.077 [-0.109, -0.047] | -0.000 [-0.000, -0.000] | -0.066 [-0.094, -0.041] | - | - |
+| Z-seed60@esm2_650m | -0.048 [-0.076, -0.020] | -0.060 [-0.090, -0.034] | +0.016 [+0.003, +0.032] | -0.050 [-0.076, -0.025] | +0.016 [+0.003, +0.032] | - |
+| HZ-seed60@esm2_650m | +0.001 [-0.011, +0.016] | -0.011 [-0.031, +0.007] | +0.065 [+0.040, +0.093] | -0.001 [-0.012, +0.010] | - | - |
+| R-seed60@esmc600m | -0.036 [-0.061, -0.013] | -0.049 [-0.078, -0.023] | +0.003 [-0.001, +0.009] | -0.037 [-0.058, -0.019] | - | - |
+| Z-seed60@esmc600m | -0.024 [-0.043, -0.005] | -0.037 [-0.061, -0.014] | +0.015 [-0.007, +0.038] | -0.025 [-0.043, -0.006] | +0.012 [-0.009, +0.035] | - |
+| HZ-seed60@esmc600m | -0.002 [-0.015, +0.014] | -0.014 [-0.034, +0.004] | +0.038 [+0.014, +0.063] | -0.002 [-0.015, +0.012] | - | - |
+| L-seed60@esmc600m | -0.016 [-0.035, +0.003] | -0.028 [-0.054, -0.005] | +0.024 [-0.000, +0.048] | -0.016 [-0.038, +0.005] | +0.021 [-0.002, +0.044] | vs Z-seed60@esmc600m: +0.009 [-0.013, +0.029] |
+| HL-seed60@esmc600m | -0.000 [-0.011, +0.013] | -0.013 [-0.034, +0.005] | +0.039 [+0.014, +0.065] | -0.001 [-0.017, +0.016] | - | vs HZ-seed60@esmc600m: +0.001 [-0.010, +0.013] |
+
+### Decisive table, whitened arms (5% level)
+
+Reference `S-top60` = `S-top60/bitrank`; `union S` = accepted pairs of all six sequence arms
+(9,823,998 pairs, 58,065 covered query genes). "In search" = an E <= 1e-3 hit of the
+4,000-candidate MMseqs2 search; "no hit" = not returned by it.
+
+| arm | reference | accepted pairs arm / ref | shared | arm-only (/ ref) | arm-only: in search / no hit | ref-only | blocks arm / ref | arm-only blocks (cross-phylum) | ref-only blocks (cross-phylum) | covered genes ref / arm / union | added by arm | added by ref |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| R-seed60@esm2_650m | S-top60 | 642,978 / 865,281 | 456,049 | 186,929 (21.6%) | 146,820 / 40,109 | 409,232 | 226,051 / 283,116 | 64,366 (5,314) | 124,558 (29,712) | 49,335 / 49,007 / 52,252 | 2,917 (+5.9%) | 3,245 |
+| R-seed60@esm2_650m | union S | 642,978 / 9,823,998 | 588,508 | 54,470 (0.6%) | 14,361 / 40,109 | 9,235,490 | 226,051 / - | - | - | 58,065 / 49,007 / 59,575 | 1,510 (+2.6%) | 10,568 |
+| Z-seed60@esm2_650m | S-top60 | 823,910 / 865,281 | 606,308 | 217,602 (25.1%) | 159,578 / 58,024 | 258,973 | 284,974 / 283,116 | 75,320 (12,879) | 75,497 (18,322) | 49,335 / 49,860 / 51,840 | 2,505 (+5.1%) | 1,980 |
+| Z-seed60@esm2_650m | union S | 823,910 / 9,823,998 | 744,898 | 79,012 (0.8%) | 20,988 / 58,024 | 9,079,100 | 284,974 / - | - | - | 58,065 / 49,860 / 59,482 | 1,417 (+2.4%) | 9,622 |
+| HZ-seed60@esm2_650m | S-top60 | 1,124,839 / 865,281 | 863,013 | 261,826 (30.3%) | 198,198 / 63,628 | 2,268 | 374,066 / 283,116 | 93,310 (17,560) | 41 (8) | 49,335 / 52,131 / 52,135 | 2,800 (+5.7%) | 4 |
+| HZ-seed60@esm2_650m | union S | 1,124,839 / 9,823,998 | 1,036,019 | 88,820 (0.9%) | 25,192 / 63,628 | 8,787,979 | 374,066 / - | - | - | 58,065 / 52,131 / 59,595 | 1,530 (+2.6%) | 7,464 |
+| R-seed60@esmc600m | S-top60 | 482,641 / 865,281 | 360,123 | 122,518 (14.2%) | 99,267 / 23,251 | 505,158 | 168,675 / 283,116 | 40,496 (1,484) | 158,477 (33,527) | 49,335 / 48,858 / 52,941 | 3,606 (+7.3%) | 4,083 |
+| R-seed60@esmc600m | union S | 482,641 / 9,823,998 | 452,164 | 30,477 (0.3%) | 7,226 / 23,251 | 9,371,834 | 168,675 / - | - | - | 58,065 / 48,858 / 60,022 | 1,957 (+3.4%) | 11,164 |
+| Z-seed60@esmc600m | S-top60 | 810,326 / 865,281 | 609,937 | 200,389 (23.2%) | 151,758 / 48,631 | 255,344 | 276,950 / 283,116 | 68,467 (7,533) | 76,149 (20,260) | 49,335 / 51,902 / 53,040 | 3,705 (+7.5%) | 1,138 |
+| Z-seed60@esmc600m | union S | 810,326 / 9,823,998 | 743,813 | 66,513 (0.7%) | 17,882 / 48,631 | 9,080,185 | 276,950 / - | - | - | 58,065 / 51,902 / 60,147 | 2,082 (+3.6%) | 8,245 |
+| HZ-seed60@esmc600m | S-top60 | 1,102,548 / 865,281 | 862,000 | 240,548 (27.8%) | 187,700 / 52,848 | 3,281 | 366,165 / 283,116 | 85,366 (11,319) | 53 (3) | 49,335 / 53,393 / 53,402 | 4,067 (+8.2%) | 9 |
+| HZ-seed60@esmc600m | union S | 1,102,548 / 9,823,998 | 1,029,078 | 73,470 (0.7%) | 20,622 / 52,848 | 8,794,920 | 366,165 / - | - | - | 58,065 / 53,393 / 60,271 | 2,206 (+3.8%) | 6,878 |
+| L-seed60@esmc600m | S-top60 | 942,932 / 865,281 | 699,274 | 243,658 (28.2%) | 178,151 / 65,507 | 166,007 | 313,821 / 283,116 | 80,360 (13,633) | 49,640 (15,469) | 49,335 / 51,174 / 51,967 | 2,632 (+5.3%) | 793 |
+| L-seed60@esmc600m | union S | 942,932 / 9,823,998 | 852,000 | 90,932 (0.9%) | 25,425 / 65,507 | 8,971,998 | 313,821 / - | - | - | 58,065 / 51,174 / 59,553 | 1,488 (+2.6%) | 8,379 |
+| HL-seed60@esmc600m | S-top60 | 1,140,516 / 865,281 | 861,759 | 278,757 (32.2%) | 208,827 / 69,930 | 3,522 | 376,039 / 283,116 | 95,763 (18,148) | 33 (3) | 49,335 / 52,239 / 52,243 | 2,908 (+5.9%) | 4 |
+| HL-seed60@esmc600m | union S | 1,140,516 / 9,823,998 | 1,042,484 | 98,032 (1.0%) | 28,102 / 69,930 | 8,781,514 | 376,039 / - | - | - | 58,065 / 52,239 / 59,658 | 1,593 (+2.7%) | 7,419 |
+
+### Structure confirmation of the hybrid additions (TM >= 0.5 by the shorter chain; Wilson 95%)
+
+| arm | set | n | confirmed | strict (min TM >= 0.5) | median TM |
+|---|---|---|---|---|---|
+| HZ-seed60@esm2_650m | no hit, over the union | 4,500 | 70.4% [69.0%, 71.7%] | 53.3% | 0.604 |
+| HZ-seed60@esm2_650m | in search, over the union | 1,000 | 94.0% [92.4%, 95.3%] | 85.6% | 0.825 |
+| HZ-seed60@esm2_650m | in search, over S-top60 | 1,000 | 97.3% [96.1%, 98.1%] | 93.3% | 0.887 |
+| HZ-seed60@esmc600m | no hit, over the union | 4,500 | 62.1% [60.7%, 63.5%] | 48.4% | 0.577 |
+| HZ-seed60@esmc600m | in search, over the union | 1,000 | 93.9% [92.2%, 95.2%] | 83.8% | 0.821 |
+| HZ-seed60@esmc600m | in search, over S-top60 | 1,000 | 97.8% [96.7%, 98.5%] | 93.6% | 0.899 |
+| HL-seed60@esmc600m | no hit, over the union | 4,500 | 68.1% [66.7%, 69.4%] | 49.6% | 0.597 |
+| HL-seed60@esmc600m | in search, over the union | 1,000 | 93.7% [92.0%, 95.0%] | 84.4% | 0.824 |
+| HL-seed60@esmc600m | in search, over S-top60 | 1,000 | 97.3% [96.1%, 98.1%] | 91.1% | 0.892 |
+
+Random query x reference pairs: 1.82% (n = 23,788). Raw-cosine hybrid (`H-seed60`) no-hit
+additions: 68.0% (650M), 49.7% (600M).
+
+### Predeclared verdict
+
+| arm | additions over union (bar 2% = 196,480) | covered genes added (bar 5% = 2,903) | no-hit confirmed (bar 50%) | est. confirmed additions | est. confirmed no-hit pairs | verdict |
+|---|---|---|---|---|---|---|
+| HZ-seed60@esm2_650m | 88,820 (0.90%) | 1,530 (2.6%) | 70.4% | 77.1% (68,460) | 44,780 | unchanged |
+| HZ-seed60@esmc600m | 73,470 (0.75%) | 2,206 (3.8%) | 62.1% | 71.0% (52,200) | 32,836 | unchanged |
+| HL-seed60@esmc600m (secondary) | 98,032 (1.00%) | 1,593 (2.7%) | 68.1% | 75.4% (73,946) | 47,615 | unchanged |
+
+The quality bar is met and the materiality bar is missed by a factor of 2.0-2.7 on pairs and
+1.3-1.9 on genes. A better similarity makes the embedding contribution cleaner (more
+confirmed, more distant). The contribution stays small next to exhaustive sequence anchors,
+and on `source207` it adds nothing over `S-top60`.
+
+### Wall time, whitened arms
+
+- Exact top-60 search (64 CPUs): 707-742 s for zca10, 186 s for zlin256, 690-760 s for raw.
+  The MMseqs2 search took 1,546 s on the same CPUs.
+- Vector production (ws_metric): soft-ZCA export 143 s / 191 s. Whitening statistics come from
+  one reference pass; the learned head was trained separately. Both sit on the embedding
+  inference times of the main section.
+- Chaining (24 CPUs): observed 16-30 s; four chains 49-87 s.
+
+### Open questions added
+
+1. Whitened seeds alone reach 6x more cross-phylum blocks than raw seeds and keep a clean
+   null. A larger per-query budget in whitened space (exhaustive per-scaffold top-k, BRIEF F)
+   is the natural next test of distant reach.
+2. The learned head's no-hit additions are 68% confirmed with the largest count (47,615
+   estimated). Its configuration was chosen post hoc in the metric workstream; a held-out
+   choice would settle whether that advantage over zca10 is real.

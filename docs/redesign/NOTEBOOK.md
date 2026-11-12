@@ -528,3 +528,29 @@ Next, to locate what embeddings add, if anything:
    (hybrid jobs 77758, 77764; engine jobs 77759-77763, 77765-77769).
 3. The same on DPANN with the ESM++ small vectors when they are finalized
    (`benchmarks/redesign/lab/embed_tokens.py`: unique-level kNN, graph communities, hybrids).
+
+## 2026-11-12 01:40 UTC — Sequence-anchors agent: whitened-embedding arms (jobs 77597, 77598, 77617)
+
+Full record: `benchmarks/redesign/ws_seqanchors/REPORT.md`, section "Whitened-embedding arms".
+
+- **Verdict unchanged: embedding seeds do not materially extend sequence anchors on the
+  Spacedust collection.** Over the union of the six sequence arms (9.82M accepted pairs,
+  58,065 covered genes) the whitened hybrid adds 0.90% / 0.75% accepted pairs
+  (ESM2-650M / ESM-C 600M; bar 2%) and 2.6% / 3.8% covered genes (bar 5%). The learned head
+  on ESM-C 600M: 1.00% pairs, 2.7% genes.
+- **The additions are real homologs.** 70.4% [69.0, 71.7] / 62.1% [60.7, 63.5] of the
+  no-sequence-hit additions are structure-confirmed (68.1% for the learned head).
+  Estimated confirmed homologs with no sequence hit: 44,780 (ESM2-650M), 32,836
+  (ESM-C 600M), 47,615 (learned head), 0.3-0.5% of the sequence pairs.
+- **Whitening helps embedding seeds on their own:** +26% / +64% accepted blocks over exact
+  raw cosine, cross-phylum blocks 30,360 against 11,422 and 23,074 against 3,757; F1 excess
+  +0.016 [+0.003, +0.032] / +0.012 [-0.009, +0.035] over raw. Whitened seeds alone still
+  trail the sequence top-60 arm (-0.048 / -0.024).
+- **In the hybrid the gain is zero:** whitened hybrid minus sequence top-60 is +0.001 /
+  -0.002 in F1 excess, intervals containing zero.
+- Exact raw top-60 contains 99.8% of the original HNSW seeds, so the whitened-versus-raw
+  contrast isolates the metric.
+
+Together with the token result above, two independent routes (pairwise anchors, family
+tokens) give the same answer on this collection: a sensitive sequence search already
+captures what the embeddings find, and the embedding-only remainder is real but small.

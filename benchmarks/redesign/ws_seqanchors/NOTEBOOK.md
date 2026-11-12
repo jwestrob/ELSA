@@ -480,3 +480,120 @@ the union, and 1,000 in-search additions over `S-top60`. Each set is the first N
 `work/tm/sample_scored.parquet` where present; foldseek TM-aligns the rest.
 
 Correction: the entry above was written at 16:13 PST (biotite clock), not 08:00.
+
+## 2026-11-11 16:25 PST. Whitened arms: jobs launched
+
+Preflight repeated in this turn: both cluster files read in full (unchanged since the first read).
+
+- **77597** `code/run_zsearch.sbatch` (`standard_expand_2`, 64 CPU, node-64-768g-12; node-64-768g-29
+  excluded for the stalled reads ws_metric saw): `code/zsearch.py`. Five exact top-60 searches,
+  faiss 1.13.2 `knn` (`METRIC_INNER_PRODUCT`), queries in blocks of 8,192, with whole-matrix
+  sequential reads (21.5 GB reference read in 30 s). Spaces: `zca10__esm2_650m`,
+  `zca10__esmc600m`, `zlin256__esmc600m`, `raw__esm2_650m`, `raw__esmc600m`. Each search writes
+  `work/zseeds/<space>__<model>.parquet` and `results/zsearch/<name>.json` (timings, rows without
+  vectors, norm checks, replay against ws_metric hits, ANN60 recall for raw). It was smoke-tested
+  on the login node first (30,000 reference rows, 500 queries, 2 threads).
+- **77598** `code/run_zarms.sbatch` (array 0-2, 24 CPU, after 77597): `sa.py arms` with the new arm
+  kinds (`Z`, `L`, `R`, `HZ`, `HL`; `sa.py` gains `Ctx.exact`, the percentile weight over each
+  space's own hits).
+- **77617** `code/run_compare_z.sbatch` (`standard_expand_2`, 64 CPU, after 77598; it starts
+  after 77597 ends, so only one 64-CPU job runs at a time): `code/compare_z.py` prep, foldseek
+  on the pairs without a score, summarize (structure, verdict), paired F1 bootstrap.
+
+## 2026-11-11 17:14 PST. Job 77597 complete: exact searches; replay gates pass
+
+`results/zsearch/<name>.json`. 64 CPUs (Xeon E5-2683 v4), faiss 1.13.2 exact `knn`.
+
+| space | dim | reference rows | queries | read s | search s | hits | replay: identical queries / 22,621 | mean Jaccard | max score diff |
+|---|---|---|---|---|---|---|---|---|---|
+| zca10 esm2_650m | 1,280 | 4,115,052 | 66,212 | 30 | 742 | 3,972,720 | 22,548 | 0.99983 | 3.0e-7 |
+| zca10 esmc600m | 1,152 | 4,190,383 | 67,148 | 27 | 707 | 4,028,880 | 22,566 | 0.99990 | 3.0e-7 |
+| zlin256 esmc600m | 256 | 4,190,383 | 67,148 | 6 | 186 | 4,028,880 | 22,538 | 0.99987 | 1.1e-6 |
+| raw esm2_650m | 1,280 | 4,115,052 | 66,212 | 30 | 760 | 3,972,720 | 22,514 | 0.99984 | 5.4e-7 |
+| raw esmc600m | 1,152 | 4,190,383 | 67,148 | 27 | 690 | 4,028,880 | 22,559 | 0.99990 | 6.0e-7 |
+
+Replay against the metric workstream's hits passes for every space (the queries that differ
+differ at tied rank-60 scores). The raw exact top-60 contains 99.82% (650M: 3,964,759 of
+3,971,948) and 99.85% (600M: 4,021,218 of 4,027,458) of the HNSW ANN60 seeds. Only 772 / 1,413
+exact raw hits fall below cosine 0.85, so `R-seed60` and `E-seed60` share almost every
+anchor, and `Z` vs `R` isolates the metric. Similarity medians: raw 0.988 / 0.973, zca10
+0.769 / 0.601, zlin256 0.835.
+
+Job 77598 (arms) started 17:12; 77617 is pending on it.
+
+## 2026-11-11 17:35 PST. Whitened arms complete (77598, 77617): results and verdict
+
+Jobs 77598 (array 0-2) and 77617 COMPLETED. Files: `results/zarms.tsv`, `zarms_by_stratum.tsv`,
+`zdecisive_counts.tsv`, `zstructure_confirmation.tsv`, `zverdict.tsv`, `zpaired_f1_excess.tsv`,
+`zper_region_excess.tsv`, `tmz_prep_stats.json`, `arms/{Z,HZ,L,HL,R}-seed60__*.json`.
+
+Arms at 5% (every exact-search arm has a clean null and accepts every block):
+
+| arm | observed = accepted | perm/obs | accepted pairs | covered genes | F1 | random | excess [95% CI] | cross-phylum (>= 10) |
+|---|---|---|---|---|---|---|---|---|
+| R-seed60@esm2_650m | 226,051 | 0.009 | 642,978 | 49,007 | 0.578 | 0.582 | -0.004 [-0.038, +0.029] | 11,422 (13) |
+| Z-seed60@esm2_650m | 284,974 | 0.006 | 823,910 | 49,860 | 0.602 | 0.590 | +0.012 [-0.021, +0.044] | 30,360 (38) |
+| HZ-seed60@esm2_650m | 374,066 | 0.008 | 1,124,839 | 52,131 | 0.668 | 0.607 | +0.061 [+0.032, +0.090] | 53,305 (60) |
+| R-seed60@esmc600m | 168,675 | 0.019 | 482,641 | 48,858 | 0.599 | 0.575 | +0.023 [-0.009, +0.055] | 3,757 (0) |
+| Z-seed60@esmc600m | 276,950 | 0.013 | 810,326 | 51,902 | 0.639 | 0.604 | +0.035 [+0.004, +0.067] | 23,074 (30) |
+| HZ-seed60@esmc600m | 366,165 | 0.013 | 1,102,548 | 53,393 | 0.673 | 0.615 | +0.058 [+0.028, +0.087] | 47,072 (50) |
+| L-seed60@esmc600m | 313,821 | 0.006 | 942,932 | 51,174 | 0.645 | 0.601 | +0.044 [+0.011, +0.076] | 33,945 (44) |
+| HL-seed60@esmc600m | 376,039 | 0.007 | 1,140,516 | 52,239 | 0.667 | 0.608 | +0.059 [+0.028, +0.090] | 53,887 (59) |
+
+`R-seed60` reproduces the raw ANN60 arm (`E-seed60/rank`: 225,864 / 168,580 blocks; paired F1
+difference -0.0003 / +0.003), so exact search and the 0.85 cut change nothing.
+
+Paired F1-excess differences (95% region bootstrap):
+- Whitening alone helps a seeds-only arm. Z vs exact raw: +0.016 [+0.003, +0.032] (650M) and
+  +0.012 [-0.009, +0.035] (600M); L vs exact raw +0.021 [-0.002, +0.044]; L vs Z +0.009
+  [-0.013, +0.029].
+- Whitened seeds alone stay below sequence: Z vs `S-top60` -0.048 [-0.076, -0.020] (650M) and
+  -0.024 [-0.043, -0.005] (600M); L -0.016 [-0.035, +0.003]; every Z/L arm is below `S-all`.
+- Hybrids are unchanged by whitening. HZ vs `S-top60`: +0.001 [-0.011, +0.016] (650M), -0.002
+  [-0.015, +0.014] (600M); HL -0.000 [-0.011, +0.013]. HZ vs the raw hybrid `H-seed60`: -0.001
+  / -0.002; HL vs HZ +0.001. HZ/HL vs `S-all`: -0.011 to -0.014, all intervals spanning 0.
+
+Decisive counts and structure (union of sequence arms = 9,823,998 accepted pairs, 58,065 genes):
+
+| arm | additions over union (% of union) | in search / no hit | covered genes added | no-hit confirmed [95% CI] | in-search confirmed | est. confirmed additions | est. confirmed no-hit pairs |
+|---|---|---|---|---|---|---|---|
+| HZ-seed60@esm2_650m | 88,820 (0.90%) | 25,192 / 63,628 | +1,530 (+2.6%) | 70.4% [69.0, 71.7] | 94.0% | 77.1% (68,460) | 44,780 |
+| HZ-seed60@esmc600m | 73,470 (0.75%) | 20,622 / 52,848 | +2,206 (+3.8%) | 62.1% [60.7, 63.5] | 93.9% | 71.0% (52,200) | 32,836 |
+| HL-seed60@esmc600m | 98,032 (1.00%) | 28,102 / 69,930 | +1,593 (+2.7%) | 68.1% [66.7, 69.4] | 93.7% | 75.4% (73,946) | 47,615 |
+
+Against `S-top60`, HZ adds 30.3% / 27.8% accepted pairs (HL 32.2%), +5.7% / +8.2% covered genes
+(HL +5.9%), and in-search additions over `S-top60` are 97.3-97.8% confirmed. Raw-hybrid
+comparison (03:52 and 04:52 entries): `H-seed60` added 66,100 / 38,531 pairs over the union,
+no-hit confirmed 68.0% / 49.7%, est. 31,800 / 13,800 confirmed no-hit pairs. Whitening raises
+the confirmed no-hit additions to 44,780 (x1.4) for 650M and 32,836 (x2.4) for 600M, and the
+learned head to 47,615 (x3.5).
+
+Structure sample: 19,500 rows, 11,482 unique pairs. 7,599 scores came from
+`$S/work/pair_table.parquet` and 205 from this workstream's round-1 sample; 3,678 were
+TM-aligned here (foldseek, 3.3 min on 64 CPUs). `$S/work_key/tm_key.parquet` contributed none
+beyond those.
+
+**Verdict (predeclared).** `HZ-seed60` adds 0.90% / 0.75% accepted pairs (bar 2%) and 2.6% /
+3.8% covered query genes (bar 5%) over the union of sequence arms. The quality condition holds
+(no-hit additions 70.4% / 62.1% confirmed, above 50%), and the materiality condition fails for
+both models. **Whitened embeddings leave the verdict unchanged.** The secondary
+`HL-seed60@esmc600m` gives the same answer: 1.00% pairs, 2.7% genes, 68.1% confirmed.
+
+**Cross-phylum expectation vs result.**
+- `Z-seed60` over raw seeds: x2.66 for 650M (30,360 vs 11,408) and x6.16 for 600M (23,074 vs
+  3,744). Both exceed the predicted ranges (1.3-2x, 2-5x); whitening reaches distant genomes
+  more than I expected.
+- `HZ-seed60` over `H-seed60`: +19.1% (53,305 vs 44,744) and +20.2% (47,072 vs 39,164), inside
+  the predicted <= 30%.
+- Against `S-all/bitrank`'s 2,488,554 cross-phylum blocks: HZ is 2.14% (650M) and 1.89%
+  (600M), HL 2.17%. The predicted "below 2%" holds for 600M only.
+
+Correction: the entry above was written at 17:30 PST (biotite clock), not 17:35.
+
+## 2026-11-11 17:40 PST. Whitened follow-up closed
+
+`REPORT.md` gains the section "Whitened-embedding arms": findings, method, ablation rows,
+strata, paired F1, decisive table, structure table, predeclared verdict, wall time and open
+questions. Local `code/` holds 17 files with sha256 identical to the remote copies (the earlier
+diff output differed only in sort order). Jobs 77597, 77598, 77617 COMPLETED; none of this
+workstream's jobs remain queued.

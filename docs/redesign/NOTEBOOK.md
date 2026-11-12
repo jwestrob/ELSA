@@ -482,3 +482,49 @@ the cap of 10 submitted jobs).
 
 Submitted 00:55 UTC: 77717 on `-p gpu` (A5000, running, ascending length) and 77718 on
 `-p gpu_h200 --qos=gpu_h200_4` (pending, descending length).
+
+## 2026-11-12 01:20 UTC — Permissive sequence families match the embedding hybrids (jobs 77729-77733)
+
+Jacob (01:10 UTC): once the DPANN embeddings are back, experiment freely toward the best
+tool for this purpose.
+
+Baselines queued while the embeddings run, all with the genome-level null.
+
+Spacedust source207, conserved loci with gaps 0-2 / all locus kinds:
+
+| Tokens | w | Conserved g0-2: F1 | Random | Excess [95% CI] | All kinds: F1 | Excess |
+|---|---|---|---|---|---|---|
+| MMseqs E<=1e-3, cov 50% (601,584 tokens) | 3 | 0.692 | 0.571 | +0.121 [+0.085, +0.156] | 0.754 | +0.064 |
+| same | 5 | **0.758** | 0.576 | **+0.182** [+0.150, +0.213] | 0.798 | +0.098 |
+| same | 8 | 0.745 | 0.561 | +0.184 [+0.152, +0.214] | 0.807 | +0.104 |
+| hybrid ESM2-650M CPM r 0.05 on 30%/80% (334,660 tokens) | 5 | 0.737 | 0.576 | +0.161 [+0.127, +0.193] | 0.788 | +0.089 |
+| same | 8 | 0.750 | 0.566 | +0.184 [+0.154, +0.213] | 0.801 | +0.099 |
+
+**A sequence-only token set equals the embedding hybrid at every window.** The gain of the
+hybrid arm over the strict 30%/80% clusters is reproduced by relaxing the MMseqs clustering
+(sensitivity 7.5, E <= 1e-3, 50% bidirectional coverage, no identity floor). On this
+benchmark the embedding contributes nothing that a sensitive sequence clustering lacks.
+For reference: native Spacedust F1 0.676 (+0.065); calibrated ELSA chains 0.652-0.762 by
+model; every-hit MMseqs anchors 0.727 (+0.073).
+
+DPANN gold loci (instances with at least two members), F1 / control / excess:
+
+| Tokens | w | Genes covered | DefenseFinder | TXSScan | CRISPRCasTyper |
+|---|---|---|---|---|---|
+| MMseqs 30%/80% (674,172) | 3 | 55.4% | 0.720 / 0.463 / +0.258 | 0.731 / 0.548 / +0.183 | 0.527 / 0.466 / +0.061 |
+| MMseqs E<=1e-3, cov 50% (430,471) | 3 | 62.9% | 0.814 / 0.545 / +0.269 | 0.753 / 0.580 / +0.173 | 0.586 / 0.519 / +0.067 |
+| same | 5 | 64.7% | 0.799 / 0.551 / +0.248 | 0.746 / 0.583 / +0.164 | 0.583 / 0.522 / +0.061 |
+
+Broader families raise absolute F1 on DPANN (DefenseFinder 0.720 to 0.814) and coverage
+(55.4% to 62.9% of genes); the control rises with them, so the excess is about level
+(summed DefenseFinder + TXSScan +0.441 to +0.442). Window 3 again beats window 5 on DPANN.
+
+Next, to locate what embeddings add, if anything:
+
+1. Further breadth by sequence alone: MMseqs E <= 1e-3 with 30% coverage on both data sets
+   (jobs 77754-77757).
+2. Embedding merges on top of the permissive base, Spacedust, window 5: ESM2-650M and ESM-C
+   300M genome-centred centroids, Leiden CPM at null p 1e-2, 1e-3 and r 0.05, 0.1, 0.2
+   (hybrid jobs 77758, 77764; engine jobs 77759-77763, 77765-77769).
+3. The same on DPANN with the ESM++ small vectors when they are finalized
+   (`benchmarks/redesign/lab/embed_tokens.py`: unique-level kNN, graph communities, hybrids).

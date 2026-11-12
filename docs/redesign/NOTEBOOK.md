@@ -1038,3 +1038,25 @@ queries with >= 2 members on even genomes (1,247); parameters tuned on odd genom
   298 genomes per second.
 Follow-up workstream `locus_search2`: what the unlabelled hits are, a rate-constrained
 selection, a fitted-tail null, and a token-pair library.
+
+## 2026-11-12 07:56 UTC — Spec to Sharur; one-kernel hypothesis and its first test
+
+- `docs/redesign/SPEC_family_remote_homology.md` (CDD per protein; MMseqs2 families, HHblits
+  enrichment, HHsearch against HH-format Pfam 39 and PDB100; schema, cost, validation set) was
+  sent to the Sharur session at Jacob's request. Measured cost: 173 families through all searches
+  in 82 min on 24 CPUs (job 78254).
+- Jacob's objection to the locus-search result: three similarity inputs make a hodgepodge and
+  slow the method; the task is a clustering task. Working hypothesis in reply: tokens, sequence
+  ranks and embedding ranks are feature maps for one kernel,
+  K(a, a') = k(x_a, x_a') * sum_delta k(x_{a+delta}, x_{a'+delta'}); the recurrence engine is
+  this kernel with one-hot tokens (token-pair recurrence = collisions of gene bigrams). With a
+  dot-product k the neighbourhood term is c_a . c_a' with c_a the summed neighbour vectors, so K
+  is the Gram matrix of x_a (x) c_a and nearest-neighbour search plus one graph clustering would
+  give context-aware families, loci and search from a single input. A learned head that distils
+  alignment evidence and context into one vector is the place for the language model.
+- Workstream `context_kernel` tests the cheapest form: ESM++ small kNN edges weighted by
+  neighbourhood agreement before clustering, then the engine. Predeclared: on even genomes the
+  best arm (chosen on odd) has TXSScan excess >= base - 0.04 (context-free graph arms: -0.074
+  to -0.095), summed DefenseFinder + TXSScan excess >= base - 0.01, and at the edge level
+  AUROC(similarity x context) - AUROC(similarity) >= 0.05 for same-type against different-type
+  gold pairs.

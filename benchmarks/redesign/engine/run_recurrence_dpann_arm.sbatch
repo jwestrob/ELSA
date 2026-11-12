@@ -40,3 +40,7 @@ if [[ -n "$BASECMP" && "$O" != "$BASECMP" ]]; then
     "$PY" -u "$RD/engine/code/dpann_compare.py" "$O" "$BASECMP" > "$O/compare_vs_base.txt"
     grep "summed excess" "$O/compare_vs_base.txt"
 fi
+# standing acceptance check: the ribosomal-protein locus (runs of >= 16 Ribosomal_* Pfam genes, gap <= 2)
+if [[ -f "$RD/ribosomal/code/ribosomal_check.py" ]]; then
+    "$PY" -u "$RD/ribosomal/code/ribosomal_check.py" check "$O" --threads "$T" || echo "RIBOSOMAL check failed to run"
+fi

@@ -1208,3 +1208,38 @@ families, engine at window 3. Predeclared 08:07 UTC.
 Next hypothesis: one hierarchy over genes in place of one flat partition, with evidence read as
 the size of the smallest shared cluster, for both the engine and locus search (workstream
 `hierarchy`).
+
+## 2026-11-12 09:43 UTC — Ribosomal-locus acceptance check (workstream `ribosomal`; `benchmarks/redesign/ribosomal/REPORT.txt`)
+
+Jacob asked whether the redesign still resolves the ribosomal protein locus; it had not been
+checked since the redesign began. Gold: per genome, runs of >= 16 genes with a `Ribosomal_*`
+Pfam domain, up to 2 unmarked genes allowed inside (1,686 runs, 627 genera, 8 phyla; the
+gap-free July definition yields runs in 10 genomes on the current gene set). Recovered = one
+locus covers >= 50% of the run; resolved = one locus covers >= 80% with precision >= 0.8.
+Controls: 20 length-matched windows per run on the same contig.
+
+| Arm (window 3 unless noted) | Recovered | Resolved, default reading | Resolved, level 80 | Resolved, unit reading | Parvarchaeaceae |
+|---|---|---|---|---|---|
+| Base MMseqs2 e3c50 (engine v1.5) | 1,686 | 711 (precision 0.743) | 1,317 (0.923) | 149 | 114 / 114 |
+| Random windows | 51.6% | 6.7% | | 0.02% | |
+| Base, window 5 | 1,686 | 501 | 1,197 | 1,355 | 114 / 114 |
+| Strict MMseqs2 id30c80 | 1,686 | 743 | 929 | 0 | 114 / 114 |
+| Hybrid ESM++ merge, r0.05 | 1,686 | 770 | 1,266 | 1,565 (0.96) | 114 / 114 |
+| Context-gated embedding families (dense w1) | 1,673 | 816 | 1,246 | 1,035 | 114 / 114 |
+| Plain-similarity embedding families, r19000 (the +0.038 arm) | 1,155 | 466 | 0 | 98 | 6 / 114 |
+| Plain-similarity embedding families, r11000 | 1,580 | 724 | 0 | 196 | 53 / 114 |
+
+- The base engine finds the locus in every genome that has a run, as one locus in 1,640 of
+  1,686. At the default reading the locus extends a median 3 genes past each end into conserved
+  neighbours (the commonest is a SecY-domain family present in 3,280 genomes), which the
+  precision rule counts as error; 958 of the 975 unresolved runs fail on precision alone.
+- The run's genes fall into two modules (329 and 85) in every genome; top-module purity 0.849
+  (random windows 0.149).
+- Hybrid families (ESM++ merges of the base) make the unit reading work: 1,565 resolved against
+  149 for the base, +248 [218, 278] over the base's best fixed reading. Each ribosomal family
+  becomes one token.
+- **The plain-similarity embedding families that exceeded the base on summed excess lose the
+  locus** (1,155 of 1,686 recovered, 6 of 114 Parvarchaeaceae): fine tokens split universal
+  families. That arm is disqualified as a default; the acceptance check is now part of
+  `run_recurrence_dpann_arm.sbatch` and a guard for the hierarchy workstream.
+- Larger windows lose 184-258 resolved runs at the default reading.

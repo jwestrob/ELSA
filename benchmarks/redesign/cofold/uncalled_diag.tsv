@@ -1,0 +1,5 @@
+fold_id	matched_to_cand	match_level	gids	genome	lengths	iptm	iface_pae	contacts	token_a	token_b	members_a	members_b	genomes_a	genomes_b	genomes_both	genera_of_G	G	L	NP	J	E	P	passes_rule	in_significant_pairs	dark_a	dark_b	fam_dark_frac_a	fam_dark_frac_b	strand	intergenic_nt
+unc_002_r1	2	contig;len_rel_diff=0.239;hyd_diff=0.050	2651111;2651112	GCA_030651135.1	85;172	0.805	3.641	43	305819	303977	282	1	280	1	1	JACPBO01	1	1	1	1.0	0.0037	3.70e-03	False	False	True	True	0.812	1.0	-1/-1	551
+unc_069_r2	69	genome;len_rel_diff=0.167;hyd_diff=0.041	2253540;2253541	GCA_027362985.1	112;270	0.754	4.326	54	269054	203874	5	21	5	21	5	JAJZNA01	5	1	1	1.0	0.0326	3.00e-10	False	False	True	True	1.0	1.0	1/1	60
+unc_071_r2	71	genome;len_rel_diff=0.077;hyd_diff=0.038	2763963;2763964	GCA_035289325.1	109;167	0.868	1.469	67	125177	322055	228	1	169	1	1	DATDXM01	1	1	1	1.0	0.0044	4.41e-03	False	False	True	True	0.618	1.0	-1/-1	4
+unc_087_r1	87	genome;len_rel_diff=0.181;hyd_diff=0.015	1240720;1240719	GCA_018819065.1	181;145	0.786	3.682	264	172558	172557	10	4	10	4	4	GCA-2686295	4	1	1	1.0	0.0148	1.96e-09	False	False	True	True	1.0	1.0	-1/-1	45

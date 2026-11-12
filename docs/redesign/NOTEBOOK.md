@@ -974,3 +974,35 @@ pass rate falls with summed length for engine-called pairs (40% under 200 aa, n 
 200-300; 7.0% at 300-450; 4.8% above 450, n = 124) and for curated mates (33%, 20%, 16.7%,
 10.6%); partner swaps pass 0 / 20 under 200 aa. Screen 2 folds blocks of 450 aa or more with and
 without the block MSA and reports by length class.
+
+## 2026-11-12 07:32 UTC — Co-fold screen 2 (workstream `cofold2`; `benchmarks/redesign/cofold/REPORT_screen2.txt`)
+
+Pool widened to windows of up to 8 genes, proteins of 60-1,200 aa, blocks up to 2,500 aa: 392
+block types pass every filter; 61 screened (42 multi-gene, 19 pairs with a protein over 700 aa).
+Triage before folding (HHblits/HHsearch against Pfam 39 and PDB100, RPS-BLAST against CDD,
+Pfam GA, later Foldseek) removed 37 as resembling characterised families (16 of the 19 long
+pairs; PDB100 HHsearch flagged 54 of 62 characterised families). 24 blocks folded (18 of three
+genes, 3 of four, 3 pairs; 472 Biohub items in total).
+
+| Class | Folds with a passing interface | Rate |
+|---|---|---|
+| Engine-called blocks | 12 / 42 | 28.6% |
+| Curated positives | 17 / 56 | 30.4% |
+| Uncalled windows | 3 / 42 | 7.1% |
+| Partner swaps | 3 / 90 | 3.3% |
+
+Engine-called against uncalled: odds ratio 5.2, p = 0.02; against swaps: 11.6, p = 6.5e-5. Ten of
+the 12 passing folds come from blocks with Pfam DUF7287 / DUF7288 families. Block-paired MSAs
+(median depth 12) never raise the pass rate at 450-800 aa (10 / 31 single sequence, 8 / 31 with
+MSA) or above 800 aa (1 / 10 both), so shallow MSAs do not rescue larger complexes.
+
+No screen-2 block has every chain free of detectable similarity. Shortlist: (1) s2 rank 34, a
+four-gene cassette in Nanobdellota (10 genomes, 2 orders): interfaces AB, AD, BC, BD pass in
+both replicates (pair ipTM 0.79-0.86, controls 0.07-0.49); chain A has a prepilin-type signal
+peptide and resembles a minor pilin, chains B and C are DUF7287 / DUF7288; every chain has a
+hydrophobic N-terminal helix carrying 0-52% of the interface. (2) s2 rank 7, the same DUF
+architecture in Micrarchaeota and Iainarchaeota (28 genomes, 3 orders): one interface passes
+single-sequence (0.84 / 0.82) and fails with the MSA (interface PAE 5.5 / 6.3 A). (3) Screen-1
+rank 1 (60 + 70 aa; 249 genomes, 21 orders, 7 phyla): no detectable similarity in any search,
+ipTM 0.856 / 0.708, fused 133-139 aa homologs in 3 genomes. Follow-up workstream `cofold3`
+examines rank 1 and the DUF cassette in depth.

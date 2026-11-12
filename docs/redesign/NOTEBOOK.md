@@ -1243,3 +1243,33 @@ Controls: 20 length-matched windows per run on the same contig.
   families. That arm is disqualified as a default; the acceptance check is now part of
   `run_recurrence_dpann_arm.sbatch` and a guard for the hierarchy workstream.
 - Larger windows lose 184-258 resolved runs at the default reading.
+
+## 2026-11-12 09:53 UTC — Gene-call repair of the family tokens (workstream `repair`; `benchmarks/redesign/repair/REPORT.txt`)
+
+Criteria fixed 07:18 UTC before any search or engine job: adopt a repair if, on even genomes,
+the summed DefenseFinder + TXSScan excess does not fall (lower bound above -0.005) and F1 on
+gold instances containing a repaired gene rises by >= 0.03 with an interval excluding 0.
+Genome-wide MMseqs2 search (1,093,510 unique queries against all 2,547,528; 23 min in 4 shards).
+
+| Arm | Genes changed | Tokens | Summed excess vs base | Touched instances | F1 on touched | Excess on touched | Adopted |
+|---|---|---|---|---|---|---|---|
+| rescue1 (singletons join by >= 80% coverage of the shorter protein) | 54,734 | 375,737 | +0.002 [-0.002, +0.007] | 52 | +0.301 [+0.202, +0.410] | +0.164 [+0.092, +0.249] | yes |
+| **rescue3** (tokens with fewer than 3 members) | 83,466 | 363,307 | +0.004 [-0.003, +0.010] | 101 | +0.260 [+0.181, +0.340] | +0.166 [+0.112, +0.223] | **yes, preferred** |
+| split (adjacent pieces take the intact homolog's token) | 44,287 | 429,642 | -0.002 [-0.005, +0.001] | 105 | -0.308 [-0.391, -0.229] | -0.253 | no |
+| rescue1 + split | 98,244 | 375,631 | +0.000 [-0.005, +0.006] | 156 | -0.101 [-0.187, -0.019] | -0.112 | no |
+| rescue3 + split | 126,565 | 363,234 | +0.002 [-0.005, +0.009] | 202 | -0.017 [-0.090, +0.061] | -0.043 | no |
+
+- **Fragment rescue is adopted** (rescue3): DefenseFinder F1 over all 1,261 even-genome instances
+  +0.020 [+0.013, +0.028]; genes covered by loci 2,256,894 -> 2,302,705; engine FDR 0.00425. Of
+  20 random rescued genes, 17 are fragments joining their family, 2 full-length matches, 1
+  domain-level glue (a 1,163-aa protein joining a 232-aa family at 17% query coverage).
+  New DPANN default family table:
+  `engine/dpann_tokens/mmseqs__seq__e3c50s75_rescue3__dpann.parquet`.
+- **Split unification fails for a mechanical reason.** The engine counts pairs of different
+  tokens only (`ta != tb`), so two pieces sharing a token lose the adjacency that located them:
+  168 of 220 touched instances contain both pieces (F1 -0.326). 106 gold instances are
+  two-member instances made of exactly one split pair (103 CRISPRCasTyper): in those, the "system
+  of two members" is one gene called in two pieces. A fair test needs a merged gene universe
+  (`merged_universe_design.txt`; not built).
+- Ribosomal acceptance check: every arm recovers 1,686 / 1,686 runs and 114 / 114
+  Parvarchaeaceae; top-module purity 0.849 (base), 0.974 (rescue1), 0.896 (rescue3).

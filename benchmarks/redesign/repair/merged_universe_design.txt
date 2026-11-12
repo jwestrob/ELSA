@@ -1,0 +1,27 @@
+Merged-universe variant of split unification (described, not built)
+
+Goal: test the split repair with each broken-call-like pair collapsed into one gene position, so that a split
+gene occupies one slot (as the intact gene does elsewhere) and its two pieces stop counting as two adjacent
+tokens inside the recurrence window.
+
+How to test it without touching the package:
+1. Shadow package at $RD/repair/pkg_merged/ (the scorer and recurrence.py both take the package or universe path
+   as an argument). Symlink annotation_flags, embeddings, qc and scorer; write new universe/ and gold/ tables.
+2. universe/genes.parquet: drop the C-terminal-in-gid-order gene of each qualifying pair (results/split_pairs.parquet),
+   keep the other as the merged gene with start = min(start), end = max(end); recompute position_index per contig,
+   gid = rank over (genome_code, contig_code, position_index), contigs.parquet n_genes and first_gid. Keep an
+   old_gid -> new_gid map (both pieces map to the merged gid).
+3. gold/: remap member_gids through the map (deduplicate), recompute member_positions, start_idx, end_idx,
+   span_genes and n_members_resolved. Instances whose members merge into one gene fall from >= 2 to 1 member and
+   leave the score_min2 set; report that count and score both sets on the instances present in both universes.
+4. Two engine runs on the shadow universe: base tokens (merged gene takes X's token, which is what the split arm
+   gives both pieces) and the same tokens with no merge are not comparable gene for gene, so the paired comparison
+   is (merged universe, split tokens) against (merged universe, base tokens with the merged gene taking the token of
+   its longer piece). That isolates the token effect inside the merged universe; the merge effect itself is the
+   difference between that base and the unmerged base on the instances that survive the remapping, with the
+   control placements redrawn in each universe.
+5. Cost: two engine runs of 2-3 min plus a remapping script; no new search.
+
+Caveat to state with any result: the merge changes the genome-shuffle null (fewer genes per genome) and the random
+placement control (span lengths in genes change), so a merged-universe excess and an unmerged excess differ in
+both observed and control terms.

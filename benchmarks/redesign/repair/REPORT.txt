@@ -1,0 +1,155 @@
+ws_repair: gene-call repair of family tokens on DPANN (12 November 2026)
+==========================================================================
+
+Verdict
+-------
+- Fragment rescue works and passes the predeclared test in both variants. The predeclared tie-break
+  (odd-genome summed excess, +0.002 against +0.001) prefers rescue3 (genes in tokens with fewer than 3 members),
+  so rescue3 is the adopted repair. On even (held-out) genomes it raises F1 on the 101 gold instances it touches by
+  +0.260 [+0.181, +0.340] and their excess over random placement by +0.166 [+0.112, +0.223]. The DefenseFinder +
+  TXSScan summed excess moves by +0.004 [-0.003, +0.010], because only 230 of 7,096 instances (3.2%) are touched.
+- Split unification (both pieces take the token of the intact homolog) damages the instances it touches:
+  F1 -0.308 [-0.391, -0.229], excess -0.253 [-0.331, -0.182] on even genomes. Mechanism: the engine counts only
+  pairs of different tokens (recurrence.py colocalization: `ok = ... & (ta != tb)`), so a unified pair loses the
+  recurrent adjacency of its two pieces, which is the signal that located it. 168 of the 220 touched instances
+  contain both pieces (F1 -0.326); 106 are two-member instances made of exactly that pair (F1 -0.510; 103 of them
+  CRISPRCasTyper). Every arm that includes split unification fails c2.
+- Every arm is admissible on the ribosomal acceptance check: 1,686 / 1,686 runs and 114 / 114 Parvarchaeaceae.
+
+Predeclared criteria (predeclared.json, written 2026-11-12T07:18:00Z, before any search or engine job)
+- c1: DefenseFinder + TXSScan summed excess A - B on even genomes, 95% lower bound > -0.005.
+- c2: mean F1 on even-genome gold instances (>= 2 members) with >= 1 member gene whose token changed: A - B >= +0.03,
+  paired genome-bootstrap interval excluding 0 (2,000 draws, seed 17).
+- Adopt if both pass; among adopted arms, prefer the larger odd-genome summed excess difference.
+- Refutation checks (glue, max-seqs truncation, 20-gene inspection) are reported below.
+
+Design (all genes, one parameter set genome-wide)
+------------------------------------------------
+Queries: unique sequences of every gene in a base token with < 3 members (372,088 uids, 62.5 M aa) and the shorter
+gene of every same-strand, distance-1 pair with nucleotide gap <= 50 (1,477,865 pairs, 487,865 overlapping;
+867,645 uids); union 1,093,510 uids (197.8 M aa) against all 2,547,528 unique sequences.
+MMseqs2 18: prefilter -s 7.5 (the base clustering's sensitivity) --max-seqs 1000; align -e 1e-5 -a; coverage
+applied in code. 4 shards on 64 CPUs: prefilter 819-847 s, align 468-474 s, convert 40-62 s (about 23 min wall).
+347,122,527 hits; 861,909 queries with a hit. The prefilter reached 1000 for 99.3% of queries; the truncation checks
+below show it is harmless for both rules.
+- Rescue: hit at E <= 1e-5 covering >= 80% of the shorter protein, in a base token with >= 2 members other than the
+  gene's own; best hit by bits. The moves are applied together, and a gene whose best hit itself moved follows it
+  (rescue3: 676 chains, 403 cycles; rescue1 cannot chain).
+- Split: piece hits E <= 1e-5, piece coverage >= 0.7, region on X >= 80 aa and <= len(X) - 60 (the sizing study's
+  definitions), X present in another genome, regions in genomic N-to-C order, overlap <= 20 aa, <= 10 aa of X
+  uncovered between them, union >= 0.8 of X. Stage 1 takes candidates from the shorter piece's hits (6,622,765 rows,
+  568,596 pairs, top 30 per pair). Stage 2 aligns the longer piece to each candidate on an explicit prefilter
+  database (4,593,694 pairs in 22 s; 762,068 at E <= 1e-5). 38,651 pairs qualify (43.7% overlapping); 72,918 genes are
+  assigned, of which 44,287 change token (the rest already shared X's token).
+- Arms are written to engine/dpann_tokens/ as mmseqs__seq__e3c50s75_<repair>__dpann.parquet (+ .json), all
+  3,585,303 gids. The universe is unchanged.
+
+Truncation checks (max-seqs 1000 against the sizing study's search S at max-seqs 8000)
+- Rescue1, 25,826 singleton genes of the 10% sample genomes: 5,268 moved here and 5,292 with S; 5,206 move to the same
+  token, 32 to a different one, 30 / 54 move in one search only. Disagreement 2.2% (bar 5%): pass.
+- Split: 3,531 of the 4,056 sizing-study broken-call-like pairs with joint coverage >= 0.8 recovered (87.1%; bar 85%):
+  pass. 233 of the 3,764 sample pairs found here are absent from that reference.
+
+Arm summary (base: 430,471 tokens, 278,361 singletons, largest 7,675)
+---------------------------------------------------------------------
+| arm          | genes changed | tokens  | base tokens emptied | receiving tokens | largest | max genes into one token |
+| rescue1      | 54,734 (1.53%)| 375,737 | 54,734              | 25,370           | 7,696   | 92                       |
+| rescue3      | 83,466 (2.33%)| 363,307 | 67,164              | 29,038           | 7,712   | 127                      |
+| split        | 44,287 (1.24%)| 429,642 | 829                 | 2,686            | 7,930   | 3,210                    |
+| rescue1split | 98,244        | 375,631 | 54,840              | 25,839           | 8,007   | 3,223                    |
+| rescue3split | 126,565       | 363,234 | 67,237              | 29,350           | 8,037   | 3,228                    |
+
+Engine (W 3, genome null; base = results_dpann_v2, identical to the v1.5 replay in v5; modules from v5)
+| arm          | sig. pairs | FDR     | genes covered        | modules / largest | ribosomal: recovered, resolved, purity, Parv. | admissible |
+| base         | 159,955    | 0.00445 | 2,256,894            | 1,833 / 701       | 1686, 711, 0.849, 114/114                     | -          |
+| rescue1      | 163,102    | 0.00438 | 2,288,494 (+31,600)  | 1,879 / 634       | 1686, 706, 0.974, 114/114                     | yes        |
+| rescue3      | 162,786    | 0.00425 | 2,302,705 (+45,811)  | 1,743 / 752       | 1686, 704, 0.896, 114/114                     | yes        |
+| split        | 156,784    | 0.00438 | 2,246,801 (-10,093)  | 1,832 / 672       | 1686, 726, 0.852, 114/114                     | yes        |
+| rescue1split | 159,924    | 0.00432 | 2,277,936            | 1,860 / 712       | 1686, 721, 0.593, 114/114                     | yes        |
+| rescue3split | 159,684    | 0.00421 | 2,292,158            | 1,737 / 786       | 1686, 721, 0.854, 114/114                     | yes        |
+Full RIBOSOMAL lines: results/ribosomal_lines.txt (all report median coverage 1.000 and 1 median fragment).
+
+Predeclared test (even genomes; A - B with 95% genome-bootstrap interval)
+| arm          | c1 summed DF+TXSS excess  | touched n | touched F1 B -> A, diff      | control diff            | excess diff               | adopt |
+| rescue1      | +0.002 [-0.002, +0.007]   | 52        | 0.459 -> 0.760, +0.301 [+0.202, +0.410] | +0.137 [+0.064, +0.225] | +0.164 [+0.092, +0.249] | yes |
+| rescue3      | +0.004 [-0.003, +0.010]   | 101       | 0.461 -> 0.720, +0.260 [+0.181, +0.340] | +0.094 [+0.036, +0.154] | +0.166 [+0.112, +0.223] | YES (preferred) |
+| split        | -0.002 [-0.005, +0.001]   | 105       | 0.794 -> 0.486, -0.308 [-0.391, -0.229] | -0.054 [-0.079, -0.034] | -0.253 [-0.331, -0.182] | no  |
+| rescue1split | +0.000 [-0.005, +0.006]   | 156       | 0.688 -> 0.587, -0.101 [-0.187, -0.019] | +0.011 [-0.024, +0.049] | -0.112 [-0.177, -0.047] | no  |
+| rescue3split | +0.002 [-0.005, +0.009]   | 202       | 0.632 -> 0.615, -0.017 [-0.090, +0.061] | +0.027 [-0.006, +0.063] | -0.043 [-0.099, +0.015] | no  |
+Odd genomes agree: touched F1 rescue1 +0.334 [+0.245, +0.423], rescue3 +0.269 [+0.201, +0.338], split -0.257 [-0.333, -0.191].
+Odd summed excess: rescue1 +0.001 [-0.003, +0.006], rescue3 +0.002 [-0.003, +0.008].
+Instances touched (member / span): rescue1 123 / 266, rescue3 230 / 432, split 220 / 375, rescue1split 338 / 583,
+rescue3split 439 / 722 (all genomes).
+
+By caller, touched instances, even genomes (F1 diff; excess diff)
+- rescue3: DefenseFinder n 41 +0.476 [+0.341, +0.610]; +0.302 [+0.196, +0.420]. CRISPRCasTyper n 54 +0.121 [+0.032, +0.216];
+  +0.077 [+0.030, +0.133]. TXSScan n 6 +0.032; +0.032.
+- rescue1: DefenseFinder n 23 +0.457; +0.299. CRISPRCasTyper n 25 +0.199; +0.062. TXSScan n 4 +0.048; +0.031.
+- split: CRISPRCasTyper n 67 -0.421 [-0.524, -0.317]; -0.347. DefenseFinder n 32 -0.128 [-0.255, -0.022]; -0.103.
+All instances, even genomes (F1 diff; excess diff):
+- rescue3: DefenseFinder (1,261) +0.020 [+0.013, +0.028]; +0.007 [+0.001, +0.013]. TXSScan (404) -0.001; -0.003 [-0.005, -0.002].
+  CRISPRCasTyper (1,899) +0.008 [+0.004, +0.012]; +0.001 [-0.002, +0.004].
+- rescue1: DefenseFinder +0.010 [+0.005, +0.016]; +0.004 [-0.000, +0.008]. TXSScan +0.001; -0.002 [-0.003, -0.000].
+  CRISPRCasTyper +0.006 [+0.003, +0.009]; +0.000.
+- split: CRISPRCasTyper -0.016 [-0.022, -0.011]; -0.011 [-0.016, -0.006]. DefenseFinder -0.007; -0.002. TXSScan -0.002; -0.000.
+
+Refutation checks
+-----------------
+- Glue (control rising with F1): the control rises too, by 30-45% of the F1 gain (rescue3 +0.094 against +0.260;
+  rescue1 +0.137 against +0.301), and the excess gain holds at +0.16 with intervals above 0. Joining a larger family
+  lengthens loci, which partly helps random placements; most of the gain is localization. The largest token grows by
+  0.5% (7,675 -> 7,712), and at most 127 genes enter any one token. Refutation not met.
+- 20 random rescue1 genes (results/inspect_rescue1.tsv): 17 are the shorter protein (16 of them 34-470 aa, one
+  2,413 aa against a 2,681 aa partner; partners 81-2,876 aa; covered 81-100%; identity 0.23-1.00, 8 of 17 >= 0.84),
+  i.e. fragments joining their family. 3 have the
+  target shorter: 134 vs 124 aa at 31% identity covering both fully (a family member the representative-based
+  clustering missed); 211 vs 103 aa at 100% identity (query = target + 108 aa); 1,163 vs 232 aa at 30% identity
+  covering 17% of the query (domain-level glue, 1 of 20). Genome-wide, the target is the shorter protein in 14.9% of
+  rescue1 moves and 17.8% of rescue3 moves; identity q10 / q50 / q90 0.29 / 0.67 / 1.00.
+- Fragments: 2,784 of the 2,786 singleton fragments in sample genomes (sizing-study definition) move; they are 53% of
+  the 5,268 moved sample genes.
+- Split receiving tokens: the three largest take 3,210 / 2,813 / 2,090 genes from 2,316 / 1,939 / 1,845 genomes
+  (median 380 / 101 / 493 aa); 99.5-100% of these genes carry a Pfam hit (annotation_flags). The pieces are
+  widespread annotated two-gene states, consistent with the sizing study's clade-wide split families. Domain names
+  were not retrieved: the annotations query returned 0 rows despite the flags (unresolved; observation only).
+
+What would let split unification be tested fairly
+-------------------------------------------------
+Under the current engine a token-unified pair is invisible to itself. Two routes, both without touching the package:
+(1) an engine variant that counts same-token adjacency within the window (this also changes tandem duplicates, so
+it needs its own base run); (2) a merged-universe run in which each qualifying pair becomes one gene position
+(design in merged_universe_design.txt: shadow package with remapped universe and gold, two engine runs, about 5
+minutes of compute, no new search). In (2), 106 two-member gold instances made of exactly the pair become
+single-member instances and leave the min-2 set, so the comparison must be restricted to instances present in both
+universes.
+
+Open problems
+-------------
+- rescue3 lowers TXSScan excess by 0.003 [0.002, 0.005] over all 404 even-genome instances while raising
+  DefenseFinder; small, and the summed criterion holds.
+- rescue3 chains and cycles (676 / 403) come from two-member tokens moving into each other; rescue1 is the simpler
+  rule at about half the touched instances and the same effect size.
+- Domain names of the split-receiving tokens (lookup failed, see above).
+- Process: the arms-job completion notice did not resume this agent; 07:45-09:44 UTC was lost before the engine
+  runs.
+
+Jobs
+----
+78357-78360 search shards (standard_expand_2, 64 CPU); 78397 split stage 1 + stage 2 + arms (64 CPU, 50 s for the
+rules); engine 79055 rescue1, 79056 rescue3, 79057 split, 79058 rescue1split, 79090 rescue3split (standard_expand,
+24 CPU, about 2 min each).
+
+Files
+-----
+biotite RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111
+- $RD/engine/dpann_tokens/mmseqs__seq__e3c50s75_{rescue1,rescue3,split,rescue1split,rescue3split}__dpann.{parquet,json}
+  (INDEX.tsv left untouched; index of these arms at $RD/repair/results/arms_index.tsv)
+- $RD/engine/results_dpann_repair/dpann__mmseqs__seq__e3c50s75_<repair>__w3/ (summary.json, score_min2,
+  compare_vs_base.txt, ribosomal_check.{json,txt})
+- $RD/repair/: hits/Q_{0..3}.parquet (347 M rows, 4.8 GB; q, t, evalue, bits, fident, alnlen, coordinates, lengths
+  by uid), split/{cand.parquet, stage2.parquet, pref.tsv}, results/{changed_<arm>.parquet, split_pairs.parquet,
+  arms.json, evaluation.json, touched_instances.tsv, inspect_rescue1.tsv}, genes.parquet, pairs.parquet, lists/, code/
+Local benchmarks/redesign/repair/: predeclared.json, progress.log, REPORT.txt, merged_universe_design.txt, code
+(make_queries.py, search_shard.sbatch, tsv2parquet.py, split_candidates.py, arms.sbatch, build_arms.py,
+repair_lib.py, evaluate.py), results/ (arms.json, evaluation.json, touched_instances.tsv, inspect_rescue1.tsv,
+ribosomal_lines.txt, compare_vs_base_<repair>.txt, queries.json, cand.json, timing_shards.tsv).

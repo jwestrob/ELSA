@@ -1,0 +1,48 @@
+{
+  "written_utc": "2026-11-12T07:18:00Z",
+  "status": "fixed before any search, token arm or engine job of workstream repair; the code reads its thresholds from this file",
+  "base_arm": "engine/dpann_tokens/mmseqs__seq__e3c50s75__dpann.parquet (430,471 tokens; 278,361 singletons; 55,619 two-member tokens)",
+  "base_scores": "engine/results_dpann_v2/dpann__mmseqs__seq__e3c50s75__w3 (identical instance scores to the engine v1.5 replay in results_dpann_v5, checked 2026-11-12 07:15Z: 0 of 7,096 F1 or control values differ)",
+  "search": {
+    "queries": "unique sequences of (a) every gene in a base token with < 3 members and (b) the shorter gene (FASTA length; tie -> lower gid) of every same-contig, co-oriented gene pair at distance 1 with nucleotide gap <= 50 (overlaps included)",
+    "targets": "all 2,547,528 unique sequences (subgenic/db/uniqdb)",
+    "mmseqs": "prefilter -s 7.5 --max-seqs 1000; align -e 1e-5 -a; no coverage filter at search time; self hits dropped",
+    "uniform": "one parameter set for every query genome-wide; no gold-neighbourhood-specific search"
+  },
+  "rescue": {
+    "variants": {"rescue1": "query genes in tokens with 1 member", "rescue3": "query genes in tokens with < 3 members"},
+    "hit_rule": "E <= 1e-5 and (alignment length on the shorter protein) / (shorter protein length) >= 0.8, shorter by FASTA length",
+    "target_token": "the hit's base token (token of the plurality of the hit sequence's genes) has >= 2 members and differs from the query gene's base token",
+    "best_hit": "highest bits, then lowest E, then larger target token, then lower target uid",
+    "resolution": "simultaneous on base tokens; a gene whose best hit is itself a moved gene follows that gene's final token (pointer following); a cycle of moved genes takes the base token of its member with the largest base token (ties: lower token id). Only rescue3 can chain, because rescue1 targets never move."
+  },
+  "split": {
+    "pairs": "same contig, same strand, position difference 1, nucleotide gap <= 50 (negative = overlap, included)",
+    "piece_hit": "E <= 1e-5, piece covered >= 0.7 by its alignment to X, region on X >= 80 aa, region on X <= len(X) - 60 (subgenic predeclared composite definitions y_coverage_min, x_region_min_aa)",
+    "x_rule": "one sequence X, present in a genome other than the pair's genome, aligned by both pieces; regions overlap by <= 20 aa (subgenic max_region_overlap_aa), the genomic N-terminal piece's region starts before the C-terminal piece's region on X, uncovered residues of X between the two regions <= 10, union of the two regions >= 0.8 of len(X)",
+    "x_choice": "per pair, highest union coverage, then highest summed bits, then lower X uid",
+    "search_route": "stage 1: shorter piece against all targets (search above); stage 2: longer piece aligned to the stage-1 X candidates (explicit pairs, align -e 1e-5 -a), at most 30 candidates per pair by stage-1 bits after the length and side prefilter",
+    "assignment": "both genes receive X's token (token of the plurality of X's genes in the arm the split repair is applied to); a gene in two qualifying pairs takes the pair with higher union coverage, then summed bits",
+    "universe": "unchanged: no genes merged or removed"
+  },
+  "arms": {
+    "mmseqs__seq__e3c50s75_rescue1__dpann": "base + rescue1",
+    "mmseqs__seq__e3c50s75_rescue3__dpann": "base + rescue3",
+    "mmseqs__seq__e3c50s75_split__dpann": "base + split (X token from base)",
+    "mmseqs__seq__e3c50s75_rescue1split__dpann": "base + rescue1, then split with X token read from the rescue1 arm (split overrides rescue on genes in both)",
+    "mmseqs__seq__e3c50s75_rescue3split__dpann": "secondary: base + rescue3, then split"
+  },
+  "engine": "run_recurrence_dpann_arm.sbatch, W=3, null genome, OUTDIR=results_dpann_repair; base comparator results_dpann_v2",
+  "primary": {
+    "split_genomes": "test = even genome_code (odd = tune; used only to rank arms that pass)",
+    "c1_summed_excess": "DefenseFinder + TXSScan summed excess A - B on even genomes, 95% genome-bootstrap interval lower bound > -0.005 (compare_vs_base.txt, test line)",
+    "c2_touched_f1": "mean best-locus F1 (score_min2, gold instances with >= 2 resolved members) over instances on even genomes with >= 1 member gene whose token differs between arm and base: A - B >= +0.03 and paired genome-bootstrap 95% interval (2,000 draws, seed 17) excluding 0",
+    "adopt": "c1 and c2 both met; among adopted arms the one with the larger odd-genome summed excess difference is preferred"
+  },
+  "also_report": ["genes whose token changed", "base tokens left empty (merged away)", "receiving tokens", "largest token before / after", "genes covered by called loci", "significant pairs and FDR (summary.json)", "F1 / excess differences for all three callers", "touched-instance F1, control F1 and excess differences, all callers, all / odd / even", "instances touched through span genes (any gene between start_idx and end_idx) as a secondary set"],
+  "refutation": {
+    "glue": "rescue raises touched-instance observed F1 and the random-placement control F1 by similar amounts (touched-instance excess difference interval includes 0 or is negative while F1 rises), or the largest token grows by more than 2x, or the 20 inspected rescued genes show low identity (< 0.3) full-length matches dominated by the target-shorter case",
+    "max_seqs": "rescue destination tokens computed from the subgenic search S (max-seqs 8000) disagree with this search on > 5% of the rescued sample-genome genes, or split pairs found by the sizing study (broken-call-like, joint coverage >= 0.8, sample genomes) are recovered at < 85%",
+    "inspection": "20 rescued genes drawn uniformly at random (seed 17) from rescue1 with query length, target length, coverage of each, identity, E, target token size"
+  }
+}

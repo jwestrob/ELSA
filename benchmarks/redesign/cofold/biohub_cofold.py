@@ -186,8 +186,14 @@ def metrics(j, job):
             for b in ids[ai + 1:]:
                 m = np.ix_(chains == a, chains == b)
                 cab = cont[m]
+                # added for screen 3: interface pLDDT of the a-b interface and its residues (0-based within chain)
+                ra, rb = np.flatnonzero(cab.any(1)), np.flatnonzero(cab.any(0))
+                pla, plb = pl[chains == a], pl[chains == b]
                 pp[f"{a}{b}"] = dict(contacts=int(cab.sum()),
-                                     iface_pae=round(float(sym[m][cab].mean()), 3) if cab.any() else None)
+                                     iface_pae=round(float(sym[m][cab].mean()), 3) if cab.any() else None,
+                                     iface_plddt=(round(float(np.r_[pla[ra], plb[rb]].mean()) * 100, 2)
+                                                  if cab.any() else None),
+                                     res_i=ra.tolist(), res_j=rb.tolist())
         out["pairs"] = pp
     out["plddt_per_res"] = [round(float(x) * 100, 1) for x in pl]
     out["iface_mask"] = iface.astype(int).tolist()
@@ -233,6 +239,8 @@ def cmd_submit(a):
         r = post("/submit", {"endpoint": "fold_all_atom", "payload": payload}, H)
         batch = r["data"]["batch_id"]
         st["batches"].append(batch)
+        st.setdefault("batch_times", {})[batch] = dict(utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                                                       epoch=time.time(), items=len(chunk))
         for i, j in enumerate(chunk):
             st["tasks"][j["fold_id"]] = {"task_id": f"{batch}-{i:05d}", "batch": batch, "status": "queued",
                                          "jobs_file": f"jobs_{len(st['batches']) - 1 if False else len(st['batches']) - 1}.json"}

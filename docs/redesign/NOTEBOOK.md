@@ -1560,3 +1560,44 @@ UTC; variant chosen on odd genomes among admissible ones: zca10, top 1,000, coun
 - Cost: 29 min for six variants at depth 1,000 on 24 CPUs after a 2 h 14 min kNN (top 2,000).
 Follow-up `softrec2`: token-free modules for the reading rule, a two-tier statistic, and the
 lineage-aware expectation, judged on single outputs only.
+
+## 2026-11-12 18:55 UTC — Census of unannotated blocks and co-fold screen 3 (workstream `census`; `benchmarks/redesign/cofold/REPORT_census.txt`)
+
+Engine rescue3 run; Sharur DPANN database republished 12 November (families, remote-homology
+tier for 33,724 Pfam-dark families, CDD).
+
+**Census: 22,531 block types** (2-8 adjacent unannotated genes linked by significant family
+pairs, >= 3 genomes; 253,328 instances, 263,825 genes), by the most-recognised chain:
+
+| Category | Types | >= 5 genomes and >= 2 orders | Genes |
+|---|---|---|---|
+| A chain's family has annotated members elsewhere | 12,926 | 1,548 | 171,108 |
+| A chain resembles a characterised family (profile search) | 2,286 | 278 | 31,904 |
+| A chain has a CDD-only hit | 403 | 52 | 4,484 |
+| Unrecognised chains, one or more outside the remote-homology tier | 2,901 | 217 | 37,645 |
+| Unrecognised, unknown-function families only | 522 | 81 | 8,270 |
+| Unrecognised, no hit in any chain | 3,493 | 557 | 61,724 |
+
+Of 2,563,690 genes in engine loci, 68,599 (2.68%) sit in a block with no recognised chain
+(23,494, 0.92%, at >= 5 genomes and >= 2 orders). The automated tier (family-only alignments) is
+less sensitive than the enriched hand triage: of 50 searched families that triage classed
+characterised it calls 33 resembling, 2 CDD-only, 2 unknown-only and 13 no hit, so "no hit" in the
+tier is weaker than "unrecognised".
+
+**Screen 3** (criteria frozen 17:00 UTC before any fold): of 4,015 all-unrecognised types, 206
+pass the foldability filters; 85 were folded in screens 1-2; 94 new non-redundant blocks were
+submitted (435 items; 81 blocks complete, 13 blocks with complexes above 768 aa still queued at
+the API). Provisional class rates: engine-called 12 / 165 folds with a passing interface (7.3%),
+partner swaps 1 / 82, uncalled windows 1 / 81, curated positives 5 / 35 (ipTM distributions:
+called against uncalled p 3e-6; binary rate p 0.066).
+- Four blocks pass in both replicates. Three are known units: two variants of the showcase A-B
+  pair (a B-variant family; a minority C family; the caspase-like gene again directly
+  downstream in 12 of 13 instances) and the PIN / antitoxin-like operon of screen 1 with its
+  third gene. The fourth (tokens 205406-263312) passes every predeclared check, but its two
+  replicates carry identical protein sequences found in MAGs of two phyla; the one independent
+  sequence variant does not co-fold (ipTM 0.358). Refuted post hoc.
+- **No new block is both unrecognised by every search and co-folding across independent
+  sequences** (pending the 13 queued blocks). The A-B-C operon remains the single showcase.
+- Design flaw: choosing replicates by taxonomic distance alone picked identical or near-identical
+  sequences for 12 of 94 blocks; replicate selection needs a sequence-identity ceiling.
+- Biohub items: 462 (ledger `work/s3/biohub_ledger.json`); items expire 17:00 UTC 13 November.

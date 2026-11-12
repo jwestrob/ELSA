@@ -21,5 +21,6 @@ mkdir -p "$NUMBA_CACHE_DIR"
 EXTRA=()
 if [[ "${ORIENTED:-0}" == 1 ]]; then EXTRA+=(--oriented); fi
 if [[ -n "${ADAPTIVE:-}" ]]; then EXTRA+=(--adaptive "$ADAPTIVE"); fi   # window grid, colon-separated, e.g. 1:2:3:5:8
+if [[ -n "${RULE:-}" ]]; then EXTRA+=(--rule "$RULE"); fi               # fixed significance rule, e.g. 'P<=1e-4&L>=3'
 /home/jwestrob/miniconda3/envs/elsa/bin/python -u "$RD/engine/code/recurrence.py" \
     --arm "${ARM:?}" --w "${W:-3}" --null "${NULL:-genome}" --out "$RD/engine/${OUTDIR:-results}" --threads "$SLURM_CPUS_ON_NODE" "${EXTRA[@]}"

@@ -666,3 +666,37 @@ existing runs: permissive 50% against strict 30%/80% at w 3, DefenseFinder F1 +0
 [+0.082, +0.106] but summed excess +0.001 [-0.010, +0.012]; w 3 against w 5 on the
 permissive base, summed excess +0.030 [+0.024, +0.036]; 50% against 30% coverage, +0.023
 [+0.014, +0.032].
+
+## 2026-11-12 02:15 UTC — Adaptive window: the universal grid fails on DPANN (jobs 77826-77829)
+
+(The heading of the previous entry, "02:25", ran ahead of the clock; this one is `date -u`.)
+
+A = adaptive, B = fixed window, same tokens, paired.
+
+| Data set, tokens | A | B | Observed F1 A, B | Excess A - B [95% CI] |
+|---|---|---|---|---|
+| Spacedust, permissive sequence base, conserved g0-2 | grid 1-8 | w 5 | 0.759, 0.758 | +0.011 [-0.010, +0.032] |
+| same | grid 1-8 | w 8 | 0.759, 0.745 | +0.010 [-0.008, +0.029] |
+| Spacedust, ESM2-650M merge r 0.05, conserved g0-2 | grid 1-8 | w 5 | 0.730, 0.801 | -0.035 [-0.063, -0.007] |
+| same | grid 1-8 | w 8 | 0.730, 0.759 | -0.000 [-0.026, +0.025] |
+| DPANN, permissive base, DefenseFinder + TXSScan summed | grid 1-8 | w 3 | | -0.045 [-0.054, -0.038] (test half -0.054) |
+| same | grid 1-3 | w 3 | | **+0.018 [+0.013, +0.023]** (test half +0.018 [+0.012, +0.025]) |
+
+Windows chosen for significant pairs with the 1-8 grid: Spacedust sequence base 16% / 13% /
+13% / 20% / 38% at 1 / 2 / 3 / 5 / 8; DPANN 18% / 15% / 14% / 21% / 31%.
+
+- **Predeclared criterion: (a) met, (b) failed.** With one grid for both data sets the
+  adaptive window matches the best fixed window on the Spacedust sequence base and loses
+  0.045 summed excess on DPANN. The largest window stays a per-dataset setting. The smallest
+  log P favours wide windows for about a third of the pairs, and on DPANN's short contigs
+  those pairs join neighbouring systems.
+- **Within a cap, the per-pair window helps on DPANN**: grid 1-3 against fixed 3 gives
+  +0.018 summed excess, on the held-out half too. New best DPANN configuration: permissive
+  base, grid 1-3, summed excess +0.460 (DefenseFinder F1 0.795 / excess +0.281; TXSScan
+  0.747 / +0.178).
+- The window is a resolution setting (systems of a few genes against clusters of tens of
+  genes), as in any clustering; the tool should expose it as "scale" with the per-pair
+  selection inside it.
+- Confound in the hybrid row: the coverage heuristic chose rule `P<=1e-6 & L>=2` for the
+  adaptive run and `P<=1e-4 & L>=3` for the fixed runs. Controls: the hybrid with grid 1-8
+  and the rule fixed to `P<=1e-4 & L>=3`, and both token sets with grid 1-5 against w 5.

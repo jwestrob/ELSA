@@ -1135,3 +1135,37 @@ round-1 configurations reproduce round 1 exactly.
   recomputed (1.8 M genes in 11.5 s): DefenseFinder F1 0.721 (engine 0.806, module library
   0.675) at the engine's excess (0.267 against 0.268); TXSScan F1 0.752 against 0.758.
 - Spacedust replication: source207 carries no type label; nothing run.
+
+## 2026-11-12 09:12 UTC — Candidate 1: independent tests (workstream `cofold4`; `benchmarks/redesign/cofold/REPORT_candidate1.txt`)
+
+The A-B-C unit (A about 60 aa, B about 70 aa, both unrecognised; C 214 aa, caspase-like) holds
+outside DPANN and B occupies C's active-site groove.
+- **Outside DPANN, 40 public loci found by accession lookup (39 bacterial, 1 Bathyarchaeota):**
+  37 have a C-family gene within 3 genes against 0 of 51 length-matched control windows on the
+  same records (p 2.3e-22); in 35 of the 37, C is the co-oriented gene directly after B. 36 are
+  CPR/Patescibacteria; the rest Omnitrophota, Myxococcota, Bacteroidota, Bathyarchaeota. The
+  bacterial C copies keep the His and Cys in 36 of 38. No other neighbour recurs.
+- **Inside DPANN:** of 309 high-scoring C genes with an upstream gene, 306 have A or B directly
+  upstream (293 both). 118 DefenseFinder Borvo calls exist; 10 fall on C-family proteins and the
+  other 108 on 51 unrelated families (ribosomal proteins L22 and S13, prolyl-tRNA synthetase
+  among them), so that call has low specificity in this dataset.
+- **Structure (11 passing models):** relative accessibility of C's His / Cys is 0.25 / 0.19 alone
+  and 0.07 / 0.02 in the complex; B buries a median 71% / 86% of their side-chain surface. B's
+  first hairpin strand pairs with a C strand; B's invariant Gly (99.6%) touches the Cys in 10 of
+  11 models. C's His and Cys superpose on the annotated catalytic dyad in 66 of 66 alignments to
+  six protease entries (gingipain R 1cvr: Cb 0.75 and 1.05 A away). B covers 79% of the 1cvr
+  inhibitor's atoms within 3 A, running in the same direction (cosine 0.95-0.99).
+- **Covariation, B-C contact against non-contact column pairs (258 paired rows, effective 174.6):**
+  AUC 0.697 (MI with average-product correction) and 0.763 (mean-field DCA); pairing-shuffle
+  nulls 0.45-0.56 (global, within phylum, within order; p <= 0.01). Within-genus shuffle: MI not
+  separable (p 0.18), DCA p 0.0099. A-B shows the same pattern (0.716 / 0.766). This revises the
+  deep dive's "no coevolution evidence".
+- **Junctions:** A-B is translational coupling (own ATG in 314 of 325; ATGA in 206). -1 slippery
+  sites are enriched at A-B junctions against ATGA junctions on the same contigs (odds ratio
+  3.06, p 7.5e-11), almost all in Nanobdellota (44 of 175 pairs; 0 of 67 in Micrarchaeota). B-C:
+  no enrichment.
+- **Bacterial folds (60 items):** CPR A+B+C ipTM median 0.910 (B-C passes in 10 of 11); B+C
+  passes in 11 of 13 including Bathyarchaeota (0.920) and Omnitrophota (0.836); every partner
+  swap fails (0 of 18).
+Two readings, both UNVERIFIED: B is a substrate-mimicking inhibitor of C, or B is cleaved by C
+after the Gly. Biohub items used across all co-fold work: 2,187.

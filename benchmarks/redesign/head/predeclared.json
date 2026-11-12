@@ -1,0 +1,69 @@
+{
+ "workstream": "head",
+ "written_utc": "2026-11-12T10:36Z, before any data preparation, training or evaluation of this workstream",
+ "question": "Can one learned vector per gene (a small network on stored ESM++ small zca10 vectors, trained so that genes with a real MMseqs2 alignment are close) replace MMseqs2 score ranks in locus search and MMseqs2 families in the recurrence engine?",
+ "teacher": "MMseqs2 release 18 alignments at E <= 1e-5 ($RD/subgenic/hits/S_*.parquet, $RD/repair/hits/Q_*.parquet) and co-membership in the rescue3 family table. Gold system labels are never used for training, selection of the head, or construction of families.",
+ "split": {
+  "genomes": "even genome_code = test; odd genome_code split by a seed-17 permutation into training (4/5) and validation (1/5).",
+  "training_sequences": "unique sequences that occur in training genomes only (no validation genome, no even genome). Positives, hard negatives and anchors are all training sequences.",
+  "validation_sequences": "unique sequences that occur in a validation genome and in no even genome; never seen in training.",
+  "test_sequences": "unique sequences that occur in an even genome; never seen in training or validation."
+ },
+ "retrieval_metric": "AP@2000: for a query sequence from the S search (prefilter not saturated, < 8,000 prefilter hits, so its alignment list is complete at the teacher's sensitivity) with >= 1 alignment to another sequence, rank all 2,547,528 unique sequences except itself by cosine; AP@2000 = (1 / min(n_aligned, 2000)) * sum over aligned sequences in the top 2,000 of precision at their rank. Mean over 4,000 validation queries (selection) and 5,000 even-genome queries (H3); 95% bootstrap over queries.",
+ "design_search": {
+  "max_configurations": 7,
+  "common": "input zca10 vector (960); output L2-normalised; InfoNCE (temperature 0.05), anchor-to-candidates over all in-batch positives and hard negatives plus the symmetric positive-to-anchor term; in-batch candidates of the anchor's own rescue3 family masked; AdamW, cosine schedule; validation AP@2000 evaluated periodically, best evaluation kept",
+  "configurations": {
+   "A_mlp256_full": "residual MLP 960 -> 1024 -> 256 (GELU, LayerNorm, linear skip 960 -> 256); alignment positives sampled with weight log(1 + bits/40) * (0.2 + 0.8 * min coverage); family co-member positives with probability 0.3; in-batch negatives; one hard negative per anchor (zca10 kNN neighbour, training sequence, no alignment, other family)",
+   "B_linear256_full": "linear 960 -> 256, recipe of A",
+   "C_mlp960_full": "residual MLP 960 -> 1024 -> 960 with identity skip (starts at the raw vector), recipe of A",
+   "D_mlp256_nohard": "A without hard negatives (in-batch only)",
+   "E_mlp256_nofam": "A without family positives (alignment positives only)",
+   "F_mlp256_unweighted": "A with alignment positives sampled uniformly",
+   "G_mlp256_minimal": "A with uniform alignment positives, no family positives, no hard negatives"
+  },
+  "selection_rule": "highest mean validation AP@2000; within 0.002 of the best, the simpler model wins (linear < mlp256 < mlp960). No test-genome number is computed before the choice is written to results/selection.json.",
+  "ingredient_contributions": "on validation genomes: hard negatives = A - D; family positives = A - E; bit-score/coverage weighting = A - F; all three = A - G; capacity = A - B and C - A"
+ },
+ "H1_single_input_search": {
+  "statement": "Student ranks alone (M1') reach the level of MMseqs2 ranks alone.",
+  "measure": "mean primary AP of M1' on even-genome DefenseFinder queries with >= 2 members and >= 1 relevant target (1,247 queries), configuration (W extra in {0,2,4,8}, tau in {0,1,2,3}) chosen on odd-genome DefenseFinder queries by mean AP, 200-replicate circular-shift null as round 1; unsupported unlabelled hits per query = unlabelled hits at E <= 0.01 that fail the round-2 'supported' rule (evidence.py), divided by 1,247.",
+  "met": "M1' AP >= 0.600 and unsupported unlabelled hits per query <= 0.05",
+  "partial": "M1' AP >= 0.52 (with the same rate bound)",
+  "not_met": "M1' AP < 0.52, or the rate bound fails",
+  "also_reported": "M2' (tokens e3c50s75 + w * student, w in {0.5, 0.75, 1}) and S3' (tokens + MMseqs2 ranks + w * student, w in {0.25, 0.5, 0.75, 1}), each tuned on odd genomes over the same W/tau grid; strict AP; recall at E <= 0.01; unlabelled and unsupported unlabelled hits per query; CPU seconds per query; TXSScan and CRISPRCasTyper even-genome queries at the DefenseFinder-chosen configurations. Paired genome-bootstrap intervals (2,000 draws, seed 17) against M0 0.370, M1 0.442, M2 0.576, S1 0.602, S2 0.620, S3 0.698."
+ },
+ "S3prime_question": "Does the student add to sequence ranks more than the raw embedding does? Yes if S3' - S3 > 0 with the paired 95% interval excluding 0; no if the interval includes 0 or lies below it.",
+ "H2_single_input_discovery": {
+  "families": "student kNN over unique sequences (k 50, exact cosine, self excluded) expanded to gene-level cross-genome edges with a cap of 64 partners per gene (context_kernel 'expand': identical-sequence partners first, then kNN order), undirected union, Leiden modularity (n_iterations -1, seed 17) with weight max(student cosine, 0) at resolutions 300, 1000, 3000, 7500, 11000, 19000, 30000, 50000; token arms head__<config>__r<res>.",
+  "engine": "run_recurrence_dpann_arm.sbatch at window 3, OUTDIR=results_dpann_head; compare_vs_base.txt against dpann__mmseqs__seq__e3c50s75__w3; ribosomal check.",
+  "admissible": "ribosomal check recovers >= 1,650 of 1,686 runs and >= 110 of 114 Parvarchaeaceae",
+  "choice": "highest odd-genome (tune) summed DefenseFinder + TXSScan excess difference against the base among admissible arms",
+  "met": "chosen arm's even-genome summed excess difference >= -0.01 (point estimate); >= +0.02 counts as beating MMseqs2 families",
+  "not_met": "difference < -0.01, or no admissible arm",
+  "also_reported": "F1 per caller, CRISPRCasTyper excess, comparison with the rescue3 table and with the raw-embedding arms of context_kernel (V0 r19000 +0.038 inadmissible, V1b -0.004)"
+ },
+ "H3_retrieval": {
+  "statement": "The student improves homolog retrieval over the raw vectors.",
+  "met": "mean AP@2000 (student) - mean AP@2000 (raw zca10) >= 0.10 on the 5,000 even-genome queries",
+  "not_met": "difference < 0.10"
+ },
+ "amendment_1": {
+  "written_utc": "2026-11-12T10:52Z, after data preparation counts and before any training, retrieval or search number",
+  "reason": "prefilter saturation is the norm: 356,192 of 371,905 S queries reach 8,000 prefilter candidates and 1,086,374 of 1,093,510 Q queries reach 1,000, so 'unsaturated prefilter' selected an atypical 4% (validation pool 1,249 sequences, 790 with an alignment; 7,036 training sequences verifiable for hard negatives).",
+  "change": "an alignment list counts as complete when the prefilter is unsaturated OR the query has at most half the prefilter cap in alignments (self excluded): S <= 4,000, Q <= 500. Applies to the retrieval query sets (S-search queries, 4,000 validation and 5,000 test drawn with seed 18) and to the verification of hard negatives.",
+  "hard_negative_search": "the stored zca10 50-NN over all sequences yields few training-sequence candidates; hard negatives are mined from the exact zca10 top-64 among training sequences (same rule: other family, no alignment either way, at least one end complete), up to 8 per anchor. Configurations without hard negatives fill the second candidate slot with a random anchor-pool sequence, so A - D isolates hardness from the number of negatives."
+ },
+ "amendment_2": {
+  "written_utc": "2026-11-12T12:07Z, after the retrieval results and before any locus-search or engine number",
+  "reason": "round-1 M1 used plain L2 vectors, whose test AP@2000 is 0.336 against 0.722 for zca10 and 0.798 for the student; M1' - M1 alone would mix the zca10 transform with the learned head.",
+  "change": "control arms with raw zca10 top-20,000 ranks (no learning): M1z, M2z, S3z, tuned and tested exactly as M1', M2', S3' (DefenseFinder; TXSScan and CRISPRCasTyper at the DefenseFinder configurations). The head's own contribution is M1' - M1z and S3' - S3z. H1 and its thresholds are unchanged."
+ },
+ "refutations_written_before_results": [
+  "If H3 holds and H1 fails, alignment retrieval is learnable but locus-search evidence needs more than which genes align (for example the bit-score order among aligned genes, or alignments below the teacher threshold); the reading 'one vector distils sequence search' is then refuted for search.",
+  "If the student beats raw vectors in retrieval by >= 0.10 but M1' - M1 <= 0.02 AP, retrieval AP is not the bottleneck of locus search.",
+  "If validation and test retrieval gains differ by more than 0.05, the head has overfit to training-genome families; the validation-chosen configuration is still reported.",
+  "If student families pass the ribosomal guard only at resolutions whose summed excess is < base - 0.01, a single learned vector does not replace MMseqs2 families at the granularity the engine needs.",
+  "No tuning beyond the declared search is done to rescue a negative result."
+ ]
+}

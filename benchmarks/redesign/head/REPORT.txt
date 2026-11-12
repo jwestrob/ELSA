@@ -1,0 +1,178 @@
+HEAD WORKSTREAM: REPORT (2026-11-12, DPANN package, ESM++ small; learned head on stored vectors)
+==================================================================================================
+
+QUESTION
+Can one learned vector per gene (a small network on the stored ESM++ small zca10 vectors, trained so that
+genes with an MMseqs2 alignment are close) replace MMseqs2 ranks in locus search and MMseqs2 families in the
+recurrence engine?
+
+ANSWER IN SEVEN LINES
+1. In locus search one vector per gene replaces MMseqs2 ranks, and most of the work is done by the
+   unsupervised zca10 transform. Even-genome DefenseFinder (1,247 queries): zca10 ranks alone (M1z) AP 0.792,
+   student ranks alone (M1') 0.809, against MMseqs2 ranks alone (S1) 0.602 and the three-input S3 0.698.
+   Round 1's M1 = 0.442 used uncentred L2 vectors (homolog retrieval AP@2000 0.336 against 0.722 for zca10).
+2. H1 as declared: NOT MET on the rate condition. AP passes (0.809 >= 0.600); unsupported unlabelled hits are
+   0.065 [0.042, 0.094] per query against a bound of 0.05. Under the same declared 200-replicate null, round-1 M1
+   sits at 0.137 and S3 at 0.029; the bound was copied from round 2's calibrated-null table, where M1 was 0.042.
+   Tokens + student (M2', two inputs) passes both: AP 0.821, 0.020 unsupported per query.
+3. The learned head's own contribution is small: M1' - M1z +0.017 [+0.013, +0.021] AP, and it halves the
+   unsupported rate (0.121 -> 0.065). H3 NOT MET: retrieval AP@2000 +0.075 [+0.071, +0.079] over zca10 (bar 0.10).
+4. S3' exceeds S3 by +0.128 [+0.121, +0.135] (the student adds to sequence ranks more than the L2 embedding
+   did); +0.118 of that comes from zca10 alone (S3z - S3) and +0.010 [+0.007, +0.013] from the head.
+5. H2 NOT MET. The chosen admissible student-family arm (r3000, 27,405 tokens) is -0.070 [-0.087, -0.054]
+   below the MMseqs2 base in summed DefenseFinder + TXSScan excess; the only arm above the base (r19000,
+   +0.021 [+0.001, +0.042]) loses the ribosomal locus (1,144 of 1,686 runs, 35 of 114 Parvarchaeaceae).
+   Student families are no better than raw zca10 families at matched token counts.
+6. Design ingredients (validation genomes): hard negatives +0.006, family-co-member positives -0.005, bit-score
+   weighting +0.001 (n.s.); a linear 960 -> 256 map beats every MLP (MLPs overfit after 1,500 of 12,000 steps).
+7. Practical reading: for search, apply zca10 (centring + soft whitening) to the stored vectors; a linear head
+   adds +0.017 AP. For discovery, MMseqs2 families (rescue3) stay the default.
+
+------------------------------------------------------------------------------------------------------------
+PREDECLARED (predeclared.json, 10:36 UTC, before any computation). Two amendments, each before the numbers
+they touch:
+  amendment 1 (10:52, after prep counts, before any training or evaluation): prefilter saturation is the norm
+    (356,192 of 371,905 S queries reach 8,000 prefilter candidates; 99.3% of Q queries reach 1,000), so
+    "unsaturated" kept an atypical 4%. A list counts as complete when unsaturated OR alignments <= cap/2
+    (S <= 4,000, Q <= 500). Hard negatives mined on the GPU from the exact zca10 top-64 among training
+    sequences (the stored 50-NN over all sequences gave 0.084 per anchor). Configurations without hard negatives
+    fill that slot with a random sequence, so A - D isolates hardness.
+  amendment 2 (12:07, after retrieval, before any locus-search or engine number): zca10-rank control arms M1z,
+    M2z, S3z, because round-1 M1 used L2 vectors.
+Selection of the head, of locus-search configurations and of the engine arm used odd genomes only (head: the
+validation fifth of the odd genomes); every reported test number comes from even genomes.
+
+------------------------------------------------------------------------------------------------------------
+DATA AND SPLIT (head_prep.py job 79537, head_prep2.py job 79624)
+  Genomes 3,564: 1,782 even (test), 1,426 odd training, 356 odd validation (seed 17).
+  Unique sequences 2,547,528: training-only 883,892 (no validation or even genome; asserted), validation 239,378,
+  test (in an even genome) 1,424,258.
+  Teacher: 689,565,849 MMseqs2 alignment rows (E <= 1e-5). Training pairs (both ends training): 72,112,682
+  directed, 110,610,790 symmetric, 109,982,875 after a cap of 2,000 per anchor; 744,571 anchors with an
+  alignment (median 79 partners); bits q10/q50/q90 58/107/304; min coverage 32/83/98%.
+  rescue3 families: 53,672 with >= 2 training members; anchors 776,408.
+  Hard negatives (GPU, 134 s): of 64 zca10 neighbours per anchor, 51.6% same family, 8.1% aligned (other
+  family), 15.5% unverifiable; 403,320 anchors keep >= 1 (mean 3.59); zca10 cosine q50 0.53.
+  Retrieval sets (S-search queries, complete lists): validation 4,000, test 5,000, median 409 aligned per query.
+
+------------------------------------------------------------------------------------------------------------
+DESIGN SEARCH (head_train.py, job 79599, one RTX A5000, 49 min including mining, test retrieval and kNN)
+InfoNCE (temperature 0.05), batch 4,096, 12,000 steps, AdamW 1e-3, validation every 1,500 steps, best kept.
+  config                       params     best step  val AP@2000  test AP@2000  test - raw zca10
+  raw zca10 (no training)      -          -          0.704        0.722         -
+  raw L2 (round-1 M1 vectors)  -          -          0.318        0.336         -0.386
+  A mlp256 full                1,494,272  1,500      0.771        0.792         +0.070
+  B linear256 full  [CHOSEN]     245,760  12,000     0.778        0.798         +0.075 [+0.071, +0.079]
+  C mlp960 full                1,970,112  1,500      0.772        0.794         +0.071
+  D mlp256 no hard negatives   1,494,272  1,500      0.765        0.787         +0.064
+  E mlp256 no family positives 1,494,272  1,500      0.776        0.798         +0.076
+  F mlp256 unweighted          1,494,272  1,500      0.770        0.792         +0.069
+  G mlp256 minimal             1,494,272  1,500      0.768        0.791         +0.069
+  Ingredients on validation (paired over queries): hard negatives A-D +0.0059 [+0.0039, +0.0080]; family
+  positives A-E -0.0052 [-0.0074, -0.0030]; weighting A-F +0.0012 [-0.0002, +0.0027]; all three A-G +0.0026
+  [+0.0003, +0.0049]; MLP vs linear A-B -0.0075 [-0.0096, -0.0055]; 960-d output C-A +0.0015 [-0.0004, +0.0034].
+  Every MLP peaks at its first evaluation and declines; the linear map improves to the last step.
+  Validation and test gains agree (+0.074 / +0.075): no sign of overfitting to training families.
+  Spearman(cosine, bit score) over aligned targets, test: raw zca10 0.606, B 0.657.
+  H3 (test gain >= 0.10): NOT MET (+0.075).
+
+------------------------------------------------------------------------------------------------------------
+LOCUS SEARCH (head_ls.py; jobs 79796 student, 80279 zca10 control; 200-replicate null, seeds as rounds 1-2)
+Self-check: with raw L2 lists in the student slot the code reproduces round-1 M1 and round-2 S3 exactly
+(24 queries, max |diff| 0). Configurations chosen on 1,200 odd-genome DefenseFinder queries (scan-only AP):
+M1' W+8 tau 3 (odd 0.813); M2' w 0.75 tau 3 (0.823); S3' w_emb 0.75 tau 3 (0.831); M1z tau 3 (0.800); M2z
+w 0.75 tau 1 (0.811); S3z w 0.5 tau 0 (0.827). Every choice is W = span + 8, the grid edge, as in round 1.
+DefenseFinder, even genomes, 1,247 queries:
+  method                       AP      strict  recall E<=.01  recall E<=1  unlabelled/q  unsupported/q  wrong/q
+  M0 tokens                    0.370   0.256   0.094          0.173        0.72          0.000          0.11
+  M1 L2 ranks (round 1)        0.442   0.257   0.093          0.171        2.59          0.137          0.33
+  S1 MMseqs2 ranks             0.602   0.389   0.170          0.291        4.47          0.029*         1.13
+  S3 tok+MMseqs2+0.5 L2        0.698   0.454   0.182          0.320        4.51          0.029*         1.22
+  M1z zca10 ranks              0.792   0.510   0.183          -            4.51          0.121          -
+  M1' student ranks            0.809   0.516   0.192          0.397        4.49          0.065          1.35
+  M2z tok + zca10              0.804   0.520   0.180          -            3.52          0.031          -
+  M2' tok + student            0.821   0.521   0.184          0.377        3.63          0.020          1.24
+  S3z tok+MMseqs2+zca10        0.816   0.508   0.184          -            4.65          0.028          -
+  S3' tok+MMseqs2+student      0.826   0.521   0.189          0.385        4.89          0.038          1.35
+  (* round 2 task 1, same null; unsupported = unlabelled at E <= 0.01 failing the round-2 'supported' rule)
+  Paired (genome bootstrap): M1'-M1 +0.367 [+0.357, +0.377]; M1'-S1 +0.207 [+0.197, +0.218]; M1'-M1z +0.017
+  [+0.013, +0.021]; M2'-M2 +0.245; M2'-M2z +0.017 [+0.013, +0.020]; S3'-S3 +0.128 [+0.121, +0.135]; S3'-S3z
+  +0.010 [+0.007, +0.013]; M1z-M1 +0.350 [+0.340, +0.360]; S3z-S3 +0.118 [+0.111, +0.125].
+  >= 3 members (322): M1' 0.831, S3' 0.858, S3 0.780, S1 0.670, M1 0.509.
+  Supported share of unlabelled hits: M1' 0.985, M1z 0.972, M1 0.945; own-type profile domain 0.96 (M1').
+TXSScan (404, DefenseFinder configurations; one type, so primary AP has no negatives):
+  M1' 0.931 (strict 0.209), M1z 0.868, M2' 0.879, S3' 0.891, S3z 0.883; S2 0.488, S3 0.747; L2 M1 at the
+  frozen configuration 0.504. M1'-M1z +0.063 [+0.052, +0.074]; S3'-S3 +0.144 [+0.129, +0.159].
+CRISPRCasTyper (1,893): M1' 0.154 (strict 0.087), M1z 0.135, M2' 0.166, S3' 0.165; S2 0.120, S3 0.133;
+  L2 M1 0.082. Wrong-subtype hits per query rise: M1' 14.4, S3 6.1, L2 M1 3.3.
+Cost per query (one CPU): scan + 200-replicate null 8.9 s for M1', M1z and S3 alike (the null dominates; the
+  round-2 fast null cuts it 5x). Per-gene top-20,000: student (256-d) 157 genes/s on 64 CPUs, raw 960-d 98/s.
+  M1' needs no MMseqs2 search (S methods: 3.2 s per query on 24 CPUs in round 2's interactive session).
+H1: AP condition met (0.809 >= 0.600); rate condition not met (0.065 > 0.05). Verdict as declared: NOT MET.
+S3' question: yes, S3' > S3 (+0.128, interval above 0).
+
+------------------------------------------------------------------------------------------------------------
+ENGINE (head_families.py job 79797; 8 engine jobs 80456-80525; W 3; vs dpann__mmseqs__seq__e3c50s75__w3)
+Student exact kNN (k 50) -> 164,178,496 gene-level edges (cap 64 binds for 63%) -> Leiden, weight = cosine.
+  arm      tokens     tune sum d  test sum d [95%]          DF F1  TXSS F1  CCT F1  ribo runs  Parv  admissible
+  r300       7,575    -0.120      -0.135 [-0.152, -0.119]   0.851  0.656    0.607   1,686      114   yes
+  r1000     13,744    -0.098      -0.096 [-0.112, -0.080]   0.847  0.658    0.593   1,686      114   yes
+  r3000     27,405    -0.071      -0.070 [-0.087, -0.054]   0.844  0.658    0.560   1,686      114   yes [CHOSEN]
+  r7500     61,940    -0.044      -0.049 [-0.068, -0.031]   0.821  0.648    0.526   1,665      103   no
+  r11000   104,618    -0.005      -0.012 [-0.030, +0.006]   0.813  0.669    0.505   1,607       98   no
+  r19000   289,068    +0.025      +0.021 [+0.001, +0.042]   0.787  0.628    0.449   1,144       35   no
+  r30000   702,088    -0.024      -0.008 [-0.035, +0.018]   0.669  0.538    0.329     659        1   no
+  r50000 1,616,189    -0.203      -0.214 [-0.244, -0.184]   0.404  0.249    0.170     150        0   no
+  base MMseqs2 e3c50s75: F1 DF 0.806, TXSS 0.758, CCT 0.589. Against rescue3: r3000 -0.074 [-0.090, -0.057];
+  r19000 +0.017 [-0.003, +0.038] (DF excess +0.069, TXSS -0.052).
+  Raw zca10 families with the same graph construction (V0; hierarchy and context_kernel reports): ~13k tokens
+  -0.091, ~29k -0.083, ~67k -0.014 (admissible, 1,677/114), ~112k -0.012 (1,580/53), ~298k +0.038 (1,155/6).
+  At matched token counts the student is +0.013 (~28k), -0.035 (~65k, and inadmissible), equal (~110k),
+  -0.017 (~290k): the head does not improve engine families. TXSScan F1 stays 0.09-0.13 below the base in
+  every student arm up to r19000 (fragmentation of large secretion families, as for V0).
+H2: NOT MET (-0.070 < -0.01).
+
+------------------------------------------------------------------------------------------------------------
+READINGS AND WHAT WOULD HAVE REFUTED THEM (written in NOTEBOOK.txt before the test numbers)
+  (1) "The round-1 embedding deficit in search was list length (a rank list gives all 20,000 entries
+      s >= 5.2)": refuted. zca10 lists of the same length reach 0.792; the deficit was the uncentred L2 space.
+  (2) "The student's information is already in MMseqs2 ranks": refuted for search; S3' - S3 = +0.128, and the
+      head alone adds +0.010 on top of zca10 + sequence.
+  (3) "A head taught family co-membership keeps universal families whole at matched token counts": not
+      supported; ribosomal recovery tracks token count as for V0 (student better at ~110k, worse at ~65k).
+  (4) "zca10 ranks buy primary AP with spurious windows": not supported; strict AP rises with primary AP
+      (0.257 -> 0.510), 95% of M1z unlabelled hits carry the query type's DefenseFinder profile domains, and
+      the unsupported rate (0.121) is below round-1 M1's (0.137) under the same null.
+
+CAVEATS
+  - The H1 rate bound (0.05) came from round 2's calibrated-null table (M1 0.042); under the declared
+    200-replicate null round-1 M1 is 0.137. I report the declared verdict; no calibrated E-values were computed
+    for these runs (their null tails were not stored).
+  - zca10's mean and covariance are computed over all 2.5 M sequences, including even genomes (unsupervised,
+    transductive; no labels enter).
+  - Retrieval queries come from the S search (356 random genomes plus gold-locus neighbourhoods); 97% have a
+    saturated prefilter, handled by amendment 1.
+  - Validation retrieval was the only selection signal for the head; a locus-search signal on validation genomes
+    was not used.
+  - Wrong-type hits per query at E <= 0.01 for M1' (1.35) match the sequence methods (S3 1.22), above M0/M2.
+
+ARTIFACTS
+  Local benchmarks/redesign/head/: predeclared.json (2 amendments), NOTEBOOK.txt, REPORT.txt; code head_prep.py,
+  head_prep2.py, embed_tokens.py (copy), head_train.py, head_ls.py, head_families.py, head_collect.py,
+  submit_engine.sh, run_*.sbatch; results/ (data/prep*.json, student/selection.json + train.json, ls/ and
+  ls_zca10/ summary.json + best_configs.json, ls/combine_vs_zca10.json, ls/selfcheck.json, engine/
+  engine_results.{tsv,json} + families.json, engine_jobs.log, compare_vs_rescue3.txt).
+  Biotite $RD/head/: data/ (zca10_f16__uid.npy, l2_f16__uid.npy, pos_csr.npz, fam.npz, hardneg.npy, eval_*.npz,
+  split.npz), student/ (7 checkpoints *.pt, per-query AP npz, B_linear256_full/student_f32__uid.npy 2.6 GB and
+  knn_k50.npz), ls/ and ls_zca10/ (topk lists, tune_odd.parquet, final_metrics.parquet, final_hits_E10.parquet,
+  unlabelled_DF_E0.01.parquet), engine/. Token arms $RD/engine/dpann_tokens/head__B__r*.parquet (+ .json);
+  engine runs $RD/engine/results_dpann_head/dpann__head__B__r*__w3/. Logs $RD/logs/head_*.
+  Jobs: 79537, 79624 prep; 79645 code test; 79667 selfcheck; 79599 GPU training; 79796, 80279 locus search;
+  79797 families; 80456, 80457, 80473, 80477, 80490, 80501, 80521, 80525 engine. All completed.
+
+NEXT (not started; one line each)
+  - Re-run the round-2 fast null (Gumbel + calibration curve) for M1', M1z and S3 so the rate bound is read on
+    the null it was set on.
+  - Rebuild the interactive search path (HNSW + no MMseqs2) on zca10 or student vectors: one input, one index.
+  - Hybrid families for the engine: MMseqs2 rescue3 tokens with zca10/student merges (the ribosomal workstream's
+    hybrid arm) rather than embedding-only Leiden.

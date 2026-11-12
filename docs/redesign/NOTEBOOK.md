@@ -1342,3 +1342,42 @@ Jacob chose to keep rescue3 (a gene in a family of fewer than 3 members joins it
 family when the alignment covers >= 80% of the shorter protein) as the DPANN default family
 table, knowing its cut-test error (5.0% wrong family, 13.4% false joins of singleton pieces).
 The anchored variant (`rescue3c`) stays available as the conservative table.
+
+## 2026-11-12 13:03 UTC — CORRECTION: whitened embedding ranks beat MMseqs2 ranks in locus search (workstream `head`; `benchmarks/redesign/head/REPORT.txt`)
+
+**Error in locus-search rounds 1 and 2 (the coordinator's brief):** the embedding ranks there
+(M1, M2, S3) were computed on the uncentred L2 vectors (`l2_f32__row.npy`). On DPANN, raw
+ESM++ small vectors are strongly anisotropic; homolog retrieval AP@2000 is 0.336 for raw L2
+against 0.722 after the zca10 transform (mean removal and soft whitening, unsupervised), in line
+with the July transform ablation. The statements "sequence search supplies graded evidence
+better than ESM++ small" and "embedding ranks alone 0.442" hold for unwhitened vectors only.
+
+Even-genome DefenseFinder queries (1,247; 200-replicate null; configurations tuned on odd):
+
+| Method | Inputs | AP | Strict AP | Recall E<=0.01 | Unlabelled / query | Unsupported / query |
+|---|---|---|---|---|---|---|
+| M0 tokens | 1 | 0.370 | 0.256 | 0.094 | 0.72 | 0.000 |
+| M1 raw L2 embedding ranks | 1 | 0.442 | 0.257 | 0.093 | 2.59 | 0.137 |
+| S1 MMseqs2 ranks | 1 | 0.602 | 0.389 | 0.170 | 4.47 | 0.029 |
+| S3 tokens + MMseqs2 + raw L2 | 3 | 0.698 | 0.454 | 0.182 | 4.51 | 0.029 |
+| **M1z zca10 embedding ranks** | 1 | **0.792** | 0.510 | 0.183 | 4.51 | 0.121 |
+| M1' learned-head ranks (linear 960 -> 256) | 1 | 0.809 | 0.516 | 0.192 | 4.49 | 0.065 |
+| M2' tokens + head | 2 | 0.821 | 0.521 | 0.184 | 3.63 | 0.020 |
+| S3' tokens + MMseqs2 + head | 3 | 0.826 | 0.521 | | | 0.038 |
+
+- Whitened embedding ranks alone exceed MMseqs2 ranks alone by 0.19 AP and the three-input S3 by
+  0.09. TXSScan: M1' 0.931, M1z 0.868, S3 0.747. CRISPRCasTyper: 0.154, 0.135, 0.133 (with more
+  wrong-subtype hits). The M1z arms were added by amendment during the run, so the comparison
+  needs a predeclared confirmation (workstream `search3`).
+- The trained head adds little: +0.017 [+0.013, +0.021] AP over zca10 and half the unsupported
+  rate; retrieval AP@2000 +0.075 over zca10 (bar 0.10). A linear map beat every MLP.
+- Predeclared outcomes of the head test: H1 not met on the rate condition (AP 0.809 passes; 0.065
+  unsupported unlabelled hits per query against a bound of 0.05 taken from a different null);
+  H2 not met (admissible head-family arm -0.070 [-0.087, -0.054] against the MMseqs2 base; the
+  only arm above the base loses the ribosomal locus); H3 not met.
+- Discovery is unchanged: MMseqs2 families with fragment rescue remain the engine default.
+- Affected earlier statements: locus-search rounds 1-2 conclusions about the embedding (S2 - M2,
+  "the embedding reorders the deeper list", token-invisible recall, the 20,000 against 2,000 list
+  depth) and the phase-0 "embedding-reachable" counts, all computed on raw vectors.
+- The Mac's data volume reached 100% during this run (10:41 UTC) and was freed by another
+  session's cleanup.

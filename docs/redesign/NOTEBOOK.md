@@ -769,3 +769,17 @@ v1.5 labels 92% of DefenseFinder best loci (83% in v1.4), 802 / 804 for TXSScan 
 3,423 / 3,820 for CRISPRCasTyper (2,176), at 0.026 lower AMI on the larger labelled set.
 On the Spacedust collection (job 77903, window 8) v1.4 gives 1,797 modules, largest 1,397
 tokens, with F1 unchanged (0.745 / 0.807). v1.5 is the engine default.
+
+## 2026-11-12 04:33 UTC — Decisions from Jacob
+
+- ESM2-650M embedding of DPANN is authorized. Submit it when the H200s are free (Talea
+  lanes finished or talea-ae agrees); ESM++ small serves the first round of DPANN tests.
+  The run needs an ESM2 backend in `embed_queue` (same shard queue, new model loader and
+  pooling; 1,022-residue context needs a chunking rule for the 4,322+ long proteins).
+- Framing concern: a tool positioned beside Spacedust (Steinegger lab) whose family step is
+  MMseqs2 reads poorly as an independent alternative. Jacob may approach Martin Steinegger
+  about joining. Consequence for the experiments: the embedding arms now carry the claim of
+  independent value; a sequence-only result points toward a collaboration or an extension
+  of their stack. A family step from another lab (for example DIAMOND DeepClust) is an
+  untested option for the token table; the engine takes any gene-to-token table.
+- Embedding status at 04:25 UTC: 166 / 170 shards done on job 77717; 77718 still pending.

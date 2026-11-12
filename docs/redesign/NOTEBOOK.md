@@ -1709,3 +1709,11 @@ account limit; order of events unaffected).
 Round 2's configuration remains the best embedding-only discovery output. Reading: at long range
 the whitened ESM++ small similarity does not separate homologs from chance well enough for a
 per-lineage best match; the representation is the limit this lever ran into.
+
+## 2026-11-12 23:39 UTC — Sharur DPANN database republished (note from the Sharur session)
+
+Seal 78c68b6b…, 16:38 MST 12 November. CDD hits moved from `annotations` (source 'cdd') to table
+`protein_resemblance`; a stored view `family_annotations_carried` carries family annotations to the
+rescue clustering runs. Family tables unchanged. `cofold/s3_export_sharur.py` reads CDD from
+`annotations`; point it at `protein_resemblance` before any rerun of the census export. The census
+numbers already reported came from the earlier seal (f652ef47…).

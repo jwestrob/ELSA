@@ -717,3 +717,38 @@ a cap of 3. Dropping a pair's co-locations beyond its most significant distance 
 support that cluster-scale loci need. **Verdict: `--adaptive` stays an option and is not
 the default.** Fixed window per data set remains: 5 with merged tokens or 8 with sequence
 tokens on the Spacedust collection, 3 on DPANN.
+
+## 2026-11-12 02:45 UTC — Modules: communities replace connected components (engine v1.4)
+
+A module is meant to name a recurrent neighbourhood type. The union-find definition
+(components of pairs with J >= 0.5) put 26,832 of 33,888 module tokens into one component
+on DPANN, so every locus carried the same label.
+
+`lab/modules_lab.py` scores a module definition with no locus caller in between: each
+curated instance with at least two members takes the plurality module of its members'
+tokens; adjusted mutual information (AMI) with the caller's system type, homogeneity and
+completeness. DPANN, permissive sequence base, window 3 (159,955 significant pairs, 40,919
+tokens), DefenseFinder (2,472 instances, 158 types in the package):
+
+| Definition (edge weight) | Modules | Largest (tokens) | AMI | Homogeneity | Completeness | AMI tune / test |
+|---|---|---|---|---|---|---|
+| union-find, J >= 0.5 (engine v1.1-1.3) | 2,458 | 26,832 | 0.28 | 0.21 | 0.67 | 0.272 / 0.264 |
+| Leiden modularity r 5 (J) | 1,694 | 1,227 | 0.74 | 0.80 | 0.72 | 0.734 / 0.729 |
+| Leiden modularity r 20 (J) | 2,042 | 245 | 0.75 | 0.90 | 0.67 | 0.750 / 0.738 |
+| Leiden modularity r 5 (unweighted) | 1,621 | 1,349 | 0.72 | 0.73 | 0.74 | 0.704 / 0.716 |
+| **Leiden modularity r 5 (J x log2 L)** | 1,692 | 1,243 | **0.80** | 0.86 | 0.77 | 0.795 / 0.798 |
+| Leiden CPM r 0.02-0.4 (J) | 5,057-9,178 | 75-10 | 0.63-0.67 | 0.93-0.95 | 0.52-0.57 | |
+| Louvain (networkx) r 5 (J x log2 L) | 1,699 | 1,224 | 0.76 | 0.78 | 0.78 | 0.765 / 0.759 |
+| **Louvain (networkx) r 10 (J x log2 L)** | 1,833 | 701 | 0.79 | 0.89 | 0.73 | 0.791 / 0.778 |
+
+On the strict 30%/80% clusters the best definition reaches AMI 0.66, so the permissive
+families also give the better modules. TXSScan has a single system type among instances
+with two or more members and CRISPRCasTyper labels are mostly `cas_putative`; both are
+uninformative for this score (CRISPRCasTyper AMI 0.09-0.13 for every definition).
+
+Engine v1.4: `--module-method louvain` (default; networkx Louvain, resolution 10, weight
+J x log2 L, seed 17), chosen over Leiden because networkx is in every environment the
+engine runs in while igraph is absent from the elsa environment; the cost is 0.02 AMI.
+A significant pair whose two tokens fall in different modules names neither. Reruns:
+77902 (DPANN, permissive base, w 3, with the gold-locus scorer) and 77903 (Spacedust,
+permissive base, w 8).

@@ -396,7 +396,10 @@ def main():
     ap.add_argument("--perms", type=int, default=3)
     ap.add_argument("--fdr", type=float, default=0.01)
     ap.add_argument("--rule", help="use this rule instead of choosing by coverage at the FDR target")
-    ap.add_argument("--module-j", type=float, default=0.5)
+    ap.add_argument("--module-j", type=float, default=0.5, help="J floor of the union-find modules")
+    ap.add_argument("--module-method", choices=["louvain", "uf"], default="louvain",
+                    help="louvain: communities of the significant-pair token graph; uf: components of pairs with J >= --module-j")
+    ap.add_argument("--module-res", type=float, default=10.0, help="Louvain resolution")
     ap.add_argument("--oriented", action="store_true")
     ap.add_argument("--null", choices=["genome", "contig"], default="genome",
                     help="shuffle gene order within each genome (contig sizes kept) or within each contig")
@@ -423,7 +426,7 @@ def main():
     tok = tok_by_gid[u.gid]
     strand = u.genes.strand.to_numpy(dtype=np.int64)
     n_start, n_end = (u.g_start, u.g_end) if a.null == "genome" else (u.c_start, u.c_end)
-    res = dict(engine="v1.3", null=a.null, arm=a.arm, universe=str(a.universe), w=(f"a{a.w}" if grid else a.w),
+    res = dict(engine="v1.4", null=a.null, arm=a.arm, universe=str(a.universe), w=(f"a{a.w}" if grid else a.w),
                window_grid=grid, oriented=a.oriented,
                perms=a.perms, genes=u.n, genomes=u.ng, assigned=int((tok >= 0).sum()),
                tokens=int(len(np.unique(tok[tok >= 0]))))
@@ -509,22 +512,39 @@ def main():
         log("windows of significant pairs", res["window_of_significant_pairs"])
 
     # ---- modules: tokens joined by significant, consistent pairs --------------------
-    strong = mask & (st["J"] >= a.module_j)
-    parent = union_find(T, st["lo"][strong].astype(np.int64), st["hi"][strong].astype(np.int64))
     in_mod = np.zeros(T, dtype=bool)
-    in_mod[st["lo"][strong]] = True
-    in_mod[st["hi"][strong]] = True
-    token_module = np.where(in_mod, parent, -1)
-    sizes = np.bincount(parent[in_mod]) if in_mod.any() else np.zeros(1, dtype=np.int64)
+    if a.module_method == "louvain":
+        # communities of the significant-pair token graph; edge weight J * log2(lineages)
+        import networkx as nx
+        H = nx.Graph()
+        wt = st["J"][mask] * np.log2(np.maximum(st["L"][mask], 2).astype(np.float64))
+        H.add_weighted_edges_from(zip(st["lo"][mask].tolist(), st["hi"][mask].tolist(), wt.tolist()))
+        token_module = np.full(T, -1, dtype=np.int64)
+        for i, c in enumerate(nx.community.louvain_communities(H, weight="weight", resolution=a.module_res, seed=17)):
+            if len(c) >= 2:
+                idx = np.fromiter(c, dtype=np.int64)
+                token_module[idx] = i
+                in_mod[idx] = True
+        strong = mask
+    else:
+        strong = mask & (st["J"] >= a.module_j)
+        parent = union_find(T, st["lo"][strong].astype(np.int64), st["hi"][strong].astype(np.int64))
+        in_mod[st["lo"][strong]] = True
+        in_mod[st["hi"][strong]] = True
+        token_module = np.where(in_mod, parent, -1)
+    sizes = np.bincount(token_module[in_mod]) if in_mod.any() else np.zeros(1, dtype=np.int64)
     sizes = sizes[sizes > 0]
-    res["modules"] = dict(module_j=a.module_j, strong_pairs=int(strong.sum()), modules=int(len(sizes)),
-                          tokens_in_modules=int(in_mod.sum()), largest=int(sizes.max()) if len(sizes) else 0,
+    res["modules"] = dict(method=a.module_method, module_res=a.module_res, module_j=a.module_j, strong_pairs=int(strong.sum()),
+                          modules=int(len(sizes)), tokens_in_modules=int(in_mod.sum()),
+                          largest=int(sizes.max()) if len(sizes) else 0,
                           size_quantiles=np.quantile(sizes, [.5, .9, .99]).tolist() if len(sizes) else [])
-    pair_module = token_module[st["lo"][mask]]
+    log("modules", res["modules"])
+    pair_module = token_module[st["lo"][mask]].copy()
+    pair_module[token_module[st["hi"][mask]] != pair_module] = -1      # a pair between two modules names neither
     sig = pd.DataFrame({k: st[k][mask] for k in ("key", "lo", "hi", "G", "L", "NP", "n_other", "J", "E", "P", "F_lo", "F_hi")})
     sig["module"] = pair_module
     sig.to_parquet(out / "significant_pairs.parquet", index=False)
-    pd.DataFrame({"token": np.flatnonzero(in_mod), "module": parent[in_mod]}).to_parquet(
+    pd.DataFrame({"token": np.flatnonzero(in_mod), "module": token_module[in_mod]}).to_parquet(
         out / "token_modules.parquet", index=False)
 
     # ---- support landscape and loci ----------------------------------------------------

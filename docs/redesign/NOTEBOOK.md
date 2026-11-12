@@ -1273,3 +1273,36 @@ Genome-wide MMseqs2 search (1,093,510 unique queries against all 2,547,528; 23 m
   (`merged_universe_design.txt`; not built).
 - Ribosomal acceptance check: every arm recovers 1,686 / 1,686 runs and 114 / 114
   Parvarchaeaceae; top-module purity 0.849 (base), 0.974 (rescue1), 0.896 (rescue3).
+
+## 2026-11-12 10:27 UTC — Hierarchy of families (workstream `hierarchy`; `benchmarks/redesign/hierarchy/REPORT.txt`)
+
+Hypothesis: one multi-resolution hierarchy from one input, evidence = -log(size of the smallest
+shared cluster / N), serves the engine and search. Predeclared 09:26 UTC; ribosomal guard added
+09:44 UTC (admissible = >= 1,650 of 1,686 runs and >= 110 of 114 Parvarchaeaceae recovered).
+
+- **T1, plain-similarity embedding families confirmed and inadmissible.** Three new Leiden seeds
+  at resolution 19000: summed excess +0.039 / +0.038 / +0.038 over the base on even genomes, F1
+  below the base on all three callers, and 1,122-1,165 ribosomal runs with 5-16 of 114
+  Parvarchaeaceae. The step from round 1 (+0.067) splits evenly between gene-level capped edges
+  (+0.052 [+0.033, +0.070] at about 155k tokens) and resolution (+0.049 [+0.027, +0.070]); no
+  graph-by-resolution cell is admissible.
+- **T2, multi-resolution recurrence: not met.** `recurrence_ml.py` (one token per level, smallest
+  Poisson P per gene-pair instance with a multiplicity correction, joint null) reproduces v1.5
+  exactly with one level. Embedding hierarchies are ruled by their coarsest level (63-77% of
+  significant instances), and loci read from the union of significance only grow: admissible
+  sets sit 0.074-0.114 below their finest level alone. Sequence hierarchy (id30c80 + e3c50):
+  +0.004 [-0.002, +0.010]. Mixed (two MMseqs2 levels + three embedding levels): +0.012
+  [+0.002, +0.022] over the base, admissible (1,686 / 114), DefenseFinder F1 0.849; below the
+  +0.02 bar.
+- **T3, hierarchy evidence in search with no per-query search: not met.** Embedding levels AP
+  0.513, MMseqs2 levels 0.450, both 0.575 (M0 0.370, M2 0.576, S2 0.620, S3 0.698) at 0.16-0.27
+  CPU-s per query against 8.7 for M2; 3.3-9.1x M0's unlabelled hits (bound 1.5x), 92-95% of
+  them carrying the query type's profile domains; unsupported unlabelled hits per query 0.231
+  for both sources (M2 0.002, S3 0.029). The finest levels carry the ranking (+0.089 AP for 13
+  against 8 levels).
+- **T4:** the saved Leiden levels are far from nested (32-54% of genes), and nesting by
+  intersection changes nothing material.
+Reading: with ESM++ small, one flat MMseqs2 partition (now with fragment rescue) remains the
+best family source for the engine; neither the product kernel nor the hierarchy unifies the
+inputs. Remaining route to a single input: a learned head that distils alignment evidence into
+one vector (workstream `head`).

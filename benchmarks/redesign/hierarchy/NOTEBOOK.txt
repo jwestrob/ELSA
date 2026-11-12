@@ -1,0 +1,61 @@
+hierarchy workstream notebook (append-only; times UTC)
+=====================================================
+
+2026-11-12 09:26  predeclared.json written before any computation of this workstream (copy at
+  $RD/hierarchy/predeclared.json). Criteria T1-T3 as in the brief; T4 descriptive.
+  What would refute each reading:
+  T1: fewer than 2 of 3 new Leiden seeds at r19000 reach +0.02 summed excess on even genomes.
+  T2: no multi-level family beats its best single level (both chosen on odd) by >= 0.02 with a CI excluding 0
+      at DF and TXSS F1 >= base - 0.01.
+  T3: both single-source hierarchies (H_emb chosen among L8/L13, H_seq) below AP 0.576 on even DF queries or
+      above 1.5x M0's unlabelled rate.
+
+2026-11-12 09:40  code: leiden_t1.py, recurrence_ml.py (+ copy of deployed recurrence.py v1.5 imported as module),
+  one_ml.sh, run_ml.sbatch, compare_repro.py, levels.py, nested.py, hier_search.py, run_search.sbatch,
+  run_leiden_t1.sbatch. Read /home/jwestrob/.claude/CLAUDE.md and biotite-cluster-ops.md in full, then:
+  78859 hier_leiden  (standard_expand_2 -c 64; V0 graph r19000 seeds 17-20 + r13000/r13500; gene-level mutual
+                      subgraph r3000-50000; round-1 unique-sequence mutual 20-NN r3000-100000)
+  78860 hier_ml      (REPRO=1: deployed v1.5 and recurrence_ml one level on e3c50s75, exact comparison; then single
+                      levels r19000 (npy path check), r1000, r3000, r7500, id30c80, e3c30s75)
+  78861 hier_ml      (afterok 78860: candidates E1-E6, S1, S2a, S2b, S2c)
+  78862 hier_search  (nestedness + nested levels; T3 tune on odd, finals on even; nested variants)
+  Note: the base result dir results_dpann_v2/...e3c50s75__w3 was written by engine v1.1; the v1.5 rerun is
+  compared with it for information.
+
+2026-11-12 09:44  Coordinator message: ribosomal-locus guard. Amendment written to predeclared.json
+  (amendment_1_ribosomal_guard) before any T1 seed / attribution / T2 multi-level result was seen. Seen
+  before the amendment: T3 results; summed excess of single levels r19000 (+0.038 test, = ctx result),
+  r3000 (-0.083), r1000 (-0.092). Admissible = recovered >= 1,650/1,686 and Parvarchaeaceae >= 110/114
+  at conserved@2. T2 primary selection now among admissible arms; comparator = best admissible single level.
+
+2026-11-12 09:36  Job 78860 reproduction gate: recurrence_ml.py with one level == deployed v1.5 on e3c50s75
+  (summary values, rules.tsv, 159,955 significant pairs, 40,919 module tokens, 2,939,492 loci, boundary
+  support, instance scores: all identical). v1.5 rerun vs the v1.1 base dir: boundary support identical,
+  F1/excess identical (summed A-B = 0.000 on every split); modules and module ids differ (v1.1 modules).
+  r19000 through the .npy path reproduces the ctx arm (+0.038 [+0.017, +0.062] test).
+
+2026-11-12 09:35  Job 78862 (search) done. T3 predeclared: NOT MET (details in REPORT). chk_e3c50s75
+  reproduces M0 exactly (AP 0.3700, unlabelled 0.719). Nestedness: consecutive V0 levels contain 34-54% of
+  genes in a finer cluster wholly inside one coarser cluster (plurality share 86-93%).
+
+2026-11-12 09:52  Job 78859 (Leiden) done, 13 min. Seed-17 rerun at r19000 identical to the saved context_kernel
+  membership (297,708 tokens). Tokens: V0 r19000 seeds 18/19/20 = 297,720 / 297,923 / 297,891; V0 r13000 146,818,
+  r13500 156,633 (low cell = r13500 by the matching rule). G1 (round-1 graph) r3000 153,520 (= round 1), r6000
+  175,061, r10000 197,396, r19000 237,642, r30000 279,705 (high cell), r50000 358,146, r100000 800,294; 71,722
+  singleton tokens fixed below r30000. G3 (gene-level mutual edges, 56,962,567) r3000 83,077, r6000 100,964,
+  r10000 120,325, r19000 160,485 (low cell), r30000 315,176 (high cell), r50000 806,925.
+  Submitted 79080 (T1 engine arms with one_ml2.sh = one_ml.sh + ribosomal check; pre-step: ribosomal check of the
+  J2 singles and the ctx V0 singles r11000-r30000 into $RD/hierarchy/ribo/), 79099 (T2 second half, afterok 78861:
+  guard on candidates, guarded/unguarded selection, B1/B2, nested chosen E set, final paired comparisons).
+  Guard (conserved@2 recovered / Parvarchaeaceae): e3c50s75 1686/114; id30c80 1686/114; e3c30s75 1685/114;
+  V0 r1000 1685/114, r3000 1685/114, r7500 1677/114 (admissible); r11000 1580/53, r15000 1406/27, r19000 1155/6,
+  r23000 880/0, r30000 643/0 (not admissible).
+
+2026-11-12 10:20  T1 done (job 79080): seeds 18/19/20 +0.039/+0.038/+0.038 test summed vs base (criterion met
+  3/3); every seed inadmissible (1,122-1,165 / Parv 5-16). Attribution contrasts in results/t1_contrasts.txt.
+2026-11-12 10:35  T2 done (jobs 78861, 79099). No family meets the criterion, guarded or unguarded. Coarse levels
+  take 63-77% of significant instances; coarse-level E sets admissible at -0.074 to -0.114 against their finest
+  level. B1u (E1 + S2b) admissible and +0.012 [+0.002, +0.022] over base. Nested E sets: -0.001 / -0.003.
+2026-11-12 10:40  T3 extended grid (job 78923, post hoc): unlabelled rate insensitive to tau 3-7 and wx 8-16;
+  92-95% of unlabelled hits carry own-type DefenseFinder profiles; unsupported per query 0.024-0.443.
+  REPORT.txt written.

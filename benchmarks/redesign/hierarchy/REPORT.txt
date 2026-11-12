@@ -1,0 +1,177 @@
+HIERARCHY WORKSTREAM: REPORT (2026-11-12, DPANN package; ESM++ small V0 Leiden levels + MMseqs2 levels)
+==========================================================================================================
+
+QUESTION
+Does one hierarchy of families (nested or multi-resolution) from one input serve discovery (recurrence engine)
+and search, with evidence for two genes read as -log(size of the smallest shared cluster / N)?
+
+ANSWER IN SEVEN LINES
+1. T1 CONFIRMED (3 of 3 new seeds), AND EVERY SEED IS INADMISSIBLE. V0 r19000 beats the base on even genomes by
+   +0.039 / +0.038 / +0.038 (seeds 18-20; seed 17 +0.038), and recovers 1,122-1,165 of 1,686 ribosomal runs
+   (Parvarchaeaceae 5-16 of 114). The gain is DefenseFinder localization bought by splitting universal families.
+2. Round 1 -> V0 (+0.067) splits evenly between graph and granularity: gene-level capped edges +0.052
+   [+0.033, +0.070] at ~155k tokens; ~155k -> ~300k tokens +0.049 [+0.027, +0.070] on the round-1 graph; applied
+   second, each adds +0.016 to +0.018. Ribosomal recovery falls with granularity in every graph.
+3. T2 NOT MET in any family, guarded or unguarded. Embedding hierarchies are ruled by their coarsest level: the
+   smallest-P choice sends 63-77% of significant instances there, the union of significance extends loci, and DF
+   excess falls back to the base level while TXSScan stays at V0's level. Coarse levels keep the ribosomal locus
+   (E2/E3/E4/E6 admissible) at -0.074 to -0.114 summed excess against their finest level alone.
+4. The one admissible multi-level arm above the base mixes sources: B1u = MMseqs2 id30c80 + e3c50s75 + V0 r30000,
+   r19000, r11000: +0.012 [+0.002, +0.022] over the base (criterion +0.02), 1,686 / 114 ribosomal, DF F1 0.849.
+5. T3 NOT MET. Hierarchy evidence with no per-query search: embedding levels AP 0.513 (M0 0.370, M2 0.576),
+   MMseqs2 levels 0.450, both 0.575 (= M2, -0.001 [-0.012, +0.011]), at 0.16-0.27 CPU-s per query; every
+   variant makes 3.3-9.1x M0's unlabelled hits (bound 1.5x), and floors up to 7 and windows up to span + 16 leave
+   the rate unchanged. 92-95% of those unlabelled hits carry the query type's DefenseFinder profile domains.
+6. T4: the saved Leiden levels are far from nested (32-54% of genes sit in a finer cluster wholly inside one
+   coarser cluster). Nesting by intersection changes little: engine -0.001 / -0.003 summed, search -0.007 AP.
+7. As built, one hierarchy serves neither job better than one well-chosen flat partition. Its value shows only as
+   a hybrid: sequence families carry universal families and TXSScan, fine embedding levels add DF localization.
+
+PREDECLARED (predeclared.json, 09:26 UTC before any computation; amendment_1_ribosomal_guard 09:44 UTC on the
+coordinator's instruction, before any T1 seed, attribution or multi-level result; seen before it: T3 results and
+the summed excess of single levels r19000, r3000, r1000). Admissible = conserved@2 recovers >= 1,650 of 1,686
+runs AND >= 110 of 114 Parvarchaeaceae. Guard = rec / Parv / resolved@2 / resolved unit@0.5 below.
+
+-----------------------------------------------------------------------------------------------------------------
+T1. V0 SEEDS AND ATTRIBUTION (engine v1.5 via recurrence_ml one level, W 3, genome null; base = MMseqs2 e3c50s75,
+    even-genome F1 DF 0.806, TXSS 0.758, CCT 0.589; summed excess +0.447 even / +0.436 odd)
+  Leiden: seed-17 rerun reproduces the saved r19000 membership exactly (297,708 tokens).
+  arm (tokens)                  test summed d [95%]     tune d  | DF F1 dEx | TXSS F1 dEx | CCT F1 dEx  | guard
+  V0 r19000 s17 (297,708)       +0.038 [+.017, +.062]   +0.033  | .775 +.082 | .632 -.044 | .431 -.025 | 1155/6/466/98
+  V0 r19000 s18 (297,720)       +0.039 [+.017, +.061]   +0.031  | .765 +.075 | .636 -.036 | .434 -.017 | 1122/5/470/129
+  V0 r19000 s19 (297,923)       +0.038 [+.016, +.059]   +0.036  | .771 +.082 | .631 -.044 | .435 -.020 | 1165/11/501/102
+  V0 r19000 s20 (297,891)       +0.038 [+.016, +.061]   +0.024  | .762 +.072 | .636 -.034 | .433 -.019 | 1129/16/471/123
+  Criterion (>= +0.02 in >= 2 of 3 new seeds): MET, 3 of 3; seed spread of the test difference 0.001. The
+  refuting outcome (a seed-17 fluctuation) is excluded. F1 is below the base on all three callers in every seed
+  (DF -0.031 to -0.044, TXSS -0.122 to -0.128, CCT -0.155 to -0.159): an excess (precision) gain.
+  Attribution, 2 x 2 at matched token counts (G1 = round-1 unique-sequence mutual 20-NN, 12,425,925 edges, reproduced
+  round-1 r3000 exactly; G2 = V0 gene-level capped edges, 164.9 M; G3 = G2's 56,962,567 mutual edges):
+  cell                         tokens    test summed d [95%]    guard
+  G1 low  r3000                153,520   -0.029 [-.047, -.011]  1646/114/811/343
+  G1      r19000 (res-matched) 237,642   +0.015 [-.008, +.036]  1368/50/627/139
+  G1 high r30000               279,705   +0.020 [-.005, +.044]  1175/9/538/132
+  G2 low  r13500               156,633   +0.022 [+.004, +.042]  1510/51/644/195   (r13000, 146,818: +0.016)
+  G2 high r19000               297,708   +0.038 (4 seeds)       1122-1165 / 5-16
+  G3 low  r19000               160,485   +0.018 [-.003, +.040]  1433/0/614/173
+  G3 high r30000               315,176   -0.026 [-.049, -.004]  1143/1/497/120
+  Paired contrasts (test): graph at ~155k G2-G1 +0.052 [+0.033, +0.070]; graph at ~290k +0.018 [-0.007, +0.043];
+  granularity in G1 +0.049 [+0.027, +0.070]; granularity in G2 +0.016 [+0.001, +0.031] (interaction about -0.033);
+  mutuality at ~158k G2-G3 +0.005 [-0.013, +0.022], at ~305k +0.064 [+0.041, +0.087]. Reading: the gene-level
+  edges and the higher resolution each carry about half of the +0.067; mutual-only gene-level edges equal capped
+  edges at ~158k tokens and collapse at ~300k. No cell is admissible; G1 r3000 comes closest (1,646, 114/114).
+
+-----------------------------------------------------------------------------------------------------------------
+T2. MULTI-RESOLUTION RECURRENCE (recurrence_ml.py)
+  Method: one token per level; per-level v1.5 pair statistics; each gene-pair instance takes the level with the
+  smallest Poisson P (ties to the finer level); rules on P_adj = min(1, K P); the null permutes gene order per
+  genome jointly for all levels and repeats the choice (FDR includes the choice); support = L of the selected pair;
+  loci read as v1.5.
+  Reproduction gate: one level == deployed v1.5 on e3c50s75 exactly (summary values, rules.tsv, 159,955 significant
+  pairs, 40,919 module tokens, 2,939,492 loci, boundary support, instance scores). The v1.5 rerun matches the v1.1
+  base directory in F1 and excess exactly (modules differ). r19000 via the .npy path reproduces the ctx arm.
+  run                       levels                          odd sum  even sum | DF F1 / ex   | TXSS F1 / ex | guard (rec/Parv/res@2/unit)
+  base e3c50s75             1                                0.436    0.447   | .806 / .268  | .758 / .178  | 1686/114/711/149
+  single r1000              1                                0.352    0.356   | .834 / .253  | .676 / .102  | 1685/114/702/259
+  single r3000              1                                0.358    0.364   | .828 / .277  | .648 / .087  | 1685/114/717/332
+  single r7500              1                                0.411    0.433   | .808 / .300  | .677 / .133  | 1677/114/803/217
+  single r11000 / r15000    1                                .426/.448 .435/.467| .798/.313, .788/.333 | .658/.123, .652/.134 | 1580/53, 1406/27
+  single r19000             1                                0.469    0.485   | .775 / .350  | .632 / .135  | 1155/6/466/98
+  single r23000 / r30000    1                                .465/.409 .478/.448| .737/.346, .683/.342 | .598/.131, .506/.105 | 880/0, 643/0
+  single id30c80 / e3c30s75 1                                .435/.413 .446/.425| .709/.258, .815/.273 | .735/.188, .736/.152 | 1686/114, 1685/114
+  E1 r30000,r19000,r11000                                    0.428    0.448   | .822 / .328  | .657 / .120  | 1569/64/703/202
+  E2 r19000,r11000,r3000                                     0.366    0.372   | .838 / .285  | .648 / .087  | 1686/114/709/332
+  E3 r30000,r19000,r11000,r3000                              0.367    0.374   | .840 / .286  | .648 / .087  | 1686/114/717/332
+  E4 E3 + r1000                                              0.366    0.370   | .844 / .267  | .676 / .103  | 1686/114/692/258
+  E5 r30000,r23000,r19000,r15000,r11000                      0.424    0.441   | .820 / .323  | .658 / .118  | 1576/64/707/196
+  E6 r19000,r7500,r1000                                      0.370    0.376   | .844 / .271  | .676 / .105  | 1685/114/694/258
+  S1 id30c80,e3c50s75,e3c30s75                               0.428    0.435   | .829 / .271  | .752 / .164  | 1686/114/744/153
+  S2a e3c50s75,e3c30s75 / S2c id30c80,e3c30s75               .416/.424 .430/.438| .830, .821   | .749, .747   | 1686/114
+  S2b id30c80,e3c50s75                                       0.443    0.451   | .802 / .270  | .762 / .181  | 1686/114/699/157
+  B1 (E6+S2b, guarded)      id30c80,e3c50s75,r19000,r7500,r1000  0.416 0.424 | .859 / .263  | .756 / .161  | 1686/114/659/157
+  B1u (E1+S2b, unguarded)   r30000,id30c80,e3c50s75,r19000,r11000 0.446 0.459 | .849 / .285 | .760 / .174  | 1686/114/664/157
+  B2 (E4+S1)                8 levels                         0.398    0.407   | .865 / .258  | .747 / .149  | 1686/114/657/153
+  Verdicts (criterion: even summed excess of the chosen multi-level arm - chosen best single >= 0.02 with the
+  interval excluding 0, DF F1 >= 0.796, TXSS F1 >= 0.748):
+  (a) guarded   E6 vs r7500   -0.057 [-0.071, -0.043]  NOT MET (TXSS F1 0.676 also fails)
+      unguarded E1 vs r19000  -0.037 [-0.054, -0.021]  NOT MET
+  (b) both      S2b vs e3c50s75 +0.004 [-0.002, +0.010] NOT MET (F1 DF 0.802, TXSS 0.762; admissible)
+  (c) guarded, amended set {B1, B2}: B1 vs e3c50s75 -0.023 [-0.035, -0.010] NOT MET
+      guarded with B1u admitted (the original-declaration B1, admissible): B1u vs e3c50s75 +0.012 [+0.002, +0.022]
+      NOT MET (gain below 0.02; DF F1 0.849, TXSS F1 0.760 pass)
+      unguarded B1u vs r19000 -0.026 [-0.047, -0.006] NOT MET
+  Hypothesis reading (amendment): admissible arms whose finest level alone is inadmissible, against that level:
+  E2 -0.114 [-0.135, -0.094], E6 -0.109 [-0.130, -0.090] (vs r19000), E3 -0.074 [-0.102, -0.047], E4 -0.077
+  [-0.104, -0.050] (vs r30000): refuted for embedding-only hierarchies. B1u vs r30000 +0.012 [-0.014, +0.038] meets
+  the 'supported' wording formally; r30000 is the weakest fine level (B1u vs r19000 -0.026), and B1u vs its own
+  sequence part S2b is +0.008 [-0.000, +0.017] (DF excess +0.015 [+0.006, +0.023], TXSS -0.007 [-0.009, -0.004]).
+  What would have refuted the mechanism below: coarse levels taking a minority of significant instances, or E-set
+  DF excess staying near the finest level's. Neither observed.
+  Mechanism. Significant instances by level: E2 r3000 2.41 M of 3.17 M (76%); E3 r3000 75%; E6 r1000 77%; E4 r1000
+  63% + r3000 20%; B1u e3c50s75 55% + id30c80 25%. Genes covered E2 61.7% (r3000 alone 61.8%, r19000 39.5%).
+  A level can only add significant instances, and conserved loci are read from their union, so the coarsest
+  level's over-extension passes through: DF excess of the coarse-level sets is 0.267-0.286 (base 0.268, r19000
+  0.350). TXSScan is the second limit: no V0 level reaches the base (TXSS excess 0.087 at r3000, 0.102 at r1000,
+  0.135 at r19000; base 0.178, id30c80 0.188), so the coarse V0 levels hold the ribosomal locus and supply neither
+  TXSScan families nor localization.
+  Engine cost: K = 3-5 levels 300-460 s on 6 threads (4 runs per 24-CPU job), one level 137-250 s on 8 threads;
+  about linear in K.
+
+-----------------------------------------------------------------------------------------------------------------
+T3. HIERARCHY EVIDENCE IN LOCUS SEARCH (no per-query search; even-genome DefenseFinder, 1,247 queries; 200-replicate
+    null, seeds as round 1; configuration chosen on odd genomes; every variant chose span + 8, tau 3, the grid edge)
+  Check: e3c50s75 alone reproduces M0 exactly (AP 0.3700, unlabelled 0.719 per query, per-query AP identical).
+  variant (odd AP)        AP     strict  rec E<=.01 unl/q (xM0)  dAP vs M0          vs M2             vs S2    vs S3    CPU-s/query
+  H_emb L13 (0.503, chosen)0.513 0.386   0.196      6.45 (9.0x)  +0.143 [.127,.158] -0.063 [-.078,-.049] -0.107 -0.185  0.197
+  H_emb L8  (0.409)       0.424  0.310   0.184      6.72 (9.4x)  +0.054             -0.152            -0.196   -0.274   0.113
+  H_seq S3  (0.446)       0.450  0.320   0.141      2.39 (3.3x)  +0.080 [.073,.087] -0.125            -0.169   -0.248   0.157
+  H_both L13+S3 (0.570)   0.575  0.409   0.209      6.53 (9.1x)  +0.205             -0.001 [-.012,+.011] -0.045 -0.123  0.273
+  H_both L8+S3 (0.530)    0.541  0.380   0.208      6.49 (9.0x)  +0.171             -0.034            -0.078   -0.157   0.205
+  flat V0 r19000          0.208  0.173   0.151      3.16 (4.4x)  -0.162             -0.368            -0.412   -0.490   0.019
+  references: M0 0.370 / M2 0.576 / S2 0.620 / S3 0.698; strict 0.256 / 0.362 / 0.407 / 0.454; recall E<=0.01
+  0.094 / 0.115 / 0.180 / 0.182; M2 cost 8.7 CPU-s per query (null), S3 8.9 + per-query MMseqs2 and embedding search.
+  Verdict: NOT MET. H_emb (selected L13) AP 0.513 < 0.576 and 9.0x M0's unlabelled rate; H_seq 0.450 at 3.3x.
+  Neither reaches 'graded evidence without search', nor 'matches sequence search'. The declared refutation holds:
+  hierarchy depth does not substitute for per-query ranks at M0's unlabelled rate.
+  What it does deliver: 70% of the M0 -> M2 AP gain from embedding levels alone; H_both equals M2's AP with higher
+  strict AP (+0.047 [+0.039, +0.055]) and the highest recall at E <= 0.01 of any method (+0.027 [+0.019, +0.035]
+  over S3), at 3% of M2's CPU per query. The finest levels carry the ranking: L13 - L8 = +0.089 [+0.082, +0.096] AP
+  (L13 adds r300000, r100000, r26000, r10000, r300); depth over the flat r19000 partition +0.305 [+0.288, +0.322].
+  Post hoc, exploratory: (i) extended grid on odd genomes (wx 8/12/16 x tau 3-7, 200-replicate null): unlabelled
+  hits per query 6.75-7.09 (H_emb/H_both) and 2.57-2.62 (H_seq) against M0 0.85 (bound 1.28); evidence values
+  sit far above any floor, so tau does not move the rate. (ii) Round-2 evidence classifier on the unlabelled hits:
+  92-95% carry a raw DefenseFinder profile of the query's type (span-matched controls 1.4-1.8%); unsupported
+  unlabelled hits per query H_emb L13 0.345, H_both L13+S3 0.231, H_seq 0.024 (round 2: M0 0.000, M2 0.002, S2
+  0.028, S3 0.029). Observed domains only; no system named.
+
+-----------------------------------------------------------------------------------------------------------------
+T4. NESTEDNESS
+  Consecutive V0 levels (fine -> coarse): genes whose finer cluster lies wholly inside one coarser cluster 32-54%
+  (r100000 -> r30000 92%, r300000 -> r100000 99.96%); finer clusters (size >= 2) split 69-80%; gene share in the
+  plurality coarser cluster 86-93%. MMseqs2: id30c80 -> e3c50s75 46% (16% of clusters split), e3c50s75 -> e3c30s75
+  28% (20%). Not nested.
+  Top-down intersection multiplies the finer levels' token counts (L8: r30000 709,751 -> 1,456,918; L13 finest
+  3,567,154). Effect:
+    engine  nested E6 - E6 -0.001 [-0.007, +0.004] (guard 1685/114 both); nested E1 - E1 -0.003 [-0.011, +0.004]
+            (guard 1569/64 -> 1531/53)
+    search  nested L13 - L13 AP -0.007 [-0.012, -0.004], unlabelled -0.58 [-0.90, -0.26] per query;
+            nested L8 - L8 AP -0.005 [-0.010, -0.001]
+  Nesting changes nothing material.
+
+-----------------------------------------------------------------------------------------------------------------
+NEXT (not started; one line each)
+  - Hybrid hierarchy (MMseqs2 families as coarse levels + fine embedding levels) is the only admissible arm above
+    the base; a locus reading that confirms coarse-level loci with fine-level support (in place of the union of
+    significance) is the untested rule that could turn levels into localization.
+  - Search: a per-level weight on coarse-level evidence is the knob the floor lacks for the unlabelled rate.
+
+ARTIFACTS
+  Local benchmarks/redesign/hierarchy/: predeclared.json (with amendment_1), NOTEBOOK.txt, REPORT.txt; code
+  recurrence_ml.py, compare_repro.py, one_ml.sh, one_ml2.sh (+ ribosomal check), run_ml.sbatch, run_t2b.sbatch,
+  select_t2.py, t1_table.py, leiden_t1.py, run_leiden_t1.sbatch, levels.py, nested.py, hier_search.py,
+  hier_unlabelled.py, run_search.sbatch, sets_*.tsv; results/ (t1_table.json, t1_contrasts.txt, t2_table.tsv,
+  t2_select.json, t2_extra_contrasts.txt, ribosomal_lines.txt, search/*, levels/*).
+  Biotite $RD/hierarchy/{code,families,levels,search,ribo,logs}; engine runs $RD/engine/results_dpann_hier/
+  (hier__single__*, hier__ml__*, hier__t1__*, v15check/); token arms $RD/engine/dpann_tokens/hier__{v0,mutual,g1}__*.
+  Jobs: 78859 Leiden (13 min, 64 CPUs); 78860 reproduction + singles; 78861 E/S candidates; 78862 nestedness + T3;
+  78923 T3 extended grid + unlabelled evidence; 79080 T1 engine arms + ribosomal checks; 79099 guard, selection,
+  B sets, nested E, final comparisons. All completed.

@@ -1528,3 +1528,35 @@ Predeclared 13:10 UTC (`results/criterion3.json`). DefenseFinder, 5-fold genome 
   HNSW never came within 0.01 AP of exact top-20,000.
 - The learned linear head: +0.017 [+0.013, +0.021] AP over zca10 on held-out queries and +0.054
   recall at the matched unsupported rate.
+
+## 2026-11-12 16:26 UTC — Token-free recurrence from whitened neighbour lists (workstream `softrec`; `benchmarks/redesign/softrec/REPORT.txt`)
+
+Each gene's ranked zca10 neighbour list (genes outside its genus) replaces its family token in
+the recurrence statistic; the kernel reproduces the token engine exactly when the list is the
+family (L and G equal for all 9,350,064 instances; all 2,939,492 loci equal). Predeclared 13:27
+UTC; variant chosen on odd genomes among admissible ones: zca10, top 1,000, count rule L >= 15
+(instance FDR 0.0046).
+
+| Comparison (even genomes) | Summed DF+TXSS excess | DefenseFinder F1 | TXSScan F1 | CRISPRCasTyper F1 | Ribosomal recovered / resolved / Parv. |
+|---|---|---|---|---|---|
+| Full table: softrec against base | +0.061 [+0.041, +0.080] | 0.843 vs 0.806 | 0.699 vs 0.758 | 0.499 vs 0.589 | 1,681 / 984 / 114 |
+| Default single reading: softrec against base | +0.054 [+0.032, +0.075] | 0.711 vs 0.673 | 0.448 vs 0.412 | 0.412 vs 0.422 | (base 1,686 / 711 / 114) |
+| Softrec end-trimmed reading against token rule H | -0.028 [-0.049, -0.007] | 0.731 vs 0.723 | 0.460 vs 0.558 | 0.408 vs 0.451 | 1,679 / 1,104 / 114 |
+
+- **Predeclared outcome: neither matches nor beats**, because full-table TXSScan F1 is 0.059 below
+  the base (bars 0.02 and 0.01), although summed excess is +0.061.
+- **First embedding-only discovery arm that is above the base and keeps the ribosomal locus.** At
+  the default single reading it beats the token engine on summed excess and on DefenseFinder and
+  TXSScan F1.
+- The machinery alone (family lists; G and E counted over other genera) gives +0.011 to +0.014 at
+  unchanged TXSScan F1; embedding lists add about +0.05 through DefenseFinder localization.
+- Where it loses: TXSScan in the locus reading (the unit reading over-merges because a bounded
+  list fills with close relatives; no admissible softrec single reading reaches the token engine's
+  module-based rule H, which needs token-pair modules); CRISPR-Cas in the statistic (at depth
+  1,000 the null forces L >= 15 and variable Cas pairs fall under it: member genes touching
+  support 0.616 vs 0.765).
+- Depth 50 gains most (+0.064 to +0.068) and loses Parvarchaeaceae runs (97-101 of 114); the
+  Poisson statistic fails on deep lists. The learned head trails zca10 at every admissible depth.
+- Cost: 29 min for six variants at depth 1,000 on 24 CPUs after a 2 h 14 min kNN (top 2,000).
+Follow-up `softrec2`: token-free modules for the reading rule, a two-tier statistic, and the
+lineage-aware expectation, judged on single outputs only.

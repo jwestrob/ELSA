@@ -700,3 +700,20 @@ Windows chosen for significant pairs with the 1-8 grid: Spacedust sequence base 
 - Confound in the hybrid row: the coverage heuristic chose rule `P<=1e-6 & L>=2` for the
   adaptive run and `P<=1e-4 & L>=3` for the fixed runs. Controls: the hybrid with grid 1-8
   and the rule fixed to `P<=1e-4 & L>=3`, and both token sets with grid 1-5 against w 5.
+
+## 2026-11-12 02:30 UTC — Adaptive window controls (jobs 77857-77859): not adopted
+
+| Tokens (Spacedust, conserved g0-2) | A | B | Observed F1 A, B | Excess A - B [95% CI] |
+|---|---|---|---|---|
+| ESM2-650M merge | grid 1-8, rule fixed to `P<=1e-4 & L>=3` | w 5 | 0.775, 0.801 | -0.021 [-0.047, +0.004] |
+| ESM2-650M merge | same | w 8 | 0.775, 0.759 | +0.013 [-0.009, +0.036] |
+| permissive sequence base | grid 1-5 | w 5 | 0.748, 0.758 | -0.012 [-0.028, +0.003] |
+| ESM2-650M merge | grid 1-5 | w 5 | 0.770, 0.801 | -0.026 [-0.051, -0.002] |
+
+With the rule held fixed the adaptive hybrid run sits between the two fixed windows, so
+part of the earlier deficit was the rule switch. Inside a cap of 5 the per-pair window
+costs 0.012-0.026 excess on the Spacedust collection, where it gained 0.018 on DPANN inside
+a cap of 3. Dropping a pair's co-locations beyond its most significant distance removes
+support that cluster-scale loci need. **Verdict: `--adaptive` stays an option and is not
+the default.** Fixed window per data set remains: 5 with merged tokens or 8 with sequence
+tokens on the Spacedust collection, 3 on DPANN.

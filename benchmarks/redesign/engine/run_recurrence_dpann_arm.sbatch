@@ -25,7 +25,18 @@ if [[ -n "${ADAPTIVE:-}" ]]; then EXTRA+=(--adaptive "$ADAPTIVE"); WTAG=a${ADAPT
 "$PY" -u "$RD/engine/code/recurrence.py" --arm "${ARM:?}" --universe "$P/universe" --tokens "${TOKENS:?}" --w "$W" \
     --null "${NULL:-genome}" --benchmark none --all-genome-loci --out "$OUT" --threads "$T" "${EXTRA[@]}"
 O=$OUT/${ARM}__w${WTAG}
+# the two scorer passes are independent; run them side by side, each with half the threads
+H=$(( T / 2 ))
 "$PY" -u "$P/scorer/score_dpann_loci.py" --pkg "$P" --loci "$O/loci_all_genomes.parquet" \
-    --out "$O/score_min2" --threads "$T" --min-members 2
+    --out "$O/score_min2" --threads "$H" --min-members 2 &
+p1=$!
 "$PY" -u "$P/scorer/score_dpann_loci.py" --pkg "$P" --loci "$O/loci_all_genomes.parquet" \
-    --out "$O/score_min2_span30" --threads "$T" --min-members 2 --max-span 30
+    --out "$O/score_min2_span30" --threads "$(( T - H ))" --min-members 2 --max-span 30 &
+p2=$!
+wait $p1; wait $p2
+# paired comparison against the base arm (genome bootstrap; tune = odd, test = even genome_code)
+BASECMP="${BASECMP-$RD/engine/results_dpann_v2/dpann__mmseqs__seq__e3c50s75__w3}"
+if [[ -n "$BASECMP" && "$O" != "$BASECMP" ]]; then
+    "$PY" -u "$RD/engine/code/dpann_compare.py" "$O" "$BASECMP" > "$O/compare_vs_base.txt"
+    grep "summed excess" "$O/compare_vs_base.txt"
+fi

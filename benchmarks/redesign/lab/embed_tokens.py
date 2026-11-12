@@ -127,14 +127,66 @@ def ivf_knn(X, k, nlist, nprobe, seed, threads):
     index.nprobe = int(min(nprobe, nlist))
     D = np.empty((len(X), k + 1), dtype=np.float32)
     I = np.empty((len(X), k + 1), dtype=np.int64)
+    t = time.time()
     for s in range(0, len(X), BLK):
         D[s:s + BLK], I[s:s + BLK] = index.search(X[s:s + BLK], k + 1)
-    # drop the self hit (first column whenever it is the query itself; otherwise drop the last column)
-    self_first = I[:, 0] == np.arange(len(X))
+        stamp(f"ivf search {min(s + BLK, len(X)):,}/{len(X):,} {time.time() - t:.0f}s")
+    return drop_self(I, D)
+
+
+def drop_self(I, D):
+    """Drop the self hit (first column whenever it is the query itself; otherwise the last column)."""
+    n = len(I)
+    self_first = I[:, 0] == np.arange(n)
     Io = np.where(self_first[:, None], I[:, 1:], I[:, :-1])
     Do = np.where(self_first[:, None], D[:, 1:], D[:, :-1])
-    Io[Io == np.arange(len(X))[:, None]] = -1
+    Io[Io == np.arange(n)[:, None]] = -1
     return Io, Do
+
+
+def hnsw_knn(X, k, m, efc, efs, threads):
+    """Cosine kNN with a FAISS HNSW graph (unit vectors, inner product). The IVF index spent 75 min
+    on 2.5 M DPANN vectors because dense families make unbalanced lists; a graph index has no lists."""
+    import faiss
+    faiss.omp_set_num_threads(threads)
+    index = faiss.IndexHNSWFlat(X.shape[1], m, faiss.METRIC_INNER_PRODUCT)
+    index.hnsw.efConstruction = efc
+    t = time.time()
+    for s in range(0, len(X), BLK):
+        index.add(X[s:s + BLK])
+        stamp(f"hnsw add {min(s + BLK, len(X)):,}/{len(X):,} {time.time() - t:.0f}s")
+    index.hnsw.efSearch = max(efs, k + 1)
+    D = np.empty((len(X), k + 1), dtype=np.float32)
+    I = np.empty((len(X), k + 1), dtype=np.int64)
+    t = time.time()
+    for s in range(0, len(X), BLK):
+        D[s:s + BLK], I[s:s + BLK] = index.search(X[s:s + BLK], k + 1)
+        stamp(f"hnsw search {min(s + BLK, len(X)):,}/{len(X):,} {time.time() - t:.0f}s")
+    return drop_self(I, D)
+
+
+def exact_neighbours(X, q, k, threads):
+    """Exact top-k (self excluded) for the query rows q, by brute force."""
+    import faiss
+    faiss.omp_set_num_threads(threads)
+    flat = faiss.IndexFlatIP(X.shape[1])
+    for s in range(0, len(X), BLK):
+        flat.add(X[s:s + BLK])
+    D, I = flat.search(np.ascontiguousarray(X[q]), k + 1)
+    out = np.full((len(q), k), -1, dtype=np.int64)
+    for r in range(len(q)):
+        row = I[r][I[r] != q[r]][:k]
+        out[r, :len(row)] = row
+    return out
+
+
+def recall_at(I_test, I_exact, ks):
+    """Mean fraction of the exact top-k found among the first k test neighbours, for each k."""
+    res = {}
+    for kk in ks:
+        hit = [len(np.intersect1d(I_test[r, :kk], I_exact[r, :kk])) / kk for r in range(len(I_exact))]
+        res[f"recall@{kk}"] = round(float(np.mean(hit)), 4)
+    return res
 
 
 def mutual_edges(I, D):
@@ -203,7 +255,32 @@ def cmd_knn(a):
     info = transform(X, valid, cnt, a.transform)
     stamp("transformed", X.shape, info, f"{time.time() - t0:.0f}s rss {rss_gb()}")
     vi = np.flatnonzero(valid)
-    I, D = ivf_knn(np.ascontiguousarray(X[vi]), a.k, a.nlist, a.nprobe, a.seed, a.threads)
+    Xv = X if len(vi) == len(X) else np.ascontiguousarray(X[vi])
+    t1 = time.time()
+    if a.index == "hnsw":
+        I, D = hnsw_knn(Xv, a.k, a.hnsw_m, a.ef_construction, a.ef_search, a.threads)
+        info.update(index="hnsw", hnsw_m=a.hnsw_m, ef_construction=a.ef_construction, ef_search=a.ef_search)
+    else:
+        I, D = ivf_knn(Xv, a.k, a.nlist, a.nprobe, a.seed, a.threads)
+        info.update(index="ivf", nlist=a.nlist, nprobe=a.nprobe)
+    info["knn_seconds"] = round(time.time() - t1, 1)
+    stamp(f"kNN ({a.index}) {info['knn_seconds']}s rss {rss_gb()}")
+    if a.exact_n:
+        # recall of this index (and of an earlier kNN file) against brute force on a query sample
+        q = np.sort(np.random.default_rng(a.seed + 1).choice(len(Xv), min(a.exact_n, len(Xv)), replace=False))
+        t2 = time.time()
+        Ie = exact_neighbours(Xv, q, a.k, a.threads)
+        ks = [kk for kk in (1, 10, 20, a.k) if kk <= a.k]
+        info["recall"] = recall_at(I[q], Ie, ks)
+        stamp(f"exact check on {len(q):,} queries {time.time() - t2:.0f}s; {a.index}: {info['recall']}")
+        if a.check_npz:
+            old = np.load(a.check_npz, allow_pickle=True)["I"]
+            inv = np.full(len(X), -1, dtype=np.int64)
+            inv[vi] = np.arange(len(vi))
+            Io = old[vi[q]].astype(np.int64)
+            Io = np.where(Io >= 0, inv[np.maximum(Io, 0)], -1)
+            info["recall_check_npz"] = dict(recall_at(Io, Ie, ks), file=str(a.check_npz))
+            stamp(f"{a.check_npz.name}: {info['recall_check_npz']}")
     I = np.where(I >= 0, vi[np.maximum(I, 0)], -1)
     full_I = np.full((len(X), a.k), -1, dtype=np.int32)
     full_D = np.zeros((len(X), a.k), dtype=np.float32)
@@ -212,8 +289,8 @@ def cmd_knn(a):
     i, j = rng.choice(vi, 2_000_000), rng.choice(vi, 2_000_000)
     null = np.einsum("ij,ij->i", X[i], X[j])[i != j]
     a.work.mkdir(parents=True, exist_ok=True)
-    f = a.work / f"knn__{a.tag}__{a.transform}__k{a.k}.npz"
-    np.savez(f, I=full_I, D=full_D, null=null.astype(np.float32), info=np.array(dict(info, nlist=a.nlist, nprobe=a.nprobe, emb=str(a.emb)), dtype=object))
+    f = a.work / f"knn__{a.tag}__{a.transform}__k{a.k}{'' if a.index == 'ivf' else '__' + a.index}.npz"
+    np.savez(f, I=full_I, D=full_D, null=null.astype(np.float32), info=np.array(dict(info, emb=str(a.emb)), dtype=object))
     stamp("saved", f, "neighbour cosine q10/q50/q90 at rank 1 / 10 / k:",
           np.quantile(full_D[vi, 0], [0.1, 0.5, 0.9]).round(3), np.quantile(full_D[vi, min(9, a.k - 1)], [0.1, 0.5, 0.9]).round(3),
           np.quantile(full_D[vi, -1], [0.1, 0.5, 0.9]).round(3), "null q50/q99/q999:", np.quantile(null, [0.5, 0.99, 0.999]).round(3),
@@ -335,6 +412,12 @@ def main():
     p.add_argument("--k", type=int, default=50)
     p.add_argument("--nlist", type=int, default=4096)
     p.add_argument("--nprobe", type=int, default=48)
+    p.add_argument("--index", default="ivf", choices=("ivf", "hnsw"), help="hnsw writes knn__<tag>__<transform>__k<k>__hnsw.npz")
+    p.add_argument("--hnsw-m", type=int, default=32)
+    p.add_argument("--ef-construction", type=int, default=200)
+    p.add_argument("--ef-search", type=int, default=128)
+    p.add_argument("--exact-n", type=int, default=0, help="check recall against brute force on this many sampled queries")
+    p.add_argument("--check-npz", type=Path, default=None, help="an earlier kNN file to score against the same exact sample")
     p.add_argument("--work", type=Path, required=True)
     p.set_defaults(fn=cmd_knn)
     p = sub.add_parser("graph")

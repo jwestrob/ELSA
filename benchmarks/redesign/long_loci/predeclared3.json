@@ -30,5 +30,20 @@
   "token_check": "token cohesion within .01 of kNN cohesion on excess (on DPANN the cohesion source moved ribosomal resolution, not excess)",
   "verdict": "the configuration carries: every list arm above the word output P2 and level with pair-linking, below the engine reference; the long-locus gap to the engine stays (regions >= 11 genes)"
  },
- "jobs_plan": "1) MMseqs2 all-against-all (64 CPUs, the long pole); 2) HNSW kNN + exclusion masks + kNN cohesion (CPU); 3) GPU z table only when the A5000 partition has no job of jwestrob running or pending; 4) arm builds (lbsd.py) and source207 scoring once the lists exist"
+ "jobs_plan": "1) MMseqs2 all-against-all (64 CPUs, the long pole); 2) HNSW kNN + exclusion masks + kNN cohesion (CPU); 3) GPU z table only when the A5000 partition has no job of jwestrob running or pending; 4) arm builds (lbsd.py) and source207 scoring once the lists exist",
+ "amendment_1_arms": {
+  "written_utc": "2026-11-13T13:22Z",
+  "source": "coordinator message (decision by Jacob), received after job 93320 had been cancelled at 43 min",
+  "status_when_written": "No Spacedust list, list-based bond, locus or source207 score of any list arm exists. Job 93320 (MMseqs2 all-against-all) was cancelled by Jacob after 43 minutes; its partial output is not used and the job is not resubmitted. Job 93321 (kNN, masks, kNN cohesion) is the only part-3 computation so far; it is gold-free.",
+  "arms": "A and As are DROPPED on this collection for compute cost (alignment lists stay a DPANN-only control). The Spacedust arms are Z and Zs, each reported as L4b+ at theta .02 (the DPANN selection), with F as the reference (part-1 family arm: L4b theta .02 and theta .1). Everything else in predeclared3.json is unchanged (z lists from the ws_calib z table at 10.6, bond tau by the 1% rule on this collection's shuffles, kNN cohesion primary and token cohesion as the check, the scorer and every comparison).",
+  "secondary": "L4b (filtered) at theta .02 and L1 of Z and Zs are scored as context rows, labelled not selected, as on DPANN",
+  "compute_limits": "no single job beyond about 2 h on 64 CPUs and no GPU job beyond about 1 h without asking; the GPU z-table pass is estimated at about 25 min on one A5000 (DPANN: 720 s for 2.55 M x 3,564 genomes; here about 2x the multiply-adds); each Z / Zs build about 20 min on 64 CPUs (DPANN 18-21 min)",
+  "expectations_update": "Z L4b+ .02: excess +.11 to +.16, F1 .58-.64, level with pair-linking (vs CC2 -.03 to +.02), above native Spacedust, below the engine reference; Zs within .02 of Z; token cohesion within .01 of kNN cohesion on excess"
+ },
+ "amendment_2_knn": {
+  "written_utc": "2026-11-13T13:25Z",
+  "status_when_written": "No Spacedust list-bond score exists. GPU z-table job 93592 running.",
+  "change": "The CPU HNSW kNN (job 93321) measured 352 queries/s after a 22.5-min build: projected ~4.1 h on 64 CPUs including the prep, beyond the 2-h limit, so it was cancelled at 49 min (no output used). The embedding kNN is computed instead by exact cosine search on one A5000 (gpu_knn_sd.py: same vectors, k 2,000, self dropped as knn_deep, fp16 products), after a timing test on 32,768 queries; it is run only if the projected time is under ~50 min. Exact search replaces HNSW (DPANN recall@1000 .994), so the exclusion masks and the kNN cohesion are built from the exact neighbours; everything downstream unchanged.",
+  "fallback_if_over_limit": "stop and report the estimate; no list arm is built without the masks"
+ }
 }

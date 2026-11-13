@@ -2648,3 +2648,35 @@ run on it.
   queue; changed to a plain sbatch that waits in the queue, with the whitening job dependent on it.
 - Other curated callers on this set, not run: DefenseFinder 30-60 min and TXSScan 10-20 min on 24
   CPUs; CRISPRCasTyper about 1 h plus 4.5 GB of nucleotide files from NCBI.
+
+## 2026-11-13 14:55 UTC — Bond tree on embedding lists, Spacedust collection, DPANN settings unchanged (`benchmarks/redesign/long_loci/REPORT3.txt`)
+
+Predeclared with two amendments before any score (alignment arms dropped for compute cost at
+Jacob's instruction; the CPU nearest-neighbour job replaced by an exact GPU one under the compute
+limit). Development result.
+
+| Output (source207) | F1 | Control | Excess [95%] |
+|---|---|---|---|
+| Engine reference | 0.750 | 0.566 | +0.184 |
+| Pair-linking, families, genome groups | 0.580 | 0.427 | +0.153 |
+| Bond tree, families (part 1) | 0.574 | 0.448 | +0.126 |
+| **Bond tree, embedding lists, genome groups** | 0.598 | 0.487 | +0.111 [+0.072, +0.149] |
+| Bond tree, embedding lists, shared-gene-order counts | 0.550 | 0.464 | +0.086 [+0.045, +0.125] |
+| Native Spacedust | 0.676 | 0.612 | +0.065 |
+
+- **The all-bars configuration carries over and gains nothing here over the family version:**
+  -0.015 [-0.050, +0.019] against the family bond tree; +0.046 [+0.010, +0.082] over native
+  Spacedust; -0.031 to -0.042 under pair-linking; -0.073 [-0.110, -0.037] under the engine.
+- **The long-locus gap to the engine remains:** for regions of 11 or more genes the union of loci
+  covers 0.62 of region genes and the best locus 0.33 (engine 0.89 and 0.73). Excess by region
+  size (1-5 / 6-10 / 11-20 / 21+ genes): +0.132 / +0.150 / +0.086 / +0.053 against the engine's
+  +0.159 / +0.207 / +0.182 / +0.175.
+- Nesting costs 0.020 here through the control, as in part 1. Shared-gene-order counting is lower
+  than genome groups by 0.025 [0.007, 0.045] (undiagnosed). Token cohesion in place of the
+  family-free array: within 0.01.
+- **Measured cost of embedding lists for 4,231,484 sequences: about 57 minutes** (similarity
+  table 20 min 34 s and exact nearest neighbours 18 min 22 s on one A5000; masks, cohesion and list
+  build 18 min on 64 CPUs). Alignment lists were projected at 12-18 h on 64 CPUs: 13-19 times
+  the wall time and 30-40 times the CPU-hours.
+Follow-up started (part 4): pair distance. The engine used a window of 8 on this collection; the
+bonds use at most 2 intervening genes. Fixed wider and adaptive distances, on both datasets.

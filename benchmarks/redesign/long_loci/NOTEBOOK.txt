@@ -145,3 +145,30 @@ PART 3 (Spacedust collection): the part-2 selected outputs carried with nothing 
 REMAINING (on resume): (1) after 93320: SD_ARMS="A As" sbatch --export=ALL q_sdarm.sbatch (requires done_sd_prep from 93321);
                   (2) GPU z table when 'squeue -u jwestrob -p gpu' is empty: cd $RD/long_loci/code && sbatch q_gpu_sd.sbatch,
                   then SD_ARMS="Z Zs" sbatch --export=ALL q_sdarm.sbatch; (3) REPORT3.txt.
+2026-11-13 13:22  Coordinator (decision by Jacob): job 93320 (MMseqs2 all-against-all) was cancelled after 43 min, is not
+                  resubmitted, and its partial output is not used. predeclared3.json amendment_1: A and As dropped on this
+                  collection for compute cost; arms Z and Zs (L4b+ theta .02) with F as reference; compute limit 2 h on
+                  64 CPUs per job, 1 h per GPU job, without asking. GPU pass approved.
+2026-11-13 13:25  Job 93321 (CPU HNSW kNN): build 1,351 s; search 352 queries/s on 64 threads -> ~3.3 h search, ~4.1 h with
+                  prep: beyond the new 2-h limit. Cancelled at 49:17 (no output used). Preflight (cluster files unchanged; the
+                  'gpu' partition spans the H200 node, so the H200 node is excluded = A5000 only); my GPU queue empty.
+                  Submitted 93592 ll_gpusd (z table, A5000, -c 12): first progress ETA 1,246 s. predeclared3 amendment_2:
+                  exact GPU kNN (gpu_knn_sd.py) replaces HNSW if a timing test projects < ~50 min. Timing test 93607
+                  queued (QOSMaxJobsPerUserLimit: one running gpu job per user).
+2026-11-13 13:44  Z table done (job 93592, A5000): 20 min 34 s wall (search 1,210 s), peak GPU 11.2 GB, host peak RSS 12.0 GiB;
+                  1,232,730,135 entries at z >= 10.5 (per uid q50 166, q90 794, mean 291; DPANN mean 882 over 3,564 genomes).
+                  GPU kNN timing test (job 93607, 32,768 queries): 6.9 s -> projected 891 s for the full exact k 2,000 search
+                  (peak GPU 10.0 GB; 0 queries without self), against ~3.3 h for the CPU HNSW search. Submitted 93760
+                  ll_gknnsd (full exact kNN, A5000) and 93761 ll_sdprep (64 CPUs, afterok:93760: masks + kNN cohesion).
+2026-11-13 14:16  GPU kNN 93760 waited 31 min for the per-user gpu-partition slot (other workstreams' jobs), ran 14:16-14:34:
+                  18 min 22 s wall (search 1,090 s), peak GPU 10.0 GB, host RSS 12.0 GiB; 0 queries without self; cosine at
+                  rank 1 / 50 / 1000 / 2000 median .841 / .618 / .340 / .280 (DPANN HNSW .87 / .658 / .389 / .293).
+2026-11-13 14:34  Prep 93761 started (masks + kNN cohesion). Submitted 94064 ll_sdarm (Z, Zs builds + source207; afterok:93761).
+2026-11-13 14:40  Prep 93761 done: 5 min 32 s, peak RSS 135 GiB (64 CPUs). kappa_var_knn50 (Spacedust): floor .00018; quantiles
+                  q05/q25/q50/q75/q95 .004/.011/.026/.097/.573; share below .02/.05/.1/.2 = .426/.658/.754/.823 (token array
+                  .535/.722/.809/.879); Spearman with the token array .548. Exclusion masks: observed order excludes 387,827
+                  (group lineage) / 379,374 (genome) of 12,760,265 round-0 instances at K1000; shuffles 80-86k.
+                  Arms job 94064 started 14:40.
+2026-11-13 14:54  Arms job 94064 done (12 min 19 s): Z tau 8, Zs tau 6. source207 read: Z L4b+ .02 +.111 [+.072, +.149] (vs part-1
+                  L4b -.015; vs L1 groups -.042; vs CC2 -.031; vs engine -.073; vs Spacedust +.046); Zs +.086. Token cohesion
+                  -.008 / -.003. REPORT3.txt written.

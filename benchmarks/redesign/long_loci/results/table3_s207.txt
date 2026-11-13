@@ -1,0 +1,28 @@
+SOURCE207 sd_Z
+output            F1  ctrl           excess [95%]            d ex vs p1L4b             d ex vs p1L1              d ex vs CC2       d ex vs engine_ref        d ex vs spacedust       d ex vs P2_Vcoh0.1  union/best (>=11)  qgenes
+L4bp_t0.02      .598  .487    +.111 [+.072,+.149]      -.015 [-.050,+.019]      -.042 [-.077,-.009]      -.031 [-.067,+.002]      -.073 [-.110,-.037]      +.046 [+.010,+.082]      +.062 [+.026,+.097]  .67(.62)/.50(.33)  .555
+               d F1: p1L4b +.024 [-.011,+.058] p1L1 +.019 [-.016,+.052] CC2 +.011 [-.024,+.044] engine_ref -.151 [-.191,-.112] spacedust -.078 [-.115,-.042] P2_Vcoh0.1 +.117 [+.082,+.153] | verdicts p1L4b:MATCHES p1L1:BELOW CC2:BELOW engine_ref:BELOW spacedust:BEATS P2_Vcoh0.1:BEATS
+               by size excess 1-5 +.132 6-10 +.150 11-20 +.086 21-+ +.053; bprec 1.00 cov .50 loci 1597653
+L4bptok_t0.02   .593  .489    +.103 [+.064,+.141]      -.023 [-.058,+.011]      -.050 [-.084,-.016]      -.039 [-.075,-.005]      -.081 [-.117,-.045]      +.038 [+.002,+.074]      +.054 [+.018,+.090]  .67(.62)/.50(.33)  .555
+               d F1: p1L4b +.018 [-.016,+.052] p1L1 +.013 [-.022,+.046] CC2 +.005 [-.030,+.039] engine_ref -.157 [-.196,-.118] spacedust -.084 [-.121,-.048] P2_Vcoh0.1 +.112 [+.076,+.147] | verdicts p1L4b:BELOW p1L1:BELOW CC2:BELOW engine_ref:BELOW spacedust:BEATS P2_Vcoh0.1:BEATS
+               by size excess 1-5 +.118 6-10 +.137 11-20 +.084 21-+ +.053; bprec 1.00 cov .50 loci 1660736
+L4b_t0.02       .540  .450    +.090 [+.049,+.132]      -.036 [-.068,-.005]      -.063 [-.096,-.030]      -.052 [-.089,-.017]      -.094 [-.131,-.056]      +.025 [-.012,+.061]      +.041 [+.005,+.077]  .61(.50)/.44(.31)  .497
+               d F1: p1L4b -.034 [-.065,-.003] p1L1 -.039 [-.073,-.007] CC2 -.047 [-.083,-.012] engine_ref -.209 [-.250,-.169] spacedust -.136 [-.174,-.099] P2_Vcoh0.1 +.059 [+.023,+.096] | verdicts p1L4b:BELOW p1L1:BELOW CC2:BELOW engine_ref:BELOW spacedust:MATCHES P2_Vcoh0.1:BEATS
+               by size excess 1-5 +.073 6-10 +.157 11-20 +.081 21-+ +.007; bprec 1.00 cov .44 loci 1407989
+L1              .571  .439    +.131 [+.094,+.169]      +.005 [-.031,+.041]      -.021 [-.055,+.011]      -.011 [-.045,+.022]      -.052 [-.089,-.016]      +.067 [+.031,+.103]      +.082 [+.047,+.118]  .67(.62)/.50(.33)  .555
+               d F1: p1L4b -.004 [-.040,+.032] p1L1 -.009 [-.043,+.024] CC2 -.016 [-.050,+.016] engine_ref -.179 [-.217,-.141] spacedust -.106 [-.143,-.068] P2_Vcoh0.1 +.090 [+.053,+.126] | verdicts p1L4b:MATCHES p1L1:BELOW CC2:MATCHES engine_ref:BELOW spacedust:BEATS P2_Vcoh0.1:BEATS
+               by size excess 1-5 +.159 6-10 +.173 11-20 +.105 21-+ +.062; bprec 1.00 cov .50 loci 518632
+SOURCE207 sd_Zs
+output            F1  ctrl           excess [95%]            d ex vs p1L4b             d ex vs p1L1              d ex vs CC2       d ex vs engine_ref        d ex vs spacedust       d ex vs P2_Vcoh0.1  union/best (>=11)  qgenes
+L4bp_t0.02      .550  .464    +.086 [+.045,+.125]      -.041 [-.074,-.008]      -.067 [-.101,-.035]      -.057 [-.092,-.022]      -.098 [-.137,-.060]      +.021 [-.016,+.057]      +.037 [+.001,+.071]  .62(.54)/.43(.29)  .518
+               d F1: p1L4b -.024 [-.057,+.008] p1L1 -.030 [-.063,+.003] CC2 -.037 [-.072,-.003] engine_ref -.200 [-.242,-.159] spacedust -.126 [-.164,-.090] P2_Vcoh0.1 +.069 [+.033,+.105] | verdicts p1L4b:BELOW p1L1:BELOW CC2:BELOW engine_ref:BELOW spacedust:MATCHES P2_Vcoh0.1:BEATS
+               by size excess 1-5 +.085 6-10 +.141 11-20 +.061 21-+ +.024; bprec 1.00 cov .43 loci 1587851
+L4bptok_t0.02   .549  .466    +.083 [+.042,+.123]      -.043 [-.077,-.010]      -.069 [-.103,-.037]      -.059 [-.095,-.025]      -.100 [-.139,-.062]      +.018 [-.018,+.055]      +.034 [-.000,+.069]  .62(.54)/.44(.29)  .518
+               d F1: p1L4b -.025 [-.059,+.008] p1L1 -.030 [-.064,+.002] CC2 -.038 [-.073,-.004] engine_ref -.200 [-.242,-.160] spacedust -.127 [-.165,-.090] P2_Vcoh0.1 +.068 [+.033,+.104] | verdicts p1L4b:BELOW p1L1:BELOW CC2:BELOW engine_ref:BELOW spacedust:MATCHES P2_Vcoh0.1:MATCHES
+               by size excess 1-5 +.076 6-10 +.144 11-20 +.057 21-+ +.024; bprec 1.00 cov .44 loci 1652494
+L4b_t0.02       .531  .447    +.084 [+.044,+.124]      -.042 [-.074,-.011]      -.069 [-.101,-.038]      -.058 [-.092,-.025]      -.100 [-.137,-.062]      +.019 [-.015,+.054]      +.035 [+.002,+.069]  .56(.50)/.40(.27)  .495
+               d F1: p1L4b -.043 [-.075,-.012] p1L1 -.049 [-.081,-.018] CC2 -.056 [-.090,-.023] engine_ref -.219 [-.259,-.179] spacedust -.145 [-.182,-.110] P2_Vcoh0.1 +.050 [+.016,+.084] | verdicts p1L4b:BELOW p1L1:BELOW CC2:BELOW engine_ref:BELOW spacedust:MATCHES P2_Vcoh0.1:BEATS
+               by size excess 1-5 +.089 6-10 +.146 11-20 +.058 21-+ +.006; bprec 1.00 cov .40 loci 1438087
+L1              .529  .420    +.109 [+.069,+.148]      -.017 [-.051,+.016]      -.044 [-.076,-.012]      -.034 [-.066,-.001]      -.075 [-.113,-.037]      +.044 [+.008,+.081]      +.060 [+.025,+.094]  .62(.54)/.44(.29)  .518
+               d F1: p1L4b -.046 [-.080,-.012] p1L1 -.051 [-.083,-.019] CC2 -.058 [-.091,-.026] engine_ref -.221 [-.261,-.181] spacedust -.148 [-.186,-.109] P2_Vcoh0.1 +.048 [+.012,+.084] | verdicts p1L4b:MATCHES p1L1:BELOW CC2:BELOW engine_ref:BELOW spacedust:BEATS P2_Vcoh0.1:BEATS
+               by size excess 1-5 +.102 6-10 +.184 11-20 +.076 21-+ +.031; bprec 1.00 cov .44 loci 501315

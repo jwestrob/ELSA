@@ -36,6 +36,7 @@ def main():
     ap.add_argument("--tag", required=True)
     ap.add_argument("--names", required=True)
     ap.add_argument("--label", default="")
+    ap.add_argument("--extra-refs", dest="extra_refs", default="")
     ap.add_argument("--out-suffix", dest="out_suffix", default="")
     ap.add_argument("--threads", type=int, default=4)
     a = ap.parse_args()
@@ -45,6 +46,9 @@ def main():
     qmask = (g.side == "query").to_numpy()
     B = s207.Bench(a.threads)
     refs = {k: pd.read_parquet(TS / "results" / f"{v}.parquet") for k, v in REFS.items()}
+    for c in [x for x in a.extra_refs.split(",") if x]:        # label=tag/pr_name (this workstream's per-region frames)
+        lab, path = c.split("=")
+        refs[lab] = pd.read_parquet(LL / "scores" / f"{path}.parquet")
     res = dict(tag=a.tag, label=a.label, references={k: frag(v) | dict(f1=float(v.f1.mean()), excess=float(v.excess.mean()))
                                                        for k, v in refs.items()}, outputs={})
     od = LL / "scores" / a.tag

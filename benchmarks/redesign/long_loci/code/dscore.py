@@ -120,6 +120,9 @@ def cmd_even(a):
     dh_per = pd.read_parquet(S1.DH_SCORES).set_index("instance_id")
     cmp = {"DH": dh_per, "words_Vmob": pd.read_parquet(WORDS_VMOB).set_index("instance_id"),
            "words_Vcoh0.1": pd.read_parquet(WORDS_COH).set_index("instance_id")}
+    for c in [x for x in a.compare.split(",") if x]:          # label=tag/name (per-instance scores of this workstream)
+        lab, ref_ = c.split("=")
+        cmp[lab] = pd.read_parquet(LL / "scores" / f"{ref_}.parquet").set_index("instance_id")
     dh_sc = B.ribo_score(ctx.runs, *[pd.read_parquet(S1.DH_LOCI)[c].to_numpy() for c in ("gid_s", "gid_e")])
     names = [x for x in a.names.split(",") if x]
     res = dict(tag=a.tag, outputs={})
@@ -148,6 +151,8 @@ def cmd_even(a):
             "F1", {c[:4]: round(summ["even"][c]["f1"], 3) for c in CALLERS},
             "bprec", {c[:4]: summ["even"][c]["median_bprec_covered"] for c in CALLERS},
             "genes", round(item["genes_in_loci_frac"], 3), "success", item["ribosomal_success"])
+    if a.extra:
+        res["extra"] = extra_diag(ctx, loci, a)
     if a.rdiag:
         loci["token_DH"] = pd.read_parquet(S1.DH_LOCI).rename(columns={"gid_s": "s", "gid_e": "e"})[["s", "e"]]
         res["ribosomal_diagnosis"] = rdiag(ctx, loci, a.threads)
@@ -156,6 +161,58 @@ def cmd_even(a):
 
 
 # =========================================================================== ribosomal diagnosis
+def extra_diag(ctx, loci, a):
+    """Part 2: gold member genes outside every locus (even genomes, instances with >= 2 members) per caller; the runs
+    that part-1 L4b (theta .1) leaves under-covered: how many have every internal boundary bonded in this arm (best_frac
+    1 under the arm's L1) and how many each output resolves."""
+    mem = pd.read_parquet(B.PKG / "gold/members.parquet")
+    inst = pd.read_parquet(B.PKG / "gold/instances.parquet", columns=["instance_id", "genome"])
+    even = set(inst.instance_id[inst.genome.map(ctx.gcode).to_numpy() % 2 == 0])
+    k = mem.groupby("instance_id").gid.transform("size")
+    mm = mem[(k >= 2) & mem.instance_id.isin(even)]
+    n = len(ctx.gc)
+    p1 = pd.read_parquet(LL / "loci/dpann_group/L4b_t0.1.parquet")
+    sc1 = B.ribo_score(ctx.runs, p1.s.to_numpy(), p1.e.to_numpy())
+    u56 = sc1.best_frac.to_numpy() < 0.8
+    l1 = pd.read_parquet(LL / "loci" / a.tag / "L1.parquet")
+    scl1 = B.ribo_score(ctx.runs, l1.s.to_numpy(), l1.e.to_numpy())
+    out = dict(part1_L4b_under_covered=int(u56.sum()),
+               of_those_fully_bonded_in_this_arm=int((u56 & (scl1.best_frac.to_numpy() >= 1.0)).sum()),
+               of_those_best_frac_q50_under_arm_L1=float(np.median(scl1.best_frac.to_numpy()[u56])), outputs={})
+    for nm, df in loci.items():
+        cov = np.zeros(n + 1, np.int32)
+        np.add.at(cov, df.s.to_numpy(), 1)
+        np.add.at(cov, df.e.to_numpy() + 1, -1)
+        inl = np.cumsum(cov)[:n] > 0
+        sc = B.ribo_score(ctx.runs, df.s.to_numpy(), df.e.to_numpy())
+        out["outputs"][nm] = dict(
+            members_outside_every_locus={c: float(1 - inl[g.gid.to_numpy()].mean()) for c, g in mm.groupby("caller")},
+            part1_under56_resolved=int((u56 & sc.resolved.to_numpy()).sum()),
+            part1_under56_recovered_best_frac_ge_08=int((u56 & (sc.best_frac.to_numpy() >= 0.8)).sum()))
+        log("extra", nm, out["outputs"][nm])
+    log("extra", {k_: v for k_, v in out.items() if k_ != "outputs"})
+    return out
+
+
+def cmd_pairs(a):
+    """Paired even differences between per-instance score files of this workstream: --pairs A=tag/name:B=tag/name,..."""
+    ctx = S1.Ctx()
+    res = {}
+    for pr in [x for x in a.pairs.split(",") if x]:
+        A, Bn = pr.split(":")
+        PA = pd.read_parquet(LL / "scores" / f"{A}.parquet").set_index("instance_id")
+        PB = pd.read_parquet(LL / "scores" / f"{Bn}.parquet").set_index("instance_id")
+        res[pr] = RU.paired(PA, PB, ctx.gcode, "even")
+        la = pd.read_parquet(LL / "loci" / f"{A}.parquet")
+        lb_ = pd.read_parquet(LL / "loci" / f"{Bn}.parquet")
+        sa = B.ribo_score(ctx.runs, la.s.to_numpy(), la.e.to_numpy())
+        sb = B.ribo_score(ctx.runs, lb_.s.to_numpy(), lb_.e.to_numpy())
+        res[pr]["ribo_resolved"] = RU.ribo_paired(sa, sb)
+        log("PAIR", pr, "summed", [round(x, 4) for x in res[pr]["summed"]],
+            {c[:4]: [round(x, 3) for x in res[pr][c]["d_f1"]] for c in CALLERS}, "resolved", res[pr]["ribo_resolved"])
+    jdump(res, LL / "results" / f"pairs_{a.tag}.json")
+
+
 def g2_runs():
     r = pd.read_parquet(RC.CACHE / "runs.parquet")
     return r[r.run_set == "g2"].reset_index(drop=True)
@@ -352,7 +409,10 @@ def cmd_rdiag(a):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["refcheck", "odd", "even", "rdiag"])
+    ap.add_argument("cmd", choices=["refcheck", "odd", "even", "rdiag", "pairs"])
+    ap.add_argument("--compare", default="")
+    ap.add_argument("--extra", action="store_true")
+    ap.add_argument("--pairs", default="")
     ap.add_argument("--tag", default="dpann_group")
     ap.add_argument("--names", default="")
     ap.add_argument("--rdiag", action="store_true")
@@ -361,7 +421,7 @@ def main():
     a = ap.parse_args()
     import numba
     numba.set_num_threads(a.threads)
-    {"refcheck": cmd_refcheck, "odd": cmd_odd, "even": cmd_even, "rdiag": cmd_rdiag}[a.cmd](a)
+    {"refcheck": cmd_refcheck, "odd": cmd_odd, "even": cmd_even, "rdiag": cmd_rdiag, "pairs": cmd_pairs}[a.cmd](a)
 
 
 if __name__ == "__main__":

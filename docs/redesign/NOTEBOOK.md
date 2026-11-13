@@ -2174,3 +2174,43 @@ decisions after reading it and my assessment of the paper:
   word method counts lineages, so they no longer measure what this method does.
 - Still running from the previous round: `vocab_lists` (phrase reading on embedding words;
   alignment-list control).
+
+## 2026-11-13 07:51 UTC — Prior-work check, part A (gene-cluster statistics and synteny tools; `benchmarks/redesign/priorart/REPORT_codex_A.txt`)
+
+Headless Codex (gpt-6-astra, high effort, live web search); it cites only sources it opened.
+Overall verdict: known ingredients, new combination.
+
+- **Closest precedent: Hervé, Cury and Bernheim, microLife 7:uqag033, 8 September 2026**
+  ("Characterization of syntons across bacterial genomes using non-redundant genomic contexts").
+  Right-tailed Poisson test on family adjacency with an abundance-based expectation; the counting
+  unit is a cluster of similar genomic contexts (Jaccard > 0.15 on flanking families) in place of
+  a genome; significant adjacent families form connected "syntons" with one intervening gene
+  allowed; 32,791 complete RefSeq genomes; DefenseFinder recall reported; code public. I
+  confirmed title, authors and date on the publisher page; the method details come from Codex and
+  a fetched summary. It anticipates the pair statistic, a redundancy correction and the defence
+  validation; it has no recursive merging, no nested parse and no embeddings.
+- **Effective genome counts exist already:** CSBFinder-S (Svetlitsky, Dagan, Ziv-Ukelson 2020)
+  corrects each candidate's support by genome-similarity neighbourhood sizes (gene-content
+  Jaccard); Junier and Rivoire 2016 weight genomes by 1 / (number of similar genomes) in a
+  binomial test with null-based FDR. Using shared gene adjacency between carrier genomes in
+  n / (1 + (n - 1) s) has no precedent that the search found (queries listed in the report).
+- **Shuffle null and its blindness to ancestry: published** (Durand and Sankoff 2003; i-ADHoRe
+  3.0; Gecko 3 states the caveat). Rogozin 2002 already used gaps of 0-2 genes and recurrence in
+  at least three genomes after handling close relatives; Overbeek 1999 scored by 16S distance.
+- **Per component:** merge procedure, statistic, independence correction and benchmark design are
+  each "known ingredients, new combination"; the null model is "published essentially as is".
+  Narrowest defensible novelty: the recursive composite-unit parse together with the
+  adjacency-sharing effective count.
+- **Spacedust** is by Zhang, Mirdita and Söding (Nature Methods 2025); its benchmarks were KEGG
+  module associations, 5,255 of 5,520 PADLOC multigene loci, and the 207 manually annotated BGCs
+  on nine genomes scored by F1 against ClusterFinder, DeepBGC and GECCO; it removes redundant
+  genomes with a protein-alphabet Mash threshold. (My own fetch of the PMC page was blocked.)
+- **Baselines a reviewer would expect:** Spacedust, Gecko 3, CSBFinder-S, the Hervé procedure,
+  Junier-Rivoire weighting, and a plain significant-adjacency connected-component baseline that
+  isolates what recursive merging adds.
+- **Checks worth adopting:** duplicate-genome and oversampled-clade stress tests; simulations that
+  keep inherited order; plain precision, recall and F1 beside the excess score; size-stratified
+  recovery. The report's depletion concern (the statistic is positive when n < E) is already
+  handled in code (`vocab.py` and `vl.py` set the gain to 0 when n <= E).
+- Point to carry: the embedding route's 1% rule is applied to first-round merges; its full-run
+  shuffle check gave 1.6-2.0% word instances, above 1%.

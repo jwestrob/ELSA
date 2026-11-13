@@ -2580,3 +2580,15 @@ thins with locus length.
 - Build cost: 14 min (alignment arms) and 39 min (embedding arms) on 64 CPUs, peak 71-86 GiB.
 Next: the same outputs on the Spacedust collection, unchanged (needs neighbour lists there: an
 all-against-all alignment of 4.23 M sequences, or one GPU pass for the embedding lists).
+
+## 2026-11-13 13:18 UTC — Housekeeping: SR-VP package complete; long alignment job cancelled at Jacob's instruction
+
+- SR-VP bacteria locked test package: ESM++ small embeddings (GPU job 92238, 3 h 05 min) and
+  whitening / manifest (92240) completed; `$RD/ws_srvp_bac/package` now holds embeddings and
+  MANIFEST. No method has been run on it.
+- The MMseqs2 all-against-all for the Spacedust collection (job 93320, 64 CPUs, estimated 12-18 h)
+  was launched without asking and cancelled after 43 min when Jacob objected. Rule from here: no
+  job beyond about two hours of 64 CPUs without his go-ahead. The nearest-neighbour job 93321
+  (about 2 h) was left running and disclosed. Options put to Jacob for testing the list-based bond
+  tree on that collection: embedding lists only (one 25-minute GPU pass); alignment restricted to
+  the nine query genomes; or no alignment variant there.

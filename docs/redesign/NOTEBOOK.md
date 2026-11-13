@@ -1917,3 +1917,63 @@ systems, and a family-free identity that is relational (lists) and not a quantiz
 Next (round 2, launched): (A) on tokens, effective counts from genomic context (Lambda scaled by
 the share of independent contexts) and word classes; (B) on vectors, words whose identity is the
 set of instances aligned to them (neighbour lists), merged under the same objective.
+
+## 2026-11-13 03:30 UTC — What the similarity beyond the family is; statistics for embedding similarity (workstream `ws_calib`; `benchmarks/redesign/calib/REPORT.txt`)
+
+Predeclared 02:12 UTC; the stored softrec3 line reproduced exactly first. Items marked post hoc in
+the report were designed after the numbers they follow.
+
+- **Most beyond-family similarity is homology that MMseqs2 families split.** Share of non-family
+  neighbours with positive homology evidence (Smith-Waterman E <= 1e-3, shared Pfam family or
+  clan, CDD superfamily, or a family-profile link): rank 1-10 0.676 [0.668, 0.685], 11-100 0.587,
+  101-1,000 0.427; length-matched random pairs 0.015-0.018. Where both proteins are annotated:
+  0.953 / 0.883 / 0.712. Best matches in genomes lacking the family, by cosine band [.20,.32)
+  0.326, [.32,.45) 0.518, [.45,.60) 0.608, >= .60 0.764.
+- **The split is mechanical.** 59% of rank 1-10 non-family neighbours align at E <= 1e-3 (median
+  identity 0.42) and 87% of those alignments cover >= 50% of both proteins: full-length homologs
+  that set-cover clustering placed under different representatives. Across all query x genome
+  cells 28% of best matches align to the query while 21% of cells hold its family.
+- **"Same kind, different origin" is a small second component:** among pairs with no homology
+  evidence, same physical kind runs at 2.0-2.4x the length-matched rate; same kind with
+  contradicting annotation is 0.012-0.083 of a band. Unexplained is 0.23-0.59 of a band, nearly all
+  with an unannotated side. **This corrects my reading of the Cas lists ("kind above family"):
+  the lists rank homologs outside the MMseqs2 cluster above deep members of the cluster.**
+- The Cas pattern is the general rule: every curated role with >= 30 queries carries >= 54x more
+  same-role genes of other families in its top 1,000 than matched controls (per list:
+  CRISPRCasTyper 233 vs 0.69, DefenseFinder 103 vs 0.012, TXSScan 55 vs 0.076).
+- **No E-value.** Per-query x per-genome extreme-value p-values run 8x / 42x over nominal at
+  alpha 1e-3 / 1e-4; hub correction (CSLS) loses 0.16 recall because the hubs are dense real
+  families; reciprocity and genome centring add <= 0.012. Detecting "this genome holds the query's
+  MMseqs2 family" fails for every score at low false-positive rates (recall 0.014-0.071 at 1e-3)
+  because the label itself is too narrow.
+- **A fixed within-genome z threshold behaves like a calibrated cut** (post hoc labelling by
+  homolog against clean non-homolog): z >= 10.6 / 13.7 / 16.0 (cosine >= 0.504 / 0.649 / 0.746)
+  gives false-positive rates 1e-2 / 1e-3 / 1e-4, identically on odd and even genomes; recall at
+  1e-3 is 0.324 for z against 0.259 for raw cosine.
+- Handover: z-score table for every sequence x genome at z >= 10.5 in `$RD/calib/table` (2.25
+  billion cells, 15.7 GB, 12.0 min on one A5000; format in `table/FORMAT.txt`).
+Consequences: treat beyond-family similarity as coarser homology evidence; estimate chance by
+gene-order shuffling, never by family absence. The claim "embeddings do work alignment cannot"
+is not supported by this component: an all-against-all alignment search would find most of
+these pairs; what misses them is greedy clustering into families.
+
+## 2026-11-13 03:30 UTC — Partner covariation and provenance (workstream `ws_signals`; `benchmarks/redesign/signals/REPORT.txt`)
+
+- **Partner covariation exists and is not usable.** Excess covariation of family-centred vectors,
+  after genome similarity and matched unlinked families: median +0.057 [+0.046, +0.069] for 1,000
+  engine-called same-strand neighbour pairs against +0.009 for adjacent opposite-strand pairs. As a
+  predictor of co-folding on 168 folds: AUROC 0.573 [0.423, 0.727] (engine 0.575, critic 0.630 on
+  the same folds); it needs >= 10 distinct instances, which 28% of called pairs have. The A-B-C
+  operon is unexceptional (71st-83rd percentile).
+- **Provenance exists, small per gene.** Genome means hold 2.2% of family-centred residual
+  variance. Per-gene foreignness (even genomes): DefenseFinder members +0.49 bits [+0.36, +0.63],
+  ribosomal markers -0.24, transposase/integrase-domain genes +1.00, Type I restriction-modification
+  +1.44; showcase A and B +2.0 and +1.7 (exploratory).
+- **Adjacent genes share residual direction, and it is a same-strand signal** (0.053 for
+  same-strand neighbours, 0.0045 opposite strand; decays to +0.001 at 50 genes). Native ribosomal
+  operons share it too, so it measures unit cohesion, not shared foreign origin.
+- As a boundary feature added to engine support: DefenseFinder +0.012 AUROC (below the +0.02
+  bar); CRISPR-Cas +0.043 [+0.016, +0.070], label-free variant +0.056 [+0.029, +0.082]. Cost: 64
+  genome-background directions, about 1 min, no taxonomy.
+Decision: covariation stays out; residual-direction coherence is a candidate single-genome
+boundary feature (not yet tested as a reading rule); foreignness is an annotation.

@@ -1,0 +1,89 @@
+{
+ "workstream": "ws_calib",
+ "written_utc": "2026-11-13T02:12:00Z",
+ "status": "written after the reproduction of the stored calibration line (repro.json) and before any new similarity, neighbour, classification or detector number existed",
+ "reproduction_first": {
+  "target": "softrec3 calibration: per (query, genome) maximum zca10 cosine, 10,000 random unique queries, genomes lacking / holding the query's rescue3 family, exceedance at 0.30 / 0.32 / 0.40 / 0.45 / 0.50 / 0.60",
+  "result_before_this_file": "all genomes convention reproduces exactly: absent .3994 / .3518 / .2017 / .1389 / .0946 / .0418; present .9509 / .9382 / .8685 / .8072 / .7317 / .5378 (stored 0.40 / 35% / 0.20 / 14% / 0.095 / 4.2%; 0.95 / 0.87 / 0.73 / 0.54)",
+  "gpu_check": "the new GPU feature job recomputes the per-genome maximum for the same 10,000 queries; it must equal softrec3 omax within 1e-3 for >= 99.9% of (query, genome) cells, otherwise stop and diagnose"
+ },
+ "inputs": {
+  "vectors": "$RD/softrec/r3/vec/zca10_f16.npy (whitened ESM++ small, unit norm, float16), meta.npz",
+  "families": "rescue3 MMseqs2 tokens $RD/engine/dpann_tokens/mmseqs__seq__e3c50s75_rescue3__dpann.parquet (token of a unique sequence = token of its first gene)",
+  "annotations_eval_only": "Sharur DPANN DuckDB seal 78c68b6b (Mac copy, exported 2026-11-13 02:05 UTC to $RD/calib/inputs): Pfam (annotations source pfam), CDD (protein_resemblance), family-level HHsearch Pfam / HHblits PDB100 (family_annotations, clustering run permissive-e3c50s75, 33,724 Pfam-dark families in >= 5 genomes), curated caller membership (system_proteins: cctyper, defensefinder_system, txsscan_system). Pfam 39 clans from Pfam-A.seed 39.0; CDD superfamilies from family_superfamily_links (CDD 3.20 copy in cofold/s2/db/cdd). Sequences from subgenic/uniq.faa. Alignment: MMseqs2 release 18 align of explicit pairs against the 2,547,528-sequence uniqdb.",
+  "hubness": "r_k(t) = mean of the k largest cosines of t to other unique sequences, from the stored zca10 HNSW top-300 (softrec/knn/zca10__k300), self removed; k in {10, 50}"
+ },
+ "sample": {
+  "R": "the 10,000 softrec3 calibration queries (uniform over valid unique sequences, seed 17); every overall estimate uses R only",
+  "S": "3,000 further unique sequences of length < 100 aa (seed 17)",
+  "N": "3,000 further unique sequences whose rescue3 family has exactly 1 gene and that carry >= 1 Pfam hit (seed 17)",
+  "Y": "1,000 unique sequences per curated caller (CRISPRCasTyper, DefenseFinder, TXSScan) from system_proteins members (seed 17)",
+  "Yc": "one matched control per Y query: a unique sequence outside every curated system with the same rescue3 family-size bin (1, 2-4, 5-19, 20-99, 100-499, >= 500 genes) and length tertile (seed 17)",
+  "query_genome": "the genome of the unique sequence's first gene; every genome holding a gene with the query's sequence is excluded as a target"
+ },
+ "Q1_beyond_family": {
+  "neighbour_sets": {
+   "rank_bands": "exact zca10 top-2,000 unique sequences per query (GPU, float16 products); neighbours whose rescue3 token equals the query's are removed; ranks counted among the rest; band 1-10 all ten, bands 11-100 and 101-1,000 ten drawn at random per query (seed 17)",
+   "cosine_bands": "per-genome best match in target genomes lacking the query's family; bands [0.20,0.32) [0.32,0.45) [0.45,0.60) [0.60,1]; up to 5 (query, genome) cells drawn per band per query (seed 17)"
+  },
+  "baselines": {
+   "uniform": "20 random genes per query outside its family (gene-weighted), mapped to their unique sequence",
+   "length_matched": "for every sampled neighbour one random gene outside the query's family with length within +-10% of the neighbour's length; this is the reference baseline for every excess"
+  },
+  "evidence_lines": {
+   "A_align": "MMseqs2 align (Smith-Waterman, alignment-mode 3) E <= 1e-3 against the 2.55 M-sequence database, any coverage",
+   "P_pfam": "share >= 1 Pfam family accession (stored Pfam hits)",
+   "C_clan": "share >= 1 Pfam 39 clan (not P)",
+   "D_cdd": "share >= 1 CDD superfamily (each stored CDD hit mapped to its cl superfamily; a model without a superfamily stands for itself)",
+   "F_profile": "family-level profile link: a family HHsearch-Pfam or HHblits-PDB100 hit with probability >= 90 over >= 30 aligned columns on at least one side, matching the other side's Pfam family or clan (its direct hits or its family's profile hits) or the same PDB entry",
+   "R_role": "same curated role: cctyper gene class (profile name before the first underscore), DefenseFinder system__gene with numeric / FAM / alignment suffixes removed, TXSScan component; a role is a NAME only because the curated caller emitted it",
+   "K_kind": "same physical kind: same predicted TM-segment class (0 / 1 / 2-4 / >= 5 Kyte-Doolittle 19-residue windows with mean >= 1.6, a hydropathy heuristic) AND length ratio >= 0.67 AND amino-acid composition L1 distance <= the 25th percentile of the uniform baseline's distances"
+  },
+  "partition": "HOM = A or P or C or D or F; ROLE = R and not HOM; KIND = K and not HOM and not ROLE; REST = the remainder. Each class is split into 'contradicted' (both proteins carry Pfam or CDD annotation and share no Pfam family, clan or CDD superfamily) and 'unknown' (at least one side carries neither). Headline: remote homology = HOM; same kind, different origin = KIND (contradicted) + ROLE; unexplained = REST plus KIND (unknown) reported separately",
+  "hypotheses": {
+   "H1": "rank 1-10 non-family neighbours (R): P(HOM) >= 0.50. Refuted if P(HOM) < 0.30.",
+   "H2": "family-absent best matches (R): P(HOM) exceeds the length-matched baseline by >= 0.20 at cosine >= 0.45 and by >= 0.05 at [0.32, 0.45). Refuted if the excess at cosine >= 0.45 is < 0.10.",
+   "H3": "same kind: P(KIND) exceeds the length-matched baseline by >= 0.05 in cosine band [0.32, 0.45) and rank band 101-1,000. Refuted if the excess is < 0.02 in every band.",
+   "H4": "the Cas pattern is general: for every curated role with >= 30 sampled query genes, enrichment = mean count of same-role genes of other families in the query's top-1,000 non-family neighbours / the same count for matched controls (Yc); general if enrichment >= 10 for at least half of the non-Cas roles (DefenseFinder and TXSScan roles, and cctyper roles outside Cas genes); for the 20 largest Pfam clans among R queries, same-clan neighbours vs R queries outside the clan matched on family-size bin: general if enrichment >= 3 for >= 15 of 20. Refuted (pattern particular to Cas) if fewer than half the non-Cas roles reach 10."
+  },
+  "expectations_written_before_numbers": {
+   "H1": "P(HOM) 0.45-0.65 in band 1-10, 0.25-0.40 at 11-100, 0.10-0.25 at 101-1,000; uniform baseline 0.03-0.06 (P-loop, Rossmann, HTH clans)",
+   "H2": "HOM at [0.20,0.32) ~0.08, [0.32,0.45) ~0.15, [0.45,0.60) ~0.30, >= 0.60 ~0.50; A_align contributes a minority of HOM (most is Pfam / clan / profile only)",
+   "H3": "KIND excess 0.05-0.15 at low cosine, driven by TM proteins; composition and length both enriched",
+   "H4": "roles of large multi-family systems (RM, Archaeal-T4P components, Cas) show enrichment >= 10; many DefenseFinder roles of small systems fall short; clans enrichment >= 3 for most"
+  },
+  "deliverable": "class-probability table by rank band and cosine band (R queries; all pairs and evaluable pairs; length-matched baseline row) with 2,000-draw query-bootstrap intervals (seed 17)"
+ },
+ "Q2_calibration": {
+  "units": "(query, target genome), target != any genome holding the query's sequence; every fitted quantity (tail window, combination weights, thresholds for transfer) is fitted on odd target genome_code and scored on even",
+  "labels": {
+   "FAM": "target genome holds a gene of the query's rescue3 family",
+   "CLAN": "target genome holds a protein sharing a Pfam family or Pfam 39 clan with the query's representative protein (queries with >= 1 Pfam hit)",
+   "clean_negative": "not FAM, not CLAN and no shared CDD superfamily (queries with Pfam or CDD annotation); used for the nominal-calibration check"
+  },
+  "detectors": {
+   "D1_raw": "best cosine in the genome m1",
+   "D2_z": "(m1 - mean) / sd of the query's cosines to all genes of that genome",
+   "D3_ev_raw": "per query x genome extreme-value p: exponential upper tail of the query's cosines to all 3.59 M genes fitted between two upper quantiles (window chosen on odd from {(1e-2, 1e-3), (1e-3, 1e-4)}); p = 1 - exp(-n_G S(m1)); score -log10 p",
+   "D4_ev_z": "the same on within-genome z-scores pooled over all genomes for the query (Gumbel for the maximum of n_G draws, location set by n_G); score -log10 p",
+   "D5_ev_emp": "empirical per-query survival S_emp(m1) over all genes (global rank of the best match); p = 1 - (1 - S_emp)^n_G",
+   "D6_ev_local": "per (query, genome) tail from the genome's own top-8 cosines: Renyi spacings, T = (c1 - c2) / mean_{i=2..7} i (c_i - c_{i+1}) ~ F(2, 12); p = (1 + T/6)^-6",
+   "D7_gap": "c1 - c2",
+   "D8_csls": "max_t [2 cos(q,t) - r_k(t)] - r_k(q), k in {10, 50}",
+   "D9_rbm": "reciprocal best match: the genome's best gene t has the query's gene as its best match in the query's genome; binary operating point, and as an ordering: reciprocal cells first, then by m1",
+   "D10_centred": "best genome-centred cosine (both vectors minus their genome's mean whitened vector, renormalised)",
+   "D11_combo_lr": "logistic regression on odd cells (R queries) with D1, D2, D4, D6, D7, D8 (k = 10), D9, D10, log n_G, log query length, r_10(q)",
+   "D12_combo_gbm": "gradient-boosted trees on the same features (sklearn HistGradientBoosting, default settings, 2 M odd cells drawn at random, seed 17)"
+  },
+  "metrics": "AUROC; recall at FPR 1e-2, 1e-3, 1e-4 (ROC point on even negatives); transfer: threshold set on odd negatives at that FPR, realised even FPR and recall; 2,000-draw query bootstrap (seed 17) for intervals and paired differences against D1",
+  "subsets": "overall = R (FAM and CLAN); short = length < 100 aa (R and S; FAM); singletons = rescue3 singletons with >= 1 Pfam hit (R and N; CLAN, the singleton's nearest relatives); curated = curated system genes (R and Y; FAM)",
+  "criteria": {
+   "clearly_better": "recall at FPR 1e-3 (FAM, overall) >= D1 + 0.05 with the 95% interval of the paired difference above 0, and not below D1 - 0.01 at FPR 1e-2 and 1e-4",
+   "e_value": "a p-valued score (D3-D6) carries an E-value if its realised FPR at nominal p <= alpha on clean negatives (even) lies within [alpha/3, 3 alpha] for alpha in {1e-2, 1e-3, 1e-4} pooled, and within [alpha/10, 10 alpha] at alpha = 1e-3 in >= 80% of 12 query strata (length tertile x predicted TM yes/no x Pfam-annotated yes/no). The raw-cosine reference: one global cosine at pooled FPR 1e-3; share of strata within 10x.",
+   "absolute_threshold": "usable if the transfer FPR (odd threshold -> even) is within 2x of the target at 1e-3 AND the e_value strata condition holds for that score's threshold"
+  },
+  "expectations_written_before_numbers": "D2 / D4 / D8 beat D1 at FPR 1e-3 by 0.05-0.10 recall; D6 weak (paralogs, small samples); D9 high precision, low recall; D10 close to D1; D3-D5 nominal calibration fails on family-absent negatives (remote homologs) by > 3x and is closer on clean negatives; strata condition uncertain (TM proteins)",
+  "refuters": "the calibration claim is refuted if no p-valued score meets the pooled [alpha/3, 3 alpha] condition at alpha = 1e-3 on clean negatives; 'clearly better' is refuted if every calibrated score's paired difference interval at FPR 1e-3 includes 0",
+  "handover": "if a score is clearly better or carries an E-value: an all-sequence GPU run writing $RD/calib/table/ (per unique sequence x genome: best gene, cosine, calibrated score) at the stated nominal error rate, with a format note"
+ }
+}

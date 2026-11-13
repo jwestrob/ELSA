@@ -26,7 +26,11 @@ REFS = {"P2_Vcoh0.1": "pr_P2__V-coh0.1", "P2_Vmob": "pr_P2__V-mob", "CC1": "pr_P
 
 def frag(pr):
     big = pr["size"] >= 11
-    return dict(union_cov_q50=float(pr.union_coverage.median()), union_cov_q50_ge11=float(pr.union_coverage[big].median()),
+    bins = {"1-5": (1, 5), "6-10": (6, 10), "11-20": (11, 20), "21+": (21, 10 ** 6)}
+    by = {k: dict(union_q50=float(pr.union_coverage[(pr["size"] >= lo) & (pr["size"] <= hi)].median()),
+                  best_q50=float(pr.coverage[(pr["size"] >= lo) & (pr["size"] <= hi)].median()))
+          for k, (lo, hi) in bins.items()}
+    return dict(by_size=by, union_cov_q50=float(pr.union_coverage.median()), union_cov_q50_ge11=float(pr.union_coverage[big].median()),
                 best_cov_q50=float(pr.coverage.median()), best_cov_q50_ge11=float(pr.coverage[big].median()),
                 best_span_over_size_q50=float(np.median(pr.block_span.to_numpy() / pr["size"].to_numpy())))
 
@@ -72,7 +76,7 @@ def main():
         log(a.tag, nm, a.label, {k: (round(v, 4) if isinstance(v, float) else v) for k, v in r.items()
                                  if k in ("n_intervals", "f1_observed", "f1_random", "f1_excess", "ci_lo", "ci_hi",
                                           "median_boundary_precision", "median_coverage", "query_gene_coverage")},
-            "frag", {k: round(v, 3) for k, v in item["fragmentation"].items()},
+            "frag", {k: (round(v, 3) if isinstance(v, float) else v) for k, v in item["fragmentation"].items()},
             {k: [round(x, 4) for x in item[f"vs_{k}"]["paired"]["excess"]] for k in refs})
     res["seconds"] = round(time.time() - t0, 1)
     res["written"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())

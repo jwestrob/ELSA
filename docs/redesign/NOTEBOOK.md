@@ -2680,3 +2680,35 @@ limit). Development result.
   the wall time and 30-40 times the CPU-hours.
 Follow-up started (part 4): pair distance. The engine used a window of 8 on this collection; the
 bonds use at most 2 intervening genes. Fixed wider and adaptive distances, on both datasets.
+
+## 2026-11-13 15:24 UTC — Pair distance: an adaptive distance closes the long-region gap on the Spacedust collection and keeps the DPANN bars (`benchmarks/redesign/long_loci/REPORT4.txt`)
+
+Family bonds, genome groups; CPU only (no job over 15 min). Predeclared with two amendments
+before any score; DPANN selection on odd genomes; Spacedust rows other than the DPANN-selected one
+are development rows. Development results throughout.
+
+"WA": every pair within 8 positions is tested at the smallest window that contains it, so wider
+pairs need more support; threshold from the 1% shuffle rule on the whole adaptive procedure.
+
+- **Spacedust collection, DPANN-selected output (WA bond tree):** F1 0.667, excess +0.164
+  [+0.125, +0.202]; +0.038 [+0.015, +0.061] over the fixed-distance tree; **-0.020 [-0.054,
+  +0.014] against the engine reference (interval includes zero)**; +0.099 over native Spacedust.
+  Regions of 11+ genes: coverage 0.75 by the union of loci and 0.55 by the best locus (was 0.57 /
+  0.31; engine 0.89 / 0.73).
+- **Connected runs at the adaptive distance (development row) beat the engine:** +0.247 [+0.213,
+  +0.281], +0.064 [+0.033, +0.094] over the reference, coverage 0.91 / 0.73. They fail DPANN
+  (381 of 848 odd runs resolved): DPANN needs the tree's run-sized pieces.
+- **DPANN, the same WA bond tree: all seven bars with family bonds.** Ribosomal 1,685 recovered /
+  1,594 resolved (+82 [+54, +111] over the reference; -4 [-15, +8] against the fixed-distance
+  tree); Parvarchaeaceae 114; F1 0.762 / 0.672 / 0.461, CRISPR-Cas -0.019 (inside the bar by
+  0.001); summed 0.513 (+0.086 [+0.063, +0.110] over the reference; -0.071 [-0.086, -0.056]
+  against the fixed-distance tree). At theta 0.1 instead of 0.2 (one odd run apart): summed 0.540,
+  same ribosomal counts, all seven bars.
+- Fixed wide windows resolve more runs (1,631 at 5, 1,626 at 8) and miss CRISPR-Cas (-0.026).
+- Accepted bonds by distance 1-8: DPANN 34 / 21 / 14 / 10 / 7 / 6 / 5 / 4%; Spacedust 29 / 19 /
+  14 / 11 / 9 / 7 / 6 / 5%. Boundaries bonded only by pairs 4-8 apart: 15% and 20%.
+- Part of the change is the significance rule: the bond-level 1% rule gives tau 6 (DPANN) and 8
+  (Spacedust) against 10 from the word-level rule used in part 1; on Spacedust the distance is the
+  larger effect (+0.030 for the tree, +0.082 for runs, at equal tau).
+- 19 of the 56 runs the fixed-distance tree left under-covered are now bonded; 15 resolved.
+Follow-up started (part 5): the adaptive distance with embedding-list bonds, for CRISPR-Cas margin.

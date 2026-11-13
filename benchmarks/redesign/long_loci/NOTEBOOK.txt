@@ -172,3 +172,22 @@ REMAINING (on resume): (1) after 93320: SD_ARMS="A As" sbatch --export=ALL q_sda
 2026-11-13 14:54  Arms job 94064 done (12 min 19 s): Z tau 8, Zs tau 6. source207 read: Z L4b+ .02 +.111 [+.072, +.149] (vs part-1
                   L4b -.015; vs L1 groups -.042; vs CC2 -.031; vs engine -.073; vs Spacedust +.046); Zs +.086. Token cohesion
                   -.008 / -.003. REPORT3.txt written.
+
+PART 4 (pair distance; CPU only)
+--------------------------------
+2026-11-13 14:57  Coordinator: part 4 (W3 / W5 / W8 / WA family bonds; Z-WA conditional). Read transfer_spacedust's DEVELOPMENT
+                  window-8 notebook entry (CC7 groups +.233, chosen after scores). predeclared4.json written before any
+                  computation at another pair distance.
+2026-11-13 14:58  Smoke (login node, 150 DPANN genomes): lw W3 equals ll.bonds(w=3); WA's d = 1 bonds equal ll.bonds(w=1); WA
+                  bonds by d 31,923 / 21,459 / ... / 5,825 at tau 4. Cluster files unchanged; account 88 CPUs. Submitted
+                  94238 ll_w (DPANN: builds + odd scores) and 94239 ll_w (Spacedust: builds only), 24 CPUs each.
+2026-11-13 14:59  Bond-rule ladder check (gold-free): W3 tau 6 on DPANN, 8 on Spacedust (part 1 used the word-type tau 10).
+                  predeclared4 amendment_1: W3b (W3 at its bond-rule tau) added as a candidate and reference row.
+2026-11-13 15:16  Builds done (DPANN 644 s, Spacedust 782 s; peak 3-5 GB): bond taus DPANN 6 / Spacedust 8 in every arm; WA
+                  bonds at d >= 4: 31% (DPANN) / 38% (Spacedust); boundaries bonded only by d >= 4: 283k / 458k. Odd read:
+                  WA L4b .05/.1/.2 are the only outputs meeting all three odd conditions; selected WA L4b theta .2 [3, 806,
+                  .522] (theta .1 [3, 805, .550]). predeclared4 amendment_2 written before any even or source207 number.
+2026-11-13 15:23  EVEN + source207 read (job 94379). DPANN: WA L4b .2 1,685 / 1,594, summed .513, F1 .762/.672/.461, all seven
+                  bars; W5 / W8 1,631 / 1,626 resolved, CRISPR-Cas -.026 (fail). Spacedust: WA L4b .2 (primary) +.164
+                  [+.125, +.202] (vs engine -.020 [-.054, +.014]); DEVELOPMENT WA L1 +.247 (BEATS engine +.064), W8 L1 +.234,
+                  W5 L1 +.232. Z-WA not built (list kernels fix WGAP = 3; masks only for d <= 3); cost estimated. REPORT4.txt.

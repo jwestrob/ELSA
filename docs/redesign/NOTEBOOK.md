@@ -1770,3 +1770,37 @@ engine's nested reading (even genomes; single outputs; predeclared 23:32 UTC, se
   `readings4.py`; no round-4 step reads taxonomy beyond it.
 Next: a diagnosis of what Cas pairs lack (list depth, homologs per Cas gene, lineage spread,
 threshold floor), then a rerun with the data-derived lineage unit from `lineagefree`.
+
+## 2026-11-13 01:49 UTC — Why the embedding-only method loses CRISPR-Cas, and a second-tier fix (workstream `ws_cas`; `benchmarks/redesign/softrec/REPORT_cas.txt`)
+
+Diagnosis on round 4's post hoc configuration (instance-graph labels + trimming 0.8, unoriented
+landscape) against the token engine's nested reading; references reproduced exactly first.
+
+- **The loss is missing support, not the reading and not the lists.** Even genomes, 1,899
+  CRISPRCasTyper loci, F1 difference -0.037: loci with an unsupported boundary cost -0.067 (377
+  loci; 209 with no support on any member cost -0.053); reading differences are +0.017 in the
+  embedding's favour.
+- **The rank-weight floor carries 87% of it.** Restoring only the 10,581 below-floor
+  token-significant instances within 3 genes of Cas loci gives CRISPR-Cas F1 +0.046 [+0.038,
+  +0.054] at no cost elsewhere.
+- **Cas pairs are rare, not special.** 30.2% of token-significant Cas-span instances are lost,
+  65% of them with token L 2-7; at matched L and family spread Cas pairs are lost less often than
+  other pairs (-0.036 [-0.047, -0.024]). Cas loci are small and support-sparse.
+- **The homologs are in the lists, deep.** Cas genes keep as much of their MMseqs2 family in the
+  top 1,000 as matched non-Cas genes (0.841 against 0.792); the best family pair sits at median
+  rank 107, behind a mean of 200 Cas genes of other MMseqs2 families per list. The whitened
+  neighbourhood of a Cas gene is Cas genes of other families: kind-level similarity outranks
+  family-level similarity.
+- **A Poisson tail of G given E at depth 1,000 separates lost Cas instances from null at L >= 5**
+  (AUC 0.935 / 0.987 / 1.00 at L 5-7 / 8-15 / 16+; rank weight W 0.60-0.76). At L 2-4 no stored
+  statistic or reciprocity separates them (AUC 0.68-0.81).
+- **Predeclared fix: a second tier (P <= 1e-8 and L >= 2 at depth 1,000) admitted only in gene
+  intervals untouched by the first tier** (115,781 instances, 75,045 island loci, combined FDR
+  0.0027). Even genomes against token DH: summed excess +0.027 [+0.010, +0.047], DefenseFinder F1
+  +0.080, TXSScan -0.015, CRISPR-Cas -0.007 [-0.016, +0.003], ribosomal 1,681 recovered / 1,404
+  resolved / Parvarchaeaceae 114. **This meets the "matches" bars and the summed-excess "beats"
+  bar; the base configuration was chosen post hoc in round 4, so the verdict carries that label.**
+- A predeclared refuter fired: the islands form genome-wide and raise each caller's
+  random-placement control (DefenseFinder +0.041), so summed excess falls 0.038 against the base.
+  Ungated, the same statistic costs summed -0.11 to -0.16 and drops resolved to 1,274-1,376.
+  126 of 209 missed even loci still have no support.

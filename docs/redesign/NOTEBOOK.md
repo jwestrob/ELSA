@@ -2391,3 +2391,46 @@ bars (even); Spacedust collection scored with DPANN-chosen settings only.
 Earlier result that this builds on and that the status scorecard omitted: cohesion cuts on the
 engine's pair-support landscape cleared every DPANN bar (+0.065 [+0.050, +0.079]; ribosomal
 1,686 / 1,456), with genus counting and a lower overall score than words (`context_units`, test 3).
+
+## 2026-11-13 11:23 UTC — Word method on the Spacedust collection, DPANN settings unchanged (workstream `transfer_spacedust`; `benchmarks/redesign/transfer_spacedust/REPORT.txt`)
+
+Predeclared; stored references reproduced exactly (engine 0.7498 / 0.5660 / +0.1838; native
+Spacedust 0.6765 / +0.0649); the copied learner reproduces both DPANN vocabularies. 207 BGC
+regions; every output scored by the same evaluator with the same random-placement control.
+
+| Output | F1 | Control | Excess [95%] |
+|---|---|---|---|
+| Engine, single reading (window 8) | 0.578 | 0.377 | +0.200 [+0.164, +0.237] |
+| Engine reference (union of 42 readings, window 8) | 0.750 | 0.566 | +0.184 [+0.154, +0.213] |
+| Connected runs on the word pair statistic, genome groups | 0.580 | 0.427 | +0.153 [+0.116, +0.189] |
+| Engine on the same families, DPANN window, single reading | 0.599 | 0.455 | +0.144 [+0.108, +0.181] |
+| Connected runs on the word pair statistic, shared-gene-order counts | 0.587 | 0.445 | +0.142 [+0.106, +0.178] |
+| P1: family words + phrases, genome groups | 0.483 | 0.402 | +0.080 [+0.046, +0.114] |
+| Native Spacedust | 0.676 | 0.612 | +0.065 [+0.037, +0.093] |
+| P2: family words + phrases, shared-gene-order counts | 0.481 | 0.432 | +0.049 [+0.014, +0.084] |
+
+- **The procedure transfers; the parse does not win.** The 1% shuffle rule lands on the DPANN
+  thresholds (8 and 10) and both primary outputs beat random placement. Against native Spacedust
+  they tie on excess (P2 -0.016 [-0.051, +0.018]; P1 +0.015 [-0.020, +0.050]) and trail by 0.19 F1.
+  Against the engine reference: -0.135 and -0.104.
+- **Connected runs on the same first-round statistic beat the word parse by +0.093 / +0.072 and
+  beat Spacedust on excess by +0.077 / +0.088** (F1 0.58 against 0.68). Recursive merging and
+  phrases subtract from what the pair statistic finds here.
+- **Cause: words are short, regions long.** Word span median 3 genes (q90 6-7); regions median 10.
+  Excess is +0.08 to +0.15 on regions of 1-10 genes and -0.025 to +0.04 on regions of 11 or more.
+  47-49% of gold genes lie outside every word; the best single word covers a median 33% of a region.
+- Development variant (window 8, chosen after seeing scores): connected runs reach F1 0.62-0.64 and
+  excess +0.230 / +0.233, above the stored engine reference by +0.047 / +0.049; words barely move.
+- The engine's single reading scores as high as its 42-reading union, so the union is not the
+  source of the engine's strength here.
+- Genome groups beat shared-gene-order counts by +0.031 [+0.008, +0.055] (618 groups, estimated
+  from 300 sampled genes per genome with pairs near the cut recomputed exactly; declared deviation).
+- **Duplicate-genome stress test (26 Lactobacillaceae genomes copied 1, 3, 9 times):** counting
+  every genome inflates the clade's word types x1.78 / x7.0 / x8.1. Genome groups deflate them
+  (x0.93 / 0.86 / 0.75) because copies raise the group's chance expectation. Shared-gene-order
+  counts hold the number (x1.02 / 0.94 / 0.83) while the vocabulary changes (Jaccard with the
+  uncopied run 0.76 / 0.63 / 0.49). Neither correction is invariant to duplication: the
+  expectation term needs the same redundancy treatment as the count.
+- Embedding words (P3) did not run: the GPU partition was occupied at every check. ESM-C 300M
+  vectors stored for the collection are bitwise the same weights as ESM++ small.
+Open: P3; the long-locus design (`long_loci`) is the direct follow-up.

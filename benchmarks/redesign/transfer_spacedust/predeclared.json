@@ -1,0 +1,65 @@
+{
+ "workstream": "transfer_spacedust",
+ "written_utc": "2026-11-13T07:59Z",
+ "status_when_written": "No word-method run, score or ladder exists on this collection. No reference has been rescored yet. Only the stored summaries listed in NOTEBOOK.txt (07:46) and the gold-region size distribution (07:45) have been read.",
+ "question": [
+  "Q1: does the DPANN word method transfer to the Spacedust collection with its DPANN settings unchanged?",
+  "Q2: how does it compare with native Spacedust on Spacedust's own benchmark (source207)?"
+ ],
+ "reference_reproduction": {
+  "stored": "$RD/engine/results_v2/hybrid__esm2_650m__genomecentred__mm30cpmr0p05__w8/summary.json, selection 'conserved loci, gaps 0-2': F1 .7498, random .5660, excess .1838 [.1537, .2134]",
+  "how": "(i) rescore the stored query_loci.parquet with the stored scorer and the engine's rng sequence (8 selections in order, rng seed 17): every summary number and every per-region F1 must be equal; (ii) rerun engine/recurrence.py (unchanged, read-only) on the stored hybrid tokens at w 8 into this workstream's directory: same rule, same significant pairs, same source207 numbers.",
+  "spacedust": "rescore native_run_20260910/results/all_blocks.parquet, all blocks (n_anchors >= 2), as block_fdr.py: F1 .6765, random .6115, excess .0649 [.0365, .0927]; per-region values kept for paired differences.",
+  "gate": "no comparison is made before (i) and the Spacedust rescore reproduce exactly"
+ },
+ "matched_protocol": "Every output is a set of query-genome intervals [start, end] (gene position indices). Scorer: model_scaling_20260913/code/evaluate_spacedust_queries.evaluate, unchanged: per region the single interval with the best gene-level F1 (any interval of the set); control = 200 rigid translations of the region's exact membership pattern inside its contig (per-region seed from sha256('17:'+region_id)), scored against the same interval set; excess = mean over the 207 regions of (F1 - mean control F1); 95% interval = 10,000 bootstrap draws over regions (rng seed 17). Paired differences A - B: per-region differences of observed F1 and of excess, 10,000 bootstrap draws over regions (rng seed 17). What differs between methods and is stated with every comparison: the engine reference is the union of 42 readings (3 gap rules x 14 support levels), native Spacedust the union of all 1,641,181 blocks, each word output one reading. The control is scored on the same interval set, so it absorbs part (not all) of the advantage of a union of many readings.",
+ "references": {
+  "engine_reference": "stored engine v1.1 hybrid ESM2-650M tokens, w 8, 'conserved loci, gaps 0-2' (the brief's .750 / +.184)",
+  "engine_single_reading": "secondary reference: the same stored loci, kind 'conserved' at support level 2 only (one reading)",
+  "engine_same_tokens": "secondary reference rows: recurrence.py unchanged on this workstream's rescue3 tokens at w 3 (DPANN window) and w 8 (Spacedust window), 'conserved loci, gaps 0-2'; reference rows, not word-method variants",
+  "spacedust": "native Spacedust, all blocks"
+ },
+ "tokens": "MMseqs2 base clustering $RD/tokens/mmseqs__seq__e3c50s75 (E <= 1e-3, coverage 50% bidirectional, -s 7.5; stored) + rescue3 (repair recipe copied: search -s 7.5 --max-seqs 1000, align -e 1e-5, hit covering >= 80% of the shorter protein, target token >= 2 members, best by bits, chains followed). No equivalent table existed for the collection.",
+ "embeddings": "Stored ESM-C 300M vectors (biohub/ESMC-300M), weights bitwise identical to ESM++ small, same pooling (NOTEBOOK 07:48). zca10 refitted on this collection at the unique-sequence level exactly as embed_tokens.transform('zca10'): L2 normalise, subtract the gene-weighted mean, soft-ZCA alpha 0.1 of the gene-weighted covariance, renormalise. No labels.",
+ "primary_outputs": {
+  "order": ["P2", "P1", "P3"],
+  "common": "stage-1 learner (vocab.py / vocab2a.py copied, logic unchanged): adjacent live nodes with <= 2 intervening single genes, either order; E with w = 3; Lambda = n ln(n/E) - n + E; n >= 2; greedy commit in decreasing Lambda; rounds until nothing commits. tau = smallest value of the ladder {4,6,8,10,12,15,20,25,30,40,50,70,100} whose word-type FDR (mean word types over 3 within-genome token shuffles, seeds 1000-1002, / observed word types) <= 0.01, computed on this collection's own shuffles (the rule transfers, not the DPANN value).",
+  "P2": {
+   "name": "family words + cohesion phrases, shared-gene-order effective counts",
+   "unit": "genomes with synteny-retention N_eff (vocab2a mode neff, ctx syn): S(g,h) = share of g's round-0 adjacent token pairs also adjacent in h, symmetrised, S(g,g) = 1, recomputed on each shuffle; N_eff = n^2 / sum over carrier genome pairs S; Lambda_eff = Lambda_genome x N_eff / n; commit needs n >= 2, N_eff >= 2, Lambda_eff >= tau",
+   "reading": "V-coh0.1: top-level words plus cohesion phrases = consecutive top-level words <= 2 genes apart joined when every boundary between them has token cohesion kappa >= 0.1 or NaN; kappa computed on this collection with ws_context's recipe (context_units/cuts.py gene_cohesion, copied): rescue3 token families, zca10 vectors of the boundary-facing neighbours, gene-pair floor c0 from 1,000,000 random gene pairs in different genomes (seed 17); kappa(k) = min over the two genes; NaN when < 3 family members have a neighbour on that side"
+  },
+  "P1": {
+   "name": "family words + cohesion phrases, data-derived genome groups",
+   "unit": "genome groups: average linkage on 1 - emb_hom (mean-symmetrised), cut at 0.75; emb_hom(A,B) = mean over A's genes whose best zca10 match in B is >= 0.5 of that best cosine (exact per-genome maxima, genome_groups.py embsim definition); n = groups, E over groups",
+   "reading": "V-coh0.1 as P2"
+  },
+  "P3": {
+   "name": "embedding words on z >= 10.6 neighbour lists, nested reading",
+   "how": "vocab_lists vl.py z10.6 arm with logic unchanged: terminal list = best gene of every genome outside the gene's own group (P1 groups) with within-genome z >= 10.6 (z = (best cosine - mean cosine to all genes of that genome) / sd, zca10 vectors; calib gpu_table recipe on this collection), ranked by z; group counts; ladder {4,6,8,10,12,15,20}, round-0 instance FDR <= 0.01 over 3 shuffles; reading V-nest. Secondary reading (vocab_lists reported it, as a diagnostic): V-phr (V-nest + junction phrases where the junction gene pair passes the arm's own test).",
+   "status": "needs the per-genome z table (one all-vs-all pass, GPU partition or CPU) and a port of vl.py's list/exclusion machinery; may finish after P2 and P1"
+  },
+  "secondary_readings_reported_not_selected": "for P1 and P2 also V-top, V-nest, V-mob, V-phr (round-0 significance phrases) and V-coh at 0.02 / 0.05 / 0.2; none is selected; each is labelled 'secondary reading' and none enters an ANSWER line except as context"
+ },
+ "reported_for_every_output": ["source207 F1, control F1, excess [95%]", "paired difference vs engine reference (F1 and excess) and vs engine single reading", "difference from native Spacedust (F1 and excess, paired)", "median boundary precision and coverage at the best interval; localized fraction", "share of all genes and of query genes in loci", "tau ladder and tau*", "vocabulary: types, instances, top-level instances, span distribution, nesting depth", "groups at 0.75 (count, size distribution) and the distribution of S between genomes", "F1 and best-interval span by gold-region size class (1-5, 6-10, 11-20, 21+ genes); word and phrase span distributions on query genomes", "wall time and peak memory"],
+ "verdict_rules": {
+  "transfers": "T1: the tau rule yields tau* on the ladder; T2: excess over random placement has 95% lower bound > 0. Both = 'runs and finds signal without retuning'.",
+  "versus_a_reference": "on paired excess difference d: BEATS if the 95% lower bound > 0; MATCHES if not beats and point d >= -0.02; BELOW if d < -0.02 (interval always reported). Applied against the engine reference (best of 42), the engine single reading, and native Spacedust; the observed-F1 difference is reported beside it."
+ },
+ "expectations_written_before_numbers": {
+  "context": "BGC regions are long (median 10 genes) and largely lineage-specific; DPANN words have median span 2 (q90 5); group counting merges the five Streptomyces query genomes (the engine counts each query genome as its own lineage). Words should localise conserved cores precisely but cover only part of each region; cohesion phrases restore some length.",
+  "tau": "tau* 8-12 for P1 (DPANN 10); 6-10 for P2 (DPANN 8)",
+  "P2": "F1 .50-.62, control .38-.48, excess +.08 to +.15 (lower bound > 0, T2 holds); BELOW the engine reference (d excess -.03 to -.10; F1 -.15 to -.25); vs the engine single reading MATCHES or BELOW; vs Spacedust: F1 below (-.05 to -.15), excess MATCHES or BEATS (+0 to +.08); median boundary precision >= .8 with coverage < .6",
+  "P1": "below P2 by .01-.05 excess (group counting removes Streptomyces-only support); F1 .47-.60, excess +.06 to +.13",
+  "P3": "between P1 and the engine: F1 .55-.68, excess +.08 to +.16",
+  "size": "for every word output F1 falls with region size; regions of 21+ genes lose most against the engine",
+  "refuter": "if any primary output has excess >= the engine reference's (+.184) the reading 'long neighbourhoods are the method's weak point on this benchmark' is refuted"
+ },
+ "development_variants_after_primary": "Chosen after seeing source207 numbers, labelled DEVELOPMENT in every table, run only after P2 and P1 are recorded: wider occurrence window (gap <= 7, w = 8 in E, the engine's Spacedust window), other cohesion thetas, genome unit, other group cuts.",
+ "amendment_0_secondary_items": {
+  "written_utc": "2026-11-13T07:59Z",
+  "source": "coordinator message 07:57, before any number of these items",
+  "CC_baseline": "Connected-component baseline (assembly rule of Herve, Cury and Bernheim 2026, 'syntons'): with the same pair statistic, expectation, unit and tau* as the word run (P1 and P2 each), take the round-0 significant pairs only (no merging rounds; occurrences of significant keys) and form loci as maximal runs of genes linked by significant occurrences at distance <= 2 (1 intervening gene; variant CC1) and <= 3 (2 intervening; variant CC2); a locus = a maximal run of boundaries covered by significant occurrences. Scored exactly like the primary outputs; paired differences against P1 / P2. SECONDARY. Expectation: CC2 >= CC1 in F1; CC loci longer and fewer than words; excess within .03 of the word output's V-coh0.1 (the pair statistic carries most of the signal), boundary precision lower than words.",
+  "duplicate_stress_test": "Label-free. Clade = the GTDB genus with the most reference genomes among genera with 20-50 genomes (taxonomy used only to pick the clade; if none, the GTDB family by the same rule). Add k = 1, 3, 9 exact copies of every clade genome (new genome codes, appended). Rerun the family word procedure (rescue3 tokens copied with the genes) under three counting rules: every genome its own unit; data-derived groups (average linkage at 0.75 recomputed on the emb_hom matrix augmented with the copies: copy rows/columns duplicated, copy-original similarity 1); synteny-retention N_eff (S recomputed on the augmented corpus). tau fixed at each rule's k = 0 tau* (no ladder rerun). Report for words with >= 1 top-level instance in the clade (original genomes) and for the rest separately: word types, share of genes in top-level words (clade originals / other genomes), Jaccard overlap of the vocabulary with k = 0, a word type keyed by its canonical composition (unordered merge tree over slot tokens). SECONDARY. Expectation: genome unit inflates clade word types and gene share monotonically with k (+30% to +300% types at k = 9) and leaves the rest nearly unchanged; groups stay within +-5% of k = 0 (Jaccard >= .9); synteny N_eff grows mildly (Lambda_eff = N_eff ln(n/E) - ... still grows with log n): within +-20%, Jaccard >= .8."
+ }
+}

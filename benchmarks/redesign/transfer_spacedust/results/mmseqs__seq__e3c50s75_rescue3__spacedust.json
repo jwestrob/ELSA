@@ -1,0 +1,31 @@
+{
+ "arm": "mmseqs__seq__e3c50s75_rescue3__spacedust",
+ "rows": 4257531,
+ "base_tokens": 601584,
+ "tokens": 523853,
+ "singletons": 376082,
+ "doubletons": 37333,
+ "largest": 11978,
+ "genes_changed": 97968,
+ "genes_changed_frac": 0.02301051947713358,
+ "base_tokens_emptied": 77731,
+ "receiving_tokens": 37539,
+ "query_genes": 553026,
+ "genes_with_qualifying_hit": 98541,
+ "chains_followed": 903,
+ "cycles": 448,
+ "uids_with_genes_in_more_than_one_token": 75,
+ "qualifying_uid_hits": 3917377,
+ "fident_q10_q50_q90": [
+  0.26100000739097595,
+  0.38499999046325684,
+  0.7310000061988831
+ ],
+ "target_token_size_q50_q90_max": [
+  43.0,
+  860.0,
+  11867
+ ],
+ "seconds": 15.1,
+ "recipe": "repair/build_arms.py rescue_tokens(3) + repair_lib.resolve_moves, copied; base /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/tokens/mmseqs__seq__e3c50s75.parquet"
+}

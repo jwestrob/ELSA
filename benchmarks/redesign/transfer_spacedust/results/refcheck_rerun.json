@@ -1,0 +1,43 @@
+{
+ "rdir": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/transfer_spacedust/engine/hybrid__esm2_650m__genomecentred__mm30cpmr0p05__w8",
+ "equal": {
+  "rule": true,
+  "significant_pairs": true,
+  "fdr": true,
+  "genes_covered": true,
+  "tokens": true,
+  "instances": true,
+  "token_pairs": true
+ },
+ "source207_equal": {
+  "conserved loci, all levels": true,
+  "conserved loci, gap 1": true,
+  "conserved loci, gap 2": true,
+  "conserved loci, gaps 0-2": true,
+  "islands": true,
+  "profile units, all tau": true,
+  "conserved (gaps 0-2) + profile units": true,
+  "all locus kinds": true
+ },
+ "all_equal": true,
+ "new": {
+  "rule": "P<=1e-4&L>=3",
+  "significant_pairs": 329844,
+  "fdr": 0.005650145725454053,
+  "genes_covered": 2440774,
+  "tokens": 334660,
+  "instances": 33819640,
+  "token_pairs": 20812688,
+  "seconds": 758.3,
+  "engine": "v1.5"
+ },
+ "stored": {
+  "rule": "P<=1e-4&L>=3",
+  "significant_pairs": 329844,
+  "fdr": 0.005650145725454053,
+  "genes_covered": 2440774,
+  "tokens": 334660,
+  "instances": 33819640,
+  "token_pairs": 20812688
+ }
+}

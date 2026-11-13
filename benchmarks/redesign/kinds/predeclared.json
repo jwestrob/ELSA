@@ -1,0 +1,68 @@
+{
+ "written_utc": "2026-11-13 02:06:38 (file mtime; before any job was submitted, any statistic computed or any fold)",
+ "workstream": "ws_kinds: recurrence of kinds for genes that have no homologs",
+ "statistic": {
+  "name": "kind recurrence kappa",
+  "input": "whitened ESM++ small vectors (zca10, unique sequences) and gene order; no taxonomy, no annotation, no alignment",
+  "lists": "N_D(x) = the D nearest unique sequences by whitened cosine (stored HNSW top-1000, $RD/softrec/knn/zca10__k1000) plus x's own sequence; a gene's list = every gene carrying one of those sequences, minus genes of the query's own genome",
+  "query": "every pair of consecutive genes (a, b) on one contig (3,353,826 = rows of grammar/prep/adj1.parquet)",
+  "support": "S_D(a,b) = consecutive gene pairs (a', b') in other genomes with seq(a') in N_D(a) and seq(b') in N_D(b), any orientation",
+  "realisation_unit": "embedding family pair (f(a'), f(b')), f = Leiden community of the zca10 mutual-kNN graph (k 20, resolution 3000; graph__esmpp_small_zca10__mknn20r3000, 153,520 families, built from vectors alone)",
+  "counts": {
+   "F": "distinct realisation units in S_D",
+   "FX": "distinct realisation units with f(a') and f(b') both outside {f(a), f(b)} (other families only)"
+  },
+  "null": "gene order permuted within each genome (contig sizes kept), seeds 1000-1002; the query and its lists stay fixed; R0 = mean count over the three permutations",
+  "scores": {"ratio": "ln((R + 1) / (R0 + 1))", "excess": "R - R0"},
+  "variant_grid": "count in {F, FX} x depth D in {30, 100, 300, 1000} x score in {ratio, excess} = 16 variants",
+  "reported_ablations_not_selectable": "A (support adjacencies, descent counted), G (distinct genomes, descent counted), M and X (MMseqs2-family realisation units; evaluation only), oriented versions (same arrangement as the query)"
+ },
+ "selection": {
+  "rule": "on the grammar critic benchmark (held-out GTDB orders, 5-fold, reference = training-side genomes of each split), restricted to ODD genome_code: the variant with the highest mean of DefenseFinder within-system vs no-gold AUROC in the strata never_w3 and singleton_either; ties broken by the all-stratum AUROC",
+  "written_before_reading": "any AUROC of any kappa variant"
+ },
+ "reproduce_first": [
+  "critic 'primary' DefenseFinder no-gold AUROC never_w3 0.7676 and singleton_either 0.7863 (grammar eval1.tsv) from assembled_cv.npz with this workstream's AUROC code",
+  "screen-1 cognate pass count 27/300 on criteria 1-3 recomputed from folds.tsv metrics"
+ ],
+ "test_C_critic_benchmark": {
+  "data": "EVEN genome_code adjacencies of the same benchmark (reference = training side of the split holding each adjacency); 2,000 paired genome-bootstrap draws, seed 17",
+  "expectation_written_before": "kappa below the critic: never_w3 about 0.70-0.75 (critic 0.768), singleton about 0.70-0.78 (critic 0.786)",
+  "C1_carries_signal": "kappa AUROC >= 0.70 in never_w3 and in singleton_either, each with lower 95% bound > 0.60",
+  "C2_matches_critic": "kappa minus critic in never_w3: point >= -0.02 and lower 95% bound >= -0.05",
+  "refuted": "kappa AUROC < 0.65 in never_w3",
+  "also_reported": "all genomes pooled (contains the tuning half; labelled), TXSScan and CRISPRCasTyper never_w3, PMI and raw cosine, the ablations"
+ },
+ "test_W_withheld_families": {
+  "positives": "within-instance adjacencies of each DefenseFinder system_type with >= 10 such adjacencies (all genomes), plus TXSScan Archaeal-T4P and CRISPRCasTyper subtypes meeting the same count",
+  "negatives": "20,000 random no-gold adjacencies (seed 17), scored under the same withholding",
+  "levels": {
+   "full": "selected statistic, nothing withheld",
+   "L1": "support pairs touching either MMseqs2 family of the query withheld",
+   "L2": "support pairs touching any MMseqs2 family that occurs in any curated instance of the query's system type withheld",
+   "L2_control": "the same number of MMseqs2 families, matched on size decile, drawn at random (seed 17), withheld"
+  },
+  "measures": "per type and pooled: AUROC (positives vs negatives), fraction of positives above the negatives' 99th percentile",
+  "expectation": "toxin-antitoxin-like types keep AUROC >= 0.7 at L2; pooled drop full -> L2 <= 0.10",
+  "supported": "pooled L2 AUROC >= 0.70 with lower 95% bound > 0.65",
+  "refuted": "pooled L2 AUROC < 0.60"
+ },
+ "test_F_cofold": {
+  "engine": "Biohub ESMFold2 esmfold2-2026-05, fold_all_atom, single sequence, include_pae and pair_chains_iptm; client copied from cofold/biohub_cofold.py (same metrics as screens 1-3)",
+  "pass_criteria_1_3_per_fold": "ipTM >= 0.75; interface PAE <= 5 A (mean of (PAE(i,j)+PAE(j,i))/2 over CB-CB <= 8 A contacts); >= 10 contacts; interface pLDDT >= 70 (screen-1 predeclared_criteria.json, unchanged)",
+  "pool": "consecutive gene pairs on EVEN genome_code genomes; both genes unannotated (package annotation_flags) and in no curated instance; the token engine cannot call the pair (a member in a singleton MMseqs2 rescue3 family, or engine L < 2 at window 3); not homologous (whitened cosine(a,b) < 0.32 and neither sequence in the other's top-1000 list); each chain >= 40 aa, sum <= 450 aa; neither gene first or last on its contig; no X or internal stop; hydrophobic fraction (ILVFMAWC) <= 0.45 and SEG-trigger low-complexity fraction <= 0.145 for each chain (screen-1 filters)",
+  "class_a_high": "300 pairs: pool ranked by the selected kappa (all genomes as reference), greedy with caps: one pair per unordered MMseqs2 family pair; <= 2 pairs per MMseqs2 family; <= 5 per unordered coarse embedding-family pair (graph r100); <= 3 per genome",
+  "class_b_low": "300 pairs, one per class-a pair: pool pairs with kappa <= the pool median, not sharing a gene with any selected pair; same genome first, then same genus, family, order, phylum, anywhere (taxonomy used for matching only); both lengths within +-20% (sorted lengths matched min-to-min, max-to-max), smallest summed relative length difference, ties by seed 17",
+  "class_c_swaps": "150 class-a pairs drawn with seed 17; alternate which chain is kept (first: keep A replace B; second: keep B replace A, ...); donors = chains of other class-a pairs with an MMseqs2 family different from both chains and a coarse embedding family (r100) different from the replaced chain; length within +-10% (relaxed to +-25%) and hydrophobic fraction within +-0.05 (relaxed to +-0.10); one-to-one Hungarian assignment",
+  "class_d_critic": "the six grammar critic candidates (8 gid pairs listed in grammar/REPORT.txt) and one swap each; descriptive only",
+  "sizes": "300 + 300 + 150 + 16 = 766 items; up to 134 more for monomer folds of passing pairs (disorder-zipping check); hard cap 900",
+  "hypothesis": "kind-level recurrence predicts interaction for proteins the token engine cannot call",
+  "expectation_written_before": "class a about 4-6%, class b about 1-2%, swaps 0-1%",
+  "supported": "rate(a) >= 3 x rate(b), Clopper-Pearson 95% intervals separate (upper(b) < lower(a)), one-sided Fisher p < 0.01, and rate(c) <= 2%",
+  "partly_supported": "rate(a) > rate(b) with one-sided Fisher p < 0.05 but intervals overlap or ratio < 3",
+  "refuted": "rate(a) <= 1.5 x rate(b), or Fisher p >= 0.05, or swaps pass at >= half the rate of class a (stickiness, not partner specificity)",
+  "length": "rates by combined length bins <200, 200-300, 300-450 aa next to the stored screen-1 rates of the same bins; Mantel-Haenszel odds ratio a vs b across bins; direct standardisation of stored rates to class a's length mix",
+  "artefact_checks_for_passing_pairs": "split gene (MMseqs2 of both chains vs all 3,585,303 DPANN proteins; fused homolog = one target hit by both chains in collinear non-overlapping segments, E <= 1e-3, each >= 50% query coverage); disorder zipping (monomer folds; >= 50% of a chain's interface residues pLDDT < 60 alone, or chain pLDDT < 60 in the complex); low complexity and hydrophobicity values; overlapping reading frames reported",
+  "naming": "observed Pfam domains of the genes and of their embedding neighbours only; any system name only if a curated caller emitted it; otherwise UNVERIFIED"
+ }
+}

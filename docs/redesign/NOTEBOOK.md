@@ -2041,3 +2041,43 @@ first time: leave-genome-group-out nearest-neighbour accuracy on even-genome gol
   -0.031); lower recall at matched unlabelled-hit rates (0.030 vs 0.099).
 Reading: the mean-pooled locus vector is the class identity the word method lacks (word identity
 was pure and fragmented, AMI 0.464), and one flat index serves typing, the map and ranked search.
+
+## 2026-11-13 03:54 UTC — Recurrence of kinds, judged by co-folding (workstream `ws_kinds`; `benchmarks/redesign/kinds/REPORT.txt`)
+
+Statistic, no training: kappa = R - R0, where R counts distinct embedding-family pairs among
+adjacent gene pairs in other genomes whose two members sit in the two genes' top-1,000 whitened
+neighbour lists, and R0 is the same count with gene order shuffled within each genome.
+Predeclared 02:06 UTC. 837 of 900 Biohub fold items used.
+
+- **Critic's benchmark (held-out orders, even genomes):** pairs never seen together in training
+  0.797 [0.759, 0.838] against 0.756 for the trained critic; pairs with a singleton family 0.843
+  against 0.781; all pairs 0.837 against 0.823. TXSScan never-seen pairs trail the critic by 0.058.
+- **Predeclared co-fold test supported.** High-kappa adjacent pairs that the token engine cannot
+  call pass the strict criteria in 26 of 300 folds (8.7% [5.7, 12.4]); length- and genome-matched
+  low-kappa controls 2 of 300 (0.67% [0.08, 2.39]); partner swaps 0 of 150. Fisher p 9e-7. After
+  the split-gene and disorder-zipping rules 21 of 300 remain. By length: 18 of 51 under 200 aa,
+  7 of 79 at 200-300 aa, 1 of 170 at 300-450 aa.
+- **The signal comes from support that is homologous to the query on at least one side.** For the
+  26 passers, 21.7% of support family pairs are homologous on both sides, 70.4% on one, 7.9% on
+  neither. Pairs whose support is more than 50% homology-free pass 1 of 149; at 10% or less, 22
+  of 93 (post hoc). Architectures unannotated everywhere co-fold at the base rate (1 of 36).
+- **Where alignment finds no homolog for one chain, the embedding supplies the match:** such
+  pairs pass 8 of 108 against 0 of 168 controls (p 0.0005, post hoc); in all 8 the partner side
+  is anchored by homology.
+- What co-folds: 17 pairs with toxin-antitoxin-like observed domains and 2 with RNase P subunit
+  domains (UNVERIFIED as systems); 12 of 26 passers come from one ParE-like architecture (without
+  it 14 of 274, p 0.001; grouping by architecture widens the interval to [2.2%, 20.7%]).
+- **Predeclared withheld-family test refuted.** With a system type's own families and every
+  family homologous to them withheld, pooled AUROC falls from 0.788 to 0.595 (33% of the
+  above-chance signal kept: DefenseFinder 16%, archaeal type IV pili 5%, CRISPR subtypes 83%).
+- "Kinds without homology" is a minority: 14,211 family pairs in 390 architectures form 7,445
+  homology-distinct groups; only 1,356 share no homologous member at all.
+- The critic's "about 50 aa beside a longer protein" pattern is two architectures (725 and 535
+  family pairs) and co-folds 0 of 19.
+- Weak part: the run-time realisation unit. Embedding families split housekeeping kinds by
+  lineage (pairs seen in >= 5 genomes: AUROC 0.546 with embedding families, 0.884 with MMseqs2
+  families as an evaluation-only unit).
+Reading: operationally the statistic finds interacting pairs the token engine cannot call, at
+the rate of engine-called unannotated pairs (9.0%) and 13 times its matched controls. The
+mechanism is homology-anchored on one side with the other side matched in embedding space, not
+recurrence of kinds across unrelated proteins.

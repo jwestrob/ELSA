@@ -2323,3 +2323,46 @@ curated calls. Package at `$RD/ws_srvp_bac/package`, sealed 2026-11-13T08:31:26Z
 - Split by genome-code parity: 691 / 691.
 - Pending: ESM++ small embeddings and whitening. A gate script on the biotite login node submits
   the GPU job once the account's current GPU job clears, then the finalize job.
+
+## 2026-11-13 10:32 UTC — Synton baseline (Hervé, Cury and Bernheim 2026) on the Spacedust collection and DPANN (workstream `baseline_synton`; `benchmarks/redesign/baseline_synton/REPORT.txt`)
+
+Their public pipeline, run with their published parameters; stored references reproduced exactly
+first; one scorer shared with `transfer_spacedust` (per-region values agree to 5e-7).
+
+Spacedust collection, source207 (207 BGC regions; excess = F1 minus random placement):
+
+| Output | F1 | Random | Excess [95%] |
+|---|---|---|---|
+| Recurrence-engine reference (union of 42 readings) | 0.750 | 0.566 | +0.184 [+0.154, +0.213] |
+| Word statistic + connected components, 2 gaps (CC2) | | | about +0.142 |
+| Word statistic + connected components, 1 gap (CC1) | 0.552 | 0.437 | +0.115 [+0.079, +0.151] |
+| Native Spacedust (all blocks) | 0.676 | 0.612 | +0.065 [+0.037, +0.093] |
+| Synton pipeline on our family tokens (matched) | 0.381 | 0.327 | +0.054 [+0.018, +0.090] |
+| Word method, first primary output (P2: family words + cohesion phrases, shared-gene-order counts) | 0.481 | 0.432 | +0.049 [+0.014, +0.084] |
+| Synton pipeline, faithful (their families) | 0.190 | 0.192 | -0.002 [-0.037, +0.034] |
+
+- **The word method does not beat Spacedust on Spacedust's benchmark with this output:** excess
+  about level (+0.049 against +0.065), F1 lower (0.481 against 0.676). The connected-component
+  rule on the same statistic scores higher than the recursive parse with phrases (+0.115 and about
+  +0.142 against +0.049). BGC regions are long; words cover 54% of query genes and split regions.
+  The reference and native Spacedust are unions of many readings or blocks; the word and synton
+  rows are single outputs. P1 and the embedding output of `transfer_spacedust` are still pending.
+- **The published synton pipeline shows no signal here with its own families** (linclust cascade to
+  50% identity leaves 53.7% of genes as singletons over 1,317 diverse genomes; 31.8% of gold-region
+  genes sit in a family present in at least 3 genomes, against 95.2% with our tokens). On our
+  tokens it ties the word output on excess.
+- **On DPANN the synton pipeline finds almost nothing** with either family set (260 and 218
+  syntons; every F1 0; ribosomal 0). Cause: contexts need replicons of at least 48 genes (34.4% of
+  DPANN genes) and the expected count grows with family copies per replicon length, so the
+  published score threshold removes nearly all pairs (median score 38 on DPANN, 67 on Spacedust).
+- Verified method (differs from our second-hand notes): context = families 13-24 genes away on
+  each side; one representative gene per context cluster; Poisson right tail with lambda = 2 sum
+  n_B / L; score = log2 fold x -log10 q, threshold score > 80 (the code does not apply the q cut);
+  syntons = connected components within +-2 positions.
+- Public test set prepared, no method run: universe over 34,719 RefSeq complete genomes
+  (131,406,988 genes; 47,290,207 distinct proteins) at `$RD/ws_refseq_synton/universe`. The Zenodo
+  record carries no accession list; 25,747 of their 32,791 genome codes map uniquely, 7,044 remain
+  to pin.
+- Run time of their pipeline on 24 CPUs: 30-50 min.
+- Process note: after the API interruption the agent submitted one job before re-reading the
+  cluster rules; it re-read them immediately afterwards and the job complied.

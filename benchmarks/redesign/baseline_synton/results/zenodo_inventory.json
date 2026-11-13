@@ -1,0 +1,74 @@
+{
+ "files": {
+  "Supplementary_Table_1_context_clusters.csv": {
+   "bytes": 9232066176,
+   "md5": "919c50041f1b81b7c9c48e8f9c795f08",
+   "md5_ok": true
+  },
+  "Supplementary_Table_2_family_associations.csv": {
+   "bytes": 564195424,
+   "md5": "4f78abd28a326915165d38cd45b2e969",
+   "md5_ok": true
+  },
+  "Supplementary_Table_3_syntons.csv": {
+   "bytes": 1155490582,
+   "md5": "d7cf8efd459e6aaf51b0f943b5af97be",
+   "md5_ok": true
+  },
+  "Supplementary_Table_4_synton_families.csv": {
+   "bytes": 239366184,
+   "md5": "148d11aa6ec2e1a2c00dc16486f8a067",
+   "md5_ok": true
+  },
+  "Supplementary_Table_5_cre.csv": {
+   "bytes": 308958918,
+   "md5": "ca253284aaffbe4e3c1afb4862d9b59c",
+   "md5_ok": true
+  },
+  "Supplementary_Table_7_cooccurrences.csv": {
+   "bytes": 22856,
+   "md5": "30da4bc7abf811d2fb8d7b16e2bc262f",
+   "md5_ok": true
+  }
+ },
+ "ST1": {
+  "rows": 123095149,
+  "distinct_wp": 44612331,
+  "fam50": 8812981,
+  "context_clusters": 18106016,
+  "genome_codes_in_context_ids": 29517,
+  "genome_codes_in_fam50_ids": 31521,
+  "species_codes": 8316,
+  "release_codes": 1,
+  "singleton_context_clusters": 12623549,
+  "genome_codes_with_singleton_contexts": 27814
+ },
+ "ST2": {
+  "rows": 3088488,
+  "score_gt80": 1034357,
+  "score_gt80_and_q_lt_1e5": 1034357,
+  "score_gt80_and_q_ge_1e5": 0,
+  "min_k_obs": 2,
+  "q_lt_1e5": 2856661
+ },
+ "ST3": {
+  "syntons": 14985590.0,
+  "gene_rows": 49676729.0,
+  "median_genes": 3.0,
+  "q90_genes": 6.0,
+  "max_genes": 35.0,
+  "distinct_wp": 15165958
+ },
+ "ST4": {
+  "rows": 14985590,
+  "families": 778526,
+  "syntons": 14985590
+ },
+ "ST5": {
+  "rows": 8812981
+ },
+ "ST7": {
+  "rows": 194,
+  "subtypes_a": 83
+ }
+}

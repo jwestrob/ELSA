@@ -1,0 +1,24 @@
+{
+ "candidates": 34727,
+ "genomes": 34719,
+ "genes": 131406988,
+ "contigs": 78200,
+ "downloaded_gz_bytes": 33832750457,
+ "genomes_current": 33060,
+ "genomes_historical": 1659,
+ "distinct_protein_ids": 47290207,
+ "proteins_written": 47290207,
+ "proteins_missing": 0,
+ "missing_assemblies": {
+  "GCF_000486165.2": "no feature table",
+  "GCF_003315755.1": "no feature table",
+  "GCF_006228425.1": "no feature table",
+  "GCF_023921185.1": "no feature table",
+  "GCF_028215935.1": "no feature table",
+  "GCF_028471605.1": "no feature table",
+  "GCF_029625785.1": "no feature table",
+  "GCF_902502825.2": "no feature table"
+ },
+ "genes_on_contigs_ge48": 131117606,
+ "seconds": 2231.8
+}

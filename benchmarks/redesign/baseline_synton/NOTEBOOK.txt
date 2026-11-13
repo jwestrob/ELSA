@@ -1,0 +1,180 @@
+baseline_synton NOTEBOOK (workstream baseline_synton; times UTC from `date -u`)
+================================================================================
+2026-11-13 08:02  Read priorart/REPORT_codex_A.txt (second-hand summary of Herve et al.), transfer_spacedust NOTEBOOK +
+                  predeclared (read-only), engine/recurrence.py (source207 scorer path), vocab/REPORT.txt, vscore.py.
+2026-11-13 08:04  Read /home/jwestrob/.claude/CLAUDE.md and obsidian-vault/biotite-cluster-ops.md on biotite.
+2026-11-13 08:05  Cloned gitlab.pasteur.fr/mdm-lab/papers/bacterial-genome-syntons into $RD/baseline_synton/src:
+                  HEAD 84baf1438f13fb6e03dabb8536e4f4dbfc03caa0 (2026-05-23, "Fix window size and add warning");
+                  4 commits. Files: compute_syntons.ipynb (29 cells), scripts/{neighbors, single_replicon_neighbors,
+                  merge_shards, diversity, synteny, syntons}.py, demo data (510 Mycobacterium genomes), unpinned
+                  requirements (duckdb networkx numpy pandas pyarrow scipy statsmodels tqdm jupyterlab); shell cells
+                  need the duckdb CLI. No family-clustering code in the repository.
+2026-11-13 08:07  Paper: OUP page behind Cloudflare (403 to curl); full text from Europe PMC PMC13639185 (fullTextXML) and
+                  the supplementary docx (Europe PMC supplementaryFiles). Methods, Results, Discussion, legends read.
+2026-11-13 08:08  Zenodo 21099310 (published 2026-07-01): 7 CSVs; headers read with HTTP range requests. ST5 and ST6 are
+                  the same file (md5 ca253284...; both CRE). The supplement's ST6 (DefenseFinder recall per subtype) is
+                  therefore not on Zenodo. ST1/ST3 identify genes by RefSeq WP accession only (non-unique across
+                  genomes); family and context ids are gembase gene ids (e.g. ACEQ002.0523.00001.001C_02768).
+2026-11-13 08:09  Code vs paper differences found (details in REPORT): context window = offsets 13..24 (paper text
+                  "12 to 24"); replicons < 48 genes are dropped from contexts and lambda (not in the paper); only
+                  pairs with k_obs > 1 are tested; k_obs counts adjacency rows of the context representative (a
+                  representative with B on both sides counts 2); the q < 1e-5 filter of the Methods is absent from
+                  the link step (sig_score > 80 only); links at +-2 use all genes of the two families on any replicon
+                  (also replicons < 48 genes).
+2026-11-13 08:12  Conda env $RD/baseline_synton/env (conda-forge: python 3.12, python-duckdb, duckdb-cli, networkx, numpy,
+                  pandas, pyarrow, scipy, statsmodels, tqdm) being created on the login node.
+2026-11-13 08:15  Gold-free facts. Spacedust universe: 4,257,531 genes, 2,061 contigs (median 1,885 genes), 1,739 contigs
+                  >= 48 genes hold 99.86% of genes; 13 query contigs (211-10,200 genes). DPANN universe: 3,585,303 genes,
+                  231,477 contigs (median 8 genes); 12,303 contigs >= 48 genes hold 1,234,248 genes (34.4%).
+                  Proteins: Spacedust $RD/ws_tokens/work/mmseqs/all.faa, DPANN $RD/ws_dpann/work/proteins_gid.faa
+                  (headers = gid).
+2026-11-13 08:16  Stored engine reference read (summary.json only): 'conserved loci, gaps 0-2' F1 .7498 random .5660
+                  excess .1838 [.1537, .2134]; it is the 4th of 8 selections sharing one default_rng(17).
+2026-11-13 08:20  predeclared.json written (faithful configuration, variants, gates, metrics, expectations). No score
+                  exists yet.
+2026-11-13 08:22  DuckDB: conda-forge gave duckdb 2.0.0, which rejects their arrow lambdas (cell 7, `x -> ...`: Binder
+                  Error). Pinned to the release current at their commit (2026-05-23): duckdb 1.5.3 (PyPI 2026-05-20;
+                  pip) + official CLI v1.5.3 binary (14eca11bd9) as env/bin/duckdb (conda 2.0 CLI kept as
+                  duckdb.conda-2.0.0). 1.5.3 runs the arrow lambda with a deprecation warning. Env versions:
+                  env_versions.txt (pandas 3.1.1, numpy 2.5.4, pyarrow 26.0.1, networkx 3.7, scipy 1.18.1,
+                  statsmodels 0.15.0). Login-node DuckDB default = 224 threads / 1.3 TiB, so the run sets threads,
+                  memory_limit (75% of allocation) and temp_directory through ~/.duckdbrc (HOME = run/home for the
+                  cells only).
+2026-11-13 08:23  Job 91498 (bs_synton, 24 CPUs, account 332 running before): gate reproduced the engine numbers, then
+                  crashed comparing a field the v1.1 summary does not store (per_region_random_f1). Fixed the check.
+2026-11-13 08:24  Zenodo download started on the login node (aria2c, 2 streams): ST1, ST2, ST3, ST4, ST5, ST7 into
+                  $RD/ws_refseq_synton/zenodo (ST6 skipped: md5 identical to ST5).
+2026-11-13 08:25  NCBI RefSeq bacteria assembly_summary (current, historical) into ws_refseq_synton/meta. Complete Genome
+                  with seq_rel_date <= cut: current 32,478 / 32,725 / 33,060 (cut May 1 / 15 / 31); plus 1,693 / 1,646
+                  / 1,667 historical assemblies live at the cut; distinct base accessions 34,129 / 34,337 / 34,690.
+                  None equals 32,791. Download size from 120 random candidates: protein.faa.gz 0.76 MB, feature_table
+                  0.18 MB, genomic.gff.gz 0.34 MB per genome -> proteins + feature tables of 34,727 candidates ~33 GB.
+2026-11-13 08:27  Job 91528 (bs_synton resubmitted; 304 CPUs running before). Gate PASSED: engine reference 'conserved
+                  loci, gaps 0-2' F1 .7498 / random .5660 / excess .1838 [.1537, .2134] and per-region F1 equal to the
+                  stored summary (abs 1e-9); native Spacedust (n_anchors >= 2, 63,756 intervals) .6765 / .6115 / .0649
+                  [.0365, .0927] equal to block_fdr's stored JSON. Families (linclust cascade) started 08:28.
+2026-11-13 08:29  RefSeq download started on the login node (aria2c, 8 concurrent, NCBI rule): protein.faa.gz +
+                  feature_table.txt.gz of 34,719 candidate assemblies (8 of 34,727 have no ftp_path) into
+                  ws_refseq_synton/genomes/<accession>/; list ws_refseq_synton/genomes/aria2_urls.txt. Candidates =
+                  superset (current + historical-live, cut 2023-05-31); the exact 32,791 cannot be recovered from the
+                  record (no accession list). Plan: identify their genomes later by matching gembase genome codes
+                  through singleton context clusters (gembase gene id <-> WP) against candidate proteomes.
+2026-11-13 08:31  Spacedust linclust cascade: 4,257,531 -> 4,211,608 (99%) -> 4,192,559 (95%) clusters; 80% running.
+                  Gembase id format checked on the first 2 MB of ST1: SPEC###.0523.#####.###C_##### throughout.
+2026-11-13 08:36  Spacedust faithful families (linclust cascade, 8 min on 24 CPUs): 99% 4,211,608 / 95% 4,192,559 / 80%
+                  3,993,503 / 50% 2,732,673 clusters; fam50 singletons 2,287,209 (53.7% of genes); genes in fam50 of
+                  >= 2 members 1,970,322 (46.3%); fam50 size q50 1, q90 2, q99 10, max 687. For comparison the stored
+                  MMseqs2 base families (e3c50s75, mmseqs cluster) have 601,584 tokens / 433,844 singletons. linclust at
+                  50% on 1,317 phylogenetically spread genomes fragments families ~4.5x more.
+2026-11-13 08:41  DPANN fairness facts (gold-free for genes; gold structure only, no method output): genes on replicons
+                  >= 48 genes 34.43% (= genes with a non-empty 13..24 window); genes with the full 24-gene window
+                  17.95%. Even gold instances (>= 2 members) with every member on a replicon >= 48 genes: DefenseFinder
+                  31.2% of 1,261, TXSScan 58.4% of 404, CRISPRCasTyper 35.9% of 1,899 (member genes on such replicons
+                  32.1% / 56.0% / 34.8%). Their counting and lambda see only these; links still reach shorter replicons.
+2026-11-13 08:46  Spacedust faithful timing so far: neighbours (cell 3) 432 s (1,739 replicons, their 10 workers x 3
+                  DuckDB threads), cell 5 14 s, cell 7 9 s; Jaccard shards (cell 9, 1,000 sequential DuckDB calls)
+                  ~0.7 s each. On course for < 1 h wall in total, so DPANN runs (brief: only if < ~2 h).
+2026-11-13 08:46  Job 91696 submitted (bs_dpann: DATASET=dpann FAMILY=faithful, GATE=1 = DH refcheck first, SCORE=1;
+                  24 CPUs; account 352 CPUs running before; my jobs: 91528 + 91696).
+2026-11-13 08:49  DPANN gate PASSED (job 91696, 34 s): token DH even summed .42702, F1 .7439 / .5480 / .4794, control
+                  .439 / .426 / .399, ribosomal 1,686 recovered / 1,512 resolved, Parvarchaeaceae 114/114 recovered,
+                  113/114 resolved; per-instance F1, control and coverage equal the stored DH scores. Word method
+                  (stage-1 words + cohesion phrases V-coh0.1, vocab/loci + scores) rescored the same way: .60820, F1
+                  .7351 / .6359 / .3948, ribosomal 1,684 / 1,420, Parvarchaeaceae 114 / 109; per-instance equal stored.
+                  DPANN linclust: 3,585,303 -> 2,372,039 (99%) -> 2,278,509 (95%).
+2026-11-13 09:04  Job 91528 cells finished (their pipeline 22 min on 24 CPUs after 8 min of families); my post step hung
+                  in an O(n x syntons) coverage loop (re-sorting the gene key per synton). Cancelled at 37.6 min, loop
+                  replaced by one sorted searchsorted + difference array. Their outputs untouched (cells marked done).
+2026-11-13 09:06  Job 91850 (post + scoring only, cells skipped): SPACEDUST FAITHFUL RESULT. Contexts: 4,166,508 context
+                  clusters for 4,251,358 genes (fam50 with one context 2,300,434): with fam50 this fragmented almost
+                  no two 13..24 windows share >= 15% of families, so context deduplication merges little. 324,828 pairs
+                  tested (k_obs > 1), 93,179 with score > 80; the q < 1e-5 rule removes none (paper rule = code rule).
+                  167,053 syntons (1,297 genomes), 9.8% of all genes, 17.0% of query genes (17.2% inside intervals);
+                  size median 2, q90 4, q99 6, max 20; 6,140 with a one-gene hole; 4,240 on query genomes.
+                  source207: F1 .1900, random .1921, excess -.0021 [-.0373, +.0343]; 95 of 207 regions overlap any
+                  synton; localized .097 (random .059). vs engine reference dF1 -.560 [-.601, -.517], dExcess -.186
+                  [-.224, -.146]; vs native Spacedust dF1 -.486 [-.527, -.447], dExcess -.067 [-.105, -.029].
+                  Expectation (excess +.05..+.15, F1 .25-.45) refuted low. Run time of their pipeline 30.4 min wall
+                  (families 8:05, cells 22:13), peak RSS 16.5 GB (cell 5 DuckDB dense rank).
+2026-11-13 09:07  Job 91858 submitted: Spacedust matched variant (transfer_spacedust rescue3 tokens, copied to
+                  baseline_synton/tokens with sha256 27cc55cd...; 523,853 tokens, 376,082 singletons).
+                  DPANN faithful fam50: 1,367,944 clusters (933,590 singletons; size q90 5, q99 24, max 1,382);
+                  neighbours stage at 40% after 16 min (12,303 replicons >= 48 genes).
+2026-11-13 09:08  RefSeq download finished: 69,438 files (protein.faa.gz + feature_table.txt.gz for 34,719 assemblies),
+                  aria2c status OK for all, 0 errors, ~40 min at 8 connections. Zenodo ST1 (9.2 GB) still downloading.
+2026-11-13 09:08  transfer_spacedust has scored P2 (read-only: results/score_P2.json, pr_P2__*.parquet): P2 V-coh0.1
+                  F1 .4811 / random .4321 / excess +.049 [+.014, +.084]; their CC1 / CC2 (connected components on the
+                  word statistic's round-0 pairs) .552 / .437 / +.115 and .587 / .445 / +.142. Their per-region F1 and
+                  control for the engine reference and native Spacedust equal mine to 5e-7 (rounding): one scorer,
+                  one protocol, reconciled.
+2026-11-13 09:11  DIAGNOSTIC (post hoc, gold genes only describe family coverage; nothing selected from it): of 2,740
+                  source207 member genes, 44.5% sit in a fam50 of >= 2 members and 31.8% in a fam50 present in >= 3
+                  genomes (query genes 58.2% / 46.5%; all genes in >= 3 genomes 34.2%). With the rescue3 tokens: 96.5%
+                  / 95.2% (query 93.4% / 91.4%; all 87.9%). Faithful syntons hold 12.7% of gold genes against 17.0% of
+                  all query genes: BGC genes are depleted in syntons, consistent with excess ~0 and with the size-class
+                  pattern (F1 above control for regions of 1-10 genes, below for 11+).
+2026-11-13 09:23  Zenodo download finished (all six tables, aria2c OK; ST1 9,232,066,176 bytes). md5 check runs in the
+                  inventory job.
+2026-11-13 09:41  DPANN FAITHFUL RESULT (job 91696, COMPLETED). Families 4.8 min; neighbours 2,352 s (12,303 replicons);
+                  their cells 46 min in total; pipeline wall 51 min on 24 CPUs; peak RSS 5.5 GB (cell 5). Contexts:
+                  746,434 clusters over the 1,234,248 genes on replicons >= 48 genes. 58,315 pairs tested, 3,091 with
+                  q < 1e-5, 42 with score > 80 (k_obs 5-12); q rule removes none. 260 syntons (29 genomes, 593 genes =
+                  0.017%; 111 of them on replicons < 48 genes), size median 2, max 5. Even scorecard: summed DF+TXSS
+                  excess -0.0003, F1 0 / 0 / 0, ribosomal 0 recovered / 0 resolved, Parvarchaeaceae 0 / 0. Paired:
+                  vs DH -0.427 [-0.450, -0.404]; vs word method -0.609 [-0.635, -0.583]. Expectation (summed .10-.30)
+                  refuted low.
+2026-11-13 09:41  Job 92100 submitted: DPANN matched variant (rescue3 tokens). Spacedust matched (91858) in its post step.
+2026-11-13 09:41  SPACEDUST MATCHED VARIANT (job 91858): rescue3 tokens as representative_50. 3,610,427 context clusters;
+                  524,648 pairs tested, 88,450 with score > 80 (q rule removes none); Jaccard pairs 177.7 M (faithful
+                  1.9 M), so merge_shards (row-by-row Python) took 457 s. 503,559 syntons (all 1,317 genomes; 94,250
+                  synton families), 36.4% of genes, 33.9% of query genes; size median 2, q90 5, q99 12, max 43.
+                  source207 F1 .3808, random .3267, excess +.054 [+.018, +.090]; 169 regions overlap a synton; median
+                  boundary precision 1.0 and coverage .30 among them. vs engine dExcess -.130 [-.168, -.090]; vs native
+                  Spacedust -.011 [-.053, +.031] (dF1 -.296). Cells 33.5 min, peak RSS 17.5 GB.
+2026-11-13 09:42  Paired against transfer_spacedust per-region frames (copied read-only into results/transfer_spacedust_
+                  copies; same paired function, 10,000 draws, seed 17): faithful - P2 V-coh0.1 dF1 -.291 [-.334, -.250],
+                  dExcess -.051 [-.093, -.010]; matched - P2 V-coh0.1 dF1 -.100 [-.131, -.070], dExcess +.005 [-.026,
+                  +.035]; matched - faithful dF1 +.191 [+.150, +.233], dExcess +.056 [+.017, +.098]; matched - P2 CC1
+                  dExcess -.061 [-.093, -.030]; matched - P2 CC2 -.088 [-.125, -.053].
+2026-11-13 09:42  Job 92108 (inventory + universe) failed in 36 s: `rows` is a DuckDB keyword (alias renamed). md5 of all
+                  six Zenodo tables matched the record before the failure. Resubmitted as 92115.
+2026-11-13 09:43  REPORT.txt draft v1 written (Spacedust final; DPANN matched and the RefSeq universe pending).
+2026-11-13 09:47-10:26  Session cut off by an API authentication error (coordinator message); jobs kept running.
+2026-11-13 10:26  Resumed. Job 92115 COMPLETED (38 min). Zenodo inventory (50 s): all six md5 equal the record. ST1
+                  123,095,149 gene rows (genes on replicons >= 48 genes), 44,612,331 distinct WP, 8,812,981 fam50,
+                  18,106,016 context clusters (12,623,549 singletons); gembase genome codes seen as context
+                  representatives 29,517 / as fam50 representatives 31,521; 8,316 species codes; one release code (0523).
+                  ST2 3,088,488 tested pairs, 1,034,357 with score > 80 (paper: 1.03 M), all with q < 1e-5 (their own
+                  data: paper rule = code rule). ST3 14,985,590 syntons (paper 15 M), 49,676,729 gene rows, median 3,
+                  q90 6, max 35 genes. ST4 778,526 synton families (paper 779 k). ST7 194 rows, 83 subtypes.
+                  Universe (37.5 min, 38.6 GB peak): 34,719 assemblies (33,060 current + 1,659 historical; 8 candidates
+                  without a feature table on the FTP), 131,406,988 protein genes, 78,200 replicons, 47,290,207 distinct
+                  protein accessions written to proteins_wp.faa.gz (none missing); 131,117,606 genes on replicons >= 48
+                  genes; downloaded 33.8 GB (gz).
+2026-11-13 10:27  Job 92436 submitted (bs_match): gembase genome code -> assembly mapping from singleton context clusters
+                  (WPs carried by <= 20 candidate assemblies). Submitted before re-reading the cluster rules after the
+                  resumption; re-read both files at 10:28 (job complies: -A/-p/--qos/-c 24/-J/-o/--exclude only).
+                  Final joint scoring waits for 92100 (two-job cap; chaining it now would be a third job).
+2026-11-13 10:27  DPANN MATCHED RESULT (job 92100, COMPLETED; cells 45.3 min, peak 5.6 GB). rescue3 tokens: 557,905
+                  context clusters (faithful 746,434: broader families make far flanks alike, so more collapse); 79,791
+                  pairs tested, 13,224 with q < 1e-5, 15 with score > 80. 218 syntons (159 genomes, 481 genes, 109 on
+                  replicons < 48 genes). Even scorecard: summed -.0005, F1 0 / 0 / 0, ribosomal 0 / 0, Parvarchaeaceae
+                  0 / 0. vs DH -.428 [-.450, -.405]; vs word -.609 [-.635, -.583].
+2026-11-13 10:27  Job 92439 submitted (bs_final: joint scoring, Spacedust faithful + matched with the word outputs present
+                  in transfer_spacedust/results (P2 V-coh0.1, CC1, CC2; P1 not yet written), DPANN faithful + matched).
+2026-11-13 10:28  DIAGNOSTIC (no gold): score > 80 is out of reach on DPANN. Among pairs with q < 1e-5 the score median /
+                  q99 is 38 / 83 (faithful) and 45 / 72 (matched) on DPANN, against 67 / 135 and 68 / 134 on Spacedust.
+                  Mechanism: lambda sums 2 nB_r / L_r over the replicon of each context representative; the gene-
+                  weighted median replicon (>= 48 genes) holds 104 genes on DPANN and 3,661 on Spacedust, so one copy of
+                  B adds ~35x more expectation per representative on DPANN (log2 FE ~5 bits lower at equal k_obs).
+                  Pairs passing the paper's q < 1e-5 alone: 3,091 / 13,224 (not scored; it would be a post hoc variant).
+2026-11-13 10:29  Job 92439 (final joint scoring, 50 s): every number equals the per-run scoring; Spacedust paired values
+                  equal the 09:42 local computation. Added: faithful - P2 CC1 dExcess -.117 [-.158, -.077], faithful -
+                  P2 CC2 -.145 [-.188, -.102]. Among regions with an overlapping synton: median boundary precision 1.00
+                  (both), coverage .20 (faithful) / .30 (matched), best span 3. transfer_spacedust P1 not yet written,
+                  so the word comparison uses P2 (its predeclared first output).
+2026-11-13 10:29  Job 92436 (gembase mapping, 38 s): 27,814 genome codes carry singleton context clusters; 26,804 have
+                  WPs held by <= 20 candidate assemblies; 25,747 map to one assembly uniquely with >= 95% of those WPs
+                  found in it (532 tied, median gene-order Spearman .994); 26,498 distinct best assemblies. Output
+                  ws_refseq_synton/meta/gembase_to_assembly.{parquet,json}.
+2026-11-13 10:31  REPORT.txt final written. All jobs of this workstream finished; none running.

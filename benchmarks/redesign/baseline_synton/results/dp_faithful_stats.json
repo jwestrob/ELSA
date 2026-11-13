@@ -1,0 +1,122 @@
+{
+ "run": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/baseline_synton/runs/dp_faithful",
+ "genes": 3585303,
+ "usable_context": {
+  "genes_on_replicons_ge48": 1234248,
+  "frac_on_replicons_ge48": 0.34425207576598127,
+  "genes_nonempty_window": 1234248,
+  "frac_nonempty_window": 0.34425207576598127,
+  "genes_full_window": 643704,
+  "frac_full_window": 0.17953963723568134,
+  "replicons": 231477,
+  "replicons_ge48": 12303
+ },
+ "families": {
+  "fam50": 1367944,
+  "fam50_singletons": 933590,
+  "fam50_size_quantiles": [
+   1.0,
+   1.0,
+   1.0,
+   2.0,
+   5.0,
+   24.0,
+   1382.0
+  ]
+ },
+ "context_clusters": {
+  "genes": 1234248,
+  "context_clusters": 746434,
+  "fam50_with_contexts": 528479,
+  "per_fam50_quantiles": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   2.0,
+   8.0,
+   318.0
+  ],
+  "fam50_with_1_context": 448035
+ },
+ "associations": {
+  "tested_pairs": 58315,
+  "pairs_q_lt_005": 58310,
+  "pairs_q_lt_1e5": 3091,
+  "significant_score_gt80": 42,
+  "significant_score_gt80_and_q_ge_1e5": 0,
+  "k_obs_of_significant_quantiles": [
+   5.0,
+   6.0,
+   7.0,
+   9.0,
+   9.0,
+   12.0,
+   12.0
+  ],
+  "min_k_obs_significant": 5,
+  "k_obs_quantiles": [
+   2.0,
+   2.0,
+   2.0,
+   2.0,
+   3.0,
+   8.0,
+   72.0
+  ]
+ },
+ "links": {
+  "rows": 641,
+  "distinct_gene_pairs": 641
+ },
+ "syntons": {
+  "syntons": 260,
+  "genes_in_syntons": 593,
+  "frac_genes_in_syntons": 0.0001653974573418202,
+  "genes_in_intervals": 602,
+  "frac_genes_in_intervals": 0.0001679077054296387,
+  "query_genes": 0,
+  "query_genes_in_syntons": 0,
+  "frac_query_genes_in_syntons": 0.0,
+  "frac_query_genes_in_intervals": 0.0,
+  "size_quantiles": [
+   2.0,
+   2.0,
+   2.0,
+   2.0,
+   3.0,
+   5.0,
+   5.0
+  ],
+  "span_quantiles": [
+   2.0,
+   2.0,
+   2.0,
+   2.0,
+   3.0,
+   5.0,
+   5.0
+  ],
+  "size_hist": {
+   "2": 203,
+   "3": 48,
+   "4": 2,
+   "5": 7
+  },
+  "syntons_with_hole": 9,
+  "query_syntons": 0,
+  "query_size_quantiles": [],
+  "query_span_quantiles": [],
+  "genomes_with_syntons": 29,
+  "syntons_on_replicons_lt48": 111
+ },
+ "synton_families": {
+  "families": 25,
+  "syntons": 260,
+  "syntons_per_family_mean": 10.4
+ },
+ "paperq": {
+  "pairs_removed": 0
+ },
+ "seconds": 2.9
+}

@@ -1,0 +1,152 @@
+{
+ "run": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/baseline_synton/runs/sd_faithful",
+ "genes": 4257531,
+ "usable_context": {
+  "genes_on_replicons_ge48": 4251358,
+  "frac_on_replicons_ge48": 0.99855009863698,
+  "genes_nonempty_window": 4251358,
+  "frac_nonempty_window": 0.99855009863698,
+  "genes_full_window": 4167886,
+  "frac_full_window": 0.978944369400951,
+  "replicons": 2061,
+  "replicons_ge48": 1739
+ },
+ "families": {
+  "fam50": 2732673,
+  "fam50_singletons": 2287209,
+  "fam50_size_quantiles": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   2.0,
+   10.0,
+   687.0
+  ]
+ },
+ "context_clusters": {
+  "genes": 4251358,
+  "context_clusters": 4166508,
+  "fam50_with_contexts": 2728740,
+  "per_fam50_quantiles": [
+   1.0,
+   1.0,
+   1.0,
+   1.0,
+   2.0,
+   10.0,
+   604.0
+  ],
+  "fam50_with_1_context": 2300434
+ },
+ "associations": {
+  "tested_pairs": 324828,
+  "pairs_q_lt_005": 324732,
+  "pairs_q_lt_1e5": 308600,
+  "significant_score_gt80": 93179,
+  "significant_score_gt80_and_q_ge_1e5": 0,
+  "k_obs_of_significant_quantiles": [
+   3.0,
+   3.0,
+   4.0,
+   5.0,
+   8.0,
+   21.0,
+   159.0
+  ],
+  "min_k_obs_significant": 2,
+  "k_obs_quantiles": [
+   2.0,
+   2.0,
+   2.0,
+   3.0,
+   4.0,
+   12.0,
+   159.0
+  ]
+ },
+ "links": {
+  "rows": 491292,
+  "distinct_gene_pairs": 491292
+ },
+ "syntons": {
+  "syntons": 167053,
+  "genes_in_syntons": 417363,
+  "frac_genes_in_syntons": 0.09802935081388721,
+  "genes_in_intervals": 423684,
+  "frac_genes_in_intervals": 0.09951401410817678,
+  "query_genes": 67148,
+  "query_genes_in_syntons": 11403,
+  "frac_query_genes_in_syntons": 0.1698189074879371,
+  "frac_query_genes_in_intervals": 0.17239530589146362,
+  "size_quantiles": [
+   2.0,
+   2.0,
+   2.0,
+   3.0,
+   4.0,
+   6.0,
+   20.0
+  ],
+  "span_quantiles": [
+   2.0,
+   2.0,
+   2.0,
+   3.0,
+   4.0,
+   7.0,
+   21.0
+  ],
+  "size_hist": {
+   "2": 116764,
+   "3": 31940,
+   "4": 11011,
+   "5": 3932,
+   "6": 1746,
+   "7": 743,
+   "8": 374,
+   "9": 248,
+   "10": 130,
+   "11": 53,
+   "12": 35,
+   "13": 33,
+   "14": 19,
+   "15": 9,
+   "16": 5,
+   "17": 7,
+   "19": 2,
+   "20": 2
+  },
+  "syntons_with_hole": 6140,
+  "query_syntons": 4240,
+  "query_size_quantiles": [
+   2.0,
+   2.0,
+   2.0,
+   3.0,
+   4.0,
+   8.0,
+   14.0
+  ],
+  "query_span_quantiles": [
+   2.0,
+   2.0,
+   2.0,
+   3.0,
+   4.0,
+   8.0,
+   14.0
+  ],
+  "genomes_with_syntons": 1297,
+  "syntons_on_replicons_lt48": 37
+ },
+ "synton_families": {
+  "families": 59235,
+  "syntons": 167053,
+  "syntons_per_family_mean": 2.820173883683633
+ },
+ "paperq": {
+  "pairs_removed": 0
+ },
+ "seconds": 5.4
+}

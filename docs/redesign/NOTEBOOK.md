@@ -2267,3 +2267,36 @@ reported with the short-contig caveat (their contexts span ±24 genes); their 32
 set prepared as a locked public test, with no method run on it until the configuration is frozen.
 The agent first verifies their method from the paper and repository, since our description is
 second-hand.
+
+## 2026-11-13 08:19 UTC — Family-free words, final: alignment lists equal embedding lists; junction phrases leave the ribosomal bar open (workstream `ws_vocab2b`; `benchmarks/redesign/vocab_lists/REPORT.txt`)
+
+Even genomes against the token engine's nested reading; predeclared with four amendments, each
+before the numbers it governs.
+
+- **Verdict unchanged: neither.** Selected output (z >= 10.6 lists, genome groups, nested
+  reading): summed excess 0.4749, +0.048 [+0.027, +0.069]; F1 0.810 / 0.602 / 0.470; ribosomal
+  1,675 recovered / 1,172 resolved (bar 1,400); Parvarchaeaceae 114.
+- **Alignment-list control (required arm): MMseqs2 all-against-all hits used as lists, everything
+  else identical, score 0.4683, +0.041 [+0.021, +0.062] over the reference; level with the
+  calibrated embedding lists (-0.007 [-0.026, +0.014]) and +0.031 [+0.013, +0.050] above
+  depth-1,000 embedding lists.** F1 0.819 / 0.605 / 0.475; ribosomal 1,622 / 1,079;
+  Parvarchaeaceae 78. The gain over families is the absence of a hard partition, which alignment
+  hits supply as well as embeddings do. Lists with one match per genome recover all 114
+  Parvarchaeaceae runs (depth-limited lists: 64 embedding, 78 alignment).
+- **Junction phrases (diagnostic, declared in amendment 3): recover all 1,686 runs and resolve
+  fewer** (z lists 1,138 against 1,172; group lists 1,131 against 1,007); the agent's expected
+  gain of 200-400 was wrong. This reading joins words where the junction's gene pair passes the
+  merge test; it is not the cohesion reading used with families.
+- **Diagnosis corrected.** Depth-limited lists fragment long neighbourhoods (322 of 598 unresolved
+  runs under-covered). The z lists do the opposite: words span the ribosomal locus and continue
+  into its conserved flanks (420 of 503 unresolved runs below 0.8 precision). Recurrence is the
+  only boundary signal the objective has. A word's aligned set shrinks with length (median 224
+  spans at 2 genes, 9 at 10, 2 at 20); at 47% of word junctions inside ribosomal runs the gene
+  pair is supported (median 6 groups) while the two words meet in no other group.
+- CRISPR-Cas: synteny-retention arm 0.517, +0.038 [+0.028, +0.049] over the reference; its
+  excess (0.057) trails the reference (0.080) because higher coverage lifts its control.
+- Typing: mean-pooled word-vector classes AMI 0.679; leave-group-out nearest neighbour 0.954
+  (DefenseFinder type) and 0.602 (CRISPR-Cas subtype), under the gold-locus vectors (0.970 / 0.720).
+- Cost: 6-9 min per full run on 64 threads; lists 2-5 min.
+Open: a boundary signal for the parse (cohesion as a cut at junctions; gene-level lists kept at a
+word's ends); alignment and z lists with the synteny unit, which were tested separately.

@@ -1,0 +1,209 @@
+{
+ "DH": {
+  "summary_even": {
+   "CRISPRCasTyper": {
+    "n": 1899,
+    "f1": 0.479418481084168,
+    "control": 0.3993681278261974,
+    "excess": 0.08005035325797057,
+    "median_bprec_covered": 0.4,
+    "covered50": 0.889942074776198,
+    "localized": 0.4291732490784623,
+    "median_best_span": 4.0
+   },
+   "DefenseFinder": {
+    "n": 1261,
+    "f1": 0.7439475579523818,
+    "control": 0.4390331484305228,
+    "excess": 0.30491440952185894,
+    "median_bprec_covered": 0.75,
+    "covered50": 0.9238699444885012,
+    "localized": 0.7470261697065821,
+    "median_best_span": 3.0
+   },
+   "TXSScan": {
+    "n": 404,
+    "f1": 0.5479943434588632,
+    "control": 0.4258884914071254,
+    "excess": 0.1221058520517378,
+    "median_bprec_covered": 0.4444444444444444,
+    "covered50": 0.9900990099009901,
+    "localized": 0.43564356435643564,
+    "median_best_span": 9.0
+   },
+   "summed_DF_TXSS_excess": 0.42702026157359674
+  },
+  "summary_odd": {
+   "CRISPRCasTyper": {
+    "n": 1921,
+    "f1": 0.4786078177877231,
+    "control": 0.40012511562738523,
+    "excess": 0.07848270216033786,
+    "median_bprec_covered": 0.4,
+    "covered50": 0.8865174388339406,
+    "localized": 0.4299843831337845,
+    "median_best_span": 4.0
+   },
+   "DefenseFinder": {
+    "n": 1211,
+    "f1": 0.7429209516389708,
+    "control": 0.4390438637811891,
+    "excess": 0.3038770878577817,
+    "median_bprec_covered": 0.75,
+    "covered50": 0.9372419488026424,
+    "localized": 0.7349298100743188,
+    "median_best_span": 3.0
+   },
+   "TXSScan": {
+    "n": 400,
+    "f1": 0.5441631999561686,
+    "control": 0.4301271188919485,
+    "excess": 0.11403608106422009,
+    "median_bprec_covered": 0.42857142857142855,
+    "covered50": 0.97,
+    "localized": 0.375,
+    "median_best_span": 9.0
+   },
+   "summed_DF_TXSS_excess": 0.4179131689220018
+  },
+  "ribo_all": {
+   "runs": 1686,
+   "recovered": 1686,
+   "resolved": 1512,
+   "median_precision_recovered": 0.96,
+   "median_ext_left_recovered": 0.0,
+   "median_ext_right_recovered": 0.0,
+   "median_fragments": 2.0,
+   "parvarchaeaceae": "114/114",
+   "parvarchaeaceae_resolved": "113/114",
+   "median_coverage": 1.0
+  },
+  "ribo_odd": {
+   "runs": 848,
+   "recovered": 848,
+   "resolved": 769,
+   "median_precision_recovered": 0.96,
+   "median_ext_left_recovered": 0.0,
+   "median_ext_right_recovered": 0.0,
+   "median_fragments": 2.0,
+   "parvarchaeaceae": "55/55",
+   "parvarchaeaceae_resolved": "55/55",
+   "median_coverage": 1.0
+  },
+  "loci": {
+   "loci": 650438,
+   "genes_covered": 2563690,
+   "median_span": 4.0,
+   "mean_span": 5.913164667500976
+  },
+  "per_instance_equal_stored": {
+   "f1": true,
+   "control_mean_f1": true,
+   "coverage": true
+  }
+ },
+ "R1": {
+  "summary_even": {
+   "CRISPRCasTyper": {
+    "n": 1899,
+    "f1": 0.42597492392758446,
+    "control": 0.35395907822185607,
+    "excess": 0.07201584570572843,
+    "median_bprec_covered": 0.3333333333333333,
+    "covered50": 0.889942074776198,
+    "localized": 0.3417588204318062,
+    "median_best_span": 5.0
+   },
+   "DefenseFinder": {
+    "n": 1261,
+    "f1": 0.6877505391956683,
+    "control": 0.4015739309783372,
+    "excess": 0.2861766082173311,
+    "median_bprec_covered": 0.6666666666666666,
+    "covered50": 0.9238699444885012,
+    "localized": 0.6653449643140364,
+    "median_best_span": 3.0
+   },
+   "TXSScan": {
+    "n": 404,
+    "f1": 0.408695078375557,
+    "control": 0.3573856480703263,
+    "excess": 0.051309430305230705,
+    "median_bprec_covered": 0.2727272727272727,
+    "covered50": 0.9900990099009901,
+    "localized": 0.18564356435643564,
+    "median_best_span": 14.0
+   },
+   "summed_DF_TXSS_excess": 0.3374860385225618
+  },
+  "summary_odd": {
+   "CRISPRCasTyper": {
+    "n": 1921,
+    "f1": 0.425386252636923,
+    "control": 0.3529165782327256,
+    "excess": 0.0724696744041974,
+    "median_bprec_covered": 0.3333333333333333,
+    "covered50": 0.8865174388339406,
+    "localized": 0.3331598125976054,
+    "median_best_span": 5.0
+   },
+   "DefenseFinder": {
+    "n": 1211,
+    "f1": 0.6796351164667971,
+    "control": 0.3957640021721439,
+    "excess": 0.28387111429465317,
+    "median_bprec_covered": 0.6666666666666666,
+    "covered50": 0.9372419488026424,
+    "localized": 0.639141205615194,
+    "median_best_span": 3.0
+   },
+   "TXSScan": {
+    "n": 400,
+    "f1": 0.4085967164064638,
+    "control": 0.36560048230791325,
+    "excess": 0.042996234098550495,
+    "median_bprec_covered": 0.26666666666666666,
+    "covered50": 0.97,
+    "localized": 0.1625,
+    "median_best_span": 14.0
+   },
+   "summed_DF_TXSS_excess": 0.32686734839320364
+  },
+  "ribo_all": {
+   "runs": 1686,
+   "recovered": 1686,
+   "resolved": 704,
+   "median_precision_recovered": 0.7419354838709677,
+   "median_ext_left_recovered": 3.0,
+   "median_ext_right_recovered": 3.0,
+   "median_fragments": 1.0,
+   "parvarchaeaceae": "114/114",
+   "parvarchaeaceae_resolved": "13/114",
+   "median_coverage": 1.0
+  },
+  "ribo_odd": {
+   "runs": 848,
+   "recovered": 848,
+   "resolved": 378,
+   "median_precision_recovered": 0.75,
+   "median_ext_left_recovered": 2.5,
+   "median_ext_right_recovered": 3.0,
+   "median_fragments": 1.0,
+   "parvarchaeaceae": "55/55",
+   "parvarchaeaceae_resolved": "7/55",
+   "median_coverage": 1.0
+  },
+  "loci": {
+   "loci": 419861,
+   "genes_covered": 2563690,
+   "median_span": 4.0,
+   "mean_span": 6.106044619528844
+  },
+  "per_instance_equal_stored": {
+   "f1": true,
+   "control_mean_f1": true,
+   "coverage": true
+  }
+ },
+ "reproduced": true
+}

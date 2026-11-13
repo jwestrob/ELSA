@@ -1,0 +1,34 @@
+{
+ "pool": {
+  "grp": {
+   "reading": "V-nest",
+   "score": [
+    2,
+    0.44507484400104746
+   ]
+  },
+  "z10.6": {
+   "reading": "V-nest",
+   "score": [
+    2,
+    0.48728634862642706
+   ]
+  },
+  "z13.7": {
+   "reading": "V-nest",
+   "score": [
+    1,
+    0.5419200733833828
+   ]
+  }
+ },
+ "ranking": [
+  "z10.6",
+  "grp",
+  "z13.7"
+ ],
+ "main": "z10.6",
+ "rule": "number of odd conditions met, then odd summed excess; ties keep grp",
+ "note": "recomputed with the amendment_2 pool {grp, z10.6, z13.7}; the job's select step used a stale pool {ctx, z10.6, z13.7} (selection_stale_pool.json); same winner",
+ "written": "2026-11-13T05:59:36Z"
+}

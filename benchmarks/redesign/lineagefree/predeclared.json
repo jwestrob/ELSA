@@ -1,0 +1,61 @@
+{
+ "workstream": "lineagefree",
+ "written_utc": "2026-11-12T23:59:30Z",
+ "stage": "main, written before any similarity, group, engine run or score of this workstream",
+ "question": "Replace the GTDB genus as the recurrence engine's lineage unit by a unit derived from the pipeline's own data (family content or embedding best matches) and show whether results hold.",
+ "constructions": {
+  "groups": "average-linkage clusters of 1 - S cut at 1 - theta (S symmetrised by the mean of both directions); the cluster is the lineage; L = number of distinct clusters among genomes carrying the pair",
+  "weights": "w(g) = 1 / #{h : S(g, h) >= theta} (h = g included); L_eff = sum of w over genomes carrying the pair; every rule, landscape level and module weight that uses L uses L_eff",
+  "degenerate": "every genome its own lineage (L = G)"
+ },
+ "similarities": {
+  "fam": "Jaccard index of the two genomes' rescue3 family sets (primary family-based similarity)",
+  "emb": "mean over A's genes of the best-match zca10 cosine in B (entries below the stored floor 0.32 count as 0.32), mean of both directions (primary embedding-based similarity)",
+  "descriptive_only": "family containment and the homolog-level (>= 0.5) mean cosine are computed and described; they are not tested unless the primary similarities have no usable internal threshold"
+ },
+ "threshold_criterion": "fixed in an amendment written after the similarity distributions and before any engine run with a data-derived unit; it uses only the similarity distributions (no taxonomy, no gold). The genus relation (AMI, group count vs 922 genera) is computed only after the thresholds are fixed and is descriptive.",
+ "comparisons": "token engine (rescue3 families, w 3, genome-order null, 3 permutations, the engine's rule selection at FDR 0.01) with each unit in place of genus; the genus map fed through the same --lineage-map code must reproduce the deployed result exactly (significant_pairs, boundary_support, loci). Readings: R1 (conserved@2, the default single reading) and DH (level-2 locus + rule-H core: Louvain res 0.3 seed 17 on J x log2 max(L,2), trimming f 0.5). Even genomes (genome_code % 2 == 0) for the verdict, paired genome bootstrap 2,000 draws seed 17 against the genus-based run of the same reading; ribosomal check on all 1,686 runs.",
+ "replaces_genus_if": {
+  "summed_DF_TXSS_excess_DH": "|A - B| <= 0.01 on even genomes (point estimate; paired 95% interval reported)",
+  "F1": "no caller's even-genome DH F1 lower than the genus-based DH by more than 0.01",
+  "ribosomal": "recovered >= 1,650, Parvarchaeaceae recovered >= 110 of 114, resolved within 3% of the genus-based value (1,512 -> >= 1,467 and <= 1,557)"
+ },
+ "token_free": "the same conditions for softrec round 2 (rw1000_e50, rule selection at FDR 0.01, validated families Leiden r2000, Louvain res 0.3, DH) with own-lineage exclusion and lineage counts on the data-derived groups, against the genus-based round-2 output (DH summed .4669, F1 .802/.500/.442, resolved 1,263)",
+ "refuters": "the reading 'the data-derived unit replaces the genus' is refuted by any failed condition above; the reading 'the unit matters' is refuted if the degenerate unit (every genome its own lineage) also meets the conditions",
+ "amendment_1": {
+  "written_utc": "2026-11-13T00:07:00Z",
+  "seen_before_writing": "similarity distributions only (job 86526: describe_*.json) and the genus-map reproduction of the deployed engine (job 86553: engine outputs and R1 / DH loci and per-instance scores identical to the deployed ones). No data-derived unit has been run through the engine; no group has been compared with taxonomy.",
+  "internal_criterion": "theta = the deepest interior minimum (antimode) of a Gaussian KDE of the genomes' nearest-neighbour similarity (each genome's largest similarity to another genome; mean-symmetrised S), usable if its depth (lower flanking maximum / minimum) is >= 1.4x (0.15 log10).",
+  "thresholds": {
+   "emb (emb_mean, primary embedding)": "nearest-neighbour antimode 0.753, depth 1.50x -> theta 0.753 (average linkage gives ~1,960 groups)",
+   "emb_hom (homolog-level mean cosine >= 0.5, AAI analogue; secondary embedding similarity, added because it has the deepest gap)": "nearest-neighbour antimode 0.894, depth 2.67x (pairwise density above q99 also has its minimum at 0.917) -> theta 0.894",
+   "fam (fam_jac, primary family)": "no usable antimode (deepest 0.566, depth 1.21x; the pairwise density above q99 has none; family containment none either) -> theta chosen on ODD genomes over the ladder below (allowed by the brief), separately for groups and weights"
+  },
+  "odd_selection": "score = (number of conditions met on odd genomes against the genus run: summed DH excess not below -0.01, every caller's DH F1 not below -0.01, ribosomal on the 848 odd runs with recovered >= 830, Parvarchaeaceae recovered >= 54 and resolved within 3% of genus; then the odd summed DH excess). Selection recorded in NOTEBOOK.txt before any even-genome number of a data-derived unit is read; the job logs print odd numbers only and odd numbers are written to a separate file.",
+  "summed_condition_interpretation": "the replacement condition guards against loss: a unit whose summed excess exceeds the genus by more than 0.01 is reported as exceeding and still counts as meeting the condition; the literal |difference| <= 0.01 is reported alongside.",
+  "ladders (task 4 sensitivity; every point run on all genomes, groups = average linkage, weights = 1/#{S >= theta})": {
+   "fam_jac": [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+   "emb_mean": [0.5, 0.55, 0.6, 0.65, 0.7, 0.753, 0.8, 0.85, 0.9],
+   "emb_hom": [0.75, 0.8, 0.85, 0.894, 0.92, 0.95]
+  },
+  "verdict_units (even genomes)": ["emb_mean groups 0.753", "emb_mean weights 0.753", "emb_hom groups 0.894", "emb_hom weights 0.894", "fam_jac groups (odd-selected theta)", "fam_jac weights (odd-selected theta)", "genome (degenerate)"],
+  "token_free_units": "genus (reproduction), emb_mean groups 0.753, emb_hom groups 0.894, fam_jac groups (odd-selected theta), genome. The token-free variant needs groups (own-lineage exclusion in the lists); the weight construction is not run there.",
+  "readings_given_before_numbers": "Expectation: the embedding gap units (species-like, ~1,900 groups against 922 genera) count more units per pair, so the engine's rule selection may move to a stricter rule; I expect the nested reading's summed excess within 0.01 of the genus and the ribosomal check to hold, because the landscape is dominated by pairs conserved across many genera. Refuted by any verdict unit failing a condition. The degenerate unit is expected to fail (clonal Parvarchaeum, 190 genomes, inflates L); refuted if it meets all conditions."
+ },
+ "amendment_2": {
+  "written_utc": "2026-11-13T00:43:00Z",
+  "seen_before_writing": "odd-genome numbers of all 47 ladder runs (results/ladder_odd.txt); no even-genome number of any data-derived unit; groups vs GTDB description (results/groups_vs_taxonomy.json: the internal-criterion units match GTDB species, AMI 0.904 emb_mean 0.753 and 0.963 emb_hom 0.894).",
+  "odd_finding": "On odd genomes the internal-criterion (species-gap) units fail the CRISPRCasTyper F1 condition (-0.029 to -0.037) and the ribosomal condition (713-717 resolved against 769); the fam_jac odd selection lands at much coarser units than the genus. Significant pairs rise roughly linearly with the number of units for every similarity (no plateau in significant pairs or covered genes), so the engine-plateau criterion has no plateau to find.",
+  "odd_selections (score = conditions met on odd, then odd summed DH excess)": {
+   "fam_jac groups": "theta 0.2 (232 groups; 3 of 3 odd conditions; odd summed .4472 vs genus .4179)",
+   "fam_jac weights": "theta 0.4 (N_eff 1,363; 1 of 3: no weight theta meets more than one odd condition; odd summed .4737)",
+   "emb_mean groups (added: secondary)": "theta 0.55 (562 groups; 3 of 3; .4556)",
+   "emb_mean weights (added: secondary)": "theta 0.55 (N_eff 443; 2 of 3; .4568)",
+   "emb_hom groups (added: secondary)": "theta 0.75 (642 groups; 3 of 3; .4083)",
+   "emb_hom weights (added: secondary)": "theta 0.75 (N_eff 556; 2 of 3; .4427)"
+  },
+  "added_verdict_units": "the four emb odd-selected units above, labelled 'odd-selected (amendment_2)'; the predeclared internal-criterion units remain the primary embedding verdict.",
+  "token_free_added": "fam_jac groups 0.2, emb_mean groups 0.55, emb_hom groups 0.75 (queued after the four running token-free jobs, at most four at once).",
+  "readings_given_before_even_numbers": "(1) The species-gap units fail on even as on odd (CRISPR-Cas F1 and ribosomal resolution); refuted if any of them meets all three conditions on even. (2) The odd-selected coarse group units (fam_jac 0.2, emb_mean 0.55, emb_hom 0.75) meet all three on even; refuted if any fails one. (3) The weight construction fails the CRISPR-Cas condition on even; refuted if a selected weight unit has CCT dF1 >= -0.01. (4) The degenerate unit fails; refuted if it meets all three."
+ }
+}

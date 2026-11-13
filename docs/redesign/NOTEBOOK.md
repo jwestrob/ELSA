@@ -1804,3 +1804,77 @@ landscape) against the token engine's nested reading; references reproduced exac
   random-placement control (DefenseFinder +0.041), so summed excess falls 0.038 against the base.
   Ungated, the same statistic costs summed -0.11 to -0.16 and drops resolved to 1,274-1,376.
   126 of 209 missed even loci still have no support.
+
+## 2026-11-13 01:59 UTC — Taxonomy-free lineage unit (workstream `lineagefree`; `benchmarks/redesign/lineagefree/REPORT.txt`)
+
+Question: can the GTDB genus be replaced by a unit derived from the pipeline's own data.
+Predeclared 23:59 UTC 12 Nov, amendments before each stage; the genus map through the modified
+copies reproduces the deployed token and token-free results exactly. Even genomes, differences
+against the genus run of the same method.
+
+- **Yes, with data-derived genome groups coarser than genera; the threshold needs calibration.**
+  Token engine, nested reading: shared-family Jaccard 0.2 (232 groups) +0.017 [+0.002, +0.033]
+  summed excess, 1,487 resolved; embedding mean best-match cosine 0.55 (562 groups) +0.033
+  [+0.020, +0.046], TXSScan F1 +0.027, 1,477 resolved; homolog-level cosine 0.75 (642 groups)
+  -0.009 [-0.020, +0.003], 1,476 resolved. All three meet the predeclared conditions.
+- **The internal criterion I predeclared picks the wrong scale.** The antimode of nearest-genome
+  similarity cuts at species (1,880-1,965 groups; AMI with GTDB species 0.90-0.96) and fails
+  (CRISPR-Cas F1 -0.025 to -0.043, ribosomal resolved -6.6 to -6.9%). The engine shows no
+  plateau either: significant pairs rise steadily with the number of units (89k at 172 groups,
+  163k at 922 genera, 288k at 1,965, 548k with every genome separate).
+- **Every genome its own lineage fails** (F1 -0.094 / -0.019 / -0.098, 1,364 resolved), and so do
+  random partitions with genus group sizes (post hoc control): the grouping must hold related
+  genomes together. **Per-genome weights fail at every threshold** (CRISPR-Cas F1 -0.020 or worse).
+- Embedding-only round 2: only the homolog-level groups at 0.75 replace the genus (+0.019
+  [+0.006, +0.032], 1,271 resolved).
+- **Mechanism: the null shuffles gene order within each genome independently, so it cannot see
+  order inherited within a clade.** Finer units turn shared ancestry into recurrence.
+- Passing band on tokens: about 170-650 groups for all three similarities, calibrated on DPANN
+  odd genomes. A new dataset or model needs the same calibration or a scale rule; none exists.
+- `genome_groups.py` reads no taxonomy (similarity 15-105 s, grouping about 20 s). Taxonomy is
+  read to run the pipeline in three places (engine lineage, softrec lineage and list exclusion,
+  pair statistics for token-free Louvain weights); each takes a lineage map in the copies.
+Open: a unit with no dataset-specific threshold (workstream `ws_context`, launched below).
+
+## 2026-11-13 01:59 UTC — Direction from Jacob: rethink the method; six exploratory workstreams
+
+After round 4 and the CRISPR-Cas fix (parity with tokens through patches), Jacob: "i think this
+requires a bit of a larger scale rethink of what we're doing here. i want you to be expansive.
+... i'm thinking we need a new algorithm, or at least a substantial new method to get what we
+want here." On gLM2: "we can add glm2 as an ablation once standard esm embeddings win." Then:
+"i authorize your exploration in whatever capacity you feel like exploring ... be creative.
+don't be afraid to take big swings. the more novel the algorithm and the more interesting your
+synthesis of ideas, the stronger the method and the paper will be."
+
+Reading that came out of the discussion: every round so far (tokens or neighbour lists) is one
+design: decide who is homologous, count adjacent pairs across lineages, test each pair. That
+uses embeddings as a homology detector, the one job alignment already does well. What an
+embedding gives that an alignment does not: a description of one protein in a shared coordinate
+system, hence (1) similarity without homology (kinds of protein; the Cas lists, the critic on
+never-seen pairs), (2) arithmetic (averages, expected neighbours, pooled weak evidence), (3)
+sets as objects (a locus as a point), (4) a description of every protein including the 278,361
+singleton families, (5) signals other than relatedness (lineage of origin, partner covariation),
+(6) per-residue resolution (unused; we mean-pool). Four designs discussed: progressive alignment
+up a data-derived genome tree (Jacob sceptical for this task; I agree: mobile loci meet near the
+root where merging is hardest, and root columns are hard embedding families), a vocabulary of
+locus prototypes fitted by description length (Jacob: "compelling"), an evolutionary model of
+adjacency retention, and calibrated statistics for embedding similarity.
+
+Launched 02:2x UTC, all predeclared, CPU on biotite unless stated:
+- `ws_vocab` (`benchmarks/redesign/vocab/`): genomes as unsegmented text, loci as words learned
+  by description length (merging with a shuffle-null stopping rule); stage 1 on tokens, stage 2
+  on vectors with prototype slots whose radius the objective chooses.
+- `ws_kinds` (`kinds/`): recurrence of kinds across unrelated family pairs, to call pairs with no
+  homologs; judged by co-folding (up to 900 Biohub items) against the stored 1.35% rate for
+  uncalled adjacent pairs.
+- `ws_context` (`context_units/`): independence of evidence from pooled genomic-context
+  vectors (effective number of contexts = 1 / squared resultant length), replacing the genus
+  count with no genome grouping; label-free cuts from continuity of support and successor
+  variety.
+- `ws_signals` (`signals/`): partner covariation of family-centred vectors as an interaction
+  predictor against the existing folds; provenance signature of transferred blocks.
+- `ws_locusspace` (`locus_space/`): a locus as a point; typing of loci scored for the first
+  time; a map of all called loci and its dense unannotated clusters; search from one index.
+- `ws_calib` (`calib/`; the one A5000 user): what the similarity beyond the family is (remote
+  homology, same kind, or unexplained), and whether per-genome calibration gives it an E-value.
+Deferred: domain-level vectors (needs a re-embedding), a learned locus encoder and gLM2 (ablations).

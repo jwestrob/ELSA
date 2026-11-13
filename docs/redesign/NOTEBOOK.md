@@ -2013,3 +2013,31 @@ should be recovered through broader identity (lists reaching homologous systems 
 lineages), not through a looser unit. Untested alternative with no unit-size confound and no
 threshold: N_eff from genome-pair synteny retention (share of one genome's adjacencies conserved
 in the other), passed to the round-2 word workstreams.
+
+## 2026-11-13 03:44 UTC — A locus as a point: typing, map and search from one vector (workstream `ws_locusspace`; `benchmarks/redesign/locus_space/REPORT.txt`)
+
+Predeclared; the search reference (AP 0.79196) reproduced exactly first. Typing scored for the
+first time: leave-genome-group-out nearest-neighbour accuracy on even-genome gold loci.
+
+- **One whitened vector per locus (mean of its zca10 gene vectors) types loci as well as anything
+  tested:** DefenseFinder type 0.970 [0.960, 0.979], CRISPRCasTyper subtype 0.720 [0.698, 0.740].
+  Engine module identity 0.803 / 0.562 (the vector gains +0.167 / +0.157). MMseqs2 family-set
+  Jaccard 0.958 / 0.715 (+0.012 [+0.004, +0.019] / +0.005 [-0.012, +0.021]). Chamfer set kernel,
+  gene order, strand, rank evidence and sketches add nothing or lose.
+- **Among references sharing no MMseqs2 family with the query, the nearest locus has the query's
+  type for 94.4% (DefenseFinder) and 56.3% (CRISPR-Cas subtype) of queries** (chance 4.9% /
+  12.6%; module labels 68.5% / 36.2%). Read with the calibration result: family-disjoint mostly
+  means homologs the clustering split, which tokens cannot use and vectors can.
+- **Map:** 500,842 core loci form 1,206 clusters (Leiden resolution chosen on odd genomes);
+  agreement with gold types equals module labels (AMI 0.510 vs 0.518). A cluster merges a median
+  of 9 census block types (q90 56). 306 dense clusters hold no curated-caller member; 57 are
+  mostly unannotated, 30 of those span at least 5 genome groups (listed with observed domains).
+- **Search from the same index:** untrained, one vector per locus ranks at AP 0.744 [0.732,
+  0.756] against 0.792 for per-gene rank aggregation (misses the predeclared bar), in 0.03 s per
+  query against 1.33 s. A label-free locus whitening fitted on odd genomes (positives: cross-group
+  mutual neighbours with differing flanks) gives AP 0.792 [0.781, 0.804], equal to the reference
+  (post hoc, one fit); it leaves typing unchanged.
+- Limits: no calibrated score; supported-but-uncalled loci rank above curated targets (strict AP
+  -0.031); lower recall at matched unlabelled-hit rates (0.030 vs 0.099).
+Reading: the mean-pooled locus vector is the class identity the word method lacks (word identity
+was pure and fragmented, AMI 0.464), and one flat index serves typing, the map and ranked search.

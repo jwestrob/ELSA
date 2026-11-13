@@ -2738,3 +2738,12 @@ Standing candidates after parts 1-5 (development results):
 | Embedding-list bonds, fixed distance, tree | 7 | 1,542 | +0.010 | +0.111 |
 | Alignment-list bonds, fixed distance, tree | 7 | 1,549 | -0.004 | not run |
 | Embedding-list bonds, adaptive distance, tree | 6 | 1,497 | +0.012 | +0.150 |
+
+## 2026-11-13 22:41 UTC — lut test set: embeddings complete
+
+ESM++ small embedding of the 1,032-genome lut test set finished (job 93934: 7 h 08 min on one
+A5000 for 4,464,102 unique sequences, about 55,700 residues per second; estimate was 7.2-7.7 h);
+whitening and manifest (93935) 13.5 min. `$RD/slice_lut/testset/package_k8/` now holds
+embeddings and MANIFEST. No ELSA method has been run on the set. Untouched test sets ready:
+SR-VP bacteria (1,382 long single contigs) and the lut set; the RefSeq set has a universe only.
+Open with Jacob: which configuration to freeze for them.

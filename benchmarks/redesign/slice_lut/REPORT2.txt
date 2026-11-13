@@ -96,11 +96,17 @@ JOBS (part 2)
 93729 lut_testset (-c 24) size counts + package_k2 + ribosomal, COMPLETED 2 min 3 s
 93742 lut_testset (-c 24) package_k8 + ribosomal + embed_queue prep, COMPLETED 4 min 2 s
 gate  code/embed/gate.sh 93742 on the biotite login node (pid 341928), log $RD/slice_lut/logs/embed_gate.log
-STATUS (embedding) at 14:08 UTC: gate alive (pid 341928); build COMPLETED 13:47 UTC; GPU worker not yet submitted.
-  The account's gpu partition has not been empty since: other workstreams keep jobs there (14:07 UTC: hs_g10 running;
-  ll_gknnsd, hsup_g01, hd_g01, hfam_g01 pending). The gate submits only into an empty gpu queue, so it waits for a
-  gap; queuing behind the pending jobs would need the gate condition relaxed to "nothing running" (coordinator's call).
-  When it fires: GPU job ID in $RD/slice_lut/logs/embed_gpu_jobid.txt, finalize job ID in logs/embed_finalize_jobid.txt,
-  worker log logs/embed_gpu_<job>.log. Throughput afterwards: elapsed time in that log, or
-  `source $EQ/code/env.sh; $PYBIN $EQ/code/embed_queue.py status --run $RD/slice_lut/testset/embed/luttest__esmpp_small__20261113`;
-  expected 160-170 unique sequences/s (SR-VP rate) -> 7.2-7.7 h for 4,464,102 sequences.
+STATUS (embedding), coordinator decision 14:1x UTC: gate stopped (pid 341928, it never submitted). After the Slurm
+  preflight (both remote instruction files re-read, unchanged) the jobs were queued directly:
+  93934 lut_esmpp  partition gpu, QOS standard, gres/gpu=1, 12 CPUs, ExcNodeList=node-224-2t-8gpu-1 (H200 excluded, so
+                   only the A5000 node node-128-512g-8gpu-1 qualifies); PENDING (QOSMaxJobsPerUserLimit), 6th of 6
+                   pending jobs in partition gpu at submission (behind 90171 ctrl_cache, 93760 ll_gknnsd,
+                   93922 hsup_g01, 93924 hd_g01, 93928 hfam_g01; all priority 1)
+  93935 lut_final  partition standard, QOS standard_expand, 24 CPUs, Dependency=afterok:93934
+  Estimate 7.2-7.7 h of GPU time once it starts. Throughput afterwards: elapsed time in logs/embed_gpu_93934.log or
+  `source $EQ/code/env.sh; $PYBIN $EQ/code/embed_queue.py status --run $RD/slice_lut/testset/embed/luttest__esmpp_small__20261113`.
+CLEAN-UP DONE (one rm per path, under $RD/slice_lut/work/): tokens_rhizobiales 32 GB, tokens_beijerinckiaceae 5.5 GB,
+  mm 13 GB, mm_alpha 4.3 GB, mm_beyond 790 MB, alpha_wide/pkg/proteins_gid.faa 15 GB, beyond/pkg/proteins_gid.faa 2.9 GB,
+  annot_order 319 MB, annot_alpha_wide 272 MB, annot_beyond 259 MB, pfam_check 31 MB, test 63 MB (about 74 GB).
+  Kept: rhizobiales/parts, alpha_wide/parts, beyond/parts, alpha_wide/pkg (universe), beyond/pkg (universe),
+  hmm_refine_order, hmm_refine_alpha; work/ now 16.3 GB.

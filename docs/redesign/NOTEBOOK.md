@@ -2257,3 +2257,13 @@ adjacency-based redundancy correction, boundary cohesion). Locus vectors, co-fol
 shuffle null and effective genome counts each have published precedents and need positioning.
 Follow-up started: a connected-component baseline on the same pair statistic (the Hervé assembly
 rule) and a duplicate-genome stress test, added to `transfer_spacedust` as secondary items.
+
+## 2026-11-13 08:02 UTC — Benchmark against the published synton method (decision by Jacob; workstream `baseline_synton`)
+
+Hervé, Cury and Bernheim 2026 is from the group behind DefenseFinder. Agreed with Jacob: a
+faithful run of their public pipeline on the Spacedust collection, scored like the word method,
+plus a matched-identity variant on our family tokens; the same on DPANN if their pipeline is fast,
+reported with the short-contig caveat (their contexts span ±24 genes); their 32,791-genome RefSeq
+set prepared as a locked public test, with no method run on it until the configuration is frozen.
+The agent first verifies their method from the paper and repository, since our description is
+second-hand.

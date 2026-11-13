@@ -1878,3 +1878,42 @@ Launched 02:2x UTC, all predeclared, CPU on biotite unless stated:
 - `ws_calib` (`calib/`; the one A5000 user): what the similarity beyond the family is (remote
   homology, same kind, or unexplained), and whether per-genome calibration gives it an E-value.
 Deferred: domain-level vectors (needs a re-embedding), a learned locus encoder and gLM2 (ablations).
+
+## 2026-11-13 03:13 UTC — Loci as words learned by description length (workstream `ws_vocab`; `benchmarks/redesign/vocab/REPORT.txt`)
+
+Genomes as unsegmented text; adjacent labels are merged into words when naming the word saves
+description length. One statistic, Lambda = n ln(n/E) - n + E over lineage-group counts (Poisson
+log-likelihood ratio = code-length saving), replaces the pair test, support levels, trimming and
+module cuts; the same procedure on shuffled genomes sets the cost of a word, tau* = 10 nats
+(word-type FDR 0.0004). Unit of independence: data-derived genome groups (homolog-level cosine
+0.75, 642 groups). Predeclared 02:15 UTC; token DH reproduced exactly first. Even genomes.
+
+- **Verdict: neither stage matches or beats token DH, and stage 1 gives the best localisation
+  measured on DPANN.** Words over MMseqs2 tokens (reading selected on odd genomes): summed excess
+  0.624 against 0.427, +0.197 [+0.174, +0.221]; DefenseFinder F1 0.745 (0.744); TXSScan F1 0.679
+  (0.548), +0.131 [+0.108, +0.153]; median boundary precision 1.00 / 0.80 against 0.75 / 0.44;
+  42% of genes in words against 71% in DH loci. Blocked by CRISPR-Cas F1 0.406 (0.479) and the
+  ribosomal check (1,198 recovered, 501 resolved, Parvarchaeaceae 11 of 114).
+- One run takes 64 s on one core (1.3 GB); linear in genes up to a log factor; no pairwise
+  genome comparison, no neighbour lists, no reading rule.
+- **Group counting is the decisive ingredient and its price is CRISPR-Cas.** Per-genome counting:
+  summed excess -0.204 [-0.224, -0.183], CRISPR-Cas F1 0.504. Genera: 0.588 / 0.422. Groups:
+  0.624 / 0.406.
+- **The ribosomal failure is exact identity.** Word types are exact compositions; at word
+  junctions inside ribosomal runs the family pair recurs in a median 240 groups and the word-type
+  pair in 1. A phrase level (words joined through significant round-0 adjacencies; post hoc)
+  gives 1,679 recovered / 1,168 resolved, Parvarchaeaceae 114, at +0.178 summed.
+- **Stage 2 (no families; a three-level k-means tree of whitened vectors, each slot choosing its
+  level by Lambda): +0.096 [+0.074, +0.121] over DH, -0.101 under stage 1,** CRISPR-Cas unchanged,
+  ribosomal 1,541 / 978. Description length picks the coarsest cells (1,024 kinds) for 91% of
+  ribosomal and 83% of TXSScan slot pairs, because pooling lineage variants raises group counts
+  faster than E; the finest cells alone recur in too few groups (16.6% of genes in words). The
+  quantized alphabet is the weak part. The prototype-averaging step was not built.
+- Typing: word identity is pure and fragmented (DefenseFinder AMI 0.464, homogeneity 0.993,
+  completeness 0.420; 231 word types for 35 system types; engine modules 0.779).
+Reading: the objective is sound and removes the reading rules. Three things are missing: identity
+by class in place of exact composition, an independence measure that does not penalise mobile
+systems, and a family-free identity that is relational (lists) and not a quantized alphabet.
+Next (round 2, launched): (A) on tokens, effective counts from genomic context (Lambda scaled by
+the share of independent contexts) and word classes; (B) on vectors, words whose identity is the
+set of instances aligned to them (neighbour lists), merged under the same objective.

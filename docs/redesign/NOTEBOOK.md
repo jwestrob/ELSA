@@ -2366,3 +2366,28 @@ Spacedust collection, source207 (207 BGC regions; excess = F1 minus random place
 - Run time of their pipeline on 24 CPUs: 30-50 min.
 - Process note: after the API interruption the agent submitted one job before re-reading the
   cluster rules; it re-read them immediately afterwards and the job complied.
+
+## 2026-11-13 10:38 UTC — Long-locus fix: design and workstream `long_loci`
+
+Diagnosis: a word must recur with the same composition. That gives short loci their precision
+(DPANN: words 0.624 summed excess against 0.338 for pair-linking alone) and breaks long ones
+(Spacedust BGC regions: words + phrases +0.049 excess against about +0.142 for connected
+components on the same pair statistic; inside ribosomal runs the junction gene pair recurs in a
+median 240 groups, the word pair in 1). Greedy exclusivity also costs coverage (54-59% of region
+genes in words against 75-80% for pair-linking).
+
+Design under test: separate the three jobs that word identity was doing at once.
+1. Grow by pairwise bonds (first-round pair statistic, lineage counting), which keep their support
+   at any length.
+2. Cut by cohesion, a boundary signal that does not depend on recurrence.
+3. Confirm a candidate as a whole by tolerant joint recurrence (at least half of its families
+   together within twice its span, in more independent lineages than shuffles give).
+Unified form (L4): a persistence tree over the bond landscape (split each bonded run at its
+weakest boundary, recursively; linear time); nodes kept by persistence and tolerant recurrence;
+thresholds from the shuffle null. Precursors scored first: linking alone (L1), linking with
+cohesion cuts (L2), cuts with words nested inside (L3). DPANN for selection (odd) and the seven
+bars (even); Spacedust collection scored with DPANN-chosen settings only.
+
+Earlier result that this builds on and that the status scorecard omitted: cohesion cuts on the
+engine's pair-support landscape cleared every DPANN bar (+0.065 [+0.050, +0.079]; ribosomal
+1,686 / 1,456), with genus counting and a lower overall score than words (`context_units`, test 3).

@@ -2512,3 +2512,35 @@ so the headline shares are post hoc; predeclared and stricter readings are repor
 - Caution (mine): conserved-flank precision defines acceptable flank by recurrence beside runs,
   the same kind of signal the methods use; asked the audit to quantify that dependence and to
   score the bond-tree outputs under the same definitions (addendum pending).
+
+## 2026-11-13 11:54 UTC — Ribosomal audit, addendum: bond tree under every definition; independence of the flank criterion (`benchmarks/redesign/ribo_audit/REPORT_addendum.txt`)
+
+Full-set rules (no sampling) applied to the bond-tree outputs; counts reproduced run by run.
+
+| Definition (resolved of 1,686; random-window chance) | Reference | Family words + phrases | Embedding words | Bond tree | Pair-linking alone |
+|---|---|---|---|---|---|
+| Standing | 1,512 (7.96%) | 1,420 (0.04%) | 1,172 (1.39%) | 1,598 (2.41%) | 1,036 (2.09%) |
+| Any fitting locus counts | 1,590 (10.16%) | 1,433 | 1,298 | 1,620 (2.81%) | 1,036 |
+| Conserved-flank precision | 1,559 | 1,601 | 1,470 | 1,617 | 1,380 |
+| + junction split | 1,571 | 1,622 | 1,490 | 1,671 | 1,433 |
+| Flank must pass a narrow annotation tier | 1,518 | 1,440 | 1,206 | 1,598 | 1,066 |
+| Flank must pass a broad annotation tier (post hoc) | 1,536 | 1,506 | 1,306 | 1,603 | 1,150 |
+
+- **The bond tree leads under the standing definition and every alternative.** Its 88 failures: 54
+  junction splits, 22 scoring-rule cases, 7 flank or nearby-gene cases, 3 method errors, 2 data.
+- **Its 56 under-covered runs are cut at lineage-specific junctions.** 159 junctions lack a bond;
+  none recurs in other lineage groups above chance (median 6 other groups, at most 15); every
+  junction that recurs across groups carries a bond. Commonest cuts: S3_C|S5_C (23 of 83) and
+  S17|L22 (20), rearranged gene orders.
+- **The conserved-flank relaxation is mostly unsupported by annotation alone:** a narrow
+  translation tier from KO role terms backs 9-13% of that gain (0% for the bond tree), a broad
+  tier chosen after seeing the flanks 26-51%. SecY, EMC3_TMCO1, primase, Peptidase_M48 and
+  Prefoldin families rest on recurrence alone. The definition-artefact shares of the main report
+  are therefore upper bounds.
+- **With independent support required** (annotation for flank; strand flip for junction breaks:
+  12/12 reference, 12/21 words, 10/20 embedding, 18/54 bond tree), method errors in absolute
+  numbers are bond tree 44, reference 70, family words 159, embedding words 288, pair-linking 517.
+- The junction-split label for the bond tree is nearly the same statistic as its own bonds, so 54
+  "junction" cases mostly restate "no bond here".
+- A ribosomal protein the Pfam marker misses: family 90081 (KOW domain), annotated as translation
+  in 81% of members.

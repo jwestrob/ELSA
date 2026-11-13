@@ -1,0 +1,44 @@
+{
+ "L4b": {
+  "loci": 1007174,
+  "single_gene_loci": 0,
+  "recovered": 1680,
+  "resolved": 1598,
+  "rc_recovered": 1680,
+  "rc_resolved": 1598,
+  "per_run_equal_rc": true,
+  "parv_recovered": 114,
+  "parv_resolved": 107,
+  "fail_coverage_only": 56,
+  "fail_precision_only": 32,
+  "fail_both": 0
+ },
+ "L4b+": {
+  "loci": 1210640,
+  "single_gene_loci": 0,
+  "recovered": 1680,
+  "resolved": 1598,
+  "rc_recovered": 1680,
+  "rc_resolved": 1598,
+  "per_run_equal_rc": true,
+  "parv_recovered": 114,
+  "parv_resolved": 107,
+  "fail_coverage_only": 56,
+  "fail_precision_only": 32,
+  "fail_both": 0
+ },
+ "L1": {
+  "loci": 426696,
+  "single_gene_loci": 0,
+  "recovered": 1680,
+  "resolved": 1036,
+  "rc_recovered": 1680,
+  "rc_resolved": 1036,
+  "per_run_equal_rc": true,
+  "parv_recovered": 114,
+  "parv_resolved": 106,
+  "fail_coverage_only": 53,
+  "fail_precision_only": 594,
+  "fail_both": 3
+ }
+}

@@ -115,8 +115,11 @@ class Data:
 
 class Loci:
     def __init__(self, path):
-        df = pd.read_parquet(path, columns=["gid_s", "gid_e"])
-        a, b = df.gid_s.to_numpy(np.int64), df.gid_e.to_numpy(np.int64)
+        import pyarrow.parquet as pq
+        cols = pq.read_schema(path).names
+        sc, ec = ("gid_s", "gid_e") if "gid_s" in cols else ("s", "e")
+        df = pd.read_parquet(path, columns=[sc, ec])
+        a, b = df[sc].to_numpy(np.int64), df[ec].to_numpy(np.int64)
         o = np.argsort(a, kind="stable")
         self.a, self.b = a[o], b[o]
         self.maxlen = int((self.b - self.a + 1).max())
@@ -457,6 +460,7 @@ class Ev:
         self._assoc = {}
         self._pair = {}
         self.strict = False      # post hoc strict variant: marked genes admissible only if run-associated
+        self.adm_rule = "assoc"  # addendum: assoc | assoc_T | assoc_I | T | I (annotation-only tiers)
         self.no_s2 = False       # random windows: S2 not applied (a window holds 0-2 marked genes)
 
     # A
@@ -475,6 +479,20 @@ class Ev:
 
     def assoc_gene(self, k):
         return self.assoc_stats(int(self.D.tok[k]))[3]
+
+    def adm_ok(self, k):
+        r = self.adm_rule
+        if r == "assoc":
+            return self.assoc_gene(k)
+        if r == "assoc_T":
+            return self.assoc_gene(k) and bool(self.S["annT"][k])
+        if r == "assoc_I":
+            return self.assoc_gene(k) and bool(self.S["annI"][k])
+        if r == "T":
+            return bool(self.S["annT"][k])
+        if r == "I":
+            return bool(self.S["annI"][k])
+        raise ValueError(r)
 
     # B
     def other_kind(self, k):
@@ -578,7 +596,7 @@ class Ev:
         D = self.D
 
         def ok(k):
-            return (D.marked[k] and not self.strict) or self.assoc_gene(k)
+            return (D.marked[k] and not self.strict) or self.adm_ok(k)
         last = lo
         k = lo - 1
         while k >= max(self.cf, lo - ASSOC_REACH):
@@ -1037,8 +1055,197 @@ def cmd_cases(a):
     log("cases", len(case_rows), "genes", len(gene_rows), f"{time.time()-t0:.0f}s")
 
 
+# ------------------------------------------------------------------------------------------- addendum
+NEW = {"L4b": RD / "long_loci/loci/dpann_group/L4b_t0.1.parquet",
+       "L4b+": RD / "long_loci/loci/dpann_group/L4bp_t0.1.parquet",
+       "L1": RD / "long_loci/loci/dpann_group/L1.parquet"}
+NEW_ORDER = ("L4b", "L4b+", "L1")
+ALL6 = ORDER + NEW_ORDER
+TIER_T = ("ribosomal_protein", "translation", "translation_factor")
+TIER_I = TIER_T + ("trna_synthetase", "trna_modification", "rna_processing", "transcription", "rna_polymerase",
+                   "replication", "sec_pathway", "signal_recognition")
+RULES = ("assoc", "assoc_T", "assoc_I", "T", "I")
+
+
+def all_paths():
+    d = dict(OUTPUTS)
+    d.update(NEW)
+    return d
+
+
+def cmd_annot(a):
+    """KO-derived role flags per gene (annotation only; no gene order)."""
+    import duckdb
+    D = Data(protein_ids=True)
+    con = duckdb.connect(str(DB), read_only=True)
+    con.execute("SET threads=2")
+    terms = ",".join(f"'{t}'" for t in TIER_I)
+    df = con.execute(f"SELECT DISTINCT protein_id, term_id FROM semantic_terms WHERE facet = 'role' AND "
+                     f"source_db IN ('kofam', 'kegg') AND term_id IN ({terms})").df()
+    con.close()
+    pid2gid = pd.Series(np.arange(D.n), index=D.pid)
+    df["gid"] = pid2gid.reindex(df.protein_id.to_numpy()).to_numpy()
+    df = df.dropna(subset=["gid"])
+    annT = np.zeros(D.n, bool)
+    annI = np.zeros(D.n, bool)
+    annT[df[df.term_id.isin(TIER_T)].gid.astype(np.int64).to_numpy()] = True
+    annI[df.gid.astype(np.int64).to_numpy()] = True
+    np.savez(WK / "annot.npz", annT=annT, annI=annI)
+    per = df.groupby("term_id").gid.nunique().to_dict()
+    log("annot: genes T", int(annT.sum()), "I", int(annI.sum()), per)
+    json.dump(dict(T=int(annT.sum()), I=int(annI.sum()), per_term=per, marked_with_T=int((annT & D.marked).sum()),
+                   marked=int(D.marked.sum())), open(WK / "annot.json", "w"), indent=1)
+
+
+def sens_states(ev, L, rules):
+    """Fast sensitivity states (corrected S2 core, strict admissibility) for one run or window under one output."""
+    s, e = ev.s, ev.e
+    out = {}
+    st0 = state(L, s, e, s, e)
+    out["std_ok"] = st0["ok"]
+    anyok = False
+    for k in L.overlapping(s, e):
+        ov = ovl(L.a[k], L.b[k], s, e)
+        if ov / (e - s + 1) >= 0.8 and ov / L.length(k) >= 0.8:
+            anyok = True
+            break
+    out["any_ok"] = anyok
+    cs, ce, _ = ev.s2_core()
+    j, ov = L.best(cs, ce)
+    for r in rules:
+        ev.adm_rule = r
+        as3, ae3 = ev.s3_adm(s, e)
+        if j < 0:
+            out[f"{r}_ok"] = False
+            continue
+        bf = ov / (ce - cs + 1)
+        prec = ovl(L.a[j], L.b[j], as3, ae3) / L.length(j)
+        out[f"{r}_ok"] = bool(bf >= 0.8 and prec >= 0.8)
+    ev.adm_rule = "assoc"
+    return out
+
+
+def cmd_addendum(a):
+    t0 = time.time()
+    D = Data()
+    S = pickle.load(open(WK / "stats.pkl", "rb"))
+    add_marker_share(D, S)
+    z = np.load(WK / "annot.npz")
+    S["annT"], S["annI"] = z["annT"], z["annI"]
+    runs = D.runs
+    paths = all_paths()
+    Ls = {n: Loci(paths[n]) for n in ALL6}
+    # ---- (1) reproduction ----------------------------------------------------------------------------------
+    sys.path.insert(0, str(RD / "ribosomal/code"))
+    import ribosomal_check as RC
+    rep = {}
+    parv = runs.family.to_numpy() == "Parvarchaeaceae"
+    for n in NEW_ORDER:
+        L = Ls[n]
+        df = pd.DataFrame([standard(L, s, e) for s, e in zip(runs.gid_start, runs.gid_end)])
+        sc = RC.score(dict(a=L.a, b=L.b, mod=np.full(L.n, -1, np.int64), maxlen=L.maxlen, n=L.n),
+                      runs.gid_start.to_numpy(), runs.gid_end.to_numpy())
+        multi = (L.b > L.a)
+        rep[n] = dict(loci=L.n, single_gene_loci=int((~multi).sum()), recovered=int(df.recovered.sum()),
+                      resolved=int(df.resolved.sum()), rc_recovered=int(sc.recovered.sum()),
+                      rc_resolved=int(sc.resolved.sum()),
+                      per_run_equal_rc=bool(np.array_equal(sc.resolved.to_numpy(), df.resolved.to_numpy())),
+                      parv_recovered=int(df.recovered[parv].sum()), parv_resolved=int(df.resolved[parv].sum()),
+                      fail_coverage_only=int(((df.best_frac < 0.8) & (df.precision >= 0.8)).sum()),
+                      fail_precision_only=int(((df.best_frac >= 0.8) & (df.precision < 0.8)).sum()),
+                      fail_both=int(((df.best_frac < 0.8) & (df.precision < 0.8)).sum()))
+        log(n, rep[n])
+    json.dump(rep, open(WK / "repro_add.json", "w"), indent=1)
+    # ---- (2) census of the new outputs under the three rubrics ------------------------------------------------
+    rows, srows = [], []
+    for i in range(len(runs)):
+        ev = Ev(D, S, i, "pre")
+        evc = Ev(D, S, i, "corr")
+        evx = Ev(D, S, i, "corr")
+        evx.strict = True
+        evc._assoc, evc._pair = ev._assoc, ev._pair
+        evx._assoc, evx._pair = ev._assoc, ev._pair
+        for n in NEW_ORDER:
+            o = evaluate(ev, Ls[n])
+            oc = evaluate(evc, Ls[n])
+            ox = evaluate(evx, Ls[n])
+            for k in CORR_KEYS:
+                o["c_" + k] = oc.get(k)
+                o["x_" + k] = ox.get(k)
+            o["x_s1_ok"] = ox["s1_ok"]
+            o.update(output=n, ridx=i, run_id=int(runs.run_id.iat[i]))
+            rows.append(o)
+        for n in ALL6:
+            st = sens_states(evx, Ls[n], RULES)
+            st.update(output=n, run_id=int(runs.run_id.iat[i]))
+            srows.append(st)
+        if i % 400 == 0:
+            log(i, f"{time.time()-t0:.0f}s")
+    cen = pd.DataFrame(rows)
+    cen.to_parquet(WK / "census_add.parquet", index=False)
+    sens = pd.DataFrame(srows)
+    sens.to_parquet(WK / "sens_add.parquet", index=False)
+    for n in NEW_ORDER:
+        d = cen[cen.output == n]
+        log(n, "std", int(d.std_ok.sum()), "corr", d.c_label.value_counts().to_dict())
+    # ---- random windows, all six outputs, all rules ----------------------------------------------------------
+    ctrl = pd.read_parquet(GOLD / "controls_random.parquet")
+    ctrl = ctrl[ctrl.run_id.isin(runs.run_id) & (ctrl.draw < 5)].reset_index(drop=True)
+    rr = []
+    for w in ctrl.itertuples():
+        ev = Ev(D, S, -1, "corr", window=(w.gid_start, w.gid_end))
+        ev.no_s2, ev.strict = True, True
+        for n in ALL6:
+            st = sens_states(ev, Ls[n], RULES)
+            st.update(output=n, run_id=w.run_id, draw=w.draw)
+            rr.append(st)
+    rw = pd.DataFrame(rr)
+    rw.to_parquet(WK / "random_windows_add.parquet", index=False)
+    log("random windows", rw.groupby("output")[["std_ok", "any_ok"] + [f"{r}_ok" for r in RULES]].mean().round(4).to_dict())
+    # ---- (4) bond gaps inside under-covered L4b runs ------------------------------------------------------------
+    b = np.load(RD / "long_loci/nodes/dpann_group/bonds_obs.npz")
+    bk, bd, bl = b["k"], b["d"], b["lam"]
+    sk = np.zeros(D.n)
+    for off in range(3):
+        m = bd > off
+        np.maximum.at(sk, bk[m] + off, bl[m])
+    np.save(WK / "bond_sk.npy", sk)
+    grp_tok = S["GallX"]
+    gaps = []
+    d4 = cen[(cen.output == "L4b") & ~cen.std_ok]
+    for r in d4.itertuples():
+        i = r.ridx
+        ev = Ev(D, S, i, "corr")
+        s, e = ev.s, ev.e
+        cov_fail = r.std_bf < 0.8
+        for p in range(s, e):
+            if sk[p] > 0:
+                continue
+            rec_a, test_a, n_a, E_a, L_a = ev.pair_rec(p, p + 1)
+            best = (-1, 0.0, False, False, -1, -1)
+            for x in range(max(s, p - 2), p + 1):
+                for y in range(p + 1, min(e, x + 3) + 1):
+                    rc_, ts_, nn, EE, LL = ev.pair_rec(x, y)
+                    if nn > best[0]:
+                        best = (nn, LL, rc_, ts_, x - s, y - s)
+            tx, ty = int(D.tok[p]), int(D.tok[p + 1])
+            mk = lambda k: D.marker_names[D.topm[k]] if D.topm[k] >= 0 else "-"
+            gaps.append(dict(run_id=r.run_id, stratum=runs.stratum.iat[i], cov_fail=bool(cov_fail),
+                             fail_type=r.fail_type, c_label=r.c_label, rel=p - s, run_len=e - s + 1,
+                             left=mk(p), right=mk(p + 1), strand_flip=bool(D.strand[p] != D.strand[p + 1]),
+                             adj_n_other=n_a, adj_lambda=round(L_a, 1), adj_recurrent=rec_a, adj_testable=test_a,
+                             best_n_other=best[0], best_lambda=round(best[1], 1), best_recurrent=best[2],
+                             best_pair=f"{best[4]}-{best[5]}", tok_groups_left=int(grp_tok[tx]),
+                             tok_groups_right=int(grp_tok[ty]),
+                             cut_of_best=bool(r.std_a >= 0 and (p == r.std_b or p + 1 == r.std_a))))
+    g = pd.DataFrame(gaps)
+    g.to_csv(WK / "gaps_L4b.tsv", sep="\t", index=False)
+    log("gaps", len(g), "in runs", g.run_id.nunique())
+    log("addendum done", f"{time.time()-t0:.0f}s")
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     WK.mkdir(parents=True, exist_ok=True)
     {"repro": cmd_repro, "sample": cmd_sample, "stats": cmd_stats, "classify": cmd_classify,
-     "cases": cmd_cases, "full": cmd_full}[cmd](None)
+     "cases": cmd_cases, "full": cmd_full, "annot": cmd_annot, "addendum": cmd_addendum}[cmd](None)

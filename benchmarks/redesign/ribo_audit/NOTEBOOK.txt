@@ -78,3 +78,32 @@ RIBO_AUDIT NOTEBOOK (times from `date -u`)
 2026-11-13T11:40Z  REPORT.txt written (ANSWER lines first; predeclared, corrected and strict tables; controls; families;
   nearby runs; sensitivity; ten diagrams per major category; low-confidence cases; caveats). Copied with NOTEBOOK.txt to
   $RD/ribo_audit/. No Slurm job used; nothing committed.
+
+ADDENDUM (coordinator follow-up: long-locus bond tree outputs L4b, L4b+, L1; independence of the flank criterion)
+2026-11-13T11:44Z  Outputs: $RD/long_loci/loci/dpann_group/{L4b_t0.1, L4bp_t0.1, L1}.parquet (columns s, e = gene ids,
+  inclusive); bonds: $RD/long_loci/nodes/dpann_group/bonds_obs.npz (k, d, lam: a bond = gene pair at distance d <= 3
+  whose family pair is significant at group level; s_k = max Lambda of bonds spanning boundary k; L1 = runs of s_k > 0).
+  Read ll.py header and bonds() only; the long_loci ribosomal diagnosis section is left unread to keep this audit
+  independent (its one-line summary was visible in a grep: 88 failures, 56 under-covered).
+  Plan, fixed before any number for these outputs: same rules (predeclared, corrected, strict) on all failures; same
+  sensitivity chains and random windows; under-covered L4b runs: every boundary inside the run with s_k = 0, its
+  recurrence (n' other groups, Lambda) by statistic C, adjacent pair and best crossing pair, classed as
+  lineage-unique (n' < 3), partial (3-99), universal (n' >= 100).
+  Independence (point 5), annotation-only criteria, defined now: KO-derived role terms from Sharur semantic_terms
+  (facet 'role', source_db kofam or kegg; no gene order involved):
+    T (narrow, the marker's own function): role in {ribosomal_protein, translation, translation_factor}
+    I (broad information processing; KNOWLEDGE-INFORMED, chosen after seeing that SecY / primase sit in the flanks):
+      T + {trna_synthetase, trna_modification, rna_processing, transcription, rna_polymerase, replication,
+      sec_pathway, signal_recognition}
+  Admissible-flank variants of the strict chain: assoc (as reported), assoc AND T, assoc AND I, T alone, I alone.
+  Gain share = (resolved under variant - standing) / (resolved under assoc - standing). Random windows for every variant.
+2026-11-13T11:46Z  audit.py annot: KO-role flags, tier T 227,373 genes, tier I 354,300.
+2026-11-13T11:48Z  audit.py addendum (100 s, 0.9 GB): L4b / L4b+ 1,680 / 1,598 (identical run by run), L1 1,680 / 1,036,
+  equal to ribosomal_check.score. Corrected census: L4b 88 = JUNCTION 54, SCORING 22, NEARBY 4, ASSOC 3, EXT 3, data 2;
+  L1 650 = ASSOC 252, EXT 186, NEARBY 156, JUNCTION 54, data 2. sens states consistent with the census (assoc_ok =
+  x_s3_ok on every run). Gaps: 159 no-bond junctions in the 56 under-covered L4b runs, none recurrent (Lambda 0,
+  n' <= 15), 31 strand flips; L4b cuts at S3_C|S5_C 23, S17|L22 20.
+2026-11-13T11:50Z  Independence: flank gain backed by tier T 9-13% (L4b 0%), by tier I 26-51%; strand flip at the break
+  in 12/12 TOK, 12/21 WCP, 10/20 EMB, 18/54 L4b junction runs. Independent-evidence method share: TOK 40.2, WCP 59.8,
+  EMB 56.0, L4b 50.0, L1 79.5%. Family 90081 (KOW, no Ribosomal_* Pfam hit) is 81% KO ribosomal/translation.
+2026-11-13T11:53Z  REPORT_addendum.txt written; claims checked against the tables (four corrections before saving).

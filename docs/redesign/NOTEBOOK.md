@@ -2476,3 +2476,39 @@ groups unless noted.
   on DPANN.
 Follow-up started (part 2): the same tree over list-based first-round bonds (embedding z-lists
 and alignment lists), to bring CRISPR-Cas back without the identity-at-length problem.
+
+## 2026-11-13 11:42 UTC — Audit of the ribosomal benchmark's recorded failures (workstream `ribo_audit`; `benchmarks/redesign/ribo_audit/REPORT.txt`)
+
+Independent Opus audit; rubric written before any case; 40 unresolved runs sampled per output
+(reference "TOK", family words + cohesion phrases "WCP", embedding words "EMB"), 20 unresolved in
+all three, 20 resolved controls per output; all 240 diagrams read; the three outputs' counts
+reproduced exactly. One predeclared evidence rule misfired (it flagged 287 ordinary ribosomal
+proteins of neighbouring operons as "protein of another kind") and was replaced after the fact,
+so the headline shares are post hoc; predeclared and stricter readings are reported beside them.
+
+- **Share of sampled failures (Wilson 95%):** definition artefacts TOK 80.0% [65.2, 89.5], WCP
+  82.5% [68.0, 91.3], EMB 57.5% [42.2, 71.5]; method errors 20.0%, 15.0%, 40.0%; data problems
+  0-2.5%. Pooled: definition 73.3% [64.8, 80.4], method 25.0% [18.1, 33.4]. Across alternative
+  rulings the method share ranges TOK 20-80%, WCP 15-22.5%, EMB 40-55%.
+- **Scoring rule:** the code scores only the largest-overlap locus. In 78 of TOK's 174 failures the
+  output holds a locus that resolves the run, nested inside a larger parent that is picked
+  instead (WCP 13, EMB 126). The worded definition ("one locus covers...") would count these.
+- **Definition artefacts over all failures (TOK / WCP / EMB):** extension into flanking families
+  that recur beside runs in at least 3 other lineage groups 9 / 111 / 135 (SecY in 274 groups,
+  DNA_primase_lrg 126, EMC3_TMCO1, L34e); Ribosomal_* genes within 5 genes of the run 43 / 66 /
+  86; runs joining two blocks across a junction seen in no other group 14 / 21 / 21.
+- **Method errors:** mostly Iainarchaeota (TOK 24 of 29; WCP 31 of 48), where the run is a merged
+  37-44-gene block: WCP and EMB cut it at junctions present in 109-564 other groups; TOK's locus
+  runs 8-110 genes (median 39) into unassociated flank. EMB also splits ordinary runs at
+  universal junctions (110 splits).
+- Failures against controls: a Ribosomal_* gene within 5 genes of the run in 38-53% of failures
+  against 10-20% of resolved runs; contig ends and gene-call anomalies are as common in resolved
+  runs and explain none of the failures. No two runs share a contig.
+- **Sensitivity definitions (resolved, TOK / WCP / EMB; the standing definition is unchanged):**
+  standing 1,512 / 1,420 / 1,172; any locus counts 1,590 / 1,433 / 1,298; conserved-flank
+  precision 1,559 / 1,601 / 1,470; plus junction split (the audit's proposal) 1,571 / 1,622 /
+  1,490; plus any locus counts 1,621 / 1,623 / 1,517. Chance on random windows is unchanged
+  (TOK 8.0 -> 8.1%). Under the proposal the ranking flips: WCP passes TOK, EMB clears 1,400.
+- Caution (mine): conserved-flank precision defines acceptable flank by recurrence beside runs,
+  the same kind of signal the methods use; asked the audit to quantify that dependence and to
+  score the bond-tree outputs under the same definitions (addendum pending).

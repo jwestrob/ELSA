@@ -1,0 +1,80 @@
+RIBO_AUDIT NOTEBOOK (times from `date -u`)
+==========================================
+
+2026-11-13T11:10Z  Read ribosomal_check.py, vscore.py (Ctx, score), vscore2a.py, vl_score.py, blib.py ribo helpers,
+  the three REPORTs. Output loci located:
+    TOK  $RD/boundary/loci/rescue3/DH_coreH_res0.3_f0.5.parquet          (target 1,686 / 1,512)
+    WCP  $RD/vocab/loci/runs_main_tau10_s1coh_V-coh0.1.parquet           (target 1,684 / 1,420)
+    EMB  $RD/vocab_lists/loci/z10.6_V-nest.parquet                       (target 1,675 / 1,172)
+  Definition as implemented (differs from the brief's paragraph in three places):
+    - ">= 16 genes" is >= 16 MARKED genes; the span also counts up to 2 consecutive unmarked gap genes (span 17-45).
+    - "one locus covers >= 80% ... and >= 80% of that locus inside" is evaluated on the BEST locus only (largest
+      overlap, ties -> shorter); a smaller resolving locus does not count when a larger-overlap locus exists.
+    - the 114 Parvarchaeaceae count is genomes; it equals runs because no genome holds two g2_m16 runs.
+  Gap genes count as inside the run for both coverage and precision.
+  Aggregate facts (no case seen): 1,686 runs in 1,686 genomes; 436 of 642 groups carry a run; 289 runs touch a contig
+  end; all 3,564 genomes order_trusted with empty flags; Parvarchaeaceae all Nanobdellota.
+2026-11-13T11:12Z  predeclared.json written (rubric, thresholds, sampling, seeds) before any case was inspected.
+2026-11-13T11:16Z  audit.py repro (login node, one thread, 24 s, 0.7 GB): own scorer and ribosomal_check.score agree
+  run by run; TOK 1,686 / 1,512 (Parv 114 / 113), WCP 1,684 / 1,420 (114 / 109), EMB 1,675 / 1,172 (114 / 106).
+  Exact. ribosomal/code/__pycache__ untouched (bytecode off; numba cache in $RD/ribo_audit/numba_cache).
+2026-11-13T11:16Z  audit.py sample (predeclared seeds). Unresolved per stratum:
+    TOK 174: Iainarchaeota 64 (of 134 runs), Nanobdellota 75, Aenigmatarchaeota 22, Micrarchaeota 8, Altiarch. 3, EX 1, Parv 1
+    WCP 266: Nanobdellota 176, Iainarchaeota 46, Aenigm. 19, Micrarch. 15, Parv 5, Nanohal. 3, Altiarch. 2
+    EMB 514: Nanobdellota 354, Micrarch. 48, Iainarch. 46, Aenigm. 33, Nanohal. 14, Parv 8, EX 7, Altiarch. 2, Undin. 2
+    unresolved in all three: 53 (Iainarchaeota 24, Nanobdellota 15, Aenigmatarchaeota 12, Altiarchaeota 2)
+  Samples: 40 / 40 / 40 unresolved, 20 all-three, 20 / 20 / 20 controls (allocations in work/sample.json).
+  Iainarchaeota carry 37% of TOK failures from 8% of runs: noted, not interpreted yet.
+2026-11-13T11:17Z  audit.py stats (8 s): 5,718 families occur in a run flank, 54 run-associated with all groups counted;
+  5,749 junction family pairs inside runs, 761 recurrent; anomalies: 76,060 adjacent same-family/marker genes, 73,022 short.
+2026-11-13T11:18Z  audit.py classify (census, 21 s). Predeclared labels, unresolved runs:
+    TOK 174: SCORING 78, NEARBY_RIBO 43, OTHER_KIND 39, JUNCTION 8, ASSOC_FLANK 3, METHOD_EXT 2, EDGE 1
+    WCP 266: ASSOC_FLANK 111, NEARBY_RIBO 66, OTHER_KIND 39, JUNCTION 13, SCORING 13, SPLIT 11, EXT 8, EDGE 4, GENE_CALL 1
+    EMB 514: ASSOC_FLANK 135, SCORING 126, SPLIT 98, NEARBY_RIBO 86, EXT 26, OTHER_KIND 22, JUNCTION 15, EDGE 4, GENE_CALL 2
+  Strong result; treated as suspect until the cases are read.
+2026-11-13T11:19Z  audit.py cases: 240 case evaluations, 10,298 layout rows, diagrams. Read every diagram.
+2026-11-13T11:25Z  MANUAL REVIEW FINDINGS (before any post hoc change):
+  (1) OTHER-KIND rule (a) misfires. Of 293 flagged members in the sampled runs, 287 carry the canonical single
+      Ribosomal_* domain at typical length: S13, S11, L13, S9, S2, L27A(=L18e), L34e (alpha / L13-S9 block in
+      Iainarchaeota: families inside runs in 6-9% of groups), S12, S7, S10 (str), L7Ae / S28e / L24e / S6e, L11, L37ae.
+      They are real ribosomal operons whose adjacency to the superoperon is lineage-specific, not proteins of another
+      kind. Only 6 trip the length rule (four 200-aa L23, one L5+L5_C+S8 fusion). The S2 step then re-scores against
+      the superoperon alone and switches to a smaller locus: the label claims a definition artefact on a wrong premise.
+      Iainarchaeota runs (37-44 genes) = S10-spc + SecY-EMC3-L34e-AdkA(Cytidylate_kin2) + alpha + L13-S9; break tests
+      find no non-recurring junction there, so the merged block counts as recurrent.
+  (2) JUNCTION breaks are genuine: Aenigmatarchaeota runs 8062, 7411, 4721 join the two halves of the superoperon on
+      OPPOSITE strands with 1-2 genes between (L3 ... | HIT/RadSAM | S8 ...); Parvarchaeaceae 7098 has a Laminin_G_3
+      insertion after L3-L4-L23 with L2-S19-L22-S3-L29 elsewhere. All three outputs cut exactly there.
+  (3) Associated flank genes are SecY (274 other groups, Lambda 537), DNA_primase_lrg (126), unannotated family
+      90081 (165), EMC3_TMCO1 (two families, 55 / 94), DEAD helicase (65), L34e (68, marked), TruB/PUA (77),
+      Peptidase_M48 (51), Toprim (40). WCP / EMB failures in Nanobdellota are mostly the locus covering the run plus
+      5-9 of these genes (precision .60-.79); controls carry 1-3 of the same genes (precision .80-.96).
+  (4) TOK failures are mostly a parent locus extending 10-80 genes into non-associated flank (o) while a child
+      locus fits the run (SCORING); several Iainarchaeota TOK loci also span a second ribosomal cluster 3 genes away
+      (S6e / IF-2 / dUTPase / NDK / L24e / S28e / L7Ae; families not run-associated across groups, Lambda 0).
+  (5) Method labels checked: EMB cuts L29|S3 (universal junction), WCP leaves a rearranged L22 block uncovered;
+      gene-call cases sit next to split ORFs where L32e is expected (two fragments of one family). Contig-edge rule
+      fires on splits whose remainder lies toward the edge; causation by the edge is not shown (1-4 per output).
+  Decision: keep the predeclared labels as the primary table; add ONE post hoc correction, labelled as such:
+  OTHER-KIND = the member's family carries Ribosomal_* domains on < 50% of its members, or length > 2x the marker
+  median (the brief's "protein of another kind"). Also add: random-window check of any-locus scoring and of the
+  relaxed definition (chance level), S1 split by association of the nearby marked genes, full-set nearby-run counts.
+2026-11-13T11:30Z  POST HOC (labelled as such everywhere): census rerun with (C) corrected OTHER-KIND rule and (X) strict
+  variant = C + nearby Ribosomal_* genes admissible only when their family is run-associated (S1 off; S3 admits
+  associated genes only). Census, unresolved runs, definition / method:
+    predeclared  TOK 98.3 / 1.1%   WCP 91.0 / 7.1%   EMB 74.7 / 24.1%
+    corrected    TOK 82.8 / 16.7%  WCP 79.3 / 18.0%  EMB 72.4 / 26.5%
+    strict       TOK 62.6 / 36.8%  WCP 76.3 / 21.1%  EMB 67.1 / 31.7%
+  Predeclared OTHER_KIND cases go to METHOD_EXTENSION (TOK 25), METHOD_SPLIT (WCP 29, EMB 11), JUNCTION (6-8).
+  Random windows (5 per run, 8,325): resolved TOK .0796 standing / .1016 any-locus / .0814 strict chain / .1154
+  corrected chain; EMB .0139 / .0142 / .0141 / .0160; WCP .0004 throughout. The strict chain leaves chance unchanged.
+2026-11-13T11:31Z  audit.py full: no two g2_m16 runs share a contig (0 pairs); 376 / 1,686 runs (22.3%) have another
+  Ribosomal_* gene <= 5 genes outside, 163 (9.7%) a cluster of >= 2, 4 a run of 8-15 marked genes.
+2026-11-13T11:33Z  Junction check at Iainarchaeota split points (corrected METHOD_SPLIT): WCP cuts between L34e and its
+  neighbour, pair adjacent in 239 other groups (Lambda 619); EMB cuts L5|S14 (564 groups, Lambda 1,472) and next to
+  S17 (109 groups). These splits break recurrent junctions: method errors.
+  U-EMB-01 is the brief's "protein of another kind": a 320-aa Ribosomal_L32e + Lactamase_B_2/3 protein; EMB splits there.
+2026-11-13T11:36Z  tables.py -> results/tables.txt; illustrative.txt (10 per major category); results copied locally.
+2026-11-13T11:40Z  REPORT.txt written (ANSWER lines first; predeclared, corrected and strict tables; controls; families;
+  nearby runs; sensitivity; ten diagrams per major category; low-confidence cases; caveats). Copied with NOTEBOOK.txt to
+  $RD/ribo_audit/. No Slurm job used; nothing committed.

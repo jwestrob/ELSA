@@ -1,0 +1,117 @@
+LONG_LOCI PART 5: Z-WA, EMBEDDING-LIST BONDS AT THE ADAPTIVE PAIR DISTANCE (DPANN + SPACEDUST, 2026-11-13)
+=========================================================================================================
+ws_calib z >= 10.6 lists (own group excluded), genome-group counting, every gene pair within 8 positions tested at its
+own distance (list partners must lie within d positions in the other genome; E with 2d), tau by the bond-level 1% rule,
+part-1 tree with kNN cohesion, part-2 family-free node filter. DPANN odd = selection, even = verdict (paired genome
+bootstrap, 2,000 draws); Spacedust source207 (DPANN-selected output primary; other outputs DEVELOPMENT). CPU only.
+Predeclaration predeclared5.json: main 15:25 UTC, amendment_1 16:07 (selection, before any even or source207 number).
+Development results throughout.
+
+ANSWER
+1. No single output meets the success definition. The selected Z-WA output (L4b+ theta .02) keeps a CRISPR-Cas margin
+   on DPANN (F1 .491, +.012 [+.001, +.023] over DH: .032 above the bar) and meets six of the seven bars, but resolves
+   1,497 ribosomal runs (-15 [-47, +19] against DH; bar > 1,512). On Spacedust it scores +.150 [+.114, +.184], -.034
+   [-.066, -.002] against the engine reference (BELOW).
+2. The adaptive distance costs list bonds the ribosomal runs on DPANN: -45 [-65, -26] resolved against part-2 Z (same
+   lists at window 3; odd 758 vs 781) and -97 [-119, -75] against part-4 family WA, with F1 unchanged against Z (DF
+   -.018, TXSS .000, CRISPR-Cas +.002). Wider list bonds extend loci past the run edges.
+3. Summed excess on DPANN: .560 (+.133 [+.112, +.155] over DH): -.024 [-.045, -.004] against part-1 L4b, -.021
+   [-.030, -.012] against part-2 Z, -.052 [-.069, -.036] against part-2 A, +.047 [+.028, +.067] against part-4 family
+   WA. F1 against part-1 L4b: DF +.075, TXSS +.049, CRISPR-Cas +.072.
+4. On Spacedust the adaptive distance lifts the list arm: +.039 [+.009, +.070] over part-3 Z, level with part-4 family
+   WA (-.014 [-.048, +.020]) and with pair-linking (CC2 +.007, part-1 L1 -.003). Coverage of regions with 11+ genes
+   reaches .85 (union) / .69 (best locus), against the engine's .89 / .73; F1 .721 against .750. The remaining excess gap
+   is the control: the nested output's random placements score .571 (engine .566 with a union of 42 readings).
+5. DEVELOPMENT rows: Z-WA L1 +.206 [+.170, +.241] MATCHES the engine (+.022 [-.011, +.056]); the filtered Z-WA L4b falls
+   to +.074 (the list node test removes long nodes: 11+-gene coverage .54 / .29).
+6. Gates passed before use: the copied kernel at window 3 reproduces vl.pass_count exactly on the observed order (n,
+   n_groups, E, E_groups, Lambda on 8,015,534 DPANN and 12,000,081 Spacedust round-0 rows) and on a synthetic universe;
+   adaptive support equals a brute-force count on 300 sampled pairs; the distance <= 3 part of the new exclusion masks
+   equals the stored masks in all four orders on both datasets.
+7. Cost (64 CPUs): DPANN 36.0 min, peak 110 GiB (masks 16.7 min, mostly reloading the stored kNN and vectors through
+   vl.emb_lists; z lists 6.9 min; window-3 gate 1.9 min; four adaptive round-0 passes 90-100 s each; tree + node test
+   3.6 min); Spacedust 10.3 min, peak 106 GiB (masks 2.7 min, lists 45 s, passes 48-55 s each). Scoring 2 min.
+8. Standing of the candidates for one output on both datasets: family WA L4b theta .2 (part 4) meets all seven DPANN
+   bars with CRISPR-Cas -.019 and sits -.020 [-.054, +.014] from the engine on Spacedust; Z-WA moves the CRISPR-Cas
+   margin to +.012 and loses the ribosomal bar and .014 on Spacedust. The list arms at window 3 (part 2 A / Z) keep all
+   seven DPANN bars and stay below the engine on Spacedust (part 3 Z -.073).
+
+--------------------------------------------------------------------------------------------------------------------------
+TABLE 1. DPANN EVEN (d = paired difference [95%]; bars = of seven; margin CCT = d F1 CRISPR-Cas vs DH + .02)
+  output                         rec/res    d res vs DH      Parv summed d vs DH              F1 DF/TXSS/CCT  d F1 CCT vs DH       bars bprec          genes  CasOut
+  token DH (reference)           1686/1512  -                114  .427   -                    .744/.548/.479  -                    ref  .75/.44/.40    .715   -
+  part-1 L4b theta .1            1680/1598  +86 [+60,+115]   114  .584   +.157 [+.134,+.182]  .731/.700/.419  -.060 [-.072,-.048]  6    1.00/1.00/.50  .460   -
+  part-2 Z L4b+ theta .02        1681/1542  +30 [+1,+60]     114  .581   +.154 [+.133,+.176]  .824/.749/.489  +.010 [-.002,+.021]  7    1.00/1.00/.50  .571   .305
+  part-2 A L4b theta .02         1681/1549  +37 [+7,+69]     114  .613   +.186 [+.165,+.206]  .823/.751/.475  -.004 [-.015,+.007]  7    1.00/.83/.50   .566   .322
+  part-4 WA L4b theta .2         1685/1594  +82 [+54,+111]   114  .513   +.086 [+.063,+.110]  .762/.672/.461  -.019 [-.029,-.008]  7    1.00/1.00/.50  .552   .324
+  Z-WA L4b+ theta .02 (SELECTED) 1686/1497  -15 [-47,+19]    114  .560   +.133 [+.112,+.155]  .806/.748/.491  +.012 [+.001,+.023]  6    1.00/1.00/.50  .611   .272
+  Z-WA L4b theta .02 (secondary) 1686/1499  -13 [-45,+21]    114  .605   +.178 [+.156,+.203]  .768/.746/.443  -.037 [-.049,-.024]  5    1.00/1.00/.50  .537   .336
+  Z-WA L4b+ .02 paired (summed; resolved; dF1 DF / TXSS / CCT):
+    vs part-1 L4b .1   -.024 [-.045,-.004]; -101 [-125,-78]; +.075 / +.049 / +.072
+    vs part-2 Z        -.021 [-.030,-.012]; -45 [-65,-26];   -.018 / -.000 / +.002
+    vs part-2 A        -.052 [-.069,-.036]; -52 [-72,-33];   -.017 / -.003 / +.016
+    vs part-4 WA       +.047 [+.028,+.067]; -97 [-119,-75];  +.044 / +.076 / +.030
+    vs words V-mob -.064 [-.084, -.043]; vs words + cohesion phrases -.048 [-.068, -.028].
+  Failed bar of the selected output: ribosomal resolved (1,497). Parvarchaeaceae resolved 94 / 114 (part-2 Z 107). Of the
+  56 runs part-1 L4b left under-covered, Z-WA bonds 19 fully and resolves 16.
+  Odd selection (selection5.json): L4b+ .02 [3, 758, .572] > L4b+ .05 [3, 748, .525] > ...; every L4b misses the odd
+  CRISPR-Cas condition (.439-.450); L1 [0, 410, .342].
+
+TABLE 2. SPACEDUST source207 (d = paired excess difference [95%]; coverage = union / best locus by region size)
+  output                       F1    ctrl  excess [95%]          d vs p1 L4b           d vs CC2              d vs engine            d vs Spacedust        d vs p3 Z             d vs p4 WA L4b        coverage 1-5 | 6-10 | 11-20 | 21+    (11+)
+  engine reference             .750  .566  +.184 [+.154,+.213]   -                     -                     -                      -                     -                     -                     1.00/.90 | 1.00/.89 | .91/.76 | .89/.73  (.89/.73)
+  native Spacedust             .676  .612  +.065                 -                     -                     -                      -                     -                     -                     1.00/1.00 | 1.00/.70 | .92/.43 | .89/.31 (.91/.36)
+  part-1 L4b theta .1 (W3)     .574  .448  +.126                 -                     -                     -.058                  +.061                 -                     -                     .75/.60 | .78/.59 | .58/.39 | .57/.24   (.57/.31)
+  part-3 Z L4b+ .02            .598  .487  +.111                 -.015                 -.031                 -.073                  +.046                 -                     -                     (.62/.33)
+  part-4 WA L4b .2 (family)    .667  .504  +.164                 +.038                 +.021                 -.020                  +.099                 -                     -                     .80/.75 | .89/.67 | .72/.58 | .76/.55   (.75/.55)
+  Z-WA L4b+ .02 (PRIMARY)      .721  .571  +.150 [+.114,+.184]   +.023 [-.013,+.060]   +.007 [-.027,+.041]   -.034 [-.066,-.002]    +.085 [+.047,+.121]   +.039 [+.009,+.070]   -.014 [-.048,+.020]   1.00/.90 | .90/.79 | .85/.72 | .85/.65   (.85/.69)
+  Z-WA L1 (DEV)                .631  .425  +.206 [+.170,+.241]   +.080                 +.063                 +.022 [-.011,+.056]    +.141                 +.095                 +.042                 1.00/1.00 | .90/.88 | .85/.75 | .85/.65 (.85/.69)
+  Z-WA L4b .02 (DEV)           .547  .473  +.074 [+.030,+.118]   -.053                 -.069                 -.110                  +.009                 -.037                 -.090                 .58/.58 | .80/.67 | .55/.35 | .52/.25   (.54/.29)
+  Excess by region size (1-5 / 6-10 / 11-20 / 21+): Z-WA L4b+ +.118 / +.173 / +.134 / +.168; Z-WA L1 +.145 / +.239 /
+  +.209 / +.216; engine +.159 / +.207 / +.182 / +.175. F1 vs engine: Z-WA L4b+ -.029 [-.062, +.004]. Share of genes in
+  loci .656 (L4b+, L1), .550 (L4b). Median boundary precision 1.00 in every row.
+
+--------------------------------------------------------------------------------------------------------------------------
+BONDS
+  tau (bond FDR, 3 gene-order shuffles): DPANN .046 / .0116 / .0020 at 4 / 6 / 8 -> 8 (part-2 Z: 6); Spacedust .107 /
+  .035 / .0089 -> 8 (part-3 Z: 8). Bonds: DPANN 3,066,418 (part-2 Z 2,246,491), Spacedust 4,912,599 (part-3 Z 2,970,156).
+  By distance 1-8: DPANN 34 / 21 / 14 / 10 / 8 / 6 / 5 / 4%; Spacedust 27 / 18 / 14 / 11 / 9 / 8 / 7 / 6%. Boundaries
+  bonded only by pairs 4-8 apart: DPANN 278,729 of 1,776,020 (15.7%); Spacedust 503,869 of 2,363,869 (21.3%).
+  Round-0 adjacencies at distance <= 8: DPANN 18.4 M (window 3: 8.0 M), Spacedust 32.3 M (12.0 M). Exclusion masks
+  (observed order) remove 227,543 DPANN and 655,510 Spacedust instances up to distance 8.
+
+EXPECTATIONS (predeclared5.json) AND OUTCOMES
+  tau DPANN 6-8, Spacedust 8-10                         HELD (8, 8)
+  DPANN resolved 1,540-1,620                            REFUTED (1,497)
+  DPANN CRISPR-Cas F1 .47-.50                           HELD (.491)
+  DPANN summed .52-.60                                  HELD (.560; vs part-1 L4b -.024, vs part-2 Z -.021)
+  Spacedust selected output +.14 to +.19; L1 +.20-.25   HELD (+.150; +.206)
+  success about 0.4                                     NOT MET (ribosomal bar on DPANN; -.034 vs the engine)
+  cost DPANN ~45 min, Spacedust ~20 min, peak < 150 GB  HELD (36 / 10 min; 110 / 106 GiB)
+
+FAILURE ANALYSIS
+- Ribosomal runs: with lists, the adaptive distance costs 45 runs against window 3 (odd 781 -> 758); with families it
+  cost none (part 4: -4 against part-1 L4b). 16% of Z-WA's bonded boundaries are bonded only by pairs 4-8 apart. The
+  per-run mechanism was not diagnosed here; joining runs to conserved flanks through far list pairs is the candidate
+  (UNVERIFIED; the part-1 ribosomal diagnosis code can classify the 1,497-run output's failures directly).
+- Spacedust: the union coverage of long regions is near the engine's (.85 vs .89 for 11+ genes) and F1 within .03, but
+  the nested L4b+ output carries a control of .571; the engine's union of readings has .566. The L1 runs carry .425 and
+  match the engine on excess.
+- CRISPR-Cas: list identity keeps its margin at the adaptive distance (+.012; part-2 Z +.010), so the trade against
+  family WA (-.019) is CRISPR-Cas for ribosomal runs.
+
+CAVEATS
+- The selection rule ranks odd conditions before resolved runs; Z-WA L4b+ met all three odd conditions with odd resolved
+  758 < DH odd 769 (the odd ribosomal condition is >= 705), so the rule could select an output that misses the even
+  ribosomal bar.
+- DPANN masks were rebuilt from the stored kNN through vl.emb_lists (16.7 min of the 36 min); a stored capcos array
+  would remove most of it.
+- Spacedust kNN is exact (part 3), DPANN's is HNSW (vocab_lists); both feed only masks and cohesion.
+
+ARTIFACTS
+Local benchmarks/redesign/long_loci/: predeclared5.json, REPORT5.txt, NOTEBOOK.txt (part 5); code/zwa.py (kernels,
+  masks, gates, adaptive run), zwa_smoke.py, sel5.py, q_zwa.sbatch, q_zwa2.sbatch; results/zwa_{dpann,sd}.json,
+  odd_dpann_ZWA.json, selection5.json, even_dpann_ZWA_p5.json, pairs_p5.json, s207_sd_ZWA.json, s207_sd_ZWA_dev.json.
+Biotite $RD/long_loci/: loci/{dpann,sd}_ZWA/, nodes/{dpann,sd}_ZWA/bonds_obs.npz, scores/, results/, logs/.
+JOBS: 94458 ll_zwa DPANN (64 CPUs, 38.5 min incl. odd scoring), 94459 ll_zwa Spacedust (64 CPUs, 10.3 min), 94715
+  ll_zwa2 (24 CPUs, 2 min: even, pairs, source207). Login node: zwa_smoke.py (synthetic, 1 thread).

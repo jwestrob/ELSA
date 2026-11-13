@@ -191,3 +191,17 @@ PART 4 (pair distance; CPU only)
                   bars; W5 / W8 1,631 / 1,626 resolved, CRISPR-Cas -.026 (fail). Spacedust: WA L4b .2 (primary) +.164
                   [+.125, +.202] (vs engine -.020 [-.054, +.014]); DEVELOPMENT WA L1 +.247 (BEATS engine +.064), W8 L1 +.234,
                   W5 L1 +.232. Z-WA not built (list kernels fix WGAP = 3; masks only for d <= 3); cost estimated. REPORT4.txt.
+
+PART 5 (Z-WA: embedding-list bonds at the adaptive pair distance; CPU only)
+---------------------------------------------------------------------------
+2026-11-13 15:25  Coordinator: part 5. predeclared5.json written before any Z-WA computation.
+2026-11-13 15:28  zwa_smoke (login node, synthetic universe): adjacency_w + pass_count_w at window 3 equal vl.adjacency +
+                  vl.pass_count exactly (n, n_groups, E, E_groups on 6,233 rows); adaptive support equals a brute-force count
+                  for 300 sampled adjacencies. Submitted Z-WA jobs (64 CPUs each) for DPANN and Spacedust.
+2026-11-13 16:07  Z-WA builds: Spacedust 617 s (masks 161 s, lists 45 s, gate 62 s), peak 106 GiB; DPANN 2,159 s (masks incl.
+                  vl.emb_lists 1,002 s, z lists 416 s, gate 115 s, 4 adaptive passes ~90 s each), peak 110 GiB. Gates passed
+                  (window-3 kernel = vl.pass_count exactly; mask d <= 3 = stored). tau 8 on both (DPANN FDR .0116 at 6).
+                  Odd: L4b+ .02 selected [3, 758, .572] (CCT .495); L4b .02 [2, 758, .615] (CCT .439). Amendment_1 written.
+2026-11-13 16:10  Even + source207 read (job 94715). DPANN Z-WA L4b+ .02: 1,686 / 1,497 (-15 vs DH: fails the ribosomal bar),
+                  summed .560, F1 .806/.748/.491 (CCT +.012): 6/7. Spacedust: +.150, -.034 [-.066, -.002] vs engine (BELOW);
+                  DEV L1 +.206 (MATCHES engine). Success definition not met. REPORT5.txt written.

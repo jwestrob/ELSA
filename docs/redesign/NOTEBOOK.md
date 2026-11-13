@@ -2712,3 +2712,29 @@ pairs need more support; threshold from the 1% shuffle rule on the whole adaptiv
   larger effect (+0.030 for the tree, +0.082 for runs, at equal tau).
 - 19 of the 56 runs the fixed-distance tree left under-covered are now bonded; 15 resolved.
 Follow-up started (part 5): the adaptive distance with embedding-list bonds, for CRISPR-Cas margin.
+
+## 2026-11-13 16:11 UTC — Adaptive distance with embedding-list bonds: no single output passes both tests (`benchmarks/redesign/long_loci/REPORT5.txt`)
+
+Negative result. The copied list kernel reproduces the existing first-round statistics exactly at
+window 3 (8.0 M DPANN and 12.0 M Spacedust gene pairs). Development result.
+
+- **DPANN, selected output (embedding lists, adaptive distance, every tree node):** CRISPR-Cas F1
+  0.491 (+0.012 [+0.001, +0.023]); ribosomal 1,686 recovered / **1,497 resolved** (-15 [-47, +19]
+  against the reference; bar 1,512 as the primary criterion); summed 0.560; six of seven bars.
+  Against the same lists at fixed distance it loses 45 resolved runs [26, 65]; family bonds lost
+  none at the adaptive distance. Cause not diagnosed (the agent's unverified guess: far list
+  pairs join runs to conserved flank).
+- **Spacedust collection:** F1 0.721, excess +0.150 [+0.114, +0.184]; -0.034 [-0.066, -0.002]
+  against the engine; +0.039 over the fixed-distance list tree; coverage of 11+-gene regions
+  0.85 / 0.69 (engine 0.89 / 0.73). Connected runs (development row) +0.206, level with the engine.
+- Cost on 64 CPUs: 36 min for DPANN (peak 110 GiB), 10 min for the Spacedust collection.
+- Selection-rule caveat: the odd-genome ribosomal condition (705 resolved) admitted an output
+  below the reference's odd count (758 against 769).
+
+Standing candidates after parts 1-5 (development results):
+| Configuration | DPANN bars | Ribosomal resolved | CRISPR-Cas vs reference | Spacedust excess |
+|---|---|---|---|---|
+| Family bonds, adaptive distance, tree | 7 | 1,594 | -0.019 | +0.164 (level with the engine) |
+| Embedding-list bonds, fixed distance, tree | 7 | 1,542 | +0.010 | +0.111 |
+| Alignment-list bonds, fixed distance, tree | 7 | 1,549 | -0.004 | not run |
+| Embedding-list bonds, adaptive distance, tree | 6 | 1,497 | +0.012 | +0.150 |

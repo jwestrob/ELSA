@@ -1977,3 +1977,39 @@ these pairs; what misses them is greedy clustering into families.
   genome-background directions, about 1 min, no taxonomy.
 Decision: covariation stays out; residual-direction coherence is a candidate single-genome
 boundary feature (not yet tested as a reading rule); foreignness is an annotation.
+
+## 2026-11-13 03:42 UTC — Context vectors as evidence units; label-free cuts (workstream `ws_context`; `benchmarks/redesign/context_units/REPORT.txt`)
+
+Hypothesis: the effective number of independent genomic contexts of a pair's instances, N_eff =
+1 / ||mean unit context vector||^2 (context = pooled whitened vectors within +-W genes), replaces
+the genus count with no genome grouping. Token DH reproduced exactly first.
+
+- **Refuted as a replacement for the genus.** Predeclared selection (raw vectors, W 50, t 2), even
+  genomes against the genus run: summed -0.003 [-0.018, +0.012], F1 +0.006 / -0.016 / -0.017,
+  ribosomal 1,686 recovered / 1,437 resolved. TXSScan and CRISPR-Cas lose more than 0.01; none of
+  48 configurations met all three odd conditions.
+- **The cause is the principle.** Real contexts carry information (they recover +0.100 / +0.081
+  F1 of the loss from shuffled contexts, which reproduce one-lineage-per-genome), but context
+  cosine between instances of one pair stays 15x the noise floor across phyla (0.76 same species,
+  0.48 / 0.28 / 0.17 / 0.11 / 0.08 genus / family / order / class / other phylum) because inside a
+  conserved multi-gene unit the window is filled by the rest of the unit. One cosine mixes shared
+  descent with the size of the conserved unit: the ribosomal superoperon gets N_eff 1-3
+  everywhere. Windows placed outside the locus (post hoc) do not fix it. The CRISPR-Cas loss sits
+  on systems seen in two genera with shared flanks (809 of 4,579 gold pairs; median N_eff 1.61).
+- **Embedding-only kernel with same-context exclusion and per-instance N_eff fails badly:**
+  -0.173 [-0.203, -0.144], 0 of 1,686 ribosomal runs recovered (mechanism not verified).
+- **Label-free cuts work.** Cohesion of a boundary = mean pairwise cosine of the neighbours of each
+  gene's homologs on the side facing the boundary (successor variety); cut where it falls below
+  theta. Token landscape, theta 0.05, against module-cut DH: +0.065 [+0.050, +0.079], F1 +0.050 /
+  +0.081 / +0.010, 1,456 resolved, Parvarchaeaceae 108. Round-2 embedding landscape with kNN
+  homologs (no families, no modules): +0.057, TXSScan F1 +0.101. Caveat: more, smaller loci (808k
+  against 650k) raise the control too; net of that DefenseFinder +0.023, TXSScan +0.042,
+  CRISPR-Cas excess -0.025. Boundary precision 0.75 -> 1.0 and 0.44 -> 0.67.
+- Best taxonomy-free token output (post hoc): data-derived groups (homolog-level 0.75) plus the
+  cut: +0.063 against token DH, F1 +0.051 / +0.072 / +0.006, 1,460 resolved.
+Reading: any honest independence measure gives a pair seen in two sister genera with shared
+flanks fewer than two observations; the genus count credits it by accident of rank. CRISPR-Cas
+should be recovered through broader identity (lists reaching homologous systems in other
+lineages), not through a looser unit. Untested alternative with no unit-size confound and no
+threshold: N_eff from genome-pair synteny retention (share of one genome's adjacencies conserved
+in the other), passed to the round-2 word workstreams.

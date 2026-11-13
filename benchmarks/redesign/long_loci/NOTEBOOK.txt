@@ -87,3 +87,39 @@ long_loci NOTEBOOK (workstream long_loci; times UTC from `date -u`)
 2026-11-13 11:28  All five jobs COMPLETED (92658 16 min, 92659 8 min, 92721 4.4 min, 92765 6.2 min, 92767 4.3 min); peak
                   RSS of every step <= 2.4 GB. Writing REPORT.txt.
 2026-11-13 11:32  REPORT.txt written (final). Copies of REPORT / NOTEBOOK / predeclared.json placed in $RD/long_loci/.
+
+PART 2 (DPANN only): L4b over list-based first-round bonds
+------------------------------------------------------------------
+2026-11-13 11:33  Coordinator: part 2 (list bonds Z / A / Zs / As, F reference, FZ exploratory). Read vocab_lists/REPORT.txt
+                  and vl.py (pass_count, pass_synneff, syn_matrix, Learner.evaluate, z_lists, aln_lists, cmd_job); stored
+                  objects located: $RD/vocab_lists/excl/{group,genome}_order{-1,0,1,2}.npz, mm/aln__k1000__{I,B}.npy,
+                  $RD/calib/table (z), job_z.json / job_aln.json ladders (Z tau* 6: 2,246,491 observed at 6; A tau* 6:
+                  2,522,221). Round-0 statistics are not stored per adjacency: recomputed here with vl.py's own kernels.
+2026-11-13 11:37  predeclared2.json written before any list-based computation of this workstream.
+2026-11-13 11:39  Family-free node filter smoke (login node, 1 thread, synthetic 40-genome universe): lb.count_lists equals a
+                  brute-force window scan on 261 nodes (0 mismatches; -1 padding, partner dedupe and own-group exclusion
+                  included); lb.py imports vl.py read-only (numba cache and bytecode redirected away from vocab_lists).
+2026-11-13 11:40  Re-read both cluster files (unchanged); account 228 CPUs running. Submitted 92909 ll_qZ (Z with FZ, then
+                  Zs) and 92910 ll_qA (A, then As), 64 CPUs each on standard_expand_2 (account 356). Gate inside: Z and A
+                  ladders must equal job_z.json / job_aln.json before any locus is written.
+2026-11-13 11:44  GATE PASSED for A: observed and three shuffled round-0 ladders equal job_aln.json exactly (tau* 6;
+                  2,522,221 bonds at 6). Z observed ladder equal at 11:47 (shuffles following).
+2026-11-13 11:54  Job 92910 done (A 369 s, peak 51 GB; As). Submitted 93014 ll_qodd (24 CPUs; account 268 before it):
+                  odd scores of A, As and F's L4b+ (Z / Zs / FZ after job 92909).
+2026-11-13 12:01  GATE PASSED for Z (all four orders equal job_z.json; tau* 6). Z + FZ built (job 92909); Zs started.
+                  As tau* 6 (FDR .0115 at 4, .0022 at 6). Odd A / As / F-L4b+ read (job 93014): A L4b .02 [3 conditions,
+                  odd resolved 785, summed .614]; As L4b .02 [3, 785, .620]; F L4b+ .02 [2, 810, .593].
+2026-11-13 12:04  Submitted 93124 ll_qodd (Z, FZ odd; 24 CPUs; account 268 before it).
+2026-11-13 12:09  Odd Z / FZ read (job 93124): Z L4b .02 [2, 781, .624] (CCT .448), Z L4b+ .02 [3, 781, .591]; FZ L4b
+                  .02 [3, 784, .623]. Selections (sel2.py, part-1 rule): F L4b .02, Z L4b+ .02, A L4b .02, As L4b .02,
+                  FZ L4b .02; written to predeclared2.json amendment_1 before any even number.
+2026-11-13 12:15  EVEN read (job 93147; even_dpann_{group,Z,A,As,FZ}_p2.json, pairs_p2.json). All seven bars met by A L4b
+                  .02 (1,681 / 1,549, +37 [+7, +69]; summed .613; F1 .823/.751/.475), As L4b .02 (1,686 / 1,547; .624;
+                  CCT .470), Z L4b+ .02 (1,681 / 1,542; .581; CCT .489) and FZ L4b .02 (exploratory). F L4b .02 fails
+                  CRISPR-Cas only. Token cohesion instead of kNN cohesion: +53 to +75 resolved, all bars still met.
+                  Z - A like-for-like L4b: summed +.007 [-.010, +.022], CCT -.022 [-.030, -.015], resolved -7 [-17, +2].
+2026-11-13 12:23  Zs built (tau* 6: FDR .0118 at 4, .0026 at 6) and odd-scored (job 93220): L4b .02 [2, 777, .622] (CCT
+                  .451), L4b+ .02 [3, 777, .586] selected. predeclared2.json amendment_2 written before any Zs even number.
+2026-11-13 12:26  Zs even read (job 93224): L4b+ .02 1,681 / 1,533 (+21 [-10, +51]), summed .585, F1 .807/.757/.504,
+                  all seven bars. Pairs vs part-1 L4b: resolved -49 to -65; summed -.003 to +.040; CCT F1 +.045 to +.084.
+                  Token vs kNN cohesion: A +53 [+37, +70] resolved, As +75 [+55, +94]. REPORT2.txt written.

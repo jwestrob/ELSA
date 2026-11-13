@@ -1,0 +1,158 @@
+LONG_LOCI PART 2: THE L4b TREE OVER LIST-BASED FIRST-ROUND BONDS (DPANN, 2026-11-13)
+=====================================================================================
+Odd genome_code = selection, even = verdict; ribosomal counts over all 1,686 runs; paired genome bootstrap (2,000 draws,
+seed 17). Every number is a development result (both halves consulted many times). Predeclaration predeclared2.json:
+main 11:37 UTC (before any list-based computation), amendment_1 12:09 (selections of F, Z, A, As, FZ, before any even
+number), amendment_2 12:22 (Zs selection, before its even numbers). Reproduction gate: the round-0 ladders of Z and A
+(observed and the three gene-order shuffles) equal the stored vocab_lists ladders exactly (job_z.json, job_aln.json),
+so the list bonds are vocab_lists' own first-round statistic. Token DH reference as in part 1 (.4270, 1,686 / 1,512).
+Seven bars (even, vs token DH): summed >= -.01; F1 DF, TXSS, CCT each >= -.02; recovered >= 1,650; resolved > 1,512;
+Parvarchaeaceae recovered >= 110.
+
+ANSWER
+1. YES: single outputs meet all seven bars. The odd-selected alignment-list arm A (MMseqs2 lists, group counting,
+   L4b at theta .02, kNN cohesion) gives ribosomal 1,681 / 1,549 (+37 [+7, +69] over DH), Parvarchaeaceae 114, summed
+   .613 (+.186 [+.165, +.206]), F1 .823 / .751 / .475 (DF +.079, TXSS +.203, CCT -.004 [-.015, +.007]). The selected
+   outputs of Z (L4b+), Zs (L4b+) and As (L4b) also meet all seven, and so does the exploratory FZ.
+2. Against part-1 L4b (families, theta .1): A +.028 [+.006, +.050] summed, F1 +.092 / +.052 / +.056, and -49 [-66, -32]
+   resolved runs. List bonds buy CRISPR-Cas (+.05 to +.08 F1) and DefenseFinder (+.08 to +.09) and give back 49-65 of the
+   86 resolved runs that families gained over DH; every selected list output keeps resolved above 1,512 (lower 95%
+   bound above 0 for A, As, Z; Zs +21 [-10, +51]).
+3. Cohesion source matters for the ribosomal runs: the token cohesion array in place of the kNN array adds +53 [+37, +70]
+   resolved runs to A (1,602) and +75 [+55, +94] to As (1,622, the highest of any output here) at -.008 summed, with all
+   seven bars still met (A tok CCT -.006, As tok -.011). The predeclared family-free array is the one selected; the token
+   array is a check, so 1,602 / 1,622 are reported as such.
+4. Embedding lists and alignment lists are equivalent here except on CRISPR-Cas: Z - A like-for-like (L4b .02) summed
+   +.007 [-.010, +.022], resolved -7 [-17, +2], DF F1 -.021 [-.033, -.008], CCT F1 -.022 [-.030, -.015]. Z's L4b misses
+   the CRISPR-Cas bar (.453), so its rule picks L4b+ (.489); A's L4b passes directly (.475). Zs - As (L4b): -.001
+   [-.017, +.013], CCT -.008, resolved -14 [-26, -2].
+5. Where the CRISPR-Cas F1 comes from: CRISPR-Cas member genes outside every locus fall from 41.9% (families, F L4b .02)
+   to 28.1-33.3% (list outputs) and covered50 rises from .676 to .74-.81. Part of the gain is coverage: CRISPR-Cas excess
+   stays at .057-.065 for every list output against .080 for DH, because the control rises with it (.40-.45 vs .399).
+6. The 56 runs part-1 L4b left under-covered: embedding and alignment lists with group counting bond every internal
+   boundary of only 3-6 of them (Z 5, A 6, Zs 3) and resolve 1-3; alignment lists with synteny counting (As) bond 36 of 56
+   and resolve 18 (22 with token cohesion). The gaps are lineage-confined genes: group-excluded lists hold no partner for
+   them, genome-excluded alignment lists do.
+7. Family-free whole-node filter (proposed and used): a node gene's identity is its list partners; a genome holds the
+   node when list partners of >= half its listed genes lie within 2|I| genes; n = other groups, closed-form E, kept at the
+   bonds' tau. It trades CRISPR-Cas for summed exactly as in part 1: A L4b vs L4b+ summed +.035, CCT -.032; Z +.039 /
+   -.036. With the part-1 rule, A and As keep the filtered L4b; Z and Zs need L4b+ for the CRISPR-Cas bar.
+8. Spacedust needs neighbour lists for its 1,317 genomes (section 'SPACEDUST'); the alignment arm can be built on CPU
+   alone (MMseqs2 all-against-all, about 16 h on 64 CPUs) with the existing token cohesion array.
+
+--------------------------------------------------------------------------------------------------------------------------
+TABLE. DPANN EVEN, the seven bars (results/table2_even.txt; d = paired difference [95%]; p1 = part-1 L4b theta .1;
+bars = number of the seven met; bprec = median boundary precision DF/TXSS/CCT; genes = share of genes in loci;
+CasOut = CRISPR-Cas member genes outside every locus, even instances with >= 2 members)
+  arm output             rec/res    d res vs DH     d res vs p1     Parv summed d vs DH              d vs p1              F1 DF/TXSS/CCT  dF1 CCT vs DH        bars bprec          genes CasOut
+  DH  token DH           1686/1512  -               -               114  .427   -                    -                    .744/.548/.479  -                    ref  .75/.44/.40    .715  -
+  p1  L4b theta .1       1680/1598  +86 [+60,+115]  -               114  .584   +.157 [+.134,+.182]  -                    .731/.700/.419  -.060 [-.072,-.048]  6/7  1.00/1.00/.50  .460  -
+  F   L4b .02 (sel.)     1680/1602  +90 [+63,+118]  -               114  .587   +.160 [+.137,+.184]  +.003 [-.005,+.010]  .724/.700/.418  -.062 [-.074,-.050]  6/7  1.00/.86/.50   .459  .419
+  Z   L4b+ .02 (sel.)    1681/1542  +30 [+1,+60]    -56 [-75,-39]   114  .581   +.154 [+.133,+.176]  -.003 [-.023,+.017]  .824/.749/.489  +.010 [-.002,+.021]  7/7  1.00/1.00/.50  .571  .305
+  A   L4b .02 (sel.)     1681/1549  +37 [+7,+69]    -49 [-66,-32]   114  .613   +.186 [+.165,+.206]  +.028 [+.006,+.050]  .823/.751/.475  -.004 [-.015,+.007]  7/7  1.00/.83/.50   .566  .322
+  Zs  L4b+ .02 (sel.)    1681/1533  +21 [-10,+51]   -65 [-84,-48]   114  .585   +.158 [+.138,+.179]  +.001 [-.020,+.022]  .807/.757/.504  +.024 [+.013,+.036]  7/7  1.00/.94/.50   .598  .281
+  As  L4b .02 (sel.)     1686/1547  +35 [+6,+66]    -51 [-72,-31]   114  .624   +.197 [+.177,+.218]  +.040 [+.019,+.062]  .823/.757/.470  -.010 [-.021,+.001]  7/7  1.00/.80/.50   .578  .322
+  FZ  L4b .02 (expl.)    1681/1548  +36 [+6,+67]    -50 [-68,-33]   114  .618   +.191 [+.170,+.213]  +.034 [+.014,+.053]  .807/.747/.464  -.015 [-.026,-.003]  7/7  1.00/1.00/.50  .537  .329
+  secondary rows (not selected)
+  Z   L4b .02            1681/1542  +30 [+1,+60]                    114  .620   +.193 [+.171,+.215]  +.035 [+.015,+.055]  .802/.746/.453  -.026 [-.038,-.014]  6/7  1.00/1.00/.50  .526  .345
+  A   L4b+ .02           1681/1549  +37 [+7,+69]                    114  .578   +.151 [+.131,+.170]  -.006 [-.028,+.016]  .842/.752/.507  +.027 [+.017,+.038]  7/7  1.00/.83/.50   .611  .283
+  Zs  L4b .02            1681/1533  +21 [-10,+51]                   114  .623   +.196 [+.175,+.219]  +.039 [+.019,+.059]  .801/.747/.462  -.018 [-.029,-.005]  7/7  1.00/1.00/.50  .542  .333
+  token-cohesion checks (same output, kappa_var_tokens.npy)
+  Z   L4b+ tok .02       1681/1602  +90 [+64,+119]                  114  .569   +.142 [+.120,+.163]  -.016 [-.036,+.003]  .823/.743/.497  +.018 [+.006,+.029]  7/7  1.00/1.00/.50  .571  .305
+  A   L4b tok .02        1681/1602  +90 [+62,+118]                  114  .604   +.177 [+.156,+.198]  +.020 [-.002,+.042]  .822/.746/.474  -.006 [-.017,+.006]  7/7  1.00/1.00/.50  .566  .326
+  Zs  L4b+ tok .02       1681/1604  +92 [+65,+120]                  114  .576   +.149 [+.128,+.170]  -.009 [-.030,+.012]  .806/.755/.512  +.033 [+.021,+.046]  7/7  1.00/.89/.50   .598  .281
+  As  L4b tok .02        1686/1622  +110 [+84,+137]                 114  .616   +.189 [+.168,+.209]  +.032 [+.011,+.053]  .822/.750/.468  -.011 [-.023,+.000]  7/7  1.00/.80/.50   .578  .326
+  FZ  L4b tok .02        1681/1606  +94 [+68,+123]                  114  .612   +.185 [+.164,+.208]  +.028 [+.009,+.047]  .806/.741/.463  -.016 [-.028,-.004]  7/7  1.00/1.00/.50  .537  .331
+  Paired, tok - kNN (same output): A resolved +53 [+37, +70], summed -.008 [-.013, -.003]; As +75 [+55, +94], -.008.
+  Parvarchaeaceae resolved (of 114): F / Z / A / Zs / As 107 / 107 / 106 / 100 / 102; As tok 112.
+  CRISPR-Cas excess (F1 - control): DH .080; list outputs .057-.065; F .057.
+
+SELECTION (odd; results/selection2.json; [odd conditions met, odd resolved, odd summed]; DH odd resolved 769)
+  F   L4b .02 [2, 810, .607]  (L4b+ .02 [2, 810, .593]; L1 [1, 531, .491])   CRISPR-Cas fails the odd F1 condition
+  Z   L4b+ .02 [3, 781, .591] (L4b .02 [2, 781, .624]: CCT .448)            A   L4b .02 [3, 785, .614] (L4b+ [3, 785, .581])
+  Zs  L4b+ .02 [3, 777, .586] (L4b .02 [2, 777, .622]: CCT .451)            As  L4b .02 [3, 785, .620] (L4b+ [3, 785, .574])
+  FZ  L4b .02 [3, 784, .623]   L1 of every list arm: 0-1 conditions, odd resolved 433-496 (no boundaries).
+  theta .02 is selected in every arm (resolved and summed fall with theta in all list arms: A 785 / 774 / 769 / 768).
+
+--------------------------------------------------------------------------------------------------------------------------
+THE ARMS AND WHAT THEY READ (code/lb.py; vl.py imported read-only; nothing written under $RD/vocab_lists)
+  Stored objects: $RD/vocab_lists/code/vl.py (Univ, z_lists, aln_lists, Learner.round0 = adjacency + pass_count, and for
+  syn pass_synneff + syn_matrix; ladder_counts, LADDER, FDR); $RD/calib/table/{counts.npy, genome.bin, local.bin, z.bin}
+  (ws_calib per-genome z table, read through vl.z_lists at 10.6); $RD/vocab_lists/mm/aln__k1000__{I,B}.npy (MMseqs2
+  all-against-all, read through vl.aln_lists); $RD/vocab_lists/excl/{group,genome}_order{-1,0,1,2}.npz (round-0 homolog
+  exclusion masks, K1000); $RD/lineagefree/groups/emb_hom_average_t0.75.parquet and genome_map.parquet; softrec
+  null_order (seeds 1000-1002) and map_slots; ladders in job_z.json / job_aln.json (gate). vl.Learner.syn_S was
+  subclassed only to remove its np.save into vocab_lists/results. Cohesion: $RD/context_units/ctx/kappa_var_knn50.npy
+  (primary) and kappa_var_tokens.npy (check).
+  arm  lists (excluded unit)         counting         tau*  bonds (round 0)  bonded boundaries  L1 genes  build wall / peak
+  F    families (part 1)             groups           10    1,797,062        1,310,777          .485      141 s / 1.6 GB
+  Z    z >= 10.6 (own group)         groups           6     2,246,491        1,583,142          .571      21 min / 82 GiB *
+  A    MMseqs2 depth 1,000 (group)   groups           6     2,522,221        1,710,321          .611      6.2 min / 51 GiB
+  Zs   z >= 10.6 (own genome)        synteny N_eff    6     2,511,906        1,703,987          .598      18.4 min / 84 GiB
+  As   MMseqs2 (own genome)          synteny N_eff    6     2,814,337        1,818,450          .634      7.5 min / 51 GiB
+  FZ   F or Z bond, larger Lambda    -                10/6  -                1,661,437          .597      in Z's run
+  * includes FZ. z lists hold 3.27 G (group-excluded) / 3.35 G (genome-excluded) entries; building them takes 145-358 s.
+  Round-0 pass per order: 20-75 s (pass A), 24-127 s more for N_eff (syn); family-free node test 99-277 s for 2.2-2.7 M
+  node intervals on 64 threads. tau ladders (round-0 instance FDR, 3 shuffles): Zs .0118 / .0026 at 4 / 6, As .0115 /
+  .0022 -> tau* 6 for both (Z, A stored and reproduced: 6). Odd scoring 9 outputs per arm ~2 min; even ~30-50 s per arm
+  (24 CPUs). All seven jobs completed.
+
+FAMILY-FREE NODE FILTER (code/lb.py count_lists; brute-force check on a synthetic universe, 0 / 261 mismatches)
+  For node I: |I| = genes of I with a non-empty list; q = max(2, ceil(|I|/2)); W = 2|I|; a genome holds I when a window
+  of <= W genes on one contig contains list partners of >= q distinct genes of I, each partner position counted once
+  (for the lowest-indexed node gene listing it); n = groups other than the node's own holding I; E = part-1 closed form
+  with c_f(g) = partners of node gene f in genome g; kept at n >= 2 and Lambda(n, E) >= the arm's bond tau (6). Kept
+  share of tree nodes at theta .02: Z 89.3%, A 89.4%, Zs 86.1%, As 86.4%, FZ 86.6%.
+
+SPACEDUST: WHAT ADDING IT NEEDS
+  (1) Lists for 1,317 genomes / 4.26 M genes: z lists need ws_calib's per-genome best-match z table, one all-against-all
+      embedding pass (4.23 M unique x 4.26 M genes x 960 d; ~25 min on one GPU, 9-10 h on a 64-core Broadwell node per
+      transfer_spacedust's estimate); alignment lists need an MMseqs2 all-against-all of 4.23 M unique sequences (-s 7.5,
+      --max-seqs 1000; DPANN's 2.55 M took 6.0 h on 64 CPUs, so roughly 16 h) and mm2knn.py.
+  (2) Round-0 homolog exclusion masks (vl uses zca10 kNN lists: GPU kNN k 2,000 on the collection) or a rule derived from
+      the MMseqs2 hits; (3) family-free cohesion kappa_var_knn50 (top-50 kNN; same kNN) or the existing token array
+      $RD/transfer_spacedust/emb/kappa_var_tokens.npy, which on DPANN gave more resolved runs; (4) a vl.Univ variant for
+      $RD/universe (lf_universe reads the DPANN package path) with the 618 groups; then lb.py and sscore.py unchanged.
+  The alignment arm with token cohesion therefore needs no GPU: about 16 h of MMseqs2 plus 30 min of lb.py and scoring.
+
+EXPECTATIONS (predeclared2.json) AND OUTCOMES
+  Z / A ladders equal the stored ones                       HELD (all four orders, both arms)
+  Zs / As tau* 4-6                                          HELD (6, 6)
+  Z selected: resolved 1,500-1,620, CCT .45-.50, DF .76-.81,
+    TXSS .64-.70, summed .50-.58                            resolved 1,542 HELD; CCT .489 HELD; DF .824 / TXSS .749 / summed .581 ABOVE
+  A within .02 summed and .015 CCT of Z                     summed HELD like-for-like (+.007 Z-A); CCT REFUTED (A +.022)
+  Zs / As CCT +.02 to +.04 above Z / A                      REFUTED like-for-like (Zs - Z L4b CCT +.009, unpaired; As - A -.006 [-.010, -.001])
+  FZ between F and Z on CCT; resolved 1,560-1,620           CCT HELD (.464); resolved 1,548 BELOW
+  one output meets all seven bars with probability ~.5      five selected outputs meet them
+  amendment_1: A / As resolved 1,530-1,580, all F1 bars     HELD (1,549 / 1,547; all F1 bars)
+  under-covered 56: 25-50 fully bonded, 15-40 resolved      REFUTED for Z / A / Zs (3-6 bonded, 1-3 resolved); As 36 / 18 HELD
+  Cas members outside: F 30-40%, list arms 15-28%           F 41.9% (above), list arms 28.1-33.3% (above)
+
+CAVEATS
+- All five selected list outputs meet the seven bars by point estimates; the ribosomal margin over DH is +21 to +37 with
+  kNN cohesion (Zs's interval includes 0) and +90 to +110 with token cohesion (not selected; reported as the check the
+  brief asked for).
+- CRISPR-Cas F1 meets its bar while CRISPR-Cas excess stays below DH (.057-.065 vs .080): the F1 gain is partly coverage.
+- Syn arms count groups in the node test (as part 1); only their bonds use N_eff. FZ is exploratory and its filter uses
+  the Z lists.
+- Lists are those of vocab_lists (group- or genome-excluded, as that workstream's units); no list was rebuilt or
+  re-ranked. The exclusion masks come from the zca10 kNN lists for every arm, as in vocab_lists.
+- theta .02 is the low edge of the predeclared ladder in every list arm.
+
+ARTIFACTS
+Local benchmarks/redesign/long_loci/: predeclared2.json, REPORT2.txt, NOTEBOOK.txt (part-2 section); code/lb.py (list
+  bonds via vl.py, tree, family-free node filter), lb_smoke.py, sel2.py, table2.py, dscore.py (even --compare / --extra,
+  pairs), q_Z.sbatch, q_A.sbatch, q_odd.sbatch, q_even.sbatch; results/lbuild_{Z,A,Zs,As}.json, odd_dpann_{Z,A,Zs,As,FZ}.json,
+  odd_dpann_group_L4bp.json, selection2.json, even_dpann_{group,Z,A,Zs,As,FZ}_p2.json, pairs_p2a.json, pairs_p2.json,
+  table2_even.txt.
+Biotite $RD/long_loci/: loci/dpann_{Z,A,Zs,As,FZ}/ (L1, L4b*_t*, L4bp*_t*), nodes/dpann_<arm>/ (bonds_obs.npz with n, ng,
+  N_eff; obs4b_{knn,tok}_t*.parquet node tables with n, E, Lambda), scores/dpann_<arm>/, results/, logs/.
+JOBS (account <= 356 CPUs at each submission)
+  92909 ll_qZ   64 CPU  39.4 min  Z (+FZ) and Zs builds, peak 85.5 GiB
+  92910 ll_qA   64 CPU  13.7 min  A and As builds, peak 71.1 GiB
+  93014 ll_qodd 24 CPU   5.3 min  odd A, As, F L4b+
+  93124 ll_qodd 24 CPU   4.3 min  odd Z, FZ
+  93147 ll_qeven 24 CPU  3.1 min  even F, Z, A, As, FZ; pairs
+  93220 ll_qodd 24 CPU   2.2 min  odd Zs; selection
+  93224 ll_qeven 24 CPU  1.0 min  even Zs; pairs vs part-1 L4b, Zs vs As, token vs kNN
+  Login node: lb_smoke.py (synthetic, 1 thread).

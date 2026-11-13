@@ -2544,3 +2544,39 @@ Full-set rules (no sampling) applied to the bond-tree outputs; counts reproduced
   "junction" cases mostly restate "no bond here".
 - A ribosomal protein the Pfam marker misses: family 90081 (KOW domain), annotated as translation
   in 81% of members.
+
+## 2026-11-13 12:28 UTC — Bond tree over neighbour-list bonds: single outputs clear all seven DPANN bars (`benchmarks/redesign/long_loci/REPORT2.txt`)
+
+Development result (both DPANN halves have been consulted many times). Predeclared; arms and
+readings selected on odd genomes; recomputed first-round statistics match the stored
+`vocab_lists` ladders exactly. The tree needs only first-round bonds, so list identity no longer
+thins with locus length.
+
+| Bond source, counting (output) | Recovered / resolved | Resolved vs reference | Summed excess | F1 DF / TXSS / CCT | Bars |
+|---|---|---|---|---|---|
+| Reference engine | 1,686 / 1,512 | | 0.427 | 0.744 / 0.548 / 0.479 | |
+| Families, groups (part 1) | 1,680 / 1,598 | +86 [+60, +115] | 0.584 | 0.731 / 0.700 / 0.419 | 6 |
+| **Alignment lists, groups** | 1,681 / 1,549 | +37 [+7, +69] | 0.613 (+0.186 [+0.165, +0.206]) | 0.823 / 0.751 / 0.475 | **7** |
+| Alignment lists, shared-gene-order counts | 1,686 / 1,547 | +35 [+6, +66] | 0.624 | 0.823 / 0.757 / 0.470 | 7 |
+| Embedding lists, groups (every node) | 1,681 / 1,542 | +30 [+1, +60] | 0.581 | 0.824 / 0.749 / 0.489 | 7 |
+| Embedding lists, shared-gene-order counts (every node) | 1,681 / 1,533 | +21 [-10, +51] | 0.585 | 0.807 / 0.757 / 0.504 | 7 |
+| Family or embedding bond (exploratory) | 1,681 / 1,548 | +36 [+6, +67] | 0.618 | 0.807 / 0.747 / 0.464 | 7 |
+
+- **First single outputs to meet every bar.** Selected arm: MMseqs2 alignment lists, genome
+  groups, bond tree at theta 0.02 with the family-free cohesion array: CRISPR-Cas -0.004
+  [-0.015, +0.007]; Parvarchaeaceae 114.
+- Against the family bond tree: summed +0.028 [+0.006, +0.050], F1 +0.092 / +0.052 / +0.056, 49
+  fewer runs resolved [-66, -32].
+- **The cohesion array matters for the ribosomal count:** the token array in place of the kNN array
+  gives 1,602 (alignment, groups) and 1,622 (alignment, shared-gene-order counts; the most of any
+  output), with all seven bars still met. The kNN array was the predeclared one.
+- **Embedding and alignment lists differ only on CRISPR-Cas:** embedding minus alignment on the
+  same output: summed +0.007 [-0.010, +0.022], resolved -7 [-17, +2], CRISPR-Cas -0.022 [-0.030,
+  -0.015].
+- The CRISPR-Cas gain is partly coverage: Cas member genes outside every locus fall from 41.9% to
+  28-33%; CRISPR-Cas excess is 0.057-0.065 against the reference's 0.080.
+- Of the 56 runs the family tree left under-covered, list bonds with group counting resolve 1-3;
+  alignment lists with shared-gene-order counts resolve 18 (22 with token cohesion).
+- Build cost: 14 min (alignment arms) and 39 min (embedding arms) on 64 CPUs, peak 71-86 GiB.
+Next: the same outputs on the Spacedust collection, unchanged (needs neighbour lists there: an
+all-against-all alignment of 4.23 M sequences, or one GPU pass for the embedding lists).

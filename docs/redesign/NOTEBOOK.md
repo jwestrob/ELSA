@@ -2150,3 +2150,27 @@ triage result, part 2 before any fold). ESMFold2 through the Biohub API, 48 of 5
   `protein_resemblance`; the screen read the 12 Nov Mac copy.
 Open: superpose rank 20's small chain on Phd in 3k33; open the M. jannaschii MJ0788/MJ0789 locus
 for rank 4; screen the hydrophobic clusters with MSA-conditioned folds.
+
+## 2026-11-13 07:44 UTC — Second datasets chosen; prior-work check started (decisions by Jacob)
+
+Status report for Jacob published as an artifact (source kept in the session scratchpad). His
+decisions after reading it and my assessment of the paper:
+
+- **Datasets, by role.** (A) Spacedust benchmark collection for development and the external
+  head-to-head (workstream `transfer_spacedust`: word method with DPANN settings unchanged,
+  predeclared; any setting chosen after a source207 number is a labelled development variant).
+  (B) SR-VP bacteria PacBio (Sharur `srvp_bacteria_pb`, 1,382 single-contig genomes, 2.91 M
+  proteins) as a locked test: package, family tokens and embeddings only, no method run
+  (workstream `transfer_srvp_bac`). (C) Omnitrophota afterwards, as the application.
+- **GlobDB / GTDB slices as datasets** (Jacob's suggestion). First slice: loci homologous to the
+  lanthanide utilization and transport (lut) cluster across the family holding Methylobacterium
+  and its order, from GTDB r232 representatives with GlobDB r232 annotations; packaged in universe
+  format with no ELSA method run on it (workstream `slice_lut`). The GlobDB protein FASTA was
+  deleted on 29 October, so GlobDB-only genomes have annotations without sequences.
+- **Prior-work check** by headless Codex (gpt-6-astra, high effort, live web search), two scopes:
+  gene-cluster statistics and synteny tools (`priorart/REPORT_codex_A.txt`), language-model,
+  embedding and co-folding approaches (`priorart/REPORT_codex_B.txt`). Prompts saved beside them.
+- Scope note: the repo's E. coli and B. subtilis operon benchmarks are single-lineage sets, and the
+  word method counts lineages, so they no longer measure what this method does.
+- Still running from the previous round: `vocab_lists` (phrase reading on embedding words;
+  alignment-list control).

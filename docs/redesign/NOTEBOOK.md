@@ -2300,3 +2300,26 @@ before the numbers it governs.
 - Cost: 6-9 min per full run on 64 threads; lists 2-5 min.
 Open: a boundary signal for the parse (cohesion as a cut at junctions; gene-level lists kept at a
 word's ends); alignment and z lists with the synteny unit, which were tested separately.
+
+## 2026-11-13 09:03 UTC — Locked test package: SR-VP bacteria, PacBio (workstream `transfer_srvp_bac`; `benchmarks/redesign/transfer_srvp_bac/REPORT.txt`)
+
+Inputs only; no locus-calling method has been run on it and nothing has been scored against its
+curated calls. Package at `$RD/ws_srvp_bac/package`, sealed 2026-11-13T08:31:26Z (`SEAL.txt`).
+
+- **Correction to my earlier description: these are 1,382 long single contigs, not complete
+  genomes.** 406 are circular; median completeness 36.7%; contig length 403 to 8,933 genes,
+  median 1,483. 2,914,401 proteins.
+- Source database stable (SHA-256 matches the Sharur seal; unchanged over the whole build). The
+  biotite copy of the database dates from 23 October, before the DefenseFinder reload; unused.
+- Breadth: 36 phyla, 114 orders, 163 families, 198 genera; Acidobacteriota 475 genomes,
+  Pseudomonadota 215; 25 named species.
+- Gold instances with at least two members: DefenseFinder 3,468 (span median 2 genes),
+  CRISPRCasTyper 1,681 (3), GECCO BGC loci 1,646 (12), TXSScan 2,542 (430). Ribosomal runs 755.
+- **TXSScan is not a locus benchmark here as it stands:** only 115 of 2,542 instances are
+  contiguous (median span 430 genes). The frozen protocol has to fix how it is scored (the
+  scorer's span limit) before any run.
+- Family tokens with the DPANN recipe: 187,175 tokens after rescue3; the agent's rescue code
+  reproduces the adopted DPANN table exactly.
+- Split by genome-code parity: 691 / 691.
+- Pending: ESM++ small embeddings and whitening. A gate script on the biotite login node submits
+  the GPU job once the account's current GPU job clears, then the finalize job.

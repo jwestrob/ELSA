@@ -1,0 +1,106 @@
+slice_lut part 2 — a lut-centred test set in the manner of the DPANN package
+Workstream slice_lut, 2026-11-13. Local: benchmarks/redesign/slice_lut/ (testset/, code/). Biotite: $RD/slice_lut/testset/
+(RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111). Log: NOTEBOOK.txt (continues).
+Untouched: no ELSA method, similarity pass or neighbour list has been run on these genomes. GTDB taxonomy was used to
+build the set only; the method reads no taxonomy.
+
+ANSWERS
+1. Built (Jacob's choice, large size): package_k8, 1,032 GTDB r232 species representatives, 4,507,042 proteins,
+   4,464,102 unique sequences, 161,964 contigs; split 516 tuning (odd genome_code) / 516 test (even).
+   Seal SHA-256 261ce23413a3708d98ddbc055ee8101a9ea60c65e2e43cd82202c17a2d533475 (12 files: selection, split, FASTA,
+   5 universe tables, 4 truth tables; testset/package_k8/seal.json). The middle size was already built when the decision
+   arrived: package_k2 (449 genomes), seal 9b94d6e6894445cf899c271835cf2dc93060a9097d463839c9347ff2f41c0580.
+2. Size options (rule set v2, ladder step k; embedding = ESM++ small on one A5000, scaled from today's SR-VP run of
+   1,785,952 unique sequences / 581.0 M tokens in 3 h 05 min; similarity pass scaled linearly from ~25 min per 4.2 M):
+
+   size      k  genomes  proteins   unique seq  unique residues  main lut loci  embedding (tokens / seqs)  similarity
+   ~250      1      297  1,354,673  1,335,765     404.7 M          253          2.2 h / 2.3 h             ~8 min
+   ~500      2      449  2,000,518  1,976,450     600.0 M          360          3.2 h / 3.4 h             ~12 min
+   ~1,000    8    1,032  4,507,042  4,464,102   1,354.0 M          733          7.2 h / 7.7 h             ~27 min
+
+   Lut loci by architecture class (main definition): complete lutA-I 80 at every size (58 + 22 with lanM); receptor +
+   transporter 30 / 45 / 92; transporter module only 139 / 229 / 551; receptor module without transporter 4 / 6 / 10.
+3. Layers of the large set (genomes / genera / families): a1 complete lutA-I 80 / 1 / 1; a2 receptor (+ transporter or
+   receptor module) 96 / 33 / 6; a3 split 141 / 75 / 31; a4 transporter module only 341 / 201 / 84; b1 same-genus
+   lut-negative 166 / 30 / 6; b2 same-family lut-negative 134 / 134 / 23; c1 class background 56 / 56 / 56;
+   c2 outside-class module carriers 18 / 18 / 16 (17 Gammaproteobacteria, 1 Campylobacteria; including the
+   Aquipseudomonas alloputida rep for P. putida KT2440 and Methylotuvimicrobium buryatense).
+   Largest genera: Methylobacterium 93, Bradyrhizobium 23, AP-15 20, VAZQ01 17, BOG-931 16, Roseiarcus 15, 62-47 15.
+   Largest families: Beijerinckiaceae 190, Xanthobacteraceae 145, Acetobacteraceae 61, CGMCC-115725 34.
+4. Truth tables (package gene numbering): gold/lut_instances.parquet with 733 main and 121 strict part-1 loci (system
+   type = architecture class, components, member gids and positions, architecture, contig-edge flags) and
+   gold/lut_members.parquet (4,585 members; all on their instance contig and inside the span; the M. extorquens
+   representative maps to gids 1,501,061-1,501,070 in AM1 order). Ribosomal runs by the standing definition: 858 g2 runs
+   with >= 16 marked genes in 855 of 1,032 genomes (g0: 799), from 53,031 marked genes (Pfam 38.1, 67 of 121
+   ^ribosom(al)?_ models hit at GA). Ribosomal search cost: 2.5 min on 24 CPUs.
+5. Embedding: queued through a gate (one GPU job per account). Estimate 7.2-7.7 h on one A5000. The gate submits the
+   GPU worker when `squeue -u jwestrob -p gpu` is empty, then the whitening + manifest job with afterok. Job IDs: see
+   STATUS at the end (filled when the gate submits).
+6. Rule set v1 was withdrawn before use: its smallest step selected 1,645 genomes (per-genus caps over ~1,100 genera).
+   v2 caps split and transporter-only genomes per family, keeps per-genus caps for the operon genera and samples the
+   background per order. Only layer totals were seen before v2 was written (testset/selection_rules.txt).
+
+CHOICES FOR JACOB
+- Complete lutA-I genomes are all Methylobacterium and all 80 are in every size: 9% of the large set (28% of the small).
+  Option: cap a1 at a fixed number (for example 30, chosen by the same rank) to free room for other lineages.
+- Background is thin by design: 56 c1 genomes over 187 orders of the class (one genome for each of the 80 largest
+  orders lacking a selected family) and 18 c2 genomes outside the class. Option: raise c1 / c2 without touching the
+  lut layers (one parameter each).
+- The DPANN parity split is not stratified by layer: a3 split 82 tuning / 59 test, a4 154 / 187, c2 7 / 11. Option: keep
+  the DPANN rule (comparability) or alternate genome_code parity within each layer (balanced halves).
+- Lut-negative relatives (b1, b2) exclude genomes with any reverse-best lutH homolog (receptor-only genomes); they are
+  negatives for the whole cluster, not just the transporter module.
+- The selection prefers CheckM2 >= 90% complete / <= 5% contaminated genomes inside every stratum (85% of the large set);
+  incomplete MAGs enter only where a stratum has no better genome.
+
+OTHER CURATED CALLERS (not run; estimates for the large package, 4.5 M proteins, from the measured hmmsearch rate of
+2.6 us per protein-profile on biotite)
+- DefenseFinder (about 1,000 profiles in the Aksha copy): hmmsearch ~3 CPU-h plus MacSyFinder per genome (1,032 runs,
+  ~20-60 s each): about 30-60 min wall on 24 CPUs.
+- TXSScan (a few hundred profiles): about 10-20 min wall on 24 CPUs.
+- CRISPRCasTyper: Cas profiles on proteins ~1-2 CPU-h, but CRISPR arrays need genome nucleotide sequences, which the
+  GTDB proteome files lack: 1,032 genome FASTA downloads from NCBI (~4.5 GB) first, then about 1 h wall on 24 CPUs.
+
+METHODS
+Candidates: the 23,811 genomes scanned in part 1 (Rhizobiales 5,752; rest of the class 15,721; 2,338 targeted outside
+  the class). Lut status from part-1 main loci and reverse-best lutH counts (S0 negative 17,301; S1 complete 80; S2
+  receptor + transporter 336; S3 receptor module 17; S4 split 1,924; S5 transporter only 3,055; S6 other 5; S7 receptor
+  only 1,093).
+Rank: quality tier (Q0 >= 90 / <= 5, Q1 >= 70 / <= 10, Q2) then SHA-256 of "17:<accession>". Layer rules v2 in
+  testset/selection_rules.txt; code/13_select.py writes candidates.tsv, ladder.tsv (k = 1-12), selection_k*.tsv.
+Package builder: code/14_build_testset.py (count | build SELECTION_TSV) reads the part-1 Parquet parts, so any size is
+  one command; numbering by the DPANN rules; genomes.parquet carries layer, lut_status, n_main_loci, locus_components,
+  source_scope, quality_tier, split. Ribosomal truth: code/15_ribosomal_truth.py (standing definition of
+  ribosomal/code/ribosomal_check.py and PREDECLARE.txt, with markers from a direct Pfam GA search). Seal: code/16_seal.py
+  (SHA-256 of each file and of the sorted path/hash list). Wrapper: code/testset.sbatch.
+Embedding (copied from transfer_srvp_bac/code, paths adapted, recipe unchanged): embed_queue prep in the build job
+  (341 shards, 1,362,898,600 tokens, 3,099 sequences > 2,046 aa, longest 21,533 aa); code/embed/embed_gpu.sbatch
+  (partition gpu, H200 node excluded, -c 12, one worker, bf16, float32 residue mean, whole protein in one pass);
+  code/embed/finalize_zca.sbatch (embed_queue finalize, zca10 whitening fitted on this set, products linked into
+  package_k8/embeddings, manifest; the SR-VP describe step is dropped); code/embed/gate.sh on the login node.
+
+CLEAN-UP (nothing deleted). Under $RD/slice_lut/work/ (89 GB):
+  delete  tokens_rhizobiales 32 GB (cancelled order rescue3: seqdb, clusters, unique sequences)
+  delete  tokens_beijerinckiaceae 5.5 GB (family token intermediates; tokens are in package/beijerinckiaceae/tokens)
+  delete  mm 13 GB, mm_alpha 4.3 GB, mm_beyond 0.8 GB (MMseqs2 databases of the lut search; results are in scan/)
+  delete  alpha_wide/pkg/proteins_gid.faa and beyond/pkg/proteins_gid.faa (~16 GB together; FASTA rebuilt from parts)
+  delete  annot_order / annot_alpha_wide / annot_beyond 0.85 GB (hmmscan domtbls; parsed into results/*/own_annot.parquet)
+  delete  pfam_check 31 MB, test 63 MB
+  keep    rhizobiales/parts 4.5 GB, alpha_wide/parts 8.1 GB, beyond/parts 1.7 GB (inputs of the test-set builder: any
+          other size is rebuilt from them), alpha_wide/pkg/universe and beyond/pkg/universe (gid space of the part-1
+          results tables), hmm_refine_* (component HMMs, 0.1 GB)
+  Also deletable: package/rhizobiales/tokens/mmseqs__seq__e3c50s75__rhizobiales.* (base tokens, no longer needed) and
+  package/rhizobiales/proteins_gid.faa (7.7 GB) if the order package itself is retired.
+
+JOBS (part 2)
+93729 lut_testset (-c 24) size counts + package_k2 + ribosomal, COMPLETED 2 min 3 s
+93742 lut_testset (-c 24) package_k8 + ribosomal + embed_queue prep, COMPLETED 4 min 2 s
+gate  code/embed/gate.sh 93742 on the biotite login node (pid 341928), log $RD/slice_lut/logs/embed_gate.log
+STATUS (embedding) at 14:08 UTC: gate alive (pid 341928); build COMPLETED 13:47 UTC; GPU worker not yet submitted.
+  The account's gpu partition has not been empty since: other workstreams keep jobs there (14:07 UTC: hs_g10 running;
+  ll_gknnsd, hsup_g01, hd_g01, hfam_g01 pending). The gate submits only into an empty gpu queue, so it waits for a
+  gap; queuing behind the pending jobs would need the gate condition relaxed to "nothing running" (coordinator's call).
+  When it fires: GPU job ID in $RD/slice_lut/logs/embed_gpu_jobid.txt, finalize job ID in logs/embed_finalize_jobid.txt,
+  worker log logs/embed_gpu_<job>.log. Throughput afterwards: elapsed time in that log, or
+  `source $EQ/code/env.sh; $PYBIN $EQ/code/embed_queue.py status --run $RD/slice_lut/testset/embed/luttest__esmpp_small__20261113`;
+  expected 160-170 unique sequences/s (SR-VP rate) -> 7.2-7.7 h for 4,464,102 sequences.

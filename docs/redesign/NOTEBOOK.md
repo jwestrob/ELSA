@@ -2626,3 +2626,25 @@ functional readings UNVERIFIED. No ELSA method was run on the slice.
   tokens); order has universe, FASTA and base tokens. The order's rescue3 job (92432, 64 CPUs,
   estimated 13 h) was cancelled at 2 h 58 min under Jacob's compute limit; list-based bonds do not
   need family tokens.
+
+## 2026-11-13 14:09 UTC — lut test set built and sealed (workstream `slice_lut`, part 2; `benchmarks/redesign/slice_lut/REPORT2.txt`)
+
+Requested by Jacob as a taxon-focused test set with lut as the highlighted example; he chose the
+large size and authorised its embedding on the A5000 with no time cap. No ELSA method has been
+run on it.
+
+- Package `$RD/slice_lut/testset/package_k8/`: 1,032 GTDB r232 representatives, 4,507,042
+  proteins (4,464,102 unique sequences), DPANN layout. Layers: complete A-I cluster 80 (all
+  Methylobacterium), receptor 96, split arrangements 141 (with the three published cases),
+  transporter only 341, same-genus negatives 166, same-family negatives 134, class background 56,
+  outside the class 18. Largest genera: Methylobacterium 93, Bradyrhizobium 23. Selection by
+  written rules with per-genus caps (first rule set withdrawn as too large; both kept in
+  `testset/selection_rules.txt`); GTDB taxonomy used only to build the set.
+- Truth tables: 733 main and 121 strict lut loci (4,585 member genes); 858 ribosomal runs in 855
+  genomes. Split by genome-code parity 516 / 516. Seal 261ce234...2d533475.
+- Smaller options also sized (297 and 449 genomes); the 449-genome package is built and sealed too.
+- Embedding estimate for the large set: 7.2-7.7 h on one A5000 (from today's 1,785,952 sequences
+  in 3 h 05 min). The agent's strict gate never fired because other sessions keep jobs in the gpu
+  queue; changed to a plain sbatch that waits in the queue, with the whitening job dependent on it.
+- Other curated callers on this set, not run: DefenseFinder 30-60 min and TXSScan 10-20 min on 24
+  CPUs; CRISPRCasTyper about 1 h plus 4.5 GB of nucleotide files from NCBI.

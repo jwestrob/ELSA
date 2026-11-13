@@ -1,0 +1,52 @@
+lut test set: selection rules, predeclared 2026-11-13T13:33:46Z (seed 17), written before any count of the selection.
+
+Candidates: GTDB r232 bacterial species representatives scanned in part 1 (REPORT.txt): o__Rhizobiales (5,752),
+c__Alphaproteobacteria outside the order (15,721), and the 2,338 targeted representatives outside the class.
+GTDB taxonomy is used to build the set only; the ELSA method reads no taxonomy.
+
+Genome lut status (from part-1 main-definition loci and the reverse-best lutH count rb_H; first match wins):
+  S1 complete              a main locus with lutA, B, C, D, E, F, G, H and I (lanM optional)
+  S2 receptor_transporter  a main locus with lutH and >= 2 of lutA/B/E/F
+  S3 receptor_module       a main locus with lutH and < 2 of lutA/B/E/F
+  S4 split                 main loci, none with lutH, and >= 1 reverse-best lutH gene elsewhere in the genome
+  S5 transporter_only      main loci with >= 2 of lutA/B/E/F, none with lutH, and rb_H = 0
+  S6 other_locus           main loci not covered above
+  S7 receptor_only         no main locus, rb_H >= 1
+  S0 negative              no main locus and rb_H = 0
+Rank inside any stratum: quality tier (Q0 CheckM2 completeness >= 90 and contamination <= 5; Q1 >= 70 and <= 10;
+  Q2 the rest), then SHA-256 hex of "17:" + GTDB accession, ascending. "First n" always means first n in this rank.
+
+Layers at ladder step k (k = 1..12); a genome is taken by the first layer that selects it, in this order:
+  a1  every S1 genome of the class
+  a2  S2 and S3 genomes of the class: first k per genus
+  a3  S4 genomes of the class: first ceil(k/2) per genus; plus forced GCA_901457705.2 (Beijerinckiaceae bacterium RH AL1),
+      GCF_001043915.1 (Methylobacterium aquaticum 22A), GCF_002752655.1 (Methylosinus trichosporium OB3b)
+  a4  S5 genomes of the class: first ceil(k/2) per genus
+  b1  S0 genomes of the class in genera holding any a-layer genome: first ceil(k/2) per genus
+  b2  S0 genomes of the class in families holding any a-layer genome, from genera holding no a-layer genome: the first
+      genome of each such genus, at most k genera per family (genera ordered by the rank of their first genome)
+  c1  class genomes in families holding no a- or b-layer genome: the first genome of each of the first ceil(k/6)
+      genera per family (one genome per genus)
+  c2  outside the class: families of the targeted set holding >= 1 genome with a main locus, ordered by number of such
+      genomes (desc), then name; for each of the first 2k families one genome: the first S2/S3 genome, else the first
+      genome with a main locus; plus forced RS_GCF_021283545.2 (Aquipseudomonas alloputida, species of P. putida
+      KT2440) and RS_GCF_000341735.1 (Methylotuvimicrobium buryatense)
+Sizes: for targets 250, 500 and 1,000 genomes, the k whose total is nearest the target (ties: smaller k).
+Split: genome_code = rank of genome accession inside the package; odd genome_code = tuning, even = test (DPANN rule:
+  parameters tuned on odd genomes, evaluated on even genomes).
+
+AMENDMENT v2, 2026-11-13T13:35:16Z. Rule set v1 (above) cannot reach the requested sizes: its smallest step (k = 1) selects 1,645
+genomes, because per-genus caps over ~1,100 genera dominate (a4 555, b1 369, c1 336). Only totals per layer and
+candidate counts per rank were looked at (no lut outcome, no ELSA output exists for these genomes). v1 is withdrawn; v2
+replaces the layer rules below, everything else (statuses, rank, split, size choice) is unchanged.
+  a1  every S1 genome of the class
+  a2  S2 and S3 genomes of the class: first k per genus
+  a3  S4 genomes of the class: first k per family; plus the three forced published cases
+  a4  S5 genomes of the class: first k per family
+  b1  S0 genomes of the class in genera holding any a1 or a2 genome: first k per genus
+  b2  S0 genomes of the class in families holding any a1, a2 or a3 genome, from genera holding no a-layer genome: the
+      first genome of each of the first k such genera per family (genera ordered by the rank of their first genome)
+  c1  class background: orders of the class ordered by number of candidate genomes (desc), then name; for each of the
+      first 10k orders, the first genome (rank) from its families holding no a- or b-layer genome (none if all are held)
+  c2  outside the class: as v1 (first 2k families by number of genomes with a main locus, one genome each, S2/S3 first;
+      plus forced RS_GCF_021283545.2 and RS_GCF_000341735.1)

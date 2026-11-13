@@ -123,3 +123,25 @@ PART 2 (DPANN only): L4b over list-based first-round bonds
 2026-11-13 12:26  Zs even read (job 93224): L4b+ .02 1,681 / 1,533 (+21 [-10, +51]), summed .585, F1 .807/.757/.504,
                   all seven bars. Pairs vs part-1 L4b: resolved -49 to -65; summed -.003 to +.040; CCT F1 +.045 to +.084.
                   Token vs kNN cohesion: A +53 [+37, +70] resolved, As +75 [+55, +94]. REPORT2.txt written.
+
+PART 3 (Spacedust collection): the part-2 selected outputs carried with nothing retuned
+-------------------------------------------------------------------------------------------
+2026-11-13 12:31  Coordinator: part 3. Read vocab_lists mm_search.sbatch / mm2knn.py, calib gpu_table.py / calib_gpu.sbatch
+                  (DPANN z table 720 s on one A5000, Z_STORE 10.5), softrec knn_deep.py (DPANN kNN k 2,000: HNSW, CPU,
+                  2.2 h on 24 threads), softrec.exclusion / Lists._knn (capcos), context_units cuts.py gene_cohesion_knn.
+                  Spacedust assets: transfer_spacedust/fam/uniq.faa (4,231,484 uids; headers = uid), gid2uid.npy = emb
+                  meta uq, zca10_f32 / f16 vectors per uid, token kappa. predeclared3.json written.
+2026-11-13 12:34  Adapter smoke (login node, sdu.py smoke): SDU gene order / contigs / genomes / 618 groups equal ll.load('sd');
+                  12,760,265 round-0 instances; gene -> uid map (fam/gid2uid) equals emb/meta.npz uq (4,231,484 uids).
+2026-11-13 12:34  Re-read both cluster files (unchanged); account 204 CPUs running; my GPU-partition job 92238 (sb_esmpp,
+                  another workstream) RUNNING, so the GPU z-table pass is NOT submitted. Submitted (64 CPUs each,
+                  standard_expand_2; account 332 after):
+                    93320 ll_mmsd  MMseqs2 18 createdb (own copy of fam/uniq.faa, 4,231,484 sequences) + prefilter -s 7.5
+                                   --max-seqs 1000 + align -e 1e-3 + convertalis + mm2knn_sd -> $LL/mm_sd/aln__k1000__{I,B}.npy
+                    93321 ll_knnsd HNSW kNN k 2,000 of the zca10 vectors (knn_sd.py) -> $LL/sd_knn; then sdu.py prep:
+                                   exclusion masks (group / genome, 4 orders) -> $LL/sd_lists/excl, kappa_var_knn50 -> $LL/sd_lists
+                  Prepared, not submitted: q_gpu_sd.sbatch + gpu_table_sd.py (calib gpu_table copy, Z_STORE 10.5, A5000
+                  partition 'gpu' only) and q_sdarm.sbatch (arm builds + source207 with refs part-1 L4b .1 / .02 and L1).
+REMAINING (on resume): (1) after 93320: SD_ARMS="A As" sbatch --export=ALL q_sdarm.sbatch (requires done_sd_prep from 93321);
+                  (2) GPU z table when 'squeue -u jwestrob -p gpu' is empty: cd $RD/long_loci/code && sbatch q_gpu_sd.sbatch,
+                  then SD_ARMS="Z Zs" sbatch --export=ALL q_sdarm.sbatch; (3) REPORT3.txt.

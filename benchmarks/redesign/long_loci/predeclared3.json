@@ -1,0 +1,34 @@
+{
+ "workstream": "long_loci part 3 (Spacedust collection)",
+ "written_utc": "2026-11-13T12:31Z",
+ "status_when_written": "No list, kNN, list-based bond, locus or source207 score of the Spacedust collection exists in this workstream. Known before writing: every part-1 Spacedust number (family arms; L4b theta .1 +.126, L4b theta .02 +.127 sensitivity, L1 groups +.153), the part-2 DPANN results (selected list outputs meet all seven DPANN bars), transfer_spacedust's references.",
+ "question": "Does the all-bars DPANN configuration (list-based first-round bonds + L4b tree) carry to the Spacedust collection with nothing retuned?",
+ "arms_fixed_from_dpann": {
+  "A": "MMseqs2 alignment lists (own group excluded), group counting, output L4b at theta .02",
+  "As": "MMseqs2 alignment lists (own genome excluded), synteny-retention counting, output L4b at theta .02",
+  "Z": "ws_calib z >= 10.6 lists (own group excluded), group counting, output L4b+ at theta .02",
+  "Zs": "z >= 10.6 lists (own genome excluded), synteny counting, output L4b+ at theta .02",
+  "F": "reference: the part-1 family arm on this collection (groups, tau* 10): L4b theta .02 (the part-2 DPANN selection for F; already scored as part-1 sensitivity, +.127) and part-1's selected L4b theta .1 (+.126)"
+ },
+ "what_is_fixed": "list sources and their parameters, counting units and their rules, theta .02, the output type per arm (L4b or L4b+), the family-free node filter (part-2 definition, at the arm's bond tau), the tree code. Nothing is selected or tuned on this collection.",
+ "what_is_recomputed_by_rule": "the bond tau of each arm by vl.py's rule on this collection's own three gene-order shuffles (smallest of {4,...,20} with round-0 instance FDR <= 0.01; on DPANN it gave 6 for every list arm): the rule transfers, as in part 1 and transfer_spacedust, not the value",
+ "inputs": {
+  "universe": "$RD/universe (4,257,531 genes, 1,317 genomes, 2,061 contigs); gene -> uid = transfer_spacedust/fam/gid2uid.npy (= emb/meta.npz uq); groups transfer_spacedust/groups/emb_hom_average_t0.75.parquet (618; read-only); genome map = one unit per genome",
+  "alignment_lists": "MMseqs2 18 all-against-all of the 4,231,484 unique sequences (transfer_spacedust/fam/uniq.faa, headers = uid; own createdb copy under $RD/long_loci/mm_sd): prefilter -s 7.5 --max-seqs 1000, align -e 1e-3, no coverage rule; per query the hits ranked by bit score, self dropped, depth 1,000 (vocab_lists mm_search.sbatch + mm2knn.py, N parameterised); expanded to genes outside the lineage unit by softrec.expand_knn exactly as vl.aln_lists",
+  "z_lists": "ws_calib per-genome best matches with within-genome z (calib gpu_table.py recipe; Z_STORE 10.5 as on DPANN) on transfer_spacedust's zca10 fp16 vectors, one A5000 pass; read at z >= 10.6 as vl.z_lists",
+  "embedding_knn": "FAISS HNSW cosine kNN of the unique zca10 vectors, k 2,000, M 32, efConstruction 200, efSearch k + 1, self excluded (softrec knn_deep.py recipe, CPU); recall checked against exact search on 2,000 queries",
+  "exclusion_masks": "round-0 homolog exclusion exactly as vl/softrec (softrec.exclusion mode 1, variant K1000: identical sequence, or cosine(a, b) >= max(0.32, min(capcos_a, capcos_b)), capcos = cosine at depth 1,000 of the gene's lineage-excluded list from the kNN above), for lineage = group and = genome, observed order and three shuffles",
+  "cohesion": "PRIMARY kappa_var_knn50 built for this collection with context_units cuts.py gene_cohesion_knn (homolog set = genes of the top-50 kNN unique sequences from the kNN above, at most 200; zca10 neighbour vectors; gene-pair floor from 1,000,000 random cross-genome gene pairs, seed 17). CHECK: the existing token array transfer_spacedust/emb/kappa_var_tokens.npy, reported for every selected output."
+ },
+ "scoring": "source207 under transfer_spacedust's matched protocol (s207.Bench unchanged; best single interval per region, 200 rigid translations, 10,000 region bootstrap draws, seed 17). Per output: F1, random control, excess [95%]; paired differences (F1 and excess) against part-1 L4b theta .1 (+.126), part-1 L1 groups (+.153), CC2 (+.142), CC1, the engine reference (+.184), native Spacedust (+.065), word P2 (+.049); share of region genes in the union of loci and in the best locus (all regions, regions >= 11 genes); excess by region size; verdict per transfer_spacedust (BEATS if lower bound > 0; MATCHES if d >= -.02; else BELOW).",
+ "expectations": {
+  "tau": "6 for A and As (as DPANN), 6-8 for Z and Zs",
+  "A": "excess +.11 to +.16, F1 .57-.64; vs part-1 L4b (+.126) within -.02 / +.04; vs CC2 -.03 to +.02 (MATCHES); vs engine reference BELOW (-.03 to -.08); vs native Spacedust BEATS; union coverage .68-.80",
+  "As": "within .02 of A",
+  "Z": "L4b+ (no node filter): F1 higher than A by .01-.03, control higher, excess within .02 of A",
+  "Zs": "within .02 of Z",
+  "token_check": "token cohesion within .01 of kNN cohesion on excess (on DPANN the cohesion source moved ribosomal resolution, not excess)",
+  "verdict": "the configuration carries: every list arm above the word output P2 and level with pair-linking, below the engine reference; the long-locus gap to the engine stays (regions >= 11 genes)"
+ },
+ "jobs_plan": "1) MMseqs2 all-against-all (64 CPUs, the long pole); 2) HNSW kNN + exclusion masks + kNN cohesion (CPU); 3) GPU z table only when the A5000 partition has no job of jwestrob running or pending; 4) arm builds (lbsd.py) and source207 scoring once the lists exist"
+}

@@ -1,0 +1,264 @@
+LONG_LOCI: ONE PROCEDURE FOR SHORT AND LONG LOCI (BONDS, COHESION, WHOLE-LOCUS RECURRENCE); DPANN + SPACEDUST (2026-11-13)
+==========================================================================================================================
+DPANN: odd genome_code = selection, even = verdict; ribosomal check over all 1,686 runs; paired genome bootstrap (2,000
+draws, seed 17). Spacedust: source207 under transfer_spacedust's matched protocol (10,000 region draws, seed 17); nothing
+selected there. Both halves have been consulted many times in this project: every number below is a DEVELOPMENT result.
+Reference reproduced exactly before any comparison (job 92658): token DH even summed .4270, F1 .744/.548/.479, ribosomal
+1,686 / 1,512, Parvarchaeaceae 114 / 113, per-instance F1, control F1 and coverage equal to the stored scores. Spacedust L1
+under syn counting reproduces transfer_spacedust's CC2 boundaries exactly (paired d .000). Predeclarations
+(predeclared.json): definitions + expectations 10:54 UTC; amendment_1 10:58 (ribosomal resolved = primary criterion; no
+number of this workstream existed); amendment_2 11:09 (L4b, written before any odd score was read); amendment_3 11:20
+(selection + expectations, before any even or source207 number).
+
+ANSWER
+1. Verdict: the selected procedure (L4b at theta 0.1) resolves 1,598 of 1,686 DPANN ribosomal runs, +86 [+60, +115] over
+   token DH (1,512), with 1,680 recovered and Parvarchaeaceae 114 / 114: the primary ribosomal criterion is MET. The full
+   bar set fails on CRISPR-Cas F1 alone (.419, -.060 [-.072, -.048] vs DH), the same blocker as every word output; summed
+   excess .584, +.157 [+.134, +.182] over DH; DefenseFinder F1 -.013, TXSScan +.152.
+2. DPANN cost against the words: summed -.040 [-.056, -.024] vs stage-1 words V-mob (.624) and -.024 [-.041, -.007] vs
+   words + cohesion phrases (.608). F1 is level or higher than the words' (DF -.014, TXSS +.021, CCT +.013 vs V-mob); the
+   loss sits in the random-placement control (TXSScan control .466 vs .424), i.e. more and longer nested loci. In exchange
+   ribosomal resolved rises from 501 (words) / 1,420 (words + phrases) to 1,598.
+3. Spacedust, DPANN settings unchanged: L4b F1 .574, excess +.126 [+.086, +.166]; +.077 [+.044, +.109] above the word
+   output P2; level with pair-linking (vs CC2 -.016 [-.042, +.008], vs CC1 +.011 [-.017, +.038]); above native Spacedust
+   (+.061 [+.025, +.097], BEATS); below the engine reference (-.058 [-.093, -.021], BELOW). The long-locus loss of the
+   words is CLOSED relative to pair-linking (83% of the P2 -> CC2 gap; 21+-gene regions +.068 vs CC2 +.061) and OPEN
+   relative to the engine reference (regions >= 11 genes: union / best-locus coverage .57 / .31 vs engine .89 / .73).
+4. The brief's L2 and L4 (cohesion as a hard cut before linking) fail at the selected theta on both datasets: DPANN
+   DefenseFinder F1 .376 (L2) / .357 (L4) against .744; Spacedust excess -.040 / -.044 (no signal; L2 keeps 19.6% of
+   genes). The cut deletes bonded loci; at theta .02 Spacedust L2 still gives only +.071. L4b keeps cohesion as the order
+   of splits inside a tree over the uncut bond runs and lets recurrence decide which levels survive: +117 resolved and
+   +.131 summed over L4 on DPANN, +.170 excess on Spacedust.
+5. The brief's node calibration is empty: 62 / 30 / 36 null nodes against 817,870 observed on DPANN (529-576 on
+   Spacedust), so delta = tau_node = 0 at every theta, L4 = L4a (identical outputs) and test (c) reduces to n >= 2 (drops
+   4-6% of nodes). In L4b the whole is tested at the bonds' own tau with the closed-form E (17% of tree nodes dropped);
+   that filter leaves ribosomal unchanged (L4b+ also 1,598) and moves Spacedust by .003 (+.129 without it).
+6. L1 (pair-linking alone, group counting): DPANN summed .487, ribosomal 1,680 / 1,036 (594 runs over-extended), DF F1
+   .726, CCT .396; Spacedust +.153 [+.116, +.189], the highest excess of any output here (vs CC2 +.010). Boundaries matter
+   on DPANN, nesting costs .027 excess on Spacedust through the control (L4b+ control .471 vs L1 .427).
+7. Ribosomal benchmark diagnosis (own section below): token DH fails 174 runs, 157 by over-extension (median 18 genes past
+   the run) and 17 by under-coverage. No two benchmark runs sit within 10 genes of each other; 376 runs have a smaller
+   marked fragment 3-5 genes away, and an oracle reporting each whole merged neighbourhood resolves 1,507 (exact-span
+   oracle 1,686). L4b's 88 failures are 56 under-covered (bond gaps inside the run; the same 56 as L1) + 32 over-extended.
+8. Secondary counting (synteny-retention N_eff for the bonds): L4b resolves 1,601, summed .570, CRISPR-Cas F1 .441 (-.038,
+   still short of the -.02 bar); L3 at theta .1 meets every F1 bar (CRISPR-Cas -.007) and beats DH on summed (+.137
+   [+.118, +.157]) at 1,502 resolved. Syn bonds + L4b is the closest any output came to all DPANN bars.
+
+--------------------------------------------------------------------------------------------------------------------------
+THE PROCEDURES (code/ll.py)
+Bonds   round 0 of the word learner (copied unchanged): genes labelled by rescue3 family when the family occurs in >= 2
+        counting units; labelled pairs at distance 1-3 on one contig; n = units holding the pair, E = expected_groups
+        (w 3), Lambda = n ln(n/E) - n + E; significant at n >= 2, Lambda >= tau (syn: Lambda N_eff / n >= tau, N_eff >= 2).
+        tau = the word runs' tau* (1% word-type FDR): DPANN groups 10; Spacedust groups 10 (ladder rerun here: FDR .027 at
+        8, .005 at 10; 87,698 word types); syn 8 on both. Each occurrence of a significant pair is a bond.
+        DPANN: 39,137 significant pairs, 1,797,062 bonds (Lambda q50 64, q99 1,494), 36.6% of boundaries bonded; null
+        corpora 14 / 9 / 10 pairs (62 / 30 / 36 bonds). Spacedust groups 140,823 pairs, 39.7% of boundaries; nulls
+        418-465 pairs.
+s_k     largest Lambda among bonds spanning boundary k.
+L1      maximal runs of s_k > 0.        L2  L1 cut where kappa < theta (NaN = no cut).        L3  L2 UNION words V-mob.
+L4      brief (a)-(d): s'_k = s_k, 0 where kappa < theta; tie-collapsed min-rooted Cartesian tree per run (union-find over
+        boundaries in decreasing s'; equal minima split together, so every node has persistence > 0; checked against a
+        brute force); kept at persistence >= delta, n >= 2, Lambda(n, E) >= tau_node, n = groups other than the node's
+        own with a genome holding >= q distinct non-singleton families of the node within <= 2|I| genes on one contig,
+        q = max(2, ceil(.5 |F_I|)); E literal (mean of 3 shuffled corpora; L4) or closed form (Poisson clumping with
+        elementary symmetric polynomials; L4a). delta, tau_node: 1% node FDR against the whole procedure on 3 shuffles.
+        Counts equal a brute-force window scan (0 / 120 mismatches). Closed-form E / shuffled count, summed over nodes:
+        1.19 (DPANN), 1.002 (Spacedust).
+L4+     L4's tree without test (c).
+L4b     (amendment_2) the tree runs over the uncut L1 runs: w_k = s_k where kappa >= theta or NaN, w_k = 1e-6 + max(kappa,
+        0) below theta (always below any bond, Lambda >= 4), so low-cohesion junctions split first and every L1 run stays
+        a root; node kept if n >= 2 and Lambda(n, E_closed) >= tau (the bond tau). Why: the three ideas stay (grow by
+        bonds, order by cohesion, confirm the whole by tolerant recurrence), the hard cut goes (a cut can never be undone
+        by recurrence, so L4 can never report more than an L2 piece), and the whole is tested at one threshold shared
+        with its parts, with the E estimator that has no 1/3-group resolution floor, because the node null was empty.
+L4b+    every node of the L4b tree.
+Cost    DPANN group build (bonds in 4 corpora, 4 thetas, recurrence of 1,032,127 node intervals = 204,645 family-set keys
+        in 4 corpora) 141 s on 24 threads, 1.6 GB; L4b 68 s; Spacedust 116 s / 60 s; word ladder (28 runs) 160 s.
+
+SELECTION (DPANN odd; results/table_odd.txt). Rule (amendment_1): [odd conditions met, odd resolved, odd summed].
+  L2 theta .02 / .05 / .1 / .2: conditions 1 / 2 / 2 / 0, odd resolved 685 / 735 / 748 / 72 -> theta 0.1.
+  At theta .1: L4 = L4a [2, 752, .454]; L4b [2, 807, .597] -> L4b. (DH odd: 769 resolved, summed .418.)
+  Odd context: L4 at theta .02 [2, 798, .647] and L4b at every theta (806-810 resolved, summed .572-.607). CRISPR-Cas F1
+  fails the odd F1 condition for every group-counted output.
+
+--------------------------------------------------------------------------------------------------------------------------
+TABLE 1. DPANN EVEN (results/table_even.txt; groups unless marked; d = paired difference [95%]; Parv = Parvarchaeaceae
+recovered; bprec = median boundary precision of covered instances DF/TXSS/CCT; genes = share of genes in loci)
+  output                ribo rec/res  d res vs DH      Parv  summed  d vs DH               d vs words V-mob      d vs words+phrases    F1 DF/TXSS/CCT    bprec          genes
+  token DH (reference)  1686/1512     -                114   .427    -                     -                     -                     .744/.548/.479    .75/.44/.40    .715
+  words V-mob           1198/501      -                11    .624    +.197                 -                     -                     .745/.679/.406    1.00/.80/-     .420
+  words + phrases .1    1684/1420     -                114   .608    +.181                 -                     -                     .735/.636/.395    1.00/.67-.80/.50 -
+  L1                    1680/1036     -476 [-518,-436] 114   .487    +.060 [+.041,+.080]   -.137 [-.156,-.117]   -.121 [-.138,-.103]   .726/.491/.396    1.00/.36/.50   .485
+  L2 theta .1           1663/1473     -39 [-68,-10]    114   .404    -.023 [-.059,+.010]   -.220 [-.253,-.190]   -.204 [-.238,-.173]   .376/.549/.252    1.00/.75/.50   .255
+  L3 theta .1           1671/1494     -18 [-45,+10]    114   .606    +.179 [+.156,+.201]   -.018 [-.025,-.011]   -.002 [-.013,+.008]   .754/.696/.427    1.00/1.00/.50  .442
+  L4b theta .1 SELECTED 1680/1598     +86 [+60,+115]   114   .584    +.157 [+.134,+.182]   -.040 [-.056,-.024]   -.024 [-.041,-.007]   .731/.700/.419    1.00/1.00/.50  .460
+  L4b+ theta .1         1680/1598     +86 [+60,+115]   114   .570    +.143 [+.121,+.166]   -.054 [-.069,-.039]   -.038 [-.054,-.022]   .772/.701/.451    1.00/1.00/.50  .485
+  L4 = L4a theta .1     1663/1481     -31 [-59,-2]     114   .453    +.026 [-.010,+.059]   -.171 [-.204,-.142]   -.155 [-.189,-.124]   .357/.617/.249    1.00/1.00/.50  .239
+  L4+ theta .1          1663/1481     -31 [-59,-2]     114   .445    +.018 [-.017,+.050]   -.179 [-.212,-.151]   -.163 [-.197,-.133]   .378/.623/.257    1.00/1.00/.50  .255
+  L4 theta .02 (POST    1670/1585     +73 [+45,+101]   114   .632    +.205 [+.182,+.228]   +.008 [-.008,+.024]   +.024 [+.007,+.041]   .743/.692/.403    1.00/1.00/.50  .406
+    HOC, not selected)
+  syn L1                1680/919      -593 [-635,-550] 114   .446    +.019 [+.001,+.037]   -.178 [-.203,-.153]   -.162 [-.185,-.139]   .739/.473/.412    1.00/.33/.40   .597
+  syn L3 theta .1       1678/1502     -10 [-37,+17]    114   .564    +.137 [+.118,+.157]   -.060 [-.076,-.043]   -.044 [-.062,-.026]   .778/.727/.473    1.00/.80/.50   .547
+  syn L4b theta .1      1680/1601     +89 [+63,+117]   114   .570    +.143 [+.120,+.166]   -.054 [-.070,-.038]   -.038 [-.055,-.021]   .758/.700/.441    1.00/1.00/.50  .523
+  dF1 vs DH, L4b: DF -.013 [-.033, +.008], TXSS +.152 [+.129, +.173], CCT -.060 [-.072, -.048]. Parvarchaeaceae resolved:
+  L4b 107 / 114 (DH 113). Verdict vs DH ('matches' = summed >= -.01, every F1 >= -.02, ribosomal bars): every group row
+  'neither' (CRISPR-Cas F1); syn L3 'beats' on summed and F1 but resolves 1,502 (< 1,512, primary criterion not met).
+  Even-genome runs alone (838): L4b 791 resolved, DH 743.
+
+TABLE 2. SPACEDUST source207 (results/table_s207.txt; F1 / control / excess [95%]; d = paired excess difference [95%];
+cov = median share of region genes in the union of loci / in the best locus, regions >= 11 genes in brackets)
+  output                       F1    ctrl  excess [95%]          d vs P2               d vs CC2              d vs engine ref       d vs Spacedust        cov union / best       qgenes
+  engine reference (42 rdgs)   .750  .566  +.184 [+.154,+.213]   -                     -                     -                     -                     1.00 (.89) / .83 (.73)  .773
+  native Spacedust             .676  .612  +.065 [+.037,+.093]   -                     -                     -                     -                     .96 (.91) / .60 (.36)   .786
+  word P2 V-coh0.1 (syn)       .481  .432  +.049 [+.014,+.084]   -                     -                     -                     -                     .59 (.50) / .33 (.22)   .539
+  CC1 (syn)                    .552  .437  +.115 [+.079,+.151]   -                     -                     -                     -                     .68 (.58) / .44 (.29)   .561
+  CC2 (syn) = syn L1           .587  .445  +.142 [+.106,+.178]   +.093 [+.067,+.121]   .000                  -.041 [-.074,-.007]   +.077 [+.044,+.111]   .75 (.66) / .50 (.36)   .600
+  L1 groups                    .580  .427  +.153 [+.116,+.189]   +.104 [+.073,+.133]   +.010 [-.008,+.028]   -.031 [-.064,+.003]   +.088 [+.054,+.121]   .71 (.66) / .50 (.35)   .535
+  L2 theta .1                  .154  .194  -.040 [-.066,-.012]   -.089 [-.128,-.050]   -.182 [-.225,-.140]   -.223 [-.262,-.185]   -.105 [-.144,-.066]   .00 (.14) / .00 (.11)   .176
+  L3 theta .1                  .490  .417  +.073 [+.040,+.107]   +.025 [+.000,+.049]   -.069 [-.100,-.039]   -.110 [-.144,-.077]   +.009 [-.027,+.042]   .56 (.52) / .33 (.24)   .486
+  L4b theta .1 SELECTED        .574  .448  +.126 [+.086,+.166]   +.077 [+.044,+.109]   -.016 [-.042,+.008]   -.058 [-.093,-.021]   +.061 [+.025,+.097]   .67 (.57) / .45 (.31)   .500
+  L4b+ theta .1                .600  .471  +.129 [+.092,+.166]   +.080 [+.049,+.110]   -.013 [-.035,+.008]   -.055 [-.088,-.021]   +.064 [+.030,+.097]   .71 (.66) / .50 (.35)   .535
+  L4 = L4a theta .1            .138  .183  -.044 [-.070,-.017]   -.093 [-.132,-.055]   -.187 [-.229,-.145]   -.228 [-.267,-.189]   -.109 [-.148,-.070]   .00 (.11) / .00 (.09)   .159
+  L4+ theta .1                 .154  .196  -.042 [-.069,-.015]   -.091                 -.185                 -.226                 -.107                 .00 (.14) / .00 (.11)   .176
+  syn L4b theta .1             .600  .477  +.123 [+.084,+.162]   +.074 [+.045,+.104]   -.019 [-.040,+.001]   -.061 [-.095,-.025]   +.058 [+.025,+.093]   .70 (.60) / .50 (.36)   .543
+  L4b paired F1: vs P2 +.093 [+.060, +.126], vs CC2 -.013 [-.038, +.011], vs engine -.176 [-.214, -.136], vs Spacedust
+  -.102 [-.139, -.067]. Excess by region size (1-5 / 6-10 / 11-20 / 21+ genes; 46 / 68 / 54 / 39 regions):
+    L4b +.147 / +.186 / +.075 / +.068;  L1 +.166 / +.221 / +.109 / +.079;  CC2 +.171 / +.206 / +.096 / +.061;
+    P2 +.077 / +.127 / -.020 / -.025;   engine reference +.159 / +.207 / +.182 / +.175.
+  SENSITIVITY (not selected; s207_sd_group_sens.json): L2 theta .02 / .05 +.071 / +.031; L3 .02 +.100; L4 .02 +.059;
+  L4b .02 / .05 / .2 +.127 / +.126 / +.126.
+
+--------------------------------------------------------------------------------------------------------------------------
+RIBOSOMAL BENCHMARK DIAGNOSIS (label-free; the package run table and ribosomal_check.py read-only; dscore.py rdiag;
+results/rdiag_reference.json, even_dpann_group.json 'ribosomal_diagnosis'). Run = >= 16 genes with a Ribosomal_* Pfam
+domain, gaps <= 2 (g2); resolved = best locus (largest overlap, ties to the shorter) covers >= 80% of the run with
+precision >= 80%.
+(1) Unresolved runs by cause (all 1,686 runs)
+  output              resolved  unresolved  under-covered (<80%)  over-extended (>=80%, precision <.8)
+  token DH            1,512     174         17                    157
+  words V-mob         501       1,185       1,159                 26
+  words + phrases .1  1,420     266         69                    197
+  L1                  1,036     650         56                    594
+  L2 theta .1         1,473     213         205                   8
+  L3 theta .1         1,494     192         185                   7
+  L4b theta .1        1,598     88          56                    32
+  L4 theta .1         1,481     205         205                   0
+  L4 theta .02        1,585     101         94                    7
+  Under-covered runs are split, not missed: no output leaves a run without any overlapping locus; L4b's 56 under-covered
+  runs have a median best-locus coverage of .54. They are the same 56 that L1 leaves under-covered (every L4b node lies
+  inside one L1 run), so a gap in the bonds inside the run, not the tree, causes them.
+(2) Over-extended runs: genes of the best locus outside the run
+  output        outside genes  per run q10/q50/q90/max  other run (a)  gap between runs (b)  other (c): in own neighbourhood / Ribosomal_* beyond / rest
+  token DH      3,644          7 / 18 / 48 / 110        0              0                     .312 / .034 / .654
+  words+phr .1  1,854          7 / 9 / 14 / 20          0              0                     .257 / .001 / .743
+  L1            9,676          7 / 14 / 28 / 85         0              0                     .214 / .029 / .758
+  L4b theta .1  490            7 / 12.5 / 27 / 55       0              0                     .131 / .010 / .859
+  ('own neighbourhood' = the run's merged neighbourhood of (3): marked fragments within 5 genes and the genes between.)
+  Observed Pfam domains of those genes (gene counts, top 30):
+  token DH: GTP_EFTU 120, MMR_HSR1 63, TrmB 63, Ribosomal_L7Ae 54, GTP_EFTU_D2 52, SecY 47, GTP_EFTU_D4 45, eIF2_C 44,
+    S1 44, Ribosomal_S27 43, SHS2_Rpb7-N 43, Ribosomal_S24e 43, Spt4 43, IF-2 41, EMC3_TMCO1 41, RNA_pol_Rpb1_5 40,
+    Ribosomal_L24e 38, Ribosomal_S28e 38, Rce1-like 38, NDK 37, Ribosomal_S6e 37, tRNA-synt_1c 36, PIN_9 34, RtcB 31,
+    ResIII 29, TsaD 29, Prefoldin 28, DEAD 28, Helicase_C 28, Plug_translocon 26; 957 of 3,644 genes carry no Pfam domain.
+  L4b: EMC3_TMCO1 28, SecY 28, Glycos_transf_4 20, SpoIIM 20, Prefoldin 19, IF-2B 18, STT3 18, Glycos_transf_2 16,
+    AI-2E_transport 16, Glycos_transf_3 15, Glycos_trans_3N 15, PYNP_C 14, Glyco_tranf_2_3 13, Methyltransf_11 10,
+    Epimerase 10, Radical_SAM 9, Plug_translocon 9, Glycos_transf_1 8, Glyco_trans_1_4 8, STT3-PglB_core 8,
+    GDP_Man_Dehyd 7, Methyltransf_23 7, RmlD_sub_bind 6, Polysacc_synt_2 6, Glyco_trans_2_3 6, tRNA-synt_2d 5,
+    3Beta_HSD 5, B12-binding 5, Polysacc_synt_3 4, Ribosomal_L34e 4; 124 of 490 without a Pfam domain.
+  L1: SecY 427, EMC3_TMCO1 393, Prefoldin 184, tRNA-synt_2d 156, Ribosomal_L34e 144, SpoIIM 143, TrmB 142, IF-2B 131,
+    tRNA_synthFbeta 131, B5 129, ...; words + phrases: SecY 158, EMC3_TMCO1 139, Ribosomal_L34e 69, DNA_primase_lrg 66, ...
+  (Observed domains only. DH's over-extension reaches genes with GTP_EFTU / eIF2 / IF-2 / RNA_pol / Spt4 domains and other
+  Ribosomal_* domains that stand > 2 genes apart from the run; L4b's 32 residual cases reach genes with SecY and
+  EMC3_TMCO1 domains and a set of glycosyltransferase-family, STT3 and polysaccharide-synthesis domains.)
+(3) How the run definition splits neighbourhoods
+  Benchmark runs with another benchmark run on the same contig within 1-5 genes: 0 (none within 10 genes).
+  Marked fragments of any size under the same g2 rule: 67,473 (outside the 1,686 runs: 34,982 with 1 marked gene,
+  22,807 with 2-3, 5,564 with 4-7, 2,434 with 8-15). Runs with such a fragment 3-5 genes away: 376 (22%); they add a
+  median 2 marked genes (q90 7); for them run length / neighbourhood length q10 .60, q50 .80.
+  Sensitivity analysis (targets = merged neighbourhoods, gap genes as members, standing rule; the benchmark is unchanged):
+    output        standing resolved  merged-target resolved  runs with a fragment: standing / merged  standing OR merged
+    token DH      1,512              1,466                   280 / 234                                1,570
+    words+phr .1  1,420              1,369                   253 / 202                                1,473
+    L1            1,036              1,163                   103 / 230                                1,188
+    L4b theta .1  1,598              1,543                   349 / 294                                1,603
+    L4 theta .02  1,585              1,471                   344 / 230                                1,589
+  Merging the split neighbourhoods into one target lowers every finished output's count (the fragments are separate
+  loci in the outputs as well); it raises L1's (+127), whose loci already join the fragments.
+(4) Upper references under the standing definition: an oracle reporting each run's exact span resolves 1,686 / 1,686; an
+  oracle reporting each merged neighbourhood resolves 1,507 (179 runs are < 80% of their own neighbourhood), below token
+  DH. A method that finds whole conserved neighbourhoods perfectly is capped at 1,507 by the definition; resolving more
+  requires a nested output that also holds the run-sized piece, which is how L4b reaches 1,598.
+
+--------------------------------------------------------------------------------------------------------------------------
+EXPECTATIONS (predeclared) AND OUTCOMES
+  Calibration: delta, tau_node at the ladder bottom                               HELD (0, 0 at every theta, both data)
+  Spacedust group bond tau 8-12                                                    HELD (10)
+  DPANN L1: summed .30-.42; ribo resolved 600-900; DF F1 .66-.72; genes 50-62%     ABOVE: .487; 1,036; .726; 48.5%
+  DPANN L2: theta .05/.1; summed .45-.55; DF F1 .74-.78; ribo 1,350-1,500          theta .1 HELD; .404 BELOW; DF .376 REFUTED; 1,473 HELD
+  DPANN L3: summed .58-.63; ribo 1,400-1,500; F1 .75-.77/.66-.69/.42-.45           HELD (.606; 1,494; .754/.696/.427)
+  DPANN L4: summed .52-.62; ribo 1,350-1,500; DF .75-.78                           .453 BELOW; 1,481 HELD; DF .357 REFUTED
+  DPANN L4+: within .02 of L4                                                      HELD (-.008)
+  L4b (amendment_2): ribo within -60/+40 of L4; summed within .03 of L4            REFUTED upward (+117; +.131)
+  L4b (amendment_3, before even): resolved 1,560-1,640; recovered >= 1,680;
+    summed .56-.62; CCT F1 .40-.43; L2 DF near .38                                 HELD (1,598; 1,680; .584; .419; .376)
+  Spacedust L1 groups +.10 to +.15                                                 HELD at the edge (+.153)
+  Spacedust L2 +.06 to +.11 / L4 +.06 to +.12 (before amendments)                  REFUTED downward (-.040 / -.044)
+  Spacedust L3 +.06 to +.11                                                        HELD (+.073)
+  Spacedust L4b +.08 to +.14, union coverage .65-.75; L2 and L4 at .1 below +.06   HELD (+.126, .67; -.040 / -.044)
+  'Loss not closed at the DPANN theta; the cost is the cohesion cut'               HELD for the brief's L2/L4; L4b
+                                                                                   (no cut) closes it to pair-linking
+
+FAILURE ANALYSIS
+- A cohesion cut deletes real loci. kappa scores how consistent the neighbours of a gene's homologs are; in DefenseFinder
+  systems on DPANN and in biosynthetic regions spread over 1,317 phylogenetically distant Spacedust genomes the homologs'
+  neighbours vary, so kappa is low inside true loci (Spacedust: 81% of all boundaries below .1, L2 at .1 keeps 19.6% of
+  genes against 51.2% bonded). Joining by cohesion (the words' phrases) is safe because it only adds; cutting by it
+  removes. L4b uses it only to order splits.
+- The node null is uninformative because bonds are already null-controlled at the word runs' tau: shuffled genomes keep
+  9-14 significant pairs on DPANN (418-465 on Spacedust), so any node-level FDR is far below 1% at delta = tau_node = 0.
+- Nesting buys ribosomal resolution and costs excess through the control: L4b+ vs L1 on DPANN +562 resolved, on
+  Spacedust control +.044 for +.020 F1. The scorer's largest-overlap-then-shortest rule rewards a nested output only when
+  a run-sized node exists inside the over-extended parent; L4b's tree supplies it for 1,598 runs.
+- The 56 remaining under-covered runs carry a gap in the bonds inside the run (no significant pair spans some boundary:
+  three consecutive background genes or lineage-confined families break the chain). The tree cannot join across a
+  boundary with no bond.
+- CRISPR-Cas F1 stays below DH under group counting (.419 vs .479), as for every group-counted word output; syn bonds lift
+  it to .441 (L4b) and .473 (L3).
+
+CAVEATS
+- theta came from the amendment_1 rule applied to L2, the weakest reading; L4b is nearly flat in theta (DPANN odd 806-810
+  resolved; Spacedust +.126-.127). L4 at theta .02 (odd-best L4 row) is reported post hoc and labelled.
+- L4b was designed after the DPANN build summary (gold-free: bond and node counts, calibration) and before any odd score;
+  its selection over L4 was on odd. Its expectation (amendment_2) was refuted in the favourable direction.
+- q uses distinct families (q = max(2, ceil(.5 |F_I|))), a declared reading of the brief's ceil(.5 |I|).
+- Syn rows count groups in the node test; only their bonds use N_eff. P2 is syn-counted; the matched comparison is syn L4b
+  vs P2: +.074 [+.045, +.104].
+- Spacedust groups are transfer_spacedust's CPU-fallback groups (618), read-only.
+- The ribosomal 'merged neighbourhood' uses marked fragments of any size (the g2 rule without its size floor) linked by
+  <= 5 genes; Pfam names are observed domains; nothing is named beyond them.
+- Even split for paired DPANN intervals; ribosomal counts over all 1,686 runs, as the benchmark defines them.
+
+ARTIFACTS
+Local benchmarks/redesign/long_loci/: predeclared.json (main + amendments 1-3), NOTEBOOK.txt, REPORT.txt;
+  code/ (ll.py bonds / L1-L4 / L4b / tree / recurrence / calibration / smoke; dscore.py DPANN scoring + ribosomal
+  diagnosis; sscore.py source207; mkplus.py; table.py; copies words_ts.py, wscore_ts.py, s207.py, vscore_v.py; env.sh;
+  dp1 / sd1 / x4b / dp2 / sd2 .sbatch); results/ (every result JSON: refcheck_dpann, build_*, build4b_*, ladder_group,
+  odd_*, even_*, s207_*, rdiag_reference; table_odd.txt, table_even.txt, table_s207.txt).
+Biotite $RD/long_loci/: code/, loci/<data>_<count>/*.parquet (gene-id intervals of every output), nodes/<data>_<count>/
+  (bonds_obs.npz, obs_t*.parquet, obs4b_t*.parquet, null*.parquet node tables), scores/ (per-instance DPANN scores of the
+  even outputs; per-region source207 frames), runs/group/tau*/ (Spacedust group word ladder), results/, logs/.
+
+JOBS (all -A banfield -p standard --qos=standard_expand -c 24, exclude list; account <= 340 CPUs at each submission)
+  92658 ll_dp1  16.0 min  DH refcheck, DPANN group + syn builds, odd scores, reference ribosomal diagnosis
+  92659 ll_sd1   8.1 min  Spacedust group word ladder (tau* 10), group + syn builds
+  92721 ll_x4b   4.4 min  ribosomal diagnosis with fragments, L4b builds (DPANN, Spacedust), DPANN L4b odd scores
+  92765 ll_sd2   6.2 min  source207 scores (selected, syn, sensitivity)
+  92767 ll_dp2   4.3 min  DPANN even scores + ribosomal diagnosis of every output; syn L4b build and even rows
+  Login node: one single-thread smoke test (150 genomes, 18 s plus compile).
+
+NEXT (one line each)
+- CRISPR-Cas: L4b on syn bonds is .038 short; test it with syn counting in the node test as well (built here only for
+  bonds).
+- The 56 under-covered ribosomal runs: allow a bond to bridge a boundary when the flanking families recur together within
+  the node window (a recurrence-backed bridge), then rescore.
+- Spacedust: L4b trails the engine reference by .058 mostly in regions >= 11 genes; the engine's w 8 window adds +.062 on
+  the same tokens (transfer_spacedust), so a w = 8 bond window is the next DPANN-selected test.

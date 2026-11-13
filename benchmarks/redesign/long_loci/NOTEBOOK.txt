@@ -1,0 +1,89 @@
+long_loci NOTEBOOK (workstream long_loci; times UTC from `date -u`)
+==================================================================
+2026-11-13 10:35  Brief read. Read (local, read-only): vocab/REPORT.txt, REPORT2A.txt, context_units/REPORT.txt,
+                  transfer_spacedust/NOTEBOOK.txt + REPORT.txt (interim 10:30), baseline_synton/REPORT.txt; code
+                  transfer_spacedust/words.py, wscore.py, s207.py; vocab/vscore.py, vscore2.py (significant_boundaries,
+                  phrases), vscore2a.py; context_units/cuts.py (kappa definition); remote blib.py scoring functions and
+                  rules.paired.
+2026-11-13 10:45  Read /home/jwestrob/.claude/CLAUDE.md and obsidian-vault/biotite-cluster-ops.md on biotite.
+                  Stored inputs located: DPANN stage-1 run $RD/vocab/runs/main/tau10/obs (no b0/sig0 stored: bonds are
+                  recomputed here from the learner's round 0); V-mob loci vocab/loci/main_tau10_V-mob.parquet and scores
+                  vocab/scores/main_tau10_V-mob.parquet (.624); words + cohesion phrases scores
+                  vocab/scores/runs_main_tau10_s1coh_V-coh0.1.parquet (.608); kappa context_units/ctx/kappa_var_tokens.npy.
+                  Spacedust: P2 run transfer_spacedust/runs/syn/tau8/obs (sig0, b0 stored), kappa emb/kappa_var_tokens.npy,
+                  per-region frames results/pr_*.parquet.
+2026-11-13 10:48  transfer_spacedust's CPU genome groups landed (job 91643): 618 groups at 0.75 (query genomes in groups
+                  of 2-6). Used read-only as the Spacedust counting unit.
+2026-11-13 10:54  predeclared.json written (definitions of L1-L4, L4a variant, L4+ interpretation, selection rules,
+                  expectations for every output) before any computation of this workstream.
+2026-11-13 10:58  Coordinator (priority from Jacob): DPANN ribosomal resolved is the primary criterion for every output;
+                  add a label-free failure diagnosis of the ribosomal benchmark. predeclared.json amendment_1 written
+                  10:58: success bar resolved > 1,512 with recovered >= 1,650 and the other bars; odd selection now
+                  [conditions met, odd resolved, odd summed]. No number of this workstream existed at that time (no odd,
+                  no even number of anything computed).
+2026-11-13 11:04  Smoke test (login node, 1 thread, first 150 DPANN genomes, ll.py smoke): 3,163 significant keys, 43,192
+                  bonds, 34,710 positive boundaries; tie-collapsed tree 18,444 nodes, every node's m / e / persistence equal
+                  to a brute-force check, run roots == L1 runs; recurrence counts equal a brute-force window scan for 60
+                  random nodes in the observed and one shuffled corpus (0 mismatches of 120).
+2026-11-13 11:05  Re-read both cluster files; account 332 CPUs running. Submitted 92658 ll_dp1 (24 CPUs: DH refcheck,
+                  DPANN group build, ODD scoring of all outputs, reference ribosomal diagnosis, syn build + odd) and
+                  92659 ll_sd1 (24 CPUs: Spacedust group word ladder 4-20, group build at tau*, syn build; no scoring).
+2026-11-13 11:06  DH reference reproduced exactly (job 92658, dscore.py refcheck): even summed .4270, F1 .744/.548/.479,
+                  ribosomal 1,686 / 1,512, Parvarchaeaceae 114 recovered / 113 resolved; per-instance F1, control F1 and
+                  coverage equal to the stored scores.
+2026-11-13 11:08  DPANN group build (gold-free): 39,137 significant keys, 1,797,062 bonds (Lambda q50 64, q99 1,494),
+                  1,310,777 positive boundaries; nulls 14 / 9 / ? keys (62 / 30 / 36 tree nodes). L1 426,696 loci, 48.5%
+                  of genes (span q50 3, max 108). L2 genes in loci .422 / .326 / .255 / .191 at theta .02 / .05 / .1 / .2.
+                  Node calibration: delta = 0, tau_node = 0 at every theta (FDR 5e-5 to 1.2e-4), so L4 = L4a; the test
+                  removes 31,112 of 848,982 nodes at theta .02 (n < 2). Closed-form E sums to 1.19x the shuffled count.
+                  Recurrence for 1,032,127 unique intervals (204,645 keys) 52 s on 24 threads; build 141 s.
+2026-11-13 11:09  amendment_2 (L4b: cohesion orders the splits instead of cutting; whole tested at the bond tau with the
+                  closed-form E) written before any odd score was read (3 odd log lines existed, unopened).
+2026-11-13 11:13  ODD scores of DPANN group outputs read (job 92658; results/odd_dpann_group.json; odd numbers only).
+                  DH odd: summed .4179, ribosomal 848 / 769, Parv 55. Odd resolved / summed / F1 DF-TXSS-CCT:
+                    L1 531 / .491 / .738 .494 .394;  L2 .02 685 / .510;  L2 .05 735 / .597 / .681 .584 .319;
+                    L2 .1 748 / .416 / .378 .569 .244;  L2 .2 72 / .323;  L3 .02/.05/.1/.2 717/750/760/317, summed
+                    .601/.613/.610/.603;  L4 .02 798 / .647 / .756 .700 .400;  L4 .05 753 / .681;  L4 .1 752 / .454 /
+                    .365 .627 .241;  L4 .2 72 / .316.  L4a = L4 (identical outputs);  L4+ .02 798 / .632.
+                  Predeclared rule (amendment_1: [conditions, odd resolved, odd summed] on L2): theta = 0.1 (L2 .05 and
+                  .1 both meet 2 conditions; odd resolved 748 > 735). CRISPR-Cas F1 fails the F1 condition everywhere.
+                  Not selected by the rule but best on odd resolved and on odd summed among L4 rows: L4 at theta .02.
+                  Cut-only L2 collapses DefenseFinder F1 at theta >= .1 (.378 / .259); joining phrases at the same theta
+                  did not (words V-coh0.1 DF .735), because a cut destroys bonded loci while a phrase only adds.
+2026-11-13 11:14  Reference ribosomal diagnosis read (rdiag_reference.json; reference outputs only, all 1,686 runs):
+                  DH unresolved 174 = 17 under-covered + 157 over-extended (median 18 outside genes per run); no two
+                  benchmark runs share a contig within 10 genes (0 neighbour pairs), so the (3) merge among benchmark
+                  runs is empty; 14.5% of DH's outside genes carry a Ribosomal_* marker outside every run of >= 8 marked
+                  genes. Extending (3) to smaller marked fragments (any size) before any output of mine is diagnosed.
+2026-11-13 11:19  L4b odd (job 92721): theta .02/.05/.1/.2 resolved 810/806/807/807, summed .607/.601/.597/.572, F1 at
+                  .1 = .756/.706/.415 (DH odd .743/.544/.479). Selection: theta 0.1, L4b ([2, 807, .597] over L4
+                  [2, 752, .454]). Written to predeclared.json amendment_3 at 11:20 with even expectations, before any
+                  even number. Spacedust builds (gold-free): group tau* 10 (FDR .005; 87,698 word types); syn L1 equals
+                  the stored CC2 boundaries exactly and S obs equals the stored matrix; closed-form node E sums within
+                  0.2% of the shuffled count on Spacedust (1.19x on DPANN).
+2026-11-13 11:20  Reference ribosomal diagnosis rerun with marked fragments of any size (job 92721, rdiag_reference.json):
+                  0 benchmark-run pairs within 10 genes; 67,473 g2 marked fragments; 376 runs have a smaller marked
+                  fragment 3-5 genes away (extra marked genes q50 2, q90 7); oracle exact span 1,686 / 1,686; oracle
+                  merged neighbourhood 1,507 (179 runs fail precision against their own neighbourhood). DH 174 unresolved
+                  = 17 under-covered + 157 over-extended (median 18 outside genes; 31% of outside genes inside the merged
+                  neighbourhood, 65% beyond it).
+2026-11-13 11:20  Submitted 92765 ll_sd2 (24 CPUs; account 252 running): source207 scores of the selected settings
+                  (groups, syn) and a SENSITIVITY file (other thetas). Expectations: predeclared.json amendment_3.
+2026-11-13 11:21  Submitted 92767 ll_dp2 (24 CPUs; account 252 running): build4b syn, L4b+ tables, EVEN scoring of the
+                  amendment_3 outputs with ribosomal diagnosis; syn secondary rows.
+2026-11-13 11:23  source207 scores read (job 92765; results/s207_sd_group.json, s207_sd_syn.json, s207_sd_group_sens.json):
+                  groups L1 +.153 [+.116, +.189]; L2 .1 -.040; L3 .1 +.073; L4b .1 (selected) +.126 [+.086, +.166], vs P2
+                  +.077 [+.044, +.109], vs CC2 -.016 [-.042, +.008], vs engine ref -.058 [-.093, -.021], vs Spacedust +.061
+                  [+.025, +.097]; brief's L4 .1 -.044. syn: L1 equals CC2 (d .000); L4b +.123. Sensitivity (not selected):
+                  L2 .02 +.071, L4 .02 +.059, L4b +.126-.127 at every theta.
+2026-11-13 11:25  DPANN EVEN read (job 92767; even_dpann_group.json): L4b .1 ribosomal 1,680 / 1,598 (+86 [+60, +115] vs
+                  DH), Parv 114, summed .584 (+.157 vs DH; -.040 [-.056, -.024] vs words V-mob; -.024 [-.041, -.007] vs
+                  words + cohesion phrases), F1 .731/.700/.419 (CRISPR-Cas -.060 vs DH: fails the F1 bar). L1 1,036
+                  resolved; L2 .1 1,473 (DF F1 .376); L3 .1 1,494 (summed .606); brief's L4 .1 1,481 (DF F1 .357);
+                  L4 .02 (not selected) 1,585 / .632. Ribosomal diagnosis: L4b 88 unresolved = 56 under-covered (the
+                  same 56 as L1: bond gaps inside the run) + 32 over-extended.
+2026-11-13 11:26  syn even (even_dpann_syn.json): L4b 1,601 resolved, summed .570, CRISPR-Cas F1 .441 (-.038); L3 .1
+                  1,502 resolved, every F1 bar met (CRISPR-Cas -.007), verdict 'beats' DH on summed.
+2026-11-13 11:28  All five jobs COMPLETED (92658 16 min, 92659 8 min, 92721 4.4 min, 92765 6.2 min, 92767 4.3 min); peak
+                  RSS of every step <= 2.4 GB. Writing REPORT.txt.
+2026-11-13 11:32  REPORT.txt written (final). Copies of REPORT / NOTEBOOK / predeclared.json placed in $RD/long_loci/.

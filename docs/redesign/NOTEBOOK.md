@@ -2434,3 +2434,45 @@ regions; every output scored by the same evaluator with the same random-placemen
 - Embedding words (P3) did not run: the GPU partition was occupied at every check. ESM-C 300M
   vectors stored for the collection are bitwise the same weights as ESM++ small.
 Open: P3; the long-locus design (`long_loci`) is the direct follow-up.
+
+## 2026-11-13 11:33 UTC — Long-locus redesign: 1,598 of 1,686 ribosomal runs resolved; CRISPR-Cas still blocks (workstream `long_loci`; `benchmarks/redesign/long_loci/REPORT.txt`)
+
+Development results (both test halves have been consulted many times). Predeclared with three
+amendments; theta selected on odd genomes; reference reproduced first. Family identity, genome
+groups unless noted.
+
+- **Selected procedure, "L4b" (the agent's formulation, designed before any odd score):** link
+  genes by first-round significant bonds; build the tree by splitting each bonded run at its
+  weakest boundary, with boundaries of low cohesion (below theta 0.1) split first; keep nodes that
+  pass the bond test as a whole. No word identity is used.
+- **DPANN:** ribosomal 1,680 recovered / **1,598 resolved (+86 [+60, +115] over the reference's
+  1,512; 95%)**; Parvarchaeaceae 114 recovered / 107 resolved; summed excess 0.584 (+0.157 over
+  the reference; -0.040 [-0.056, -0.024] against words, through a higher random control); F1
+  0.731 / 0.700 / 0.419. **CRISPR-Cas -0.060 fails the bar**, as for every family-based output.
+  Without the node filter (L4b+): 1,598 resolved, F1 0.772 / 0.701 / 0.451 (CRISPR-Cas -0.028).
+  With synteny-retention counting for the bonds: 1,601 resolved, CRISPR-Cas 0.441 (-0.038).
+- **Spacedust collection, DPANN settings unchanged:** L4b F1 0.574, excess +0.126 [+0.086, +0.166];
+  +0.077 over the word output, level with pair-linking (-0.016 [-0.042, +0.008]), +0.061 over
+  native Spacedust, -0.058 [-0.093, -0.021] under the engine reference.
+- **My design was wrong in two places.** (1) A hard cohesion cut deletes real loci: defence
+  systems and BGC regions have low cohesion inside (81% of Spacedust boundaries fall below 0.1);
+  with the cut, DefenseFinder F1 falls to 0.36-0.38 and Spacedust excess to -0.04. Cohesion works
+  as the order of splitting, not as a cut. (2) The tolerant joint-recurrence test has nothing to
+  calibrate against: shuffled genomes yield 30-62 nodes against 818,000 observed, so its
+  thresholds fall to zero and it removes 4-6% of nodes.
+- **Pair-linking alone (L1):** DPANN summed 0.487 with 1,036 resolved; Spacedust +0.153, the best
+  excess of the new outputs. Nesting costs 0.027 excess on Spacedust through the control.
+- **Ribosomal benchmark diagnosis.** Reference: 174 unresolved, 157 of them over-extended (median
+  18 genes beyond the run) and 17 under-covered. Of the 3,644 outside genes, 31% lie in the run's
+  own neighbourhood (ribosomal fragments within 5 genes and the genes between), 3% carry other
+  Ribosomal_* domains, 65% other; commonest observed domains GTP_EFTU, MMR_HSR1, TrmB, SecY, eIF2_C,
+  S1, IF-2, RNA_pol_Rpb1_5. L4b: 88 unresolved, 56 under-covered (gaps in the bonds inside the run)
+  and 32 over-extended (SecY, EMC3_TMCO1, glycosyltransferase-family domains). No two benchmark
+  runs lie within 10 genes; 376 runs have a smaller ribosomal fragment 3-5 genes away. **An oracle
+  reporting every run's exact span resolves 1,686; an oracle reporting each whole merged
+  neighbourhood resolves 1,507**, below the reference. A whole-neighbourhood method is capped
+  near 1,507 by the definition; passing it needs a nested output that holds the run-sized piece.
+- The closed-form expectation matches shuffled counts within 0.2% on Spacedust and runs 19% high
+  on DPANN.
+Follow-up started (part 2): the same tree over list-based first-round bonds (embedding z-lists
+and alignment lists), to bring CRISPR-Cas back without the identity-at-length problem.

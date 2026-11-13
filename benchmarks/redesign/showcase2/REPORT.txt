@@ -1,0 +1,322 @@
+ws_showcase2 - unannotated, co-folding conserved blocks from the locus-space uncalled clusters and the kinds passers
+13 November 2026 (UTC times from date -u). DPANN, 3,564 genomes. Folding: Biohub ESMFold2 esmfold2-2026-05,
+fold_all_atom, single sequence, client cofold/biohub_cofold.py (byte-identical copy). Names below are observations of
+similarity (UNVERIFIED as systems or functions) unless a curated caller emitted the call; curated callers in the live
+data: DefenseFinder, TXSScan, CRISPRCasTyper, HydDB (system_proteins / *_systems tables).
+Predeclared: predeclared.json part 1 (05:00 UTC, before any triage result), part 2 (06:02:33 UTC, fold list, before
+any fold). Items decided after a fold result are labelled POST HOC.
+
+ANSWER
+1. New blocks whose every member is unrecognised and that co-fold in two independent replicates: 0.
+2. The candidate pool ran out at triage: 248 candidates (227 locus-space (cluster, k) from 146 clusters, 21 kinds
+   passers) -> 47 with two eligible replicates in different genome groups at <= 60 % identity -> 0 with every position
+   unrecognised after enriched profile search; 35 have every position characterised (37 before the wording amendment),
+   mostly as toxin-antitoxin-like structures (RelBE2, YoeB-YefM, ParD-ParE, DinJ-YafQ, MqsA, BrnT, AbrB-like, RHH).
+3. 12 blocks with at least one unrecognised position were folded (10 by the predeclared rule, 2 by a wording
+   amendment written before folding); 48 Biohub items. Cognate folds with an interface passing the per-replicate
+   rule 5/24 (20.8 % [7.1, 42.2]), swap controls 0/12 (0 % [0, 26.5]).
+4. Two blocks are interface hits that pass every refutation (no zipping, no low complexity, 0 fused homologs, no
+   promiscuity; margins 0.59-0.73) and whose replicates agree (complex TM 0.70-0.82); both carry a recognised member.
+5. Rank 20 (ls_c764_k2): a Fic/Doc-domain protein (Pfam Fic, KOfam K07341, CDD Doc; Foldseek Doc and Phd-Doc, strong)
+   plus a 39-41-aa protein that no profile or structure search recognises; pair ipTM 0.88/0.92; 98 instances, 59 genome
+   groups, 5 phyla; the small gene follows the Doc-like gene in 92/92 co-oriented instances, overlapping it by a
+   median 29 nt. Consistent with a Doc-antitoxin-type pair, UNVERIFIED. The closest analogue of the A-B-C pattern here.
+6. Rank 4 (kd_kA_091): a DUF2283 protein plus a DUF4258 / MJ0788-family protein; pair ipTM 0.90/0.93; 599 realisations,
+   179 genome groups, 8 phyla; this kind pair passes in 5 of 6 folds across this screen and the kinds screen (POST HOC
+   tally). Profile matches are unknown-function entries plus one structural-genomics PDB title, but Foldseek places
+   chain B on BrnT/RelE-type toxin structures in both replicates (moderate) and Pfam's own text calls DUF4258 toxin-like.
+7. So both hits are 'co-folds, partly recognised'; neither meets the showcase bar of members no search recognises.
+8. Fold items used: 48 of 500 (36 screen + 2 margin controls + 8 monomers + 2 POST HOC controls).
+
+==============================================================================================================
+1. CANDIDATES (code/sc2_candidates.py; tables results/candidates/)
+==============================================================================================================
+Sources. (a) Locus space: the 306 MEAN-map clusters (resolution 10) with >= 10 cores and no curated-caller member.
+Candidate = (cluster, k) for k = 2-5; realisations = cores of span k whose every position has whitened zca10 cosine
+>= 0.32 to the reference core (the canonical rescue3 token tuple seen in the most genome groups); 7,515 of 17,717
+span-2-5 cores qualify. (b) Kinds: the 21 passers clear of the kinds split-gene and zipping rules; realisations =
+their support pairs at list depth 1,000 with both chains at cosine >= 0.32 to the passer (9,227 of 10,574).
+Replicates (predeclared): every protein 40-400 aa and sum <= 700 aa, >= 1 unannotated gene, no X, hydrophobic
+fraction <= 0.45, SEG-trigger low complexity <= 0.145, partial 00 or unrecorded, not at a contig end, lengths within
+0.8-1.25x of the position median, family set never folded before; two realisations in different data-derived genome
+groups (homolog-level cosine 0.75), per-position identity <= 0.60 (ceiling), tier A (both at cosine >= 0.50 to the
+reference) before tier B, lowest maximum identity within a tier. Kinds replicates lie outside the passer's group.
+Matching to earlier folds: unordered rescue3 token set of the folded genes, over 1,776 earlier folds (screens 1-3
+cognate and uncalled windows, deep dive c1/c1abc/c2, kinds classes a/b/d; 1,407 family sets). A-B-C tokens (81718,
+393054, 130016 and variants 247277, 399854, 190823) excluded.
+Outcome (248): kept 47 (locus space 27, kinds 20); removed: fewer than 2 eligible genome groups 187 (annotated
+housekeeping or toxin-antitoxin realisations, hydrophobic membrane-like units, long proteins, or realisations whose
+family sets were folded before), no replicate pair under the identity ceiling 6, reference family set already tested
+with two replicates 4 (c799, c842, c1148, c618), low complexity 3, duplicate 1 (kA_242). Replicate tiers: A 36, B 11.
+Replicate identity (per position): kinds candidates 0.175-0.595 (median of per-block maxima 0.26); locus space
+0.205-0.592 (median of maxima 0.44).
+
+Ranked candidate table (rank = genome groups, then family sets; phyla for evaluation). grp = data-derived genome
+groups, fs = distinct family sets, ph = phyla, gen = genomes; rep id = per-position identity between replicates;
+triage per position after the wording amendment: C characterised, U unknown-function only, w weak, n none; fold:
+yes = predeclared rule, yes2 = amendment set; min ipTM = the better interface's lower replicate value.
+rk candidate   k grp  fs ph gen len (median aa)  rep id         triage fold  min ipTM call      characterised member (example hit)
+ 1 kd_kA_014   2 234  32  8 569 109;89           0.23;0.23      CC     no                       PDB 7c0i E3L Z-DNA-binding (P 98.2) / DsrD 1ucr
+ 2 kd_kA_010   2 229  26  8 541 89;109           0.26;0.28      CC     no                       PDB 1ucr DsrD (P 94.0) / E3L 7c0i
+ 3 kd_kA_188   2 192  26  6 447 214;227          0.22;0.28      CC     no                       PDB 4wh5 LnuA nucleotidyltransferase (P 99.4)
+ 4 kd_kA_091   2 179  67  8 469 117;109          0.22;0.22      UC     yes2      0.90 HIT       Pfam MJ0788 family (P 96.7), PDB 3bu2 (NESG)
+ 5 kd_kA_086   2 169  54  6 349 107;80           0.19;0.17      CC     no                       PDB 3ga8 MqsA N-terminal domain (P 98.7)
+ 6 kd_kA_041   2 162  74  6 332 140;71           0.19;0.19      CC     no                       Pfam RVP_2 retroviral aspartyl protease (P 99.2)
+ 7 kd_kA_111   2 160  56  5 331 109;78           0.29;0.26      CC     no                       Pfam MazE_antitoxin (GA); PDB 3u97 BrnT
+ 8 kd_kA_175   2 145  52  6 333 52;102           0.21;0.21      CC     no                       PDB 4ltt HP0894 toxin (P 99.4)
+ 9 kd_kA_157   2 129  51  5 315 46;105           0.29;0.32      CC     no                       PDB 7bwf YoeB-YefM (P 98.1)
+10 kd_kA_089   2 126  83  7 268 63;86            0.35;0.41      CC     no                       PDB 7bwf YoeB-YefM; 4q2u DinJ-YafQ (P 99.6)
+11 kd_kA_195   2 119  34  4 338 87;82            0.23;0.26      CC     no                       PDB 4v7j RelE; 3kxe ParD-ParE (P 99.2)
+12 kd_kA_163   2 116  37  5 308 87;82            0.26;0.23      CC     no                       PDB 3g5o RelBE2 (P 99.5)
+13 kd_kA_096   2  95  65  5 192 104;46           0.29;0.29      CC     no                       PDB 3g5o RelBE2 (P 99.2)
+14 kd_kA_271   2  92  55  5 201 63;86            0.55;0.59      CC     no                       PDB 3g5o RelBE2 (P 99.3)
+15 kd_kA_120   2  88  43  5 182 111;118          0.20;0.20      CU     yes2      0.22 rep1 only Pfam MJ0788 family (P 99.5)
+16 kd_kA_124   2  86  53  6 757 111;173          0.20;0.21      CC     no                       Pfam RNase_P_Rpp14 (GA); RNase_P_p30
+17 kd_kA_118   2  83  52  5 760 111;173          0.31;0.28      CC     no                       Pfam RNase_P_Rpp14 (GA); RNase_P_p30
+18 kd_kA_074   2  73  26  5 202 87;111           0.21;0.18      CC     no                       Pfam HTH_36 (P 94.4); PDB 6pcp BpsR
+19 kd_kA_136   2  63  52  5 127 53;103           0.31;0.30      CC     no                       PDB 7bwf YoeB-YefM; 5ja8 HigB-2
+20 ls_c764_k2  2  59  11  5  98 132;40           0.25;0.20      Cw     yes       0.88 HIT       Pfam Fic (GA on replicate gene)
+21 ls_c835_k2  2  53   4  5  93 83;127           0.34;0.36      CC     no                       PDB 2l66 Sso7c4 AbrB-like; 2k5j yiiF
+22 ls_c856_k2  2  49   1  3  87 79;86            0.46;0.45      CC     no                       PDB 3kxe ParD-ParE (P 99.4); 4v7j RelE
+23 ls_c838_k3  3  44   2  3  64 51;98;89         0.42;0.41;0.35 CCC    no                       Pfam RHH_12 (P 98.2)
+24 ls_c919_k2  2  42   1  6  65 96;321           0.49;0.48      CC     no                       PDB 6dk7 RetS histidine kinase; 6m36 RsbV/RsbW
+25 ls_c881_k2  2  39   2  3  69 50;105           0.34;0.33      CC     no                       PDB 7bwf YoeB-YefM; 3g5o RelBE2
+26 ls_c838_k2  2  29   4  4  36 87;101           0.28;0.32      CC     no                       Pfam ParE_toxin (GA); RHH_12
+27 ls_c939_k2  2  26   1  3  46 173;293          0.31;0.34      CC     no                       PDB 3o6u CPE2226 (NESG, P 98.8) + Pfam-annotated partner
+28 ls_c774_k2  2  23   4  3  51 132;89           0.53;0.48      CC     no                       PDB 5ceg toxin/antitoxin (P 99.3); 2mh2 HOP2
+29 ls_c938_k2  2  21   1  3  44 213;140          0.48;0.45      CC     no                       Pfam GIY_YIG_3 (P 100); H2O2_YaaD
+30 ls_c964_k2  2  17   7  3  28 230;206          0.23;0.26      CC     no                       Pfam RNA_ligase (GA); PDB 2lcq Nob1
+31 ls_c778_k2  2  17   3  1  62 156;168          0.45;0.44      wC     yes       0.07 no        PDB 4un7 I-DmoI homing endonuclease (P 98.8)
+32 ls_c940_k2  2  15   1  4  24 182;61           0.29;0.55      CC     no                       Pfam LemA (GA); PDB 2wvd NikR
+33 kd_kA_246   2  14  14  4  17 81;58            0.25;0.26      CC     no                       PDB 6ont / 6rh1 response-regulator receiver
+34 ls_c987_k2  2  14   4  4  23 214;305          0.29;0.34      Cw     yes       0.10 no        Pfam Peptidase_C39_2 (GA)
+35 ls_c950_k2  2  14   2  2  36 85;136           0.29;0.41      CC     no                       PDB 2l66 Sso7c4 AbrB-like; 2fy9 AbrB
+36 ls_c794_k2  2  13   4  3 122 373;304          0.43;0.52      CC     no                       PDB 6jw6 KanD2 (P 100)
+37 ls_c920_k2  2  11   4  1  54 163;189          0.39;0.26      Cw     yes       0.58 no        PDB 2e6j PapD-like domain of HYDIN (P 92.0)
+38 ls_c1043_k2 2  11   2  2  21 83;98            0.39;0.59      CC     no                       PDB 5ceg toxin/antitoxin (P 98.2)
+39 ls_c1095_k2 2  10   1  4  15 76;127           0.36;0.40      UC     yes       0.43 no        Pfam Asp_protease_2 / gag-asp_proteas (GA)
+40 ls_c1077_k2 2   5   2  1  15 219;185          0.48;0.46      wC     yes       0.33 no        Pfam Phage_integrase (GA)
+41 ls_c778_k3  3   5   2  1  10 137;169;164      0.45;0.41;0.39 CwC    yes       0.07 no        Pfam ACT/ACT_8 (GA); PDB 4un7 I-DmoI
+42 ls_c968_k3  3   5   1  1   7 216;271;193      0.50;0.44;0.34 CUw    yes       0.24 no        Pfam Lactamase_B (GA)
+43 ls_c640_k2  2   3   1  1  24 207;160          0.45;0.34      wC     yes       0.14 no        Pfam Acetyltransf_1 family (GA)
+44 ls_c1106_k2 2   3   1  2  12 95;414           0.29;0.44      CC     no                       Pfam FIST (GA); CDD PTZ00287
+45 ls_c1170_k2 2   2   1  1  18 90;143           0.40;0.43      wC     yes       0.06 no        Pfam PTPS (GA)
+46 ls_c900_k2  2   2   1  1   8 289;167          0.26;0.24      CC     no                       Pfam Cupin_2 (P 98.8); PDB 1jh6
+47 ls_c940_k4  4   2   1  2   2 60;189;230;134   0.50;0.38;0.40;0.53 CCCC no                    Pfam LemA (GA); PDB 2wvd NikR
+Full table: results/candidate_table.tsv; replicate genes, genomes and taxonomy: results/candidates/reps.tsv.
+
+==============================================================================================================
+2. TRIAGE (code/sc2_triage.py, sc2_triage.sbatch, sc2_triage_parse.py, sc2_triage_sens.py; results/triage/)
+==============================================================================================================
+Per rescue3 token of a replicate chain (118 tokens): 28 carry a curated Pfam hit with characterised wording on the
+replicate gene (ParE/ParD/MazE toxin-antitoxin domains, PIN, Fic, RNase_P_Rpp14, Phage_integrase, ACT, Lactamase_B,
+acetyltransferases, PTPS, LemA, RNA_ligase, Peptidase_C39_2 ...); the other 90 were searched: mafft -> HHblits
+UniRef30_2020_06 (2 iterations) -> HHsearch of the enriched and DPANN-only alignments vs Pfam 39 (HH) and PDB100
+2021-03, hmmsearch Pfam 39 (E 0.01 and GA), RPS-BLAST CDD 3.20 (up to 10 members). Jobs 89564 (1:01:01) and 89747
+(27:59, second worker on the same lock directories). 14,288 hits recorded (HHsearch P >= 50: 11,297; hmmsearch E <=
+0.01: 2,551; CDD: 440) in results/triage/triage_hits.tsv; PDB titles fetched from RCSB by entry ID.
+Family classes (screen-2 rule, unchanged): characterised 96 (curated Pfam on the gene 28; HHsearch 39; HHsearch + CDD
+8; HHsearch + CDD + Pfam GA 16; HHsearch + Pfam GA 4; CDD only 1), unknown_function 5, weak 17, none 0.
+Blocks: 47 triaged; 37 with every position characterised under the predeclared rule; 10 with >= 1 unrecognised
+position (all of them with a characterised partner); 0 with every position unrecognised.
+Wording amendment (before any fold): two families (49439, 279903) were characterised only through PDB 3bu2 ('a
+tRNA-binding protein ... Northeast Structural Genomics Consortium target SyR77', P 91.8-92.0 over 51-52 columns);
+re-classed unknown_function in a sensitivity column, which adds kd_kA_091 and kd_kA_120 as a labelled secondary set.
+Wording limit found afterwards: the rule reads only entry names. Pfam PF27370 'MJ0788 family' (the hit that keeps the
+DUF4258 side of kd_kA_091 / kd_kA_120 'characterised', P 96.7 / 99.5) states in its own description 'small
+uncharacterised proteins ... The function of this protein family remains to be determined'. With the entries' full
+text, kd_kA_091 has unknown-function profile matches only (DUF2283, DUF4258, MJ0788 family, the 3bu2 structural-
+genomics entry); the structure search below still recognises its chain B.
+Folded blocks, positions in reference order (best evidence per position, both replicates' families):
+ rank 4  kd_kA_091   A: DUF2283 (Pfam GA on the gene; HHsearch DUF2283 P 99.3, 48 col; PDB 3bu2 P 91.8);
+                     B: DUF4258 (P 88.6-99.2), MJ0788 family (P 96.7); UniRef30 hits P >= 95: 500 / 0-436
+ rank 15 kd_kA_120   A: DUF4258 (P 99.4), MJ0788 family (P 99.5); B: DUF2283 (P 99.3-99.4), PDB 3bu2 (P 92.0)
+ rank 20 ls_c764_k2  A: Pfam Fic (GA); B: weak only (EML_C P 82.7 over 23 col; GLTP P 80.2 over 35 col)
+ rank 31 ls_c778_k2  A: weak (PDB 1l1m LacI DNA-binding P < 90); B: PDB 4un7 I-DmoI homing endonuclease (P 98.8, 141 col)
+ rank 34 ls_c987_k2  A: Pfam Peptidase_C39_2 (GA); B: weak (PDB 2k02 FeoC)
+ rank 37 ls_c920_k2  A: PDB 2e6j PapD-like domain (P 92.0, 39 col); B: weak (PDB 3rgb)
+ rank 39 ls_c1095_k2 A: DUF5678 (P 96.8, unknown function); B: Pfam Asp_protease_2 / gag-asp_proteas (GA)
+ rank 40 ls_c1077_k2 A: weak (DUF22766 P 45.7); B: Pfam Phage_integrase (GA)
+ rank 41 ls_c778_k3  A: Pfam ACT / ACT_8 (GA); B: weak (DUF6078 P 70.8); C: PDB 4un7 I-DmoI (P 98.8)
+ rank 42 ls_c968_k3  A: Pfam Lactamase_B (GA); B: DUF2797 (P 100, 211 col); C: weak (DUF27841 P 64.0)
+ rank 43 ls_c640_k2  A: weak (DUF6715 P 89.8); B: Pfam acetyltransferase families (GA)
+ rank 45 ls_c1170_k2 A: weak (PDB 6ycs PC4 DNA-binding P < 90); B: Pfam PTPS (GA)
+
+==============================================================================================================
+3. FOLDS (code/sc2_design.py, sc2_analyze.py; results/folds/)
+==============================================================================================================
+Design: per block two cognate replicates (A, B, ... in reference order) and one swap control (census rule: odd rank
+-> replicate 1 with B replaced; even rank -> replicate 2 with chain k-2 replaced); donors = chains of other folded
+blocks in the same replicate, Hungarian on relative length + hydrophobic difference (median 0.020 / 0.018, max 0.128
+/ 0.049), donors sharing a token or at whitened cosine >= 0.32 to any receiving chain forbidden. Margin controls for
+interfaces passing both replicates and monomers of their chains folded afterwards (predeclared). Batches 7bcbbd07
+(36 items, 06:02:38 UTC, all done by 06:04) and 6d676d20 (12 items, 06:06:44 UTC).
+Per-replicate pass: pair ipTM >= 0.75, >= 10 contacts (CB-CB <= 8 A), interface PAE <= 5 A, interface pLDDT >= 70.
+Hit: passes in both replicates and both margins (cognate minus the control replacing the partner) >= 0.30.
+
+rank cand         set       pair r1 ipTM   PAE cont pLDDT | r2 ipTM   PAE cont pLDDT | ctrl r1 ctrl r2 | call
+   4 kd_kA_091    secondary AB     0.901   2.3   90  85.2 |   0.930   1.1   69  92.5 |   0.272   0.288 | HIT
+  15 kd_kA_120    secondary AB     0.936   1.2   66  90.6 |   0.221  15.2   57  56.2 |   0.382       - | rep1 only
+  20 ls_c764_k2   primary   AB     0.882   1.7   65  89.0 |   0.924   4.1   66  86.9 |   0.158   0.333 | HIT
+  31 ls_c778_k2   primary   AB     0.076  24.5   60  59.7 |   0.074  27.6   52  50.3 |   0.056       - | no
+  34 ls_c987_k2   primary   AB     0.101  27.0  125  45.1 |   0.132  25.9  159  51.7 |       -   0.083 | no
+  37 ls_c920_k2   primary   AB     0.675   6.4  139  78.4 |   0.582   9.5  141  75.0 |   0.153       - | no
+  39 ls_c1095_k2  primary   AB     0.907   5.4  119  82.1 |   0.428  13.3   99  65.0 |   0.132       - | no
+  40 ls_c1077_k2  primary   AB     0.332  16.5   78  66.2 |   0.612  10.1   76  71.6 |       -   0.600 | no
+  41 ls_c778_k3   primary   AB     0.070  28.2  152  55.5 |   0.109  24.4  116  50.0 |   0.090       - | no
+  41 ls_c778_k3   primary   AC     0.048     -    0     - |   0.053  29.5    3  69.4 |       -       - | no
+  41 ls_c778_k3   primary   BC     0.057  29.1   22  71.4 |   0.058  29.3   22  64.7 |       -       - | no
+  42 ls_c968_k3   primary   AB     0.520  11.4   23  74.1 |   0.198     -    0     - |       -       - | no
+  42 ls_c968_k3   primary   AC     0.243  18.9   59  69.7 |   0.657   7.8   33  83.8 |       -       - | no
+  42 ls_c968_k3   primary   BC     0.174  23.2   28  71.0 |   0.333  16.0   32  79.3 |       -   0.107 | no
+  43 ls_c640_k2   primary   AB     0.141  21.2  133  52.3 |   0.630   7.5   37  84.8 |   0.135       - | no
+  45 ls_c1170_k2  primary   AB     0.056  27.3   25  75.6 |   0.174  20.4   27  66.2 |   0.215       - | no
+(ctrl r1 for ranks 4 and 20 = follow-up controls sc2f_*, donors 90 aa for a 110-aa chain and 78 aa for a 39-aa chain.)
+POST HOC (rank 20, after reading the follow-up): two length-matched rep-1 B controls from the wider candidate pool,
+45 aa (kd_kA_136 rep-1 chain, YefM-like family) and 50 aa (ls_c881_k2 rep-1 chain): pair ipTM 0.284 and 0.245
+(interface PAE 14.6 / 15.6 A) -> margins 0.60 / 0.64.
+Class level (per fold, >= 1 interface passing the per-replicate rule; swaps count only interfaces of the replaced
+chain): cognate 5/24 = 20.8 % [7.1, 42.2]; swap 0/12 = 0 % [0, 26.5]; Fisher p 0.146; max pair ipTM median 0.474 vs
+0.184 (Mann-Whitney p 0.144). Blocks with an interface hit: 2/12 = 16.7 % [2.1, 48.4] (primary rule 1/10 = 10.0 %
+[0.3, 44.5]). Single-replicate passes: rank 15 (rep 1 0.936; rep 2 0.221) and rank 39 (rep 1 0.907 but PAE 5.4 A).
+
+==============================================================================================================
+4. CHECKS PER PASSING BLOCK
+==============================================================================================================
+RANK 20  ls_c764_k2 (locus-space cluster 764)  -  co-folds, partly recognised
+ Replicates: r1 GCA_007131205.1 Nanobdellota / Woesearchaeales / PWWA01, SLQZ01000012.1_5 (A, 133 aa) + _4 (B, 39 aa);
+  r2 GCA_027334005.1 Micrarchaeota / Micrarchaeales / JAKAUU01, DAHWXV010000004.1_15 (A, 117 aa) + _14 (B, 41 aa).
+  Identity A 0.248, B 0.205; genome groups 341 / 576; tier A (cosine >= 0.50 to the reference).
+ Fold: pair ipTM 0.882 / 0.924, interface PAE 1.7 / 4.1 A, contacts 65 / 66, interface pLDDT 89.0 / 86.9; controls
+  0.158 (B replaced, 78-aa donor) / 0.333 (A replaced) -> margins 0.72 / 0.59; POST HOC length-matched B controls 0.28 /
+  0.25. Promiscuity: none (controls < 0.6).
+ Zipping (monomers sc2m_*): chain A alone pLDDT 95.1 / 83.1, B alone 72.2 / 69.4; interface residues below pLDDT 60 in
+  the monomer: A 0 % / 0 %, B 5.6 % / 13.0 % -> no flag. Low complexity: chain fractions 0.00-0.09 (<= 0.145).
+ Split gene: 0 fused homologs among 3,585,303 DPANN proteins (MMseqs2 18, job 90229); homologs outside the
+  realisations: A 549, B 18.
+ Overlap (POST HOC, code/sc2_overlap.py, 92 co-oriented instances, re-translation checked 12/12): the Doc-like gene is
+  upstream in 92/92; the small gene overlaps its 3' end in 90/92 (median 29 nt), starts with ATG in 92/92, sits in the
+  +1 (75) or +2 (17) frame, and its frame meets an in-frame stop between the two starts in 92/92 (no read-through
+  fusion in the small gene's frame). A separate, translationally coupled-type ORF.
+ Recognition: A = Pfam Fic (GA, 95 of 98 realisations), KOfam K07341, CDD Doc (76); Foldseek strong in both replicates
+  (PDB 3dd7 Doc H66Y complex E 4.1e-4 TM 0.81; 3k33 Phd-Doc complex E 2.1e-6 TM 0.84; AFDB-SP 'Toxin Doc' A0QRY0 E 5e-4 /
+  2e-5). B = no Pfam, KOfam or CDD row on any of 98 realisation members, best enriched HHsearch EML_C P 82.7 over 23
+  columns, Sharur family tier best CENP-K P 83.6 over 26 columns, Foldseek no alignment in either database.
+ Spread: 98 realisations in 98 genomes, 59 genome groups, 11 family sets; Nanobdellota 59, Micrarchaeota 19,
+  Iainarchaeota 9, Aenigmatarchaeota 7, Nanohalarchaeota 4.
+ Context (+-3 genes, 98 windows; 3 same-contig control windows each): no curated call on any member; windows with a
+  curated member 13.4 % vs controls 24.6 %; most frequent flank domains ParE_toxin 9, Methyltransf_11/25/31 6-8, PIN 6,
+  NUDIX 6 of 98.
+ Replicate agreement: US-align complex TM 0.701 / 0.756 (RMSD 2.53 A over 142 residues); interface residue
+  correspondence through the replicate alignment 0.66 (A; random expectation 0.24) and 0.55 (B; 0.56 expected - B is
+  mostly interface).
+ Reading: a Doc-like toxin-domain protein with an unrecognised 39-42-aa partner encoded overlapping its 3' end and
+  bound with high confidence in two phyla; consistent with a Doc-antitoxin-type pair (UNVERIFIED; the partner's best
+  profile matches stay below P 84 and none names a Phd/YefM-type antitoxin).
+
+RANK 4  kd_kA_091 (kinds passer kA_091, architecture 35)  -  co-folds, partly recognised (structure)
+ Replicates: r1 GCA_034190525.1 Nanohalarchaeota / Nanosalinales / JALIDP01, MDY6769685.1 (A, 114 aa) + MDY6769686.1
+  (B, 110 aa); r2 GCA_018221285.1 Nanobdellota / Pacearchaeales / JAHKAF01, MBR9701315.1 (A, 118 aa) + MBR9701316.1 (B,
+  102 aa). Identity A 0.219, B 0.216; genome groups 0 / 205; tier A.
+ Fold: pair ipTM 0.901 / 0.930, interface PAE 2.3 / 1.1 A, contacts 90 / 69, interface pLDDT 85.2 / 92.5; controls 0.272
+  (B replaced, 90-aa donor) / 0.288 (A replaced) -> margins 0.63 / 0.64. Promiscuity: none.
+ Zipping: chain pLDDT alone A 71.9 / 73.3, B 70.5 / 74.0; interface residues below 60 in the monomer: A 9.7 % / 0 %, B
+  29.0 % / 12.5 % -> no flag. Low complexity: 0.00-0.12 (<= 0.145).
+ Split gene: 0 fused homologs; homologs outside the realisations: A 112, B 10.
+ Overlap (POST HOC): 531 co-oriented realisations; the DUF4258-side gene (chain B) is upstream in 524; overlap in 307
+  (median 14 nt; exactly 4 nt in 94); downstream start ATG 521; downstream frame closed upstream in 530/531.
+ Recognition: profiles - A: Pfam DUF2283 (GA on 530 realisation members; 'no known function'), PDB 3bu2 (NESG
+  'tRNA-binding protein', P 91.8); B: Pfam DUF4258 (GA on 80 members; Pfam text: 'functionally uncharacterised ...
+  structural models show ... a structure found in bacterial toxins, suggesting ... toxins in a toxin-antitoxin
+  system'), PF27370 MJ0788 family (P 96.7; 'function ... remains to be determined'), BrnT_toxin P 84.9 and PDB 3u97
+  BrnT P 88.9 in the Sharur family tier. Structure (Foldseek 10): A - PDB none; AFDB-SP strong in both replicates to
+  'Uncharacterized protein MJ0789' Q58199 (E 3.6e-6 / 7.3e-9, TM 0.77 / 0.81) and 'Putative hypoxanthine
+  phosphoribosyltransferase' Q8Q0D6 (E 5.5e-6 / 8.2e-10); B - PDB moderate in both replicates: 7vd7 toxin-antitoxin
+  complex (E 0.030, TM 0.58) and 3u97 BrnT ribonuclease toxin (E 0.0046, TM 0.78); AFDB-SP HI_1419 uncharacterised (E
+  0.016, TM 0.62) / HigB2 putative toxin (E 0.014, TM 0.50). By the predeclared Foldseek rule chain B resembles a known
+  (toxin) fold and chain A a Swiss-Prot uncharacterised protein; Q58198 (MJ0788, the PF27370 seed) and Q58199 (MJ0789)
+  are consecutive Methanocaldococcus jannaschii entries, so the pair has neighbours outside DPANN (observation from
+  accession and locus-tag adjacency; the M. jannaschii locus was not opened).
+ Curated calls: none on the replicate genes; CRISPRCasTyper component labels on 4 of 599 realisation members (Csx19,
+  Csm2gr11, WYL, Cas10 profiles); one raw DefenseFinder DzbA profile hit (not a call).
+ Spread: 599 realisations, 469 genomes, 179 genome groups, 67 family sets; Nanobdellota 475, Aenigmatarchaeota 46,
+  Micrarchaeota 35, Nanohalarchaeota 15, Iainarchaeota 13, EX4484-52 13, Undinarchaeota 1, Altiarchaeota 1.
+ Context: windows with a curated member 12.5 % vs controls 30.6 %; frequent flank domains NTP_transf_2 52, Polbeta 51,
+  PIN 35, ResIII 28, DEAD / Helicase_C 25, TrmB 23, MazE_antitoxin 20, Fic 20 (of 599).
+ Replicate agreement: US-align complex TM 0.810 / 0.823 (RMSD 2.24 A over 203 residues, sequence identity 0.16-0.18);
+  interface correspondence 0.67 / 0.67 vs 0.25 / 0.24 expected.
+ Same kind pair elsewhere (POST HOC tally): kinds kA_091 (ipTM 0.91) and kA_120 (0.80) passed in the kinds screen;
+  here rank 4 r1 0.901, r2 0.930, rank 15 r1 0.936 pass and rank 15 r2 (Micrarchaeota MBD3389438.1 / MBD3389439.1,
+  90 / 108 aa) fails at 0.221 -> 5 of 6 folds pass the per-replicate rule.
+ Reading: a conserved DUF2283 + DUF4258 pair that co-folds reproducibly; chain B has a toxin-like fold by structure
+  search, so the block is consistent with a toxin-antitoxin-like pair (UNVERIFIED) and is not structurally unrecognised.
+
+==============================================================================================================
+5. CAVEATS
+==============================================================================================================
+- The answer '0' is fixed at triage: every one of the 47 candidates with two eligible replicates has a member that
+  resembles a characterised family (or, for rank 4, only unknown-function entries plus a toxin-like structure). The
+  folds decide only how the partly recognised blocks behave.
+- The unknown-function wording rule reads entry names only; it counts Pfam 'MJ0788 family' and structural-genomics PDB
+  titles as characterised. This decides the class of kd_kA_091 / kd_kA_120 (secondary set), and nothing else in the
+  fold list. Sharur's family tier carries the same flag (unknown_function False for PF27370).
+- Candidate eligibility removed 187 of 227 locus-space candidates before triage, mostly because every eligible
+  realisation was annotated, membrane-like (hydrophobic fraction > 0.45, e.g. c928, c917), long, or already folded.
+  Hydrophobic units were excluded by the unchanged screen filter and remain untested.
+- Kinds replicates are support pairs at whitened cosine >= 0.32 to the passer and 17.5-59.5 % identical to each other
+  (median of per-block maxima 26 %); this tests the kind pair across distant homologs (rank 15 replicate 2 fails for the same architecture as rank 4).
+- genes.parquet 'length' counts the stop codon in some genomes, so candidate-table lengths can read 1 aa long; fold
+  inputs and the design use the protein lengths (composition aa_len).
+- Prodigal partial flags are unrecorded for most proteins (treated as unknown, as the census did); the contig-end
+  rule still applies.
+- The rank-20 rep-1 margin control in the predeclared design used a 78-aa donor for a 39-aa chain (the predeclared
+  donor pool held no closer length); two POST HOC length-matched donors give the same reading.
+- The biotite Sharur path in ~/.claude/CLAUDE.md (Jacob/Sharur_dbs/DPANN, 3.40 M proteins) predates family_annotations
+  and protein_resemblance; context and member annotations used the republished Mac copy (12 Nov 2026 seal), one DuckDB
+  thread, read-only.
+- Foldseek ran on chains; no complex-level (multimer) search. The 39-42-aa chain of rank 20 produced no alignment in
+  either database.
+- External services: Biohub API (48 items; sequences); RCSB GraphQL/REST for PDB titles by entry ID (no sequences).
+
+==============================================================================================================
+6. ARTIFACTS
+==============================================================================================================
+Local benchmarks/redesign/showcase2/:
+ REPORT.txt, NOTEBOOK.txt, predeclared.json, view_rank004_kd_kA_091.cxc, view_rank020_ls_c764_k2.cxc (not opened).
+ code/: sc2_explore.py, sc2_candidates.py, sc2_triage.py, sc2_triage.sbatch, sc2_triage_parse.py, sc2_triage_sens.py,
+  sc2_pdb_titles.py, sc2_design.py, biohub_cofold.py (unchanged copy), sc2_analyze.py, sc2_zipping.py, sc2_post.sbatch,
+  sc2_split_check.py, sc2_context_genes.py, sc2_context_annot.py, sc2_agree.py, sc2_overlap.py, sc2_cxc.py, sc2_tables.py.
+ results/: candidate_table.tsv; candidates/ (candidates_all.tsv, candidates.tsv, reps.tsv); triage/ (triage_family.tsv,
+  triage_hits.tsv, triage_blocks.tsv, triage_family_sens.tsv, triage_blocks_sens.tsv); folds/ (interfaces, calls, blocks,
+  fold_level, class, class_tests.json, need_controls, zipping, agreement, overlap, block_geometry, context_annot,
+  context_summary, member_family_hits); post/ (foldseek_pdb.m8, foldseek_afdb_sp.m8, foldseek_summary.tsv,
+  split_check.tsv).
+ analysis/: working copies of results/folds.
+ work/ - CONTAINS PROTEIN SEQUENCES (jobs*.jsonl) AND STRUCTURES; keep out of commits: jobs.jsonl, jobs_fu*.jsonl,
+  jobs_px.jsonl, manifest*.tsv, folds_main/ and folds_fu/ (pdb/, pae/, metrics.jsonl, state.json; 12 MB), context_genes.tsv,
+  earlier_folds.tsv, pdb title tables, post_us/, collect logs.
+Biotite $RD/showcase2/: code/, data/ (candidates, realisations.parquet, reps, triage tables, context_genes, PDB titles),
+ triage/ (fasta/ and out/ per family alignments, A3M and .hhr - CONTAIN SEQUENCES; hmmsearch domtbl; cdd_hits.tsv),
+ design/ (manifests, jobs with sequences), folds/ (all structures, PAE, metrics), post/p1/ (chains, complexes,
+ splitgene_queries.faa - sequences; Foldseek m8, US-align, split/hits.tsv), logs/.
+Slurm jobs (all -A banfield -p standard --qos=standard_expand -c 24, exclude list, no --mem/--time): 89564 triage
+ families + hmm + cdd (COMPLETED 1:01:01), 89747 triage families, second worker (COMPLETED 27:59), 90229 Foldseek +
+ US-align + MMseqs2 split-gene (COMPLETED 1:14). Login node: candidate builder (2 min 11 s, <= 4 threads), triage
+ FASTA (13 s), parsers and design (seconds).
+Biohub: 48 items of 500 (batch 7bcbbd07: 24 cognate + 12 swaps; batch 6d676d20: 2 margin controls, 8 monomers,
+ 2 POST HOC controls). Mac CPU: API polling and second-scale pandas/DuckDB (one thread).
+
+==============================================================================================================
+7. NEXT STEPS
+==============================================================================================================
+1. Rank 20: superpose the B chain on the Phd C-terminal segment of the Phd-Doc complex (3k33) after superposing A on
+   Doc, as candidate 1 did with gingipain (does B occupy the antitoxin groove next to Doc's active-site His?); search
+   Phd/YefM and Doc-antitoxin profiles against the 40-aa family at relaxed thresholds; check public loci for Doc genes
+   with a short overlapping downstream ORF.
+2. Rank 4: superpose B on BrnT (3u97) and the 7vd7 toxin-antitoxin complex and test whether A sits on the antitoxin
+   site; open the M. jannaschii MJ0788/MJ0789 locus and other methanogen loci holding both families.
+3. A fully unrecognised showcase block needs a different pool: the hydrophobic (membrane-like) dense uncalled clusters
+   (c928, c917, ...) excluded here by the screen filter, judged with an MSA-conditioned or Protenix fold, or the
+   locus-space map at finer resolution with the identity-ceiling replicate rule applied before folding.
+4. Extend the unknown-function wording check to Pfam CC text and structural-genomics PDB titles in the shared triage
+   parser and in Sharur's family tier (PF27370 is flagged characterised there too).

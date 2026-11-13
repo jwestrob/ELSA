@@ -2112,3 +2112,41 @@ genomes against token DH.
   hoc); a vocabulary is a high-precision, low-recall retriever. Search belongs to the locus index.
 Open: CRISPR-Cas, through list-based identity (`ws_vocab2b`, running) and then synteny-retention
 counts on that identity.
+
+## 2026-11-13 06:18 UTC — Showcase screen 2: the locus-map and kinds pools hold toxin-antitoxin-like pairs; two partly recognised co-folding blocks (workstream `ws_showcase2`; `benchmarks/redesign/showcase2/REPORT.txt`)
+
+Pool: 306 dense locus-space clusters with no curated-caller member (227 cluster/size candidates
+from 146 clusters) plus the 21 kinds passers; criteria in `predeclared.json` (part 1 before any
+triage result, part 2 before any fold). ESMFold2 through the Biohub API, 48 of 500 items.
+
+- **New blocks with every member unrecognised that co-fold in two replicates: 0.** The pool ended
+  at triage: 248 candidates -> 47 with two eligible replicates in different genome groups at
+  <= 60% identity -> 0 with every position unrecognised after enriched profile search; 35 have
+  every position characterised, mostly resembling toxin-antitoxin structures (RelBE2, YoeB-YefM,
+  ParD-ParE, DinJ-YafQ, MqsA, BrnT, AbrB-like, RHH). Observed similarity; UNVERIFIED as systems.
+- **12 blocks with at least one unrecognised position were folded.** Cognate folds with a passing
+  interface 5/24 (20.8% [7.1, 42.2]); swap controls 0/12 (0% [0, 26.5]); Fisher p 0.146.
+- **Rank 20 (`ls_c764_k2`):** a Fic/Doc-domain protein (Pfam Fic at gathering threshold on 95 of
+  98 instances, KOfam K07341, CDD Doc; Foldseek to Doc and the Phd-Doc complex 3k33, TM 0.84)
+  with a 39-41 aa partner that no profile or structure search recognises (best HHsearch P 82.7
+  over 23 columns; Foldseek returns no alignment). Pair ipTM 0.88 / 0.92, margins 0.59-0.72
+  (length-matched post hoc controls 0.60 / 0.64). 98 instances, 59 genome groups, 5 phyla. The
+  small gene sits downstream in 92/92 co-oriented instances, overlaps the 3' end by a median 29
+  nt and starts with ATG in 92/92. Consistent with a Doc-antitoxin-type pair, UNVERIFIED.
+- **Rank 4 (`kd_kA_091`):** DUF2283 + DUF4258 / "MJ0788 family"; pair ipTM 0.90 / 0.93; 599
+  instances, 179 genome groups, 8 phyla; 5 of 6 folds of this kind pair pass across the two
+  screens (post hoc tally). Profile matches are unknown-function entries; Foldseek places chain B
+  on BrnT / RelE-type toxin structures in both replicates (TM 0.58-0.78).
+- Both hits pass every refutation (disorder zipping, low complexity, 0 fused homologs among
+  3,585,303 proteins, promiscuity) and their replicates agree (complex TM 0.70-0.82). Both are
+  "co-folds, partly recognised".
+- **Triage wording rule reads entry names only:** it classes Pfam PF27370 "MJ0788 family" and
+  structural-genomics PDB titles as characterised, although their own text says the function is
+  undetermined. Sharur's family tier carries the same flag.
+- Untested pool: hydrophobic dense uncalled clusters (c928, c917 and others), removed by the
+  unchanged screen filter (hydrophobic fraction <= 0.45). 187 of 227 locus-space candidates left
+  before triage (annotated, membrane-like, long, or folded before).
+- The biotite Sharur DPANN copy named in `~/.claude/CLAUDE.md` predates `family_annotations` and
+  `protein_resemblance`; the screen read the 12 Nov Mac copy.
+Open: superpose rank 20's small chain on Phd in 3k33; open the M. jannaschii MJ0788/MJ0789 locus
+for rank 4; screen the hydrophobic clusters with MSA-conditioned folds.

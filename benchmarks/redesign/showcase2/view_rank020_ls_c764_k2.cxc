@@ -1,0 +1,23 @@
+# ws_showcase2 rank 20 (ls_c764_k2): 2 genes, median lengths 132;40 aa, 59 genome groups, 11 family sets, 5 phyla.
+# ESMFold2 single-sequence complexes of the two replicates (different genome groups); chains coloured by chain ID;
+# side chains within 4 A across the interface(s) AB shown as sticks.
+# Colour by confidence instead:  color bfactor palette alphafold
+# Superpose replicate 2 on replicate 1:  matchmaker #2 to #1
+set bgColor white
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/showcase2/work/folds_main/pdb/sc2c_020_r1.pdb
+rename #1 "rank 20 replicate 1 | Nanobdellota (Woesearchaeales) GCA_007131205.1 | SLQZ01000012.1_5 / SLQZ01000012.1_4 | complex ipTM 0.88"
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/showcase2/work/folds_main/pdb/sc2c_020_r2.pdb
+rename #2 "rank 20 replicate 2 | Micrarchaeota (Micrarchaeales) GCA_027334005.1 | DAHWXV010000004.1_15 / DAHWXV010000004.1_14 | complex ipTM 0.92"
+
+hide atoms
+show cartoons
+color bychain
+show (#1/A & (#1/B :< 4)) | (#1/B & (#1/A :< 4)) atoms
+show (#2/A & (#2/B :< 4)) | (#2/B & (#2/A :< 4)) atoms
+style stick
+color byhetero
+lighting soft
+graphics silhouettes true
+tile
+view

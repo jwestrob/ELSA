@@ -1732,3 +1732,41 @@ Workstream `lineagefree`: a lineage unit derived from the pipeline's own data (g
 effective genome weights from shared-family or embedding best-match similarity), threshold set
 by an internal criterion, predeclared to replace the genus if the nested reading's summed excess
 stays within 0.01, no caller loses more than 0.01 F1, and the ribosomal check holds.
+
+## 2026-11-13 01:05 UTC — Token-free recurrence, round 4 (workstream `softrec4`; `benchmarks/redesign/softrec/REPORT4.txt`)
+
+Four levers on round 2's embedding-only landscape, same match/beat criterion against the token
+engine's nested reading (even genomes; single outputs; predeclared 23:32 UTC, selection written
+00:38 UTC before any even score). References reproduced exactly first.
+
+- **Verdict: neither matches nor beats.** Predeclared configuration (orientation mode 2 +
+  instance-graph module labels + trimming factor 0.8): summed excess +0.040 [+0.021, +0.059],
+  DefenseFinder F1 0.791 (+0.047), TXSScan F1 0.518 (-0.030 [-0.044, -0.017]), CRISPRCasTyper F1
+  0.446 (-0.033 [-0.043, -0.023]), ribosomal 1,682 recovered / 1,348 resolved (bar 1,400).
+- **Levers alone against round 2's configuration** (summed excess; resolved, round 2 = 1,263):
+  module labels from communities of the instance graph, no families: +0.009 [-0.000, +0.018],
+  1,423. Orientation-aware support: -0.020 [-0.029, -0.010], 1,257. Critic extension: -0.014
+  [-0.018, -0.010], 1,264 (added genes are gold members at the base rate, 0.018-0.024 against
+  0.019). Reading parameters (trimming 0.8, Louvain 0.5): +0.015 [+0.009, +0.020], TXSScan F1
+  +0.023, 1,332.
+- **Instance-graph labels work once overlap edges are added.** Support edges alone give
+  pair-type communities that cut every ribosomal run (0 of 1,686 keep one label) while scoring
+  F1 0.831 / 0.661 / 0.491 on odd genomes; overlap edges (weight 0.3, Leiden resolution 1)
+  restore the run. System edges are marked less often than with token modules (0.085 against
+  0.195).
+- **Orientation halves chance support and does not pay.** Null instances with L >= 2 at depth
+  1,000: 7.80 M unoriented, 5.79 M with the strand flag, 3.72 M with the full arrangement. On the
+  token engine (`recurrence.py --oriented`) the nested reading moves -0.001 [-0.010, +0.007].
+- **The predeclared combination rule admitted orientation and it cost the result.** Post hoc
+  (after the verdict), labels + reading parameters on the unoriented landscape: summed +0.065
+  [+0.047, +0.084], DefenseFinder F1 +0.062, TXSScan -0.017 [-0.031, -0.003], CRISPR-Cas -0.037
+  [-0.047, -0.027], ribosomal 1,681 recovered / 1,404 resolved. Every "matches" bar except
+  CRISPR-Cas.
+- **CRISPR-Cas is the one deficit no lever closed in four rounds:** F1 0.437-0.455 in every
+  configuration that keeps the ribosomal run (token 0.479); Cas member genes touching support
+  0.656-0.677 against 0.774. The embedding rule needs W >= 1 or L >= 8-15 where the token rule
+  needs L >= 2; a system confined to few lineages may sit under that floor (untested; next).
+- The lineage unit is now one pluggable genome-to-lineage array in `softrec4.py` and
+  `readings4.py`; no round-4 step reads taxonomy beyond it.
+Next: a diagnosis of what Cas pairs lack (list depth, homologs per Cas gene, lineage spread,
+threshold floor), then a rerun with the data-derived lineage unit from `lineagefree`.

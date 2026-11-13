@@ -1,0 +1,172 @@
+SOFTREC ROUND 4 (ws_softrec4): FOUR LEVERS ON THE ROUND-2 EMBEDDING-ONLY METHOD (DPANN, 2026-11-13)
+=================================================================================================
+Single outputs only (one reading per output). Even genomes = test, odd = tuning, paired genome bootstrap (2,000 draws,
+seed 17). Predeclaration: predeclared4.json (2026-11-12 23:32 UTC, before any job). Notebook: NOTEBOOK4.txt.
+Reproduced exactly before any comparison: token R1 / C / H / DH (per-instance F1 and control max diff 0 against
+boundary/scores/rescue3), round-2's selected configuration "r2sel" (odd and even, max diff 0), and round 2's
+statistics (the new oriented kernel in mode 0 gives L, G, E, W equal to r2/stats/obs.npz at depths 200 and 1,000).
+References: token DH even F1 DF .744 / TXSS .548 / CCT .479, summed DF+TXSS excess .4270, ribosomal 1,686 recovered /
+1,512 resolved / Parvarchaeaceae 114 rec, 113 res. Odd: .743/.544/.479, .4179, 848/769/55.
+
+ANSWER IN EIGHT LINES
+1. Predeclared verdict: the round-4 configuration NEITHER MATCHES NOR BEATS token DH. Even: summed +0.0397 [+0.0210,
+   +0.0594] (clears "beats"), DF F1 +0.047, but TXSScan F1 -0.030 [-0.044, -0.017], CRISPRCasTyper F1 -0.033 [-0.043,
+   -0.023], ribosomal resolved 1,348 < 1,400 (recovered 1,682, Parv 114/114 rec, 106 res). Blocking: those three.
+2. Levers alone, even, against r2sel DH (summed; TXSS / CCT F1; resolved): L1 instance communities +0.0088 [-0.0001,
+   +0.0180], +.009 / -.003, 1,263 -> 1,423; L2 orientation -0.0198 [-0.0293, -0.0100], +.005 / +.004, 1,257; L3 critic
+   -0.0141 [-0.0183, -0.0099], -.000 / +.002, 1,264; L4 trimming f 0.8 (+res 0.5) +0.0145 [+0.0092, +0.0197], +.023 /
+   +.004, 1,332. L1 alone clears the ribosomal bar on even (1,423); L4 alone brings TXSScan to -0.025 of token.
+3. The predeclared combination (all odd-helping levers: L1 + L2 + L4) is worse than L1 + L4 without orientation. L2
+   "helped" on odd only through the shortfall score (resolved, CCT margin) while lowering summed excess and DF F1; in
+   combination it cost TXSScan and the ribosomal gain. The combination's odd shortfall (1.02) was already worse than
+   L4 alone (0.88); the predeclared rule still took it.
+4. Post hoc (after the verdict, not predeclared, not selected): L1 + L4 on the unoriented landscape meets every
+   "matches" bar except CRISPR-Cas on even: summed +0.0650 [+0.0474, +0.0844], F1 DF +0.062, TXSS -0.017 [-0.031,
+   -0.003], CCT -0.037 [-0.047, -0.027], ribosomal 1,681 / 1,404 / 114 rec / 100 res. Odd shortfall 0.57 (only CCT).
+5. CRISPR-Cas is the one deficit no lever closes: DH CCT F1 sits at .437-.455 (odd and even) in every configuration
+   that keeps the ribosomal run (token .479). Orientation raises Cas member genes touching support .656 -> .677 (token .774) without moving
+   CCT F1; the critic adds genes that are gold members at the base rate (.018-.024 vs .019). Only label schemes that
+   cut almost every boundary reach CCT F1 >= .49, and they lose the ribosomal run (resolved 468 of 848 odd).
+6. L1 mechanism: the literal support-only instance graph gives pair-type communities, so labels change inside every
+   TXSScan span (one-label .003) and every ribosomal run (0 / 1,686): DH odd F1 .831/.661/.491 (above token on all
+   three), summed .518, ribosomal resolved 468 (fails). Adding overlap edges (w_o 0.3, Leiden gamma 1) restores the
+   run: odd resolved 638 -> 725, even 1,263 -> 1,423.
+7. Orientation lowers chance support: null instances with L >= 2 at depth 1,000 7.80 M -> 5.79 M (mode 1, strand
+   flag, -26%) -> 3.72 M (mode 2, full arrangement, -52%); null W mass -49% / -74%; selected rank-weight threshold
+   W >= 1 -> 0.75; count threshold L >= 15 -> 10 / 8. Token control (--oriented): DH even -0.0012 [-0.0100, +0.0074],
+   TXSS -0.008, matches token DH; orientation is near-neutral on tokens and negative on softrec summed excess.
+8. Lineage unit: now one pluggable array (genome -> lineage id) in softrec4.py; no new step reads taxonomy. No
+   recommended map existed in $RD/lineagefree/ when the configuration was chosen (00:36 UTC), so no rerun was made.
+
+------------------------------------------------------------------------------------------------------------------
+DESIGN (predeclared4.json) AND DEVIATIONS
+- Odd score: total shortfall to the "matches" bars, each quantity in units of its tolerance (m = (v - bar) /
+  (token - bar); shortfall = sum of max(0, -m) over summed excess, 3 F1, recovered, Parv recovered, resolved), then
+  summed excess. Deviation from round 2's lexicographic score, stated in predeclared4.json. A lever "helps" if its best
+  odd configuration lowers r2sel's odd shortfall (2.436) by >= 0.10.
+- Combination rule: every helping lever; joint odd grid over the helping levers' selected parameters and their grid
+  neighbours. gamma 1/3 is not on the grid; the neighbour 0.3 was used (noted before scoring).
+- No even round-4 score existed before the selection was written in NOTEBOOK4.txt (00:38 UTC). The post hoc L1 + L4
+  run (line 4) was decided after the even verdict and is labelled as such.
+
+LEVER 1: MODULE LABELS FROM THE INSTANCE GRAPH (no families)
+Graph on r2sel's landscape (2,547,427 significant instances): support edges = per instance the k = 5 lineage units
+with the best-ranked supporting pair that is itself significant (10,361,229 undirected; 97% of instances have one),
+weight exp(-(m-1)/50); overlap edges = significant instances whose gene intervals intersect (8,090,463), weight w_o.
+Leiden (modularity) 30-70 s per resolution on 64 CPUs (one process each).
+ odd (DH, f 0.5)            communities (>= 2)  ribo runs one / 2+   Parv one   TXSS one / 2+ / edge   resolved  shortfall
+ token modules (res 0.3)    1,381                1,547 / 139          114/114    .718 / .282 / .195     769       0
+ r2sel validated families   16,921               1,434 / 252            2/114    .652 / .347 / .150     638       2.44
+ support only, any gamma    56,896-78,028            0 / 1,686          0/114    .003 / .998 / .68-.78  468       3.70
+ w_o 0.3, components        1 giant (2.53 M)     1,686 / 0            114/114    .985 / .015 / .072     533       7.64
+ w_o 0.3, gamma 0.3         3,108                1,524 / 162           97/114    .682 / .318 / .083     673       2.38
+ w_o 0.3, gamma 1 (sel.)    3,405                1,373 / 313            0/114    .675 / .325 / .085     725       1.54
+ w_o 0.3, gamma 3           3,778                  848 / 838            0/114    .665 / .335 / .098     627       1.88
+ w_o 0.3, gamma >= 10       4,425-24,448          <= 54 / >= 1,632      0/114    .043-.593 one          469-470   3.67-4.15
+ w_o 1, best (gamma 10)     4,455                1,295 / 391            6/114    .662 / .338 / .083     666       2.65
+ Support-only labels: DH odd summed .517-.518, F1 .831/.661/.491. Even L1 alone (gamma 1): DH vs token DH +0.0486
+ [+0.0308, +0.0682], TXSS -0.039, CCT -0.041, ribosomal 1,681 / 1,423 / Parv 100 res -> blocked only by two F1 bars.
+ Ribosomal resolution follows a cut at the run's edge, not one label inside the run: at gamma 1 no Parvarchaeaceae
+ run carries one label, yet resolved rises 638 -> 725 (odd). System edges are marked less often than with token
+ modules (.085 vs .195), the reason TXSScan F1 stays below token.
+
+LEVER 2: ORIENTATION-AWARE SUPPORT (supporting pair counts only if its arrangement matches the query pair's)
+ mode (depth 1,000)   null L>=2   obs L>=2   null W_e50   rule (FDR)          significant   genes covered   count rule
+ 0 (round 2)          7.80 M      7.13 M     254 K        W>=1 (.0028)        2,547,427     1,958,677       L>=15 (.0046)
+ 1 strand flag        5.79 M      6.07 M     130 K        W>=0.75 (.0081)     2,845,680     2,072,953       L>=10 (.0073)
+ 2 arrangement        3.72 M      5.26 M      65 K        W>=0.75 (.0038)     2,794,689     2,036,672       L>=8 (.0061)
+ Depth 200: null L>=2 1.32 M / 0.72 M / 0.37 M. Brute recount 0/300 mismatches per mode.
+ CRISPR-Cas member genes touching support: odd .661 / .693 / .684; even .656 / - / .677 (token .774-.780).
+ Lever alone (validated l2000 tokens, res 0.3, f 0.5), odd shortfall: mode 1 2.32, mode 2 2.20 (selected).
+ Even, mode 2: DH vs r2sel -0.0198 [-0.0293, -0.0100] (DF -.017, TXSS +.005, CCT +.004), resolved 1,257, Parv res 107;
+ vs token DH +0.0200 [+0.0017, +0.0393]; R1 vs token R1 +0.0721 (r2sel R1 +0.0913).
+ Token control (recurrence.py --oriented, rescue3; same rule P<=1e-4 & L>=2, pair FDR .0081 vs .0042, 182,721 vs
+ 162,786 significant pairs): even DH vs token DH -0.0012 [-0.0100, +0.0074], F1 +.002 / -.008 [-.014, -.002] / +.000,
+ ribosomal 1,686 / 1,513 / 113; R1 vs token R1 +0.0064 [-0.0029, +0.0158].
+
+LEVER 3: CRITIC EXTENSION / BRIDGING (held-out grammar critic, thresholds = null quantile per fold)
+ odd, DH: q 0.99-0.9999 x m 1, 2 x {extend+bridge, bridge only}: shortfall 2.418-2.65 (r2sel 2.436); best q 0.995 m 1
+ extend (-0.018): does not help. At q 0.99 m 1: 30,253 boundaries added (25,273 extensions, 4,980 bridges); 12,509
+ genes added on odd genomes, 910 of singleton rescue3 families; gold-member share of added genes .020 (base .019),
+ of added singleton-family genes .005. CCT F1 change <= +0.001; summed excess -0.0005 to -0.030; DF F1 -.001 to -.022;
+ ribosomal unchanged; median boundary precision at the best locus unchanged (1.00/.36/.50); R1 DF precision 1.00 -> .67.
+ Even (q 0.995 m 1 x): vs r2sel -0.0141 [-0.0183, -0.0099], CCT +.002 [+.000, +.004]; 8,622 genes added, 555 singleton
+ family, gold share .018 (base .019), singleton gold share .009.
+
+LEVER 4: READING PARAMETERS (trimming factor f x Louvain resolution, r2sel landscape and families)
+ odd shortfall (rows Louvain res; columns f .2 .3 .4 .5 .6 .7 .8 1.0):
+   0.1  5.19 4.62 4.21 3.77 3.26 2.76 2.00 2.09     1    3.88 3.38 3.04 2.61 2.14 1.76 1.16 2.07
+   0.2  4.72 4.17 3.80 3.37 2.85 2.36 1.60 1.78     3    3.17 2.63 2.30 1.90 1.57 1.49 1.51 2.82
+   0.3  3.78 3.28 2.92 2.44 1.93 1.55 1.05 1.88     0.5  3.69 3.16 2.79 2.34 1.80 1.37 0.88 1.83
+   (results/remote4/odd_C.json). Larger f trims the H core harder: TXSScan and CCT rise with f; resolved
+   peaks at f 0.8 and falls at 1.0. Selected res 0.5, f 0.8: odd summed .4849, F1 .806/.527/.451, resolved 674.
+ Even: vs r2sel +0.0145 [+0.0092, +0.0197], TXSS +.023, CCT +.004, DF +.005; vs token DH +0.0544, TXSS -0.025 [-.038,
+ -.012], CCT -0.034, resolved 1,332.
+
+ROUND-4 CONFIGURATION (combination; odd joint grid gamma {0.3, 1, 3} x f {0.7, 0.8, 1.0}, best gamma 1, f 0.8)
+ o2rw1000_e50 (mode 2, W >= 0.75 & L >= 2) + Leiden gamma 1 communities of its own instance graph (k 5, w_o 0.3;
+ 20,167,403 edges, 3,657 communities) + DH with f 0.8. Odd shortfall 1.02.
+ even     F1 DF/TXSS/CCT   control          excess            summed  covered50        bprec           ribo rec/res/Parv res  genes in loci
+ DH       .791/.518/.446   .431/.410/.385   .359/.107/.061    .4667   .931/.980/.808   1.00/.40/.50    1682/1348/106          2,255,607
+ H        .779/.510/.416   .409/.385/.362   .369/.125/.055    .4943   .923/.948/.755   1.00/.40/.50    1625/1238/2            1,963,942
+ C        .766/.472/.434   .418/.395/.372   .348/.077/.062    .4254   .929/.955/.806   1.00/.33/.50    1647/1143/106          2,240,993
+ R1       .754/.412/.412   .404/.352/.350   .350/.059/.062    .4096   .931/.980/.808   1.00/.27/.40    1682/862/106           2,255,607
+ token DH .744/.548/.479   .439/.426/.399   .305/.122/.080    .4270   .924/.990/.890    .75/.44/.40    1686/1512/113          2,563,690
+ DH vs token DH: summed +0.0397 [+0.0210, +0.0594]; dF1 DF +0.047 [+0.032, +0.062], TXSS -0.030 [-0.044, -0.017],
+ CCT -0.033 [-0.043, -0.023]. DH vs r2sel DH: summed -0.0001 [-0.0125, +0.0126]; DF -.012, TXSS +.018, CCT +.005;
+ resolved +85. R1 vs token R1 +0.0721 [+0.0549, +0.0892]. CRISPR-Cas members touching support .677 (token .774).
+ VERDICT: neither matches nor beats. Blocking: TXSScan F1, CRISPRCasTyper F1, ribosomal resolved (1,348 < 1,400).
+
+READINGS AND WHAT WOULD HAVE REFUTED THEM (written before the numbers they govern; NOTEBOOK4.txt)
+- L1 "support-only communities are pair types and cut every multi-gene locus": refuted if Parvarchaeaceae one-label
+  runs >= 10 with w_o 0. Observed 0/114, TXSS one-label .003: holds. "Overlap edges keep the run": refuted if one-label
+  Parv runs <= 50 or resolved <= 638 at every gamma. gamma 0.3: 97/114, 673: not refuted.
+- L2 "orientation halves (strand flag) to quarters (arrangement) chance support and raises Cas support": refuted for
+  mode 1 if null L >= 2 falls < 30%: it falls 26% (fires on that measure; W mass falls 49%); mode 2 -52% holds; Cas
+  support rises (.661 -> .684/.693 odd): holds. It does not raise CCT F1 (not predicted either way).
+- L3 "critic extension raises CCT F1": refuted if CCT F1 rises < 0.005 at q 0.999. Observed +0.000: refuted.
+- L4 "retuning f / resolution meets none of the failing bars": refuted if any configuration meets one on odd. f 0.8
+  meets the odd TXSScan bar (margin +0.12 at res 0.5, +0.18 at res 0.3): refuted.
+- Round-4 expectation (00:38): fails "matches" on CCT, probably TXSS and resolved; refuted by even CCT and TXSS
+  >= token - 0.02 and resolved >= 1,400. Observed -0.033, -0.030, 1,348: held.
+
+WHERE THE LINEAGE UNIT ENTERS (coordinator constraint, 2026-11-13)
+ One array genome_code -> lineage id (softrec4.py universe()/set_lineage(); --lineage FILE (.npy by genome_code or
+ parquet genome, lineage) and --lin-tag; outputs then under $RD/softrec/r4/lin_<tag>/; readings4.py --r4base reads
+ them). Default = the GTDB genus array used since round 1. It decides (1) which genes a list excludes (own lineage, in
+ the list expansion), (2) what L and the rank-weighted W count (distinct lineages other than the instance's), (3) the
+ per-lineage best support kept for the instance graph (lever 1). The validated-family modules of round 2 inherit it
+ through their lists. Taxonomy is otherwise used only for evaluation (Parvarchaeaceae ribosomal runs). No round-4
+ step reads taxonomy to run beyond this array. Rerun with a lineage-free map: not done; $RD/lineagefree/ had
+ candidate maps (groups/*.parquet) but no recommended map or report at 00:36 UTC when the configuration was chosen.
+
+ENGINEERING
+ Job A (64 CPU, 13 min): lists 4.2 min; passes 35-47 s each (mode 0 observed; modes 1, 2 observed + 3 nulls); rule
+ selection < 1 min; support edges 23-31 s per landscape; peak RSS 59 GB. Leiden on 2.5-2.8 M nodes / 10-20 M edges
+ 30-70 s per resolution. Odd scoring ~12 s per reading (~23 s per DH configuration); even ~25 s per reading.
+ Jobs: 86289 (A), 86290 (B: engine --oriented, references, L3), 86291 (C: L4), 86292 (D: graph, L2, L1), 86797
+ (combination graph + odd grid), 86942 (even test), 87132 (post hoc L1 + L4). All COMPLETED.
+
+CAVEATS
+- The odd-score deviation and the combination rule are mine; the rule admitted a lever (L2) whose odd gain was in
+  the shortfall score only, which is why the post hoc L1 + L4 run is reported.
+- zca10 whitening uses all 2.5 M sequences (as rounds 1-3). Critic thresholds use each fold's null; critic models never
+  saw the scored genome's order.
+- The support edge of an instance uses the best-ranked a' marking b''s slot; a worse-ranked a' forming a significant
+  instance with the same b' is not used (affects which neighbour instance is linked, never L or W).
+
+ARTIFACTS
+ Local benchmarks/redesign/softrec/: softrec4.py (oriented kernel, candidates, support edges, pluggable lineage),
+ readings4.py (instance graph + Leiden, labels, critic fill, odd/even scoring, diagnostics, token controls),
+ mkconfigs4.py, collect4.py, smoke4.py, run4_big.sbatch, run4_py.sbatch, r4configs/*.jsonl, predeclared4.json,
+ NOTEBOOK4.txt, REPORT4.txt, results/remote4/ (all result JSONs, cands.json, stats.json, graph/edges JSONs).
+ Biotite $RD/softrec/r4/: code/, configs/, stats/m{1,2}_{obs,null0-2}.npz, cand/<name>/ (o1/o2 rw1000_e50, cnt1000,
+ rw200_e50), graph/<landscape>/ (sup_dst/m/cnt, ic_k5o<wo>_<g|cc>.npy, graph.json), results/{odd,all}_<tag>.json,
+ scores/. Token control: $RD/engine/results_dpann_softrec/dpann__softrec4__tok_rescue3__w3__oriented.
+ Logs $RD/logs/softrec4_{big,py}_<job>.log.
+
+NEXT (not started; one line each)
+- Predeclared test of L1 + L4 on the unoriented landscape (post hoc here: only CCT blocks on even).
+- CRISPR-Cas: the deficit survives every label and support change; test what Cas pairs lack (list depth, homolog
+  count per Cas gene, lineage spread) before another statistic.
+- Rerun the chosen configuration with the lineage-free map once $RD/lineagefree/ recommends one.

@@ -1,0 +1,10 @@
+{"name": "r2sel", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "none", "f": 0.5, "keep_per": true, "diag": false, "save_per": false, "check_against": {"R1": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__R1.parquet", "C": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__C.parquet", "H": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__H.parquet", "DH": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__DH.parquet"}}
+{"name": "comb_o2rw1000_e50_k5o0.3_g0.3_f0.7", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g0.3", "f": 0.7, "diag": true}
+{"name": "comb_o2rw1000_e50_k5o0.3_g0.3_f0.8", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g0.3", "f": 0.8, "diag": true}
+{"name": "comb_o2rw1000_e50_k5o0.3_g0.3_f1", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g0.3", "f": 1.0, "diag": true}
+{"name": "comb_o2rw1000_e50_k5o0.3_g1_f0.7", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g1", "f": 0.7, "diag": true}
+{"name": "comb_o2rw1000_e50_k5o0.3_g1_f0.8", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g1", "f": 0.8, "diag": true}
+{"name": "comb_o2rw1000_e50_k5o0.3_g1_f1", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g1", "f": 1.0, "diag": true}
+{"name": "comb_o2rw1000_e50_k5o0.3_g3_f0.7", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g3", "f": 0.7, "diag": true}
+{"name": "comb_o2rw1000_e50_k5o0.3_g3_f0.8", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g3", "f": 0.8, "diag": true}
+{"name": "comb_o2rw1000_e50_k5o0.3_g3_f1", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g3", "f": 1.0, "diag": true}

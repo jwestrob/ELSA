@@ -57,6 +57,41 @@ def jdump(path, obj):
     os.replace(tmp, path)
 
 
+# ------------------------------------------------------------------------------ lineage unit (one pluggable input)
+# The lineage unit enters in exactly one place: a genome_code -> lineage id array (u.lin_of_genome, with u.lin, u.nl and
+# u.genes_in_lin derived from it). Default: softrec.Universe's GTDB genus (genomes.parquet 'genus'; genomes without one
+# are their own unit). It decides (1) which genes a list excludes (own lineage, expand_knn via u.lin), (2) what L and the
+# rank-weighted W count (distinct lineages other than the instance's, soft_pass4) and (3) the per-lineage best support
+# kept for the instance graph (support_edges). --lineage FILE replaces it: a .npy int array indexed by genome_code, or a
+# parquet with columns genome, lineage; outputs then go to $RD/softrec/r4/lin_<--lin-tag>/.
+def load_lineage(path, u):
+    path = Path(path)
+    if path.suffix == ".npy":
+        arr = np.load(path)
+    else:
+        df = pd.read_parquet(path)
+        m = dict(zip(df.genome.astype(str), df.lineage))
+        arr = np.array([m[g] for g in u.gm.genome.astype(str)])
+    assert len(arr) == u.ng, (len(arr), u.ng)
+    return pd.factorize(arr)[0].astype(np.int32)
+
+
+def set_lineage(u, arr):
+    u.lin_of_genome = np.asarray(arr, np.int32)
+    u.nl = int(u.lin_of_genome.max()) + 1
+    u.lin = u.lin_of_genome[u.gc]
+    u.genes_in_lin = np.bincount(u.lin, minlength=u.nl).astype(np.int64)
+    return u
+
+
+def universe(lineage=""):
+    u = SR.Universe()
+    if lineage:
+        set_lineage(u, load_lineage(lineage, u))
+        stamp("lineage map", lineage, "units", u.nl)
+    return u
+
+
 def strand_of(u):
     g = pd.read_parquet(SR.PKG / "universe/genes.parquet", columns=["gid", "strand"])
     assert (g.gid.to_numpy() == np.arange(u.n)).all()
@@ -308,7 +343,7 @@ def cmd_stats(a):
     t0 = time.time()
     out = R4 / "stats"
     out.mkdir(parents=True, exist_ok=True)
-    u = SR.Universe()
+    u = universe(a.lineage)
     strand = strand_of(u)
     nd, off, left, d = u.instances(W)
     n_inst = len(left)
@@ -326,7 +361,7 @@ def cmd_stats(a):
         mm["seconds_observed_pass"] = round(time.time() - t1, 1)
         mm["brute_observed"] = brute4(u, L, obs, nd, off, strand, mode, np.random.default_rng(17 + mode), 300)
         stamp("brute", mode, mm["brute_observed"])
-        if mode == 0:
+        if mode == 0 and not a.lineage:
             r2 = np.load(R2 / "stats/obs.npz")
             r2v = list(r2["variants"])
             chk = {}
@@ -440,13 +475,13 @@ def chance_summary(obs, nulls, variants, mode):
 def cmd_cands(a):
     import numba
     numba.set_num_threads(a.threads)
-    u = getattr(a, "universe", None) or SR.Universe()
+    u = getattr(a, "universe", None) or universe(a.lineage)
     nd, off, left, d = u.instances(W)
     res_fn = R4 / "cand" / "cands.json"
     (R4 / "cand").mkdir(parents=True, exist_ok=True)
     summ = json.loads(res_fn.read_text()) if res_fn.exists() else {}
     # chance support of round 2's statistic (mode 0), from round 2's stored passes
-    if "mode0_chance" not in summ:
+    if "mode0_chance" not in summ and not a.lineage:
         o2 = S2.load_pass(R2 / "stats/obs.npz")
         n2 = [S2.load_pass(R2 / f"stats/null{r}.npz") for r in range(3)]
         summ["mode0_chance"] = chance_summary(o2, n2, o2["variants"], 0)
@@ -458,7 +493,7 @@ def cmd_cands(a):
         stamp("mode 0", summ["mode0_reselect_W_T4"], c0["info"]["rule"])
         del o2, n2
         jdump(res_fn, summ)
-    for mode in [int(x) for x in a.modes.split(",") if x and int(x) > 0]:
+    for mode in [int(x) for x in a.modes.split(",") if x and (int(x) > 0 or a.lineage)]:
         obs = load_pass(R4 / f"stats/m{mode}_obs.npz")
         nulls = [load_pass(R4 / f"stats/m{mode}_null{r}.npz") for r in range(3)]
         variants = obs["variants"]
@@ -597,13 +632,13 @@ def mode_of(name):
 def cmd_edges(a):
     import numba
     numba.set_num_threads(a.threads)
-    u = getattr(a, "universe", None) or SR.Universe()
+    u = getattr(a, "universe", None) or universe(a.lineage)
     strand = getattr(a, "strand", None)
     if strand is None:
         strand = strand_of(u)
     L = getattr(a, "lists", None) or SR.Lists(u, S2.ListArgs(DEPTHS))
     nd, off, left, d = u.instances(W)
-    for name in [x for x in a.edge_names.split(";") if x] if getattr(a, "edge_names", "") else [x for x in a.names.split(";") if x]:
+    for name in [x for x in a.edge_names.split(",") if x] if getattr(a, "edge_names", "") else [x for x in a.names.split(",") if x]:
         t0 = time.time()
         cd = cand_dir(name)
         sidx = np.load(cd / "sidx.npy")
@@ -643,9 +678,16 @@ def main():
     ap.add_argument("--perms", type=int, default=3)
     ap.add_argument("--then-cands", action="store_true")
     ap.add_argument("--edges", action="store_true", help="stats: then edges for --edge-names (lists stay in memory)")
-    ap.add_argument("--edge-names", default="", help="';'-separated candidate names")
+    ap.add_argument("--edge-names", default="", help="comma-separated candidate names")
     ap.add_argument("--names", default="", help="edges: ';'-separated candidate names")
+    ap.add_argument("--lineage", default="", help="genome -> lineage map (.npy by genome_code or parquet genome, lineage)")
+    ap.add_argument("--lin-tag", default="", help="with --lineage: outputs under $RD/softrec/r4/lin_<tag>/")
     a = ap.parse_args()
+    if a.lineage:
+        global R4
+        assert a.lin_tag, "--lin-tag is required with --lineage"
+        R4 = RD / "softrec/r4" / f"lin_{a.lin_tag}"
+        R4.mkdir(parents=True, exist_ok=True)
     {"stats": cmd_stats, "cands": cmd_cands, "edges": cmd_edges}[a.cmd](a)
 
 

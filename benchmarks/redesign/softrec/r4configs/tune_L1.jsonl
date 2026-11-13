@@ -1,0 +1,24 @@
+{"name": "r2sel", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "none", "f": 0.5, "keep_per": true, "diag": false, "save_per": false, "check_against": {"R1": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__R1.parquet", "C": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__C.parquet", "H": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__H.parquet", "DH": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__DH.parquet"}}
+{"name": "L1_rw1000_e50_k5o0_cc", "land": "rw1000_e50", "lab": "ic:k5o0_cc", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0_g0.3", "land": "rw1000_e50", "lab": "ic:k5o0_g0.3", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0_g1", "land": "rw1000_e50", "lab": "ic:k5o0_g1", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0_g3", "land": "rw1000_e50", "lab": "ic:k5o0_g3", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0_g10", "land": "rw1000_e50", "lab": "ic:k5o0_g10", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0_g30", "land": "rw1000_e50", "lab": "ic:k5o0_g30", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0_g100", "land": "rw1000_e50", "lab": "ic:k5o0_g100", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0_g1000", "land": "rw1000_e50", "lab": "ic:k5o0_g1000", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0.3_cc", "land": "rw1000_e50", "lab": "ic:k5o0.3_cc", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0.3_g0.3", "land": "rw1000_e50", "lab": "ic:k5o0.3_g0.3", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0.3_g1", "land": "rw1000_e50", "lab": "ic:k5o0.3_g1", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0.3_g3", "land": "rw1000_e50", "lab": "ic:k5o0.3_g3", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0.3_g10", "land": "rw1000_e50", "lab": "ic:k5o0.3_g10", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0.3_g30", "land": "rw1000_e50", "lab": "ic:k5o0.3_g30", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0.3_g100", "land": "rw1000_e50", "lab": "ic:k5o0.3_g100", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o0.3_g1000", "land": "rw1000_e50", "lab": "ic:k5o0.3_g1000", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o1_g0.3", "land": "rw1000_e50", "lab": "ic:k5o1_g0.3", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o1_g1", "land": "rw1000_e50", "lab": "ic:k5o1_g1", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o1_g3", "land": "rw1000_e50", "lab": "ic:k5o1_g3", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o1_g10", "land": "rw1000_e50", "lab": "ic:k5o1_g10", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o1_g30", "land": "rw1000_e50", "lab": "ic:k5o1_g30", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o1_g100", "land": "rw1000_e50", "lab": "ic:k5o1_g100", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}
+{"name": "L1_rw1000_e50_k5o1_g1000", "land": "rw1000_e50", "lab": "ic:k5o1_g1000", "f": 0.5, "diag": true, "readings": ["R1", "C", "H", "DH"]}

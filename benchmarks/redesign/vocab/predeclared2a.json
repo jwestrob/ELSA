@@ -1,0 +1,91 @@
+{
+ "written_utc": "2026-11-13T03:35Z",
+ "written_before": "any round-2A computation (no context vector, no class, no run, no score)",
+ "workstream": "ws_vocab round 2A (tokens; stage-1 learner extended)",
+ "inputs_read_first": "context_units/NOTEBOOK.txt (no REPORT.txt exists at 03:15 UTC): context = window outside the instance, per-genome pooling, noise floor from random cross-genome pairs, Kish N_eff, z = 2 noise-aware rho; findings: contigs truncate most windows (median context 27/30 genes at W 25/50), ribosomal flanks are the superoperon itself, context cosine stays above the floor between phyla inside conserved units. Its context vectors are per-pair tables, not reusable here; contexts are computed here with the same definition.",
+ "part1_independence": {
+  "statistic": "n = genomes with >= 1 occurrence, E = expected genomes (stage-1 genome arm), Lambda_genome = n ln(n/E) - n + E; Lambda_eff = Lambda_genome x N_eff / n",
+  "context": "instance span [lo, hi] (live nodes, words included): genes [lo-W, lo-1] and [hi+1, hi+W] on the same contig. Vector arm: S = sum of zca10 gene vectors (softrec transform), B = S/||S||. Token arm: set of rescue3 tokens in the window, Jaccard estimated by MinHash (64 hashes). No context genes -> instance uninformative.",
+  "pooling": "per genome, B_g = unit(sum of B over the key's occurrences in g) (token: union of sets); k = genomes with an informative context; c_bar = mean pairwise similarity over the k genome contexts",
+  "noise_floor": "c0, sd0 = mean and sd of the similarity between contexts of 200,000 random 2-gene windows in different genomes, measured on each corpus (observed and each shuffle) and each W",
+  "rho": "clip((c_bar - c0 - 2 sd0 sqrt(2/(k(k-1)))) / (1 - c0), 0, 1); rho = 0 when k < 2",
+  "N_eff": "n / (1 + (n - 1) rho)  (Kish design effect = 1 / ||mean B||^2 with the floor removed)",
+  "rules": "n >= 2 genomes and N_eff >= 2 (one independent context cannot be compressed; the analogue of stage 1's n >= 2 groups) and Lambda_eff >= tau. Commit check on claimed occurrences: gain(n_claimed, E) x N_eff/n >= tau and n_claimed x N_eff/n >= 2.",
+  "arms": [
+   "V25 (vector, W 25)",
+   "V50 (vector, W 50)",
+   "T25 (token MinHash, W 25)",
+   "T50 (token, W 50)"
+  ],
+  "control": "Vshuf: the selected vector arm with each occurrence's context replaced by the context of a random occurrence of another key in the same round (N_eff should lose its effect and the arm behave like the genome arm); run at the selected arm's tau*",
+  "ladder": "tau in [6, 8, 10, 12], 3 genome shuffles (contexts recomputed on each shuffled corpus); tau* = smallest with type FDR <= 0.01",
+  "selection": "one arm (W, vector/token) by (odd conditions met, odd summed excess) against token DH, reading V-mob or V-phr likewise; then one even run",
+  "prediction_coordinator": "CRISPR-Cas F1 >= .47 with summed excess > .55 (even, selected). Refuted if CCT F1 < .44 or summed < .50.",
+  "expectation_mine": "tau* = 8 for vector arms (null of the genome arm); CCT F1 .44-.49; summed .48-.56; probability the coordinator's prediction holds about 35%; vector arms above token arms on summed excess"
+ },
+ "part2_classes": {
+  "independence": "lineage groups as stage 1 (emb_hom 0.75); tau 10 (stage-1 tau*) unless the class runs' own nulls give type FDR > 0.01 at 10, then the next ladder value 12, 15",
+  "procedure": "phase = stage-1 merging rounds until nothing commits; then every live word node gets a class label; phases alternate until a phase commits nothing",
+  "classes": "unit = composition (set of slot tokens) of a live word node. Similarity: token arm Jaccard of slot-token sets; vector arm cosine of pooled vectors (composition vector = unit of the sum over its live instances of unit(sum of slot-gene zca10 vectors)). Leader clustering: compositions in decreasing group count (ties: instance count, id); each joins the most similar earlier leader among its 50 most similar compositions if similarity >= theta, else leads a new class. Class symbols are fresh each phase; E from class copy numbers.",
+  "theta_ladder": {
+   "token": [
+    0.34,
+    0.5,
+    0.67
+   ],
+   "vector": [
+    0.6,
+    0.75,
+    0.9
+   ]
+  },
+  "theta_selection": "gold-free, by description length on the observed corpus: maximise D = sum over committed words (Lambda - tau) - tau x sum over classes (compositions - 1) (each class membership is a rule costing tau, as a word does); type FDR checked with 3 shuffles at the selected theta",
+  "readings": "V-top, V-mob (mobility judged on class labels), V-phr (phrases over round-0 significant adjacencies, predeclared this time)",
+  "selection": "token vs vector arm and reading by (odd conditions met, odd summed excess) against token DH; then one even run",
+  "refuter": "'exact identity is the cause of the ribosomal failure' is refuted if the selected class arm leaves ribosomal resolved under 1,000 (even, all runs)",
+  "typing": "AMI, homogeneity, completeness of the top-level class label against gold system_type and subtype (even), against engine modules on the same instances (stage 1: .464 vs .779)",
+  "expectation_mine": "vector classes selected; ribosomal resolved 1,100-1,400 under V-phr, 700-1,100 under V-mob; typing AMI .55-.70; summed excess .55-.62"
+ },
+ "part3_together": {
+  "configuration": "selected part-1 arm (independence) + selected part-2 class arm and theta; tau from its own ladder [6, 8, 10, 12] with 3 shuffles",
+  "selection": "reading V-mob vs V-phr on odd; one even run",
+  "criterion": "matches token DH: summed >= DH - 0.01, each caller F1 >= DH - 0.02, ribosomal recovered >= 1,650, Parvarchaeaceae recovered >= 110/114, resolved >= 1,400; beats: matches and summed-excess lower CI > 0",
+  "controls": "Vshuf (part 1) and the stage-1 group arm (reference); paired differences reported",
+  "expectation_mine": "neither more likely (about 65%); most likely blocker ribosomal resolved or CRISPR-Cas F1"
+ },
+ "search": {
+  "benchmark": "locus_search queries: DefenseFinder instances with >= 2 members; targets = same-type instances with >= 2 members in other genomes; hit labels as bench.py (correct covers >= 50% of a target's members; wrong overlaps a member of a different-type DefenseFinder instance; unlabelled and same-type-other ignored in primary AP)",
+  "method": "parse: the query's word = the top-level word holding the plurality of the query's members (>= 50%); retrieved = all top-level instances in other genomes with the same class label, ordered exact type first, then the rest of the class; AP as the expectation over random orders within ties (40 draws, seed 17)",
+  "outputs": "AP, precision, recall per query on all queries and on even genomes, for the stage-1 vocabulary and the part-3 vocabulary; reference M1z AP .796 (5-fold CV), S1 .610, tokens .370",
+  "label": "descriptive (no criterion)"
+ },
+ "conventions": "even genome_code = test, odd = selection; single outputs; paired genome bootstrap 2,000 draws seed 17; reference DH reproduced already (results/refcheck.json); anything decided after an even number is labelled post hoc",
+ "amendment_1": {
+  "written_utc": "2026-11-13T04:20Z",
+  "written_after": "coordinator message after ws_context's REPORT.txt (154da55); part-1 and part-2 ladders done (gold-free); part-1 odd scoring job 88872 running, none of its numbers read",
+  "context_arm": "kept as predeclared (the coordinator's prediction stands). Context is already taken from genes outside the instance span as it stands when the merge is tested (the span grows with the word). Added diagnostic: N_eff/n of committed words by round and by whether their slots lie in ribosomal runs, to report whether growing spans remove the unit-size confound.",
+  "synteny_arm": {
+   "S": "S(g,h) = share of genome g's round-0 adjacent token pairs (the learner's adjacency: <= 2 intervening genes, both tokens in >= 2 genomes, X != Y) that are also adjacent in h; symmetrised (S + S^T)/2; S(g,g) = 1; from the sparse genome-by-adjacency incidence product; computed on each corpus (observed and each shuffle)",
+   "N_eff": "n^2 / sum over g, h in G of S(g,h) over the carrier genomes G of the candidate pair (exact sum, O(n^2) per pair)",
+   "rules": "Lambda_eff = Lambda_genome x N_eff / n; N_eff >= 2; commit check as the context arm",
+   "ladder": "tau in [6, 8, 10, 12], 3 shuffles, tau* by type FDR <= 0.01",
+   "comparison": "paired against the 642-group arm (stage 1, same reading) on even genomes",
+   "expectation": "tau* 10; between the group arm and the genome arm on summed excess; CRISPR-Cas F1 .40-.46 (a system confined to two sister genera stays under N_eff 2)"
+  },
+  "cohesion_reading": {
+   "V-coh": "V-top + phrases: consecutive top-level words (<= 2 genes apart) joined when every boundary from the end of one word to the start of the next has ws_context's token cohesion kappa >= theta or NaN ($RD/context_units/ctx/kappa_var_tokens.npy, read-only; boundary k = genes k, k+1); cut otherwise",
+   "theta_ladder": [
+    0.02,
+    0.05,
+    0.1,
+    0.2
+   ],
+   "selection": "theta on odd genomes per vocabulary, jointly with the reading choice"
+  },
+  "reading_pool": "for every vocabulary the nested reading is chosen on odd genomes among V-mob, V-phr and V-coh(theta) by (odd conditions met, odd summed excess)",
+  "stage1_with_cohesion": "the stage-1 vocabulary read with V-coh (theta chosen on odd) is the classes-free fix of the ribosomal failure; one even run, against token DH and against stage-1 V-mob",
+  "part1_selection": "context arms (V25, V50, T25, T50): one selected on odd for the coordinator's prediction; the synteny arm is selected and tested separately; part 3 uses whichever independence arm (context or synteny) scores higher on odd",
+  "cas_identity": "for the selected vector-class vocabulary: per class covering >= 1 CRISPR-Cas gold instance (even), the number of distinct CCTyper subtypes among the gold instances its words cover, and the CRISPR-Cas member genes inside words against stage 1; reported as evidence for or against recovery of Cas words through broader identity",
+  "expectation_cohesion": "V-coh lifts ribosomal resolved to >= 1,300 on the stage-1 vocabulary at a summed-excess cost of 0.02-0.06 relative to V-mob"
+ }
+}

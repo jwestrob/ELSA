@@ -2081,3 +2081,34 @@ Reading: operationally the statistic finds interacting pairs the token engine ca
 the rate of engine-called unannotated pairs (9.0%) and 13 times its matched controls. The
 mechanism is homology-anchored on one side with the other side matched in embedding space, not
 recurrence of kinds across unrelated proteins.
+
+## 2026-11-13 04:35 UTC — Words, round 2A: phrases fix the ribosomal check; synteny-retention counts; CRISPR-Cas still blocks (workstream `ws_vocab`; `benchmarks/redesign/vocab/REPORT2A.txt`)
+
+On MMseqs2 tokens; predeclared (`predeclared2a.json` plus one amendment before selection); even
+genomes against token DH.
+
+- **Best output: stage-1 words read with cohesion phrases** (consecutive words joined where the
+  successor-variety cohesion of `ws_context` is >= 0.1, theta chosen on odd genomes): summed
+  excess +0.181 [+0.158, +0.204], F1 0.735 / 0.636 / 0.395, ribosomal 1,684 recovered / 1,420
+  resolved, Parvarchaeaceae 114 / 109. Every "matches" bar is met except CRISPR-Cas (-0.085
+  [-0.096, -0.073]).
+- **The ribosomal failure is solved by the phrase level, not by classes** (resolved 501 -> 1,420;
+  token classes on top -0.003 [-0.007, +0.001]). Description length rejects classes (it rises
+  monotonically with looser classes), and typing barely moves (DefenseFinder AMI 0.473).
+- **Context N_eff: my prediction (CRISPR-Cas >= 0.47 with summed >= 0.55) is refuted** (0.406 at
+  0.576). Context taken outside the span relaxes the unit-size discount only as words grow; seed
+  pairs inside conserved units stay discounted 30-90x.
+- **Synteny-retention N_eff works as a threshold-free evidence unit.** S(g,h) = share of one
+  genome's adjacencies conserved in the other; N_eff = n^2 / sum S over carrier pairs; Lambda
+  scaled by N_eff / n; structural rule N_eff >= 2; tau* = 8. CRISPR-Cas F1 0.452 (-0.027 [-0.038,
+  -0.015] against DH), DefenseFinder +0.025, TXSScan +0.154; no unit-size confound (82
+  Parvarchaeaceae ribosomal runs at the word level against 11 with groups); -0.050 [-0.066,
+  -0.034] summed against the 642-group arm. With cohesion phrases it gives CRISPR-Cas 0.430 and
+  1,326 resolved: the two levers still pull against each other.
+- **CRISPR-Cas does not return through classes,** because classes act only on words that already
+  exist (45% of Cas member genes are outside every word). Identity has to be broad at the unit
+  level, before the first merge.
+- Search by parsing: MAP 0.098-0.108 at labelled precision 0.99 (loose vector classes 0.317, post
+  hoc); a vocabulary is a high-precision, low-recall retriever. Search belongs to the locus index.
+Open: CRISPR-Cas, through list-based identity (`ws_vocab2b`, running) and then synteny-retention
+counts on that identity.

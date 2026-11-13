@@ -2592,3 +2592,37 @@ all-against-all alignment of 4.23 M sequences, or one GPU pass for the embedding
   (about 2 h) was left running and disclosed. Options put to Jacob for testing the list-based bond
   tree on that collection: embedding lists only (one 25-minute GPU pass); alignment restricted to
   the nine query genomes; or no alignment variant there.
+
+## 2026-11-13 13:25 UTC — Loci homologous to the lanthanide lut cluster; Rhizobiales slice packaged (workstream `slice_lut`; `benchmarks/redesign/slice_lut/REPORT.txt`)
+
+Requested by Jacob. GTDB r232 species representatives; no curated caller emits a lut call, so
+every locus is an observation of homology to the M. extorquens AM1 cluster plus co-location;
+functional readings UNVERIFIED. No ELSA method was run on the slice.
+
+- Taxonomy: GTDB r232 folds Methylorubrum into g__Methylobacterium (146 representatives); family
+  f__Beijerinckiaceae (NCBI Methylobacteriaceae); order o__Rhizobiales (NCBI Hyphomicrobiales).
+- AM1 cluster verified from Roszczenko-Jasinska et al. 2020 and NCBI: META1_1778-1787 = lutA, B,
+  C, D, E, F, G, H, lanM, lutI, all on one strand.
+- Loci (at least 3 distinct components, at most 3 genes between): order 2,354 loci in 2,170 of
+  5,752 genomes; family 584 in 530 of 996; rest of Alphaproteobacteria 1,810 in 1,696 of 15,721;
+  targeted genomes outside the class 1,588 in 1,551 of 2,338. Chance expectation 0.5 / 0.2 / 0.1
+  loci. Strict definition: 159 loci in the order, 141 of them in the family.
+- Two parts with different ranges: the transporter module (lutA/B/E/F, often G and C) is
+  widespread and reaches Gammaproteobacteria; the complete A-I cluster with the receptor lutH
+  occurs in 80 loci, all Methylobacterium (22 with lanM); lutD, lanM and lutI occur in loci only
+  within Rhizobiales. Receptor plus transporter without the full set: 239 loci in the order
+  (Bradyrhizobium 118, Methylocystis 39). 996 order genomes have a transporter-only locus with a
+  lutH homolog elsewhere.
+- KOfam K23995 (lanthanide-dependent methanol dehydrogenase profile) is present in 1,689 of 2,170
+  order genomes with a locus against 94 of 3,582 without (odds ratio 130; genomes are related, so
+  not independent samples).
+- **Pitfall: GlobDB r232 annotation rows cannot be joined to GTDB proteome files by gene number**
+  (GlobDB numbers its own gene calls; 3.9% agreement at the best offset over 148,763 Pfam hits).
+  A gene-level join needs GlobDB's 36 GB coordinate tarball.
+- Slice sizes: family 996 representatives, 4,517,879 proteins (412 GlobDB-only genomes); order
+  5,752 representatives, 27,072,085 proteins (2,059 GlobDB-only). GlobDB-only proteins would mean
+  streaming a 181 GB tarball; not downloaded.
+- Packages in `$RD/slice_lut/package/`: family complete (universe, FASTA, base and rescue3
+  tokens); order has universe, FASTA and base tokens. The order's rescue3 job (92432, 64 CPUs,
+  estimated 13 h) was cancelled at 2 h 58 min under Jacob's compute limit; list-based bonds do not
+  need family tokens.

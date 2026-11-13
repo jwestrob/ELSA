@@ -2214,3 +2214,46 @@ Overall verdict: known ingredients, new combination.
   handled in code (`vocab.py` and `vl.py` set the gain to 0 when n <= E).
 - Point to carry: the embedding route's 1% rule is applied to first-round merges; its full-run
   shuffle check gave 1.6-2.0% word instances, above 1%.
+
+## 2026-11-13 07:57 UTC — Prior-work check, part B (language-model, embedding and co-folding approaches; `benchmarks/redesign/priorart/REPORT_codex_B.txt`)
+
+Same protocol as part A. Per component:
+
+- **Greedy pair merging of gene order with a lineage-adjusted likelihood gain and a
+  shuffle-calibrated cost: no close precedent found** (ingredients: SEQUITUR, ADIOS, Dunning's
+  likelihood-ratio collocations; null searches for byte-pair encoding, description length and
+  grammar induction over gene order are listed in the report).
+- **Cohesion at word boundaries: no close precedent found** (ancestry: successor variety).
+- **The finding that beyond-family embedding similarity is mostly split homology, with a fixed
+  standardised threshold working where E-values fail: no close precedent found.** ProtEmbed
+  (Melvin et al. 2011) calibrated p-values for an earlier kind of embedding, so the claim must be
+  limited to the models, score and null tested.
+- **Family-free identity with span-supported words: known ingredients, new combination** (gLM,
+  Gaia, SAFPred).
+- **Effective count: standard variance-inflation form; sequence reweighting (Morcos 2011) and
+  phylogenetic effective sample size (Bartoszek 2016) are the ancestry; estimating redundancy
+  from shared gene adjacency has no precedent found.**
+- **Locus vector as the mean of protein embeddings: published** (SAFPred, Urhan et al. 2024,
+  averages ESM1b embeddings into operon vectors; BiG-SLiCE and IBIS map and retrieve BGCs by
+  vector). BGC-Bench (arXiv, 1 November 2026) reports that pooled language-model representations
+  do not consistently beat compositional baselines, in line with our 0.970 against 0.958 for
+  shared-family overlap. What remains ours: typing across family-disjoint loci and de novo loci.
+- **Co-folding of operon partners at scale: published** (Qi et al. 2026, 164,037 candidate pairs
+  from predicted operons and conserved co-localisation; Humphreys et al. 2024). Ours to claim: the
+  control design (matched swaps, adjacent uncalled pairs, curated mates) applied to a locus caller.
+- **Comparators a reviewer would expect:** Gaia / gLM2 for contextual retrieval, SAFPred mean
+  operon vectors, BGC-Prophet, DeepBGC and BiGCARP for BGC boundaries, BiG-SLiCE and bag-of-Pfam
+  vectors for typing, unwhitened means, CSLS and per-query percentiles for calibration.
+- Author overlap: the report lists Jacob as co-author of Gaia and of the OMG / gLM2 paper (the
+  latter with Mirdita, second author of Spacedust). The public ELSA README still describes the
+  shingle-and-alignment algorithm; a paper has to separate that version from the word method.
+- Cautions adopted: mean pooling ignores gene order, so locus vectors show composition; a
+  likelihood gain is a description length only once dictionary and parse costs are specified; a
+  fixed z threshold transfers only if null tail shapes do (to be checked on the second dataset).
+
+Combined reading of parts A and B: the defensible contribution is the integrated discovery
+algorithm (calibrated hierarchical merging over soft gene matches, span-supported words,
+adjacency-based redundancy correction, boundary cohesion). Locus vectors, co-fold validation, the
+shuffle null and effective genome counts each have published precedents and need positioning.
+Follow-up started: a connected-component baseline on the same pair statistic (the Hervé assembly
+rule) and a duplicate-genome stress test, added to `transfer_spacedust` as secondary items.

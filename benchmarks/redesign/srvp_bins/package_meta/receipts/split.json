@@ -1,0 +1,24 @@
+{
+ "stage": "split",
+ "written_utc": "2026-11-14T06:03:51Z",
+ "code_sha256": "42caefb9ecf2f78d055ccc2c6e34fcb0a3ed3914c55c3ae1af343ec6a5e00a67",
+ "rule": "test = even genome_code, tune = odd genome_code (DPANN repair/predeclared.json)",
+ "genomes": {
+  "test": 497,
+  "tune": 497
+ },
+ "genes": {
+  "test": 1600439,
+  "tune": 1611312
+ },
+ "phyla": {
+  "test": 44,
+  "tune": 43
+ },
+ "platform": {
+  "test|Illumina": 285,
+  "test|PacBio": 212,
+  "tune|Illumina": 278,
+  "tune|PacBio": 219
+ }
+}

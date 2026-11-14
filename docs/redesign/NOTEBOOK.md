@@ -2765,3 +2765,26 @@ multi-contig genome bins chosen by completeness, as he had already said.
   `srvp_bins`: locate the multi-contig SR-VP bin collections on biotite, select by completeness
   (>= 90% / <= 5% primary), dereplicate at species level, package with truth tables; no embedding
   and no method run.
+
+## 2026-11-14 06:28 UTC — SR-VP community test set from genome bins (workstream `srvp_bins`; `benchmarks/redesign/srvp_bins/REPORT.txt`)
+
+Replaces the withdrawn single-contig set. No ELSA method run; nothing scored.
+
+- **Where the bins are:** Luis's reconciled SR-VP genome register,
+  `/groups/banfield/projects/environmental/sr/luis/srvp-all/srvp-fina/03_assemblies_and_genomes/`
+  (21 October 2026): 16,421 records, 10,123 with a verified FASTA; 6,647 bins with CheckM2
+  (4,484 Illumina, 2,155 PacBio; 67 named samples 2018-2022 plus 2022 PacBio MAGs), already
+  dereplicated together at 95% ANI into 2,392 clusters, each representative with GTDB-Tk r232
+  taxonomy and Prodigal calls. Nine other collections inventoried in the report.
+- **Selection:** primary tier (completeness >= 90%, contamination <= 5%) 3,072 bins, 994 species
+  after dereplication; all bins >= 70% / <= 10%: 6,130 bins, 2,097 species.
+- **Package** `$RD/ws_srvp_bins/package/` (dereplicated primary tier): 994 genomes (780 bacteria,
+  214 archaea; 51 phyla; 563 Illumina, 431 PacBio; 652 multi-contig, 342 closed or near-closed
+  single contigs), 146,154 contigs, 3,211,751 genes, 3,170,150 unique proteins; 803 ribosomal runs
+  (113 touching a contig edge); parity split 497 / 497; sealed.
+- Pending: DefenseFinder + TXSScan truth tables (job 99990, queued; the standard partition is full
+  and the scheduler's start estimate is 16 November). CRISPRCasTyper has no biotite install.
+- Decided without stalling: keep this collection and tier; skip CheckM2 on 37 further ggBin
+  samples (1.6-11.6 h on 64 CPUs, over the limit; about 830 more primary bins expected); queue the
+  ESM++ small embedding (about 5 h on one A5000, estimated), which the frozen configurations need
+  for genome groups and neighbour lists.

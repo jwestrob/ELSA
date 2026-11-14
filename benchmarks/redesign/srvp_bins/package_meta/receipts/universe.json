@@ -1,0 +1,74 @@
+{
+ "stage": "universe",
+ "written_utc": "2026-11-14T06:00:43Z",
+ "code_sha256": "42caefb9ecf2f78d055ccc2c6e34fcb0a3ed3914c55c3ae1af343ec6a5e00a67",
+ "genes": 3211751,
+ "genomes": 994,
+ "contigs_with_genes": 146107,
+ "contigs_all": 146154,
+ "contigs_without_genes": 47,
+ "strand_minus_fraction": 0.4990181368356389,
+ "partial_values": [
+  [
+   "00",
+   2998350
+  ],
+  [
+   "10",
+   105435
+  ],
+  [
+   "01",
+   105019
+  ],
+  [
+   "11",
+   2947
+  ]
+ ],
+ "single_gene_contigs": 7111,
+ "contig_size_hist": [
+  [
+   "1",
+   7111,
+   7111
+  ],
+  [
+   "10-49",
+   42371,
+   832438
+  ],
+  [
+   "2-4",
+   50158,
+   147919
+  ],
+  [
+   "5-9",
+   40136,
+   265284
+  ],
+  [
+   "50+",
+   6331,
+   1958999
+  ]
+ ],
+ "cds_length_not_3x": 0,
+ "tax_source": {
+  "gtdbtk_2.7.2_r232_own": 973,
+  "gtdbtk_r220_own": 14,
+  "gtdbtk_r232_cluster_representative": 7
+ },
+ "domains": {
+  "Bacteria": 780,
+  "Archaea": 214
+ },
+ "phyla": 52,
+ "platform": {
+  "Illumina": 563,
+  "PacBio": 431
+ },
+ "single_contig_genomes": 342,
+ "register_vs_measured_bp_mismatch": 0
+}

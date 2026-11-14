@@ -1,0 +1,253 @@
+SR-VP genome-bin community test set (workstream srvp_bins) -- REPORT
+Written 2026-11-14 (UTC). Local: /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/srvp_bins/
+Remote (biotite): RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111; $RD/ws_srvp_bins/
+No ELSA method was run, nothing was embedded, no GPU job was run, nothing was scored.
+
+ANSWER
+1. WHERE THE BINS ARE. The larger SR-VP bin collection is the reconciled SR-VP soil genome register in Luis's paper
+   directory /groups/banfield/projects/environmental/sr/luis/srvp-all/srvp-fina/03_assemblies_and_genomes/ (built
+   2026-10-21). genome_reconciliation_v1/master_genomes.tsv lists 16,421 records (10,123 with verified FASTA);
+   joint_dereplication_v1/input_manifest.tsv holds the 6,647 bins whose CheckM2 estimate is linked by identifier and
+   measured length (completeness >= 50, contamination < 10, >= 50 kb; 4,484 Illumina, 2,155 PacBio, 8 unresolved);
+   joint_dereplication_results_v1/ is one dRep 3.5.0 run over all 6,647 (fastANI, 95% ANI, 50% aligned fraction,
+   average linkage; job 17839) giving 2,392 species-level clusters; every cluster representative has a GTDB-Tk
+   2.7.2 / r232 call and a Prodigal gene call (05_taxonomy_and_community/gtdb_representatives_r232_v1, job 18127).
+   Its Illumina bins are the lab's ggBin output (Elliot Weiss 2023: metabat2, maxbin2, concoct and vamb with
+   cross-sample mapping, refined by DAS Tool; files in /groups/banfield/projects/environmental/sr/luis/db/illumina/bins);
+   its PacBio bins are the 2022 A1 HiFi-MAG pipeline MAGs (srvp2023/pacbio/download/8-summary/Soil_*/MAGs), the 2021
+   hifiasm DAS Tool bins and the curated circular genomes. The 6,647 bins come from 67 named samples (2018-2022)
+   plus 2022 PacBio MAGs whose short labels (srvp_core_<depth>cm) the register leaves without a sample crosswalk.
+2. HOW MANY PASS. Primary tier (CheckM2 completeness >= 90, contamination <= 5): 3,072 bins undereplicated, 994
+   species after 95% ANI dereplication. Secondary tier (>= 70, <= 10, outside the primary tier): 3,058 bins
+   undereplicated; 1,103 further species reach it without a primary member. Cumulative >= 70 / <= 10: 6,130 bins,
+   2,097 species.
+3. WHAT IS PACKAGED. The dereplicated primary tier: 994 genomes (780 Bacteria, 214 Archaea; 51 phyla by the cluster
+   representatives' r232 calls; 563 Illumina bins and 431 PacBio genomes; 652 multi-contig, 342 single-contig),
+   146,154 contigs, 3.36 Gbp, 3,211,751 genes, 3,170,150 unique protein sequences, in the DPANN layout at
+   $RD/ws_srvp_bins/package/, with ribosomal truth runs (803 g2_m16 runs, one in each of 803 genomes), a parity split
+   (497 / 497 genomes) and a seal (seal_sha256 5ab7ba791c271dfa2fa58bfda07b2cf4a2c683c0ba288994a433b5ef367681bf).
+4. WHAT REMAINS. (a) DefenseFinder + TXSScan gold: queued as Slurm job 99990 (64 CPUs, estimated 40-55 CPU-h = 40-55 min of
+   run time; scheduler start estimate 2026-11-16 22:21 UTC because the standard partition is full); the job writes
+   gold/ and rewrites the seal itself. (b) CRISPRCasTyper: not run, no installation on
+   biotite (about 1.7 CPU-h once installed). (c) The undereplicated primary package (3,072 bins): not built (about
+   33 CPU-h, mostly Prodigal on 2,099 non-representative bins). (d) 37 of the 91 ggBin samples (2,787 non-viral DAS
+   Tool bins, 12.4 Gbp, mostly 2018-2019 shallow cores and trenches) carry no CheckM2 estimate and sit outside the
+   register; CheckM2 on them costs 1.6-11.6 h on 64 CPUs depending on the prefilter, above the 2 h limit, so it was
+   not run. (e) Embedding: 3,170,150 unique sequences, about 5 h 04 min on one A5000 (not run).
+
+------------------------------------------------------------------------------------------------------------------------
+1. INVENTORY OF SR-VP BIN COLLECTIONS (biotite; found by ls on named directories, no recursive search)
+
+Collection | path | samples / type | binner | bins | sequences, proteins | quality, taxonomy | date
+A. Reconciled register + joint dRep (CHOSEN) | luis/srvp-all/srvp-fina/03_assemblies_and_genomes/{genome_reconciliation_v1,
+   joint_dereplication_v1,joint_dereplication_results_v1} | 67 named samples 2018-2022 + 2022 A1 PacBio; Illumina and
+   PacBio HiFi | ggBin/DAS Tool, HiFi-MAG pipeline, hifiasm DAS Tool, curated | 16,421 records, 10,123 verified, 6,647 with
+   linked CheckM2 (>= 50 / < 10), 2,392 clusters | per-bin FASTA (symlinks to originals); Prodigal proteins + GFF for the
+   2,392 representatives (GTDB-Tk identify) | CheckM2 1.0.1 (existing reports, linked); existing GTDB-Tk calls (mostly r220) for
+   6,114 records, GTDB-Tk 2.7.2 r232 for all 2,392 representatives | 2026-10-21/22
+B. Elliot Weiss ggBin (raw) | /groups/banfield/scratch/projects/environmental/sr/int/bin.d/elliot/ggBin{,_2.._6}/[ggBin/]results/
+   <sample>/bins/dastool/results/<sample>.asm.fa.dastool/bins | 91 Illumina samples 2018-2022 (incl. 8 viral/pellet
+   fractions) | metabat2, maxbin2, concoct, vamb -> DAS Tool | 9,739 | per-bin FASTA; whole-assembly DAS Tool proteins
+   (intermediate) | DAS Tool SCG completeness/redundancy only; CheckM2 exists for the 6,344 bins of the 54 ggBin_6
+   samples (luis/db/illumina/checkm2_srvp-illumina-genomes"/Illumina-genomes-quality_report.tsv, Jan 2024), GTDB-Tk r214
+   for the same 6,344 | Aug-Dec 2023
+C. Luis db/illumina | luis/db/illumina/{bins 4,837; bacteria_genomes 2,879; filtered_genomes/illumina_good_genomes 1,507;
+   drep_ilu_bac_genomes 1,076} | the 54 ggBin_6 samples | from B | as listed | FASTA | CheckM2 (6,344 rows), dRep | Jan 2024
+D. Luis bacteria-analysis | luis/2024/archaea-div-paper/final-analysis/bacteria-analysis | 46 Illumina samples + PacBio |
+   from B + PacBio contigs | 1,076 Illumina (CheckM2 >= 75) + 1,382 PacBio single contigs = 2,458 | FASTA + proteomes |
+   CheckM2 1.0.1 (2,458), GTDB-Tk 2.4.0 r220 | Jul 2024. The 1,382 PacBio contigs are the Sharur srvp_bacteria_pb set.
+E. Luis final-genomes/combined-genomes | luis/2024/archaea-div-paper/final-analysis/final-genomes | 2022 A1 6 depths |
+   HiFi-MAG pipeline (1,363) + A1 metaspades ggBin (229) | 1,592 (214 archaea, 1,378 bacteria) | FASTA | CheckM2, GTDB r220 |
+   Jan 2025 (the "2024 combined baseline" cohort of A)
+F. 2021 HiFi DAS Tool | srvp2022/pacbio/assembly.d/bin.d/ggBin/results/<sample>_PACBIO-HIFI/... | 34_2B, 81_5A (HiFi) |
+   ggBin/DAS Tool on hifiasm-meta | 758 + 689 | contig_to_bin + bins | per-contig CheckM2 (both), per-contig GTDB-Tk (34_2B)
+   | May 2023
+G. A1 metaspades ggBin | /groups/banfield/scratch/projects/environmental/sr/int/bin2.d/ggBin/results | 2022 A1 60-115 cm
+   Illumina (metaSPAdes) | ggBin/DAS Tool | 229 | FASTA | DAS Tool SCG; CheckM2 via E | Oct 2024
+H. 2022 Illumina ggBin (Lingdong) | srvp2023/illumina/assembly/binning/ggBin/results | 12 samples 2022 | ggBin/DAS Tool | 989 |
+   FASTA | none at source | Aug 2023
+I. 2022 PacBio HiFi-MAG pipeline | srvp2023/pacbio/download/8-summary/Soil_{60,80,90,100,110,115}/MAGs | 2022 A1 | PacBio
+   HiFi-MAG pipeline | 1,363 (303, 234, 338, 106, 109, 273) | FASTA | via E | 2023. srvp2023/pacbio/assembly.d has no
+   bin.d (confirmed): the 2022 hifiasm and metaMDBG assemblies carry no ggBin bins.
+J. vp_pb_bact_2024 (Saoirse) | /groups/banfield/projects/environmental/sr/vp_pb_bact_2024 | PacBio curated bacteria |
+   ggKbase | 440 | FASTA + Prodigal | CheckM, CheckM2, GTDB, dRep (drep_440_genomes) | 2024-2025
+K. Elliot dRep.d | /groups/banfield/scratch/projects/environmental/sr/int/dRep.d | ggKbase-named bins | ggKbase | 1,095 input ->
+   206 primary clusters | FASTA | CheckM (dRep) | Aug 2023
+L. Sharur srvp_archaea / srvp_bacteria_pb (Mac + biotite) | 908 archaeal multi-contig bins (ggkbase_2022, elliot_2023, other)
+   / 1,382 PacBio single contigs | CheckM2 + GTDB in the databases | 2024-2026
+
+Why A is "the larger collection": the earlier set (srvp_bacteria_pb) is the PacBio half of D, which is itself drawn
+from B; A is the superset that joins B (the 54 samples with CheckM2), E, F, I and the curated genomes, links each bin to
+an existing CheckM2 report by name and measured length, and dereplicates the lot at 95% ANI. It is the largest SR-VP
+bin set on biotite with quality estimates, and it is multi-contig (Illumina bins median 158 contigs) alongside closed
+PacBio genomes.
+
+------------------------------------------------------------------------------------------------------------------------
+2. SELECTION (rules written in NOTEBOOK.txt before any count; code/02_select.py; tables/ and $RD/ws_srvp_bins/selection/)
+
+Universe U = joint_dereplication_v1 input set, 6,647 bins. Quality = the register's linked CheckM2 values.
+Register records outside U carry no completeness >= 70 with contamination <= 10 (their quality is missing, unlinked,
+< 50 % complete or >= 10 % contaminated), so U holds every register bin that can enter either tier.
+
+Tier                         undereplicated   dereplicated   Illumina/PacBio (derep)   Bacteria/Archaea (derep)   multi-contig (derep)
+primary  >= 90 / <= 5            3,072            994              563 / 431                 780 / 214                  652
+secondary-only >= 70 / <= 10     3,058          1,103              930 / 173                 811 / 292                1,064
+cumulative >= 70 / <= 10         6,130          2,097            1,489 / 608               1,591 / 506                1,714
+
+Primary undereplicated by platform: 1,904 Illumina, 1,165 PacBio, 3 unresolved; 2,112 multi-contig.
+Samples: primary undereplicated bins come from 64 named samples (610 bins carry no resolved sample: 575 PacBio
+srvp_core/Soil labels, 35 Illumina); dereplicated primary from 55 named samples (192 unresolved). By year (dereplicated primary):
+2018 21, 2019 5, 2020 150, 2021 442, 2022 184, unresolved (2022 A1 PacBio) 192. Per-sample counts:
+tables/counts_by_sample.tsv. Largest contributors to the dereplicated primary tier: 9_9_2021_81_5A 0.75 m PacBio 90,
+26_10_2020_1_100CM 86, 9_9_2021_34_2B 1.4 m PacBio 79, 26_10_2020_2_100CM 64, 9_9_2021_72_4B 1.05 m (_2) 50.
+
+Per phylum (cluster representative r232; full table tables/phylum_tier_table.tsv; 60 rows incl. 'unassigned'):
+domain   phylum              primary und  primary derep  secondary-only und  secondary-only derep
+Bacteria Acidobacteriota         646          165              433                 147
+Bacteria Pseudomonadota          330          123              234                 104
+Archaea  Thermoproteota          542          120              710                 181
+Bacteria Chloroflexota           245           92              373                 141
+Bacteria Patescibacteriota       169           90              100                  59
+Bacteria Nitrospirota            162           50              104                  43
+Bacteria Bacteroidota            150           50               76                  42
+Bacteria Desulfobacterota        147           47              239                 100
+Archaea  Thermoplasmatota        127           32              130                  31
+Archaea  Halobacteriota           84           27              117                  35
+Bacteria Planctomycetota          34           17               54                  23
+Bacteria Zixibacteria             34           17               19                   8
+Bacteria Gemmatimonadota          64           16               48                  17
+Archaea  Aenigmatarchaeota        31           13               31                  11
+Bacteria Myxococcota              27           12               18                  11
+Bacteria Methylomirabilota        20           10               50                  20
+Bacteria Verrucomicrobiota        17            9               29                  22
+Bacteria Eisenbacteria            10            8                8                   2
+Bacteria Actinomycetota           11            7               23                  12
+Bacteria Omnitrophota              9            7                8                   6
+other 40 rows                    213           82              254                  88
+
+------------------------------------------------------------------------------------------------------------------------
+3. DEREPLICATION
+
+Existing tables used: joint_dereplication_results_v1/cluster_membership.tsv (job 17839; dRep 3.5.0, fastANI, primary
+Mash 0.90, secondary 95% ANI, 50% aligned fraction by the 'larger' metric, average linkage, tertiary clustering;
+scoring completeness - 5 x contamination + 0.5 x log N50 + centrality). Nothing was re-clustered.
+Pick per cluster: the dRep representative when it passes the tier (973 of 994 primary clusters), otherwise the passing
+member with the best completeness - 5 x contamination + 0.5 x log10(N50) (21 clusters; 19 Illumina bins and 2 PacBio).
+Clusters with any primary member: 994 of 2,392. Average linkage lets a cluster hold pairs below 95% ANI, and the 50%
+aligned-fraction cutoff can split incomplete genomes; at >= 90% completeness that split is rare.
+
+------------------------------------------------------------------------------------------------------------------------
+4. PACKAGE ($RD/ws_srvp_bins/package/, 1.0 GB; DPANN layout; code/03_build_package.py; receipts/*.json)
+
+Gene calls. Representatives (973): GTDB-Tk 2.7.2 identify-step calls, Prodigal 2.6.3 single mode, table 11 or 4 by
+coding density (all 994 chose table 11). Other picks (21): the same procedure run here (prodigal -m -p single, tables
+11 and 4, CheckM/GTDB-Tk density rule). Control: the procedure rerun on 6 representatives reproduced GTDB-Tk's calls
+exactly (5,791/5,791, 4,753/4,753, 907/907, 1,451/1,451, 3,752/3,752, 4,506/4,506 genes; identical coordinates,
+strands and sequences; same table). Each bin FASTA's SHA-256 matched the register (994/994).
+
+universe/genes.parquet        3,211,751  gid, protein_id, genome, genome_code, contig, contig_code, position_index, strand,
+                                         length, start, end (DPANN numbering: genome_code = rank of master_id,
+                                         contig_code = rank of (genome, contig), gid contiguous per contig)
+universe/gene_flags.parquet   3,211,751  Prodigal partial flag (00 2,998,350; 10 105,435; 01 105,019; 11 2,947), start_type,
+                                         truncated, at_contig_end_nt, first_on_contig, last_on_contig, contig_circular (null)
+universe/contigs.parquet        146,107  contigs with genes: n_genes, length_nt, first_gid, file_order
+universe/contigs_all.parquet    146,154  every contig in FASTA order (47 carry no gene call)
+universe/genomes.parquet            994  completeness, contamination, CheckM2 source, taxonomy (tax, tax_source, domain ..
+                                         species), platform, cohort, provisional sample, derep cluster + size, PacBio/
+                                         Illumina members, is_drep_representative, circularity evidence, gene source
+universe/proteins.faa         3,211,751  header = gid; 988,758,684 residues; 0 internal stops
+split/genome_halves.parquet         994  test = even genome_code (497 genomes, 1,600,439 genes), tune = odd (497, 1,611,312)
+ribosomal/marked.parquet         53,345  genes with a Pfam 38.1 ^ribosom(al)?_ hit at GA (101 of 121 models hit)
+ribosomal/runs.parquet            2,111  runs (g0, g2) with >= 8 marked genes, m16 flag
+selection.tsv                       994  selection rows with source paths and hashes
+Taxonomy source: own r232 973, own r220 14, cluster representative r232 7 (the 21 non-representative picks).
+Contig structure: Illumina bins median 158 contigs (190 with 11-100, 276 with 101-500, 82 with > 500); PacBio 341
+single-contig, 61 with 2-10, 29 with 11-100. Completeness median 97.01, contamination median 1.32.
+
+Ribosomal truth (standing definition, $RD/ribosomal/code/ribosomal_check.py; hmmsearch --cut_ga with the slice_lut
+121-model file, SHA-256 b2ce8369...): g0_m8 1,060, g0_m16 606, g2_m8 1,051, g2_m16 803. The 803 primary g2_m16 runs fall
+one per genome in 803 genomes (658 Bacteria, 145 Archaea; 404 PacBio, 399 Illumina); 113 of them touch a contig edge;
+n_marked 16-33 (median 22). Every genome has >= 16 marked genes somewhere; in the other 191 genomes the ribosomal
+cluster is split across contigs or gaps > 2.
+
+Seal (package/SEAL.txt, seal.json, MANIFEST.tsv; sha256 over sorted '<path>\t<sha256>' lines of every file except
+receipts and seal files): seal_sha256 5ab7ba791c271dfa2fa58bfda07b2cf4a2c683c0ba288994a433b5ef367681bf
+  universe/genes.parquet       5f9894190f57f8383d7d5bfa23de18f6d961571e245d69a03fe236e6b2c79d07
+  universe/gene_flags.parquet  caeff90b75b34adaf297facb4536eed12f17decce75388bd6dc703642b79c57a
+  universe/contigs.parquet     92e9d9967a9a3417c1488db30fd28e6c40fe715e09053e9bf17a09ea7b06a226
+  universe/contigs_all.parquet 9bf850d6593fb836a49389ef523ab997f09279c2183116a174f3ff18aa4b737d
+  universe/genomes.parquet     3358bdbe0338b59a20d6cc4183ffc511eebb5c937f01bf56abcfa1d40ccbadb4
+  universe/proteins.faa        ecf8a5111cd56d37aca36d1d4cb932fb5d5e4c35f4174295cd93306dbd02503e
+  split/genome_halves.parquet  873a902f2e0f5ce0574b8698747fc5c11f8a672c21b278239206387a563ba984
+  ribosomal/marked.parquet     4b979639935c276e6da7e042e974b6b7a4afaf1f324475529520421efa3e5a82
+  ribosomal/runs.parquet       8e9e2acb37010adbd697ac0001b3bd6b0c7e97b49e0c693e3052ca6f78ecc1c1
+  selection.tsv                3dffe53b381c978a06466c9a2fcdddb2416e524a9f7e74dd0f29f3c9c89a8b91
+This seal covers the package before the callers. Job 99990 adds gold/instances.parquet and gold/members.parquet,
+regenerates README.txt and rewrites SEAL.txt / seal.json / MANIFEST.tsv; the seal_sha256 above then changes and the
+per-file hashes listed here stay valid for the files they name.
+
+------------------------------------------------------------------------------------------------------------------------
+5. CURATED CALLERS
+
+DefenseFinder and TXSScan: queued, Slurm job 99990 ($RD/ws_srvp_bins/code/callers.sbatch -> code/04_callers.py;
+log $RD/ws_srvp_bins/logs/callers_99990.log). MacSyFinder 2.1.4 from the srvp_callers environment, one genome per
+process, --db-type gembase (one replicon per contig), --replicon-topology linear, gene order = position_index:
+  DefenseFinder  defense-finder-models 3.1.0 (the model set of the SR-VP Sharur reload; biotite install
+                 srvp2020/Jacob/srvp_research_2026-10-23/defensefinder/models), families DefenseFinder and RM in separate
+                 passes as the defense-finder CLI runs them, --coverage-profile 0.4 --exchangeable-weight 1.
+  TXSScan        TXSScan 1.1.1 models (~/.macsyfinder/models), 'all', MacSyFinder defaults (Sharur's convention).
+Output: gold/instances.parquet (DPANN columns plus sys_loci, sys_score, n_out_of_locus and core_start_idx /
+core_end_idx / core_span_genes, which exclude MacSyFinder loners with locus_num -1) and gold/members.parquet.
+Pilot on 2 genomes (5,012 and 3,928 proteins, login node, serial): DefenseFinder 135 / 118 s, RM 16 / 17 s, TXSScan
+35 / 73 s per genome; 18 DefenseFinder systems (RM I/II/IIG, CBASS, Gabija, Septu, pAgo, Pycsar and others) and 9
+TXSScan systems (T4aP 6, Tad 2, T2SS 1). TXSScan systems include out-of-locus components (T2SS with pilD 2,655 genes
+away), hence core_span_genes. Estimate for the package (mean 3,231 proteins per genome): 40-55 CPU-h, 40-55 min on
+64 CPUs, inside the limit. The job was submitted at once; it waits on the queue (start estimate 2026-11-16 22:21 UTC).
+The two first pilot attempts failed for configuration reasons now fixed (the original DF models directory also holds a
+download/ folder that MacSyFinder scans as a model family; a per-system reindex made parsing slow).
+
+CRISPRCasTyper: not run. Biotite has no cctyper; the CRISPR-Cas calls in the SR-VP Sharur databases come from Sharur's
+cctyper-port 1.9.0 (sharur/cas_typing.py on the Mac; the biotite Sharur checkout is from August and predates it) with the
+Aksha CCTyper profile database, which is installed only on the Mac. Cost once installed: the port took 5,542 CPU-s for
+srvp_bacteria_pb (2.9 M proteins), so about 1.7 CPU-h here, a few minutes on 64 CPUs; array typing additionally needs
+MinCED arrays on the 146,154 contigs and xgboost in the callers environment.
+
+------------------------------------------------------------------------------------------------------------------------
+6. COSTS OF WHAT WAS NOT RUN
+
+Embedding (not run): 3,170,150 unique sequences (979,486,962 residues). Scaling the measured 4,464,102 sequences in
+7 h 08 min by sequence count gives 5 h 04 min on one A5000.
+Undereplicated primary package (3,072 bins): the 2,099 bins outside the GTDB-Tk representative set need gene calls;
+Prodigal with both tables took 34-80 s per genome here, about 32 CPU-h in total, plus about 1.5 CPU-h of ribosomal
+hmmsearch for ~10 M proteins: a 35-40 min job on 64 CPUs. Callers on it: about 150 CPU-h (2.3 h on 64 CPUs).
+CheckM2 for the 37 unregistered ggBin samples (2,787 non-viral DAS Tool bins, 12.38 Gbp): three logged SR-VP CheckM2
+1.0.1 runs ran at 17.4, 21 and 60 CPU-h per Gbp. All bins 215-745 CPU-h (3.4-11.6 h on 64 CPUs); bins with DAS Tool SCG
+>= 70 / <= 10 (2,137 bins, 9.87 Gbp; this prefilter keeps 1,719 of 1,732 CheckM2-primary bins in the calibration set)
+172-592 CPU-h (2.7-9.3 h); SCG >= 90 / <= 5 (1,213 bins, 5.88 Gbp; keeps 88% of CheckM2-primary bins) 102-353 CPU-h
+(1.6-5.5 h). Expected yield from the calibration on the 6,344 ggBin_6 bins: about 830 CheckM2-primary and 1,920
+>= 70 / <= 10 bins before dereplication. GTDB-Tk 2.7.2 for ~830 new genomes: about 36 CPU-h (job 18127 took 8 h 40 min
+on 12 CPUs for 2,392). Viral/pellet fractions (608 bins) stay out, as the register excludes them.
+
+------------------------------------------------------------------------------------------------------------------------
+7. AMBIGUITY ABOUT WHICH COLLECTION JACOB MEANS (choice stated, work did not stop on it)
+
+Three readings exist: (i) the 2,458-genome Illumina + PacBio set (D) from which srvp_bacteria_pb took its 1,382 PacBio
+contigs; (ii) all of Elliot's ggBin bins (B, 9,739 bins over 91 samples); (iii) the reconciled register (A). I chose A:
+it contains the Illumina part of (i) and the 54 CheckM2-assessed samples of (ii), adds the PacBio MAGs and archaea
+(D is bacteria only), carries linked CheckM2 values, and has a finished 95% ANI dereplication with r232 taxonomy. The
+part of (ii) that A lacks is the 37 samples without CheckM2 (item 4d); adding them is the decision below.
+The package includes closed and near-closed PacBio genomes alongside multi-contig bins because the selection is by
+completeness; 652 of the 994 genomes are multi-contig. A multi-contig-only subset is the genomes table filtered on
+n_contigs >= 2.
+
+------------------------------------------------------------------------------------------------------------------------
+8. NOTES
+- Provisional sample labels are the register's (identifier prefix match); 2022 A1 PacBio MAGs labelled srvp_core_<depth>cm
+  or Soil_<depth> stay 'unresolved' there and here; their depth is in genome_name.
+- 14 non-representative picks carry their own r220 label and 7 inherit the cluster representative's r232 label
+  (tax_source). Counting by the representatives' r232 gives 51 phyla; the genome table's mixed labels give 52.
+- Circularity: genomes.parquet carries the register's reported_circular and the r232 table's graph-supported-circle flag
+  (68 True); gene_flags.contig_circular stays null (not audited per contig).
+- Files: NOTEBOOK.txt (timestamped log), code/ (02_select.py, 03_build_package.py, 04_callers.py, 05_readme.py, sbatch
+  wrappers, 01_census_ggbin.sh), tables/ (selection and count tables without sequences), package_meta/ (receipts, seal,
+  manifest, package README).

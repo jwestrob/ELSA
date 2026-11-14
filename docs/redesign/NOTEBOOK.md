@@ -2747,3 +2747,21 @@ whitening and manifest (93935) 13.5 min. `$RD/slice_lut/testset/package_k8/` now
 embeddings and MANIFEST. No ELSA method has been run on the set. Untouched test sets ready:
 SR-VP bacteria (1,382 long single contigs) and the lut set; the RefSeq set has a universe only.
 Open with Jacob: which configuration to freeze for them.
+
+## 2026-11-14 05:31 UTC — Frozen run started on the lut test set; SR-VP test set to be rebuilt from genome bins
+
+Jacob's instructions: do not stall work on a decision request, least of all one phrased with
+undefined letter labels; and the SR-VP single-contig set is not a proper test set: use
+multi-contig genome bins chosen by completeness, as he had already said.
+
+- Acted on my recommendation without waiting: two configurations frozen exactly as selected on
+  DPANN and run once on the untouched lut test set (1,032 genomes). Primary: family-bond tree
+  with the adaptive pair distance (`long_loci` part 4). Secondary: embedding-list tree at the
+  fixed distance (`long_loci` part 2). Protocol, comparators (pair-linking, the recurrence
+  engine, the published synton pipeline) and expectations are written to `long_loci/frozen/
+  FROZEN.json` before the dataset is read. Ribosomal scoring: standing definition with the
+  any-fitting-locus count beside it.
+- The SR-VP single-contig package (`ws_srvp_bac`) is withdrawn as a test set. New workstream
+  `srvp_bins`: locate the multi-contig SR-VP bin collections on biotite, select by completeness
+  (>= 90% / <= 5% primary), dereplicate at species level, package with truth tables; no embedding
+  and no method run.

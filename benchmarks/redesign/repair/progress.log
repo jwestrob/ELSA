@@ -1,0 +1,13 @@
+2026-11-12T07:15Z base check: results_dpann_v2 (engine v1.1) and results_dpann_v5 (engine v1.5) base instance scores identical (0 / 7,096 differ); v2 kept as comparator
+2026-11-12T07:18:00Z predeclared.json written (before any search, arm or engine job)
+2026-11-12T07:18Z make_queries.py on login node (2 threads, 12 s): 372,088 rescue uids (62.5 M aa), 867,645 split-short uids (151.8 M aa), union 1,093,510 (197.8 M aa); 1,477,865 pairs (487,865 overlapping)
+2026-11-12T07:19Z search shards 78357-78360 submitted (standard_expand_2, -c 64; -s 7.5 --max-seqs 1000, align -e 1e-5 -a)
+2026-11-12T07:30Z repair_lib.resolve_moves unit test passed (chains, cycles)
+2026-11-12T07:42Z search shards done: prefilter 819-847 s, align 468-474 s, convert 40-62 s per shard; 347,122,527 hit rows (E <= 1e-5, self dropped); 861,909 / 1,093,510 queries with a hit; prefilter reached max-seqs 1000 for 99.3% of queries
+2026-11-12T07:44Z cluster-rule files re-checked (md5 identical to the copies read in full at 07:18Z); arms job 78397 submitted (standard_expand_2, -c 64)
+2026-11-12T07:45Z arms job 78397 done (50 s for the rules): rescue1 54,734 genes moved, rescue3 83,466, split 44,287 (38,651 pairs), rescue1split 98,244, rescue3split 126,565; validation rescue1 disagreement 2.2% (bar 5%), split recall 87.1% (bar 85%)
+2026-11-12T09:44Z resumed (the arms completion notice did not resume this agent; two hours lost); engine jobs 79055-79058 submitted 09:44, all completed by 09:46; 79090 (rescue3split) submitted 09:47
+2026-11-12T09:48Z written before reading touched-instance numbers: a rise in touched-instance F1 counts as better localization only if the random-placement control F1 on the same instances rises by clearly less (excess difference interval above 0); equal rises = glue. A split-arm gain that sits in one receiving token (3,210 genes into one X token) would point to clade-wide two-subunit families, so check that token's identity and the instances it touches.
+2026-11-12T09:50Z engine 79090 done; all five arms pass the ribosomal acceptance check (1,686/1,686 runs, 114/114 Parvarchaeaceae)
+2026-11-12T09:55Z evaluate.py (login node, 3 s): rescue1 and rescue3 meet both predeclared criteria; split, rescue1split and rescue3split fail c2. Split mechanism: recurrence.py colocalization keeps only ta != tb, so a unified split pair loses its own adjacency signal (168 / 220 touched instances contain both pieces)
+2026-11-12T10:00Z REPORT.txt written (local and /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/repair/)

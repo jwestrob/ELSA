@@ -64,6 +64,7 @@ class ProjectionSystem:
         self.scaler_path = self.ingest_dir / "scaler.pkl"
         self.genes_parquet_path = self.ingest_dir / "genes.parquet"
         self.raw_embeddings_path = self.ingest_dir / "genes_raw.parquet"
+        self.transform_model_path = self.ingest_dir / "embedding_transform.npz"
 
         # Models
         self.pca_model = None
@@ -71,8 +72,49 @@ class ProjectionSystem:
     
     @property
     def skip_pca(self) -> bool:
-        """Return True if PCA should be skipped (project_to_D == 0)."""
+        """Return True if dimensionality reduction is skipped (project_to_D == 0)."""
         return self.config.project_to_D == 0
+
+    @property
+    def transform_kind(self) -> str:
+        """Embedding post-processing selected, or ``none``.
+
+        Independent of :attr:`skip_pca`: these transforms need not reduce
+        dimensionality, so gating them on ``project_to_D > 0`` — as the frozen
+        PCA path used to be — makes them silently unreachable at the shipped
+        default of 0.
+        """
+        return getattr(self.config, "embedding_transform", "none") or "none"
+
+    def _load_or_fit_transform(self, matrix):
+        """Return the fitted post-processing transform, or None.
+
+        A dataset-fitted transform is written to ``ingest/embedding_transform.npz``.
+        That file is what makes the space reproducible: a query embedded later has
+        to enter the same space as the index it searches, and a transform fitted
+        on this corpus cannot be re-derived from a handful of query proteins.
+        """
+        from .transform import EmbeddingTransform, fit_transform
+
+        kind = self.transform_kind
+        if kind == "none":
+            return None
+        path = getattr(self.config, "transform_path", None)
+        if path:
+            resolved = Path(path)
+            if not resolved.is_file():
+                raise FileNotFoundError(f"transform_path does not exist: {resolved}")
+            transform = EmbeddingTransform.load(resolved)
+            console.print(f"Loaded frozen transform {transform.describe()} from {resolved}")
+        else:
+            console.print(f"Fitting {kind} transform on this dataset...")
+            transform = fit_transform(
+                kind, matrix,
+                k=getattr(self.config, "transform_k", 2),
+                alpha=getattr(self.config, "transform_alpha", 0.1),
+            )
+        transform.save(self.transform_model_path)
+        return transform
 
     def fit_projection(self, embeddings: List[ProteinEmbedding],
                       subsample_size: int = 50000) -> None:
@@ -209,6 +251,24 @@ class ProjectionSystem:
                 task = progress.add_task("Applying PCA transformation...", total=None)
                 projected_matrix = self.pca_model.transform(embedding_matrix)
                 progress.update(task, description="✓ PCA transformation complete")
+
+        # Post-processing transform, applied after any dimensionality reduction
+        # and before normalization so the stored vectors are the ones the index,
+        # the kNN threshold and the reported cosines all see.
+        transform = self._load_or_fit_transform(projected_matrix)
+        if transform is not None:
+            before = float(np.linalg.norm(
+                (projected_matrix
+                 / (np.linalg.norm(projected_matrix, axis=1, keepdims=True) + 1e-8)
+                 ).mean(axis=0)))
+            projected_matrix = transform.apply(projected_matrix)
+            after = float(np.linalg.norm(
+                (projected_matrix
+                 / (np.linalg.norm(projected_matrix, axis=1, keepdims=True) + 1e-8)
+                 ).mean(axis=0)))
+            console.print(
+                f"✓ Applied {transform.describe()}: ||mean|| {before:.4f} → {after:.4f}"
+            )
 
         # Apply L2 normalization if configured
         if self.config.l2_normalize:

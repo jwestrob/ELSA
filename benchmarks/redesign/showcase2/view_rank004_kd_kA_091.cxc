@@ -1,0 +1,23 @@
+# ws_showcase2 rank 4 (kd_kA_091): 2 genes, median lengths 117;109 aa, 179 genome groups, 67 family sets, 8 phyla.
+# ESMFold2 single-sequence complexes of the two replicates (different genome groups); chains coloured by chain ID;
+# side chains within 4 A across the interface(s) AB shown as sticks.
+# Colour by confidence instead:  color bfactor palette alphafold
+# Superpose replicate 2 on replicate 1:  matchmaker #2 to #1
+set bgColor white
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/showcase2/work/folds_main/pdb/sc2c_004_r1.pdb
+rename #1 "rank 4 replicate 1 | Nanohalarchaeota (Nanosalinales) GCA_034190525.1 | MDY6769685.1 / MDY6769686.1 | complex ipTM 0.90"
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/showcase2/work/folds_main/pdb/sc2c_004_r2.pdb
+rename #2 "rank 4 replicate 2 | Nanobdellota (Pacearchaeales) GCA_018221285.1 | MBR9701315.1 / MBR9701316.1 | complex ipTM 0.93"
+
+hide atoms
+show cartoons
+color bychain
+show (#1/A & (#1/B :< 4)) | (#1/B & (#1/A :< 4)) atoms
+show (#2/A & (#2/B :< 4)) | (#2/B & (#2/A :< 4)) atoms
+style stick
+color byhetero
+lighting soft
+graphics silhouettes true
+tile
+view

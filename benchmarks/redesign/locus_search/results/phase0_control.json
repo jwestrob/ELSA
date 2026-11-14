@@ -1,0 +1,29 @@
+{
+ "DefenseFinder": {
+  "pairs": 200000,
+  "f_tok_mean": 0.0021339166666666663,
+  "tok_visible": 0.0033,
+  "f_cos_visible": 0.004965,
+  "f_rank_visible": 0.074465,
+  "emb_visible": 0.07497,
+  "tok_invisible_and_rank_visible": 0.073325,
+  "tok_invisible_and_cos_visible": 0.004785,
+  "tok_invisible_and_emb_visible": 0.073825,
+  "union_visible": 0.077125
+ },
+ "TXSScan": {
+  "pairs": 0
+ },
+ "CRISPRCasTyper": {
+  "pairs": 200000,
+  "f_tok_mean": 0.013587467449217447,
+  "tok_visible": 0.023285,
+  "f_cos_visible": 0.00639,
+  "f_rank_visible": 0.02834,
+  "emb_visible": 0.02883,
+  "tok_invisible_and_rank_visible": 0.016635,
+  "tok_invisible_and_cos_visible": 0.00178,
+  "tok_invisible_and_emb_visible": 0.017125,
+  "union_visible": 0.04041
+ }
+}

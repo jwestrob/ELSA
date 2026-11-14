@@ -1,0 +1,37 @@
+You are doing a prior-work check for a methods paper in comparative microbial genomics. This is literature research only: use live web search and open the sources. Do not read or modify any local files; everything you need is in this prompt. Your final message is the deliverable (plain text, no Markdown tables wider than 110 characters).
+
+THE METHOD BEING CHECKED (unpublished; describe it to no one, just compare it with the literature)
+Goal: find conserved gene neighbourhoods (operon-like loci, defence systems, secretion systems, biosynthetic clusters) across thousands of prokaryotic genomes, de novo, and type, map and search them.
+D1. Genomes as text, loci as words. Each contig is a sequence of genes. Adjacent units are merged greedily, pair by pair, into nested "words", in the manner of byte-pair encoding or grammar induction, with the merge criterion being a description-length saving: the Poisson log-likelihood ratio n ln(n/E) - n + E of the number n of independent lineages showing the pair as neighbours against its expectation E under random gene order. The word cost (threshold) is calibrated on genomes with shuffled gene order.
+D2. Gene identity without protein families. Instead of clustering proteins into families, each gene carries a list of similar genes in other genomes, taken from protein language model embeddings (mean-pooled, whitened), with a per-genome standardised (z-score) similarity threshold calibrated to a false-match rate. A word carries the set of spans in other genomes that supported it, so a word is in effect a progressive local alignment of a gene neighbourhood against all genomes at once, and its instances may differ in composition.
+D3. Independence of evidence. An effective count N_eff = n / (1 + (n - 1) * s) for n genomes carrying a pair, where s is the mean fraction of gene adjacencies shared between the carrier genomes; analogous in form to effective sample sizes under equicorrelation and to sequence reweighting in covariation analysis.
+D4. Phrases. Consecutive words are joined where a "cohesion" score is high: for a gene at a word boundary, take its homologs in other genomes and measure how similar (cosine of embeddings) their neighbours on the facing side are to each other. This resembles successor-variety or branching-entropy segmentation from linguistics, computed in embedding space.
+D5. Locus vectors. One vector per locus, the mean of its genes' whitened protein-language-model embeddings; nearest-neighbour typing of loci (system type, subtype), clustering into a map of all loci, and fast similarity search over loci, including between loci that share no protein family.
+D6. Validation by co-folding. Predicted neighbourhoods of unannotated genes are tested by predicting the structure of the encoded proteins as a complex (ESMFold-type or AlphaFold-Multimer-type), with partner-swap controls matched for length and hydrophobicity, adjacent-but-uncalled pairs, and curated system mates as controls, at class level (pass rates) and for individual blocks.
+D7. A finding to position: similarity between protein-language-model embeddings beyond a sequence-clustering family is mostly homology that the clustering split; calibrated statistics (E-values) for embedding cosine similarity do not hold, while a fixed standardised threshold does.
+
+YOUR SCOPE (agent B): language-model, compression, embedding and structure-based approaches.
+A second agent covers classical comparative-genomics cluster statistics and synteny tools (gene teams, max-gap clusters, Spacedust, MCScanX and the like); leave those to it except where a paper spans both.
+Search for, open and assess prior work on at least these themes. The examples in parentheses are starting points recalled from memory, possibly misremembered and certainly incomplete: verify each, and search beyond them for whatever else exists.
+ 1. Tokenisation, byte-pair encoding, grammar induction (Sequitur, ADIOS and similar) or minimum-description-length segmentation applied to gene order or to sequences of protein families or domains in genomes; collocation statistics (Dunning's log-likelihood ratio, pointwise mutual information) applied to genes.
+ 2. Word-embedding and language-model treatments of genomic context at the gene level (word2vec-style embeddings of gene families from genomic neighbourhoods, for example work from the Burstein group on deciphering microbial gene function with natural language processing; genomic language models over protein embeddings such as gLM and its successors; Bacformer-type models; anything newer). For each: does it discover loci de novo, or only embed genes in context?
+ 3. Protein-language-model embeddings used in place of sequence homology for synteny, gene-cluster comparison or operon/locus search (embedding-based synteny or collinearity; embedding-based comparison of biosynthetic gene clusters; any tool that searches gene neighbourhoods with protein embeddings).
+ 4. Representing a whole locus, operon or gene cluster as one vector (mean-pooled protein embeddings, domain-vector features such as those used for biosynthetic gene cluster families, learned cluster embeddings) and using it for typing, clustering or retrieval.
+ 5. Calibration of embedding similarity: E-values or significance statistics for protein-language-model similarity, whitening or anisotropy correction of protein embeddings, hubness correction (CSLS and similar), and evidence on whether embedding neighbours beyond sequence families are remote homologs.
+ 6. Effective sample size corrections for phylogenetic redundancy that resemble D3 (sequence reweighting in direct coupling analysis, Henikoff-type weights, phylogenetic effective sample size), and any transplant of these to gene-order or gene-content data.
+ 7. Successor variety, branching entropy or related unsupervised segmentation ideas applied to genomes or gene order.
+ 8. Structure prediction of complexes as validation of predicted functional associations in prokaryotes (co-folding of operon partners or neighbouring genes, large-scale AlphaFold-Multimer or ESMFold screens of gene neighbours, toxin-antitoxin pair screens), and the controls those studies used.
+
+RULES OF EVIDENCE
+- Cite only works you opened in this session. For each: authors, year, venue, title, DOI or URL, and one or two sentences on what the method actually does, taken from the paper or its documentation (abstract-only reading must be flagged as such). Preprints count; say when something is a preprint.
+- Anything you recall but could not open goes in a separate list headed UNVERIFIED.
+- Be precise about what is the same and what differs. "Similar in spirit" is not a finding; say which of D1-D7 the work anticipates and to what degree.
+- Report searches that found nothing (give the queries), since absence matters here.
+
+DELIVERABLE (final message), in this order
+ 1. VERDICT PER COMPONENT D1-D7: one of "published essentially as is", "known ingredients, new combination", "no close precedent found", each with the two or three closest works and the specific difference.
+ 2. CLOSEST PRIOR WORK OVERALL: the three to six papers a reviewer would say this method must be compared with or positioned against, and why.
+ 3. ANNOTATED BIBLIOGRAPHY by theme (1-8 above).
+ 4. EXPECTED BASELINES: tools reviewers would expect to see compared, especially any embedding-based locus or synteny tool.
+ 5. RISKS: claims that would be unsafe to make as novel, stated plainly.
+ 6. UNVERIFIED list, and the list of null searches.

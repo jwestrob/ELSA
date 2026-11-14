@@ -1,0 +1,265 @@
+ws_signals - what else an embedding carries: partner covariation and provenance (DPANN, ESM++ small zca10)
+13 November 2026. Predeclared in predeclared.json (02:13 UTC; one amendment at 02:40 UTC, before any vector-derived
+number); timeline in NOTEBOOK.txt. "Post hoc" marks anything decided after the predeclared results were read.
+
+ANSWER
+1. Signal 1 (partner covariation) exists and is specific to direct same-strand neighbours. Median excess E over
+   genome similarity and over matched unlinked families: +0.057 [+0.046, +0.069] for 1,000 engine-called operon-like
+   pairs (n >= 30), +0.009 [+0.004, +0.016] for adjacent opposite-strand pairs (difference +0.048 [+0.035, +0.061],
+   holding at matched engine L), and +0.012 to +0.016 for called pairs 2-3 genes apart (post hoc). Both
+   predeclared existence criteria are met.
+2. Signal 1 cannot be used to predict co-folding. Where it is defined (168 screen-1 folds, 88 family pairs, 29 hits),
+   AUROC is 0.573 [0.423, 0.727], equal to the engine on the same folds (0.575) and below the critic (0.630).
+   Combined with the engine it gains +0.028 [-0.105, +0.173]; the predeclared refuter fires. It needs >= 10 distinct
+   instances, which only 28% of called pairs and 10 of 297 uncalled folds have.
+3. Curated complex vs non-complex pairs: overall AUROC 0.575 [0.467, 0.687] (not met). RM Type I/III complexes vs
+   Type II REase+MTase give 0.787 [0.645, 0.910]; CRISPR effector/adaptation give 0.534. The showcase operon is
+   present but unexceptional: E +0.14 (A-B), +0.14 (B-C), +0.23 (A-C), permutation p 0.005 (the floor), 71st-83rd
+   percentile of operon-like pairs.
+4. Signal 2's lineage component exists but is small per gene. Genome means hold 2.2% of family-centred residual
+   variance (0.11% expected). The predeclared held-out-family classifier misses both bars (top-1 1.16x majority;
+   0.17 bits). It was underfit at 4 epochs; converged (post hoc), it carries 0.75 bits [0.67, 0.83], 68% of what
+   the whole vector carries.
+5. Per-gene foreignness behaves like provenance (predeclared criterion met). Stratified, even genomes: DefenseFinder
+   +0.49 bits [+0.36, +0.63], ribosomal markers -0.24 [-0.28, -0.21], transposase/integrase-domain genes +1.00
+   [+0.91, +1.09]. Restriction-modification systems are the most foreign defence types (Type I +1.44). The showcase
+   A and B genes score +2.0 and +1.7 (exploratory).
+6. Coherence exists (predeclared criteria met): adjacent residual directions agree, +0.038 [+0.037, +0.039] above
+   pairs on different contigs and decaying to +0.001 at 50 genes, and curated adjacent member pairs sit +0.10 above
+   strand-matched pairs. Post hoc, it is a same-strand transcription-unit signal (offset 1: 0.053 same strand,
+   0.0045 opposite) that native ribosomal operons share (0.084 vs 0.040). Coherence measures unit cohesion; a shared
+   foreign origin is not established for it.
+7. Boundary: for DefenseFinder, coherence separates edges from interiors (AUROC 0.659 [0.636, 0.682], met) but adds
+   only +0.012 [+0.007, +0.017] to engine support (bar +0.02, not met). For CRISPR-Cas, where support is weakest,
+   it adds +0.043 [+0.016, +0.070]; the label-free variant adds +0.056 [+0.029, +0.082].
+8. In the method: signal 1 stays out; it gains nothing where it is defined, and it is undefined where it would be
+   needed. Signal 2's coherence can go in label-free (64 genome-background directions, about 1 min, no taxonomy, no
+   classifier) as an end-trimming feature of the reading rule aimed at the CRISPR-Cas deficit. Per-gene foreignness
+   can go in as an annotation. The next test is a predeclared coherence-based end-trimming rule, judged on
+   even-genome F1 with the ribosomal guard.
+
+==============================================================================================================
+METHOD
+==============================================================================================================
+Vectors: ESM++ small residue means with the zca10 transform, recomputed from the softrec code and kept at unit
+length. Families: rescue3 MMseqs2 tokens. A gene is eligible when its family has >= 3 distinct sequences (75,890
+families; 3,181,891 genes, 88.7%).
+- Family-centred residual: r_i = x_i - c_F^(-i), a leave-own-sequence-out centroid over distinct sequences.
+- Genome background: b_g = mean r over the genome's eligible genes, used leave-one-out (leave-two-out for an
+  instance pair).
+- Genome-centred residual: e_i = r_i - b_g^(-i).
+Neither signal reads taxonomy; taxonomy appears only as an evaluation label (phylum, order). The lineage inputs
+are all data-derived: lineagefree genome similarity (emb_mean) and genome groups (fam_jac 0.2: 232 groups;
+emb_hom 0.75: 642; emb_mean 0.753: 1,965).
+
+Signal 1 (s1_partner.py, s1_eval.py)
+- Instances of a family pair (F, G): genes at offset 1-3 on one contig; one instance per genome (the closest); one
+  per distinct sequence pair. n = number of distinct instances, capped at 400.
+- M: partial Spearman correlation, over all instance pairs, between cos(e_F,i, e_F,j) and cos(e_G,i, e_G,j).
+  Partialled covariates: a cubic in rank genome similarity, plus same-group indicators at species and family
+  scale.
+- E: mean over 10 + 10 far background families H of [M(F,G | I_H) - M(F,H | I_H)], plus the G-side mirror. Each H
+  has a gene in the same genomes >= 20 genes away or on another contig, and is matched to the replaced partner on
+  tree-likeness. E is the mirror-tree signal that remains after genome similarity and after the covariation the
+  same family shows with unlinked families in the same genomes.
+- Permutation null: partner rows permuted within emb_hom 0.75 groups (199 permutations).
+- Secondary statistic: out-of-sample first canonical correlation (genome-parity split).
+
+Signal 2 (s2_classify.py, s2_analyze.py)
+- Classifier: a linear softmax maps r_i to the genome's group. Families are split by token parity, and each gene is
+  scored by the model trained on the other half (cross-fit). Labels: fam_jac 0.2 (primary); phylum and order for
+  evaluation.
+- Foreignness: f_i = -log2 p(host group | r_i).
+- Coherence: host-relative direction u_i = the centred log-probability vector of gene i minus the mean over the
+  genome's other genes; c_ij = cos(u_i, u_j). The boundary score is -c across a gene boundary.
+- Engine support: the engine's boundary_support (the maximum L of a significant pair spanning the boundary).
+- Label-free variant (post hoc, s2_labelfree.py): u is built from the projection of r onto the top 64 singular
+  vectors of the genome-background matrix, which hold 94.5% of its variance.
+
+Compute: biotite, 24-CPU jobs only. No GPU, no language-model inference, no folds, no external service.
+
+==============================================================================================================
+SIGNAL 1 - PARTNER COVARIATION
+==============================================================================================================
+S1.1 Existence (pairs with n >= 30; sampled 1,000 per stratum, seed 17; bootstrap over pairs)
+ stratum                                          pairs  median E [95%]           E>0    median M  p_hom<=.05  median n
+ S_op   called, offset 1, same strand, gap<=50nt  1,000  +0.057 [+0.046,+0.069]  71.6%  0.176     39.9%       58.5
+ S_opp  offset 1, opposite strands (95% called)   1,000  +0.009 [+0.004,+0.016]  56.0%  0.140     36.3%       55
+ S_unc  not called, offset 1, same strand            91  +0.013 [-0.011,+0.053]  56.0%  0.284     76.9%       38
+ S_o2   called, mostly 2 apart (post hoc)         1,000  +0.016 [+0.009,+0.026]          0.147     33.1%
+ S_o3   called, mostly 3 apart (post hoc)         1,000  +0.012 [+0.005,+0.020]          0.150     33.4%
+ S_op - S_opp: +0.048 [+0.035, +0.061].
+ Predeclared verdicts: exists MET; beyond linkage MET.
+ At matched engine L (post hoc), S_op vs called S_opp: L 12-39: 0.050 (523) vs 0.006 (546); L >= 40: 0.079 (345)
+ vs 0.009 (210); L 5-11: 0.022 vs 0.027; L 2-4: 0.027 vs 0.005. Within S_op, Spearman(E, L) is 0.18 (p 8e-9);
+ Spearman(E, n) is 0.01.
+ The permutation p-value does not discriminate: p_hom <= 0.05 for 36% of opposite-strand pairs and 77% of S_unc.
+ The partialling leaves phylogeny in M, and only the matched-background excess E separates the strata.
+
+S1.2 Co-folding (screen-1 folds; hit = ipTM >= 0.75; the score is per family pair; bootstrap over family pairs)
+ set (n >= 10)            folds  pairs  hits  AUROC E [95%]        engine -log P        critic               E+engine ranks
+ cognate + uncalled       168    88     29    0.573 [0.423,0.727]  0.575 [0.454,0.704]  0.630 [0.518,0.743]  0.603, +0.028 [-0.105,+0.173]
+ cognate only             158    79     28    0.555 [0.401,0.716]  0.552 [0.420,0.687]  0.616 [0.498,0.729]  0.573
+ curated positives         42    27     18    0.624 [0.463,0.782]  -                    -                    -
+ at n >= 30: cognate + uncalled 63 folds / 13 hits, E 0.515 [0.284, 0.759], engine 0.472; positives 18 / 9, 0.605.
+ Spearman(E, ipTM): 0.18 (p 0.022, n 168); positives 0.33 (p 0.034, n 42).
+ Predeclared verdict: REFUTED (the AUROC interval includes 0.5; usable criterion not met). The engine's 0.748 on the
+ full 597 folds comes from called vs uncalled pairs. On the subset where E exists, uncalled pairs are almost absent,
+ and engine, critic and E all sit at 0.55-0.63.
+
+S1.3 Curated complex subunits vs co-located non-subunits (token pairs, n >= 10; bootstrap over token pairs)
+ contrast                                      complex  non-complex  AUROC E [95%]          median E c / nc   AUROC M
+ all                                           69       40           0.575 [0.467, 0.687]   0.318 / 0.188     0.628
+ RM: Type I (Hsd) + Type III (Mod-Res)         21       29           0.787 [0.645, 0.910]   0.456 / 0.187     0.782
+     vs Type II REase + MTase
+ CRISPR: two effector or two adaptation        46       11           0.534 [0.350, 0.700]   0.263 / 0.189     0.577
+     subunits vs adaptation x effector
+ at n >= 30: all 26 vs 8, 0.702 [0.494, 0.887]; RM 11 vs 6, 0.879 [0.600, 1.000].
+ Predeclared verdict (all, n >= 10): NOT MET. Strand does not explain the RM contrast: Type II pairs are 80%
+ same-strand offset 1, and among same-strand-majority RM pairs E is 0.363 (10) vs 0.252 (21). The RM contrast can
+ equally reflect co-evolving specificity of the Hsd subunits or a different acquisition history of Type II pairs.
+
+S1.4 Showcase operon A-B-C (tokens 81718, 393054, 130016)
+ pair  n    M      E [sd over backgrounds]  p_hom   p_fam   out-of-sample CCA  percentile of E in S_op
+ A-B   195  0.147  +0.140 [0.011]           0.005   0.005   0.66               71
+ B-C   197  0.150  +0.138 [0.017]           0.005   0.005   0.80               71
+ A-C   220  0.240  +0.228 [0.018]           0.005   0.005   0.80               83
+ The residue-level coupling (B-C contact AUC 0.70 MIp, 0.76 DCA) has a vector-level counterpart that is real and
+ typical of operon pairs. A-C, two genes apart, scores highest. All three pairs form passing interfaces in the
+ trimer models (A-B 12/12, B-C 11/12, A-C 8/12), so this example cannot test whether E tracks contacts.
+
+==============================================================================================================
+SIGNAL 2 - PROVENANCE
+==============================================================================================================
+S2.1 Does the residual carry the genome's lineage? (held-out families, all eligible genes; genome bootstrap)
+ Variance of family-centred residuals carried by genome means: 2.18% (0.11% expected with no genome component).
+ By group means: fam_jac 1.04%, emb_hom 1.77%, emb_mean species scale 2.16%. Median cos(r_i, b_g) is 0.11.
+ labels                 model     top-1 [95%]          majority  balanced (chance)   information bits [95%]
+ fam_jac (232)          4 ep, r   0.233 [0.227,0.239]  0.200     0.041 (0.0043)      0.166 [0.119, 0.215]
+ fam_jac                30 ep, r  0.272 [0.262,0.282]  0.200     0.048               0.747 [0.669, 0.826]   post hoc
+ fam_jac                30 ep, x  0.315                0.200     0.062               1.104 [1.023, 1.187]   (whole vector)
+ fam_jac genome-perm.   30 ep, r  0.229                0.230     0.010               0.039 [-0.040, 0.121]
+ phylum (9)             4 / 30 ep 0.561 / 0.581        0.508     0.239 / 0.238       0.003 / 0.246
+ order (41)             4 / 30 ep 0.350 / 0.373        0.251     0.121 / 0.127       0.147 / 0.533
+ Predeclared verdict: NOT MET (bars: top-1 >= 2x majority, information >= 0.25 bits). Training cross-entropy was
+ still falling 0.15-0.2 bits per epoch at the predeclared 4-epoch cap. Converged (post hoc), the information bar
+ passes and the accuracy bar still fails: one dominant group holds 20% of genes, and a single gene's lineage
+ signal is weak.
+
+S2.2 Foreignness f (bits; even genomes; stratified by family size x family group breadth x residual-norm decile;
+genome-centred = f minus the genome's mean, post hoc)
+ set                         genes   raw diff  stratified [95%]        AUROC  genome-centred strat. [95%]
+ DefenseFinder               3,832   +0.53     +0.49 [+0.36, +0.63]    0.556  +0.47 [+0.37, +0.56]
+ transposase/integrase dom.  8,427   +0.89     +1.00 [+0.91, +1.09]    0.591  +0.98 [+0.91, +1.05]
+ TXSScan                     1,600   +0.18     +0.56 [+0.35, +0.76]    0.524  +0.18 [+0.08, +0.28]
+ CRISPRCasTyper             27,826   -0.28     -0.02 [-0.05, +0.02]    0.472  -0.03 [-0.06, -0.00]
+ ribosomal markers          88,645   -0.86     -0.24 [-0.28, -0.21]    0.409  -0.18 [-0.21, -0.15]
+ Predeclared verdict: MET (DefenseFinder > 0 and ribosomal < 0, both intervals excluding 0). The 30-epoch model
+ gives DefenseFinder +0.47 (genome-centred) and TXSScan +0.03 (not significant), so the stratified TXSScan figure
+ mostly reflects the host-group composition of T4P genomes.
+ By DefenseFinder type (stratified, n >= 30; s2_foreign_by_dftype.tsv): dCTPdeaminase +1.65, HEC-09 +1.63,
+ RM_Type_I +1.44, RM_Type_III +1.08, MazEF +0.80, RM_Type_II +0.61 ... AbiE -0.46, SoFic -1.10, Esos -2.50.
+ Showcase operon (exploratory, stratum-adjusted): A +2.04 [+1.76, +2.31], B +1.68 [+1.38, +1.97],
+ C +0.85 [+0.56, +1.14]. The host group is the top prediction for only 8% of A and B genes.
+
+S2.3 Coherence c of host-relative directions (even genomes; 4-epoch model)
+ offset            1       2       3       5       10      20      50      different contigs
+ all               0.038   0.023   0.018   0.013   0.007   0.005   0.001   -0.000
+ same strand       0.053   0.035   0.028   0.021   0.014   0.011   0.006   (post hoc)
+ opposite strand   0.0045  0.005   0.004   0.002   -0.001  -0.001  -0.004  (post hoc)
+ Offset 1 minus different contigs: +0.038 [+0.037, +0.039]. Predeclared verdict: MET.
+ Curated adjacent member pairs vs all adjacent pairs with the same strand mix:
+   DefenseFinder 0.152 vs 0.048, +0.104 [+0.090, +0.119] (1,118 pairs)  MET
+   TXSScan       0.145 vs 0.052, +0.093 [+0.075, +0.112] (661)
+   CRISPRCasTyper 0.161 vs 0.045, +0.116 [+0.099, +0.135] (1,397)
+ Post hoc (30-epoch model, same-strand adjacent pairs): background 0.040; ribosomal-ribosomal 0.084 [0.081, 0.086]
+ (43,520 pairs); ribosomal-other 0.024; DefenseFinder members 0.125 [0.114, 0.138]. Native, highly expressed
+ ribosomal operons cohere at twice the background. At most the defence-over-ribosomal margin (+0.04) is available
+ for a shared foreign origin. Coherence is a transcription-unit signal; co-transfer, shared expression level and
+ strand-specific composition all contribute, and these data cannot separate them.
+ Showcase operon (exploratory): A-B 0.093 [0.071, 0.117], B-C 0.053 [0.033, 0.071].
+
+S2.4 Boundaries (even genomes; edges = curated contiguous instance end vs a non-member neighbour; interiors =
+consecutive members)
+ caller          edges  interiors  AUROC -c (edge vs int.)  vs random  support alone  support + c [diff, 95%]
+ DefenseFinder   1,124  988        0.659 [0.636, 0.682]     0.507      0.870          0.883, +0.012 [+0.007, +0.017]
+ CRISPRCasTyper    967  1,056      0.619 [0.591, 0.646]     0.478      0.596          0.639, +0.043 [+0.016, +0.070]
+ TXSScan            60  118        0.550 [0.450, 0.654]     0.448      0.806          0.802, -0.004 [-0.050, +0.041]
+ Predeclared verdicts: DefenseFinder AUROC MET; "adds to support" NOT MET (+0.012 against a +0.02 bar). The
+ CRISPR-Cas gain clears the bar but was not the predeclared caller.
+ Post hoc checks: among same-strand boundaries only, DefenseFinder scores 0.654 and CRISPR-Cas 0.641 (support
+ 0.557), so the effect is not strand composition. Edges carry background coherence (vs random about 0.50) while
+ interiors carry raised coherence: c marks being inside a curated unit, not a break below background.
+ Label-free variant (post hoc): DefenseFinder 0.669 [0.644, 0.692], +0.012 [+0.006, +0.018]; CRISPR-Cas 0.633
+ [0.604, 0.659], +0.056 [+0.029, +0.082]; curated adjacent pairs +0.095 (DF), +0.079 (CRISPR-Cas). Without labels,
+ foreignness (-cos to the genome direction) also marks ribosomal genes (+0.035), so the per-gene score needs the
+ label-trained projection, while coherence does not.
+
+Exploratory: contig-level foreignness is unrelated to MAG contamination (Spearman -0.005, p 0.77; 30-epoch model
+0.05, p 0.003). The signal does not double as a binning-error detector.
+
+==============================================================================================================
+CAVEATS
+==============================================================================================================
+- E is a family-pair statistic and the co-fold label is gene-pair specific. The two replicates of one family pair
+  share a score, so intervals resample family pairs. Positives are few (29 hits at n >= 10; 13 at n >= 30).
+- What E measures beyond linkage is not identified. Adjacent same-strand pairs exceed opposite-strand and
+  2-3-apart pairs, which argues for partner specificity, but co-transcription, co-transfer of operons and
+  co-evolution are not separated. The offset strata were not strand-controlled.
+- The curated class labels apply literature architecture (stable complex vs separate enzymes or modules) to the
+  callers' component calls. Class sizes are small (RM 21 vs 29; CRISPR 46 vs 11).
+- The predeclared classifier was underfit; the 30-epoch run is post hoc. Raw foreignness carries the host group's
+  prior, and the genome-centred version (post hoc) removes it; DefenseFinder and ribosomal keep their signs and
+  sizes.
+- fam_jac groups are data-derived from family sharing (no taxonomy). The label-free variant shows coherence needs
+  no labels at all.
+- Signal 1 has no fitted parameter and was evaluated on all genomes. Signal 2's comparisons report even genomes
+  (all-genome values in s2_tests*.json agree). The boundary model was fitted on odd genomes and scored on even.
+- Deviation: job 88128 was submitted while the account held 436 CPUs and was cancelled before it started.
+
+==============================================================================================================
+ARTIFACTS
+==============================================================================================================
+Local benchmarks/redesign/signals/:
+- REPORT.txt, NOTEBOOK.txt, predeclared.json.
+- Code: common.py, sizes.py, curated_pairs.py, prep.py, s1_partner.py, s1_eval.py, s2_classify.py, s2_analyze.py,
+  s2_operon.py, s2_labelfree.py, s2_ribo_coh.py, run_job.sbatch, run_s2.sbatch, run_s2b.sbatch, run_s2lf.sbatch.
+- inputs/screen1_positive.tsv.
+- results/ (small copies):
+  - s1_eval.json, s1_pairs.parquet (2,294 pairs: M, E, p, CCA, strata), s1_pairs_offsets.parquet,
+    s1_cofold_rows.tsv, s1_curated_rows.tsv, sizes_eval.json, prep_summary.json.
+  - s2_test1[_e30].json, s2_tests[_e30|_lf|_firstpass].json, s2_foreign_by_dftype[_e30|_lf].tsv,
+    s2_operon[_e30].json, s2_labelfree.json, s2_ribo_coh_e30.json.
+Biotite $RD/signals/:
+- code/: as local.
+- work/:
+  - zca10_uid_f32.npy (9.8 GB), fam_sum/fam_row/fam_m.npy, genome_B/genome_n.npy, gene_stats.parquet.
+  - pair_counts.parquet, curated_pairs.parquet.
+  - s1_*.parquet.
+  - s2_gene[_e30|_lf].parquet (per-gene foreignness), s2_v_famjac_f16[_e30|_lf].npy (per-gene direction vectors).
+  - s2_boundaries*.parquet, s2_contigs*.parquet, and the json files above.
+- logs/sig_<job>.log.
+Jobs (all -A banfield -p standard --qos=standard_expand -c 24, exclude list):
+- 88061 prep (3 min 48 s).
+- 88148 signal 1 (17 min 48 s).
+- 88344 signal 2 (11 min).
+- 88444 signal-1 offset strata (16 min 30 s).
+- 88445 signal-2 30-epoch rerun plus re-analysis (23 min 21 s).
+- 88629 label-free signal 2 (2 min 41 s).
+- 88128 cancelled before start.
+Login node, serial: sizes.py, curated_pairs.py, s1_eval.py, s2_ribo_coh.py.
+
+==============================================================================================================
+NEXT STEPS
+==============================================================================================================
+1. Coherence-guided end trimming (label-free u) inside the nested reading, predeclared and judged on even-genome
+   F1 per caller with the ribosomal guard, targeting the CRISPR-Cas deficit (support AUROC 0.596; support + c
+   0.639-0.652). Ribosomal runs cohere internally (0.084) and drop at their edges (0.024), so the guard should hold.
+2. Foreignness as a per-gene annotation in the locus table (30-epoch, fam_jac-trained projection). Testable use:
+   rank the census's unrecognised blocks by mean foreignness and coherence, and check whether foreign, coherent
+   blocks are enriched beside curated defence calls.
+3. Signal 1 only at residue level. The mean-pooled statistic does not rank co-folding (S1.2); interface
+   information, if any, sits in a handful of columns that the mean pools away. If pursued, run paired-MSA coupling on called
+   same-strand pairs with >= 50 instances, as in the A-B-C analysis, and judge it on the co-fold tables.
+4. To separate expression from origin in coherence, take an expression proxy from nucleotide sequence (codon
+   usage of ribosomal-protein genes as the reference set) and repeat S2.3 within expression strata.

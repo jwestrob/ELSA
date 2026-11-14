@@ -1,0 +1,129 @@
+{
+ "universe_U": 6647,
+ "clusters_total": 2392,
+ "primary": {
+  "undereplicated": 3072,
+  "dereplicated": 994,
+  "derep_pick_is_drep_rep": 973,
+  "undereplicated_by_platform": {
+   "Illumina": 1904,
+   "PacBio": 1165,
+   "Unresolved": 3
+  },
+  "dereplicated_by_platform": {
+   "Illumina": 563,
+   "PacBio": 431
+  },
+  "undereplicated_by_domain": {
+   "Bacteria": 2204,
+   "Archaea": 868
+  },
+  "dereplicated_by_domain": {
+   "Bacteria": 780,
+   "Archaea": 214
+  },
+  "undereplicated_multi_contig": 2112,
+  "dereplicated_multi_contig": 652,
+  "undereplicated_samples": 65,
+  "dereplicated_phyla": 51,
+  "dereplicated_phylum_source": {
+   "r232_own": 971,
+   "r220_own": 14,
+   "r232_cluster_rep": 9
+  },
+  "undereplicated_phyla": 51,
+  "undereplicated_own_phylum_differs_from_cluster_rep": 93,
+  "dereplicated_bp": 3358907834,
+  "undereplicated_bp": 10332785486,
+  "dereplicated_contigs": 146154,
+  "undereplicated_contigs": 475208,
+  "dereplicated_contigs_median": 35.0,
+  "dereplicated_completeness_median": 97.00999999999999
+ },
+ "ge70": {
+  "undereplicated": 6130,
+  "dereplicated": 2097,
+  "derep_pick_is_drep_rep": 2086,
+  "undereplicated_by_platform": {
+   "Illumina": 4415,
+   "PacBio": 1708,
+   "Unresolved": 7
+  },
+  "dereplicated_by_platform": {
+   "Illumina": 1489,
+   "PacBio": 608
+  },
+  "undereplicated_by_domain": {
+   "Bacteria": 4150,
+   "Archaea": 1980
+  },
+  "dereplicated_by_domain": {
+   "Bacteria": 1591,
+   "Archaea": 506
+  },
+  "undereplicated_multi_contig": 4996,
+  "dereplicated_multi_contig": 1714,
+  "undereplicated_samples": 68,
+  "dereplicated_phyla": 59,
+  "dereplicated_phylum_source": {
+   "r232_own": 2079,
+   "r232_cluster_rep": 10,
+   "r220_own": 8
+  },
+  "undereplicated_phyla": 59,
+  "undereplicated_own_phylum_differs_from_cluster_rep": 168,
+  "dereplicated_bp": 6948934823,
+  "undereplicated_bp": 20092160182,
+  "dereplicated_contigs": 926467,
+  "undereplicated_contigs": 2085771,
+  "dereplicated_contigs_median": 215.0,
+  "dereplicated_completeness_median": 91.27
+ },
+ "secondary_only": {
+  "undereplicated": 3058,
+  "dereplicated": 1103,
+  "derep_pick_is_drep_rep": 1092,
+  "undereplicated_by_platform": {
+   "Illumina": 2511,
+   "PacBio": 543,
+   "Unresolved": 4
+  },
+  "dereplicated_by_platform": {
+   "Illumina": 930,
+   "PacBio": 173
+  },
+  "undereplicated_by_domain": {
+   "Bacteria": 1946,
+   "Archaea": 1112
+  },
+  "dereplicated_by_domain": {
+   "Bacteria": 811,
+   "Archaea": 292
+  },
+  "undereplicated_multi_contig": 2884,
+  "dereplicated_multi_contig": 1064,
+  "undereplicated_samples": 65,
+  "dereplicated_phyla": 48,
+  "dereplicated_phylum_source": {
+   "r232_own": 1087,
+   "r232_cluster_rep": 8,
+   "r220_own": 8
+  },
+  "undereplicated_phyla": 53,
+  "undereplicated_own_phylum_differs_from_cluster_rep": 75,
+  "dereplicated_bp": 3595310448,
+  "undereplicated_bp": 9759374696,
+  "dereplicated_contigs": 781919,
+  "undereplicated_contigs": 1610563,
+  "dereplicated_contigs_median": 614.0,
+  "dereplicated_completeness_median": 82.48
+ },
+ "register_rows": 16421,
+ "register_sequence_verified": 10123,
+ "outside_U_with_quality_primary": 0,
+ "outside_U_with_quality_ge70": 0,
+ "outside_U_contamination_eq_10_ge70": 0,
+ "outside_U_ge70_by_link_basis": {},
+ "outside_U_ge70_by_platform": {},
+ "outside_U_ge70_shorter_50kb": 0
+}

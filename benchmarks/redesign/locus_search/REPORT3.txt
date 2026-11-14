@@ -1,0 +1,277 @@
+LOCUS SEARCH ON DPANN, ROUND 3 (workstream ws_search3): zca10 EMBEDDING RANKS AS THE SINGLE INPUT
+12 November 2026. Inputs as rounds 1-2 (ESM++ small, tokens e3c50s75, DPANN package of 11 November) plus the head
+workstream's zca10 and student lists. Predeclaration: results/criterion3.json (copy $RD/locus_search/out3/criterion3.json,
+written 13:10 UTC before any round-3 number). Everything labelled POST HOC was added after the task-3 result.
+
+BOTTOM LINE
+1. Task 1 CONFIRMED and GENERAL (by the predeclared rules). 5-fold genome CV, 2,447 DefenseFinder queries in 1,384 genomes,
+   every configuration chosen inside the training folds: M1z (zca10 ranks alone) AP 0.796, S1 (MMseqs2 ranks alone) 0.610,
+   S3 (round 2, three inputs) 0.706. M1z - S1 = +0.186 [+0.179, +0.194]; M1z - S3 = +0.090 [+0.085, +0.095]; every fold
+   +0.181 to +0.198 and +0.084 to +0.095. TXSScan / CRISPRCasTyper (frozen configs, even genomes): M1z - S1 +0.390 / +0.016,
+   M1z - S3 +0.120 / +0.002 [-0.000, +0.004] (CRISPRCasTyper: no real gain over S3, and 17.4 wrong-subtype hits per query
+   against 6.1).
+2. The gain is gene-specific and comes from whitening. Shuffled zca10 lists 0.062 AP, a length-and-composition ranker 0.194
+   (below M0's 0.369). Whitening alone (no centring) 0.777, centring alone 0.483, per-genome centring 0.513, raw L2 0.445,
+   zca10 0.796. zca10 fitted on odd genomes only: +0.0002 AP (transduction irrelevant). Depth matters: zca10 top 2,000
+   costs -0.098 AP, top 200 -0.455.
+3. Under a matched false-positive rate the single input LOSES (task 3, predeclared measure). Fast null calibrated for every
+   new method (observed/expected at E = 0.01 on even genomes 0.99-1.08). At 0.03 unsupported unlabelled hits per query
+   (threshold set on odd genomes) recall is M1z 0.122, S1 0.175, S3 0.186: M1z - S1 -0.053 [-0.060, -0.046],
+   M1z - S3 -0.064 [-0.072, -0.057]. POST HOC, with curated negatives instead of the evidence rule: at 0.25 / 0.5 / 1
+   wrong-type hits per query, M1z - S1 = -0.044 / -0.040 / -0.030 and M1z - S3 = -0.049 / -0.046 / -0.032 (all intervals
+   below 0). Matched on all unlabelled hits instead, the gap closes (-0.014 at 1, -0.002 at 2, +0.008 at 4 per query).
+   Wrong-type hits include homology shared between system types, so they are curated negatives, not pure noise.
+   M1z ranks hits within a query far better than S1 or S3; its scores separate true from false hits across queries (one
+   E threshold for all queries) worse than MMseqs2 ranks do.
+4. Residual advantage of a second input at matched rates (recall, even genomes, paired against M1z):
+   0.03 unsupported / query: tokens (M2z) +0.032 [+0.026, +0.038], MMseqs2 ranks (SM1z) +0.051 [+0.044, +0.058], both (S3z)
+   +0.044 [+0.037, +0.051], learned head (M1p) +0.054 [+0.048, +0.060].
+   0.5 wrong-type / query (POST HOC): tokens +0.047 [+0.040, +0.054], MMseqs2 +0.037 [+0.030, +0.045], both +0.045
+   [+0.037, +0.052], head +0.021 [+0.017, +0.025]. Tokens + zca10 (M2z, no MMseqs2) reaches S3's recall at matched wrong-type
+   rates (0.153 vs 0.151 at 0.5; 0.204 vs 0.198 at 1) with AP 0.804.
+5. One input suffices for RANKING (AP, strict AP, recall at E <= 1, token-invisible targets). It does not suffice for
+   rate-controlled hit calling: at every matched rate of curated wrong-type or unsupported hits M1z recalls 0.03-0.06
+   fewer targets than MMseqs2 ranks alone. POST HOC, the floor tau is no lever here (tau 0-2 are identical for single-list
+   methods because every listed gene has s >= log(N_db / 20,000) = 5.2; with tau chosen on odd genomes for both methods,
+   M1z - S1 stays -0.029 to -0.053). The cheapest fix is the token table: tokens + zca10 (M2z, no per-query search) matches
+   S3 at matched wrong-type rates.
+6. Raw-vector conclusions of rounds 1-2, redone: phase-0 token-invisible and embedding-reachable DefenseFinder pairs 51.5%
+   (raw L2 20.6%) against a different-type floor of 14.8% (L2 7.4%); M1z token-invisible recall 0.075 / 0.276 per query at
+   E <= 0.01 / 1 (raw M1 0.017 / 0.073; S1 0.046 / 0.131). The iterative profile with zca10 centroids still drifts:
+   wrong-type hits per query 1.04 -> 3.15 (refine, 3.0x) and 3.85 (grow, 3.7x) by round 3 with no AP gain (0.804 -> 0.806 /
+   0.798).
+7. Task 6: the head's +0.017 survives the CV: M1p - M1z on even held-out queries +0.017 [+0.013, +0.021]; at matched
+   unsupported rate it is worth +0.054 recall, at matched wrong-type rate +0.009 to +0.021.
+8. Task 5: the one-input command uses exact brute force over the zca10 gene vectors held in RAM (13.8 GB, session load
+   7 s): median 1.33 s per query on 24 CPUs, 0.54 s with the 40 null replicates spread over threads (round-2 command:
+   4.75 s, of which MMseqs2 3.22 s); all 7,348 benchmark windows of 20 queries returned, 7,341 with identical score.
+   HNSW (M 32, efConstruction 40; 145 s build on 64 CPUs, 14.7 GB) never comes within 0.01 AP of exact top 20,000: best
+   point k 20,000 / efSearch 40,000 at -0.016 [-0.018, -0.014], 2.3 genes/s on 64 CPUs against ~125 genes/s for exact.
+   Exact top 10,000 is within 0.01 (-0.008). HNSW is the wrong index for 20,000-deep lists here.
+
+======================================================================================================================
+SELF-CHECKS (all exact)
+- Scan grid against earlier rounds, identical configurations: S3 vs round-2 cv_grid (158,208 rows), M1z and M1p vs the head
+  workstream's odd grids, M0 and M1 vs round 1, S1 vs round-1 seqctl (19,376 rows each): max |dAP| = 0.
+- Folds identical to round 2; round-2 S3 held-out AP reproduced (max |d| 0).
+- 200-replicate runs (seed 17 + qid): S3 (2,447 queries) and M0 (1,247) vs round 2, M1z and M1p (1,247 each) vs the head
+  workstream: max |d| = 0 for AP, recall at E <= 0.01 and unlabelled hits.
+- zca10 recomputed from the residue means matches the stored float16 vectors (max |d| 1.1e-4).
+
+======================================================================================================================
+TASK 1. PREDECLARED CONFIRMATION (DefenseFinder 5-fold genome CV; 2,447 held-out queries, 1,384 genomes)
+Chosen configurations (identical in all five folds and on odd genomes): M1z W = span + 8, tau 3; S1 W + 8, tau 3;
+S3 w_emb 0.5, W + 8, tau 0; M1p W + 8, tau 3; M2z w 0.75, W + 8, tau 1 (tau 3 in folds 0-1); S3z and SM1z w 0.5, W + 8,
+tau 0. W + 8 is the grid edge for every method, as in rounds 1-2.
+| Method | AP | Strict AP | Recall E<=0.01 | Recall E<=1 | Wrong / query E<=0.01 | Unlabelled / query E<=0.01 |
+| M0 tokens | 0.369 | 0.250 | | | | |
+| M1 raw L2 | 0.445 | 0.253 | | | | |
+| S1 MMseqs2 ranks | 0.610 | 0.387 | 0.165 | 0.288 | 0.96 | 4.75 |
+| S3 tok + MMseqs2 + 0.5 L2 | 0.706 | 0.452 | 0.177 | 0.320 | 1.02 | 4.78 |
+| M1z zca10 ranks | 0.796 | 0.505 | 0.177 | 0.378 | 1.20 | 4.53 |
+| M1p head ranks | 0.811 | 0.512 | 0.190 | 0.390 | 1.30 | 4.62 |
+| M2z tokens + 0.75 zca10 | 0.807 | 0.515 | | | | |
+| SM1z MMseqs2 + 0.5 zca10 | 0.820 | 0.499 | 0.170 | 0.331 | 1.02 | 4.93 |
+| S3z tok + MMseqs2 + 0.5 zca10 | 0.822 | 0.505 | | | | |
+(Recall and rates: 200-replicate null as rounds 1-2, fold configurations.)
+Paired (genome bootstrap, 2,000 draws):
+  M1z - S1: AP +0.186 [+0.179, +0.194]; strict +0.118 [+0.112, +0.123]; recall E<=0.01 +0.012 [+0.007, +0.017];
+            recall E<=1 +0.090 [+0.081, +0.097]; wrong / query +0.25 [+0.07, +0.44].
+  M1z - S3: AP +0.090 [+0.085, +0.095]; strict +0.053 [+0.049, +0.057]; recall E<=0.01 +0.000 [-0.004, +0.005];
+            recall E<=1 +0.058 [+0.051, +0.065]; wrong / query +0.18 [+0.01, +0.36].
+  Strata: even +0.190 / +0.094; odd +0.182 / +0.087; >= 3 members (633) +0.129 [+0.120, +0.138] / +0.021 [+0.015, +0.028].
+Verdict: (i) and (ii) hold: CONFIRMED.
+Frozen configurations, even genomes, 200-replicate null:
+| Caller (queries) | M0 | S1 | S3 | M1z | M1z - S1 | M1z - S3 | strict M1z - S3 | wrong / query E<=0.01 M0 / S1 / S3 / M1z |
+| DefenseFinder (1,247) | 0.370 | 0.602 | 0.698 | 0.792 | +0.190 [+0.180, +0.201] | +0.094 [+0.085, +0.101] | +0.056 | 0.11 / 1.13 / 1.22 / 1.26 |
+| TXSScan (404, one type) | 0.221 | 0.478 | 0.747 | 0.868 | +0.390 [+0.377, +0.404] | +0.120 [+0.109, +0.131] | +0.019 | 0 / 0 / 0 / 0 |
+| CRISPRCasTyper (1,893) | 0.091 | 0.119 | 0.133 | 0.135 | +0.016 [+0.013, +0.020] | +0.002 [-0.000, +0.004] | -0.007 | 2.6 / 5.6 / 6.1 / 17.4 |
+Generality rule (point estimates > 0 in both callers): met. Plainly: TXSScan has no negatives, so its AP is coverage; for
+CRISPRCasTyper M1z equals S3 within the interval, loses strict AP, and triples wrong-subtype hits.
+
+======================================================================================================================
+TASK 2. CONTROLS (same CV; held-out AP over 2,447 queries; even-genome values within 0.01)
+| Rank list (scanned alone) | AP | strict AP | vs M1z | vs raw L2 |
+| zca10 (M1z) | 0.796 | 0.505 | | +0.351 [+0.343, +0.359] |
+| (a) shuffled zca10 lists | 0.062 | 0.015 | -0.734 [-0.745, -0.723] | |
+| (b) length + amino-acid composition | 0.194 | 0.083 | -0.603 [-0.612, -0.593] | |
+| (c) raw L2 (M1) | 0.445 | 0.253 | -0.351 | |
+| (c) mean removal alone (gc) | 0.483 | 0.275 | -0.313 [-0.321, -0.305] | +0.038 [+0.035, +0.041] |
+| (c) whitening alone (wo) | 0.777 | 0.491 | -0.019 [-0.020, -0.017] | +0.333 [+0.325, +0.340] |
+| (c) per-genome mean removal (genc) | 0.513 | 0.287 | -0.284 [-0.291, -0.276] | +0.068 [+0.062, +0.074] |
+| (c) zca10 fitted on odd genomes | 0.796 | 0.506 | +0.0002 [+0.0001, +0.0003] | |
+| (d) zca10 top 200 | 0.341 | 0.275 | -0.455 [-0.466, -0.443] | |
+| (d) zca10 top 2,000 | 0.698 | 0.467 | -0.098 [-0.103, -0.093] | |
+| (d) zca10 top 20,000 | 0.796 | 0.505 | | |
+- (a) Gene-specific information: M1z - shuffled +0.734, far above the 0.10 bar; shuffled lists score below tokens (M0 0.369).
+- (b) Length/composition ranker (21 features, z-scored, ZCA; 20 eigen-directions kept since composition sums to 1):
+  below S1 by 0.416 and below M1z by 0.603. The trivial-signal reading is refuted.
+- (c) The unit L2 vectors have a common mean of norm 0.86 (participation ratio of the centred covariance 3.9; of the
+  uncentred second moment 1.7). Soft whitening of the uncentred second moment recovers 95% of the gain over L2 by itself;
+  centring alone recovers 11%; per-genome centring 19%. Whitening is the active ingredient, centring adds +0.019.
+  The odd-genome fit has mean norm 0.8594 against 0.8595 and leading eigenvalue 0.1282 against 0.1278.
+- (d) Deep lists carry M1z: the 2,000 cut costs 0.098 AP (0.029 for >= 3-member queries), larger than round 2's 0.034 for S3.
+
+======================================================================================================================
+TASK 3. RATES ON THE CALIBRATED FAST NULL (even genomes, 1,247 queries; configurations chosen on odd genomes)
+Fast null as round 2: Gumbel on the first 40 per-replicate maxima of the 200-replicate runs, per-method curve learned on
+odd-genome runs (replicates 41-200 counted). Held-out calibration on even genomes (observed / expected null rate):
+| Method | E = 0.001 | E = 0.01 | E = 0.1 | E = 1 | curve ratio at 0.01 |
+| M0 | 3.39 | 1.03 [0.92, 1.15] | 0.94 | 1.01 | 1.35 |
+| S1 | 2.17 | 0.99 [0.90, 1.08] | 0.97 | 0.96 | 1.60 |
+| S3 | 1.90 | 1.03 [0.93, 1.13] | 0.99 | 0.98 | 1.72 |
+| M1z | 1.04 | 1.01 [0.95, 1.08] | 1.03 | 1.01 | 1.18 |
+| M1p | 0.91 | 1.02 [0.96, 1.09] | 1.03 | 1.02 | 1.16 |
+| M2z | 1.32 | 1.08 [0.99, 1.16] | 1.01 | 1.00 | 1.24 |
+| SM1z | 2.44 | 1.05 | 1.00 | 0.98 | 1.75 |
+| S3z | 2.32 | 1.04 | 0.99 | 0.98 | 1.72 |
+At fast E <= 0.01 (per query; unsupported = unlabelled and failing the round-2 rule):
+| Method | AP | Recall E<=0.01 | Recall E<=1 | Unlabelled | Unsupported | Wrong-type |
+| M0 | 0.370 | 0.094 | 0.179 | 1.09 | 0.000 | 0.11 |
+| S1 | 0.602 | 0.151 | 0.304 | 2.48 | 0.014 | 0.84 |
+| S3 | 0.698 | 0.157 | 0.328 | 2.34 | 0.017 | 0.86 |
+| M1z | 0.792 | 0.166 | 0.384 | 3.44 | 0.070 | 1.01 |
+| M1p | 0.809 | 0.174 | 0.395 | 3.53 | 0.051 | 1.18 |
+| M2z | 0.804 | 0.167 | 0.370 | 2.59 | 0.026 | 0.86 |
+| SM1z | 0.815 | 0.152 | 0.341 | 2.46 | 0.014 | 0.86 |
+| S3z | 0.816 | 0.159 | 0.354 | 2.46 | 0.014 | 0.91 |
+Paired at E <= 0.01: M1z - S1 recall +0.015 [+0.008, +0.021], unsupported +0.056 [+0.026, +0.093], wrong +0.17
+[+0.03, +0.34]; M1z - S3 recall +0.008 [+0.002, +0.014], unsupported +0.053 [+0.023, +0.089].
+Matched rate, 0.03 unsupported hits per query (threshold on odd genomes; recall and AP over hits passing it, even):
+| Method | threshold (fast E <) | Recall | AP at threshold | realised unsupported / query | wrong / query |
+| M0 | 1.04 | 0.179 | 0.178 | 0.027 | 0.83 |
+| S1 | 0.0227 | 0.175 | 0.173 | 0.031 | 1.15 |
+| S3 | 0.0243 | 0.186 | 0.184 | 0.032 | 1.27 |
+| M1z | 0.00231 | 0.122 | 0.120 | 0.032 | 0.61 |
+| M1p | 0.0107 | 0.176 | 0.173 | 0.055 | 1.22 |
+| M2z | 0.0071 | 0.154 | 0.152 | 0.019 | 0.77 |
+| SM1z | 0.0195 | 0.173 | 0.171 | 0.027 | 1.13 |
+| S3z | 0.0123 | 0.166 | 0.164 | 0.017 | 1.02 |
+Paired recall: M1z - S1 -0.053 [-0.060, -0.046]; M1z - S3 -0.064 [-0.072, -0.057]; M1z - M0 -0.057; M2z - M1z +0.032
+[+0.026, +0.038]; SM1z - M1z +0.051 [+0.044, +0.058]; S3z - M1z +0.044 [+0.037, +0.051]; M1p - M1z +0.054 [+0.048, +0.060];
+S3z - S3 -0.020 [-0.022, -0.018].
+What would refute "M1z is worse at matched false-positive rates" (written before the post hoc runs): (a) its unsupported
+hits carry sequence homology the evidence rule cannot see; (b) at matched curated wrong-type rates it matches S1 / S3.
+POST HOC (i), recall at matched rates of three false-positive kinds (threshold on odd, recall on even), M1z minus:
+| Rate (per query) | S1 | S3 | tokens added (M2z - M1z) | MMseqs2 added (SM1z - M1z) | both (S3z - M1z) | head (M1p - M1z) |
+| wrong-type 0.25 | -0.044 [-0.052, -0.035] | -0.049 | +0.046 | +0.040 | +0.045 | +0.011 |
+| wrong-type 0.5 | -0.040 [-0.047, -0.033] | -0.046 | +0.047 | +0.037 | +0.045 | +0.021 |
+| wrong-type 1 | -0.030 [-0.037, -0.023] | -0.032 | +0.039 | +0.022 | +0.029 | +0.009 |
+| unlabelled 1 | -0.014 [-0.022, -0.007] | -0.017 | +0.019 | +0.014 | +0.015 | +0.003 |
+| unlabelled 2 | -0.002 [-0.009, +0.004] | -0.009 | +0.017 | +0.004 | +0.010 | +0.002 |
+| unlabelled 4 | +0.008 [+0.002, +0.014] | -0.001 | +0.017 | -0.005 | +0.002 | +0.007 |
+| unsupported 0.01 | -0.047 | -0.026 | -0.016 | -0.002 | -0.026 | +0.030 |
+| unsupported 0.03 | -0.053 | -0.064 | +0.032 | +0.051 | +0.044 | +0.054 |
+| unsupported 0.1 | -0.036 | -0.052 | +0.063 | +0.037 | +0.043 | +0.041 |
+Recall at matched wrong-type rate 0.5 / 1 per query: M1z 0.106 / 0.166, S1 0.145 / 0.195, S3 0.151 / 0.198, M2z 0.153 /
+0.204, SM1z 0.143 / 0.187, S3z 0.150 / 0.194, M0 0.165 / 0.190 (M0 never reaches 1 wrong per query below E = 10).
+Refutation (b) does not hold: M1z is also worse at matched curated negatives.
+POST HOC (ii), the unlabelled hits at fast E <= 0.01 (even): M1z 87 unsupported of 4,292 unlabelled, from 41 queries (top 5
+queries 45%), query types Lamassu-Mrr 24, Kiwa 12, AbiL 12, BREX_I 9; 17% of them contain a gene in a query member's MMseqs2
+list (E <= 10, top 20,000) against 96% of M1z's supported unlabelled hits; 79% contain a raw DefenseFinder profile hit of
+some type (observed domains, not the query's type, no curated call). S1: 17 unsupported (100% with sequence support by
+construction, 35% with a raw DefenseFinder profile). Refutation (a) does not hold either: M1z's unsupported hits mostly lack
+detectable sequence homology to the query. Reading: they are windows of defence-associated genes whose zca10 vectors resemble
+the query's (median best slot evidence 12.0 against 12.3 for supported hits) without alignable homology; consistent with
+cross-type domain similarity, UNVERIFIED.
+POST HOC (iii), is the deficit a configuration artefact? M1z and S1 rerun at tau 0, 1, 2 (W + 8, 200-replicate null,
+14,832 runs), curves per tau on odd genomes, tau chosen per method and rate level by odd-genome recall:
+| Rate (per query) | M1z (chosen tau) | S1 (chosen tau) | M1z - S1 |
+| wrong-type 0.25 / 0.5 / 1 | 0.069 / 0.106 / 0.166 (2) | 0.112 / 0.145 / 0.195 (3) | -0.043 / -0.039 / -0.029 |
+| unlabelled 1 / 2 / 4 | 0.099 / 0.134 / 0.172 (3) | 0.114 / 0.137 / 0.163 (3) | -0.014 / -0.002 / +0.008 |
+| unsupported 0.01 / 0.03 / 0.1 | 0.099 / 0.122 / 0.176 | 0.143 / 0.175 / 0.212 (3) | -0.044 / -0.053 / -0.036 |
+Tau 0, 1 and 2 give identical results for both methods (every listed gene has s >= log(N_db / 20,000) = 5.2 and windows of
+<= 15 genes subtract <= 2.7, so a floor <= 2 never binds); tau 3 changes recall by <= 0.002. The deficit is a property of
+the zca10 evidence distribution, not of the floor. The window (W + 8 for every method) was not varied.
+
+======================================================================================================================
+TASK 4. WHAT RESTED ON RAW VECTORS
+(a) Phase 0 with zca10 (reachable = best zca10 cosine >= 0.320, the 99.9th percentile of 2 M random different-genome pairs,
+    or target gene in the query gene's zca10 top 0.1%; raw L2 used 0.977):
+| Caller | Pairs | Token-reachable | Embedding-reachable (cos / rank) | Either | Token-invisible + embedding-reachable | L2 (round 1) |
+| DefenseFinder | 1,146,374 | 25.6% | 77.1% (61.6% / 77.1%) | 77.2% | 51.5% | 20.6% |
+| Different-type control (200,000) | | 0.33% | 15.2% | 15.2% | 14.8% | 7.4% |
+| TXSScan (one type, no control) | 645,216 | 21.5% | 72.2% | 73.7% | 50.8% | 11.9% |
+| CRISPRCasTyper | 3,571,536 | 8.7% | 16.1% | 16.5% | 7.7% | 2.9% |
+| Different-type control | | 2.3% | 6.4% | 6.5% | 4.2% | 1.7% |
+    Headroom above the different-type floor: DefenseFinder 36.7 points (L2 13.2), CRISPRCasTyper 3.5 (L2 1.2).
+(b) Token-invisible targets (< 50% of members share a token with the query; 435,397 of 583,413 even-genome targets),
+    200-replicate null, odd-genome configurations:
+| Method | per-query recall E<=0.01 | E<=1 | found / all invisible E<=0.01 | E<=1 |
+| M0 | 0.000 | 0.000 | 2 | 88 |
+| S1 | 0.046 | 0.131 | 8,190 (1.88%) | 29,834 (6.85%) |
+| S3 | 0.052 | 0.160 | 9,347 | 37,326 |
+| M1z | 0.075 | 0.276 | 12,024 (2.76%) | 58,870 (13.5%) |
+| SM1z (MMseqs2 + 0.5 zca10) | 0.049 | 0.178 | 8,415 | 37,905 |
+| M1p | 0.081 | 0.286 | 14,368 | 60,372 |
+    Paired per query (1,184 queries with invisible targets): M1z - S1 +0.030 [+0.020, +0.039] / +0.145 [+0.130, +0.160];
+    SM1z - S1 +0.003 / +0.047; SM1z - M1z -0.026 / -0.098. Round-1 raw M1: 0.017 / 0.073. The round-1 statement "targets
+    invisible to tokens are rarely retrieved by embeddings" was a raw-vector artefact for E <= 1 (M1z doubles S1) and still
+    holds at E <= 0.01 in absolute terms (7.5% per query).
+(c) Iterative profile (round-1 M3 machinery) seeded with M2z (w 0.75, W + 8, tau 1), slot centroids from zca10 vectors,
+    even DefenseFinder queries, 200-replicate null:
+| Profile | AP | strict | Recall E<=0.01 | Wrong / query | Unlabelled / query | Unsupported / query | Precision | Strict precision |
+| M2z (seed) | 0.804 | 0.520 | 0.180 | 1.04 | 3.52 | 0.031 | 0.978 | 0.812 |
+| refine r2 / r3 | 0.809 / 0.806 | 0.520 / 0.514 | 0.233 / 0.241 | 2.63 / 3.15 | 5.00 / 5.99 | 0.136 / 0.223 | 0.967 / 0.962 | 0.792 / 0.780 |
+| grow r2 / r3 | 0.802 / 0.798 | 0.513 / 0.505 | 0.246 / 0.264 | 2.84 / 3.85 | 9.29 / 13.36 | 0.340 / 0.576 | 0.963 / 0.953 | 0.753 / 0.729 |
+    Drift (predeclared: round-3 wrong / query >= 2x seed): yes, 3.0x (refine) and 3.7x (grow); raw-vector M3 was 4.6x / 8.0x
+    from a seed of 0.21. With zca10 the profile no longer buys AP (+0.002 / -0.006; raw M3 +0.035 / +0.039 over M2).
+
+======================================================================================================================
+TASK 5. ONE-INPUT INTERACTIVE SEARCH
+Index: FAISS IndexHNSWFlat on the 3,585,303 zca10 gene vectors (inner product on unit vectors, M 32, efConstruction 40):
+build 144.9 s on 64 CPUs, 14.7 GB, load 14-26 s. Query genes: the 2,921 member genes of even-genome DefenseFinder queries;
+k + 200 requested, own genome removed, s = log(N_db / position). AP: M1z at its frozen configuration (W + 8, tau 3), scan
+only, 1,247 even queries, paired against exact top 20,000 (MAP 0.792).
+| List | genes/s (64 CPUs) | recall vs exact top k | MAP | dAP vs exact 20,000 |
+| exact top 2,000 | | 1 | 0.697 | -0.096 [-0.103, -0.089] |
+| exact top 5,000 | | 1 | 0.770 | -0.022 [-0.025, -0.019] |
+| exact top 10,000 | | 1 | 0.784 | -0.008 [-0.010, -0.007] |
+| HNSW k 2,000, efSearch 2,200 | 350 | 0.941 | 0.669 | -0.123 |
+| HNSW k 5,000, efSearch 5,200 | 79 | 0.927 | 0.741 | -0.051 |
+| HNSW k 10,000, efSearch 10,200 | 16 | 0.914 | 0.756 | -0.036 |
+| HNSW k 20,000, efSearch 20,200 | 6.1 | 0.910 | 0.770 | -0.022 [-0.025, -0.020] |
+| HNSW k 20,000, efSearch 40,000 | 2.3 | 0.960 | 0.776 | -0.016 [-0.018, -0.014] |
+No swept (k, efSearch) meets "within 0.01 of exact top 20,000". HNSW recall falls with depth at efSearch ~ k, and a missed
+neighbour costs more than truncation (positions shift, so later genes gain evidence). Exact brute-force top 20,000 runs at
+~125 genes/s on 64 CPUs (lists job), 20-50x faster than HNSW at these depths. An efConstruction-200 graph was not built.
+THE COMMAND (24 CPUs, biotite):
+  $RD/ws_tokens/env/bin/python $RD/locus_search/code/interactive.py search --vec zca10 --gids <gid,gid,...> --threads 24
+      [--k 20000] [--emb exact|hnsw [--ef N]] [--null-threads 24] [--top 30]
+  One input: zca10 gene vectors ($RD/locus_search/out3/vec/zca10_f32__row.npy); no tokens, no MMseqs2. M1z scan
+  (W = span + 8, tau 3), 40-replicate null, Gumbel tail and the M1z calibration curve learned on odd genomes
+  (out3/fastnull_curves_search3.npz). Prints genome, contig, start, end, gids, score, E-value, slots filled (E <= 10).
+  (The genes table still loads the token file because ls.Database does; the search does not use it.)
+| Mode (20 even DefenseFinder queries, round-2 sample) | per query median / max | parts (median) | benchmark windows found / same score | hits E<=0.01 (benchmark E200: 654) |
+| exact 20,000, serial null | 1.33 / 2.60 s | ranks 0.37, scan 0.04, null 0.90 s | 7,348 / 7,341 | 598 |
+| exact 20,000, null over 24 threads | 0.54 / 0.69 s | ranks 0.37, scan 0.04, null 0.12 s | 7,348 / 7,341 | 643 |
+| HNSW k 20,000 / ef 20,200, serial null | 1.68 / 3.53 s | ranks 0.69 s | 6,980 / 314 | 569 |
+| HNSW, null over 24 threads | 0.79 / 1.63 s | ranks 0.67 s | 6,980 / 314 | 606 |
+  Session load: 7.0 s (vectors in RAM) or 14-26 s (HNSW). One-shot command: 45.7 s on a node's first run (numba compile,
+  19 s vector load), 10.5 s warm. Round-2 command for comparison: 4.75 s median per query (MMseqs2 3.22 s), 14.8 s one-shot.
+  The 7 windows with a different score come from float32 dot products computed in a different batch (ties at the tail
+  rank); the threaded null uses independent seeds per thread, which changes E-values within null noise.
+
+======================================================================================================================
+TASK 6. DOES THE HEAD STILL MATTER?
+M1p - M1z, task-1 CV, even held-out queries (1,247): AP +0.017 [+0.013, +0.021] (survives); strict +0.006 [+0.002, +0.009];
+all 2,447 held-out queries +0.015 [+0.012, +0.018]; >= 3 members +0.021. Under rate control the head matters more: matched
+0.03 unsupported / query +0.054 recall (M1p 0.176 = S1's 0.175), matched wrong-type 0.25 / 0.5 / 1: +0.011 / +0.021 /
++0.009. The head was trained on odd-genome sequences, so odd-genome M1p numbers are not test numbers.
+
+======================================================================================================================
+JOBS AND FILES
+Jobs (all COMPLETED): 80983 (grid + CV selection + 200-replicate runs, DefenseFinder 19,776 and TXSScan/CRISPRCasTyper
+9,212; 58 min), 80984 (control lists, control grid, phase 0; 24 min), 81228 (M3 with zca10 centroids, HNSW sweep; 59 min),
+81499 (selection, analysis, rates; 4 min), 81500 (command benchmark, 24 CPUs; 4 min), 81527 (post hoc matched rates,
+24 CPUs; 1 min), 81580 (post hoc tau runs 14,832 + analysis; 19 min). Logs $RD/logs/search3_<jobid>.log.
+Local benchmarks/redesign/locus_search/: search3.py (all round-3 stages), interactive.py (extended: --vec zca10, --k,
+--ef, --null-threads, bench3), run_s3.sbatch, tables3.py (prints every table from the JSONs), results/criterion3.json,
+results/round3/*.json (cv_summary3, selection3, grid_selfcheck, summary_final3, rates3, posthoc3, posthoc3_tau,
+phase0_zca10, m3z_summary, lists, hnsw_sweep, bench_m1z) and oneshot_m1z_0.txt.
+Biotite $RD/locus_search/out3/ (42 GB): grid_{main,ctl}.parquet, cv_heldout.parquet, final_{df,x,tau}_{metrics,hits}.parquet
++ _tails.npz, rates_hits.parquet, posthoc_unlabelled_E001.parquet, pairs_zca10.parquet, m3z_{metrics,hits_E10}.parquet,
+fastnull_curves_search3.npz, lists/{gc,wo,genc,zodd,lc}/ (2.9 GB each), vec/zca10_f32__row.npy (13.8 GB, needed by the
+command), interactive/hnsw_m32_efc40_zca10.faiss (14.7 GB; rebuild 145 s; deletable).
+Notes on rules: one `search3.py select` run on the login node (1 thread) took 65 s, over the ~30 s guidance; all later
+selections ran in jobs. No git commits, no NOTEBOOK.md edit, no vault capture (write scope of the brief).

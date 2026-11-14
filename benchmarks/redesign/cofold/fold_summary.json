@@ -1,0 +1,68 @@
+{
+ "folded": 1047,
+ "total": 1047,
+ "class_counts": {
+  "cognate": 300,
+  "noncognate": 300,
+  "uncalled": 297,
+  "positive": 150
+ },
+ "c1_both": 15,
+ "c123_both": 8,
+ "c4_both": 24,
+ "hits": 8,
+ "promiscuous": 8,
+ "tests": {
+  "cognate_vs_noncognate": {
+   "mw_p": 9.285617671826544e-09,
+   "median_cog": 0.19698986411094666,
+   "median_other": 0.12662197649478912,
+   "c123_table": [
+    [
+     27,
+     273
+    ],
+    [
+     0,
+     300
+    ]
+   ],
+   "fisher_or": Infinity,
+   "fisher_p": 8.07837161335933e-09
+  },
+  "cognate_vs_uncalled": {
+   "mw_p": 1.047529494801649e-07,
+   "median_cog": 0.19698986411094666,
+   "median_other": 0.12141828238964081,
+   "c123_table": [
+    [
+     27,
+     273
+    ],
+    [
+     4,
+     293
+    ]
+   ],
+   "fisher_or": 7.2445054945054945,
+   "fisher_p": 2.1753930740675225e-05
+  },
+  "cognate_vs_positive": {
+   "mw_p": 1.2726493408715217e-06,
+   "median_cog": 0.19698986411094666,
+   "median_other": 0.4759276211261749,
+   "c123_table": [
+    [
+     27,
+     273
+    ],
+    [
+     19,
+     131
+    ]
+   ],
+   "fisher_or": 0.681897050318103,
+   "fisher_p": 0.24906791631603803
+  }
+ }
+}

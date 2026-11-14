@@ -1,0 +1,223 @@
+WS_VOCAB: GENOMES AS UNSEGMENTED TEXT, LOCI AS WORDS, LEARNED BY DESCRIPTION LENGTH (DPANN, 2026-11-13)
+=====================================================================================================
+Even genome_code = test, odd = selection; single outputs; paired genome bootstrap (2,000 draws, seed 17) for every
+difference. Reference reproduced exactly before any comparison (job 87960): token DH even summed DF+TXSS excess .4270,
+F1 .744/.548/.479, ribosomal 1,686 recovered / 1,512 resolved, Parvarchaeaceae 114 recovered / 113 resolved; every
+per-instance F1, control F1 and coverage equal the stored scores. Predeclarations: predeclared.json (stage 1, 02:15
+UTC; amendment_stage2, 02:30; amendment_ablation, 03:01), each written before the numbers it governs.
+
+ANSWER IN EIGHT LINES
+1. Neither stage matches or beats token DH (H1, S2-H1 refuted). Stage 1 (words over MMseqs2 tokens, V-mob selected on
+   odd): summed excess .624 vs .427, +0.197 [+0.174, +0.221]; F1 DefenseFinder .745 vs .744, TXSScan .679 vs .548
+   (+0.131 [+0.108, +0.153]); blocked by CRISPR-Cas F1 .406 vs .479 (-0.073 [-0.086, -0.061]) and the ribosomal check
+   (1,198 recovered / 501 resolved; Parvarchaeaceae 11 of 114).
+2. The objective works as one statistic with no reading parameters: Lambda = n ln(n/E) - n + E over lineage-group
+   counts (the Poisson log-likelihood ratio = code-length saving of naming a word) replaces the pair test, support
+   levels, trimming and module cuts. The identical procedure on shuffled genomes sets tau* = 10 nats (type FDR .0004;
+   the null is empty above 12). One run: 64 s on one core. Words are the most precise loci scored on DPANN (median
+   boundary precision DF 1.00 / TXSScan .80 vs .75 / .44 for DH) while covering 42% of genes (DH 71%).
+3. Group counting is the decisive ingredient (H2 holds): counting every genome as a unit costs -0.204 [-0.224, -0.183]
+   summed excess. Its price is CRISPR-Cas: CCT F1 .406 (642 groups) < .422 (922 genera) < .504 (3,564 genomes), while
+   summed excess runs .624 > .588 > .420.
+4. Ribosomal failure = exact identity. Word types are exact compositions and a conserved neighbourhood varies by
+   lineage: at word junctions inside ribosomal runs the family pair recurs in a median 240 groups, the word-type pair in
+   1 (1,274 of 2,773 junctions); canonical compositions change nothing; lineage-confined families are not the cause
+   (Parvarchaeaceae ribosomal genes 99.6% inside words). A phrase level (words joined through junctions with Lambda >=
+   tau) gives 1,679 recovered, 1,168 resolved (bar 1,400), Parvarchaeaceae 114, at +0.178 summed (post hoc on stage 1).
+5. Stage 2 (no families: words over a 3-level vocabulary tree of whitened ESM++ vectors; each slot chooses its
+   resolution by Lambda; same null, tau* = 10): neither. V-mob +0.096 [+0.074, +0.121] over DH, -0.101 [-0.125, -0.076]
+   under stage 1; CRISPR-Cas unchanged (+0.002 [-0.008, +0.012] vs stage 1); ribosomal 1,541 / 978. Phrases recover all
+   114 Parvarchaeaceae runs (S2-H3 holds); S2-H2 and S2-H4 (+0.096 against a +0.10 bar) refuted.
+6. Why stage 2 loses: description length picks the coarsest cell (1,024 kinds) for 91% of ribosomal and 83% of
+   TXSScan first-level slot pairs, because pooling lineage variants raises group counts faster than E; kind-level
+   identity extends words past system edges (control F1 up, typing homogeneity .993 -> .789). Ablation: family-scale
+   cells alone recur in too few groups (16.6% of genes in words; F1 DF -0.158, CCT -0.239 vs DH; 5 ribosomal runs).
+   The quantized embedding alphabet is the weak part; the objective is sound.
+7. Typing: word identity is pure and fragmented. DefenseFinder AMI .464 (homogeneity .993, completeness .420; 231 word
+   types for 35 system types) against .779 for the engine's modules (H3 refuted); stage 2 .432. H4 refuted as well:
+   the null-calibrated cost of a word (10 nats) is below the a priori rule cost ln S = 12.9.
+8. Keep: the group-level gain as the significance statistic and the word parse as the core reading (best localization,
+   TXSScan +0.13 F1), with phrases as the neighbourhood level. Change next: identity by class instead of exact symbols
+   (slot prototypes with radii matched by cosine and re-estimated by averaging; word classes that fill the same
+   junction across groups), and a finer independence unit admitted only where the group-level vocabulary is silent
+   (CRISPR-Cas).
+
+------------------------------------------------------------------------------------------------------------------
+THE ALGORITHM
+Input: gene order (contigs of genes) and one label per gene per resolution (stage 1: MMseqs2 rescue3 family; stage 2:
+three vocabulary-tree cells of the whitened embedding); a genome -> group array (unit of independence; emb_hom average
+linkage theta 0.75, 642 groups, from embedding best-match similarity; no taxonomy).
+
+State. Each contig is a sequence of live nodes. A node is a terminal gene or a word instance (a contiguous span: two
+child nodes plus 0-2 inserted genes). Each node carries one label per resolution: a terminal its cells; a word its
+projection, the canonical id of the unordered pair of its children's labels at that resolution.
+
+Objective (description length of the group-level occurrence record). For labels X != Y on adjacent live nodes
+(<= 2 intervening single genes, either order, either strand), n = groups in which they are adjacent and
+   E = sum over groups of [1 - prod over the group's genomes of (1 - min(1, 2w c_X(g) c_Y(g) / m_g))],  w = 3,
+c = live copies of the label in genome g, m_g = live nodes of g: the expected number of groups carrying the adjacency
+under random order within each genome. Coding the n group occurrences as instances of one word instead of chance
+co-placements saves
+   Lambda(X, Y) = n ln(n/E) - n + E  nats      (Poisson log-likelihood ratio; ~ n x PMI for n >> E).
+Naming a word costs tau nats; the description length sum over words (tau - Lambda) is decreased greedily. A group, not
+a genome, is the unit of evidence, so shared descent inside a group is paid for once. n >= 2 is structural (one
+occurrence cannot be compressed); labels present in < 2 groups are background.
+
+Updates (one round). (1) Enumerate adjacencies of live nodes (a terminal pair offers every pair of resolutions, so each
+slot chooses its radius; a pair involving a word offers same-resolution pairs). (2) n per label pair by sorting
+(pair, group) codes. (3) E for pairs with n >= 2 by a merge-join of the two labels' per-genome copy lists, accumulated
+per group. (4) Candidates n >= 2 and Lambda >= tau in decreasing Lambda; each occurrence (shortest distance, then
+position) claims its nodes and the genes between them; a pair is committed only if its claimed occurrences still give
+n >= 2 and Lambda >= tau. (5) Committed occurrences become word nodes; their instances record children and inserted
+genes. Rounds repeat until nothing commits (7-21 rounds observed). Output: a parse in which every gene is a slot of one
+top-level word, an inserted gene inside one, or background; each instance's merge tree is its nesting.
+
+Stopping rule. tau = smallest value of a fixed ladder whose word-type FDR (mean null types over 3 genome shuffles /
+observed types) <= 0.01. No other threshold anywhere.
+
+Readings (no parameters). V-top: top-level word instances. V-nest: + their children that are words. V-mob: + maximal
+sub-words whose type also stands alone in >= 2 groups (units whose identity is confirmed by context). V-phr: + phrases,
+maximal runs of consecutive words joined through gaps spanned by a round-0 adjacency with n >= 2, Lambda >= tau.
+
+Complexity. Per round O(A log A) for the sorts (A = adjacency-label rows: 10.7 M at round 0 with one resolution,
+~9x with three) + O(sum over candidates of min(F_X, F_Y)) for E + O(A_c) for the claims; memory O(A). Linear in genes
+up to the log factor; no pairwise genome comparison, no neighbour lists, no reading rule.
+
+Measured run time (biotite, node-64-768g):
+  stage 1  one run 64 s on one core, 1.3 GB peak (round 0 ~30 s); 156-run ladder (3 arms x 13 tau x obs + 3 nulls)
+           4 min 17 s on 64 processes; readings + scoring 12 s per reading (evaluation).
+  stage 2  vocabulary tree 17.5 min on 64 CPUs (16.4 min of it level-1 k-means on single-threaded BLAS; levels 2-3 in
+           30 s); one run 414 s on 2 threads, 6.1 GB peak; 32-run ladder 15 min on 64 CPUs.
+  (softrec round 2, for scale: 45-103 min from vectors to loci on 64 CPUs.)
+
+------------------------------------------------------------------------------------------------------------------
+1. NULL CALIBRATION (gold-free; results/ladder_*.json, ladder2_*.json)
+  arm (unit)                 tau 6        tau 8        tau 10       tau 12       tau*  types at tau*  genes in words
+  stage 1 main (642 groups)  .062         .0113        .00044       .00005       10    25,018         1,505,723 (42.0%)
+  stage 1 genus (922)        .058         .0102        .00042       .00006       10    31,512         1,679,786 (46.9%)
+  stage 1 genome (3,564)     .041         .0073        .00038       .00004        8    196,634        2,698,190 (75.3%)
+  stage 2 vt1k (3 levels)    .595         .132         .0073        .0008        10    20,696         1,628,954 (45.4%)
+  ablation vt1k@2 (finest)   -            .031         .0009        .0001        10    27,290           593,687 (16.6%)
+  ablation vt1k@12           -            .084         .0040        .0005        10    30,220         1,321,309 (36.9%)
+  (type FDR; stage 1 ladder 4-100, stage 2 6-30.) The FDR falls about 25x per 2 nats near tau*: a chance adjacency must
+  coincide in two independent groups. The genome arm makes 7.9x more types: descent, which the shuffle null cannot see.
+
+2. VERDICT TABLE (even genomes; results/table_even.txt; Parv = Parvarchaeaceae recovered / resolved of 114)
+  output                       summed   d vs DH [95%]          F1 DF/TXSS/CCT     control DF/TXSS/CCT  bprec DF/TXSS  ribo rec/res  Parv     verdict
+  token DH                     .4270    -                      .744/.548/.479     .439/.426/.399       .75/.44        1,686/1,512   114/113  ref
+  token R1                     .3375    -                      .688/.409/.426     .402/.357/.354       .67/.27        1,686/704     114/13   -
+  S1 main V-top                .6082    +.181 [+.158,+.204]    .735/.632/.390     .359/.400/.321       1.00/.67       1,198/497     11/9     neither
+  S1 main V-nest               .6217    +.195 [+.171,+.218]    .745/.678/.406     .376/.425/.344       1.00/.75       1,198/501     11/9     neither
+  S1 main V-mob (selected)     .6243    +.197 [+.174,+.221]    .745/.679/.406     .375/.424/.344       1.00/.80       1,198/501     11/9     neither
+  S1 main V-phr (post hoc)     .6051    +.178 [+.155,+.201]    .736/.637/.395     .361/.408/.325       1.00/.67       1,679/1,168   114/106  neither
+  S1 genus V-mob (reference)   .5879    +.161 [+.137,+.186]    .750/.672/.422     .392/.442/.363       1.00/.75       1,199/417     53/42    neither
+  S1 genome V-mob (diagnostic) .4204    -.007 [-.029,+.015]    .776/.649/.504     .495/.509/.461       1.00/.67       1,444/632     113/28   neither
+  S2 vt1k V-mob (selected)     .5234    +.096 [+.074,+.121]    .761/.630/.409     .419/.449/.355       1.00/.67       1,541/978     60/0     neither
+  S2 vt1k V-phr                .4784    +.051 [+.028,+.075]    .731/.558/.394     .397/.413/.333       .75/.46        1,673/1,206   114/108  neither
+  ablation vt1k@12 V-mob       .5788    +.152 [+.126,+.177]    .710/.637/.370     .364/.404/.315       1.00/.75       187/10        0/0      neither
+  ablation vt1k@2 V-mob        .5461    +.119 [+.085,+.154]    .586/.421/.240     .233/.228/.183       1.00/1.00      5/0           0/0      neither
+  Paired F1 differences vs DH, S1 V-mob: DF +.001 [-.017,+.019], TXSS +.131 [+.108,+.153], CCT -.073 [-.086,-.061].
+  Paired, even, V-mob: S1 main - S1 genome +.204 [+.183,+.224] (CCT -.097); S1 main - S1 genus +.036 [+.026,+.048];
+  S2 - S1 -.101 [-.125,-.076] (DF +.016, TXSS -.049, CCT +.002); vt1k@12 - S1 -.046; vt1k@2 - S1 -.078.
+  Where the stage-1 gain sits: DefenseFinder at equal F1 with a lower control (.375 vs .439: the same recall from 42%
+  instead of 71% of genes); TXSScan in F1 itself at an equal control. Covered50 is lower (DF .833 vs .924; CCT .651 vs
+  .890): CRISPR-Cas recall is what words lose.
+  Odd selection (predeclared): S1 V-mob [1, .6229] over V-nest [1, .6209]; S2 V-mob [1, .5297] over V-phr [1, .4879].
+
+3. DIAGNOSIS OF STAGE 1 (diag1.py; results/diag1_main_tau10.json)
+  Gene status: background 467,893; free terminals 1,611,687; word slots 1,303,222; inserted 202,501.
+  Ribosomal runs          background  free   slot   inserted  top words per run (median)  best word share  runs >= 50% in one word
+    Parvarchaeaceae (114) .001        .003   .916   .080      4                           .45              11
+    other (1,572)         .002        .010   .825   .164      2                           .67              1,187
+  Junctions between adjacent top-level words: family pair groups q50 3, type pair groups q50 1 (all 208,493); inside
+  ribosomal runs family pair q25/q50/q75 = 32/240/523 groups, type pair 1/1/2; composition-canonical types (multiset of
+  slot families) 24,282 vs 24,314 types and identical junction counts.
+  Gold members (instances >= 2 members): outside every word CRISPR-Cas 45.5%, DefenseFinder 21.2%, TXSScan 19.9%;
+  Cas member families are common (median 85 groups): the pairs split across family variants.
+
+4. STAGE 2 DETAILS (results/even2_runs2_vt1k_main_tau10.json, units_vt1k.json)
+  Alphabet: 1,024 / 16,384 / 125,588 cells; member cosine to prototype median .57 / .76 / .84; vs rescue3 families
+  homogeneity .64 / .81 / .89, completeness .93 / .85 / .78.
+  Committed types by level pair (0 coarsest): 00 7,681; 11 5,017; 22 1,280; 01+10 2,368; 12+21 3,051; 02+20 1,299.
+  First-level slot pairs by gene class, share at (0,0): ribosomal .906, TXSScan .828, DefenseFinder .597, other .465,
+  CRISPR-Cas .398 (.310 at (0,1)). Ribosomal slots go to the kind level, against the expectation that they stay tight.
+  CRISPR-Cas members outside every word 44.7% (stage 1 45.5%; vt1k@2 69.2%; vt1k@12 51.0%).
+
+5. TYPING (even; plurality word or module over member genes, >= 50% of members in one unit; results/even_*.json)
+                              n      labels  homogeneity  completeness  AMI
+  DefenseFinder system_type   1,050  35 true
+    S1 word type                     231     .993         .420          .464
+    engine module (Louvain 10)        42     .850         .755          .779
+    engine module (Louvain 0.3)       16     .412         .878          .537
+    S2 word type (1,112 inst.)       148     .789         .404          .432   (engine .755 on the same 1,112)
+  CRISPRCasTyper subtype      1,232  31 true; S1 word AMI .226 vs engine .306 (res 10). TXSScan: one type among covered
+  even instances (AMI 0 for both). Best-locus labels from the scorer give the same ordering (DF .463 vs .712).
+
+6. VOCABULARY (stage 1, main, tau 10; results/even_main_tau10.json)
+  25,018 types by slots: 2: 13,465; 3: 5,429; 4: 2,932; 5: 1,353; 6: 709; 7-9: 813; 10-28: 317 (max 28).
+  Nesting depth 1-7: 13,465 / 7,300 / 3,141 / 894 / 185 / 31 / 2.
+  479,370 top-level instances (24,314 types); span median 2, q90 5, q99 10, max 36; 1,505,723 genes in top-level words
+  (42.0%): 1,303,222 slots, 202,501 inserted. Committed Lambda median 14.6, q99 242; groups per word median 5, q99 102.
+  Ribosomal: 527 of 1,686 runs have >= 80% in one word, spread over 68 types (the commonest, 20 slots / depth 5, covers
+  89 runs); Parvarchaeaceae 9 of 114. Stage 2: 20,696 types (max 36 slots, depth <= 7), 45.4% of genes, span median 3.
+
+------------------------------------------------------------------------------------------------------------------
+HYPOTHESES (predeclared) AND OUTCOMES
+  H1  stage-1 nested reading matches DH                      REFUTED (CCT F1, ribosomal)
+  H2  descent correction worth >= 0.02 summed                HOLDS (+.204 [+.183,+.224])
+  H3  word AMI >= engine AMI - 0.02 (DefenseFinder)          REFUTED (.464 vs .779)
+  H4  tau* within [ln S, 4 ln S] = [12.9, 51.5]              REFUTED (10)
+  S2-H1 stage 2 matches DH                                   REFUTED (CCT F1, ribosomal)
+  S2-H2 Cas members outside words <= 25% and CCT +0.03 vs S1 REFUTED (44.7%; +.002)
+  S2-H3 V-phr recovers >= 110 Parvarchaeaceae runs           HOLDS (114)
+  S2-H4 stage-2 summed >= DH + 0.10                          REFUTED (+.096)
+  Ablation expectation (vt1k@2 within .03 of S1)             REFUTED (-.078; F1 collapse)
+  Readings written before each even number (NOTEBOOK.txt 02:15, 02:59) held in direction for stage 1 and stage 2.
+
+FAILURE ANALYSIS
+- Exact identity at the word level fragments large conserved neighbourhoods (section 3): a ribosomal superoperon is a
+  different composition in each lineage, so no single large word recurs, and the run is cut into 2-4 words. The phrase
+  level fixes recovery because it counts junctions by their flanking units instead of by word type.
+- Exact identity at the unit level fragments variable systems (CRISPR-Cas: 45% of members never enter a word), and the
+  coarse independence unit removes what is left of rare systems. Finer units restore CRISPR-Cas (genome arm .504) and
+  let descent back in (-0.20 summed).
+- Quantized embedding units do not cure unit fragmentation: family-scale k-means cells split families (ablation), and
+  the kind-level cells that do recur coarsen every word. The objective chooses the kind level because it compresses
+  best; compression and locus boundaries prefer different resolutions.
+- The summed-excess gain is partly a coverage effect (DefenseFinder control .375 vs .439 at equal F1); TXSScan's gain
+  is in F1 (+.131) and boundary precision (.80 vs .44).
+
+CAVEATS
+- Stage-1 tau* = 10 sits one ladder step above a failing value (tau 8 FDR .0113).
+- V-phr was designed after the stage-1 even numbers; its stage-1 scores are post hoc. In stage 2 it was predeclared.
+- The vocabulary-tree shape (1,024 / x16 / x8, seed 17) was fixed a priori, not tuned; other trees may behave
+  differently. Prototype re-estimation and cosine re-parsing (the alignment-free step of the brief) were not built.
+- Typing compares fine word labels with coarse module labels; AMI penalises the fine set. Homogeneity favours words.
+- The first two even jobs (88067, 88088) crashed in the typing step after scoring; the reading numbers are identical in
+  the rerun (88114).
+- Search by parsing a query with the vocabulary was not run this round.
+- Login-node work: smoke tests, the full reproduction (63 s, one thread), diag1 (14 s), collect/table (< 10 s).
+
+ARTIFACTS
+Local benchmarks/redesign/vocab/: vocab.py (stage-1 learner, ladder), vocab2.py (multi-resolution learner, ladder,
+  reproduction), units.py (vocabulary tree), vscore.py (readings V-top/V-nest/V-mob, scoring, verdict, typing,
+  vocabulary statistics), vscore2.py (V-phr, stage-2 scoring, level pairs), diag1.py, collect.py, table.py,
+  run_big.sbatch, run_py.sbatch, predeclared.json, NOTEBOOK.txt, REPORT.txt, results/ (every result JSON, table_even.txt,
+  units_vt1k.json).
+Biotite $RD/vocab/: code/, runs/<arm>/tau<t>/{obs,null0-2}/ (words.parquet, inst.npz, live.npz, run.json),
+  runs2/<alphabet>_main/tau<t>/..., units/vt1k/ (labels_gene.npy, labels_uid.npy, centroids_l{1,2,3}.npy, units.json),
+  loci/ and scores/ (per-reading locus tables and per-instance scores), results/, logs/.
+Jobs: 87920 (stage-1 ladder), 87960 (reference), 87977 (stage-1 odd), 88067 / 88088 (even, typing crash), 88114
+  (stage-1 even, all arms), 88115 (vocabulary tree), 88209 (stage-1 phrases, post hoc), 88305 (stage-2 ladder), 88436
+  (stage-2 odd), 88451 (stage-2 even), 88471 (ablation ladder), 88528 (ablation scoring).
+
+NEXT (one line each)
+- Prototype slots: average each slot's member vectors, set its radius from its members, re-parse adjacent pairs by
+  cosine (top-k prototype search per gene); count how many groups each word gains without coarsening.
+- Word classes: merge word types that fill the same junction in independent groups (ADIOS-style equivalence classes)
+  under the same Lambda, so a ribosomal neighbourhood becomes one class-level word instead of 2-4 exact ones.
+- CRISPR-Cas: a second, genome-level unit admitted only in genes no group-level word touches (gated, as ws_cas's second
+  tier), to keep CCT .504 without the descent cost.
+- Search: parse a query locus with the vocabulary and rank targets by shared words weighted by Lambda; compare with
+  whitened-embedding ranks (AP .796).
+- Level-1 k-means with threaded BLAS (16 min -> about 1 min).

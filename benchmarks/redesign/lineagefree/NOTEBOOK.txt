@@ -1,0 +1,36 @@
+lineagefree NOTEBOOK (times UTC)
+================================
+2026-11-12 23:59  predeclared.json (main) written before any computation of this workstream.
+2026-11-13 00:00  job 86526: famsim (15 s), embsim (105 s: read 36 s, accumulate 68 s, 24 CPUs), describe x7.
+2026-11-13 00:05  job 86553: genus map through recurrence_lf.py --lineage-map: significant_pairs, rules, boundary_support,
+                  token_modules, loci_all_genomes and summary identical to the deployed rescue3 w3 result; R1 and DH loci
+                  identical to the boundary workstream's stored loci; per-instance F1 and control F1 identical.
+2026-11-13 00:07  predeclared.json amendment_1 (thresholds from the nearest-neighbour antimode; fam_jac has none ->
+                  odd-genome selection; ladders; verdict units). Written after the similarity distributions, before
+                  any engine run with a data-derived unit and before any comparison of groups with taxonomy.
+2026-11-13 00:07  groups/weights files for the three ladders (genome_groups.py groups, ~20 s each on the login node).
+2026-11-13 00:10  jobs 86617-86620: 47 token-engine runs (ladders + genome). Logs print odd-genome numbers only.
+2026-11-13 00:12  job 86644 (after 86617): token-free genus reproduction (softrec_lf.py --refcheck).
+2026-11-13 00:40  ladder complete (47 runs; jobs 86617-86620, 25.8-32.7 min each on 24 CPUs; ~2.6 min per unit:
+                  engine ~95-110 s, R1 ~19 s, DH ~30-35 s). Read ODD numbers only (results/ladder_odd.txt).
+                  Odd selections (conditions met, then odd summed DH excess): fam_jac groups 0.2, fam_jac weights 0.4,
+                  emb_mean groups 0.55, emb_mean weights 0.55, emb_hom groups 0.75, emb_hom weights 0.75.
+                  Odd finding: species-gap units fail CCT F1 and ribosomal; several DH runs collapse in ribosomal
+                  resolution (314-371 resolved: emb_mean_g0.65, emb_mean_g0.9, fam_jac_w0.7/0.8/0.9) = Louvain module
+                  partitions that stop cutting ribosomal runs; significant pairs rise ~linearly with #units (no plateau).
+2026-11-13 00:43  predeclared.json amendment_2 (emb odd-selected units added as secondary; readings for even written).
+                  No even-genome number of a data-derived unit read before this entry.
+2026-11-13 00:47  EVEN numbers read (results/ladder_even.txt, results/verdict_even.txt). Amendment_2 readings: (1) holds
+                  (all four species-gap units fail: CCT dF1 -0.025..-0.043, ribosomal -100..-105); (2) holds (fam_jac
+                  g0.2, emb_mean g0.55, emb_hom g0.75 meet all three); (3) holds (weights CCT -0.020..-0.086);
+                  (4) holds (genome fails all three).
+2026-11-13 00:52  POST HOC (after the even verdict; sensitivity and controls, not selection), job 87092 after 86655:
+                  ladder extensions fam_jac g0.1/0.15/0.25, emb_mean g0.45/0.525, emb_hom g0.7/0.775 (fam 0.2 was the
+                  ladder edge), and two size-matched random partitions (seed 17): perm_genus (genus group sizes,
+                  genomes shuffled) and perm_fam_jac_g0.2.
+                  Reading before numbers: "relatedness, not only the number of units, is what the grouping supplies":
+                  the random partitions fail (CCT/DF F1 and ribosomal); refuted if perm_genus meets all three.
+2026-11-13 01:15  token-free runs complete (86644 genus reproduction exact except edge cosines <= 3e-7 with identical
+                  Leiden partition; 86655-86657, 87063-87065). Only emb_hom g0.75 meets all three conditions there.
+2026-11-13 01:45  post hoc job 87092 complete: passing band fam_jac 0.2-0.25, emb_mean 0.5-0.55, emb_hom 0.75;
+                  perm_genus / perm_fam_jac_g0.2 fail like the degenerate unit (reading holds; refuter did not fire).

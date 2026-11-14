@@ -1,0 +1,11 @@
+{
+ "written": "2026-11-11, before any locus-search number was computed",
+ "criterion": "Embeddings count as a gain for locus search if, on DefenseFinder queries with >= 2 members from even genome_code genomes, the best of M1/M2/M3 exceeds M0 in mean primary AP by >= 0.02, with a paired genome-bootstrap 95% interval (query genomes resampled, 2,000 draws, seed 17) excluding 0, at an unlabelled-hit rate (unlabelled hits per query at E <= 0.01) at most 1.5x that of M0.",
+ "details": [
+  "Best of M1/M2/M3 = highest mean primary AP on odd-genome DefenseFinder queries; that method carries the criterion on the even half. All three are reported; if picking the best on the even half would change the verdict, the report says so.",
+  "All settings (window, per-slot floor tau, combination weight, M3 variant and round) are chosen by mean primary AP on odd-genome queries of the same caller.",
+  "If M0's unlabelled rate at E <= 0.01 is below 0.1 per query, the rate condition becomes an absolute bound of 0.15 per query.",
+  "Reported separately: recall at E <= 0.01 and E <= 1 on token-invisible targets (< 50% of the target's members share an e3c50 token with a query member), paired against M0."
+ ],
+ "refutation": "(i) criterion fails and (ii) token-invisible recall of the selected embedding method is not above M0's (paired interval includes or lies below 0): embeddings add nothing to locus search here."
+}

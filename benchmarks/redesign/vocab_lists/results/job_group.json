@@ -1,0 +1,1048 @@
+{
+ "arms": [
+  "grp",
+  "grp200"
+ ],
+ "excl": "group",
+ "lists": {
+  "emb": {
+   "source": "zca10",
+   "ku": 2000,
+   "depths": [
+    200,
+    1000
+   ],
+   "floors": [
+    -2.0
+   ],
+   "variants": [
+    "K200_fnone",
+    "K1000_fnone"
+   ],
+   "genes_with_list": 3585303,
+   "list_len_q01_q10_q50": [
+    1000.0,
+    1000.0,
+    1000.0
+   ],
+   "genes_list_shorter_than_depth": {
+    "200": 0,
+    "1000": 3333
+   },
+   "identical_copies_q50_q99": [
+    0.0,
+    0.0
+   ],
+   "cap_q10_q50_q90": {
+    "K200_fnone": [
+     200.0,
+     200.0,
+     200.0
+    ],
+    "K1000_fnone": [
+     1000.0,
+     1000.0,
+     1000.0
+    ]
+   },
+   "capcos_q10_q50_q90": {
+    "K200_fnone": [
+     0.372,
+     0.592,
+     0.812
+    ],
+    "K1000_fnone": [
+     0.261,
+     0.43,
+     0.689
+    ]
+   }
+  }
+ },
+ "ladder": {
+  "grp": {
+   "-1": {
+    "counts": {
+     "4.0": 2528780,
+     "6.0": 2339494,
+     "8.0": 2202201,
+     "10.0": 2083939,
+     "12.0": 1985064,
+     "15.0": 1864457,
+     "20.0": 1702059
+    },
+    "adjacencies": 9232166,
+    "sec_A": 43.2,
+    "sec_B": 0.0
+   },
+   "0": {
+    "counts": {
+     "4.0": 23033,
+     "6.0": 1997,
+     "8.0": 187,
+     "10.0": 16,
+     "12.0": 1,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9383931,
+    "sec_A": 50.0,
+    "sec_B": 0.0
+   },
+   "1": {
+    "counts": {
+     "4.0": 23176,
+     "6.0": 1961,
+     "8.0": 182,
+     "10.0": 14,
+     "12.0": 1,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9383889,
+    "sec_A": 51.1,
+    "sec_B": 0.0
+   },
+   "2": {
+    "counts": {
+     "4.0": 23115,
+     "6.0": 1940,
+     "8.0": 178,
+     "10.0": 25,
+     "12.0": 4,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9383932,
+    "sec_A": 48.8,
+    "sec_B": 0.0
+   }
+  },
+  "grp200": {
+   "-1": {
+    "counts": {
+     "4.0": 3001252,
+     "6.0": 2502368,
+     "8.0": 2213935,
+     "10.0": 2001434,
+     "12.0": 1825646,
+     "15.0": 1609239,
+     "20.0": 1334443
+    },
+    "adjacencies": 9305878,
+    "sec_A": 7.6,
+    "sec_B": 0.0
+   },
+   "0": {
+    "counts": {
+     "4.0": 242923,
+     "6.0": 25610,
+     "8.0": 2820,
+     "10.0": 258,
+     "12.0": 18,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9393321,
+    "sec_A": 10.5,
+    "sec_B": 0.0
+   },
+   "1": {
+    "counts": {
+     "4.0": 242631,
+     "6.0": 25300,
+     "8.0": 2699,
+     "10.0": 293,
+     "12.0": 27,
+     "15.0": 1,
+     "20.0": 0
+    },
+    "adjacencies": 9393255,
+    "sec_A": 10.8,
+    "sec_B": 0.0
+   },
+   "2": {
+    "counts": {
+     "4.0": 243014,
+     "6.0": 25523,
+     "8.0": 2741,
+     "10.0": 228,
+     "12.0": 23,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9393388,
+    "sec_A": 8.7,
+    "sec_B": 0.0
+   }
+  }
+ },
+ "floors": {
+  "-1": {
+   "False": {
+    "c0": 0.00559833324869344,
+    "sd0": 0.08672073062851708,
+    "n": 1984994,
+    "q50_q99_q999": [
+     -0.005310249134140747,
+     0.2872406611833883,
+     0.47581298415591766
+    ]
+   }
+  },
+  "0": {
+   "False": {
+    "c0": 0.006774829552660947,
+    "sd0": 0.08897483260793951,
+    "n": 1985056,
+    "q50_q99_q999": [
+     -0.0032856908316463785,
+     0.29151432831403984,
+     0.46492898573381164
+    ]
+   }
+  },
+  "1": {
+   "False": {
+    "c0": 0.006797550351984324,
+    "sd0": 0.08902847790157103,
+    "n": 1984898,
+    "q50_q99_q999": [
+     -0.003272686977261202,
+     0.2908887052894737,
+     0.4658723945575937
+    ]
+   }
+  },
+  "2": {
+   "False": {
+    "c0": 0.006760760474219214,
+    "sd0": 0.08903957697428841,
+    "n": 1985117,
+    "q50_q99_q999": [
+     -0.003371730598239253,
+     0.2912702552530729,
+     0.4614835558115179
+    ]
+   }
+  }
+ },
+ "round0_obs": {
+  "grp": {
+   "lamG_ge10": 2951079,
+   "pass_tau10": 2083939,
+   "neff_over_n_q": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "n_q": [
+    34.0,
+    208.0,
+    617.0
+   ],
+   "neff_q": [
+    34.0,
+    208.0,
+    617.0
+   ],
+   "kinf_q": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "grp200": {
+   "lamG_ge10": 2742411,
+   "pass_tau10": 2001434,
+   "neff_over_n_q": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "n_q": [
+    9.0,
+    39.0,
+    93.0
+   ],
+   "neff_q": [
+    9.0,
+    39.0,
+    93.0
+   ],
+   "kinf_q": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "tau": {
+  "grp": {
+   "table": [
+    {
+     "tau": 4.0,
+     "observed": 2528780,
+     "null_mean": 23108.0,
+     "fdr": 0.009138003305941996
+    },
+    {
+     "tau": 6.0,
+     "observed": 2339494,
+     "null_mean": 1966.0,
+     "fdr": 0.0008403526574549882
+    },
+    {
+     "tau": 8.0,
+     "observed": 2202201,
+     "null_mean": 182.33333333333334,
+     "fdr": 8.279595428997324e-05
+    },
+    {
+     "tau": 10.0,
+     "observed": 2083939,
+     "null_mean": 18.333333333333332,
+     "fdr": 8.797442407543278e-06
+    },
+    {
+     "tau": 12.0,
+     "observed": 1985064,
+     "null_mean": 2.0,
+     "fdr": 1.0075241906558176e-06
+    },
+    {
+     "tau": 15.0,
+     "observed": 1864457,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    },
+    {
+     "tau": 20.0,
+     "observed": 1702059,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    }
+   ],
+   "tau_star": 4.0
+  },
+  "grp200": {
+   "table": [
+    {
+     "tau": 4.0,
+     "observed": 3001252,
+     "null_mean": 242856.0,
+     "fdr": 0.08091823012529438
+    },
+    {
+     "tau": 6.0,
+     "observed": 2502368,
+     "null_mean": 25477.666666666668,
+     "fdr": 0.010181422822968751
+    },
+    {
+     "tau": 8.0,
+     "observed": 2213935,
+     "null_mean": 2753.3333333333335,
+     "fdr": 0.0012436378364014
+    },
+    {
+     "tau": 10.0,
+     "observed": 2001434,
+     "null_mean": 259.6666666666667,
+     "fdr": 0.00012974030953139933
+    },
+    {
+     "tau": 12.0,
+     "observed": 1825646,
+     "null_mean": 22.666666666666668,
+     "fdr": 1.2415696507793224e-05
+    },
+    {
+     "tau": 15.0,
+     "observed": 1609239,
+     "null_mean": 0.3333333333333333,
+     "fdr": 2.071372452030639e-07
+    },
+    {
+     "tau": 20.0,
+     "observed": 1334443,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    }
+   ],
+   "tau_star": 8.0
+  }
+ },
+ "full": {
+  "grp": {
+   "obs": {
+    "arm": "grp",
+    "lists": "emb",
+    "K": 1000,
+    "order": -1,
+    "tau": 4.0,
+    "instances": 1350674,
+    "top_instances": 530750,
+    "genes_in_top": 2265303,
+    "genes_in_top_frac": 0.6318302804532838,
+    "rounds": 25,
+    "seconds": 527.2,
+    "top_span_q": [
+     3.0,
+     8.0,
+     18.0,
+     80.0
+    ]
+   },
+   "rounds": [
+    {
+     "round": 0,
+     "adjacencies": 9232166,
+     "candidates": 2528780,
+     "committed": 778101,
+     "live": 2575760,
+     "list_entries": 226288584,
+     "empty_lists": 0,
+     "max_lam": 942.0671772280398,
+     "sec_A": 42.5,
+     "sec_B": 0.0,
+     "seconds": 73.7
+    },
+    {
+     "round": 1,
+     "adjacencies": 4664885,
+     "candidates": 658920,
+     "committed": 345505,
+     "live": 2141657,
+     "list_entries": 121592597,
+     "empty_lists": 0,
+     "max_lam": 725.8879526072622,
+     "sec_A": 23.7,
+     "sec_B": 0.0,
+     "seconds": 31.0
+    },
+    {
+     "round": 2,
+     "adjacencies": 3792376,
+     "candidates": 239545,
+     "committed": 148150,
+     "live": 1954419,
+     "list_entries": 86611409,
+     "empty_lists": 0,
+     "max_lam": 622.1583294406831,
+     "sec_A": 18.8,
+     "sec_B": 0.0,
+     "seconds": 21.9
+    },
+    {
+     "round": 3,
+     "adjacencies": 3460807,
+     "candidates": 80398,
+     "committed": 55669,
+     "live": 1882735,
+     "list_entries": 77411991,
+     "empty_lists": 0,
+     "max_lam": 487.72401068843175,
+     "sec_A": 16.9,
+     "sec_B": 0.0,
+     "seconds": 18.8
+    },
+    {
+     "round": 4,
+     "adjacencies": 3337120,
+     "candidates": 22718,
+     "committed": 16374,
+     "live": 1860554,
+     "list_entries": 75683034,
+     "empty_lists": 0,
+     "max_lam": 239.36953260719724,
+     "sec_A": 16.4,
+     "sec_B": 0.0,
+     "seconds": 17.8
+    },
+    {
+     "round": 5,
+     "adjacencies": 3296046,
+     "candidates": 6332,
+     "committed": 4729,
+     "live": 1853906,
+     "list_entries": 75272739,
+     "empty_lists": 0,
+     "max_lam": 79.7027788930827,
+     "sec_A": 16.6,
+     "sec_B": 0.0,
+     "seconds": 18.0
+    },
+    {
+     "round": 6,
+     "adjacencies": 3282860,
+     "candidates": 1781,
+     "committed": 1264,
+     "live": 1852064,
+     "list_entries": 75185247,
+     "empty_lists": 0,
+     "max_lam": 36.05128466265859,
+     "sec_A": 16.6,
+     "sec_B": 0.0,
+     "seconds": 17.9
+    },
+    {
+     "round": 7,
+     "adjacencies": 3278939,
+     "candidates": 701,
+     "committed": 425,
+     "live": 1851412,
+     "list_entries": 75169127,
+     "empty_lists": 0,
+     "max_lam": 22.733780030267923,
+     "sec_A": 16.7,
+     "sec_B": 0.0,
+     "seconds": 18.1
+    },
+    {
+     "round": 8,
+     "adjacencies": 3277366,
+     "candidates": 346,
+     "committed": 201,
+     "live": 1851117,
+     "list_entries": 75159341,
+     "empty_lists": 0,
+     "max_lam": 12.475590190683548,
+     "sec_A": 16.6,
+     "sec_B": 0.0,
+     "seconds": 17.9
+    },
+    {
+     "round": 9,
+     "adjacencies": 3276642,
+     "candidates": 197,
+     "committed": 110,
+     "live": 1850963,
+     "list_entries": 75154617,
+     "empty_lists": 0,
+     "max_lam": 12.475590190683548,
+     "sec_A": 16.3,
+     "sec_B": 0.0,
+     "seconds": 17.7
+    },
+    {
+     "round": 10,
+     "adjacencies": 3276280,
+     "candidates": 108,
+     "committed": 59,
+     "live": 1850877,
+     "list_entries": 75146003,
+     "empty_lists": 0,
+     "max_lam": 11.57105171673076,
+     "sec_A": 16.5,
+     "sec_B": 0.0,
+     "seconds": 17.8
+    },
+    {
+     "round": 11,
+     "adjacencies": 3276104,
+     "candidates": 59,
+     "committed": 31,
+     "live": 1850832,
+     "list_entries": 75144243,
+     "empty_lists": 0,
+     "max_lam": 8.3603602732189,
+     "sec_A": 16.4,
+     "sec_B": 0.0,
+     "seconds": 17.8
+    },
+    {
+     "round": 12,
+     "adjacencies": 3276008,
+     "candidates": 39,
+     "committed": 17,
+     "live": 1850802,
+     "list_entries": 75143336,
+     "empty_lists": 0,
+     "max_lam": 8.199751636705589,
+     "sec_A": 16.4,
+     "sec_B": 0.0,
+     "seconds": 17.9
+    },
+    {
+     "round": 13,
+     "adjacencies": 3275933,
+     "candidates": 26,
+     "committed": 11,
+     "live": 1850786,
+     "list_entries": 75143166,
+     "empty_lists": 0,
+     "max_lam": 8.839336203820798,
+     "sec_A": 16.8,
+     "sec_B": 0.0,
+     "seconds": 18.3
+    },
+    {
+     "round": 14,
+     "adjacencies": 3275901,
+     "candidates": 17,
+     "committed": 8,
+     "live": 1850774,
+     "list_entries": 75141852,
+     "empty_lists": 0,
+     "max_lam": 7.7233689905646505,
+     "sec_A": 16.9,
+     "sec_B": 0.0,
+     "seconds": 18.4
+    },
+    {
+     "round": 15,
+     "adjacencies": 3275878,
+     "candidates": 15,
+     "committed": 7,
+     "live": 1850766,
+     "list_entries": 75141853,
+     "empty_lists": 0,
+     "max_lam": 8.021630568088591,
+     "sec_A": 17.1,
+     "sec_B": 0.0,
+     "seconds": 18.6
+    },
+    {
+     "round": 16,
+     "adjacencies": 3275860,
+     "candidates": 9,
+     "committed": 4,
+     "live": 1850760,
+     "list_entries": 75141853,
+     "empty_lists": 0,
+     "max_lam": 8.021630568088591,
+     "sec_A": 17.1,
+     "sec_B": 0.0,
+     "seconds": 18.6
+    },
+    {
+     "round": 17,
+     "adjacencies": 3275845,
+     "candidates": 5,
+     "committed": 3,
+     "live": 1850757,
+     "list_entries": 75141853,
+     "empty_lists": 0,
+     "max_lam": 8.021630568088591,
+     "sec_A": 16.9,
+     "sec_B": 0.0,
+     "seconds": 18.3
+    },
+    {
+     "round": 18,
+     "adjacencies": 3275839,
+     "candidates": 2,
+     "committed": 1,
+     "live": 1850756,
+     "list_entries": 75141853,
+     "empty_lists": 0,
+     "max_lam": 8.021630568088591,
+     "sec_A": 17.0,
+     "sec_B": 0.0,
+     "seconds": 18.5
+    },
+    {
+     "round": 19,
+     "adjacencies": 3275837,
+     "candidates": 1,
+     "committed": 1,
+     "live": 1850755,
+     "list_entries": 75141392,
+     "empty_lists": 0,
+     "max_lam": 8.021630568088591,
+     "sec_A": 17.1,
+     "sec_B": 0.0,
+     "seconds": 18.6
+    },
+    {
+     "round": 20,
+     "adjacencies": 3275836,
+     "candidates": 2,
+     "committed": 1,
+     "live": 1850754,
+     "list_entries": 75141392,
+     "empty_lists": 0,
+     "max_lam": 7.038003169463325,
+     "sec_A": 16.9,
+     "sec_B": 0.0,
+     "seconds": 18.4
+    },
+    {
+     "round": 21,
+     "adjacencies": 3275833,
+     "candidates": 2,
+     "committed": 1,
+     "live": 1850753,
+     "list_entries": 75141392,
+     "empty_lists": 0,
+     "max_lam": 7.038003169463325,
+     "sec_A": 17.4,
+     "sec_B": 0.0,
+     "seconds": 18.8
+    },
+    {
+     "round": 22,
+     "adjacencies": 3275830,
+     "candidates": 2,
+     "committed": 1,
+     "live": 1850751,
+     "list_entries": 75141392,
+     "empty_lists": 0,
+     "max_lam": 8.021630568088591,
+     "sec_A": 17.2,
+     "sec_B": 0.0,
+     "seconds": 18.7
+    },
+    {
+     "round": 23,
+     "adjacencies": 3275824,
+     "candidates": 1,
+     "committed": 1,
+     "live": 1850750,
+     "list_entries": 75141392,
+     "empty_lists": 0,
+     "max_lam": 8.021630568088591,
+     "sec_A": 16.6,
+     "sec_B": 0.0,
+     "seconds": 18.1
+    },
+    {
+     "round": 24,
+     "adjacencies": 3275821,
+     "candidates": 0,
+     "committed": 0,
+     "seconds": 17.4
+    }
+   ],
+   "null0": {
+    "arm": "grp",
+    "lists": "emb",
+    "K": 1000,
+    "order": 0,
+    "tau": 4.0,
+    "instances": 24248,
+    "top_instances": 22612,
+    "genes_in_top": 70072,
+    "genes_in_top_frac": 0.019544233778846586,
+    "rounds": 4,
+    "seconds": 225.1,
+    "top_span_q": [
+     3.0,
+     4.0,
+     6.0,
+     10.0
+    ]
+   },
+   "word_fdr": 0.017952518520383157
+  },
+  "grp200": {
+   "obs": {
+    "arm": "grp",
+    "lists": "emb",
+    "K": 200,
+    "order": -1,
+    "tau": 8.0,
+    "instances": 1073200,
+    "top_instances": 572313,
+    "genes_in_top": 1942373,
+    "genes_in_top_frac": 0.5417597898978134,
+    "rounds": 22,
+    "seconds": 141.7,
+    "top_span_q": [
+     3.0,
+     6.0,
+     12.0,
+     65.0
+    ]
+   },
+   "rounds": [
+    {
+     "round": 0,
+     "adjacencies": 9305878,
+     "candidates": 2213935,
+     "committed": 714357,
+     "live": 2660468,
+     "list_entries": 37240799,
+     "empty_lists": 0,
+     "max_lam": 364.8971815590505,
+     "sec_A": 7.9,
+     "sec_B": 0.0,
+     "seconds": 14.6
+    },
+    {
+     "round": 1,
+     "adjacencies": 5037687,
+     "candidates": 441084,
+     "committed": 254765,
+     "live": 2345825,
+     "list_entries": 22303701,
+     "empty_lists": 0,
+     "max_lam": 298.30263579772463,
+     "sec_A": 5.2,
+     "sec_B": 0.0,
+     "seconds": 8.0
+    },
+    {
+     "round": 2,
+     "adjacencies": 4389955,
+     "candidates": 111181,
+     "committed": 79673,
+     "live": 2246799,
+     "list_entries": 18933695,
+     "empty_lists": 0,
+     "max_lam": 211.61393121726465,
+     "sec_A": 4.6,
+     "sec_B": 0.0,
+     "seconds": 6.4
+    },
+    {
+     "round": 3,
+     "adjacencies": 4217256,
+     "candidates": 23689,
+     "committed": 19082,
+     "live": 2222335,
+     "list_entries": 18435513,
+     "empty_lists": 0,
+     "max_lam": 102.17426941614073,
+     "sec_A": 4.5,
+     "sec_B": 0.0,
+     "seconds": 6.2
+    },
+    {
+     "round": 4,
+     "adjacencies": 4175359,
+     "candidates": 4723,
+     "committed": 3811,
+     "live": 2217295,
+     "list_entries": 18377698,
+     "empty_lists": 0,
+     "max_lam": 36.2252879693037,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 5,
+     "adjacencies": 4165978,
+     "candidates": 1232,
+     "committed": 946,
+     "live": 2215989,
+     "list_entries": 18367031,
+     "empty_lists": 0,
+     "max_lam": 22.43827884844837,
+     "sec_A": 4.6,
+     "sec_B": 0.0,
+     "seconds": 6.2
+    },
+    {
+     "round": 6,
+     "adjacencies": 4163319,
+     "candidates": 403,
+     "committed": 294,
+     "live": 2215592,
+     "list_entries": 18363921,
+     "empty_lists": 0,
+     "max_lam": 12.120166773108053,
+     "sec_A": 4.6,
+     "sec_B": 0.0,
+     "seconds": 6.2
+    },
+    {
+     "round": 7,
+     "adjacencies": 4162469,
+     "candidates": 164,
+     "committed": 114,
+     "live": 2215442,
+     "list_entries": 18363342,
+     "empty_lists": 0,
+     "max_lam": 9.709093734275537,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 8,
+     "adjacencies": 4162113,
+     "candidates": 92,
+     "committed": 55,
+     "live": 2215370,
+     "list_entries": 18362659,
+     "empty_lists": 0,
+     "max_lam": 8.916349387611831,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 5.9
+    },
+    {
+     "round": 9,
+     "adjacencies": 4161946,
+     "candidates": 60,
+     "committed": 34,
+     "live": 2215330,
+     "list_entries": 18362510,
+     "empty_lists": 0,
+     "max_lam": 8.916349387611831,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 10,
+     "adjacencies": 4161857,
+     "candidates": 37,
+     "committed": 23,
+     "live": 2215304,
+     "list_entries": 18362298,
+     "empty_lists": 0,
+     "max_lam": 9.613751941865068,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 11,
+     "adjacencies": 4161795,
+     "candidates": 24,
+     "committed": 16,
+     "live": 2215286,
+     "list_entries": 18362215,
+     "empty_lists": 0,
+     "max_lam": 9.613751941865068,
+     "sec_A": 4.5,
+     "sec_B": 0.0,
+     "seconds": 6.1
+    },
+    {
+     "round": 12,
+     "adjacencies": 4161753,
+     "candidates": 20,
+     "committed": 10,
+     "live": 2215268,
+     "list_entries": 18362184,
+     "empty_lists": 0,
+     "max_lam": 8.916349387611831,
+     "sec_A": 4.5,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 13,
+     "adjacencies": 4161706,
+     "candidates": 14,
+     "committed": 8,
+     "live": 2215258,
+     "list_entries": 18362161,
+     "empty_lists": 0,
+     "max_lam": 9.613751941865068,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 5.9
+    },
+    {
+     "round": 14,
+     "adjacencies": 4161684,
+     "candidates": 7,
+     "committed": 5,
+     "live": 2215252,
+     "list_entries": 18361972,
+     "empty_lists": 0,
+     "max_lam": 9.613751941865068,
+     "sec_A": 4.5,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 15,
+     "adjacencies": 4161673,
+     "candidates": 4,
+     "committed": 2,
+     "live": 2215250,
+     "list_entries": 18361964,
+     "empty_lists": 0,
+     "max_lam": 9.613751941865068,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 5.9
+    },
+    {
+     "round": 16,
+     "adjacencies": 4161669,
+     "candidates": 3,
+     "committed": 1,
+     "live": 2215249,
+     "list_entries": 18361964,
+     "empty_lists": 0,
+     "max_lam": 9.613751941865068,
+     "sec_A": 4.5,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 17,
+     "adjacencies": 4161667,
+     "candidates": 3,
+     "committed": 1,
+     "live": 2215247,
+     "list_entries": 18361964,
+     "empty_lists": 0,
+     "max_lam": 9.613751941865068,
+     "sec_A": 4.5,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 18,
+     "adjacencies": 4161661,
+     "candidates": 2,
+     "committed": 1,
+     "live": 2215246,
+     "list_entries": 18361964,
+     "empty_lists": 0,
+     "max_lam": 8.554380650644925,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 6.0
+    },
+    {
+     "round": 19,
+     "adjacencies": 4161658,
+     "candidates": 2,
+     "committed": 1,
+     "live": 2215245,
+     "list_entries": 18361964,
+     "empty_lists": 0,
+     "max_lam": 8.554380650644925,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 5.9
+    },
+    {
+     "round": 20,
+     "adjacencies": 4161655,
+     "candidates": 2,
+     "committed": 1,
+     "live": 2215243,
+     "list_entries": 18361965,
+     "empty_lists": 0,
+     "max_lam": 8.554380650644925,
+     "sec_A": 4.4,
+     "sec_B": 0.0,
+     "seconds": 5.8
+    },
+    {
+     "round": 21,
+     "adjacencies": 4161650,
+     "candidates": 0,
+     "committed": 0,
+     "seconds": 4.7
+    }
+   ]
+  }
+ },
+ "seconds": 1541.2
+}

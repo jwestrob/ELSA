@@ -1,0 +1,56 @@
+{
+ "written_utc": "2026-11-12T23:32Z",
+ "workstream": "softrec4 (round 4 of softrec; ws_softrec4)",
+ "seen_before_writing": "REPORT.txt, REPORT2.txt (round-2 even and odd numbers of the selected configuration and of the rescue3-module control), boundary REPORT/REPORT_followup, grammar REPORT, round-2 odd tuning JSONs (odd_stage2_b, odd_louv). No round-4 output of any kind exists: no job has been submitted.",
+ "question": "Improve the embedding-only discovery method (token-free recurrence on zca10 neighbour lists) with four levers that are independent of list construction, each measured against round 2's selected configuration, then combine the levers that help on odd genomes and test the combination against the token engine's nested reading DH on even genomes.",
+ "baseline_R2sel": "round-2 selected configuration: landscape rw1000_e50 (rank-weighted lists, depth 1,000, w = exp(-(t-1)/50), rule W >= 1 & L >= 2), validated families Leiden r2000, modules Louvain res 0.3 seed 17, DH = level-2 locus + H core (trim f 0.5). Odd: summed .474, F1 .798/.509/.446, ribosomal 847/638/55. Even: summed .4669, F1 .802/.500/.442, 1,681/1,263, Parv 114/100. Must be reproduced by this round's code before any comparison (odd and even per-instance F1 equal to the stored round-2 scores).",
+ "references": "token DH and token R1 recomputed with the boundary code and checked equal to the stored loci and per-instance scores (boundary/scores/rescue3) before any comparison; token odd references for the odd score are computed from the same per-instance scores restricted to odd genomes and the odd ribosomal runs.",
+ "levers": {
+  "L1_instance_communities": {
+   "graph": "nodes = significant instances of the landscape (positions in sidx). Support edges: for each instance q = (a, b) and each other genus, the best-ranked supporting pair (a', b') (a' in N(a), b' in N(b), within 3 genes on one contig, a' the best-ranked list member marking b''s slot, orientation filter of the landscape's statistic) that is itself a significant instance q'; per q the k = 5 genera with the smallest rank m = max(tail rank a', tail rank b') are kept (stored up to 10); edge weight exp(-(m-1)/50); undirected, duplicate edges combined by max. Overlap edges (augmented graph): two significant instances on one contig whose gene intervals [left, left+d] intersect, weight w_o.",
+   "variants": "w_o in {0 (the literal support-only graph), 0.3, 1}; communities = connected components, and Leiden (igraph, modularity, n_iterations -1, seed 17) at resolution gamma in {0.3, 1, 3, 10, 30, 100, 1000}",
+   "labels": "boundary label = community of the instance setting the boundary's support (the landscape's arg); communities of one instance are unlabelled (-1, filled by rule C like a pair between modules). Rules C, H (f 0.5) and DH as in round 2; locus module_id -1 (the scorer's F1 ignores it).",
+   "selection": "best odd score (below) over the 23 label variants",
+   "diagnostics": "Parvarchaeaceae ribosomal runs with one label, ribosomal runs with one / 2+ labels, TXSScan odd spans with one label / 2+ / label change at both edges; against the token engine's modules (res 0.3) and round 2's validated-family modules",
+   "prediction_and_refuter": "Prediction: the support-only graph gives pair-type communities, so labels change at nearly every boundary of a multi-gene locus (Parvarchaeaceae runs with one label < 10 of 114) and DH falls toward many short loci; the overlap-augmented graph gives one label to >= 100 of 114 Parvarchaeaceae runs and raises odd ribosomal resolved above R2sel's 638. Refuted if the augmented graph leaves Parvarchaeaceae one-label runs <= 50 or odd resolved <= 638 at every gamma."
+  },
+  "L2_orientation": {
+   "definition": "a supporting pair (a', b') counts only if its arrangement matches the query pair's. mode 1 (the token engine's --oriented): same-strand flag of (a', b') equals that of (a, b). mode 2 (full arrangement): in the frame where a' precedes b', the strands of (a', b') equal those of (a, b) (co-directional a->b, co-directional b->a, convergent, divergent are distinct). Strands travel with genes in the null (within-genome order shuffle, seeds 1000-1002).",
+   "statistic": "rank-weighted W (e50) and L at depth 1,000 recomputed for modes 1 and 2 (mode 0 recomputed and checked equal to round 2); rule W >= t & L >= 2 selected by the engine's instance-level procedure (FDR 0.01, top 12 by count, most genes covered) on the grid t in {0.05, 0.1, 0.15, 0.2} + round 2's grid; count rule L >= m at depth 1,000 selected the same way for reporting the count threshold",
+   "lever_alone": "oriented landscape + round 2's validated l2000 tokens + Louvain res 0.3 modules recomputed on the oriented landscape's significant token pairs + DH f 0.5; mode chosen by the odd score",
+   "token_control": "recurrence.py --oriented on rescue3 tokens (w 3, genome null, engine rule selection), R1 and DH with the boundary rule (Louvain res 0.3 on its significant pairs, f 0.5); compared with token R1 / DH (odd and even), reported as a control only",
+   "report": "chance support (null instances with L >= 2, null instances passing the selected rule), the selected rank-weight and count thresholds, CRISPR-Cas member genes touching support, R1 vs token R1 and DH vs token DH",
+   "prediction_and_refuter": "Prediction: orientation halves (mode 1) to quarters (mode 2) chance support, lowers the selected thresholds, and raises CRISPR-Cas member support. Refuted if null L >= 2 instances fall by < 30% in mode 1 or Cas member support (odd) does not rise above R2sel's."
+  },
+  "L3_critic": {
+   "scores": "grammar critic 'primary' held-out scores per offset-1 adjacency ($RD/grammar/eval/assembled_cv.npz; every genome scored by the critic that never saw its GTDB order), thresholds = quantile q of that fold's within-genome shuffled-pair null scores (runs/cv<k>/null_scores.npz['primary'])",
+   "rule": "a boundary with no count support (b = 0) and critic score > threshold is 'critic-on'. Extension (mode x): up to m consecutive critic-on boundaries directly adjacent to a supported boundary (b >= 2) on one side of the same contig join that locus; bridge (modes x and b): a gap of <= m unsupported boundaries, all critic-on, between two supported boundaries joins them. Added boundaries get support value 2 and no label (filled by rule C); the H core trims them by its own rule.",
+   "grid": "q in {0.99, 0.995, 0.999, 0.9999} x m in {1, 2} x mode in {x = extend + bridge, b = bridge only}, on R2sel's landscape and modules",
+   "report": "what it adds for CRISPR-Cas (Cas member genes touching support, CCT F1, covered50) and for genes of singleton rescue3 families (used only as an evaluation annotation: genes added to loci, share that are gold members), and its cost in median boundary precision and the ribosomal check",
+   "prediction_and_refuter": "Prediction: extension raises CRISPR-Cas member support and CCT F1 at a small cost in boundary precision and summed excess; the ribosomal check moves by < 20 resolved runs. Refuted if at q 0.999 CCT F1 (odd) rises by < 0.005."
+  },
+  "L4_reading_parameters": {
+   "grid": "trimming factor f in {0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 1.0} x Louvain resolution in {0.1, 0.2, 0.3, 0.5, 1, 3} on R2sel's landscape and validated families (H core and DH)",
+   "prediction_and_refuter": "Prediction: retuning f and the resolution changes odd summed by < 0.01 and meets none of the failing bars (TXSScan F1, CCT F1, resolved). Refuted if any configuration meets one of them on odd."
+  }
+ },
+ "odd_score": {
+  "deviation_from_round2": "Round 2 ranked by (odd conditions met, odd summed excess); its tie-breaker favoured summed excess while the blocking quantities were TXSScan F1, CCT F1 and ribosomal resolved. Round 4 ranks by total shortfall to the 'matches' bars so that every lever is credited for moving a blocking quantity.",
+  "margins": "for each quantity v in {summed DF+TXSS excess, F1 DefenseFinder, F1 TXSScan, F1 CRISPRCasTyper, ribosomal recovered (odd runs), Parvarchaeaceae recovered (odd), ribosomal resolved (odd)}: m = (v - bar) / (token - bar), where bar is the odd-scaled 'matches' bar (summed: token - 0.01; F1: token - 0.02; recovered 830; Parv recovered 54 of 55; resolved 705) and token is token DH's odd value. m = 0 at the bar, 1 at the token engine's value.",
+  "score": "lexicographic: (minus the sum over quantities of max(0, -m), odd summed excess). Higher is better; 0 shortfall means all odd 'matches' bars are met, after which summed excess decides.",
+  "lever_helps": "a lever helps if its best odd configuration (by this score) lowers R2sel's odd shortfall by >= 0.10",
+  "also_reported": "round 2's lexicographic score and the per-quantity margins of every configuration"
+ },
+ "combination": {
+  "rule": "the combined configuration uses every lever that helps: landscape = best oriented mode if L2 helps (else rw1000_e50); labels = instance communities if L1 helps (graph rebuilt from the chosen landscape's own supports with L1's selected k and w_o; gamma in {selected / 3, selected, selected x 3} where on the grid, plus connected components if selected) else validated l2000 + Louvain; critic = L3's selected setting and its grid neighbours in q if L3 helps; f = L4's selected value and its grid neighbours if L4 helps (else 0.5); Louvain resolution = L4's selected value if L4 helps and labels are validated families. The joint grid is scored on odd genomes and the best configuration by the odd score is THE round-4 configuration.",
+  "if_none_helps": "the round-4 configuration is R2sel (the verdict is round 2's)"
+ },
+ "test_even_genomes": {
+  "comparison": "round-4 configuration's DH against token DH (rescue3), paired genome bootstrap (2,000 draws, seed 17), ribosomal on all 1,686 runs",
+  "matches": "summed DF + TXSS excess >= DH - 0.01 (point estimate); F1 of each of DefenseFinder, TXSScan, CRISPRCasTyper >= DH - 0.02; ribosomal recovered >= 1,650, Parvarchaeaceae recovered >= 110 of 114, resolved >= 1,400",
+  "beats": "summed excess >= DH + 0.02 with the paired 95% interval excluding 0; no caller F1 more than 0.01 below DH; the same ribosomal bars",
+  "otherwise": "fails; the report names the blocking condition(s)",
+  "also_reported_after_the_verdict": "each lever alone (its odd-selected configuration) against R2sel on even genomes (paired), the combined configuration against R2sel, R1 / C / H of the combined configuration, F1, control, excess, covered50, genes in loci, median boundary precision, ribosomal check, CRISPR-Cas member support; the token oriented control against token DH",
+  "no_even_number": "no even-genome score of any round-4 softrec output is computed before the round-4 configuration is recorded in NOTEBOOK4.txt"
+ }
+}

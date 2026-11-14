@@ -1,0 +1,159 @@
+context_kernel workstream: REPORT (2026-11-12, DPANN, ESM++ small zca10 + gene order)
+==========================================================================================
+
+QUESTION
+Do families built from one input (ESM++ small vectors) plus gene order, with similarity edges
+weighted by neighbourhood agreement, K(a,a') = k(x_a,x_a') * sum_{d,d'} k(x_{a+d}, x_{a'+d'}),
+serve the recurrence engine as well as MMseqs2 families, and do they remove the TXSScan loss of
+context-free embedding families?
+
+ANSWER IN FIVE LINES
+1. The chosen context arm (dense w1 context gate at 1% FDR, weight sim x ctx; 880,124 tokens) matches the
+   MMseqs2 base: summed DefenseFinder + TXSScan excess -0.004 [-0.022, +0.016] on held-out even genomes,
+   TXSScan -0.013 [-0.024, -0.001] (context-free graph arms of round 1: -0.074 to -0.095). P1 and P2 met.
+2. The work is done by the context GATE (edge selection) and needs true gene order. The context WEIGHTING
+   adds nothing (same edges with weight sim: -0.014 summed, -0.023 TXSScan), and weighting all edges by
+   sim x ctx hurts TXSScan (-0.114 to -0.211).
+3. P3 fails: at edge level sim x ctx ranks same-type gold pairs far worse than sim alone
+   (AUROC 0.487 vs 0.841 for dense_w1; -0.353 [-0.371, -0.335]). Context helps on one diagnostic only:
+   TXSScan partners vs non-gold look-alikes (sim 0.608 -> sim x ctx 0.633 dense_w1, 0.751 matched_w5).
+4. Exploratory, outside the predeclared pool: the context-free control V0 (same gene-level edges, weight
+   sim, Leiden r19000, 297,708 tokens) beats the base on the summed criterion: tune +0.033, test +0.038
+   [+0.017, +0.062], through DefenseFinder localization (+0.082) at lower F1 on every caller.
+5. A strict context gate (matched w5) erases DefenseFinder systems (F1 0.060 vs 0.806): 58% of their
+   genes have no supported edge, against 36% of all genes.
+
+PREDECLARED (predeclared.json, written 08:07 UTC before any computation)
+Selection on odd genomes among the 8 context arms (V1 x2, V1b x2, V3 x4) by summed excess d:
+  V1b dense_w1 simctx_sup r10 -0.001 (chosen); V1b r100 -0.021; V3 r11000 -0.049; V3 r7500 -0.076;
+  V3 r19000 -0.078; V3 r26000 -0.148; V1 matched_w5 r10 -0.278; V1 r100 -0.305.
+  P1 test TXSScan excess d >= -0.04 ............ -0.013 [-0.024, -0.001]   MET
+  P2 test summed d >= -0.01 (>= +0.02 beats) ... -0.004 [-0.022, +0.016]   MET (competitive; does not beat)
+  P3 edge AUROC(sim x ctx) - AUROC(sim) >= 0.05  -0.353 [-0.371, -0.335]   NOT MET (dense_w1, the chosen
+     arm's variant; primary matched_w5: -0.307 [-0.325, -0.290]; every variant -0.31 to -0.41)
+Refuters, as declared:
+  "context weighting rescues TXSScan" -> refuted as a weighting effect (V2b equals V1b within 0.01 at
+     r10 and beats it at r100); survives as a gate effect: at 0.68-0.88 M tokens TXSScan d is -0.013 /
+     -0.023 with the true-order gate (V1b / V2b), -0.073 with no gate (V0 r30000), -0.074 with a gate
+     built on permuted gene order (same edge count).
+  "single input competitive" -> not refuted (P2 met); V0 does better than any context arm.
+  "context separates functional partners at edge level" -> refuted for same- vs different-type gold
+     pairs (P3); not refuted for TXSScan vs non-gold partners (sim x ctx above sim for every variant).
+
+STEP 1-3: EDGES, CONTEXT, NULL (job 78491, 529 s on 64 CPUs, peak RSS 22 GB)
+  Every gene has a vector (3,585,303 genes, 2,547,528 unique sequences). zca10 recomputed; kNN rank-1
+  cosine reproduced to 5.4e-7.
+  Candidate edges: 221,826,227 directed (cap 64), 164,863,660 undirected (56,962,567 mutual). The cap
+  binds for 62.4% of genes (available partners q50 69, q90 125, max 419); 63.5 M candidates (22%) dropped;
+  cosine of the 64th kept partner q50 0.719. Identical-sequence partners: 2.7% of directed edges.
+  Context pass 63 s and null pass 77 s for 164.9 M edges each (up to 100 neighbour dot products per edge).
+  Identity: c_a . c_a' equals the explicit double sum to 2.2e-16 (5,000 edges x 3 windows, float64);
+  kernel output matches numpy to 7e-8 (dense) and 7e-7 (matched).
+  Support at empirical FDR 1% (null: one endpoint replaced by a random gene of its genome):
+    variant     threshold  supported edges   genes with a supported edge
+    dense_w1     0.194      40,981,118 (24.9%)  2,937,565 (81.9%)
+    dense_w3     0.423         148,972          33,573
+    dense_w5     0.871           1,320           1,762
+    matched_w1   0.303      53,709,151 (32.6%)  2,994,122 (83.5%)
+    matched_w3   1.311      35,123,027 (21.3%)  2,702,510 (75.4%)
+    matched_w5   3.107      19,122,123 (11.6%)  2,286,403 (63.8%)
+  The dense form at w >= 3 averages one conserved neighbour over (2w)^2 pairs and falls under the null
+  tail (null q99 0.07 vs observed 0.23 at w3); only best-match scores reach 1% FDR at w > 1.
+  A permuted-gene-order recomputation reproduces the null distribution (dense_w1 q99 0.106 vs null 0.116).
+  Members keeping a supported edge (matched_w5 / dense_w1): TXSScan 94.0% / 97.9%, CRISPRCasTyper
+  64.2% / 84.3%, all non-gold genes 63.8% / 81.9%, DefenseFinder 42.0% / 85.3% (1.8% of DefenseFinder
+  member edges pass at matched_w5, against 11.6% overall). Observation consistent with defense genes
+  sitting in neighbourhoods that vary between genomes.
+
+STEP 4: EDGE-LEVEL DIAGNOSTIC (test = both genes in even genomes; 95% genome bootstrap)
+  Gold pairs, same vs different system type, n 429,720 (95% same-type; 87% CRISPRCasTyper):
+    sim 0.841; ctx alone 0.37-0.50; sim x ctx 0.43-0.53 for all six variants.
+    DefenseFinder pairs (n 45,676): sim 0.874; ctx 0.53-0.68; sim x ctx 0.61-0.71.
+  Mechanism: ctx spans 0-8 while sim spans 0.45-1, so the product ranks by ctx, and Cas genes of
+  different subtypes share Cas-operon context, so ctx carries little type information.
+  TXSScan members vs non-gold partners (n 65,539; 8,828 same-type TXSScan partners):
+    sim 0.608; sim x ctx: dense_w1 0.633 (+0.025 [+0.004, +0.043]), matched_w3 +0.118, matched_w5 0.751
+    (+0.143 [+0.128, +0.156]). Supported fraction (matched_w5): 55% of same-type partner edges vs 21.5%
+    of non-gold partner edges.
+
+STEP 5-6: FAMILIES AND ENGINE (Leiden modularity, n_iterations -1, seed 17; engine W=3, genome null)
+Test (even) genomes, A - B against dpann__mmseqs__seq__e3c50s75__w3 (base: 430,471 tokens; F1 DF 0.806,
+TXSS 0.758, CCT 0.589; summed excess +0.447 test, +0.436 tune). [predecl] = predeclared arm.
+  arm (edges, weight, resolution)                tokens     tune sum | DF F1 dDFex | TX F1 dTXex | test sum [95%]
+  V1  matched_w5 sup, sim x ctx, r10 [predecl] 1,632,458   -0.278   | 0.060 -0.312 | 0.585 +0.043 | -0.269 [-.295,-.245]
+  V1  r100 [predecl]                           1,633,702   -0.305   | 0.058 -0.313 | 0.562 +0.013 | -0.299 [-.325,-.275]
+  V2  matched_w5 sup, sim, r10 [predecl]       1,632,388   -0.277   | 0.060 -0.313 | 0.588 +0.046 | -0.267 [-.293,-.242]
+  V2  r100 [predecl]                           1,633,483   -0.304   | 0.057 -0.313 | 0.566 +0.017 | -0.296 [-.321,-.271]
+  V1b dense_w1 sup, sim x ctx, r10 [CHOSEN]      880,124   -0.001   | 0.741 +0.009 | 0.692 -0.013 | -0.004 [-.022,+.016]
+  V1b r100 [predecl]                             883,775   -0.021   | 0.758 +0.022 | 0.648 -0.052 | -0.030 [-.049,-.009]
+  V2b dense_w1 sup, sim, r10 (exploratory)       879,919   -0.014   | 0.744 +0.009 | 0.682 -0.023 | -0.014 [-.032,+.005]
+  V2b r100 (exploratory)                         883,121   -0.006   | 0.763 +0.026 | 0.671 -0.032 | -0.006 [-.024,+.013]
+  V3  all edges, sim x ctx(m_w5), r7500 [pre]    117,140   -0.076   | 0.835 +0.030 | 0.617 -0.119 | -0.089 [-.107,-.069]
+  V3  r11000 [predecl]                           177,500   -0.049   | 0.841 +0.053 | 0.608 -0.114 | -0.061 [-.082,-.041]
+  V3  r19000 [predecl]                           325,207   -0.078   | 0.822 +0.074 | 0.515 -0.158 | -0.083 [-.107,-.058]
+  V3  r26000 [predecl]                           445,277   -0.148   | 0.811 +0.083 | 0.417 -0.211 | -0.128 [-.150,-.104]
+  V0  all edges, sim, r11000 [predecl control]   111,780   -0.011   | 0.798 +0.044 | 0.658 -0.056 | -0.012 [-.030,+.006]
+  V0  r15000 [predecl control]                   189,089   +0.012   | 0.788 +0.065 | 0.652 -0.044 | +0.020 [+.000,+.041]
+  V0  r19000 [predecl control]                   297,708   +0.033   | 0.775 +0.082 | 0.632 -0.044 | +0.038 [+.017,+.062]
+  V0  r23000 [predecl control]                   432,675   +0.028   | 0.737 +0.078 | 0.598 -0.047 | +0.031 [+.004,+.056]
+  V0  r30000 (exploratory reference)             709,751   -0.028   | 0.683 +0.074 | 0.506 -0.073 | +0.001 [-.028,+.029]
+  permuted-order gate, sim, r50000 (expl.)       677,277   -0.110   | 0.438 -0.020 | 0.346 -0.074 | -0.094 [-.127,-.060]
+  permuted-order gate, sim x ctx, r100000        1,073,390 -0.276   | 0.158 -0.177 | 0.156 -0.118 | -0.295 [-.326,-.263]
+  CRISPRCasTyper excess d on test: -0.007 to -0.031 for V0/V1b/V2b/V3; -0.077 to -0.079 for V1/V2.
+  Token counts: supported-edge graphs have a floor set by genes without a supported edge (matched_w5
+  1,298,900; dense_w1 647,738), so V1/V2/V1b sit above the 100k-450k range, as predeclared and reported.
+  All-edge graphs: modularity r1000 gives 13k tokens, r10000 97k (sim) / 160k (sim x ctx), r30000 710k /
+  508k; above r10000 the extra tokens are mostly singletons.
+
+MECHANISM (token purity, results/purity.tsv; TXSScan member genes)
+  mean token size / share of token-mates that are same-type TXSScan members:
+  base 1,869 / 0.17; round-1 graph r3000 79 / 0.31; V0 r23000 33 / 0.31; V3 r26000 17 / 0.43 (18%
+  singletons); V1b 1,408 / 0.20. TXSScan excess tracks keeping the large secretion families whole.
+  This revises the round-1 reading: the context-free embedding families lose TXSScan by fragmenting
+  large families (purity is higher than the base), and the true-order gate restores large components
+  at low resolution. DefenseFinder localization rewards the opposite (small, precise tokens), which is
+  why V0 and V3 gain DefenseFinder excess while losing TXSScan.
+
+CAVEATS
+  - Engine null and context-derived tokens (BRIEF trap 3): the engine shuffles tokens built from true
+    order. Engine FDR is 0.0011-0.0080 for context arms, 0.0061-0.0089 for V0, 0.0044 for the base;
+    significant pairs 109k-255k vs 160k. No visible inflation; the rigorous test (rebuild tokens on the
+    shuffled order) was not run.
+  - Token counts differ across the gate comparison (V1b 880k, V0 r30000 710k, permuted gate 677k).
+  - Gold-pair labels for P3 treat homologs in different system types as negatives; for families this
+    label is stricter than homology (Cas1 of two subtypes is one family).
+  - Non-gold partners of TXSScan members include homologs in uncalled systems.
+  - V0's summed gain is an excess (precision) gain at lower F1 on all three callers.
+  - One exploratory engine job (permuted-order gate, sim x ctx, r50000, job 78664) sat single-threaded
+    after the engine's rule stage for 10 min (its sim-weighted twin took 2 min) and was cancelled; the
+    twin (r50000) and the sim x ctx r100000 arm answer the same control question.
+
+SPEED
+  Edge stage 529 s on 64 CPUs (vectors+zca10 92 s, expansion 4 s, union 64 s, context 63 s, null 77 s,
+  FDR and gold diagnostics ~200 s). Leiden 1-3 min on supported graphs (19-41 M edges); 7-28 min on the
+  165 M-edge graph plus 3-6 min to build it from numpy (igraph ~2 us per edge). Engine 84-110 s per arm.
+  Leiden on the full graph is the bottleneck; parallel runs share the graph by fork (14 runs, 96 GB).
+
+ARTIFACTS
+  Local: benchmarks/redesign/context_kernel/
+    context_kernel.py (edges | families | permctx | arms), run_edges.sbatch, run_families.sbatch,
+    run_explore.sbatch, submit_engine.sh, collect.py, purity.py, predeclared.json, NOTEBOOK.txt,
+    REPORT.txt, results/ (edges.json, permctx.json, engine_results.tsv, engine/*/compare_vs_base.txt and
+    summary.json, families/grid_*.tsv, token_manifests/*.json, purity.tsv, engine_jobs.log, INDEX.tsv).
+  Biotite: $RD/context_kernel/edges/{ea,eb,sim,mutual,ctx,null,null_partner,support,ctx_perm}.npy
+    (164.9 M edges; ctx/null columns dense_w1,w3,w5, matched_w1,w3,w5), edges.json, permctx.json;
+    $RD/context_kernel/families/*.npy (memberships of every grid run) and grid_*.tsv; code/.
+    Token arms: $RD/engine/dpann_tokens/ctx__esmpp_small__*.parquet (21 arms, each with .json).
+    Engine runs: $RD/engine/results_dpann_ctx/dpann__ctx__esmpp_small__*__w3/.
+  Jobs: 78491 edges; 78502, 78503, 78504, 78628 Leiden grids; 78627 permuted context + V2b + permuted
+    gate low resolution; 78642 permuted gate high resolution; engine 78513, 78516, 78517, 78520, 78563,
+    78566, 78643, 78644, 78650-78653, 78656, 78659-78661, 78663, 78665, 78666 (78664 cancelled).
+
+OPEN QUESTIONS AND NEXT STEPS (not started)
+  - V0 is the strongest single-input family source found so far on the summed criterion. Attribute its
+    gain over the round-1 graph arms (gene-level 64-cap edges vs unique-level mutual 20-NN, and resolution
+    10-20x higher), check a second Leiden seed, and report F1 beside excess.
+  - Combine the two regimes: true-order dense_w1 gate for genes that have support (TXSScan-like
+    families) and V0 communities for the 647,738 genes without support (DefenseFinder-like genes).
+  - An additive or rank-based kernel (sim + lambda * calibrated ctx) in place of the product, since the
+    product is ranked by ctx.

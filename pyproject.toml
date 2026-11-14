@@ -16,6 +16,7 @@ dependencies = [
     "numpy",
     "pandas",
     "pyarrow",
+    "duckdb>=1.2",
     "biopython",
     "click",
     "rich",

@@ -1,0 +1,129 @@
+LONG_LOCI PART 3: THE DPANN ALL-BARS CONFIGURATION ON THE SPACEDUST COLLECTION, NOTHING RETUNED (2026-11-13)
+=============================================================================================================
+source207 under transfer_spacedust's matched protocol (s207.Bench unchanged; best single interval per region, 200
+rigid translations, 10,000 region bootstrap draws, seed 17); paired region bootstrap for every difference. Nothing is
+selected on this collection: every setting is the DPANN selection; the bond tau follows vl.py's 1% rule on this
+collection's own shuffles. Predeclaration predeclared3.json: main 12:31 UTC; amendment_1 13:22 (A and As dropped for
+compute cost after Jacob cancelled the MMseqs2 job, which is not used; arms Z and Zs); amendment_2 13:25 (exact GPU kNN
+in place of the CPU HNSW run, after a timing test). All written before any Spacedust list-bond score. Development
+results (source207 has been consulted many times in this project).
+
+ANSWER
+1. The configuration carries as a working method and adds nothing over the family version on this collection. Z
+   (ws_calib z >= 10.6 embedding lists, group counting, L4b+ at theta .02, kNN cohesion; tau 8 by rule) scores F1 .598,
+   excess +.111 [+.072, +.149]: level with part-1 family L4b (-.015 [-.050, +.019] vs theta .1; -.016 vs theta .02),
+   above native Spacedust (+.046 [+.010, +.082], BEATS) and the word output P2 (+.062 [+.026, +.097]), below family
+   pair-linking (part-1 L1 -.042 [-.077, -.009]; CC2 -.031 [-.067, +.002]) and below the engine reference (-.073
+   [-.110, -.037]).
+2. Zs (synteny-retention counting) is lower: +.086 [+.045, +.125], -.025 [-.045, -.007] against Z and -.041 [-.074,
+   -.008] against part-1 L4b; native Spacedust MATCHES (+.021 [-.016, +.057]). The counting that lifted CRISPR-Cas on
+   DPANN costs excess here.
+3. The long-locus gap to the engine stays. Regions of >= 11 genes: Z covers a median .62 of region genes with the union
+   of its loci and .33 with the best locus (engine .89 / .73; CC2 .66 / .36); excess by region size 1-5 / 6-10 / 11-20 /
+   21+ genes = +.132 / +.150 / +.086 / +.053 against the engine's +.159 / +.207 / +.182 / +.175.
+4. Where Z gives back excess: the nested L4b+ output raises the random-placement control more than F1 (control .487 vs
+   .439 for Z's own L1; F1 .598 vs .571): Z's list pair-linking L1 scores +.131, the L4b+ nesting costs .020 (part 1 on
+   families: .027). The filtered L4b is lower still (+.090; DPANN's rule had picked L4b+ for Z for CRISPR-Cas).
+5. Token cohesion in place of kNN cohesion: -.008 (Z) and -.003 (Zs) excess, within the predeclared .01.
+6. Measured cost of the embedding lists for 4,231,484 unique sequences: z table 20 min 34 s on one RTX A5000 (peak GPU
+   11.2 GB), exact kNN k 2,000 18 min 22 s on one A5000 (peak GPU 10.0 GB), masks + kNN cohesion 5 min 32 s on 64 CPUs
+   (peak 135 GiB), list build + bonds + tree + node test 4 min 25 s (Z) and 5 min 24 s (Zs) on 64 CPUs (peak 30 GiB),
+   source207 scoring 75 s per arm. About 39 GPU-minutes plus 18 minutes on 64 CPUs (and 31 min of queue for the per-user
+   GPU slot). The alignment lists would need the MMseqs2 all-against-all: DPANN 6.0 h on 64 CPUs for 2.55 M sequences,
+   projected 12-18 h here (cancelled at 43 min). The CPU HNSW kNN measured 352 queries/s on 64 threads (projected 3.3 h
+   search; cancelled), against 1,090 s for the exact GPU search.
+7. Embedding against alignment lists, combining parts 2 and 3: on DPANN they are level on summed excess and ribosomal
+   resolution, alignment lists +.022 on CRISPR-Cas F1; on this collection the embedding route took ~57 min of wall time
+   (two ~20-min A5000 passes + 18 min on 64 CPUs) against a projected 12-18 h on 64 CPUs for the alignment lists, i.e.
+   13-19x less wall time and 30-40x fewer CPU-hours (27 against 770-1,150), plus 39 GPU-minutes.
+8. Expectations: Z +.11 to +.16 HELD at the lower edge; level with pair-linking (CC2 -.03 to +.02) just missed (-.031);
+   Zs within .02 of Z REFUTED (-.025); token check HELD; tau 6-8 HELD (Z 8, Zs 6).
+
+--------------------------------------------------------------------------------------------------------------------------
+TABLE. source207 (results/table3_s207.txt; F1 / random control / excess [95%]; d = paired excess difference [95%];
+cov = median share of region genes in the union of loci / in the best locus, regions >= 11 genes in brackets)
+  output                            F1    ctrl  excess [95%]          d vs p1 L4b .1        d vs p1 L1            d vs CC2              d vs engine ref       d vs Spacedust        cov union / best      qgenes
+  engine reference (42 readings)    .750  .566  +.184 [+.154, +.213]  -                     -                     -                     -                     -                     1.00 (.89) / .83 (.73) .773
+  native Spacedust (all blocks)     .676  .612  +.065 [+.037, +.093]  -                     -                     -                     -                     -                     .96 (.91) / .60 (.36)  .786
+  word P2 V-coh0.1                  .481  .432  +.049 [+.014, +.084]  -                     -                     -                     -                     -                     .59 (.50) / .33 (.22)  .539
+  CC2 (syn pair-linking)            .587  .445  +.142 [+.106, +.178]  -                     -                     -                     -                     -                     .75 (.66) / .50 (.36)  .600
+  F  part-1 L1 (family linking)     .580  .427  +.153 [+.116, +.189]  -                     -                     -                     -                     -                     .71 (.66) / .50 (.35)  .535
+  F  part-1 L4b theta .1            .574  .448  +.126 [+.086, +.166]  -                     -                     -                     -                     -                     .67 (.57) / .45 (.31)  .500
+  F  part-1 L4b theta .02           .574  .447  +.127 [+.087, +.167]  -                     -                     -                     -                     -                     .67 (.57) / .45 (.31)  .500
+  Z  L4b+ .02 (DPANN selection)     .598  .487  +.111 [+.072, +.149]  -.015 [-.050, +.019]  -.042 [-.077, -.009]  -.031 [-.067, +.002]  -.073 [-.110, -.037]  +.046 [+.010, +.082]  .67 (.62) / .50 (.33)  .555
+  Zs L4b+ .02 (DPANN selection)     .550  .464  +.086 [+.045, +.125]  -.041 [-.074, -.008]  -.067 [-.101, -.035]  -.057 [-.092, -.022]  -.098 [-.137, -.060]  +.021 [-.016, +.057]  .62 (.54) / .43 (.29)  .518
+  token-cohesion checks
+  Z  L4b+ tok .02                   .593  .489  +.103 [+.064, +.141]  -.023 [-.058, +.011]  -.050 [-.084, -.016]  -.039 [-.075, -.005]  -.081 [-.117, -.045]  +.038 [+.002, +.074]  .67 (.62) / .50 (.33)  .555
+  Zs L4b+ tok .02                   .549  .466  +.083 [+.042, +.123]  -.043 [-.077, -.010]  -.069 [-.103, -.037]  -.059 [-.095, -.025]  -.100 [-.139, -.062]  +.018 [-.018, +.055]  .62 (.54) / .44 (.29)  .518
+  context rows (not selected)
+  Z  L1 (list linking)              .571  .439  +.131 [+.094, +.169]  +.005 [-.031, +.041]  -.021 [-.055, +.011]  -.011 [-.045, +.022]  -.052 [-.089, -.016]  +.067 [+.031, +.103]  .67 (.62) / .50 (.33)  .555
+  Z  L4b .02 (filtered)             .540  .450  +.090 [+.049, +.132]  -.036 [-.068, -.005]  -.063 [-.096, -.030]  -.052 [-.089, -.017]  -.094 [-.131, -.056]  +.025 [-.012, +.061]  .61 (.50) / .44 (.31)  .497
+  Zs L1                             .529  .420  +.109 [+.069, +.148]  -.017 [-.051, +.016]  -.044 [-.076, -.012]  -.034 [-.066, -.001]  -.075 [-.113, -.037]  +.044 [+.008, +.081]  .62 (.54) / .44 (.29)  .518
+  Zs L4b .02                        .531  .447  +.084 [+.044, +.124]  -.042 [-.074, -.011]  -.069 [-.101, -.038]  -.058 [-.092, -.025]  -.100 [-.137, -.062]  +.019 [-.015, +.054]  .56 (.50) / .40 (.27)  .495
+  Paired F1, Z L4b+: vs part-1 L4b .1 +.024 [-.011, +.058] (regions better / tie / worse 75 / 82 / 50), vs CC2 +.011,
+  vs engine -.151 [-.191, -.112], vs Spacedust -.078 [-.115, -.042], vs P2 +.117 [+.082, +.153]. Zs - Z: F1 -.048
+  [-.068, -.030], excess -.025 [-.045, -.007]. Z vs CC1 -.004 [-.038, +.029]; vs the engine's single reading on the
+  same tokens (w 3) -.033 [-.072, +.004]. Median boundary precision 1.00 for every row.
+  Excess by region size (1-5 / 6-10 / 11-20 / 21+): Z +.132 / +.150 / +.086 / +.053; Zs +.085 / +.141 / +.061 / +.024;
+  part-1 L4b .1 +.147 / +.186 / +.075 / +.068; L1 groups +.166 / +.221 / +.109 / +.079; CC2 +.171 / +.206 / +.096 / +.061.
+
+--------------------------------------------------------------------------------------------------------------------------
+INPUTS BUILT FOR THIS COLLECTION (code/sdu.py, gpu_table_sd.py, gpu_knn_sd.py)
+  universe adapter   vl / softrec universe interface over $RD/universe (4,257,531 genes, 1,317 genomes, 2,061 contigs,
+                     618 transfer_spacedust groups); smoke test: gene order, contigs, groups equal part 1's loader; gene ->
+                     uid map equals the embedding metadata (4,231,484 uids)
+  z table            calib gpu_table.py copied, transfer_spacedust zca10 fp16 vectors, Z_STORE 10.5: 1,232,730,135 entries
+                     (per uid q50 166, q90 794, mean 291); z >= 10.6 lists 1,194,810,379 entries (group-excluded), median
+                     155 per gene (DPANN 437 over 3,564 genomes)
+  kNN                exact cosine search, k 2,000, self dropped (0 queries without self); rank 1 / 50 / 1000 / 2000 median
+                     cosine .841 / .618 / .340 / .280 (DPANN HNSW .870 / .658 / .389 / .293)
+  exclusion masks    softrec.exclusion mode 1, K1000: 387,827 of 12,760,265 round-0 instances excluded (group lineage),
+                     379,374 (genome); shuffles 80-86k
+  kNN cohesion       kappa_var_knn50: median .026; share of boundaries below .02 / .05 / .1 / .2 = .43 / .66 / .75 / .82
+                     (token array .54 / .72 / .81 / .88); Spearman with the token array .55
+  bonds              Z: tau 8 (round-0 instance FDR .074 / .024 / .0064 at 4 / 6 / 8; DPANN 6), 2,970,156 bonds, 43.9% of
+                     boundaries bonded; Zs: tau 6 (FDR .018 / .0057 at 4 / 6), 2,946,055 bonds; synteny matrix offdiag mean
+                     .068
+  node test          family-free filter of part 2; 2.07 M / 2.06 M node intervals in 77 s / 53 s
+
+MEASURED COSTS
+  step                                           hardware             wall        peak memory                 job
+  z table                                        1 RTX A5000, 12 CPU  20 min 34 s GPU 11.2 GB; host 12.0 GiB      93592
+  exact kNN k 2,000 (timing test 32,768 q: 6.9 s) 1 RTX A5000, 12 CPU  18 min 22 s GPU 10.0 GB; host 12.0 GiB      93760 (93607)
+  exclusion masks + kNN cohesion                 64 CPUs              5 min 32 s  135 GiB                     93761
+  Z: lists 61 s, 4 round-0 passes 107 s, tree + node test  64 CPUs    4 min 25 s  30.3 GiB                    94064
+  Zs: lists 44 s, 4 passes with N_eff 208 s, tree + test   64 CPUs    5 min 24 s  30.3 GiB                    94064
+  source207 scoring                              64 CPUs              75 s per arm                            94064
+  not run / cancelled: CPU HNSW kNN (93321; build 22.5 min, 352 q/s, ~4.1 h projected, cancelled at 49 min under the
+  2-h limit); MMseqs2 all-against-all (93320; cancelled by Jacob at 43 min; projected 12-18 h on 64 CPUs)
+  Queue: 93760 waited 31 min for the per-user slot on the gpu partition (other workstreams' jobs).
+
+FAILURE ANALYSIS
+- The embedding lists add bonds on this collection but not long-locus recall: Z bonds 43.9% of boundaries (family
+  bonds 39.7%) and its L1 covers 56% of genes (family L1 51%), yet Z's L1 scores +.131 against family L1's +.153
+  (-.021 [-.055, +.011]): the extra bonds land as often outside the regions as inside (control .439 vs .427).
+- The tau rule gives 8 here (6 on DPANN): chance co-location of z lists is higher across 1,317 phylogenetically spread
+  genomes (shuffled-order FDR at 6 is .024 against .009 on DPANN).
+- Synteny counting (Zs) loses .025 [-.045, -.007] against group counting (Z), most in regions of 1-5 genes (+.085 vs
+  +.132). The mechanism was not diagnosed here; a discount of support among the related Streptomyces /
+  Micromonospora genomes is a candidate (UNVERIFIED).
+- The best single locus still covers a median one third of a region of >= 11 genes; nesting and recurrence do not
+  supply the engine's wider window (transfer_spacedust: w 8 adds +.062 over w 3 for the engine on the same tokens).
+
+CAVEATS
+- A and As (the arms that met all DPANN bars most cleanly) are not tested here; the Spacedust verdict is for the
+  embedding arms only.
+- The kNN is exact here and HNSW on DPANN; both feed only the exclusion masks and the kNN cohesion.
+- The GPU jobs ran with the partition's default host memory (12 GB for 12 CPUs); both peaked at that value and
+  completed.
+- Every source207 number is a development result; nothing was chosen on this collection.
+
+ARTIFACTS
+Local benchmarks/redesign/long_loci/: predeclared3.json, REPORT3.txt, NOTEBOOK.txt (part 3), code/sdu.py (adapter,
+  prep, arm driver), gpu_table_sd.py, gpu_knn_sd.py, knn_sd.py (CPU HNSW, cancelled), mm2knn_sd.py (unused),
+  q_gpu_sd.sbatch, q_gpuknn_sd.sbatch, q_sdprep.sbatch, q_sdarm.sbatch, q_mm_sd.sbatch / q_knn_sd.sbatch (cancelled runs),
+  table3.py; results/sd_prep.json, sdbuild_{Z,Zs}.json, s207_sd_{Z,Zs}.json, table3_s207.txt.
+Biotite $RD/long_loci/: sd_calib/table (z table), sd_knn (I, D, json), sd_lists (excl masks, kappa_var_knn50.npy),
+  loci/sd_{Z,Zs}, nodes/sd_{Z,Zs}, scores/sd_{Z,Zs}; mm_sd holds the cancelled MMseqs2 database copy (not used).
+JOBS: 93320 (MMseqs2, cancelled by Jacob), 93321 (HNSW, cancelled), 93592 (z table), 93607 (kNN timing test), 93760
+  (exact kNN), 93761 (masks + cohesion), 94064 (Z, Zs builds + scoring).

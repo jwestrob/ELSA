@@ -1,0 +1,75 @@
+genus  units 922  rule P<=1e-4&L>=2  fdr 0.0042  significant pairs 162,786  genes covered 2,302,705
+   DH: summed 0.4270 d +0.0000 [+0.0000,+0.0000] | Defe 0.744 (+0.000 [+0.000,+0.000]) TXSS 0.548 (+0.000 [+0.000,+0.000]) CRIS 0.479 (+0.000 [+0.000,+0.000])
+       ribo rec 1686 res 1512 (vs genus +0 [+0,+0]) Parv rec 114/114 res 113/114 | loci 650,438 genes 2,563,690 | cond {'summed_within_0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': True, 'replaces': True}
+   R1: summed 0.3375 d +0.0000 [+0.0000,+0.0000] | Defe 0.688 (+0.000 [+0.000,+0.000]) TXSS 0.409 (+0.000 [+0.000,+0.000]) CRIS 0.426 (+0.000 [+0.000,+0.000])
+       ribo rec 1686 res 704 (vs genus +0 [+0,+0]) Parv rec 114/114 res 13/114 | loci 419,861 genes 2,563,690 | cond {'summed_within_0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': True, 'replaces': True}
+emb_mean_g0.753  units 1965  rule P<=1e-4&L>=2  fdr 0.0033  significant pairs 288,397  genes covered 2,563,455
+   DH: summed 0.4380 d +0.0110 [-0.0026,+0.0238] | Defe 0.715 (-0.029 [-0.039,-0.020]) TXSS 0.575 (+0.027 [+0.017,+0.038]) CRIS 0.437 (-0.043 [-0.051,-0.036])
+       ribo rec 1686 res 1412 (vs genus -100 [-124,-76]) Parv rec 114/114 res 113/114 | loci 600,421 genes 2,784,037 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+   R1: summed 0.2986 d -0.0389 [-0.0516,-0.0282] | Defe 0.662 (-0.025 [-0.034,-0.018]) TXSS 0.376 (-0.033 [-0.043,-0.024]) CRIS 0.390 (-0.036 [-0.043,-0.030])
+       ribo rec 1686 res 647 (vs genus -57 [-72,-43]) Parv rec 114/114 res 1/114 | loci 387,613 genes 2,784,037 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': False, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+emb_mean_w0.753  units Neff 1894  rule P<=1e-4&L>=2  fdr 0.0027  significant pairs 221,426  genes covered 2,419,701
+   DH: summed 0.4517 d +0.0246 [+0.0125,+0.0368] | Defe 0.746 (+0.002 [-0.008,+0.012]) TXSS 0.552 (+0.004 [-0.004,+0.012]) CRIS 0.454 (-0.025 [-0.032,-0.018])
+       ribo rec 1686 res 1410 (vs genus -102 [-125,-81]) Parv rec 114/114 res 113/114 | loci 633,370 genes 2,655,001 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+   R1: summed 0.3525 d +0.0150 [+0.0031,+0.0274] | Defe 0.701 (+0.013 [+0.001,+0.025]) TXSS 0.391 (-0.018 [-0.025,-0.011]) CRIS 0.394 (-0.032 [-0.039,-0.025])
+       ribo rec 1686 res 653 (vs genus -51 [-65,-38]) Parv rec 114/114 res 1/114 | loci 401,643 genes 2,655,001 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+emb_hom_g0.894  units 1882  rule P<=1e-4&L>=2  fdr 0.0035  significant pairs 275,960  genes covered 2,536,993
+   DH: summed 0.4369 d +0.0099 [-0.0008,+0.0204] | Defe 0.735 (-0.009 [-0.015,-0.003]) TXSS 0.566 (+0.018 [+0.010,+0.026]) CRIS 0.450 (-0.030 [-0.037,-0.023])
+       ribo rec 1686 res 1408 (vs genus -104 [-127,-83]) Parv rec 114/114 res 113/114 | loci 628,807 genes 2,765,890 | cond {'summed_within_0p01': True, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+   R1: summed 0.3025 d -0.0350 [-0.0470,-0.0245] | Defe 0.668 (-0.020 [-0.028,-0.014]) TXSS 0.377 (-0.032 [-0.041,-0.022]) CRIS 0.393 (-0.033 [-0.039,-0.027])
+       ribo rec 1686 res 646 (vs genus -58 [-73,-44]) Parv rec 114/114 res 1/114 | loci 393,429 genes 2,765,890 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': False, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+emb_hom_w0.894  units Neff 1874  rule P<=1e-4&L>=2  fdr 0.0028  significant pairs 223,465  genes covered 2,410,794
+   DH: summed 0.4551 d +0.0281 [+0.0146,+0.0418] | Defe 0.741 (-0.003 [-0.015,+0.008]) TXSS 0.553 (+0.005 [-0.003,+0.013]) CRIS 0.441 (-0.038 [-0.047,-0.031])
+       ribo rec 1686 res 1407 (vs genus -105 [-129,-84]) Parv rec 114/114 res 113/114 | loci 623,496 genes 2,646,102 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+   R1: summed 0.3500 d +0.0125 [-0.0010,+0.0262] | Defe 0.697 (+0.009 [-0.004,+0.023]) TXSS 0.386 (-0.023 [-0.031,-0.015]) CRIS 0.392 (-0.034 [-0.041,-0.027])
+       ribo rec 1686 res 654 (vs genus -50 [-64,-37]) Parv rec 114/114 res 1/114 | loci 402,180 genes 2,646,102 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+fam_jac_g0.2  units 232  rule P<=1e-4&L>=2  fdr 0.0047  significant pairs 102,040  genes covered 2,071,245
+   DH: summed 0.4441 d +0.0171 [+0.0023,+0.0328] | Defe 0.749 (+0.005 [-0.002,+0.011]) TXSS 0.545 (-0.003 [-0.017,+0.011]) CRIS 0.484 (+0.005 [-0.001,+0.010])
+       ribo rec 1686 res 1487 (vs genus -25 [-46,-4]) Parv rec 114/114 res 107/114 | loci 621,021 genes 2,331,417 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': True, 'replaces': True}
+   R1: summed 0.3815 d +0.0440 [+0.0302,+0.0578] | Defe 0.707 (+0.019 [+0.012,+0.027]) TXSS 0.447 (+0.038 [+0.026,+0.051]) CRIS 0.440 (+0.014 [+0.008,+0.019])
+       ribo rec 1686 res 806 (vs genus +102 [+82,+122]) Parv rec 114/114 res 28/114 | loci 427,856 genes 2,331,417 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': False, 'replaces': False}
+fam_jac_w0.4  units Neff 1363  rule P<=1e-4&L>=2  fdr 0.0023  significant pairs 128,975  genes covered 2,173,025
+   DH: summed 0.4789 d +0.0518 [+0.0360,+0.0684] | Defe 0.738 (-0.006 [-0.020,+0.007]) TXSS 0.579 (+0.031 [+0.021,+0.041]) CRIS 0.459 (-0.020 [-0.027,-0.014])
+       ribo rec 1686 res 1434 (vs genus -78 [-99,-58]) Parv rec 114/114 res 113/114 | loci 636,495 genes 2,426,399 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+   R1: summed 0.4014 d +0.0639 [+0.0469,+0.0826] | Defe 0.710 (+0.022 [+0.006,+0.038]) TXSS 0.432 (+0.023 [+0.012,+0.034]) CRIS 0.414 (-0.012 [-0.019,-0.005])
+       ribo rec 1686 res 713 (vs genus +9 [-4,+22]) Parv rec 114/114 res 13/114 | loci 418,792 genes 2,426,399 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': True, 'replaces': False}
+genome  units 3564  rule P<=1e-4&L>=2  fdr 0.0030  significant pairs 548,139  genes covered 2,832,083
+   DH: summed 0.4071 d -0.0199 [-0.0413,-0.0002] | Defe 0.650 (-0.094 [-0.110,-0.079]) TXSS 0.529 (-0.019 [-0.033,-0.005]) CRIS 0.381 (-0.098 [-0.109,-0.088])
+       ribo rec 1686 res 1364 (vs genus -148 [-173,-122]) Parv rec 114/114 res 113/114 | loci 504,031 genes 2,978,318 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': False, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+   R1: summed 0.2134 d -0.1241 [-0.1471,-0.1028] | Defe 0.534 (-0.154 [-0.175,-0.135]) TXSS 0.324 (-0.085 [-0.103,-0.067]) CRIS 0.340 (-0.086 [-0.096,-0.076])
+       ribo rec 1686 res 536 (vs genus -168 [-192,-144]) Parv rec 114/114 res 1/114 | loci 337,064 genes 2,978,318 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': False, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+emb_mean_g0.55  units 562  rule P<=1e-4&L>=2  fdr 0.0047  significant pairs 125,660  genes covered 2,168,430
+   DH: summed 0.4602 d +0.0332 [+0.0201,+0.0464] | Defe 0.751 (+0.007 [+0.004,+0.011]) TXSS 0.575 (+0.027 [+0.015,+0.039]) CRIS 0.476 (-0.004 [-0.008,+0.001])
+       ribo rec 1686 res 1477 (vs genus -35 [-53,-17]) Parv rec 114/114 res 113/114 | loci 640,566 genes 2,436,209 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': True, 'replaces': True}
+   R1: summed 0.3640 d +0.0265 [+0.0144,+0.0387] | Defe 0.703 (+0.015 [+0.010,+0.020]) TXSS 0.431 (+0.022 [+0.011,+0.034]) CRIS 0.431 (+0.005 [+0.001,+0.009])
+       ribo rec 1686 res 725 (vs genus +21 [+7,+35]) Parv rec 114/114 res 13/114 | loci 431,746 genes 2,436,209 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': True, 'replaces': True}
+emb_mean_w0.55  units Neff 443  rule P<=1e-3&L>=2  fdr 0.0033  significant pairs 32,519  genes covered 1,542,587
+   DH: summed 0.4456 d +0.0186 [-0.0043,+0.0430] | Defe 0.603 (-0.141 [-0.166,-0.116]) TXSS 0.564 (+0.016 [+0.003,+0.028]) CRIS 0.394 (-0.086 [-0.097,-0.074])
+       ribo rec 1686 res 1532 (vs genus +20 [+9,+32]) Parv rec 114/114 res 107/114 | loci 525,727 genes 1,769,763 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': True, 'replaces': False}
+   R1: summed 0.4063 d +0.0688 [+0.0433,+0.0945] | Defe 0.594 (-0.094 [-0.121,-0.065]) TXSS 0.475 (+0.067 [+0.052,+0.081]) CRIS 0.373 (-0.053 [-0.066,-0.040])
+       ribo rec 1686 res 912 (vs genus +208 [+180,+235]) Parv rec 114/114 res 106/114 | loci 393,741 genes 1,769,763 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+emb_hom_g0.75  units 642  rule P<=1e-4&L>=2  fdr 0.0046  significant pairs 139,494  genes covered 2,235,649
+   DH: summed 0.4178 d -0.0093 [-0.0204,+0.0029] | Defe 0.745 (+0.001 [-0.002,+0.005]) TXSS 0.538 (-0.010 [-0.021,+0.002]) CRIS 0.477 (-0.002 [-0.006,+0.002])
+       ribo rec 1686 res 1476 (vs genus -36 [-54,-18]) Parv rec 114/114 res 113/114 | loci 654,870 genes 2,504,526 | cond {'summed_within_0p01': True, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': True, 'replaces': True}
+   R1: summed 0.3454 d +0.0079 [-0.0018,+0.0175] | Defe 0.691 (+0.003 [+0.001,+0.006]) TXSS 0.423 (+0.014 [+0.003,+0.025]) CRIS 0.426 (+0.000 [-0.002,+0.003])
+       ribo rec 1686 res 726 (vs genus +22 [+12,+32]) Parv rec 114/114 res 13/114 | loci 428,891 genes 2,504,526 | cond {'summed_within_0p01': True, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': False, 'replaces': False}
+emb_hom_w0.75  units Neff 556  rule P<=1e-3&L>=2  fdr 0.0051  significant pairs 48,340  genes covered 1,742,227
+   DH: summed 0.4346 d +0.0076 [-0.0159,+0.0321] | Defe 0.626 (-0.118 [-0.142,-0.094]) TXSS 0.558 (+0.010 [-0.004,+0.023]) CRIS 0.414 (-0.066 [-0.077,-0.055])
+       ribo rec 1686 res 1488 (vs genus -24 [-45,-3]) Parv rec 114/114 res 107/114 | loci 574,755 genes 1,986,096 | cond {'summed_within_0p01': True, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': True, 'replaces': False}
+   R1: summed 0.3912 d +0.0538 [+0.0288,+0.0789] | Defe 0.613 (-0.075 [-0.100,-0.047]) TXSS 0.462 (+0.053 [+0.039,+0.067]) CRIS 0.387 (-0.039 [-0.051,-0.027])
+       ribo rec 1686 res 890 (vs genus +186 [+160,+212]) Parv rec 114/114 res 106/114 | loci 409,168 genes 1,986,096 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': False, 'replaces': False}
+fam_jac_g0.3  units 886  rule P<=1e-4&L>=2  fdr 0.0041  significant pairs 162,464  genes covered 2,309,184
+   DH: summed 0.4382 d +0.0112 [-0.0011,+0.0240] | Defe 0.747 (+0.003 [-0.001,+0.007]) TXSS 0.550 (+0.002 [-0.010,+0.014]) CRIS 0.470 (-0.010 [-0.014,-0.005])
+       ribo rec 1686 res 1457 (vs genus -55 [-72,-39]) Parv rec 114/114 res 113/114 | loci 642,837 genes 2,560,654 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': False, 'replaces': False}
+   R1: summed 0.3346 d -0.0029 [-0.0126,+0.0071] | Defe 0.689 (+0.001 [-0.003,+0.005]) TXSS 0.404 (-0.005 [-0.015,+0.005]) CRIS 0.411 (-0.015 [-0.021,-0.010])
+       ribo rec 1686 res 704 (vs genus +0 [-13,+14]) Parv rec 114/114 res 9/114 | loci 414,596 genes 2,560,654 | cond {'summed_within_0p01': True, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': False, 'ribosomal': True, 'replaces': False}
+emb_mean_g0.6  units 1029  rule P<=1e-4&L>=2  fdr 0.0042  significant pairs 169,033  genes covered 2,332,075
+   DH: summed 0.4312 d +0.0042 [-0.0056,+0.0139] | Defe 0.743 (-0.001 [-0.005,+0.003]) TXSS 0.547 (-0.001 [-0.009,+0.009]) CRIS 0.473 (-0.007 [-0.010,-0.003])
+       ribo rec 1686 res 1432 (vs genus -80 [-101,-60]) Parv rec 114/114 res 113/114 | loci 647,764 genes 2,590,606 | cond {'summed_within_0p01': True, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': False, 'replaces': False}
+   R1: summed 0.3405 d +0.0030 [-0.0039,+0.0105] | Defe 0.683 (-0.005 [-0.008,-0.001]) TXSS 0.416 (+0.007 [+0.001,+0.015]) CRIS 0.420 (-0.006 [-0.009,-0.003])
+       ribo rec 1686 res 689 (vs genus -15 [-24,-6]) Parv rec 114/114 res 10/114 | loci 418,506 genes 2,590,606 | cond {'summed_within_0p01': True, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': True, 'replaces': True}
+emb_mean_g0.5  units 172  rule P<=1e-4&L>=2  fdr 0.0052  significant pairs 89,211  genes covered 1,937,581
+   DH: summed 0.4403 d +0.0133 [+0.0001,+0.0269] | Defe 0.748 (+0.004 [-0.003,+0.010]) TXSS 0.539 (-0.009 [-0.021,+0.002]) CRIS 0.482 (+0.003 [-0.003,+0.009])
+       ribo rec 1686 res 1495 (vs genus -17 [-37,+4]) Parv rec 114/114 res 107/114 | loci 607,765 genes 2,208,730 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': True, 'replaces': True}
+   R1: summed 0.3837 d +0.0462 [+0.0324,+0.0598] | Defe 0.710 (+0.023 [+0.015,+0.031]) TXSS 0.444 (+0.035 [+0.023,+0.047]) CRIS 0.447 (+0.021 [+0.015,+0.028])
+       ribo rec 1686 res 804 (vs genus +100 [+81,+119]) Parv rec 114/114 res 28/114 | loci 435,655 genes 2,208,730 | cond {'summed_within_0p01': False, 'summed_not_below_m0p01': True, 'no_F1_loss_over_0p01': True, 'ribosomal': False, 'replaces': False}

@@ -1,0 +1,232 @@
+slice_lut — loci homologous to the Methylorubrum extorquens AM1 lut cluster, and an ELSA test slice
+Workstream slice_lut, 2026-11-13. Local: benchmarks/redesign/slice_lut/. Biotite: $RD/slice_lut/
+(RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111). Timestamped log: NOTEBOOK.txt.
+Naming: no curated caller emits a lut call. Every locus below is an OBSERVATION of homology (MMseqs2, reverse best hit in
+the AM1 proteome) plus co-location. Functional readings (lanthanide transport) are UNVERIFIED.
+
+ANSWERS
+1. Taxonomy. GTDB r232 has no Methylorubrum: it is part of g__Methylobacterium (146 species representatives).
+   Family f__Beijerinckiaceae (NCBI: Methylobacteriaceae), order o__Rhizobiales (NCBI: Hyphomicrobiales), class
+   c__Alphaproteobacteria. AM1 itself (RS_GCF_000022685.1) is a member of s__Methylobacterium extorquens; the
+   representative is GB_GCA_900234795.1, which carries the full cluster lutA B C D E F G H lanM lutI in AM1 order.
+2. The AM1 cluster (Roszczenko-Jasinska et al. 2020, verified in the paper and NCBI CP001510.1): META1_1778-1787 =
+   lutA lutB lutC lutD lutE lutF lutG lutH lanM lutI, all on the + strand, 9,864 bp. lanmodulin is META1_1786, inside the
+   cluster (gene 9 of 10). Your recollection was right on every point.
+3. Main definition (reverse-best component genes, >= 3 distinct components, <= 3 intervening genes): 2,354 loci in 2,170
+   of 5,752 Rhizobiales representatives; 584 loci in 530 of 996 Beijerinckiaceae representatives; 1,810 loci in 1,696 of
+   15,721 other Alphaproteobacteria; 1,588 loci in 1,551 of 2,338 targeted representatives outside the class (1,547 of
+   1,835 GlobDB-proxy-positive; 2 of 500 random proxy-negative). Chance expectation (200 independent per-component
+   shifts): 0.505 loci in the order (max 4), 0.22 in the class rest, 0.11 beyond.
+4. The cluster has two parts with different distributions.
+   (a) A transporter module, lutA/B/E/F (+ often lutG, lutC): the large majority of loci. Order: 2,019 of 2,354 loci
+       carry no receptor; class rest: 1,790 of 1,810; beyond the class: 1,502 of 1,588 (Pseudomonadaceae,
+       Methylomonadaceae, Oleiphilaceae, Balneatricaceae, Halomonadaceae, Burkholderiaceae_C ...). Commonest
+       architectures: order A B E F G (668 loci), A B C E F G (298), A B E F (235); family A B E F (175); class rest
+       C E F (356), A B E F G (280); beyond A E F (489), A B E F (263), -C A E F (194).
+   (b) The complete AM1-type cluster (lutA-lutI with lutH, lutD, lutI; lanM in 22 of 80): 80 loci, all in Methylobacterium
+       (80 of 146 species reps); Methylobacterium has a main locus in 144 of 146 reps (154 loci, 107 with lutH).
+       lutD, lanM and lutI homologs inside loci occur only in Rhizobiales (D 146, M 164, I 107 order loci; D 0-1, M 2-4,
+       I 0 in the class rest; 0 beyond).
+   Receptor + transporter loci without the full set: 239 in the order (Bradyrhizobium 118, Methylocystis 39,
+   Methylobacterium 18, BOG-931 18), 13 in the class rest (Acetobacteraceae), 86 beyond (Stutzerimonas 20, Neptuniibacter 9,
+   Cupriavidus 8, Rhodanobacter 8).
+5. Split arrangements are common: 996 Rhizobiales genomes have a transporter-only locus and a reverse-best lutH homolog
+   elsewhere in the genome. Three literature cases reproduce exactly: Beijerinckiaceae bacterium RH AL1 (lutABEFG locus,
+   lutH separate), M. aquaticum 22A (B C D E F G locus, separate receptor), M. trichosporium OB3b (M A B E F locus,
+   separate lutH homolog).
+6. Methanol dehydrogenase (curated KOfam K23995, lanthanide-dependent MDH): present in 1,689 of 2,170 order genomes with a
+   main locus and in 94 of 3,582 without (odds ratio 130; genomes are phylogenetically dependent, so the hypergeometric
+   p of 1e-860 overstates independence). K23995 lies within 25 genes of 1,087 of 2,354 loci; the commonest flanking KOs
+   are K05555 (cyclase), K09733 and K07144 (methanofuran biosynthesis), mxaJ and K23995. In the family, K23995
+   sits within 25 genes of only 103 of 584 loci, as in AM1/PA1 where xoxF1 is 35-36 genes upstream of lutA. Class rest:
+   K23995 in 980 of 1,696 genomes with a locus vs 338 of 14,025 without (odds ratio 55), within 25 genes of 707 of
+   1,810 loci. Beyond the class: K23995 494 of 1,551 vs 63 of 787 (odds ratio 5.4; 161 of 1,588 loci within 25 genes),
+   while K00114 (PQQ alcohol dehydrogenase, cytochrome c) is in 1,044 of 1,551 vs 160 of 787 (odds ratio 8.1) and
+   within 25 genes of 828 loci. KOfam names the PQQ enzymes; their metal dependence beyond K23995 is UNVERIFIED.
+7. Unexpected: the GlobDB r232 per-gene annotation table cannot be joined to the GTDB r232 protein files by gene number.
+   GlobDB numbers its own gene calls; its gene index matches the GTDB file order for 3.9% of independent Pfam hits (148,763 hits,
+   996 genomes; best offset 0; in single-contig GCF_003173775 the indices agree up to gene ~250 and then drift). Every later use of the
+   GlobDB table at gene level needs coordinates (GlobDB gff_cog release, 36 GB) or a direct annotation. Here Pfam and
+   KOfam were run directly on the locus genes and flanks with the same profile sets. Within GlobDB's own numbering,
+   adjacency is sound: a GlobDB Pfam proxy for the module (PF13458+PF10282+PF00005+PF01061 within 3 genes) recovers the
+   sequence calls in the order at sensitivity 0.945 / PPV 0.873 (with PF00593: 0.890 / 0.907).
+8. Slice sizes. Family: 996 GTDB reps (4,517,879 proteins) + 412 GlobDB-only genomes. Order: 5,752 GTDB reps
+   (27,072,085 proteins) + 2,059 GlobDB-only. GlobDB-only genomes with the proxy module (gap 3): family 97 (23 with the
+   receptor domain), order 412 (45). Packages: family complete (universe, FASTA, base + rescue3 tokens). Order: universe,
+   FASTA and base tokens (1,275,491 tokens) done; the rescue3 search (1,141,447 query sequences against 26.5 M unique) is
+   running in job 92432, projected to finish around 2026-11-14 00:30 UTC.
+
+METHODS
+References. AM1 proteins from NCBI efetch fasta_cds_aa of CP001510.1-CP001514.1 (6,234 proteins; ref/AM1_proteome.faa).
+  Query set META1_1777-1788 (cluster 1778-1787 plus the two flanking genes, reported but never counted as components).
+  Pfam 38.1 GA on the references: lutA PF13458 Peripla_BP_6; lutB PF10282 Lactonase x2 + PF22494; lutE PF00005; lutF
+  PF01061/PF12698/PF12679; lutH PF07715 Plug + PF00593; lanM PF13202 EF-hand_5 x3; lutC, lutD, lutG, lutI no Pfam.
+Slices. GTDB r232 species representatives (sp_clusters.tsv, rp16_run_r232) with their Prodigal proteomes
+  (protein_faa_reps/bacteria): order Rhizobiales (5,752), family Beijerinckiaceae subset (996), class Alphaproteobacteria
+  outside the order (15,721; 48,453,653 proteins), and 2,338 representatives outside the class (1,837 with a GlobDB proxy
+  run at gap 5, 500 random proxy-negatives, seed 17, three literature controls; 9,286,523 proteins).
+Search. MMseqs2 release 18: search refs vs slice, -s 7.5 -e 1e-3 --max-seqs 2,000,000 -a; every hit gene searched back
+  against the AM1 proteome (-s 7.5 -e 1e-3 --max-seqs 300). Self bit scores for BSR.
+Gene assignment. RB (main and strict): the gene's best AM1 hit is the component and the forward E <= 1e-5. ANY (loose):
+  best forward component at E <= 1e-3.
+Locus definitions (consecutive component genes on one contig; components counted among lutA-lutI + lanM):
+  main   RB, <= 3 intervening genes, >= 3 distinct components
+  strict RB, <= 1 intervening gene, >= 5 components including lutH and lutE or lutF
+  loose  ANY, <= 5 intervening genes, >= 2 components
+Control (chance). Each component's assigned genes shifted by an independent random offset, circular over the genome's gene
+  order (contig taken at the new position), loci recalled; 200 replicates; seed 17.
+Sensitivity (profiles). For each component, <= 400 RB genes from main order loci (mafft --auto, hmmbuild), hmmsearch of
+  every gene within 10 genes of a main or loose locus (E <= 1e-5), components counted within 3 genes of the locus.
+Annotation. hmmscan Pfam 38.1 (--cut_ga) and KOfam (ko_list thresholds; full or domain score as kofamscan) on every
+  gene of the main loci and 5 flanking genes each side; hmmsearch K23995, K14028, K14029, K00114 (ko_list thresholds)
+  over every protein of each slice for positions of methanol-dehydrogenase genes.
+GlobDB proxy (all 346,233 GlobDB r232 genomes, Pfam GA rows): letters A PF13458, B PF10282, E PF00005,
+  F PF01061/PF12698/PF12679, H PF00593, M PF13202; runs on GlobDB gene_idx with <= 3 or <= 5 intervening genes; ABEF =
+  run with A, B, E, F; ABEFH = ABEF + H.
+Architecture strings: genes from first to last component of the locus, oriented so that the majority of component
+  genes read on +; '.' gene without a component call, '-' opposite strand. Labels A-G lutA-lutG, H lutH, M lanM, I lutI.
+
+RESULTS TABLES (tables/; scopes: family = Beijerinckiaceae subset of order, order, alpha_wide = class rest, beyond)
+Per-locus records: <scope>_loci.tsv, one row per locus and definition: locus_id, definition, genome, gtdb_id, GTDB ranks,
+  CheckM2 completeness/contamination, contig, contig_genes, start/end position, span, start/end nt, components present /
+  missing, architecture, orientation, lanM-like in locus, MDH KOs within 25 genes (KO@offset) and in the genome,
+  genes to contig start/end, first/last gene partial flags, at_contig_edge_le2, copies_in_genome.
+Per-gene records: <scope>_locus_genes_main.tsv (remote results/<scope>/locus_genes.tsv has all definitions): every gene of
+  each main locus and 5 flanking genes each side with rel_pos, role (component / internal / flank), strand, length,
+  protein_id, partial flag, best component, reverse-best flag, identity, query/target coverage, E-value, bits, BSR, best AM1
+  hit, direct Pfam (accession:name(range)) and KOfam (KO:definition).
+Summaries: <scope>_by_rank_<def>, _copies_<def>, _architectures_<def>, _arch_classes_<def>, _components_<def>,
+  _mdh_<def>, _receptor_elsewhere_<def>; <scope>_genomes.tsv (per genome: reverse-best counts per component, loci per
+  definition, MDH KO counts from direct search and from GlobDB); hmm_refine summaries; proxy_*; globdb_index_check*.
+
+Counts by rank, main definition (loci / genomes with >= 1 locus / slice genomes):
+  Order Rhizobiales                          2,354 / 2,170 / 5,752
+    Xanthobacteraceae                          821 /   755 / 1,487
+    Beijerinckiaceae                           584 /   530 /   996
+    Rhizobiaceae                               411 /   381 / 1,546
+    Hyphomicrobiaceae                          246 /   228 /   409
+    Devosiaceae                                 65 /    62 /   243
+    Stappiaceae                                 44 /    39 /   132
+    Rhodomicrobiaceae                           40 /    39 /    75
+    Aestuariivirgaceae                          40 /    40 /   241
+    Methylopilaceae                             24 /    24 /    33
+  Beijerinckiaceae genera (reps; loci; genomes; loci with lutH): Methylobacterium 146; 154; 144; 107 | Roseiarcus 129; 80;
+    78; 4 | Allobosea 111; 7; 7; 0 | Methylocystis 78; 78; 74; 42 | Microvirga 76; 41; 30; 1 | Terripilifer 65; 11; 11; 1 |
+    Methylocapsa 58; 54; 54; 1 | Rhodoblastus 26; 46; 24; 1 | RH-AL1 21; 17; 16; 0 | Methylosinus 14; 15; 14; 2.
+    31 of 53 genera carry a locus.
+  Class rest (orders with most loci; loci / genomes / slice): Rhodobacterales 935 / 894 / 3,232; Acetobacterales
+    265 / 251 / 1,032; ATCC43930 85 / 80 / 244; Azospirillales 123 / 80 / 130; Rhodospirillales 60 / 60 / 534.
+  Beyond the class (targeted): Gammaproteobacteria 1,537 loci; Campylobacteria 24; Deinococci 18; 9 other loci in 6 classes.
+Strict: order 159 loci / 159 genomes (family 141; Methylobacterium 98, Methylocystis 36); class rest 4; beyond 7.
+Loose: order 6,449 loci / 3,414 genomes against a chance expectation of 4,444.5 (max 4,619): the loose definition is
+  dominated by chance co-location of ABC-ATPase hits and serves only as the upper bracket.
+Copy number (main): order 2,002 genomes with 1 locus, 154 with 2, 12 with 3, 2 with 4; family 482 / 42 / 6 / 0.
+Components (fraction of main order loci): A 0.835, B 0.885, C 0.320, D 0.062, E 0.896, F 0.897, G 0.606, H 0.142,
+  M 0.070, I 0.045. No component reaches 0.9; lutE/lutF/lutB/lutA form the shared core (0.84-0.90), lutG and lutC are
+  variable, lutH/lutD/lanM/lutI are restricted. Beyond the class: A 0.909, E 0.984, F 0.999, B 0.380, C 0.188, G 0.075,
+  H 0.054, D/M/I 0.
+Architecture classes (main, order): transporter module without receptor 2,019 loci / 1,884 genomes; receptor plus
+  transporter 239; complete lutA-I 58 (+22 with lanM; Methylobacterium only); receptor module without transporter 16.
+Commonest architectures (order, component-only strings): A B E F G 668; A B C E F G 298; A B E F 235; A B G 79; C E F 65;
+  -E B F 60; -H A B E F G 60 (Xanthobacteraceae: receptor upstream, opposite strand); A B C D E F G H I 58; A B C 44;
+  E F G 38; E F -H 36; H M A B E F 30 (Beijerinckiaceae); A B C D E F G H M I 22; M A B E F 22.
+Observed domains of component genes in main order loci (direct Pfam GA): lutA PF13458 1,774 / 1,999 (PF01094 284);
+  lutB PF10282 1,516, PF21783 1,396, PF22494 1,191, PF02239 586 / 2,103; lutE PF00005 2,106 / 2,120; lutF PF01061
+  2,107 / 2,124 (KOfam K01992 1,772); lutH PF00593 335, PF07715 325 / 355 (K02014 312); lanM EF-hand PF13202 165 / 165;
+  lutC, lutD, lutG, lutI: no Pfam domain in any copy. Median identity to AM1: A 0.47, B 0.63, C 0.44, D 0.57, E 0.57,
+  F 0.66, G 0.37, H 0.38, M 0.58, I 0.62.
+Flanks (+-5 genes, direct KOfam/Pfam, order main loci): a NarL-family sensor kinase (K07675) sits next to 51.3% of loci
+  with lutH and 17.7% of loci without; a GerE-domain regulator (PF00196) 52.8% vs 21.4%. Commonest flanking KOs overall:
+  K05555 cyclase 608, K09733 543 and K07144 365 (methanofuran biosynthesis), mxaJ 541, SoxY 486, K23995 474,
+  NitT/TauT permease 471, K07675 446. Example Methylocystis sp002929055 (main_00030): K07675 + GerE regulator | lutH lanM
+  lutA lutB lutE lutF, all + strand.
+Contig edges: 416 of 2,354 main loci end within 2 genes of a contig end (18.7% of loci without lutH, 11.6% with), so
+  part of the missing components reflects fragmented assemblies; per-locus flags are in loci tables.
+
+CONTROLS
+Chance co-location (above): main 2,354 observed vs 0.505 expected (order), 1,810 vs 0.22 (class rest), 1,588 vs 0.11
+  (beyond); strict 0 expected everywhere.
+Profile sensitivity: HMMs add components to main loci (order: A 190, B 124, E 27, D 6, C 5, G 3, M 3, F 2, H 1, I 0;
+  class rest: B 568, A 384, E 50, G 19, C 10, H 2, M 2, D 1, I 0). The restricted components stay restricted.
+Positive control: M. extorquens representative GCA_900234795.1 has lutA-lutI + lanM in AM1 order (span 10 genes).
+Literature controls: P. putida KT2440 species (Aquipseudomonas alloputida rep RS_GCF_021283545.2; PedA1A2BC system,
+  no TonB receptor in the literature): locus 'A . E F', no reverse-best lutH anywhere. M. buryatense 5GB1C species
+  (LanA is a FecA-like receptor 12% identical to LutH): locus 'A B E F', no reverse-best lutH. RH AL1, M. aquaticum 22A
+  and M. trichosporium OB3b: split arrangements as published (ANSWER 5).
+Proxy calibration (genome level, GTDB reps): order ABEF gap3 0.945 / 0.873 (sens / PPV), ABEFH gap3 0.890 / 0.907;
+  class rest ABEF 0.874 / 0.559, ABEFH 6 / 6 recovered, PPV 0.214; beyond the class PPV 0.843 (1,547 / 1,835) and 2 of
+  500 proxy-negative reps carry a locus (0.4%; about 670 missed genomes among 166,491 proxy-negative reps outside the
+  class, 95% interval roughly 80-2,400).
+
+GLOBDB
+GlobDB-only genomes (annotation without sequences): family 412 (MOTU 133, SPIREOTU 96, CRBC 60, GCMETA 35, ...), order
+  2,059, class 11,927. Proxy calls (gap 3): family 97 ABEF (23 ABEFH; Methylobacterium 10, Methylocystis 7 with the
+  receptor domain), order 412 (45).
+Proxy outside the class (all GlobDB genomes, gap 3; genomes with ABEF / with ABEFH): Gammaproteobacteria 2,257 / 196 of
+  40,043; Campylobacteria 45 / 0; Deinococci 39 / 0; Sysuimicrobiia 9; Actinomycetes 5 of 20,354; Methylomirabilia 5;
+  38 further genomes in 22 bacterial classes (2 with ABEFH); no archaea. Families with most ABEF genomes:
+  Rhodobacteraceae 859, Xanthobacteraceae 721, Beijerinckiaceae 517, Pseudomonadaceae 500, Rhizobiaceae 380,
+  Burkholderiaceae_C 354 (93 ABEFH), Methylomonadaceae 294.
+Protein download for them: GlobDB r232 serves only whole gzip tarballs (Accept-Ranges yes, no member index):
+  protein_fasta.tar.gz 180,621,086,749 B (headers GENOME___N, no coordinates), gff_cog.tar.gz 36,078,263,471 B (gene
+  coordinates and strand, also needed to map GlobDB annotation rows to genes), genome_fasta.tar.gz 292,068,313,974 B
+  (to re-call with Prodigal as for the GTDB reps). Extracting 412 or 2,059 genomes means streaming the full archives
+  once (217 GB for protein + GFF, or 292 GB of genomes); a Slurm job with a tarfile stream reader, as in
+  Chloroflexi_2026/discovery/topoib/refs/globdb/extract_globdb_seqs.py. Not downloaded.
+
+DATASET PACKAGES (no ELSA method run; no embeddings)
+package/beijerinckiaceae/: universe/{genes,genomes,contigs,gene_flags,contig_extra}.parquet, proteins_gid.faa,
+  tokens/mmseqs__seq__e3c50s75__beijerinckiaceae (308,158 tokens) and _rescue3_ (241,760 tokens; 82,293 genes moved),
+  receipts/universe.json, README.txt, MANIFEST.tsv. Same column set as ws_dpann/package/universe; contigs.length_nt is
+  NULL (GTDB ships proteomes only; contig_extra.max_end_nt is a lower bound); strand-evidence columns NULL.
+package/rhizobiales/: universe + FASTA (27,072,085 genes, 913,090 contigs), README.txt;
+  tokens/mmseqs__seq__e3c50s75__rhizobiales (1,275,491 tokens, 894,115 singletons, largest 83,284; cluster 2,828 s on 64
+  threads); tokens/mmseqs__seq__e3c50s75_rescue3__rhizobiales written by job 92432 when its rescue search ends. After it
+  ends: check the job log (logs/tokens_92432.log) and the arm .json, then write MANIFEST.tsv with
+  `python code/11_manifest.py package/rhizobiales` (single process, login node).
+
+CAVEATS
+- RB assignment is conservative outside the order: lutA/lutB homologs whose best AM1 hit is a paralog are not counted
+  (profile check adds them). Class-rest and beyond numbers are lower bounds for the module.
+- Loci near contig ends (17.7% of main order loci) may be incomplete.
+- Genome counts are species representatives; associations (MDH) are phylogenetically dependent.
+- Functional statements (lanthanide uptake) rest on the AM1/PA1/P. putida literature only: UNVERIFIED for every locus.
+
+CITATIONS OPENED (by the literature subagent; full text unless noted)
+- Roszczenko-Jasinska P et al. 2020 Sci Rep 10:12663 doi:10.1038/s41598-020-69401-4 (and Fig. 4)
+- Ochsner AM et al. 2019 Mol Microbiol 111:1152 doi:10.1111/mmi.14208
+- Zytnick AM et al. 2024 PNAS 121:e2322096121 doi:10.1073/pnas.2322096121
+- Larrinaga WB et al. 2024 PNAS doi:10.1073/pnas.2410926121
+- Good NM et al. 2022 Front Microbiol 13:820327 doi:10.3389/fmicb.2022.820327
+- Juma PO et al. 2022 Front Microbiol 13:921635; Fujitani Y et al. 2022 Front Microbiol 13:921636
+- Hemmann JL et al. 2023 J Biol Chem 299:102940 doi:10.1016/j.jbc.2023.102940
+- Groom JD et al. 2019 J Bacteriol 201:e00120-19 doi:10.1128/JB.00120-19
+- Shiina W et al. 2023 Appl Environ Microbiol 89:e01413-22 doi:10.1128/aem.01413-22
+- Wehrmann M et al. 2019 Front Microbiol 10:2494 doi:10.3389/fmicb.2019.02494; 2018 mSphere 3:e00376-18
+- Mattocks JA et al. 2023 Nature 618:87 doi:10.1038/s41586-023-05945-5
+- Wegner CE et al. 2021 AEM doi:10.1128/aem.03144-20; Gorniak L et al. 2023 Microbiol Spectr; 2026 Environ Microbiol
+- Abstract only: Cotruvo JA et al. 2018 JACS 140:15056 doi:10.1021/jacs.8b09842; Mattocks JA et al. 2019 JACS 141:2857
+- Databases: NCBI efetch CP001510.1-CP001514.1, NC_012808.1, CP000908.1; UniProt REST (C5B156-C5B165)
+
+ARTIFACTS
+Local (benchmarks/redesign/slice_lut/): code/ (all scripts and sbatch wrappers), NOTEBOOK.txt, REPORT.txt, tables/.
+Remote ($RD/slice_lut/): ref/ (AM1 proteome, references, Pfam on references), package/{beijerinckiaceae,rhizobiales}/,
+  scan/ (forward/reverse MMseqs2 TSVs, family Pfam check), globdb/ (order_rows 76.7M rows, wide_rows 26.7M rows, class
+  rows 241.0M rows, beyond rows, gene counts), results/{order,alpha_wide,beyond,proxy}/ (loci.tsv, locus_genes.tsv,
+  genomes.tsv, component_genes.parquet, own_annot.parquet, mdh_hits.parquet, loci_summary.json,
+  globdb_index_check*.json/tsv, hmm_refine_*.tsv, proxy_*.tsv), work/ (parts, alpha_wide and beyond gene tables + FASTA,
+  MMseqs2 DBs, HMMs).
+Remote disk: package/ 10.4 GB (family 1.5, order 8.9), scan/ 6.6 GB, globdb/ 2.8 GB, work/ ~89 GB of rebuildable
+  intermediates (tokens_rhizobiales 32, alpha_wide 24, mm 13, beyond 4.8, rhizobiales parts 4.5, ...); work/ can be
+  deleted once job 92432 has finished.
+
+JOBS (biotite, account banfield, partition standard)
+91291 lut_build  (-c 24) parse + universes + order search + GlobDB rows; FAILED at its last stage (hmmfetch keys), rest kept
+91327 lut_tokens (-c 64) family tokens, COMPLETED 41 min
+91755 lut_loci   (-c 24) family Pfam check + order loci, COMPLETED 3 min
+91809 lut_annot  (-c 24) order direct Pfam/KOfam + MDH KOs + loci, COMPLETED 1 h 32 min
+91817 lut_wide   (-c 24) class rest + GlobDB class rows + proxy + loci, COMPLETED 1 h 09 min
+92432 lut_tokens (-c 64) order tokens: base done 11:17 UTC; rescue3 prefilter running since 11:21 UTC (projected ~12 h)
+92469 lut_wide2  (-c 24) beyond the class + alpha and beyond annotation, COMPLETED 2 h 45 min
+Login node (single process or <= 4 threads): reference fetch, Pfam on 12 references, HMM sensitivity checks, proxy
+  calibration tables.

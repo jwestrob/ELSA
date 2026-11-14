@@ -1,0 +1,227 @@
+ws_cofold3 - deep dive on the two remaining showcase candidates (DPANN, engine v1.5 results_dpann_v5)
+12 November 2026. Biohub ESMFold2 (esmfold2-2026-05, fold_all_atom). Names below are observations of
+similarity unless a curated caller emitted the call; curated resources in the live data: DefenseFinder
+(defense_systems), TXSScan (secretion_systems: Archaeal-T4P 804, T5aSS 4, T5bSS 1), CRISPRCasTyper.
+
+HEADLINE
+- Candidate 1 is the first gene pair of a three-gene operon A (60 aa) - B (70 aa) - C (214 aa). A and B stay
+  unrecognised by every profile and structure search; C is recognised. C sits immediately downstream of B in 258 of
+  267 instances (co-oriented in all 258, overlapping in 168), its family resembles CD-clan (caspase-like / CHAT)
+  cysteine proteases by HHsearch and Foldseek, and DefenseFinder emitted a curated "Borvo" call (component BovA)
+  on C in 8 of 268 loci. The folds are robust: AB co-folds in 12 instances over 7 phyla (ipTM 0.65-0.94,
+  median 0.78; partner swaps median 0.13, max 0.47), as a 1:1 heterodimer, and ABC co-folds as a trimer (ipTM
+  median 0.905 in 11/12; C' swap controls median 0.29). B binds C directly over C's conserved His-Cys pair.
+  Fused A-B single-ORF homologs exist in DPANN (3) and bacteria (2 UniProt entries) and fold into the AB
+  arrangement (TM 0.68-0.82). Best reading: two unrecognised small proteins forming a conserved heterodimer that
+  packs onto a caspase-like protein of a defense-associated operon; a "two-protein dark heterodimer" framing is
+  refuted as incomplete (the unit has a recognised third partner).
+- Candidate 2 (DUF7287/DUF7288 cassette) fails as a showcase: it is recognised (Pfam DUF7287/7288 by HHsearch,
+  TXSScan arCOG06117 component on members of its rank-7 chain-A family, Foldseek minor-pilin EpdB), it sits 1-2
+  genes from curated Archaeal-T4P call members whenever the contig carries a call (8/8), and its screen-2
+  interfaces do not hold as isolated pairs (1/18 pass full length) and survive truncation of the leader + alpha1-N
+  helix only in some replicates. Pilin-like controls stay low (72 full-length control pairs: median ipTM 0.18,
+  0 >= 0.75), so a generic pilin-helix artefact is not what drives the screen-2 signal; the cassette is not
+  identical to any earlier lead (0 shared genes with cluster:1043 or cluster:3913 loci).
+
+==============================================================================================================
+CANDIDATE 1 - tokens 81718 (A) / 393054 (B), screen-1 rank 1
+==============================================================================================================
+1. Distribution (dd_distribution.py c1; c1_distribution.tsv, c1_completeness_bins.tsv)
+ - Engine block in 249 of 3,564 genomes (268 instances); family HMMs (built from token members, hmmsearch
+   E <= 1e-5 over all 3,585,303 DPANN proteins) give an adjacent A-B pair in 295 genomes (325 pairs). Every one of
+   the 295 genomes holding both an A-HMM and a B-HMM gene has them adjacent (295/295).
+ - Per phylum (block; HMM pair; >= 90 %-complete genomes; completeness-corrected): Nanobdellota 134/1,738 (7.7 %;
+   9.1 %; 8.1 %; 8.9 %), Micrarchaeota 49/1,146 (4.3 %; 5.6 %; 5.2 %; 5.1 %), Aenigmatarchaeota 30/315 (9.5 %),
+   Iainarchaeota 17/185 (9.2 %), EX4484-52 9/44 (20.5 %; 30 % of the 10 complete genomes), Altiarchaeota 8/63
+   (12.7 %), Nanohalarchaeota 2/46 (4.3 %; 5/46 by HMM pair); 0 in Huberarchaeota (11) and Undinarchaeota (16).
+ - Not near-universal anywhere. Highest orders with >= 10 genomes (HMM pair): QMZS01 4/14, Norongarragalinales
+   14/65, EX4484-52 9/44, IMC4 8/42, SCGC-AAA011-G17 39/206 (19.6 % of 112 complete genomes). Genera with >= 5
+   genomes: 55 of 181 carry it, 1 at >= 80 % (LFW-46, 5/5). Presence is flat across completeness bins
+   (Nanobdellota 8.0 % at 70-90 % vs 8.1 % at >= 90 %), i.e. patchy presence/absence, not missing data.
+ - Copy number: 231 genomes 1 block, 17 two, 1 three (HMM pairs 267 / 26 / 2).
+ - Geometry of the 325 HMM pairs: adjacent and co-oriented 325/325, A upstream 325/325, overlapping 228/325, of
+   which exactly 4 nt (ATGA, A's stop inside B's start) in 207/325 (63.7 %); engine instances 164/268.
+2. Genomic context (dd_prep.py windows +-5 genes; controls = up to 3 length-matched cores per instance on the same
+   contig, >= 6 genes away: 357 control windows for the 147 instances with a usable contig; dd_context.py)
+ - Third gene: the +1 neighbour of B is token 130016 (214 aa; 240), 190823 (88 aa; 13) or 399854 (5), together
+   258/267; co-oriented 258/258; B-C overlap 168/258 (-4 nt in 91). Token 130016: 90.3 % of real windows vs 3.9 %
+   of controls (q 2e-85). All three tokens belong to engine module 1167 with A and B.
+ - Module 1167 (16 tokens): A, B, the three C tokens, plus 345938 (Pfam Radical_SAM, 40 members), 349219
+   (DUF5131, 35), 185598 (GMT-wHTH/Radical_SAM, 23), 83398 (70 aa, 32) and 8 small dark tokens; only A, B, C-family
+   tokens and 210431 (+2 in 3 windows) occur in the windows.
+ - Curated calls on C: DefenseFinder "Borvo" (single component BovA, raw profile E 2e-4 to 5e-3) on the +1 gene in
+   8 of 268 instances (c1_0098, 0106, 0125-0128, 0149, 0220) and on 2 further C-family proteins; 0 curated calls on
+   any A or B gene.
+ - Windows with a curated DefenseFinder system member: 13/147 vs 9/357 controls (8.8 % vs 2.5 %, 3.5x, Fisher
+   p 0.0027); 9/147 after removing the +1 gene; CRISPRCasTyper members 14.3 % vs 14.3 %; raw DefenseFinder
+   profile hits 40 % vs 33 % (p 0.07); TXSScan 0 vs 0.6 %. Individually enriched observed domains (q < 0.05, all
+   in <= 6 % of windows): PIN_2, Bro-N (KOfam K14623), QueC, ThiI, AAA_28, TK, ADK/ADK_lid, DUF4143 (K07133),
+   AAA_14, Polbeta (16.4 % vs 9.2 %). Reading: a modest defence-gene neighbourhood, not a defence island.
+3. Fold robustness (dd_c1_jobs.py, dd_c1_analyze.py; c1_folds.tsv; 12 instances, 12 orders, 7 phyla)
+ - AB single sequence: ipTM 0.653-0.937 (median 0.784), interface PAE 1.1-6.0 A, 38-51 contacts; screen-1
+   criteria 1-3 met in 7/12 (fail: Burarchaeales 0.653, both Aenigmatarchaeota 0.685/0.683, EX4484-52 0.712,
+   Altiarchaeota 0.731 - all ipTM-only shortfalls except Burarchaeales PAE 6.0).
+ - AB with the block-paired MSA (268 rows): ipTM 0.671-0.933 (median 0.762); 7/12 meet criteria 1-3.
+ - Partner swaps (length +-10 %, hydrophobicity +-0.05, same phylum in 22/24): single 24 folds median 0.125,
+   max 0.473; MSA 12 folds median 0.092, max 0.19. Cognate minus best swap >= 0.41 in 12/12 (median 0.61).
+ - Monomers: pLDDT A 77 / B 69 alone vs 85 / 79 in AB; disorder-zipping rule 0/12 (B: <= 47 % of interface
+   residues < 60 in the monomer).
+ - Stoichiometry (Nanobdellota, Micrarchaeota, Aenigmatarchaeota instances): A2B2, A2B, AB2 each form exactly one
+   (or two, A2B2) confident A-B interface (pair ipTM 0.78-0.92, PAE 1.4-3.4 A); every extra copy sits at PAE 6.7-20.6
+   A; A2 ipTM 0.10-0.16, B2 0.11-0.39. 1:1 heterodimer; no higher-order assembly.
+ - ABC trimer: ipTM 0.856-0.953 in 11/12 (median 0.905; the 12th has a 104-aa C, 0.38); B-C passes in 11/12
+   (70-93 contacts, PAE 1.2-3.8 A), A-C in 8/12, A-B in 12/12; same with MSA (median 0.912). C' controls (length-
+   and hydrophobicity-matched dark proteins of 113-227 aa, same phylum): trimer ipTM median 0.29 (max 0.65), C'-pair
+   ipTM median 0.11 (max 0.71). Binary B-C: 0.837-0.931 (11/12 pass) vs B'-C (swap donors) median 0.18 (1/12 at
+   0.751); trimer A-B'-C: B'-C median 0.14. C alone: pTM 0.98, pLDDT 97.
+ - C carries a His (98 % of 258 rows) and a Cys (96 %) 34 residues apart (CB-CB 5.4-6.9 A in all 11 models);
+   B contacts both (CB distance 3.7-6.6 A in 11/11), A lies 25-32 A away. Observation, consistent with B packing
+   over a CD-clan-like His-Cys site; UNVERIFIED.
+ - Fused homologs (single ORF, A-first): DPANN MBU0906634.1 (133 aa), MCK5039384.1 and DAOWDG010000028.1_50 (138
+   aa, identical models); UniProt A0A661IN52 (Deltaproteobacteria bacterium, 132 aa, UniSave 2022_05, deleted
+   2025) and A0A2W7RED9 (Algoriphagus ratkowskyi, Bacteroidota, 117 aa, RefSeq WP_143244227.1). Models with the
+   A|B MSA: pTM 0.83-0.94. US-align against the 12 AB models presented as one chain: TM (fused-normalised) median
+   0.82 / 0.76 / 0.75 (DPANN), 0.68 (Deltaproteobacteria) / 0.69 (Algoriphagus), RMSD 1.7-3.0 A over 103-121
+   residues; a single half reaches only 0.36-0.51, and AB models of different instances agree with each other at 0.85 (0.70-0.95). The
+   fused proteins reproduce the AB arrangement: independent support.
+4. Sequence features (268 instances each; c1_summary.json)
+ - No cysteine in 253/268 A and 253/268 B; no conserved Cys or His motif (best His column in B 56 %), so no zinc
+   fold was run. Net charge median +1 (A) / 0 (B); no 19-residue window with Kyte-Doolittle >= 1.6 (max median 0.84
+   / 0.71); hydrophobic fraction 0.43 / 0.39; SignalP 6.0 OTHER for 536/536.
+ - Invariant columns: A W (1.00), E (0.97), F (0.96), P (0.96), R (0.94); B G (1.00), G (0.99), R (0.96), P (0.90),
+   G (0.86). B's G(1.00), P(0.90), G(0.86) sit at the B-C interface in 11/11 models; B R(0.96) at A-B.
+   Interface columns are not more conserved than the rest (median 0.48 vs 0.53, Mann-Whitney p 0.81).
+5. Deeper homology (dd_hh.py, dd_hh_parse.py, dd_u50.sbatch, dd_fs.sbatch, dd_fs_parse.py)
+ - BFD: present under /shared/db/bfd but its a3m/hhm files are mode 600 (owner gleno); HHblits fails ("Could find
+   neither hhm_db nor a3m_db", job 78395). Substitute: hmmsearch of the A, B and A|B HMMs against UniRef50 (2025
+   file).
+ - HHblits 3 iterations, UniRef30_2020_06: A 96 hits (9 with P >= 95), B 132 (37), A|B 181 (42), fused 157-172
+   (40-41), all "Uncharacterized protein". HHsearch of every resulting profile and of the DPANN-only alignments
+   against Pfam 39 (HH) and PDB100: no hit reaches P >= 90 over >= 30 columns (A: DUF7713 P 88-90 over 17-20
+   columns, HlyU-like ArsR 3jth P 82-84; B: Trans_reg_C P 62-74 over 33-34 columns; A|B <= 79; fused <= 88).
+ - Taxonomy (UniProt lineages): UniRef30 P >= 95 for A|B: Bacteria 26 (Patescibacteria 18; also Bacteroidota,
+   Thermodesulfobacteriota, Planctomycetota, Bacillota), Archaea 12 (DPANN lineages; 1 Methanobacteriota), metagenome 4.
+   UniRef50 hmmsearch E <= 1e-3: A|B 61 (Bacteria 49, Patescibacteria 34; Archaea 2; Eukaryota 1; unclassified 9),
+   A 22, B 52. Homologs outside DPANN: yes, mainly CPR bacteria; in other archaea: sparse.
+ - Single-ORF scan of UniRef hits: in the A|B search 3 templates span both halves at P >= 94 (A0A661IN52 query
+   6-123 / template 6-129 of 140, P 96.2; A0A2W7RED9 30-123, P 95.1; X1KWW4, 92 aa metagenome fragment, P 94.1).
+   One cluster hit by both the A and the B search overlaps itself (Methanosarcinales A0A520JU48, 46-residue overlap):
+   not a fusion. No UniRef50 HMM hit spans both halves.
+ - Foldseek 10 (exhaustive), PDB 2025-01-01 and AFDB Swiss-Prot v6: A (12), B (12), AB as one chain (12) and the
+   5 fused models: 0 strong or moderate hits (best E median 0.44-1.4). Foldseek 9 multimer search of AB: fragment
+   hits only (E >= 14). C: strong in 11/12 (PDB) and 9/12 + 3 moderate (AFDB-SP): SAVED-CHAT filament 8tl0 (E 7e-8,
+   TM 0.77), gingipain R 1cvr, legumain 6l4w; AFDB Gilli_2517 protease, Roc-COR-CHAT protease, caspase A, separin.
+   HHsearch of the C family: Pfam DUF26930 P 99.6 (201 columns, unknown function), Peptidase_C25 P 95.3 (129
+   columns), Separin_C 89, CHAT 81, Peptidase_C14 74; PDB caspase-3 P 94.7 (85 columns). C reads as CD-clan
+   (caspase-like / CHAT) protease-like; the only name from a curated caller is Borvo/BovA on 8+2 proteins.
+6. Verdict and refutations ("a conserved heterodimer of two unrecognised small proteins")
+ - Split gene / frameshift artefact: tested. Fusions in 3/295 genomes (1 %); B starts with its own ATG in an ATGA
+   overlap in 64 % of pairs; fused proteins fold into the AB arrangement. Not refuted (nucleotide frameshift-motif
+   scan of the overlaps not run for this pair).
+ - Sticky small proteins: tested. 36 swap controls max 0.47 vs cognate min 0.65. Not refuted.
+ - Disorder zipping: tested, 0/12. Not refuted.
+ - Higher-order / wrong stoichiometry: tested; 1:1 heterodimer. Not refuted.
+ - Recognised by profile or structure: tested for A and B (HHblits/HHsearch, UniRef50 HMM, Foldseek): not refuted.
+ - "Two proteins" / no known partner: REFUTED. A and B form a trimer with C (11/12, controls 0.29), C is
+   recognised (CD-clan protease-like; curated Borvo/BovA on 8/268 loci), and the operon sits in a modest
+   defence-gene neighbourhood (3.5x curated DefenseFinder members).
+ - Deep conservation: holds (249 genomes, 21 orders, 7 phyla; CPR bacteria homologs) but presence is patchy
+   (4-21 % per phylum), never near-universal.
+ - No coevolution evidence: MSA folds equal single-sequence folds (median ipTM 0.762 vs 0.784); interface columns
+   not more conserved than others (p 0.81).
+ Showcase framing that survives: a conserved A-B heterodimer of two proteins with no detectable homology, encoded
+ directly upstream of a caspase-like protein (called Borvo/BovA in 3 % of loci) that it binds through B at C's
+ conserved His-Cys site, across 7 DPANN phyla and with fused homologs in bacteria. Function UNVERIFIED.
+
+==============================================================================================================
+CANDIDATE 2 - DUF7287/DUF7288 cassette (screen-2 rank 34 15180-287285-354137-96948; rank 7 55170-410168-55171;
+ranks 11 and 33 overlap rank 34)
+==============================================================================================================
+1. Curated system calls (gold set = system_proteins joined to the curated tables; dd_c2_systems.py;
+   c2_curated_proximity.tsv)
+ - 0 of 187 cassette genes are members of any curated call.
+ - In every instance whose contig carries an Archaeal-T4P call (8 of 65: rank 34 1/10, rank 33 1/12, rank 11 1/15,
+   rank 7 5/28) the nearest call member is 1-2 genes away, always the arCOG01811 / arCOG01812 / arCOG01817_ATP
+   (platform/ATPase) triple (7 distinct loci; s34_0003 and s11_0003 are one locus); control cores on the same
+   contigs: 6/24 within 5 genes (Fisher one-sided p 2.9e-4). The other 57 instances lie on contigs of median 20
+   genes with no call. TXSScan includes 3 members of token 55170 (the rank-7
+   chain-A family) as Archaeal-T4P component arCOG06117 in other genomes.
+ - Context (+-5 genes, 28 instances with controls, 80 control windows): T4P ATPase (Pfam T2SSE / arCOG01817 /
+   KOfam K07332) 96 % vs 15 % (q 5e-14), platform (T2SSF, arCOG01811/01812, K07333) 89 % vs 19 %, VWA 32 % vs 2.5 %,
+   curated Archaeal-T4P members 25 % vs 5 % (q 0.013); engine module 227 (157 tokens).
+2. Earlier leads (docs/findings): no overlap. 0 shared genes and no shared contig with the 1,919 cluster:1043 loci
+   or the 837 cluster:3913 loci (run elsa-04bdd1970b90463e955d, source_loci.tsv), 0 shared tokens with cluster:1043.
+   cluster:1043 is three ~180-aa paralogous integral membrane proteins absent from Micrarchaeota; this cassette has
+   only an N-terminal hydrophobic segment (alpha1-N) and occurs in Micrarchaeota (rank 7). cluster:25065 (Micrarch.,
+   upstream of topoisomerase VI B) is a different architecture; 0/28 rank-7 windows hold K03167. The same T4P
+   neighbourhood signal as cluster:1043 (which flanks T4P loci) is the only shared feature.
+3. Truncation and pilin-like controls (dd_c2_jobs.py, dd_c2_analyze.py; c2_interfaces.tsv)
+ - Cut rule (all chains, cassette and controls): remove residues 1..E, E = end of the first run of >= 10 positions
+   whose centred 7-residue window holds >= 4 of ILVFMAWC, run starting in the first 40 residues; removes leader
+   and alpha1-N together (E = 22-47 for the 14 cassette chains). SignalP 6.0 calls Sec/SPIII on 3/14, Sec/SPI on 1.
+ - Rank 34 (screen-2 hits AB, AD, BC, BD; full complex passes all four in both replicates):
+     truncated complex, single: r1 collapses (complex ipTM 0.28; chains A, D pLDDT 32-33; only BC 0.83 passes);
+       r2 AB 0.81, BC 0.87 pass; AD 0.71 / BD 0.78 fail on PAE (15-23 A).
+     truncated complex, MSA: r1 0.64, no interface passes (pair ipTM 0.48-0.69, PAE 5.3-8.0); r2 0.87, AB AD BD CD
+       pass, BC fails on PAE (8.3).
+     isolated pairs, full length: AB 0.57/0.45, AD 0.33/0.45, BC 0.71/0.49, BD 0.27/0.24 (CD 0.79/0.69) - the
+       screen-2 hit interfaces do not form as pairs.
+     isolated pairs, truncated: BC 0.82 (pass) / 0.79 (PAE 6.2); every other pair <= 0.38 except CD r2 0.72.
+ - Rank 7 (screen-2 hit BC): truncated complex single: AB passes both (0.80/0.88), C disordered (pLDDT 25-27);
+   truncated MSA: complex 0.89/0.89, BC passes both (0.89/0.90, PAE 2.7/2.1). Isolated pairs full: AB 0.58/0.74,
+   BC 0.68/0.72, AC 0.37/0.41 (0/6 pass); truncated: AB 0.56/0.88, BC 0.10/0.10.
+ - Controls: 578-protein pool (SignalP Sec/SPIII + N-terminal hydrophobic run + curated Archaeal-T4P membership
+   [45] or Pfam Class_IIIsignal/N_methyl/Pilin_N [533]; cassette and DUF7287/7288-like tokens excluded); 2 draws per
+   side per pair, length +-15 % (relaxed to +-25 % when needed), phylum-matched (Nanobdellota for rank 34;
+   Micrarchaeota or Iainarchaeota for rank 7), 14 of 72 full-length controls from curated T4P members. Full-length 72 control
+   pairs: median 0.18, q90 0.31, max 0.70, 0 >= 0.75. Truncated 36: median 0.10, max 0.80 (1 >= 0.75: rank 34 r2,
+   truncated A + truncated pilin-like control, 0.80 vs cognate truncated AB 0.38). Cognate isolated pairs: full
+   median 0.47 (1/18 >= 0.75), truncated 0.12 (3/18).
+ - Reading: the pilin-helix confound is not supported (controls low), but the cassette's pairwise interfaces need
+   the 3-4-chain context and survive helix removal in one replicate of each block (rank 34 r2; rank 7 BC with MSA).
+4. Distribution (cassette = a DUF7287-like and a DUF7288-like gene <= 2 genes apart, same strand, by HMMs built
+   from the eight cassette tokens; c2_distribution.tsv)
+ - 917 cassettes in 470 genomes (full cassette with the ~270-aa partner: 369): Iainarchaeota 79/185 (42.7 %; 48.9 %
+   of complete genomes), Altiarchaeota 24/63 (38 %), Undinarchaeota 4/16, Aenigmatarchaeota 44/315 (14 %),
+   Micrarchaeota 151/1,146 (13 %; 18.6 % complete), Nanobdellota 166/1,738 (9.6 %; 12.8 %), Nanohalarchaeota 2/46,
+   EX4484-52 0/44. Orders: CABMEP01 12/16, Burarchaeales 18/31, IMC4 22/42, Anstonellales 95/200, Iainarchaeales
+   78/169 (53.5 % of complete). 346/470 genomes hold >= 2 adjacent DUF7287-like/DUF7288-like pairs (one locus can
+   contribute two). The engine block types are narrower
+   (rank 34/33/11: 27 genomes; rank 7: 28).
+5. Verdict. "A conserved, unrecognised, co-folding cassette" is refuted on recognition (DUF7287/7288, TXSScan
+   arCOG06117 component on chain-A homologs, EpdB-like minor pilin, located in Archaeal-T4P loci) and weakened on
+   co-folding (pairs 1/18; truncation survives in one replicate per block). Conservation across deep divergence
+   holds for the family-level cassette (7 phyla), not for the 4-gene block (1 phylum). Tested refutations: curated
+   T4P call (genes not members; adjacent to call members 8/8 where testable), pilin-helix stickiness (not the driver),
+   leader/alpha1-N dependence (replicate-dependent). Not tested: processed-leader-only variant (would only matter
+   if the full truncation had passed).
+
+==============================================================================================================
+RESOURCES, DEVIATIONS, OPEN ITEMS
+==============================================================================================================
+Biohub: 346 of 500 items (candidate 1: 105 core + 1 A2B2 payload check + 48 ABC + 4 UniProt fused + 36 C-specificity;
+candidate 2: 152). Slurm (all -c 24 standard_expand, exclude list, <= 4 at once): 78394 HHblits UniRef30 (4:56),
+78395 HHblits UniRef30+BFD (FAILED, BFD unreadable), 78396 HMMs vs DPANN + SignalP 6 (8:23), 78402 HMMs vs UniRef50
+(7:15), 78467 Foldseek/US-align/C-family HH/cassette HMMs (6:10). No GPU; local CPU only for API polling and
+second-scale pandas. UniProt REST used for two public sequences (A0A2W7RED9; A0A661IN52 via UniSave) and 73
+taxonomy lineages.
+Deviations: BFD replaced by UniRef50 hmmsearch; the zinc fold was skipped (no conserved Cys/His motif); added ABC,
+B-C and C' folds after the context showed the third gene (84 items). Interface pass rule = screen-2 per-replicate
+rule; screen-1 criteria 1-3 for AB.
+Open: (1) nucleotide frameshift-motif scan of the candidate-1 ATGA overlaps (rank 27/106 method); (2) Protenix
+confirmation of the ABC trimer; (3) whether Borvo/BovA calls extend to more C homologs at relaxed DefenseFinder
+thresholds (the raw BovA profile already hits only the 10 called proteins); (4) candidate-2 processed-leader-only
+folds.
+
+FILES (benchmarks/redesign/cofold/deepdive/; work/ holds tables, structures, PAE)
+Code: dd_prep.py, dd_remote_db.py, dd_queries.py, dd_hh.py (+ dd_hh.sbatch), dd_hmm.sbatch, dd_u50.sbatch,
+dd_distribution.py, dd_context.py, dd_c1_jobs.py, dd_c1_analyze.py, dd_hh_parse.py, dd_structs.py, dd_fs.sbatch,
+dd_fs_parse.py, dd_pairs.py, dd_c2_systems.py, dd_c2_jobs.py, dd_c2_analyze.py.
+Tables (work/): c1_instances.tsv, c1_distribution.tsv, c1_distribution_summary.json, c1_completeness_bins.tsv,
+c1_hmm_pairs.tsv, c1_context_enrichment.tsv, c1_module1167.tsv, c1_selected.tsv, c1_donors.tsv,
+c1_fold_manifest.tsv, c1_abc_manifest.tsv, c1_cspec.tsv, c1_folds.tsv, c1_summary.json, c1_interface_columns.tsv,
+hh_hits.tsv, u50_c1_hits.tsv, taxid_lineage.json, c1_foldseek_hits.tsv, c1_usalign_fused_vs_AB.tsv;
+c2_instances.tsv, c2_curated_proximity.tsv, c2_prior_leads.json, c2_context_enrichment.tsv, c2_module227.tsv,
+c2_control_pool.tsv, c2_controls.tsv, c2_fold_manifest.tsv, c2_interfaces.tsv, c2_summary.json,
+c2_distribution.tsv, c2_distribution_summary.json. Folds: work/folds_c1, folds_c1abc, folds_c1ext, folds_c1cspec,
+folds_c2 (pdb/, pae/, metrics.jsonl). Biotite: $RD/cofold/deepdive/ (hh/, hmm/, sp/, fs_c1/, logs/, code/).

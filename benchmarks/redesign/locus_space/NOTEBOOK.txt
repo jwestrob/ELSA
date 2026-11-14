@@ -1,0 +1,92 @@
+NOTEBOOK — workstream ws_locusspace (locus space: a locus as a point / point cloud)
+All times UTC.
+
+2026-11-13 01:55  Read docs/redesign/NOTEBOOK.md from 2026-11-12 13:23 to the end, locus_search REPORT.md / REPORT2.txt /
+                  REPORT3.txt, cofold/REPORT_census.txt, boundary/REPORT_followup.txt, lineagefree/REPORT.txt (head).
+2026-11-13 02:00  Inventory. Gold >= 2 members: DefenseFinder 2,472 (66 types; system_subtype == system_type),
+                  CRISPRCasTyper 3,820 (subtype = prediction; ~60 multi-subtype calls), TXSScan 804 (one type).
+                  Inputs confirmed by ls: zca10 vectors out3/vec/zca10_f32__row.npy; zca10 top-20,000 lists for the
+                  18,414 member genes head/ls_zca10/topk_student; rescue3 tokens; rescue3 token_modules; DH loci
+                  boundary/loci/rescue3/DH_coreH_res0.3_f0.5.parquet (650,438) and H cores (500,842); data-derived
+                  genome groups lineagefree/groups/emb_hom_average_t0.75 (642 groups) and t0.7 (156).
+2026-11-13 02:08  predeclared.json part_1_gold_typing written (representations, protocol, selection rules, hypotheses
+                  H1-H6 and expectations) before any number.
+2026-11-13 02:13  Job 87987 (gold stage, 24 CPUs) started. Kernel self-test (selftest_kernels.py: Chamfer, local
+                  alignment with/without strand, nn_eval ties and group exclusion) passed locally on toy data.
+2026-11-13 02:20  predeclared.json parts 3 (map) and 4 (search) written while 87987 was still building codebooks;
+                  no part-1 number read yet.
+2026-11-13 02:21  Job 88097 (DH locus vectors, MEAN; 650,438 loci, 35 s) done. Job 88106 (map stage with MEAN, run
+                  ahead of the part-1 selection to use the wait; if part 1 selects another indexable arm, the map is
+                  rerun with it and MEAN stays a comparison) started 02:22.
+2026-11-13 02:24  predeclared.json part 5 (fitted locus-level whitening LZ / LW) written before any number.
+                  Codebook K=4096: 378 s (k-means, 1M odd-genome genes); K=32768 running (about 50 min expected).
+2026-11-13 02:45  Map job 88106: exact kNN over 500,842 cores 700 s; graph 5,569,484 edges; Leiden RBConfiguration at
+                  resolution 1 gives only 395 clusters (modularity resolution limit on a 500k-node kNN graph).
+                  Rule added now, before any AMI is read: if the odd-genome selection lands on the grid maximum (50),
+                  the grid is extended to {100, 200, 500, 1000} and the resolution is reselected on odd genomes; even
+                  numbers are read only after that selection. Next jobs carry OMP_WAIT_POLICY=PASSIVE (the parent's
+                  OpenMP threads were spinning at ~2,400% CPU during the Leiden fan-out).
+2026-11-13 02:47  Map job 88106 done (25 min). Odd-genome selection: resolution 10 (odd AMI 0.506; grid interior, no
+                  extension). 1,206 clusters over 500,842 cores (every cluster >= 18 cores; median 303).
+2026-11-13 02:48  Search job 88356 submitted (account held 412 running CPUs at the check, including 88106 which had
+                  just ended; 388 a minute later with 88356 pending). M1z reproduced exactly on 1,247 even queries:
+                  AP 0.79196, stored 0.79196, max |d| 0.
+2026-11-13 02:49  Map report (login node, one thread, 40 s): report_MEAN.json.
+2026-11-13 02:52  Part-1 gold results read (job 87987 still running the engine set). Selection on odd queries: SK
+                  K32768 r8, RFF gamma 2, best = CH, indexable = MEAN (so the predeclared map / search arm is MEAN,
+                  as already run). Expectations vs observed (DF / CCT even 1-NN): J expected 0.80 / 0.70, observed
+                  0.958 / 0.715; MOD 0.70 / 0.60 -> 0.803 / 0.562; CH 0.88 / 0.75 -> 0.971 / 0.722; MEAN 0.85 / 0.72
+                  -> 0.970 / 0.720. H1 refuted against J (CH - J +0.013 [+0.006, +0.021] / +0.007 [-0.009, +0.023]),
+                  holds against MOD (+0.168 / +0.159). H2 refuted (CH - MEAN +0.002 / +0.002). H3 holds (ALN - CH
+                  -0.001 / -0.023). H4 holds (MEAN is the indexable arm, -0.002 / -0.002 to CH). H5 holds
+                  (disjoint-family 1-NN: CH 0.944 / 0.563 vs chance 0.049 / 0.126; MOD 0.685 / 0.362). H6 holds
+                  (sibling 3.4x / 3.0x chance, disjoint 3.6x / 2.6x for CH; MOD 1.4x / 1.1x on the disjoint test).
+                  Gold clustering: AMI levels with bootstrap intervals that exclude the point estimate (duplicated
+                  genomes inflate AMI) -> paired-difference intervals computed separately (lspace_post.py).
+2026-11-13 02:54  Gold job 87987 done (41 min; 32 min of it the K=32768 codebook). Engine (DH) loci overlapping gold:
+                  6,360 loci with coverage >= 0.5; on CRISPRCasTyper J beats every embedding arm (CH - J -0.041
+                  [-0.061, -0.021]); on DefenseFinder CH - J +0.015 [+0.006, +0.024]. Engine-set odd selection: best
+                  J, indexable SK_K32768_r8 (secondary; the predeclared rule uses the gold set).
+2026-11-13 02:56  Search job 88356 done (8 min). Expectation (predeclared): locus index AP 0.55-0.70, window 0.65-0.75.
+                  Observed: locus index 0.744 [0.732, 0.756] (M1z -0.048 [-0.055, -0.040]); window 0.731 (-0.061).
+                  Predeclared search criterion (AP within 0.02 of M1z) fails for both. Matched wrong-type recall at
+                  0.5 / query: locus index 0.197, window 0.216, M1z 0.106 (reproduced exactly: 0.069 / 0.106 / 0.166)
+                  -- but at those thresholds the locus-vector arms return 57-131 unlabelled hits per query (M1z
+                  0.5-3.4). POST HOC follow-up (job 88455): recall at matched unlabelled and unsupported rates.
+2026-11-13 02:57  Fit job 88435 (2 min): 160,212 self-supervised positive pairs (of 218,105 mutual-kNN cross-group odd
+                  candidates). Expectation LZ +0.00-0.02, LW +0.01-0.04. Observed LW - MEAN +0.002 [-0.001, +0.006]
+                  DF, +0.000 [-0.012, +0.012] CCT; LZ - MEAN +0.002 / -0.020. Predeclared criterion not met: the fitted
+                  map does not help. LW locus-index search submitted for completeness (job 88456).
+2026-11-13 03:00  Job 88455 (search post hoc) failed at start: the script had not reached biotite (an scp inside a
+                  timed-out ssh call). Resubmitted as 88486 while the account held 448 running CPUs (over the 400
+                  rule); cancelled within seconds (state CANCELLED, elapsed 0:00). Resubmission now waits for < 400
+                  CPUs and < 2 lsp jobs (submit_when_free.sh). Job 88456 (LW locus-index search) running.
+2026-11-13 03:03  LW locus-index search (job 88456, 3 min): AP 0.792 [0.781, 0.804], LW - M1z +0.000 [-0.007, +0.008];
+                  strict AP -0.031; the fitted locus-level whitening moves search AP from 0.744 (MEAN) to 0.792 while
+                  leaving typing unchanged. LZ search (job submitted by submit_when_free.sh) separates the
+                  unsupervised whitening from the self-supervised step. Post hoc unlabelled / unsupported matched
+                  rates: job 88516 (MEAN arms); LW to follow.
+2026-11-13 03:05  POST HOC search (job 88516, 1 min; top 300 hits per query classified with the round-2 evidence
+                  rule): unlabelled locus-index hits 79.5% supported (88.4% carry a raw DefenseFinder profile);
+                  window 81.2%. Recall at matched rates, locus index / window / M1z: unlabelled 1 per query 0.029 /
+                  0.038 / 0.099; unsupported 0.03 per query 0.133 / 0.100 / 0.122 (locus index - M1z +0.011 [+0.000,
+                  +0.021]). Reading: the locus vector ranks supported-but-uncalled homologous loci above curated
+                  targets; at the round-3 predeclared rate measure (unsupported) the locus index equals M1z.
+                  LW post hoc queued as job 88537.
+2026-11-13 03:08  LZ locus-index search (job 88534): AP 0.728 (LZ - MEAN -0.016 [-0.022, -0.011]); LW - MEAN +0.048
+                  [+0.045, +0.051], LW - LZ +0.064: the self-supervised within-pair step carries the search gain, the
+                  unsupervised locus whitening alone lowers AP. LW post hoc (job 88537): unlabelled hits 84% supported;
+                  matched unsupported 0.03 / query: LW 0.162 vs M1z 0.122 (+0.040 [+0.029, +0.051]); matched
+                  unlabelled 1 / query 0.030 vs 0.099. Map AMI half-sampling intervals (no duplicated genomes):
+                  locus space 0.510 [0.494, 0.525], modules 0.518 [0.500, 0.535], paired -0.008 [-0.018, +0.002].
+                  POST HOC, decided now after the LW search number: the map rebuilt from LW vectors with the
+                  identical protocol (resolution chosen on odd genomes), to test whether one fitted structure serves
+                  typing, search and the map.
+2026-11-13 03:10  Post hoc LW map submitted as job 88566 (submit_when_free.sh; 336 running CPUs at submission).
+2026-11-13 03:15  REPORT.txt drafted (answer, method, tables 1-8, run times, caveats, artifacts, next steps); the gold
+                  AMI half-sampling intervals and the LW map are pending.
+2026-11-13 03:38  LW map (job 88566, 30 min): resolution 5 (odd AMI 0.508), 965 clusters, even AMI 0.508 [0.491, 0.524],
+                  LW map - modules -0.010 [-0.020, +0.000]: same gold agreement as the MEAN map. LW report 46 s.
+2026-11-13 03:50  REPORT.txt finished. Jobs: 87987 gold, 88097 vectors, 88106 map MEAN, 88356 search MEAN, 88435 fit,
+                  88456 search LW, 88534 search LZ, 88516 / 88537 post hoc rates, 88566 map LW (post hoc); 88455 failed
+                  at start, 88486 cancelled. Nothing of mine is queued or running.

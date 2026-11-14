@@ -1,0 +1,168 @@
+{
+ "workstream": "hierarchy",
+ "written_utc": "2026-11-12T09:26Z, before any task 1-3 computation (no Leiden run, engine run or locus-search run of this workstream existed)",
+ "hypothesis": "A hierarchy of nested or multi-resolution families from one input, with evidence for two genes read as -log(size of the smallest shared cluster / N), serves both discovery (recurrence engine) and search; a flat partition is the one-level case.",
+ "common": {
+  "engine": "v1.5 statistics (deployed $RD/engine/code/recurrence.py), W = 3, genome-shuffle null, 3 replicates, rule = largest gene coverage at FDR <= 0.01, all-genome loci; scorer = package score_dpann_loci.py --min-members 2 (200 controls); comparison = dpann_compare.py (genome bootstrap, 2,000 draws, seed 17; tune = odd genome_code, test = even genome_code)",
+  "base": "dpann__mmseqs__seq__e3c50s75__w3 ($RD/engine/results_dpann_v2), the reference of every earlier DPANN comparison",
+  "summed_excess": "mean DefenseFinder excess + mean TXSScan excess (excess = best-locus F1 minus the mean F1 of 200 control placements)"
+ },
+ "T1": {
+  "question": "Does the V0 single-input arm (all 164,863,660 gene-level capped edges, weight = cosine similarity, Leiden modularity) beat the MMseqs2 base for Leiden seeds other than 17?",
+  "resolution": "19000, chosen on odd genomes among the predeclared V0 controls r11000 / r15000 / r19000 / r23000 (tune summed excess vs base -0.011 / +0.012 / +0.033 / +0.028)",
+  "new_seeds": [
+   18,
+   19,
+   20
+  ],
+  "also_run": "seed 17 again (determinism check: identical memberships expected)",
+  "criterion": "confirmed if the even-genome summed excess difference to the base is >= +0.02 in at least 2 of the 3 new seeds",
+  "reported_beside": "F1 and excess for DefenseFinder, TXSScan and CRISPRCasTyper per seed",
+  "refutation": "fewer than 2 of 3 new seeds reach +0.02: the +0.038 of seed 17 was a seed-specific fluctuation and the single-input claim is not confirmed",
+  "attribution": {
+   "design": "descriptive 2 x 2 at matched token counts, low = 153,520 tokens (round-1 graph r3000, the best round-1 embedding-only arm, test summed -0.029) and high = 297,708 tokens (V0 r19000). Graph G1 = round-1 graph (mutual 20-NN of unique sequences from the IVF k50 file, nodes = unique sequences, weight cosine); G2 = V0 (gene-level edges: identical-sequence partners plus the HNSW k50 neighbours of each gene's sequence expanded to genes of other genomes, cap 64 per gene, undirected union). A third graph G3 = G2 restricted to its 56,962,567 mutual edges separates mutuality from gene-level expansion.",
+   "token_matching": "for each graph a resolution grid; the run with the smallest |log(tokens / target)| represents the cell; the G1 run at resolution 19000 is also reported (resolution matched rather than granularity matched)",
+   "decomposition": "graph effect at fixed granularity and granularity effect within a graph, both orders, with the interaction; no pass/fail criterion"
+  }
+ },
+ "T2": {
+  "implementation": "recurrence_ml.py, a copy of engine v1.5. Each gene carries one token per level. Every pair of genes within W on a contig is an instance at every level where both tokens are assigned and differ. Pair statistics (G, L, NP, J, E, P) are computed within each level exactly as v1.5. Each instance takes the level whose token pair has the smallest Poisson P (ties to the level listed first; levels listed by decreasing token count). Multiplicity over levels: the rules use P_adj = min(1, K * P) with K = number of levels, and the null applies the same per-instance choice after permuting gene order within each genome jointly for all levels (as --adaptive accounts for the window choice), so the empirical FDR includes the choice. Rules are evaluated on the token pairs (per level) selected by at least one instance. Support of a boundary = L of the selected pair of the best significant instance spanning it; loci are read from this combined support exactly as v1.5.",
+  "reproduction_gate": "with one level, recurrence_ml.py must reproduce the deployed v1.5 engine exactly on e3c50s75 at W = 3 (summary values other than timing, rules.tsv, significant_pairs, token_modules, boundary_support, loci_all_genomes) before any multi-level result is interpreted",
+  "pools": {
+   "embedding (V0 levels, Leiden seed 17 memberships of the context_kernel grid)": [
+    "r30000 (709,751 tokens)",
+    "r23000 (432,675)",
+    "r19000 (297,708)",
+    "r15000 (189,089)",
+    "r11000 (111,780)",
+    "r7500 (67,420)",
+    "r3000 (28,798)",
+    "r1000 (13,391)"
+   ],
+   "sequence (MMseqs2)": [
+    "id30c80 (674,172)",
+    "e3c50s75 (430,471)",
+    "e3c30s75 (380,979)"
+   ]
+  },
+  "candidate_level_sets": {
+   "a_embedding": {
+    "E1": [
+     "r30000",
+     "r19000",
+     "r11000"
+    ],
+    "E2": [
+     "r19000",
+     "r11000",
+     "r3000"
+    ],
+    "E3": [
+     "r30000",
+     "r19000",
+     "r11000",
+     "r3000"
+    ],
+    "E4": [
+     "r30000",
+     "r19000",
+     "r11000",
+     "r3000",
+     "r1000"
+    ],
+    "E5": [
+     "r30000",
+     "r23000",
+     "r19000",
+     "r15000",
+     "r11000"
+    ],
+    "E6": [
+     "r19000",
+     "r7500",
+     "r1000"
+    ]
+   },
+   "b_sequence": {
+    "S1": [
+     "id30c80",
+     "e3c50s75",
+     "e3c30s75"
+    ],
+    "S2a": [
+     "e3c50s75",
+     "e3c30s75"
+    ],
+    "S2b": [
+     "id30c80",
+     "e3c50s75"
+    ],
+    "S2c": [
+     "id30c80",
+     "e3c30s75"
+    ]
+   },
+   "c_both": {
+    "B1": "chosen E set + chosen S set",
+    "B2": "E4 + S1"
+   }
+  },
+  "selection": "within each family the candidate with the highest odd-genome summed excess; best single level = the single level with the highest odd-genome summed excess within the same pool (a: the 8 V0 levels; b: the 3 MMseqs2 levels; c: all 11), all single levels run with the same engine",
+  "criterion": "for each of (a), (b), (c) separately: gain if on even genomes summed excess(chosen multi-level) - summed excess(chosen best single level) >= 0.02 with the paired genome-bootstrap 95% interval excluding 0, AND even-genome DefenseFinder F1 >= base - 0.01 AND even-genome TXSScan F1 >= base - 0.01",
+  "refutation": "no family meets the criterion: choosing one resolution well does as well as combining resolutions in the engine"
+ },
+ "T3": {
+  "evidence": "s(a, b) = max over levels l with tok_l(a) = tok_l(b) of log(N_db / n_l(a)), n_l(a) = genes of a's level-l cluster outside the query genome, N_db = genes outside the query genome (one level = M0 exactly). No per-query similarity search.",
+  "protocol": "round-1 locus search unchanged: windows of <= W = query span + wx genes (cap 60), greedy one-to-one slot filling, per-slot floor tau, circular-shift null with 200 replicates (seed 17 + qid), labels and AP as bench.py; DefenseFinder queries with >= 2 members; configuration chosen by mean primary AP on odd genomes (ties: smaller wx, larger tau); test on even genomes (1,247 queries with >= 1 relevant target)",
+  "grid": {
+   "wx": [
+    0,
+    2,
+    4,
+    8
+   ],
+   "tau": [
+    0,
+    1,
+    2,
+    3
+   ]
+  },
+  "variants": {
+   "H_emb (single source)": {
+    "L8": "the 8 V0 levels of the T2 embedding pool",
+    "L13": "all 13 saved V0 levels r300, r1000, r3000, r7500, r10000, r11000, r15000, r19000, r23000, r26000, r30000, r100000, r300000"
+   },
+   "H_seq (single source)": {
+    "S3": "id30c80, e3c50s75, e3c30s75"
+   },
+   "H_both": {
+    "L8+S3": "",
+    "L13+S3": ""
+   },
+   "checks": {
+    "e3c50s75 alone": "must reproduce M0 (AP 0.370) exactly",
+    "r19000 alone": "flat V0 reference"
+   }
+  },
+  "references": "frozen even-genome per-query metrics of M0 0.370, M2 0.576, S2 0.620, S3 0.698 ($RD/locus_search/out2/final_dfall_metrics.parquet); M0 unlabelled hits per query at E <= 0.01 = 0.719",
+  "criterion": "graded evidence without search: a single-source hierarchy (H_emb or H_seq, configuration chosen on odd genomes) reaches even-genome mean AP >= 0.576 at unlabelled hits per query (E <= 0.01) <= 1.5 x M0 (<= 1.079). Matches sequence search: the same with AP >= 0.620.",
+  "refutation": "both single-source hierarchies below 0.576 (or above the rate bound): hierarchy depth does not substitute for per-query graded ranks",
+  "cost": "CPU seconds per query for evidence assembly, scan and null, reported beside round-1 costs"
+ },
+ "T4": {
+  "nestedness": "for consecutive levels ordered by token count, the fraction of genes whose finer cluster lies entirely inside one coarser cluster",
+  "nested_construction": "top-down intersection: the coarsest level is kept; each finer level is replaced by its intersection with the nested level above it",
+  "comparison": "descriptive: the T2 chosen embedding set and the T3 chosen H_emb set rerun on nested levels; difference with paired interval"
+ },
+ "amendment_1_ribosomal_guard": {
+  "written_utc": "2026-11-12T09:44Z, on the coordinator's instruction, before any T1 seed result, T1 attribution result or T2 multi-level result was seen. Already seen at this time: T3 results (guard not applicable) and the summed excess of single levels r19000, r3000, r1000 (no ribosomal result of any arm of this workstream).",
+  "check": "$RD/ribosomal/code/ribosomal_check.py check <result dir> on every engine output of this workstream; primary run set g2_m16 (1,686 runs of >= 16 Ribosomal_* Pfam-marked genes, <= 2 unmarked genes inside), default reading conserved@2",
+  "admissible": "an arm is admissible only if, at the default reading conserved@2, it recovers >= 1,650 of the 1,686 runs AND >= 110 of the 114 Parvarchaeaceae runs",
+  "reported_for_every_arm": "recovered and Parvarchaeaceae recovered (conserved@2), resolved at conserved@2 and at unit@0.5",
+  "T1": "the guard is reported beside the excess of each seed and each attribution cell; the T1 confirmation criterion is unchanged and is read as a description of the localization / universal-family trade-off",
+  "T2_amended": "Primary T2 verdict: selection on odd genomes is restricted to admissible candidates (multi-level) and to admissible single levels (the comparator 'best single level' = the admissible single level of the pool with the highest odd-genome summed excess); B1 = chosen admissible E set + chosen admissible S set. Gain if the chosen admissible multi-level arm beats the best admissible single level by >= 0.02 summed excess on even genomes with the paired interval excluding 0, AND DF F1 and TXSS F1 >= base - 0.01 on even genomes. The unguarded selection of the original declaration is also reported. If a pool has no admissible single level, the comparator is the base arm (e3c50s75, admissible).",
+  "T2_hypothesis_reading": "supported if a multi-level arm is admissible while its finest level alone is not, and its summed excess on even genomes is >= that of the finest level alone - 0.01 (keeps the ribosomal locus through coarse levels, keeps localization from fine levels); refuted if every admissible multi-level arm loses >= 0.02 summed excess against its finest level alone",
+  "T3": "not applicable"
+ }
+}

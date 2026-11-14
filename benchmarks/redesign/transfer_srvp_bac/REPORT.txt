@@ -1,0 +1,134 @@
+SR-VP bacteria (PacBio): locked test package for the ELSA word method        (workstream transfer_srvp_bac)
+====================================================================================================
+Status: inputs and descriptive statistics only. No neighbourhood, recurrence, word or locus method has been run on
+this universe, and nothing has been scored against its gold tables (the scorer ran only on a synthetic package).
+
+Locations
+  remote  RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111
+          package   $RD/ws_srvp_bac/package/      (SEAL.txt, MANIFEST.tsv/json, receipts/, code/)
+          source    $RD/ws_srvp_bac/input/sharur.duckdb (+ dataset.seal.json), byte copy of the Mac file
+          work      $RD/ws_srvp_bac/work/, embedding run $RD/ws_srvp_bac/embed/srvp_bac__esmpp_small__20261113
+  local   benchmarks/redesign/transfer_srvp_bac/ (code/, NOTEBOOK.txt, this file, results/census.json)
+
+1. Source database and stability
+  Mac file /Users/jacob/Documents/Sandbox/Sharur/Sharur/data/srvp_bacteria_pb/sharur.duckdb
+    15,172,382,720 B; mtime 2026-11-12 19:43:44 MST = 2026-11-13T02:43:44Z; SHA-256
+    971795c67fc30093e9fb09c7dd531f4c5158c6539a75df25752e107455494d6b. Size and mtime were identical at every check
+    from 07:43 to 08:28 UTC (census, hashing, before and after the transfer). The copy on biotite has the same
+    SHA-256 and the 29 table row counts recorded by the Sharur seal (dataset_id 19437953c10c66ce...,
+    2026-11-13T02:43:51Z, structural). The Sharur session's CONTEXT.md (2026-11-13) records the same SHA-256, no
+    write running or planned, and the last write as one dataset_meta row at 19:43 MST.
+  The older biotite Sharur copy (/home/jwestrob/srvp2020/Jacob/srvp_bacteria_pb/sharur.duckdb, 2026-10-23,
+    15,330,979,840 B) predates the 2 Nov DefenseFinder reload; it was not used.
+  Curated callers with named calls in the live tables:
+    DefenseFinder (models 3.1.0)        defense_systems     6,569 systems, 268 types
+    TXSScan                             secretion_systems   2,754 systems, 14 types
+    CRISPRCasTyper (cctyper-port 1.9.0) crispr_cas_systems 20,463 (cas_putative 20,113; crispr_cas 254; cas 57;
+                                                                    crispr_cas_putative 39)
+    GECCO 0.11.0                        loci (bgc)          1,646 clusters, members in locus_proteins
+    sharur.nitrogenase_loci v1          loci                71 confirmed + 10 candidates, members in locus_proteins
+  Outside the gold set, as in DPANN: CRISPR arrays (423 nucleotide loci, no member proteins) and HydDB
+  (per-protein classifier). Raw annotation sources: pfam, kegg, txsscan, cazy, defensefinder, hyddb (+ caller
+  membership rows). Taxonomy per genome: GTDB-Tk 2.4.0 (r226) string for all 1,382. Coordinates, strand, gene
+  index and Prodigal partial flags present for all 2,914,401 proteins.
+
+2. What is built (package/)
+  universe/genes.parquet        DPANN columns and conventions (gid = rank over genome_code, contig_code, start,
+                                end, protein_id; position_index per contig; strand +1/-1; 1-based start/end)
+  universe/contigs.parquet, universe/genomes.parquet (DPANN columns; tax_source sharur_bins_taxonomy)
+  universe/gene_flags.parquet   sidecar: partial flag, truncated (DPANN repair convention), contig-end and
+                                contig_circular flags (genes.parquet keeps exactly the DPANN columns)
+  universe/proteins.faa         >gid headers (trailing * stripped), 2,914,401 records
+  annotation_flags.parquet      DPANN definition
+  gold/instances.parquet, gold/members.parquet   DPANN format, every instance of every caller above; the
+                                evaluation set is resolved + order_trusted + n_members_resolved >= 2, applied at
+                                scoring time exactly as for DPANN (score_*_loci.py --min-members 2)
+  ribosomal/                    runs.parquet, marked.parquet, controls_random/transplant.parquet, gold.json
+                                (ribosomal_check.py rule: Pfam ^ribosom(al)?_, g0/g2, >= 8 and >= 16 markers)
+  split/genome_halves.parquet   test = even genome_code, tune = odd (DPANN rule)
+  scorer/                       score_srvp_bac_loci.py (DPANN scorer, body byte-identical), synthetic test PASSED
+  SEAL.txt                      SHA-256 of every universe and gold file, source identity, date
+  tokens/, embeddings/          see sections 4-5
+  receipts/, code/, MANIFEST    every stage's counts, the code that ran
+
+3. Descriptive statistics (receipts/describe.json, universe.json, strandqc.json, gold.json)
+  Universe: 1,382 genomes = 1,382 contigs (one contig per genome; 406 circular, 976 linear), 2,914,401 proteins
+    (+ 1,457,479 / - 1,456,922). Duplicate positions 0; Sharur gene_index equals the coordinate rank on every
+    contig; no coordinate anomalies; stage03 Prodigal calls match every strand and coordinate (transcription
+    check); all 1,382 genomes order-trusted. Partial flags 00 / 10 / 01 = 2,912,179 / 1,119 / 1,103.
+  Contig length in genes: min 403, q1 461, q5 528, q25 780, median 1,483, q75 3,238, q95 5,389, q99 7,006,
+    max 8,933. Bins: < 500: 40; 500-999: 463; 1,000-1,999: 343; 2,000-2,999: 147; 3,000-4,999: 294; >= 5,000: 95.
+    Contig length 0.50-9.22 Mb, median 1.57 Mb. CheckM2 completeness median 36.7% (q5 12.7, q95 100);
+    contamination median 0.14%.
+  Proteins: median 274 aa (universe `length` = aa + 1, the stored stop, as in DPANN), q99 1,138, max 78,141 aa.
+    Unique sequences 1,785,952 (38.7% of rows repeat a sequence already seen); 577,439,004 unique residues.
+  Taxonomy (GTDB-Tk r226 strings): 36 phyla (1 genome with no phylum), 63 classes, 114 orders, 163 families,
+    198 genera (981 genomes named to genus), 25 species (108 genomes named). Largest phyla: Acidobacteriota 475,
+    Pseudomonadota 215, Desulfobacterota 142, Nitrospirota 103, Chloroflexota 94, Desulfobacterota_B 62,
+    Bacteroidota 49, Methylomirabilota 48, Patescibacteria 34, Gemmatimonadota 30.
+  Split (even genome_code = test): 691 / 691 genomes, 1,456,578 / 1,457,823 genes, 30 / 30 phyla.
+
+  Gold instances (evaluation set = resolved, order-trusted, >= 2 resolved members; span = first-to-last member):
+    caller             all      single  >=2 members  types  genomes  test/tune   span q50/q90/q99/max   members q50/max  contiguous
+    DefenseFinder      6,569    3,101   3,468        138    994      1,727/1,741  2/5/8/16              2/15             2,626
+    TXSScan            2,754      212   2,542         11    910      1,236/1,306  430/2,915/5,111/7,430 10/26              115
+    CRISPRCasTyper    20,463   18,782   1,681         22    807        847/834    3/7/13/19             2/14               855
+    GECCO              1,646        0   1,646          7    794        839/807    12/24/35/79           12/79            1,646
+    SharurNitrogenase     81        9      72          2     72         29/43     3/4/5/5               3/5                 72
+    Every instance resolves to one contig of its genome; member lists equal system_proteins / locus_proteins.
+    Size bins (>= 2 set): DefenseFinder 2-3 / 4-6 / 7+ = 3,265 / 193 / 10; TXSScan 145 / 231 / 2,166;
+    CRISPRCasTyper 1,375 / 126 / 180; GECCO 89 / 300 / 1,257; nitrogenase 64 / 8 / 0.
+    CRISPRCasTyper status over all rows: cas_putative 20,113, crispr_cas 254, cas 57, crispr_cas_putative 39;
+    1,345 of the 1,681 >= 2-member rows carry prediction "False". GECCO types: Unknown 683, Polyketide 354, NRP 181,
+    RiPP 144, Terpene 126, Saccharide 88, NRP;Polyketide 70. Nitrogenase: 71 confirmed (Fe protein + alpha + beta
+    slot KOs in operon order), 10 candidates.
+    TXSScan spans differ from DPANN (median 430 genes here, 8 in DPANN): on these long single-contig genomes the
+    caller assembles components far apart (115 of 2,542 contiguous). The DPANN scorer's --max-span option is the
+    existing control for this.
+  Ribosomal runs (Pfam ^ribosom(al)?_ markers: 46,128 hits on 39,681 genes, 65 domain names):
+    g2_m16 (primary, <= 2 unmarked genes inside, >= 16 markers): 755 runs in 753 genomes, 32 phyla, 154 genera,
+      genes per run q10/q50/q90/max 21/25/34/42, 4 at a contig edge; test/tune 369/386.
+    g0_m16 704; g2_m8 785; g0_m8 798. Random-window controls (20 per run) and transplant controls built.
+
+4. Families (MMseqs2 DPANN recipe + rescue3; job 91538, 29 min on 24 CPUs)
+  package/tokens/mmseqs__seq__e3c50s75__srvp_bac.parquet (+ .json)
+    mmseqs cluster -s 7.5 -e 1e-3 --min-seq-id 0 -c 0.5 --cov-mode 0 --cluster-mode 0 (MMseqs2 release 18, 622 s),
+    mmseqs_tokens.py identical to the DPANN copy. 216,659 tokens, 104,330 singletons, size q50/q90/q99 2/13/255,
+    largest 12,733; tokens in >= 2 / 5 / 50 / 500 genomes: 109,317 / 45,348 / 7,259 / 784.
+  package/tokens/mmseqs__seq__e3c50s75_rescue3__srvp_bac.parquet (+ .json)   <- the DPANN default family table
+    Queries: 168,390 genes in tokens of < 3 members = 150,942 unique sequences, searched against all 1,785,952
+    unique sequences (prefilter -s 7.5 --max-seqs 1000, align -e 1e-5 -a). 38,037 genes move (1.31%; DPANN 2.33%),
+    187,175 tokens, 83,343 singletons, largest 12,764, size q50/q90/q99 2/16/302.
+    Tokens by size 1 / 2 / 3-4 / 5-9 / 10-49 / 50-99 / 100-999 / >= 1000:
+      83,343 / 22,963 / 32,269 / 21,132 / 19,253 / 3,471 / 4,446 / 298
+    Genes by family size, same bins: 83,343 / 45,926 / 113,220 / 135,151 / 396,160 / 239,840 / 1,347,279 / 553,482
+    Tokens in >= 2 / 5 / 50 / 500 genomes: 101,588 / 45,962 / 7,320 / 788.
+  Replay control: rescue3_tokens.py run on the DPANN inputs reproduces the adopted DPANN rescue3 arm row for row
+    (0 differences; identical parquet SHA-256 560140f2...).
+
+5. ESM++ small embeddings and zca10 (pending the GPU)
+  embed_queue run $RD/ws_srvp_bac/embed/srvp_bac__esmpp_small__20261113 is prepared (CPU, no model): 1,785,952
+  unique sequences, 577,439,004 residues, 146 shards, length 20-78,141 (1,887 > 2,046 aa). Recipe as DPANN:
+  Synthyra/ESMplusplus_small rev 46c5f7d5, bf16 autocast, float32 residue-only mean, whole protein in one pass,
+  worker self-check and per-shard float32 audit on the GPU; finalize with no model on CPU.
+  Expected GPU time at the DPANN A5000 rate (52,319 res/s): about 3.1 h.
+  Submission: code/gate.sh runs detached on the biotite login node and submits embed_gpu.sbatch (partition gpu,
+  A5000 node only, 12 CPUs) when `squeue -u jwestrob -p gpu` is empty, then finalize_zca.sbatch afterok on it.
+  finalize_zca.sbatch: embed_queue finalize -> zca10.py (embed_tokens.transform 'zca10' fitted on these vectors,
+  row-count weights, alpha 0.1; stored float16 per unique sequence as softrec/r3/vec/zca10_f16.npy, plus mu, W and
+  eigenvalues and a 20,000-row reproduction check) -> products linked into package/embeddings -> describe ->
+  MANIFEST.
+
+6. Differences from the DPANN package, all forced by the data
+  - Source check: the Sharur seal is structural (no file digest), so the copy is checked against the Mac file's
+    SHA-256 taken before transfer, plus the seal's 29 table row counts.
+  - Strand check uses the Prodigal calls that produced the database (no independent re-call exists).
+  - Taxonomy comes from the Sharur bins string (GTDB-Tk r226) for every genome; the r232 accession lookup is kept
+    and matches nothing (unpublished MAGs).
+  - Gold adds two curated locus callers absent from DPANN (GECCO, sharur.nitrogenase_loci) in the same format.
+  - universe/gene_flags.parquet and universe/proteins.faa are added beside the DPANN files.
+  - tsv2parquet.py widens lengths to UINTEGER (a 78,141-aa protein exceeds USMALLINT).
+  - The rescue search runs only the rescue queries (per-query results are independent of the other queries).
+  - The March ESM2-8M stage is dropped; ESM++ small is the embedding.
+  - The scorer self-test on gold-as-loci and the whole-contig example were not run, because both read the curated
+    calls; the scorer was tested on a synthetic package only.

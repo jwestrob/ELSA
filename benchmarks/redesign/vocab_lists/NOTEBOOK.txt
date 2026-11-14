@@ -1,0 +1,288 @@
+vocab_lists NOTEBOOK (workstream ws_vocab2b; times UTC)
+========================================================
+2026-11-13 03:19  Read vocab/REPORT.txt, vocab.py, vscore.py; softrec REPORT2, REPORT4, REPORT_cas, softrec.py (Universe,
+                  Lists, expand_knn, exclusion, soft_pass), softrec4.py; lineagefree/REPORT.txt and softrec_lf.py;
+                  calib/REPORT.txt; context_units NOTEBOOK.txt (odd numbers to 03:03) and predeclared.json (no REPORT
+                  yet); docs/redesign/NOTEBOOK.md from 2026-11-12 23:53. Facts used in the design: ws_context's context
+                  cosine between instances of one token pair decays with relatedness (raw W25: species .76, genus .48,
+                  family .28, order .17, class .11, phylum .08; floor .005, sd .08) and stays above the floor between
+                  phyla because the window around a pair inside a conserved unit is the unit itself; best odd
+                  configuration so far raw W50, t 2, noise-aware rho (z 2).
+2026-11-13 03:24  predeclared.json written (before any computation): algorithm, evidence units (ctx main; grp reference;
+                  gen, ctxshuf, ctx200 controls), tau rule, readings, classes, odd selection, even criterion, H1-H6,
+                  refuters, expectations X1-X10, deviations from the brief stated in advance.
+2026-11-13 03:27  amendment_0 (before any computation): N_eff sample 32 genomes, best-ranked span per genome (cost).
+2026-11-13 03:31  vl.py written (kernels: pass_count = n, E, group counts; pass_neff = contexts and N_eff; pass_build = word
+                  lists; adjacency / commit / rebuild; Order = slot space of one gene order; smoke test vs brute force).
+2026-11-13 03:33  Coordinator: add an alignment-list control (aln) and ws_calib's z table as list sources. Checked for an
+                  existing all-genes MMseqs2 table: repair/hits (1.09 M query uids, E <= 1e-5), subgenic/hits (sample),
+                  ws_seqanchors (67 k queries), locus_search seqsearch (subset): none covers all uids at E <= 1e-3.
+                  amendment_1 written (aln control; z10.6 / z13.7 list sources; main-arm rule on odd).
+2026-11-13 03:34  Read /home/jwestrob/.claude/CLAUDE.md and biotite-cluster-ops.md. Account 304 CPUs running. Job 88812
+                  (mm_search.sbatch, 64 CPUs): MMseqs2 18 all-against-all, prefilter -s 7.5 --max-seqs 1000, align
+                  -e 1e-3, then hits -> kNN-layout arrays (mm2knn.py). Running on node-64-768g-28.
+2026-11-13 03:35  Clock correction: hand-written times in predeclared.json were ahead of the clock; corrected from file
+                  mtimes (03:24 / 03:27 / 03:33), content unchanged.
+2026-11-13 03:39  Smoke test (login node, 31 s, synthetic 12-genome universe): pass_count n / groups / E / group E equal a
+                  brute-force count on all 1,464 adjacencies; ctx_vec equals direct window sums; pass_neff equals a direct
+                  N_eff on all rows; learner invariants (live nodes tile genes, children tile parents with <= 2 genes,
+                  word-list spans on one contig of another genome); planted 6-gene blocks: 8 of 8 become one word.
+2026-11-13 03:40  Job 88856 (run_big.sbatch, 64 CPUs, node-64-768g-31; account 320 CPUs running before it): genome-excluded
+                  embedding lists; arms ctx, ctxshuf, gen, ctx200; round-0 ladder on observed + 3 shuffles, tau*, full
+                  observed runs (saved), full shuffle-0 runs for ctx and ctx200 (word FDR), reciprocity sample.
+                  Expectations before its numbers (X1): tau* 8 or 10 for ctx; round-0 null passes scale like Lambda_genome.
+2026-11-13 03:43  Coordinator: ws_context reported (context N_eff confounded by conserved-unit size; Test 2 embedding-only
+                  kernel 0 of 1,686 ribosomal runs). Read its REPORT sections 1-5 (Test 2 in full). Job 88856 cancelled
+                  after 3.5 min (lists 164 s; one gene order 10 s; context floor W50 raw c0 .0056, sd0 .087; no ladder
+                  number existed).
+2026-11-13 03:44  amendment_2: grp is the MAIN evidence unit; grp200 depth control; syn = synteny-retention N_eff (second
+                  arm, no groups, no threshold); ctx exploratory (ctxshuf control, gen diagnostic); aln and z arms use the
+                  main unit. H1/H3/H4/H6 restated, H7 (CRISPR-Cas via other-family homologs) added; expectations X13-X16.
+2026-11-13 03:45  Job 88891 (64 CPUs): refsr (softrec round-2 reproduction), then group-excluded lists, arms grp and
+                  grp200, full shuffle run for grp. Expectation before its numbers (X13): tau* 8-12.
+2026-11-13 03:46  syn kernels written (syn_matrix: per-genome supported round-0 adjacencies and the genomes supporting
+                  them; pass_synneff: N_eff from the mean pairwise S over own + <= 63 sampled carriers); smoke test:
+                  S equals a brute-force matrix, N_eff equals a direct computation on all rows.
+2026-11-13 03:48  Coordinator: ws_locusspace reported (mean-pooled zca10 vector per locus types at 0.970 / 0.720
+                  leave-group-out 1-NN; Leiden on the 15-NN graph, resolution by odd AMI). To add after the main verdict:
+                  vector classes of word instances with that recipe, typing for both class sets, 1-NN accuracy; search
+                  if time allows.
+2026-11-13 03:48  REFERENCE REPRODUCED (job 88891, refsr): this kernel's round-0 pass with softrec round 2's genus lists
+                  (depth 1,000) gives the stored $RD/softrec/r2/stats/obs.npz exactly: homolog-exclusion mask equal on
+                  9,399,310 instances; L and G equal on all 9,235,875 non-excluded instances; E equal as float32 (max rel
+                  diff 6e-8). Pass time 48.6 s on 64 threads. Group-excluded lists: 3,333 genes shorter than depth 1,000.
+2026-11-13 03:56  Ladder (job 88891; round-0 adjacencies passing Lambda >= tau and n >= 2; observed / mean of 3 shuffles):
+                    tau        4          6          8          10         12         15     20
+                    grp obs    2,528,780  2,339,494  2,202,201  2,083,939  1,985,064  1.86M  1.70M
+                    grp null   23,108     1,966      182        18.3       2.0        0      0
+                    grp FDR    .0091      .00084     .000083    .0000088   1e-6
+                    grp200 obs 3,001,252  2,502,368  2,213,935  2,001,434  1,825,646  1.61M  1.33M
+                    grp200 null 242,856   25,478     2,753      260        22.7       0.3    0
+                    grp200 FDR .081       .0102      .0012      .00013     .000012
+                  tau* (predeclared rule): grp 4 (the lowest ladder value; FDR .0091, so the boundary lies between 3 and
+                  4 at the observed ~10x per 2 nats), grp200 8. X13 (tau* 8-12) refuted for grp. Depth 1,000 has the
+                  sparser null: its larger E removes chance pairs with n = 2 that pass at depth 200.
+                  Pass A 43-51 s at depth 1,000, 8-11 s at depth 200 (64 threads).
+2026-11-13 04:01  grp full observed run in progress (tau 4): round 0 committed 778,101 of 2,528,780 candidates (74 s),
+                  round 1 345,505, round 2 148,150, then halving; ~18 s per later round.
+                  Expectations before any odd score of grp (written now): odd summed .50-.60 (token DH odd .418), F1 DF
+                  .74-.80, TXSS .58-.66, CCT .42-.46; odd ribosomal recovered >= 800 of 848, resolved 450-700 (bar 705);
+                  V-top selected over V-nest unless V-nest adds ribosomal resolution. grp200 (tau 8) below grp on summed
+                  excess and ribosomal recovery.
+2026-11-13 04:10  Job 88891 done (1,541 s). grp (tau 4): 1,350,674 word instances, 530,750 top-level, 2,265,303 genes in
+                  top-level words (63.2%), top span median 3 / q90 8 / q99 18 / max 80, 25 rounds, 527 s. Shuffle 0 at
+                  tau 4: 24,248 word instances, 70,072 genes (2.0%): full-run word FDR .018, gene FDR .031 (reported; the
+                  round-0 rule selected tau). grp200 (tau 8): 1,073,200 instances, 572,313 top-level, 54.2% of genes,
+                  span q99 12, 142 s.
+2026-11-13 04:11  Job 89149 (64 CPUs; account 344 CPUs running before it): token DH refcheck; odd scores of grp, grp200;
+                  genome-list job (syn, ctx, ctxshuf, gen; full shuffle for syn; reciprocity sample on syn); odd scores.
+2026-11-13 04:12  REFERENCE REPRODUCED (job 89149): stored token DH loci rescored: even summed .4270, F1 .744/.548/.479,
+                  ribosomal 1,686 / 1,512, Parv 114 / 113; per-instance F1, control F1 and coverage equal the stored
+                  scores (R1 .3375 equal too).
+2026-11-13 04:13  ODD scores (job 89149; token DH odd summed .4179, F1 .743/.544/.479, ribosomal odd 848/769/55; bars
+                  summed >= .4079, F1 >= DH - .02, recovered >= 830, Parv >= 54, resolved >= 705):
+                    arm/reading   summed  d vs DH odd [95%]       F1 DF/TXSS/CCT    ribo odd rec/res  Parv rec  cond
+                    grp V-top     .3961   -.022 [-.043, -.001]    .766/.500/.444    815/482           31        n n n
+                    grp V-nest    .4451   +.027 [+.006, +.048]    .829/.589/.485    815/521           31        Y Y n
+                    grp200 V-top  .4716   +.054 [+.032, +.074]    .804/.537/.446    369/124            0        Y n n
+                    grp200 V-nest .5065   +.089 [+.066, +.109]    .834/.617/.479    369/126            0        Y Y n
+                  SELECTION (predeclared rule, odd): grp -> V-nest [2, .4451]; grp200 -> V-nest [2, .5065]. Written
+                  before any even number of a word reading was read.
+                  Against the 04:01 expectations: summed lower than expected (.445 vs .50-.60); CCT F1 higher (.485 vs
+                  .42-.46; at the odd DH value); TXSScan in range; ribosomal resolved in range, recovered 815 (bar 830)
+                  and Parvarchaeaceae 31/55 fail. Reading before even: grp fails "matches" on the ribosomal bars; summed
+                  and F1 bars likely hold.
+2026-11-13 04:29  Job 89149: the vector file read was I/O-bound on node-64-768g-29 (lists step 770 s, of it ~12 min in
+                  uninterruptible reads of the zca10 source; earlier jobs 160 s). Synteny-retention matrix (observed
+                  order, genome-excluded lists, depth 1,000; 55 s): supported round-0 adjacencies per genome median 2,258;
+                  off-diagonal S mean .026, median .0065, q90 .075, q99 .256; same-group pairs mean .298, other-group
+                  .022 (S tracks relatedness without any grouping). syn observed round 0: 3,143,602 adjacencies pass
+                  tau 4, 2,211,959 pass tau 10 (pass A 56 s, pass B 97 s).
+2026-11-13 04:45  Observed round 0 (job 89149), adjacencies passing tau 10: syn 2,211,959; ctx 1,938,989; ctxshuf
+                  4,010,059; gen 4,014,174 (grp 2,083,939). Shuffled contexts give N_eff ~ n, as gen: the context arm's
+                  reduction comes from the real contexts. syn shuffle 0: 29,077 at tau 4, 37 at tau 10.
+                  Expectations for EVEN (written before any even number exists), main arm grp V-nest from its odd scores:
+                  summed .44-.47 (d vs DH +0.01 to +0.04), F1 DF .80-.83, TXSS .57-.60, CCT .46-.49; ribosomal recovered
+                  1,600-1,640 (< 1,650), resolved 1,000-1,100 (< 1,400), Parvarchaeaceae recovered 55-70 (< 110).
+                  Verdict expected: neither, blocked by the three ribosomal bars only.
+2026-11-13 04:48  tau* (job 89149, round-0 FDR at tau 4 / 6 / 10): syn .0093 / .0010 / .000016 -> 4; ctx .0064 / .00066 /
+                  .0000084 -> 4; ctxshuf .0063 -> 4; gen .0064 -> 4. Every arm with depth-1,000 lists sits at the lowest
+                  ladder value (grp too); the FDR falls ~10x per 2 nats, so tau 3 would exceed .01.
+2026-11-13 04:53  grp parse structure (gold-free; login node, 5 s): word list size |S| and supporting groups by span
+                    span   instances  |S| q10/q50/q90   groups q50  Lambda q50
+                    2      594,920    26 / 269 / 665   53          99.6
+                    3      274,448     9 / 118 / 540   26          44.1
+                    4      179,890     4 /  66 / 429   17          29.1
+                    6       60,993     1 /  19 / 242    7          15.3
+                    10      14,104     1 /   7 / 109    4          10.4
+                    20         840     1 /   2 /  37    2           8.2
+                  The aligned set shrinks multiplicatively with word length: a 10-gene word keeps a median 7 aligned
+                  instances, a 20-gene word 2. Reading (to test with the junction diagnosis): words stop growing because
+                  long contiguous instances are rare in other genomes (median contig 8 genes; each step also needs both
+                  parts inside the respective lists), so large conserved neighbourhoods (ribosomal superoperons, >= 16
+                  genes) cannot be one word.
+2026-11-13 04:54  amendment_3 (before any even number): diagnostic reading V-phr (V-nest + phrases joined where the
+                  junction gene pair passes the arm's own test; not selectable) and the junction diagnosis on grp.
+                  Expectation: V-phr raises ribosomal recovered above 1,650 and resolved by 200-400, costs 0.01-0.05
+                  summed excess.
+2026-11-13 05:07  Job 89149 full observed runs: syn 1,449,551 instances, 588,738 top-level, 68.1% of genes, span q99 17,
+                  11 rounds, 484 s; ctx 1,480,454 / 563,893 / 71.2% / q99 18, 14 rounds, 512 s.
+                  Round-0 adjacencies passing tau 10 (observed): N_eff / n q10/q50/q90 syn .011/.049/.20 (N_eff q50 9.3,
+                  n q50 242); ctx .007/.031/.17 (N_eff q50 6.5); ctxshuf 1.0 (as gen).
+                  Synteny matrix on shuffled orders: off-diagonal mean .00076 (observed .026), so N_eff ~ n in the null.
+                  Reciprocity (2,000 committed round-0 syn merges, 572,269 supporting pairs): a in list(a') .852, b in
+                  list(b') .862, both .763 -> requiring reciprocity would remove 24% of the supporting pairs.
+2026-11-13 05:15  Job 89149: ctxshuf 2,200,178 instances, 424,749 top-level, 87.9% of genes, top span q99 54, max 842;
+                  gen 2,205,214 / 423,319 / 88.0% / max 842 (genome counting without correction chains descent into giant
+                  words). syn shuffle 0 at tau 4: 28,491 word instances, 84,076 genes (2.3%): word FDR .020, gene FDR .034.
+2026-11-13 05:21  ODD scores (job 89149; same bars as 04:13):
+                    arm/reading     summed  d vs DH odd [95%]       F1 DF/TXSS/CCT    ribo odd rec/res  Parv rec  cond
+                    syn V-top       .3898   -.028 [-.049, -.008]    .788/.521/.475    799/441           55        n n n
+                    syn V-nest      .4392   +.021 [+.001, +.041]    .847/.614/.523    799/472           55        Y Y n
+                    ctx V-top       .3476   -.070 [-.092, -.049]    .749/.508/.464    762/502           28        n n n
+                    ctx V-nest      .4087   -.009 [-.031, +.011]    .828/.596/.517    762/573           28        Y Y n
+                    ctxshuf V-top   .1846   -.233                   .572/.352/.367    847/307           55        n n n
+                    ctxshuf V-nest  .2281   -.190 [-.215, -.166]    .661/.442/.436    847/375           55        n n n
+                    gen V-top       .1815   -.236                   .570/.350/.366    842/305           55        n n n
+                    gen V-nest      .2287   -.189 [-.215, -.166]    .659/.442/.434    842/374           55        n n n
+                  SELECTION (predeclared rule): syn V-nest, ctx V-nest, ctxshuf V-nest, gen V-nest. Written before any
+                  even number. Odd reading: syn has the highest CRISPR-Cas F1 measured on odd genomes in this project
+                  (.523 vs token DH .479) and recovers all 55 odd Parvarchaeaceae runs (grp 31): group-excluded lists
+                  cost Parvarchaeaceae its in-group evidence. Every arm fails the ribosomal bars on odd. Uncorrected genome
+                  counting collapses (summed -0.19), contexts restore most of it (ctx .409), synteny retention more
+                  (syn .439, CCT +.038 over grp on odd).
+2026-11-13 05:23  Expectations for EVEN of the other arms (before any even number): syn V-nest summed .43-.46, F1 DF .83-.86,
+                  TXSS .59-.63, CCT .50-.53 (H3 holds: CCT >= grp + .02 and summed >= grp - .03); ribosomal recovered
+                  1,560-1,620, resolved 900-1,000, Parv recovered ~110 (bars: recovered and resolved fail). ctx V-nest
+                  summed .40-.42; gen and ctxshuf .21-.24 (H4 holds for ctx vs ctxshuf: +0.18). grp200 above grp on
+                  summed, far below on ribosomal recovery (~740). z arms: unknown; X12 stands.
+2026-11-13 05:22  Job 89810 (64 CPUs, node-64-768g-22; account 352 CPUs running before it): z10.6 / z13.7 (group unit;
+                  ladder, full runs, shuffle run for z10.6), odd scores, main-arm selection (vl_score.py select), even
+                  scoring of all arms, paired arm differences, typing2 (grp, syn), junction diagnosis (grp), V-phr (grp).
+                  The selection JSON is read and recorded here before any even line of the log is read.
+2026-11-13 05:32  z lists (job 89810; group-excluded, one entry per genome): z10.6 3,265,088,204 gene-list entries, per
+                  gene median 437, q90 2,879, max 3,505, 256,897 genes empty (279 s); z13.7 1,814,779,752 entries,
+                  median 66, q90 1,836, 960,734 genes empty (27%). Observed round 0 at tau 4 / 10: z10.6 2,455,555 /
+                  1,905,931; z13.7 1,985,931 / 1,520,981 (grp 2,528,780 / 2,083,939).
+2026-11-13 05:37  tau* z arms (round-0 FDR at 4 / 6 / 8): z10.6 .034 / .0086 / .0014 -> 6; z13.7 .029 / .0079 / .0014 -> 6.
+                  One-per-genome lists have a denser chance null at tau 4 than depth-1,000 lists (E smaller per pair).
+2026-11-13 05:59  ODD scores of the z arms (job 89810):
+                    z10.6 V-top    .4446   +.027 [+.007, +.047]    .762/.523/.429    842/546   55   Y n n
+                    z10.6 V-nest   .4873   +.069 [+.050, +.089]    .810/.610/.469    842/598   55   Y Y n
+                    z13.7 V-top    .5092   +.091 [+.069, +.114]    .705/.561/.383    834/560   55   Y n n
+                    z13.7 V-nest   .5419   +.124 [+.102, +.146]    .735/.637/.417    834/593   55   Y n n
+                  z10.6 full run (tau 6): 1,203,235 instances, 516,845 top-level, 57.0% of genes, span q99 17, 529 s;
+                  shuffle 0: 19,246 instances (word FDR .016), 1.6% of genes. z13.7 (tau 6): 974,857 / 450,100 / 48.3%.
+                  MAIN-ARM SELECTION (predeclared rule, amendment_1/2 pool {grp, z10.6, z13.7}): z10.6 V-nest [2, .4873]
+                  > grp V-nest [2, .4451] > z13.7 V-nest [1, .5419]. MAIN = z10.6 (ws_calib z-table lists, z >= 10.6,
+                  own group excluded, group counts), reading V-nest. Correction: the job's select step used a stale pool
+                  {ctx, z10.6, z13.7} (MAIN_POOL not updated at amendment_2); recomputed with the correct pool at 05:59:36
+                  (results/selection.json; stale copy selection_stale_pool.json); the winner is the same. Recorded before
+                  any even line of job 89810's log was read.
+2026-11-13 06:01  Expectation for the MAIN output's EVEN verdict (z10.6 V-nest; written before reading it): summed .47-.50
+                  (+0.04 to +0.07 vs DH, lower bound > 0); F1 DF .79-.82, TXSS .59-.62, CCT .46-.48 (all F1 bars hold);
+                  ribosomal recovered 1,660-1,685 (holds), Parvarchaeaceae recovered 110-114 (holds), resolved
+                  1,150-1,250 (fails 1,400). Verdict: neither, blocked by ribosomal resolution alone.
+2026-11-13 06:15  EVEN (job 89810; paired genome bootstrap vs token DH .4270; F1 .744/.548/.479; ribosomal 1,686/1,512):
+                    arm/reading      summed  d vs DH [95%]            dF1 DF / TXSS / CCT                 ribo rec/res  Parv rec/res  members out CCT
+                    z10.6 V-nest *   .4749   +.048 [+.027, +.069]     +.066 / +.054 / -.010 [-.021,+.001] 1,675/1,172   114/106       .317
+                    z10.6 V-top      .4370   +.010 [-.009, +.030]     +.022 / -.030 / -.047               1,675/1,053   114/106
+                    grp V-nest       .4372   +.010 [-.011, +.031]     +.086 / +.038 / +.004 [-.007,+.015] 1,605/1,007    64/2         .257
+                    grp V-top        .3835   -.044                    +.025 / -.058 / -.035               1,605/917      64/2
+                    grp200 V-nest    .5082   +.081 [+.059, +.103]     +.089 / +.071 / -.004               742/249         0/0         .326
+                    syn V-nest       .4334   +.006 [-.014, +.026]     +.102 / +.069 / +.038 [+.028,+.049] 1,582/926     114/56        .202
+                    syn V-top        .3837   -.043                    +.049 / -.031 / -.007               1,582/865     114/54
+                    ctx V-nest       .4021   -.025 [-.046, -.003]     +.089 / +.046 / +.033               1,486/1,089    58/47        .188
+                    ctxshuf V-nest   .2184   -.209 [-.235, -.182]     -.084 / -.098 / -.044               1,680/717     114/17        .065
+                    gen V-nest       .2115   -.216 [-.242, -.190]     -.087 / -.103 / -.044               1,675/721     114/18        .065
+                  (* = the verdict output, selected on odd.) VERDICT: NEITHER. z10.6 V-nest meets the summed-excess bar
+                  (lower bound > 0, so it would 'beat' on that bar), every F1 bar, ribosomal recovered and
+                  Parvarchaeaceae recovered; it fails ribosomal resolved (1,172 < 1,400). The 06:01 expectation held on
+                  every quantity. grp: neither (recovered, resolved, Parv). syn: CRISPR-Cas F1 +.038 [+.028, +.049] over
+                  token DH (the first embedding-only output above the token engine on CRISPR-Cas), neither (ribosomal).
+2026-11-13 06:17  EVEN z13.7 V-nest .5422 +.115 [+.092, +.138], dF1 -.018 / +.094 / -.056, ribo 1,656/1,152, Parv 114/59;
+                  members outside words CCT .418. Paired arm differences, even (A - B, selected readings, all V-nest):
+                    grp - syn      summed +.004 [-.009, +.015]; dF1 DF -.016, TXSS -.031, CCT -.034 [-.041, -.026]
+                    grp - ctx      +.035 [+.021, +.048]; CCT -.029
+                    grp - grp200   -.071 [-.088, -.054]; TXSS -.033, CCT +.008; ribosomal recovered 1,605 vs 742
+                    grp - z10.6    -.038 [-.056, -.020]; DF +.020, TXSS -.016, CCT +.014 [+.004, +.024]
+                    grp - z13.7    -.105; DF +.103, TXSS -.056, CCT +.060
+                    syn - gen      +.222 [+.199, +.245]; ctx - ctxshuf +.184 [+.162, +.208]; ctx - gen +.191
+                    syn - ctx      +.031 [+.018, +.044]
+                  Hypotheses: H1 refuted (main output neither). H2 refuted (z10.6 1,675 recovered but 1,172 resolved;
+                  grp 1,605 / 1,007). H3 HOLDS (syn - grp: CCT +.034, summed -.004). H4 HOLDS (ctx - ctxshuf +.184, ctx -
+                  gen +.191). H6 refuted on summed excess (depth 200 +.071) and holds on ribosomal recovery (1,605 vs 742).
+                  H7 HOLDS (grp CCT F1 .483 = stage 1 .406 + .077; CCT members outside words .257 vs stage 1 .455).
+                  Typing of list classes (vscore protocol, DefenseFinder system_type AMI; engine res 10 .76): grp .486,
+                  ctx .486, z10.6 .441, z13.7 .324, gen .303 -> H5 refuted for list classes (vector classes pending).
+2026-11-13 06:52  Job 89810: its typing2 step ran ~45 min without finishing: the wrapper gives vl_score.py steps one BLAS
+                  thread (for the scorer pool), which made faiss's flat 15-NN search single-threaded sgemm (~3 h per
+                  arm). Process stopped (the job ended there; diag and phr had not run). Fix: typing2 steps get all
+                  threads; the Leiden resolution grid runs sequentially (no fork after OpenMP). Job 90640 (64 CPUs;
+                  account 244 CPUs running before it): typing2 on z10.6 (the selected main), grp, syn; junction diagnosis
+                  and V-phr (amendment_3) on z10.6 and grp. The main arm changed to z10.6 at the 05:59 selection, so the
+                  diagnostic steps of amendment_3 are run on it as well as on grp (stated here before their numbers).
+                  MMseqs2 search 88812: prefilter 11,192 s (3.1 h), align started 06:40 UTC.
+2026-11-13 07:15  Job 90640 cancelled in typing2: z10.6's 15-NN graph took 570 s (with the vector load) but leidenalg
+                  needed > 8 min for resolution 1 alone (0.5 took ~1 min). Vector-class Leiden switched to igraph's
+                  community_leiden with the same objective (modularity with resolution, weights = cosine), same grid
+                  0.5-50, resolution chosen by odd DefenseFinder AMI (deviation from the copied ws_locusspace recipe: the
+                  solver). Job 90870 (account 268 CPUs running): diag + V-phr on z10.6, typing2 z10.6, diag + V-phr on
+                  grp, typing2 grp and syn.
+2026-11-13 07:21  Junction diagnosis, z10.6 final parse (job 90870; vl.py diag): 1,358,068 junctions with a word on at
+                  least one side, none passing (the parse is complete). Inside ribosomal runs 577 such junctions:
+                  word-level supporting groups q50 1 (own group only), Lambda q50 3.7; the two genes meeting there, as
+                  terminals: groups q50 6, q75 507, q90 564, and 46.6% pass tau 6. Overall junctions: gene pair passes
+                  5.8%. Parvarchaeaceae junctions (127): gene pairs reach 2 groups and none passes (lineage-specific
+                  order). z10.6 word lists by span: |S| q50 224 / 64 / 21 / 9 / 2 at span 2 / 4 / 6 / 10 / 20.
+2026-11-13 07:21  V-phr z10.6 (diagnostic, amendment_3): 60,410 phrases (span q50 7, q90 16, max 120); even summed .4679,
+                  +.041 [+.020, +.062]; F1 .813/.604/.479; ribosomal 1,686 recovered, 1,138 resolved (V-nest 1,172).
+                  amendment_3 expectation (resolved +200 to +400) REFUTED: phrases recover the last 11 runs and extend
+                  past run edges.
+2026-11-13 07:25  Why ribosomal runs stay unresolved (all 1,686 runs; best locus by the check's rule; login node, 40 s):
+                    output        recovered  resolved  recovered-unresolved: coverage<.8 only / precision<.8 only / both   not recovered
+                    z10.6 V-nest  1,675      1,172     503: 83 / 373 / 47                                            11
+                    grp V-nest    1,605      1,007     598: 322 / 236 / 40                                           81
+                    syn V-nest    1,582        926     656: 365 / 247 / 44                                           104
+                    z10.6 V-phr   1,686      1,138     548: 23 / 523 / 2                                             0
+                  Median precision of recovered runs: z10.6 .885, grp .920, syn .923, V-phr .867, token DH .960.
+                  Reading: with depth-1,000 lists (grp, syn) the dominant failure is fragmentation (word lists shrink);
+                  with genome-diverse z lists the words reach the whole superoperon and the dominant failure is
+                  over-extension into conserved flanks (the parse has no boundary signal beyond support).
+2026-11-13 07:38  Junction diagnosis, grp final parse: 966 word junctions inside ribosomal runs: word-level groups q50 1;
+                  gene pair at the same junction groups q50 86.5 (q75 145), 72.4% pass tau 4; nodes' list sizes q50 7-8.
+                  Parvarchaeaceae junctions 234: gene pair groups q50 2, 47.9% pass. V-phr grp (diagnostic): summed .4288,
+                  +.002 [-.019, +.022]; F1 .833/.587/.491; ribosomal 1,686 / 1,131 (V-nest 1,007), Parv 114 / 106.
+2026-11-13 07:33  Vector-class typing z10.6 (job 90870; igraph Leiden, 15-NN of mean-pooled word vectors, resolution 10
+                  by odd DF AMI .687): even DF AMI .679 (homog .757, compl .672; list classes .437), 1-NN accuracy .954,
+                  class-majority .830 (list classes .733); CRISPR-Cas subtype AMI .222 (list .159), 1-NN .602, class-
+                  majority .474 (list .352). Gold instances on words (even): DF 1,176, CCT 1,472, TXSS 378.
+2026-11-13 08:00  MMseqs2 all-against-all done (job 88812): prefilter 11,192 s, align 4,057 s, convertalis 129 s, arrays
+                  580 s (6.0 h on 64 CPUs). 1,209,424,748 hits at E <= 1e-3 (self excluded), 2,330,053 of 2,547,528
+                  query sequences with a hit (217,475 without), hits per query q25 24 / q50 375 / q75 998 (cap 999).
+                  Job for the aln control (group unit, depth 1,000, otherwise identical to grp): ladder, full runs, odd,
+                  even, paired vs grp, z10.6, syn. Expectation X11 (amendment_1) stands: aln within 0.02 of grp on summed
+                  excess and DF / TXSS F1; CCT aln >= grp.
+2026-11-13 08:04  Vector-class typing, grp and syn (job 90870; resolution chosen on odd): grp DF AMI list .483 / vector
+                  .676, 1-NN .934; CCT subtype list .142 / vector .213, 1-NN .588. syn DF list .563 / vector .674, 1-NN
+                  .932; CCT list .185 / vector .206, 1-NN .568. Job 91283 (aln) running on node-64-768g-28.
+2026-11-13 08:05  aln lists (job 91283; bit-score-ranked MMseqs2 hits expanded to genes outside the own group, depth
+                  1,000): 3,128,713 genes with a list (456,590 without), length q50 600, 2,148,701 genes shorter than
+                  1,000 (embedding lists: all 1,000). Observed round 0: 2,752,739 pass tau 4, 2,123,106 tau 10.
+2026-11-13 08:14  aln: tau* 6 (round-0 FDR .0255 / .0057 / .00089 at 4 / 6 / 8); full run 1,292,456 instances, 535,921
+                  top-level, 60.9% of genes, 16 rounds, 268 s; shuffle 0: 14,169 instances (word FDR .011).
+                  ODD: aln V-top .4323 (+.014), F1 .776/.507/.438, ribo 822/503, Parv 40; aln V-nest .4786 +.061 [+.040,
+                  +.081], F1 .823/.606/.479, ribo 822/550, Parv 40 -> V-nest selected [2, .4786]. Written before any even
+                  aln number. On odd the alignment lists sit above the embedding neighbour lists (grp .4451) and below
+                  ... z10.6 (.4873); X11 (aln within .02 of grp) looks refuted in aln's favour.
+2026-11-13 08:17  EVEN aln (job 91283): V-nest .4683, +.041 [+.021, +.062] vs token DH; dF1 DF +.075, TXSS +.057, CCT -.004
+                  [-.015, +.007]; ribosomal 1,622 / 1,079, Parv 78 / 22; CRISPR-Cas members outside words .293. Verdict
+                  neither. Paired: aln - grp +.031 [+.013, +.050] (DF -.010, TXSS +.020, CCT -.008 [-.017, .000]);
+                  aln - z10.6 -.007 [-.026, +.014]; aln - syn +.035 [+.018, +.051] (CCT -.042). X11 REFUTED in aln's
+                  favour: alignment lists beat the depth-1,000 embedding neighbour lists on summed excess and equal the
+                  calibrated one-per-genome embedding lists. The advantage of lists over families in this method is the
+                  absence of a hard partition, and alignment supplies it as well as the embedding does.
+2026-11-13 08:18  REPORT.txt written. No job of this workstream is queued or running. Final: main output z10.6 V-nest
+                  neither (ribosomal resolved 1,172 the single failing bar; summed +.048 [+.027, +.069]); syn the best
+                  CRISPR-Cas output (+.038 over token DH); alignment lists equal the selected embedding lists and beat the
+                  depth-1,000 neighbour lists (+.031). Results copied to results/ (JSON only; large arrays stay on biotite).

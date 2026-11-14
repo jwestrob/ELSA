@@ -1,0 +1,84 @@
+2026-11-14T05:30:45Z workstream srvp_bins started
+
+2026-11-14T05:37:32Z INVENTORY (so far, ls-only exploration of biotite)
+- Elliot Weiss ggBin (metabat2/maxbin2/concoct/vamb -> DAS Tool, cross-mapped), Illumina, 91 samples 2018-2022,
+  9,739 DAS Tool bins, Aug-Dec 2023: /groups/banfield/scratch/projects/environmental/sr/int/bin.d/elliot/ggBin{,_2..6}/[ggBin/]results/<s>/bins/dastool/results/<s>.asm.fa.dastool/bins
+  quality: DAS Tool SCG summary only (intermediate/*_DASTool_summary.tsv). No CheckM2 at source.
+- Luis db/illumina/bins: 4,837 Illumina bins (54 samples, eweiss Jan 2024) + CheckM2 6,344 rows
+  (db/illumina/checkm2_srvp-illumina-genomes”/Illumina-genomes-quality_report.tsv, Jan 2024).
+- Luis bacteria-analysis (Jul 2024): illumina_bacteria-genomes 1,076 (CheckM2 >= 75%) + bacteria-PB-genomes 1,382
+  (= the srvp_bacteria_pb Sharur set) = illumina-pacbio 2,458; CheckM2 + GTDB-Tk 2.4.0/r220 bac120.
+- Luis final-genomes/combined-genomes (Jan 2025): 1,592 (1,363 PacBio + 229 Illumina A1 metaspades), CheckM2 + GTDB r220.
+- 2021 HiFi ggBin DAS Tool: 758 + 689 bins (34_2B, 81_5A), May 2023. 2022 hifiasm: no bin.d (confirmed).
+- A1 metaspades ggBin (leylenm, Oct 2024): 229 bins over 6 depths.
+- lingdongs ggBin srvp2023/illumina/assembly/binning: 989 bins over 12 2022 samples (Aug 2023), no DAS Tool summary.
+- Reconciled register (srvp-fina, Oct 21 2026): genome_reconciliation_v1/master_genomes.tsv 16,421 rows
+  (10,123 sequence-verified), joint_dereplication_v1 input 6,647 (CheckM2 >=50 / <10, >=50 kb, quality linked by ID+length),
+  joint dRep 3.5.0 fastANI 95% ANI, 50% AF, average linkage (job 17839, 3h57m) -> 2,392 clusters.
+
+2026-11-14T05:37:32Z SELECTION RULES (written before any tier count)
+- Candidate universe U = the joint dRep input set (6,647 sequence-verified SR-VP soil genome bins whose CheckM2 estimate is
+  linked by identifier and measured FASTA length). This is the largest SR-VP bin set with linked quality; it spans
+  Illumina bins (all years) and PacBio HiFi MAGs/contigs. Bins with contamination exactly 10.0 are outside U by its <10 rule;
+  they are counted separately from the master register.
+- Quality = CheckM2 completeness / contamination as selected in the register (quality_source).
+- Primary tier: completeness >= 90 AND contamination <= 5.
+- Secondary tier: completeness >= 70 AND contamination <= 10 (reported both as secondary-only and as cumulative >=70/<=10).
+- Report counts per tier, per phylum (taxonomy as recorded: r220 where present, later r232 if a classification table exists),
+  per sample (provisional sample_identifier of the register), per platform, and single-contig vs multi-contig.
+- Dereplication: the existing joint 95% ANI clusters (job 17839). Within each cluster, among members in the tier, pick the
+  best-quality bin by score = completeness - 5*contamination + 0.5*log10(N50) (dRep's weights without centrality);
+  ties: fewer contigs, then genome_id. Report agreement with dRep's representative.
+- Package: dereplicated primary tier. Gene calls: one uniform Prodigal 2.6.3 call per genome, single mode (Sharur convention),
+  translation table from CheckM2 where available (else 11).
+
+2026-11-14T05:38:39Z AMENDMENT to the dereplication pick (before any tier count)
+- Found: GTDB-Tk 2.7.2 / r232 run over all 2,392 joint-dRep representatives (job 18127), whose identify step holds one
+  uniform Prodigal 2.6.3 single-mode call per representative (protein.faa + protein.gff with partial flags, table 11 or 4 by
+  coding density): gtdb_representatives_r232_v1/runs/r232_18127/gtdbtk/identify/intermediate_results/marker_genes/<master_id>/.
+- Pick rule, amended: per cluster, the dRep representative when it passes the tier (dRep chose it by completeness
+  - 5*contamination + 0.5*log10(N50) + centrality); otherwise the tier member with the best score
+  completeness - 5*contamination + 0.5*log10(N50) (ties: fewer contigs, then genome_id). Reason: this uses the existing
+  dereplication tables, the existing r232 taxonomy and the existing gene calls for representatives.
+- Gene calls: existing GTDB-Tk Prodigal 2.6.3 calls for representatives; for non-representative picks, Prodigal 2.6.3 single
+  mode with GTDB-Tk's rule (table 4 when its coding density exceeds table 11's by > 5 points and is > 70%, else 11;
+  to be confirmed against GTDB-Tk 2.7.2 source).
+2026-11-14T05:48:26Z Read remote CLAUDE.md + biotite-cluster-ops.md; submitted build_pkg.sbatch (dereplicated primary tier, 64 CPU, standard_expand_2). Test on 3 genomes: GTDB-Tk Prodigal calls reproduced exactly by prodigal -m -p single (4529/4529 and 4866/4866 genes, same table).
+2026-11-14T05:57:01Z Job 99813 (64 CPU) estimated start 2026-11-16 (standard partition: 1,502/1,664 CPUs allocated, 190 pending); cancelled. Package build moved to the login node at 8 processes (~65 CPU-min: Prodigal on 27 genomes + hmmsearch 121 ribosomal HMMs; rest is I/O), within the 16-thread login cap.
+
+2026-11-14T05:59:45Z SELECTION RESULT (02_select.py; U = 6,647; 2,392 clusters)
+- primary (>=90/<=5): 3,072 undereplicated (1,904 Illumina, 1,165 PacBio, 3 unresolved; 2,112 multi-contig), 994 dereplicated
+  (563 Illumina, 431 PacBio; 780 Bacteria, 214 Archaea; 652 multi-contig; 51 phyla by cluster-rep r232; 3.36 Gbp, 146,154 contigs;
+  pick = dRep representative in 973 clusters, best-scoring tier member in 21).
+- secondary-only (>=70/<=10 minus primary): 3,058 undereplicated, 1,103 dereplicated (clusters without a primary member).
+- cumulative >=70/<=10: 6,130 undereplicated, 2,097 dereplicated.
+- Register rows outside U: none carry a quality estimate >= 70/<=10 (those without linked quality have blank values).
+- Phylum counting switched (before the package was built, picks unchanged) to the cluster representative's r232 phylum for every bin,
+  so all counts use one release.
+
+2026-11-14T05:59:45Z UNREGISTERED ggBin SAMPLES (CheckM2 missing)
+- 37 of Elliot's 91 ggBin samples (ggBin runs 1-5) are absent from the register: 3,395 DAS Tool bins (608 in 8 viral/pellet
+  fractions; 2,787 non-viral, 12.38 Gbp). Only DAS Tool SCG estimates exist.
+- Calibration of DAS Tool SCG against CheckM2 on the 6,344 ggBin_6 bins: SCG>=90/<=5 -> P(CheckM2 primary)=0.614, P(>=70/10)=0.951;
+  SCG 70-90 band -> 0.088 / 0.721; SCG<70 -> 0.008 / 0.158. SCG>=70/<=10 holds 1,719 of 1,732 CheckM2-primary bins.
+- Expected in the 2,787 non-viral bins: ~831 CheckM2-primary and ~1,923 >=70/10 bins (undereplicated; overlap with existing clusters unknown).
+- CheckM2 cost from three logged SR-VP runs (CheckM2 1.0.1: 17.4, 21 and 60 CPU-h per Gbp):
+  all 2,787 bins 215-745 CPU-h (3.4-11.6 h on 64 CPU); SCG>=70/10 subset (2,137 bins, 9.87 Gbp) 172-592 CPU-h (2.7-9.3 h);
+  SCG>=90/5 subset (1,213 bins, 5.88 Gbp) 102-353 CPU-h (1.6-5.5 h). GTDB-Tk 2.7.2 for ~830 new genomes: ~36 CPU-h
+  (job 18127: 2,392 genomes in 8 h 40 min on 12 CPU). Above the 2 h / 64 CPU limit -> not run; reported.
+
+2026-11-14T06:26:45Z PACKAGE BUILT (login node, 8 processes; genes 214 s, universe 9 s, fasta 49 s, ribosomal 139 s)
+- 994 genomes, 146,154 contigs (47 without genes), 3,211,751 genes, 988,758,684 residues, 3,170,150 unique sequences.
+- Gene source: GTDB-Tk Prodigal calls 973, Prodigal with GTDB-Tk procedure 21; all table 11. Control 6/6 representatives
+  reproduced exactly. SHA-256 of every bin FASTA matched the register (994/994).
+- Ribosomal: 53,345 marked genes (101 of 121 models); g0_m8 1,060, g0_m16 606, g2_m8 1,051, g2_m16 803 (one per genome,
+  803 genomes, 113 at a contig edge).
+- Split 497/497. README.txt written; seal_sha256 5ab7ba791c271dfa2fa58bfda07b2cf4a2c683c0ba288994a433b5ef367681bf.
+2026-11-14T06:26:45Z CALLERS
+- Pilot (2 genomes, serial, login node): DF 118-135 s, RM 16-17 s, TXSScan 35-73 s per genome. Fixed: DF models dir
+  (download/ scanned as a family) -> ws_srvp_bins/models symlink; per-system reindex in the parser; added --reuse, core span
+  columns (MacSyFinder loners locus_num -1), --replicon-topology linear (identical TXSScan result on the pilot genome).
+- Submitted callers.sbatch as job 99990 (64 CPU, standard_expand_2); scheduler start estimate 2026-11-16 22:21 UTC.
+  Estimated 40-55 CPU-h. The job writes gold/, regenerates README.txt and rewrites the seal.
+- CRISPRCasTyper not run: no installation on biotite (Sharur cctyper-port + Aksha CCTyper DB exist only on the Mac).
+2026-11-14T06:27:35Z REPORT.txt finalized; callers job 99990 pending (watcher b56bm40de runs only while this session lives).

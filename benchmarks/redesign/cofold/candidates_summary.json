@@ -1,0 +1,19 @@
+{
+ "links": 77928,
+ "runs": 54182,
+ "genes_in_runs": 132110,
+ "window_instances": 110680,
+ "types": 14309,
+ "types_ge3_genomes": 8546,
+ "pass_counts": {
+  "pass_dark": 8546,
+  "pass_len": 6545,
+  "pass_hyd": 4924,
+  "pass_lowcomplex": 5037,
+  "pass_copies": 7726,
+  "pass_geometry": 6347,
+  "pass_recurrence": 1110,
+  "pass_all": 358
+ },
+ "nonredundant": 189
+}

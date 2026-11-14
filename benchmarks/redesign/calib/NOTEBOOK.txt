@@ -1,0 +1,111 @@
+ws_calib NOTEBOOK (append-only; UTC)
+====================================
+2026-11-13 02:00 UTC  Read NOTEBOOK.md from 13:23 UTC 12 Nov, softrec REPORT3 / REPORT_cas / REPORT2, SPEC_family_remote_homology.
+  Inputs located: zca10 float16 vectors + meta ($RD/softrec/r3/vec), calibration arrays for 10,000 random queries
+  ($RD/softrec/r3/calib: omax / oarg / omin / famp / qids), exact per-genome best matches ($RD/softrec/r3/exact),
+  stored zca10 HNSW top-300 (softrec/knn). The Sharur DPANN DB with CDD and family-level profile tables (seal 78c68b6b,
+  republished 12 Nov) exists only on the Mac; biotite holds the 19 Oct copy (ws_dpann/input). The path given in the
+  biotite CLAUDE.md (~/srvp2020/Sharur_dbs/DPANN) does not exist.
+2026-11-13 02:05 UTC  Exported evaluation tables from the Mac DB (read-only, 2 DuckDB threads, 1.7 s): pfam 4,218,124 rows,
+  cdd 2,565,792, family_annotations 608,690 (permissive-e3c50s75; hhsearch_pfam 26,365 families, hhblits_pdb 16,732),
+  family_annotation_status 33,724, protein_families (permissive-e3c50s75) 3,585,303, system_proteins + system types
+  68,719, defensefinder / txsscan per-protein hits 506,675. Copied to $RD/calib/inputs; local copies deleted. Pfam 39
+  clan map extracted from cofold/s2/db/pfam39/Pfam-A.seed.gz (17,535 clan lines); CDD superfamily links from
+  cofold/s2/db/cdd/family_superfamily_links. No TM or signal-peptide predictions are stored in Sharur (semantic_state
+  topology is empty); physical kind will use a Kyte-Doolittle heuristic computed from sequence.
+2026-11-13 02:10 UTC  REPRODUCED the stored line (repro.py on the login node, one thread; 110 s wall, I/O bound):
+  per (query, genome) maximum, 10,000 queries, ALL genomes convention: family absent >= 0.30 / 0.32 / 0.40 / 0.45 /
+  0.50 / 0.60 / 0.70 = .3994 / .3518 / .2017 / .1389 / .0946 / .0418 / .0158; present .9509 / .9382 / .8685 / .8072 /
+  .7317 / .5378 / .3043. Stored: .40 / 35% / .20 / 14% / .095 / 4.2%, present .95 / .87 / .73 / .54. Exact.
+  (Outside-own-genus convention differs in the 4th decimal: .3514 / .1386 / .0416.)
+2026-11-13 02:12 UTC  predeclared.json written (local file mtime 02:12; copied to $RD/calib 02:16:35;
+  written_utc corrected from a clerical 02:20 at 02:23, content unchanged) (both questions; sample design, evidence lines, partition, H1-H4,
+  detectors D1-D12, criteria, expectations) before any new number.
+2026-11-13 02:16 UTC  Jobs 88064 (prep, 24 CPU) and 88065 (GPU features, A5000, afterok) submitted.
+2026-11-13 02:18 UTC  Prep done (90 s): subgenic uid == embedding uid (asserted); KD heuristic: 28.5% of unique
+  sequences carry >= 1 predicted TM segment; Pfam: 1,475,708 uids, 9,166 families, 1,074 clans in the Pfam 39 seed map;
+  family-level profile hits at prob >= 90 / cols >= 30: 5,090 families (Pfam-HH), 5,344 (PDB), reaching 82,514 uids;
+  CDD (E <= 0.01): 1,641,350 uids, 14,010 superfamily codes, 99.93% of hits map to a cl superfamily; curated roles 449
+  over 49,020 uids (cctyper 40,644; DefenseFinder 5,990; TXSScan 2,562). Queries 22,000 = R 10,000 + S 3,000 + N 3,000
+  + Y 3,000 (1,000 per caller) + Yc 3,000 (all matched). Hubness r10 q01/q50/q99 0.417 / 0.780 / 0.975.
+2026-11-13 02:22 UTC  GPU features (job 88065, RTX A5000, 86 s total): genome loop 62.7 s for 22,000 queries x 3,564
+  genomes (top-8, mean / sd, centred max, CSLS k 10 / 50, per-query raw and z histograms over all 3,585,303 genes),
+  reciprocal check 11.1 s, exact top-2,001 unique sequences 3.2 s; peak GPU 11.2 GB. CHECK: per-genome maximum of the
+  10,000 calibration queries equals softrec3 omax within 1e-3 in 100% of cells (max |d| 5.2e-4); best gene identical in
+  99.90%. Cost of the full feature set for all 2,547,528 sequences by extrapolation: 2.85 ms per query, ~2.0 h on one
+  A5000.
+2026-11-13 02:25 UTC  Jobs 88118 (Q1: pairs, MMseqs2 align of explicit pairs, classify, H4) and 88119 (Q2 detectors)
+  submitted.
+2026-11-13 02:26 UTC  Q1 (job 88118, 2.5 min): 1,038,728 neighbour pairs + 1,478,728 baseline pairs; 2,453,555 unique pairs
+  aligned (MMseqs2 align, 15 s); 3,936 of 22,000 queries have < 1,000 non-family neighbours within the top 2,001.
+  READ (R queries; all pairs / pairs with Pfam-or-CDD annotation on both sides):
+  P(HOM) rank 1-10 .676 [.668,.685] / .953; 11-100 .587 / .883; 101-1,000 .427 / .712. Family-absent best matches:
+  [.20,.32) .326 / .577; [.32,.45) .518 / .859; [.45,.60) .608 / .938; >= .60 .764 / .975. Length-matched baseline .015-.018
+  (evaluable .032-.034). Alignable at E <= 1e-3 (SW, MMseqs2 align): .594 / .445 / .234 (ranks), .085 / .281 / .462 / .705
+  (cosine bands). H1 SUPPORTED (.676 >= .50). H2 SUPPORTED (excess .503 at [.32,.45), .59-.75 at >= .45; expectation
+  of ~.15 at [.32,.45) was far too low). H3 by the predeclared letter: excess of P(KIND) .000 at [.32,.45) and .020 at
+  101-1,000 (bar .05): not supported; not refuted (excess .032 at [.20,.32)). H4 SUPPORTED: 28 roles with >= 30 queries,
+  all 23 non-Cas roles enriched >= 10x (lowest 54x); same-role genes of other families per top-1,000 list: cctyper
+  233 vs 0.69, DefenseFinder 103 vs 0.012, TXSScan 55 vs 0.076; 20 of 20 largest clans enriched >= 3x (22x-4,300x).
+  The Cas pattern is the general rule.
+2026-11-13 02:27 UTC  Q2 job 88119 cancelled after 7 min: q2.py re-read arrays from the npz on every query (NpzFile
+  indexing). Fixed (arrays loaded once); resubmitted as 88152. No Q2 number had been computed.
+2026-11-13 02:30 UTC  POST HOC (after reading the Q1 tables): q1_extra.py (kind conditional on no homology evidence,
+  homology evidence when one side is unannotated, alignment geometry of alignable pairs, three-way headline).
+2026-11-13 02:50 UTC  q1_extra (POST HOC; ran ~16 min single-threaded on the login node because each bootstrap redrew
+  the multinomial weights; should have been a job). R queries:
+  (a) physical kind among pairs WITHOUT homology evidence, band vs length-matched baseline: K (same TM class, length
+  ratio >= .67, composition within the uniform p25) rank 1-10 .394 vs .164; 101-1,000 .262 vs .133; cosine [.20,.32)
+  .216 vs .115; [.32,.45) .238 vs .116; both predicted TM .27-.38 vs .09 (3-4x); composition .50-.65 vs .29-.32.
+  (b) pairs with an unannotated side are ~40% of every band; when NEITHER side is annotated homology evidence falls to
+  .218 (rank 1-10), .007 ([.20,.32)), .035 ([.32,.45)), .287 (>= .60), almost all of it alignment.
+  (c) alignable pairs: rank 1-10 median identity .415, coverage of the shorter .959, both sides >= 50% covered in 87%
+  (full-length homologs that set-cover clustering placed under different representatives); family-absent [.32,.45):
+  identity .334, coverage .878, both >= 50% in 52%, length ratio .70 (half split by the 50% bidirectional coverage rule).
+  (d) headline [.32,.45): remote homology .518, same kind with contradicting annotation .030, unexplained .452 (.400 of
+  it with an unannotated side; different domains and different kind .052).
+2026-11-13 02:58 UTC  Q2 (job 88208) first subset read: overall_FAM (10,000 R queries; even cells 3.77 M positive,
+  14.0 M negative) recall at FPR 1e-3: raw .026, z .021, ev_raw .027, ev_z .025, ev_emp .008, local .014, gap .029,
+  CSLS10 .014, RBM-then-raw .026, centred .025, LR .028, GBM .071. Odd choice: tail window (1e-2, 1e-3) for both EV
+  scores (odd recall .027 / .025 vs .012 / .009). Reading: at FPR 1e-3 the FAM negatives' top tail is homologs of
+  other MMseqs2 families (Q1), so "family present" is not a detectable target for any embedding score.
+  POST HOC Q2b declared now, before its numbers: label every R-query cell by its best raw match: HOM = SW-alignable
+  (E <= 1e-3) or shared Pfam family / clan / CDD superfamily / profile link; NEGC = both annotated, nothing shared,
+  E > 1. Same detectors, odd fits, even scoring, query bootstrap; nominal-calibration check on NEGC by 12 strata.
+  Expectation: raw recall at FPR 1e-3 0.3-0.5; z / ev_z gain <= 0.05; ev nominal FPR on NEGC within 3x pooled, strata
+  spread > 10x for raw.
+2026-11-13 03:00 UTC  Q2 (job 88208, 21.6 min) READ. Predeclared primary (FAM, overall R, even genomes, recall at FPR
+  1e-3): raw .026 [.021,.032]; z .021; ev_raw .027; ev_z .025; ev_emp .008; ev_local .014; gap .029; CSLS10 .014;
+  RBM-then-raw .026; centred .025; LR .028; GBM .071 (+.046 [.036,.055] vs raw). CLEARLY_BETTER: not met by any score
+  (GBM short of the +.05 bar by .004). FAM vs genome-level clean negatives: raw .223, z .223, gap .254, centred .233,
+  ev_z .117, CSLS10 .074, LR .339, GBM .390. CLAN .062 (raw); CLAN with family absent vs clean .039; short FAM .049;
+  singletons' relatives (CLAN) .001-.004 for every score; curated FAM .017.
+  E_VALUE (predeclared, genome-level clean negatives): ev_z realised FPR at nominal 1e-2 / 1e-3 / 1e-4 = .0176 / .0084 /
+  .0042 (1.8x / 8.4x / 42x); ev_raw .0161 / .0081 / .0042; ev_local .026 / .0071 / .0018; ev_emp 12x-inf too
+  conservative. REFUTED: no p-valued score within [alpha/3, 3 alpha] at 1e-3. ABSOLUTE THRESHOLD: raw cosine .736
+  (pooled clean FPR 1e-3) transfers odd -> even at 1.03e-3 and keeps 10 of 12 query strata within 10x: met by the letter.
+  RBM binary: FPR .30 (FAM negatives) / .17 (clean), recall .87.
+2026-11-13 03:02 UTC  Q2b (POST HOC, job 88345, 13 min incl. 30.6 M explicit alignments in 3.7 min) READ. Cell labels from
+  the best raw match: HOM 41.5% of cells (SW-alignable 28.2%), NEGC 17.8%, unknown 40.7%. HOM vs NEGC, recall at FPR
+  1e-3: raw .259 [.241,.279]; z .324 (+.065 [+.046,+.084]); gap .319 (+.060); centred .270 (+.011); RBM-then-raw +.012;
+  ev_raw .172 (-.087); ev_z .166 (-.093); CSLS10 .095 (-.164); LR .357 (+.099); GBM .412 (+.153 [+.134,+.171]).
+  Alignable vs NEGC: raw .377, z .467 (+.090), gap .454, GBM .589. Nominal calibration on pair-level clean negatives:
+  ev_z .0073 / .0029 / .0011 at 1e-2 / 1e-3 / 1e-4 (0.7x / 2.9x / 11x); z threshold 13.65 at FPR 1e-3 keeps 11 of 12
+  strata within 10x (raw cosine .649: 9 of 12).
+2026-11-13 03:10 UTC  POST HOC thresholds (job 88440; R queries, pair-level clean negatives NEGC): within-genome z at FPR
+  1e-2 / 1e-3 / 1e-4 = 10.57 / 13.65 / 15.96 even (10.58 / 13.70 / 16.16 odd); recall of homologous best matches .553 /
+  .324 / .151 (alignable .756 / .467 / .220). Raw cosine .504 / .649 / .746 even (.504 / .649 / .749 odd); recall .485 /
+  .259 / .120. Thresholds are stable across genome halves. Decision: the predeclared handover condition is not met on
+  the predeclared FAM target; on the post hoc homology label the z-score meets the same bar (+.065 [+.046,+.084] at 1e-3,
+  +.070 at 1e-2, +.031 [-.016,+.066] at 1e-4), so a z-score table is produced and labelled POST HOC: all sequences x
+  genomes, cells with z >= 10.5 (about FPR 1e-2 per cell against clean non-homologs; ~25% of cells).
+2026-11-13 03:12 UTC  GPU table job 88450 cancelled while pending: another workstream's job (met_g01, 88376) holds the
+  account's `gpu` partition slot. Resubmission waits in a guard for an empty `gpu` partition (account), < 400 running
+  CPUs and < 2 calib jobs. (Earlier: Q2 job 88202 was cancelled within seconds of starting because the account stood at
+  exactly 400 CPUs when it was submitted.)
+2026-11-13 03:31 UTC  GPU table job 88624 (gpu_table.py, Z_STORE 10.5) started on the A5000 after ws_metric's met_g02
+  finished (its next GPU job pends behind it under the QOS limit). Report drafted from the stored results meanwhile.
+2026-11-13 03:44 UTC  Table job 88624 COMPLETED: 2,547,528-sequence x 3,564-genome z table at z >= 10.5, 2,246,194,130
+  entries (24.7% of cells; per uid median 395, mean 882), 718 s search on one A5000, peak GPU 7.3 GB, 15.7 GB on disk.
+  table_check.py (login node, 200 sample queries): all reference cells present, same best gene 99.98%, |dz| q99 .012.
+  FORMAT.txt written to $RD/calib/table. REPORT.txt finalised.

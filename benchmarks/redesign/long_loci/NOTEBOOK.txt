@@ -1,0 +1,207 @@
+long_loci NOTEBOOK (workstream long_loci; times UTC from `date -u`)
+==================================================================
+2026-11-13 10:35  Brief read. Read (local, read-only): vocab/REPORT.txt, REPORT2A.txt, context_units/REPORT.txt,
+                  transfer_spacedust/NOTEBOOK.txt + REPORT.txt (interim 10:30), baseline_synton/REPORT.txt; code
+                  transfer_spacedust/words.py, wscore.py, s207.py; vocab/vscore.py, vscore2.py (significant_boundaries,
+                  phrases), vscore2a.py; context_units/cuts.py (kappa definition); remote blib.py scoring functions and
+                  rules.paired.
+2026-11-13 10:45  Read /home/jwestrob/.claude/CLAUDE.md and obsidian-vault/biotite-cluster-ops.md on biotite.
+                  Stored inputs located: DPANN stage-1 run $RD/vocab/runs/main/tau10/obs (no b0/sig0 stored: bonds are
+                  recomputed here from the learner's round 0); V-mob loci vocab/loci/main_tau10_V-mob.parquet and scores
+                  vocab/scores/main_tau10_V-mob.parquet (.624); words + cohesion phrases scores
+                  vocab/scores/runs_main_tau10_s1coh_V-coh0.1.parquet (.608); kappa context_units/ctx/kappa_var_tokens.npy.
+                  Spacedust: P2 run transfer_spacedust/runs/syn/tau8/obs (sig0, b0 stored), kappa emb/kappa_var_tokens.npy,
+                  per-region frames results/pr_*.parquet.
+2026-11-13 10:48  transfer_spacedust's CPU genome groups landed (job 91643): 618 groups at 0.75 (query genomes in groups
+                  of 2-6). Used read-only as the Spacedust counting unit.
+2026-11-13 10:54  predeclared.json written (definitions of L1-L4, L4a variant, L4+ interpretation, selection rules,
+                  expectations for every output) before any computation of this workstream.
+2026-11-13 10:58  Coordinator (priority from Jacob): DPANN ribosomal resolved is the primary criterion for every output;
+                  add a label-free failure diagnosis of the ribosomal benchmark. predeclared.json amendment_1 written
+                  10:58: success bar resolved > 1,512 with recovered >= 1,650 and the other bars; odd selection now
+                  [conditions met, odd resolved, odd summed]. No number of this workstream existed at that time (no odd,
+                  no even number of anything computed).
+2026-11-13 11:04  Smoke test (login node, 1 thread, first 150 DPANN genomes, ll.py smoke): 3,163 significant keys, 43,192
+                  bonds, 34,710 positive boundaries; tie-collapsed tree 18,444 nodes, every node's m / e / persistence equal
+                  to a brute-force check, run roots == L1 runs; recurrence counts equal a brute-force window scan for 60
+                  random nodes in the observed and one shuffled corpus (0 mismatches of 120).
+2026-11-13 11:05  Re-read both cluster files; account 332 CPUs running. Submitted 92658 ll_dp1 (24 CPUs: DH refcheck,
+                  DPANN group build, ODD scoring of all outputs, reference ribosomal diagnosis, syn build + odd) and
+                  92659 ll_sd1 (24 CPUs: Spacedust group word ladder 4-20, group build at tau*, syn build; no scoring).
+2026-11-13 11:06  DH reference reproduced exactly (job 92658, dscore.py refcheck): even summed .4270, F1 .744/.548/.479,
+                  ribosomal 1,686 / 1,512, Parvarchaeaceae 114 recovered / 113 resolved; per-instance F1, control F1 and
+                  coverage equal to the stored scores.
+2026-11-13 11:08  DPANN group build (gold-free): 39,137 significant keys, 1,797,062 bonds (Lambda q50 64, q99 1,494),
+                  1,310,777 positive boundaries; nulls 14 / 9 / ? keys (62 / 30 / 36 tree nodes). L1 426,696 loci, 48.5%
+                  of genes (span q50 3, max 108). L2 genes in loci .422 / .326 / .255 / .191 at theta .02 / .05 / .1 / .2.
+                  Node calibration: delta = 0, tau_node = 0 at every theta (FDR 5e-5 to 1.2e-4), so L4 = L4a; the test
+                  removes 31,112 of 848,982 nodes at theta .02 (n < 2). Closed-form E sums to 1.19x the shuffled count.
+                  Recurrence for 1,032,127 unique intervals (204,645 keys) 52 s on 24 threads; build 141 s.
+2026-11-13 11:09  amendment_2 (L4b: cohesion orders the splits instead of cutting; whole tested at the bond tau with the
+                  closed-form E) written before any odd score was read (3 odd log lines existed, unopened).
+2026-11-13 11:13  ODD scores of DPANN group outputs read (job 92658; results/odd_dpann_group.json; odd numbers only).
+                  DH odd: summed .4179, ribosomal 848 / 769, Parv 55. Odd resolved / summed / F1 DF-TXSS-CCT:
+                    L1 531 / .491 / .738 .494 .394;  L2 .02 685 / .510;  L2 .05 735 / .597 / .681 .584 .319;
+                    L2 .1 748 / .416 / .378 .569 .244;  L2 .2 72 / .323;  L3 .02/.05/.1/.2 717/750/760/317, summed
+                    .601/.613/.610/.603;  L4 .02 798 / .647 / .756 .700 .400;  L4 .05 753 / .681;  L4 .1 752 / .454 /
+                    .365 .627 .241;  L4 .2 72 / .316.  L4a = L4 (identical outputs);  L4+ .02 798 / .632.
+                  Predeclared rule (amendment_1: [conditions, odd resolved, odd summed] on L2): theta = 0.1 (L2 .05 and
+                  .1 both meet 2 conditions; odd resolved 748 > 735). CRISPR-Cas F1 fails the F1 condition everywhere.
+                  Not selected by the rule but best on odd resolved and on odd summed among L4 rows: L4 at theta .02.
+                  Cut-only L2 collapses DefenseFinder F1 at theta >= .1 (.378 / .259); joining phrases at the same theta
+                  did not (words V-coh0.1 DF .735), because a cut destroys bonded loci while a phrase only adds.
+2026-11-13 11:14  Reference ribosomal diagnosis read (rdiag_reference.json; reference outputs only, all 1,686 runs):
+                  DH unresolved 174 = 17 under-covered + 157 over-extended (median 18 outside genes per run); no two
+                  benchmark runs share a contig within 10 genes (0 neighbour pairs), so the (3) merge among benchmark
+                  runs is empty; 14.5% of DH's outside genes carry a Ribosomal_* marker outside every run of >= 8 marked
+                  genes. Extending (3) to smaller marked fragments (any size) before any output of mine is diagnosed.
+2026-11-13 11:19  L4b odd (job 92721): theta .02/.05/.1/.2 resolved 810/806/807/807, summed .607/.601/.597/.572, F1 at
+                  .1 = .756/.706/.415 (DH odd .743/.544/.479). Selection: theta 0.1, L4b ([2, 807, .597] over L4
+                  [2, 752, .454]). Written to predeclared.json amendment_3 at 11:20 with even expectations, before any
+                  even number. Spacedust builds (gold-free): group tau* 10 (FDR .005; 87,698 word types); syn L1 equals
+                  the stored CC2 boundaries exactly and S obs equals the stored matrix; closed-form node E sums within
+                  0.2% of the shuffled count on Spacedust (1.19x on DPANN).
+2026-11-13 11:20  Reference ribosomal diagnosis rerun with marked fragments of any size (job 92721, rdiag_reference.json):
+                  0 benchmark-run pairs within 10 genes; 67,473 g2 marked fragments; 376 runs have a smaller marked
+                  fragment 3-5 genes away (extra marked genes q50 2, q90 7); oracle exact span 1,686 / 1,686; oracle
+                  merged neighbourhood 1,507 (179 runs fail precision against their own neighbourhood). DH 174 unresolved
+                  = 17 under-covered + 157 over-extended (median 18 outside genes; 31% of outside genes inside the merged
+                  neighbourhood, 65% beyond it).
+2026-11-13 11:20  Submitted 92765 ll_sd2 (24 CPUs; account 252 running): source207 scores of the selected settings
+                  (groups, syn) and a SENSITIVITY file (other thetas). Expectations: predeclared.json amendment_3.
+2026-11-13 11:21  Submitted 92767 ll_dp2 (24 CPUs; account 252 running): build4b syn, L4b+ tables, EVEN scoring of the
+                  amendment_3 outputs with ribosomal diagnosis; syn secondary rows.
+2026-11-13 11:23  source207 scores read (job 92765; results/s207_sd_group.json, s207_sd_syn.json, s207_sd_group_sens.json):
+                  groups L1 +.153 [+.116, +.189]; L2 .1 -.040; L3 .1 +.073; L4b .1 (selected) +.126 [+.086, +.166], vs P2
+                  +.077 [+.044, +.109], vs CC2 -.016 [-.042, +.008], vs engine ref -.058 [-.093, -.021], vs Spacedust +.061
+                  [+.025, +.097]; brief's L4 .1 -.044. syn: L1 equals CC2 (d .000); L4b +.123. Sensitivity (not selected):
+                  L2 .02 +.071, L4 .02 +.059, L4b +.126-.127 at every theta.
+2026-11-13 11:25  DPANN EVEN read (job 92767; even_dpann_group.json): L4b .1 ribosomal 1,680 / 1,598 (+86 [+60, +115] vs
+                  DH), Parv 114, summed .584 (+.157 vs DH; -.040 [-.056, -.024] vs words V-mob; -.024 [-.041, -.007] vs
+                  words + cohesion phrases), F1 .731/.700/.419 (CRISPR-Cas -.060 vs DH: fails the F1 bar). L1 1,036
+                  resolved; L2 .1 1,473 (DF F1 .376); L3 .1 1,494 (summed .606); brief's L4 .1 1,481 (DF F1 .357);
+                  L4 .02 (not selected) 1,585 / .632. Ribosomal diagnosis: L4b 88 unresolved = 56 under-covered (the
+                  same 56 as L1: bond gaps inside the run) + 32 over-extended.
+2026-11-13 11:26  syn even (even_dpann_syn.json): L4b 1,601 resolved, summed .570, CRISPR-Cas F1 .441 (-.038); L3 .1
+                  1,502 resolved, every F1 bar met (CRISPR-Cas -.007), verdict 'beats' DH on summed.
+2026-11-13 11:28  All five jobs COMPLETED (92658 16 min, 92659 8 min, 92721 4.4 min, 92765 6.2 min, 92767 4.3 min); peak
+                  RSS of every step <= 2.4 GB. Writing REPORT.txt.
+2026-11-13 11:32  REPORT.txt written (final). Copies of REPORT / NOTEBOOK / predeclared.json placed in $RD/long_loci/.
+
+PART 2 (DPANN only): L4b over list-based first-round bonds
+------------------------------------------------------------------
+2026-11-13 11:33  Coordinator: part 2 (list bonds Z / A / Zs / As, F reference, FZ exploratory). Read vocab_lists/REPORT.txt
+                  and vl.py (pass_count, pass_synneff, syn_matrix, Learner.evaluate, z_lists, aln_lists, cmd_job); stored
+                  objects located: $RD/vocab_lists/excl/{group,genome}_order{-1,0,1,2}.npz, mm/aln__k1000__{I,B}.npy,
+                  $RD/calib/table (z), job_z.json / job_aln.json ladders (Z tau* 6: 2,246,491 observed at 6; A tau* 6:
+                  2,522,221). Round-0 statistics are not stored per adjacency: recomputed here with vl.py's own kernels.
+2026-11-13 11:37  predeclared2.json written before any list-based computation of this workstream.
+2026-11-13 11:39  Family-free node filter smoke (login node, 1 thread, synthetic 40-genome universe): lb.count_lists equals a
+                  brute-force window scan on 261 nodes (0 mismatches; -1 padding, partner dedupe and own-group exclusion
+                  included); lb.py imports vl.py read-only (numba cache and bytecode redirected away from vocab_lists).
+2026-11-13 11:40  Re-read both cluster files (unchanged); account 228 CPUs running. Submitted 92909 ll_qZ (Z with FZ, then
+                  Zs) and 92910 ll_qA (A, then As), 64 CPUs each on standard_expand_2 (account 356). Gate inside: Z and A
+                  ladders must equal job_z.json / job_aln.json before any locus is written.
+2026-11-13 11:44  GATE PASSED for A: observed and three shuffled round-0 ladders equal job_aln.json exactly (tau* 6;
+                  2,522,221 bonds at 6). Z observed ladder equal at 11:47 (shuffles following).
+2026-11-13 11:54  Job 92910 done (A 369 s, peak 51 GB; As). Submitted 93014 ll_qodd (24 CPUs; account 268 before it):
+                  odd scores of A, As and F's L4b+ (Z / Zs / FZ after job 92909).
+2026-11-13 12:01  GATE PASSED for Z (all four orders equal job_z.json; tau* 6). Z + FZ built (job 92909); Zs started.
+                  As tau* 6 (FDR .0115 at 4, .0022 at 6). Odd A / As / F-L4b+ read (job 93014): A L4b .02 [3 conditions,
+                  odd resolved 785, summed .614]; As L4b .02 [3, 785, .620]; F L4b+ .02 [2, 810, .593].
+2026-11-13 12:04  Submitted 93124 ll_qodd (Z, FZ odd; 24 CPUs; account 268 before it).
+2026-11-13 12:09  Odd Z / FZ read (job 93124): Z L4b .02 [2, 781, .624] (CCT .448), Z L4b+ .02 [3, 781, .591]; FZ L4b
+                  .02 [3, 784, .623]. Selections (sel2.py, part-1 rule): F L4b .02, Z L4b+ .02, A L4b .02, As L4b .02,
+                  FZ L4b .02; written to predeclared2.json amendment_1 before any even number.
+2026-11-13 12:15  EVEN read (job 93147; even_dpann_{group,Z,A,As,FZ}_p2.json, pairs_p2.json). All seven bars met by A L4b
+                  .02 (1,681 / 1,549, +37 [+7, +69]; summed .613; F1 .823/.751/.475), As L4b .02 (1,686 / 1,547; .624;
+                  CCT .470), Z L4b+ .02 (1,681 / 1,542; .581; CCT .489) and FZ L4b .02 (exploratory). F L4b .02 fails
+                  CRISPR-Cas only. Token cohesion instead of kNN cohesion: +53 to +75 resolved, all bars still met.
+                  Z - A like-for-like L4b: summed +.007 [-.010, +.022], CCT -.022 [-.030, -.015], resolved -7 [-17, +2].
+2026-11-13 12:23  Zs built (tau* 6: FDR .0118 at 4, .0026 at 6) and odd-scored (job 93220): L4b .02 [2, 777, .622] (CCT
+                  .451), L4b+ .02 [3, 777, .586] selected. predeclared2.json amendment_2 written before any Zs even number.
+2026-11-13 12:26  Zs even read (job 93224): L4b+ .02 1,681 / 1,533 (+21 [-10, +51]), summed .585, F1 .807/.757/.504,
+                  all seven bars. Pairs vs part-1 L4b: resolved -49 to -65; summed -.003 to +.040; CCT F1 +.045 to +.084.
+                  Token vs kNN cohesion: A +53 [+37, +70] resolved, As +75 [+55, +94]. REPORT2.txt written.
+
+PART 3 (Spacedust collection): the part-2 selected outputs carried with nothing retuned
+-------------------------------------------------------------------------------------------
+2026-11-13 12:31  Coordinator: part 3. Read vocab_lists mm_search.sbatch / mm2knn.py, calib gpu_table.py / calib_gpu.sbatch
+                  (DPANN z table 720 s on one A5000, Z_STORE 10.5), softrec knn_deep.py (DPANN kNN k 2,000: HNSW, CPU,
+                  2.2 h on 24 threads), softrec.exclusion / Lists._knn (capcos), context_units cuts.py gene_cohesion_knn.
+                  Spacedust assets: transfer_spacedust/fam/uniq.faa (4,231,484 uids; headers = uid), gid2uid.npy = emb
+                  meta uq, zca10_f32 / f16 vectors per uid, token kappa. predeclared3.json written.
+2026-11-13 12:34  Adapter smoke (login node, sdu.py smoke): SDU gene order / contigs / genomes / 618 groups equal ll.load('sd');
+                  12,760,265 round-0 instances; gene -> uid map (fam/gid2uid) equals emb/meta.npz uq (4,231,484 uids).
+2026-11-13 12:34  Re-read both cluster files (unchanged); account 204 CPUs running; my GPU-partition job 92238 (sb_esmpp,
+                  another workstream) RUNNING, so the GPU z-table pass is NOT submitted. Submitted (64 CPUs each,
+                  standard_expand_2; account 332 after):
+                    93320 ll_mmsd  MMseqs2 18 createdb (own copy of fam/uniq.faa, 4,231,484 sequences) + prefilter -s 7.5
+                                   --max-seqs 1000 + align -e 1e-3 + convertalis + mm2knn_sd -> $LL/mm_sd/aln__k1000__{I,B}.npy
+                    93321 ll_knnsd HNSW kNN k 2,000 of the zca10 vectors (knn_sd.py) -> $LL/sd_knn; then sdu.py prep:
+                                   exclusion masks (group / genome, 4 orders) -> $LL/sd_lists/excl, kappa_var_knn50 -> $LL/sd_lists
+                  Prepared, not submitted: q_gpu_sd.sbatch + gpu_table_sd.py (calib gpu_table copy, Z_STORE 10.5, A5000
+                  partition 'gpu' only) and q_sdarm.sbatch (arm builds + source207 with refs part-1 L4b .1 / .02 and L1).
+REMAINING (on resume): (1) after 93320: SD_ARMS="A As" sbatch --export=ALL q_sdarm.sbatch (requires done_sd_prep from 93321);
+                  (2) GPU z table when 'squeue -u jwestrob -p gpu' is empty: cd $RD/long_loci/code && sbatch q_gpu_sd.sbatch,
+                  then SD_ARMS="Z Zs" sbatch --export=ALL q_sdarm.sbatch; (3) REPORT3.txt.
+2026-11-13 13:22  Coordinator (decision by Jacob): job 93320 (MMseqs2 all-against-all) was cancelled after 43 min, is not
+                  resubmitted, and its partial output is not used. predeclared3.json amendment_1: A and As dropped on this
+                  collection for compute cost; arms Z and Zs (L4b+ theta .02) with F as reference; compute limit 2 h on
+                  64 CPUs per job, 1 h per GPU job, without asking. GPU pass approved.
+2026-11-13 13:25  Job 93321 (CPU HNSW kNN): build 1,351 s; search 352 queries/s on 64 threads -> ~3.3 h search, ~4.1 h with
+                  prep: beyond the new 2-h limit. Cancelled at 49:17 (no output used). Preflight (cluster files unchanged; the
+                  'gpu' partition spans the H200 node, so the H200 node is excluded = A5000 only); my GPU queue empty.
+                  Submitted 93592 ll_gpusd (z table, A5000, -c 12): first progress ETA 1,246 s. predeclared3 amendment_2:
+                  exact GPU kNN (gpu_knn_sd.py) replaces HNSW if a timing test projects < ~50 min. Timing test 93607
+                  queued (QOSMaxJobsPerUserLimit: one running gpu job per user).
+2026-11-13 13:44  Z table done (job 93592, A5000): 20 min 34 s wall (search 1,210 s), peak GPU 11.2 GB, host peak RSS 12.0 GiB;
+                  1,232,730,135 entries at z >= 10.5 (per uid q50 166, q90 794, mean 291; DPANN mean 882 over 3,564 genomes).
+                  GPU kNN timing test (job 93607, 32,768 queries): 6.9 s -> projected 891 s for the full exact k 2,000 search
+                  (peak GPU 10.0 GB; 0 queries without self), against ~3.3 h for the CPU HNSW search. Submitted 93760
+                  ll_gknnsd (full exact kNN, A5000) and 93761 ll_sdprep (64 CPUs, afterok:93760: masks + kNN cohesion).
+2026-11-13 14:16  GPU kNN 93760 waited 31 min for the per-user gpu-partition slot (other workstreams' jobs), ran 14:16-14:34:
+                  18 min 22 s wall (search 1,090 s), peak GPU 10.0 GB, host RSS 12.0 GiB; 0 queries without self; cosine at
+                  rank 1 / 50 / 1000 / 2000 median .841 / .618 / .340 / .280 (DPANN HNSW .87 / .658 / .389 / .293).
+2026-11-13 14:34  Prep 93761 started (masks + kNN cohesion). Submitted 94064 ll_sdarm (Z, Zs builds + source207; afterok:93761).
+2026-11-13 14:40  Prep 93761 done: 5 min 32 s, peak RSS 135 GiB (64 CPUs). kappa_var_knn50 (Spacedust): floor .00018; quantiles
+                  q05/q25/q50/q75/q95 .004/.011/.026/.097/.573; share below .02/.05/.1/.2 = .426/.658/.754/.823 (token array
+                  .535/.722/.809/.879); Spearman with the token array .548. Exclusion masks: observed order excludes 387,827
+                  (group lineage) / 379,374 (genome) of 12,760,265 round-0 instances at K1000; shuffles 80-86k.
+                  Arms job 94064 started 14:40.
+2026-11-13 14:54  Arms job 94064 done (12 min 19 s): Z tau 8, Zs tau 6. source207 read: Z L4b+ .02 +.111 [+.072, +.149] (vs part-1
+                  L4b -.015; vs L1 groups -.042; vs CC2 -.031; vs engine -.073; vs Spacedust +.046); Zs +.086. Token cohesion
+                  -.008 / -.003. REPORT3.txt written.
+
+PART 4 (pair distance; CPU only)
+--------------------------------
+2026-11-13 14:57  Coordinator: part 4 (W3 / W5 / W8 / WA family bonds; Z-WA conditional). Read transfer_spacedust's DEVELOPMENT
+                  window-8 notebook entry (CC7 groups +.233, chosen after scores). predeclared4.json written before any
+                  computation at another pair distance.
+2026-11-13 14:58  Smoke (login node, 150 DPANN genomes): lw W3 equals ll.bonds(w=3); WA's d = 1 bonds equal ll.bonds(w=1); WA
+                  bonds by d 31,923 / 21,459 / ... / 5,825 at tau 4. Cluster files unchanged; account 88 CPUs. Submitted
+                  94238 ll_w (DPANN: builds + odd scores) and 94239 ll_w (Spacedust: builds only), 24 CPUs each.
+2026-11-13 14:59  Bond-rule ladder check (gold-free): W3 tau 6 on DPANN, 8 on Spacedust (part 1 used the word-type tau 10).
+                  predeclared4 amendment_1: W3b (W3 at its bond-rule tau) added as a candidate and reference row.
+2026-11-13 15:16  Builds done (DPANN 644 s, Spacedust 782 s; peak 3-5 GB): bond taus DPANN 6 / Spacedust 8 in every arm; WA
+                  bonds at d >= 4: 31% (DPANN) / 38% (Spacedust); boundaries bonded only by d >= 4: 283k / 458k. Odd read:
+                  WA L4b .05/.1/.2 are the only outputs meeting all three odd conditions; selected WA L4b theta .2 [3, 806,
+                  .522] (theta .1 [3, 805, .550]). predeclared4 amendment_2 written before any even or source207 number.
+2026-11-13 15:23  EVEN + source207 read (job 94379). DPANN: WA L4b .2 1,685 / 1,594, summed .513, F1 .762/.672/.461, all seven
+                  bars; W5 / W8 1,631 / 1,626 resolved, CRISPR-Cas -.026 (fail). Spacedust: WA L4b .2 (primary) +.164
+                  [+.125, +.202] (vs engine -.020 [-.054, +.014]); DEVELOPMENT WA L1 +.247 (BEATS engine +.064), W8 L1 +.234,
+                  W5 L1 +.232. Z-WA not built (list kernels fix WGAP = 3; masks only for d <= 3); cost estimated. REPORT4.txt.
+
+PART 5 (Z-WA: embedding-list bonds at the adaptive pair distance; CPU only)
+---------------------------------------------------------------------------
+2026-11-13 15:25  Coordinator: part 5. predeclared5.json written before any Z-WA computation.
+2026-11-13 15:28  zwa_smoke (login node, synthetic universe): adjacency_w + pass_count_w at window 3 equal vl.adjacency +
+                  vl.pass_count exactly (n, n_groups, E, E_groups on 6,233 rows); adaptive support equals a brute-force count
+                  for 300 sampled adjacencies. Submitted Z-WA jobs (64 CPUs each) for DPANN and Spacedust.
+2026-11-13 16:07  Z-WA builds: Spacedust 617 s (masks 161 s, lists 45 s, gate 62 s), peak 106 GiB; DPANN 2,159 s (masks incl.
+                  vl.emb_lists 1,002 s, z lists 416 s, gate 115 s, 4 adaptive passes ~90 s each), peak 110 GiB. Gates passed
+                  (window-3 kernel = vl.pass_count exactly; mask d <= 3 = stored). tau 8 on both (DPANN FDR .0116 at 6).
+                  Odd: L4b+ .02 selected [3, 758, .572] (CCT .495); L4b .02 [2, 758, .615] (CCT .439). Amendment_1 written.
+2026-11-13 16:10  Even + source207 read (job 94715). DPANN Z-WA L4b+ .02: 1,686 / 1,497 (-15 vs DH: fails the ribosomal bar),
+                  summed .560, F1 .806/.748/.491 (CCT +.012): 6/7. Spacedust: +.150, -.034 [-.066, -.002] vs engine (BELOW);
+                  DEV L1 +.206 (MATCHES engine). Success definition not met. REPORT5.txt written.

@@ -1,0 +1,33 @@
+{
+ "pool": {
+  "ctx": {
+   "reading": "V-nest",
+   "score": [
+    2,
+    0.40865073012513864
+   ]
+  },
+  "z10.6": {
+   "reading": "V-nest",
+   "score": [
+    2,
+    0.48728634862642706
+   ]
+  },
+  "z13.7": {
+   "reading": "V-nest",
+   "score": [
+    1,
+    0.5419200733833828
+   ]
+  }
+ },
+ "ranking": [
+  "z10.6",
+  "ctx",
+  "z13.7"
+ ],
+ "main": "z10.6",
+ "rule": "number of odd conditions met, then odd summed excess; ties keep ctx",
+ "written": "2026-11-13T05:59:04Z"
+}

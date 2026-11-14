@@ -1,0 +1,41 @@
+{
+ "written": "2026-11-12 07:58 UTC, before any round-2 number was computed (workstream ws_locus_search2)",
+ "question": "Do ESM++ small embedding ranks add locus-search value on top of MMseqs2 sequence ranks (S3 versus S2)?",
+ "methods": {
+  "S2": "per slot evidence max(token, w_seq * sequence rank); sequence rank = log(N_db / bitscore tail rank) from MMseqs2 -s 7.5 -e 10 --max-seqs 20000 (round-1 topk_seq)",
+  "S3": "per slot evidence max(token, sequence rank, w_emb * embedding rank); embedding rank = exact cosine tail rank, top 20,000 (round-1 topk)",
+  "AP": "primary AP of round 1 (bench.py / locus_search.evaluate): correct = covers >= 50% of the members of a same-type target with >= 2 members; wrong = overlaps a different-type instance; unlabelled and same-type-other hits ignored; hits ranked by score; AP needs no null"
+ },
+ "test_A_defensefinder_cv": {
+  "queries": "DefenseFinder instances with >= 2 members and >= 1 relevant target (n_rel > 0), all genomes (odd and even)",
+  "folds": "query genomes (unique genome_code of DefenseFinder queries) permuted with numpy default_rng(17) and assigned to 5 folds by permutation position modulo 5",
+  "tuning": "per fold, S2 config chosen among w_seq in {0.5, 0.75, 1}, W = span + {0, 2, 4, 8}, tau in {0, 1, 2, 3}; S3 config among w_emb in {0.25, 0.5, 0.75, 1} (w_seq fixed at 1), same W and tau grids; choice = highest mean primary AP on the other four folds' queries (ties: smaller W extra, larger tau, then smaller weight)",
+  "statistic": "per held-out query AP(S3) - AP(S2); mean over all held-out queries; 95% interval from a paired genome bootstrap (query genomes resampled, 2,000 draws, seed 17)"
+ },
+ "test_B_frozen_other_callers": {
+  "queries": "TXSScan and CRISPRCasTyper instances with >= 2 members and n_rel > 0 on even genome_code genomes (type label as round 1: system_type for TXSScan, system_subtype for CRISPRCasTyper)",
+  "configs": "frozen at the DefenseFinder odd-genome values of round 1: S2 w_seq 1, W = span + 8, tau 3; S3 w_emb 0.5, W = span + 8, tau 0",
+  "statistic": "mean AP(S3) - AP(S2) per caller, with a paired genome-bootstrap interval reported"
+ },
+ "criterion": "The embedding counts as adding value if (A) the DefenseFinder cross-validated mean S3 - S2 is >= 0.02 AP and its 95% interval excludes 0, and (B) the mean S3 - S2 is > 0 for TXSScan and for CRISPRCasTyper. All three conditions are required.",
+ "refutation": "Any of: (A) mean < 0.02 or interval includes 0; (B) mean <= 0 in either other caller. Then the round-1 S3 - S2 gain (+0.079) is not confirmed as a general embedding contribution.",
+ "secondary_reported": ["strict AP", "instances with >= 3 members", "per-fold chosen configs", "recall at E <= 0.01 and unlabelled hits per query for the frozen configs (200-replicate null)"],
+ "unlabelled_hit_evidence_rule": {
+  "scope": "a hit labelled unlabelled (overlaps no instance of the query's caller) at E <= 0.01",
+  "supported_if_any": [
+   "a_own: a gene in the hit window carries a raw DefenseFinder profile hit (annotations.source = 'defensefinder', any reported e-value) whose profile name occurs in profile_names of at least one curated defense_systems row of the query's system_type",
+   "c_module: the hit window overlaps an engine conserved locus (dpann__mmseqs__seq__e3c50s75__w3, kind 'conserved', any level) whose module_id equals the module_id of a conserved locus overlapping the query instance's members"
+  ],
+  "control": "per hit, 10 span-matched windows drawn uniformly on the same contig among windows that overlap no gold instance of the caller (seed 17)",
+  "reported_also": ["any raw DefenseFinder profile hit (any type)", "any conserved locus overlap", ">= 50% of window genes inside conserved loci", "slots filled / query members"],
+  "non_defensefinder_callers": "the rule is defined for DefenseFinder queries only"
+ },
+ "rate_constrained_selection": {
+  "candidates": "M0, M1, M2 (w_emb in {0.5, 0.75, 1}), S1, S2 (w_seq in {0.5, 0.75, 1}), S3 (w_emb in {0.25, 0.5, 0.75, 1}), each at W = span + 8 and tau in {0, 1, 2, 3}; plus M3 refine and grow, rounds 2 and 3, at their round-1 configs",
+  "training": "odd genome_code DefenseFinder queries (n_rel > 0); AP = mean primary AP; rate = unlabelled hits per query at E <= 0.01, E from a 40-replicate circular-shift null with a fitted exponential tail (M3 candidates: round-1 200-replicate empirical E)",
+  "constraint": "rate <= 1.5 x the rate of M0 at its round-1 config (tau 3, W = span + 8) computed the same way; if that M0 rate is < 0.1, the bound is 0.15 per query",
+  "exemption_variant": "unlabelled hits classified supported by unlabelled_hit_evidence_rule are removed from the rate of every candidate and of M0",
+  "selection": "highest training mean AP among candidates meeting the constraint (reported without and with the exemption)",
+  "test": "even genome_code DefenseFinder queries: AP and paired AP difference to M0 (genome bootstrap), rate with and without the exemption"
+ }
+}

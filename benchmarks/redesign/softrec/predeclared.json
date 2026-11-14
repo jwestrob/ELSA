@@ -1,0 +1,45 @@
+{
+ "written_utc": "2026-11-12T13:27Z",
+ "written_before": "any scorer run of any softrec result (odd or even genomes); no softrec job had been submitted",
+ "workstream": "softrec",
+ "question": "Does a token-free recurrence statistic that uses each gene's ranked neighbour list directly (graded whitened-embedding evidence, no families) match or beat the token recurrence engine for discovery on DPANN?",
+ "design": {
+  "instances": "every gene pair (a, b) within w = 3 positions on one contig (the engine's instances); homologous pairs excluded as the engine excludes ta == tb (fam lists: same token; embedding lists: identical sequence or cosine(a, b) >= max(0.32, the cosine at which b would enter a's list or a would enter b's))",
+  "lists": "N(a) = ranked genes outside a's genus (own-genus genes cannot add a lineage); embedding lists from a unique-sequence HNSW top-2000 (identical sequences first, tail rank for ties), capped at depth K genes and cosine floor f",
+  "statistic": "L_o = genera other than a's genus with a pair (a', b') within 3 genes on one contig, a' in N(a), b' in N(b), a' != b'; G_o genomes; E_o = sum_G min(1, 2w c_a(G) c_b(G) / n_G); graded S = sum over genera of the best pair's min(log(N_db / tail rank)) of the two members; engine convention L = L_o + 1, G = G_o + 1, P = Poisson P(X >= G | E_o + own-genome term)",
+  "null": "gene order shuffled within each genome (contig sizes kept), RNG seeds 1000 + r (r = 0, 1, 2) exactly as the engine; instances and target co-location both recomputed on the shuffled order",
+  "rule_selection": "per statistic family, the engine's procedure at the instance level: rules with FDR (mean null instances passing / observed instances passing) <= 0.01, top 12 by observed count, the one covering most genes. Families: count (L >= m), poisson (P <= 1e-e & L >= 2 or 3), graded (S >= t)",
+  "loci": "boundary support = largest L of a significant instance spanning the boundary; engine locus reading (conserved levels 2, 5, 12, 30, 80 genera at gaps 0 and 2; profile units at Jaccard 0.5 of the genome sets of the best instance per boundary); no modules (module_id -1)"
+ },
+ "variant_pool": {
+  "sources": ["zca10 (ESM++ small, zca10 transform)", "head (learned linear 960 -> 256 head)"],
+  "depth_genes_outside_genus": [50, 200, 1000],
+  "cosine_floor": ["none", 0.4],
+  "statistic": ["count", "poisson", "graded"],
+  "also_in_pool": "zca10_k50: the stored zca10 top-50 unique-sequence kNN expanded to genes outside the genus (depth <= 50, floors none and 0.4), the first end-to-end run",
+  "note": "head variants enter the pool only if their kNN finishes tonight; the pool is whatever completes, all listed in the report"
+ },
+ "controls_outside_pool": {
+  "fam_e3c50s75_genome": "degenerate lists = base family members outside the own genome; must reproduce the token engine: per-instance L, G equal to the engine's token-pair L, G for every instance, E within float tolerance; under the forced rule P <= 1e-4 & L >= 2 the significant instances and boundary_support.npy equal the v5 base",
+  "fam_e3c50s75_genus": "same family lists outside the own genus (parity with the embedding lists), selected by the soft machinery",
+  "fam_rescue3_genus": "default family table, same"
+ },
+ "admissibility": "ribosomal check (ribosomal_check.py, default reading conserved@2 of loci_all_genomes): recovered >= 1,650 of 1,686 runs AND Parvarchaeaceae >= 110 of 114",
+ "selection_of_the_tested_variant": "among admissible pool variants, the highest tune (odd genome_code) summed DefenseFinder + TXSScan excess difference against the base (dpann_compare A - B); selection reads tune numbers only",
+ "base": "results_dpann_v5/dpann__mmseqs__seq__e3c50s75__w3 (even genomes: DefenseFinder F1 0.806, TXSScan F1 0.758, summed excess +0.447); default rescue3 reported beside it",
+ "criteria_on_even_genomes": {
+  "matches": "summed DF + TXSS excess A - B >= -0.01 AND DefenseFinder F1 >= 0.786 AND TXSScan F1 >= 0.738",
+  "beats": "summed excess A - B >= +0.02 with the 95% paired genome-bootstrap interval excluding 0 AND DefenseFinder F1 >= 0.796 AND TXSScan F1 >= 0.748",
+  "otherwise": "fails; state which part fails"
+ },
+ "readings_and_refuters": {
+  "if_matches_or_beats": "Reading: graded whitened evidence carries the homology information discovery needs, so a partition into families is unnecessary. Refuted if (i) the degenerate family-list run through the same machinery also gains by the same amount over the token engine (the machinery, not the evidence, would explain the gain), or (ii) the chosen variant's null FDR at its rule exceeds 0.01, or (iii) the gain vanishes against the default (rescue3) as well as the base by more than the interval.",
+  "if_fails_attribution": {
+   "machinery": "fam lists through softrec vs the token engine (forced rule and own selection); a gap here locates the failure in the instance-level statistic/rule selection, not the evidence",
+   "statistic_or_lists": "embedding lists vs fam lists at the same machinery and statistic; gold member genes covered by significant instances (coverage) per caller",
+   "null": "observed vs null instances passing at the chosen rule; rule chosen per family; L distribution of null instances; an FDR above target or a threshold forced high by deep-list chance support points to the null",
+   "locus_reading": "if gold members are covered by significant instances at the base's rate but best-locus F1 is lower, the locus reading (level ladder in genera, overshoot, fragmentation; median best-locus span and boundary precision) is the failing part"
+  }
+ },
+ "also_reported": "CRISPRCasTyper F1 and excess; random-placement control; genes covered; loci counts and median span; ribosomal check; median boundary precision at best locus; even-genome gold instances with token F1 < 0.5 recovered (F1 >= 0.5) by softrec and the reverse, against base and default; wall time and peak memory"
+}

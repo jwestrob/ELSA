@@ -1,0 +1,263 @@
+ws_cofold4 - candidate 1 (DPANN tokens 81718 A / 393054 B, third gene C 130016): independent tests and structure
+12 November 2026. Code and tables: benchmarks/redesign/cofold/candidate1/ (code/, work/); biotite
+$RD/cofold/candidate1/. Folds: Biohub ESMFold2 esmfold2-2026-05 (fold_all_atom), client cofold/biohub_cofold.py.
+Names are observations of similarity unless a curated caller emitted them. Curated callers in the live data:
+DefenseFinder (defense_systems), TXSScan (secretion_systems), CRISPRCasTyper (crispr_cas_systems).
+C family = hmmbuild of the 258-row C instance alignment; family calls use full-sequence E <= 1e-5.
+
+HEADLINE
+- The A-B-C unit holds outside DPANN. 40 public loci (39 bacterial, 1 Bathyarchaeota) holding an A, B or fused
+  A|B homolog: a C-family CDS lies within +-3 genes in 37/40, against 0/51 length-matched control windows on the
+  same records (Fisher p 2.3e-22); in 35 of the 37 it is the co-oriented CDS directly downstream of B (34) or of the
+  fused A|B ORF (1), and in the other 2 a C-like segment is fused to a B-like segment in one CDS; A sits directly
+  upstream of B in all 32 loci holding both. Lineages: 36 CPR/Patescibacteria,
+  Omnitrophota, Myxococcota ("Deltaproteobacteria"), Bacteroidota (Algoriphagus), Bathyarchaeota. The bacterial C
+  copies keep the His and Cys (36/38; the 2 exceptions are fragments). Nothing else recurs (no Pfam domain in > 2/40
+  windows; 113/146 other neighbours are "hypothetical protein").
+- The bacterial units co-fold like the DPANN ones: 11 CPR A-B-C trimers ipTM median 0.910 (0.806-0.924), B-C pair
+  passes 10/11; B-C dimers 11/13 pass (incl. Bathyarchaeota 0.920 and Omnitrophota 0.836); every partner swap fails
+  (B-C' 0/10 pass, median 0.166; B'-C 0/8, median 0.129). Myxococcota fused A|B + C: ipTM 0.933 (C' 0.169).
+- Precise contact: B inserts a beta-strand into C's active-site groove in the orientation of a bound substrate, with
+  its invariant Gly (B column 48, 99.6 %) at the P1 position next to the catalytic Cys. After superposing C onto
+  gingipain R 1cvr (TM 0.66-0.73), C's His/Cys land on the catalytic His211/Cys244 (CB 0.75 / 1.05 A median) and B
+  covers 79 % (74-91 %) of the D-Phe-Phe-Arg-CMK inhibitor's heavy atoms within 3 A, running in the same
+  direction (cosine 0.95-0.99); B's Gly-48 backbone carbon lies 2.0 A (1.2-5.5) from the inhibitor's warhead carbon.
+  The same holds against caspase-7 + Ac-DEVD-CHO (8dgz: P1 Asp -> B Gly-48 region, cosine 0.69-0.84). The bacterial
+  models reproduce it (nearest B backbone carbonyl within 4.7 A of Cys SG in 20/24 bacterial/archaeal ABC and BC
+  models; the column-48-equivalent Gly in 17 of them).
+- Coevolution without folding is detected (revises the deep dive's "no coevolution evidence"): B-C contact column
+  pairs outscore non-contact pairs (MIp AUC 0.697, mean-field DCA AUC 0.763) beyond pairing shuffles across all
+  rows, within phylum and within order (p at the permutation floor, 0.001 / 0.005-0.01); a within-genus shuffle
+  (near-identical rows only) leaves the MIp AUC inseparable (p 0.18) while DCA AUC still exceeds it (p 0.0099).
+- The 12th fold instance's C is a truncated C (104 aa, complete ORF ending in TAG, N-terminal 90 residues with the
+  His, no Cys), not a contig-edge fragment: this explains its failed trimer (ipTM 0.38).
+- The A->B junction is a translational-coupling junction (B has its own ATG in 314/325; ATGA in 206/325). -1
+  slippery heptamers are enriched there relative to ATGA junctions elsewhere on the same contigs (78/206 vs
+  168/1,011, OR 3.1, p 7.5e-11), concentrated in Nanobdellota (fusion-competent 44/175 vs 0/67 Micrarchaeota); the
+  B->C junction shows no enrichment (OR 1.12, p 0.74).
+- Borvo: 118 DefenseFinder Borvo calls in DPANN, all single-gene BovA; 10 fall on C-family proteins (9 in A-B-C);
+  the other 108 fall on 51 unrelated families incl. ribosomal proteins L22 (4) and S13 (4) and prolyl-tRNA
+  synthetase (5): the single-gene BovA call has low specificity in this dataset.
+
+==============================================================================================================
+1. ASSOCIATION OUTSIDE DPANN (c1x_targets.py, c1x_loci.py, c1x_nbscan.sbatch, c1x_nb_analyze.py; work/nb/)
+==============================================================================================================
+Refutation criterion (set before looking): C-family genes absent from most public loci, or present at the
+control-window rate, or present but not adjacent to B.
+- Targets: HHblits UniRef30 hits P >= 95 (A, B, A|B, F1, F2 profiles) plus UniRef50 hmmsearch hits E <= 1e-5:
+  100 UniProt accessions (UniParc-only skipped). Most entries have left UniProtKB; 96 resolved from UniSave, 4
+  active. Classified by NCBI taxonomy and by membership of the protein id in the DPANN gene universe: Bacteria 70,
+  already in our DPANN data 13 (incl. "Euryarchaeota archaeon SM23-78" KYK24974.1), metagenome-only 11, Eukaryota 3
+  (Calicophoron daubneyi A0AAV2TDW8 2,312 aa, A|B E 3e-31; Blomia, Eublepharis; not examined), DPANN outside our
+  data 2, non-DPANN Archaea 1 (Bathyarchaeota A0A497NWD9, B profile only, P 95.4).
+- Loci: priority fused > non-DPANN archaea > bacteria by evidence; 40 loci on 40 nucleotide records resolved by NCBI
+  efetch (fasta_cds_aa; 1,534 CDS). Neighbour CDS: A/B/C family HMMs and Pfam 39.0 (hmmscan) on biotite.
+- C-family CDS within +-3: 37/40 loci vs 0/51 control windows (same records, centre CDS length +-25 % of the
+  target, >= 6 CDS away). Positions: directly downstream of B in 34 (B at 0 / C at +1: 21; A at 0, B +1, C +2: 12;
+  B at 0 / split C at +1 and +2: 1), in one CDS with a B-like segment directly after A in 1 (L26, 126 aa, B HMM
+  3-43 + C HMM 132-214), directly downstream of the fused A|B in 1 (Myxococcota QMLA01000263: fused RLA82195.1 132 aa -> C RLA82194.1 246 aa,
+  C E 1e-21), and in Algoriphagus ratkowskyi (VORV01000010) as a 370-aa protein TXD76615.1 whose residues 51-103
+  match B (E 3e-8) and 150-282 match C (HMM 3-133, E 8e-18), lying upstream of the fused A|B ORF TXD76614.1 (117 aa).
+  The three loci without C: L25 Falkowbacteria (A-B followed by 38/49-aa ORFs and a MazF-like gene; record end
+  within 3), L27 Woesebacteria (A-B then tRNA-dihydrouridine synthase), L32 Collierbacteria (A at the record end).
+- B-C without A: 5/40 (Bathyarchaeota L03 RLI43539.1 62 aa -> RLI43540.1 243 aa; Omnitrophota L23; CPR L08, L30,
+  L38), the same variant seen in DPANN (section 2a).
+- C conservation: 36/38 C-family CDS in the windows carry His and Cys at the positions aligned to DPANN C His66 /
+  Cys100 (exceptions: a 77-aa split-C piece, L04; a 126-aa B-C fragment, L26). Median length 213 aa.
+- Other neighbours: 146 non-A/B/C CDS in the windows, 79 with any Pfam hit (i-E <= 1e-5); no domain in more than
+  2/40 windows (ResIII + Helicase_C + N6_N4_Mtase together in 2; Fic 2 vs 1/51 controls; DUF4143 2 vs 1/51).
+Files: work/nb/targets.tsv, scope.tsv, loci.tsv, cds.tsv, nb_windows.tsv (every +-3 neighbour: offset, strand,
+length, product, family and Pfam hits), nb_per_locus.tsv (layout string per locus), nb_domain_recurrence.tsv.
+
+==============================================================================================================
+2. VARIANTS INSIDE DPANN (c1x_chmm.sbatch, c1x_variants.py; work/variants/, work/hmm/)
+==============================================================================================================
+- C family over all 3,585,303 DPANN proteins: 376 hits E <= 1e-5 (378 at 1e-3). Bit scores split: 316 >= 150 bits
+  ("core"; the engine C token 130016 has median 258, min 105) and 60 below (37-143 bits).
+(a) C without A-B directly upstream. Of 376: A-B-C 316 (84 %), B-C 14, A-C 3, A/B within 5 genes but rearranged 9,
+  no A/B within 5 genes 22, contig edge upstream 12. Core tier (316): A-B-C 293; B-C 11 (in 4 B is the first gene of
+  the contig, so A is unobservable; 7 carry a non-A gene at -2); A-C 2 (EX4484-52 MBU4452261.1, Micrarchaeota
+  JBFYLP010000006.1_39); rearranged 1 (a split C, c1_0063 locus); no A/B within 5 genes 2, both N-terminally
+  truncated (EX4484-52 MCK5234173.1, 183 aa, HMM 36-214, after a 28-aa ORF; Aenigmatarchaeota QMZP01 HDD46180.1,
+  142 aa, HMM 72-213, after an opposite-strand PQQ beta-propeller protein); contig edge 7. Thus 306/309 core C
+  genes with an observable upstream gene have A or B directly upstream (293 both). Core C without A-B by phylum:
+  Nanobdellota 11, Micrarchaeota 6, EX4484-52 5, Aenigmatarchaeota 1. Of the 60 sub-150-bit hits, 23 are A-B-C;
+  the rest are C-terminal pieces of split C genes (tokens 210431, 399854) and weakly similar longer proteins
+  (tokens 380425, 371579, 371966; 251-469 aa, 37-70 bits) with no A/B nearby.
+(b) Engine instances without C at +1 (10 of 268): 1 at a contig edge (c1_0023); 4 carry a short C fragment at +1
+  (c1_0054 83 aa, HMM 92-164; c1_0063 45 aa, HMM 3-43, followed by a 161-aa C 57-214 = split C; c1_0122 52 aa at the
+  contig edge; c1_0219 53 aa, HMM 3-30); 5 carry another gene: same strand RIO1/ABC1-kinase-domain protein (252 aa,
+  c1_0062) and a 51-aa dark ORF (c1_0245); opposite strand GHMP-kinase/MVD-like (c1_0157), PPDK (c1_0207), AbiEii
+  domain protein (c1_0243). At HMM level, 316/325 A-B pairs have C at +1, 1 ends at a contig edge, 8 other.
+(c) Borvo: 118 DefenseFinder Borvo instances, all one gene (BovA). 10 on C-family proteins: 9 in A-B-C operons, 1
+  in B-C (3 of the 10 are truncated C of 87-116 aa); 9/316 A-B-C operons carry the call (2.8 %). The other 108 are on
+  51 tokens with no C-HMM hit even at E 1e-3 (median 184 aa; Pfam: none 34, LemA 14, Peptidase_M29 7,
+  ProRS/tRNA-synt_2b 5, Ribosomal_L22 4, Ribosomal_S13 4, PIN 3).
+(d) Minority C tokens. 190823 (19 members, 51-215 aa, median 88): all hit the C HMM over its N-terminal part (HMM
+  1-72 to 2-105); 7/19 are followed by a C-terminal C piece (HMM 115/127/130-214); 4/19 end their contig; 14/19 in
+  A-B-C -> N-terminal pieces of split or truncated C. 399854 (7 members, 76-179 aa): N-terminally shortened C (HMM
+  41/42-213, 2), near-full (5-214, 1) and C-terminal pieces (121/140-214); 5/7 in A-B-C. The 8 split-C junctions
+  (section 5) are frameshifts (+1 in 5, -1 in 3; 0 in frame), consistent with indels interrupting C.
+(e) Slot 4 (c1_0142, Micrarchaeales GCA_021803945.1): C = JAJZKW010000005.1_58, 104 aa, token 190823, complete per
+  Prodigal (partial 00), TAG stop at nt 54,807 of a 55,335-nt contig, HMM 1-95 (reference C residues 5-90 of 214).
+  It carries the His (res 67) and lacks the Cys and the whole C-terminal half. The 528 nt beyond the stop hold no
+  C-terminal C homology in any frame (best local score 25-27 vs 153 for the encoded part) and an opposite-strand
+  153-aa gene. A truncated C, not a contig-edge fragment; after superposition B's Gly-48 sits 11 A from the
+  catalytic position in this model (B is out of the groove).
+
+==============================================================================================================
+3. STRUCTURE OF THE B-C CONTACT (c1x_struct.py, c1x_superpose.py; work/struct/, work/usal/, work/tmpl/)
+==============================================================================================================
+Models: 11 passing single-sequence ABC models (slots 1-3, 5-12); MSA models agree (struct_models.tsv, kind abcmsa).
+- Catalytic pair: His = C alignment column 76 (H 98.4 %), Cys = column 135 (C 96.1 %); His precedes Cys by 34
+  residues in 8/11 (33, 38, 50 in one each); His CB-Cys CB 6.2-6.9 A (median 6.6); His ring N - Cys SG 5.2-6.4 A in
+  9/11 (7.9, 9.6 in slots 12, 11). Templates: His before Cys in all, separation 33 (gingipain 1cvr) to 48, CB-CB
+  5.6-6.9 A, N-SG 5.2-7.3 A.
+- Solvent accessibility (Shrake-Rupley; relative SASA): C alone His 0.25 (0.16-0.53), Cys 0.19 (0.11-0.24); in A-B-C
+  His 0.07 (0.02-0.37), Cys 0.02 (0.00-0.06). B buries 71 % (29-90 %) of the His side-chain surface and 86 % of the
+  Cys side chain (70-100 % in the 9 models where it is exposed in C alone; slots 11/12 Cys already buried). A stays
+  22-29 A from both side chains.
+- B residues within 4.5 A of the side chains: column 48 (Gly 99.6 %) touches the Cys in 10/11 and the His in 8/11;
+  column 50 (S 47 %, S/N/D) touches Cys 7/11, His 8/11; column 47 (I 63 %, I/V/L/M) touches Cys 3/11. Nearest B
+  backbone carbonyl carbon to Cys SG: 3.5-4.5 A in 9/11 (the column-48 Gly in 7, the column-47 residue in 2).
+- Secondary structure (Kabsch-Sander H-bonds, DSSP-lite): B = alpha1 (res ~3-16), beta-hairpin (strands ~21-28 and
+  ~30-33), alpha2, alpha3. B's first strand, ending at the column-48 Gly, forms 3-5 antiparallel beta-bridges with C
+  residues ~126-135 (a C strand 25-31 residues after the Cys), 4-7 inter-chain backbone H-bonds per model. Reading:
+  an extended B segment (res ~21-30, columns ~41-50) lies in the groove beside the Cys and pairs with a C strand;
+  the helices of B are elsewhere.
+- Superposition (US-align, C chain of each of the 11 models onto 7 matched entries; TM normalised by C): SAVED-CHAT
+  filament 8tl0_A 0.65-0.71, gingipain R 1cvr_A 0.66-0.73, asparaginyl endopeptidase 6l4y_A 0.65-0.72, caspase-4
+  6nry_A 0.57-0.65, caspase-7 8dgz_A 0.54-0.62 and 4jr2_A 0.57-0.65, CED-3 4m9r_A 0.59-0.66. C's His aligns to the
+  UniProt-annotated catalytic His in 66/66 alignments to the six annotated entries and C's Cys to the catalytic Cys
+  (or its C->A/S mutant) in 66/66 (pairs within 5 A in 64). Distances after superposition, median (range): 1cvr His CB 0.75 (0.49-1.90), Cys
+  CB 1.05 (0.70-4.56), SG 1.99 (0.99-7.28); 6l4y His CB 1.63, Cys CB 1.15, SG 1.98; 8dgz His CB 2.26, Cys CB 3.36;
+  4m9r His CB 2.01, Cys(Ser) CB 2.61. 8tl0 has no UniProt active-site annotation; C's His/Cys align to its His375 /
+  Cys422 in 11/11.
+- B against bound inhibitors (whole ABC model moved by the C superposition): 1cvr D-Phe-Phe-Arg-CMK (bonded to
+  Cys244 SG): 79 % (74-91 %) of inhibitor heavy atoms within 3 A of B atoms (65 % within 2 A); B Gly-48 backbone C
+  to warhead carbon 2.0 A (1.2-5.5); B strand vs inhibitor N->C direction cosine 0.96 (0.95-0.99). 8dgz
+  Ac-DEVD-CHO: 54 % (51-74 %) within 3 A, Gly-48 C to aldehyde carbon 2.4 A (1.4-4.2), cosine 0.79 (0.69-0.84); the
+  inhibitor's P3 Glu / P2 Val / P1 Asp map onto B residues 25 / 26 / 28 (slot 1 numbering; Gly-48 = res 28). 4jr2
+  Ac-DEVD-CMK: 54 % within 3 A, cosine 0.60 (0.40-0.64).
+- Observation: B places an extended strand in C's non-primed substrate groove (P4-P1), substrate-oriented, with the
+  invariant Gly at P1 adjacent to the Cys; the chain then turns into the hairpin. UNVERIFIED as function.
+
+==============================================================================================================
+4. COUPLING WITHOUT FOLDING (c1x_contacts.py, c1x_coupling.py/.sbatch, c1x_coupling2.py/.sbatch; work/coup/)
+==============================================================================================================
+Refutation criterion: contact column pairs not separable from non-contact pairs, or separable equally well after
+the pairing is shuffled.
+- Paired rows: one per engine instance (same locus). B-C 258 rows, 70 B and 211 C columns at occupancy >= 0.7,
+  Neff(80 %) 174.6. Contacts = CB-CB <= 8 A in >= 6 of the 11 ABC models (66 B-C column pairs); non-contacts > 12 A in
+  >= 6 (14,339). A-B: 268 rows, 60 + 70 columns, Neff 176, 34 contact / 3,977 non-contact pairs.
+- Statistics (AUC = P(contact score > non-contact); top-K precision with K = number of contacts):
+                     MIp (APC)                 mean-field DCA (APC)
+  B-C observed       AUC 0.697, top-66 0.212   AUC 0.763, top-66 0.091   (base rate 0.005)
+    null global      0.517 (q95 0.549) p<=0.001   0.450 (q95 0.501) p<=0.005
+    null phylum      0.541 (q95 0.575) p<=0.001   0.472 (q95 0.513) p<=0.005
+    null order       0.560 (q95 0.595) p<=0.001   0.496 (q95 0.532) p<=0.0099
+    null genus       0.691 (q95 0.702) p=0.18     0.697 (q95 0.724) p=0.0099  (top-K: MIp p 0.001, DCA p 0.17)
+  A-B observed       AUC 0.716, top-34 0.088   AUC 0.766, top-34 0.118
+    null global/phylum/order p<=0.001 (MIp), <=0.005-0.01 (DCA); genus MIp p 0.001, DCA p 0.02
+  Positive controls (pairing-independent): intra-C MIp AUC 0.778 (top-486 precision 0.187, base 0.025), DCA 0.698;
+  intra-B MIp 0.721, DCA 0.742; intra-A 0.666 / 0.630.
+- The genus null permutes only rows within a genus (163 of 258 rows sit in multi-row genera, mostly near-identical),
+  so it keeps the between-genus pairing; it measures the within-genus share of the signal, and the MIp AUC carries
+  none of it. Effect size on the order null: +0.14 AUC (MIp), +0.27 (DCA).
+- Top DCA pairs are contacts at the groove: B I27 (col 47) - C I126 (paired C strand), B N22 - C K132, B E56 - C
+  R195; MIp top 12 include B F59 - C F198, B M25 - C Y196 and B G28 (col 48) - C G67 (next to His66).
+
+==============================================================================================================
+5. OVERLAPPING JUNCTIONS (c1x_overlap.py, c1x_overlap_ctrl.py; work/ovl/)
+==============================================================================================================
+Method of cofold/overlap_check.py, extended: a slip site counts as fusion-competent when the shifted frame is the
+downstream gene's frame and that frame has no stop between the slip site and the downstream start. Contigs from the
+DPANN genome FASTAs (337), SHA-256 equal to assembly_contig_provenance for all; both translations equal the stored
+proteins for 325/325 A->B and 329/330 B->C pairs. Control: all 10,096 other adjacent co-oriented gene pairs on the same contigs.
+- A->B (325 HMM pairs): overlap > 0 in 228; 4 nt in 207 (ATGA 206); B frame vs A: -1 246, +1 57, in frame 22; B
+  start ATG 314, GTG 7, TTG 4; B's frame is open for a median 7 codons (q90 18) upstream of its start. -1 slippery
+  heptamers in 105; fusion-competent in 49; +1 motifs 0; SD-like purine run in 84.
+  Against ATGA control junctions (1,011): slippery 78/206 vs 168/1,011 (OR 3.06, p 7.5e-11), fusion-competent
+  44/206 vs 83/1,011 (OR 3.04, p 2.6e-7), SD-like 55/206 vs 415/1,011 (OR 0.52, p 1.1e-4). By lineage
+  (fusion-competent): Nanobdellota 44/175 (Pacearchaeales 16, Woesearchaeales 16, SCGC-AAA011-G17 12), Iainarchaeota
+  2/22, Aenigmatarchaeota 1/36, EX4484-52 1/11, Nanohalarchaeota 1/6, Micrarchaeota 0/67, Altiarchaeota 0/8; slip
+  sites 27-30 nt upstream of B's start in 34/49; heptamer TTTAAAA in 41/105 slippery cases. 38 of 175 genera.
+  One of the three DPANN fused A|B ORFs is a Pacearchaeales genome (MBU0906634.1); two are EX4484-52.
+- B->C (330 pairs: B gene directly upstream of a C-family gene): overlap > 0 in 199 (4 nt 92, ATGA 89; 8 nt 42);
+  frames -1 155, +1 143, 0 32; C start ATG 294, GTG 22, TTG 14; slippery 51/330 vs 801/5,768 (OR 1.13, p 0.41),
+  fusion-competent 11/330 vs 172/5,768 (OR 1.12, p 0.74), in-frame read-through junctions 32/330 vs 1,064/5,768
+  (OR 0.47, p 2.4e-5).
+- Reading: both junctions encode separate start codons and the A->B ATGA overlap is the classic coupling motif; a
+  -1 frameshift that would read A into B is a lineage-restricted possibility (Nanobdellota), untested for
+  stimulatory RNA structure; B and C are translated separately.
+
+==============================================================================================================
+6. EXTRA FOLDS (c1x_bact_jobs.py, c1x_bact_analyze.py; work/bact/; 60 Biohub items, payload checked on 1)
+==============================================================================================================
+- Set: 12 CPR loci with A, B and a >= 180-aa C (one per lineage): ABC, AB, BC, A-B-C' and A-B'-C (C', B' = CDS of
+  the same record, length +-15/25 %, no family hit, fewest Pfam domains); Bathyarchaeota L03 and Omnitrophota L23:
+  BC, B-C', B'-C; fused A|B loci L01 (Algoriphagus) and L02 (Myxococcota): fused+C, fused+C'.
+- Results (pass = pair ipTM >= 0.75, >= 10 contacts, interface PAE <= 5 A, interface pLDDT >= 70):
+  ABC trimer ipTM median 0.910 (0.806-0.924), B-C pass 10/11 (pair ipTM 0.889-0.940), A-B 11/11, A-C 10/11.
+  AB dimer median 0.757 (0.626-0.841), pass 5/11. BC dimer median 0.892 (0.836-0.920), pass 11/13.
+  Controls: A-B-C' trimer median 0.303 (max 0.759), B-C' pair median 0.166 (max 0.811), pass 0/10; A-B'-C median
+  0.174 (max 0.397), B'-C median 0.129 (max 0.207), pass 0/8; L03 B-C' 0.072, B'-C 0.351; L23 B-C' 0.113.
+  Fused: L02 fused A|B + C 0.933 (C' 0.169), C's Cys and His side chains fully buried, fused residues T88-L89-M90
+  on the Cys (L89 carbonyl 3.1 A from SG). L01 fused A|B + TXD76615.1 0.327 (C' 0.100); in that model TXD76615.1's own
+  B-like residues V71-I72-E73 contact its catalytic Cys250 (intramolecular), its N-terminal B-like segment playing
+  B's role.
+- Active site in bacterial models: B's column-48-equivalent residue is Gly in 12/12 CPR/Omnitrophota B (Bathyarchaeota:
+  Gly23, one residue from the aligned position); nearest B backbone carbonyl to Cys SG <= 4.7 A in 20/24 ABC/BC
+  models (the column-48 Gly in 17, the preceding residue in 3; 7.9-8.2 A in L06 ABC/BC and L12 ABC, 5.0 A in L13
+  ABC); Cys side chain 61-100 % buried by B in the 21 models where it is exposed in C alone.
+
+==============================================================================================================
+COMPETING FUNCTIONAL READINGS (both UNVERIFIED)
+==============================================================================================================
+R1. A-B is a substrate-mimic inhibitor of C: B occupies P4-P1 and blocks the Cys; the operon keeps C inactive until
+    A-B is released or degraded. Predicts: B's chain leaves the groove at P1 without occupying the primed side (the
+    models show the hairpin turn right after Gly-48; checkable by superposition onto a protease entry with a
+    primed-side ligand); C copies lacking A-B should be rare or catalytically altered (observed: 2/309 core C lack
+    any A/B within 5 genes, both N-truncated); B's Gly-48 carbonyl should sit outside a catalytic attack geometry.
+R2. B is a cleaved substrate: C cuts B after the invariant Gly-48 (a Gly-|-Ser/Asn/Asp bond), e.g. to release or
+    activate A-B. Predicts: C's S1 pocket fits a Gly (checkable from the residues aligned to the S1 pockets of
+    1cvr/8dgz); the Gly-48 carbonyl oxygen sits in C's oxyanion hole and the Gly48-col50 bond spans the Cys SG at
+    <= 3.5 A (measurable now in the 11 + 24 models); the Algoriphagus B-C fusion should behave as an autoprocessing
+    protease.
+Either reading needs C's catalytic pair to be intact: His/Cys conservation 98/96 % (DPANN) and 36/38 (public).
+
+==============================================================================================================
+REVISIONS TO THE DEEP-DIVE REPORT
+==============================================================================================================
+- "No coevolution evidence" -> inter-protein coupling at the modelled B-C and A-B interfaces is detected with
+  sequence-only statistics (section 4); MSA folds still match single-sequence folds.
+- "B packs over the His-Cys pair" -> B inserts a substrate-oriented strand into the non-primed groove, invariant Gly
+  at P1 (section 3).
+- "the 12th has a 104-aa C" -> that C is a truncated ORF lacking the Cys and the C-terminal half (section 2e).
+- "nucleotide frameshift-motif scan not run" -> run (section 5).
+- The Borvo/BovA name is the curated call on 10 C proteins; the caller places the same single-gene call on 108
+  unrelated DPANN proteins, including ribosomal proteins.
+
+RESOURCES, DEVIATIONS, FILES
+- Slurm (all -A banfield -p standard --qos=standard_expand -c 24, exclude list, <= 3 concurrent): 78501 C HMM vs
+  DPANN + UniRef50 (4:35); 78511 neighbour scan FAILED (a '-' in one NCBI translation; FASTA cleaned); 78636
+  neighbour scan (25:49); 78633 coupling (13:54); 78649 coupling, order/genus nulls (10:17). US-align (84 runs) and
+  contig extraction inline on the login node, serial, seconds.
+- Biohub: 60 items (1 payload check + 59). External lookups by public accession only: UniProt REST + UniSave (100
+  accessions), NCBI E-utilities (1 taxonomy request, 40 nucleotide records as fasta_cds_aa), PDBe SIFTS and RCSB mmCIF
+  (8 entries), UniProt entries of the 6 template proteins. No DPANN sequence left biotite / the Mac.
+- Local CPU: scripts of 1-32 s (c1x_struct.py 32 s, c1x_bact_analyze.py 18 s; others <= 4 s).
+- Deviations: non-DPANN archaea reduce to 1 locus (all other archaeal hits are DPANN genomes, 13 of them in our own
+  data); the up-to-40 loci came from the 70 bacterial accessions by evidence rank; Pfam threshold i-E <= 1e-5 for
+  neighbour domains; mkdssp lacked its dictionary, so secondary structure uses a Kabsch-Sander H-bond DSSP-lite.
+- Not done: SignalP/TM checks of bacterial A/B; a primed-side-ligand template for R1/R2; the eukaryotic-assembly
+  hits (Calicophoron 2,312-aa protein) as contamination candidates.
+Code: candidate1/code/c1x_targets.py, c1x_loci.py, c1x_nbscan.sbatch, c1x_nb_analyze.py, c1x_chmm.sbatch,
+c1x_variants.py, c1x_struct.py, c1x_superpose.py, c1x_contacts.py, c1x_coupling.py(.sbatch), c1x_coupling2.py(.sbatch),
+c1x_overlap.py, c1x_overlap_ctrl.py, c1x_bact_jobs.py, c1x_bact_analyze.py.
+Tables: candidate1/work/nb/ (targets, scope, loci, cds, nb_windows, nb_per_locus, nb_domain_recurrence,
+nb_summary.json), work/hmm/ (c1C_vs_dpann, c1C_vs_u50), work/variants/ (C_family_context, engine_B_downstream,
+hmm_pairs_downstream, borvo_calls, C_tokens, summary.json), work/struct/ (struct_models, struct_bcontacts,
+struct_summary.json, superpose.tsv, superpose_summary.json), work/coup/ (pairs.json, coupling_results.json,
+coupling_results2.json), work/ovl/ (junctions, overlap_scan, overlap_control, overlap_summary.json), work/bact/
+(jobs_bact.jsonl, manifest.tsv, folds/, bact_folds.tsv, bact_summary.json), work/tmpl/ (template chains).

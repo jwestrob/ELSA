@@ -1,0 +1,17 @@
+mode	cls	shape	n	any_pass	frac	max_pair_iptm_med
+msa	cognate	multi	35	9	0.2571	0.744
+msa	cognate	pair	6	0	0.0	0.279
+msa	noncognate	multi	77	3	0.039	0.196
+msa	noncognate	pair	6	0	0.0	0.239
+msa	positive	multi	34	8	0.2353	0.755
+msa	positive	pair	15	2	0.1333	0.487
+msa	uncalled	multi	9	1	0.1111	0.633
+msa	uncalled	pair	3	0	0.0	0.158
+single	cognate	multi	42	12	0.2857	0.737
+single	cognate	pair	6	0	0.0	0.131
+single	noncognate	multi	90	3	0.0333	0.181
+single	noncognate	pair	6	0	0.0	0.137
+single	positive	multi	56	17	0.3036	0.767
+single	positive	pair	16	2	0.125	0.229
+single	uncalled	multi	42	3	0.0714	0.507
+single	uncalled	pair	6	0	0.0	0.187

@@ -1,0 +1,232 @@
+LEGACY ELSA AGAINST THE RECURRENCE ENGINE ON DPANN - workstream ws_baseline, 2026-11-12
+=======================================================================================
+Legacy = research checkout `elsa/` (branch agent/normalized-result-contract, HEAD f649406 + working tree),
+gene-level kNN anchors -> collinear chaining -> blocks -> overlap clusters, canonical parameters (k 50,
+max gap 2, min chain 2, no gap penalty), ESM++ small vectors (3,585,303 x 960), all 3,564 genomes.
+Engine = v1.5, permissive MMseqs2 families e3c50s75, w 3: base (results_dpann_v5) and rescue3 default
+(results_dpann_repair). Same gold-locus scorer, same genome split, same ribosomal gold and controls.
+Predeclared readings: PREDECLARE.txt (12:58 UTC; addendum 14:05 UTC on readings, before any full score).
+
+VERDICT
+1. Single reading against single reading (the fair pairing), even genomes, summed DefenseFinder +
+   TXSScan excess (F1 minus random placement): engine rescue3 conserved@2 0.338 [0.313, 0.361], engine
+   rescue3 rule H 0.451 [0.427, 0.473]; legacy union of shipped blocks 0.181 [0.160, 0.201] (raw cosine
+   0.85) and 0.183 [0.163, 0.203] (soft-ZCA 0.30). Paired legacy - engine: -0.157 [-0.182, -0.132] and
+   -0.154 [-0.180, -0.129] against conserved@2; -0.270 and -0.267 against H. The engine leads on every
+   caller (excess DefenseFinder -0.115 to -0.125, TXSScan -0.032 to -0.039, CRISPRCasTyper -0.038 to
+   -0.042 against conserved@2, every interval below 0).
+2. Many readings against many readings: legacy all block intervals (a median 93-105 overlapping
+   intervals cover each ribosomal run; the engine's 11-reading table covers it with 7-8) gives the
+   highest absolute F1 of any table (DefenseFinder 0.830 raw / 0.873 ZCA against 0.826) and a higher
+   random control (0.60-0.64 against 0.55), so its excess is lower on every caller: summed -0.082
+   [-0.098, -0.066] (raw) and -0.086 [-0.100, -0.072] (ZCA) against the rescue3 full table. The single
+   reading H (0.451) also exceeds the legacy best-of-many tables (0.365-0.368; dpann_compare -0.082 to
+   -0.091 on even genomes). Size of the oracle effect: the legacy best-of-many tables exceed the engine's
+   single conserved@2 reading by +0.027 to +0.034 (intervals above 0), and fall below everything else.
+3. The Spacedust calibration rule does not transfer to DPANN. Permuted-order blocks have a HIGHER mean
+   anchor cosine than observed blocks at every size, so no cut reaches <= 5% for 2-3 anchors (raw:
+   also 4); "calibrated" reduces to a size filter (raw >= 5 anchors, 914,906 blocks; ZCA >= 4,
+   2,061,964). Mechanism measured: size-2 chance blocks sit between genomes of one GTDB species 29.7%
+   of the time (observed 1.0%), on genome pairs sharing a median 451 anchors (observed 117). Calibrated
+   blocks lose the 2-gene systems (DefenseFinder F1 0.148 / 0.238, excess -0.054 / -0.046) and score
+   summed excess 0.089 / 0.109.
+4. Ribosomal locus (1,686 runs): single readings - legacy union resolves 406-444 (precision 0.56-0.61;
+   the best union locus is a median 41-44 genes long, the runs 24) against 704-711 for conserved@2 and 1,554
+   for H; paired -260 to -305 against conserved@2. Many readings - ZCA blocks resolve 1,385 against the
+   engine full table's 1,370 (+15 [-27, +56]); raw blocks 1,009 (-361 [-408, -311]).
+5. Boundary precision: single readings, median members / locus span of the covering locus, even
+   genomes: legacy union 0.375 / 0.12 / 0.13 (DefenseFinder / TXSScan / CRISPRCasTyper) against
+   conserved@2 0.667 / 0.27 / 0.32 and H 0.75 / 0.40 / 0.375. Among hundreds of overlapping block
+   intervals some interval is tight: smallest containing interval 1.0 / 0.5 / 0.5 for legacy, as for the
+   engine full table (1.0 / 0.44 / 0.5).
+6. Spacedust (extra): the notebook's engine source207 figure "conserved g0-2" is a best-of-42 reading.
+   Single readings: engine conserved@2 F1 0.570-0.651, excess +0.164 to +0.222; union of calibrated
+   legacy blocks F1 0.331-0.491, excess +0.070 to +0.125. Paired engine - legacy excess +0.065 to +0.152,
+   every interval above 0 (21 pairings).
+
+1. RUNS (legacy as shipped; no part of the all-against-all output was capped)
+                                   raw cosine >= 0.85            soft-ZCA alpha 0.1, cosine >= 0.30
+ neighbour slots kept (of 215,118,180) 210,761,790 (98.0%)       209,413,358 (97.3%)
+ unique cross-genome anchors        160,246,428                   155,400,929
+ contig pairs / with >= 2 anchors   124,320,561 / 15,470,116      112,872,238 / 17,261,812
+ blocks                             7,626,476                     10,750,829
+ by size 2 / 3 / 4 / 5 / 6+         5,078,227 / 1,165,847 /       6,950,090 / 1,738,775 /
+                                    467,496 / 244,909 / 669,997   735,989 / 385,727 / 940,248
+ blocks with 2-3 anchors            81.9%                         80.8%
+ anchors in blocks                  25,246,265                    35,070,413
+ genome pairs with a block          1,280,738                     1,565,028
+ clusters (>= 2 blocks) + singleton 80,963 + 184,938              79,109 + 169,681
+   clusters (after containment merge; genome support median 6 in both)
+ wall time, kNN + chaining          33.5 min (64 CPUs)            43.7 min (24 CPUs) + 6.2 min transform
+ wall time, clustering + CSVs       14.8 min (24 CPUs)            22.1 min (24 CPUs)
+ peak RSS chaining / clustering     48.3 GB / 53.4 GB             47.4 GB / 89.1 GB
+ HNSW (hnswlib, M 32, efC 200, efS 256) build 7.7 min and search 8.6 min at 64 threads (raw arm).
+ Soft-ZCA fitted on DPANN with elsa.transform (200,000-row sample, seed 17): ||mean|| 0.860 -> 0.018;
+ random-pair cosine q50 / q99 / q99.9: raw 0.781 / 0.954 / 0.976, ZCA -0.003 / 0.137 / 0.323.
+ At k 50 both thresholds pass nearly every neighbour (predeclared R1 confirmed for raw; ZCA 0.30 is
+ equally permissive at this depth: the transform changes which neighbours are retrieved).
+ Schema stage (slot architecture) skipped (run_schema=False); it does not touch blocks or clusters.
+
+2. CALIBRATION (3 within-contig position permutations, seeds 17/18/19, of the saved anchors; this
+   pipeline's anchors do not depend on gene order, so chaining is the first order-dependent step.
+   Identity replay reproduces the observed blocks exactly in both arms: 7,626,476 and 10,750,829, max
+   score difference 0.)
+ arm  size  observed   permuted mean  ratio   cut      accepted   median mean cosine obs / perm
+ raw  2     5,078,227  1,128,699      0.222   none     0          0.9852 / 0.9917
+ raw  3     1,165,847    129,338      0.111   none     0          0.9866 / 0.9976
+ raw  4       467,496     26,563      0.057   none     0          0.9878 / 0.9991
+ raw  5       244,909      6,361      0.026   (all)    244,909    0.9891 / 0.9995
+ raw  6+      669,997      1,971      0.0029  (all)    669,997    0.9941 / 0.9996
+ zca  2     6,950,090  1,526,095      0.220   none     0          0.798 / 0.856
+ zca  3     1,738,775    166,664      0.096   none     0          0.815 / 0.924
+ zca  4       735,989     32,352      0.044   (all)    735,989    0.826 / 0.962
+ zca  5       385,727      7,467      0.019   (all)    385,727    0.837 / 0.979
+ zca  6+      940,248      2,253      0.0024  (all)    940,248    0.878 / 0.988
+ Totals: raw permuted/observed 0.170, accepted 914,906 at 0.009; ZCA 0.161, accepted 2,061,964 at 0.020.
+ Predeclared R2 (size-2 ratio >= 0.5) is refuted: 22% of 2-anchor blocks are chance level (Spacedust
+ with neighbourhood selection: 115%).
+ Origin of chance blocks (permutation 17 against observed, size 2): same GTDB species 29.7% vs 1.0% (raw),
+ 22.4% vs 0.7% (ZCA); same genus 61.6% vs 12.3%; median anchors shared by the genome pair 451 vs 117
+ (raw), 423 vs 126 (ZCA). Within same-species pairs mean cosine is ~0.9999 (raw) / ~0.999 (ZCA); outside
+ them permuted blocks still sit above observed (0.9880 vs 0.9851 raw; 0.826 vs 0.798 ZCA). A cut that
+ conditions on genome-pair anchor density is the evident repair (untested).
+
+3. LOCUS TABLES
+ reading                          loci (distinct)  median span  genes covered        per genome (median)
+ legacy raw, all block intervals  3,702,337        3 (intervals) 3,033,409 (84.6%)   990
+ legacy raw calibrated, all       929,185          9            2,348,211 (65.5%)    210
+ legacy raw union (one reading)   302,833          5            3,033,409 (84.6%)    71
+ legacy raw calibrated union      132,079          11           2,348,211 (65.5%)    34
+ legacy ZCA, all block intervals  4,327,753        3            3,133,732 (87.4%)    1,171
+ legacy ZCA calibrated, all       1,702,222        7            2,665,455 (74.3%)    421
+ legacy ZCA union                 308,868          5            3,133,732 (87.4%)    71
+ legacy ZCA calibrated union      172,542          9            2,665,455 (74.3%)    45
+ engine base full table           1,964,215        3            2,570,098 (71.7%)    537
+ engine rescue3 full table        2,000,311        3            2,616,576 (73.0%)    548
+ engine base conserved@2          413,181          4            2,518,213 (70.2%)    108
+ engine rescue3 conserved@2       419,861          4            2,563,690 (71.5%)    111
+ engine base H                    492,786          3            2,268,939 (63.3%)    131
+ engine rescue3 H                 500,842          3            2,308,785 (64.4%)    133
+ Legacy block intervals: 15,252,952 (raw) and 21,501,658 (ZCA) = 2 x blocks; the scorer de-duplicates
+ identical intervals, so the distinct set is scored (exactly equivalent). Max legacy span 843 genes
+ (blocks), 1,305 (raw union). Union = maximal runs of gene boundaries spanned by >= 1 block.
+
+4. GOLD LOCI, even genomes (test split), score_dpann_loci.py --min-members 2; F1 / random control /
+   excess [95% genome bootstrap], instances DefenseFinder 1,261, TXSScan 404, CRISPRCasTyper 1,899
+ reading                   DefenseFinder                TXSScan                      CRISPRCasTyper              summed DF+TXSS
+ engine base full          .806/.538/+.269 [.254,.283]  .758/.580/+.179 [.168,.189]  .589/.520/+.069 [.060,.078]  .447 [.429,.467]
+ engine rescue3 full       .826/.551/+.275 [.260,.290]  .757/.582/+.175 [.165,.186]  .597/.527/+.070 [.061,.079]  .451 [.432,.470]
+ engine base c2            .673/.393/+.280 [.263,.296]  .412/.358/+.054 [.039,.071]  .422/.350/+.071 [.062,.081]  .334 [.310,.358]
+ engine rescue3 c2         .688/.402/+.286 [.270,.303]  .409/.357/+.051 [.036,.068]  .426/.354/+.072 [.063,.081]  .338 [.313,.361]
+ engine base H             .723/.415/+.308 [.291,.325]  .558/.410/+.148 [.133,.163]  .451/.379/+.072 [.063,.082]  .456 [.433,.478]
+ engine rescue3 H          .737/.424/+.314 [.296,.331]  .545/.408/+.137 [.122,.152]  .458/.383/+.075 [.066,.085]  .451 [.427,.473]
+ legacy raw all            .830/.602/+.228 [.214,.242]  .773/.632/+.141 [.129,.153]  .620/.582/+.038 [.030,.047]  .368 [.351,.386]
+ legacy raw cal            .148/.201/-.054 [-.063,-.044] .537/.395/+.142 [.125,.160] .269/.271/-.003 [-.008,.003] .089 [.069,.109]
+ legacy raw union          .484/.323/+.161 [.143,.179]  .286/.266/+.020 [.010,.029]  .311/.277/+.034 [.027,.041]  .181 [.160,.201]
+ legacy raw cal union      .094/.114/-.020 [-.025,-.014] .269/.206/+.063 [.048,.080] .153/.149/+.003 [-.001,.007] .044 [.026,.061]
+ legacy ZCA all            .873/.636/+.237 [.226,.248]  .779/.651/+.128 [.118,.139]  .646/.610/+.036 [.028,.044]  .365 [.349,.381]
+ legacy ZCA cal            .238/.284/-.046 [-.059,-.033] .658/.503/+.155 [.141,.172] .387/.377/+.010 [.002,.017]  .109 [.088,.129]
+ legacy ZCA union          .507/.336/+.171 [.153,.188]  .274/.261/+.013 [.004,.021]  .311/.281/+.030 [.023,.037]  .183 [.163,.203]
+ legacy ZCA cal union      .147/.149/-.002 [-.010,.006] .272/.225/+.047 [.033,.060]  .206/.195/+.011 [.006,.016]  .045 [.030,.059]
+ (engine c2 rows reproduce the coordinator's figures: rescue3 even .688 / .409 / .426, summed .337.)
+ All genomes: same ordering; summed excess engine full .442/.444, c2 .331/.332, H .452/.446; legacy all
+ .369/.364, cal .082/.098, union .192/.191, cal union .038/.037.
+ Paired, even genomes, summed DF+TXSS excess, legacy - engine (tables.py; dpann_compare.py gives the same):
+                     vs rescue3 full          vs rescue3 c2            vs rescue3 H
+ raw all             -0.082 [-0.098,-0.066]
+ ZCA all             -0.086 [-0.100,-0.072]
+ raw union                                    -0.157 [-0.182,-0.132]   -0.270 [-0.295,-0.245]
+ ZCA union                                    -0.154 [-0.180,-0.129]   -0.267 [-0.292,-0.243]
+ raw cal (union)     -0.362 (all)             -0.294 (union)           -0.407 (union)
+ ZCA cal (union)     -0.341 (all)             -0.293 (union)           -0.406 (union)
+ Against the base arm every difference is within 0.006 of these. Paired F1, many vs many (even):
+ raw - rescue3 full DF +0.003 [-0.011, +0.018], TXSS +0.016, CCT +0.023; ZCA DF +0.047 [+0.035, +0.059],
+ TXSS +0.022, CCT +0.049 - higher F1, lower excess (control +0.05 to +0.09 higher).
+ --max-span 30 (TXSScan 324 even instances): same picture; summed excess engine rescue3 full .440, c2
+ .330, H .440; legacy all .351 / .352, union .177 / .182; paired raw all -0.089 [-0.106, -0.074], ZCA
+ all -0.089 [-0.103, -0.074], raw union - c2 -0.153 [-0.178, -0.129], ZCA union - c2 -0.147
+ [-0.171, -0.123], unions - H -0.263 / -0.258.
+ Predeclared R3 (engine above every legacy variant, single pairing) holds; it also holds many vs many.
+
+5. RIBOSOMAL CHECK (same gold runs and 20 random windows per run; recovered = best interval >= 50% of the
+   run; resolved = >= 80% at precision >= 0.8; input side adapted to interval tables; it reproduces
+   711 / 0.743 / random 0.516 / 0.067 for the base's conserved@2 exactly)
+ reading               recovered  resolved  median prec  fragments  Parv. rec/res  random rec/res
+ engine base full      1,686      1,370     0.917        7          114/58         0.731/0.129
+ engine rescue3 full   1,686      1,370     0.917        8          114/58         0.738/0.130
+ engine base c2        1,686        711     0.743        1          114/13         0.516/0.067
+ engine rescue3 c2     1,686        704     0.742        1          114/13         0.520/0.068
+ engine base / resc. H 1,685      1,554     0.960        1          114/114        0.285-0.294/0.047-0.050
+ legacy raw all        1,621      1,009     0.920        93         114/80         0.674/0.120
+ legacy raw cal        1,621      1,009     0.920        23         114/80         0.674/0.120
+ legacy raw union      1,685        430     0.585        1          114/1          0.787/0.082
+ legacy raw cal union  1,666        444     0.612        1          114/1          0.718/0.074
+ legacy ZCA all        1,673      1,385     0.960        105        114/108        0.722/0.142
+ legacy ZCA cal        1,673      1,385     0.960        48         114/108        0.722/0.142
+ legacy ZCA union      1,686        406     0.564        1          114/1          0.813/0.089
+ legacy ZCA cal union  1,683        433     0.576        1          114/1          0.778/0.083
+ Paired resolved (genome bootstrap): ZCA all - engine full +15 [-27, +56] (both 1,142, only legacy 243,
+ only engine 228); raw all - engine full -361 [-408, -311]; unions - c2 -260 to -305; unions - H -1,110
+ to -1,148. "Fragments" counts overlapping intervals, so for block tables it measures redundancy.
+ Predeclared R4 holds for single readings and is refuted for the all-interval reading (ZCA 1,385 >= 711).
+
+6. BOUNDARY PRECISION (bprec.py; members in locus / locus span; gold instances with >= 2 members, even)
+ reading               typical covering locus (median)   smallest containing   at best-F1 locus   covering loci
+                       DF / TXSS / CCT                   DF / TXSS / CCT       DF / TXSS / CCT    per instance
+ engine rescue3 full   0.50 / 0.37 / 0.33                1.0 / 0.44 / 0.50     1.0 / 0.75 / 0.50  3 / 5 / 4
+ engine rescue3 c2     0.67 / 0.27 / 0.32                0.67 / 0.25 / 0.29    0.67 / 0.27 / 0.33 1
+ engine rescue3 H      0.75 / 0.40 / 0.375               1.0 / 0.40 / 0.40     0.78 / 0.44 / 0.40 1
+ legacy raw all        0.59 / 0.47 / 0.33                1.0 / 0.50 / 0.50     1.0 / 0.83 / 0.50  2 / 11 / 5
+ legacy ZCA all        0.63 / 0.43 / 0.31                1.0 / 0.50 / 0.50     1.0 / 1.0 / 0.50   3 / 16 / 6
+ legacy raw union      0.375 / 0.12 / 0.13               0.33 / 0.12 / 0.11    0.375 / 0.13 / 0.14 1
+ legacy ZCA union      0.375 / 0.11 / 0.13               0.35 / 0.12 / 0.11    0.375 / 0.12 / 0.13 1
+ legacy raw cal union  0.08 / 0.13 / 0.09                0.08 / 0.12 / 0.08    0.08 / 0.14 / 0.09 1 (0 for DF)
+ Median covering-locus span (single readings): legacy union 6 / 29 / 15 genes, engine c2 3 / 15.5 / 6,
+ H 3 / 9 / 4. Base-arm values are within 0.01 of rescue3. Predeclared R5 holds for single readings
+ (legacy union 0.375 vs 0.667 on DefenseFinder); for the all-interval reading it is refuted (smallest
+ containing interval equal to the engine's).
+
+7. SPACEDUST source207 (extra; evaluate(), 200 controls, seed 17; paired region bootstrap, 10,000)
+ reading                                         F1     random  excess [95%]
+ engine e3c50 w5, conserved g0-2 (best of 42)    0.758  0.576   +0.182 [+0.150, +0.214]  (notebook figure)
+ engine e3c50 w5, conserved gap 0 (best of 14)   0.716  0.539   +0.177
+ engine e3c50 w5, conserved@2 (one reading)      0.624  0.423   +0.201 [+0.165, +0.237]
+ engine e3c50 w8, conserved@2                    0.584  0.362   +0.222 [+0.185, +0.260]
+ engine hybrid ESM2-650M r0.05 w5, conserved@2   0.651  0.461   +0.190 [+0.159, +0.221]
+ legacy calibrated blocks, all intervals         0.652-0.762    -0.020 to +0.081 (notebook figures, replayed exactly)
+ legacy union of calibrated blocks (one reading) ESM2 8M 0.464 (+0.088), 35M 0.411 (+0.071), 150M 0.367
+   (+0.085), 650M 0.331 (+0.080); ESM-C 300M 0.465 (+0.114), 600M 0.438 (+0.104), 6B 0.491 (+0.125 [+0.095, +0.155])
+ Paired engine e3c50 w5 conserved@2 - legacy union, excess: +0.076 (ESM-C 6B) to +0.130 (ESM2 35M); F1 +0.13
+ to +0.29; against w8 +0.097 to +0.152; hybrid w5 +0.065 to +0.119; all 21 intervals above 0. Many vs many
+ (g0-2 best-of-42 vs all calibrated intervals): excess +0.10 to +0.22, F1 -0.018 to +0.15.
+
+CAVEATS
+- One embedding model: ESM++ small (the ESM-C 300M architecture), the only vectors on DPANN; no other
+  model was run on DPANN. On Spacedust ESM2-650M and ESM-C 6B legacy runs scored best among ESM2 / ESM-C.
+- Legacy = research checkout as shipped: no neighbourhood selection (that step is production-only), no
+  anchor extension, clustering jaccard_tau 0.9. Blocks are scored, clusters are reported only.
+- The union reading is one natural single reading of overlapping blocks; others exist (cluster
+  footprints, a block-support ladder). The legacy pipeline ships blocks, not loci, so "single reading"
+  is constructed here; the all-interval reading is the shipped output itself.
+- Calibration uses the Spacedust rule unchanged; on DPANN it acts as a size filter (section 2), so the
+  calibrated rows measure "blocks of >= 4-5 anchors", which miss 2-gene systems by construction.
+- The engine full table is best-of-11 and legacy all-interval tables are best-of-hundreds; their excesses
+  carry their own random controls but the two oracles differ in strength. Single vs single is the
+  comparison to quote.
+- Engine runtime is not comparable here: it needs the MMseqs2 families (precomputed; the engine itself
+  runs in about 96 s once tokens exist).
+
+ARTIFACTS
+ biotite $RD/baseline/ (RD = .../Jacob/ELSA/redesign_20261111): src/elsa (copied package), code/ (legacy.py,
+ post.py, ribo_blocks.py, ribosomal_check.py [byte copy], bprec.py, tables.py, diag_null.py,
+ spacedust_single.py, collect.py, *.sbatch), vectors/ (esmpp_small__soft_zca_a0.1.npy 13.8 GB, transform
+ .npz/.json), runs/{raw,zca}/ (anchors.parquet 3.8 GB, blocks_checkpoint.parquet, perm_{identity,17,18,19}
+ _blocks.parquet, micro_chain_*.csv, *summary.json, calibration.json), results/<reading>/ (loci.parquet,
+ stats.json, score_min2/, score_min2_span30/, ribosomal_check.json/.txt, ribosomal_runs.parquet,
+ compare_vs_engine_score_min2*.txt from dpann_compare.py), results/{tables_full,bprec_full,spacedust}/,
+ results/diag_null.json, results/locus_stats.json. Smoke run (200 genomes): runs/raw_smoke200, results/*smoke*.
+ Jobs: 80799-80801 smoke; 80869 chain raw; 80870 ZCA transform + chain; 80871 / 80872 clustering; 81295
+ smoke of the reading tables; 81324 scoring; 81359 / 81478 Spacedust; 81655 null diagnostic. Logs
+ $RD/logs/baseline_*_<job>.log.
+ Local benchmarks/redesign/baseline/: PREDECLARE.txt, REPORT.txt, code/, runs/ (summaries), results/ (all
+ json / tsv / txt).

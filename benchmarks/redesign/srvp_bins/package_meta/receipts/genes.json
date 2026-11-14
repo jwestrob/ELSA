@@ -1,0 +1,195 @@
+{
+ "stage": "genes",
+ "written_utc": "2026-11-14T06:00:31Z",
+ "code_sha256": "42caefb9ecf2f78d055ccc2c6e34fcb0a3ed3914c55c3ae1af343ec6a5e00a67",
+ "genomes": 994,
+ "sha_mismatch": 0,
+ "genes": 3211751,
+ "gene_source": {
+  "gtdbtk_2.7.2_prodigal_2.6.3": 973,
+  "prodigal_2.6.3_gtdbtk_procedure_single": 21
+ },
+ "translation_table": {
+  "11": 994
+ },
+ "contigs": 146154,
+ "dup_contig_names": 0,
+ "genes_on_unknown_contig": 0,
+ "genes_end_beyond_contig": 0,
+ "control": [
+  {
+   "master_id": "Gc04a0282f8789731",
+   "sha_ok": true,
+   "n_contigs": 1,
+   "genome_bp": 6309425,
+   "dup_contig_names": 0,
+   "n_genes": 5791,
+   "translation_table": 11,
+   "coding_density_11": 87.78,
+   "coding_density_4": 83.39,
+   "gene_source": "gtdbtk_2.7.2_prodigal_2.6.3",
+   "contigs_unknown": 0,
+   "end_beyond": 0,
+   "seconds": 103.27,
+   "control_gtdb_genes": 5791.0,
+   "control_rerun_genes": 5791.0,
+   "control_shared": 5791.0,
+   "control_table_gtdb": 11.0,
+   "control_table_rerun": 11.0,
+   "control_seq_identical": 5791.0,
+   "control_cd11": [
+    87.78,
+    87.89
+   ],
+   "control_cd4": [
+    83.39,
+    83.85
+   ]
+  },
+  {
+   "master_id": "G8f3fb01d887c7b1f",
+   "sha_ok": true,
+   "n_contigs": 1,
+   "genome_bp": 4916044,
+   "dup_contig_names": 0,
+   "n_genes": 4753,
+   "translation_table": 11,
+   "coding_density_11": 91.84,
+   "coding_density_4": 83.77,
+   "gene_source": "gtdbtk_2.7.2_prodigal_2.6.3",
+   "contigs_unknown": 0,
+   "end_beyond": 0,
+   "seconds": 72.91,
+   "control_gtdb_genes": 4753.0,
+   "control_rerun_genes": 4753.0,
+   "control_shared": 4753.0,
+   "control_table_gtdb": 11.0,
+   "control_table_rerun": 11.0,
+   "control_seq_identical": 4753.0,
+   "control_cd11": [
+    91.84,
+    92.03
+   ],
+   "control_cd4": [
+    83.77,
+    84.17
+   ]
+  },
+  {
+   "master_id": "G7514f5fbf7a68e4a",
+   "sha_ok": true,
+   "n_contigs": 1,
+   "genome_bp": 771253,
+   "dup_contig_names": 0,
+   "n_genes": 907,
+   "translation_table": 11,
+   "coding_density_11": 92.16,
+   "coding_density_4": 88.2,
+   "gene_source": "gtdbtk_2.7.2_prodigal_2.6.3",
+   "contigs_unknown": 0,
+   "end_beyond": 0,
+   "seconds": 14.38,
+   "control_gtdb_genes": 907.0,
+   "control_rerun_genes": 907.0,
+   "control_shared": 907.0,
+   "control_table_gtdb": 11.0,
+   "control_table_rerun": 11.0,
+   "control_seq_identical": 907.0,
+   "control_cd11": [
+    92.16,
+    92.39
+   ],
+   "control_cd4": [
+    88.2,
+    88.88
+   ]
+  },
+  {
+   "master_id": "Gda738c0b77d92267",
+   "sha_ok": true,
+   "n_contigs": 67,
+   "genome_bp": 1460386,
+   "dup_contig_names": 0,
+   "n_genes": 1451,
+   "translation_table": 11,
+   "coding_density_11": 91.18,
+   "coding_density_4": 87.79,
+   "gene_source": "gtdbtk_2.7.2_prodigal_2.6.3",
+   "contigs_unknown": 0,
+   "end_beyond": 0,
+   "seconds": 35.44,
+   "control_gtdb_genes": 1451.0,
+   "control_rerun_genes": 1451.0,
+   "control_shared": 1451.0,
+   "control_table_gtdb": 11.0,
+   "control_table_rerun": 11.0,
+   "control_seq_identical": 1451.0,
+   "control_cd11": [
+    91.18,
+    91.32
+   ],
+   "control_cd4": [
+    87.79,
+    88.34
+   ]
+  },
+  {
+   "master_id": "G28ffd547151a92a2",
+   "sha_ok": true,
+   "n_contigs": 1,
+   "genome_bp": 4059000,
+   "dup_contig_names": 0,
+   "n_genes": 3752,
+   "translation_table": 11,
+   "coding_density_11": 88.97,
+   "coding_density_4": 86.21,
+   "gene_source": "gtdbtk_2.7.2_prodigal_2.6.3",
+   "contigs_unknown": 0,
+   "end_beyond": 0,
+   "seconds": 57.5,
+   "control_gtdb_genes": 3752.0,
+   "control_rerun_genes": 3752.0,
+   "control_shared": 3752.0,
+   "control_table_gtdb": 11.0,
+   "control_table_rerun": 11.0,
+   "control_seq_identical": 3752.0,
+   "control_cd11": [
+    88.97,
+    89.11
+   ],
+   "control_cd4": [
+    86.21,
+    86.71
+   ]
+  },
+  {
+   "master_id": "G17022e821436bcec",
+   "sha_ok": true,
+   "n_contigs": 154,
+   "genome_bp": 4577595,
+   "dup_contig_names": 0,
+   "n_genes": 4506,
+   "translation_table": 11,
+   "coding_density_11": 87.89,
+   "coding_density_4": 85.24,
+   "gene_source": "gtdbtk_2.7.2_prodigal_2.6.3",
+   "contigs_unknown": 0,
+   "end_beyond": 0,
+   "seconds": 58.42,
+   "control_gtdb_genes": 4506.0,
+   "control_rerun_genes": 4506.0,
+   "control_shared": 4506.0,
+   "control_table_gtdb": 11.0,
+   "control_table_rerun": 11.0,
+   "control_seq_identical": 4506.0,
+   "control_cd11": [
+    87.89,
+    88.04
+   ],
+   "control_cd4": [
+    85.24,
+    85.76
+   ]
+  }
+ ]
+}

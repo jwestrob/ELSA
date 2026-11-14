@@ -1,0 +1,68 @@
+ws_showcase2 NOTEBOOK (times from date -u)
+
+2026-11-13 04:42:23 UTC  Start. Read REPORT_census/screen2/deepdive/candidate1 (cofold/), locus_space/REPORT.txt, kinds/REPORT.txt,
+  SPEC_family_remote_homology.md, NOTEBOOK.md 13 Nov. Criteria to reuse unchanged: predeclared_criteria_screen3.json
+  (pair rule = screen-1 criteria 1-4; multi-chain = screen-2 per-interface rule; refutations; margin completion
+  controls folded after the screen; Foldseek strong/moderate definitions). Census collectors/watchers on the Mac
+  have exited (finish_watch.log: done 00:28 UTC); nothing of theirs is touched.
+  Collected every earlier folded gene set (screens 1-3 cognate + uncalled windows, deep dive c1/c1abc/c2 pairs,
+  kinds classes a/b/d) -> work/earlier_folds.tsv (1,776 folds).
+  Exploration on biotite (sc2_explore.py, 16 s): 306 uncalled dense clusters; 20,812 cores; 17,717 with span 2-5;
+  141 clusters hold >= 1 core with span 2-5, every protein <= 300 aa, sum <= 600 aa, >= 1 unannotated gene.
+
+2026-11-13 05:00:34 UTC  Candidates (sc2_candidates.py on the biotite login node, 2 min 11 s; three runs: the first read the protein FASTA
+  once per candidate and was stopped; the second showed (a) Prodigal partial flags are unrecorded for most proteins
+  (treated as unknown, as the census did) and (b) kinds replicates at 15-25 % identity drawn from support pairs
+  homology-free to the passer -> added the cosine >= 0.32 rule to kinds realisations and the tier-A/B pair choice).
+  248 candidates (227 locus-space (cluster, k), 21 kinds passers): kept 47 (locus space 27, kinds 20); removed:
+  < 2 eligible genome groups 187 (mostly annotated housekeeping clusters, membrane-like hydrophobic units, long
+  proteins, or every realisation's family set folded before), no pair under the 60 % identity ceiling 6, reference
+  family set already tested with two replicates 4 (c799, c842, c1148, c618), low complexity 3, duplicate 1 (kA_242: shares
+  a replicate gene or reference family set with a better-ranked arch-11 passer). Pair tier A 36, tier B 11.
+  Triage FASTAs (sc2_triage.py fasta, 13 s): 118 tokens in replicate chains; 28 carry a curated Pfam hit with
+  characterised wording on the replicate gene (ParE/ParD/MazE/PIN/Fic/RNase_P_Rpp14 ...) -> characterised without
+  HH search; 90 families searched (8,252 sequences).
+  Slurm preflight read (both files) -> squeue: account 392 running CPUs (< 400) -> job 89564 sc2_triage (24 CPUs,
+  families + hmm + cdd) submitted 04:56 UTC; watcher armed.
+  predeclared.json part 1 written before any triage result (criteria, design, refutations, expectation).
+
+2026-11-13 05:13:20 UTC  Triage 89564 at 15/90 families after 17 min (largest families first). squeue: account 392 running CPUs incl.
+  89564 -> second worker job 89747 (STEPS=families; shares the per-family lock directories) submitted 05:13 UTC.
+
+2026-11-13 06:02:51 UTC  Triage done (89564 COMPLETED 1:01:01; 89747 COMPLETED 27:59). PDB titles for 2,275 hit IDs at P >= 50 fetched
+  from RCSB GraphQL by ID (no sequences sent); 228 entries with empty titles in the screen-2 table refetched (4ltt =
+  HP0894 toxin). sc2_triage_parse.py: 118 families -> characterised 96 (28 by curated Pfam on the replicate gene,
+  68 by search: HHsearch 67, CDD-only 1), unknown_function 5, weak 17. Blocks: 47 triaged, 10 fold under the
+  predeclared rule, 0 with every position unrecognised. Most "dark" small pairs resemble toxin-antitoxin structures
+  after UniRef enrichment (RelBE2 3g5o, YoeB-YefM 7bwf, ParD-ParE 3kxe/5ceg, DinJ-YafQ 4q2u, MqsA 3ga8, BrnT 3u97,
+  AbrB-like 2l66, RHH_12).
+  Amendment before any fold (sc2_triage_sens.py): characterised calls resting only on structural-genomics / de novo
+  PDB titles -> unknown_function in a sensitivity column: 2 families flip (3bu2), adding kd_kA_091 and kd_kA_120 as a
+  labelled secondary set. predeclared.json part 2 (fold list, expectation) written 06:02:33 UTC.
+  Design (sc2_design.py): 12 blocks, 24 cognate + 12 swaps = 36 items; swap length difference median 0.020 (max 0.128),
+  hydrophobic difference median 0.018 (max 0.049); first fix: genes.length counts the stop codon in some genomes ->
+  lengths from composition aa_len.
+  06:02:38 UTC batch 7bcbbd07 submitted (36 items; ledger 36/500); collector running (work/collect_main.log).
+
+2026-11-13 06:04 UTC (collector log, local 23:04 = UTC-7)  Screen batch 7bcbbd07: 36/36 done in about 1.5 min.
+  sc2_analyze.py: interfaces passing both replicates 2 (rank 4 kd_kA_091 AB 0.901/0.930; rank 20 ls_c764_k2 AB
+  0.882/0.924); single-replicate passes rank 15 (0.936 / 0.221) and none other; rank 39 rep 1 0.907 fails on PAE 5.4.
+  Cognate folds with a passing interface 5/24, swaps 0/12.
+2026-11-13 06:06:44 UTC  Follow-up batch 6d676d20 (12 items): sc2f margin controls for ranks 4 and 20 (rep 1, B
+  replaced), 8 monomers, and 2 POST HOC length-matched B controls for rank 20 (the predeclared donor pool held only a
+  78-aa donor for the 39-aa chain). Results: margins rank 4 0.63/0.64, rank 20 0.72/0.59 (POST HOC 0.60/0.64);
+  zipping none; low complexity none. Both are interface hits. Ledger 48/500.
+2026-11-13 06:07 UTC  Slurm preflight re-read (both files); account 344 running CPUs -> job 90229 sc2_post (Foldseek
+  10 vs PDB / AFDB-SP, US-align replicate complexes, MMseqs2 split-gene) submitted; COMPLETED 1:14.
+  Split gene: 0 fused homologs for both. US-align TM 0.81/0.82 (rank 4), 0.70/0.76 (rank 20). Foldseek: rank 20 A =
+  Doc / Phd-Doc (strong both), B no alignment; rank 4 B = BrnT 3u97 / TA complex 7vd7 (moderate both), A = AFDB-SP
+  MJ0789 uncharacterised and a putative HPRT (strong both).
+  Pfam seed text checked (Pfam-A.seed 39.0): PF27370 'MJ0788 family' = small uncharacterised proteins, function to be
+  determined; DUF2283 no known function; DUF4258 functionally uncharacterised, toxin-like by structural models (clan
+  CL0136). The name-only wording rule therefore counts the MJ0788 family as characterised (caveat in the report).
+  Context (sc2_context_genes.py on biotite 9 s; sc2_context_annot.py on the Mac republished Sharur DB, 2 s, 1 thread),
+  agreement (sc2_agree.py), overlapping junctions POST HOC (sc2_overlap.py; re-translation 12/12): rank 20 small gene
+  downstream of the Doc-like gene in 92/92, overlap median 29 nt in 90/92, own ATG 92/92, frame closed upstream 92/92.
+2026-11-13 06:17:57 UTC  REPORT.txt, results/ tables, view_rank004_kd_kA_091.cxc and view_rank020_ls_c764_k2.cxc written (ChimeraX not
+  opened). Structures archived on biotite $RD/showcase2/folds/. Answer: 0 new blocks with every member unrecognised;
+  2 co-folding blocks, both partly recognised.

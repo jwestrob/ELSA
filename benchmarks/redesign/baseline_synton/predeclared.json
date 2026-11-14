@@ -1,0 +1,52 @@
+{
+ "workstream": "baseline_synton",
+ "written_utc": "2026-11-13T08:20Z",
+ "status_when_written": "No synton run, no synton score and no rescore of any reference exists. Read so far: the paper (Europe PMC full text PMC13639185: Methods, Results, Discussion, figure legends; supplementary docx), the repository at commit 84baf1438f13fb6e03dabb8536e4f4dbfc03caa0 (notebook + 6 scripts), Zenodo 21099310 file list and CSV headers, the stored engine summary (engine/results_v2/hybrid__esm2_650m__genomecentred__mm30cpmr0p05__w8), vocab/REPORT.txt and REPORT2A.txt answer lines, and gold-free universe facts (genes per contig).",
+ "method_under_test": "Herve, Cury and Bernheim 2026, microLife 7:uqag033; code gitlab.pasteur.fr/mdm-lab/papers/bacterial-genome-syntons commit 84baf14 (2026-05-23).",
+ "faithful_configuration": {
+  "principle": "Their notebook cells and scripts run unmodified (copied byte-identical; shell cells extracted verbatim into scripts) on adapter-built inputs data/genes.parquet (gene, replicon, position, orientation) and data/clusters.parquet (gene, representative_50, representative_95). Parameters as in the repository: W 24 (neighbour window), X 12 (context = fam50 set at 12 < |offset| <= 24), Jaccard edges >= 0.15 within a fam50, single-linkage context clusters, one representative gene per context cluster (min gene id), k_obs = representative genes of A with a gene of B at +-1, tested pairs k_obs > 1, lambda = sum over representatives of 2 nB_r / L_r on replicons with >= 48 genes, right-tailed Poisson, BH over tested pairs, sig_score = log2(FE) x -log10(q + 1e-12), links where sig_score > 80 between genes within +-2 positions, syntons = connected components (networkx).",
+  "families": "fam50 / fam95 = MMseqs2 linclust cascade 99% -> 95% -> 80% -> 50% identity, each stage clustering the previous stage's representatives, coverage -c 0.8 --cov-mode 0 (linclust default; the paper states no coverage; its core-gene families use 80% coverage), MMseqs2 release 18 (paper version not stated). Members map transitively to the stage representative.",
+  "q_filter": "The paper states q < 1e-5 AND score > 80; the code applies score > 80 only. Faithful run = the code. The number of significant pairs, links and syntons that the additional q < 1e-5 filter would remove is reported; if it is non-zero, the paper-rule synton set is scored as a labelled variant.",
+  "synton_to_interval": "Each synton (component, all genes on one replicon) -> [min position, max position] on its replicon; one-gene holes fall inside the interval (count reported). All syntons are scored (synton-family deduplication is a representative choice for counting families and is not applied to loci).",
+  "execution_only_deviations_allowed": "Thread counts and DuckDB temp directory set to the Slurm allocation; the Jaccard shard loop may run shards concurrently (each shard is an independent duckdb process writing its own file; identical outputs). Any deviation in logic is listed in REPORT.txt."
+ },
+ "variants": {
+  "V-matched (Spacedust)": "Same code; data/clusters.parquet representative_50 := the word method's family token on this collection (transfer_spacedust rescue3 tokens), representative_95 := representative_50 (CRE only; unused by syntons). Labelled VARIANT.",
+  "V-matched (DPANN)": "Same, with $RD/engine/dpann_tokens/mmseqs__seq__e3c50s75_rescue3__dpann.parquet. Labelled VARIANT.",
+  "V-paperq": "Faithful + q < 1e-5 filter on links, only if it changes anything (see q_filter). Labelled VARIANT.",
+  "no_tuning": "No parameter of theirs is changed in any run; no variant is chosen by gold."
+ },
+ "reference_reproduction_gates": {
+  "spacedust": "Before any synton number is compared: rescore the stored engine query_loci.parquet selection 'conserved loci, gaps 0-2' with evaluate_spacedust_queries.evaluate (controls 200, seed 17) and replay the engine's bootstrap rng (default_rng(17), three preceding (10000 x 207) draws): F1 .7498, random .5660, excess .1838 [.1537, .2134] must reproduce to 4 decimals; rescore native Spacedust all_blocks (all blocks): F1 .6765, random .6115, excess .0649 [.0365, .0927].",
+  "dpann": "Before any synton number is compared: the token DH loci rescored with blib.score_table / ribo_score exactly as vocab/vscore.py refcheck: even summed DF+TXSS excess .4270, F1 .744 / .548 / .479, ribosomal 1,686 recovered / 1,512 resolved, Parvarchaeaceae resolved 113; per-instance F1, control and coverage equal the stored DH scores."
+ },
+ "metrics": {
+  "spacedust_source207": ["mean best single-interval F1 over 207 regions", "random-placement control F1 (200 rigid translations per region, evaluate's seeds)", "excess = mean(F1 - mean control), 95% interval from 10,000 bootstrap draws over regions (fresh default_rng(17) per output)", "median boundary precision and coverage at the best interval, localized fraction", "share of all genes and of query genes in syntons", "synton size (genes) and interval span distributions, all genomes and query genomes", "F1 by gold-region size class 1-5 / 6-10 / 11-20 / 21+", "paired differences (F1 and excess; 10,000 region bootstrap, seed 17) vs engine reference, vs native Spacedust, and vs transfer_spacedust word outputs when they exist", "wall time per stage and peak RSS"],
+  "dpann_even": ["summed DF+TXSScan excess", "F1 DefenseFinder / TXSScan / CRISPRCasTyper", "ribosomal runs recovered, resolved (of 1,686)", "Parvarchaeaceae recovered (of 114)", "paired differences vs token DH and vs the word method (stage-1 words + cohesion phrases) with vocab's paired genome bootstrap (rules.paired, 2,000 draws, seed 17)", "fraction of DPANN genes with a usable context: on replicons >= 48 genes; with a non-empty 13-24 window; with a full 24-gene window", "wall time, peak RSS"]
+ },
+ "expectations_written_before_numbers": {
+  "spacedust_faithful": {
+   "reasoning": "Query genomes are actinomycetes; BGC regions are long (median 10 genes) and lineage-specific; fam50 at 50% identity splits distant homologues; vertically inherited BGCs share their 13-24 window and collapse into one context cluster, and long BGCs place the 13-24 window inside the cluster itself; score > 80 needs about >= 3 distinct contexts. Syntons will be short (median 3) and cover part of each region.",
+   "F1": ".25 to .45",
+   "control": ".10 to .30",
+   "excess": "+.05 to +.15, 95% lower bound > 0",
+   "vs_engine_reference": "excess BELOW by .05 to .13; F1 BELOW by .30 to .50",
+   "vs_native_spacedust": "F1 BELOW by .25 to .45; excess within +-.06 of Spacedust's .065",
+   "vs_word_method_P2": "F1 BELOW by .10 to .30; excess BELOW or MATCHES (d -.08 to +.02)",
+   "boundary_precision_median": ">= .8 with coverage at best interval < .5",
+   "gene_share": "all genes 10% to 30%; query genes 10% to 30%",
+   "synton_size": "median 3 genes, q90 6 to 10",
+   "run_time": "< 2 h wall on one 64-CPU node; peak RSS < 120 GB",
+   "q_filter": "removes < 1% of significant pairs"
+  },
+  "spacedust_matched_variant": "broader families raise k_obs and syntons get longer: F1 +.03 to +.15 over faithful, gene share higher, excess within -.02 to +.08 of faithful",
+  "dpann": {
+   "usable_context": "34.4% of DPANN genes lie on replicons >= 48 genes (gold-free fact, computed 08:15); fewer have a full window",
+   "faithful": "summed excess .10 to .30 (below DH .427 and below the word method .608); F1 DF .40 to .65, TXSS .25 to .50, CCT .20 to .45; ribosomal runs recovered 300 to 1,200, resolved < 500 (superoperons exceed the 12-gene detectable scale and their 13-24 window lies inside the operon, collapsing contexts); Parvarchaeaceae recovered < 60",
+   "matched_variant": "above faithful by +.03 to +.12 summed; still below DH",
+   "run_condition": "run only if the Spacedust faithful run takes < about 2 h on one node"
+  },
+  "refuters": "If faithful Spacedust excess >= +.184 (engine reference), the reading 'context deduplication plus fam50 loses most of the signal on lineage-specific BGCs' is refuted. If DPANN faithful summed excess >= .427, the reading 'their method is weak on fragmented archaeal assemblies' is refuted."
+ },
+ "public_dataset_task": "Zenodo 21099310 holds ST1 (context clusters: fam50, context_cluster, refseq WP accession; 9.2 GB), ST2 (family associations, 564 MB), ST3 (syntons: synton, refseq WP; 1.16 GB), ST4 (synton families), ST5 and ST6 (both CRE, identical md5), ST7 (DefenseFinder subtype co-occurrences). Plan: record what is and is not published (no genome accession list, no gene coordinates, no fam95 table, no DefenseFinder per-system table); size the RefSeq May-2023 complete bacterial download; fetch only if <= ~100 GB and allowed; no method run, no scoring."
+}

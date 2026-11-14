@@ -1,0 +1,315 @@
+1. VERDICT PER COMPONENT C1–C5
+
+Overall: known ingredients, new combination. The strongest potential distinction is the precise recursive representation and its adjacency-based evidence correction. Broad claims about de novo discovery, greedy merging, hierarchical neighbourhoods, or phylogenetic correction would encounter substantial prior work.
+
+C1 — known ingredients, new combination.
+
+Closest: Spacedust; Hoberman and Durand (2005); Gene Team Tree.
+
+Spacedust explicitly uses greedy agglomerative hierarchical clustering. Hoberman and Durand analyse how bottom-up growth imposes nestedness; Gene Team Tree represents clusters hierarchically across gap thresholds. The remaining distinction is recursive replacement by reusable composite units, scored across the genome collection, producing a genome parse. These papers establish substantial algorithmic precedent, but I found no complete match to that formulation. [Spacedust](https://pmc.ncbi.nlm.nih.gov/articles/PMC12510874/), [Hoberman–Durand](https://www.cs.cmu.edu/~roseh/Papers/rcg05.pdf), [Gene Team Tree](https://journals.sagepub.com/doi/abs/10.1089/cmb.2009.0093?download=true).
+
+C2 — known ingredients, new combination.
+
+Closest: Hervé, Cury and Bernheim (2026); CSBFinder; Junier and Rivoire (2016).
+
+These supply, respectively, Poisson adjacency enrichment, random-order recurrence probabilities incorporating paralogs, and significance testing with effective genome counts. Their scores differ from the stated Poisson log-likelihood ratio. I found no exact comparative-genomics precedent for that score driving recursive composite-unit formation. Its description-length interpretation belongs partly to the second agent’s scope. [Hervé et al.](https://academic.oup.com/microlife/article/doi/10.1093/femsml/uqag033/8788034), [CSBFinder](https://www.researchgate.net/publication/328316188_CSBFinder_Discovery_of_colinear_syntenic_blocks_across_thousands_of_prokaryotic_genomes), [Junier–Rivoire](https://statbio.net/papers/Junier_2016.pdf).
+
+C3 — known ingredients, new combination.
+
+Closest: CSBFinder-S; Junier and Rivoire; Hervé et al.
+
+Effective genome counts and tree-free redundancy correction are established. CSBFinder-S even computes a separate corrected count among genomes containing each candidate. Hervé et al. deduplicate inherited genomic contexts. The specific substitution of mean carrier-genome adjacency sharing into n/[1+(n−1)s] remains a narrower “no close precedent found” result. [CSBFinder-S](https://pdfs.semanticscholar.org/e3f7/aaa378617cba6d6a2aeb2f52bc08c81e86eb.pdf), [Junier–Rivoire](https://statbio.net/papers/Junier_2016.pdf), [Hervé et al.](https://academic.oup.com/microlife/article/doi/10.1093/femsml/uqag033/8788034).
+
+An important additional precedent is Ermolaeva et al. (2001): they estimate background conservation directly from conserved different-strand adjacencies. Thus, using observed gene-order conservation to address ancestry predates this method, although their estimator and target differ. [Ermolaeva et al.](https://academic.oup.com/nar/article-pdf/29/5/1216/9906367/291216.pdf).
+
+C4 — published essentially as is.
+
+Closest: Durand and Sankoff; i-ADHoRe 3.0; Gecko 3.
+
+Random-order nulls, randomized-data calibration, and recognition that ancestry violates independent random-genome assumptions are established. Preserving contig lengths is a useful implementation constraint; i-ADHoRe already preserves gene-list lengths during randomization, although it permits movement between lists. Gecko explicitly cautions that its null omits phylogenetic history. [Durand–Sankoff](https://www.cs.cmu.edu/~durand/papers/DurandSankoff03.pdf), [i-ADHoRe](https://academic.oup.com/nar/article-pdf/40/2/e11/25333653/gkr955.pdf), [Gecko 3](https://academic.oup.com/nar/article-pdf/44/20/9600/25405490/gkw843.pdf).
+
+C5 — known ingredients, new combination.
+
+Closest: Spacedust; Gecko 3; Hervé et al.
+
+Recovery of established systems, operon validation, and ribosomal-locus checks all have precedent. The particular caller panel and subtraction of random-placement F1 form a distinct evaluation arrangement; I found no exact precedent for the subtraction. Treat that quantity as an additional effect-size measure, accompanied by ordinary precision, recall and F1. [Spacedust](https://pmc.ncbi.nlm.nih.gov/articles/PMC12510874/), [Gecko 3](https://academic.oup.com/nar/article-pdf/44/20/9600/25405490/gkw843.pdf), [Hervé et al.](https://academic.oup.com/microlife/article/doi/10.1093/femsml/uqag033/8788034).
+
+
+2. CLOSEST PRIOR WORK OVERALL
+
+The six strongest positioning references are:
+
+• Zhang, Mirdita and Söding, 2025, Spacedust: mandatory direct computational comparison; closest algorithmic competitor. Attribution correction: the authors are Zhang, Mirdita and Söding; Steinegger is acknowledged. [Paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC12510874/).
+
+• Hervé, Cury and Bernheim, 2026: particularly important recent precedent combining adjacency enrichment, context deduplication, locus assembly and defence validation. [Paper](https://academic.oup.com/microlife/article/doi/10.1093/femsml/uqag033/8788034).
+
+• Svetlitsky, Dagan and Ziv-Ukelson, 2020, CSBFinder-S: strongest practical precedent for candidate-specific effective counts and scalable discovery across microbial genomes. [Paper](https://pdfs.semanticscholar.org/e3f7/aaa378617cba6d6a2aeb2f52bc08c81e86eb.pdf).
+
+• Junier and Rivoire, 2016: closest statistical foundation for converting weighted cross-genome proximity into genomic segments. [Paper](https://statbio.net/papers/Junier_2016.pdf).
+
+• Winter et al., 2016, Gecko 3: exact approximate-cluster discovery, providing a valuable comparison with greedy search. [Paper](https://academic.oup.com/nar/article-pdf/44/20/9600/25405490/gkw843.pdf).
+
+• Hoberman and Durand, 2005: essential conceptual positioning for nestedness, greedy growth and the distinction between a cluster definition and the clusters an algorithm can recover. [Paper](https://www.cs.cmu.edu/~roseh/Papers/rcg05.pdf).
+
+
+3. ANNOTATED BIBLIOGRAPHY BY THEME
+
+Evidence status: full text or substantive method documentation was opened unless explicitly marked otherwise.
+
+Theme 1 — Formal cluster models and significance
+
+• Dannie Durand and David Sankoff. 2003. Journal of Computational Biology 10:453–482. “Tests for gene clustering.”
+They derive random-order probabilities for r-window clusters, distinguishing prespecified reference regions, sampled windows and whole-genome searches, with extensions for incomplete clusters and gene families. This anticipates C2/C4 and establishes that significance depends on the discovery procedure. [Author manuscript](https://www.cs.cmu.edu/~durand/papers/DurandSankoff03.pdf).
+
+• Rose Hoberman, David Sankoff and Dannie Durand. 2005. Journal of Computational Biology 12:1083–1102. “The statistical analysis of spatially clustered genes under the maximum gap criterion.” DOI: 10.1089/cmb.2005.12.1083.
+They derive exact marked-gene max-gap probabilities and bounds for pairwise whole-genome discovery under random gene order. This directly precedes bounded-gap cluster significance, while addressing regional homology rather than lineage-weighted recursive words; the opened author manuscript carries an earlier Bioinformatics-style header, so the final venue was checked separately. [Manuscript](https://www.cs.cmu.edu/~durand/papers/HobermanSankoffDurand05.pdf), [publication record](https://pubmed.ncbi.nlm.nih.gov/16241899/).
+
+• Narayanan Raghupathy and Dannie Durand. 2009. Molecular Biology and Evolution 26:957–968. “Gene Cluster Statistics with Gene Families.” DOI: 10.1093/molbev/msp002.
+They show that ignoring gene-family sizes exaggerates cluster significance and derive tractable family-size-aware approximations, tested against simulations with realistic family-size distributions. This is direct precedent for copy-number-aware expectations in C2. [Full text](https://pdfs.semanticscholar.org/93b9/24c3339a781b891483bb17410ef69860a1e5.pdf).
+
+• Nicolas Luc, Jean-Loup Risler, Anne Bergeron and Mathieu Raffinot. 2003. Computational Biology and Chemistry 27:59–67. “Gene teams: a new formalization of gene clusters for comparative genomics.” DOI: 10.1016/S1476-9271(02)00097-X.
+Gene teams permit internal reordering, either strand and bounded intervening genes across multiple chromosomes. This anticipates C1’s flexible neighbourhood definition, with combinatorial discovery rather than the stated score. Reading status: abstract, introduction and publisher section excerpts. [Publisher page](https://www.sciencedirect.com/science/article/abs/pii/S147692710200097X).
+
+• Anne Bergeron, Cedric Chauve, Fabien de Montgolfier and Mathieu Raffinot. 2008. SIAM Journal on Discrete Mathematics 22:1022–1039. “Computing Common Intervals of K Permutations, with Applications to Modular Decomposition of Graphs.” DOI: 10.1137/060651331.
+They compute common intervals and compact representations of their containment structure. This establishes hierarchical representations of conserved gene sets; its permutation model and combinatorial criteria differ from C1–C3. [Full text](https://gi.cebitec.uni-bielefeld.de/_media/teaching/2018winter/cg/bergeron_common_intervals.pdf).
+
+• Katharina Jahn, Sascha Winter, Jens Stoye and Sebastian Böcker. 2013. BMC Bioinformatics 14(Suppl 15):S14. “Statistics for approximate gene clusters.” DOI: 10.1186/1471-2105-14-S15-S14.
+They calculate random-order significance for approximate common intervals using genome support, cluster size, conservation errors and within-genome family frequencies, with multiple-testing correction. This supplies Gecko’s statistical foundation and substantial C2/C4 precedent. [Full text](https://noah.nrw/ubbihs/download/pdf/5127511).
+
+
+Theme 2 — Functional coupling and operon prediction
+
+• Ross Overbeek, Michael Fonstein, Mark D’Souza, Gordon D. Pusch and Natalia Maltsev. 1999. PNAS 96:2896–2901. “The use of gene clusters to infer functional coupling.” DOI: 10.1073/pnas.96.6.2896.
+They identify conserved pairs within same-strand runs, initially using bidirectional best hits, and score pair evidence by the organisms’ 16S-tree distance. They explicitly explain why closely related genomes provide weaker evidence: direct precedent for C3’s motivation. [Full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC15866/).
+
+• Igor B. Rogozin, Kira S. Makarova, Janos Murvai, Eva Czabarka, Yuri I. Wolf, Roman L. Tatusov, Laszlo A. Szekely and Eugene V. Koonin. 2002. Nucleic Acids Research 30:2212–2223. “Connected gene neighborhoods in prokaryotic genomes.” DOI: 10.1093/nar/30.10.2212.
+They retain same-direction COG pairs separated by zero to two genes in at least three genomes after handling close relatives, assemble gene arrays, then single-linkage cluster overlapping arrays. This closely anticipates C1’s local gap allowance and C3’s independent recurrence principle; their resulting neighbourhood can combine arrangements absent from any individual genome. [Full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC115289/).
+
+• Christian von Mering, Martijn Huynen, Daniel Jaeggi, Steffen Schmidt, Peer Bork and Berend Snel. 2003. Nucleic Acids Research 31:258–261. “STRING: a database of predicted functional associations between proteins.” DOI: 10.1093/nar/gkg034.
+The neighbourhood channel requires recurrence across sufficiently distant species and uses nonredundant observations, calibrated against functional reference associations. Separately, its co-occurrence channel collapses phylogenetically concordant taxa; that latter correction should not be attributed wholesale to the neighbourhood channel. [Full text](https://vis.cs.brown.edu/docs/pdf/Mering-2003-STR.pdf).
+
+• Maria D. Ermolaeva, Owen White and Steven L. Salzberg. 2001. Nucleic Acids Research 29:1216–1221. “Prediction of operons in microbial genomes.” DOI: 10.1093/nar/29.5.1216.
+They contrast conservation frequencies of same-strand and different-strand adjacent pairs, using the latter to estimate background conservation attributable to ancestry, transfer or chance. This is an important gene-order-based background correction preceding C3/C4, but it estimates operon membership rather than effective lineage counts. [Full text](https://academic.oup.com/nar/article-pdf/29/5/1216/9906367/291216.pdf).
+
+• Morgan N. Price, Katherine H. Huang, Eric J. Alm and Adam P. Arkin. 2005. Nucleic Acids Research 33:880–892. “A novel method for accurate operon predictions in all sequenced prokaryotes.” DOI: 10.1093/nar/gki232.
+They combine comparative-genomic evidence with genome-specific intergenic-distance models and validate using experimentally characterized transcription units and expression data. They explicitly identify neutral order conservation among close relatives as a confounder, anticipating C4’s interpretation. [Full text](https://genomics.lbl.gov/~aparkin/Stuff/NovelMethod.pdf).
+
+
+Theme 3 — De novo cluster discovery at scale
+
+• Ruoshi Zhang, Milot Mirdita and Johannes Söding. 2025. Nature Methods. “De novo discovery of conserved gene clusters in microbial genomes with Spacedust.” DOI: 10.1038/s41592-025-02816-x.
+
+For k matched genes, maximum span m and a conserved immediate adjacencies including orientation:
+
+p_clu ≈ (m!)² q₀ᵏ / [(m−k)!² k!], with q₀=10⁻³ by default.
+p_ord = (1−a/k)/(2ᵃ a!).
+p=p_clu p_ord; combined P=p(1−ln p).
+
+Its null concerns random hits and random ordering/orientation within genome pairs, rather than C2’s across-lineage recurrence. Genome redundancy filtering uses protein-alphabet Mash, a 70% similarity threshold and representative selection—not merely taxonomy. Benchmarks: KEGG-module associations versus neighbouring-pair baselines; 5,255/5,520 PADLOC multigene loci recovered; 207 manually annotated BGCs from nine genomes evaluated by F1 against ClusterFinder, DeepBGC and GECCO. [Full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC12510874/).
+
+The documented output contains pairwise cluster matches, whereas C1 proposes a genome parse. [Official output documentation](https://github.com/soedinglab/spacedust/blob/master/README.md).
+
+• Sascha Winter, Katharina Jahn, Stefanie Wehner, Leon Kuchenbecker, Manja Marz, Jens Stoye and Sebastian Böcker. 2016. Nucleic Acids Research 44:9600–9610. “Finding approximate gene clusters with Gecko 3.” DOI: 10.1093/nar/gkw843.
+Gecko exactly enumerates reference gene sets with approximate occurrences, ignoring internal order and multiplicity; its null draws independent genome strings using empirical family frequencies, rather than strictly permuting fixed copy counts. It combines genome-level probabilities and applies FDR correction; validation used 678 genomes, operon literature/databases and RNA-seq, establishing C2/C4/C5 precedent. [Full text](https://academic.oup.com/nar/article-pdf/44/20/9600/25405490/gkw843.pdf).
+
+• Dina Svetlitsky, Tal Dagan, Vered Chalifa-Caspi and Michal Ziv-Ukelson. 2019; online 2018. Bioinformatics 35:1634–1643. “CSBFinder: discovery of colinear syntenic blocks across thousands of prokaryotic genomes.” DOI: 10.1093/bioinformatics/bty861.
+CSBFinder enumerates ordered patterns permitting insertions and ranks them by −ln of a binomial recurrence tail, using a combinatorial random-order occurrence probability adjusted for paralog multiplicities. Its 1,487-genome application establishes scale and recurrence-based significance, while retaining collinearity and a nonrecursive pattern model. [Author-uploaded full text](https://www.researchgate.net/publication/328316188_CSBFinder_Discovery_of_colinear_syntenic_blocks_across_thousands_of_prokaryotic_genomes).
+
+• Dina Svetlitsky, Tal Dagan and Michal Ziv-Ukelson. 2020. Bioinformatics 36(Suppl 1):i21–i29. “Discovery of multi-operon colinear syntenic blocks in microbial genomes.” DOI: 10.1093/bioinformatics/btaa503.
+CSBFinder-S extends discovery across strands and corrects both total-genome count and candidate-support count by inverse neighbourhood sizes in a genome-similarity graph; similarity is Jaccard overlap of orthology-group sets. Candidate support therefore already receives carrier-specific effective counting, but uses thresholded gene content rather than C3(b)’s continuous adjacency-sharing correction. [Full text](https://pdfs.semanticscholar.org/e3f7/aaa378617cba6d6a2aeb2f52bc08c81e86eb.pdf).
+
+• Alexandre Hervé, Jean Cury and Aude Bernheim. 2026, published 8 September. microLife 7:uqag033. “Characterization of syntons across bacterial genomes using non-redundant genomic contexts.” DOI: 10.1093/femsml/uqag033.
+They cluster flanking gene-family sets by Jaccard similarity, count distinct contexts supporting adjacency, and test a Poisson expectation λ=2Σ n_B/L; their score multiplies log₂ enrichment by −log₁₀ BH-adjusted P. Significant local edges form connected-component syntons with one intervening gene allowed; application spans 32,791 genomes and includes DefenseFinder validation, closely anticipating C2/C3/C5 while using a different assembly rule. [Full text](https://academic.oup.com/microlife/article/doi/10.1093/femsml/uqag033/8788034).
+
+• Marina Marcet-Houben and Toni Gabaldón. 2020; online 2019. Bioinformatics 36:1265–1266. “EvolClust: automated inference of evolutionary conserved gene clusters in eukaryotes.” DOI: 10.1093/bioinformatics/btz706.
+EvolClust scores shared versus unshared genes, evaluates subregions, and derives genome-pair-specific thresholds from background conservation; overlapping predictions are collapsed and cluster families formed with MCL. Although eukaryotic, it is important precedent for judging local conservation against the compared genomes’ overall conservation, addressing part of C3/C4 through an empirical background. [Full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC7703780/).
+
+• Yves-Pol Deniélou, Marie-France Sagot, Frédéric Boyer and Alain Viari. 2011. BMC Bioinformatics 12:193. “Bacterial syntenies: an exact approach with gene quorum.” DOI: 10.1186/1471-2105-12-193.
+They give an exact graph-based method accommodating quorum, partial correspondence, gaps and configurable order conservation, demonstrated on up to ten genomes. This precedes flexible de novo synton discovery but supplies neither C2’s statistic nor C1’s learned hierarchy. [Full text](https://link.springer.com/article/10.1186/1471-2105-12-193).
+
+
+Theme 4 — Synteny and collinearity tools
+
+• Brian J. Haas, Arthur L. Delcher, Jennifer R. Wortman and Steven L. Salzberg. 2004. Bioinformatics 20:3643–3646. “DAGchainer: a tool for mining segmental genome duplications and synteny.” DOI: 10.1093/bioinformatics/bth397.
+DAGchainer finds maximally scoring ordered paths through a directed acyclic graph, using homolog-match BLAST E-values and distance-dependent penalties. Its documented chain score is distinct from a calibrated neighbourhood-recurrence P-value; it provides a collinearity baseline rather than C2/C3 equivalence. Reading status: official method documentation; journal full text was inaccessible. [Documentation](https://dagchainer.sourceforge.net/).
+
+• Yupeng Wang et al. 2012. Nucleic Acids Research 40:e49. “MCScanX: a toolkit for detection and evolutionary analysis of gene synteny and collinearity.” DOI: 10.1093/nar/gkr1293.
+MCScanX uses dynamic-programming chains with match rewards and gap penalties, followed by an analytical expected-occurrence calculation:
+E=2P(N,m)Π[(l₁ᵢ/L₁)(l₂ᵢ/L₂)], with default cutoff 10⁻⁵.
+This is a spatial anchor-placement expectation, rather than C2’s Poisson recurrence across lineages. [Full text](https://pdfs.semanticscholar.org/93a8/3472e1389fac3c6d794837308002f6e1112d.pdf).
+
+• Sebastian Proost, Jan Fostier, Dieter De Witte, Bart Dhoedt, Piet Demeester, Yves Van de Peer and Klaas Vandepoele. 2012. Nucleic Acids Research 40:e11. “i-ADHoRe 3.0—fast and sensitive detection of genomic homology in extremely large data sets.” DOI: 10.1093/nar/gkr955.
+It detects significant diagonals in gene-homology matrices, aligns them into profiles and iteratively recruits additional regions into multiplicons; significance uses an approximation with Bonferroni or FDR correction. Empirical false-positive calibration uses 100 randomized datasets, preserving list lengths and randomizing orientations after tandem handling: direct C4 precedent, but a different iterative operation from C1. [Full text](https://academic.oup.com/nar/article-pdf/40/2/e11/25333653/gkr955.pdf).
+
+• John T. Lovell et al. 2022. eLife 11:e78526. “GENESPACE tracks regions of interest and gene copy number variation across multiple genomes.” DOI: 10.7554/eLife.78526.
+GENESPACE integrates orthogroups with MCScanX-derived anchors, tandem-array treatment and graph/cluster processing to infer syntenic orthology. It represents newer orthology-aware synteny engineering, rather than a new independent-lineage neighbourhood null. [Full text](https://elifesciences.org/articles/78526.pdf).
+
+• Lauren Coombe, Parham Kazemi, Johnathan Wong, Inanc Birol and René L. Warren. 2025. BMC Biology 23:367. “ntSynt: multi-genome synteny detection using minimizer graph mappings.” DOI: 10.1186/s12915-025-02455-w.
+ntSynt derives nucleotide-level blocks from minimizer-graph paths, iteratively increases resolution and merges compatible adjacent blocks using distance/orientation constraints. This is further precedent for iterative block refinement and merging; its geometric criteria address a different target from C2/C3’s statistical locus discovery. [Full text](https://link.springer.com/article/10.1186/s12915-025-02455-w).
+
+
+Theme 5 — Iterative growth and hierarchical descriptions
+
+• Rose Hoberman and Dannie Durand. 2005. RECOMB Comparative Genomics, LNBI 3678:73–87. “The Incompatible Desiderata of Gene Cluster Properties.” DOI: 10.1007/11554714_7.
+They formalize nestedness and show how greedy seed-extension procedures restrict the cluster class recovered, including implicit order constraints. This is directly relevant to C1’s representational assumptions and to demonstrating which true loci recursive merging can miss. [Full text](https://www.cs.cmu.edu/~roseh/Papers/rcg05.pdf).
+
+• Melvin Zhang and Hon Wai Leong. 2009. Journal of Computational Biology 16:1383–1398. “Gene team tree: a hierarchical representation of gene teams for all gap lengths.” DOI: 10.1089/cmb.2009.0093.
+The Gene Team Tree compactly represents gene teams across all gap thresholds, with application-specific scoring performed subsequently. It anticipates hierarchical neighbourhood representation but organizes the hierarchy by gap scale rather than learned pair scores. Reading status: abstract only. [Publisher abstract](https://journals.sagepub.com/doi/abs/10.1089/cmb.2009.0093?download=true).
+
+The common-interval paper under theme 1 and Spacedust under theme 3 provide additional direct precedents. Hierarchy, nestedness, greedy extension and agglomeration should be distinguished explicitly: they are related properties, not interchangeable algorithms.
+
+
+Theme 6 — Phylogenetic dependence and database redundancy
+
+• Ivan Junier and Olivier Rivoire. 2016. PLOS ONE 11:e0155740. “Conserved Units of Co-Expression in Bacterial Genomes: An Evolutionary Insight into Transcriptional Regulation.” DOI: 10.1371/journal.pone.0155740.
+They assign each genome weight 1/(number of similar genomes), using similarity across ten conserved proteins, and test weighted proximity through a binomial model with effective genome totals. Significant pair relations define maximal consecutive segments whose every gene pair passes, with a null-tail-based FDR threshold of 0.005; this strongly anticipates C2–C4 while differing from greedy pair assembly. [Full text](https://statbio.net/papers/Junier_2016.pdf).
+
+• Ofir Cohen, Haim Ashkenazy, Eli Levy Karin, David Burstein and Tal Pupko. 2013. Nucleic Acids Research 41:W232–W237. “CoPAP: Coevolution of Presence–Absence Patterns.” DOI: 10.1093/nar/gkt471.
+CoPAP maps gains and losses probabilistically onto a phylogeny and evaluates coordinated evolutionary events using simulations. It is a useful tree-aware co-occurrence comparator, while gene order remains outside its primary model. [Full text](https://www.tau.ac.il/~talp/publications/CoPAP.pdf).
+
+• Cedric Chauve and Eric Tannier. 2008. PLOS Computational Biology 4:e1000234. “A Methodological Framework for the Reconstruction of Contiguous Regions of Ancestral Genomes and Its Application to Mammalian Genomes.” DOI: 10.1371/journal.pcbi.1000234.
+They weight conserved adjacencies and larger syntenic sets using occurrence patterns and phylogenetic branch lengths, then reconstruct compatible ancestral regions through consecutive-ones/PQ-tree methods. This establishes phylogenetic weighting of adjacency evidence, with ancestral reconstruction rather than functional-locus discovery as its target. [Full text](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000234).
+
+• Cedric Chauve, Yann Ponty and João Paulo Pereira Zanetti. 2015. BMC Bioinformatics 16(Suppl 19):S6. “Evolution of genes neighborhood within reconciled phylogenies: an ensemble approach.” DOI: 10.1186/1471-2105-16-S19-S6.
+They model adjacency histories within reconciled gene phylogenies and explore ensembles of evolutionary scenarios. This provides explicit inherited-adjacency modelling, rather than a scalar effective-count adjustment. [Full text](https://link.springer.com/article/10.1186/1471-2105-16-S19-S6).
+
+Together with Overbeek, Ermolaeva, STRING, EvolClust and CSBFinder-S, these establish several distinct corrections: taxon collapsing, sequence-similarity weighting, gene-content weighting, empirical gene-order backgrounds and explicit evolutionary histories.
+
+
+Theme 7 — Defence-island discovery
+
+• Kira S. Makarova, Yuri I. Wolf, Sagi Snir and Eugene V. Koonin. 2011. Journal of Bacteriology 193:6039–6056. “Defense islands in bacterial and archaeal genomes and prediction of novel defense systems.” DOI: 10.1128/JB.05535-11.
+They test proximity of defence/mobilome gene sets against 1,000 randomizations per genome partition, combine standardized proximity scores, and compare island conservation with matched random-family pseudoislands. This establishes neighbourhood-enrichment discovery and randomized controls, although discovery is seeded by functional categories. [Full text](https://journals.asm.org/doi/10.1128/jb.05535-11).
+
+• Shany Doron, Sarah Melamed, Gal Ofir, Azita Leavitt, Anna Lopatina, Mai Keren, Gil Amitai and Rotem Sorek. 2018. Science 359:eaar4120. “Systematic discovery of antiphage defense systems in the microbial pangenome.” DOI: 10.1126/science.aar4120.
+Their defence score is the fraction of family members within ±10 genes of known defence genes; a second score measures diversity of neighbouring defence-gene lists, with thresholds 0.65 and 0.1, respectively. Conserved candidate systems were then tested experimentally, establishing neighbourhood-based discovery and context-diversity filtering, rather than C2’s general-purpose enrichment statistic. [Full text](https://www.weizmann.ac.il/molgen/Sorek/files/publications/Doron_Science_2018.pdf).
+
+
+Theme 8 — Benchmarking precedents
+
+The opened papers support four complementary evaluation targets:
+
+• Functional association: STRING’s reference-association calibration and Spacedust’s KEGG-module benchmark.
+• Locus reconstruction: Spacedust’s BGC boundary F1 and curated defence-system recovery.
+• Operon biology: Gecko’s literature/RNA-seq validation and Price et al.’s experimental transcription-unit benchmarks.
+• Statistical calibration: i-ADHoRe’s randomized datasets, Raghupathy–Durand’s family-size simulations and CoPAP’s evolutionary simulations.
+
+These evaluate different claims. A method can recover genes belonging to a system while merging neighbouring systems, and can recover conserved neighbourhoods whose genes belong to different transcription units.
+
+
+4. EXPECTED BASELINES AND BENCHMARKS
+
+The following are recommendations based on the literature comparison.
+
+Direct method comparisons:
+
+• Spacedust, Gecko 3 and CSBFinder-S are the essential software baselines.
+• Include the Hervé–Cury–Bernheim procedure or a faithful implementation if available.
+• Include Junier–Rivoire-style weighted pair significance followed by segment construction.
+• Add a simple significant-adjacency graph/connected-component baseline. This isolates whether recursive merging improves on the pair scores themselves.
+• MCScanX or i-ADHoRe is a useful collinearity comparator, but has a different biological target.
+• EvolClust is particularly useful for testing the value of background gene-order conservation.
+
+Datasets and positive references:
+
+• Reuse the published Spacedust and Gecko evaluation collections identified above where reproducible.
+• Evaluate the proposed DefenseFinder, TXSScan and CRISPRCasTyper panel; add PADLOC for continuity with published benchmarking.
+• Include experimentally supported operons from well-characterized bacteria, with independent transcript evidence where available.
+• Include archaeal genomes and fragmented assemblies if the paper claims broad prokaryotic applicability.
+• Report ribosomal loci separately so abundant, strongly conserved housekeeping structures do not dominate averages.
+
+Controls reviewers should expect:
+
+• Identical gene-family assignments across compatible methods, plus separate end-to-end comparisons.
+• Raw genome counts; hard genome grouping alone; effective-count correction alone; both corrections.
+• Sequence-based versus gene-content-based versus adjacency-based redundancy correction.
+• Duplicate-genome and oversampled-clade stress tests, with discovery stability measured quantitatively.
+• Neutral evolutionary simulations preserving inherited order through related descendants. Independent permutations test chance proximity, but erase precisely the dependence C3 is intended to address.
+• Synthetic loci with controlled insertions, rearrangements, paralogs, gene losses, HGT and contig fragmentation.
+• Random-placement controls matched for locus length, genome, contig and annotation density.
+• Clade-held-out evaluation and thresholds fixed before examining test labels.
+
+Report gene-level and locus-level precision/recall, boundary accuracy, splitting/merging errors, size-stratified recovery, runtime and peak memory. For a hierarchy, specify which level is evaluated and how predictions are matched to reference loci.
+
+
+5. RISKS
+
+Unsafe novelty claims:
+
+• “First de novo conserved-neighbourhood discovery across thousands of genomes.”
+• “First greedy or hierarchical gene-cluster method.”
+• “First order-independent or strand-flexible conserved-cluster method.”
+• “First correction for phylogenetic redundancy in gene co-localisation.”
+• “First effective number of genomes.”
+• “First use of genomic context to distinguish recurrence from inheritance.”
+• “First random-order significance test, copy-number-aware expectation, or shuffled-data calibration.”
+• “First validation against defence systems, operons or ribosomal neighbourhoods.”
+
+The bibliography above supplies direct precedents for each.
+
+Statistical and interpretive risks—my assessment:
+
+• A low discovery count after independent genome shuffling establishes calibration against that null. It does not by itself establish a 1% biological false-discovery rate under inherited gene order.
+
+• Shared-adjacency fraction is a similarity measure. Substituting it for correlation in n/[1+(n−1)s] requires empirical validation. The denominator has the algebraic form obtained from the variance of a mean under equal pairwise correlation; that algebra alone does not validate s as the relevant correlation.
+
+• If observations are lineage-level presence/absence events, E should sum probabilities of at least one neighbourhood occurrence per lineage. Expected numbers of adjacent copy pairs can differ materially in multicopy families.
+
+• The Poisson expression is positive for depletion as well as enrichment. An enrichment detector needs an explicit n>E condition or a one-sided likelihood-ratio definition.
+
+• Scaling a score by N_eff/n is a heuristic unless connected to a sampling model. Evaluate null and alternative distributions after applying the complete correction.
+
+• Calling a likelihood improvement “description length saved” requires accounting for the cost of the learned dictionary, composite definitions and parse choices. The compression-focused review should assess this separately.
+
+• Recursive collapse changes candidate opportunities and multiplicities. Calibration should rerun the full adaptive procedure, including grouping and any similarity estimation that depends on the randomized data.
+
+• Curated callers provide labelled positives for particular system definitions. Their unlabelled regions include genuine unknown systems, so they cannot automatically serve as biological negatives.
+
+• Chance-subtracted F1 can be negative and loses ordinary F1’s interpretation. Report both the original F1 and the subtraction, with uncertainty across randomizations.
+
+• A nested representation imposes a biological hypothesis. Overlapping systems and rearranged loci may resist a single parse; measure those failure modes explicitly.
+
+
+6. UNVERIFIED AND NULL SEARCHES
+
+UNVERIFIED
+
+• Gecko/GhostFam, Schmidt and Stoye (2007): its publication was located, but opening the record encountered an access challenge. Detailed assessment here relies on the opened Gecko 3 and statistical-foundation papers.
+
+• MCMuSeC, Ling, He and Xin (2009), “Detecting gene clusters under evolutionary constraint in a large number of genomes”: encountered through opened reference lists and Gecko’s comparison; the original paper was not opened. Its exact phylogenetic constraint and null remain unverified.
+
+• Spacedust supplementary derivations and implementation-level score calculation: supplementary PDF access failed. The main text states P=p(1−ln p), but its displayed score labelled “negative logarithm” has an inconsistent sign on the correction term. The exact implemented expression needs source-code verification.
+
+• i-ADHoRe 3.0’s detailed diagonal-probability approximation: the main paper and empirical randomization procedure were opened; the full supplementary derivation was not verified.
+
+• No reviewed source establishes that the complete C1–C5 combination was previously published. Conversely, this search cannot establish universal absence.
+
+Null searches
+
+These queries produced no matching precedent for the specific claim; some returned unrelated work or the broader precedents discussed above:
+
+• `"gene adjacency" "effective sample size"`
+  No located neighbourhood-discovery method using the stated adjacency-based effective-count formula.
+
+• `"conserved gene" "n_eff" adjacency`
+  No exact implementation match.
+
+• `"gene neighborhood" "shared adjacencies" weighting`
+  No matching carrier-specific correction; nearby results concerned ancestral reconstruction.
+
+• `"synteny" "1 + (n" effective`
+  No exact formula match.
+
+• `"gene clusters" "Poisson" "likelihood ratio"`
+  No located direct precedent for that statistic driving recursive neighbourhood merging; results included unrelated expression-clustering models.
+
+• `"conserved gene clusters" "F1" "random placement"`
+  No matching chance-subtracted F1 benchmark.
+
+• `"gene clusters" "F1" "subtracted"`
+  No matching evaluation procedure.
+
+• `"gene neighbourhood" "chance-corrected"`
+  No matching evaluation procedure.
+
+The narrowest supported novelty candidate is the specific recursive composite-unit procedure combined with carrier-specific adjacency weighting. Its value would be established most convincingly through comparisons and ablations against the close precedents above.

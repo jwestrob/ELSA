@@ -1,0 +1,61 @@
+{
+ "per_genome_split_rate_q10_q50_q90": [
+  0.05207315795542138,
+  0.07354998243206513,
+  0.1047918449603843
+ ],
+ "per_genome_fragment_rate_q10_q50_q90": [
+  0.014335087910156741,
+  0.03748307224863989,
+  0.08028709088835671
+ ],
+ "spearman_y_vs_completeness": [
+  0.020366264552691783,
+  0.7017507657831856
+ ],
+ "spearman_f_vs_completeness": [
+  -0.4329449944197172,
+  1.0711372324975986e-17
+ ],
+ "spearman_y_vs_contamination": [
+  -0.04306687036185315,
+  0.4178814308055103
+ ],
+ "spearman_f_vs_contamination": [
+  0.08228927955312842,
+  0.12118953083503553
+ ],
+ "spearman_y_vs_n_contigs": [
+  -0.04639312769820484,
+  0.3828073868779378
+ ],
+ "spearman_f_vs_n_contigs": [
+  0.7069911953544866,
+  3.306137087044626e-55
+ ],
+ "share_of_split_genes_in_top10pct_genomes": 0.17308603286812665,
+ "split_loci_sample": 15320,
+ "split_loci_token_pair_in_ge2_sample_genomes": 0.816710182767624,
+ "split_loci_token_pair_in_ge2_genera": 0.7870104438642298,
+ "split_loci_token_pair_in_ge5_sample_genomes": 0.6935378590078329,
+ "gap_nt_split_pairs_q": [
+  -11.0,
+  -4.0,
+  2.0,
+  21.0,
+  70.0
+ ],
+ "gap_nt_split_pairs_n": 11916,
+ "gap_nt_all_coriented_neighbours_q": [
+  -4.0,
+  1.0,
+  27.0,
+  79.0,
+  174.0
+ ],
+ "gap_nt_all_coriented_neighbours_n": 226509,
+ "frac_split_pairs_gap_le_10nt": 0.6638972809667674,
+ "frac_all_neighbours_gap_le_10nt": 0.39919826585257095,
+ "frac_split_pairs_overlap": 0.37781134608929173,
+ "frac_all_neighbours_overlap": 0.20830077392068305
+}

@@ -1,0 +1,220 @@
+BOUNDARY WORKSTREAM NOTEBOOK (ws_boundary), append-only, times UTC
+=====================================================================
+
+2026-11-12 12:58  Start. Read BRIEF, NOTEBOOK tail, recurrence.py, ribosomal REPORT + check, hierarchy REPORT (T2),
+repair REPORT + merged_universe_design. Read /home/jwestrob/.claude/CLAUDE.md and biotite-cluster-ops.md in full.
+Remote work dir $RD/boundary/ (code/, results/, landscape/, loci/), logs $RD/logs/boundary_<job>.log.
+
+Observation before any experiment: the DPANN scorer scores EVERY locus in loci_all_genomes.parquet (conserved and
+conserved_g2 at levels 2, 5, 12, 30, 80 plus unit@0.5) and takes the best-F1 locus per instance. So every DPANN F1 in
+the program (e.g. rescue3 DF 0.826) is a best-of-11-readings figure, while the ribosomal "default reading" is
+conserved@2 alone. A single reading competes against that table at a disadvantage in F1 (the random-placement
+control also gains from the choice, so excess is affected less). Both references will be reported.
+
+Plan: (1) exploration on odd genomes only (references; boundary features internal vs overshoot); (2) predeclare
+rules, grids, tuning objective and adoption criteria in predeclared.json; (3) tune on odd; (4) record chosen
+parameters; (5) test on even + ribosomal on all runs; (6) winning rule(s) on base and hybrid arms.
+
+2026-11-12 13:10  Exploration, TUNE HALF ONLY (odd genome_code). Jobs 80760 (failed: pandas .ge name clash), 80784
+(explore.py, 128 s). Landscape of rescue3 recomputed from tokens + significant_pairs.parquet with the engine's
+functions: 162,786 significant pairs, 3,392,853 significant instances, boundary_support.npy reproduced EXACTLY;
+419,861 level-2 loci (span q10/q50/q90/q99/max 2/4/13/34/269 genes).
+References on odd gold (min 2 members; F1 / excess per caller; summed DF+TXSS excess) and odd ribosomal runs (848,
+Parvarchaeaceae 55):
+  full engine table (11 readings) CCT .594/.066  DF .840/.272  TXSS .749/.166  sum .438
+  conserved@2 alone (R1)          CCT .425/.072  DF .680/.284  TXSS .409/.043  sum .327  ribo resolved 378/848, rec 848
+  fixed@3   CCT .418 DF .702 TXSS .437 sum .382 ribo 415    fixed@8  CCT .363 DF .651 TXSS .486 sum .444 ribo 465
+  fixed@30  CCT .259 DF .360 TXSS .556 sum .373 ribo 564    fixed@80 CCT .143 DF .125 TXSS .572 sum .329 ribo 666
+Reading: the full table's F1 lead over conserved@2 is the best-of-11 choice (DF +0.16, TXSS +0.34, CCT +0.17); its
+EXCESS lead is smaller (sum +0.111), and DF excess is higher for conserved@2 alone (.284 vs .272). A fixed level
+trades callers against each other: DF peaks at level 3, TXSScan at 50, CCT falls from level 2 on; the ribosomal
+locus needs level >= 30 (odd-scaled bar for 1,100/1,686 is 554/848).
+Boundary features, internal (inside the gold span) vs extension (rest of the covering level-2 locus), AUROC:
+                 log b   b/locus median   max J   n spanning   same pair-module as core   same gene module
+  DefenseFinder  0.641   0.606            0.632   0.388        0.833                      0.636
+  TXSScan        0.554   0.562            0.644   0.578        0.753                      0.585
+  CRISPRCasTyper 0.377   0.483            0.505   0.408        0.740                      0.525
+  ribosomal      0.946   0.836            0.888   0.818        0.781                      0.733
+CRISPR-Cas members sit at LOWER support than their level-2 neighbours (internal b median 18 vs extension 36), the
+ribosomal run far higher (780 vs 76). So trimming by support level helps the ribosomal locus and removes CRISPR-Cas
+systems; cutting at support steps while KEEPING both sides (segmentation) can serve both, and pair-module changes
+mark gold edges best for the three callers (the "same as core" AUROC uses the gold core's label, so it bounds what a
+label-change rule can achieve). Rule set and selection fixed in predeclared.json (next entry).
+
+2026-11-12 13:15  predeclared.json written (task1) before any tuning grid. Seen before it: explore.json (odd only).
+
+2026-11-12 13:45  Tuning, ODD genomes only (jobs 80865 F,A,E; 80866 B; 80867 C; 80902 D running). Odd bars: ribosomal
+resolved >= 554/848, recovered >= 830, Parv >= 54/55; dsum = summed DF+TXSS excess - R1 >= +0.02; dF1 >= -0.01
+per caller. Louvain res 10 recomputed here reproduces the engine's pair modules exactly.
+  family  best config by (conditions met, dsum)      conds   dsum    dF1 DF / TXSS / CCT      ribo res/rec
+  F       level 30                                   1,1,0  +0.047  -0.320 / +0.147 / -0.166  564/845
+  A       f 1.0 (f 0.5: ribo 573, CCT -0.011)        1,1,0  +0.084  +0.015 / +0.047 / -0.024  581/846
+  B       h1 gain0 keep_low0 (2 conds; ties broken    0,1,0.. see tune json; best 2-cond: keep_low1 h1 g0
+          by dsum)                                    0,1,1  +0.097  +0.068 / +0.112 / +0.029  481/846
+  C       res 0.3                                    1,1,1  +0.044  +0.038 / +0.090 / +0.039  735/848
+  E       theta 0.5                                  1,1,0  +0.159  -0.052 / +0.119 / -0.118  704/836
+Only C meets all three on odd. The ribosomal outcome of C depends on the Louvain resolution non-monotonically
+(res 0.1 / 0.3 / 1 / 3 / 10 / 30: resolved 385 / 735 / 686 / 27 / 26 / 0; recovered 848/848/848/799/798/301): at
+res >= 3 the run's ribosomal families fall in several modules and C cuts the run apart; at 0.1 the overshoot
+neighbours share the run's module. Caveat to carry: the module partition (like the support landscape) is computed
+from all genomes, so the ribosomal locus is one family-level object in both halves; the even-genome ribosomal number
+tests the same partition on other genomes, and the resolution choice is effectively one global choice.
+Segmentation that keeps both sides (B keep_low1) raises F1 for all three callers (+0.068/+0.112/+0.029) and the
+summed excess (+0.097) but leaves the ribosomal overshoot (481): support steps alone do not cut it.
+
+2026-11-12 13:52  amendment_1 in predeclared.json (composites G = C then B keep_low1; H = C then A), written after the
+odd results of F/A/B/C/E and 25 D configs, before any even number. Also fixed a JSON syntax slip in the 13:12 file
+(one tuning string lacked a key; content unchanged, noted in json_fix_note). Jobs 80902 (D, 50 configs, 11 min) and
+80947 (G 36 + H 18 configs, 11 min).
+
+2026-11-12 13:32  SELECTION (predeclared lexicographic rule, odd genomes; results/selected_rescue3.json; 172 configs).
+Recorded BEFORE any test number.
+  family  selected                 conds(odd)  dsum odd  dF1 DF / TXSS / CCT       ribo odd res/rec/Parv
+  A       A_f1.0                   1,1,0       +0.084    +0.015 / +0.047 / -0.024  581/846/55
+  B       B_h1_gain0_keep_low1     0,1,1       +0.097    +0.068 / +0.112 / +0.029  481/846/55
+  C       C_res0.3                 1,1,1       +0.044    +0.038 / +0.090 / +0.039  735/848/55
+  D       D_coreF_level200         1,1,1       +0.183    +0.002 / +0.241 / +0.018  703/848/55
+  E       E_theta0.5               1,1,0       +0.159    -0.052 / +0.119 / -0.118  704/836/55
+  F       F_level3                 0,1,1       +0.055    +0.022 / +0.029 / -0.007  415/848/55
+  G       G_res0.3_h1_gain0        1,1,1       +0.118    +0.096 / +0.161 / +0.055  736/846/55
+  H       H_res0.3_f0.5            1,1,1       +0.114    +0.052 / +0.132 / +0.029  786/847/55
+By the predeclared preference (larger odd summed excess among families passing on even), D would be preferred over
+G, H, C if all pass. D's F1 cannot fall below R1 by construction (it contains every R1 locus), so condition (iii)
+is automatic for D; its gain is almost all TXSScan (+0.241 F1 on odd).
+What would refute "tighter boundaries without losing loci" on the test half (written before the test): covered50
+falling > 0.01 for any caller, ribosomal recovered < 1,650, an F1 loss for any caller, or an excess gain that comes
+from the control falling (d_control < 0 with d_F1 <= 0). What would refute the module-cut mechanism for C/G/H: even
+ribosomal resolved far below the odd rate (735/848 = 0.87) or gold F1 gains vanishing on even.
+
+2026-11-12 13:45  TEST (job 81050, 3 min; results/test_rescue3.json; loci and per-instance scores under
+$RD/boundary/loci/rescue3/, $RD/boundary/scores/rescue3/). Even genomes, paired against R1 = conserved@2 alone
+(genome bootstrap 2,000, seed 17); ribosomal on all 1,686 runs.
+References (even): R1 F1 DF .688 TXSS .409 CCT .426, summed excess .337, ribo 704 resolved / 1,686 recovered;
+R2 (full table) F1 .826 / .757 / .597, summed .451, ribo (best overlap across 11 readings, ties to the shorter) 1,370.
+ fam  config            cond R1  cond R2  dF1 DF / TXSS / CCT       dsum vs R1 [95%]        dsum vs R2 [95%]        ribo res/rec  Parv rec/res
+ A    f1.0              1,1,0    1,0,0    +.017 / +.046 / -.023     +.084 [+.074,+.094]     -.029 [-.049,-.010]     1165/1682     114/63
+ B    h1 g0 keep_low1   0,1,1    0,0,0    +.058 / +.084 / +.030     +.066 [+.051,+.081]     -.047 [-.066,-.027]      929/1680     114/106
+ C    res0.3            1,1,1    1,0,0    +.033 / +.097 / +.041     +.045 [+.034,+.056]     -.068 [-.083,-.053]     1435/1686     114/103
+ D    L2 + level200     1,1,1    1,1,0    +.001 / +.226 / +.018     +.171 [+.150,+.191]     +.058 [+.038,+.077]     1377/1686     114/13
+ E    theta0.5          1,1,0    1,1,0    -.061 / +.122 / -.103     +.154 [+.129,+.177]     +.041 [+.017,+.065]     1388/1659     114/106
+ F    level3            0,1,1    0,0,0    +.014 / +.029 / -.000     +.054 [+.043,+.067]     -.059 [-.078,-.040]      787/1686     114/46
+ G    res0.3 h1 g0      1,1,1    1,0,0    +.080 / +.154 / +.057     +.101 [+.084,+.118]     -.012 [-.028,+.005]     1448/1680     114/107
+ H    res0.3 f0.5       1,1,1    1,0,0    +.050 / +.136 / +.032     +.113 [+.099,+.126]     -.000 [-.016,+.016]     1554/1685     114/114
+Per-caller excess vs R1 (even): C +.006/+.040/+.006; D -.011/+.182/-.006; G +.031/+.070/-.001; H +.028/+.085/+.003.
+Control F1 change vs R1: C +.027/+.058/+.035; D +.013/+.043/+.024; G +.049/+.084/+.057; H +.022/+.051/+.029 (more,
+shorter loci also raise the random-placement F1, so excess gains are smaller than F1 gains).
+Refutation check written before the test (covered50 falling > 0.01 = tighter by dropping loci): R1 covered50
+.924/.990/.890. C .923/.985/.888 (holds); D .924/.990/.890 (holds by construction); G .921/.973/.877 (TXSS -.017, CCT
+-.013: partly refuted); H .918/.978/.859 (TXSS -.012, CCT -.031: partly refuted). Genes covered: R1 2,563,690; C
+2,555,417; D 2,563,690; G 2,484,654; H 2,308,785 (-9.9%). Median boundary precision of the best locus over covered
+instances DF/TXSS/CCT: R1 .667/.273/.333; C .667/.364/.400; D .667/.750/.333; G 1.0/.500/.500; H .775/.444/.400.
+Ribosomal median precision: R1 .742; C .894; D .923; G .920; H .960. Even-run subset resolved: C 700/838, D 674, G 712,
+H 768 (odd 735/703/736/786 at tuning: no drop on the held-out runs).
+VERDICT vs R1: C, D, G, H pass all three; A and E fail (iii) on CRISPRCasTyper F1; B and F fail (i). By the
+predeclared preference (largest odd summed excess among passing) the ADOPTED rule is D (level-2 neighbourhood plus
+level-200 core): its gain is TXSScan (+.182 excess) and the ribosomal locus; DF and CCT excess fall slightly
+(-.011, -.006) and Parvarchaeaceae resolve 13/114. H gives the best ribosomal resolution (1,554; Parv 114/114) and
+F1 gains for every caller, at the cost of covered50 (CCT -.031) and 9.9% of genes. Vs R2 (best-of-11 table) no rule
+passes (iii): every single or two-reading output is 0.06-0.32 F1 below a best-of-11 table; D and E pass (ii) vs R2.
+
+2026-11-12 14:05  FOLLOW-UP ARMS (jobs 81136 base, 81137 hybrid; parameters fixed at the rescue3 choice, each arm
+against its own R1/R2 on even genomes; results/test_base.json, test_hybrid.json). All four passing families run (the
+predeclared minimum was the adopted D).
+ arm     R1 F1 DF/TXSS/CCT, sum, ribo      rule  cond R1  dF1 DF / TXSS / CCT    dsum vs R1 [95%]       dsum vs R2           ribo res  Parv res
+ base    .673/.412/.422, .334, 711         C     1,1,1    +.033/+.105/+.039     +.054 [+.041,+.066]    -.059 [-.075,-.044]  1413      103
+                                           D     1,1,1    +.001/+.222/+.018     +.168 [+.147,+.188]    +.055 [+.035,+.074]  1374       13
+                                           G     1,1,1    +.078/+.161/+.052     +.107 [+.089,+.125]    -.006 [-.022,+.011]  1427      107
+                                           H     1,1,1    +.050/+.145/+.030     +.122 [+.107,+.136]    +.009 [-.007,+.025]  1554      114
+ hybrid  .642/.403/.410, .275, 770         C     0,1,1    +.036/+.119/+.030     +.076 [+.062,+.090]    -.076                 799        2
+                                           D     1,1,1    +.052/+.244/+.041     +.213 [+.193,+.233]    +.062 [+.045,+.079]  1456        2
+                                           G     0,1,1    +.085/+.146/+.050     +.113 [+.097,+.130]    -.038                 941       84
+                                           H     1,1,1    +.083?                see json               -.007                1198       28
+ (hybrid H exact: dF1 +.062/+.149/+.026, dsum +.144 [+.128,+.162].)
+Reading against the predeclared refutation: the summed-excess gain of every rule has the same sign and similar size
+on all three arms (D +.171/+.168/+.213; H +.113/+.122/+.144; G +.101/+.107/+.113; C +.045/+.054/+.076), so the rule
+does that work. The ribosomal resolution of the module-based rules depends on the families: on hybrid tokens the
+res-0.3 module partition no longer separates the run from its neighbours (C 799, G 941, H 1,198 resolved; Parv
+2-84/114). D's ribosomal resolution (1,374-1,456) holds on all arms, but its level-200 core resolves only 2-13 of 114
+Parvarchaeaceae runs (their pairs reach fewer genera).
+
+2026-11-12 14:15  CORRECTION to the 14:05 table: the hybrid H row's "+.083?" placeholder is wrong; hybrid H is
+dF1 +.062 / +.149 / +.026, dsum vs R1 +.144 [+.128, +.162], vs R2 -.007 [-.025, +.012], ribo 1,198 resolved /
+1,685 recovered, Parv resolved 28/114, conditions vs R1 1,1,1 (passes on hybrid).
+
+2026-11-12 14:15  ROBUSTNESS of the module rules (job 81138, robust.py; results/robust_rescue3.json; even genomes vs
+R1, ribosomal all runs). Reported only; selection was fixed before.
+  Louvain seed 17-21 at res 0.3: C passes 5/5 (dsum +.035 to +.045, ribo 1,319-1,438); G 5/5 (+.098 to +.101,
+  1,331-1,450); H 5/5 (+.100 to +.117, ribo 1,494-1,554, Parv resolved 114/114 in every seed).
+  Resolution 0.2 / 0.25 / 0.35 / 0.5 (seed 17): H passes at all four (dsum +.066 / +.117 / +.113 / +.084, ribo
+  1,554-1,555); G passes at all four (+.077 / +.104 / +.099 / +.076, 1,402-1,464); C fails (ii) at 0.2 (+.007) and
+  0.5 (+.014).
+  Mechanism: at res 0.3 and 1, 1,547 of 1,686 runs carry one pair-module label on every internal boundary (114 / 124
+  carry two); at res 3 and 10, 1,566-1,575 runs carry two labels, so a module cut splits the run (C resolved 27 / 26
+  on odd at tuning). Coarse modules keep the ribosomal families together and still change label at the gold
+  system edges.
+
+2026-11-12 14:15  TASK 2, merged universe (job 81224, 3 min: build 17 s, engine 93 s, scorer, compare;
+results/task2_compare.json, task2_build.json, task2_engine_summary.json). Predeclared 13:58 UTC in
+predeclared.json task2 before the build.
+  Build: 38,651 pairs -> 38,651 positions removed (3,585,303 -> 3,546,652 genes); 4,384 genes sit in two pairs
+  (chains collapse to one position); in 36,987 of 38,651 pairs the two pieces carry different rescue3 tokens.
+  Gold >= 2 members: 7,096 -> 6,990; 106 instances leave (CCTyper 87, DefenseFinder 19): their two members were the
+  two pieces of one gene. contains_pair (both pieces among the members, still >= 2 members): 64 (29 even, 35 odd);
+  touched 298; unaffected 6,680.
+  Engine on the merged universe: rule P<=1e-4&L>=2, 160,832 significant pairs (rescue3 unmerged 162,786), FDR
+  0.00429 (0.00425), 2,261,175 genes covered of 3,546,652; ribosomal conserved@2 700 resolved / 1,686 recovered
+  (unmerged 704 / 1,686), conserved@80 1,315 (1,316).
+  Even genomes, merged - default, full engine table:
+    contains_pair n=29  F1 .627 vs .608  dF1 +.018 [-.049, +.110]  dExcess +.031 [-.011, +.073]
+    touched       n=89  dF1 +.032 [-.009, +.075]  dExcess +.026 [-.006, +.055]
+    remaining   n=3,509 dF1 +.000 [-.001, +.002]
+    unaffected  n=3,355 summed DF+TXSS excess -.001 [-.002, +.001]
+  Odd: contains_pair n=35 dF1 -.001 [-.062, +.077], dExcess +.052 [-.002, +.127]; unaffected summed +.002 [+.000, +.003].
+  VERDICT: NOT ADOPTED. (a) fails: +0.018 is below +0.03 and the interval includes 0 (29 instances); (b) holds
+  (lower bound -0.002). With the adopted task-1 reading D on both universes: contains_pair dF1 +.007 [-.078, +.107],
+  unaffected summed +.001 [-.001, +.003]. Merging leaves everything else unchanged and gives no measurable gain on
+  the split-pair instances; most of the instances it targets (106 of 170) stop being two-member systems at all.
+
+2026-11-12 14:25  REPORT.txt written (local and $RD/boundary/REPORT.txt). Task 1: C, D, G, H pass vs R1; D adopted
+by the predeclared preference; H the strongest single reading. Task 2: not adopted (criterion a fails).
+
+2026-11-12 13:58  CORRECTION OF TIMESTAMPS. From the "13:45 Tuning" entry on I typed times by hand and they run ahead
+of the clock. True times (UTC) from sacct (biotite runs PST = UTC-8) and `date -u`:
+  explore 80784 13:03-13:05; predeclared.json task1 written ~13:10 (labelled 13:12); tuning F,A,E / B / C submitted
+  13:09:50, D 13:12:14; amendment_1 written just before GH job 80947 was submitted at 13:19:12 (labelled 13:52);
+  selection 13:31:36 (date -u; labelled 13:32, correct); test 81050 submitted 13:31:54, ran 13:37-13:40 (entry
+  labelled 13:45); follow-up arms + robustness submitted 13:41:46 (entry labelled 14:05); task2 predeclaration
+  written before 13:48:32 (upload) and job 81224 submitted 13:48:33 (labelled 13:58); entries labelled 14:15 and
+  14:25 were written ~13:53-13:56. The ORDER of events in every entry is unchanged and correct: amendment_1 before
+  any even number (first even number 13:37), task-2 criteria before the merged build (13:48:42).
+
+2026-11-12 13:57  Coordinator follow-ups received: (1) nested DH = level-2 locus + H core; (2) reading inventory for
+base and rescue3. Both predeclared in predeclared.json (followup_1, followup_2) at 13:56:52 UTC, before any number.
+
+2026-11-12 14:05  FOLLOW-UP 1, nested DH = level-2 locus + rule H core (job 81296, submitted 13:58 UTC after
+re-reading both cluster-rules files; results/test_rescue3_followup.json). Even genomes vs R1:
+  F1 DF .744 (R1 .688) +.056 [+.048,+.065]; TXSS .548 (.409) +.139 [+.125,+.154]; CCT .479 (.426) +.053 [+.048,+.059]
+  excess DF +.019 [+.012,+.026]; TXSS +.071 [+.060,+.082]; CCT +.008 [+.004,+.012]; control +.037/+.069/+.045
+  summed DF+TXSS excess +.090 [+.077, +.102]; vs R2 -.023 [-.039, -.007]; F1 vs R2 -.082 / -.209 / -.118
+  covered50 .924 / .990 / .890 = R1 exactly; genes in loci 2,563,690 = R1; loci 650,438; median span 4
+  ribosomal 1,512 resolved / 1,686 recovered (D 1,377; H alone 1,554), median precision .96, Parv 114/114
+  recovered, 113/114 resolved; even-run subset 743/838; resolved vs R1 +808 [+767, +848]
+Predeclared replacement conditions (followup_1): (i)(ii)(iii) met; covered50 within 0.01 of R1 for every caller
+(equal); ribosomal 1,512 > 1,377; Parvarchaeaceae resolved 113 >= 100. All met: DH REPLACES D AS THE ADOPTED RULE.
+DH resolves 42 fewer runs than H alone because, where H's core covers less than the whole run, the level-2 locus
+has the larger overlap and is chosen as best by the ribosomal rule.
+
+2026-11-12 14:05  FOLLOW-UP 2, reading inventory (jobs 81297 rescue3, 81298 base; results/inventory_<arm>.{json,tsv}).
+Checks: conserved/conserved_g2 readings recomputed in full from boundary_support.npy; level-2 sets equal the table
+rows, higher levels contain the table rows (the table stores a locus once per kind); the full-table F1 equals the
+maximum over the 11 readings for every instance (max abs difference 0) on both arms.
+Finding: unit@0.5 alone carries most of the full table's F1 (rescue3 even: DF .809 vs full .826, TXSS .721 vs .757,
+CCT .568 vs .597; it attains the full-table best F1 for 81% / 77% / 74% of instances and is the only reading that
+does for 12% / 39% / 33%), while it resolves 149 ribosomal runs. Conserved@2 attains the best for 50% / 11% / 34%.
+Conserved_g2 readings are almost never the sole best (<= 0.5% per caller). Base arm: the same pattern.
+
+2026-11-12 14:08  REPORT_followup.txt written; REPORT.txt carries an UPDATE line (DH adopted). Both mirrored to
+$RD/boundary/.
+
+2026-11-12 14:03  CORRECTION: the two entries above labelled 14:05 and 14:08 were written 14:01-14:03 UTC (date -u
+14:03:09 at the mirror step). Jobs 81296-81298 ran 13:58-14:01 UTC.

@@ -1,0 +1,7 @@
+{"name": "r2sel", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "none", "f": 0.5, "keep_per": true, "diag": false, "save_per": true, "check_against": {"R1": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__R1.parquet", "C": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__C.parquet", "H": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__H.parquet", "DH": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__DH.parquet"}}
+{"name": "ROUND4_comb_o2rw1000_e50_k5o0.3_g1_f0.8", "land": "o2rw1000_e50", "lab": "ic:k5o0.3_g1", "f": 0.8, "save_per": true, "diag": true}
+{"name": "L1_sel", "land": "rw1000_e50", "lab": "ic:k5o0.3_g1", "f": 0.5, "save_per": true, "diag": true}
+{"name": "L2_sel", "land": "o2rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "f": 0.5, "save_per": true, "diag": true}
+{"name": "L3_sel", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.995m1x", "f": 0.5, "save_per": true}
+{"name": "L4_sel", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.5", "f": 0.8, "save_per": true}
+{"name": "tokor", "land": "tokor", "lab": "tokmod:0.3", "f": 0.5, "save_per": true, "diag": true}

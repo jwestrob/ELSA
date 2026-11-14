@@ -1,0 +1,55 @@
+{
+ "written": "2026-11-12 13:10 UTC, before any search3 number was computed (workstream ws_search3)",
+ "question": "Do zca10 embedding ranks alone (one input: the stored ESM++ small vectors) beat MMseqs2 ranks alone and the three-input S3 of round 2 in DPANN locus search, under cross-validated configuration choice?",
+ "inputs": {
+  "zca10": "ESM++ small residue-mean vectors, L2 normalised, minus the sequence-count-weighted global mean, soft-ZCA whitening with alpha 0.1 (lab/embed_tokens.py transform 'zca10'; mean and covariance over all 2,547,528 unique sequences, no labels), renormalised; stored as head/data/zca10_f16__uid.npy",
+  "zca10_lists": "exact cosine top 20,000 among genes outside the query genome, s = log(N_db / tail rank), for the 18,414 member genes ($RD/head/ls_zca10/topk_student)",
+  "student_lists": "same for the head's B_linear256_full vectors ($RD/head/ls/topk_student)",
+  "l2_lists": "round-1 raw L2 lists (out/topk)",
+  "sequence_lists": "round-1 MMseqs2 -s 7.5 -e 10 --max-seqs 20000 bitscore tail ranks (out/topk_seq)",
+  "tokens": "mmseqs__seq__e3c50s75 (as rounds 1-2)"
+ },
+ "methods": {
+  "M0": "tokens",
+  "S1": "sequence rank only",
+  "S3": "round 2's S3: per slot max(token, sequence rank, w_emb * L2 rank), w_emb in {0.25, 0.5, 0.75, 1}",
+  "M1z": "zca10 rank only",
+  "M1p": "student (learned head) rank only",
+  "M2z": "max(token, w * zca10 rank), w in {0.5, 0.75, 1}",
+  "S3z": "max(token, sequence rank, w * zca10 rank), w in {0.25, 0.5, 0.75, 1}",
+  "SM1z": "max(sequence rank, w * zca10 rank), no tokens, w in {0.5, 0.75, 1}",
+  "M1": "L2 rank only (round 1)"
+ },
+ "grid": "every method: W = query span + {0, 2, 4, 8} genes (cap 60), tau in {0, 1, 2, 3}, weights as listed. AP = primary AP of rounds 1-2 (correct = covers >= 50% of the members of a same-type target with >= 2 members; wrong = overlaps a different-type instance; unlabelled and same-type-other ignored); strict AP counts unlabelled hits as wrong. AP needs no null.",
+ "task1_confirmation": {
+  "queries": "DefenseFinder instances with >= 2 members and n_rel > 0, all genomes (2,447 queries in 1,384 genomes)",
+  "folds": "identical to round 2: unique genome codes of these queries permuted with numpy default_rng(17), fold = permutation position mod 5",
+  "tuning": "per fold and method, the configuration with the highest mean primary AP on the other four folds' queries (ties: smaller W extra, larger tau, smaller weight)",
+  "statistic": "per held-out query AP(M1z) - AP(S1) and AP(M1z) - AP(S3); mean over the 2,447 held-out queries; 95% interval from a paired genome bootstrap (query genomes resampled, 2,000 draws, seed 17)",
+  "criterion": "CONFIRMED iff (i) mean(M1z - S1) >= 0.10 with the 95% interval excluding 0, and (ii) mean(M1z - S3) > 0 with the 95% interval excluding 0.",
+  "generality": "TXSScan (one type) and CRISPRCasTyper (system_subtype) even-genome queries with n_rel > 0, each method at its configuration chosen on odd-genome DefenseFinder queries by the same rule (frozen). The confirmation is called GENERAL iff M1z - S1 > 0 and M1z - S3 > 0 (point estimates) in both callers; intervals reported.",
+  "also_reported": ["strict AP", "recall at E <= 0.01 and E <= 1 under the 200-replicate circular-shift null (seed 17 + qid, as rounds 1-2) at the fold-chosen configurations", "wrong-type hits per query at E <= 0.01 for all three callers", ">= 3-member stratum", "per-fold configurations", "reproduction of round 2's S3 cross-validation"],
+  "refutation": "(i) mean(M1z - S1) < 0.10 or its interval includes 0, or (ii) mean(M1z - S3) <= 0 or its interval includes 0: the head workstream's zca10 result is not confirmed."
+ },
+ "task2_controls": {
+  "protocol": "each control is one rank list per member gene scanned alone (no tokens, no sequence ranks), tuned and evaluated by the task-1 cross-validation; held-out AP reported with paired differences to M1z and to M1",
+  "a_shuffled": "M1z with each member gene's zca10 list replaced by another member gene's list (row permutation numpy default_rng(17) over the 18,414 member-gene lists, as round 2; own-genome entries removed). Reading 'zca10 ranks carry gene-specific information' holds if M1z - shuffled >= 0.10 with the interval excluding 0.",
+  "b_length_composition": "per gene 21 features: frequencies of the 20 standard amino acids (other residues ignored) and log10(length in aa); each feature z-scored over all 3,585,303 genes, then ZCA-whitened (21 x 21 covariance); database genes ranked by Euclidean distance to the query gene, top 20,000 outside the query genome, s = log(N_db / rank). Reading 'whitening exposes a trivial length/composition signal' is refuted if this ranker's AP is below S1's and M1z - ranker >= 0.10 with the interval excluding 0.",
+  "c_decomposition": "rank lists (exact top 20,000) from: l2 (round 1); gc = L2 minus the weighted global mean, renormalised (mean removal alone); wo = soft-ZCA (alpha 0.1) of the uncentred weighted second-moment matrix applied to the L2 vectors, renormalised (whitening alone); zca10 (both); genc = L2 minus the mean L2 vector of the gene's own genome, renormalised (per-genome mean removal); secondary: zca10 with mean and covariance from odd-genome sequences only (transduction check). All stored as float16 and read back as float32, as zca10 was.",
+  "d_depth": "zca10 lists truncated to the top 200, 2,000 and 20,000 (exact)"
+ },
+ "task3_rates": {
+  "methods": "M0, S1, S3, M1z, M1p, M2z (tokens + zca10), plus SM1z and S3z; each at its configuration chosen on odd-genome DefenseFinder queries",
+  "null": "200-replicate circular-shift null (seed 17 + qid) for every DefenseFinder query, top 32 null hits per replicate stored. Fast null as round 2: Gumbel fitted to the first 40 per-replicate maxima, then a per-method calibration curve learned on odd-genome runs (Gumbel on replicates 1-40, null rate counted on replicates 41-200). Calibration checked on even genomes (held-out replicates 41-200).",
+  "rates": "even-genome queries with n_rel > 0: unlabelled (overlaps no DefenseFinder instance), unsupported (unlabelled and failing the round-2 'supported' rule of criterion2.json) and wrong-type hits per query at fast E <= 0.01",
+  "matched_rate": "per method, threshold t = the largest fast E at which unsupported hits per query on odd-genome queries are <= 0.03 (searched up to E = 10; if never reached, t = 10). On even genomes at t: recall (fraction of relevant targets covered by a correct hit with E <= t), AP over hits with E <= t, realised unsupported and wrong-type rates. Residual advantage of tokens = M2z - M1z, of MMseqs2 ranks = SM1z - M1z, of both = S3z - M1z, in recall and AP at matched rate (paired genome bootstrap)."
+ },
+ "task4_raw_vector_redo": {
+  "a_phase0": "round-1 phase-0 definitions with zca10: embedding-reachable = best zca10 cosine >= the 99.9th percentile of 2,000,000 random different-genome gene pairs (seed 17), or target gene in the query gene's zca10 top 0.1% (s >= log 1000); token-invisible = < 50% of the target's members share a token with a query member; different-type control on 200,000 pairs (seed 17)",
+  "b_invisible_recall": "token-invisible target recall (micro: found / all invisible targets; and per query) at E <= 0.01 and E <= 1, 200-replicate null, even genomes, for M1z, S1 and SM1z",
+  "c_profile": "round-1 M3 (refine and grow2; profile from hits at E <= 0.01, up to 200; rounds 2 and 3) seeded with M2z at its odd-chosen configuration, slot centroids = renormalised mean of zca10 vectors, even-genome DefenseFinder queries, 200-replicate null. It drifts if round-3 wrong-type hits per query at E <= 0.01 are >= 2x those of its seed (round 1 saw 5-8x)."
+ },
+ "task5_interactive": "FAISS IndexHNSWFlat on the 3,585,303 zca10 gene vectors (inner product, M 32, efConstruction 40). Required: M1z AP on even-genome DefenseFinder queries (frozen configuration, scan only) within 0.01 of exact top 20,000 (point estimate); report the smallest k (list depth) and efSearch (>= k) that meet it, against exact brute force at the same k. Command timed on 24 CPUs.",
+ "task6_head": "M1p - M1z on even-genome held-out queries of the task-1 cross-validation (the head was trained on odd-genome sequences only). The head's +0.017 survives if the paired interval excludes 0.",
+ "no_rescue": "No tuning beyond these grids is done to rescue a negative result. Any later addition is labelled post hoc."
+}

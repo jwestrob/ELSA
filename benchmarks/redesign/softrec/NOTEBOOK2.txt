@@ -1,0 +1,232 @@
+softrec2 workstream NOTEBOOK (append-only; UTC from `date -u` on the Mac / biotite clocks)
+=========================================================================================
+
+2026-11-12 16:42 UTC  Code: softrec2.py (extended kernel: L, G, E as round 1 plus rank-weighted lineage sums; candidate
+  rule selection; validated edges), readings2.py (Leiden families, engine pair statistics on validated tokens, Louvain
+  res 0.3 modules, readings R1/A/C/H/DH, scoring, token reference reproduction, family comparison).
+  Jobs: 82614 sr2_big (64 CPU): stats (depths 50/200/500/1000, obs + 3 nulls), all 26 candidate rules, validated edges
+  for cnt1000, tt1000, rw1000_{e50,e100,e200,e400,h20,h100}, pois50, pois200. 82615 sr2_py: refcheck (token R1 / DH
+  reproduction and module-code check on the token landscape).
+2026-11-12 16:45 UTC  predeclared2.json written (before any round-2 output existed). Selection on odd genomes:
+  stage 1 picks the rank-weighted weight on R1; stage 2 runs validated families (cc + Leiden at ~0.5x/1x/2x of
+  rescue3's 136,009 non-singleton families, calibrated on counts only) + modules + DH for cnt1000, tt1000, rw1000_best,
+  pois50, pois200; best odd DH (conditions met, then summed excess) is tested on even genomes against token DH.
+2026-11-12 16:48 UTC  Job 82615 (refcheck, 1 min 21 s): token references reproduced exactly with the boundary code
+  (loci and per-instance F1 / control equal the stored ones). Even: R1 F1 .688/.409/.426, summed .3375, ribosomal
+  1686/704; DH .744/.548/.479, summed .427, ribosomal 1686/1512, Parvarchaeaceae 114/114 recovered, 113/114 resolved.
+  readings2.py module code on the token landscape: same significant pairs, J, L, token modules (1,381 modules at res
+  0.3, 40,577 tokens), and identical R1 and DH loci.
+2026-11-12 16:48 UTC  Job 82635 (matched control gen_rescue3 = softrec fam lists, rescue3, skip genome, Poisson):
+  3 min 10 s on 64 CPUs; rule P<=1e-3&L>=2 (instance FDR 0.0053), 3,528,036 significant instances, 2,362,683 genes;
+  brute 0/200 observed and null. (lin_rescue3 round 1: same rule, FDR 0.0080, 3,198,446 instances.)
+  Job 82668: Task 3 test (predeclared; tok_rescue3 through the same path as an identity check, lin_rescue3, gen_rescue3).
+2026-11-12 16:58 UTC  Job 82614 stats stage done (462 s on 64 CPUs: lists 2.5 min, observed pass 51 s, nulls 36 s each).
+  Checks: rank-weighted sums vs python recount 0 / 300 mismatches (max rel diff 6e-8); L, G, E equal to round 1 for
+  K50 / K200 / K1000 (E max diff 0). Excluded homolog instances K50 56,037 ... K1000 163,435 (round 1 same).
+  Candidate rules seen before cancelling: cnt200 L>=4 (FDR .0095, 2.72 M inst), cnt500 L>=8 (.0063, 2.54 M),
+  tt200 [L>=5]@200 OR [P<=1e-4&L>=2]@50 (union FDR .0062, 3.01 M; shallow-only 0.54 M), tt500 [L>=10]@500 OR
+  [P<=1e-4&L>=2]@50 (.0063, 3.05 M; shallow-only 0.70 M).
+  GRID DEFECT (gold-free): the rank-weighted threshold grid started at W >= 1.5, and rw*_e50 / h20 / e100 / h100 picked
+  that lowest threshold at FDR 0.0001-0.004, i.e. the FDR procedure was truncated. Grid extended down to 0.25 (0.25,
+  0.5, 0.75, 1, 1.25 added); 82614 cancelled at 10 min; job 82724 reruns candidate selection (all 26) from the saved
+  statistics and the validated edges for cnt1000, tt1000, pois50, pois200 and the six rw1000 weights. No score existed.
+2026-11-12 17:00 UTC  TASK 3 RESULT (job 82668, 4 min 38 s; predeclared 16:45). Even genomes, single outputs.
+  Identity check: token landscape through readings2 test path: R1 and DH vs boundary scores +0.0000 exactly.
+  lin_rescue3 (lineage-aware G/E, rescue3, P<=1e-3&L>=2): DH summed .4177 vs token DH .4270: -0.0093 [-0.0179, -0.0003];
+     dF1 DF -0.002 [-.008,+.005], TXSS -0.009 [-.015,-.003], CCT -0.007 [-.013,-.001]; ribosomal 1681 / 1478 / Parv
+     114 rec, 107 res. R1 vs token R1 -0.0037 [-0.0129, +0.0047] (F1 .690/.416/.429 vs .688/.409/.426).
+  gen_rescue3 (matched control, G/E over other genomes, same machinery): DH -0.0131 [-0.0248, -0.0020]; R1 -0.0234
+     [-0.0299, -0.0168]; ribosomal DH 1686/1505/113 res.
+  VERDICT (predeclared): NOT CONFIRMED. The DH interval lies below 0, which is the predeclared refuter of "the
+  lineage-aware expectation helps the token engine" on single outputs. Attribution: point estimates say lineage-aware
+  G/E beats the matched control by about +0.020 at R1 and +0.004 at DH, while the instance-level rule selection costs
+  about -0.023 (R1) and -0.013 (DH) against the engine's pair-level rule; paired lin - gen pending.
+2026-11-12 17:05 UTC  Task 3 attribution (paired, even): lin_rescue3 - gen_rescue3 (only G/E over other genera vs over
+  other genomes differs): R1 +0.0197 [+0.0128, +0.0268] (F1 +.020/+.016/+.007); DH +0.0038 [-0.0073, +0.0146]
+  (F1 +.005/-.010/-.003); H +0.0031 [-0.0075, +0.0137]. The lineage-aware expectation helps the default reading and
+  vanishes under the nested reading; against the engine (pair-level rule) it is -0.004 at R1 and -0.009 at DH.
+2026-11-12 17:05 UTC  cnt1000 validated graph (job 82724): 699.3 M valid list entries (genes with any: 1,822,058;
+  per gene q50 331, q90 802), 189.8 M undirected unique-level edges, 1,564,426 unique sequences with an edge, degree
+  q50 160 / q90 616 / max 2,108; edge cosine q01 .27, q10 .43, q50 .67. Connected components: one giant component
+  holds 1,560,612 of 1,564,426 (99.76%); 57 non-trivial components -> CC families are degenerate (one family).
+  82 s per candidate for edges. Jobs: 82792 Leiden scan on cnt1000 (11 resolutions 2,000-64,000, count calibration
+  only); 82793 stage 1a (R1, A on odd for the 16 K200/K500 candidates).
+2026-11-12 17:12 UTC  Job 82724 done (18 min 16 s; 64 CPUs; edges 82-90 s per candidate). Candidate rules (FDR-selected):
+  cnt200 L>=4 (.0095, 2.72 M inst); cnt500 L>=8 (.0063); cnt1000 L>=15 (.0046, 2.33 M; = round 1);
+  tt200 [L>=5]@200|[P<=1e-4&L>=2]@50 (union .0062, 3.01 M, shallow-only 0.54 M); tt500 [L>=10]|.. (.0063, 3.05 M);
+  tt1000 [L>=15]|[P<=1e-4&L>=2]@50 (.0069, 3.11 M, shallow-only 0.78 M); pois50 P<=1e-4&L>=2 (.0041, 2.59 M);
+  pois200 P<=1e-4&L>=2 (.0015, 3.15 M); rank-weighted (now unconstrained by the grid) e.g. rw200_e200 W>=2 (.0039),
+  rw1000_e50 W>=1 (.0028), rw1000_e400 W>=4 (.0066), rw1000_h20 W>=1 (.0045).
+  Edge graphs (unique level): K1000-based 183-193 M edges, one giant component (largest 1.56-1.82 M of 1.56-1.83 M
+  nodes with edges); pois200 43.9 M edges (largest CC 1.40 M); pois50 10.6 M edges (largest CC 0.53 M, 54,473
+  non-trivial components).
+2026-11-12 17:12 UTC  STAGE 1a (job 82793, odd genomes, R1 and A vs token R1; K200/K500 candidates; all meet the
+  three odd conditions at R1): R1 odd summed (token .327): rw200_e200 .443 (+.116), rw200_e50 .437, rw500_e50 .433,
+  rw200_e100 .417, rw200_e400 .414, cnt200 .412 (+.085), rw200_h20 .409, rw200_h100 .405, cnt500 .399, rw500_h20 .397,
+  ..., tt200 .364 (+.037), tt500 .355. CCT F1 at R1: counts / rw .409-.421, two-tier .422-.426 (token .425).
+  CRISPR-Cas member genes touching support (odd): tt .717-.723, rw .657-.701, cnt200 .673, cnt500 .647.
+  Stage-1 weight choice (predeclared rule): K200 -> e200; K500 -> e50. Job 82900: stage 1b (K1000 + pois).
+  Leiden scan 82792: igraph graph build 448 s for 190 M edges; 11 resolutions running.
+2026-11-12 17:17 UTC  STAGE 1b (job 82900, odd, R1 vs token R1 .327): rw1000_e50 .433 (+.106), pois50 .404 (+.077),
+  cnt1000 .394 (+.067; round 1 odd R1 +.067 reproduced), rw1000_e100 .393, rw1000_e400 .377, rw1000_e200 .375,
+  rw1000_h100 .373, rw1000_h20 .367, pois200 .342 (+.015), tt1000 .320 (-.006). All meet the three odd R1 conditions.
+  CCT F1 at R1 .410-.428 (token .425); CRISPR-Cas member support: tt1000 .733, pois200 .737, cnt1000 .622 (lowest).
+  Stage-1 choice at K1000: e50. STAGE-2 POOL FIXED: cnt1000, tt1000, rw1000_e50, pois50, pois200.
+2026-11-12 17:25 UTC  Family control (job 82939, odd; predeclared attribution: rescue3 MMseqs2 families as module tokens
+  on the softrec landscapes; NOT embedding-only). DH vs token DH (odd .418; F1 .743/.544/.479):
+  rw1000_e50 .509 (+.091 [+.074,+.109]) F1 .800/.552/.444 -> fails o3 on CCT (.444 < .459); ribosomal 847/755, Parv 55.
+  pois50 .464 (+.046) CCT .446, ribo resolved 678 (< 705); cnt1000 .449 (+.031) CCT .434, resolved 696;
+  pois200 .426 (+.008 [-.008,+.025]) F1 .772/.530/.463 -> meets all three; tt1000 .389 (-.029) fails all.
+  H alone (rescue3 modules): rw1000_e50 .527, pois50 .469, cnt1000 .466. Modules at res 0.3: 2,952-5,899 (token 1,381).
+  Reading: with MMseqs2 modules the softrec landscapes beat token DH on summed excess and DefenseFinder F1 but trail on
+  CRISPR-Cas F1 by 0.02-0.05 except pois200; CCT is the binding condition before validated families enter.
+  Jobs 83020 (tt1000), 83021 (rw1000_e50), 83022 (pois50 + pois200): the same 11-resolution Leiden scan, so stage 2 does
+  not wait; the three analysed resolutions are still fixed from cnt1000's counts (82792).
+2026-11-12 17:42 UTC  Leiden scan, cnt1000 (job 82792; 18-29 min per resolution, single-threaded, 11 in parallel).
+  Unique-level non-trivial communities: r2000 19,420 ... r22600 64,011 (many nodes peel off as singletons as r grows).
+  CALIBRATION DEVIATION (gold-free): the predeclared gene-level target (0.5x/1x/2x of rescue3's 136,009 families with
+  >= 2 genes) is unreachable: 983,102 unique sequences have no validated edge, and 153,187 of them have >= 2 identical
+  gene copies, so every resolution yields >= 153k gene-level families with >= 2 genes from edgeless identical groups.
+  Calibration is done instead on genes with a validated edge (2,246,946 genes), where rescue3 has 66,685 families with
+  >= 2 genes. Validated families on those genes, families with >= 2 genes: r2000 69,504 (1.04x), r2800 89,347,
+  r4000 111,721, r5600 132,259 (1.98x), r8000 155,793, r11300 176,985, r16000 197,407, r22600 216,950, r32000
+  235,180, r45000 251,975. Chosen: r2000 (1x), r5600 (2x); 0.5x needs r ~ 1,000 (outside the scan; to be run).
+  pois50 / pois200 scans done (job 83022, 10 min; 54-160 s per resolution on 10.6 M / 43.9 M edges).
+  Job 83172: stage 2 for cnt1000 (cc, l2000, l5600; readings C, H, DH; odd).
+2026-11-12 17:48 UTC  STAGE 2, cnt1000 (job 83172, odd, vs token DH odd .418, F1 .743/.544/.479):
+  family   modules (sig token pairs)   DH sum (d)        DH F1              ribo rec/res   conds   H sum
+  cc       2 (56; 99.5% self pairs)    .423 (+.005)      .740/.474/.417     847/560        nYn     .440
+  l2000    18,249 (714,268)            .432 (+.014)      .753/.498/.431     847/654        nYn     .451
+  l5600    49,019 (1,114,005)          .430 (+.012)      .752/.487/.427     847/606        nYn     .447
+  rescue3  5,085 (208,194) [control]   .449 (+.031)      .754/.528/.434     847/696        nYn     .466
+  Validated modules trail MMseqs2 modules on the same landscape on TXSScan (-.03) and ribosomal resolution (-42 to
+  -90); CCT is equal (both ~.43). The validated module graph is 3.4-5.4x larger in significant token pairs.
+2026-11-12 17:58 UTC  STAGE 2, pois50 / pois200 (job 83184, odd, vs token DH):
+  pois50  cc .443 (+.025) F1 .798/.491/.444 res 498 | l1000 .446 (+.028) .791/.480/.439 res 538 | l2000 .442 | l5600 .437
+          all conds nYn (ribosomal resolved < 705; TXSS and CCT F1 below the bar); pois50 CC is not degenerate (25.7%
+          self-pair instances; 6,089 modules).
+  pois200 l1000/l2000/l5600 .392 (-.026) F1 ~.769/.482/.456 res 583-681: fails all three; cc .376.
+  (rescue3-module control on pois200: .426, F1 .772/.530/.463, res 747, all three met.)
+2026-11-12 18:07 UTC  STAGE 2, rw1000_e50 / tt1000 (job 83303, odd, vs token DH .418; F1 .743/.544/.479):
+  rw1000_e50 l2000 .474 (+.056 [+.038,+.075]) F1 .798/.509/.446 res 638 nYn (16,921 modules, 742,771 sig pairs)
+  rw1000_e50 l5600 .473 (+.055) .799/.495/.436 res 596 nYn; cc .458 (+.040) .783/.461/.423 res 533 (cc degenerate:
+  99.4% self-pair instances, 118 modules).
+  tt1000 l2000 .380 (-.038) .759/.502/.465 res 638 nnn; cc .355.
+  Jobs: 83371 Leiden r1000 for cnt1000/tt1000/rw1000_e50 -> 83372 (afterok) stage 2 at l1000; 83373 tt1000 l5600.
+2026-11-12 18:14 UTC  tt1000 l5600 (job 83373, odd): DH .372 (-.046), F1 .747/.488/.459, res 583: fails all.
+  Task 4 prep (job 83422, 5 min 22 s): edges for rw500_e50 (101.2 M undirected), rw200_e50 (42.4 M), rw200_e200
+  (43.2 M); lists load 2.3 min on 64 CPUs. Depth cost (unique kNN neighbours needed for a gene's list of genes outside
+  its genus to reach depth K; zca10 top-2000): K50 q50/q99 40/84 (99.6% by k 100); K200 151/213 (98.2% by k 200,
+  99.85% by 300); K500 371/490 (99.25% by 500, 99.96% by 750); K1000 731/949 (99.5% by 1000, 99.99% by 1500).
+2026-11-12 18:18 UTC  FAMILY COMPARISON (job 83512; genes with a validated edge; rescue3 on all genes: 363,307 families,
+  136,009 with >= 2 genes, size q50/q90/q99/max 4/24/425/7,712; ribosomal Pfam markers: purity .980, median 5 families
+  per marker, largest family holds a median 90% of a marker's genes, 0.03% singletons).
+  config            genes      fam (>=2)          AMI   NMI   ARI  | ribo purity  fams/marker  largest share  singletons
+  cnt1000 cc        2,246,946  57 (57)            .003  .006  .000 |  .081          20          .968           .023
+  cnt1000 l2000     2,246,946  266,913 (69,504)   .648  .811  .224 |  .993         521          .157           .297
+  cnt1000 l5600     2,246,946  501,657 (132,259)  .536  .792  .118 |  .998        1059          .049           .401
+  rw1000_e50 l2000  2,588,810  269,927 (74,409)   .657  .816  .221 |  .992         423          .183           .286
+  tt1000 l2000      2,571,264  291,167 (95,596)   .656  .821  .213 |  .993         426          .190           .287
+  pois50 l1000      2,213,955  66,386 (66,386)    .779  .879  .211 |  .984          42          .156           .023
+  pois200 l1000     2,511,287  39,300 (39,150)    .786  .876  .283 |  .981          27          .221           .016
+  (AMI with expected MI from 3 label permutations; EMI sd ~1e-4.)
+  READING (to test with the module counts and the ribosomal check): deep-list validated graphs are lineage-structured
+  (each sequence links to its ~1,000 nearest relatives), so count-matched modularity communities split universal
+  families by clade (hundreds of families per ribosomal marker, ~29% singletons) while staying pure; the module graph
+  then has 3-5x more significant token pairs and 3-12x more modules than with MMseqs2 families, which cuts conserved
+  runs (lower ribosomal resolution) and secretion systems (lower TXSScan F1). Refuter: coarser validated families
+  (r1000) or a lower Louvain resolution do not raise ribosomal resolution or TXSScan F1.
+2026-11-12 18:29 UTC  STAGE 2 complete (l1000 configs: job 83372). Odd DH ranking (conditions o1 o2 o3; summed vs token DH .418):
+  rw1000_e50 l2000 .474 nYn | rw1000_e50 l5600 .473 nYn | rw1000_e50 l1000 .466 nYn | rw1000_e50 cc .458 nYn |
+  pois50 l1000 .446 nYn | pois50 cc .443 | pois50 l2000 .442 | pois50 l5600 .437 | cnt1000 l2000 .432 nYn |
+  cnt1000 l5600 .430 | cnt1000 l1000 .429 | cnt1000 cc .423 | pois200 l1000/l2000/l5600 .392 nnn | tt1000 .355-.380 nnn.
+  No configuration meets o1 (ribosomal resolved >= 705 on odd runs: best 681) or o3 (TXSScan F1 >= .524 and CCT F1
+  >= .459: best TXSS .513, best CCT .471, never both with DF).
+  SELECTED (predeclared score): rw1000_e50 with Leiden r2000 validated families, Louvain res 0.3.
+  REFUTED READING (written 18:18): "too many modules cause the cuts". At r1000 the module count falls to 3,987
+  (token engine 1,381; rescue3 modules on the same landscape 2,952) with TXSScan F1 .510 and resolved 629, no better
+  than r2000 (16,921 modules; .509, 638). Module count is not the cause.
+  CONTINGENCY (predeclared): the selected DH fails the odd ribosomal bar (638 < 705) while its R1 passes (847 / 55),
+  so Louvain resolution in {0.1, 0.2, 0.5, 1, 3} is tuned on odd genomes for the selected configuration (job next).
+2026-11-12 18:39 UTC  CONTINGENCY RESULT (job 83600, odd): Louvain res 0.1 / 0.2 / 0.3 / 0.5 / 1 / 3 on the selected
+  configuration: modules 16,883-17,205 (most modules are small components of the token-pair graph; resolution only
+  changes the largest module: 38,768 tokens at 0.1 -> 6,104 at 3); DH odd summed .466/.465/.474/.471/.468/.472,
+  resolved 602/616/638/647/637/651, all nYn. Best score: res 0.3 -> unchanged.
+  FINAL SELECTION (before any even-genome softrec2 score): rw1000_e50 (rank-weighted, w = exp(-(t-1)/50), depth 1,000,
+  rule W >= 1 & L >= 2, instance FDR 0.0028), validated families = Leiden r2000 on its validated-edge graph, modules
+  Louvain res 0.3, reading DH. Odd: summed .474 vs token DH .418 (+.056), F1 .798/.509/.446 vs .743/.544/.479,
+  ribosomal 847 recovered / 638 resolved / Parv 55 of 55 recovered. Expected from odd: fails 'matches' on TXSScan
+  and CRISPR-Cas F1 and on ribosomal resolved. Refuter of that expectation: even TXSScan F1 >= .528 and CCT >= .459
+  and resolved >= 1,400.
+  Job next: test (even) of the selected configuration alone.
+2026-11-12 18:42 UTC  TEST REVEAL (job 83723), selected rw1000_e50 + validated l2000 families, even genomes.
+  DH  F1 .802/.500/.442 (token DH .744/.548/.479); control .426/.410/.377; excess .377/.090/.065; summed .4669 vs
+      .4270: +0.0398 [+0.0223, +0.0591]; dF1 DF +0.059 [+.043,+.073], TXSS -0.048 [-.061,-.034], CCT -0.038
+      [-.048,-.028]; covered50 .940/.978/.790 (token DH .924/.990/.890); median bprec 1.00/.369/.500 (.750/.444/.400);
+      genes in loci 2,173,246 (token 2,563,690); ribosomal 1,681 recovered, 1,263 resolved, Parv 114/114 recovered,
+      100/114 resolved.
+  PREDECLARED OUTCOME: neither matches nor beats. Blocking (matches): TXSScan F1, CRISPRCasTyper F1, ribosomal
+      resolved (1,263 < 1,400). Summed excess alone would satisfy 'beats' (+0.040, interval above 0).
+  R1  .4288 vs token R1 .3375: +0.0913 [+0.0746, +0.1082]; dF1 DF +.079, TXSS +.020, CCT -.014; ribosomal 1681/896.
+  H   .4840 vs token DH +0.0570; F1 .798/.499/.426; resolved 1,228. C .4407.
+  DH gain over own R1: softrec +0.038 vs token +0.0895 -> the validated-module core adds less than half of what the
+  MMseqs2-module core adds.
+  Expectation written at 18:39 (fails on TXSS, CCT, resolved) held; its refuter did not fire.
+  CRISPR-Cas member genes touching support (even): softrec .656 vs token .774 (DF .770 vs .795, TXSS .979 vs .982).
+2026-11-12 18:47 UTC  LABEL DIAGNOSTIC (job 83609; module label of the instance setting each boundary; ribosomal runs = all
+  1,686; gold spans = odd-genome instances, first to last member). one = all labelled internal boundaries carry one
+  module; edge = the label changes at both span edges.
+  config                     ribo one / 2+ / Parv one   TXSS one / 2+ / edge   CCT one / edge   DF one / edge
+  token (rescue3, res 0.3)   1547 / 139 / 114            .718 / .282 / .195     .630 / .290      .880 / .522
+  rw1000_e50 + rescue3       1547 / 139 / 114            .705 / .285 / .200     .564 / .282      .892 / .659
+  rw1000_e50 + l2000 (SEL)   1434 / 252 /   2            .652 / .347 / .150     .583 / .300      .887 / .626
+  rw1000_e50 + l2000 res .1  1536 / 150 /  81            .730 / .270 / .117     .590 / .287      .892 / .623
+  rw1000_e50 + l1000         1403 / 283 /  27            .713 / .287 / .125     .547 / .292      .896 / .619
+  cnt1000 + l2000            1491 / 195 /  57            .695 / .287 / .142     .577 / .286      .907 / .480
+  pois50 + l1000             1638 /  48 / 114            .718 / .280 / .085     .616 / .275      .898 / .598
+  READING: on the same landscape the validated modules (i) cut Parvarchaeaceae ribosomal runs (2 / 114 single-label
+  against 114 / 114), consistent with lineage-split families (Parvarchaeum genes in their own families), and (ii) change
+  label at TXSScan system edges less often (.150 vs .200) while cutting more spans inside (.347 vs .285); both lower
+  TXSScan F1. pois50 families keep runs whole but almost never change label at system edges (.085).
+2026-11-12 18:52 UTC  POOL, EVEN, R1 (job 83724; descriptive after the verdict). R1 summed vs token R1 .3375 [95%];
+  CCT F1 change; CRISPR-Cas member genes touching support (token .774):
+  rw200_e200 .4430 +.1055 [+.0871,+.1246] CCT -.014 touch .651 | rw200_e50 .4308 +.0933 | rw500_e50 .4289 +.0914 |
+  rw1000_e50 .4288 +.0913 (touch .656) | rw200_e400 .4191 | rw200_e100 .4144 | cnt200 .4142 +.0767 (touch .669) |
+  rw200_h100 .4084 | rw500_e100 .4027 | rw1000_e100 .4023 | rw500_h20 .3999 | pois50 .3986 +.0611 CCT -.001 |
+  rw200_h20 .3985 (touch .696) | rw500_e200 .3923 | rw500_h100 .3910 | cnt1000 .3877 +.0502 (touch .616; round 1
+  +.054) | cnt500 .3834 | rw500_e400 .3812 | rw1000_e400 .3768 | rw1000_e200 .3762 | rw1000_h100 .3692 |
+  rw1000_h20 .3675 | tt200 .3660 +.0285 CCT +.001 touch .710 | tt500 .3491 +.0116 touch .718 | pois200 .3306 -.0069
+  touch .730 | tt1000 .3165 -.0210 [-.0396,-.0024] CCT +.006 (F1 .432) touch .728.
+  Ribosomal at R1: 1,680-1,686 recovered, 744-984 resolved, Parv 114/114 for every statistic.
+  READING: the statistic gap on CRISPR-Cas closes in support only through the shallow Poisson tier (touch .616 ->
+  .728; CCT F1 at R1 .412 -> .432, token .426), and every statistic that raises CCT support loses DF/TXSS excess at
+  R1 (two-tier -.021 to +.029 against +.05 to +.11 for count / rank-weighted).
+2026-11-12 18:55 UTC  TASK 4 + FAMILY CONTROL, EVEN (job 83725; after the verdict). DH vs token DH .4270 [95%]:
+  config (families l2000, res .3)  DH sum  d                      dF1 DF / TXSS / CCT       ribo rec/res  modules
+  rw1000_e50 (selected)            .4669   +.0398 [+.0223,+.0591]  +.059 / -.048 / -.038     1681/1263     16,921
+  rw500_e50                        .4516   +.0246 [+.0067,+.0438]  +.051 / -.067 / -.037     1681/1245      4,441
+  rw200_e50                        .4592   +.0321 [+.0136,+.0508]  +.051 / -.066 / -.040     1680/1323      1,854
+  rw200_e200 (stage-1 K200 pick)   .4738   +.0468 [+.0284,+.0671]  +.057 / -.058 / -.047     1681/1307        745
+  Task 4: depth 500 and 200 keep the verdict (fail on TXSS F1, CCT F1, resolved); R1 is the same at every depth
+  (+.091 / +.091 / +.093 vs token R1).
+  MMseqs2 rescue3 families as module tokens on the softrec landscapes (attribution control, NOT embedding-only):
+  rw1000_e50 + rescue3   .5036 +.0766 [+.0584,+.0956]  +.056 / +.001 / -.039   1681/1499  blocked only by CCT F1
+  pois200 + rescue3      .4197 -.0073 [-.0248,+.0107]  +.021 / -.016 / -.019   1686/1464  MATCHES token DH
+  pois50 + rescue3       .4559 +.0289                   +.037 / -.029 / -.029   1681/1334
+  cnt1000 + rescue3      .4363 +.0093                   +.005 / -.028 / -.045   1681/1378
+  tt1000 + rescue3       .3932 -.0339                   +.007 / -.033 / -.017   1682/1095
+  PREDECLARED REFUTER (ii) of the success reading FIRES: replacing validated families by rescue3 families on the same
+  landscape raises DH by +.0367 (> .02): the families are the limiting part for TXSScan (-.048 -> +.001) and the
+  ribosomal locus (1,263 -> 1,499 resolved). CCT F1 is the same with either family set (-.038 / -.039): the CRISPR-Cas
+  loss sits in the landscape (statistic): CCT member support .656 vs token .774.
+2026-11-12 19:00 UTC  Descriptive even DH of all stage-2 configs (jobs 83748, 83749): with validated families only
+  rw1000_e50 (l1000/l2000/l5600: +.039/+.040/+.040) and rw*_e50/e200 at depth 200-500 exceed token DH on summed
+  excess; every configuration fails TXSScan F1 (-.040 to -.122) and ribosomal resolved (904-1,323); CCT F1 is within
+  .02 only for tt1000 (-.005 to -.015, summed -.050 to -.079) and pois200 (-.018 to -.022, summed -.043 to -.048).
+  Job 83754: kNN timing on 64 CPUs (k 300, then k 1000). REPORT2.txt drafted.
+2026-11-12 19:24 UTC  kNN timing (job 83754, 64 CPUs, zca10, HNSW M 32 efC 200, efSearch k+1): k 300 vectors 92 s, build
+  823 s, search 1,085 s (2,348 queries/s), total 2,037 s; recall vs exact @50 .9967, @200 .9923, @300 .9873 (round 1
+  efSearch 2001: @200 .9986). HNSW build barely scales from 24 to 64 threads (924 -> 823 s). k 1000 running.
+2026-11-12 20:33 UTC  kNN k 1000 (job 83754, 64 CPUs): build 813 s, search 3,162 s (806 queries/s), total 4,101 s; recall
+  @50 .9987, @200 .9977, @1000 .9848. End to end (sum of measured stages, 64 CPUs): depth 200 ~45 min (kNN 34),
+  depth 1,000 ~103 min (kNN 68, Leiden 24). REPORT2.txt final.

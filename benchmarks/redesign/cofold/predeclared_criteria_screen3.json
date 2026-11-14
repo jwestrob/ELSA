@@ -1,0 +1,111 @@
+{
+ "written_utc": "2026-11-12 17:00:10 UTC",
+ "written_before": "any screen-3 fold, including the payload verification; at writing, the census statuses and the design (pool, replicates, controls) existed, no structure had been predicted",
+ "scope": "census of conserved unannotated gene blocks called by the ELSA engine on DPANN (engine v1.5, rescue3 tokens, results_dpann_repair/dpann__mmseqs__seq__e3c50s75_rescue3__w3) and co-fold screen 3 of blocks whose chains all stay unrecognised after remote-homology search (Sharur DPANN database republished 12 Nov 2026, dataset_id f652ef47...)",
+ "census_status_rules": {
+  "unannotated_gene": "no row in any curated Sharur annotation source (annotations sources pfam, kofam, kegg, defensefinder, defensefinder_system, txsscan, txsscan_system, hyddb, hyddb_subgroup; CDD rows excluded), no system_proteins row (incl. cctyper), no derived _locus/_validation atom, no curated gold-instance membership",
+  "block": "runs of adjacent unannotated genes linked by engine-significant token pairs (distinct tokens), windows of 2-8 genes, block type = canonical token tuple, census = types in >= 3 genomes; screen filters kept as columns (s3_census.py docstring)",
+  "token_family_link": "engine token == Sharur family of permissive-e3c50s75-rescue3 (one-to-one, checked); searched counterpart = the permissive-e3c50s75 family with the same representative protein (Sharur family_annotations_via semantics)",
+  "statuses_in_order_of_recognition": [
+   "not_in_tier (own status, outside the order; placed lowest for least/most)",
+   "no_hit",
+   "unknown_only",
+   "cdd_only",
+   "resembles_characterised",
+   "annotated"
+  ],
+  "annotated": "the chain family fails the screens' dark-family rule: < 98 % of its members unannotated (some members carry a curated annotation)",
+  "resembles_characterised": "searched counterpart has a family_resemblance row (sources hhsearch_pfam, hhsearch_pdb, hhblits_pdb; probability >= 90 % over >= 30 aligned columns; family_only MSA) whose entry carries no unknown-function wording",
+  "not_in_tier": "no searched counterpart (no permissive-e3c50s75 family with the same representative, or it is in < 5 genomes, or not Pfam-dark); reported with its CDD sub-status",
+  "cdd_only": "a CDD model (annotations source cdd: best model per region, E <= 0.01) without unknown-function wording on >= 2 members and >= 10 % of the family's members; no characterised tier hit",
+  "unknown_only": "only unknown-function entries meet the tier rule and/or the CDD family rule",
+  "no_hit": "searched; no entry meets the tier rule; no CDD model meets the family rule",
+  "unknown_function_wording": "Sharur hhr.py UNKNOWN_FUNCTION_PATTERN: DUF\\d|UPF\\d|unknown function|uncharacteri|hypothetical|function unknown|unknown protein (case-insensitive), applied by Sharur to tier hits and here to CDD name + description",
+  "sensitivity_columns_not_used_for_status": "fraction of members whose own permissive-e3c50s75 family has a characterised tier hit; best tier hit at any probability (>= 50 %); CDD hits on any member",
+  "unrecognised_wording": "a chain with status no_hit is 'unrecognised: no hit in HHsearch Pfam 39.0 / HHblits PDB100 2021-03 (family_only alignments, P >= 90 % over >= 30 columns) or CDD 3.20 (E <= 0.01, family rule) as of the 12 Nov 2026 seal'"
+ },
+ "pool": "census types with every chain no_hit or unknown_only, passing every screen filter (pass_fold: dark families >= 98 %, family medians 60-1,200 aa, median summed length <= 2,500 aa, hydrophobic fraction <= 0.45, low complexity <= 0.145, copies <= 1.5, same strand >= 0.8, gap-0 fraction >= 0.5, median intergenic <= 150 nt, >= 5 genomes, >= 2 orders), not folded in screens 1-2 (types mapped to rescue3 tokens through the folded replicate genes); ranked by orders, phyla, k (larger first), genomes, block integrity; a type whose token set is contained in that of a better-ranked selected type is dropped; top 500",
+ "classes_kept_labelled": "all_no_hit (every chain no_hit) and with_unknown_only (>= 1 chain unknown_only)",
+ "budget": {
+  "max_items_total": 2500,
+  "max_items_any_24h": 2000,
+  "ledger": "work/s3/biohub_ledger.json via s3_submit.py"
+ },
+ "fold_engine": {
+  "api": "Biohub batch",
+  "endpoint": "fold_all_atom",
+  "model": "esmfold2-2026-05",
+  "msa": "none",
+  "include_pae": true,
+  "include_pair_chains_iptm": true,
+  "chains": "k chains in gene order A, B, C, ..."
+ },
+ "replicates": "two block instances per type, screen-1/2 rule (s2_select.replicates): quality, then maximal taxonomic distance between genomes",
+ "controls": {
+  "ratio": "half the earlier ratio: per block (two cognate folds) one partner-swap control and one uncalled-neighbour control",
+  "swap": "odd s3_rank: replicate 1 with chain index 1 (B) replaced; even s3_rank: replicate 2 with chain index k-2 replaced (A for pairs); donor = a chain of another pool block in the same replicate, Hungarian on relative length + hydrophobic difference, no shared token",
+  "uncalled": "in the replicate without the swap control: k adjacent same-strand unannotated genes, no X, 60-1,200 aa, consecutive token pairs all non-significant, none in a census link run; per-position length within 25 % and hydrophobic fraction within 0.05 (then 40 % / 0.08); same contig, genome, order, anywhere",
+  "positives": "60 curated gold windows (DefenseFinder, TXSScan, CRISPRCasTyper excluding cas_putative) of k consecutive member genes under the same length/hydrophobic/X filters, k distribution proportional to the pool's, <= 4 per (caller, system type)",
+  "margin_controls_completion": "criterion 4 / the per-interface margin is unchanged and needs a control in each replicate; for every cognate interface passing the per-replicate rule in both replicates, the missing control (rep 1 replacing j, rep 2 replacing i) is folded after the screen with the same donor rule (non3f_*); class-level comparisons use only the screen's controls"
+ },
+ "pair_blocks_k2": "screen-1 rule (predeclared_criteria.json), unchanged: in both replicates ipTM >= 0.75, interface PAE <= 5 A (contacts CB-CB <= 8 A), >= 10 inter-chain contacts, interface pLDDT >= 70; cognate minus swap-control ipTM >= 0.30 in each replicate (rep 1 control replaces B, rep 2 replaces A)",
+ "multi_chain_k_ge_3": {
+  "rule": "screen-2 per-interface rule (predeclared_criteria_screen2.json multi_chain), unchanged",
+  "pass_in_a_replicate": "pair_iptm = max(M[i][j], M[j][i]) of pair_chains_iptm >= 0.75, contacts >= 10, iface PAE <= 5 A, iface pLDDT >= 70",
+  "interface_hit": "passes in both replicates; rep-1 margin (cognate minus control replacing j) >= 0.30 and rep-2 margin (cognate minus control replacing i) >= 0.30",
+  "full_block_cofold": "interface hits connect all k chains"
+ },
+ "metric_source": "biohub_cofold.py per-pair metrics computed at full precision on arrival (contacts, iface PAE, iface pLDDT); for k = 2 the per-interface rule equals screen-1 criteria 1-4",
+ "refutations": {
+  "partner_swap_margin": "criterion 4 / interface margins >= 0.30 in each replicate (above)",
+  "promiscuity": "a kept chain reaches pair_iptm >= 0.6 with >= 10 contacts against the swapped-in chain",
+  "disorder_zipping": ">= 50 % of a chain's interface residues have pLDDT < 60 in that chain's monomer fold, or the chain's mean pLDDT in the complex < 60 (monomers of every chain of every interface passing both replicates)",
+  "split_gene": "MMseqs2 release 18 (-s 7.5, E <= 1e-3) of the chains against all 3,585,303 DPANN proteins: a target hit by both chains of an interface in collinear segments overlapping <= 10 % of the shorter, each >= 50 % query coverage, outside the block's instances, is a fused homolog; artefact if fused homologs occur in >= 25 % as many genomes as the block or in the genus of a replicate",
+  "single_lineage": "an interface passing in one replicate only is not a hit",
+  "generic_adjacency": "class level: uncalled windows with >= 1 interface meeting the per-replicate rule as often as cognate replicates (Fisher two-sided p >= 0.05 with cognate not higher) means the engine call adds nothing to co-folding among unrecognised blocks"
+ },
+ "class_level": "per fold: >= 1 interface meeting the per-replicate pass rule (swap controls count only interfaces of the replaced chain); cognate vs uncalled, vs swap, vs positive: Fisher exact on that fraction and Mann-Whitney on the maximum pair ipTM; reported for pairs, multi-chain blocks and all; cognate split by all_no_hit / with_unknown_only",
+ "after_folding": {
+  "foldseek": "Foldseek 10 of every chain of every block with an interface hit (both replicates) vs PDB (2025-01-01) and AFDB Swiss-Prot (v6) from /shared/db/foldseek/latest/db: strong = E <= 1e-3 and alignment TM >= 0.5; moderate = E <= 0.1, prob >= 0.9, TM >= 0.5; a strong or moderate match in both replicates moves the chain to 'resembles a known fold' (observation; the co-fold call stands)",
+  "context": "+-3 genes around each instance of a passing block: observed annotations of neighbours (Pfam, KOfam, CDD names, curated calls), whether a recognised gene sits directly adjacent in the same orientation and how often across instances",
+  "shortlist": "blocks with an interface hit (k = 2) or a full-block co-fold or interface hit (k >= 3) that pass every refutation and have no strong/moderate Foldseek match in both replicates, ordered by orders then phyla"
+ },
+ "what_would_refute_the_screen_reading": [
+  "cognate unrecognised blocks do not exceed uncalled windows in per-fold pass rate (generic adjacency) - then co-folding among unrecognised blocks is not tied to the engine call",
+  "a hit's swap control in either replicate reaches within 0.30 of the cognate pair ipTM, or the kept chain binds the swap partner at >= 0.6",
+  "a hit chain folds as a confident structure only in the complex (disorder zipping) or the pair is a split gene",
+  "Foldseek or later profile searches place the chains in a characterised family (the block is then recognised, not novel)"
+ ],
+ "post_hoc_labelling": "any relaxed bar, new rule or extra fold after the screen's folds are read is labelled post hoc",
+ "pool_at_writing": {
+  "census_types_ge3_genomes": 22531,
+  "all_chains_unrecognised": 4015,
+  "plus_pass_fold": 206,
+  "plus_not_folded_in_screens_1_2": 121,
+  "non_redundant_pool": 94,
+  "by_k": {
+   "2": 79,
+   "3": 12,
+   "4": 2,
+   "6": 1
+  },
+  "by_class": {
+   "all_no_hit": 82,
+   "with_unknown_only": 12
+  },
+  "items": {
+   "cognate": 188,
+   "swap": 94,
+   "uncalled": 93,
+   "positive": 60,
+   "total": 435
+  },
+  "screens_1_2_types_in_the_unrecognised_foldable_set": 85,
+  "files": "work/s3/pool.tsv, reps.tsv, fold_manifest3.tsv, jobs_s3.jsonl"
+ },
+ "earlier_enriched_triage": {
+  "what": "screen-2 / Part A hand triage (HHblits UniRef30-enriched and DPANN-only alignments vs Pfam 39 and PDB100, CDD, Pfam GA; s2_triage_analyze.py) exists for 148 old families; its class is carried to the rescue3 token of each family's query gene (pool column chain_triage_s2)",
+  "use": "label only; the pool follows the Sharur tier. Class-level rates and the shortlist are reported for the whole pool and for the pool without the 11 blocks that have a chain the earlier triage classed characterised; a shortlisted block with such a chain is moved to 'recognised by the earlier enriched triage'"
+ },
+ "merge_screens_1_2": "the 85 all-unrecognised foldable census types folded in screens 1-2 are not refolded; their screen-1 (criteria 1-4) or screen-2 (per-interface) outcomes are merged into the screen-3 tables as a separate 'folded earlier' group"
+}

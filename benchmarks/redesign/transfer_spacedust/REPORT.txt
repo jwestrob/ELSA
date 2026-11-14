@@ -1,0 +1,278 @@
+TRANSFER_SPACEDUST: THE DPANN WORD METHOD ON THE SPACEDUST COLLECTION, SETTINGS UNCHANGED (2026-11-13)
+=======================================================================================================
+One collection (9 query + 1,308 reference genomes), gold set source207 (207 BGC regions on 7 query genomes); no tuning
+half exists, so every primary output uses DPANN-chosen settings only. Predeclaration: predeclared.json (07:59 UTC; the
+coordinator's two secondary items as amendment_0, 07:59), written before any word-method number. Notebook with UTC
+times: NOTEBOOK.txt. Complete: references, P2, P1, the connected-component baseline, development variants (w 8), the
+duplicate-genome stress test. NOT RUN: P3, the embedding-word output (it needs one GPU all-vs-all pass for the z-score
+lists; at every check the gpu partition held another workstream's job: 90861 pending 07:44-09:46, SR-VP embedding
+92238 running from ~10:00).
+
+ANSWER
+1. Does the word method transfer without retuning? It RUNS AND FINDS SIGNAL, AND IT IS FAR BELOW THE ENGINE. Both
+   family-word outputs run with DPANN settings unchanged, the null-calibration rule transfers (tau* 8 for shared-gene-
+   order counts and 10 for genome groups, the DPANN values), and both beat random placement:
+     family words + phrases, shared-gene-order counts (P2): F1 .481, excess +.049 [+.014, +.084]
+     family words + phrases, data-derived genome groups (P1): F1 .483, excess +.080 [+.046, +.114]
+   Against the engine reference (best of 42 readings, F1 .750, excess +.184) both are BELOW: excess -.135 [-.173,
+   -.097] (P2) and -.104 [-.138, -.069] (P1), F1 -.27 for both. Against the engine's single reading on the same tokens
+   at the DPANN window they are BELOW too (-.095 [-.128, -.064]; -.064 [-.099, -.030]).
+2. Against native Spacedust under the matched protocol both MATCH on excess (P2 -.016 [-.051, +.018]; P1 +.015 [-.020,
+   +.050]) and trail it by .19 in F1 (P2 -.195 [-.230, -.162]; P1 -.194 [-.229, -.159]). Spacedust's 1.64 M blocks give a
+   high random-placement control (.612); the word readings a low one (.40-.43).
+3. The loss is the method's known weak point, long neighbourhoods. Query-genome word span median 3 (q90 6-7); regions
+   median 10 genes. Excess by region size, P1 / P2: 1-5 genes +.093 / +.077; 6-10 +.147 / +.127; 11-20 +.040 / -.020;
+   21+ +.006 / -.025 (engine reference +.16 to +.21 in every class). 47-49% of gold member genes lie outside every
+   word, and the rest is split: the union of word intervals covers a median 52-59% of a region, the best single
+   interval 33%.
+4. SECONDARY, connected-component baseline (declared before its numbers; the assembly rule of Herve, Cury and Bernheim
+   2026): the same round-0 pair statistic, unit and tau, assembled as runs with <= 2 intervening genes (CC2), scores
+   F1 .580-.587, excess +.142 [+.106, +.178] (P2 unit) and +.153 [+.116, +.189] (P1 unit): +.093 [+.067, +.121] and
+   +.072 [+.045, +.100] above the word outputs, above native Spacedust (+.077 / +.088, BEATS), and equal to the
+   engine's single reading on the same tokens at the same window (-.002 / +.008). Here recursive merging plus cohesion
+   phrases subtract from what the pair statistic finds.
+5. Genome groups vs shared-gene-order counts: P1 - P2 +.031 [+.008, +.055] excess at equal F1 (+.002), the reverse of the
+   predeclared expectation. The groups cover fewer query genes (47.5% vs 54.0%), so their random-placement control is
+   lower; the counting rules do not differ under CC2 (+.010 [-.008, +.028]).
+6. DEVELOPMENT (chosen after the numbers; window w 8, the engine's window on this collection, tau rule rerun): the words
+   barely move (P2 +.022 [-.006, +.050], P1 +.005 [-.025, +.033]; both still -.14 to -.16 below the engine's w-8 single
+   reading on the same tokens), while connected runs of the same run's round-0 significant pairs at that window (CC7)
+   reach F1 .620-.636, excess +.230 [+.191, +.269] / +.233 [+.194, +.272]: equal to the engine's w-8 single reading on
+   the same tokens (+.002 / +.004), above the stored engine reference (+.047 / +.049, lower bounds +.013 / +.018) and
+   above native Spacedust (+.165 / +.168). The pair statistic carries the signal at either window; the word parse
+   loses about .15 of excess against it.
+7. SECONDARY duplicate-genome stress test (26 Lactobacillaceae genomes copied k = 1, 3, 9 times; tau fixed): counting
+   every genome as a unit inflates the clade's word types x1.78 / x7.0 / x8.1 and puts .70 / .995 / 1.000 of its genes
+   in words (k = 0: .57). Genome groups deflate the clade instead (types x.93 / .86 / .75; genes .47 -> .38), because
+   copies raise their group's expectation; shared-gene-order counts stay closest in number (x1.02 / .94 / .83; genes .54
+   -> .53) but change composition (Jaccard with k = 0 .76 / .63 / .49). The rest of the vocabulary is unchanged in
+   number under all three rules (x1.000-1.002).
+8. Reproduced exactly before any comparison: the stored engine source207 score (F1 .7498, control .5660, excess .1838
+   [.1537, .2134]; all 8 selections and every per-region F1), the engine rerun from stored tokens (same rule, 329,844
+   pairs, same scores), native Spacedust (F1 .6765, excess .0649 [.0365, .0927]); the copied learner reproduces both
+   stored DPANN vocabularies exactly.
+
+------------------------------------------------------------------------------------------------------------------
+INPUTS (nothing tuned on this collection)
+- Collection: $RD/universe, 1,317 genomes (9 query, 1,308 reference; 1,127 reference genomes outside the queries'
+  phylum), 4,257,531 genes, 2,061 contigs. source207: 207 contiguous regions on 7 query genomes, 1-73 genes (q25 6,
+  q50 10, q75 16.5, q90 27).
+- Family tokens (no equivalent table existed): stored MMseqs2 base clustering (-s 7.5, E <= 1e-3, 50% bidirectional
+  coverage; 601,584 families) + rescue3 with the repair recipe (fam.py): 552,111 query sequences against 4,231,484 unique
+  sequences, prefilter -s 7.5 --max-seqs 1000 (2,705 s), align -e 1e-5 (438 s), 64 CPUs; 97,968 genes moved (2.30%;
+  DPANN 2.33%), 523,853 families.
+- Vectors: stored ESM-C 300M vectors (model_scaling_20260913, biohub/ESMC-300M). weights_check.py: all 308 ESM++ small
+  tensors (332,997,184 parameters) are bitwise identical to tensors of this checkpoint (only 90 empty _extra_state
+  buffers unmatched); both pipelines take the post-final-LayerNorm residue mean under bf16 over the whole sequence. Not
+  measured: bf16 numerics of the two implementations (needs a GPU). zca10 refitted here without labels (emb.py zca;
+  4,231,484 unique sequences; copies in different batches agree to cosine >= .99999).
+- Genome groups (P1): average linkage on 1 - emb_hom (mean-symmetrised), cut 0.75. DEVIATION (declared 08:42, before
+  any group or P1 number): with the gpu partition held, emb_hom was estimated for all 866,586 genome pairs from 300
+  sampled genes per genome (exact maxima over all genes of the target genome) and recomputed exactly for the 93,774
+  pairs with an estimate >= 0.65 (cpu_groups.py, 2 h 6 min on 64 CPUs). Result: 618 groups (largest 20, 388
+  singletons; one group per 2.1 genomes, DPANN one per 5.6); groups at theta .65 / .70 / .75 / .80 = 70 / 229 / 618 /
+  1,230. The 5 Streptomyces query genomes share one group (with one reference genome), S. sp. AA4 is in another, the
+  two Micromonospora share one, Kutzneria has a group of 2. Description only: AMI with GTDB family .70.
+- Learner: vocab.py / vocab2a.py copied (words.py), logic unchanged; portcheck.py on the DPANN inputs reproduces the
+  stored stage-1 vocabulary (tau 10: 25,018 types, every word and instance) and the synteny vocabulary (tau 8: 43,964
+  types, words, instances, b0). Gap <= 2, w = 3 in E, n >= 2; tau = smallest ladder value with word-type FDR <= .01 over
+  3 within-genome shuffles of THIS collection. Reading V-coh0.1 with this collection's ws_context token cohesion
+  (cuts.py recipe; boundary kappa median .017, 19% of boundaries >= 0.1).
+
+MATCHED PROTOCOL (what "matched" means)
+Every output is a set of query-genome intervals, scored by model_scaling_20260913/code/evaluate_spacedust_queries
+.evaluate unchanged: per region the single interval with the best gene-level F1; control = 200 rigid translations of
+the region's membership pattern within its contig (seeded per region), scored against the same interval set; excess =
+mean over regions of (F1 - mean control F1); 95% intervals from 10,000 bootstrap draws over regions; paired differences
+by region bootstrap. Not matched, and the reason the control column matters: the engine reference is the union of 42
+readings (3 gap rules x 14 support levels; 19,741 query intervals), native Spacedust the union of all its blocks
+(63,756 query intervals), each word output one reading (~9,000-10,000 intervals).
+
+------------------------------------------------------------------------------------------------------------------
+TABLE 1. source207 (results/table.txt). F1 / control / excess [95%] / median boundary precision and coverage at the best
+interval / share of query genes in loci / query intervals.
+  output                                          F1    ctrl  excess [95%]           bprec  cov  qgenes  intervals
+  REFERENCES
+  engine reference: v1.1 hybrid tokens, w 8,     .750  .566  +.184 [+.154, +.213]   1.00   .83  .773    19,741
+    union of 42 readings (stored, reproduced)
+  engine single reading (same loci, level 2)     .578  .377  +.200 [+.164, +.237]   .76    .90  .762     4,378
+  native Spacedust, all blocks                   .676  .612  +.065 [+.037, +.093]   1.00   .60  .786    63,756
+  engine, rescue3 tokens, w 3, union             .707  .580  +.127 [+.092, +.162]   1.00   .70  .698    26,474
+  engine, rescue3 tokens, w 3, single            .599  .455  +.144 [+.108, +.181]   1.00   .57  .678     7,179
+  engine, rescue3 tokens, w 8, union             .756  .566  +.190 [+.158, +.221]   1.00   .85  .786    20,156
+  engine, rescue3 tokens, w 8, single            .590  .362  +.229 [+.190, +.266]   .82    .90  .775     4,242
+  PRIMARY
+  P2 family words + phrases, shared-gene-order   .481  .432  +.049 [+.014, +.084]   1.00   .33  .539     9,702
+  P1 family words + phrases, genome groups       .483  .402  +.080 [+.046, +.114]   1.00   .33  .475     9,267
+  SECONDARY READINGS (not selected; P2 / P1 excess)
+  V-top +.046 / +.078; V-nest +.039 / +.073; V-mob +.038 / +.073; V-phr (round-0 significance phrases) +.079 / +.111;
+  V-coh0.02 +.079 / +.106; V-coh0.05 +.060 / +.090; V-coh0.2 +.046 / +.077.
+  SECONDARY: CONNECTED-COMPONENT BASELINE (amendment_0)
+  CC1 (<= 1 intervening gene), P2 unit           .552  .437  +.115 [+.079, +.151]   1.00   .44  .561     8,409
+  CC2 (<= 2 intervening genes), P2 unit          .587  .445  +.142 [+.106, +.178]   1.00   .50  .600     7,634
+  CC1, P1 unit                                   .536  .411  +.125 [+.088, +.163]   1.00   .40  .498     8,408
+  CC2, P1 unit                                   .580  .427  +.153 [+.116, +.189]   1.00   .50  .535     7,850
+
+TABLE 2. Paired differences (A - B; region bootstrap; verdict on excess: BEATS = lower bound > 0, MATCHES = d >= -.02,
+BELOW otherwise; win/tie/loss on per-region F1)
+  A           B                                  d F1 [95%]             d excess [95%]         verdict   w/t/l
+  P2          engine reference (best of 42)      -.269 [-.311, -.226]   -.135 [-.173, -.097]   BELOW     22/22/163
+  P2          engine single reading (stored)     -.097 [-.154, -.040]   -.152 [-.202, -.101]   BELOW     72/15/120
+  P2          engine rescue3 w3 single           -.118 [-.152, -.085]   -.095 [-.128, -.064]   BELOW     30/52/125
+  P2          native Spacedust                   -.195 [-.230, -.162]   -.016 [-.051, +.018]   MATCHES   20/30/157
+  P1          engine reference (best of 42)      -.267 [-.306, -.228]   -.103 [-.138, -.069]   BELOW     18/26/163
+  P1          engine single reading (stored)     -.095 [-.148, -.042]   -.120 [-.168, -.074]   BELOW     66/21/120
+  P1          engine rescue3 w3 single           -.116 [-.152, -.081]   -.064 [-.099, -.030]   BELOW     39/49/119
+  P1          native Spacedust                   -.194 [-.229, -.159]   +.015 [-.020, +.050]   MATCHES   22/31/154
+  P1          P2                                 +.002 [-.022, +.025]   +.031 [+.008, +.055]   BEATS     44/125/38
+  CC2 (P2)    P2                                 +.106 [+.078, +.135]   +.093 [+.067, +.121]   BEATS     107/76/24
+  CC1 (P2)    P2                                 +.071 [+.045, +.097]   +.066 [+.040, +.092]   BEATS     99/81/27
+  CC2 (P1)    P1                                 +.097 [+.069, +.125]   +.072 [+.045, +.100]   BEATS     99/80/28
+  CC1 (P1)    P1                                 +.054 [+.024, +.083]   +.045 [+.015, +.075]   BEATS     90/81/36
+  CC2 (P2)    engine rescue3 w3 single           -.012 [-.033, +.009]   -.002 [-.022, +.018]   MATCHES   29/121/57
+  CC2 (P1)    engine rescue3 w3 single           -.019 [-.048, +.008]   +.008 [-.020, +.035]   MATCHES   39/103/65
+  CC2 (P2)    native Spacedust                   -.089 [-.124, -.055]   +.077 [+.044, +.111]   BEATS     45/59/103
+  CC2 (P1)    native Spacedust                   -.097 [-.132, -.063]   +.088 [+.054, +.121]   BEATS     43/58/106
+  CC2 (P1)    CC2 (P2)                           -.007 [-.026, +.010]   +.010 [-.008, +.028]   MATCHES   26/149/32
+  references: engine single - engine union +.017 [-.015, +.047] (F1 -.172); Spacedust - engine union -.119 [-.151,
+  -.086]; engine rescue3 w3 - w8 (union) -.062 [-.091, -.033]; engine rescue3 w8 - stored reference +.006 [-.017, +.029].
+
+TABLE 3. Region size. F1 / control / excess; median best-interval span vs median region size.
+  output              1-5 genes (46)         6-10 (68)              11-20 (54)              21+ (39)
+  engine reference    .629/.470/+.159 4/4    .775/.568/+.207 8/9    .796/.614/+.182 11/14   .784/.610/+.175 22/28
+  engine r3 w3 single .522/.386/+.137 4/4    .683/.470/+.212 6/9    .602/.494/+.108 7/14    .539/.453/+.086 10/28
+  native Spacedust    .761/.678/+.083 4/4    .792/.653/+.139 6/9    .610/.594/+.016 6/14    .468/.486/-.018 8/28
+  P2                  .515/.437/+.077 2/4    .603/.477/+.127 4/9    .421/.441/-.020 4/14    .311/.336/-.025 5/28
+  P1                  .498/.405/+.093 2/4    .592/.445/+.147 4/9    .448/.408/+.040 4/14    .324/.318/+.006 5/28
+  CC2 (P2)            .566/.395/+.171 4/4    .677/.470/+.206 5/9    .574/.478/+.096 6/14    .474/.413/+.061 9/28
+  CC2 (P1)            .557/.390/+.166 4/4    .682/.461/+.221 5/9    .560/.451/+.109 6/14    .456/.378/+.079 8/28
+  Fragmentation (median over regions; regions of >= 11 genes in brackets): share of region genes in the UNION of an
+  output's intervals / in its BEST single interval: P2 .59 (.50) / .33 (.22); P1 .52 (.50) / .33 (.24); CC2 (P2) .75
+  (.66) / .50 (.36); engine r3 w3 single .80 (.73) / .57 (.42); engine reference 1.00 (.89) / .83 (.73); Spacedust .96
+  (.91) / .60 (.36). Gold member genes outside every top-level word: P2 47.3%, P1 49.1%.
+
+TABLE 4. DEVELOPMENT variants (chosen after source207 numbers; window w 8 = gap <= 7 in the merge and in E, the engine's
+window on this collection; tau rule rerun on w-8 shuffles: tau* 10 for both units)
+  output                                    F1    ctrl  excess [95%]           vs same unit, w 3     vs engine r3 w8 single
+  DEV P2w8 V-coh0.1 (words + phrases)       .482  .411  +.071 [+.034, +.109]   +.022 [-.006, +.050]  -.157 [-.205, -.110]
+  DEV P1w8 V-coh0.1                         .482  .398  +.085 [+.047, +.123]   +.005 [-.025, +.033]  -.144 [-.192, -.095]
+  DEV P2w8 V-phr / P1w8 V-phr               .544 / .552, excess +.109 / +.128
+  DEV P2w8 CC2 / P1w8 CC2                   .552 / .564, excess +.138 / +.155 (= w-3 CC2)
+  DEV P2w8 CC7 (runs, <= 7 genes apart)     .620  .390  +.230 [+.191, +.269]   CC7 - words +.159     +.002 [-.036, +.040]
+  DEV P1w8 CC7                              .636  .403  +.233 [+.194, +.272]   CC7 - words +.148     +.004 [-.032, +.041]
+  CC7 against: stored engine reference +.047 [+.013, +.079] / +.049 [+.018, +.080] (F1 -.130 / -.114); engine r3 w8
+  union +.040 / +.043 (F1 -.137 / -.120); native Spacedust +.165 / +.168. CC7 by region size (P1w8): +.179 / +.273 /
+  +.214 / +.253 (best span 4 / 6.5 / 9.5 / 18). Words at w 8: query span median 3, q90 8-9; 48-50% of gold genes
+  outside every word.
+
+TABLE 5. SECONDARY duplicate-genome stress test (amendment_0; results/stress.json). Clade Lactobacillaceae (26 reference
+genomes, 54,760 genes; picked by the declared rule: no genus has 20-50 genomes, two families tie at 26, more genes
+wins). k exact copies of every clade genome appended; tau fixed at k = 0 tau*.
+  rule (tau)          k   word types   clade types (x k0)   rest types (x k0)   Jaccard clade / rest   clade genes in words
+  every genome (10)   0   140,217      3,805                136,412             -                      .567
+                      1   143,229      6,757 (1.78)         136,472 (1.000)     .46 / .97              .697
+                      3   163,355      26,677 (7.01)        136,678 (1.002)     .11 / .94              .995
+                      9   167,543      30,949 (8.13)        136,594 (1.001)     .09 / .88              1.000
+  genome groups (10)  0   87,698       2,890                84,808              -                      .466
+                      1   87,466       2,695 (.93)          84,771 (1.000)      .86 / .99              .440
+                      3   87,142       2,482 (.86)          84,660 (.998)       .78 / .97              .414
+                      9   86,768       2,156 (.75)          84,612 (.998)       .68 / .95              .384
+  shared gene order (8) 0 103,490      3,509                99,981              -                      .537
+                      1   103,534      3,587 (1.02)         99,947 (1.000)      .76 / .98              .546
+                      3   103,294      3,313 (.94)          99,981 (1.000)      .63 / .93              .538
+                      9   102,964      2,918 (.83)          100,046 (1.001)     .49 / .86              .525
+  The clade's 26 genomes fall in 5 groups; copies join their original's group at every k (618 groups throughout).
+  Genes in words of other genomes: .520 / .455 / .488 at every k. Word types keyed by canonical composition.
+
+------------------------------------------------------------------------------------------------------------------
+P2 AND P1 DETAILS
+                                   P2 (shared-gene-order N_eff)          P1 (genome groups, 618)
+  word-type FDR at tau 4/6/8/10/12 .120/.0295/.0071/.0016/.0003          .362/.109/.027/.0050/.0003
+  tau* (DPANN)                     8 (8)                                 10 (10)
+  word types                       103,490                               87,698
+  instances / top-level            1,232,186 / 595,811                   1,130,145 / 569,461
+  genes in top-level words         48.9% (slots 1,827,997; ins. 252,020) 45.5% (1,699,606; 238,435)
+  two-slot types / all            47,725 / 103,490                      41,423 / 87,698
+  max slots / max depth            52 / 8                                51 / 12
+  top-level span q10/q50/q90/q99   2/3/6/13 (max 59)                     2/3/6/13 (max 57)
+  same on query genomes q50/q90/q99 3/7/14                               3/6/13
+  committed Lambda q50 / q99       12.8 / 67                             14.5 / 241
+  units per word q50 / q99         5 genomes / 116                       4 groups / 72
+  rounds                           10                                    14
+  multi-word cohesion phrases      16,038 (span q50 8, q90 18)           15,085 (8, 17)
+  The unit's description: shared-gene-order S between genomes, off-diagonal q50/q90/q99/max .031/.070/.148/.817
+  (shuffles .0006/.0016/.0036/.049; DPANN observed .029/.068/.216). Genome groups: see INPUTS.
+
+------------------------------------------------------------------------------------------------------------------
+HYPOTHESES AND EXPECTATIONS (predeclared.json) AND OUTCOMES
+  T1 the tau rule yields tau* on the ladder                        HOLDS (P2 8, P1 10; DPANN values)
+  T2 excess lower bound > 0                                         HOLDS (P2 +.014, P1 +.046)
+  tau expectation (P1 8-12, P2 6-10)                                HOLDS
+  P2: F1 .50-.62, control .38-.48, excess +.08 to +.15              REFUTED on F1 (.481) and excess (+.049); control in range
+  P2 BELOW engine; MATCHES or BEATS Spacedust on excess             HOLDS (BELOW; MATCHES)
+  P1: F1 .47-.60, excess +.06 to +.13                               HOLDS (.483, +.080)
+  P1 below P2 by .01-.05                                            REFUTED (P1 above P2 by +.031)
+  F1 falls with region size, 21+ loses most vs the engine           HOLDS
+  refuter "a primary output reaches the engine's +.184"             did not fire (max +.080)
+  CC expectation: CC2 >= CC1 (holds); CC loci longer than words (holds: query span q90 9-11 vs 6-7); excess within .03
+  of the word output (REFUTED: +.07 to +.09 above); boundary precision lower than words (REFUTED: median 1.00 for both).
+  P3 expectation not testable (not run).
+  SECONDARY stress test: every-genome counting inflates with k (HOLDS; x8.1 at k = 9, above the predicted +30% to +300%);
+  groups within +-5% with Jaccard >= .9 (REFUTED: -7/-14/-25%, Jaccard .86/.78/.68); shared-gene-order counts within
+  +-20% (HOLDS: +2/-6/-17%) with Jaccard >= .8 (REFUTED: .76/.63/.49).
+
+------------------------------------------------------------------------------------------------------------------
+P3 (EMBEDDING WORDS ON z >= 10.6 LISTS): NOT RUN
+It needs (1) the per-genome best-match table with within-genome z for 4.23 M unique sequences x 1,317 genomes (gtable.py,
+written; ~25 min on one A5000, ~9-10 h on one CPU node), which also gives the exact emb_hom for P1; (2) the round-0
+homolog exclusion masks of vl.py, which come from zca10 kNN lists (depth 1,000) of this collection, a second GPU-scale
+pass; (3) a port of vl.py's list machinery off its DPANN softrec imports. The gpu partition held another workstream's job
+at every check, so none of these ran. Next step when the partition clears: sbatch code/gtable.sbatch (it also writes
+exact groups; compare with the fallback's 618 and rescore P1 if they differ).
+
+------------------------------------------------------------------------------------------------------------------
+SLURM JOBS (biotite; all CPU on standard, Broadwell node-64-768g; account kept under 400 CPUs, at most 2 jobs held)
+  91199 ts_fam     64 CPU  53 min 44 s   unique sequences, rescue3 MMseqs2 search, rescue3 tokens
+  91364 ts_prep    24 CPU  23 min 52 s   reference rescoring, learner port check, zca10, engine rerun + comparison
+  91643 ts_cpugrp  64 CPU  2 h 6 min     genome-pair emb_hom (CPU fallback), groups at 0.75
+  91728 ts_p2      64 CPU  24 min 38 s   cohesion, synteny ladder, P2 scores, engine on rescue3 tokens w 3 / w 8
+  92549 ts_p1      64 CPU  8 min 22 s    group + genome ladders, P1 scores
+  92550 ts_dev     64 CPU  21 min 15 s   DEVELOPMENT w 8 ladders and scores
+  92632 ts_stress  64 CPU  3 min 10 s    FAILED (index error after the k = 0 runs; fixed)
+  92655 ts_stress  64 CPU  10 min 24 s   duplicate-genome stress test
+  No GPU job was submitted.
+
+COST OF THE METHOD ITSELF
+  one word run (4.26 M genes, one core): 86-110 s, <= 2.6 GB (synteny unit), similar for groups; the 13-tau ladder with 3
+  shuffles: 3 min 51 s (52 runs) and 5 min 15 s (104 runs) on 64 processes; w 8 runs 2-3x longer (ladder 14 min 31 s).
+  Inputs: synteny matrices (4 orders) 82 s; cohesion 47 s / 20.6 GB; readings and 10 scorings 3 min. Upstream: rescue3
+  search 53 min (64 CPUs); zca10 refit 414 s / 39.8 GB; genome groups 2 h 6 min on CPU (the GPU route was blocked).
+  Engine for comparison: 5 min (w 3) and 10.6 min (w 8) on 64 CPUs, 7.3 / 17.3 GB.
+
+------------------------------------------------------------------------------------------------------------------
+CAVEATS
+- P1's groups come from the CPU fallback (sampled estimate for pairs below 0.65, exact above), a declared deviation from
+  exact per-genome maxima; if the exact GPU table is run later and the groups differ, P1 must be rescored on them.
+- The stored ESM-C 300M vectors stand in for ESM++ small on the strength of identical weights and pooling; the bf16
+  numerics of the two implementations were not compared on a sample (no GPU).
+- source207 has no tuning half; every choice made after a number is labelled DEVELOPMENT.
+- The engine reference and native Spacedust are unions of many readings, the word outputs single readings. The control
+  absorbs part of that difference; the engine's own single reading (+.200) shows the union is not what makes the engine
+  strong here.
+- Query genomes carry no GTDB genus, so the engine counts each as its own lineage; the word method's units are derived
+  from data (groups merge the 5 Streptomyces queries; shared-gene-order counts discount them by their S).
+- Cohesion phrases use a theta (0.1) chosen on DPANN odd genomes; on this collection 81% of boundaries fall below it.
+
+ARTIFACTS
+Local benchmarks/redesign/transfer_spacedust/: predeclared.json, NOTEBOOK.txt, REPORT.txt; code: fam.py (rescue3),
+  tsv2parquet.py, weights_check.py, emb.py (zca10, cohesion, groups), gtable.py (GPU table, not run), cpu_groups.py
+  (CPU fallback groups), words.py (learner), portcheck.py, wscore.py (readings, CC baseline, scoring), s207.py
+  (matched-protocol scorer), refs.py (reference reproduction), pairs.py, stress.py, collect.py, recurrence.py (engine,
+  unchanged copy), env.sh and *.sbatch; results/ (refcheck.json, refcheck_rerun.json, portcheck.json, weights_check.json,
+  ladder_syn.json, ladder_group_genome.json, ladder_w8.json, score_P1.json, score_P2.json, score_DEV_P1w8.json,
+  score_DEV_P2w8.json, ref_engine_r3_w{3,8}.json, pairs.json, stress.json, groups.json, groups_cpu_fallback_provenance.json,
+  mmseqs__seq__e3c50s75_rescue3__spacedust.json, uniq.json, zca.json, cohesion.json, table.txt).
+Biotite $RD/transfer_spacedust/: code/, fam/ (uniq.faa, gid2uid.npy, MMseqs2 db and hits), tok/ (rescue3 tokens),
+  emb/ (zca10_f32__uid.npy 16 GB, zca10_f16__uid.npy, meta.npz, kappa_var_tokens.npy), gtable/ (sums.npz),
+  groups/ (emb_hom.npy, emb_hom_average_t0.75.parquet, groups.json), runs/, runs_w8/ (word runs per spec and tau),
+  engine/ (engine reruns), results/ (per-region tables pr_*.parquet and all JSON), logs/.

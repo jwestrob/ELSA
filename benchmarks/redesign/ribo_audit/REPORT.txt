@@ -1,0 +1,458 @@
+WS RIBO_AUDIT: WHAT THE RECORDED RIBOSOMAL-LOCUS FAILURES ARE (DPANN, 3,564 genomes, 1,686 runs; 2026-11-13)
+==============================================================================================================
+Outputs audited: TOK = token engine nested reading (token DH), WCP = stage-1 family words + cohesion phrases (V-coh0.1),
+EMB = embedding words on calibrated z10.6 neighbour lists (V-nest). Counts reproduced exactly before sampling (own
+scorer and ribosomal_check.score agree run by run): TOK 1,686 recovered / 1,512 resolved, WCP 1,684 / 1,420, EMB
+1,675 / 1,172; Parvarchaeaceae resolved 113 / 109 / 106. Rubric, thresholds, seeds: predeclared.json (11:12 UTC, before
+any case was read). Post hoc items are labelled POST HOC. Intervals: Wilson 95%.
+
+ANSWER
+1. Method errors against definition artefacts (corrected rubric, 40 sampled failures per output): definition artefacts
+   TOK 80.0% [65.2, 89.5], WCP 82.5% [68.0, 91.3], EMB 57.5% [42.2, 71.5]; method errors TOK 20.0% [10.5, 34.8],
+   WCP 15.0% [7.1, 29.1], EMB 40.0% [26.3, 55.4]; data (gene call, contig edge) 0-2.5%. Pooled 120: definition 73.3%
+   [64.8, 80.4], method 25.0% [18.1, 33.4]. The census of all 954 failures with the same rules agrees: method 16.7%
+   [11.9, 22.9] / 18.0% [13.9, 23.1] / 26.5% [22.8, 30.4]. Recovery is near complete in all three (1,675-1,686);
+   the failures are resolution failures, 73-90% of them on precision.
+2. The answer differs by output, and two rulings move it. (a) Scoring: 42.5% of TOK's sampled failures (78 of 174 in
+   the census) hold a locus that resolves the run, nested inside a parent that the largest-overlap rule selects
+   (nested in 19 of 19 sampled; parent precision median .62; the parent runs into unassociated flank in 50 of 78).
+   Counted as method errors: TOK 62.5% [47.0, 75.8], WCP 17.5%, EMB 52.5% method. (b) Strict: if nearby Ribosomal_*
+   genes count as admissible only when their family is run-associated across groups, method errors are 37.5 / 20.0 /
+   42.5%. Over both rulings the method share spans TOK 20-80%, WCP 15-22.5%, EMB 40-55%. WCP is the output whose
+   failures are most clearly definition artefacts under every ruling; EMB carries the most genuine method errors.
+3. The definition artefacts (census, corrected): the locus covers the run plus flank genes whose families recur beside
+   ribosomal runs in >= 3 other lineage groups (WCP 111, EMB 135, TOK 9; SecY 274 groups Lambda 537, DNA_primase_lrg
+   126, unannotated family 90081 165, EMC3_TMCO1 55 and 94, Ribosomal_L34e 68, DEAD-box helicase 65); nearby
+   Ribosomal_* genes within 5 genes of the run (43 / 66 / 86); runs that join two blocks across a junction adjacent in
+   no other group, mostly the two superoperon halves on opposite strands in Aenigmatarchaeota and an insertion in
+   Parvarchaeaceae (14 / 21 / 21); the scoring rule (78 / 13 / 126); one Ribosomal_* domain on a protein of another kind
+   (EMB 4 runs, e.g. a 320-aa Ribosomal_L32e + Lactamase_B protein where EMB splits).
+4. The method errors: TOK and WCP errors sit in Iainarchaeota (24 of 29 and 31 of 48), whose runs are the whole
+   S10-spc-SecY-EMC3-L34e-adenylate kinase-alpha-L13/S9 block (37-44 genes). WCP and EMB cut it at junctions adjacent
+   in 109-564 other groups (L34e|neighbour 239 groups, Lambda 619; L5|S14 564 groups, Lambda 1,472); TOK's covering
+   locus runs 8-110 genes (median 39) into flank with no measured association. EMB also splits ordinary runs at
+   universal junctions such as L29|S3 (110 METHOD_SPLIT in the census: Nanobdellota 63, Iainarchaeota 18,
+   Nanohalarchaeota 13 of its 14 failures, Aenigmatarchaeota 11).
+5. Nearby runs over all 1,686: two runs of >= 16 marked genes never share a contig (0 pairs; one run per genome).
+   Another Ribosomal_* gene lies within 5 genes outside 376 runs (22.3% [20.4, 24.4]); a cluster of >= 2 within 5
+   genes, 163 (9.7%); a run of 8-15 marked genes, 4. The feature is 2.6-3.4x commoner in failures than in passing runs
+   (census 55 / 46 / 44% against 18.5 / 18 / 13%).
+6. Controls (20 resolved runs per output, phylum-matched): contig ends (failures 8-14%, passing 17.5-21%), gene-call
+   anomalies (3-6% vs 3.5-4%) and corrected other-kind members (4-7% vs 5-6%) occur at least as often in passing runs,
+   so they explain no failures. The discriminating feature is a best locus running past the run-associated flank:
+   failures 87.5 / 42.5 / 65%, controls 5 / 20 / 15%.
+7. Fairer definition (sensitivity only; the standing definition is unchanged): recall against the run as now;
+   precision against the run plus flank genes of run-associated families (>= 3 other groups, Lambda >= 10 nats,
+   own group removed, <= 10 genes out, <= 2-gene bridges); runs split at junctions that recur in no other group;
+   largest-overlap scoring kept. Resolved: TOK 1,571, WCP 1,622, EMB 1,490 (standing 1,512 / 1,420 / 1,172);
+   Parvarchaeaceae 113 / 113 / 114. Random-window chance stays put: TOK 8.14% (standing 7.96%), WCP 0.04%, EMB 1.41%
+   (1.39%). The order changes: WCP passes TOK and EMB passes the 1,400 bar. Any-locus scoring added on top gives
+   1,621 / 1,623 / 1,517 and raises TOK's chance level to 10.2%.
+8. Protocol: the predeclared OTHER-KIND rule misfired. 287 of 293 members it flagged carry the canonical single
+   Ribosomal_* domain at typical length (S13, S11, L13, S9, S2, L18e, L34e, S12, S7, S10, L7Ae, S28e, L24e, S6e); they
+   are ribosomal operons whose adjacency to the superoperon is lineage-specific. The predeclared table therefore reads
+   definition 97.5 / 87.5 / 57.5%. ONE POST HOC correction (OTHER-KIND = Ribosomal_* domain atypical for the protein's
+   family, or length > 2x the marker median) gives lines 1-7. Unclassifiable by the rules: none; low-confidence: 3
+   sampled cases (two gene-call cases beside split L32e ORFs, one contig-edge case that the correction moves to
+   METHOD_SPLIT).
+
+--------------------------------------------------------------------------------------------------------------
+1. THE DEFINITION AS IMPLEMENTED (ribosomal_check.py, blib.ribo_* helpers, vscore Ctx.table)
+- Marker: a gene with any Pfam hit (annotations.source = 'pfam', ws_dpann/input/sharur.duckdb) whose name matches
+  '^ribosom(al)?_' case-insensitively; 96 names (includes Ribosom_S12_S23, Ribosomal_60s, Ribosomal_S30AE, ribosomal_L24);
+  177,848 marked genes, all mapped to the universe.
+- Run: maximal set of marked genes on one contig whose consecutive members are <= 3 positions apart (<= 2 unmarked genes
+  between). The span runs from the first to the last marked gene and includes the gap genes. The primary set keeps runs
+  with >= 16 MARKED genes (the brief's ">= 16 genes" is >= 16 marked genes); spans are 17-45 genes, median 24.
+- 1,686 runs in 1,686 genomes; no genome holds two. "114 in Parvarchaeaceae" is counted as genomes by the check and
+  equals 114 runs.
+- Best locus: the single locus of the output with the largest overlap with the span (ties: the shorter, then the
+  earlier start). Recovered: overlap / span >= 0.5 (equivalent to any locus >= 50%).
+- Resolved: overlap / span >= 0.8 AND overlap / best-locus length >= 0.8, on the BEST locus only. The brief's wording
+  ("one locus covers ... and 80% of that locus lies inside") reads as any locus; the code differs, and the difference
+  is the scoring-rule category below (78 / 13 / 126 runs).
+- Gap genes count as run genes in both coverage and precision; every gene of the locus counts in the precision
+  denominator. Positions are universe gene indices (position_index = gid - contig first gid; no genes dropped).
+- Loci are the stored tables; single-gene loci are absent (Ctx.table keeps e > s). In nested readings every locus,
+  parent or child, competes for "best".
+
+2. RUBRIC (predeclared.json) AND THE TWO POST HOC VARIANTS
+Cumulative states, first state that resolves gives the label: S0b any locus resolves (DEF_SCORING); S1 nearby
+Ribosomal_* genes within 5 unmarked genes admissible for precision (DEF_NEARBY_RIBO); S2 OTHER-KIND members removed
+from the recall target (DEF_OTHER_KIND); S3 flank genes of run-associated families admissible, <= 2-gene bridges, <= 10
+genes (DEF_ASSOC_FLANK); data check at the failure point (DATA_CONTIG_EDGE, DATA_GENE_CALL); S4 run cut at junctions
+that recur in no other group (DEF_JUNCTION); otherwise METHOD_SPLIT / METHOD_UNCOVERED (coverage) or METHOD_EXTENSION.
+Association (A): family within 10 genes outside a run, n' = groups other than the case's own (642 lineage-free
+groups, emb_hom_average_t0.75), E' = expected groups under random placement within each genome, run-associated iff
+n' >= 3 and Lambda = n ln(n/E) - n + E >= 10 nats. Junction recurrence (C): family pair within 3 positions, same
+statistic over all genomes; a break needs no recurrent crossing pair and >= 1 testable pair (both families in >= 10
+other groups).
+POST HOC corrected (C): OTHER-KIND = family carries Ribosomal_* domains on < 50% of its members, or length > 2x the
+median of its top marker. POST HOC strict (X): C, and marked genes admissible only when run-associated (S1 off).
+
+3. SAMPLE (seed 20261113 + k; strata = phyla with Parvarchaeaceae separate; allocation by largest remainder)
+Unresolved per stratum: TOK 174 (Iainarchaeota 64 of 134 runs, Nanobdellota 75, Aenigmatarchaeota 22, Micrarchaeota 8,
+Altiarchaeota 3, EX4484-52 1, Parvarchaeaceae 1); WCP 266 (Nanobdellota 176, Iainarchaeota 46, Aenigm. 19, Micrarch.
+15, Parv. 5, Nanohal. 3, Altiarch. 2); EMB 514 (Nanobdellota 354, Micrarch. 48, Iainarch. 46, Aenigm. 33, Nanohal. 14,
+Parv. 8, EX 7, Altiarch. 2, Undin. 2). Unresolved in all three: 53. Samples: 40 per output (U), 20 all-three (A3,
+evaluated under each output), 20 controls per output (C, resolved, allocation matched to that output's failures).
+240 case evaluations; every diagram was read.
+
+4. CATEGORY TABLES (count of 40 U cases per output, 20 A3 cases; share [95%] in results/tables.txt)
+  corrected rubric          U-TOK  U-WCP  U-EMB   A3-TOK  A3-WCP  A3-EMB   census TOK / WCP / EMB (174 / 266 / 514)
+  DEF_SCORING                17      1      5       2       0       4      78 / 13 / 126
+  DEF_NEARBY_RIBO            11     12      3       9       4       6      43 / 66 / 86
+  DEF_OTHER_KIND              0      0      2       0       0       0       0 /  0 /  4
+  DEF_ASSOC_FLANK             1     15     11       0       4       0       9 / 111 / 135
+  DEF_JUNCTION                3      5      2       4       5       3      14 / 21 / 21
+  DATA_GENE_CALL              0      1      1       0       0       0       0 /  2 /  3
+  DATA_CONTIG_EDGE            0      0      0       0       0       0       1 /  5 /  3
+  METHOD_SPLIT                2      5     13       0       7       7       2 / 41 / 110
+  METHOD_UNCOVERED            0      0      0       0       0       0       0 /  0 /  0
+  METHOD_EXTENSION            6      1      3       5       0       0      27 /  7 / 26
+  = definition               32     33     23      15      13      13      144 / 211 / 372  (82.8 / 79.3 / 72.4%)
+  = method                    8      6     16       5       7       7      29 / 48 / 136    (16.7 / 18.0 / 26.5%)
+  predeclared: definition 39 / 35 / 23 (97.5 / 87.5 / 57.5%), method 1 / 4 / 15; census method 1.1 / 7.1 / 24.1%
+  strict:      definition 25 / 31 / 22 (62.5 / 77.5 / 55.0%), method 15 / 8 / 17; census method 36.8 / 21.1 / 31.7%
+  method + SCORING (corrected): 25 / 7 / 21 of 40 (62.5 / 17.5 / 52.5%); strict: 32 / 9 / 22 (80 / 22.5 / 55%)
+  Pooled U (120), corrected: definition 73.3% [64.8, 80.4], method 25.0% [18.1, 33.4], data 1.7% [0.5, 5.9];
+  predeclared 80.8 / 16.7 / 2.5%; strict 65.0 [56.1, 72.9] / 33.3 [25.5, 42.2] / 1.7%.
+  Failure type at the standing rule (census, coverage / precision / both): TOK 10 / 157 / 7, WCP 66 / 197 / 3,
+  EMB 93 / 373 / 48.
+  Where predeclared DEF_OTHER_KIND goes (census): TOK 39 -> METHOD_EXTENSION 25, DEF_JUNCTION 6, DEF_ASSOC_FLANK 6,
+  METHOD_SPLIT 2; WCP 39 -> METHOD_SPLIT 29, DEF_JUNCTION 8, data 2; EMB 22 -> METHOD_SPLIT 11, DEF_JUNCTION 6,
+  DEF_OTHER_KIND 4, data 1.
+  Where corrected DEF_NEARBY_RIBO goes under strict: TOK 43 -> METHOD_EXTENSION 29, DEF_ASSOC_FLANK 14; WCP 66 ->
+  ASSOC_FLANK 58, EXTENSION 8; EMB 86 -> ASSOC_FLANK 62, EXTENSION 24. (Nearby marked genes all non-associated in
+  27 / 10 / 28 of them: the S6e / L24e / S28e / L7Ae cluster beside Iainarchaeota runs, Lambda 0.)
+  By stratum (census, corrected; definition / data / method): TOK Iainarchaeota 40 / 0 / 24, Nanobdellota 73 / 0 / 2;
+  WCP Iainarchaeota 14 / 1 / 31, Nanobdellota 162 / 2 / 12; EMB Nanobdellota 265 / 1 / 88, Iainarchaeota 26 / 2 / 18,
+  Aenigmatarchaeota 19 / 3 / 11, Nanohalarchaeota 1 / 0 / 13.
+
+5. SCORING-RULE CASES
+TOK 78 / WCP 13 / EMB 126 runs hold a locus with >= 80% of the run and >= 80% of itself inside, while a larger-overlap
+locus is chosen. In every sampled case (TOK 19, EMB 9, WCP 1) the resolving locus lies nested inside the chosen one.
+TOK parents: precision median .622 (q10 .367); in 50 of 78 they extend past the run-associated flank, so TOK's
+parent loci are over-extended and its children are right. EMB: 99 of 126 would also pass the strict chain (parents
+extend into associated flank). Random windows show the cost of any-locus scoring: TOK chance 7.96% -> 10.16% (TOK has
+loci of every size), EMB 1.39 -> 1.42%, WCP 0.04 -> 0.04%. Keeping largest-overlap scoring and counting these as
+nested-output behaviour is the conservative reading; the brief's own wording reads as any locus.
+
+6. CONTROLS AGAINST FAILURES (U vs C samples; census in parentheses, unresolved vs resolved)
+  feature                                     U-TOK   C-TOK   U-WCP   C-WCP   U-EMB   C-EMB   census TOK / WCP / EMB
+  Ribosomal_* gene <= 5 genes outside          52.5%   15.0%   47.5%   10.0%   37.5%   20.0%   55/18.5, 46/18, 44/13
+  OTHER-KIND, predeclared rule                 80.0    35.0    22.5    35.0    30.0    35.0    78/22, 31/27, 28/27.5
+  OTHER-KIND, corrected rule                    5.0    10.0    10.0     0.0    10.0     5.0    6.9/5.3, 6.0/5.4, 4.1/6.1
+  non-recurring junction inside run            20.0    10.0    17.5     0.0    17.5     5.0    20/12, 14/12, 11/13
+  run touches contig end                       15.0    20.0    10.0    20.0    10.0    15.0    14/17.5, 8/19, 8/21
+  gene-call anomaly inside run                  5.0     5.0     7.5    10.0     5.0     5.0    5.7/3.5, 3.0/3.9, 2.9/4.1
+  best locus past the run                     100.0    70.0    90.0    90.0    85.0    95.0
+  best locus past the run-associated flank     87.5     5.0    42.5    20.0    65.0    15.0
+  extension genes per case (median)              17       1       7       2       8       3
+  extension M / a / o (sum)               120/103/627  2/22/9  20/144/119  0/31/10  48/133/181  1/41/14
+  best-locus precision (median)                .625    .960    .772    .936    .717    .915
+Passing runs carry a median 1-3 extension genes, mostly the associated SecY / EMC3_TMCO1 / primase genes; failing
+WCP and EMB definition cases carry a median 8 and 9 (IQR 7-11) of the same genes. The predeclared OTHER-KIND flag
+fires on the alpha / L13-S9 block of Iainarchaeota and on L34e at Nanobdellota run ends: it marks run composition.
+
+7. OUTSIDE-OF-RUN FAMILIES IN FAILING LOCI (U + A3, 1,906 unique extension genes: o 1,212, a 429, M 265; gene-case
+   pairs TOK 203/157/948, WCP 34/192/155, EMB 88/176/285; n' / E' / Lambda = median flank statistic, own group removed)
+  class token   genes  n'    E'     Lambda  Pfam (commonest architecture)
+  a     68605    66   274  14.98   537.3   SecY
+  a     62578    34   126  15.04   157.0   DNA_primase_lrg
+  a     90081    30   165   9.54   314.9   (no Pfam hit)
+  a     41955    27    55   5.45    77.6   EMC3_TMCO1
+  a    182686    25    94   4.62   193.9   EMC3_TMCO1
+  a    162677    25    65  18.97    34.0   ResIII,DEAD,RNA_helicase_helical,Helicase_C,ERCC4,HHH_5,HHH_2
+  a    287424    19    51  13.71    29.7   Peptidase_M48
+  a    125615    18    43  19.05    11.1   B5,tRNA_synthFbeta
+  a    294424    10    77  17.30    55.3   DKCLD,TruB_N,TruB_C_2,PUA
+  a    182269    10    40   6.05    41.6   Toprim
+  M    393096    24    68   5.13   112.9   Ribosomal_L34e (run-associated)
+  M    154972    18     7  16.10     0.0   Ribosomal_S6e
+  M    298689    16    17  18.48     0.0   Ribosomal_S28e
+  M     44920    16    17  18.39     0.0   RNase_P_pop3,Ribosomal_L7Ae
+  M    193393    12    14  16.61     0.0   Ribosomal_L24e
+  o    145956    20     7  17.05     0.0   Spt4
+  o     16038    20     5  18.47     0.0   GTP_EFTU,eIF2_C
+  o     36945    18    42  19.41     9.8   tRNA-synt_2d
+  o    418575    18     6  16.06     0.0   SHS2_Rpb7-N,S1
+  o    408588    18    17  19.17     0.0   GTP_EFTU,MMR_HSR1,IF-2,GTP_EFTU_D4
+  o    337440    16    18  17.39     0.0   NDK
+  o     49473    16    21  19.17     0.1   tRNA-synt_1c
+  Domains on extension genes (genes carrying it, a / M / o): SecY 68/0/0; EMC3_TMCO1 57/0/3; GTP_EFTU 0/0/50;
+  DNA_primase_lrg 25/0/0; Helicase_C 25/0/1; Prefoldin 22/0/2; Ribosomal_L34e 0/24/0; Ribosomal_L7Ae 0/21/0;
+  Spt4 0/0/20; NDK 0/0/20; S1 0/0/20. 480 of 1,906 extension genes have no Pfam hit (a 82, o 398).
+  The o families with Lambda 0 are the Iainarchaeota neighbourhood of the second ribosomal cluster (IF-2, NDK, Spt4,
+  dUTPase, tRNA synthetases): adjacent to runs in that lineage only (n' 5-21 against E' 16-19).
+
+8. NEARBY RUNS (all 1,686 runs)
+  g2_m16 run pairs on one contig: 0; within 5 genes: 0.
+  another Ribosomal_* gene <= 5 genes outside: 376 (22.3%); <= 10: 574 (34.0%). By stratum (<= 5): Nanobdellota
+  199 / 1,133, Iainarchaeota 75 / 134, Micrarchaeota 47 / 137, Aenigmatarchaeota 38 / 105, EX4484-52 9 / 19,
+  Undinarchaeota 5 / 11, Nanohalarchaeota 3 / 24, Parvarchaeaceae 0 / 114.
+  g2 cluster of >= 2 marked genes <= 5 outside: 163 (9.7%); <= 10: 291 (17.3%). g2 run of 8-15 marked genes: 4.
+
+9. SENSITIVITY: RESOLVED RUNS UNDER ALTERNATIVE DEFINITIONS (of 1,686; Parvarchaeaceae of 114; random-window chance)
+  definition                                      TOK     WCP     EMB    Parv T/W/E     chance TOK / WCP / EMB
+  standing                                       1,512   1,420   1,172   113/109/106    7.96% / 0.04% / 1.39%
+  any locus (brief's wording)                    1,590   1,433   1,298   114/109/106   10.16% / 0.04% / 1.42%
+  strict associated-flank precision              1,559   1,601   1,470   113/109/107    8.14% / 0.04% / 1.41%
+    + junction pieces  (PROPOSED)                1,571   1,622   1,490   113/113/114
+    + any locus                                  1,621   1,623   1,517   114/113/114
+  corrected chain incl. nearby marked genes      1,602   1,609   1,503   113/109/107   11.54% / 0.04% / 1.60%
+    + junction pieces                            1,616   1,630   1,524   113/113/114
+  predeclared chain                              1,666   1,649   1,523   113/109/107
+  Every standing-resolved run stays resolved under each chain on its own (0 lost in TOK, WCP, EMB). Chance is measured on 8,325 length-matched
+  random windows (5 per run) with the same chain; junction pieces need a run and have no window equivalent.
+  Proposed definition: the strict chain plus junction pieces. It is gold-free, uses only gene order, family tokens and
+  lineage-free groups, and leaves chance unchanged; including nearby non-associated Ribosomal_* genes raises TOK's
+  chance by 3.6 points and is left out.
+
+10. ILLUSTRATIVE CASES (ten per major category, corrected labels; all cases in results/diagrams.txt)
+Legend: R run member with a Ribosomal_* domain; r gap gene inside the run; K member flagged by the PREDECLARED
+OTHER-KIND rule (ordinary member under the corrected rule); M Ribosomal_* gene outside the run; a gene of a
+run-associated family; o other gene; [ ] best locus; ( ) other maximal loci; <n / >n the locus continues n genes past
+the window (run +- 10); | contig end; / junction that recurs in no other group. Second line: strand.
+
+--- DEF_SCORING (29 sampled case evaluations; 10 shown)
+  U-TOK-28   run 5419 Nanobdellota  20g/16m bf 1.0 prec 0.267 ext M/a/o 6/3/46  DEF_SCORING
+    |o[RrrRRRRRRRRRRRRRRrrKaoaMoooaoo]>45
+     > >>>>>>>>>>>>>>>>>>>>>>>>>><<<>    
+  U-WCP-14   run 4952 Nanobdellota  23g/22m bf 1.0 prec 0.767 ext M/a/o 0/5/2  DEF_SCORING
+    |oo(aoa)[aaaooRRRRRRRRrRRRRRRRRRRRRRRaa]o(oo)oo|
+     << >>>  ><>>>>>>>>>>>>>>>>>>>>>>>>>>>> > >> >> 
+  A3-EMB-19  run 4856 Nanobdellota  20g/19m bf 1.0 prec 0.526 ext M/a/o 1/4/13  DEF_SCORING
+    <7[oooaoaMoaaRRRRRRRRRRRRRRrRRRRRo]|
+       >>>>><<><<<<<<<<<<<<<<<<<<<<<<<  
+  U-TOK-29   run 4385 Nanobdellota  23g/19m bf 1.0 prec 0.315 ext M/a/o 1/3/46  DEF_SCORING
+    <24[oooooooaooRRRRRrRRrRRRRRRRRRRRrrRooaoaooooo]>6
+        <>>>><<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<>>   
+  A3-EMB-14  run 5120 Iainarchaeota 37g/28m bf 1.0 prec 0.552 ext M/a/o 6/3/21  DEF_SCORING
+    <1(M)ooo[aooaooRRRRKRRRrrRRRRRRRRRRRRRrrKrrKrKrKKKrKooaoooMMMo]>14
+       > <<> >>>><>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><>>>>    
+  U-TOK-12   run 6110 Iainarchaeota 27g/22m bf 1.0 prec 0.342 ext M/a/o 16/7/29  DEF_SCORING
+    <25[MMMoMaMaaaKrrRRRRRRRRrRRRRRrrRRRRRRRRoaaMoooMMo]>7
+        <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<><<<<   
+  U-EMB-08   run 6185 Micrarchaeota 24g/22m bf 1.0 prec 0.571 ext M/a/o 6/7/5  DEF_SCORING
+    |oooo[RRRRRRRRrrRRRRRRRRRRRRRRaaaaoaaMaM]>8
+     >><< >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   
+  A3-TOK-17  run 7434 Nanobdellota  26g/23m bf 1.0 prec 0.413 ext M/a/o 0/8/29  DEF_SCORING
+    <2[ooooooooaaKrrRRRRRRRRRRRRRRrRRRRRRRRaoaoaaaaoo]>15
+       >><>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<>><<<<<><    
+  U-EMB-04   run 7591 Iainarchaeota 37g/29m bf 1.0 prec 0.607 ext M/a/o 6/4/14  DEF_SCORING
+    <8[MoooMMMooaKrKKKrKrKrKrrRRRRRRRRRRRRRRrrRRRRRKRRoaooaa]ooo(M)>8
+       <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< <<< <   
+  U-TOK-22   run 7656 Micrarchaeota 27g/23m bf 1.0 prec 0.519 ext M/a/o 6/4/15  DEF_SCORING
+    <4[MooMaMaoaoKrrRRRRRRRRRRRRRRrRRRRRRrRRoaooMooooo]>1
+       <<<<<<<><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>><<   
+
+--- DEF_NEARBY_RIBO (45 sampled case evaluations; 10 shown)
+  U-TOK-13   run 4446 Iainarchaeota 37g/29m bf 1.0 prec 0.493 ext M/a/o 10/2/26  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    <10[oooMMMooaoKrKKKrKrKrKrrRRRRRRRRRRRRRRrrRRRRRRRRoaoooMooMM]>8
+        <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<   
+  A3-WCP-06  run 7287 Iainarchaeota 22g/20m bf 1.0 prec 0.595 ext M/a/o 7/4/4  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict DEF_ASSOC_FLANK)
+    |oooo[RRRRRRRRrrRRRRRRRRRRRRoaoMaaMaMo]>5
+     >>>> >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   
+  U-EMB-05   run 5139 Iainarchaeota 24g/22m bf 1.0 prec 0.364 ext M/a/o 14/5/23  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    <26[ooMMMaMooaRRRRRRRRRRRRRRrrRRRRRRRRooaaoo](MooM)>10
+        <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<  <<<<    
+  A3-TOK-11  run 4612 Iainarchaeota 37g/28m bf 1.0 prec 0.463 ext M/a/o 10/3/30  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    <5[ooMoMMMooaKrKKKrKrKrKrrRRRRRRRRRRRRRRrrRrRRRRRRaooooMoooa]>18
+       <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>><<><<<    
+  U-WCP-09   run 7221 Iainarchaeota 23g/20m bf 1.0 prec 0.59 ext M/a/o 6/4/6  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    <6[oMaMaaMoaoRRRRRRRRRRRRRrrRrRRRRRR]ooooo(oo)ooo
+       <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< <<<<< <> >><
+  A3-EMB-13  run 8261 Iainarchaeota 37g/29m bf 1.0 prec 0.607 ext M/a/o 6/2/16  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    <13[ooMMMooooaKrKKRrKrKrKrrRRRRRRRRRRRRRRrrRRRRRRRRa]o(aoo)ooooo
+        <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< < <>< ><<><
+  A3-TOK-08  run 5992 Iainarchaeota 43g/32m bf 1.0 prec 0.642 ext M/a/o 6/2/16  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    <7[oaoooMoooaRRRRRRrRrrRRRRRRRRRRRRRRrrKrKrKrKKKrKrKKKrKooooMMo](ooo)>16
+       >>>><>><>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  >>>    
+  A3-WCP-16  run 7587 Nanobdellota  20g/16m bf 1.0 prec 0.606 ext M/a/o 5/2/6  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    o(oo)oooo[aoaRrR/rRR/RRRRRRrRRRRRrRoooMoMoMMM]
+    > >> >>>< <<<<<< <<< <<<<<<<<<<<<<<<<<<<<<<<< 
+  A3-EMB-07  run 8006 Iainarchaeota 41g/32m bf 1.0 prec 0.732 ext M/a/o 3/0/12  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    <5[ooooooMoooKKKrKrKKKrKrKrKrrRRRRRRRRRRRRRRrrRRRRRRRR]o|
+       <<<<><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< > 
+  U-TOK-07   run 6184 Iainarchaeota 38g/29m bf 1.0 prec 0.655 ext M/a/o 6/1/13  DEF_NEARBY_RIBO (pre DEF_NEARBY_RIBO; strict METHOD_EXTENSION)
+    <8[MoooMMMoooKrKKKrKrKrrKrrRRRRRRRRRRRRRRrrRRRRRRRRoa]ooooo(Moo)>9
+       <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< <><>< <<<   
+
+--- DEF_ASSOC_FLANK (31 sampled case evaluations; 10 shown)
+  U-TOK-27   run 8250 Nanobdellota  24g/22m bf 1.0 prec 0.75 ext M/a/o 1/3/4  DEF_ASSOC_FLANK
+    |oooooo([RRRRRRRRrrRRRRRRRRRRRRRRooaooaMa]o)o
+     <><>>>  >>>>>>>>>>>>>>>>>>>>>>>>><>>>>>> > >
+  U-WCP-17   run 7442 Nanobdellota  23g/22m bf 1.0 prec 0.605 ext M/a/o 1/10/4  DEF_ASSOC_FLANK
+    oo[oaaaaaoaRRRRRRRRrRRRRRRRRRRRRRRaaoMaao](oo)|
+    >> <>>>><>>>>>>>>>>>>>>>>>>>>>>>>>>><>><<  <<  
+  U-EMB-11   run 6169 Micrarchaeota 24g/22m bf 1.0 prec 0.585 ext M/a/o 6/8/3  DEF_ASSOC_FLANK
+    |(oo)([RRRRRRRRrrRRRRRRRRRRRRRRaaaaaaaMaM)>9]>7
+      <<   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>      
+  A3-WCP-18  run 5941 Nanobdellota  23g/22m bf 1.0 prec 0.697 ext M/a/o 0/8/2  DEF_ASSOC_FLANK
+    |o(oaaMoao[aRRRRRRRRRRRRRRrRRRRRRRRaaoaaaaao])o
+     > >><<><< <<<<<<<<<<<<<<<<<<<<<<<<<>>><<<<>  <
+  U-EMB-33   run 7452 Nanobdellota  23g/22m bf 1.0 prec 0.676 ext M/a/o 1/7/3  DEF_ASSOC_FLANK
+    (ooo)[oaaMoaaRRRRRRRRRRRRRRrRRRRRRRRaoaa]|
+     >>>  >><<><<<<<<<<<<<<<<<<<<<<<<<<<<<><  
+  U-WCP-34   run 4340 Nanobdellota  25g/22m bf 1.0 prec 0.61 ext M/a/o 1/7/8  DEF_ASSOC_FLANK
+    (aoao)[aoaoaoRRRRRRRRrrRRRRRRRRRRRRRrRaaoMaoaooo]
+     >>>>  ><<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<< 
+  U-EMB-34   run 7502 Nanobdellota  26g/23m bf 0.808 prec 0.724 ext M/a/o 0/6/2  DEF_ASSOC_FLANK
+    |o[aaaoaoaaRRRRRRRRrRRRRRRRRRRRR](RRrrKaaoooooo)(oo)>5
+     > >>>><><>>>>>>>>>>>>>>>>>>>>>>  >>>>>><<<<<<<  <<   
+  U-WCP-22   run 7582 Nanobdellota  23g/22m bf 1.0 prec 0.697 ext M/a/o 0/7/3  DEF_ASSOC_FLANK
+    |[aRRRRRRRRRRRRRRrRRRRRRRRaoaoaaaao]o
+      <<<<<<<<<<<<<<<<<<<<<<<<<>><<<<<> <
+  U-EMB-20   run 4482 Nanobdellota  24g/22m bf 1.0 prec 0.649 ext M/a/o 1/5/7  DEF_ASSOC_FLANK
+    ooo[aoaMaaoRRRRRRRRRRRRRRrrRRRRRRRRooaooo]oooo
+    ><< <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>><< ><>>
+  A3-WCP-15  run 7435 Nanobdellota  26g/23m bf 1.0 prec 0.722 ext M/a/o 0/7/3  DEF_ASSOC_FLANK
+    |o(oo)(oa)[aKrrRRRRRRRRRRRRRRrRRRRRRRRaoaoaaaao]o
+     > >>  >>  <<<<<<<<<<<<<<<<<<<<<<<<<<<<>><<<<<> <
+
+--- DEF_JUNCTION (22 sampled case evaluations; 10 shown)
+  U-TOK-01   run 8098 Aenigmatarcha 33g/23m bf 0.545 prec 0.409 ext M/a/o 2/1/23  DEF_JUNCTION
+    <16[ooooooooooRrRRRRRrrRRRRRRRR/r]/r/(RRrRrRRRRrRrrKooaaooo)ooo
+        <<<<<><>><<<<<<<<<<<<<<<<<< >  <  >>>>>>>>>>>>>><<>><>> >><
+  A3-WCP-03  run 4721 Aenigmatarcha 19g/16m bf 0.474 prec 0.9 ext M/a/o 0/0/1  DEF_JUNCTION
+    <4(M)oooo(aaoaaRRRRRRRR)/r/r/([RRRRRRRrRo]ooMMMMMoo)
+       < >>>< <<<<<<<<<<<<<  > <   >>>>>>><>> <>>>>>>>> 
+  A3-EMB-01  run 8062 Aenigmatarcha 33g/23m bf 0.545 prec 1.0 ext M/a/o 0/0/0  DEF_JUNCTION
+    (oooooooooo)[RrRRRRRrrRRRRRRRR/r]/r/(RRrRrRRRRrRrrKooaa)(ooo)ooo
+     <<<<<><>><  <<<<<<<<<<<<<<<<< >  <  >>>>>>>>>>>>>><<>>  <>> >><
+  U-TOK-04   run 7411 Aenigmatarcha 23g/19m bf 0.696 prec 0.941 ext M/a/o 0/0/1  DEF_JUNCTION
+    |(ooo)(oRRRRRR)/r/[r/RRRRRRRRrrRRRRRo]|
+      ><>  ><<<<<<  <  < >>>>>>>>>>>>>>>>  
+  U-WCP-29   run 5268 Nanobdellota  34g/21m bf 0.647 prec 0.917 ext M/a/o 0/1/1  DEF_JUNCTION
+    |oooooo(aoR)r(RRrrRrRR)/r/r/[RRRrRRrRRrrRRRR/RrRr/RrRoa]|
+     <>>>>> >>> > >>>>>>>>  > >  >>>>>>>>>>>>>>> >>>> >>>>>  
+  A3-EMB-05  run 4556 Altiarchaeota 22g/19m bf 0.727 prec 1.0 ext M/a/o 0/0/0  DEF_JUNCTION (pre DEF_OTHER_KIND; strict DEF_JUNCTION)
+    |(oK/rKKK)/[RRRRRRRRrrRRRRRR]/(Ko)o|
+      << <<<<   >>>>>>>>>>>>>>>>   >> > 
+  A3-TOK-04  run 5519 Aenigmatarcha 27g/20m bf 0.741 prec 1.0 ext M/a/o 0/0/0  DEF_JUNCTION (pre DEF_OTHER_KIND; strict DEF_JUNCTION)
+    |(oRRrR)/(KrK)/[RRRRRrrRRrRRRRRKrrKK]o(oooMooooo)>3
+      ><<<<   >>>   >>>>>>>>>>>>>>>>>>>> < <><<<<>><   
+  U-WCP-25   run 6106 Nanobdellota  38g/29m bf 0.711 prec 1.0 ext M/a/o 0/0/0  DEF_JUNCTION (pre DEF_OTHER_KIND; strict DEF_JUNCTION)
+    ooooooo(oo)o[RRRRRRRRrrRRRRRRRRRRRRRRrKr]/r/K/r/r/(KrKrKKK)ooo(ooo)o(oo)o
+    ><<>>>> >> > >>>>>>>>>>>>>>>>>>>>>>>>>>>  < > < >  >>>>>>> >>< <<< > << >
+  U-EMB-40   run 5920 Parvarchaeace 19g/16m bf 0.789 prec 0.882 ext M/a/o 0/2/0  DEF_JUNCTION
+    oooooooo[aaRrRRRRRRRRRRRRr]/r/(RRR)ooooooaooo
+    <>>><<>> <<<<<<<<<<<<<<<<<  <  <<< <<<<<<<<><
+  A3-WCP-02  run 4541 Aenigmatarcha 30g/24m bf 0.767 prec 0.821 ext M/a/o 0/4/1  DEF_JUNCTION (pre DEF_OTHER_KIND; strict DEF_JUNCTION)
+    <3(MoMaM)[aaaaoRRRRRrRRRRRRRRrrRRRRRRR]R/r/(KrrKK)o(ooo)oooo|
+       <<<<<  <<<<<<<<<<<<<<<<<<<<<<<<<<<< < <  <<<<< < >>> <<<< 
+
+--- METHOD_SPLIT (34 sampled case evaluations; 10 shown)
+  U-TOK-02   run 8369 Aenigmatarcha 21g/18m bf 0.714 prec 0.6 ext M/a/o 1/0/9  METHOD_SPLIT+ext (pre DEF_OTHER_KIND; strict METHOD_SPLIT+ext)
+    <4(ooooooooooRRR)/(KrK)/[RRRRRrrRRRRRRRKoooMoooooo]
+       <<<<<<<><><<<   >>>   >>>>>>>>>>>>>>>>>><<>>><< 
+  A3-WCP-08  run 5992 Iainarchaeota 43g/32m bf 0.581 prec 0.962 ext M/a/o 0/1/0  METHOD_SPLIT (pre DEF_OTHER_KIND; strict METHOD_SPLIT)
+    o(aoo)oMooo[aRRRRRRrRrrRRRRRRRRRRRRRRr]rKr(KrKrKKKrKr)(KKKrKo)o(ooM)Moo(oo)>1
+    > >>> <>><> >>>>>>>>>>>>>>>>>>>>>>>>>> >>> >>>>>>>>>>  >>>>>> > >>> >>> >>   
+  A3-EMB-10  run 7195 Iainarchaeota 44g/32m bf 0.341 prec 0.682 ext M/a/o 2/0/5  METHOD_SPLIT (pre METHOD_SPLIT; strict METHOD_SPLIT+ext)
+    <5(oaoooMoooaRRRRRRrRr)(rRrRRRR)(RRRRRRRRRrrKr)[KrKrKKKrKrKKKrKooooMMo]o(oo)>2
+       >>>><>><>>>>>>>>>>>  >>>>>>>  >>>>>>>>>>>>>  >>>>>>>>>>>>>>>>>>>>>> > ><   
+  U-TOK-05   run 4562 Aenigmatarcha 21g/18m bf 0.714 prec 0.6 ext M/a/o 1/0/9  METHOD_SPLIT+ext (pre DEF_OTHER_KIND; strict METHOD_SPLIT+ext)
+    [ooooooMoooKRRRRRRRrrRRRRR]/(KrK)/(RRR)oo(oo)(oooooo)>5
+     >><<<>><<<<<<<<<<<<<<<<<<   <<<   >>> << ><  >>>>>>   
+  U-WCP-36   run 8324 Nanobdellota  24g/21m bf 0.667 prec 0.8 ext M/a/o 0/3/1  METHOD_SPLIT
+    oooooo[aoaaRRRRRRRRrRRRRRRR]rRr(RRRRR)(aoo)oooooo(M)>2
+    <<<><< <><<<<<<<<<<<<<<<<<< <<< <<<<<  <>> <>><>< <   
+  A3-EMB-09  run 4593 Iainarchaeota 37g/28m bf 0.405 prec 0.938 ext M/a/o 0/1/0  METHOD_SPLIT
+    (aoooMo)ooo[aRRRRRRrRrrRRRRR](RRRRRRRRRrrKr)(KrKrKKKrKaooMMMoMoo)>5
+     >>><>> <<> >>>>>>>>>>>>>>>>  >>>>>>>>>>>>>  >>>>>>>>>>>>>>>>>>>   
+  U-WCP-37   run 8308 Nanobdellota  24g/21m bf 0.667 prec 0.8 ext M/a/o 0/3/1  METHOD_SPLIT
+    oooooo[aoaaRRRRRRRRrRRRRRRR]rRr(RRRRR)(aoo)oooooo(M)>2
+    <<<><< <><<<<<<<<<<<<<<<<<< <<< <<<<<  <>> <>><>< <   
+  A3-EMB-11  run 4612 Iainarchaeota 37g/28m bf 0.405 prec 0.938 ext M/a/o 0/1/0  METHOD_SPLIT
+    <5(ooMoMMMooaKrKKKrKrK)(rKrrRRRRRRRRR)[RRRRRrrRrRRRRRRa]ooo(oMoooa)
+       <<<<<<<<<<<<<<<<<<<  <<<<<<<<<<<<<  <<<<<<<<<<<<<<<< <>> <<><<< 
+  A3-WCP-12  run 4607 Iainarchaeota 37g/28m bf 0.676 prec 0.962 ext M/a/o 0/1/0  METHOD_SPLIT (pre DEF_OTHER_KIND; strict METHOD_SPLIT)
+    o(oMoMMM)oo(aKrKKKrKrK)rKr[rRRRRRRRRRRRRRRrrRrRRRRRRa]ooooMo(ooa)
+    < <<<<<< << <<<<<<<<<< <<< <<<<<<<<<<<<<<<<<<<<<<<<<< <>><<> <<< 
+  U-EMB-31   run 5682 Nanobdellota  27g/23m bf 0.481 prec 1.0 ext M/a/o 0/0/0  METHOD_SPLIT (pre DATA_CONTIG_EDGE; strict METHOD_SPLIT)
+    (MMoooo)ooooK/r/[rRRRRRRRRRRRR](RRr)(rRRRRRRRR)|
+     <<<<<< ><><< <  <<<<<<<<<<<<<  <<<  <<<<<<<<<  
+
+--- METHOD_EXTENSION (15 sampled case evaluations; 10 shown)
+  U-TOK-20   run 4704 Iainarchaeota 37g/29m bf 1.0 prec 0.278 ext M/a/o 12/2/82  METHOD_EXTENSION (pre DEF_OTHER_KIND; strict METHOD_EXTENSION)
+    <8[MMooMaooooRRRRRRRRrrRRRRRRRRRRRRRRrrKrKrKrKKKrKaooMMMoooM]>68
+       >>>>>>>>><>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><>>>>>>>    
+  U-WCP-19   run 7673 Nanobdellota  23g/17m bf 1.0 prec 0.605 ext M/a/o 1/2/12  METHOD_EXTENSION
+    |[RRrrRRrRrRRRRRrRRRRRRrRaoaooooooo]>5
+      >>>>>>>>>>>>>>>>>>>>>>>>>><<<<>>>   
+  U-EMB-12   run 7267 Nanobdellota  24g/22m bf 1.0 prec 0.5 ext M/a/o 4/5/15  METHOD_EXTENSION
+    <9[oMMoMooaoaRRRRRRRRrRrRRRRRRRRRRRRRaaaoo](oo)(oo)|
+       <>>>>>><<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  >>  >>  
+  A3-TOK-09  run 4593 Iainarchaeota 37g/28m bf 1.0 prec 0.389 ext M/a/o 11/3/44  METHOD_EXTENSION (pre DEF_OTHER_KIND; strict METHOD_EXTENSION)
+    <33[aoooMooooaRRRRRRrRrrRRRRRRRRRRRRRRrrKrKrKrKKKrKaooMMMoMoo]>5
+        >>><>><<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>   
+  U-EMB-30   run 5212 Nanobdellota  23g/22m bf 1.0 prec 0.59 ext M/a/o 0/2/14  METHOD_EXTENSION
+    <21(<6[ooooooooaaRRRRRRRRRRRRRRrRRRRRRRR])oooooo(aaoa)>7
+           <>><>><<<<<<<<<<<<<<<<<<<<<<<<<<<  <>><>> <>>>   
+  A3-TOK-12  run 4607 Iainarchaeota 37g/28m bf 1.0 prec 0.389 ext M/a/o 11/3/44  METHOD_EXTENSION (pre DEF_OTHER_KIND; strict METHOD_EXTENSION)
+    <5[ooMoMMMooaKrKKKrKrKrKrrRRRRRRRRRRRRRRrrRrRRRRRRaooooMoooa]>33
+       <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>><<><<<    
+  U-EMB-35   run 5121 Nanobdellota  22g/21m bf 1.0 prec 0.71 ext M/a/o 0/2/7  METHOD_EXTENSION
+    <18(o)([oooooooaaRRRRRRRRRRRRRrRRRRRRRR]ooaooaaaoa)>7
+        >   <<><><<<<<<<<<<<<<<<<<<<<<<<<<< ><<><>><<<   
+  U-TOK-17   run 7652 Iainarchaeota 43g/32m bf 1.0 prec 0.483 ext M/a/o 7/3/36  METHOD_EXTENSION (pre DEF_OTHER_KIND; strict METHOD_EXTENSION)
+    <1[oaoMMoooooKrKKKrKrKKKrKrKrKrrRRRRRRRRRRRRRRrrRrRRRRRRaoooooMooo]>25
+       <><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>><<><<    
+  A3-TOK-10  run 7195 Iainarchaeota 44g/32m bf 1.0 prec 0.512 ext M/a/o 7/2/33  METHOD_EXTENSION (pre DEF_OTHER_KIND; strict METHOD_EXTENSION)
+    <25[oaoooMoooaRRRRRRrRrrRrRRRRRRRRRRRRRrrKrKrKrKKKrKrKKKrKooooMMo](ooo)>17
+        >>>><>><>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  >><    
+  U-TOK-21   run 5037 Iainarchaeota 37g/29m bf 1.0 prec 0.529 ext M/a/o 4/3/26  METHOD_EXTENSION (pre DEF_OTHER_KIND; strict METHOD_EXTENSION)
+    <16[oMooooaoaoRRRRRRRRrrRRRRRRRRRRRRRRrrKrKrKrKKKrKoooaooo]|
+        >>>>>>>>><>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<>  
+
+How to read the categories from the diagrams:
+  DEF_SCORING       the chosen best locus [ ] spans the run plus a long flank (prec .27-.77); a child locus inside it
+                    fits the run (listed in results/cases.tsv loci_rel).
+  DEF_NEARBY_RIBO   the locus covers the run and a second Ribosomal_* cluster (M) 3-5 genes away. In Iainarchaeota
+                    this cluster is S6e / L24e / S28e / L7Ae with IF-2, dUTPase and NDK between; under the strict
+                    ruling these TOK cases are method errors.
+  DEF_ASSOC_FLANK   bf 1.0 with 5-10 extra genes, almost all a (SecY, EMC3_TMCO1, L34e, primase, helicase).
+  DEF_JUNCTION      '/' marks junctions adjacent in no other group; in Aenigmatarchaeota the strand line flips at the
+                    junction (two superoperon halves transcribed apart, 1-2 genes between); every output cuts there.
+  METHOD_SPLIT      cuts at junctions that recur widely (Iainarchaeota L34e|neighbour, L5|S14; Nanobdellota L29|S3).
+  METHOD_EXTENSION  the locus runs 8-110 genes into o genes beyond the run-associated flank.
+
+11. LOW-CONFIDENCE AND UNCLASSIFIED CASES
+No sampled case fell outside the rubric. Three carry low confidence:
+  U-WCP-27 (run 5279, Nanobdellota) DATA_GENE_CALL: the best locus ends at L6; the next two genes are fragments of one
+    family (60 + 130 aa, no Pfam hit) where L32e is expected, then L19e. A split ORF at the cut; plausible cause.
+  U-EMB-07 (run 5132, Iainarchaeota) DATA_GENE_CALL: L32e is split (162 + 49 aa, one family) at positions 17-18 and S14
+    is absent between L5 and S8, where EMB cuts. Gene-call trouble on both counts; the rule fires on the L32e pair.
+  U-EMB-31 (run 5682, Nanobdellota) predeclared DATA_CONTIG_EDGE, corrected METHOD_SPLIT: EMB cuts the run into three
+    loci with the remainder toward the contig end; the edge rule fires on geometry, and causation by the edge is
+    unshown.
+The predeclared DEF_OTHER_KIND label is wrong in premise for every case it covers except the length-flagged ones
+(listed per case in results/cases.tsv: other_kind_members); those cases carry their corrected label throughout.
+
+12. CAVEATS
+- The headline uses a post hoc correction of one evidence rule; the predeclared numbers are reported beside it.
+- Association is measured on family tokens (MMseqs2 rescue3) and 642 lineage-free groups; lineage-confined families
+  score as unassociated, so the strict ruling leans toward calling extensions method errors.
+- S1 / S3 admit up to 2 unassociated bridge genes and, in the corrected chain, the genes between nearby Ribosomal_*
+  genes; the strict chain admits associated genes only (bridges kept).
+- DEF_JUNCTION takes the piece with the largest overlap with the best locus as the target, which favours the output;
+  the proposed definition inherits this (14-21 runs per output).
+- TOK's loci table holds 650,438 loci of every size; its chance level (8% of random windows resolved) is 6-200x that of
+  WCP and EMB, so resolved counts compare outputs with different chance floors.
+- Near-identical genomes appear as near-identical cases (e.g. U-WCP-36 / U-WCP-37); the sample is of runs, not of
+  lineages.
+- Login-node work only (one thread): repro 24 s, stats 8 s, census + random windows 98 s, cases 39 s, full 30 s.
+  No Slurm job was needed.
+
+13. FILES
+Local benchmarks/redesign/ribo_audit/: audit.py (repro, sample, stats, classify, cases, full), tables.py,
+  predeclared.json, NOTEBOOK.txt, REPORT.txt, results/: cases.tsv (240 case evaluations: labels under the three
+  rubrics, coverage, precision, states, features, diagram), layouts.tsv (10,298 gene rows: position, strand, family,
+  Pfam domains, run membership, association statistics, loci covering), diagrams.txt (all 240), illustrative.txt,
+  ext_genes.tsv (best-locus extension genes with association statistics and domains), census.tsv (1,686 runs x 3
+  outputs, all three rubrics), tables.txt, random_windows_summary.tsv, sample.json, repro.json, full.json.
+Biotite $RD/ribo_audit/: code/ (audit.py, tables.py, predeclared.json), work/ (repro.json, std_*.parquet, sample.json,
+  stats.pkl, census.parquet, random_windows.parquet, nearby.parquet, full.json, cases.tsv, layouts.tsv, ext_genes.tsv,
+  diagrams.txt, tables.txt, illustrative.txt), numba_cache/.

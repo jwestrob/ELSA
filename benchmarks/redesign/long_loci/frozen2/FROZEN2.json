@@ -1,0 +1,67 @@
+{
+ "workstream": "long_loci, second frozen run: the SR-VP genome-bin set",
+ "written_utc": "2026-11-19T05:11Z",
+ "status_when_written": "Read from the dataset: package README.txt, MANIFEST.tsv / MANIFEST.json (file list, rows, bytes), seal.json (summary keys) and directory listings; the workstream report srvp_bins/REPORT.txt and its notebook (no data rows). No parquet, npy, FASTA or gold content of the package opened; no ELSA method, similarity pass, neighbour list or token build run on it. Parts 1-7 (DPANN, Spacedust development) and the lut frozen run are known.",
+ "dataset": {
+  "path": "$RD/ws_srvp_bins/package (read-only; RD = /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111)",
+  "seal_sha256": "390cb9f1d350bbe4afbafd1bc7a8902b415bdc75c282dc9acc38f134af021509 (sealed 2026-11-15T11:06:55Z, gold included)",
+  "sha256": {"README.txt": "070d0a4c7c2d1423828cbd6e0cb385c21825eaf75781f563b8eba97960c63cae", "MANIFEST.tsv": "d15a4bcc5fca17a22c27c5c6df813f6b78fd8f024de18f541dc58308fd02bb1d", "MANIFEST.json": "5fedba285da907d8f48398fe33e13aad7bfacc2518fdd53811477536afdce075", "seal.json": "48f24fef82acba0e08140ab6c62f48bc35740aacee23bf7cebc00541b6047a35"},
+  "as_described": "994 dereplicated high-quality genomes (780 Bacteria, 214 Archaea; 52 phyla by the genome table), 3,211,751 genes (3,170,150 unique proteins), 146,107 contigs with genes, 342 single-contig genomes; ESM++ small embeddings with zca10 whitening stored; ribosomal runs g2_m16 803 (one per genome in 803 genomes); gold DefenseFinder 6,395 and TXSScan 2,303 instances (MacSyFinder 2.1.4); no CRISPRCasTyper; split test = even genome_code (497), tune = odd (497)"
+ },
+ "configuration_rule": "fixed by the coordinator before part 7: PRIMARY = the embedding-list tree with S-add + B if part 7 found it justified on that base, otherwise the unmodified embedding-list tree exactly as run on the lut set; SECONDARY = the family-bond tree with the adaptive distance exactly as run on the lut set. Part 7 (REPORT7.txt): S-add + B NOT justified on the list base (summed excess -.019 to -.052). Hence PRIMARY = unmodified embedding-list tree.",
+ "rule_for_every_data_derived_number": "Nothing is chosen on this dataset. Taus by their rules (bond-level 1% shuffle rule; vl round-0 instance FDR rule), genome groups by the emb_hom 0.75 average-linkage rule, cohesion floors from 1,000,000 random cross-genome gene pairs (seed 17), exclusion masks by softrec mode 1, the engine's rule by its coverage rule at FDR .01. Whitening = the package's stored transform, applied, never refitted. Other theta outputs written by the unchanged code are never scored or reported.",
+ "configurations": {
+  "PRIMARY": "embedding-list tree, fixed distance (frozen run 1 SECONDARY, code frozen/code/fz.py copied as fz2.py with paths only): z >= 10.6 lists (one best match per genome, own group excluded) from the exact GPU z table (Z_STORE 10.5); genome groups (0.75 rule); vl round 0 with <= 2 intervening genes, 'grp' counting, exclusion masks K1000; list tau by vl's rule (ladder 4-20, FDR .01); L4b tree at theta .02 with the family-free kNN cohesion kappa_var_knn50; every node kept (L4b+); output L4bp_t0.02",
+  "SECONDARY": "family-bond tree, adaptive distance (frozen run 1 PRIMARY, code frozen/code/fl.py copied as fl2.py with paths only): rescue3 family tokens built here (MMseqs2 base cluster + rescue3, package recipe), genome groups (0.75 rule), lw.py WA bonds within 8 positions tested at their own distance, bond tau by the 1% shuffle rule, L4b tree with token cohesion at theta .2, closed-form family node test at the bond tau; output L4b_t0.2"
+ },
+ "inputs_built_here": {
+  "tokens": "frozen/code/tokens_f.sbatch copied (input FASTA via a shadow directory frozen2/pkg/proteins_gid.faa -> universe/proteins.faa); base mmseqs cluster -s 7.5 -e 1e-3 --min-seq-id 0 -c 0.5 --cov-mode 0 --cluster-mode 0; rescue3 prefilter -s 7.5 --max-seqs 1000, align -e 1e-5 -a; guard GUARD_MIN = 180 (rescue authorised up to 3 h for this run; time recorded)",
+  "uid_map": "package uid_of_row; gate: equal to 06a gid2uid",
+  "zca10_float32": "stored transform applied to the raw means; gate max |f32 - stored f16| <= 1e-3",
+  "gtable": "transfer_spacedust gtable.py copied (z table + genome-pair sums), one A5000 (partition gpu)",
+  "knn": "gpu_knn_sd.py copied, exact cosine, k 2,000, one A5000",
+  "prep": "fz2.py prep (kNN cohesion, exclusion masks) on 40 CPUs for memory (lut peak 126 GB at 4.46 M uids)",
+  "jobs": "24 CPUs each except the prep; dependent Slurm jobs that write their results to disk; login-node watchdog caps (about 2x expected); no timeout inside job scripts"
+ },
+ "comparators": {
+  "pair_linking": "L1 of each configuration's own bonds",
+  "engine_DH": "engine/code/recurrence.py unchanged on the same rescue3 tokens (--w 3 --null genome --perms 3 --fdr .01, Louvain modules, --all-genome-loci), nested reading DH (level-2 loci + rule-H cores, res .3, f .5) via blib / rules read-only; lineages = GTDB genera from the package genome table (genus; genomes without a genus count as their own lineage, the engine's rule); this is the ENGINE REFERENCE for the pass criteria",
+  "synton": "baseline_synton adapters copied (paths only): faithful (linclust cascade families) and matched (our rescue3 tokens), 24 CPUs each; a run that passes 2 h is cancelled by the watchdog and reported as not completed"
+ },
+ "scoring": {
+  "all_genomes": "every genome scored; headline on all genomes; the even (test) half beside it",
+  "loci": "inclusive gid intervals with e > s",
+  "curated": "package gold (DefenseFinder, TXSScan), scored with ws_dpann/package/scorer/score_dpann_loci.py read-only through a shadow package (universe symlinked; gold/instances.parquet with the DPANN columns the scorer reads; 'resolved' = every member on one contig, 'order_trusted' = True) at 200 controls, seed 17, min_members 2: per instance the best locus (max F1), F1, coverage, precision, control, excess. TXSScan reported as called and with the scorer's span limit (instances whose first-to-last member span exceeds 30 genes dropped, the engine runs' --max-span 30); every curated number also without genome G03c08f50ba11988e (its instances removed). Per caller: mean F1, control, excess with 95% intervals (10,000 bootstrap draws over instances, seed 17); summed DF + TXSS excess. Paired differences against the engine reference DH and between configurations: genome bootstrap (10,000 draws, seed 17) of per-caller F1 and excess differences and of the summed excess difference. Wording: BEATS if the lower bound > 0; MATCHES if not beats and d >= -.02; BELOW if d < -.02",
+  "ribosomal": "package ribosomal/runs.parquet, g2 runs with >= 16 marked genes (803): standing definition (ribosomal_check.score: best = largest overlap, ties shorter; recovered best_frac >= .5; resolved best_frac >= .8 and precision >= .8), the any-fitting-locus count, paired resolved differences vs DH (run bootstrap 10,000, seed 17)",
+  "accurate_reading": "ribo_audit bio.py rules (components of linked members: same strand and spacing <= 150 nt (strict) or 500 nt (loose), member pairs <= 500 nt, >= 3 consecutive non-members cut; members R = ribosomal Pfam at GA (package marked.parquet) or a KOfam 'ribosomal protein' KO, N = the literature members of N_RULES by KO or Pfam, EF2 by Pfam), evaluated if the annotation fits the compute limit: a restricted annotation of all proteins with the KOfam profiles of every ribosomal-protein KO and the N_RULES KOs (KOfam thresholds from ko_list) and the N_RULES / EF2 Pfam 38.1 models at GA (hmmsearch, 24 CPUs); the restriction can only change genes whose best overall KO differs from their best restricted KO (stated as an approximation). If the annotation job cannot finish within the limit, the reading is reported as missing with its cost",
+  "subsets": "Bacteria and Archaea separately (genome table domain); multi-contig bins and single-contig genomes separately; even half",
+  "coverage": "share of genes in loci, loci count, span quantiles",
+  "costs": "wall time and peak memory per stage"
+ },
+ "failure_criteria": {
+  "per_configuration": "FAILS on this set if any of: (F1) ribosomal resolved < 602 of 803 (75%) or recovered < 763 (95%); (F2) DefenseFinder excess 95% lower bound < +.15 or DefenseFinder F1 < .60; (F3) against the engine reference DH: summed DF + TXSS excess difference < -.02 with 95% upper bound < 0, or ribosomal resolved difference with 95% upper bound < 0; (F4) ribosomal resolved below 70% of the runs of either domain",
+  "headline_basis": "all genomes; TXSScan as called for F3, with the span-limited and without-G03c08f50ba11988e numbers beside it"
+ },
+ "expectations": {
+  "groups": "500-850 groups at 0.75 (dereplicated species, 52 phyla; nearest-neighbour emb_hom mostly below .75)",
+  "taus": "bond tau 6-10; list tau 6-10",
+  "genes_in_loci": "PRIMARY .40-.60; SECONDARY .40-.58; DH .50-.72",
+  "ribosomal_803": "PRIMARY recovered >= 780, resolved 640-760; SECONDARY resolved 650-770; DH 600-730; any-fit +5 to +30 over standing; accurate strict 20-80 below standing (if computed)",
+  "DefenseFinder": "PRIMARY F1 .72-.86, control .40-.55, excess +.25 to +.36; SECONDARY F1 .70-.83, excess +.22 to +.34; DH F1 .65-.80, excess +.20 to +.32",
+  "TXSScan": "as called: F1 .40-.62, excess +.08 to +.22; span-limited: F1 .55-.78, excess +.15 to +.32; removing G03c08f50ba11988e changes every curated mean by < .01",
+  "comparisons": "PRIMARY - DH summed +.04 to +.15 (BEATS); SECONDARY - DH +.02 to +.12; PRIMARY - SECONDARY summed 0 to +.08, resolved -20 to +40",
+  "subsets": "Archaea and Bacteria DefenseFinder F1 within .06; single-contig genomes resolve 5-15 percentage points more runs than multi-contig bins",
+  "pair_linking": "L1 F1 .45-.65, DefenseFinder excess +.05 to +.20, resolved 250-550",
+  "synton": "faithful DefenseFinder F1 < .20, 0-60 ribosomal runs recovered; matched no better",
+  "even_half": "within .02 F1 of all genomes",
+  "costs": "tokens 60-180 min at 24 CPUs; GPU table 12-25 min; GPU kNN 8-20 min; prep 4-10 min / 80-110 GB; Z arm 5-10 min; WA build 5-12 min; engine + DH < 10 min; synton 40-100 min each; annotation 15-60 min; scoring < 30 min"
+ },
+ "code_sha256": {
+  "frozen/code (copied with paths only into frozen2/code)": {"fl.py": "d4889fe3f2c3f45c8b09c9d55e9905c0903651d53b07f06c4d49ef531fd9ddb6", "fz.py": "32222775924ecfcdbb418eb746d15c5666ac3c2a37d964192f95651a613f65a8", "gtable_lut.py": "62c9cf8536949652190f7cc3515340a31eb2dd472e4b86dc4ef758a22704f7fc", "gpu_knn_lut.py": "66af65106c64d2c50e9ee72ea0819b65d483fab14e0202eea3adde0ff0d49ae5", "tokens_f.sbatch": "052630854e01bc715f5656c5616a1f0eeb57423aed3f7f3650b9253171d08092", "syn_f.sbatch": "aafc6b6d2d78859ab7e4aba4f325445589a397cf36275c95110c2685cab40fe6", "watchdog.sh": "9e7d220b109fd08886feaf8ba67b12590a2ff9b6fbaa12d3f7d934ecb4c707d1"},
+  "token recipe (package copies, unchanged)": {"06a_unique.py": "35e46235b7c7673761575d424e1face191d67549e928c96237544ee46796e486", "06b_rescue3.py": "593cda1d7abc33c31d180841ce88a995f936052bef99429d03102cb1c93cfc6a", "mmseqs_tokens.py": "1e85ff2e13c29c340adf610d27fba9b4e74d7e0f48782e02d057bca67d722ed2", "repair_lib.py": "af4d54a34033a7b31bc9aa3231ad6d7552b1b19eae8f345654ab58c7ea34da60", "tsv2parquet.py": "6ec5770e45562e0b2b212c2cb13dce5b2aad6161a45d2c0a68c97344657070e2"},
+  "synton adapters (unchanged)": {"make_inputs.py": "39d00ea3590b453cb1a54cd238178dd85056f8b5c698ea67880fbdd86eb3e25e", "fam_cascade.sh": "f2e753f35cfada43eb473311058d21d1198a37c86024ceac2fd80fda356b6006", "nb2sh.py": "80616cd498602a238aa512184d285b3af34ea328daf7bf63bb92794ade59812e", "synton_loci.py": "94f932bb54853dbc399a28d660674af8adf81be164178724728b49b070c95af0", "repository HEAD": "84baf1438f13fb6e03dabb8536e4f4dbfc03caa0"},
+  "long_loci/code (imported unchanged)": {"ll.py": "2382fcc951acaaf4d1e878a487a1878bf9dfa0038adfbef96e1a61471acb0103", "lw.py": "f593a7ac5dfd1381afa958b5eb600fd90dad93e7a01be9101cd4182f3aa06bbe", "lb.py": "404cd4a422fd536f64f54a5548566c4ca133e7b8f314075acfa63e922bade807", "words_ts.py": "88aa09ddb619f740eba0a55bcd41ba586f75a21bfec7d487db09a805c048326f", "sdu.py": "354538c4847bee8c53290817e5af45dd6e2278d377813f783a99df90cf58196d"},
+  "read-only imports": {"vocab_lists/code/vl.py": "8f89c1df0a0eb203ce515a399708025d0107a7f29e5b2aceafaebd87514f85b1", "softrec/code/softrec.py": "4124bd25e350dd5ea1877a1aa34d20ed3203723d8120f4b5c00d502d5b3a1630", "transfer_spacedust/code/emb.py": "0f951f7a8119dbd2aa4fdf787ca8afd4745cc195ac86c4d38b944ecca83c3581", "engine/code/recurrence.py": "703a2564f1be80f996f22ce503797df22dd10c78cab92dd7e4da37a6309937ba", "boundary/code/blib.py": "3afba7c337aa92153afc3c331b2165a9d5310d7081f3f7b9c2d4e3401d2c0b55", "boundary/code/rules.py": "11e4c1d63feb81b950db6aa1470874feec78b20e112afc3ae531959ee985f9e3", "ws_dpann/package/scorer/score_dpann_loci.py": "51400ca50fdcb809989f7b001cda79de65d226756de522957529abf95f65c8e5", "ribosomal/code/ribosomal_check.py": "2f37c8a8615c35fd2cd6cf05634f0318cef1e5831074452360405b607bb9be77", "ribo_audit/code/bio.py": "3eb95d54741740464965b0411d2a169c45fbda1cf48ae3cfea6c16a79c40f2af", "ribo_audit/code/audit.py": "ab60d576a504af8ae729b0477052595b3fcd0e619d9bfade1e5949fccb6ea59b"}
+ },
+ "scorer_code": "frozen2/code/fscore2.py and the accurate-reading adapter are written after this file; their sha256 enters the notebook before they read any output"
+}

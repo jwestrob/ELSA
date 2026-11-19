@@ -2972,3 +2972,41 @@ Standing limitation of that configuration on DPANN ribosomal runs, by the audit'
 reading: 1,504 (strict) to 1,547 (loose) of 1,686 right; 29 runs split at lineage-specific
 rearrangements; divergent blocks reported as one locus. The single-strand pieces remain available
 as a separate optional layer.
+
+## 2026-11-19 07:09 UTC — Second run on untouched data: SR-VP genome bins (`benchmarks/redesign/long_loci/frozen2/REPORT_frozen2.txt`)
+
+994 dereplicated high-quality genomes (780 bacteria, 214 archaea); truth: DefenseFinder (3,278
+instances with at least two members), TXSScan (2,034), 803 ribosomal runs. Frozen in
+`FROZEN2.json` before the data were opened; primary = the unmodified embedding-list tree (by the
+rule fixed before part 7), secondary = the family-bond tree with the adaptive distance; each ran
+once; no deviations except 40 CPUs for one memory-bound step.
+
+| Output | DefenseFinder F1 / excess | TXSScan F1 / excess | Summed excess | Ribosomal recovered / resolved / any fitting locus / accurate strict |
+|---|---|---|---|---|
+| **Embedding-list tree (primary)** | 0.882 / +0.451 | 0.754 / +0.302 | +0.753 | 802 / 528 / 708 / 540 |
+| Family-bond tree, adaptive (secondary) | 0.824 / +0.457 | 0.706 / +0.287 | +0.745 | 803 / 498 / 706 / 508 |
+| Recurrence-engine reference | 0.818 / +0.430 | 0.666 / +0.206 | +0.636 | 803 / 313 / 332 / 283 |
+| Pair-linking, embedding lists | 0.790 / +0.435 | 0.672 / +0.257 | +0.692 | 802 / 292 / 292 / 289 |
+| Synton pipeline on our families | 0.418 / +0.246 | 0.410 / +0.184 | +0.430 | 0 / 0 / 0 / 0 |
+| Synton pipeline as published | 0.067 / -0.011 | 0.173 / +0.043 | +0.032 | 0 / 0 / 0 / 0 |
+
+- **Both configurations fail the predeclared ribosomal criteria:** primary 528 of 803 resolved
+  (65.8%; bar 602) and 390 of 658 bacterial runs (59.3%; bar 70%); secondary 498 and 378.
+  Recovery is complete. Archaea 138 of 145 resolved; the losses are bacterial. Closed
+  single-contig genomes resolve fewer runs than multi-contig bins (52% against 75%): the
+  conserved flanks stay on the contig and parents reach past the run.
+- **The shortfall is which locus the scorer picks:** some locus of the primary fits 708 runs (88%)
+  at 80% both ways (secondary 706); a larger parent wins under the largest-overlap rule in 180 of
+  the 208 unresolved runs that have a fitting locus. The engine reference resolves 313 (39%).
+- **Both configurations beat the engine on every curated measure and on ribosomal runs:** primary
+  summed excess +0.117 [+0.104, +0.129] and +215 [+190, +240] resolved; secondary +0.108 and +185.
+- Primary against secondary: summed +0.008 [-0.003, +0.020]; DefenseFinder F1 +0.058; resolved +30
+  [+12, +48]. Same order as on the lut set.
+- TXSScan with the span limit: F1 0.823 / 0.768 / 0.710. Removing the Omnitrophota genome with the
+  runaway pilus call changes every summed excess by at most 0.001.
+- Accurate ribosomal reading (strict / loose): primary 540 / 574, secondary 508 / 570, engine
+  283 / 413.
+- 277 genome groups (500-850 expected); list threshold tau 8. Cost: 3 h 21 min of job wall time
+  (tokens 1 h 17 min; GPU 22 min).
+Both prepared untouched sets with embeddings are now used. Part 8 (best-window pair test) starts
+on DPANN.

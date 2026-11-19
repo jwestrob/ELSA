@@ -382,3 +382,42 @@ PART 7 (S-add: strand-first pieces added to the unmodified tree; both bases)
                   P S-add theta .2: summed +.001 [-.006, +.009], F1 DF +.010, TXSS +.018, CCT +.009, resolved +36, bio
                   1,592 / 1,634 (+54 / +63), all seven bars, 3 new curated pairs -> NOT justified (new pairs only).
                   P S-add+B: bio +29, 3 new pairs -> not justified. Frozen run 2 PRIMARY therefore = unmodified Z.
+
+SECOND FROZEN RUN (SR-VP genome bins, $RD/ws_srvp_bins/package; first ELSA run on it)
+---------------------------------------------------------------------------------------
+2026-11-19T05:11Z  FROZEN2.json written after reading only the package README, MANIFEST.tsv / .json, seal.json summary, listings and
+                  srvp_bins/REPORT.txt. PRIMARY = unmodified embedding-list tree (part 7: S-add+B not justified),
+                  SECONDARY = family-bond tree, adaptive distance; comparators, scoring, failure criteria, expectations.
+2026-11-19 05:15  Schemas read (genes gid-ordered and sorted; genomes with domain / genus / n_contigs; gold with the DPANN
+                  columns incl. resolved / order_trusted / span_genes; ribosomal runs with domain). Code frozen2/code:
+                  path-only copies (fl2 f49b6257, fz2 6d1a3828, gtable_f2 caa93680, gpu_knn_f2 90456a3c, tokens_f2
+                  7db50194, syn_f2 c2884a97), fscore2.py (2f3fac6a) and annot2.py (4a0a1f04) written before any output;
+                  shadow pkg/proteins_gid.faa -> universe/proteins.faa; meta.npz: 3,211,751 genes, 3,170,150 uids
+                  numbered by first gid. Preflight repeated (md5 unchanged; account 126 CPUs). Chain (watchdog pid 1533763,
+                  caps in logs/watchdog_jobs.tsv): 115659 tokens (GUARD_MIN 180), 115660 GPU table, 115661 GPU kNN, 115662
+                  main, 115663 zprep (40 CPUs, memory), 115664 zarm, 115665 synton faithful, 115666 synton matched, 115667
+                  annotation for the accurate reading, 115668 scoring (afterany).
+2026-11-19 05:27  Annotation 115667 done (11 min 30 s; hmmsearch 675 s on 24 processes): 226 KOfam profiles (201
+                  'ribosomal protein' + 25 N_RULES), 20 Pfam models (none missing); KO assigned to 60,185 genes; classes R
+                  56,992 (53,345 marked + 3,647 by KO only), N 16,197, X 3,138,562. The accurate reading can be computed.
+                  GPU table 115660 started; tokens 115659 in base clustering (13 min); synton faithful running.
+2026-11-19 05:30  Coordinator queued part 8 (best-window test on both bases; DPANN + Spacedust rows). Not started: it waits
+                  until the second frozen run is finished and reported.
+2026-11-19 05:40  GPU table 115660 done (11 min 47 s). Tokens: base cluster 1,179 s; 376,933 rescue query uids against
+                  979 M residues, guard projection 106 min (prefilter started 05:35:38). GPU kNN 115661 running.
+2026-11-19 05:50  GPU kNN 115661 done (10 min 38 s). Tokens rescue and synton faithful running.
+2026-11-19 05:53  Synton faithful 115665 done (37 min 28 s): 31,236 significant pairs (score > 80), 100,042 syntons, 8.4% of genes. Rescue prefilter running (18 min so far).
+2026-11-19 06:34  Tokens 115659 done (1 h 17 min at 24 CPUs; base 1,179 s, rescue prefilter 2,687 s, align 687 s): base 421,147 families (284,899 singletons); rescue3 moved 102,540 genes -> 337,684 families (220,296 singletons, largest 9,502). Main 115662 and synton matched 115666 running.
+2026-11-19 06:43  Main 115662 done (9 min): uid gate EQUAL; zca32 gate passed (max diff 1.2e-4); groups 277 at 0.75
+                  (largest 54, 143 singletons; .70 / .80: 153 / 481; FROZEN2 expectation 500-850 MISSED; AMI family .87,
+                  genus .39, description only); token cohesion q50 .022; SECONDARY WA: bond tau 8 (FDR at 6: .0155),
+                  2,180,472 bonds, L1 360,009 loci (50.7% of genes), L4b .2 874,154 loci (42.9%); engine rule P <= 1e-4 &
+                  L >= 2 (FDR .0099), 276,715 significant pairs; DH 528,741 loci (65.5%). zprep 115663 running (40 CPUs).
+2026-11-19 06:48  zprep 115663 done (4 min 40 s, 40 CPUs, peak 90.0 GiB): adapter smoke OK (277 groups, 8,797,285 instances); kNN cohesion q50 .033; exclusion masks built. Z arm 115664 running.
+2026-11-19 06:52  Z arm 115664 done (4 min 53 s, 20.8 GB): list tau 8 (FDR at 6 / 8: .0241 / .0059); 791,717,268 list entries; 1,752,378 bonds over 1,183,285 boundaries; PRIMARY L4b+ .02 1,013,801 loci (49.3% of genes); Z L1 400,338 loci. Waiting on synton matched 115666, then scoring 115668.
+2026-11-19 07:15  Synton matched 115666 done (31 min); scoring 115668 (2 min 53 s); watchdog exited, no cancellation.
+                  PRIMARY (Z L4b+ .02): DF F1 .882, excess +.451 [+.443, +.459]; TXSS .754 / +.302; summed +.753; ribosomal
+                  802 / 528 (any-fit 708; accurate 540 / 574); vs DH summed +.117 [+.104, +.129] BEATS, resolved +215.
+                  SECONDARY (WA L4b .2): DF .824 / +.457; summed +.745; 803 / 498 (any-fit 706); vs DH +.108, +185.
+                  DH: summed +.636, resolved 313. Both configurations FAIL F1 (resolved < 602) and F4 (Bacteria < 70%);
+                  pass F2, F3. Single-contig genomes resolve fewer runs (52% vs 75%). REPORT_frozen2.txt written.

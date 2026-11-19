@@ -1,0 +1,38 @@
+{
+ "kos_searched": 226,
+ "n_rules_kos": 25,
+ "pfam_models": [
+  "Cytidylate_kin",
+  "Cytidylate_kin2",
+  "DKCLD",
+  "EFG_C",
+  "EFG_IV",
+  "Enolase_C",
+  "Enolase_N",
+  "GTP_EFTU",
+  "IF-2",
+  "NDK",
+  "RNA_pol_A_bac",
+  "RNA_pol_L",
+  "RNA_pol_N",
+  "RNA_pol_Rpb6",
+  "RNase_P-MRP_p29",
+  "SUI1",
+  "SecE",
+  "SecY",
+  "TruB_C_2",
+  "TruB_N"
+ ],
+ "pfam_missing": [],
+ "ko_assigned": 60185,
+ "cls": {
+  "X": 3138562,
+  "R": 56992,
+  "N": 16197
+ },
+ "marked": 53345,
+ "R_by_ko_only": 3647,
+ "hmmsearch_seconds": 675.1,
+ "processes": 24,
+ "seconds": 687.9
+}

@@ -1,0 +1,65 @@
+{
+ "workstream": "ribo_audit part 3: the bacterial ribosomal shortfall on the SR-VP genome-bin set",
+ "written_utc": "2026-11-19T07:21Z",
+ "prior_exposure": "Read before writing: REPORT_frozen2.txt (aggregate counts: Bacteria 390 / 658 resolved PRIMARY, any-fit 569, accurate 406 / 439; closed genomes worse), FROZEN2.json keys, frozen2 code/annot2.py, results/annot.json, package README and table schemas. No SR-VP run, locus or case has been opened.",
+
+ "data": {
+  "package": "$RD/ws_srvp_bins/package (read-only): universe/genes, gene_flags, contigs, genomes (domain, n_contigs, platform, reported_circular), ribosomal/marked.parquet (Pfam 38.1 ^ribosom(al)?_ at GA, 121 models), ribosomal/runs.parquet (g2 with m16 = the 803 runs)",
+  "outputs": {"PRIMARY": "$RD/long_loci/frozen2/loci/srvp_Z/L4bp_t0.02.parquet (embedding-list tree)",
+              "SECONDARY": "$RD/long_loci/frozen2/loci/srvp_WA/L4b_t0.2.parquet (family-bond tree, adaptive distance)",
+              "ENGINE": "$RD/long_loci/frozen2/loci/srvp_engine/DH.parquet"},
+  "groups": "$RD/long_loci/frozen2/groups/emb_hom_average_t0.75.parquet (277 lineage-free groups)",
+  "closed_genome": "genome with n_contigs == 1 in universe/genomes.parquet; multi-contig = the rest",
+  "targets_to_reproduce": "Bacteria PRIMARY 658 recovered / 390 resolved, SECONDARY 658 / 378; Archaea PRIMARY 144 / 138, SECONDARY 145 / 120 (of 145); engine DH Bacteria 191, Archaea 122"
+ },
+
+ "annotation": {
+  "base": "$RD/long_loci/frozen2/annot/genes_annot.parquet (gid, ko, ko_name, cls, lit): KOfam for 201 ribosomal-protein KOs + the 25 part-2 N_RULES KOs, 20 Pfam models (N_RULES / EF2) at GA; R and N classes by the part-2 rules (archaeal literature list)",
+  "lacks": "(1) the bacterial literature members outside the archaeal list (nusG, rpoB, rpoC, tufA/B, adk, map, infA, cysS and the ecf / truA operon); (2) every Pfam domain and KO of all other genes, so annotated and unannotated non-members cannot be told apart and extension contents cannot be described",
+  "supplement_1": "KOfam search (ko_list thresholds) of the bacterial members over all package proteins: K02601 nusG, K03043 rpoB, K03046 rpoC, K02358 tufA/B, K02355 fusA, K00939 adk, K01265 map, K02518 infA, K03073 secE, K01883 cysS, K03685 rnc, K03218 rlmB, K16786 / K16787 / K16785 ecfA1 / ecfA2 / ecfT, K06173 truA",
+  "supplement_2": "full Pfam-A (38.1, GA) and full KOfam (ko_list thresholds) on every gene within 60 genes of an 803-run span (description of contents and the annotated / unannotated flag; nothing outside these windows)",
+  "compute": "one Slurm job, 24 CPUs, standard_expand, hmmsearch per chunk; expected < 1 h"
+ },
+
+ "literature": {
+  "bacterial_cluster": "secE - nusG - rplK (L11) - rplA (L1) - rplJ (L10) - rplL (L7/L12) - rpoB - rpoC - rpsL (S12) - rpsG (S7) - fusA - tufA - S10 operon (rpsJ, rplC, rplD, rplW, rplB, rpsS, rplV, rpsC, rplP, rpmC, rpsQ) - spc (rplN, rplX, rplE, rpsN, rpsH, rplF, rplR, rpsE, rpmD, rplO, secY, [adk, map, infA in Bacillus], rpmJ) - alpha (rpsM, rpsK, rpsD, rpoA, rplQ); variable adjacent operons cysS (cysS-rnc-rlmB-orf-sigH), tufB, ecf (ecfA1-ecfA2-ecfT-truA-rplM-rpsI)",
+  "sources": {
+   "Br21": "Brandis G (2021) Reconstructing the evolutionary history of a highly conserved operon cluster in Gammaproteobacteria and Bacilli. Genome Biol Evol 13:evab041 (PMC8046335, read): > 40 kb cluster secE-rpoBC-str-S10-spc-alpha + cysS, tufB, ecf; 57 genes; 163 order-altering events over 204 genomes; segmental duplication / transposition as mechanisms",
+   "Bo89": "Boylan SA, Suh JW, Thomas SM, Price CW (1989) J Bacteriol 171:2553 (PMC209934, read): B. subtilis IF1-B(L36)-S13-S11-alpha-L17 cotranscribed, S4 absent from the alpha operon; E. coli SecY-B-S13-S11-S4-alpha-L17",
+   "Su96": "Suh JW, Boylan SA, Oh SH, Price CW (1996) Gene: B. subtilis L16-L29-S17-L14-L24-L5-S14-S8-L6-L18-S5-L30-L15-SecY-Adk-Map-IF1-L36-S13-S11-alpha, internal promoters for secY and map (abstract only)",
+   "W09": "Wang, Dasgupta & Fox 2009 (part 2): bacterial alpha, L10 (rif), L11, S10, S20, str, spc clusters (Nomura et al. 1984); rpoB / rpoC at the end of the L10 operon; str = rpsL, rpsG, fusA, tufB; L16 within the bacterial S10 operon",
+   "T23": "Tirumalai et al. 2023 (part 2): bacterial S10-spc contiguous with bL36-uS13-uS11-uS4-rpoA-bL17",
+   "Ts22": "Tsurumaki M, Saito M, Tomita M, Kanai A (2022) RNA 28:1041 (PMC9297842, read): CPR bacteria lack uL30 (all), uL1 (some Parcubacteria), bL9 (most Microgenomates and others); further lineage-specific losses",
+   "CV05": "Coenye & Vandamme 2005 (abstract): gene order and content of S10-spc-alpha vary across bacteria by differential loss",
+   "archaeal": "the part-2 list (predeclared2.json) for the 145 archaeal runs"
+  },
+  "mapping": "R = Pfam ^ribosom(al)?_ (package marked.parquet) or a KO named 'ribosomal protein'; N = the archaeal N_RULES (part 2) + the bacterial KOs above + Pfam SecE / SecY / IF-2 / EF2 rule; X = other"
+ },
+
+ "rules": {
+  "accurate_locus": "part-2 bio.py rules unchanged: linkage = same strand and <= 150 nt (strict) or <= 500 nt (loose, POST HOC in part 2), <= 500 nt between two members; >= 3 consecutive X cut; components trimmed to members, >= 2 members incl. >= 1 R; one unit = one locus C, several = several (targets with >= 3 members)",
+  "verdicts": "part-2 procedure: 7 cannot tell, 6 data (gene-call anomaly at the decisive point: split ORF, length outlier, Prodigal partial / truncated flag from gene_flags), 2 glue, 3 output correct and larger, 5 fitting locus exists, 1 split, 4 extends past; reported for PRIMARY and SECONDARY unresolved bacterial runs, separately for closed and multi-contig genomes; archaeal unresolved runs as well",
+  "unannotated": "a gene with no hit in supplement 2 (inside the windows) and no base / supplement-1 hit"
+ },
+
+ "rearrangement_measures": {
+  "marker_identity": "R gene name (KO name or Pfam marker, part-2 short_rp), output-independent",
+  "pair_share": "for each pair of consecutive marked genes in a run (gap genes skipped), the share of OTHER lineage groups of the same domain, among groups holding both markers anywhere, in which some genome has the two markers <= 3 positions apart on one contig; per run: median share, minimum share, count of RARE pairs (share < 0.10)",
+  "core_order": "core = the 18 markers L3, L4, L23, L2, S19, L22, S3, L29, S17, L14, L24, L5, S14, S8, L6, L18, S5, L15 (shared S10-spc genes, T23 / W09); the order of the core markers present in a run, read in the run's direction and canonicalised (lexicographic minimum of forward and reverse); distinct orders per domain, per group-weighted count, and the share of runs whose order differs from the domain's modal order",
+  "unresolved_at_rare_junction": "an unresolved run whose decisive junction (verdict-1 cut or verdict-2 glue) lies between two consecutive markers of a RARE pair, or whose cut lies inside a RARE pair"
+ },
+
+ "conserved_stretch": "from each run edge outward, extend while the next adjacent gene pair (identity = KO, else Pfam architecture from supplement 2, else none) occurs <= 2 positions apart in >= 25% of other lineage groups of the same domain that hold both identities; report genes added per side, by domain and closed / multi-contig; also the length of C against the run",
+
+ "shares_for_the_answer": {
+  "rearrangement": "verdict 1 whose cut lies at a RARE pair or a rearranged member junction (share < 0.10)",
+  "over_extension_into_conserved_neighbours": "verdict 4 whose extension genes are mostly literature members or lie within the conserved stretch",
+  "scorer_choice": "verdict 5",
+  "run_definition": "verdict 2 (run glues units) + verdict 3 (accurate locus larger than the run)",
+  "other_method": "verdict 1 at common junctions, verdict 4 into unrelated genes",
+  "data_and_unknown": "verdicts 6 and 7",
+  "denominator": "unresolved bacterial runs of each output (PRIMARY 268, SECONDARY 280)"
+ },
+
+ "sound_definition": "evaluate the accurate-target scoring (part-2 strict / loose with the bacterial member list) for PRIMARY, SECONDARY and the engine DH, with target-length random-window chance; if the evidence points to a different definition, state it and report counts under it"
+}

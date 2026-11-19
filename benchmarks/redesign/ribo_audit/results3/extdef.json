@@ -1,0 +1,73 @@
+{
+ "PRIMARY": {
+  "Bact_closed": {
+   "resolved": 255,
+   "runs": 260,
+   "chance": 0.0015384615384615385
+  },
+  "Bact_multi": {
+   "resolved": 396,
+   "runs": 398,
+   "chance": 0.0022222222222222222
+  },
+  "Archaea": {
+   "resolved": 140,
+   "runs": 145,
+   "chance": 0.007017543859649123
+  }
+ },
+ "SECONDARY": {
+  "Bact_closed": {
+   "resolved": 257,
+   "runs": 260,
+   "chance": 0.002307692307692308
+  },
+  "Bact_multi": {
+   "resolved": 392,
+   "runs": 398,
+   "chance": 0.0033333333333333335
+  },
+  "Archaea": {
+   "resolved": 139,
+   "runs": 145,
+   "chance": 0.010526315789473684
+  }
+ },
+ "ENGINE": {
+  "Bact_closed": {
+   "resolved": 210,
+   "runs": 260,
+   "chance": 0.02
+  },
+  "Bact_multi": {
+   "resolved": 370,
+   "runs": 398,
+   "chance": 0.01888888888888889
+  },
+  "Archaea": {
+   "resolved": 120,
+   "runs": 145,
+   "chance": 0.01929824561403509
+  }
+ },
+ "extension": {
+  "Archaea": {
+   "run_len": 22.0,
+   "ext_len": 24.0,
+   "added_left": 0.0,
+   "added_right": 0.0
+  },
+  "Bact_closed": {
+   "run_len": 25.0,
+   "ext_len": 36.0,
+   "added_left": 3.0,
+   "added_right": 3.5
+  },
+  "Bact_multi": {
+   "run_len": 21.0,
+   "ext_len": 31.0,
+   "added_left": 1.0,
+   "added_right": 1.0
+  }
+ }
+}

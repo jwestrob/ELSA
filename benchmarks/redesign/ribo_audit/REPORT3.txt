@@ -1,0 +1,227 @@
+ribo_audit PART 3: the bacterial ribosomal shortfall on the SR-VP genome-bin set (frozen run 2)
+written 2026-11-19 ~09:00Z; predeclared3.json written 07:21Z before any SR-VP run, locus or case was opened.
+Items marked POST HOC were defined after the predeclared tables had been read.
+
+ANSWER
+1. The shortfall is the run definition. The g2_m16 run follows Pfam-marked ribosomal proteins with <= 2 unmarked genes
+   between them, so it stops at L15 where the spc operon continues through secY-adk-map-infA (3-4 unmarked genes) into
+   the alpha operon (L36-S13-S11-S4-rpoA-L17). Both outputs report the whole co-linked cluster. Of the 268 unresolved
+   bacterial PRIMARY runs: run definition 256 (95.5%; verdict 3 236, verdict 2 20), scorer's choice among nested loci
+   5 (1.9%), over-extension into conserved neighbours 3 (1.1%), extension into unrelated genes 1, gene-call data 3,
+   rearrangement 0. SECONDARY (280): 269 (96.1%) / 7 (2.5%) / 1 / 1 / 2 / 0. Loose reading: 258 and 270.
+2. Rearrangement explains none of it. Measured without the outputs, bacterial marker order is MORE conserved than
+   archaeal: adjacent-pair share across other lineage groups median 0.987 (closed and multi-contig) vs 0.975 in
+   Archaea, q10 0.916 / 0.946 vs 0.860; all 658 bacterial runs are collinear with one S10-spc core order (421 runs
+   carry all 18 core markers, all 421 in that one order) against 141 / 145 archaeal runs (4 rearranged). No verdict-1
+   split exists in Bacteria; unresolved runs holding any rare pair: PRIMARY 7 / 268 (resolved runs 109 / 390).
+3. Output-independent check (POST HOC): 259 of the 268 unresolved runs (96.6%) have the alpha block <= 12 genes past
+   the run on the same contig; runs whose spc-alpha insert is <= 2 genes (alpha block inside the run) resolve 97 / 101
+   (PRIMARY), 97 / 101 (SECONDARY), 88 / 101 (engine DH). Closed genomes do worse because their clusters are whole:
+   277 of 398 multi-contig runs lie <= 12 genes from a contig end and resolve 227 / 277 (82%); away from contig ends
+   multi-contig bins resolve 55 / 121 (45%) and closed genomes 107 / 258 (41%).
+4. Contents beyond the run (PRIMARY, closed): 1,478 genes in 140 runs, 711 ribosomal proteins + 756 literature cluster
+   members (secY 140, map 139, rpoA 135, infA 128, adk 119, ...) + 11 other, 0 unannotated; past the accurate locus only
+   5 runs (49 genes). The conserved stretch around a closed-genome run adds a median 10 genes (q25-q75 3-11); in
+   Archaea 1 (0-2).
+5. Ribosomal resolution as defined is unsound in Bacteria: it scores the accurate locus as a failure in 236 / 268 runs.
+   A sound definition is the cluster-level run (ribosomal proteins + literature cluster members, same <= 2-gene rule;
+   POST HOC): Bacteria PRIMARY 651 / 658, SECONDARY 649 / 658, engine DH 580 / 658 (Archaea 140 / 139 / 120 of 145),
+   chance 0.15-1.05% for the outputs and 1.9-2.0% for DH. The predeclared accurate-target scoring with the bacterial
+   member list gives 626 / 623 / 530 strict and 631 / 626 / 548 loose (chance 0.9-2.7% outputs, 1.9-4.1% DH).
+
+------------------------------------------------------------------------------------------------------------------------
+1. REPRODUCTION (bio3.py repro; equal to ribosomal_check.score and REPORT_frozen2)
+
+                     runs   PRIMARY rec/res (any-fit)   SECONDARY rec/res (any-fit)   ENGINE DH res (any-fit)
+  Bacteria            658   658 / 390 (569)             658 / 378 (569)               191 (208)
+    closed (1 contig) 260   260 / 108 (209)             260 /  94 (204)                58 (70)
+    multi-contig      398   398 / 282 (360)             398 / 284 (365)               133 (138)
+  Archaea             145   144 / 138 (139)             145 / 120 (137)               122 (124)
+
+  Closed = n_contigs == 1 in universe/genomes.parquet. Bacterial resolved share closed 41.5%, multi-contig 70.9%. The
+  52% / 75% in REPORT_frozen2 is over both domains (165 / 320 vs 363 / 483).
+
+2. ANNOTATION USED AND WHAT IT LACKS
+  Base: $RD/long_loci/frozen2/annot/genes_annot.parquet (gid, ko, ko_name, cls, lit): KOfam for 201 ribosomal-protein
+  KOs and the 25 part-2 N_RULES KOs, 20 Pfam models at GA; classes R / N by the part-2 rules with the ARCHAEAL member
+  list. It lacks (a) the bacterial cluster members outside that list: nusG, rpoB, rpoC, tufA/B, adk, map, infA, cysS
+  and the ecf / truA genes; (b) every Pfam domain and KO of all other genes, so annotated and unannotated non-members
+  cannot be told apart. Consequence: under the base list adk-map-infA are three consecutive non-members, which the
+  part-2 rule (>= 3 consecutive X cut) uses to end the accurate locus at secY; that is why REPORT_frozen2's accurate
+  reading is 406 strict / 439 loose (inferred from the rule; the base-only variant was not rerun here).
+  Supplement 1 ($RD/ribo_audit/work3/annot/extra_ko.parquet): 16 KOfam profiles (ko_list thresholds) over all
+  3,211,751 package proteins: K02601 nusG, K03043 rpoB, K03046 rpoC, K02358 tufA/B, K02355 fusA, K00939 adk, K01265
+  map, K02518 infA, K03073 secE, K01883 cysS, K03685 rnc, K03218 rlmB, K16786 / K16787 / K16785 ecfA1 / ecfA2 / ecfT,
+  K06173 truA; 11,540 hits. Supplement 2 (work3/annot/window_pfam*.parquet): Pfam-A 38.1 at GA on the 63,010 genes
+  within 40 genes of a run; 54,011 carry a domain. DEVIATIONS from predeclared3: windows of 40 genes (60 declared);
+  full KOfam on the windows dropped (15 GB of profiles, beyond the 2-hour bound). "Unannotated" means no hit in base,
+  supplement 1 or supplement 2, and exists only inside the windows. Label note: the part-2 tables call the Pfam
+  RNA_pol_A_bac / KO K03040 gene "rpoD" (archaeal name); in Bacteria it is rpoA, written rpoA here.
+  Slurm job 115893 (24 CPUs, 12 min 13 s) ran both supplements; everything else ran single-threaded on the login node.
+
+3. LITERATURE (compiled before cases; full list in predeclared3.json)
+  Bacterial cluster (Brandis 2021 GBE 13:evab041; Boylan et al. 1989 J Bacteriol 171:2553; Suh et al. 1996 Gene;
+  Wang, Dasgupta & Fox 2009): secE-nusG-L11-L1-L10-L12-rpoB-rpoC | str (S12-S7-fusA-tufA) | S10 operon (S10, L3, L4,
+  L23, L2, S19, L22, S3, L16, L29, S17) | spc (L14, L24, L5, S14, S8, L6, L18, S5, L30, L15, secY, [adk, map, infA in
+  Bacillus], L36) | alpha (S13, S11, S4, rpoA, L17); adjacent cysS, tufB, ecf (ecfA1-ecfA2-ecfT-truA-L13-S9). B.
+  subtilis spc is transcribed through secY-adk-map-infA-L36-S13-S11-alpha (Suh 1996; Boylan 1989). Brandis counts 163
+  order-altering events over 204 genomes in the > 40 kb, 57-gene cluster (segmental duplication and transposition).
+
+4. VERDICTS FOR EVERY UNRESOLVED RUN (part-2 rules and procedure; STRICT linkage = same strand, <= 150 nt; LOOSE =
+   <= 500 nt, POST HOC in part 2)
+  STRICT                         PRIMARY                               SECONDARY
+                                 closed  multi  Bacteria  Archaea      closed  multi  Bacteria  Archaea
+  1 split one locus                  0      0        0        0            0      0        0        0
+  2 run glues >= 2 loci              9     11       20        4            7     13       20        8
+  3 output correct, larger          137     99      236        3          154     95      249       13
+  4 output extends past the locus    2      2        4        0            2      0        2        2
+  5 fitting locus, scorer picks      3      2        5        0            2      5        7        0
+    the larger
+  6 data (gene-call anomaly)         1      2        3        0            1      1        2        2
+  7 cannot tell                      0      0        0        0            0      0        0        0
+  unresolved                       152    116      268        7          166    114      280       25
+  LOOSE: PRIMARY closed 0/8/139/2/2/1/0, multi 0/6/105/2/1/2/0 (Bacteria 0/14/244/4/3/3/0), Archaea 0/3/4/0/0/0/0;
+         SECONDARY closed 0/7/155/1/2/1/0, multi 0/7/101/1/4/1/0 (Bacteria 0/14/256/2/6/2/0), Archaea 0/10/15/0/0/0/0.
+  Verdict-2 break types, PRIMARY strict (Bacteria, 20): spacer > 500 nt between two members 7 (EF2|S10 529-581 nt in
+  4, S8|L5 529 nt, L2|S19 590 nt, L2|S3 740 nt; 2 of the 7 with a second break), opposite-strand non-member gene(s)
+  inside the cluster 7, same-strand non-member gene with a > 150 nt spacer 6.
+  Verdict 4, PRIMARY strict: 3 extend into members of the neighbouring unit (alpha block and ecf genes in PRIMARY-1290
+  and -1459; rpoBC-L10-L11 operon in -1746), 1 (PRIMARY-1616) into GalP_UDP_transf, Glycos_transf_2, RuvX and an
+  unannotated gene before the str operon.
+  Verdict 5 parents extend into secE-nusG-L11-L1-L10-L12-rpoB-rpoC (PRIMARY-1090 across a 530 nt spacer, -1507,
+  -1687) or into adk-map-infA and the alpha block where the accurate locus ends one gene past the run (PRIMARY-1656,
+  -1892).
+  Verdict 6: PRIMARY-1758 (length outlier at the decisive gene), -1808 and -1987 (split ORFs).
+
+  Accurate-target scoring (the part-2 bio scoring with the bacterial member list; runs right / runs):
+                 PRIMARY                      SECONDARY                    ENGINE DH
+    strict       closed 245/260 multi 381/398  closed 246/260 multi 377/398  closed 192/260 multi 338/398
+                 Bacteria 626/658 Archaea 134   Bacteria 623/658 Archaea 137   Bacteria 530/658 Archaea 110
+    loose        Bacteria 631/658 Archaea 135   Bacteria 626/658 Archaea 139   Bacteria 548/658 Archaea 116
+    chance (target-length random windows, 5 per target, seed 17, strict): PRIMARY closed 1.07% multi 0.90% Archaea
+    1.97%; SECONDARY 1.28 / 1.09 / 2.68%; DH 2.99 / 1.90 / 4.08%.
+
+5. SHARES OF THE BACTERIAL SHORTFALL (predeclared3 mapping)
+                                     PRIMARY strict (268)      SECONDARY strict (280)
+                                     closed  multi  all         closed  multi  all
+  rearrangement (v1 at a rare pair)      0      0   0 (0%)          0      0   0 (0%)
+  over-extension into conserved          1      2   3 (1.1%)        1      0   1 (0.4%)
+    neighbours (v4 into members)
+  scorer's choice (v5)                   3      2   5 (1.9%)        2      5   7 (2.5%)
+  run definition (v2 + v3)             146    110 256 (95.5%)     161    108 269 (96.1%)
+  other method (v4 unrelated)            1      0   1               1      0   1
+  data / unknown (v6, v7)                1      2   3               1      1   2
+  Loose: PRIMARY 0 / 4 / 3 / 258 (96.3%) / 0 / 3; SECONDARY 0 / 2 / 6 / 270 (96.4%) / 0 / 2.
+  Reading of "over-extension into conserved neighbours": 236 of the 256 run-definition runs (v3) are runs whose
+  output extends into conserved neighbours; those neighbours are the same co-transcribed cluster (alpha operon and
+  the secY-adk-map-infA genes) by strand, spacing and the literature, so the run, and not the output, is short.
+
+6. REARRANGEMENT MEASURED DIRECTLY (independent of the outputs)
+  Marker identity = KO name or Pfam marker of each ribosomal protein. The predeclared naming left archaeal Pfam
+  synonyms unmerged (L4e, S29e, L5e, L23e, L26, L27A); the table below merges them (rearr3.py, POST HOC naming fix;
+  bacterial numbers are unchanged to the third decimal; predeclared-name values in parentheses).
+  Pair share = for consecutive markers of a run, share of OTHER same-domain lineage groups holding both markers in
+  which they lie <= 3 positions apart; rare = share < 0.10.
+                             Bact closed      Bact multi       Archaea
+  runs / marker pairs        260 / 6,122      398 / 8,137      145 / 2,601
+  other groups per pair      228              228              43
+  pair share median          0.987            0.987            0.975 (0.953)
+  pair share q25 / q10       0.957 / 0.916    0.982 / 0.946    0.907 / 0.860 (q10 0.800)
+  run-minimum share median   0.518            0.916            0.791 (0.780)
+  rare pairs                 55 (0.90%)       69 (0.85%)       15 (0.58%)
+    L15|L36 or L15|S13       51               49               0
+    same-name (split calls)  0                14               3
+    other                    4                6                12
+  runs with >= 1 rare pair   52               64               14
+  Core order (18 S10-spc markers, canonicalised): Bacteria 31 distinct orders over 658 runs (201 groups), modal share
+  0.640; 421 runs with all 18 markers, 1 order (L15-S5-L18-L6-S8-S14-L5-L24-L14-S17-L29-S3-L22-S19-L2-L23-L4-L3);
+  every one of the 31 orders is a subset of that order (658 / 658 collinear); distinct orders come from absent markers
+  (17 markers in 163 runs, <= 16 in 74). Archaea 21 distinct over 145 runs (34 groups), modal share 0.366; 54 runs
+  with all 18 in 2 orders (53 + 1); 4 runs non-collinear: S10-operon block placed after S8 (2), L3..L29 block placed
+  after L15 (1), L5-S14 swapped (1). (Predeclared names: Bacteria 33 orders, Archaea 46 orders, 0 complete.)
+  The bacterial rare pairs are the spc-alpha junction itself: L15 sits next to L36 / S13 only where the secY-adk-map-
+  infA insert has shrunk to <= 2 genes (adk-secY 28, secY-infA 25, infA-secY 22, secY 11, secY-adk 11, other 4 runs).
+  The order is the same; the gene count of the insert varies. These runs carry the alpha block inside the run and are
+  resolved: runs with >= 1 rare pair are 109 / 390 resolved and 7 / 268 unresolved (PRIMARY), 109 / 378 and 7 / 280
+  (SECONDARY).
+  Unresolved runs whose decisive junction lies at a rare pair: verdict 1 none; verdict 2 1 of 20 under the predeclared
+  names (PRIMARY-1822, L2|S3 with a 740 nt spacer and S3|S17 with 658 nt; spacer lengths match the absent S19-L22 and
+  L16-L29 gene calls, so the junction reflects missing calls, read from lengths only), 0 under merged names (L2|S3
+  share 0.129).
+
+7. WHERE THE ALPHA BLOCK SITS (alpha3.py, POST HOC, output-independent)
+                                                          runs   PRIMARY  SECONDARY  DH   PRIMARY unresolved
+  closed  a alpha block inside the run (insert <= 2)       51       49        49      46     2
+          b alpha block <= 12 genes past the run           186       39        23       1   147
+          d alpha block absent within 12 genes              23       20        22      11     3
+  multi   a alpha block inside the run                      50       48        48      42     2
+          b alpha block <= 12 genes past the run           252      140       143       7   112
+          c run <= 12 genes from a contig end, no alpha     81       81        78      77     0
+          d alpha block absent within 12 genes              15       13        15       7     2
+  PRIMARY strict verdicts in category b: closed v2 8, v3 136, v4 1, v5 1, v6 1; multi v2 10, v3 98, v4 1, v5 1, v6 2.
+  Category b resolves more often in multi-contig bins than in closed genomes (140 / 252 vs 39 / 186): 161 of those 252
+  runs end <= 12 genes from a contig end (111 resolved); the other 91 resolve 29 (32%), closed 38 / 184 (21%).
+  By distance to a contig end: multi-contig <= 12 genes 277 runs, PRIMARY 227 / SECONDARY 228 / DH 114 resolved; > 12
+  genes 121 runs, 55 / 56 / 19; closed > 12 genes 258 runs, 107 / 93 / 58.
+
+8. WHAT THE OVER-EXTENDED PARENTS CONTAIN (genes of the output's best locus beyond the run; verdicts 3-5, strict)
+  PRIMARY closed, inside the accurate locus (140 runs, 1,478 genes): ribosomal 711 (S4 137, S11 136, S13 136, L17 134,
+    L36 97, S9 28, L13 28, S16 3, ...), literature members 756 (secY 140, map 139, rpoA 135, infA 128, adk 119, tufA 30,
+    truA 28, nusG 12, secE 12, rpoB 5, rpoC 4), other 11 (ADK Pfam below the adk KO threshold 4, ...), unannotated 0.
+    Beyond the accurate locus (5 runs, 49 genes): ribosomal 22, members 15 (secE, nusG, rpoB, rpoC, rpoA, infA),
+    other 12 (unannotated 4, RuvX, Radical_SAM, Peptidase_M50, ADK).
+  PRIMARY multi: inside 102 runs, 1,024 genes (ribosomal 489, members 519, other 16, unannotated 4); beyond 4 runs,
+    40 genes (19 / 16 / 5).
+  SECONDARY closed: inside 158 runs, 1,625 genes (777 / 834 / 14, unannotated 4); beyond 4 runs, 40 genes (15 / 9 /
+    16). SECONDARY multi: inside 98 runs, 1,001 genes (483 / 505 / 13); beyond 5 runs, 48 genes (20 / 15 / 13).
+  Archaea (for contrast): PRIMARY 3 runs, 10 genes (secY 3, EMC3_TMCO1 2, cbf5, cmk, adk, L34e, AAA_17).
+  Accurate locus minus run, verdict-3 runs: closed median +10 genes (q25-q75 10-12, range 5-21), multi +10 (9-11),
+  Archaea +4 (3 runs).
+  Conserved stretch (predeclared: identity pairs <= 2 apart in >= 25% of other same-domain groups holding both):
+  closed run median 25 genes, adds 2 left / 2 right, total q25 / q50 / q75 3 / 10 / 11; multi 21, 1 / 1, 2 / 8 / 10;
+  Archaea 22, 0 / 0, 0 / 1 / 2. No stretch reached the 40-gene window edge.
+  Cluster-level run (section 9) vs run, median genes: closed 25 -> 36, multi 21 -> 31, Archaea 22 -> 24.
+
+9. A SOUND BACTERIAL DEFINITION, WITH COUNTS
+  As defined, ribosomal resolution in Bacteria measures where the Pfam ribosomal chain happens to end, which is inside a
+  co-transcribed cluster; an output that reports the accurate locus fails it in 236 / 268 (PRIMARY) and 249 / 280
+  (SECONDARY) unresolved runs. Two definitions measure the intended thing:
+  (i) Cluster-level run (POST HOC): markers = ribosomal proteins + literature cluster members (base N list +
+      supplement 1), same <= 2-gene gap rule, the extended run containing each original run as target, standard 80 / 80
+      best locus. Chance = 5 random windows of the extended-run length per target, seed 17.
+                 Bacteria          closed     multi      Archaea    chance closed / multi / Archaea
+      PRIMARY    651 / 658         255 / 260  396 / 398  140 / 145  0.15% / 0.22% / 0.70%
+      SECONDARY  649 / 658         257 / 260  392 / 398  139 / 145  0.23% / 0.33% / 1.05%
+      ENGINE DH  580 / 658         210 / 260  370 / 398  120 / 145  2.00% / 1.89% / 1.93%
+  (ii) Accurate-target scoring (predeclared; section 4): PRIMARY 626, SECONDARY 623, DH 530 of 658 strict.
+  (i) is the simpler replacement: one rule for both domains, computable from annotation alone, Archaea nearly
+  unchanged (PRIMARY 138 -> 140), and the margin over the engine reference stays (PRIMARY +71 Bacteria, +20 Archaea).
+  (ii) additionally splits the cluster at > 500 nt spacers and strand changes, so it separates str and S10 operons;
+  it is the stricter biological reading.
+
+10. THREE DIAGRAMS (gene order on the contig, left to right; [ ] = run; -n nt- = decisive intergenic distance)
+  (A) PRIMARY-1063, closed genome, verdict 3 (the pattern of 236 / 268). All genes on the minus strand; spacers
+      <= 150 nt from L17 to tufB except secE-L33 283 nt (two members, linked under the <= 500 nt member rule).
+      L17 rpoA S4 S11 S13 L36 infA map adk secY [L15 L30 S5 L18 L6 S8 S14 L5 L24 L14 S17 L29 L16 S3 L22 S19 L2 L23
+      L4 L3 S10 tufA EF2 S7 S12 rpoC rpoB L12 L10 L1 L11 nusG secE L33] tufB
+      run 34 genes (L15 .. L33); accurate locus C 45 (L17 .. tufB); output best locus 44 (L17 .. L33).
+      The 4 unmarked genes infA-map-adk-secY end the run; standard precision 34 / 44 = 0.77 -> unresolved.
+  (B) PRIMARY-1116, closed genome, verdict 2 (member spacer > 500 nt). Plus strand.
+      tufA secE nusG [L11 L1 L10 L12 rpoB rpoC S12 S7 EF2 -557 nt- S10 L3 L4 L23 L2 S19 L22 S3 L16 L29 S17 L14 L24
+      L5 S14 S8 L6 L18 S5 L15] secY adk map infA S13 S11 S4 rpoA L17
+      run 29 genes (L11 .. L15); accurate units tufA .. EF2 (12) and S10 .. L17 (29); output best locus nusG .. L17 (39).
+      Same EF2|S10 adjacency in 4 / 5 genomes of the group and 123 other groups: the str / S10 operon boundary.
+  (C) PRIMARY-1090, closed genome, verdict 5. Minus strand. The spc-alpha insert is adk-secY only, so the alpha block
+      is inside the run.
+      [L17 rpoA S11 S13 adk secY L15 L30 S5 L18 L6 S8 S14 L5 L24 L14 S17 L29 L16 S3 L22 S19 L2 L23 L4 L3 S10 tufA
+      EF2 S7 S12] -530 nt- Formyl_trans_N unannotated rpoC rpoB -274 nt- L12 L10 -537 nt- L1 L11 nusG secE
+      run 31 genes = accurate locus C (L17 .. S12); the output holds a locus fitting it, and the scorer's best locus
+      L17 .. secE (41 genes, precision 0.76) adds the rpoBC-L10-L11 genes across the 530 nt spacer.
+
+11. FILES
+  Local benchmarks/redesign/ribo_audit/: predeclared3.json, REPORT3.txt, NOTEBOOK.txt; code annot3.py, annot3.sbatch,
+  bio3.py (repro, verdict, rearr, chance, extdef), rearr3.py, alpha3.py, tables3.py, tables3b.py; results3/ (tables3.txt,
+  tables3b.txt, strict/ and loose/ cases3.tsv, diagrams3.txt, junctions3.json, ext3.parquet, chance3.json; repro3.json,
+  extdef.json, rearr_norm.json, alpha3.parquet, pair_shares*.parquet, run_order*.parquet, stretch.parquet).
+  Remote $RD/ribo_audit/: the same report, notebook and code; all intermediate outputs in work3/ (layouts3.tsv per case).
+  Nothing in $RD/ws_srvp_bins/package or $RD/long_loci/frozen2 was changed. Nothing committed.

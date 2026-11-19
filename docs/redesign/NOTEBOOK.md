@@ -3031,3 +3031,40 @@ Spacedust check rows; predeclared; in own-window mode the code reproduces the fr
 Reading: fragmentation at rearranged junctions is a small class and the best-window test removes
 it on the family base. The larger problem, shown by the SR-VP test on bacteria, is conglomeration:
 the fitting locus exists under a larger parent. Not adopted; the frozen configurations stand.
+
+## 2026-11-19 08:56 UTC — Why bacterial ribosomal runs go unresolved on the SR-VP set: the run definition (`benchmarks/redesign/ribo_audit/REPORT3.txt`)
+
+Audit part 3, on the already-used SR-VP set; counts reproduced exactly first. Corrects two
+readings of mine: that the oversized parents were over-extension ("conglomeration"), and the low
+"accurate reading" in the frozen report (540 / 574), which used an archaeal member list.
+
+- **Of the 268 unresolved bacterial runs of the primary output: run definition 256 (95.5%)**,
+  scorer's choice among nested loci 5, over-extension into conserved neighbours 3, unrelated genes
+  1, data 3, **rearrangement 0**. Secondary (280): 269 / 7 / 1 / 1 / 2 / 0.
+- **Mechanism:** a run is a chain of Pfam-marked ribosomal proteins with at most 2 unmarked genes
+  between them. In bacteria secY-adk-map-infA puts 3-4 unmarked genes between the spc and alpha
+  operons, so the run stops at L15, while the outputs report the whole linked cluster (example,
+  closed genome: run of 34 genes L15..L33; accurate locus 45 genes L17..tufB; output 44 genes,
+  precision 0.77, scored unresolved). When that insert is 2 genes or fewer the alpha block falls
+  inside the run and 97 of 101 such runs resolve.
+- **What the parents add in closed genomes:** 1,478 genes beyond the run in 140 runs: 711
+  ribosomal proteins, 756 literature-defined cluster members (secY 140, map 139, rpoA 135, infA
+  128, adk 119), 11 other genes. Only 5 runs extend past the accurate locus.
+- **Closed genomes look worse only because their clusters are whole:** away from contig ends,
+  multi-contig bins resolve 45% and closed genomes 41%.
+- **Gene order is more conserved in Bacteria than in Archaea here:** all 658 bacterial runs follow
+  one S10-spc core order (31 distinct orders, all subsets of one); 4 of 145 archaeal runs are
+  rearranged; median share of other lineage groups with the same adjacent marker pair 0.987
+  (Bacteria) against 0.975 (Archaea).
+- **Under a cluster-level run (ribosomal proteins plus literature cluster members, same 2-gene
+  rule; defined after the fact):** primary 651 of 658 bacterial and 140 of 145 archaeal runs
+  resolved; secondary 649 and 139; engine reference 580 and 120; chance 0.15-1.05%. Predeclared
+  accurate-target scoring with the bacterial member list: 626 / 623 / 530 (strict).
+- The remaining real errors of the primary in Bacteria: 20 runs where the output joins units that
+  the evidence separates (a spacer over 500 nt, or an opposite-strand gene inside), 4 extending
+  past the locus, 5 where the scorer picks a larger nested locus.
+- Deviations declared: 40-gene windows in place of 60; full KOfam on windows dropped for the
+  compute limit; one extra 12-minute 24-CPU job for bacterial member profiles.
+Status of the claim: the frozen run's predeclared ribosomal criterion failed; this audit shows
+the criterion was unsound for Bacteria. A clean claim needs the cluster-level definition declared
+in advance on new data.

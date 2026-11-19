@@ -1,0 +1,89 @@
+SHARES OF THE BACTERIAL SHORTFALL (predeclared3 mapping; denominators = unresolved bacterial runs)
+  strict PRIMARY   closed       n=152  rearrangement 0 (0.0%)  over-extension into conserved neighbours 1 (0.7%)  scorer 3 (2.0%)  run definition 146 (96.1%; v2 9, v3 137)  other method 1  data 1
+  strict PRIMARY   multi        n=116  rearrangement 0 (0.0%)  over-extension into conserved neighbours 2 (1.7%)  scorer 2 (1.7%)  run definition 110 (94.8%; v2 11, v3 99)  other method 0  data 2
+  strict PRIMARY   closed+multi n=268  rearrangement 0 (0.0%)  over-extension into conserved neighbours 3 (1.1%)  scorer 5 (1.9%)  run definition 256 (95.5%; v2 20, v3 236)  other method 1  data 3
+  strict SECONDARY closed       n=166  rearrangement 0 (0.0%)  over-extension into conserved neighbours 1 (0.6%)  scorer 2 (1.2%)  run definition 161 (97.0%; v2 7, v3 154)  other method 1  data 1
+  strict SECONDARY multi        n=114  rearrangement 0 (0.0%)  over-extension into conserved neighbours 0 (0.0%)  scorer 5 (4.4%)  run definition 108 (94.7%; v2 13, v3 95)  other method 0  data 1
+  strict SECONDARY closed+multi n=280  rearrangement 0 (0.0%)  over-extension into conserved neighbours 1 (0.4%)  scorer 7 (2.5%)  run definition 269 (96.1%; v2 20, v3 249)  other method 1  data 2
+  loose  PRIMARY   closed       n=152  rearrangement 0 (0.0%)  over-extension into conserved neighbours 2 (1.3%)  scorer 2 (1.3%)  run definition 147 (96.7%; v2 8, v3 139)  other method 0  data 1
+  loose  PRIMARY   multi        n=116  rearrangement 0 (0.0%)  over-extension into conserved neighbours 2 (1.7%)  scorer 1 (0.9%)  run definition 111 (95.7%; v2 6, v3 105)  other method 0  data 2
+  loose  PRIMARY   closed+multi n=268  rearrangement 0 (0.0%)  over-extension into conserved neighbours 4 (1.5%)  scorer 3 (1.1%)  run definition 258 (96.3%; v2 14, v3 244)  other method 0  data 3
+  loose  SECONDARY closed       n=166  rearrangement 0 (0.0%)  over-extension into conserved neighbours 1 (0.6%)  scorer 2 (1.2%)  run definition 162 (97.6%; v2 7, v3 155)  other method 0  data 1
+  loose  SECONDARY multi        n=114  rearrangement 0 (0.0%)  over-extension into conserved neighbours 1 (0.9%)  scorer 4 (3.5%)  run definition 108 (94.7%; v2 7, v3 101)  other method 0  data 1
+  loose  SECONDARY closed+multi n=280  rearrangement 0 (0.0%)  over-extension into conserved neighbours 2 (0.7%)  scorer 6 (2.1%)  run definition 270 (96.4%; v2 14, v3 256)  other method 0  data 2
+
+ORDER VARIABILITY, ribosomal-protein names normalised (rearr3.py; archaeal Pfam synonyms mapped, POST HOC naming fix)
+  Bact_closed runs 260  marker pairs 6122  other groups per pair median 228  share median 0.987  q25 0.957  q10 0.916  run-minimum median 0.518
+              rare pairs (< 0.10) 55 (0.90%) in 52 runs; of these L15|L36 or L15|S13 51, same-name pairs (split / duplicate calls) 0, other 4
+              runs with >= 1 rare pair: PRIMARY resolved 50/108, unresolved 2/152; SECONDARY resolved 50/94, unresolved 2/166
+  Bact_multi  runs 398  marker pairs 8137  other groups per pair median 228  share median 0.987  q25 0.982  q10 0.946  run-minimum median 0.916
+              rare pairs (< 0.10) 69 (0.85%) in 64 runs; of these L15|L36 or L15|S13 49, same-name pairs (split / duplicate calls) 14, other 6
+              runs with >= 1 rare pair: PRIMARY resolved 59/282, unresolved 5/116; SECONDARY resolved 59/284, unresolved 5/114
+  Archaea     runs 145  marker pairs 2601  other groups per pair median 43  share median 0.975  q25 0.907  q10 0.860  run-minimum median 0.791
+              rare pairs (< 0.10) 15 (0.58%) in 14 runs; of these L15|L36 or L15|S13 0, same-name pairs (split / duplicate calls) 3, other 12
+              runs with >= 1 rare pair: PRIMARY resolved 11/138, unresolved 3/7; SECONDARY resolved 12/120, unresolved 2/25
+              top rare pairs: {('L3', 'S8'): 2, ('L30', 'S2'): 2, ('S2', 'L30'): 2, ('S25e', 'L22'): 2, ('L18', 'L18'): 1, ('L22', 'S25e'): 1, ('L3', 'L15'): 1, ('L37e', 'S19'): 1}
+  Bacteria: core-marker orders distinct 31 over 658 runs (201 groups); modal share 0.640; runs with all 18 core markers 421 in 1 order(s); runs collinear with the one bacterial S10-spc order 658/658; core markers per run {9: 2, 11: 2, 12: 2, 13: 1, 14: 13, 15: 29, 16: 25, 17: 163, 18: 421}
+  Archaea: core-marker orders distinct 21 over 145 runs (34 groups); modal share 0.366; runs with all 18 core markers 54 in 2 order(s); runs collinear with the one bacterial S10-spc order 141/145; core markers per run {11: 2, 12: 31, 13: 40, 14: 4, 15: 8, 16: 2, 17: 4, 18: 54}
+      non-collinear: L15-S5-L18-L6-S8-L3-L4-L23-L2-S19-L22-S3-L29 x1
+      non-collinear: L15-L3-L4-L23-L2-S19-L22-S3-L29-S17-L14-L24-L5-S14-S8-L6 x1
+      non-collinear: L15-S5-L18-L6-S8-L5-S14-L24-L14-S17-L29-S3-L22-S19 x1
+      non-collinear: L15-S5-L18-L6-S8-L3-L4-L23-L2-S19-L22-S3-L29-S17-L14-L24-L5-S14 x1
+
+WHERE THE ALPHA BLOCK (L36 / S13 / S11 / S4 / L17) SITS RELATIVE TO EACH BACTERIAL RUN (alpha3.py, POST HOC, output-independent)
+                                                                        runs  PRIMARY  SECONDARY  ENGINE  PRIMARY_unresolved
+gtype       cat                                                                                                             
+Bact_closed a alpha block inside the run (spc-alpha insert <= 2 genes)    51       49         49      46                   2
+            b alpha block <= 12 genes past the run, same contig          186       39         23       1                 147
+            d alpha block absent within 12 genes, contig continues        23       20         22      11                   3
+Bact_multi  a alpha block inside the run (spc-alpha insert <= 2 genes)    50       48         48      42                   2
+            b alpha block <= 12 genes past the run, same contig          252      140        143       7                 112
+            c run <= 12 genes from a contig end, alpha block absent       81       81         78      77                   0
+            d alpha block absent within 12 genes, contig continues        15       13         15       7                   2
+  inserts between L15 and the alpha block in category a: {'adk-secY': 28, 'secY-infA': 25, 'infA-secY': 22, 'secY': 11, 'secY-adk': 11, 'secY-map': 1, '?-secY': 1, 'map-secY': 1}
+  by distance to a contig end (<= 12 genes):
+                       runs  PRIMARY  SECONDARY  ENGINE
+gtype       near_edge                                  
+Bact_closed False       258      107         93      58
+            True          2        1          1       0
+Bact_multi  False       121       55         56      19
+            True        277      227        228     114
+  PRIMARY strict verdicts by category:
+verdict           2    3  4  5  6
+gtype       cat                  
+Bact_closed a     0    0  0  2  0
+            b     8  136  1  1  1
+            d     1    1  1  0  0
+Bact_multi  a     0    1  0  1  0
+            b    10   98  1  1  2
+            d     1    0  1  0  0
+
+GENES IN THE OUTPUT'S BEST LOCUS BEYOND THE RUN (unresolved runs with verdicts 3-5; ext3.parquet, strict)
+  PRIMARY   Bact_closed C_beyond_run  cases 140 genes 1478: ribosomal 711, literature members 756, other 11 (unannotated 0)
+      {'secY[N]': 140, 'map[N]': 139, 'S4[R]': 137, 'S11[R]': 136, 'S13[R]': 136, 'rpoA/rpoD[N]': 135, 'L17[R]': 134, 'infA[N]': 128, 'adk[N]': 119, 'L36[R]': 97, 'tufA[N]': 30, 'S9[R]': 28, 'L13[R]': 28, 'truA[N]': 28, 'nusG[N]': 12, 'secE[N]': 12, 'rpoB[N]': 5, 'rpoC[N]': 4, 'ADK': 4, 'S16[R]': 3}
+  PRIMARY   Bact_closed best_beyond_C cases   5 genes   49: ribosomal 22, literature members 15, other 12 (unannotated 4)
+      {'unannotated': 4, 'S4[R]': 2, 'secE[N]': 2, 'L17[R]': 2, 'rpoA/rpoD[N]': 2, 'S11[R]': 2, 'S13[R]': 2, 'L36[R]': 2, 'infA[N]': 2, 'nusG[N]': 2, 'L11[R]': 2, 'L1[R]': 2, 'L10[R]': 2, 'L7/L12[R]': 2, 'rpoB[N]': 2, 'rpoC[N]': 2, 'ADK': 1, 'RuvX': 1, 'Radical_SAM': 1, 'Peptidase_M50': 1}
+  PRIMARY   Bact_multi  C_beyond_run  cases 102 genes 1024: ribosomal 489, literature members 519, other 16 (unannotated 4)
+      {'secY[N]': 102, 'S13[R]': 98, 'map[N]': 97, 'S11[R]': 97, 'S4[R]': 95, 'rpoA/rpoD[N]': 94, 'L17[R]': 93, 'infA[N]': 90, 'adk[N]': 73, 'L36[R]': 52, 'L13[R]': 21, 'S9[R]': 20, 'truA[N]': 20, 'tufA[N]': 9, 'secE[N]': 8, 'nusG[N]': 8, 'rpoC[N]': 6, 'rpoB[N]': 4, 'unannotated': 4, 'ADK': 3}
+  PRIMARY   Bact_multi  best_beyond_C cases   4 genes   40: ribosomal 19, literature members 16, other 5 (unannotated 2)
+      {'ADK': 2, 'map[N]': 2, 'nusG[N]': 2, 'L11[R]': 2, 'L1[R]': 2, 'L10[R]': 2, 'L7/L12[R]': 2, 'rpoB[N]': 2, 'rpoC[N]': 2, 'L17[R]': 2, 'tufA[N]': 2, 'rpoA/rpoD[N]': 2, 'unannotated': 2, 'S4[R]': 2, 'S11[R]': 2, 'S13[R]': 2, 'L36[R]': 2, 'infA[N]': 2, 'secE[N]': 2, 'PALP': 1}
+  PRIMARY   Archaea     C_beyond_run  cases   3 genes   10: ribosomal 1, literature members 6, other 3 (unannotated 0)
+      {'secY[N]': 3, 'EMC3_TMCO1': 2, 'cbf5[N]': 1, 'cmk[N]': 1, 'AAA_17': 1, 'L34e[R]': 1, 'adk[N]': 1}
+  SECONDARY Bact_closed C_beyond_run  cases 158 genes 1625: ribosomal 777, literature members 834, other 14 (unannotated 4)
+      {'secY[N]': 156, 'S4[R]': 151, 'S11[R]': 151, 'S13[R]': 151, 'map[N]': 151, 'rpoA/rpoD[N]': 150, 'L17[R]': 149, 'infA[N]': 144, 'adk[N]': 124, 'L36[R]': 100, 'tufA[N]': 39, 'S9[R]': 28, 'L13[R]': 28, 'truA[N]': 28, 'nusG[N]': 13, 'secE[N]': 13, 'rpoB[N]': 7, 'rpoC[N]': 6, 'unannotated': 4, 'S16[R]': 3}
+  SECONDARY Bact_closed best_beyond_C cases   4 genes   40: ribosomal 15, literature members 9, other 16 (unannotated 7)
+      {'unannotated': 7, 'L17[R]': 2, 'S13[R]': 2, 'S11[R]': 2, 'S4[R]': 2, 'rpoA/rpoD[N]': 2, 'Peptidase_M50': 1, 'NUDIX': 1, 'tufA[N]': 1, 'S7[R]': 1, 'AAA_17': 1, 'Lactamase_B': 1, 'Competence': 1, 'ADK': 1, 'map[N]': 1, 'infA[N]': 1, 'S12[R]': 1, 'GalP_UDP_transf': 1, 'EF2[N]': 1, 'RuvX': 1}
+  SECONDARY Bact_multi  C_beyond_run  cases  98 genes 1001: ribosomal 483, literature members 505, other 13 (unannotated 3)
+      {'secY[N]': 99, 'S11[R]': 94, 'S13[R]': 94, 'S4[R]': 93, 'rpoA/rpoD[N]': 92, 'L17[R]': 91, 'map[N]': 91, 'infA[N]': 84, 'adk[N]': 71, 'L36[R]': 48, 'L13[R]': 25, 'S9[R]': 24, 'truA[N]': 23, 'tufA[N]': 12, 'secE[N]': 9, 'nusG[N]': 9, 'rpoC[N]': 7, 'rpoB[N]': 5, 'unannotated': 3, 'ADK': 3}
+  SECONDARY Bact_multi  best_beyond_C cases   5 genes   48: ribosomal 20, literature members 15, other 13 (unannotated 8)
+      {'unannotated': 8, 'L10[R]': 3, 'nusG[N]': 3, 'rpoC[N]': 3, 'secE[N]': 3, 'L1[R]': 3, 'L11[R]': 3, 'L7/L12[R]': 2, 'rpoB[N]': 2, 'RNA_pol_Rpb2_6': 2, 'rpoA/rpoD[N]': 1, 'map[N]': 1, 'infA[N]': 1, 'L36[R]': 1, 'S13[R]': 1, 'S11[R]': 1, 'S4[R]': 1, 'S12[R]': 1, 'L17[R]': 1, 'L33[R]': 1}
+  SECONDARY Archaea     C_beyond_run  cases  15 genes   69: ribosomal 17, literature members 29, other 23 (unannotated 1)
+      {'secY[N]': 15, 'L34e[R]': 12, 'EMC3_TMCO1': 12, 'cmk[N]': 10, 'AAA_17': 10, 'L14e[R]': 2, 'adk[N]': 2, 'cbf5[N]': 2, 'S13[R]': 1, 'S4[R]': 1, 'S11[R]': 1, 'unannotated': 1}
+  SECONDARY Archaea     best_beyond_C cases   2 genes   19: ribosomal 7, literature members 5, other 7 (unannotated 0)
+      {'AAA_17': 2, 'EMC3_TMCO1': 2, 'cmk[N]': 2, 'L14e[R]': 2, 'cbf5[N]': 2, 'Mem_trans': 2, 'S13[R]': 2, 'S11[R]': 2, 'S4': 1, 'rpoA/rpoD[N]': 1, 'S4[R]': 1}
+
+CLUSTER-LEVEL RUN DEFINITION (POST HOC: markers = ribosomal proteins + literature cluster members, same <= 2-gene gap rule; standard 80 / 80 best locus; chance = 5 random windows of the extended-run length per target, seed 17)
+  PRIMARY   Bacteria 651/658 (closed 255/260, multi 396/398)  Archaea 140/145  chance closed 0.15% multi 0.22% Archaea 0.70%
+  SECONDARY Bacteria 649/658 (closed 257/260, multi 392/398)  Archaea 139/145  chance closed 0.23% multi 0.33% Archaea 1.05%
+  ENGINE    Bacteria 580/658 (closed 210/260, multi 370/398)  Archaea 120/145  chance closed 2.00% multi 1.89% Archaea 1.93%
+  extended run vs run (median genes): {"Archaea": {"run_len": 22.0, "ext_len": 24.0, "added_left": 0.0, "added_right": 0.0}, "Bact_closed": {"run_len": 25.0, "ext_len": 36.0, "added_left": 3.0, "added_right": 3.5}, "Bact_multi": {"run_len": 21.0, "ext_len": 31.0, "added_left": 1.0, "added_right": 1.0}}

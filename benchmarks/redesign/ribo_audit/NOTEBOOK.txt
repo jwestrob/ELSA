@@ -146,3 +146,54 @@ PART 2 (Jacob: resolve recovered-but-unresolved runs only where biologically acc
   Bridge job of the first pass stopped (stale annotation); one pkill matched its own shell, orphans killed by PID.
 2026-11-19T02:53Z  REPORT2.txt written; claims re-checked against the tables (secY count, two causal phrasings in D,
   strand-run range corrected before saving). Files synced to $RD/ribo_audit/. Nothing committed.
+
+PART 3 (SR-VP genome bins: is the bacterial ribosomal shortfall rearrangement or something else?)
+2026-11-19T07:00-07:20Z  Read REPORT_frozen2.txt, FROZEN2.json keys, frozen2 code/annot2.py, results/annot.json, package
+  README and table schemas (no case). Bacterial literature opened: Brandis 2021 GBE (full text; secE-rpoBC-str-S10-spc-alpha
+  cluster, 57 genes, 163 rearrangement events / 204 genomes), Boylan et al. 1989 J Bacteriol (full text), Tsurumaki et al.
+  2022 RNA (full text; CPR ribosomal protein losses); Suh et al. 1996 and Coenye & Vandamme 2005 (abstracts).
+2026-11-19T07:21Z  predeclared3.json written: outputs, closed = n_contigs 1, annotation base (frozen2 genes_annot.parquet)
+  and what it lacks, two supplementary annotation searches, bacterial member list, rearrangement measures (pair share
+  across groups, core-marker orders), conserved stretch, mapping of verdicts to the five shares.
+2026-11-19T07:24Z  Slurm preflight read (remote CLAUDE.md, biotite-cluster-ops.md). Job 115893 (ribo3_annot, 24 CPUs,
+  standard_expand, exclude list, no --mem/--time/timeout): 16 bacterial-member KOfam profiles over all 3,211,751 proteins +
+  Pfam-A 38.1 (GA) over genes within 40 of every run. DEVIATION from predeclared3: full KOfam on the windows dropped (15 GB of
+  profiles, beyond the 2-hour bound); Pfam describes the windows. Account had 198 CPUs running before submission.
+2026-11-19T07:27Z  bio3.py repro (login node): PRIMARY Bacteria 658 / 390 (any-fit 569; closed 108 / 260, multi 282 / 398),
+  Archaea 144 / 138; SECONDARY Bacteria 658 / 378 (closed 94 / 260, multi 284 / 398), Archaea 145 / 120; ENGINE Bacteria 191,
+  Archaea 122. Equal to ribosomal_check.score and to REPORT_frozen2. Closed = n_contigs 1 (260 bacterial runs).
+2026-11-19T07:36Z  Job 115893 COMPLETED in 12 min 13 s (1.9 GB peak): bacterial-member KO hits 11,540 (fusA 1,401, map 1,030,
+  cysS 1,007, tufA 921, infA 901, adk 882, rpoC 811, nusG 773, rpoB 772, secE 740, rnc 720, truA 681, rlmB 551, ecfT 296,
+  ecfA1 48, ecfA2 6); Pfam on 54,011 of 63,010 window genes. Outputs $RD/ribo_audit/work3/annot/{extra_ko, window_pfam,
+  window_pfam_domains}.parquet, window_gids.npy. Verdict (strict, loose), chance and rearrangement passes launched on the
+  login node (one thread).
+2026-11-19T07:58Z  Verdict pass, STRICT (bio3.py verdict; 1,353 s). Components 9,422; N genes 25,633, R 56,992; window
+  unannotated 8,961 / 63,010; anomalies 5,608. PRIMARY Bact_closed v2 9 / v3 137 / v4 2 / v5 3 / v6 1 (152); Bact_multi
+  11 / 99 / 2 / 2 / 2 (116); Archaea v2 4 / v3 3. SECONDARY closed 7 / 154 / 2 / 2 / 1 (166); multi 13 / 95 / 0 / 5 / 1
+  (114); Archaea 8 / 13 / 2 / 0 / 2. No verdict 1 or 7 anywhere. Accurate scoring Bacteria PRIMARY 626, SECONDARY 623,
+  DH 530 of 658. Chance (strict, target-length windows): PRIMARY 1.07 / 0.90 / 1.97%.
+2026-11-19T08:22Z  Verdict pass, LOOSE (1,387 s): PRIMARY Bacteria v2 14 / v3 244 / v4 4 / v5 3 / v6 3; SECONDARY 14 / 256
+  / 2 / 6 / 2. Accurate scoring 631 / 626 / 548.
+2026-11-19T08:30Z  POST HOC cluster-level run (bio3.py extdef, run as copy code/bio3_ext.py so the chain was untouched):
+  markers = R + literature members, same <= 2-gene rule. Bacteria PRIMARY 651, SECONDARY 649, DH 580 of 658; Archaea
+  140 / 139 / 120 of 145; chance 0.15-0.70% / 0.23-1.05% / 1.9-2.0%. Extension medians closed 25 -> 36, multi 21 -> 31,
+  Archaea 22 -> 24.
+2026-11-19T08:41Z  Rearrangement pass (predeclared names): Bacteria pair share median 0.987, Archaea 0.953; core orders
+  Bacteria 33 / 658, Archaea 46 / 145 with 0 complete archaeal runs. Archaeal Pfam synonyms (L4e, S29e, L5e, L23e, L26,
+  L27A) were left unmerged by the predeclared naming, which inflates archaeal order counts.
+2026-11-19T08:44Z  rearr3.py (POST HOC naming fix, merged synonyms; first run's JSON had a key collision between the
+  per-type and per-domain "Archaea" entries, fixed and rerun 08:44Z): Archaea pair share median 0.975, q10 0.860; 21
+  orders, 54 complete runs in 2 orders, 4 runs non-collinear. Bacteria 31 orders, 421 complete runs in 1 order, 658 / 658
+  collinear. Bacterial rare pairs are L15|L36 / L15|S13 (51 / 55 closed, 49 / 69 multi): the spc-alpha junction where the
+  secY-adk-map-infA insert is <= 2 genes; rare-pair runs are 109 / 390 resolved vs 7 / 268 unresolved.
+2026-11-19T08:46Z  alpha3.py (POST HOC, output-independent): alpha block inside run 101 runs (97 resolved PRIMARY), <= 12
+  genes past the run 438 (179 resolved), contig end with no alpha 81 (81), absent nearby 38 (33). 259 / 268 unresolved
+  PRIMARY runs are in the "past the run" class. Multi-contig runs <= 12 genes from a contig end 277 (227 resolved);
+  > 12 genes 121 (55); closed 258 (107).
+2026-11-19T08:50Z  tables3.py, tables3b.py (shares by the predeclared mapping: PRIMARY strict run definition 256 / 268,
+  scorer 5, over-extension into members 3, unrelated 1, data 3, rearrangement 0; SECONDARY 269 / 7 / 1 / 1 / 2 / 0).
+  Three diagram cases opened in full: PRIMARY-1063 (v3), -1116 (v2), -1090 (v5); PRIMARY-1822 opened for the one
+  rare decisive junction (L2|S3 740 nt, S3|S17 658 nt; lengths match missing S19-L22 and L16-L29 calls).
+2026-11-19T08:55Z  REPORT3.txt written; claims re-checked against tables (verdict-2 break types, verdict-4 targets, diagram
+  A strand marks and the secE-L33 283 nt member spacer corrected before saving). Results copied to results3/ and
+  $RD/ribo_audit/. Nothing committed.

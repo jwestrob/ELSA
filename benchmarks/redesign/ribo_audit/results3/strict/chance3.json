@@ -1,0 +1,53 @@
+{
+ "PRIMARY": {
+  "Bact_closed": {
+   "resolved": 15,
+   "windows": 1405,
+   "chance": 0.010676156583629894
+  },
+  "Bact_multi": {
+   "resolved": 10,
+   "windows": 1105,
+   "chance": 0.00904977375565611
+  },
+  "Archaea": {
+   "resolved": 14,
+   "windows": 710,
+   "chance": 0.01971830985915493
+  }
+ },
+ "SECONDARY": {
+  "Bact_closed": {
+   "resolved": 18,
+   "windows": 1405,
+   "chance": 0.012811387900355872
+  },
+  "Bact_multi": {
+   "resolved": 12,
+   "windows": 1105,
+   "chance": 0.01085972850678733
+  },
+  "Archaea": {
+   "resolved": 19,
+   "windows": 710,
+   "chance": 0.02676056338028169
+  }
+ },
+ "ENGINE": {
+  "Bact_closed": {
+   "resolved": 42,
+   "windows": 1405,
+   "chance": 0.0298932384341637
+  },
+  "Bact_multi": {
+   "resolved": 21,
+   "windows": 1105,
+   "chance": 0.019004524886877826
+  },
+  "Archaea": {
+   "resolved": 29,
+   "windows": 710,
+   "chance": 0.04084507042253521
+  }
+ }
+}

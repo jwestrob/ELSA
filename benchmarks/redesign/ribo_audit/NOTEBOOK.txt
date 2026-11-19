@@ -279,3 +279,29 @@ PART 6 (freeze for testset3; external operon check; scorer)
   annot6.sbatch template written (not submitted).
 2026-11-19T10:57Z  REPORT6.txt written; two wording fixes (str distance 17 genes, diagram legend) before saving. Synced. Nothing
   committed. testset3 not opened.
+
+PART 7 (frozen run on testset3; coordinator GO 2026-11-19, set sealed)
+2026-11-19T15:16-15:18Z  Seal verified: all 31 files of $RD/testset3/package re-hashed (verify_seal.py), every sha256 equal to
+  seal.json, combined seal recomputed cf920a483f2714e5be34de17b2c4285d69277681dc5822c71abbc9ef77ff3c89 = seal_sha256 field
+  (work6/testset3/seal_check.json). Frozen inputs verified: predeclared6.json a6c997f3...9c3c, score6.py 6b61eeb8...2f80;
+  annot6.py 7eb20f2b...68ad, bio4.py 9be92586...a282, bio5.py 63d51004...6e41, bio.py 3eb95d54...f2af, audit.py ab60d576...b59b.
+  Package: 842 genomes, 2,557,405 genes, lut layout, no ribosomal tables.
+2026-11-19T15:17Z  Marking rule read: ws_srvp_bins/package/code/03_build_package.py st_ribosomal (= slice_lut package_k8
+  15_ribosomal_truth.py): hmmsearch --cut_ga --domtblout of ribo.hmm (121 models, sha256 b2ce8369...6e49), marked = any domain
+  row, marker = best full score, runs g0 / g2 (<= gap unmarked inside, per contig), >= 8 kept, m16 >= 16. mark7.py reproduces
+  it through Aksha (--hmm_in ribo.hmm --cut_ga, GA1 / GA2 re-applied). Validation on the 20-genome SR-VP sample (8 threads,
+  login): marked 1,085 / 1,085 identical, marker and markers identical, runs 45 / 45 identical.
+2026-11-19T15:18Z  Slurm preflight read (remote CLAUDE.md, biotite-cluster-ops.md). Jobs: 116646 ribo7_mark (mark7.sbatch;
+  writes work6/testset3/ribosomal/{marked,runs}.parquet and RUNS_READY.json) and 116647 ribo7_annot (annot7.sbatch, annot6.py
+  unchanged, afterok:116646). 24 CPUs, standard_expand, exclude list, no --mem / --time / timeout. Shadow package
+  work6/testset3/pkg (links to the sealed universe and FASTA plus the built ribosomal tables) for score6.py, which reads
+  ribosomal tables from the package path. Account had 148 CPUs running before submission.
+2026-11-19T15:20-15:54Z  Job 116646 COMPLETED (1 min 17 s): 45,292 marked genes, g2_m16 801 runs (Bacteria 688, Archaea 113) in
+  801 genomes; RUNS_READY.json 15:20:02Z. Job 116647 COMPLETED (33 min 31 s): annot6.py through Aksha, 2,557,405 proteins,
+  84,394 window proteins; R 48,544, N 13,509, supplement 10,839. Job time total 34 min 48 s.
+2026-11-19T16:48-16:50Z  locus_tables.json (16:48:30Z) read; PRIMARY / SECONDARY / ENGINE sha256 verified against the files;
+  frozen code hashes verified again.
+2026-11-19T16:50-16:51Z  score6.py (login node, one thread, 72 s, --verdicts) on work6/testset3/pkg: primary PASS (R1 801 / 801,
+  R2 666 / 688, R3 110 / 113, R4 +106 [+86, +126], R5 0.29% / 0.00%); secondary PASS (801 / 801, 659 / 688, 102 / 113, +91
+  [+66, +114], 1.08% / 0.71%); engine R2 586 / 688 and R3 84 / 113 below the bars. report7.py tables (R4 recomputed, equal).
+2026-11-19T16:52Z  REPORT7.txt written (one invented window-count line removed before saving); results7/ copied. Synced.

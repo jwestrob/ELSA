@@ -1,0 +1,881 @@
+{
+ "name": "testset3",
+ "package": "work6/testset3/pkg",
+ "annot": "work6/testset3/annot",
+ "loci": {
+  "Z": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_Z/L4bp_t0.02.parquet",
+  "WA": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_WA/L4b_t0.2.parquet",
+  "DH": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_engine/DH.parquet"
+ },
+ "runs": 801,
+ "by_domain": {
+  "Bacteria": 688,
+  "Archaea": 113
+ },
+ "definitions": {
+  "standing": {
+   "all": {
+    "runs": 801,
+    "below_min": 0,
+    "targets": 801,
+    "Z": {
+     "recovered": 801,
+     "resolved": 692,
+     "anyfit": 773,
+     "chance": null,
+     "accurate_reading_resolved": 730
+    },
+    "WA": {
+     "recovered": 801,
+     "resolved": 683,
+     "anyfit": 743,
+     "chance": null,
+     "accurate_reading_resolved": 700
+    },
+    "DH": {
+     "recovered": 801,
+     "resolved": 298,
+     "anyfit": 315,
+     "chance": null,
+     "accurate_reading_resolved": 565
+    }
+   },
+   "Archaea": {
+    "runs": 113,
+    "below_min": 0,
+    "targets": 113,
+    "Z": {
+     "recovered": 113,
+     "resolved": 107,
+     "anyfit": 109,
+     "chance": 0.0,
+     "accurate_reading_resolved": 106
+    },
+    "WA": {
+     "recovered": 113,
+     "resolved": 86,
+     "anyfit": 88,
+     "chance": 0.005309734513274336,
+     "accurate_reading_resolved": 99
+    },
+    "DH": {
+     "recovered": 113,
+     "resolved": 77,
+     "anyfit": 77,
+     "chance": 0.024778761061946902,
+     "accurate_reading_resolved": 78
+    }
+   },
+   "Bacteria": {
+    "runs": 688,
+    "below_min": 0,
+    "targets": 688,
+    "Z": {
+     "recovered": 688,
+     "resolved": 585,
+     "anyfit": 664,
+     "chance": 0.0069767441860465115,
+     "accurate_reading_resolved": 624
+    },
+    "WA": {
+     "recovered": 688,
+     "resolved": 597,
+     "anyfit": 655,
+     "chance": 0.015697674418604653,
+     "accurate_reading_resolved": 601
+    },
+    "DH": {
+     "recovered": 688,
+     "resolved": 221,
+     "anyfit": 238,
+     "chance": 0.010465116279069767,
+     "accurate_reading_resolved": 487
+    }
+   }
+  },
+  "part4": {
+   "all": {
+    "runs": 801,
+    "below_min": 0,
+    "targets": 801,
+    "Z": {
+     "recovered": 801,
+     "resolved": 776,
+     "anyfit": 781,
+     "chance": null
+    },
+    "WA": {
+     "recovered": 801,
+     "resolved": 760,
+     "anyfit": 776,
+     "chance": null
+    },
+    "DH": {
+     "recovered": 801,
+     "resolved": 669,
+     "anyfit": 756,
+     "chance": null
+    }
+   },
+   "Archaea": {
+    "runs": 113,
+    "below_min": 0,
+    "targets": 113,
+    "Z": {
+     "recovered": 113,
+     "resolved": 110,
+     "anyfit": 110,
+     "chance": 0.0
+    },
+    "WA": {
+     "recovered": 113,
+     "resolved": 102,
+     "anyfit": 103,
+     "chance": 0.007079646017699115
+    },
+    "DH": {
+     "recovered": 113,
+     "resolved": 85,
+     "anyfit": 109,
+     "chance": 0.021238938053097345
+    }
+   },
+   "Bacteria": {
+    "runs": 688,
+    "below_min": 0,
+    "targets": 688,
+    "Z": {
+     "recovered": 688,
+     "resolved": 666,
+     "anyfit": 671,
+     "chance": 0.0029069767441860465
+    },
+    "WA": {
+     "recovered": 688,
+     "resolved": 658,
+     "anyfit": 673,
+     "chance": 0.011046511627906977
+    },
+    "DH": {
+     "recovered": 688,
+     "resolved": 584,
+     "anyfit": 647,
+     "chance": 0.008430232558139536
+    }
+   }
+  },
+  "a": {
+   "all": {
+    "runs": 801,
+    "below_min": 0,
+    "targets": 801,
+    "Z": {
+     "recovered": 801,
+     "resolved": 776,
+     "anyfit": 781,
+     "chance": null
+    },
+    "WA": {
+     "recovered": 801,
+     "resolved": 761,
+     "anyfit": 777,
+     "chance": null
+    },
+    "DH": {
+     "recovered": 801,
+     "resolved": 670,
+     "anyfit": 757,
+     "chance": null
+    }
+   },
+   "Archaea": {
+    "runs": 113,
+    "below_min": 0,
+    "targets": 113,
+    "Z": {
+     "recovered": 113,
+     "resolved": 110,
+     "anyfit": 110,
+     "chance": 0.0
+    },
+    "WA": {
+     "recovered": 113,
+     "resolved": 102,
+     "anyfit": 103,
+     "chance": 0.007079646017699115
+    },
+    "DH": {
+     "recovered": 113,
+     "resolved": 84,
+     "anyfit": 108,
+     "chance": 0.021238938053097345
+    }
+   },
+   "Bacteria": {
+    "runs": 688,
+    "below_min": 0,
+    "targets": 688,
+    "Z": {
+     "recovered": 688,
+     "resolved": 666,
+     "anyfit": 671,
+     "chance": 0.0029069767441860465
+    },
+    "WA": {
+     "recovered": 688,
+     "resolved": 659,
+     "anyfit": 674,
+     "chance": 0.010755813953488373
+    },
+    "DH": {
+     "recovered": 688,
+     "resolved": 586,
+     "anyfit": 649,
+     "chance": 0.008430232558139536
+    }
+   }
+  }
+ },
+ "bars": {
+  "primary": {
+   "R1": {
+    "value": 1.0,
+    "n": 801,
+    "bar": 0.97,
+    "pass_": true
+   },
+   "R2": {
+    "value": 0.9680232558139535,
+    "n": 688,
+    "bar": 0.9,
+    "pass_": true
+   },
+   "R3": {
+    "value": 0.9734513274336283,
+    "n": 113,
+    "bar": 0.85,
+    "pass_": true
+   },
+   "R4": {
+    "difference": 106.0,
+    "ci95": [
+     86.0,
+     126.0
+    ],
+    "resamples": 2000,
+    "pass_": true
+   },
+   "R5": {
+    "chance": {
+     "Bacteria": 0.0029069767441860465,
+     "Archaea": 0.0
+    },
+    "bar": 0.05,
+    "pass_": true
+   },
+   "PASS": true
+  },
+  "secondary": {
+   "R1": {
+    "value": 1.0,
+    "n": 801,
+    "bar": 0.97,
+    "pass_": true
+   },
+   "R2": {
+    "value": 0.9578488372093024,
+    "n": 688,
+    "bar": 0.9,
+    "pass_": true
+   },
+   "R3": {
+    "value": 0.9026548672566371,
+    "n": 113,
+    "bar": 0.85,
+    "pass_": true
+   },
+   "R4": {
+    "difference": 91.0,
+    "ci95": [
+     66.0,
+     114.0
+    ],
+    "resamples": 2000,
+    "pass_": true
+   },
+   "R5": {
+    "chance": {
+     "Bacteria": 0.010755813953488373,
+     "Archaea": 0.007079646017699115
+    },
+    "bar": 0.05,
+    "pass_": true
+   },
+   "PASS": true
+  }
+ },
+ "closed_vs_multi": {
+  "closed": {
+   "Z": {
+    "runs": 598,
+    "resolved": 580
+   },
+   "WA": {
+    "runs": 598,
+    "resolved": 579
+   },
+   "DH": {
+    "runs": 598,
+    "resolved": 514
+   }
+  },
+  "multi": {
+   "Z": {
+    "runs": 90,
+    "resolved": 86
+   },
+   "WA": {
+    "runs": 90,
+    "resolved": 80
+   },
+   "DH": {
+    "runs": 90,
+    "resolved": 72
+   }
+  }
+ },
+ "phylum": [
+  {
+   "dom": "Archaea",
+   "phylum": "AGJL01",
+   "runs": 8,
+   "Z": 8,
+   "WA": 8,
+   "DH": 2,
+   "below": 0
+  },
+  {
+   "dom": "Archaea",
+   "phylum": "Asgardarchaeota",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Archaea",
+   "phylum": "Halobacteriota",
+   "runs": 45,
+   "Z": 45,
+   "WA": 45,
+   "DH": 35,
+   "below": 0
+  },
+  {
+   "dom": "Archaea",
+   "phylum": "Korarchaeota",
+   "runs": 1,
+   "Z": 1,
+   "WA": 0,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Archaea",
+   "phylum": "Methanobacteriota",
+   "runs": 12,
+   "Z": 12,
+   "WA": 3,
+   "DH": 11,
+   "below": 0
+  },
+  {
+   "dom": "Archaea",
+   "phylum": "Methanobacteriota_B",
+   "runs": 4,
+   "Z": 3,
+   "WA": 4,
+   "DH": 4,
+   "below": 0
+  },
+  {
+   "dom": "Archaea",
+   "phylum": "Nanobdellota",
+   "runs": 6,
+   "Z": 6,
+   "WA": 6,
+   "DH": 4,
+   "below": 0
+  },
+  {
+   "dom": "Archaea",
+   "phylum": "Thermoplasmatota",
+   "runs": 15,
+   "Z": 15,
+   "WA": 15,
+   "DH": 11,
+   "below": 0
+  },
+  {
+   "dom": "Archaea",
+   "phylum": "Thermoproteota",
+   "runs": 21,
+   "Z": 19,
+   "WA": 20,
+   "DH": 15,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Acidobacteriota",
+   "runs": 24,
+   "Z": 24,
+   "WA": 24,
+   "DH": 19,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Actinomycetota",
+   "runs": 65,
+   "Z": 63,
+   "WA": 55,
+   "DH": 56,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Armatimonadota",
+   "runs": 7,
+   "Z": 7,
+   "WA": 7,
+   "DH": 7,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Babelota",
+   "runs": 4,
+   "Z": 4,
+   "WA": 4,
+   "DH": 4,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Bacillota",
+   "runs": 105,
+   "Z": 89,
+   "WA": 95,
+   "DH": 56,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Bacillota_I",
+   "runs": 24,
+   "Z": 24,
+   "WA": 24,
+   "DH": 23,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Bacteroidota",
+   "runs": 83,
+   "Z": 81,
+   "WA": 82,
+   "DH": 76,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Bdellovibrionota",
+   "runs": 4,
+   "Z": 4,
+   "WA": 4,
+   "DH": 4,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Bdellovibrionota_B",
+   "runs": 2,
+   "Z": 2,
+   "WA": 2,
+   "DH": 2,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Calditrichota",
+   "runs": 2,
+   "Z": 2,
+   "WA": 1,
+   "DH": 2,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Campylobacterota",
+   "runs": 14,
+   "Z": 14,
+   "WA": 14,
+   "DH": 14,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Chlamydiota",
+   "runs": 7,
+   "Z": 7,
+   "WA": 7,
+   "DH": 7,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Chloroflexota",
+   "runs": 41,
+   "Z": 41,
+   "WA": 40,
+   "DH": 41,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Chrysiogenota",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Cloacimonadota",
+   "runs": 4,
+   "Z": 4,
+   "WA": 4,
+   "DH": 4,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Cyanobacteriota",
+   "runs": 19,
+   "Z": 19,
+   "WA": 19,
+   "DH": 19,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Desulfobacterota",
+   "runs": 33,
+   "Z": 33,
+   "WA": 31,
+   "DH": 30,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Desulfobacterota_D",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Dictyoglomota",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Electryoneota",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Fibrobacterota",
+   "runs": 2,
+   "Z": 2,
+   "WA": 2,
+   "DH": 2,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Fidelibacterota",
+   "runs": 2,
+   "Z": 2,
+   "WA": 2,
+   "DH": 2,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Gemmatimonadota",
+   "runs": 3,
+   "Z": 3,
+   "WA": 3,
+   "DH": 3,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "JAAXHH01",
+   "runs": 4,
+   "Z": 4,
+   "WA": 4,
+   "DH": 4,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Krumholzibacteriota",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Latescibacterota",
+   "runs": 3,
+   "Z": 3,
+   "WA": 3,
+   "DH": 3,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Margulisbacteria",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Myxococcota",
+   "runs": 3,
+   "Z": 3,
+   "WA": 3,
+   "DH": 3,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Myxococcota_A",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Nitrospinota",
+   "runs": 2,
+   "Z": 2,
+   "WA": 2,
+   "DH": 2,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Nitrospirota",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Omnitrophota",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Patescibacteriota",
+   "runs": 44,
+   "Z": 42,
+   "WA": 41,
+   "DH": 41,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Planctomycetota",
+   "runs": 11,
+   "Z": 11,
+   "WA": 11,
+   "DH": 11,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Poribacteria",
+   "runs": 4,
+   "Z": 4,
+   "WA": 4,
+   "DH": 4,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Pseudomonadota",
+   "runs": 104,
+   "Z": 104,
+   "WA": 103,
+   "DH": 89,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "SM23-31",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Spirochaetota",
+   "runs": 22,
+   "Z": 22,
+   "WA": 22,
+   "DH": 17,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Synergistota",
+   "runs": 5,
+   "Z": 5,
+   "WA": 5,
+   "DH": 2,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Thermotogota",
+   "runs": 6,
+   "Z": 6,
+   "WA": 6,
+   "DH": 6,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "UBA10199",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Verrucomicrobiota",
+   "runs": 19,
+   "Z": 19,
+   "WA": 19,
+   "DH": 17,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Vulcanimicrobiota",
+   "runs": 4,
+   "Z": 4,
+   "WA": 4,
+   "DH": 4,
+   "below": 0
+  },
+  {
+   "dom": "Bacteria",
+   "phylum": "Zixibacteria",
+   "runs": 1,
+   "Z": 1,
+   "WA": 1,
+   "DH": 1,
+   "below": 0
+  }
+ ],
+ "verdicts": {
+  "Z": {
+   "Archaea": {
+    "1": 3,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0
+   },
+   "Bacteria": {
+    "1": 2,
+    "2": 6,
+    "3": 1,
+    "4": 1,
+    "5": 1,
+    "6": 11
+   }
+  },
+  "WA": {
+   "Archaea": {
+    "1": 7,
+    "2": 3,
+    "4": 0,
+    "5": 1,
+    "6": 0
+   },
+   "Bacteria": {
+    "1": 1,
+    "2": 16,
+    "4": 2,
+    "5": 6,
+    "6": 4
+   }
+  },
+  "DH": {
+   "Archaea": {
+    "1": 0,
+    "2": 1,
+    "3": 3,
+    "4": 7,
+    "5": 17,
+    "6": 1
+   },
+   "Bacteria": {
+    "1": 1,
+    "2": 32,
+    "3": 0,
+    "4": 3,
+    "5": 43,
+    "6": 23
+   }
+  }
+ },
+ "seconds": 69.8
+}

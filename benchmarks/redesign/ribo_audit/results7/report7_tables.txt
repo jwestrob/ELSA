@@ -1,0 +1,107 @@
+BARS (frozen definition (a), predeclared6.json; denominators = all runs, below-minimum runs counted unresolved / not recovered)
+  PRIMARY embedding-list bond tree
+    R1 recovered overall 801 / 801 = 100.00%  bar >= 97%  PASS  (Bacteria 688 / 688; Archaea 113 / 113)
+    R2 resolved Bacteria 666 / 688 = 96.80%  bar >= 90%  PASS
+    R3 resolved Archaea 110 / 113 = 97.35%  bar >= 85%  PASS
+    R4 resolved minus engine +106 runs, 95% interval [+86, +126] (paired bootstrap over 801 runs, 2,000 resamples, seed 17)  bar: interval above 0  PASS
+    R5 chance Bacteria 0.29%  bar <= 5%  PASS
+    R5 chance Archaea 0.00%  bar <= 5%  PASS
+    OVERALL (all five) PASS
+  SECONDARY family-bond adaptive tree
+    R1 recovered overall 801 / 801 = 100.00%  bar >= 97%  PASS  (Bacteria 688 / 688; Archaea 113 / 113)
+    R2 resolved Bacteria 659 / 688 = 95.78%  bar >= 90%  PASS
+    R3 resolved Archaea 102 / 113 = 90.27%  bar >= 85%  PASS
+    R4 resolved minus engine +91 runs, 95% interval [+66, +114] (paired bootstrap over 801 runs, 2,000 resamples, seed 17)  bar: interval above 0  PASS
+    R5 chance Bacteria 1.08%  bar <= 5%  PASS
+    R5 chance Archaea 0.71%  bar <= 5%  PASS
+    OVERALL (all five) PASS
+  ENGINE reference (recurrence engine DH)
+    R1 recovered overall 801 / 801 = 100.00%  bar >= 97%  PASS  (Bacteria 688 / 688; Archaea 113 / 113)
+    R2 resolved Bacteria 586 / 688 = 85.17%  bar >= 90%  FAIL
+    R3 resolved Archaea 84 / 113 = 74.34%  bar >= 85%  FAIL
+    R4 not applicable (reference itself)
+    R5 chance Bacteria 0.84%  bar <= 5%  PASS
+    R5 chance Archaea 2.12%  bar <= 5%  PASS
+    R1-R3 + R5 for the reference: FAIL (R4 not applicable)
+
+RUN COUNTS
+  genomes 842 ({'Bacteria': 700, 'Archaea': 142}); marked genes 45292; runs {'g0_m8': 927, 'g0_m16': 642, 'g2_m8': 850, 'g2_m16': 801}
+  g2 runs with >= 16 marked (scored): 801 ({'Bacteria': 688, 'Archaea': 113}) in 801 genomes; genomes with no scored run 41 ({'Archaea': 29, 'Bacteria': 12})
+  below-minimum runs under (a), kept as unresolved: 0 ({}); pieces (marked genes): 
+  runs with > 1 target under (a): 0; closed (1 contig) / multi-contig bacterial runs: 598 / 90
+
+STANDING DEFINITION BESIDE THE FROZEN DEFINITION (resolved / any fitting locus / recovered; chance)
+  Bacteria  Z : standing 585 / 664 / 688 chance 0.70%; part 4 666; frozen (a) 666 / 671 / 688 chance 0.29%; accurate reading 624
+  Bacteria  WA: standing 597 / 655 / 688 chance 1.57%; part 4 658; frozen (a) 659 / 674 / 688 chance 1.08%; accurate reading 601
+  Bacteria  DH: standing 221 / 238 / 688 chance 1.05%; part 4 584; frozen (a) 586 / 649 / 688 chance 0.84%; accurate reading 487
+  Archaea   Z : standing 107 / 109 / 113 chance 0.00%; part 4 110; frozen (a) 110 / 110 / 113 chance 0.00%; accurate reading 106
+  Archaea   WA: standing 86 / 88 / 113 chance 0.53%; part 4 102; frozen (a) 102 / 103 / 113 chance 0.71%; accurate reading 99
+  Archaea   DH: standing 77 / 77 / 113 chance 2.48%; part 4 85; frozen (a) 84 / 108 / 113 chance 2.12%; accurate reading 78
+  all       Z : standing 692 / 773 / 801 chance -; part 4 776; frozen (a) 776 / 781 / 801 chance -; accurate reading 730
+  all       WA: standing 683 / 743 / 801 chance -; part 4 760; frozen (a) 761 / 777 / 801 chance -; accurate reading 700
+  all       DH: standing 298 / 315 / 801 chance -; part 4 669; frozen (a) 670 / 757 / 801 chance -; accurate reading 565
+
+VERDICTS FOR EVERY UNRESOLVED RUN OF THE PRIMARY (part-2 strict procedure; below-minimum runs listed separately)
+  Z  Bacteria  unresolved runs   22: v1 2 v2 6 v3 1 v4 1 v5 1 v6 11 v7 0 below-minimum 0
+  Z  Archaea   unresolved runs    3: v1 3 v2 0 v3 0 v4 0 v5 0 v6 0 v7 0 below-minimum 0
+  WA Bacteria  unresolved runs   29: v1 1 v2 16 v3 0 v4 2 v5 6 v6 4 v7 0 below-minimum 0
+  WA Archaea   unresolved runs   11: v1 7 v2 3 v3 0 v4 0 v5 1 v6 0 v7 0 below-minimum 0
+  DH Bacteria  unresolved runs  102: v1 1 v2 32 v3 0 v4 3 v5 43 v6 23 v7 0 below-minimum 0
+  DH Archaea   unresolved runs   29: v1 0 v2 1 v3 3 v4 7 v5 17 v6 1 v7 0 below-minimum 0
+
+PHYLUM TABLE (frozen definition (a); runs, resolved Z / WA / DH, below minimum)
+  Archaea   Halobacteriota                    45    45    45    35   0
+  Archaea   Thermoproteota                    21    19    20    15   0
+  Archaea   Thermoplasmatota                  15    15    15    11   0
+  Archaea   Methanobacteriota                 12    12     3    11   0
+  Archaea   AGJL01                             8     8     8     2   0
+  Archaea   Nanobdellota                       6     6     6     4   0
+  Archaea   Methanobacteriota_B                4     3     4     4   0
+  Archaea   Asgardarchaeota                    1     1     1     1   0
+  Archaea   Korarchaeota                       1     1     0     1   0
+  Bacteria  Bacillota                        105    89    95    56   0
+  Bacteria  Pseudomonadota                   104   104   103    89   0
+  Bacteria  Bacteroidota                      83    81    82    76   0
+  Bacteria  Actinomycetota                    65    63    55    56   0
+  Bacteria  Patescibacteriota                 44    42    41    41   0
+  Bacteria  Chloroflexota                     41    41    40    41   0
+  Bacteria  Desulfobacterota                  33    33    31    30   0
+  Bacteria  Acidobacteriota                   24    24    24    19   0
+  Bacteria  Bacillota_I                       24    24    24    23   0
+  Bacteria  Spirochaetota                     22    22    22    17   0
+  Bacteria  Cyanobacteriota                   19    19    19    19   0
+  Bacteria  Verrucomicrobiota                 19    19    19    17   0
+  Bacteria  Campylobacterota                  14    14    14    14   0
+  Bacteria  Planctomycetota                   11    11    11    11   0
+  Bacteria  Armatimonadota                     7     7     7     7   0
+  Bacteria  Chlamydiota                        7     7     7     7   0
+  Bacteria  Thermotogota                       6     6     6     6   0
+  Bacteria  Synergistota                       5     5     5     2   0
+  Bacteria  Babelota                           4     4     4     4   0
+  Bacteria  Bdellovibrionota                   4     4     4     4   0
+  Bacteria  Cloacimonadota                     4     4     4     4   0
+  Bacteria  JAAXHH01                           4     4     4     4   0
+  Bacteria  Poribacteria                       4     4     4     4   0
+  Bacteria  Vulcanimicrobiota                  4     4     4     4   0
+  Bacteria  Gemmatimonadota                    3     3     3     3   0
+  Bacteria  Latescibacterota                   3     3     3     3   0
+  Bacteria  Myxococcota                        3     3     3     3   0
+  Bacteria  Bdellovibrionota_B                 2     2     2     2   0
+  Bacteria  Calditrichota                      2     2     1     2   0
+  Bacteria  Fibrobacterota                     2     2     2     2   0
+  Bacteria  Fidelibacterota                    2     2     2     2   0
+  Bacteria  Nitrospinota                       2     2     2     2   0
+  Bacteria  Chrysiogenota                      1     1     1     1   0
+  Bacteria  Desulfobacterota_D                 1     1     1     1   0
+  Bacteria  Dictyoglomota                      1     1     1     1   0
+  Bacteria  Electryoneota                      1     1     1     1   0
+  Bacteria  Krumholzibacteriota                1     1     1     1   0
+  Bacteria  Margulisbacteria                   1     1     1     1   0
+  Bacteria  Myxococcota_A                      1     1     1     1   0
+  Bacteria  Nitrospirota                       1     1     1     1   0
+  Bacteria  Omnitrophota                       1     1     1     1   0
+  Bacteria  SM23-31                            1     1     1     1   0
+  Bacteria  UBA10199                           1     1     1     1   0
+  Bacteria  Zixibacteria                       1     1     1     1   0
+
+CLOSED VS MULTI-CONTIG BACTERIAL GENOMES (a): {"closed": {"Z": {"runs": 598, "resolved": 580}, "WA": {"runs": 598, "resolved": 579}, "DH": {"runs": 598, "resolved": 514}}, "multi": {"Z": {"runs": 90, "resolved": 86}, "WA": {"runs": 90, "resolved": 80}, "DH": {"runs": 90, "resolved": 72}}}

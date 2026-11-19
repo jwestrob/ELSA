@@ -1,0 +1,147 @@
+ribo_audit PART 7: the frozen ribosomal benchmark (predeclared6.json) on the third untouched test set (testset3)
+written 2026-11-19 ~16:52Z. All 842 genomes scored; the package's tuning / test split is ignored, as nothing is tuned here.
+
+ANSWER
+1. PRIMARY (embedding-list bond tree) PASSES all five bars:
+   - R1 recovered 801 / 801 (100.0%)
+   - R2 resolved 666 / 688 bacterial runs (96.8%)
+   - R3 resolved 110 / 113 archaeal runs (97.3%)
+   - R4 +106 runs over the engine reference, 95% interval [+86, +126]
+   - R5 chance 0.29% (Bacteria) and 0.00% (Archaea)
+2. SECONDARY (family-bond adaptive tree) PASSES all five: R1 801 / 801, R2 659 / 688 (95.8%), R3 102 / 113 (90.3%),
+   R4 +91 [+66, +114], R5 1.08% / 0.71%.
+   The ENGINE reference fails R2 (586 / 688, 85.2%) and R3 (84 / 113, 74.3%); it passes R1 and R5.
+3. Runs: 801 scored runs (688 Bacteria, 113 Archaea), one in each of 801 genomes. 41 genomes (29 Archaea, 12 Bacteria) hold
+   no run with >= 16 marked genes. No run falls below the minimum under the frozen definition.
+4. Primary unresolved runs: 25 (22 Bacteria, 3 Archaea).
+   - Bacteria: v1 2, v2 6, v3 1, v4 1, v5 1, v6 11, v7 0.
+   - Archaea: v1 3, others 0.
+5. Standing definition beside the frozen one (resolved): primary 692 -> 776, secondary 683 -> 761, engine 298 -> 670.
+   - No setting, definition or code changed. Every step ran with the frozen code (hashes below).
+   - Every HMM search ran through Aksha.
+   - The only addition is the ribosomal-table build the package lacked; it follows the package rule and is validated
+     exactly on SR-VP.
+
+------------------------------------------------------------------------------------------------------------------------
+1. VERIFICATION BEFORE ANY JOB
+  - Seal: all 31 files of $RD/testset3/package re-hashed. Every sha256 equals seal.json, and the combined seal recomputes to
+    cf920a483f2714e5be34de17b2c4285d69277681dc5822c71abbc9ef77ff3c89 (results7/seal_check.json).
+  - Frozen inputs:
+    predeclared6.json  a6c997f337368830679752018e8050d0505c2d51136f1509d1a66a6aecde9c3c
+    score6.py          6b61eeb8cac4f960696e2f70b27240b6d12ad1e44a3b2fa066ee2066c9d32f80
+    annot6.py          7eb20f2bb4e062fdc8328ade0f9bee79a090506e28eb074be5da5510554068ad
+    bio4.py            9be92586151755ea461999897d68b16d9bc931e19ff212aa748818fee9a3a282
+    bio5.py            63d51004c465b656f47ac861307412c66afc35373f152110ba4d6264e8a47e41
+    bio.py             3eb95d54741740464965b0411d2a169c45fbda1cf48ae3cfea6c16a79c40f2af
+    audit.py           ab60d576a504af8ae729b0477052595b3fcd0e619d9bfade1e5949fccb6ea59b
+    All verified again immediately before scoring.
+  - Locus tables from the frozen-run agent (long_loci/frozen3/results/locus_tables.json, 16:48:30Z); sha256 checked against
+    the files before scoring:
+    PRIMARY   loci/gtdb3_Z/L4bp_t0.02.parquet   8f55d59e92347c6112911ab05f44adf335e2038b374d9efb6e3e252185cb87af  769,433 loci
+    SECONDARY loci/gtdb3_WA/L4b_t0.2.parquet    43c8fc452ae9a3f365a68f2b9447e219a25bf27ebfdc2894aac7b12bd3f49219  719,101 loci
+    ENGINE    loci/gtdb3_engine/DH.parquet      4685c2167af09abb244478fe3e4b936d20073eb6a72c1cbe4a8e5709e771ad4f  375,644 loci
+
+2. RIBOSOMAL TABLES (built here; the package holds none)
+  - Rule source: ws_srvp_bins/package/code/03_build_package.py st_ribosomal, identical to
+    slice_lut/testset/package_k8/code/15_ribosomal_truth.py.
+    - Search: hmmsearch --cut_ga --domtblout of ribo.hmm, the 121 Pfam 38.1 ^ribosom(al)?_ models, sha256
+      b2ce8369acd81894f9b437a64ecacc59c7ac35175f69b1454624dd4bdc6e1e49.
+    - Marked gene = any reported domain. marker = model with the best full-sequence score.
+    - Runs: per contig, marked genes with <= gap unmarked genes inside (g0, g2); runs with >= 8 marked kept;
+      m16 = >= 16 marked.
+    - Standing selection: g2 and m16.
+  - Implementation: mark7.py (sha256 dc12595f...0748).
+    - Search through Aksha: /home/jwestrob/.local/bin/aksha search --hmm_in ribo.hmm --cut_ga
+      --threads $SLURM_CPUS_ON_NODE.
+    - GA1 / GA2 are re-applied to Aksha's rows from the HMM file, so the result does not depend on whether Aksha prints
+      sub-GA domains.
+  - Validation on the 20-genome SR-VP sample against that package's stored tables: marked genes 1,085 / 1,085, marker and
+    markers identical, runs 45 / 45 identical (results7/equiv7.json).
+  - testset3 output (job 116646, 24 CPUs, 1 min 17 s; Aksha 74 s):
+    - 45,292 marked genes; 101 models hit.
+    - Runs: g0_m8 927, g0_m16 642, g2_m8 850, g2_m16 801 (Bacteria 688, Archaea 113) in 801 genomes.
+    - Files: work6/testset3/ribosomal/{marked,runs}.parquet (sha256 973a46ca...263a, 30e56f0a...ee8f) and RUNS_READY.json
+      (15:20:02Z), written outside the sealed package.
+
+3. MEMBER ANNOTATION (job 116647, afterok, 24 CPUs, 33 min 31 s)
+  - annot6.py, unchanged, through Aksha (--hmm_in, --evalue 1000 --domE 1000, $SLURM_CPUS_ON_NODE threads), with thresholds
+    applied in the script exactly as frozen:
+    - ko_list threshold by score_type
+    - E-value cut emulated with N_total = 2,557,405 proteins
+    - Pfam GA1 / GA2
+  - Aksha timings: 226 KOs 484 s; 20 Pfam 115 s; 16 supplement KOs 699 s; Pfam-A on 84,394 window proteins 687 s.
+  - Result: 52,361 genes with a KO; classes R 48,544, N 13,509; 10,839 supplement hits; 73,123 window genes with Pfam.
+  - Total job time for this part: 34 min 48 s of 24-core time (budget 2 h).
+  - score6.py ran single-threaded on the login node (72 s).
+  - It read the sealed universe through a shadow package (work6/testset3/pkg: links to the sealed universe and FASTA plus
+    the built ribosomal tables), because the frozen scorer reads ribosomal tables from the package path.
+
+4. BARS (frozen definition (a); denominators = all 801 runs)
+                         R1 recovered (>= 97%)   R2 Bacteria resolved (>= 90%)  R3 Archaea resolved (>= 85%)  R4 minus engine               R5 chance (<= 5%)            ALL
+  PRIMARY  Z             801/801 100.0% PASS     666/688 96.80% PASS            110/113 97.35% PASS           +106 [+86, +126] PASS          Bact 0.29%, Arch 0.00% PASS  PASS
+  SECONDARY WA           801/801 100.0% PASS     659/688 95.78% PASS            102/113 90.27% PASS           +91 [+66, +114] PASS           Bact 1.08%, Arch 0.71% PASS  PASS
+  ENGINE DH              801/801 100.0% PASS     586/688 85.17% FAIL            84/113 74.34% FAIL            n/a                            Bact 0.84%, Arch 2.12% PASS  FAIL
+  - R1 per domain: 688 / 688 Bacteria and 113 / 113 Archaea, for every output.
+  - R4 = sum over runs of (resolved - engine resolved): paired bootstrap over 801 runs, 2,000 resamples, numpy
+    default_rng(17), 95% percentile interval. report7.py recomputed it independently, identical to score6.py.
+  - Chance: 5 same-contig windows per target of the target length, seed 17, scored with the resolved rule.
+
+5. RUN COUNTS
+  - Scored runs: 801 (Bacteria 688, Archaea 113), one per genome in 801 of 842 genomes.
+  - Genomes with no scored run: 41 (Archaea 29 of 142, Bacteria 12 of 700).
+  - Below-minimum runs under the frozen definition: 0. Runs with more than one target: 0.
+  - Bacterial runs from closed (single-contig) genomes 598, multi-contig 90. Resolved by Z: closed 580 / 598, multi 86 / 90.
+
+6. STANDING DEFINITION BESIDE THE FROZEN DEFINITION (resolved / any fitting locus / recovered; chance)
+                 standing                           part 4    frozen (a)                         accurate reading
+  Bacteria  Z    585 / 664 / 688   chance 0.70%     666       666 / 671 / 688   chance 0.29%     624
+            WA   597 / 655 / 688   chance 1.57%     658       659 / 674 / 688   chance 1.08%     601
+            DH   221 / 238 / 688   chance 1.05%     584       586 / 649 / 688   chance 0.84%     487
+  Archaea   Z    107 / 109 / 113   chance 0.00%     110       110 / 110 / 113   chance 0.00%     106
+            WA    86 /  88 / 113   chance 0.53%     102       102 / 103 / 113   chance 0.71%      99
+            DH    77 /  77 / 113   chance 2.48%      85        84 / 108 / 113   chance 2.12%      78
+  all       Z    692 / 773 / 801                    776       776 / 781 / 801                    730
+            WA   683 / 743 / 801                    760       761 / 777 / 801                    700
+            DH   298 / 315 / 801                    669       670 / 757 / 801                    565
+
+7. VERDICTS FOR EVERY UNRESOLVED RUN (part-2 strict procedure on each unresolved frozen target; runs counted)
+                          v1   v2   v3   v4   v5   v6   v7   below-minimum   unresolved
+  PRIMARY Z   Bacteria     2    6    1    1    1   11    0        0              22
+              Archaea      3    0    0    0    0    0    0        0               3
+  SECONDARY   Bacteria     1   16    0    2    6    4    0        0              29
+              Archaea      7    3    0    0    1    0    0        0              11
+  ENGINE DH   Bacteria     1   32    0    3   43   23    0        0             102
+              Archaea      0    1    3    7   17    1    0        0              29
+  Primary cases are in results7/cases6_Z.tsv.
+  - The 11 v6 (gene-call anomaly at the decisive point) are glue junctions such as L7/L12 | MTS | rpoB and tufA | S10.
+  - The 3 archaeal v1 are cuts inside the S10 operon (L22 | S19, S15e | L22, S19 | L22).
+
+8. PHYLUM TABLE: results7/report7_tables.txt. Largest bacterial phyla, runs and resolved Z / WA / DH:
+   - Bacillota 105: 89 / 95 / 56
+   - Pseudomonadota 104: 104 / 103 / 89
+   - Bacteroidota 83: 81 / 82 / 76
+   - Actinomycetota 65: 63 / 55 / 56
+   Archaea:
+   - Halobacteriota 45: 45 / 45 / 35
+   - Thermoproteota 21: 19 / 20 / 15
+   - Methanobacteriota 12: 12 / 3 / 11
+
+9. DEVIATIONS FROM predeclared6.json AND NOTES
+  - The ribosomal tables were built by this agent; the package provides none. This is the case foreseen in
+    predeclared6.json ("if the package lacks them, built by this rule from the Aksha Pfam search and reported as a
+    deviation"). The rule is the package rule, run through Aksha (--cut_ga) and validated identical on SR-VP.
+  - score6.py read the package through a shadow directory of links (sealed universe + FASTA + built ribosomal tables).
+    No code was changed.
+  - No other deviation: definition, bars, chance procedure, bootstrap and code are as frozen, and every score was computed
+    once.
+  - Tools used:
+    - Ribosomal marking: Aksha 0.2.1 (/home/jwestrob/.local/bin/aksha search --hmm_in ribo.hmm --cut_ga).
+    - Member annotation: Aksha (--hmm_in for ko_sel.hmm, pfam_sel.hmm, extra.hmm and Pfam-A.hmm 38.1; no cutoffs in Aksha;
+      thresholds in annot6.py).
+    - No direct hmmsearch, hmmscan or pyhmmer call.
+
+FILES (beside this report, results7/)
+  table6.txt, score6.json, score6_runs.parquet, cases6_{Z,WA,DH}.tsv, report7_tables.txt, RUNS_READY.json, receipt.json,
+  marked.parquet, runs.parquet, annot6.json, seal_check.json, equiv7.json, locus_tables.json.
+  Code: mark7.py, mark7.sbatch, annot7.sbatch, report7.py.
+  Remote work: $RD/ribo_audit/work6/testset3/.

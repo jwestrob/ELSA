@@ -1,0 +1,24 @@
+{
+ "written_utc": "2026-11-19T15:20:02Z",
+ "package": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/testset3/package",
+ "rule": "ws_srvp_bins/package/code/03_build_package.py st_ribosomal (= slice_lut package_k8/code/15_ribosomal_truth.py)",
+ "tool": "Aksha /home/jwestrob/.local/bin/aksha search --hmm_in ribo.hmm --cut_ga --threads 24",
+ "files": {
+  "marked": {
+   "path": "work6/testset3/ribosomal/marked.parquet",
+   "sha256": "973a46cae9ff6cad410dd13d4c979a33db7ea6c0e0196207b009d7add9cd263a",
+   "rows": 45292
+  },
+  "runs": {
+   "path": "work6/testset3/ribosomal/runs.parquet",
+   "sha256": "30e56f0a8c139708ac031f79de9407a820ff394713867453bb62e927450fee8f",
+   "rows": 1777
+  }
+ },
+ "g2_m16_runs": 801,
+ "g2_m16_by_domain": {
+  "Bacteria": 688,
+  "Archaea": 113
+ },
+ "standing_selection": "run_set == 'g2' and m16 (n_marked >= 16)"
+}

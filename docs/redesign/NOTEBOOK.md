@@ -3246,3 +3246,39 @@ for both trees landed above the predicted range (50–72% / 45–68%); the predi
 Archaea-above-Bacteria gap of 20–40 points was wrong (primary +9.7, secondary −10.7). 353 genome
 groups at 0.75. Cost: 90 min of 24/40-core CPU job time; GPU passes 7.9 and 10.1 min on the A5000.
 The frozen-definition scoring against bars R1–R5 (audit agent, `score6.py`) is still running.
+
+## 2026-11-19 16:54 UTC — THIRD UNTOUCHED TEST: primary passes all five bars (`ribo_audit/REPORT7.txt`)
+
+Frozen definition (`predeclared6.json` a6c997f3…, `score6.py` 6b61eeb8…), frozen configuration
+(`FROZEN3.json` 5f30fb51…), sealed package cf920a48…; every score computed once, all 842 genomes.
+801 scored runs (688 Bacteria, 113 Archaea), one per genome; 41 genomes (29 of 142 Archaea, 12 of
+700 Bacteria) hold no run of 16 marked genes and sit outside the denominator.
+
+| output | R1 recovered ≥97% | R2 Bacteria resolved ≥90% | R3 Archaea resolved ≥85% | R4 minus engine | R5 chance ≤5% | all |
+|---|---|---|---|---|---|---|
+| embedding-list tree (primary) | 801/801 | 666/688 (96.8%) | 110/113 (97.3%) | +106 [+86, +126] | 0.29% / 0.00% | **PASS** |
+| family-bond tree (secondary) | 801/801 | 659/688 (95.8%) | 102/113 (90.3%) | +91 [+66, +114] | 1.08% / 0.71% | **PASS** |
+| engine reference | 801/801 | 586/688 (85.2%) | 84/113 (74.3%) | — | 0.84% / 2.12% | fail (R2, R3) |
+
+I recomputed the resolved counts and the R4 interval from `results7/score6_runs.parquet`
+(numpy default_rng(17), 2,000 resamples): identical.
+
+- **Unresolved primary runs: 25.** Verdicts, Bacteria (22): target spans two or more units that
+  the output keeps apart 6 (v2), the same with a flagged gene at the junction 11 (v6; junctions
+  such as L7/L12 | methyltransferase | rpoB and tufA | S10; **labels not hand-checked by me**),
+  one locus split 2 (v1), v3/v4/v5 one each. Archaea (3): all cuts inside the S10 operon
+  (L22 | S19, S15e | L22, S19 | L22). Method splits of one locus: 5 of 801 runs.
+- **Standing definition beside it** (resolved): primary 692, secondary 683, engine 298. The frozen
+  definition lifts the engine most (298 → 670), because its loci are larger; the margin over the
+  engine is +394 under the standing rule and +106 under the frozen one.
+- **Deviation (foreseen in predeclared6.json):** the package held no ribosomal tables; built by
+  the lut / SR-VP package rule (121 ribosomal Pfam models, GA cutoffs, gaps ≤ 2, ≥ 16 marked)
+  through Aksha; identical to the stored SR-VP tables on a 20-genome sample (1,085/1,085 marked
+  genes, 45/45 runs). Scorer read them through a directory of links; no code change.
+- **Every HMM search through Aksha** (0.2.1, `--hmm_in`). Cost: marking 1 min 17 s, annotation
+  33 min 31 s (24 cores), scoring 72 s. Whole test: 4 h 20 min A5000 embedding, about 2 h 5 min
+  of CPU job time, two GPU passes of 8 and 10 min.
+- By phylum (runs: primary / secondary / engine): Bacillota 105: 89 / 95 / 56; Pseudomonadota
+  104: 104 / 103 / 89; Bacteroidota 83: 81 / 82 / 76; Actinomycetota 65: 63 / 55 / 56;
+  Halobacteriota 45: 45 / 45 / 35; Thermoproteota 21: 19 / 20 / 15; Methanobacteriota 12:
+  12 / 3 / 11.

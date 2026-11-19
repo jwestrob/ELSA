@@ -3142,3 +3142,27 @@ that are conserved across lineage groups.
 - Remaining method-level faults under (a), embedding-list tree on DPANN: 28 splits of rearranged
   S10 operons, 36 loci extending past the unit, 30 scorer's choice.
 Candidate single definition for a future untouched set: variant (a).
+
+## 2026-11-19 10:37 UTC — Third untouched test set approved and started (Jacob: "sure, go for it")
+
+Purpose: a clean test of ribosomal-locus resolution under a definition frozen in advance.
+- **Test set** (`benchmarks/redesign/testset3/`, `$RD/testset3/package/`): about 700 bacterial and
+  300 archaeal complete GTDB r232 representatives, families as strata, selection rule and list
+  fixed before any content is read; genomes of the lut package, the DPANN universe and the
+  Spacedust collection excluded by accession; E. coli and B. subtilis reserved for the external
+  check. Same package format and embedding recipe as the lut package; no curated callers.
+  Approved compute: one A5000 embedding pass of about 5-7 h; about 3 h of 24-CPU jobs.
+- **Definition** (`ribo_audit/predeclared6.json`, frozen before the set exists): the conserved
+  ribosomal cluster; variant (a) of part 5 unchanged (cluster-level chain, break where consecutive
+  members are on opposite strands, 16-gene minimum, below-minimum runs unresolved).
+- **Bars** (set by me): primary = embedding-list bond tree. R1 recovered >= 97% overall; R2
+  resolved >= 90% of bacterial runs; R3 resolved >= 85% of archaeal runs; R4 resolved minus the
+  engine reference above zero (paired bootstrap, 95% interval); R5 chance <= 5% per domain. Pass =
+  all five. Family-bond adaptive tree reported as secondary.
+- **External check of the definition:** its targets against experimentally mapped ribosomal
+  operons in E. coli K-12 and B. subtilis 168, independent of our outputs.
+- **Run** (`long_loci/frozen3/FROZEN3.json`): both frozen configurations unchanged, engine
+  reference and pair-linking as comparators; one run after the package is sealed.
+- Annotation for this set goes through Aksha, with ko_list thresholds applied by score_type in
+  the scoring script so the definition matches the one developed; equivalence with the stored
+  hmmsearch annotation is checked before the freeze.

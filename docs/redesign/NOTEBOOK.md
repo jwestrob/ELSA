@@ -3189,3 +3189,16 @@ Purpose: a clean test of ribosomal-locus resolution under a definition frozen in
 - Repo data note: `operons/bsubtilis/operons.tsv` has no provenance and lacks spc and alpha;
   `operons/ecoli/OperonSet.txt` is an HTML page from a failed download. Not used here.
 - Annotation of the new set: `annot6.sbatch` (24 CPUs, Aksha), about 1 h projected; not submitted.
+
+## 2026-11-19 11:07 UTC — Third test set: selection fixed (`benchmarks/redesign/testset3/REPORT.txt`)
+
+Rules written 10:38 UTC (seed 17), selection 10:40 UTC from GTDB r232 metadata only, before any
+protein content was read. **842 genomes: 700 Bacteria** (all complete; 44 phyla, 308 families, 564
+genera) **and 142 Archaea** (132 complete + 10 near-complete fill; 11 phyla, 54 families, 110
+genera), 2,557,405 proteins. The archaeal target of 300 was unreachable under the stated caps:
+complete archaeal genomes concentrate in Halobacteriota and Thermoproteota (45 each at the cap).
+Decision (mine): keep 142 as selected by the pre-written rule; lifting the phylum cap would give
+186, mostly more of those two phyla. Excluded by accession: Spacedust 919, lut package 97, DPANN
+universe 11, reserved E. coli / B. subtilis representatives 4. Seven archaea fall in DPANN
+lineages. Embedding job 116292 running on the A5000 since 10:45 UTC, projected 4.0-4.3 h;
+finalize and seal chained behind it.

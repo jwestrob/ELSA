@@ -1,0 +1,33 @@
+testset3 — selection rules, predeclared 2026-11-19T10:38:35Z (seed 17), written before any protein or annotation content of any
+candidate is read. Only GTDB r232 metadata (assembly level, CheckM2, contig count, taxonomy, protein count) and the
+exclusion lists below are used to select.
+
+Source: GTDB r232 metadata, bac120_metadata.tsv.gz and ar53_metadata.tsv.gz (downloaded 2026-06-29,
+  giant_protein_folding/rp16_phylogeny_2026_06/gtdb_giant_scan/meta/), rows with gtdb_representative = t, kept only when
+  the representative's proteome exists in gtdb_giant_scan/reps/protein_faa_reps/{bacteria,archaea} (the files used for
+  the lut slice). Taxonomy: gtdb_taxonomy of that row.
+Quality: CheckM2 columns of the metadata (checkm2_completeness, checkm2_contamination), GTDB r232's quality estimates.
+Tier "complete": ncbi_assembly_level = "Complete Genome", completeness >= 95, contamination <= 5.
+Tier "fill" (archaea only, used only if the complete tier gives fewer than 300 archaea): not "Complete Genome",
+  completeness >= 98, contamination <= 2, contig_count <= 10.
+Exclusions, matched on the 9-digit GCA/GCF accession number (so GCA/GCF twins and versions match):
+  - lut test set package_k8 ($RD/slice_lut/testset/package_k8/selection.tsv, 1,032 genomes)
+  - DPANN development universe ($RD/ws_dpann/package/universe/genomes.parquet, 3,564 genomes)
+  - Spacedust collection ($RD/universe/genomes.parquet, 1,317 genomes = 9 query + 1,308 reference)
+  - every representative whose GTDB species is Escherichia coli or Bacillus subtilis, including GTDB splits named
+    "Escherichia coli_<suffix>" or "Bacillus subtilis_<suffix>"
+Orders (all from SHA-256 hex, ascending):
+  family order          SHA-256("17:family:" + family name)
+  genus order           SHA-256("17:genus:" + genus name)
+  genome order          tier complete: SHA-256("17:" + accession); tier fill: completeness desc, contamination asc,
+                        contig_count asc, then SHA-256("17:" + accession)
+  picking order inside a family: round-robin over its genera in genus order (first genome of each genus, then the second
+  of each, ...), so distinct genera come first, then distinct species (every representative is its own species).
+Per domain (Bacteria target 700, phylum cap 105 = 15%; Archaea target 300, cap 45 = 15%): walk families in family order;
+  from each family take genomes in picking order, at most 4 per family, skipping a genome whose phylum already holds the
+  cap; stop as soon as the target is reached (the family in progress may contribute fewer than 4).
+Archaea: the complete tier is walked first under these caps (this is "take all eligible" under the caps). If it gives
+  fewer than 300, the fill tier is walked in the same family order with the same caps, the 4-per-family limit counting
+  genomes of both tiers, until 300 or exhaustion. Bacteria get no fill tier; a shortfall is reported.
+DPANN lineages: archaeal phyla present in the DPANN development universe (its genomes.parquet phylum column).
+Split (as package_k8): genome_code = rank of genome accession in the package; odd = tuning, even = test.

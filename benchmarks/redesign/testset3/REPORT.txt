@@ -1,0 +1,117 @@
+testset3 — untouched GTDB r232 test set for ribosomal-locus resolution (package only)
+Built 2026-11-19 on biotite. Package: $RD/testset3/package/ (RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/
+ELSA/redesign_20261111). Local: benchmarks/redesign/testset3/ (this report, NOTEBOOK.txt, selection_rules.txt,
+selection/, code/; no sequences). No method run, no ribosomal analysis, no curated caller, no token arm: family tokens
+are left to the agent that runs the frozen configurations.
+
+DECISION NEEDED — archaeal size
+The predeclared rule gives 142 archaea, short of the 300 target. Two caps bind together:
+  - Phylum cap 45 (15% of 300): Halobacteriota and Thermoproteota reach 45 each; every other archaeal phylum has fewer
+    eligible genomes. Scan of the cap (metadata only): 45 -> 142, 60 -> 172, 70 -> 185, no phylum cap -> 186.
+  - 4 genomes per family: with no phylum cap the archaeal pool still stops at 186 (159 complete + 27 fill), because
+    complete and near-complete archaea sit in few families (54 families in the selection).
+Reaching 300 needs more than 4 genomes per archaeal family, and the extra genomes would come mostly from Halobacteriota and
+Thermoproteota (each already 32% of the 142).
+Options:
+  keep 142 (built now)      phylum and family caps as specified; archaea are 17% of genomes and 13% of proteins.
+  lift the phylum cap       186 archaea (+44 genomes, about +100,000 proteins, about +10 min of A5000 time); the two
+                            large phyla rise to about 35-40% of archaea.
+  more per family           up to 300 with a per-family limit above 4 (not computed); concentrates the same two phyla.
+Recommendation: keep 142. The set exists to test ribosomal-locus resolution; 142 archaea in 11 phyla with complete or
+near-complete genomes already give 54 families, and the extra genomes would mainly add haloarchaea and Thermoproteota.
+The package is built on this choice; a change means one selection rerun plus re-embedding of the added genomes.
+
+REPORT 1 — SELECTION FIXED (2026-11-19 10:40 UTC, before any protein or annotation content was read)
+Rule: selection_rules.txt (sha256 f3cbed1a7d63ec27f6346fa21a92a7ec4640043d0a7b37e62ae8d9c6fe71f171), predeclared
+10:38 UTC. Selection: selection/selection.tsv (sha256 71ae766830d6dec368505e754e6bafca65edb64aeb8b08267d282ca3c24b2c63),
+written by code/ts3_select.py in job 116283 from GTDB r232 metadata only.
+- Source: GTDB r232 species representatives (metadata rows with gtdb_representative = t: 189,801 Bacteria, 10,122
+  Archaea; every one has its proteome in the files used for the lut slice).
+- Eligible (ncbi_assembly_level "Complete Genome", CheckM2 completeness >= 95, contamination <= 5): Bacteria 10,788,
+  Archaea 509; after exclusions 9,776 and 498. Archaeal fill tier (not complete, >= 98 / <= 2, <= 10 contigs): 139.
+  Quality = the CheckM2 columns of the GTDB r232 metadata (CheckM1 values are kept in the genome table).
+- Exclusions (matched on the 9-digit GCA/GCF number), complete-and-q95 genomes removed: Spacedust collection 919 (list
+  of 1,317 = 9 query + 1,308 reference; the 9 query genomes carry no NCBI accession), lut package_k8 97 (list 1,032), DPANN
+  development universe 11 (list 3,564), reserved species 4: GTDB species Bacillus subtilis, Bacillus subtilis_G,
+  Escherichia coli, Escherichia coli_E, Escherichia coli_F (all representatives of these names and their GTDB splits).
+- Selected: 842 genomes = 700 Bacteria (all complete) + 142 Archaea (132 complete + 10 fill).
+  Bacteria: 44 phyla, 308 families, 564 genera; genomes per family 1: 144 families, 2: 40, 3: 20, 4: 104.
+  Archaea: 11 phyla, 54 families, 110 genera; per family 1: 17, 2: 10, 3: 3, 4: 24.
+  DPANN lineages (archaeal phyla of the DPANN development universe): 7 archaea, Nanobdellota 6 (1 complete, 5 fill) and
+  Nanohalarchaeota 1. Complete DPANN genomes are scarce after the DPANN universe exclusion.
+- Expected proteins (metadata protein_count): 2,557,405 (Bacteria 2,232,853; Archaea 324,552); contigs 1,187 (median 1
+  per genome; 90 bacterial and 37 archaeal genomes have more than one; maximum 23).
+- Projected embedding (ESM++ small, one A5000; rate measured on the lut package_k8 run, 4,464,102 unique sequences /
+  1.363 G tokens in 7 h 08 min): 2,530,648 unique sequences / 820.4 M tokens -> 4.0 h (sequences) to 4.3 h (tokens).
+
+Phylum table (genomes, families, genera, complete, fill, proteins, fraction of domain):
+Bacteria
+  Bacillota               105   43   86  105    0   365,035   0.150
+  Pseudomonadota          105   40   81  105    0   341,517   0.150
+  Bacteroidota             84   35   65   84    0   271,597   0.120
+  Actinomycetota           68   24   58   68    0   227,182   0.097
+  Patescibacteriota        48   32   44   48    0    46,065   0.069
+  Chloroflexota            41   18   27   41    0   128,598   0.059
+  Desulfobacterota         33   16   29   33    0   128,009   0.047
+  Acidobacteriota          24   12   22   24    0   113,699   0.034
+  Bacillota_I              24    9   18   24    0    35,381   0.034
+  Spirochaetota            22   10   17   22    0    69,588   0.031
+  Verrucomicrobiota        21   10   19   21    0    80,687   0.030
+  Cyanobacteriota          19    7   12   19    0    82,258   0.027
+  Campylobacterota         14    5   10   14    0    30,048   0.020
+  Planctomycetota          11    5   10   11    0    60,708   0.016
+  Armatimonadota            8    4    5    8    0    34,139   0.011
+  Chlamydiota               7    3    5    7    0    15,232   0.010
+  Thermotogota              6    2    5    6    0    13,103   0.009
+  Synergistota              5    3    5    5    0    12,705   0.007
+  Babelota, Bdellovibrionota, Cloacimonadota, JAAXHH01, Poribacteria, Vulcanimicrobiota   4 each
+  Gemmatimonadota, Latescibacterota, Myxococcota   3 each
+  Bdellovibrionota_B, Calditrichota, Fibrobacterota, Fidelibacterota, Nitrospinota   2 each
+  Chrysiogenota, Desulfobacterota_D, Dictyoglomota, Electryoneota, Krumholzibacteriota, Margulisbacteria, Myxococcota_A,
+  Nitrospirota, Omnitrophota, SM23-31, UBA10199, Zixibacteria   1 each
+Archaea
+  Halobacteriota           45   15   36   45    0   137,176   0.317
+  Thermoproteota           45   17   34   45    0    96,872   0.317
+  Thermoplasmatota         16    6   15   14    2    30,099   0.113
+  Methanobacteriota        12    4    7   11    1    22,544   0.085
+  AGJL01                    8    2    5    8    0    13,860   0.056
+  Nanobdellota              6    5    5    1    5     6,398   0.042
+  Methanobacteriota_B       4    1    4    4    0     8,217   0.028
+  JAADCQ01                  2    1    1    1    1     3,359   0.014
+  Korarchaeota              2    1    1    1    1     3,379   0.014
+  Asgardarchaeota           1    1    1    1    0     1,504   0.007
+  Nanohalarchaeota          1    1    1    1    0     1,144   0.007
+The archaeal cap is 15% of the 300 target (45); measured against the 142 archaea selected, the two capped phyla are 32%.
+
+REPORT 2 — PACKAGE
+PENDING (filled when the GPU job and the finalize-and-seal job end).
+
+PACKAGE LAYOUT (same file names and columns as slice_lut/testset/package_k8 where they apply)
+  universe/genes.parquet       gid, protein_id ('<genome>|<Prodigal ID>'), genome, genome_code, contig, contig_code,
+                               position_index (gene order), strand (+1/-1), length (aa), start, end (1-based nt)
+  universe/genomes.parquet     DPANN columns (tax = GTDB r232 taxonomy string, phylum ... species, completeness and
+                               contamination = CheckM2) + gtdb_id, domain, assembly_level, contig_count_metadata,
+                               protein_count_metadata, genome_size, selection_tier, selection_order, dpann_lineage,
+                               checkm1_completeness, checkm1_contamination, split
+  universe/contigs.parquet     genome, contig, contig_code, n_genes, length_nt (NULL: GTDB ships proteomes), first_gid
+  universe/contig_extra.parquet, universe/gene_flags.parquet (Prodigal partial / start type / file index)
+  proteins_gid.faa             header = gid, trailing '*' removed
+  selection.tsv, split.parquet (odd genome_code = tuning, even = test, as package_k8)
+  embeddings/                  ESM++ small, the package_k8 / SR-VP recipe: esmpp_small__mean_raw_f32__uid.npy,
+                               esmpp_small__l2_f32__row.npy, esmpp_small__uid_of_row.npy, ..., zca10_f16__uid.npy,
+                               zca10_transform.npz, zca10.json, esmpp_small__MANIFEST.json, esmpp_small__run.json
+  receipts/build.json, MANIFEST.tsv / MANIFEST.json, seal.json (written last, covers every file), code/
+No gold/ directory: this set carries no truth tables (the ribosomal definition is frozen separately).
+
+CODE AND JOBS
+code/ts3_select.py + select.sbatch      selection from metadata (116282 failed at import: the script was named select.py
+                                        and shadowed the standard-library module; renamed; 116283 COMPLETED 22 s;
+                                        116285 archaeal cap scan 32 s)
+code/ts3_parse.py, ts3_build.py, build.sbatch   proteomes -> package (116291 COMPLETED 56 s: parse 5 s, build 20 s,
+                                        embed_queue prep 27 s)
+code/embed_gpu.sbatch                   116292 ts3_esmpp, partition gpu, H200 node excluded, ran on node-128-512g-8gpu-1
+                                        (RTX A5000); started 10:45 UTC
+code/finalize_zca.sbatch + ts3_seal.py  116293 ts3_final, afterok:116292 (finalize, zca10, manifest, seal)
+code/embed/                             zca10.py, embed_tokens.py, make_manifest.py copied unchanged from
+                                        slice_lut/code/embed (themselves from transfer_srvp_bac)
+No HMM search was needed or run.

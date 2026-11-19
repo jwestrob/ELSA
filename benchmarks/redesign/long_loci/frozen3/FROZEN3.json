@@ -1,0 +1,58 @@
+{
+ "workstream": "long_loci, third frozen run: complete GTDB genomes (ribosomal benchmark)",
+ "written_utc": "2026-11-19T10:38Z",
+ "status_when_written": "Written before the package exists. Nothing under $RD/testset3/ has been opened or listed. Known: parts 1-8 (DPANN, Spacedust development), the lut frozen run and the SR-VP frozen run (REPORT_frozen2.txt), including the SR-VP finding that the standing largest-overlap rule picks a larger parent in 180 of the 708 runs the primary fits.",
+ "dataset": {
+  "path": "$RD/testset3/package/ (RD = /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111), built by another agent in the lut package format; read-only; opened only after the coordinator reports it sealed",
+  "as_described_by_the_coordinator": "about 700 Bacteria and 300 Archaea, complete GTDB genomes; no curated-system truth (no DefenseFinder / TXSScan calls)",
+  "seal": "recorded at phase 2 (seal sha256 and MANIFEST hashes) before any build"
+ },
+ "configurations_unchanged": {
+  "basis": "parts 6-8 found no justified change to either configuration (REPORT6.txt, REPORT7.txt, REPORT8.txt); both run exactly as on SR-VP (REPORT_frozen2.txt)",
+  "PRIMARY": "embedding-list bond tree, fixed distance: z >= 10.6 lists (one best match per genome, own genome group excluded) from the exact GPU z table (Z_STORE 10.5); genome groups by the emb_hom 0.75 average-linkage rule; vl round 0 with <= 2 intervening genes, 'grp' counting, round-0 homolog exclusion masks K1000; list tau by vl's rule (ladder 4-20, round-0 instance FDR over 3 gene-order shuffles <= .01); L4b tree at theta .02 with the family-free kNN cohesion kappa_var_knn50; every node kept (L4b+). Output L4bp_t0.02",
+  "SECONDARY": "family-bond tree, adaptive distance: rescue3 family tokens; genome groups (0.75 rule); lw.py WA bonds (every token pair within 8 positions tested at its own distance); bond tau by the 1% shuffle rule (ladder 4-50, 3 within-genome token shuffles); L4b tree at theta .2 with token cohesion kappa_var_tokens; closed-form family node test at the bond tau (n >= 2, Lambda >= tau, nI >= 2). Output L4b_t0.2",
+  "rule_for_every_data_derived_number": "nothing is chosen on this set: taus, genome groups, cohesion floors (1,000,000 random cross-genome gene pairs, seed 17), exclusion masks (softrec mode 1) and the engine's rule (its coverage rule at FDR .01) come from their fixed rules; whitening = the package's stored transform, applied, never refitted; other theta outputs written by the unchanged code are never scored or reported"
+ },
+ "comparators": {
+  "engine_reference": "recurrence engine (engine/code/recurrence.py, unchanged) on the same rescue3 tokens: --w 3 --null genome --perms 3 --fdr .01, Louvain modules, --all-genome-loci; nested reading DH = level-2 conserved loci UNION rule-H cores (Louvain res .3, seed 17, trim f .5) via boundary blib / rules read-only; lineages = GTDB genera from the package genome table (genomes without a genus count as their own lineage, the engine's rule)",
+  "pair_linking": "L1 of each base's own bonds (Z L1, WA L1)",
+  "not_run": "the synton pipeline (not requested for this run)"
+ },
+ "pipeline_as_on_SR_VP": {
+  "code": "frozen2/code copied to frozen3/code with paths only (package path, output root $RD/long_loci/frozen3, data key 'gtdb3', engine arm name); diffs recorded in the notebook before any job. If the lut layout puts the FASTA at proteins_gid.faa, the SR-VP shadow directory is not needed; otherwise the same shadow link is used",
+  "J1_tokens": "MMseqs2 release 18: base cluster -s 7.5 -e 1e-3 --min-seq-id 0 -c 0.5 --cov-mode 0 --cluster-mode 0 -> mmseqs_tokens.py; rescue3: unique sequences, genes in base tokens of < 3 genes searched against all unique sequences (prefilter -s 7.5 --max-seqs 1000; align -e 1e-5 -a) -> 06b_rescue3.py; 24 CPUs, standard_expand; guard: the job stops before the rescue if its projected time passes 115 min, and the projection is reported",
+  "J2_gpu_table": "transfer_spacedust gtable.py copy: per unique sequence and genome, best zca10 cosine, local index, within-genome z; stored where z >= 10.5; genome-pair sums for emb_hom; one A5000 (partition gpu), fp16 vectors",
+  "J3_gpu_knn": "gpu_knn_sd.py copy: exact cosine kNN, k 2,000, one A5000",
+  "J4_main": "uid gate (package uid_of_row = 06a gid2uid), float32 zca10 (stored transform applied; gate max |f32 - stored f16| <= 1e-3), genome groups, token cohesion, SECONDARY build (lw.py WA), engine, DH; 24 CPUs",
+  "J5a_list_prep": "adapter smoke, kNN cohesion, exclusion masks; 40 CPUs (standard_expand_2) for memory only (SR-VP peak 90 GiB for 3.17 M uids)",
+  "J5b_list_arm": "z >= 10.6 lists, vl round 0 over the observed order and 3 shuffles, list tau, L1 / L4b / L4b+ at theta .02; 24 CPUs",
+  "J6_scoring": "ribosomal scoring and descriptive statistics (below); 24 CPUs",
+  "chaining": "dependent Slurm jobs (afterok; scoring afterany) that write their results to disk; login-node watchdog (frozen/code/watchdog.sh) cancels a job past about twice its expected time or stuck on a dependency that can never be met; no timeout inside job scripts; Slurm preflight (both cluster instruction files read in the same turn) before every submission",
+  "projection": "from SR-VP (3.21 M genes): tokens 75-100 min, GPU table 12-20 min, GPU kNN 10-15 min, main 9-15 min, list prep 5-8 min, list arm 5-8 min, scoring < 10 min: about 2-2.5 h of CPU job time in total, no single job above 2 h; GPU passes well under 1 h each. Re-projected from the package's gene count at phase 2; the coordinator is told before submission if the total passes 5 h or a job passes 2 h, or a GPU pass 1 h"
+ },
+ "outputs_for_the_audit_scorer": "locus tables as on SR-VP: parquet files with columns s, e (inclusive gids of the package universe, e > s) at $RD/long_loci/frozen3/loci/gtdb3_Z/L4bp_t0.02.parquet (PRIMARY), loci/gtdb3_WA/L4b_t0.2.parquet (SECONDARY), loci/gtdb3_Z/L1.parquet, loci/gtdb3_WA/L1.parquet, loci/gtdb3_engine/DH.parquet; listed with sha256 in results/locus_tables.json",
+ "ribosomal_scoring": {
+  "pass_bars": "NOT set here: they are the audit agent's, frozen separately in benchmarks/redesign/ribo_audit/predeclared6.json (path now; sha256 recorded when the coordinator sends it, before any score). This run reports its standing-definition counts beside the audit table",
+  "runs": "the package's ribosomal truth runs (g2, >= 16 marked genes) if the package provides them; otherwise runs built with ribosomal_check's run rule from the audit agent's Ribosomal_* Pfam annotation output (stated in the report). No HMM search of my own",
+  "standing_definition": "ribosomal_check.score: best locus = largest overlap with the run (ties: shorter); recovered best_frac >= .5; resolved best_frac >= .8 and precision >= .8; plus the any-fitting-locus count (some locus with overlap / run >= .8 and overlap / locus >= .8); paired resolved differences between outputs (run bootstrap 10,000, seed 17)",
+  "subsets": "Bacteria and Archaea separately; the parity halves if the package defines them"
+ },
+ "descriptive_statistics": "per output: loci, share of genes in loci (all, Bacteria, Archaea), span quantiles; genome groups at 0.75 (count, size distribution); bond / list taus with their FDR ladders; bonds and bonded boundaries; token family counts; costs (wall time and peak memory per stage)",
+ "no_curated_criteria": "the set has no curated-system truth; no curated score is computed or claimed",
+ "deviation_policy": "any departure from this file is recorded in the notebook and the report as a deviation with its reason. Execution changes that cannot change an output (CPU count for memory, job split or resume from a saved stage, path layout) are allowed and recorded. No setting is changed and nothing is rerun after any score is seen; a failed job is resubmitted unchanged or reported as not run",
+ "expectations": {
+  "groups": "250-500 genome groups at 0.75 (complete genomes spread over many genera; SR-VP gave 277 for 994 genomes, lut 179 for 1,032)",
+  "taus": "list tau 6-10; bond tau 6-10",
+  "genes_in_loci": "PRIMARY .45-.62; SECONDARY .40-.60; DH .55-.75; pair-linking .45-.65",
+  "ribosomal_standing": "recovered >= 97% for both configurations and DH. Resolved: PRIMARY 50-72%, SECONDARY 45-68%, DH 30-55%, pair-linking 25-45%; Archaea above Bacteria by 20-40 points for both configurations (SR-VP single-contig genomes: PRIMARY 52%, Archaea 95%). Any-fit 80-92% for both configurations, 15-35 points above their standing resolved count",
+  "pairwise": "PRIMARY - SECONDARY resolved 0 to +60 runs; both configurations above DH by +100 to +300 runs on about 1,000 runs",
+  "costs": "within the projection above"
+ },
+ "code_sha256_to_be_copied": {
+  "frozen2/code (SR-VP versions)": {"fl2.py": "f49b6257c9fc9eb8b08cae19e27ac1d6605cf1252bc8fff0de5f6d65d1b9460b", "fz2.py": "6d1a3828f5bb3c70702a539d089eac62c0cb14e1125c4f5e4e95026aae73051b", "gtable_f2.py": "caa93680695b21d76392cc5e0f460e112d4612a07d1a5e725220dc9285d88868", "gpu_knn_f2.py": "90456a3c34b55edb3cecdcc4a04c50bc6d510005ecd4b372559b9fe66bd05acd", "tokens_f2.sbatch": "7db50194b06341a49f306ae107c26737960e139fdc12f154a65ca5df94c856e5", "main_f2.sbatch": "582049876c14611fa5e11bfd6445624aa6521961e21da30ad349e03b29affedb", "zprep_f2.sbatch": "2dd5ab4ce637d98abf265569f4e0909fe7cb97f1237aa803af38b2b71c039624", "zarm_f2.sbatch": "8664cea9107abc0fb9b9ffbc2d722007d5807358db3dd9c3758c6cba81e67f98", "gpu_f2.sbatch": "7700c9aa4837e1ffe29bcfb6f8d1943c21de7314d1ad950cc6d5f3df7104cde4", "env_f2.sh": "94b84f07fb62b336a61544eb9a15f8363b2059001b3eb9de9a8429e17c8e05c9", "fscore2.py (ribosomal part reused)": "2f3fac6a287728091d82eeecbec03abde22e8ee18a4b6f9399404a7a7c074258"},
+  "frozen/code": {"watchdog.sh": "9e7d220b109fd08886feaf8ba67b12590a2ff9b6fbaa12d3f7d934ecb4c707d1"},
+  "imported unchanged": "long_loci/code ll.py 2382fcc9..., lw.py f593a7ac..., lb.py 404cd4a4..., words_ts.py 88aa09dd..., sdu.py 354538c4...; vocab_lists vl.py 8f89c1df...; softrec.py 4124bd25...; transfer_spacedust emb.py 0f951f7a...; engine recurrence.py 703a2564...; boundary blib.py 3afba7c3..., rules.py 11e4c1d6...; ribosomal_check.py 2f37c8a8...; token recipe 06a_unique.py 35e46235..., 06b_rescue3.py 593cda1d..., mmseqs_tokens.py 1e85ff2e..., repair_lib.py af4d54a3..., tsv2parquet.py 6ec5770e... (full hashes in FROZEN2.json)",
+  "FROZEN2.json": "c87e3336d7c6a610f62b615c9ecf860949d6e774176f18dd56cc2e68461395ed"
+ },
+ "audit_predeclaration": {"path": "benchmarks/redesign/ribo_audit/predeclared6.json", "sha256": "pending: recorded when the coordinator sends it, before any score"}
+}

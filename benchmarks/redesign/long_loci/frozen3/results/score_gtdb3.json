@@ -1,0 +1,292 @@
+{
+ "runs_source": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/ribo_audit/work6/testset3/ribosomal/runs.parquet",
+ "runs_sha256": "30e56f0a8c139708ac031f79de9407a820ff394713867453bb62e927450fee8f",
+ "runs": {
+  "all": 801,
+  "Archaea": 113,
+  "Bacteria": 688
+ },
+ "outputs": {
+  "PRIMARY_Z_L4bp_t0.02": {
+   "ribosomal": {
+    "all": {
+     "runs": 801,
+     "recovered": 801,
+     "resolved": 692,
+     "any_fit": 773,
+     "median_precision_recovered": 0.96
+    },
+    "Archaea": {
+     "runs": 113,
+     "recovered": 113,
+     "resolved": 107,
+     "any_fit": 109,
+     "median_precision_recovered": 0.9583333333333334
+    },
+    "Bacteria": {
+     "runs": 688,
+     "recovered": 688,
+     "resolved": 585,
+     "any_fit": 664,
+     "median_precision_recovered": 0.9615384615384616
+    }
+   },
+   "coverage": {
+    "loci": 769433,
+    "genes_in_loci_frac": 0.469433273181213,
+    "by_domain": {
+     "Archaea": 0.3457196381473539,
+     "Bacteria": 0.48741542770616786
+    },
+    "span_q50_q90_q99_max": [
+     3.0,
+     7.0,
+     23.0,
+     158.0
+    ]
+   }
+  },
+  "Z_L1": {
+   "ribosomal": {
+    "all": {
+     "runs": 801,
+     "recovered": 801,
+     "resolved": 294,
+     "any_fit": 294,
+     "median_precision_recovered": 0.7272727272727273
+    },
+    "Archaea": {
+     "runs": 113,
+     "recovered": 113,
+     "resolved": 79,
+     "any_fit": 79,
+     "median_precision_recovered": 0.8518518518518519
+    },
+    "Bacteria": {
+     "runs": 688,
+     "recovered": 688,
+     "resolved": 215,
+     "any_fit": 215,
+     "median_precision_recovered": 0.7142857142857143
+    }
+   },
+   "coverage": {
+    "loci": 288811,
+    "genes_in_loci_frac": 0.469433273181213,
+    "by_domain": {
+     "Archaea": 0.3457196381473539,
+     "Bacteria": 0.48741542770616786
+    },
+    "span_q50_q90_q99_max": [
+     3.0,
+     7.0,
+     22.0,
+     158.0
+    ]
+   }
+  },
+  "SECONDARY_WA_L4b_t0.2": {
+   "ribosomal": {
+    "all": {
+     "runs": 801,
+     "recovered": 801,
+     "resolved": 683,
+     "any_fit": 743,
+     "median_precision_recovered": 0.9459459459459459
+    },
+    "Archaea": {
+     "runs": 113,
+     "recovered": 113,
+     "resolved": 86,
+     "any_fit": 88,
+     "median_precision_recovered": 0.9230769230769231
+    },
+    "Bacteria": {
+     "runs": 688,
+     "recovered": 688,
+     "resolved": 597,
+     "any_fit": 655,
+     "median_precision_recovered": 0.9459459459459459
+    }
+   },
+   "coverage": {
+    "loci": 719101,
+    "genes_in_loci_frac": 0.4337697783495379,
+    "by_domain": {
+     "Archaea": 0.348002785377998,
+     "Bacteria": 0.44623627260728765
+    },
+    "span_q50_q90_q99_max": [
+     3.0,
+     9.0,
+     29.0,
+     232.0
+    ]
+   }
+  },
+  "WA_L1": {
+   "ribosomal": {
+    "all": {
+     "runs": 801,
+     "recovered": 801,
+     "resolved": 233,
+     "any_fit": 233,
+     "median_precision_recovered": 0.7
+    },
+    "Archaea": {
+     "runs": 113,
+     "recovered": 113,
+     "resolved": 62,
+     "any_fit": 62,
+     "median_precision_recovered": 0.8214285714285714
+    },
+    "Bacteria": {
+     "runs": 688,
+     "recovered": 688,
+     "resolved": 171,
+     "any_fit": 171,
+     "median_precision_recovered": 0.6843205574912892
+    }
+   },
+   "coverage": {
+    "loci": 252708,
+    "genes_in_loci_frac": 0.518656606990289,
+    "by_domain": {
+     "Archaea": 0.4526054376494368,
+     "Bacteria": 0.528257346094884
+    },
+    "span_q50_q90_q99_max": [
+     3.0,
+     10.0,
+     32.0,
+     232.0
+    ]
+   }
+  },
+  "engine_DH": {
+   "ribosomal": {
+    "all": {
+     "runs": 801,
+     "recovered": 801,
+     "resolved": 298,
+     "any_fit": 315,
+     "median_precision_recovered": 0.75
+    },
+    "Archaea": {
+     "runs": 113,
+     "recovered": 113,
+     "resolved": 77,
+     "any_fit": 77,
+     "median_precision_recovered": 0.8518518518518519
+    },
+    "Bacteria": {
+     "runs": 688,
+     "recovered": 688,
+     "resolved": 221,
+     "any_fit": 238,
+     "median_precision_recovered": 0.7352941176470589
+    }
+   },
+   "coverage": {
+    "loci": 375644,
+    "genes_in_loci_frac": 0.538559203567679,
+    "by_domain": {
+     "Archaea": 0.5649264216520002,
+     "Bacteria": 0.5347266479253224
+    },
+    "span_q50_q90_q99_max": [
+     3.0,
+     9.0,
+     31.0,
+     315.0
+    ]
+   }
+  }
+ },
+ "pairs": {
+  "PRIMARY_Z_L4bp_t0.02__vs__engine_DH": {
+   "resolved": [
+    394,
+    366.0,
+    423.0
+   ]
+  },
+  "SECONDARY_WA_L4b_t0.2__vs__engine_DH": {
+   "resolved": [
+    385,
+    356.0,
+    415.0
+   ]
+  },
+  "PRIMARY_Z_L4bp_t0.02__vs__SECONDARY_WA_L4b_t0.2": {
+   "resolved": [
+    9,
+    -13.0,
+    32.0
+   ]
+  },
+  "PRIMARY_Z_L4bp_t0.02__vs__Z_L1": {
+   "resolved": [
+    398,
+    370.0,
+    426.0
+   ]
+  },
+  "SECONDARY_WA_L4b_t0.2__vs__WA_L1": {
+   "resolved": [
+    450,
+    422.0,
+    477.0
+   ]
+  }
+ },
+ "locus_tables": {
+  "PRIMARY_Z_L4bp_t0.02": {
+   "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_Z/L4bp_t0.02.parquet",
+   "sha256": "8f55d59e92347c6112911ab05f44adf335e2038b374d9efb6e3e252185cb87af",
+   "rows": 769433,
+   "columns": [
+    "s",
+    "e"
+   ]
+  },
+  "Z_L1": {
+   "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_Z/L1.parquet",
+   "sha256": "9afd74f7e36a4b73ec74d7c94c51cbf892a0b84cb38ec312a8c6570c93b1315c",
+   "rows": 288811,
+   "columns": [
+    "s",
+    "e"
+   ]
+  },
+  "SECONDARY_WA_L4b_t0.2": {
+   "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_WA/L4b_t0.2.parquet",
+   "sha256": "43c8fc452ae9a3f365a68f2b9447e219a25bf27ebfdc2894aac7b12bd3f49219",
+   "rows": 719101,
+   "columns": [
+    "s",
+    "e"
+   ]
+  },
+  "WA_L1": {
+   "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_WA/L1.parquet",
+   "sha256": "db2e33ff3fb150ae8c8f45806fa71625e60d02ae619180c48307125e412a2fa4",
+   "rows": 252708,
+   "columns": [
+    "s",
+    "e"
+   ]
+  },
+  "engine_DH": {
+   "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_engine/DH.parquet",
+   "sha256": "4685c2167af09abb244478fe3e4b936d20073eb6a72c1cbe4a8e5709e771ad4f",
+   "rows": 375644,
+   "columns": [
+    "s",
+    "e"
+   ]
+  }
+ },
+ "written": "2026-11-19T16:49:53Z",
+ "seconds": 9.1
+}

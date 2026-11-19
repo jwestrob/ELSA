@@ -14,4 +14,6 @@ stamp "host=$(hostname) threads=$T job=$SLURM_JOB_ID"
 cd "$C"
 test -f "$FZ/logs/done_z_prep"
 step z_arm "$PYE" -u fz3.py arm --arm Z --threads "$T"
+# the five locus tables are final here (WA, L1s and DH from the main job): write results/locus_tables.json for the audit scorer
+"$PYE" -u fscore3.py manifest
 stamp "ALL DONE"

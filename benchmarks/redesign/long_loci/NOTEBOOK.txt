@@ -445,3 +445,39 @@ PART 8 (best-window bond test on both bases)
                   repaired 8 of 29 (C fit 4); case 8233 Lambda 790; 3 new pairs; seven bars met -> NOT justified.
                   Spacedust rows 115874 (DEVELOPMENT): P-BW +.159 (-.005 [-.013, +.003]) MATCHES; Z-BW +.122 (+.011
                   [-.002, +.024]) MATCHES. Watchdog exited, no cancellation. REPORT8.txt written.
+
+THIRD FROZEN RUN (complete GTDB genomes; ribosomal benchmark; package $RD/testset3/package/, not yet sealed)
+-----------------------------------------------------------------------------------------------------------
+2026-11-19T10:38Z  Coordinator: phase 1 = FROZEN3.json before the package exists; phase 2 on the go signal. FROZEN3.json written
+                  (sha256 5f30fb511e172506c7e600168788c908c8f1857af893e088ea9998806e4068eb): both configurations unchanged (parts 6-8: no justified change), engine reference and
+                  pair-linking comparators, the SR-VP pipeline and settings, outputs for the audit scorer, standing
+                  ribosomal scoring beside the audit agent's predeclared6.json (bars are the audit agent's; hash pending),
+                  deviation policy, expectations, projection ~2-2.5 h CPU. Nothing under $RD/testset3/ opened.
+2026-11-19 10:45  frozen3/code prepared as path-only copies of the SR-VP code (env_f3, tokens_f3, gtable_f3, gpu_knn_f3,
+                  gpu_f3, main_f3, zprep_f3, zarm_f3, fl3, fz3; package path testset3/package, output frozen3, data key
+                  gtdb3; lut layout: FASTA at the package root, no shadow link) and fscore3.py (ribosomal standing counts,
+                  any-fit, descriptive statistics, locus-table manifest; runs table path given at submission). Not uploaded
+                  or run; waiting for the coordinator's go.
+2026-11-19 10:59  Coordinator: audit definition and bars frozen. Recorded beside FROZEN3.json (unchanged) in
+                  frozen3/FROZEN3_audit_reference.json: predeclared6.json sha256 a6c997f3... and score6.py sha256 6b61eeb8...,
+                  both verified on local and biotite copies; score6 reads the PRIMARY / SECONDARY / engine tables by path.
+                  Package has no ribosomal runs: standing counts will use runs from the audit agent's annotation output.
+                  Waiting for the go; $RD/testset3/ unopened.
+2026-11-19 15:18  GO for phase 2. FROZEN3.json sha256 5f30fb51...68eb verified (local and biotite). Package seal verified on
+                  the login node: all 31 files of MANIFEST.json rehashed, 0 mismatches, seal sha256 cf920a48...ff3c89 equal
+                  to seal.json. Layout: lut (proteins_gid.faa at the root, universe/, embeddings/ with zca10 fitted on this
+                  set, split.parquet ignored); 842 genomes (700 Bacteria, 142 Archaea), 2,557,405 genes, 1,176 contigs; no
+                  ribosomal tables (runs from the audit agent's RUNS_READY.json). Code uploaded (fscore3.py: manifest
+                  command added; split subsets dropped, before any output). meta.npz built on the login node.
+2026-11-19 15:18  Preflight (cluster CLAUDE.md now md5 17c81248, 693 lines: Aksha section added; Slurm rules unchanged;
+                  ops note unchanged); account 112 CPUs running. Chain under watchdog (caps logs/watchdog_jobs.tsv): 116640
+                  tokens (24 CPUs, guard 115 min), 116641 GPU table, 116642 GPU kNN, 116643 main, 116644 list prep (40 CPUs
+                  for memory, as FROZEN3), 116645 list arm + results/locus_tables.json. Scoring is submitted once the audit
+                  agent's RUNS_READY.json exists. Projection for 2.56 M genes: ~1.5-2 h of CPU job time, GPU passes ~10 min.
+2026-11-19 16:55  Chain done (watchdog exited 16:48, no cancellation): tokens 116640 75 min (344,153 rescue queries; 333,290
+                  families), GPU table 7.9 min, kNN 10.1 min, main 6.4 min (groups 353; WA bond tau 8; engine P <= 1e-4 &
+                  L >= 3), list prep 5.8 min (40 CPUs, 71.7 GiB), list arm 2.4 min (list tau 8). results/locus_tables.json
+                  written 16:48:30 with the five tables' sha256. Audit runs (RUNS_READY.json; runs.parquet sha256 30e56f0a...,
+                  801 g2_m16) used for the standing counts; scoring 116810 (11 s): PRIMARY 801 / 692 / any-fit 773;
+                  SECONDARY 801 / 683 / 743; DH 298; Z L1 294; WA L1 233; PRIMARY - DH +394 [+366, +423]; PRIMARY -
+                  SECONDARY +9 [-13, +32]. REPORT_frozen3.txt written.

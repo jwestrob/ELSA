@@ -3226,3 +3226,23 @@ Decisions written before any locus or score exists:
 
 Go given to both agents at 15:20 UTC. Frozen hashes: `FROZEN3.json` 5f30fb51…68eb,
 `predeclared6.json` a6c997f3…9c3c, `score6.py` 6b61eeb8…2f80.
+
+## 2026-11-19 16:51 UTC — Third frozen run finished: standing-definition counts (`long_loci/frozen3/REPORT_frozen3.txt`)
+
+FROZEN3.json run unchanged on the sealed package; seal rehashed (31 files, 0 mismatches). Runs
+from the audit agent's Aksha-built table: **801 runs (688 Bacteria, 113 Archaea)**. Standing
+definition (recovered / resolved / any fitting locus), all 842 genomes:
+
+| output | recovered | resolved | any-fit | resolved Bacteria / Archaea |
+|---|---|---|---|---|
+| embedding-list tree (primary) | 801 | 692 (86.4%) | 773 (96.5%) | 585 / 107 |
+| family-bond tree (secondary) | 801 | 683 (85.3%) | 743 (92.8%) | 597 / 86 |
+| engine reference | 801 | 298 (37.2%) | 315 | 221 / 77 |
+| pair-linking, list base / family base | 801 | 294 / 233 | | |
+
+Paired differences (run bootstrap): primary − engine +394 [+366, +423]; secondary − engine +385
+[+356, +415]; primary − secondary +9 [−13, +32]. Predictions written in FROZEN3.json: resolved
+for both trees landed above the predicted range (50–72% / 45–68%); the predicted
+Archaea-above-Bacteria gap of 20–40 points was wrong (primary +9.7, secondary −10.7). 353 genome
+groups at 0.75. Cost: 90 min of 24/40-core CPU job time; GPU passes 7.9 and 10.1 min on the A5000.
+The frozen-definition scoring against bars R1–R5 (audit agent, `score6.py`) is still running.

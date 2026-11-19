@@ -58,6 +58,20 @@ def _any_fit(a, b, maxlen, qs, qe):
     return out
 
 
+def cmd_manifest(a):
+    """results/locus_tables.json: path, sha256, rows of the five locus tables (written as soon as they are final)."""
+    out = {}
+    for label, path in OUTPUTS.items():
+        assert path.exists(), path
+        df = pd.read_parquet(path)
+        out[label] = dict(path=str(path), sha256=sha(path), rows=int(len(df)), columns=list(df.columns))
+    out["_written_utc"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    tmp = FZ / "results/.locus_tables.json.tmp"
+    tmp.write_text(json.dumps(out, indent=1) + "\n")
+    tmp.rename(FZ / "results/locus_tables.json")
+    log("wrote", FZ / "results/locus_tables.json", {k: v["rows"] for k, v in out.items() if not k.startswith("_")})
+
+
 def cmd_score(a):
     t0 = time.time()
     genes = pd.read_parquet(PKG / "universe/genes.parquet", columns=["gid", "genome_code"]).sort_values("gid")
@@ -73,12 +87,7 @@ def cmd_score(a):
     rsub = {"all": np.ones(len(runs), bool)}
     for d in sorted(set(rdom)):
         rsub[str(d)] = rdom == d
-    if "split" in gm:
-        sp = gm.split.to_numpy()[runs.genome_code.to_numpy()]
-        for v in sorted(set(sp)):
-            rsub[f"split_{v}"] = sp == v
-    else:
-        rsub["even_genome_code"] = (runs.genome_code % 2 == 0).to_numpy()
+    # every genome scored; the package split is ignored (nothing is tuned on this set)
     res = dict(runs_source=str(a.runs), runs_sha256=sha(a.runs), runs={k: int(v.sum()) for k, v in rsub.items()}, outputs={}, pairs={},
                locus_tables={})
     ribs = {}
@@ -123,17 +132,16 @@ def cmd_score(a):
     res["written"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     res["seconds"] = round(time.time() - t0, 1)
     Path(FZ / "results/score_gtdb3.json").write_text(json.dumps(res, indent=1, default=lambda x: x.item() if hasattr(x, "item") else str(x)) + "\n")
-    Path(FZ / "results/locus_tables.json").write_text(json.dumps(res["locus_tables"], indent=1) + "\n")
     log("wrote", FZ / "results/score_gtdb3.json")
 
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["score"])
+    ap.add_argument("cmd", choices=["score", "manifest"])
     ap.add_argument("--threads", type=int, default=1)
-    ap.add_argument("--runs", required=True)
+    ap.add_argument("--runs", default=None)
     a = ap.parse_args()
-    cmd_score(a)
+    {"score": cmd_score, "manifest": cmd_manifest}[a.cmd](a)
 
 
 if __name__ == "__main__":

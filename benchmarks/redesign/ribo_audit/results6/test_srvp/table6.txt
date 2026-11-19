@@ -1,0 +1,64 @@
+FROZEN RIBOSOMAL BENCHMARK (predeclared6.json) on SR-VP-test: 803 runs {'Bacteria': 658, 'Archaea': 145}
+  primary: R1 recovered 99.4% (>= 97%) PASS; R2 bacteria resolved 98.9% (>= 90%) PASS; R3 archaea resolved 95.2% (>= 85%) PASS; R4 minus engine +87 [+70, +104] PASS; R5 chance Bacteria 0.27%, Archaea 0.36% PASS  => PASS
+  secondary: R1 recovered 99.3% (>= 97%) PASS; R2 bacteria resolved 98.8% (>= 90%) PASS; R3 archaea resolved 95.2% (>= 85%) PASS; R4 minus engine +86 [+68, +105] PASS; R5 chance Bacteria 0.68%, Archaea 0.18% PASS  => PASS
+  definition / domain: runs, below minimum; resolved Z / WA / DH; recovered Z; any-fit Z / WA / DH; chance Z / WA / DH
+  standing  all         803    0; 528 / 498 / 313; 802; 708 / 706 / 332; - / - / - ; accurate reading Z / WA / DH 760 / 760 / 640
+  standing  Archaea     145    0; 138 / 120 / 122; 144; 139 / 137 / 124; 0.67% / 0.50% / 3.36% ; accurate reading Z / WA / DH 134 / 137 / 110
+  standing  Bacteria    658    0; 390 / 378 / 191; 658; 569 / 569 / 208; 0.63% / 0.92% / 3.40% ; accurate reading Z / WA / DH 626 / 623 / 530
+  part4     all         803    0; 791 / 788 / 700; 803; 794 / 793 / 789; - / - / -
+  part4     Archaea     145    0; 140 / 139 / 120; 145; 140 / 139 / 137; 0.70% / 1.05% / 1.93%
+  part4     Bacteria    658    0; 651 / 649 / 580; 658; 654 / 654 / 652; 0.18% / 0.27% / 1.95%
+  a         all         803    5; 789 / 788 / 702; 798; 792 / 793 / 786; - / - / -
+  a         Archaea     145    5; 138 / 138 / 121; 140; 138 / 138 / 134; 0.36% / 0.18% / 3.42%
+  a         Bacteria    658    0; 651 / 650 / 581; 658; 654 / 655 / 652; 0.27% / 0.68% / 2.35%
+  closed vs multi-contig bacterial genomes (definition a): {"closed": {"Z": {"runs": 260, "resolved": 255}, "WA": {"runs": 260, "resolved": 257}, "DH": {"runs": 260, "resolved": 211}}, "multi": {"Z": {"runs": 398, "resolved": 396}, "WA": {"runs": 398, "resolved": 393}, "DH": {"runs": 398, "resolved": 370}}}
+  phylum table (definition a): dom, phylum, runs, resolved Z / WA / DH, below minimum
+    Bacteria  Acidobacteriota                152   151   152   148   0
+    Bacteria  Pseudomonadota                 110   110   109    96   0
+    Bacteria  Chloroflexota                   79    79    79    77   0
+    Archaea   Thermoproteota                  77    75    75    72   1
+    Bacteria  Patescibacteriota               64    61    61    56   0
+    Bacteria  Nitrospirota                    45    45    45    32   0
+    Bacteria  Desulfobacterota                42    42    42    34   0
+    Bacteria  Bacteroidota                    38    38    38    30   0
+    Archaea   Thermoplasmatota                25    25    25    14   0
+    Archaea   Halobacteriota                  21    21    21    21   0
+    Bacteria  Planctomycetota                 14    14    14    12   0
+    Bacteria  Zixibacteria                    14    14    14     9   0
+    Bacteria  Gemmatimonadota                 12    12    11    11   0
+    Bacteria  Myxococcota                      9     9     9     3   0
+    Bacteria  Eisenbacteria                    8     7     7     7   0
+    Bacteria  Verrucomicrobiota                8     8     8     8   0
+    Bacteria  Methylomirabilota                7     6     7     2   0
+    Bacteria  Omnitrophota                     7     7     7     7   0
+    Archaea   Aenigmatarchaeota                6     4     4     1   2
+    Archaea   Nanobdellota                     6     6     6     6   0
+    Archaea   Hadarchaeota                     5     5     5     5   0
+    Bacteria  SAR324                           5     5     5     5   0
+    Bacteria  Actinomycetota                   4     4     4     4   0
+    Bacteria  Electryoneota                    4     4     4     4   0
+    Bacteria  Myxococcota_A                    4     4     4     4   0
+    Archaea   Asgardarchaeota                  3     0     0     0   2
+    Bacteria  Armatimonadota                   3     3     3     3   0
+    Bacteria  Edwardsbacteria                  3     3     2     3   0
+    Bacteria  Margulisbacteria                 3     3     3     3   0
+    Bacteria  Sysuimicrobiota                  3     3     3     3   0
+    Bacteria  Chlamydiota                      2     2     2     2   0
+    Bacteria  Oederibacteriota                 2     2     2     2   0
+    Bacteria  RBG-13-61-14                     2     2     2     2   0
+    Bacteria  UBP4                             2     1     1     2   0
+    Archaea   B1Sed10-29                       1     1     1     1   0
+    Archaea   Micrarchaeota                    1     1     1     1   0
+    Bacteria                                   1     1     1     1   0
+    Bacteria  Abyssobacteria                   1     1     1     1   0
+    Bacteria  Babelota                         1     1     1     1   0
+    Bacteria  Bipolaricaulota                  1     1     1     1   0
+    Bacteria  Campylobacterota                 1     1     1     1   0
+    Bacteria  Hydrothermota                    1     1     1     1   0
+    Bacteria  J088                             1     1     1     1   0
+    Bacteria  Patescibacteria                  1     1     1     1   0
+    Bacteria  RBG-13-66-14                     1     1     1     1   0
+    Bacteria  Spirochaetota                    1     1     1     1   0
+    Bacteria  UBA6262                          1     1     1     1   0
+    Bacteria  Zhuqueibacterota                 1     1     1     1   0
+  verdicts for unresolved runs (definition a): {"Z": {"Archaea": {"1": 0, "2": 2, "3": 0, "below_minimum": 5}, "Bacteria": {"1": 1, "2": 4, "3": 2, "below_minimum": 0}}, "WA": {"Archaea": {"1": 0, "2": 2, "3": 0, "5": 0, "below_minimum": 5}, "Bacteria": {"1": 1, "2": 3, "3": 2, "5": 2, "below_minimum": 0}}, "DH": {"Archaea": {"2": 4, "4": 3, "5": 12, "6": 0, "below_minimum": 5}, "Bacteria": {"2": 19, "4": 3, "5": 53, "6": 2, "below_minimum": 0}}}

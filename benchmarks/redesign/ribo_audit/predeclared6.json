@@ -1,0 +1,56 @@
+{
+ "workstream": "ribo_audit part 6: frozen ribosomal benchmark definition for the third untouched test set ($RD/testset3)",
+ "written_utc": "2026-11-19T10:48Z",
+ "status": "FROZEN before testset3 exists and before any of its files, outputs or annotations are opened. Development history: parts 3-5 (SR-VP, lut, DPANN; all seen). No change after this file's sha256 is recorded in NOTEBOOK.txt.",
+ "object_scored": "The conserved ribosomal-protein gene cluster of a genome: the strand-consistent chain of ribosomal-protein and literature-member genes around each ribosomal run (for example S10, spc and alpha together when they lie on one strand), not individual transcription units.",
+ "definition": {
+  "name": "variant (a) of part 5, exactly as computed by bio5.py (cmd_score, definition 'a')",
+  "runs": "the package's g2 ribosomal runs with >= 16 marked genes: marked = gene with a Pfam 38.1 model whose NAME matches ^[Rr]ibosom(al)?_ (121 models) at GA; run = maximal chain of marked genes on one contig with <= 2 unmarked genes between consecutive marked genes; runs with >= 16 marked genes. Taken from the package's ribosomal tables (as in the SR-VP, lut and DPANN packages); if the package lacks them, built by this rule from the Aksha Pfam search and reported as a deviation.",
+  "member_classes": {
+   "R": "package-marked gene, or best KO (among the 226 searched) whose ko_list definition contains 'ribosomal protein'",
+   "N_archaeal_list": "part-2 N_RULES (bio.py; 25 KOs, 20 Pfam models listed in predeclared4.json) and EF2 (EFG_C or EFG_IV together with GTP_EFTU)",
+   "N_bacterial_supplement": "16 KOs: K02601 nusG, K03043 rpoB, K03046 rpoC, K02358 tufA, K02355 fusA, K00939 adk, K01265 map, K02518 infA, K03073 secE, K01883 cysS, K03685 rnc, K03218 rlmB, K16786 ecfA1, K16787 ecfA2, K16785 ecfT, K06173 truA; turns an X gene into N",
+   "application": "both lists applied to every genome, whatever its domain (as in parts 3-5)"
+  },
+  "chain": "member genes in gid order on one contig; consecutive members join when at most 2 other genes lie between them (gid difference <= 3) AND both are on the same strand; otherwise the chain breaks",
+  "targets": "pieces = chains holding >= 1 marked gene of the run; a piece qualifies when it holds >= 16 package-marked genes; targets = qualifying pieces. A run with no qualifying piece is BELOW MINIMUM and stays in the denominator as unresolved, not recovered and without a fitting locus.",
+  "scoring": "per target: best locus = largest overlap, ties to the shorter, then first in start order; recovered = best locus covers >= 50% of the target; resolved = best locus covers >= 80% of the target with precision >= 0.8; fitting locus = any overlapping locus meeting both 80% conditions. A run is recovered / resolved / has a fitting locus when every target is. Loci read as stored (s, e or gid_s, gid_e inclusive gids).",
+  "chance": "per target 5 same-contig windows of the target length outside the target, numpy default_rng(17), runs in package table order, targets in gid order; each window scored with the resolved rule; chance = resolved windows / windows, per output and domain",
+  "no_further_tuning": true,
+  "known_limitations": [
+   "Below-minimum drop-out: a strand change inside a run can leave no piece with >= 16 marked genes; seen on SR-VP Archaea (5 of 145, 3.4%), DPANN (17 of 1,686) and lut (3 of 858). These runs count as unresolved.",
+   "No spacing rule: same-strand units separated by long non-member spacers are chained into one target (verdict-2 'spacer' 100 of 204 verdict-2 cases in part 5)."
+  ]
+ },
+ "pass_bars_set_by_coordinator": {
+  "primary_output": "embedding-list bond tree",
+  "secondary_output": "family-bond adaptive tree (same criteria, reported beside the primary)",
+  "R1": "recovered >= 97% of runs overall",
+  "R2": "resolved >= 90% of bacterial runs",
+  "R3": "resolved >= 85% of archaeal runs",
+  "R4": "resolved(primary) - resolved(recurrence-engine reference) > 0 overall: paired bootstrap over runs, 2,000 resamples (numpy default_rng(17)), statistic = sum over runs of (resolved_primary - resolved_engine); pass when the 95% percentile interval excludes zero and lies above it",
+  "R5": "chance <= 5% in each domain (primary output, this definition)",
+  "pass": "all five"
+ },
+ "descriptive_without_bars": ["standing definition (package run as target)", "part-4 cluster-level definition (strand-blind chain)", "part-2 accurate reading (strict)", "closed (n_contigs == 1) against multi-contig genomes", "phylum table", "verdicts (part-2 strict procedure) for every unresolved run, after scoring"],
+ "annotation_procedure": {
+  "tool": "Aksha (/home/jwestrob/.local/bin/aksha search), Jacob's standing rule; ribo_audit code/annot6.py",
+  "profiles": {"work4/hmm/ko_sel.hmm (226 KOs)": "992db8150c1a21bdbb987e00e83977e380a8f18f2292141e106c537a68cf735d",
+               "work4/hmm/pfam_sel.hmm (20 Pfam)": "cb9a311b4b7c0688659321b1f74da2d4be5a650d6295f31c7fe31eadb7c8202c",
+               "work4/hmm/extra.hmm (16 KOs)": "b0cba7c18718afa4b0173e5a599bc3f4a488b5a03d8a747585b4798487d8918c",
+               "~/.config/Astra/ko_list": "f7cf94b595def80949b4e7335b2f99ea91dad8be197a2efe86977c0dd0cdb463",
+               "~/.config/Astra/PFAM/Pfam-A.hmm (38.1)": "a78a42d6faf265b6bfca59e8f062d06fae6083ce2c6e335d7b381f20b82b7903"},
+  "aksha_flags": "--hmm_in <profile file> --prot_in <proteins> --outdir <dir> --evalue 1000 --domE 1000 --threads $SLURM_CPUS_ON_NODE (no cutoffs in Aksha)",
+  "thresholds_in_script": "KO: ko_list threshold by score_type (full = sequence bitscore, domain = best domain bitscore) AND the developed E-value cut emulated from the profile's STATS LOCAL FORWARD: E = (N_total / 24) * exp(-lambda * (bitscore - tau)) <= 1e-3 (226 base KOs) or <= 1e-5 (16 supplement KOs), N_total = package protein count; base KO per gene = highest sequence bitscore; supplement KO per gene = highest score / threshold. Pfam: sequence bitscore >= GA1, and for domains dom_bitscore >= GA2 (GA from the HMM file).",
+  "windows": "Pfam-A on every gene within 40 genes of a run (description, unannotated flag, split-ORF test)",
+  "equivalence_on_existing_data": "SR-VP sample (20 genomes, rng 17: 15 Bacteria, 5 Archaea; 72,657 genes, 1,486 window genes): base KO / class / name 0 differences; supplement 224 / 224 identical; window Pfam 2,442 / 2,442 stored domains reproduced plus 1 extra domain (Rubrerythrin, domain score 22.80 against GA 22.8: a tie at Aksha's 2-decimal output, HMMER 3.3 excluded it; window description only, outside the member classes). Before the E-value emulation, 4 genes gained K02916 (L35; cls unchanged) because the developed procedure's -E 1e-3 at chunk size had excluded them; the emulation removes that difference."
+ },
+ "scorer": "ribo_audit code/score6.py: package path + locus tables -> the predeclared table (R1-R5 for primary and secondary, descriptive measures); end-to-end test on SR-VP must reproduce part 5 exactly before use; its sha256 is recorded in NOTEBOOK.txt and REPORT6.txt.",
+ "development_values_for_reference": {
+  "note": "development data, not targets; primary (embedding-list tree) under this definition",
+  "R1_recovered": "lut 854 / 858 (99.5%), DPANN 1,657 / 1,686 (98.3%), SR-VP 798 / 803 (99.4%)",
+  "R2_bacteria_resolved": "lut 834 / 858 (97.2%), SR-VP 651 / 658 (98.9%)",
+  "R3_archaea_resolved": "DPANN 1,546 / 1,686 (91.7%), SR-VP 138 / 145 (95.2%)",
+  "R5_chance": "lut 1.92%, SR-VP Bacteria 0.27%, DPANN 4.68%, SR-VP Archaea 0.36%"
+ }
+}

@@ -3166,3 +3166,26 @@ Purpose: a clean test of ribosomal-locus resolution under a definition frozen in
 - Annotation for this set goes through Aksha, with ko_list thresholds applied by score_type in
   the scoring script so the definition matches the one developed; equivalence with the stored
   hmmsearch annotation is checked before the freeze.
+
+## 2026-11-19 10:58 UTC — Ribosomal definition frozen for the third test; external check passed (`benchmarks/redesign/ribo_audit/REPORT6.txt`)
+
+- `predeclared6.json` sha256 a6c997f337368830679752018e8050d0505c2d51136f1509d1a66a6aecde9c3c,
+  frozen 10:47 UTC, before the test set exists: object = the conserved ribosomal-protein gene
+  cluster; variant (a) of part 5 unchanged; bars R1-R5 as recorded above. Scorer `score6.py`
+  reproduces part 5 on SR-VP in all 126 checked cells.
+- **Aksha route equivalent** to the stored annotation on 20 SR-VP genomes (72,657 genes): KO,
+  class and gene name identical for every gene; bacterial supplement 224 of 224. One difference
+  found and reproduced before the freeze: the original hmmsearch run cut at E <= 1e-3 at its
+  per-chunk database size (4 L35 hits).
+- **External check, independent of our outputs.** E. coli K-12 MG1655 (RegulonDB snapshot in the
+  repo): frozen target rplQ..rpsJ, 28 genes on one strand = the alpha (5), spc (12) and S10 (11)
+  units, each whole; none split. B. subtilis 168 (published mapping; Li et al. 1997 J Bacteriol
+  179:7046: S10-spc-alpha is one transcript of about 15 kb; Sojka et al. 2007 for str): frozen
+  target cysS..rpsI, 58 genes on one strand, containing the S10-spc-alpha transcript (31 genes)
+  and str (5) whole, plus secE-nusG, L11, L10-L12-rpoBC and ecf-truA-rplM-rpsI. **The standing
+  run (rpsJ..rplO) cuts the experimentally single S10-spc-alpha transcript at L15**, because
+  secY-adk-mapA-ybzG-infA precede L36. No mapped unit is split by the frozen target; merging
+  adjacent same-strand units is its declared object.
+- Repo data note: `operons/bsubtilis/operons.tsv` has no provenance and lacks spc and alpha;
+  `operons/ecoli/OperonSet.txt` is an HTML page from a failed download. Not used here.
+- Annotation of the new set: `annot6.sbatch` (24 CPUs, Aksha), about 1 h projected; not submitted.

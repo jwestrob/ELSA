@@ -1,0 +1,50 @@
+[
+ {
+  "run_id": 13,
+  "genome": "ecoli",
+  "run": [
+   3218,
+   3245
+  ],
+  "run_genes": "rplQ..rpsJ",
+  "n_marked": 26,
+  "pieces": [
+   {
+    "s": 3218,
+    "e": 3245,
+    "marked": 26,
+    "genes": "rplQ..rpsJ",
+    "qualifies": true
+   }
+  ],
+  "part4": {
+   "s": 3218,
+   "e": 3245,
+   "genes": "rplQ..rpsJ"
+  }
+ },
+ {
+  "run_id": 23,
+  "genome": "bsub",
+  "run": [
+   4417,
+   4437
+  ],
+  "run_genes": "rpsJ..rplO",
+  "n_marked": 21,
+  "pieces": [
+   {
+    "s": 4396,
+    "e": 4453,
+    "marked": 35,
+    "genes": "cysS..rpsI",
+    "qualifies": true
+   }
+  ],
+  "part4": {
+   "s": 4396,
+   "e": 4453,
+   "genes": "cysS..rpsI"
+  }
+ }
+]

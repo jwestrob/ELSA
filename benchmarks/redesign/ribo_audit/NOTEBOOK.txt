@@ -249,3 +249,33 @@ PART 5 (strand-aware cluster-level runs; DEVELOPMENT on all three datasets)
   secY|cbf5 connector on DPANN 0.90 over 20 groups (the part-4 divergent copies are lineage-specific). REPORT5.txt written;
   claims re-checked (verdict-2 total 204, two wording fixes for inferred statements). Results copied to results5/ and
   $RD/ribo_audit/. Nothing committed.
+
+PART 6 (freeze for testset3; external operon check; scorer)
+2026-11-19T10:30-10:37Z  Read aksha search --help (biotite); Aksha output = per-domain rows (bitscore = sequence score,
+  dom_bitscore, env coordinates, E-values). Shallow listings of benchmarks/ on the Mac: RegulonDB snapshot under
+  evaluation/ecoli_authoritative_tu_2026-09-09*/sources (source URLs, sha256); operons/ecoli/OperonSet.txt is an HTML page (failed
+  download); operons/bsubtilis/operons.tsv is a hand list of 56 operons without provenance (ribosomal: S10, str, rpmI-rplT,
+  rpsA, rpsB-tsf only). MG1655 and B. subtilis 168 genomes are absent from data/ecoli and data/bacillus.
+2026-11-19T10:37-10:43Z  annot6.py (Aksha route) on an SR-VP sample (20 genomes, rng 17; 72,657 genes; login node, 8 threads,
+  202 s). First comparison: base KO 4 differences (K02916 gained; class unchanged), supplement 224 / 224, window Pfam 2,442 /
+  2,442 + 1 extra domain. Cause of the 4: the developed hmmsearch -E 1e-3 at chunk size (about 133,822 sequences); Aksha's
+  E-values satisfy E = Z exp(-lambda (s - tau)) with Z = 72,658 (median implied), so the cut is emulated from STATS LOCAL
+  FORWARD with Z = N_total / 24.
+2026-11-19T10:45Z  Re-threshold with the emulation: base KO / class / name 0 differences of 72,657; supplement identical; window
+  Pfam +1 domain (Rubrerythrin 22.80 vs GA 22.8 tie at 2-decimal output; window description only).
+2026-11-19T10:47Z  predeclared6.json FROZEN. sha256 a6c997f337368830679752018e8050d0505c2d51136f1509d1a66a6aecde9c3c (its written_utc field reads 10:48Z, one minute ahead of the clock; left unchanged to keep the hash)
+2026-11-19T10:47-10:52Z  External check data: RefSeq GCF_000005845.2 and GCF_000009045.1 genomic.gff.gz / protein.faa.gz from the
+  NCBI FTP into ext6/dl_* (sha256: ecoli gff afdf03dc...f495e, faa 283c91ff...4896; bsub gff a3e6d29c...0a881, faa
+  07dd3f74...8225). ext6.py prep / markers (121 ribosomal Pfam models extracted in Python; Aksha, 8 threads): 116 marked genes,
+  one >= 16-marker run per genome (E. coli rplQ..rpsJ, 26; B. subtilis rpsJ..rplO, 21). annot6.py on the two genomes
+  (N_total 8,543), ext6.py targets: E. coli target = run (28 genes); B. subtilis target cysS..rpsI (58 genes, 35 marked).
+2026-11-19T10:52-10:55Z  E. coli: RegulonDB snapshot TUs (repo, regulondb-docs 4e425fe): target = S10 (11) + spc (12) + alpha (5)
+  TUs exactly. B. subtilis: repo operons.tsv lacks provenance / spc / alpha; literature: Li et al. 1997 (PMC179646, read),
+  Sojka et al. 2007 (PMC1913448, read), Suh 1996 / Boylan 1989 (part 3); SubtiWiki returned HTTP 403. No mapped unit split; no
+  strand crossing; no fault.
+2026-11-19T10:55-10:57Z  score6.py end-to-end on SR-VP (stored annotation via work6/srvp_annot links, frozen2 loci, --verdicts):
+  126 / 126 cells and all per-run values equal part 5. sha256 score6.py 6b61eeb8cac4f960696e2f70b27240b6d12ad1e44a3b2fa066ee2066c9d32f80,
+  annot6.py 7eb20f2bb4e062fdc8328ade0f9bee79a090506e28eb074be5da5510554068ad, bio5.py 63d51004...e41, bio4.py 9be92586...a282.
+  annot6.sbatch template written (not submitted).
+2026-11-19T10:57Z  REPORT6.txt written; two wording fixes (str distance 17 genes, diagram legend) before saving. Synced. Nothing
+  committed. testset3 not opened.

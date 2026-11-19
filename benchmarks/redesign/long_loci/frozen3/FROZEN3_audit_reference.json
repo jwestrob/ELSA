@@ -1,0 +1,11 @@
+{
+ "purpose": "Records the audit agent's frozen ribosomal definition and bars beside FROZEN3.json (FROZEN3.json itself unchanged; its sha256 5f30fb511e172506c7e600168788c908c8f1857af893e088ea9998806e4068eb).",
+ "recorded_utc": "2026-11-19T10:59Z",
+ "audit_predeclaration": {"path": "benchmarks/redesign/ribo_audit/predeclared6.json (also $RD/ribo_audit/predeclared6.json)",
+                          "sha256": "a6c997f337368830679752018e8050d0505c2d51136f1509d1a66a6aecde9c3c",
+                          "frozen_utc": "2026-11-19T10:47Z (coordinator)", "verified": "local and biotite copies hash to this value (2026-11-19 10:58 UTC)"},
+ "audit_scorer": {"path": "benchmarks/redesign/ribo_audit/score6.py ($RD/ribo_audit/code/score6.py)",
+                  "sha256": "6b61eeb8cac4f960696e2f70b27240b6d12ad1e44a3b2fa066ee2066c9d32f80", "verified": "local and biotite copies"},
+ "tables_it_reads": "PRIMARY $RD/long_loci/frozen3/loci/gtdb3_Z/L4bp_t0.02.parquet, SECONDARY loci/gtdb3_WA/L4b_t0.2.parquet, engine loci/gtdb3_engine/DH.parquet (frozen2 format: columns s, e), passed by path; listed with sha256 in results/locus_tables.json after the run",
+ "ribosomal_runs_for_standing_counts": "the package has no ribosomal runs; the standing counts use runs built from the audit agent's annotation output (produced after the seal), stated in the report"
+}

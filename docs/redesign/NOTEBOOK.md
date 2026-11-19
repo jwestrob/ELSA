@@ -2788,3 +2788,27 @@ Replaces the withdrawn single-contig set. No ELSA method run; nothing scored.
   samples (1.6-11.6 h on 64 CPUs, over the limit; about 830 more primary bins expected); queue the
   ESM++ small embedding (about 5 h on one A5000, estimated), which the frozen configurations need
   for genome groups and neighbour lists.
+
+## 2026-11-19 01:41 UTC — Stock-take after the token outage (14-18 November)
+
+The two working agents (`long_loci` frozen run; `srvp_bins`) stopped on the weekly token limit on
+14 November. Their Slurm jobs ran on unattended. Nothing of this session is queued or running now;
+no agent has been restarted.
+
+- **SR-VP genome-bin test set is complete** except CRISPRCasTyper: embeddings (job 100034, 5 h 10
+  min on one A5000) and whitening (100035) done; DefenseFinder + TXSScan truth tables written and
+  the seal rewritten (15 November). **Compute overrun: caller shard A (100455) held 24 CPUs for 21
+  h 30 min** against an expected hour; shard B (100456) took 1 h 03 min. Shard A logged 45.6
+  CPU-hours of work inside 516 allocated core-hours (9% use); cause undiagnosed. No one was
+  watching: the agent's watcher died with it.
+- **Frozen run on the lut test set: nothing scored yet.**
+  - Secondary configuration (embedding-list tree): loci built (job 100463, 8 min; tau 8 by the 1%
+    rule; 1.88 M loci, 63% of genes in loci), marked provisional by the agent until the unchanged
+    build is rerun beside the tokens and shown identical. Unscored.
+  - Synton comparator (100137): ran 1 h 11 min; unscored.
+  - Primary configuration (family-bond tree): not run. The family clustering job (100452) finished
+    base clustering in 16 min, then its own guard stopped it before the rescue step: 329,612
+    rescue queries projected the job to 144 min at 24 CPUs, over the 2-hour limit.
+  - Inputs built and gated: similarity table (22 min 49 s GPU), nearest neighbours (19 min 58 s
+    GPU), 179 genome groups, float32 whitened vectors. `FROZEN.json` written 14 November 05:44 UTC
+    before any dataset content was opened.

@@ -391,7 +391,8 @@ def st_seal(a, sel):
     for root, _, fs in os.walk(pkg):
         for f in sorted(fs):
             rel = os.path.relpath(os.path.join(root, f), pkg)
-            if rel.startswith(".") or "/." in rel or rel in ("SEAL.txt", "seal.json", "MANIFEST.tsv") or rel.startswith("receipts/"):
+            if rel.startswith(".") or "/." in rel or rel in ("SEAL.txt", "seal.json", "MANIFEST.tsv", "MANIFEST.json") \
+                    or rel.startswith("receipts/"):
                 continue
             files.append(rel)
     files.sort()
@@ -413,10 +414,13 @@ def st_seal(a, sel):
              "", "[files]\tsha256\tbytes\trows\tpath"]
     lines += [f"file\t{r[3]}\t{r[2]}\t{r[1]}\t{r[0]}" for r in rows]
     (pkg / "SEAL.txt").write_text("\n".join(lines) + "\n")
-    with open(pkg / "MANIFEST.tsv", "w") as f:
-        f.write("path\trows\tbytes\tsha256\n")
-        for r in rows:
-            f.write("\t".join(map(str, r)) + "\n")
+    # MANIFEST.tsv / MANIFEST.json belong to embed/make_manifest.py (finalize job); the seal only writes it while the
+    # package has no MANIFEST.json yet
+    if not (pkg / "MANIFEST.json").exists():
+        with open(pkg / "MANIFEST.tsv", "w") as f:
+            f.write("path\trows\tbytes\tsha256\n")
+            for r in rows:
+                f.write("\t".join(map(str, r)) + "\n")
     print("\n".join(lines), flush=True)
 
 

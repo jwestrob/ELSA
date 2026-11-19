@@ -26,14 +26,18 @@ ANSWER
    146,154 contigs, 3.36 Gbp, 3,211,751 genes, 3,170,150 unique protein sequences, in the DPANN layout at
    $RD/ws_srvp_bins/package/, with ribosomal truth runs (803 g2_m16 runs, one in each of 803 genomes), a parity split
    (497 / 497 genomes) and a seal (seal_sha256 5ab7ba791c271dfa2fa58bfda07b2cf4a2c683c0ba288994a433b5ef367681bf).
-4. WHAT REMAINS. (a) DefenseFinder + TXSScan gold: queued as Slurm job 99990 (64 CPUs, estimated 40-55 CPU-h = 40-55 min of
-   run time; scheduler start estimate 2026-11-16 22:21 UTC because the standard partition is full); the job writes
-   gold/ and rewrites the seal itself. (b) CRISPRCasTyper: not run, no installation on
+4. WHAT REMAINS. (a) DefenseFinder + TXSScan gold: two chained 24-CPU jobs on standard_expand, 100455 (genome shard
+   1 of 2) then 100456 (shard 2 of 2, gold tables, reseal; afterok:100455); 20-28 CPU-h each, about 50-70 min each on
+   24 CPUs; scheduler start estimate for 100455: 2026-11-16 09:22 UTC. They replace the cancelled 64-CPU job 99990.
+   (b) CRISPRCasTyper: not run, no installation on
    biotite (about 1.7 CPU-h once installed). (c) The undereplicated primary package (3,072 bins): not built (about
    33 CPU-h, mostly Prodigal on 2,099 non-representative bins). (d) 37 of the 91 ggBin samples (2,787 non-viral DAS
    Tool bins, 12.4 Gbp, mostly 2018-2019 shallow cores and trenches) carry no CheckM2 estimate and sit outside the
    register; CheckM2 on them costs 1.6-11.6 h on 64 CPUs depending on the prefilter, above the 2 h limit, so it was
-   not run. (e) Embedding: 3,170,150 unique sequences, about 5 h 04 min on one A5000 (not run).
+   not run. (e) Embedding (approved 2026-11-14): ESM++ small queued on partition gpu, A5000 only, as job 100034
+   (embed_queue run ws_srvp_bins/embed/srvpbins__esmpp_small__20261114: 3,170,150 unique sequences, 247 shards);
+   whitening + manifest job 100035 (standard, afterok:100034). Estimate 5 h 10 min of GPU time plus ~10 min finalize,
+   after the gpu queue (one running GPU job per user; another workstream's GPU jobs are ahead).
 
 ------------------------------------------------------------------------------------------------------------------------
 1. INVENTORY OF SR-VP BIN COLLECTIONS (biotite; found by ls on named directories, no recursive search)
@@ -182,15 +186,18 @@ receipts and seal files): seal_sha256 5ab7ba791c271dfa2fa58bfda07b2cf4a2c683c0ba
   ribosomal/marked.parquet     4b979639935c276e6da7e042e974b6b7a4afaf1f324475529520421efa3e5a82
   ribosomal/runs.parquet       8e9e2acb37010adbd697ac0001b3bd6b0c7e97b49e0c693e3052ca6f78ecc1c1
   selection.tsv                3dffe53b381c978a06466c9a2fcdddb2416e524a9f7e74dd0f29f3c9c89a8b91
-This seal covers the package before the callers. Job 99990 adds gold/instances.parquet and gold/members.parquet,
+This seal covers the package before the callers. Job 100456 adds gold/instances.parquet and gold/members.parquet,
 regenerates README.txt and rewrites SEAL.txt / seal.json / MANIFEST.tsv; the seal_sha256 above then changes and the
 per-file hashes listed here stay valid for the files they name.
 
 ------------------------------------------------------------------------------------------------------------------------
 5. CURATED CALLERS
 
-DefenseFinder and TXSScan: queued, Slurm job 99990 ($RD/ws_srvp_bins/code/callers.sbatch -> code/04_callers.py;
-log $RD/ws_srvp_bins/logs/callers_99990.log). MacSyFinder 2.1.4 from the srvp_callers environment, one genome per
+DefenseFinder and TXSScan: queued as two chained 24-CPU jobs on standard_expand (the cluster is 89% allocated and a
+64-CPU request needs a whole free node): 100455 = code/callers_a.sbatch (04_callers.py --shard 0/2 --run-only) and
+100456 = code/callers_b.sbatch (--shard 1/2 --run-only, then one --reuse parse of all genomes into gold/, README,
+reseal), Dependency=afterok:100455; logs $RD/ws_srvp_bins/logs/callers_{a,b}_<job>.log. Genomes are dealt to the two
+shards by descending gene count. The first submission (64-CPU job 99990) was cancelled. MacSyFinder 2.1.4 from the srvp_callers environment, one genome per
 process, --db-type gembase (one replicon per contig), --replicon-topology linear, gene order = position_index:
   DefenseFinder  defense-finder-models 3.1.0 (the model set of the SR-VP Sharur reload; biotite install
                  srvp2020/Jacob/srvp_research_2026-10-23/defensefinder/models), families DefenseFinder and RM in separate
@@ -201,8 +208,8 @@ core_end_idx / core_span_genes, which exclude MacSyFinder loners with locus_num 
 Pilot on 2 genomes (5,012 and 3,928 proteins, login node, serial): DefenseFinder 135 / 118 s, RM 16 / 17 s, TXSScan
 35 / 73 s per genome; 18 DefenseFinder systems (RM I/II/IIG, CBASS, Gabija, Septu, pAgo, Pycsar and others) and 9
 TXSScan systems (T4aP 6, Tad 2, T2SS 1). TXSScan systems include out-of-locus components (T2SS with pilD 2,655 genes
-away), hence core_span_genes. Estimate for the package (mean 3,231 proteins per genome): 40-55 CPU-h, 40-55 min on
-64 CPUs, inside the limit. The job was submitted at once; it waits on the queue (start estimate 2026-11-16 22:21 UTC).
+away), hence core_span_genes. Estimate for the package (mean 3,231 proteins per genome): 40-55 CPU-h in total, 20-28 CPU-h per shard, 50-70 min per
+shard on 24 CPUs. Both jobs wait on the queue (squeue --start for 100455: 2026-11-16 09:22 UTC).
 The two first pilot attempts failed for configuration reasons now fixed (the original DF models directory also holds a
 download/ folder that MacSyFinder scans as a model family; a per-system reindex made parsing slow).
 
@@ -215,8 +222,25 @@ MinCED arrays on the 146,154 contigs and xgboost in the callers environment.
 ------------------------------------------------------------------------------------------------------------------------
 6. COSTS OF WHAT WAS NOT RUN
 
-Embedding (not run): 3,170,150 unique sequences (979,486,962 residues). Scaling the measured 4,464,102 sequences in
-7 h 08 min by sequence count gives 5 h 04 min on one A5000.
+Embedding (queued 2026-11-14, approved by the coordinator): the lut test-set recipe copied from
+slice_lut/code/embed with paths and job-name prefix changed only (code/embed/: embed_gpu.sbatch, finalize_zca.sbatch;
+embed_tokens.py, zca10.py and make_manifest.py byte-identical to the biotite slice_lut copies).
+  prep (login node, single process, 60 s, 1.8 GB): embed_queue.py prep --backend esmpp, Synthyra/ESMplusplus_small
+     revision 46c5f7d5..., bf16; source = package/universe/proteins.faa (SHA-256 ecf8a511... = sealed file);
+     3,211,751 rows, 3,170,150 unique, 41,601 duplicate rows, 979,486,962 unique residues, 985,827,262 tokens,
+     247 shards of 4 M tokens, 2,806 sequences > 2,046 aa (whole protein in one pass), 0 substituted symbols.
+  job 100034 srvpbins_esmpp: partition gpu, --gres=gpu:1, -c 12, ExcNodeList=node-224-2t-8gpu-1 (the H200 node; the
+     only other gpu node is the 8x A5000 node-128-512g-8gpu-1); pending on QOSMaxJobsPerUserLimit behind the account's
+     running GPU job 99855 and pending 99963.
+  job 100035 srvpbins_final: partition standard, standard_expand, -c 24, Dependency=afterok:100034; embed_queue
+     finalize, zca10 whitening fitted on this set, products hard-linked into package/embeddings/, package code copy,
+     MANIFEST.tsv / MANIFEST.json.
+  Estimate: the lut run embedded 1,362,898,600 tokens in 7 h 08 min on one A5000 (job 93934); 985,827,262 tokens here
+     -> 5 h 10 min (5 h 04 min by sequence count). The lut finalize took 13.5 min for 4.46 M sequences -> ~10 min here.
+  Seal interplay: 03_build_package.py seal no longer writes MANIFEST.tsv once MANIFEST.json exists, so the finalize
+     job's manifest stands; whichever of jobs 100456 / 100035 ends last, SEAL.txt covers every non-receipt file present
+     at the last seal, and MANIFEST.tsv/json cover every file present when the finalize ran.
+  No similarity pass, no neighbour lists and no ELSA method are part of either job.
 Undereplicated primary package (3,072 bins): the 2,099 bins outside the GTDB-Tk representative set need gene calls;
 Prodigal with both tables took 34-80 s per genome here, about 32 CPU-h in total, plus about 1.5 CPU-h of ribosomal
 hmmsearch for ~10 M proteins: a 35-40 min job on 64 CPUs. Callers on it: about 150 CPU-h (2.3 h on 64 CPUs).
@@ -235,7 +259,9 @@ Three readings exist: (i) the 2,458-genome Illumina + PacBio set (D) from which 
 contigs; (ii) all of Elliot's ggBin bins (B, 9,739 bins over 91 samples); (iii) the reconciled register (A). I chose A:
 it contains the Illumina part of (i) and the 54 CheckM2-assessed samples of (ii), adds the PacBio MAGs and archaea
 (D is bacteria only), carries linked CheckM2 values, and has a finished 95% ANI dereplication with r232 taxonomy. The
-part of (ii) that A lacks is the 37 samples without CheckM2 (item 4d); adding them is the decision below.
+part of (ii) that A lacks is the 37 samples without CheckM2 (item 4d).
+Decided by the coordinator (2026-11-14): keep A and the dereplicated primary tier, single-contig closed genomes
+included; leave the 37 extra ggBin samples out; leave CRISPRCasTyper out for now.
 The package includes closed and near-closed PacBio genomes alongside multi-contig bins because the selection is by
 completeness; 652 of the 994 genomes are multi-contig. A multi-contig-only subset is the genomes table filtered on
 n_contigs >= 2.

@@ -205,3 +205,65 @@ PART 5 (Z-WA: embedding-list bonds at the adaptive pair distance; CPU only)
 2026-11-13 16:10  Even + source207 read (job 94715). DPANN Z-WA L4b+ .02: 1,686 / 1,497 (-15 vs DH: fails the ribosomal bar),
                   summed .560, F1 .806/.748/.491 (CCT +.012): 6/7. Spacedust: +.150, -.034 [-.066, -.002] vs engine (BELOW);
                   DEV L1 +.206 (MATCHES engine). Success definition not met. REPORT5.txt written.
+
+FROZEN RUN (lut test set, $RD/slice_lut/testset/package_k8; first run on untouched data)
+-------------------------------------------------------------------------------------------
+2026-11-14 05:44  Coordinator: frozen run. Read before writing FROZEN.json: package README.txt, MANIFEST.json/.tsv,
+                  directory listings, code text of package tokens.sbatch / mmseqs_tokens.py; slice_lut REPORT/REPORT2
+                  (module definitions); scorer, ribosomal, engine, boundary and synton code (no data). FROZEN.json written
+                  (sha256 b9d8... before the timestamp fix; final hash below) with both configurations, comparators,
+                  scoring protocol, expectations and failure criteria. No dataset content opened yet.
+2026-11-14 05:50  STEP 2 started. Schemas read (genes / genomes incl. GTDB genus / contigs with first_gid, n_genes / gold
+                  columns; embeddings shapes; zca10.json; package embed/zca10.py and prep_unique.py code). Code in
+                  frozen/code: env_f.sh, tokens_f.sbatch (package recipe + compute guard), gtable_lut.py and
+                  gpu_knn_lut.py (path-only copies, diffs checked), fl.py (paths + ll.DATA['lut']; inputs, WA, DH),
+                  fz.py (sdu.py with paths changed; 14 path edits, diff checked), main_f / z_f / gpu_f wrappers. Package
+                  token scripts copied byte-identical (sha256 = MANIFEST). meta.npz built on the login node: 4,507,042
+                  genes, 1,032 genomes, 4,464,102 uids numbered by first gid. Slurm preflight (both rule files re-read,
+                  md5 unchanged d797b6c9 / 60727ce8); account 24 standard + 128 gpu_h200 CPUs running before.
+                  Submitted J1 99840 llf_tok (64 CPUs) and J2 99841 llf_gpu MODE=table (A5000, queued).
+2026-11-14 05:54  fscore.py written (sha256 17d11c54...) before any output exists; synton wrapper syn_f.sbatch (run_pipeline
+                  copy, gate and scoring removed) and byte-identical baseline_synton adapters (hashes = FROZEN.json).
+                  Scorer prep (login node, 16 s, 1.3 GB): shadow packages main 733 (all >= 2 members, single contig,
+                  positions = gids) / strict 121; complete clusters 80 (all a1); RB lut homologs 4,740 mapped to package
+                  gids, 134 in b1/b2 (72 isolated: B 38 / F 37 / E 33 / A 9 / G 8 / M 6 / C 2 / I 1 over all b1/b2
+                  homologs); ribosomal runs 858 in 855 genomes (431 even). The false-positive side rests on 72 genes.
+                  Code sha256: fl d4889fe3, fz 32222775, gtable_lut 62c9cf85, gpu_knn_lut 66af6510, tokens_f c1492082.
+                  J2 99841 running on the A5000 node since ~05:51; J1 99840 pending (Priority).
+2026-11-14 06:15  J2 99841 done (22 min 49 s, host RSS 9.3 GB, GPU 10.9 GB): z table 2,227,054,481 entries at z >= 10.5
+                  (per uid q50 / q90 / q99 481 / 953 / 1,006; Spacedust 1.20 G) + genome-pair sums. Preflight repeated
+                  (rule files md5 unchanged); account 212 CPUs running. Submitted J3 99963 llf_gpu MODE=knn (queued
+                  behind another session's gpu job: QOSMaxJobsPerUserLimit). J1 99840 still pending (Resources).
+2026-11-14 07:02  J3 99963 done (19 min 58 s; GPU 10.5 GB): exact kNN k 2,000, no query lacked itself; cosine at rank
+                  1 / 50 / 200 / 1,000 / 2,000 (q50) .914 / .760 / .642 / .365 / .284. J1 99840 still pending after 72 min
+                  (Priority; standard partition full). Preflight repeated (md5 unchanged; account 220 CPUs running).
+                  Submitted J6 100137 llf_syn FAMILY=faithful (24 CPUs; independent of the tokens) as the second job.
+2026-11-14 10:25  Coordinator: 99840 (64 CPUs) held the account queue (start estimate 16 Nov 21:46, reason Resources).
+                  Preflight repeated (md5 unchanged; account 388 CPUs running incl. other sessions). tokens_f.sbatch
+                  changed to --qos=standard_expand -c 24 and its compute guard now scales the 64-thread projection by
+                  64 / allocated threads (sha256 9e9f680b...); 99840 cancelled before it started; resubmitted as J1'
+                  100452 llf_tok (24 CPUs), scheduler start estimate 2026-11-16T09:22:09 (Priority). 100137 (synton
+                  faithful, 24 CPUs) kept, estimate 2026-11-15T11:18:27. Watcher moved to 100452 + 100137.
+                  From now on 24-CPU jobs only: main_f.sbatch and z_f.sbatch converted to 24 CPUs. Exception raised
+                  with the coordinator before any submission: the Z prep (kNN cohesion + exclusion masks) peaked at
+                  120 GB on Spacedust (lut ~126-135 GB) against 96 GB at 24 CPUs; zprep_f.sbatch (40 CPUs / 160 GB,
+                  standard_expand_2) written, not submitted.
+2026-11-14 10:28  Coordinator: Z prep approved on standard_expand_2 at 40 CPUs (CPU COUNT CHOSEN FOR MEMORY: 160 GB for an
+                  expected ~126-135 GB peak); no adapter change; everything else 24 CPUs; run the secondary while the
+                  tokens wait and report it as it lands.
+                  Genome groups (login node, single thread, 3 s; gold-free): 179 groups at 0.75 for 1,032 genomes
+                  (largest 131, 95 singletons; .70 / .80 cuts 46 / 460); emb_hom pairs q50 / q90 / q99 .699 / .740 / .823;
+                  description AMI family .84, genus .63. FROZEN expectation was 300-550 groups: MISSED (fewer, coarser
+                  units than on DPANN / Spacedust, one per 5.8 genomes; DPANN one per 5.6, Spacedust one per 2.1).
+                  zca32 running on the login node (single thread).
+                  The copied secondary code reads the token cohesion twice: a descriptive Spearman in prep and an unscored
+                  token-cohesion check tree in the arm. fzrun.py (sha256 1dc08c4b...) runs fz.py unchanged around both:
+                  prep run 1 stops at that read after saving the kNN cohesion, run 2 builds the masks; the arm runs with
+                  the check tree dropped from fz.KAPPA (knn outputs never read the token array). After the tokens exist
+                  the unchanged fz.py arm is rerun and L1 / L4bp_t0.02 must be identical (provisional until then).
+2026-11-14 10:34  zca32 (login node, single thread, 6 min; peak RSS 42.8 GB, mostly the file-backed output memmap): stored
+                  transform applied to the raw means; gate PASSED: max |f32 - stored f16| 1.2e-4, min cosine .99994.
+                  Preflight repeated (md5 unchanged; account 388 CPUs running, other sessions). Submitted J5a 100462
+                  llf_zprep (standard_expand_2, -c 40 FOR MEMORY) and J5b 100463 llf_zarm (24 CPUs, afterok:100462).
+                  Jobs of mine now: 100452 tok, 100137 syn faithful, 100462 zprep, 100463 zarm (the two Z jobs at the
+                  coordinator's request while the tokens wait).

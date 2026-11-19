@@ -98,6 +98,8 @@ def main():
     ap.add_argument("pkg"); ap.add_argument("--work", required=True); ap.add_argument("--threads", type=int, required=True)
     ap.add_argument("--genomes", type=int, default=0, help="first N genomes only (timing pilot)")
     ap.add_argument("--reuse", action="store_true", help="parse existing best_solution.tsv files instead of rerunning")
+    ap.add_argument("--shard", default="", help="K/N: run only shard K of N (genomes dealt by descending gene count)")
+    ap.add_argument("--run-only", action="store_true", help="run MacSyFinder and record timings; write no gold tables")
     a = ap.parse_args()
     P, W = Path(a.pkg), Path(a.work)
     (W / "faa").mkdir(parents=True, exist_ok=True); (W / "out").mkdir(exist_ok=True)
@@ -114,6 +116,11 @@ def main():
     order = sorted(genes.genome.unique())
     if a.genomes:
         order = order[:a.genomes]
+    if a.shard:
+        k, n = map(int, a.shard.split("/"))
+        ng = genes.groupby("genome").size().reindex(order)
+        dealt = ng.sort_values(ascending=False, kind="stable").index.tolist()
+        order = sorted(g for i, g in enumerate(dealt) if i % n == k)
     jobs = []
     for g, d in genes[genes.genome.isin(order)].groupby("genome", sort=True):
         d = d.sort_values(["contig_code", "position_index"])
@@ -130,7 +137,18 @@ def main():
             recs.append(res); allhits += hits
     wall = time.time() - t0
     rec = pd.DataFrame(recs)
-    rec.to_csv(W / "caller_records.tsv", sep="\t", index=False)
+    tag = f"_shard{a.shard.replace('/', 'of')}" if a.shard else ""
+    rec.to_csv(W / f"caller_records{tag}.tsv", sep="\t", index=False)
+    if a.run_only:
+        s = dict(mode="run_only", shard=a.shard, genomes=len(jobs), genes=int(genes.genome.isin(order).sum()),
+                 wall_seconds=round(wall, 1), threads=a.threads,
+                 cpu_seconds_by_run={r: float(rec[f"{r}_s"].sum()) for r in RUNS},
+                 failed_by_run={r: int((~rec[f"{r}_ok"]).sum()) for r in RUNS},
+                 code_sha256=sha(__file__), written_utc=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()))
+        (W / f"run_only{tag}.json").write_text(json.dumps(s, indent=1) + "\n")
+        print(json.dumps(s), flush=True)
+        return
+    shard_recs = sorted(W.glob("caller_records_shard*.tsv"))
     h = pd.DataFrame(allhits)
     mid2 = genes.set_index("mid")
     callers = {"DefenseFinder": "DefenseFinder", "DefenseFinder_RM": "DefenseFinder", "TXSScan": "TXSScan"}
@@ -177,8 +195,12 @@ def main():
         mem.to_parquet(P / "gold" / "members.parquet", index=False, compression="zstd")
     else:
         inst.to_parquet(W / "pilot_instances.parquet", index=False)
+    srec = pd.concat([pd.read_csv(f, sep="\t") for f in shard_recs], ignore_index=True) if shard_recs else None
     s = dict(genomes=len(jobs), wall_seconds=round(wall, 1), threads=a.threads,
              cpu_seconds_by_run={r: float(rec[f"{r}_s"].sum()) for r in RUNS},
+             shard_runs={str(f.name): json.loads((W / f.name.replace("caller_records", "run_only").replace(".tsv", ".json")).read_text())
+                         for f in shard_recs if (W / f.name.replace("caller_records", "run_only").replace(".tsv", ".json")).exists()},
+             cpu_seconds_by_run_in_shards={r: float(srec[f"{r}_s"].sum()) for r in RUNS} if srec is not None else {},
              failed_by_run={r: int((~rec[f"{r}_ok"]).sum()) for r in RUNS},
              instances_by_caller=inst.caller.value_counts().to_dict() if len(inst) else {},
              instances_by_run=inst.source_table.value_counts().to_dict() if len(inst) else {},

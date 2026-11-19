@@ -1,0 +1,102 @@
+{
+ "workstream": "long_loci, frozen run on the lut test set",
+ "written_utc": "2026-11-14T05:44Z",
+ "status_when_written": "Read from the dataset before writing: README.txt, MANIFEST.json / MANIFEST.tsv (file list, row counts, sha256), directory listings, and the code text of package code/tokens.sbatch and code/mmseqs_tokens.py (no data). No parquet, npy, FASTA or JSON content of the package has been opened; no ELSA method, similarity pass, neighbour list or token build has been run on it. Every DPANN and Spacedust number of parts 1-5 is known (development results).",
+ "dataset": {
+  "path": "$RD/slice_lut/testset/package_k8 (read-only; RD = /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111)",
+  "sha256": {"MANIFEST.json": "e859d5ce867481f4ce66a42f872e673cc3c2bda53ab68c7d5e30903c0789f1a0", "MANIFEST.tsv": "181e9b45474cd5c3fb42698f9368c83511539ee81c7c36be7b2a3524fdc36e02", "seal.json": "e5394577fd2215de87877db8e79bda506b6c6a11237770dc6178c424ba5853ce", "README.txt": "389a26f60cbc71055ebbecaa46d79de112b4a6073b3ec93afe288ccda83fd417"},
+  "as_described": "1,032 GTDB r232 species representatives, 4,507,042 proteins (4,464,102 unique), DPANN layout; ESM++ small embeddings with the zca10 whitening stored (fitted label-free by slice_lut's embed/zca10.py); gold lut_instances (lut_homology_main 733, lut_homology_strict 121), ribosomal runs g2_m16 858 in 855 genomes; layers a1 80 / a2 96 / a3 141 / a4 341 / b1 166 / b2 134 / c1 56 / c2 18; split odd 516 / even 516."
+ },
+ "rule_for_every_data_derived_number": "Nothing is chosen on this dataset. Every number computed from data is produced by the rule fixed on DPANN (and applied unchanged on Spacedust): bond tau by the bond-level 1% shuffle rule, list tau by vl's instance-FDR rule, genome groups by the emb_hom 0.75 average-linkage rule, cohesion floors from 1,000,000 random cross-genome gene pairs (seed 17), exclusion masks by softrec mode 1. Whitening is the package's stored transform (fitted by slice_lut without labels); it is applied, never refitted. Outputs at other theta values and other tree variants are written by the unchanged code but are never scored, read or reported.",
+ "configurations": {
+  "PRIMARY": {
+   "name": "family-bond tree, adaptive distance (part 4 selected output: dpann_WA L4b_t0.2)",
+   "tokens": "rescue3 family tokens built here with the DPANN recipe: base mmseqs cluster -s 7.5 -e 1e-3 --min-seq-id 0 -c 0.5 --cov-mode 0 --cluster-mode 0 (MMseqs2 release 18) -> mmseqs_tokens.py; rescue3: unique sequences, genes in base tokens of < 3 genes searched against all unique sequences (prefilter -s 7.5 --max-seqs 1000; align -e 1e-5 -a) -> 06b_rescue3.py (package code copies, sha256 in MANIFEST)",
+   "counting_unit": "genome groups: emb_hom(A,B) = mean over A's genes (gene multiplicity) of the best zca10 cosine in B, over genes with that cosine >= 0.5 (0.32 when none); mean-symmetrised; average linkage on 1 - emb_hom; cut at 0.75 (fcluster distance 0.25). Sums from the exact GPU table (transfer_spacedust gtable.py, copied with paths changed); groups by transfer_spacedust emb.py groups (lineagefree genome_groups.py definition, copied)",
+   "bonds": "lw.py WA: every token pair at distance d (1..8 positions on one contig) tested at window d: n_d = groups with an occurrence at distance <= d, E_d = learner expected_groups with w = d, Lambda_d = n ln(n/E) - n + E; bond if n_d >= 2 and Lambda_d >= tau; tokens in < 2 groups are not symbols (min_n 2); s_k = largest Lambda of a bond spanning boundary k",
+   "tau": "smallest value of (4, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50) with bond FDR = mean significant occurrences over 3 within-genome token shuffles (rng 1000 + r, contig sizes kept) / observed <= 0.01 (DPANN gave 6, Spacedust 8)",
+   "cohesion": "token cohesion kappa_var_tokens (context_units cuts.py side_sums / gene_cohesion as copied in transfer_spacedust emb.py cohesion): per boundary min of right / left side cohesion of the token's neighbour-vector set, floor c0 = mean cosine of 1,000,000 random cross-genome gene pairs (seed 17), zca10 float32 vectors",
+   "tree": "part-1 L4b: tie-collapsed min-rooted tree over L1 runs with w_k = s_k, and low-cohesion junctions (kappa < theta, theta = 0.2) as the first splits (w_k = 1e-6 + max(kappa, 0))",
+   "node_filter": "closed-form family node test at the bond tau: n = groups other than the node's own holding >= max(2, ceil(0.5 |families|)) of the node's distinct non-singleton families within <= 2|I| genes; E closed form; kept if n >= 2, Lambda(n, E) >= tau and nI >= 2",
+   "output": "L4b_t0.2 (inclusive gid intervals, e > s)"
+  },
+  "SECONDARY": {
+   "name": "embedding-list tree, fixed distance (part 2 selected Z output: L4bp_t0.02)",
+   "lists": "z >= 10.6 lists: per gene, one best match per other genome (max zca10 cosine; z = (max - mean) / sd over that genome's genes), genomes of the gene's own group excluded; z table from the exact GPU pass (same pass as the group sums), stored at z >= 10.5",
+   "counting_unit": "the same genome groups (0.75 rule)",
+   "bonds": "vl.py round 0 through lb.Lrn (kernels imported read-only from vocab_lists vl.py): adjacencies within <= 2 intervening genes (WGAP 3), 'grp' counting (n = 1 + supporting groups, E over groups, n >= 2, Lambda >= tau), round-0 homolog exclusion masks K1000 (softrec exclusion mode 1; capcos at depth 1,000 from softrec expand_knn on the exact k = 2,000 cosine kNN outside the lineage unit)",
+   "tau": "vl's rule computed here: smallest value of vl.LADDER (4, 6, 8, 10, 12, 15, 20) with round-0 instance FDR over 3 gene-order shuffles <= vl.FDR (0.01) (DPANN 6, Spacedust 8)",
+   "cohesion": "family-free kNN cohesion kappa_var_knn50 (context_units cuts.py gene_cohesion_knn as copied in sdu.py: kh 50, cap_h 200, floor from 1,000,000 random cross-genome gene pairs, seed 17)",
+   "tree": "L4b tree at theta 0.02 with the kNN cohesion; every node with >= 2 genes kept (L4b+, no node test)",
+   "output": "L4bp_t0.02 (inclusive gid intervals, e > s)"
+  }
+ },
+ "inputs_built_here": {
+  "uid_map": "gid -> uid from embeddings/esmpp_small__uid_of_row.npy after a gate: rows are gids (row count = genes) and genes sharing a uid have identical sequences in proteins_gid.faa (sha1 of every sequence)",
+  "zca10_float32": "the stored transform (zca10_transform.npz) applied to esmpp_small__mean_raw_f32__uid.npy exactly as slice_lut embed/zca10.py applies it; gate: equal to the stored zca10_f16__uid.npy within float16 rounding (max abs difference <= 1e-3). If the transform cannot be applied exactly, the float16 vectors are upcast (recorded as a deviation)",
+  "gtable": "transfer_spacedust gtable.py copied (paths only): z table (Z_STORE 10.5) + genome-pair sums, one A5000 (partition gpu), fp16 vectors",
+  "knn": "gpu_knn_sd.py copied (paths only): exact cosine kNN, k 2,000, one A5000",
+  "prep": "sdu.py cmd_prep copied into a lut adapter (paths only): kappa_var_knn50, exclusion masks for lineage = group (and genome, as written by the copied code) for the observed order and shuffles 0-2",
+  "adapter_rule": "lut adapters (ll.DATA entry, sdu copy) change paths only; diffs are recorded in the notebook with sha256 of each adapter"
+ },
+ "comparators": {
+  "pair_linking": "L1 of each configuration's own bonds (WA family bonds at the WA tau; Z list bonds at the Z tau): runs of bonded boundaries",
+  "engine_DH": "recurrence engine (engine/code/recurrence.py v1.5, unchanged, read-only) on the same rescue3 tokens: --w 3 --null genome --perms 3 --fdr 0.01 (rule chosen by coverage at the FDR target), Louvain modules res 10 / J 0.5, --all-genome-loci; nested reading DH = level-2 conserved loci UNION rule-H cores (Louvain res 0.3 seed 17 module segmentation, trim_ends f 0.5), built with boundary/code blib.Landscape + rules.Builder.build('D', core H) (read-only imports). The engine counts lineages as GTDB genera from the package genomes.parquet genus column (GTDB r232 taxonomy); stated with every engine number",
+  "synton": "Herve, Cury & Bernheim 2026 synton pipeline (repository commit 84baf14), baseline_synton adapters copied (run_pipeline.sbatch, make_inputs.py, fam_cascade.sh, nb2sh.py, synton_loci.py) with paths changed: faithful (linclust cascade 99/95/80/50% families) and matched (our rescue3 tokens), 24 CPUs each; run only if each finishes within the compute limit (expected 30-70 min each); a run beyond ~2 h is cancelled and reported as not run"
+ },
+ "scoring": {
+  "all_genomes": "every genome scored; headline numbers on all genomes; the even half (split.parquet even genome_code, 516 genomes) reported beside them for parity with DPANN",
+  "loci": "each output is a set of inclusive gid intervals with e > s (single-gene loci absent), as Ctx.table on DPANN",
+  "ribosomal": "gold/ribosomal_runs.parquet g2 runs with >= 16 marked genes (858). Standing definition (ribosomal_check.score): best = locus with the largest overlap (ties: shorter); recovered best_frac >= 0.5; resolved best_frac >= 0.8 and precision >= 0.8. Beside it: 'any fitting locus counts' = some locus with overlap / run >= 0.8 and overlap / locus length >= 0.8. Paired differences of resolved counts: run bootstrap, 10,000 draws, seed 17",
+  "lut_loci": "shadow package (universe symlinked; gold/instances.parquet = lut_homology_main instances with caller 'lut_homology_main', system_type = architecture class, member_positions, resolved = all members on one contig, order_trusted = True, min_members 2) scored by ws_dpann/package/scorer/score_dpann_loci.py (read-only, as blib.score_table): per truth locus the best locus (max F1, then coverage, then shorter span); gene-level F1, coverage, precision (members inside / locus span); control = 200 rigid translations of the member pattern on its contig (seed sha256('17:' + instance_id)); excess = F1 - mean control F1. Means with 95% intervals from 10,000 bootstrap draws over truth loci (seed 17); paired differences between outputs by the same paired bootstrap over loci. Reported overall, by architecture class (system_type), by genome layer, on all genomes and on the even half. The 121 strict instances are reported as a secondary row",
+  "complete_clusters": "main instances whose member components include all of A, B, C, D, E, F, G, H, I (lanM optional; expected 80, the a1 layer). Held = some single locus covers >= 80% of the members (the locus of largest coverage, ties shorter span); reported: count held, median and distribution of that locus's precision (members inside / locus span). Transporter module = the instance's member genes with components A, B, C, E, F, G (slice_lut: 'lutA/B/E/F + often lutG, lutC'); matched when some locus covers >= 80% of the module genes with module precision (module genes inside / locus span) >= 0.8; reported: matched by any locus, and matched by a locus nested inside (contained in) the holding locus",
+  "false_positive_side": "relatives without any lut locus = layers b1 and b2. Lut homologs = genes with a reverse-best-hit assignment (05_loci.py RB tier: best AM1 hit is the component and forward E <= 1e-5) to one of the 10 cluster components, from slice_lut part-1 component_genes.parquet of the genome's source scope, mapped to package gids by protein_id. Isolated = no other RB component gene within 3 genes on the same contig. Reported per output: share of isolated homologs inside any locus, inside a locus of >= 3 genes, median span of the smallest containing locus; the same shares for all b1/b2 genes (background); loci in b1/b2 holding RB homologs of >= 2 distinct components (count) and >= 3 distinct components (count; a lut-like call in a lut-negative genome)",
+  "coverage": "share of all genes in loci (and by layer); loci count; span quantiles",
+  "costs": "wall time and peak memory per stage (/usr/bin/time -v per step)"
+ },
+ "expectations": {
+  "tau": "primary bond tau 6-10; secondary list tau 6-8",
+  "groups": "300-550 groups at 0.75; the 80 complete-cluster genomes (Methylobacterium) in 3-20 groups",
+  "share_of_genes_in_loci": "primary .50-.65; primary L1 .58-.72; secondary .50-.65; DH .60-.78",
+  "ribosomal_858": "primary recovered >= 845, resolved 740-830 (any-locus +5 to +30); secondary recovered >= 845, resolved 700-820; L1 (both) resolved 250-600; DH resolved 700-815; synton faithful resolved 0-500 (wide; GTDB replicons are longer than DPANN's)",
+  "lut_main_733": "primary F1 .70-.85, control .35-.50, excess +.28 to +.45 (lower bound > +.20); secondary F1 .72-.87, control .40-.55, excess +.26 to +.42; L1 F1 .45-.70, excess +.10 to +.30; DH F1 .65-.82, excess +.22 to +.40; primary - DH excess -.02 to +.10; synton faithful F1 .15-.60, excess 0 to +.30",
+  "by_class": "transporter-only and split classes F1 within .05 of overall; complete class F1 .60-.85; receptor + transporter .60-.85",
+  "by_layer": "a1-a4 within .08 of overall; c2 (outside-class carriers, 18 genomes) .50-.85",
+  "complete_80": "held at >= 80% coverage: primary 55-78 (holding-locus precision median .5-.9); secondary 60-80; L1 75-80 (precision .1-.5); DH 50-75 (.6-.9). Transporter module matched: primary 25-60, secondary 30-65, L1 0-10, DH 15-50; nested inside the holding locus for most matches of the tree outputs",
+  "false_positive_side": "isolated RB homologs in b1/b2 inside any locus .50-.85 (primary), above the b1/b2 background share by 0 to .20 (these genes sit mostly in other conserved transporter operons); loci holding >= 3 distinct RB components in b1/b2: 0-5 per output; >= 2 components: 0-40",
+  "even_half": "every even-half number within sampling error of the all-genome number (F1 within .04)",
+  "costs": "tokens 60-110 min on 64 CPUs (rescue prefilter dominates); GPU table 20-35 min, GPU kNN 15-30 min; prep 5-10 min / 100-140 GiB; Z arm 5-10 min / 30-110 GiB; WA build 5-15 min / < 10 GiB; engine + DH < 10 min; synton 30-70 min per run on 24 CPUs"
+ },
+ "failure_criteria": {
+  "per_configuration": "A configuration FAILS on this set if any of: (F1) ribosomal resolved < 644 of 858 (75%) or recovered < 816 (95%); (F2) lut main excess 95% lower bound < +0.15 or mean F1 < 0.60; (F3) against engine DH on the same tokens: lut excess difference < -0.02 with the 95% upper bound < 0, or ribosomal resolved difference with the 95% upper bound < 0; (F4) complete clusters held by one locus at >= 80% coverage in < 40 of 80. Criteria are evaluated on all genomes; the even half is reported beside them.",
+  "comparison_wording": "versus a comparator on paired excess d: BEATS if the 95% lower bound > 0; MATCHES if not beats and d >= -0.02; BELOW if d < -0.02 (interval always reported)"
+ },
+ "compute_plan": "J1 tokens (64 CPUs; a guard stops the job after the rescue queries are known if the projected prefilter would take the job past ~110 min, and the estimate is reported instead); J2 GPU table + sums (A5000, queued); J3 GPU kNN (A5000); J4 groups, float32 vectors, token cohesion, WA build, engine, DH (64 CPUs); J5 prep + Z arm (64 CPUs); J6 / J7 synton faithful / matched (24 CPUs each); J8 scoring. At most 2 jobs of mine at a time; account below 400 CPUs; Slurm preflight before every submission.",
+ "code_sha256_frozen": {
+  "long_loci/code/ll.py": "2382fcc951acaaf4d1e878a487a1878bf9dfa0038adfbef96e1a61471acb0103",
+  "long_loci/code/lw.py": "f593a7ac5dfd1381afa958b5eb600fd90dad93e7a01be9101cd4182f3aa06bbe",
+  "long_loci/code/lb.py": "404cd4a422fd536f64f54a5548566c4ca133e7b8f314075acfa63e922bade807",
+  "long_loci/code/words_ts.py": "88aa09ddb619f740eba0a55bcd41ba586f75a21bfec7d487db09a805c048326f",
+  "long_loci/code/sdu.py": "354538c4847bee8c53290817e5af45dd6e2278d377813f783a99df90cf58196d",
+  "long_loci/code/gpu_knn_sd.py": "4b9196b60c2082141ed4bb2404dfc311d881c2d0b7c561493b41c8c5fbd90164",
+  "long_loci/code/gpu_table_sd.py": "54b04a31259258831de6f5790ce3f01a4aea5c212555a391832e12afd8347677",
+  "long_loci/code/env.sh": "838ac23f3ee3ade9fa8f9af180254960cc8f5671181fc52010824147e253a85c",
+  "vocab_lists/code/vl.py": "8f89c1df0a0eb203ce515a399708025d0107a7f29e5b2aceafaebd87514f85b1",
+  "softrec/code/softrec.py": "4124bd25e350dd5ea1877a1aa34d20ed3203723d8120f4b5c00d502d5b3a1630",
+  "transfer_spacedust/code/emb.py": "0f951f7a8119dbd2aa4fdf787ca8afd4745cc195ac86c4d38b944ecca83c3581",
+  "transfer_spacedust/code/gtable.py": "b46641c92944738e5fe246b6c4c971694744d0a7e04b5e38a5e55b0e2c4b26b1",
+  "engine/code/recurrence.py": "703a2564f1be80f996f22ce503797df22dd10c78cab92dd7e4da37a6309937ba",
+  "boundary/code/blib.py": "3afba7c337aa92153afc3c331b2165a9d5310d7081f3f7b9c2d4e3401d2c0b55",
+  "boundary/code/rules.py": "11e4c1d63feb81b950db6aa1470874feec78b20e112afc3ae531959ee985f9e3",
+  "ws_dpann/package/scorer/score_dpann_loci.py": "51400ca50fdcb809989f7b001cda79de65d226756de522957529abf95f65c8e5",
+  "ribosomal/code/ribosomal_check.py": "2f37c8a8615c35fd2cd6cf05634f0318cef1e5831074452360405b607bb9be77",
+  "baseline_synton/code/make_inputs.py": "39d00ea3590b453cb1a54cd238178dd85056f8b5c698ea67880fbdd86eb3e25e",
+  "baseline_synton/code/fam_cascade.sh": "f2e753f35cfada43eb473311058d21d1198a37c86024ceac2fd80fda356b6006",
+  "baseline_synton/code/nb2sh.py": "80616cd498602a238aa512184d285b3af34ea328daf7bf63bb92794ade59812e",
+  "baseline_synton/code/synton_loci.py": "94f932bb54853dbc399a28d660674af8adf81be164178724728b49b070c95af0",
+  "baseline_synton/code/run_pipeline.sbatch": "edc939f7592ad4d1f0fe800acfab215f38db4e062ac9947cc01a7bb421a97cbe",
+  "baseline_synton/src/bacterial-genome-syntons HEAD": "84baf1438f13fb6e03dabb8536e4f4dbfc03caa0",
+  "package code (tokens recipe)": "sha256 as listed in MANIFEST.tsv: mmseqs_tokens.py 1e85ff2e..., 06a_unique.py 35e46235..., 06b_rescue3.py 593cda1d..., repair_lib.py af4d54a3..., tsv2parquet.py 6ec5770e..., tokens.sbatch ac287986..."
+ },
+ "scorer_code": "the frozen-run scorer (frozen/code/fscore.py) is written after this file and implements the protocol above with the read-only scorers named here; its sha256 is recorded in the notebook before it reads any output"
+}

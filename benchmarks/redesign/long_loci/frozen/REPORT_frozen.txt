@@ -1,0 +1,26 @@
+LONG_LOCI FROZEN RUN: THE LUT TEST SET (first run on untouched data), REPORT_frozen.txt
+=======================================================================================
+STATUS 2026-11-14 10:35 UTC: IN PROGRESS. Nothing scored yet. Inputs built: z table, kNN, genome groups, float32
+vectors. The family-token job (100452) is queued; the SECONDARY configuration (embedding lists) runs first, at the
+coordinator's request, and its results enter this file as they land. The PRIMARY follows once the tokens exist.
+
+Frozen before any dataset content was opened: frozen/FROZEN.json (2026-11-14 05:44 UTC, sha256 070b5019...).
+Dataset: $RD/slice_lut/testset/package_k8 (read-only). Notebook: long_loci/NOTEBOOK.txt, section FROZEN RUN.
+
+ANSWER
+(pending)
+
+-----------------------------------------------------------------------------------------------------------------------
+INPUTS (gold-free; every number produced by the rule fixed on DPANN)
+ uid map       package uid_of_row: 4,464,102 uids numbered by first gid (gate against 06a gid2uid runs with the tokens)
+ zca10 f32     stored transform applied to the raw means; max |f32 - stored f16| 1.2e-4, min cosine .99994 (gate passed)
+ z table       2,227,054,481 entries at z >= 10.5 (per uid q50 / q90 / q99 481 / 953 / 1,006; Spacedust 1.20 G)
+ kNN           exact cosine, k 2,000; cosine at rank 1 / 50 / 200 / 1,000 / 2,000 (q50) .914 / .760 / .642 / .365 / .284
+ groups        179 at 0.75 for 1,032 genomes (largest 131, 95 singletons); expectation 300-550 MISSED (coarser units:
+               one group per 5.8 genomes; DPANN 5.6, Spacedust 2.1); description only: AMI with GTDB family .84, genus .63
+
+COSTS SO FAR
+ GPU z table + genome sums   22 min 49 s, A5000, 10.9 GB GPU / 9.3 GB host
+ GPU kNN k 2,000             19 min 58 s, A5000, 10.5 GB GPU
+ genome groups               3 s (login node)
+ zca10 float32               6 min 01 s, single thread (login node)

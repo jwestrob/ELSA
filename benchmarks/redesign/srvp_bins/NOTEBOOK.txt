@@ -82,3 +82,26 @@
   Estimated 40-55 CPU-h. The job writes gold/, regenerates README.txt and rewrites the seal.
 - CRISPRCasTyper not run: no installation on biotite (Sharur cctyper-port + Aksha CCTyper DB exist only on the Mac).
 2026-11-14T06:27:35Z REPORT.txt finalized; callers job 99990 pending (watcher b56bm40de runs only while this session lives).
+
+2026-11-14T06:32:36Z EMBEDDING (approved by coordinator: keep A + dereplicated primary tier incl. single-contig genomes; no
+  extra 37 ggBin samples; no CRISPRCasTyper)
+- Slurm preflight: read ~/.claude/CLAUDE.md Slurm section and biotite-cluster-ops.md (GPU partitions: gpu = A5000 node
+  node-128-512g-8gpu-1 + H200 node node-224-2t-8gpu-1; exclude the H200 node).
+- Copied slice_lut/code/embed -> code/embed (paths + job names only; 3 Python files byte-identical).
+- prep on login node (60 s, 1.8 GB): 3,170,150 unique, 247 shards, source SHA-256 = package proteins.faa.
+- Submitted GPU job 100034 (gpu, gres gpu:1, -c 12, ExcNodeList=node-224-2t-8gpu-1; QOSMaxJobsPerUserLimit) and
+  finalize 100035 (standard_expand -c 24, afterok:100034). Estimate 5 h 10 min GPU + ~10 min finalize.
+- 03_build_package.py seal: excludes MANIFEST.json and leaves MANIFEST.tsv to make_manifest once MANIFEST.json exists.
+- Workstream now holds 3 pending jobs (99990 callers, 100034, 100035): above the original 2-job cap, on the coordinator's
+  explicit instruction to queue the two embedding jobs while 99990 waits.
+
+2026-11-14T10:26:47Z CALLERS RESHAPED (coordinator: standard partition 89% allocated; 64-CPU job 99990 start est. 2026-11-16)
+- Slurm preflight: both remote instruction files read (copy in logs/preflight_<utc>.txt).
+- 04_callers.py: --shard K/N (genomes dealt by descending gene count) and --run-only (no gold); final --reuse parse.
+- Cancelled 99990. Submitted 100455 (callers_a.sbatch, 24 CPU standard_expand, shard 0/2) and 100456 (callers_b.sbatch,
+  24 CPU, shard 1/2 + parse + README + reseal, afterok:100455). squeue --start for 100455: 2026-11-16T09:22:09.
+  At 24 CPUs one job would take 1.7-2.3 h (40-55 CPU-h), so two shards of 50-70 min each.
+- Account running CPUs at submission: 388 (other workstreams); a 24-CPU start alongside them would pass 400.
+- GPU job 100034 is RUNNING on node-128-512g-8gpu-1 (A5000): 168/247 shards after 3 h 26 min, ~55,000 residues/s;
+  remaining ~79 shards x 75 s = ~1 h 40 min (total ~5 h 05 min). Finalize 100035 waits on afterok:100034.
+- Watcher bteewymwo armed for 100455/100456 (lives only as long as this session).

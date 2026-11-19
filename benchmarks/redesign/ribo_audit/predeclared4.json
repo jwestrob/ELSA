@@ -1,0 +1,56 @@
+{
+ "workstream": "ribo_audit part 4: the cluster-level ribosomal run definition of part 3, frozen, scored on the lut test set and DPANN",
+ "written_utc": "2026-11-19T09:06Z",
+ "status": "Written before any lut or DPANN ribosomal run, locus, annotation or case was opened under the cluster-level definition. The definition was written POST HOC on SR-VP (part 3); the lut set and DPANN give a check of the definition on data it was not developed on, with outputs frozen earlier.",
+ "prior_exposure": {
+  "lut": "Aggregate standing counts only (REPORT_frozen.txt: embedding-list tree 857 / 811, family-bond adaptive tree 858 / 788, engine DH 668, of 858 runs). Package table schemas and row counts, and genomes.parquet column value counts (1,032 GTDB r232 representatives, all d__Bacteria; 1,014 Alphaproteobacteria, 17 Gammaproteobacteria, 1 Campylobacteria). No lut run, locus, annotation or gene was opened.",
+  "dpann": "Development data of parts 1-2: all 1,686 runs were audited under the STANDING definition (diagrams, verdicts); the archaeal literature member list (N_RULES) was compiled for DPANN in part 2. The cluster-level definition has never been evaluated on DPANN. Package taxonomy: 3,564 genomes, all d__Archaea."
+ },
+ "definition_frozen": {
+  "source": "exactly as run in part 3: ribo_audit code/bio3.py cmd_extdef (POST HOC there) with the Bio3 annotation merge; reimplemented in bio4.py and checked on SR-VP against part-3 extdef.json before any lut / DPANN result is read",
+  "runs": "package g2 runs with >= 16 Pfam-marked genes (lut gold/ribosomal_runs.parquet run_set g2, n_marked >= 16: 858; DPANN ribosomal/gold/runs.parquet: 1,686; SR-VP ribosomal/runs.parquet g2 & m16: 803). Pfam marker = package marked table (Pfam 38.1 ^ribosom(al)?_ at GA, package-built). Minimum run length: the original run's >= 16 marked genes; no further minimum on the extended run.",
+  "member_classes": {
+   "R": "package Pfam ribosomal marker, OR best KOfam KO among the 226 searched KOs whose ko_list definition contains 'ribosomal protein' (201 KOs, listed below; as in part 3 this includes enzymes whose KO definition names a ribosomal protein, e.g. rimI, rimK, rimO)",
+   "N_archaeal_list": "part-2 N_RULES (bio.py), KO or Pfam: secY K03076 / SecY; rnp1 K03538 / RNase_P-MRP_p29; sui1 K03113 / SUI1; rpoD K03047 / RNA_pol_L, RNA_pol_A_bac; rpoN K03058 / RNA_pol_N; rpoK K03055 / RNA_pol_Rpb6; eno K01689 / Enolase_N, Enolase_C; cmk Cytidylate_kin, Cytidylate_kin2; cbf5 K03177, K11130 / TruB_N, TruB_C_2, DKCLD; ndk K00940 / NDK; infB IF-2; eIF2 K03242, K03237, K03238; nusA K02600; EF1a K03231; rpoHBAEFP K03053, K13798, K03040, K03041, K03042, K03049, K03051, K03059; spt5 K15172; secE SecE; eIF6 K03264; EF2 = EFG_C or EFG_IV together with GTP_EFTU (25 KOs, 20 Pfam models). Earlier rules overwrite later ones; R takes precedence over N.",
+   "N_bacterial_supplement": "16 KOfam profiles, ko_list thresholds, -E 1e-5, one KO per gene by highest score / threshold: K02601 nusG, K03043 rpoB, K03046 rpoC, K02358 tufA, K02355 fusA, K00939 adk, K01265 map, K02518 infA, K03073 secE, K01883 cysS, K03685 rnc, K03218 rlmB, K16786 ecfA1, K16787 ecfA2, K16785 ecfT, K06173 truA. A supplement hit turns an X gene into N; R and N genes keep their class.",
+   "X": "every other gene"
+  },
+  "which_list_applies_to_which_genome": "AS USED IN PART 3: the union (archaeal list + bacterial supplement) for every genome; domain was used only to stratify results. This is the PRIMARY reading here. Requested variant (DOMAIN): genomes whose package taxonomy domain is d__Archaea get the archaeal list only, d__Bacteria genomes get archaeal list + bacterial supplement. lut genomes are all Bacteria, so both readings coincide there; on DPANN the DOMAIN reading drops the supplement. SR-VP domain from genomes.domain (= tax prefix).",
+  "chain_rule": "member genes sorted by gid; a new chain starts where the next member lies more than 3 gids further (>= 3 non-member genes between) or on another contig; strand and intergenic distance are ignored. Target = the chain containing the run's first gene (it contains the whole run).",
+  "scoring": "best locus = largest overlap with the target, ties to the shorter, then first in start order (ribosomal_check rule); recovered = best locus covers >= 50% of the target; resolved = best locus covers >= 80% of the target and >= 80% of the best locus lies inside it; any fitting locus = some overlapping locus meets both 80% conditions. Loci read as stored (s, e inclusive gids); for lut also the frozen scorer's reading (loci with e > s, duplicates dropped), whichever reproduces the standing counts is used for both definitions.",
+  "chance": "per run, 5 start positions drawn with replacement by numpy default_rng(17) (one generator per dataset x reading, runs in table order) among the positions of the run's contig where a window of the extended-target length fits without overlapping the target; each window scored with the resolved rule for every output (same windows for all outputs); chance = resolved windows / windows, per output x stratum. The same procedure with the original run length gives the standing chance."
+ },
+ "annotation_procedure": {
+  "base": "frozen2 code/annot2.py procedure: hmmsearch of the 226 KOs (201 ribosomal + 25 N_RULES; ko_list thresholds by score_type, -E 1e-3, best KO among the searched ones) and the 20 Pfam models (--cut_ga) over every package protein, in $SLURM_CPUS_ON_NODE round-robin chunks",
+  "supplement_1": "annot3.py procedure (16 KOs, every protein)",
+  "supplement_2": "annot3.py procedure: Pfam-A 38.1 --cut_ga on every gene within 40 genes of a run (describes genes, sets the unannotated flag, split-ORF test)",
+  "proteins": "lut package_k8/proteins_gid.faa; DPANN sequences from ws_dpann/input/sharur.duckdb proteins.sequence joined on genes.protein_id (read-only); trailing '*' stripped",
+  "flags": "partial from lut universe/gene_flags.parquet and DPANN proteins.partial ('00' = complete); truncated where the package has it",
+  "compute": "one Slurm job, 24 CPUs, standard_expand; expected about 1 h"
+ },
+ "datasets_and_outputs": {
+  "lut": {"package": "$RD/slice_lut/testset/package_k8 (read-only)", "groups": "$RD/long_loci/frozen/groups/emb_hom_average_t0.75.parquet",
+          "outputs": {"Z embedding-list tree": "$RD/long_loci/frozen/loci/lut_Z/L4bp_t0.02.parquet", "WA family-bond adaptive tree": "$RD/long_loci/frozen/loci/lut_WA/L4b_t0.2.parquet", "engine DH": "$RD/long_loci/frozen/loci/lut_engine/DH.parquet"},
+          "standing_to_reproduce": {"Z": [857, 811], "WA": [858, 788], "DH_resolved": 668, "runs": 858}},
+  "dpann": {"package": "$RD/ws_dpann/package + $RD/ribosomal/gold (read-only)", "groups": "$RD/lineagefree/groups/emb_hom_average_t0.75.parquet",
+            "outputs": {"Z embedding-list tree": "$RD/long_loci/loci/dpann_Z/L4bp_t0.02.parquet", "WA family-bond adaptive tree": "$RD/long_loci/loci/dpann_WA/L4b_t0.2.parquet", "engine (token DH)": "$RD/boundary/loci/rescue3/DH_coreH_res0.3_f0.5.parquet"},
+            "standing_to_reproduce": {"Z": [1681, 1542], "WA": [1685, 1594], "engine": [1686, 1512], "runs": 1686}},
+  "srvp": {"note": "part-3 numbers carried into the table; bio4.py must reproduce part-3 extdef.json exactly (Z 255 / 396 / 140, WA 257 / 392 / 139, DH 210 / 370 / 120 for closed / multi / Archaea; chance identical) as the code-equivalence control"}
+ },
+ "step3_insert": {
+  "measure": "for every bacterial run (lut, SR-VP) holding an L15 gene (lit L15, or Pfam marker Ribosomal_L27A without a KO): the side away from the spc interior (the side without L30 / S5 within 3 genes; both sides when neither or both qualify, nearest alpha gene wins) is scanned up to 15 genes on the same contig for the first alpha-block gene: lit S13, S11, S4, L17, or KO K03040 / Pfam RNA_pol_A_bac (rpoA). Insert = genes strictly between; unmarked insert = those without a package Pfam ribosomal marker (L36 is marked and is listed but not counted). Identities: R / N name, else KO, else window Pfam top, else unannotated. Classes: unmarked insert 0, 1, 2, 3, 4, >= 5; alpha block not within 15 genes (contig end within 15 genes / contig continues); no L15 in the run.",
+  "accounts_for_criterion": "insert size accounts for the lut vs SR-VP difference if (a) within each insert class (<= 2, >= 3, no alpha within 15) the standing resolved rates of lut and SR-VP Bacteria differ by <= 10 percentage points for both frozen outputs, and (b) SR-VP class-specific rates reweighted to lut's class distribution land within 10 points of lut's observed rate; otherwise it does not, and the residual is reported. Taxonomy (phylum / class) is description only."
+ },
+ "step4_verdicts": "for every run unresolved under the cluster-level definition (PRIMARY reading = union), for each of the three outputs: part-2 strict procedure (bio3.py cmd_verdict logic) with the run span replaced by the extended target: units from the marked genes in the span, components by the part-2 linkage (same strand; <= 150 nt, <= 500 nt between two members; >= 3 consecutive X cut; trimmed to members; >= 2 members incl. >= 1 R), verdicts 1 split, 2 glue, 3 output correct and larger, 4 extends past, 5 fitting locus exists, 6 data (split ORF, length outlier, partial / truncated flag at the decisive point), 7 cannot tell. The same code with the original run span gives standing verdicts for comparison.",
+ "expectations": {
+  "lut": "Most lut runs already contain the alpha block because Alphaproteobacteria carry a short spc-alpha insert (secY-adk, <= 2 unmarked genes); the standing run then spans most of the cluster, and the extension adds only a few flank members (nusG / secE side). Expected cluster-level resolved: Z 790-830 (standing 811), WA 770-820 (788), DH 640-720 (668); chance <= 3% for Z / WA, <= 5% for DH.",
+  "dpann": "Archaeal runs gain few genes (SR-VP Archaea median 22 -> 24). Expected cluster-level resolved within +-40 of standing: Z 1542, WA 1594, engine 1512; chance <= 3% (outputs), <= 5% (engine). Risk: strand-blind chaining may join divergent opposite-strand operons that part 2 found as verdict-2 glue, adding definition-caused failures.",
+  "insert": "lut median unmarked insert <= 2 with secY-adk the commonest content; SR-VP Bacteria have a large class with 3-4 (secY-adk-map-infA). Expected: insert size accounts for most of the 94.5% vs 59% difference."
+ },
+ "holds_up_criteria": {
+  "H1": "on lut and on DPANN, for each frozen output (Z, WA): cluster-level resolved >= standing resolved - 2% of runs",
+  "H2": "chance <= 5% for every output x dataset x domain under the cluster-level definition",
+  "H3": "for each frozen output and dataset: runs with definition-attributable verdicts (2 glue, 3 output correct and larger) under the cluster-level definition <= the same count under the standing definition (same code, same annotation)",
+  "reading": "holds up = H1, H2 and H3 all met on both lut and DPANN; each failure is reported with its runs and verdicts; the DOMAIN reading is reported beside the PRIMARY (union) reading and does not replace it"
+ }
+}

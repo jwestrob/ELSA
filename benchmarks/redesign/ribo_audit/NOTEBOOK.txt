@@ -197,3 +197,41 @@ PART 3 (SR-VP genome bins: is the bacterial ribosomal shortfall rearrangement or
 2026-11-19T08:55Z  REPORT3.txt written; claims re-checked against tables (verdict-2 break types, verdict-4 targets, diagram
   A strand marks and the secE-L33 283 nt member spacer corrected before saving). Results copied to results3/ and
   $RD/ribo_audit/. Nothing committed.
+
+PART 4 (cluster-level definition frozen; lut and DPANN as a check on data the definition was not developed on)
+2026-11-19T08:58-09:05Z  Read bio3.py cmd_extdef / Bio3 merge, frozen2 annot2.py, annot3.py, audit.Data, fscore.py (lut ribosomal
+  scorer: loci with e > s, duplicates dropped), lut and DPANN package schemas and genomes value counts (lut 1,032 genomes, all
+  d__Bacteria, 1,014 Alphaproteobacteria; DPANN 3,564, all d__Archaea). No lut or DPANN run, locus, annotation or gene opened.
+  Finding while freezing: part 3 applied the union of the archaeal list and the bacterial supplement to EVERY genome; domain only
+  stratified results. predeclared4 keeps that as the PRIMARY reading and adds the requested domain-specific reading beside it.
+2026-11-19T09:06Z  predeclared4.json written (definition, member lists with KOs / Pfam, chain rule, scoring, chance, annotation
+  procedure, step-3 insert measure and criterion, step-4 verdict procedure, expectations, holds-up criteria H1-H3).
+2026-11-19T09:07Z  Slurm preflight read (remote CLAUDE.md, biotite-cluster-ops.md). Job 116195 (ribo4_annot, 24 CPUs,
+  standard_expand, exclude list, no --mem / --time / timeout; one pool of 24 single-CPU hmmsearch processes): part-3 base
+  (226 KOs + 20 Pfam), supplement 1 (16 KOs) over all lut (4,507,042) and DPANN (3,585,303) proteins; Pfam-A on run windows
+  (lut 62,504, DPANN 103,305 genes). Account had 126 CPUs running before submission.
+2026-11-19T09:10-09:14Z  bio4.py code-equivalence control on SR-VP (login node, one thread): standing counts reproduce (Z 802 /
+  528, WA 803 / 498, DH 313); cluster-level resolved and chance equal part-3 extdef.json in every cell (Z 255 / 396 / 140, WA
+  257 / 392 / 139, DH 210 / 370 / 120; chance 0.15 / 0.22 / 0.70% etc.); standing verdicts for Z and WA equal part-3 cases3
+  in every cell. Bio4 initialises in 15 s (Bio3 took 23 min; the cost was fixed-width unicode identity arrays).
+  SR-VP domain reading: identical counts to the union reading.
+2026-11-19T10:00Z  Job 116195 COMPLETED (51 min 17 s, 2,280% CPU, 3.6 GB peak; 192 hmmsearch jobs in 3,009 s). lut: KO assigned
+  62,925, R 58,264 (5,233 by KO only), N 14,294, supplement hits 13,399; window Pfam 56,107 / 62,504. DPANN: KO 140,573,
+  R 181,614 (3,766 by KO only), N 66,553, supplement hits 7,004 (cysS 3,158, map 2,490, adk 1,132, ecfT 154, others <= 13).
+2026-11-19T10:02Z  Coordinator: standing rule from Jacob, every HMM search goes through Aksha (/home/jwestrob/.local/bin/aksha).
+  Job 116195 stays as run (direct hmmsearch, HMMER 3.3, /shared/software/bin/hmmsearch); REPORT4 states it. No further search
+  is planned in part 4; any later one goes through Aksha.
+2026-11-19T10:01-10:03Z  run4.sh (login node, one thread): lut standing reproduced exactly with the stored loci (Z 857 / 811,
+  WA 858 / 788, DH 668; ribosomal_check equal); lut cluster-level, both readings, verdicts cluster and standing. DPANN standing
+  reproduced (Z 1681 / 1542, WA 1685 / 1594, DH 1686 / 1512); the filtered-loci reading crashed on the token-DH column names
+  (gid_s / gid_e); LociF fixed to read either name pair, DPANN chain rerun (lut results untouched).
+2026-11-19T10:05Z  DPANN chain done. Cluster-level resolved Z 1,491, WA 1,522, DH 1,443 (standing 1,542 / 1,594 / 1,512); chance
+  4.41 / 4.90 / 7.00%; domain reading Z 1,491, WA 1,522, DH 1,444. lut: Z 835, WA 822, DH 768 (standing 811 / 788 / 668), chance
+  2.09 / 2.90 / 2.61%. Criteria: lut H1, H2, H3 met; DPANN H1, H2 (DH), H3 not met. lut insert: secY-adk in 620 runs, median 2;
+  SR-VP median 4. Predeclared insert criterion: NO (>= 3 class 66.7% vs 40.4%); reweighting 91.4% vs lut 94.5%.
+2026-11-19T10:06-10:10Z  Lost DPANN runs opened via diagrams (Z 84): 66 add opposite-strand genes; 53 add secY + divergent
+  EMC3_TMCO1-Nre_N-cbf5 (cbf5 on the archaeal list, two X genes inside the <= 2 gap); 54 are verdict 3 with the target 3 genes
+  longer than the accurate locus. lut lost runs (Z 11): 10 verdict 2. POST HOC fine-class reweighting: Z 92.7%, WA 91.6%.
+2026-11-19T10:15Z  REPORT4.txt written; claims re-checked against tables (verdict totals, standing verdict columns, subtype
+  totals 74 / 44, engine-gap numbers, the "every output" claim restricted to DPANN, chance mechanism claim removed before
+  saving). Results copied to results4/ and $RD/ribo_audit/. Nothing committed.

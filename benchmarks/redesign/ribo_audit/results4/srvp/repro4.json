@@ -1,0 +1,191 @@
+{
+ "runs": 803,
+ "by_stratum": {
+  "Bact_multi": 398,
+  "Bact_closed": 260,
+  "Archaea": 145
+ },
+ "stored": {
+  "Z": {
+   "loci": 1013801,
+   "recovered": 802,
+   "resolved": 528,
+   "any_fit": 708,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 144,
+     "resolved": 138,
+     "any_fit": 139
+    },
+    "Bact_closed": {
+     "recovered": 260,
+     "resolved": 108,
+     "any_fit": 209
+    },
+    "Bact_multi": {
+     "recovered": 398,
+     "resolved": 282,
+     "any_fit": 360
+    }
+   },
+   "target": [
+    802,
+    528
+   ],
+   "reproduced": true
+  },
+  "WA": {
+   "loci": 874154,
+   "recovered": 803,
+   "resolved": 498,
+   "any_fit": 706,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 145,
+     "resolved": 120,
+     "any_fit": 137
+    },
+    "Bact_closed": {
+     "recovered": 260,
+     "resolved": 94,
+     "any_fit": 204
+    },
+    "Bact_multi": {
+     "recovered": 398,
+     "resolved": 284,
+     "any_fit": 365
+    }
+   },
+   "target": [
+    803,
+    498
+   ],
+   "reproduced": true
+  },
+  "DH": {
+   "loci": 528741,
+   "recovered": 803,
+   "resolved": 313,
+   "any_fit": 332,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 145,
+     "resolved": 122,
+     "any_fit": 124
+    },
+    "Bact_closed": {
+     "recovered": 260,
+     "resolved": 58,
+     "any_fit": 70
+    },
+    "Bact_multi": {
+     "recovered": 398,
+     "resolved": 133,
+     "any_fit": 138
+    }
+   },
+   "target": [
+    null,
+    313
+   ],
+   "reproduced": true
+  }
+ },
+ "filtered": {
+  "Z": {
+   "loci": 1013801,
+   "recovered": 802,
+   "resolved": 528,
+   "any_fit": 708,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 144,
+     "resolved": 138,
+     "any_fit": 139
+    },
+    "Bact_closed": {
+     "recovered": 260,
+     "resolved": 108,
+     "any_fit": 209
+    },
+    "Bact_multi": {
+     "recovered": 398,
+     "resolved": 282,
+     "any_fit": 360
+    }
+   },
+   "target": [
+    802,
+    528
+   ],
+   "reproduced": true
+  },
+  "WA": {
+   "loci": 874154,
+   "recovered": 803,
+   "resolved": 498,
+   "any_fit": 706,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 145,
+     "resolved": 120,
+     "any_fit": 137
+    },
+    "Bact_closed": {
+     "recovered": 260,
+     "resolved": 94,
+     "any_fit": 204
+    },
+    "Bact_multi": {
+     "recovered": 398,
+     "resolved": 284,
+     "any_fit": 365
+    }
+   },
+   "target": [
+    803,
+    498
+   ],
+   "reproduced": true
+  },
+  "DH": {
+   "loci": 528741,
+   "recovered": 803,
+   "resolved": 313,
+   "any_fit": 332,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 145,
+     "resolved": 122,
+     "any_fit": 124
+    },
+    "Bact_closed": {
+     "recovered": 260,
+     "resolved": 58,
+     "any_fit": 70
+    },
+    "Bact_multi": {
+     "recovered": 398,
+     "resolved": 133,
+     "any_fit": 138
+    }
+   },
+   "target": [
+    null,
+    313
+   ],
+   "reproduced": true
+  }
+ },
+ "loci_reading": "stored",
+ "reproduced": {
+  "stored": true,
+  "filtered": true
+ }
+}

@@ -3078,3 +3078,34 @@ used). Also measured: the number of unmarked genes between L15 and the alpha blo
 SR-VP bacteria, as the candidate explanation for lut's 94.5% under the standing definition.
 Status-page counts made exact: 236 runs where the output is the whole cluster, 20 where the run
 spans two units, 4 extending past the cluster.
+
+## 2026-11-19 10:10 UTC — Cluster-level ribosomal definition checked on lut and DPANN (`benchmarks/redesign/ribo_audit/REPORT4.txt`)
+
+Definition frozen in `predeclared4.json` before either dataset was opened under it; method
+outputs frozen earlier; standing counts reproduce exactly. DPANN was not fully unseen (its runs
+were audited under the standing definition, and the archaeal member list was compiled on it).
+
+| Dataset | Embedding-list tree | Family-bond adaptive tree | Engine reference |
+|---|---|---|---|
+| lut, Bacteria, 858 runs (standing -> cluster-level) | 811 -> 835 | 788 -> 822 | 668 -> 768 |
+| DPANN, Archaea, 1,686 runs | 1,542 -> 1,491 | 1,594 -> 1,522 | 1,512 -> 1,443 |
+| SR-VP Bacteria, 658 runs (development data for the definition) | 390 -> 651 | 378 -> 649 | 191 -> 580 |
+| SR-VP Archaea, 145 runs | 138 -> 140 | 120 -> 139 | 122 -> 120 |
+
+- **Bacteria: the definition holds** on lut, meeting all three predeclared criteria; failures
+  caused by the definition itself fall from 36 to 18 (embedding-list tree). Chance 2.1-2.9%.
+- **Archaea: it fails** all three criteria on DPANN. The cluster chain ignores strand: 66 of the
+  84 runs the embedding-list tree loses gain opposite-strand genes; in 53 the chain adds secY
+  plus a divergent EMC3_TMCO1 - Nre_N - cbf5 block (cbf5 is on the archaeal member list and the
+  two genes before it fit the gap rule). The output stops at the strand change, where the
+  accurate locus ends. Applying member lists by domain changes nothing.
+- **Why lut resolved 94.5% under the standing definition:** 75% of lut runs carry a 2-gene
+  secY-adk insert before the alpha block, so the block falls inside the run; SR-VP bacteria
+  mostly carry 4 (secY-adk-map-infA; 44% of runs). Reweighting SR-VP's per-class rates to lut's
+  insert distribution gives 91.4% (post hoc), 32 of the 35-point gap; the predeclared test of
+  this says no (in the 3-or-more class lut resolves 66.7%, SR-VP 40.4%).
+- Standing-definition chance on DPANN: 4.6 / 5.1 / 6.2% (new measure).
+- Reading: cluster-level definition for Bacteria; the standing run for Archaea; one definition
+  for both needs a strand-aware chain, untested, and a fresh check set.
+- The annotation (job 116195, 24 CPUs, 51 min) used direct hmmsearch; it was submitted before
+  Jacob's Aksha rule (added to both CLAUDE.md files on 19 November). Later searches use Aksha.

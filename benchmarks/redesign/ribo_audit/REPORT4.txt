@@ -1,0 +1,182 @@
+ribo_audit PART 4: the cluster-level ribosomal run definition, frozen, on the lut test set and DPANN
+written 2026-11-19 ~10:15Z; predeclared4.json written 09:06Z before any lut or DPANN run, locus or annotation was opened under the
+new definition. The definition was written POST HOC on SR-VP (part 3). lut and DPANN are a check of the definition on data it was
+not developed on, with method outputs frozen earlier. DPANN caveat: its runs were audited under the standing definition in
+parts 1-2, and the archaeal member list was compiled for it in part 2.
+
+ANSWER
+1. On lut (858 runs, all Bacteria, never opened before) the definition holds up. Resolved goes from standing to cluster level:
+   embedding-list tree (Z) 811 -> 835, family-bond adaptive tree (WA) 788 -> 822, engine DH 668 -> 768. Chance is 2.1-2.9%.
+   Definition-attributable verdicts (2 and 3) fall from 36 to 18 (Z) and from 39 to 29 (WA). All three predeclared criteria are met.
+2. On DPANN (1,686 runs, all Archaea) it fails all three criteria. Resolved goes Z 1,542 -> 1,491, WA 1,594 -> 1,522,
+   DH 1,512 -> 1,443. Verdicts 2 + 3 rise from 51 to 99 (Z) and from 33 to 101 (WA). Chance is 4.4 / 4.9 / 7.0%
+   (standing 4.6 / 5.1 / 6.2%); DH is above the 5% bar under both definitions.
+3. The cause is strand-blind chaining. 66 of the 84 runs Z loses gain opposite-strand genes. In 53 of them the chain adds secY
+   plus the divergent block EMC3_TMCO1-Nre_N-cbf5: cbf5 is on the archaeal member list and the two genes before it fit the
+   <= 2-gene gap. Z stops at the strand change, which is where the accurate locus ends. 54 of the 84 lost runs are verdict 3:
+   Z's locus equals the accurate locus and the target is 3 genes longer. The domain-specific reading changes nothing
+   (Z 1,491, WA 1,522, DH 1,444).
+4. lut's 94.5% standing resolution comes from short spc-alpha inserts. 75.1% of lut runs carry secY-adk (2 unmarked genes),
+   which puts the alpha block inside the run; the median insert is 2. SR-VP Bacteria have a median insert of 4
+   (secY-adk-map-infA in 43.9% of runs). SR-VP's class rates reweighted to lut's insert distribution give 91.4% (Z) and 91.3%
+   (WA), against lut 94.5% / 91.8% and SR-VP 59.3% / 57.4%. So insert size explains 32 of the 35-point gap for Z and 34 of the
+   34-point gap for WA. The predeclared test still says NO: in the >= 3 class lut resolves 66.7% and SR-VP 40.4% (Z),
+   a 26-point gap.
+5. The cluster-level definition is sound for Bacteria (SR-VP development data, lut check) and unsound for Archaea as frozen.
+   For Archaea the standing run is the better benchmark: on DPANN it resolves more for every output, and the cluster target
+   there joins divergent neighbours. A strand-aware chain is the evident repair; it is untested here and would need a fresh check set.
+
+------------------------------------------------------------------------------------------------------------------------
+1. WHAT WAS FROZEN (predeclared4.json) AND THE CODE CHECK
+  The definition is exactly as run in part 3 (bio3.py cmd_extdef with the Bio3 annotation merge):
+  - Marker classes:
+    - R = package Pfam ribosomal marker, or the best of 226 searched KOs whose definition contains 'ribosomal protein'.
+    - N = part-2 archaeal list (N_RULES, 25 KOs and 20 Pfam models with the EF2 rule) plus the 16-KO bacterial supplement.
+  - Chain: R + N genes with <= 2 other genes between them; strand and spacing are ignored.
+  - Target: the chain containing the package g2_m16 run.
+  - Scoring is the standing rule. Recovered: best locus covers >= 50%. Resolved: best locus by largest overlap (ties to the
+    shorter) covers >= 80% with precision >= 0.8. Any fitting locus is counted with the same 80 / 80 test.
+  - Chance: 5 random same-contig windows per run of the target length, seed 17.
+  Found while freezing: part 3 applied BOTH member lists to EVERY genome; domain only stratified the results. That union is the
+  PRIMARY reading here. The requested domain-specific reading (Archaea genomes: archaeal list only) is reported beside it.
+  Code check: bio4.py reproduces part-3 extdef.json exactly on SR-VP (resolved and chance in every cell) and the part-3
+  standing verdicts for Z and WA in every cell.
+
+2. REPRODUCTION OF THE STANDING COUNTS (stored loci; the lut frozen scorer's filtered reading gives the same numbers;
+   ribosomal_check.score equal in every case)
+  lut   858 runs:  Z 857 / 811 (any-fit 834), WA 858 / 788 (841), DH 858 / 668 (673)
+  DPANN 1,686 runs: Z 1,681 / 1,542 (1,575), WA 1,685 / 1,594 (1,631), engine 1,686 / 1,512 (1,590)
+  SR-VP 803 runs:  Z 802 / 528 (708), WA 803 / 498 (706), DH 803 / 313 (332)
+
+3. ALL THREE DATASETS (PRIMARY reading; standing = package run, cluster = extended run; lost = resolved standing only)
+  output     dataset  domain       runs  standing  cluster  cluster  cluster  standing  cluster  standing  gained  lost
+                                         resolved  resolved recovered any-fit any-fit   chance   chance
+  Z          lut      Bacteria      858     811      835      857      843      834     2.09%    1.83%      35     11
+  Z          DPANN    Archaea      1686    1542     1491     1672     1537     1575     4.41%    4.55%      33     84
+  Z          SR-VP    Bacteria      658     390      651      658      654      569     0.18%    0.63%     263      2
+  Z          SR-VP    Archaea       145     138      140      145      140      139     0.70%    0.67%       5      3
+  WA         lut      Bacteria      858     788      822      857      838      841     2.90%    3.13%      50     16
+  WA         DPANN    Archaea      1686    1594     1522     1683     1572     1631     4.90%    5.05%      22     94
+  WA         SR-VP    Bacteria      658     378      649      657      654      569     0.27%    0.92%     274      3
+  WA         SR-VP    Archaea       145     120      139      145      139      137     1.05%    0.50%      21      2
+  DH engine  lut      Bacteria      858     668      768      858      821      673     2.61%    2.66%     127     27
+  DH engine  DPANN    Archaea      1686    1512     1443     1684     1598     1590     7.00%    6.23%      42    111
+  DH engine  SR-VP    Bacteria      658     191      580      658      652      208     1.95%    3.40%     400     11
+  DH engine  SR-VP    Archaea       145     122      120      145      137      124     1.93%    3.36%      16     18
+  - Chance windows per output: lut 2,725 (cluster) / 2,780 (standing); DPANN 4,040 / 4,415; SR-VP as in part 3.
+  - lut by genome type: closed (73 runs) Z 72 -> 72, WA 66 -> 70, DH 52 -> 56; multi-contig (785) Z 739 -> 763, WA 722 -> 752,
+    DH 616 -> 712.
+  - Domain reading: DPANN Z 1,491, WA 1,522, DH 1,444 (union 1,443), chance equal to two decimals; SR-VP Archaea equal to union.
+    lut is all Bacteria, so both readings coincide by construction.
+  - Target growth, median genes: lut 27 -> 29 (420 of 858 unchanged); DPANN 24 -> 26 (358 unchanged, 799 gain exactly one
+    gene); SR-VP Bacteria 24 -> 34; SR-VP Archaea 22 -> 24.
+
+4. PREDECLARED CRITERIA
+  H1 (cluster resolved >= standing - 2% of runs):
+     lut Z 835 vs 793.8 MET; lut WA 822 vs 770.8 MET
+     DPANN Z 1,491 vs 1,508.3 NOT MET; DPANN WA 1,522 vs 1,560.3 NOT MET
+  H2 (chance <= 5% in every cell):
+     lut max 2.90% MET
+     DPANN max 7.00% (DH) NOT MET; Z 4.41% and WA 4.90% are below 5%, and standing DH chance on DPANN is 6.23%
+  H3 (verdicts 2 + 3 under cluster <= under standing):
+     lut Z 18 vs 36 MET; lut WA 29 vs 39 MET
+     DPANN Z 99 vs 51 NOT MET; DPANN WA 101 vs 33 NOT MET
+  Expectations written beforehand:
+  - lut resolved Z 790-830 and WA 770-820; observed 835 and 822, slightly above.
+  - lut DH 640-720; observed 768.
+  - DPANN within +-40 of standing; observed -51 / -72 / -69.
+  - DPANN chance <= 3% (outputs); observed 4.4 / 4.9%.
+
+5. VERDICTS FOR EVERY RUN UNRESOLVED UNDER THE CLUSTER-LEVEL DEFINITION (part-2 strict rules; the span is the extended run)
+  Verdict 3 here means: the output's locus equals the accurate locus, and the extended target differs from it. On DPANN the
+  target is longer, by 3 genes in every one of the 54 lost Z runs with verdict 3.
+                         v1   v2   v3   v4   v5   v6   v7   unresolved   (standing, same code: v1-v6, total)
+  lut   Z                 2   17    1    0    1    2    0      23         2 / 17 / 19 / 2 / 3 / 4, 47
+  lut   WA                1   27    2    1    1    4    0      36         3 / 17 / 22 / 1 / 24 / 3, 70
+  lut   DH                0   30    4   29   22    5    0      90         0 / 14 / 37 / 128 / 6 / 5, 190
+  DPANN Z                28   45   54   36   30    2    0     195        29 / 29 / 22 / 36 / 26 / 2, 144
+  DPANN WA               23   40   61   11   27    2    0     164        23 / 21 / 12 / 12 / 23 / 1, 92
+  DPANN DH                0   71   58   45   68    1    0     243         0 / 59 / 25 / 42 / 45 / 3, 174
+  SR-VP Z                 1    9    2    0    0    0    0      12         0 / 24 / 239 / 4 / 5 / 3, 275
+  SR-VP WA                1    8    2    0    2    2    0      15         0 / 28 / 262 / 4 / 7 / 4, 305
+  SR-VP DH                0   27    0    6   65    5    0     103         0 / 37 / 369 / 30 / 49 / 5, 490
+  Verdict-2 subtypes under cluster, all outputs:
+     lut: same-strand spacer 27, strand 22, spacer + strand 10, member spacer > 500 nt (alone or combined) 15.
+     DPANN: strand 71, spacer 68, spacer + strand 15, other 2.
+  Verdict-4 subtypes under cluster:
+     lut: 20 into members of another unit, 10 into unrelated genes.
+     DPANN: 76 unrelated, 16 members.
+  lut runs lost (Z 11, WA 16): 10 and 11 are verdict 2. The chain joins units across non-member or opposite-strand genes:
+     alpha blocks carrying an inserted gene (secY-adk-Tad-S13-S11-rpoA-L17, secY-adk-GIY-YIG-...), and the rif operon
+     (rpoBC-L10-L12-L1-L11-nusG-secE) beyond a non-member.
+  lut runs gained (Z 35): the target adds a median of 8 genes, and the output already reported them.
+  DPANN runs lost (Z 84 / WA 94 / DH 111):
+     opposite-strand genes added: 66 / 69 / 66
+     secY + divergent EMC3_TMCO1-Nre_N-cbf5 block: 53 / 53 / 58
+     L34e-(EMC3_TMCO1)-secY block: 15 / 15 / 17
+     verdicts of the lost Z runs: v3 54, v2 20 (strand 13), v5 6, v4 2, v6 2
+
+6. STEP 3: THE L15 -> ALPHA-BLOCK INSERT (output-independent)
+  The insert is the number of unmarked genes between L15 and the first S13 / S11 / S4 / rpoA / L17, scanned up to 15 genes on
+  the side away from L30 / S5.
+                                   lut (858 Bacteria runs)                  SR-VP Bacteria (658 runs)
+  unmarked insert                  runs  share   Z std res   WA std res      runs  share   Z std res   WA std res
+  1                                  14   1.6%   14 (100%)    11 (79%)         11   1.7%   10 (91%)    11 (100%)
+  2                                 644  75.1%  628 (97.5%)  610 (94.7%)       89  13.5%   86 (96.6%)  85 (95.5%)
+  3                                  49   5.7%   36 (73.5%)   34 (69.4%)      126  19.1%   66 (52.4%)  51 (40.5%)
+  4                                  12   1.4%    3 (25.0%)    5 (41.7%)      289  43.9%   95 (32.9%)  93 (32.2%)
+  >= 5                                8   0.9%    7            8               18   2.7%   14          17
+  alpha > 15 genes, contig end       48   5.6%   48           48               36   5.5%   36          34
+  alpha > 15 genes, contig goes on   43   5.0%   41           36               36   5.5%   32          34
+  no L15 in run                      40   4.7%   34           36               53   8.1%   51          53
+  Median unmarked insert: lut 2 (mean 2.13), SR-VP 4 (mean 3.46).
+  Commonest contents:
+     lut: secY-adk 620, secY-ADK 23 (ADK Pfam below the adk KO threshold), secY-adk-unannotated 15, secY-L36 11, secY-secY-adk 10.
+     SR-VP: secY-adk-map-infA-L36 175, secY-adk-map-infA 89, secY-map-infA 41, secY-infA-L36 40, secY-adk 37.
+  Predeclared criterion:
+     within-class rates, Z: <= 2 lut 97.6% vs SR-VP 96.0%; >= 3 lut 66.7% (n 69) vs SR-VP 40.4% (n 433); no alpha within 15
+     lut 97.8% vs SR-VP 94.4%. WA: 94.4 vs 96.0; 68.1 vs 37.2; 92.3 vs 94.4.
+     SR-VP rates reweighted to lut's class distribution: Z 91.4% (lut 94.5%), WA 91.3% (lut 91.8%).
+     Result: NO. (b) is met but (a) fails in the >= 3 class.
+  POST HOC: the same reweighting on the fine classes (1 / 2 / 3 / 4 / >= 5 / no alpha / no L15) gives Z 92.7% and WA 91.6%.
+     The >= 3 gap comes mainly from size 3 (lut 73.5% vs SR-VP 52.4%). lut's size-3 inserts are mostly secY-adk plus an
+     unannotated or duplicated gene; SR-VP's are mostly secY with two of adk / map / infA.
+  Under the cluster-level definition both sets resolve nearly every class (SR-VP size 4: 287 / 289; lut size 3: 43 / 49).
+  Taxonomy (description only):
+     lut runs: 843 Alphaproteobacteria (644 with insert <= 2), 14 Gammaproteobacteria (all <= 2), 1 Campylobacteria.
+     SR-VP Pseudomonadota: 91 of 110 runs <= 2, 106 resolved by Z.
+     SR-VP Acidobacteriota: 135 of 152 runs >= 3, 65 resolved. Chloroflexota: 67 of 79 >= 3, 29 resolved.
+     Nitrospirota: 39 of 45 >= 3, 28 resolved.
+
+7. WHAT ARGUES AGAINST THE DEFINITION
+  - Strand blindness. It costs DPANN 84 / 94 / 111 resolved runs against 33 / 22 / 42 gained. The chain also glues units across
+    opposite-strand genes in Bacteria: verdict-2 cases with a strand change are 36 of 74 on lut and 25 of 44 on SR-VP
+    (all outputs).
+  - The archaeal list contains cbf5. Its divergent position 2 genes past secY puts it in the target of 53 lost DPANN runs. A
+    member list built for literature membership is used here as a chaining signal, and the two jobs differ.
+  - It narrows the engine gap. Z minus DH resolved is 143 standing vs 67 cluster on lut, and 199 vs 71 on SR-VP Bacteria,
+    because DH reports whole clusters more often. The outputs still lead on every dataset where the definition holds.
+  - Chance on DPANN is 4.4-7.0% under the cluster definition and 4.6-6.2% under the standing one, so it is a property of the
+    dataset rather than of the definition. It exceeds the 5% bar for DH under both.
+
+8. DEVIATIONS AND NOTES
+  - Annotation (job 116195, 24 CPUs, 51 min) called hmmsearch directly (HMMER 3.3, /shared/software/bin/hmmsearch), as in
+    part 3 and frozen2. The standing rule that every HMM search goes through Aksha arrived after submission; the job was kept
+    as instructed. No further search was run in part 4.
+  - The PRIMARY reading is the union list for every genome (as part 3 actually ran), not per-domain lists. The domain reading
+    is reported and gives the same counts.
+  - The verdict-3 label carries over from part 2 ("output correct, larger than run"). Under the cluster definition it means
+    "output equals the accurate locus; target differs". On DPANN the target is the larger one.
+  - Standing chance (same window procedure) is new in this part.
+  - bio4.py's filtered-loci reader crashed on DPANN's token-DH column names (gid_s / gid_e) at the reproduction step. It was
+    fixed and the DPANN chain rerun; the stored reading, which reproduces, is the one used.
+  - The step-3 criterion is reported as predeclared (NO). The fine-class reweighting is POST HOC.
+  - SR-VP rows are development data (part 3). lut and DPANN rows are the check.
+
+9. FILES
+  Local benchmarks/redesign/ribo_audit/: predeclared4.json, REPORT4.txt, NOTEBOOK.txt; code annot4.py, annot4.sbatch, bio4.py,
+     tables4.py, run4.sh; results4/ (tables4.txt; per dataset ext4_*.json / .parquet, repro4.json, cases4_*.tsv,
+     diagrams4_cluster_union.txt, verdicts4_*.json, insert4.parquet).
+  Remote $RD/ribo_audit/: the same report, notebook and code; work4/<dataset>/ holds the annotation (genes_annot, extra_ko,
+     window_pfam) and every output.
+  Packages and frozen outputs unchanged. Nothing committed.

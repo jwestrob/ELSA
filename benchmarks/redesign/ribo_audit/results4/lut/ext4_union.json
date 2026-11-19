@@ -1,0 +1,148 @@
+{
+ "dataset": "lut",
+ "reading": "union",
+ "loci_reading": "stored",
+ "strata": {
+  "Bact_closed": {
+   "runs": 73,
+   "run_len_median": 31.0,
+   "ext_len_median": 39.0,
+   "added_left_median": 0.0,
+   "added_right_median": 0.0,
+   "ext_equals_run": 28,
+   "Z": {
+    "std_resolved": 72,
+    "std_anyfit": 72,
+    "cl_recovered": 73,
+    "cl_resolved": 72,
+    "cl_anyfit": 72,
+    "cl_chance": 0.0273972602739726,
+    "cl_chance_windows": 365,
+    "std_chance": 0.010958904109589041,
+    "std_chance_windows": 365,
+    "gained": 1,
+    "lost": 1
+   },
+   "WA": {
+    "std_resolved": 66,
+    "std_anyfit": 72,
+    "cl_recovered": 73,
+    "cl_resolved": 70,
+    "cl_anyfit": 70,
+    "cl_chance": 0.024657534246575342,
+    "cl_chance_windows": 365,
+    "std_chance": 0.03561643835616438,
+    "std_chance_windows": 365,
+    "gained": 6,
+    "lost": 2
+   },
+   "DH": {
+    "std_resolved": 52,
+    "std_anyfit": 52,
+    "cl_recovered": 73,
+    "cl_resolved": 56,
+    "cl_anyfit": 66,
+    "cl_chance": 0.019178082191780823,
+    "cl_chance_windows": 365,
+    "std_chance": 0.024657534246575342,
+    "std_chance_windows": 365,
+    "gained": 12,
+    "lost": 8
+   }
+  },
+  "Bact_multi": {
+   "runs": 785,
+   "run_len_median": 27.0,
+   "ext_len_median": 28.0,
+   "added_left_median": 0.0,
+   "added_right_median": 0.0,
+   "ext_equals_run": 392,
+   "Z": {
+    "std_resolved": 739,
+    "std_anyfit": 762,
+    "cl_recovered": 784,
+    "cl_resolved": 763,
+    "cl_anyfit": 771,
+    "cl_chance": 0.019915254237288134,
+    "cl_chance_windows": 2360,
+    "std_chance": 0.019461697722567287,
+    "std_chance_windows": 2415,
+    "gained": 34,
+    "lost": 10
+   },
+   "WA": {
+    "std_resolved": 722,
+    "std_anyfit": 769,
+    "cl_recovered": 784,
+    "cl_resolved": 752,
+    "cl_anyfit": 768,
+    "cl_chance": 0.029661016949152543,
+    "cl_chance_windows": 2360,
+    "std_chance": 0.03064182194616977,
+    "std_chance_windows": 2415,
+    "gained": 44,
+    "lost": 14
+   },
+   "DH": {
+    "std_resolved": 616,
+    "std_anyfit": 621,
+    "cl_recovered": 785,
+    "cl_resolved": 712,
+    "cl_anyfit": 755,
+    "cl_chance": 0.02711864406779661,
+    "cl_chance_windows": 2360,
+    "std_chance": 0.026915113871635612,
+    "std_chance_windows": 2415,
+    "gained": 115,
+    "lost": 19
+   }
+  },
+  "Bacteria": {
+   "runs": 858,
+   "run_len_median": 27.0,
+   "ext_len_median": 29.0,
+   "added_left_median": 0.0,
+   "added_right_median": 0.0,
+   "ext_equals_run": 420,
+   "Z": {
+    "std_resolved": 811,
+    "std_anyfit": 834,
+    "cl_recovered": 857,
+    "cl_resolved": 835,
+    "cl_anyfit": 843,
+    "cl_chance": 0.02091743119266055,
+    "cl_chance_windows": 2725,
+    "std_chance": 0.018345323741007193,
+    "std_chance_windows": 2780,
+    "gained": 35,
+    "lost": 11
+   },
+   "WA": {
+    "std_resolved": 788,
+    "std_anyfit": 841,
+    "cl_recovered": 857,
+    "cl_resolved": 822,
+    "cl_anyfit": 838,
+    "cl_chance": 0.028990825688073395,
+    "cl_chance_windows": 2725,
+    "std_chance": 0.031294964028776975,
+    "std_chance_windows": 2780,
+    "gained": 50,
+    "lost": 16
+   },
+   "DH": {
+    "std_resolved": 668,
+    "std_anyfit": 673,
+    "cl_recovered": 858,
+    "cl_resolved": 768,
+    "cl_anyfit": 821,
+    "cl_chance": 0.026055045871559632,
+    "cl_chance_windows": 2725,
+    "std_chance": 0.026618705035971222,
+    "std_chance_windows": 2780,
+    "gained": 127,
+    "lost": 27
+   }
+  }
+ }
+}

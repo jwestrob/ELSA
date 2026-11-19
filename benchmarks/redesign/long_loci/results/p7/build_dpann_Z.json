@@ -1,0 +1,124 @@
+{
+ "data": "dpann",
+ "base": "Z",
+ "thetas": [
+  0.02,
+  0.05,
+  0.1,
+  0.2
+ ],
+ "outputs": {
+  "Sadd_t0.02": {
+   "loci": 1494064,
+   "genes_in_loci_frac": 0.5713280021242277,
+   "span_q50_q90_q99_max": [
+    3.0,
+    7.0,
+    19.0,
+    130.0
+   ],
+   "unmodified_nodes": 1282888,
+   "added_nodes": 211176,
+   "added_crossing": 135429
+  },
+  "SaddB_t0.02": {
+   "loci": 1502676,
+   "genes_in_loci_frac": 0.5713280021242277,
+   "span_q50_q90_q99_max": [
+    3.0,
+    7.0,
+    20.0,
+    130.0
+   ],
+   "unmodified_nodes": 1288066,
+   "added_nodes": 214610,
+   "added_crossing": 138863
+  },
+  "Sadd_t0.05": {
+   "loci": 1624839,
+   "genes_in_loci_frac": 0.5713280021242277,
+   "span_q50_q90_q99_max": [
+    3.0,
+    7.0,
+    19.0,
+    130.0
+   ],
+   "unmodified_nodes": 1428753,
+   "added_nodes": 196086,
+   "added_crossing": 161940
+  },
+  "SaddB_t0.05": {
+   "loci": 1633451,
+   "genes_in_loci_frac": 0.5713280021242277,
+   "span_q50_q90_q99_max": [
+    3.0,
+    7.0,
+    19.0,
+    130.0
+   ],
+   "unmodified_nodes": 1433931,
+   "added_nodes": 199520,
+   "added_crossing": 165374
+  },
+  "Sadd_t0.1": {
+   "loci": 1680583,
+   "genes_in_loci_frac": 0.5713280021242277,
+   "span_q50_q90_q99_max": [
+    3.0,
+    7.0,
+    19.0,
+    130.0
+   ],
+   "unmodified_nodes": 1494653,
+   "added_nodes": 185930,
+   "added_crossing": 171036
+  },
+  "SaddB_t0.1": {
+   "loci": 1689195,
+   "genes_in_loci_frac": 0.5713280021242277,
+   "span_q50_q90_q99_max": [
+    3.0,
+    7.0,
+    19.0,
+    130.0
+   ],
+   "unmodified_nodes": 1499831,
+   "added_nodes": 189364,
+   "added_crossing": 174470
+  },
+  "Sadd_t0.2": {
+   "loci": 1709301,
+   "genes_in_loci_frac": 0.5713280021242277,
+   "span_q50_q90_q99_max": [
+    3.0,
+    7.0,
+    18.0,
+    130.0
+   ],
+   "unmodified_nodes": 1528742,
+   "added_nodes": 180559,
+   "added_crossing": 174223
+  },
+  "SaddB_t0.2": {
+   "loci": 1717913,
+   "genes_in_loci_frac": 0.5713280021242277,
+   "span_q50_q90_q99_max": [
+    3.0,
+    7.0,
+    19.0,
+    130.0
+   ],
+   "unmodified_nodes": 1533920,
+   "added_nodes": 183993,
+   "added_crossing": 177657
+  }
+ },
+ "gate": {
+  "t0.02": true,
+  "t0.05": true,
+  "t0.1": true,
+  "t0.2": true
+ },
+ "seconds": 57.0,
+ "peak_rss_gb": 2.7
+}

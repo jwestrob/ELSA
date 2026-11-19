@@ -362,3 +362,23 @@ PART 6 (strand-aware splitting S, bridging B, SB on both frozen bases; DPANN dev
                   Watchdog exited, no cancellation. REPORT6.txt written (ANSWER lines first, two tables). No variant JUSTIFIED
                   by the predeclared criteria; Z carries the fixes better (SB: strict 1,585 / loose 1,634 / standing 1,624,
                   all seven bars, 0 new pairs, CCT unchanged; summed -.017 is the failed condition).
+
+PART 7 (S-add: strand-first pieces added to the unmodified tree; both bases)
+------------------------------------------------------------------------------
+2026-11-19 04:57  Coordinator: part 7, then the second frozen run (SR-VP bins). predeclared7.json written (04:56 UTC,
+                  sha256 8c68108e...) before any part-7 build, score or the mechanism check. p7.py (2c62e555...) imports
+                  part-6 code. Preflight repeated (md5 unchanged; account 126 CPUs). Chain: 115635 mechanism check +
+                  builds (Z, P), 115636 / 115637 scoring P / Z, 115638 Spacedust rows; watchdog caps 40 min each.
+2026-11-19 05:05  Mechanism check (115635, before any part-7 score): of curated instances whose best locus got worse under
+                  S, 67.1% (family base, 648) and 79.1% (list base, 397) have members on both strands, against 28.3% of
+                  all 7,096 instances (24.6-25.2% of unchanged, 22.3-26.7% of better); a strand change inside the member
+                  span: 88.0% / 92.4% of worse vs 39.0% of all. DefenseFinder worse instances 89.9% / 94.4% two-strand.
+                  CONFIRMED. Builds: gates pass; added single-strand nodes Z theta .02: 211,176 (+16.5%), of which 135,429
+                  cross an existing node without nesting; P theta .2: 152,864 (+12.2%), 121,161 crossing.
+                  Scoring (115636 / 115637, 2 min each): Z odd selection theta .05 for S-add and S-add+B (frozen .02).
+                  Z S-add+B theta .05: summed .529 (-.052 [-.060, -.044]), TXSS F1 -.012, CCT +.018, resolved 1,627
+                  (+85), bio 1,596 / 1,642 (+92 / +95), 0 new pairs, all seven bars -> NOT justified (summed, TXSS).
+                  At theta .02: summed -.019 [-.022, -.016], every F1 up (DF +.007, TXSS +.002, CCT +.011), bio +81 / +87.
+                  P S-add theta .2: summed +.001 [-.006, +.009], F1 DF +.010, TXSS +.018, CCT +.009, resolved +36, bio
+                  1,592 / 1,634 (+54 / +63), all seven bars, 3 new curated pairs -> NOT justified (new pairs only).
+                  P S-add+B: bio +29, 3 new pairs -> not justified. Frozen run 2 PRIMARY therefore = unmodified Z.

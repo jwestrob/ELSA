@@ -2945,3 +2945,30 @@ by the mechanism: keep every node of the unmodified tree and add the single-stra
 the second frozen run, on the SR-VP genome-bin set, with a configuration rule fixed in advance:
 embedding-list tree with the refined fixes if part 7 passes, otherwise the unmodified
 embedding-list tree; the family-bond adaptive tree as secondary.
+
+## 2026-11-19 05:09 UTC — Refinement "keep every node and add single-strand pieces": not justified by the predeclared test (`benchmarks/redesign/long_loci/REPORT7.txt`)
+
+DPANN development; predeclared before the mechanism check or any score; base gates and the
+accurate-reading reproduction passed.
+
+- **Mechanism confirmed:** of the curated instances whose best locus got worse under strand-first
+  splitting, 79.1% (embedding-list base) and 67.1% (family base) have members on both strands,
+  against 28.3% of all 7,096 instances.
+- **The refinement does what it was built for:** every curated F1 rises above the base (list base
+  at theta 0.02: DefenseFinder +0.007, TXSScan +0.002, CRISPR-Cas +0.011), the ribosomal gain is
+  kept (list base with bridging: accurate strict 1,585-1,596, loose 1,634-1,642; standing
+  1,625-1,627), all seven bars hold, no new pair of curated systems is merged on the list base.
+- **It fails on summed excess on the list base:** -0.019 [-0.022, -0.016] at theta 0.02 and -0.052
+  at the odd-selected theta 0.05, although every F1 rises: the added nodes (+211,176, +16.5%; 64%
+  of them partially overlap an existing node instead of nesting) raise the random-placement
+  control more than F1.
+- **Family base:** summed +0.001 [-0.006, +0.009], every F1 up, standing resolved 1,630 (+36), all
+  seven bars; fails only the condition "no new pair of distinct curated systems in one locus" (3
+  new pairs; the base already holds 45).
+- Spacedust collection: every variant matches its base (family +0.166, list +0.106), with higher F1.
+- **Consequence, by the rule fixed in advance:** the primary configuration for the second frozen
+  run (SR-VP genome bins) is the unmodified embedding-list tree exactly as run on the lut set.
+Standing limitation of that configuration on DPANN ribosomal runs, by the audit's accurate
+reading: 1,504 (strict) to 1,547 (loose) of 1,686 right; 29 runs split at lineage-specific
+rearrangements; divergent blocks reported as one locus. The single-strand pieces remain available
+as a separate optional layer.

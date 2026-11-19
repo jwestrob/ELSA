@@ -3068,3 +3068,13 @@ readings of mine: that the oversized parents were over-extension ("conglomeratio
 Status of the claim: the frozen run's predeclared ribosomal criterion failed; this audit shows
 the criterion was unsound for Bacteria. A clean claim needs the cluster-level definition declared
 in advance on new data.
+
+## 2026-11-19 08:59 UTC — Follow-up started: cluster-level ribosomal definition on lut and DPANN (audit part 4)
+
+The cluster-level run definition from part 3 is frozen in `ribo_audit/predeclared4.json` before
+the lut set and DPANN are opened under it; the method outputs there were frozen earlier. This is a
+check of the definition on data it was not developed on (the datasets themselves are already
+used). Also measured: the number of unmarked genes between L15 and the alpha block in lut and
+SR-VP bacteria, as the candidate explanation for lut's 94.5% under the standing definition.
+Status-page counts made exact: 236 runs where the output is the whole cluster, 20 where the run
+spans two units, 4 extending past the cluster.

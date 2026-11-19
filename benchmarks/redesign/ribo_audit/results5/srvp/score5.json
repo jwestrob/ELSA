@@ -1,0 +1,596 @@
+{
+ "dataset": "srvp",
+ "loci_reading": "stored",
+ "defs": {
+  "standing": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 15,
+     "windows": 2385,
+     "chance": 0.006289308176100629
+    },
+    "Archaea": {
+     "resolved": 4,
+     "windows": 595,
+     "chance": 0.0067226890756302525
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 22,
+     "windows": 2385,
+     "chance": 0.009224318658280923
+    },
+    "Archaea": {
+     "resolved": 3,
+     "windows": 595,
+     "chance": 0.005042016806722689
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 81,
+     "windows": 2385,
+     "chance": 0.033962264150943396
+    },
+    "Archaea": {
+     "resolved": 20,
+     "windows": 595,
+     "chance": 0.03361344537815126
+    }
+   }
+  },
+  "part4": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 4,
+     "windows": 2200,
+     "chance": 0.0018181818181818182
+    },
+    "Archaea": {
+     "resolved": 4,
+     "windows": 570,
+     "chance": 0.007017543859649123
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 6,
+     "windows": 2200,
+     "chance": 0.0027272727272727275
+    },
+    "Archaea": {
+     "resolved": 6,
+     "windows": 570,
+     "chance": 0.010526315789473684
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 43,
+     "windows": 2200,
+     "chance": 0.019545454545454546
+    },
+    "Archaea": {
+     "resolved": 11,
+     "windows": 570,
+     "chance": 0.01929824561403509
+    }
+   }
+  },
+  "a": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 6,
+     "windows": 2210,
+     "chance": 0.0027149321266968325
+    },
+    "Archaea": {
+     "resolved": 2,
+     "windows": 555,
+     "chance": 0.0036036036036036037
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 15,
+     "windows": 2210,
+     "chance": 0.006787330316742082
+    },
+    "Archaea": {
+     "resolved": 1,
+     "windows": 555,
+     "chance": 0.0018018018018018018
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 52,
+     "windows": 2210,
+     "chance": 0.023529411764705882
+    },
+    "Archaea": {
+     "resolved": 19,
+     "windows": 555,
+     "chance": 0.03423423423423423
+    }
+   }
+  },
+  "b": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 10,
+     "windows": 2205,
+     "chance": 0.0045351473922902496
+    },
+    "Archaea": {
+     "resolved": 1,
+     "windows": 525,
+     "chance": 0.0019047619047619048
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 15,
+     "windows": 2205,
+     "chance": 0.006802721088435374
+    },
+    "Archaea": {
+     "resolved": 1,
+     "windows": 525,
+     "chance": 0.0019047619047619048
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 48,
+     "windows": 2205,
+     "chance": 0.021768707482993196
+    },
+    "Archaea": {
+     "resolved": 19,
+     "windows": 525,
+     "chance": 0.03619047619047619
+    }
+   }
+  },
+  "c": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 10,
+     "windows": 2200,
+     "chance": 0.004545454545454545
+    },
+    "Archaea": {
+     "resolved": 2,
+     "windows": 555,
+     "chance": 0.0036036036036036037
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 15,
+     "windows": 2200,
+     "chance": 0.006818181818181818
+    },
+    "Archaea": {
+     "resolved": 4,
+     "windows": 555,
+     "chance": 0.007207207207207207
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 44,
+     "windows": 2200,
+     "chance": 0.02
+    },
+    "Archaea": {
+     "resolved": 13,
+     "windows": 555,
+     "chance": 0.023423423423423424
+    }
+   }
+  }
+ },
+ "summary": {
+  "a|Archaea": {
+   "runs": 145,
+   "kept": 140,
+   "below_min": 5,
+   "targets": 140,
+   "multi_target_runs": 0,
+   "equals_accurate": 99,
+   "target_len_median": 24.0,
+   "runs_cut": 12,
+   "Z": {
+    "recovered": 140,
+    "resolved": 138,
+    "anyfit": 138,
+    "chance": 0.0036036036036036037,
+    "chance_windows": 555
+   },
+   "WA": {
+    "recovered": 140,
+    "resolved": 138,
+    "anyfit": 138,
+    "chance": 0.0018018018018018018,
+    "chance_windows": 555
+   },
+   "DH": {
+    "recovered": 140,
+    "resolved": 121,
+    "anyfit": 134,
+    "chance": 0.03423423423423423,
+    "chance_windows": 555
+   }
+  },
+  "a|Bacteria": {
+   "runs": 658,
+   "kept": 658,
+   "below_min": 0,
+   "targets": 658,
+   "multi_target_runs": 0,
+   "equals_accurate": 508,
+   "target_len_median": 34.0,
+   "runs_cut": 4,
+   "Z": {
+    "recovered": 658,
+    "resolved": 651,
+    "anyfit": 654,
+    "chance": 0.0027149321266968325,
+    "chance_windows": 2210
+   },
+   "WA": {
+    "recovered": 657,
+    "resolved": 650,
+    "anyfit": 655,
+    "chance": 0.006787330316742082,
+    "chance_windows": 2210
+   },
+   "DH": {
+    "recovered": 658,
+    "resolved": 581,
+    "anyfit": 652,
+    "chance": 0.023529411764705882,
+    "chance_windows": 2210
+   }
+  },
+  "b|Archaea": {
+   "runs": 145,
+   "kept": 131,
+   "below_min": 14,
+   "targets": 131,
+   "multi_target_runs": 0,
+   "equals_accurate": 103,
+   "target_len_median": 24.0,
+   "runs_cut": 21,
+   "Z": {
+    "recovered": 131,
+    "resolved": 130,
+    "anyfit": 130,
+    "chance": 0.0019047619047619048,
+    "chance_windows": 525
+   },
+   "WA": {
+    "recovered": 131,
+    "resolved": 130,
+    "anyfit": 130,
+    "chance": 0.0019047619047619048,
+    "chance_windows": 525
+   },
+   "DH": {
+    "recovered": 131,
+    "resolved": 115,
+    "anyfit": 127,
+    "chance": 0.03619047619047619,
+    "chance_windows": 525
+   }
+  },
+  "b|Bacteria": {
+   "runs": 658,
+   "kept": 654,
+   "below_min": 4,
+   "targets": 655,
+   "multi_target_runs": 1,
+   "equals_accurate": 536,
+   "target_len_median": 33.0,
+   "runs_cut": 21,
+   "Z": {
+    "recovered": 654,
+    "resolved": 641,
+    "anyfit": 647,
+    "chance": 0.0045351473922902496,
+    "chance_windows": 2205
+   },
+   "WA": {
+    "recovered": 654,
+    "resolved": 635,
+    "anyfit": 644,
+    "chance": 0.006802721088435374,
+    "chance_windows": 2205
+   },
+   "DH": {
+    "recovered": 654,
+    "resolved": 560,
+    "anyfit": 625,
+    "chance": 0.021768707482993196,
+    "chance_windows": 2205
+   }
+  },
+  "c|Archaea": {
+   "runs": 145,
+   "kept": 140,
+   "below_min": 5,
+   "targets": 140,
+   "multi_target_runs": 0,
+   "equals_accurate": 99,
+   "target_len_median": 24.0,
+   "runs_cut": 12,
+   "Z": {
+    "recovered": 140,
+    "resolved": 138,
+    "anyfit": 138,
+    "chance": 0.0036036036036036037,
+    "chance_windows": 555
+   },
+   "WA": {
+    "recovered": 140,
+    "resolved": 138,
+    "anyfit": 138,
+    "chance": 0.007207207207207207,
+    "chance_windows": 555
+   },
+   "DH": {
+    "recovered": 140,
+    "resolved": 121,
+    "anyfit": 134,
+    "chance": 0.023423423423423424,
+    "chance_windows": 555
+   }
+  },
+  "c|Bacteria": {
+   "runs": 658,
+   "kept": 658,
+   "below_min": 0,
+   "targets": 658,
+   "multi_target_runs": 0,
+   "equals_accurate": 506,
+   "target_len_median": 34.0,
+   "runs_cut": 3,
+   "Z": {
+    "recovered": 658,
+    "resolved": 651,
+    "anyfit": 654,
+    "chance": 0.004545454545454545,
+    "chance_windows": 2200
+   },
+   "WA": {
+    "recovered": 657,
+    "resolved": 650,
+    "anyfit": 655,
+    "chance": 0.006818181818181818,
+    "chance_windows": 2200
+   },
+   "DH": {
+    "recovered": 658,
+    "resolved": 580,
+    "anyfit": 652,
+    "chance": 0.02,
+    "chance_windows": 2200
+   }
+  },
+  "part4|Archaea": {
+   "runs": 145,
+   "kept": 145,
+   "below_min": 0,
+   "targets": 145,
+   "multi_target_runs": 0,
+   "equals_accurate": 93,
+   "target_len_median": 24.0,
+   "Z": {
+    "recovered": 145,
+    "resolved": 140,
+    "anyfit": 140,
+    "chance": 0.007017543859649123,
+    "chance_windows": 570
+   },
+   "WA": {
+    "recovered": 145,
+    "resolved": 139,
+    "anyfit": 139,
+    "chance": 0.010526315789473684,
+    "chance_windows": 570
+   },
+   "DH": {
+    "recovered": 145,
+    "resolved": 120,
+    "anyfit": 137,
+    "chance": 0.01929824561403509,
+    "chance_windows": 570
+   }
+  },
+  "part4|Bacteria": {
+   "runs": 658,
+   "kept": 658,
+   "below_min": 0,
+   "targets": 658,
+   "multi_target_runs": 0,
+   "equals_accurate": 493,
+   "target_len_median": 34.0,
+   "Z": {
+    "recovered": 658,
+    "resolved": 651,
+    "anyfit": 654,
+    "chance": 0.0018181818181818182,
+    "chance_windows": 2200
+   },
+   "WA": {
+    "recovered": 657,
+    "resolved": 649,
+    "anyfit": 654,
+    "chance": 0.0027272727272727275,
+    "chance_windows": 2200
+   },
+   "DH": {
+    "recovered": 658,
+    "resolved": 580,
+    "anyfit": 652,
+    "chance": 0.019545454545454546,
+    "chance_windows": 2200
+   }
+  },
+  "standing|Archaea": {
+   "runs": 145,
+   "kept": 145,
+   "below_min": 0,
+   "targets": 145,
+   "multi_target_runs": 0,
+   "equals_accurate": 24,
+   "target_len_median": 22.0,
+   "Z": {
+    "recovered": 144,
+    "resolved": 138,
+    "anyfit": 139,
+    "chance": 0.0067226890756302525,
+    "chance_windows": 595,
+    "accurate_reading_resolved": 134
+   },
+   "WA": {
+    "recovered": 145,
+    "resolved": 120,
+    "anyfit": 137,
+    "chance": 0.005042016806722689,
+    "chance_windows": 595,
+    "accurate_reading_resolved": 137
+   },
+   "DH": {
+    "recovered": 145,
+    "resolved": 122,
+    "anyfit": 124,
+    "chance": 0.03361344537815126,
+    "chance_windows": 595,
+    "accurate_reading_resolved": 110
+   }
+  },
+  "standing|Bacteria": {
+   "runs": 658,
+   "kept": 658,
+   "below_min": 0,
+   "targets": 658,
+   "multi_target_runs": 0,
+   "equals_accurate": 87,
+   "target_len_median": 24.0,
+   "Z": {
+    "recovered": 658,
+    "resolved": 390,
+    "anyfit": 569,
+    "chance": 0.006289308176100629,
+    "chance_windows": 2385,
+    "accurate_reading_resolved": 626
+   },
+   "WA": {
+    "recovered": 658,
+    "resolved": 378,
+    "anyfit": 569,
+    "chance": 0.009224318658280923,
+    "chance_windows": 2385,
+    "accurate_reading_resolved": 623
+   },
+   "DH": {
+    "recovered": 658,
+    "resolved": 191,
+    "anyfit": 208,
+    "chance": 0.033962264150943396,
+    "chance_windows": 2385,
+    "accurate_reading_resolved": 530
+   }
+  }
+ },
+ "connector": {
+  "Archaea": {
+   "target_junctions": 3133,
+   "target_pairs": 80,
+   "pairs_with_5_groups": 55,
+   "hist_bins": [
+    0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95,
+    1.0
+   ],
+   "hist": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    53
+   ],
+   "junction_classes": {
+    "same": 3112,
+    "opp_other": 16,
+    "opp_lineage_specific": 5
+   },
+   "opposite_in_most": []
+  },
+  "Bacteria": {
+   "target_junctions": 20753,
+   "target_pairs": 154,
+   "pairs_with_5_groups": 90,
+   "hist_bins": [
+    0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95,
+    1.0
+   ],
+   "hist": [
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    2,
+    4,
+    0,
+    82
+   ],
+   "junction_classes": {
+    "same": 20716,
+    "opp_lineage_specific": 16,
+    "opp_other": 15,
+    "opp_conserved": 6
+   },
+   "opposite_in_most": [
+    {
+     "pair": "L28|S12",
+     "conn": 0.062,
+     "groups": 16,
+     "target_junctions": 7
+    }
+   ]
+  }
+ }
+}

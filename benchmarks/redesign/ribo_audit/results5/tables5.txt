@@ -1,0 +1,194 @@
+ALL DEFINITIONS (DEVELOPMENT numbers: every dataset has been seen). resolved / orig = resolved against the original run count
+(runs below minimum count unresolved); any-fit and chance on kept runs / targets.
+  output dataset domain    definition  runs  kept below targets  recov resolved  res/orig any-fit  chance
+  Z    lut     Bacteria  standing    858   858     0     858    857      811     94.5%     834   1.83%
+  Z    lut     Bacteria  part4       858   858     0     858    857      835     97.3%     843   2.09%
+  Z    lut     Bacteria  a           858   855     3     855    854      834     97.2%     842   1.92%
+  Z    lut     Bacteria  b           858   840    18     840    839      826     96.3%     833   2.21%
+  Z    lut     Bacteria  c           858   855     3     855    854      835     97.3%     843   1.88%
+  Z    srvp    Bacteria  standing    658   658     0     658    658      390     59.3%     569   0.63%
+  Z    srvp    Bacteria  part4       658   658     0     658    658      651     98.9%     654   0.18%
+  Z    srvp    Bacteria  a           658   658     0     658    658      651     98.9%     654   0.27%
+  Z    srvp    Bacteria  b           658   654     4     655    654      641     97.4%     647   0.45%
+  Z    srvp    Bacteria  c           658   658     0     658    658      651     98.9%     654   0.45%
+  Z    dpann   Archaea   standing   1686  1686     0    1686   1681     1542     91.5%    1575   4.55%
+  Z    dpann   Archaea   part4      1686  1686     0    1686   1672     1491     88.4%    1537   4.41%
+  Z    dpann   Archaea   a          1686  1669    17    1669   1657     1546     91.7%    1592   4.68%
+  Z    dpann   Archaea   b          1686  1662    24    1662   1650     1548     91.8%    1584   4.78%
+  Z    dpann   Archaea   c          1686  1682     4    1682   1668     1549     91.9%    1595   4.75%
+  Z    srvp    Archaea   standing    145   145     0     145    144      138     95.2%     139   0.67%
+  Z    srvp    Archaea   part4       145   145     0     145    145      140     96.6%     140   0.70%
+  Z    srvp    Archaea   a           145   140     5     140    140      138     95.2%     138   0.36%
+  Z    srvp    Archaea   b           145   131    14     131    131      130     89.7%     130   0.19%
+  Z    srvp    Archaea   c           145   140     5     140    140      138     95.2%     138   0.36%
+  WA   lut     Bacteria  standing    858   858     0     858    858      788     91.8%     841   3.13%
+  WA   lut     Bacteria  part4       858   858     0     858    857      822     95.8%     838   2.90%
+  WA   lut     Bacteria  a           858   855     3     855    854      820     95.6%     838   3.02%
+  WA   lut     Bacteria  b           858   840    18     840    840      796     92.8%     826   2.92%
+  WA   lut     Bacteria  c           858   855     3     855    854      822     95.8%     838   3.06%
+  WA   srvp    Bacteria  standing    658   658     0     658    658      378     57.4%     569   0.92%
+  WA   srvp    Bacteria  part4       658   658     0     658    657      649     98.6%     654   0.27%
+  WA   srvp    Bacteria  a           658   658     0     658    657      650     98.8%     655   0.68%
+  WA   srvp    Bacteria  b           658   654     4     655    654      635     96.5%     644   0.68%
+  WA   srvp    Bacteria  c           658   658     0     658    657      650     98.8%     655   0.68%
+  WA   dpann   Archaea   standing   1686  1686     0    1686   1685     1594     94.5%    1631   5.05%
+  WA   dpann   Archaea   part4      1686  1686     0    1686   1683     1522     90.3%    1572   4.90%
+  WA   dpann   Archaea   a          1686  1669    17    1669   1669     1569     93.1%    1618   4.93%
+  WA   dpann   Archaea   b          1686  1662    24    1662   1662     1574     93.4%    1608   5.77%
+  WA   dpann   Archaea   c          1686  1682     4    1682   1679     1576     93.5%    1625   5.05%
+  WA   srvp    Archaea   standing    145   145     0     145    145      120     82.8%     137   0.50%
+  WA   srvp    Archaea   part4       145   145     0     145    145      139     95.9%     139   1.05%
+  WA   srvp    Archaea   a           145   140     5     140    140      138     95.2%     138   0.18%
+  WA   srvp    Archaea   b           145   131    14     131    131      130     89.7%     130   0.19%
+  WA   srvp    Archaea   c           145   140     5     140    140      138     95.2%     138   0.72%
+  DH   lut     Bacteria  standing    858   858     0     858    858      668     77.9%     673   2.66%
+  DH   lut     Bacteria  part4       858   858     0     858    858      768     89.5%     821   2.61%
+  DH   lut     Bacteria  a           858   855     3     855    855      764     89.0%     821   2.21%
+  DH   lut     Bacteria  b           858   840    18     840    840      707     82.4%     746   2.32%
+  DH   lut     Bacteria  c           858   855     3     855    855      768     89.5%     821   2.21%
+  DH   srvp    Bacteria  standing    658   658     0     658    658      191     29.0%     208   3.40%
+  DH   srvp    Bacteria  part4       658   658     0     658    658      580     88.1%     652   1.95%
+  DH   srvp    Bacteria  a           658   658     0     658    658      581     88.3%     652   2.35%
+  DH   srvp    Bacteria  b           658   654     4     655    654      560     85.1%     625   2.18%
+  DH   srvp    Bacteria  c           658   658     0     658    658      580     88.1%     652   2.00%
+  DH   dpann   Archaea   standing   1686  1686     0    1686   1686     1512     89.7%    1590   6.23%
+  DH   dpann   Archaea   part4      1686  1686     0    1686   1684     1443     85.6%    1598   7.00%
+  DH   dpann   Archaea   a          1686  1669    17    1669   1669     1499     88.9%    1598   7.41%
+  DH   dpann   Archaea   b          1686  1662    24    1662   1662     1495     88.7%    1589   6.56%
+  DH   dpann   Archaea   c          1686  1682     4    1682   1680     1500     89.0%    1599   6.69%
+  DH   srvp    Archaea   standing    145   145     0     145    145      122     84.1%     124   3.36%
+  DH   srvp    Archaea   part4       145   145     0     145    145      120     82.8%     137   1.93%
+  DH   srvp    Archaea   a           145   140     5     140    140      121     83.4%     134   3.42%
+  DH   srvp    Archaea   b           145   131    14     131    131      115     79.3%     127   3.62%
+  DH   srvp    Archaea   c           145   140     5     140    140      121     83.4%     134   2.34%
+
+TARGET STRUCTURE (kept runs; runs cut = runs whose marked genes fall in >= 2 chains; equals accurate = targets identical to the
+part-2 accurate units of the run)
+  lut   Bacteria  standing  runs   858 cut    0 below minimum    0 multi-target runs   0 targets   858 target length median  27.0 equals accurate   476
+  lut   Bacteria  part4     runs   858 cut    0 below minimum    0 multi-target runs   0 targets   858 target length median  29.0 equals accurate   567
+  lut   Bacteria  a         runs   858 cut    4 below minimum    3 multi-target runs   0 targets   855 target length median  29.0 equals accurate   618
+  lut   Bacteria  b         runs   858 cut   36 below minimum   18 multi-target runs   0 targets   840 target length median  28.0 equals accurate   683
+  lut   Bacteria  c         runs   858 cut    4 below minimum    3 multi-target runs   0 targets   855 target length median  29.0 equals accurate   573
+  lut   Bacteria  accurate reading (part-2 strict, same annotation): Z 791, WA 763, DH 612
+  srvp  Bacteria  standing  runs   658 cut    0 below minimum    0 multi-target runs   0 targets   658 target length median  24.0 equals accurate    87
+  srvp  Bacteria  part4     runs   658 cut    0 below minimum    0 multi-target runs   0 targets   658 target length median  34.0 equals accurate   493
+  srvp  Bacteria  a         runs   658 cut    4 below minimum    0 multi-target runs   0 targets   658 target length median  34.0 equals accurate   508
+  srvp  Bacteria  b         runs   658 cut   21 below minimum    4 multi-target runs   1 targets   655 target length median  33.0 equals accurate   536
+  srvp  Bacteria  c         runs   658 cut    3 below minimum    0 multi-target runs   0 targets   658 target length median  34.0 equals accurate   506
+  srvp  Bacteria  accurate reading (part-2 strict, same annotation): Z 626, WA 623, DH 530
+  dpann Archaea   standing  runs  1686 cut    0 below minimum    0 multi-target runs   0 targets  1686 target length median  24.0 equals accurate   358
+  dpann Archaea   part4     runs  1686 cut    0 below minimum    0 multi-target runs   0 targets  1686 target length median  26.0 equals accurate  1286
+  dpann Archaea   a         runs  1686 cut   40 below minimum   17 multi-target runs   0 targets  1669 target length median  25.0 equals accurate  1360
+  dpann Archaea   b         runs  1686 cut   54 below minimum   24 multi-target runs   0 targets  1662 target length median  25.0 equals accurate  1472
+  dpann Archaea   c         runs  1686 cut   22 below minimum    4 multi-target runs   0 targets  1682 target length median  25.0 equals accurate  1360
+  dpann Archaea   accurate reading (part-2 strict, same annotation): Z 1503, WA 1539, DH 1444
+  srvp  Archaea   standing  runs   145 cut    0 below minimum    0 multi-target runs   0 targets   145 target length median  22.0 equals accurate    24
+  srvp  Archaea   part4     runs   145 cut    0 below minimum    0 multi-target runs   0 targets   145 target length median  24.0 equals accurate    93
+  srvp  Archaea   a         runs   145 cut   12 below minimum    5 multi-target runs   0 targets   140 target length median  24.0 equals accurate    99
+  srvp  Archaea   b         runs   145 cut   21 below minimum   14 multi-target runs   0 targets   131 target length median  24.0 equals accurate   103
+  srvp  Archaea   c         runs   145 cut   12 below minimum    5 multi-target runs   0 targets   140 target length median  24.0 equals accurate    99
+  srvp  Archaea   accurate reading (part-2 strict, same annotation): Z 134, WA 137, DH 110
+
+SOUNDNESS (predeclared S1-S4; Z and WA)
+  part4  lut   Bacteria  Z : S1 835 >= 817.8 ok; S2 chance 2.09% ok; S3 v2+v3 runs 18 vs standing 36 ok; S4 below 0 ok
+  part4  lut   Bacteria  WA: S1 822 >= 804.8 ok; S2 chance 2.90% ok; S3 v2+v3 runs 29 vs standing 39 ok; S4 below 0 ok
+  part4  srvp  Bacteria  Z : S1 651 >= 637.8 ok; S2 chance 0.18% ok; S3 v2+v3 runs 6 vs standing 256 ok; S4 below 0 ok
+  part4  srvp  Bacteria  WA: S1 649 >= 635.8 ok; S2 chance 0.27% ok; S3 v2+v3 runs 6 vs standing 269 ok; S4 below 0 ok
+  part4  dpann Archaea   Z : S1 1491 >= 1508.3 FAIL; S2 chance 4.41% ok; S3 v2+v3 runs 99 vs standing 51 FAIL; S4 below 0 ok
+  part4  dpann Archaea   WA: S1 1522 >= 1560.3 FAIL; S2 chance 4.90% ok; S3 v2+v3 runs 101 vs standing 33 FAIL; S4 below 0 ok
+  part4  srvp  Archaea   Z : S1 140 >= 137.1 ok; S2 chance 0.70% ok; S3 v2+v3 runs 5 vs standing 7 ok; S4 below 0 ok
+  part4  srvp  Archaea   WA: S1 139 >= 136.1 ok; S2 chance 1.05% ok; S3 v2+v3 runs 4 vs standing 21 ok; S4 below 0 ok
+  part4: sum Z + WA resolved (original denominators) 6249; sound on all four strata: False
+  a      lut   Bacteria  Z : S1 834 >= 817.8 ok; S2 chance 1.92% ok; S3 v2+v3 runs 16 vs standing 36 ok; S4 below 3 ok
+  a      lut   Bacteria  WA: S1 820 >= 804.8 ok; S2 chance 3.02% ok; S3 v2+v3 runs 29 vs standing 39 ok; S4 below 3 ok
+  a      srvp  Bacteria  Z : S1 651 >= 637.8 ok; S2 chance 0.27% ok; S3 v2+v3 runs 6 vs standing 256 ok; S4 below 0 ok
+  a      srvp  Bacteria  WA: S1 650 >= 635.8 ok; S2 chance 0.68% ok; S3 v2+v3 runs 5 vs standing 269 ok; S4 below 0 ok
+  a      dpann Archaea   Z : S1 1546 >= 1508.3 ok; S2 chance 4.68% ok; S3 v2+v3 runs 28 vs standing 51 ok; S4 below 17 ok
+  a      dpann Archaea   WA: S1 1569 >= 1560.3 ok; S2 chance 4.93% ok; S3 v2+v3 runs 38 vs standing 33 FAIL; S4 below 17 ok
+  a      srvp  Archaea   Z : S1 138 >= 137.1 ok; S2 chance 0.36% ok; S3 v2+v3 runs 2 vs standing 7 ok; S4 below 5 FAIL
+  a      srvp  Archaea   WA: S1 138 >= 136.1 ok; S2 chance 0.18% ok; S3 v2+v3 runs 2 vs standing 21 ok; S4 below 5 FAIL
+  a: sum Z + WA resolved (original denominators) 6346; sound on all four strata: False
+  b      lut   Bacteria  Z : S1 826 >= 817.8 ok; S2 chance 2.21% ok; S3 v2+v3 runs 8 vs standing 36 ok; S4 below 18 FAIL
+  b      lut   Bacteria  WA: S1 796 >= 804.8 FAIL; S2 chance 2.92% ok; S3 v2+v3 runs 20 vs standing 39 ok; S4 below 18 FAIL
+  b      srvp  Bacteria  Z : S1 641 >= 637.8 ok; S2 chance 0.45% ok; S3 v2+v3 runs 7 vs standing 256 ok; S4 below 4 ok
+  b      srvp  Bacteria  WA: S1 635 >= 635.8 FAIL; S2 chance 0.68% ok; S3 v2+v3 runs 7 vs standing 269 ok; S4 below 4 ok
+  b      dpann Archaea   Z : S1 1548 >= 1508.3 ok; S2 chance 4.78% ok; S3 v2+v3 runs 14 vs standing 51 ok; S4 below 24 ok
+  b      dpann Archaea   WA: S1 1574 >= 1560.3 ok; S2 chance 5.77% FAIL; S3 v2+v3 runs 21 vs standing 33 ok; S4 below 24 ok
+  b      srvp  Archaea   Z : S1 130 >= 137.1 FAIL; S2 chance 0.19% ok; S3 v2+v3 runs 1 vs standing 7 ok; S4 below 14 FAIL
+  b      srvp  Archaea   WA: S1 130 >= 136.1 FAIL; S2 chance 0.19% ok; S3 v2+v3 runs 1 vs standing 21 ok; S4 below 14 FAIL
+  b: sum Z + WA resolved (original denominators) 6280; sound on all four strata: False
+  c      lut   Bacteria  Z : S1 835 >= 817.8 ok; S2 chance 1.88% ok; S3 v2+v3 runs 16 vs standing 36 ok; S4 below 3 ok
+  c      lut   Bacteria  WA: S1 822 >= 804.8 ok; S2 chance 3.06% ok; S3 v2+v3 runs 27 vs standing 39 ok; S4 below 3 ok
+  c      srvp  Bacteria  Z : S1 651 >= 637.8 ok; S2 chance 0.45% ok; S3 v2+v3 runs 6 vs standing 256 ok; S4 below 0 ok
+  c      srvp  Bacteria  WA: S1 650 >= 635.8 ok; S2 chance 0.68% ok; S3 v2+v3 runs 5 vs standing 269 ok; S4 below 0 ok
+  c      dpann Archaea   Z : S1 1549 >= 1508.3 ok; S2 chance 4.75% ok; S3 v2+v3 runs 38 vs standing 51 ok; S4 below 4 ok
+  c      dpann Archaea   WA: S1 1576 >= 1560.3 ok; S2 chance 5.05% FAIL; S3 v2+v3 runs 44 vs standing 33 FAIL; S4 below 4 ok
+  c      srvp  Archaea   Z : S1 138 >= 137.1 ok; S2 chance 0.36% ok; S3 v2+v3 runs 2 vs standing 7 ok; S4 below 5 FAIL
+  c      srvp  Archaea   WA: S1 138 >= 136.1 ok; S2 chance 0.72% ok; S3 v2+v3 runs 2 vs standing 21 ok; S4 below 5 FAIL
+  c: sum Z + WA resolved (original denominators) 6359; sound on all four strata: False
+  BEST strand-aware variant by the predeclared rule: a (eligible ['a']; sums {'a': 6346, 'b': 6280, 'c': 6359})
+
+VERDICTS FOR RUNS UNRESOLVED UNDER EACH STRAND-AWARE VARIANT (part-2 strict on each unresolved target; runs counted)
+  a lut   Bacteria  Z  unresolved runs   21 (targets   21): v1 2 v2 15 v3 1 v4 0 v5 2 v6 1 v7 0
+  a lut   Bacteria  WA unresolved runs   35 (targets   35): v1 1 v2 26 v3 3 v4 1 v5 1 v6 3 v7 0
+  a lut   Bacteria  DH unresolved runs   91 (targets   91): v1 0 v2 29 v3 3 v4 29 v5 26 v6 4 v7 0
+  a srvp  Bacteria  Z  unresolved runs    7 (targets    7): v1 1 v2 4 v3 2 v4 0 v5 0 v6 0 v7 0
+  a srvp  Bacteria  WA unresolved runs    8 (targets    8): v1 1 v2 3 v3 2 v4 0 v5 2 v6 0 v7 0
+  a srvp  Bacteria  DH unresolved runs   77 (targets   77): v1 0 v2 19 v3 0 v4 3 v5 53 v6 2 v7 0
+  a dpann Archaea   Z  unresolved runs  123 (targets  123): v1 28 v2 25 v3 3 v4 36 v5 30 v6 1 v7 0
+  a dpann Archaea   WA unresolved runs  100 (targets  100): v1 23 v2 28 v3 10 v4 11 v5 27 v6 1 v7 0
+  a dpann Archaea   DH unresolved runs  170 (targets  170): v1 0 v2 47 v3 8 v4 46 v5 69 v6 0 v7 0
+  a srvp  Archaea   Z  unresolved runs    2 (targets    2): v1 0 v2 2 v3 0 v4 0 v5 0 v6 0 v7 0
+  a srvp  Archaea   WA unresolved runs    2 (targets    2): v1 0 v2 2 v3 0 v4 0 v5 0 v6 0 v7 0
+  a srvp  Archaea   DH unresolved runs   19 (targets   19): v1 0 v2 4 v3 0 v4 3 v5 12 v6 0 v7 0
+  a verdict-2 subtypes (all): {'spacer': 100, 'strand': 62, 'spacer+strand': 15, 'mem>500': 14, 'mem>500+spacer': 7, 'mem>500+strand': 5, 'mem>500+spacer+strand': 1}
+  b lut   Bacteria  Z  unresolved runs   14 (targets   14): v1 2 v2 7 v3 1 v4 0 v5 2 v6 2 v7 0
+  b lut   Bacteria  WA unresolved runs   44 (targets   44): v1 2 v2 17 v3 3 v4 3 v5 15 v6 4 v7 0
+  b lut   Bacteria  DH unresolved runs  133 (targets  133): v1 0 v2 20 v3 1 v4 84 v5 26 v6 2 v7 0
+  b srvp  Bacteria  Z  unresolved runs   13 (targets   13): v1 1 v2 5 v3 2 v4 3 v5 2 v6 0 v7 0
+  b srvp  Bacteria  WA unresolved runs   19 (targets   19): v1 1 v2 5 v3 2 v4 6 v5 5 v6 0 v7 0
+  b srvp  Bacteria  DH unresolved runs   94 (targets   95): v1 0 v2 20 v3 0 v4 21 v5 53 v6 0 v7 0
+  b dpann Archaea   Z  unresolved runs  114 (targets  114): v1 28 v2 12 v3 2 v4 39 v5 31 v6 2 v7 0
+  b dpann Archaea   WA unresolved runs   88 (targets   88): v1 23 v2 19 v3 2 v4 15 v5 28 v6 1 v7 0
+  b dpann Archaea   DH unresolved runs  167 (targets  167): v1 0 v2 35 v3 6 v4 51 v5 74 v6 1 v7 0
+  b srvp  Archaea   Z  unresolved runs    1 (targets    1): v1 0 v2 1 v3 0 v4 0 v5 0 v6 0 v7 0
+  b srvp  Archaea   WA unresolved runs    1 (targets    1): v1 0 v2 1 v3 0 v4 0 v5 0 v6 0 v7 0
+  b srvp  Archaea   DH unresolved runs   16 (targets   16): v1 0 v2 1 v3 0 v4 3 v5 12 v6 0 v7 0
+  b verdict-2 subtypes (all): {'spacer': 112, 'mem>500': 25, 'mem>500+spacer': 6}
+  c lut   Bacteria  Z  unresolved runs   20 (targets   20): v1 2 v2 15 v3 1 v4 0 v5 1 v6 1 v7 0
+  c lut   Bacteria  WA unresolved runs   33 (targets   33): v1 1 v2 25 v3 2 v4 1 v5 1 v6 3 v7 0
+  c lut   Bacteria  DH unresolved runs   87 (targets   87): v1 0 v2 28 v3 4 v4 29 v5 22 v6 4 v7 0
+  c srvp  Bacteria  Z  unresolved runs    7 (targets    7): v1 1 v2 4 v3 2 v4 0 v5 0 v6 0 v7 0
+  c srvp  Bacteria  WA unresolved runs    8 (targets    8): v1 1 v2 3 v3 2 v4 0 v5 2 v6 0 v7 0
+  c srvp  Bacteria  DH unresolved runs   78 (targets   78): v1 0 v2 20 v3 0 v4 3 v5 53 v6 2 v7 0
+  c dpann Archaea   Z  unresolved runs  133 (targets  133): v1 28 v2 35 v3 3 v4 36 v5 30 v6 1 v7 0
+  c dpann Archaea   WA unresolved runs  106 (targets  106): v1 23 v2 34 v3 10 v4 11 v5 27 v6 1 v7 0
+  c dpann Archaea   DH unresolved runs  182 (targets  182): v1 0 v2 60 v3 8 v4 45 v5 69 v6 0 v7 0
+  c srvp  Archaea   Z  unresolved runs    2 (targets    2): v1 0 v2 2 v3 0 v4 0 v5 0 v6 0 v7 0
+  c srvp  Archaea   WA unresolved runs    2 (targets    2): v1 0 v2 2 v3 0 v4 0 v5 0 v6 0 v7 0
+  c srvp  Archaea   DH unresolved runs   19 (targets   19): v1 0 v2 4 v3 0 v4 3 v5 12 v6 0 v7 0
+  c verdict-2 subtypes (all): {'spacer': 105, 'strand': 73, 'spacer+strand': 28, 'mem>500': 12, 'mem>500+spacer': 7, 'mem>500+strand': 6, 'mem>500+spacer+strand': 1}
+
+SAME-STRAND CONNECTOR (cross-lineage relative orientation of adjacent member families; output-independent)
+  lut   Bacteria  target junctions 25188, distinct pairs 121, pairs in >= 5 groups 60
+      connector histogram (bins [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]): [2, 0, 0, 0, 0, 0, 0, 0, 1, 0, 57]
+      target junctions by class: {'same': 25068, 'opp_conserved': 111, 'opp_other': 7, 'opp_lineage_specific': 2}
+      pairs opposite-strand in most groups (connector < 0.5, >= 5 groups): 2
+        rlmB|tufA                    connector 0.016 groups   64 target junctions 105
+        rlmB|secE                    connector 0.062 groups   16 target junctions 7
+  dpann Archaea   target junctions 40059, distinct pairs 178, pairs in >= 5 groups 122
+      connector histogram (bins [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]): [2, 1, 0, 0, 0, 0, 2, 2, 6, 4, 105]
+      target junctions by class: {'same': 39943, 'opp_lineage_specific': 65, 'opp_other': 32, 'opp_conserved': 19}
+      pairs opposite-strand in most groups (connector < 0.5, >= 5 groups): 3
+        L37e|S8e                     connector 0.127 groups  207 target junctions 1
+        L4|S13                       connector 0.000 groups   14 target junctions 10
+        L3|S8                        connector 0.000 groups    6 target junctions 8
+  srvp  Archaea   target junctions 3133, distinct pairs 80, pairs in >= 5 groups 55
+      connector histogram (bins [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]): [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 53]
+      target junctions by class: {'same': 3112, 'opp_other': 16, 'opp_lineage_specific': 5}
+      pairs opposite-strand in most groups (connector < 0.5, >= 5 groups): 0
+  srvp  Bacteria  target junctions 20753, distinct pairs 154, pairs in >= 5 groups 90
+      connector histogram (bins [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 1.0]): [1, 0, 0, 0, 0, 0, 1, 2, 4, 0, 82]
+      target junctions by class: {'same': 20716, 'opp_lineage_specific': 16, 'opp_other': 15, 'opp_conserved': 6}
+      pairs opposite-strand in most groups (connector < 0.5, >= 5 groups): 1
+        L28|S12                      connector 0.062 groups   16 target junctions 7

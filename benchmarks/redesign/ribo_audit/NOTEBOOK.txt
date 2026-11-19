@@ -235,3 +235,17 @@ PART 4 (cluster-level definition frozen; lut and DPANN as a check on data the de
 2026-11-19T10:15Z  REPORT4.txt written; claims re-checked against tables (verdict totals, standing verdict columns, subtype
   totals 74 / 44, engine-gap numbers, the "every output" claim restricted to DPANN, chance mechanism claim removed before
   saving). Results copied to results4/ and $RD/ribo_audit/. Nothing committed.
+
+PART 5 (strand-aware cluster-level runs; DEVELOPMENT on all three datasets)
+2026-11-19T10:12-10:17Z  Read ELSA commits e0b3485 (SRP tokens strand-insensitive) and d297985 (same_frac connector between
+  adjacent consensus tokens). No new data opened.
+2026-11-19T10:18Z  predeclared5.json written (variants a / b / c, connector rule with the reason stated in advance, target
+  assembly with the 16-marked minimum per piece, best-variant rule, S1-S4, expectations).
+2026-11-19T10:18-10:23Z  bio5.py score (login node, one thread) on SR-VP, lut, DPANN; part-4 and standing numbers and chance
+  reproduced in every cell. Verdicts for a / b / c. tables5.py. Best by rule: (a) (only variant with Z / WA chance <= 5%
+  everywhere; (c) has DPANN WA 5.05%). No definition meets S1-S4 on all four strata: (a) misses S3 for DPANN WA (38 vs 33)
+  and S4 on SR-VP Archaea (5 of 145 below minimum).
+2026-11-19T10:23-10:26Z  Below-minimum runs, (a) vs (c) differences and lut remaining failures opened from tables / case files.
+  secY|cbf5 connector on DPANN 0.90 over 20 groups (the part-4 divergent copies are lineage-specific). REPORT5.txt written;
+  claims re-checked (verdict-2 total 204, two wording fixes for inferred statements). Results copied to results5/ and
+  $RD/ribo_audit/. Nothing committed.

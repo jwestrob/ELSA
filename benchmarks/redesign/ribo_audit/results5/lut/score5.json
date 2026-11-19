@@ -1,0 +1,333 @@
+{
+ "dataset": "lut",
+ "loci_reading": "stored",
+ "defs": {
+  "standing": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 51,
+     "windows": 2780,
+     "chance": 0.018345323741007193
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 87,
+     "windows": 2780,
+     "chance": 0.031294964028776975
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 74,
+     "windows": 2780,
+     "chance": 0.026618705035971222
+    }
+   }
+  },
+  "part4": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 57,
+     "windows": 2725,
+     "chance": 0.02091743119266055
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 79,
+     "windows": 2725,
+     "chance": 0.028990825688073395
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 71,
+     "windows": 2725,
+     "chance": 0.026055045871559632
+    }
+   }
+  },
+  "a": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 52,
+     "windows": 2715,
+     "chance": 0.019152854511970532
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 82,
+     "windows": 2715,
+     "chance": 0.030202578268876613
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 60,
+     "windows": 2715,
+     "chance": 0.022099447513812154
+    }
+   }
+  },
+  "b": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 59,
+     "windows": 2675,
+     "chance": 0.02205607476635514
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 78,
+     "windows": 2675,
+     "chance": 0.029158878504672896
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 62,
+     "windows": 2675,
+     "chance": 0.023177570093457944
+    }
+   }
+  },
+  "c": {
+   "Z": {
+    "Bacteria": {
+     "resolved": 51,
+     "windows": 2710,
+     "chance": 0.018819188191881917
+    }
+   },
+   "WA": {
+    "Bacteria": {
+     "resolved": 83,
+     "windows": 2710,
+     "chance": 0.030627306273062732
+    }
+   },
+   "DH": {
+    "Bacteria": {
+     "resolved": 60,
+     "windows": 2710,
+     "chance": 0.02214022140221402
+    }
+   }
+  }
+ },
+ "summary": {
+  "a|Bacteria": {
+   "runs": 858,
+   "kept": 855,
+   "below_min": 3,
+   "targets": 855,
+   "multi_target_runs": 0,
+   "equals_accurate": 618,
+   "target_len_median": 29.0,
+   "runs_cut": 4,
+   "Z": {
+    "recovered": 854,
+    "resolved": 834,
+    "anyfit": 842,
+    "chance": 0.019152854511970532,
+    "chance_windows": 2715
+   },
+   "WA": {
+    "recovered": 854,
+    "resolved": 820,
+    "anyfit": 838,
+    "chance": 0.030202578268876613,
+    "chance_windows": 2715
+   },
+   "DH": {
+    "recovered": 855,
+    "resolved": 764,
+    "anyfit": 821,
+    "chance": 0.022099447513812154,
+    "chance_windows": 2715
+   }
+  },
+  "b|Bacteria": {
+   "runs": 858,
+   "kept": 840,
+   "below_min": 18,
+   "targets": 840,
+   "multi_target_runs": 0,
+   "equals_accurate": 683,
+   "target_len_median": 28.0,
+   "runs_cut": 36,
+   "Z": {
+    "recovered": 839,
+    "resolved": 826,
+    "anyfit": 833,
+    "chance": 0.02205607476635514,
+    "chance_windows": 2675
+   },
+   "WA": {
+    "recovered": 840,
+    "resolved": 796,
+    "anyfit": 826,
+    "chance": 0.029158878504672896,
+    "chance_windows": 2675
+   },
+   "DH": {
+    "recovered": 840,
+    "resolved": 707,
+    "anyfit": 746,
+    "chance": 0.023177570093457944,
+    "chance_windows": 2675
+   }
+  },
+  "c|Bacteria": {
+   "runs": 858,
+   "kept": 855,
+   "below_min": 3,
+   "targets": 855,
+   "multi_target_runs": 0,
+   "equals_accurate": 573,
+   "target_len_median": 29.0,
+   "runs_cut": 4,
+   "Z": {
+    "recovered": 854,
+    "resolved": 835,
+    "anyfit": 843,
+    "chance": 0.018819188191881917,
+    "chance_windows": 2710
+   },
+   "WA": {
+    "recovered": 854,
+    "resolved": 822,
+    "anyfit": 838,
+    "chance": 0.030627306273062732,
+    "chance_windows": 2710
+   },
+   "DH": {
+    "recovered": 855,
+    "resolved": 768,
+    "anyfit": 821,
+    "chance": 0.02214022140221402,
+    "chance_windows": 2710
+   }
+  },
+  "part4|Bacteria": {
+   "runs": 858,
+   "kept": 858,
+   "below_min": 0,
+   "targets": 858,
+   "multi_target_runs": 0,
+   "equals_accurate": 567,
+   "target_len_median": 29.0,
+   "Z": {
+    "recovered": 857,
+    "resolved": 835,
+    "anyfit": 843,
+    "chance": 0.02091743119266055,
+    "chance_windows": 2725
+   },
+   "WA": {
+    "recovered": 857,
+    "resolved": 822,
+    "anyfit": 838,
+    "chance": 0.028990825688073395,
+    "chance_windows": 2725
+   },
+   "DH": {
+    "recovered": 858,
+    "resolved": 768,
+    "anyfit": 821,
+    "chance": 0.026055045871559632,
+    "chance_windows": 2725
+   }
+  },
+  "standing|Bacteria": {
+   "runs": 858,
+   "kept": 858,
+   "below_min": 0,
+   "targets": 858,
+   "multi_target_runs": 0,
+   "equals_accurate": 476,
+   "target_len_median": 27.0,
+   "Z": {
+    "recovered": 857,
+    "resolved": 811,
+    "anyfit": 834,
+    "chance": 0.018345323741007193,
+    "chance_windows": 2780,
+    "accurate_reading_resolved": 791
+   },
+   "WA": {
+    "recovered": 858,
+    "resolved": 788,
+    "anyfit": 841,
+    "chance": 0.031294964028776975,
+    "chance_windows": 2780,
+    "accurate_reading_resolved": 763
+   },
+   "DH": {
+    "recovered": 858,
+    "resolved": 668,
+    "anyfit": 673,
+    "chance": 0.026618705035971222,
+    "chance_windows": 2780,
+    "accurate_reading_resolved": 612
+   }
+  }
+ },
+ "connector": {
+  "Bacteria": {
+   "target_junctions": 25188,
+   "target_pairs": 121,
+   "pairs_with_5_groups": 60,
+   "hist_bins": [
+    0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95,
+    1.0
+   ],
+   "hist": [
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    57
+   ],
+   "junction_classes": {
+    "same": 25068,
+    "opp_conserved": 111,
+    "opp_other": 7,
+    "opp_lineage_specific": 2
+   },
+   "opposite_in_most": [
+    {
+     "pair": "rlmB|tufA",
+     "conn": 0.016,
+     "groups": 64,
+     "target_junctions": 105
+    },
+    {
+     "pair": "rlmB|secE",
+     "conn": 0.062,
+     "groups": 16,
+     "target_junctions": 7
+    }
+   ]
+  }
+ }
+}

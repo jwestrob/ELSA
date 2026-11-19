@@ -3109,3 +3109,36 @@ were audited under the standing definition, and the archaeal member list was com
   for both needs a strand-aware chain, untested, and a fresh check set.
 - The annotation (job 116195, 24 CPUs, 51 min) used direct hmmsearch; it was submitted before
   Jacob's Aksha rule (added to both CLAUDE.md files on 19 November). Later searches use Aksha.
+
+## 2026-11-19 10:29 UTC — Strand-aware cluster-level ribosomal run (`benchmarks/redesign/ribo_audit/REPORT5.txt`)
+
+Development numbers (all three datasets seen). Prompted by Jacob's pointer to the August 2025
+strand work (strand-insensitive tokens; "same-strand connectors" between adjacent core families).
+Variants of the part-4 cluster-level run: (a) break where two consecutive members are on opposite
+strands; (b) also break at any opposite-strand gene in a gap; (c) keep opposite-strand junctions
+that are conserved across lineage groups.
+
+| Stratum | Standing | Part 4 | (a) | (b) | (c) |
+|---|---|---|---|---|---|
+| lut Bacteria, 858 (embedding-list / family-bond / engine) | 811 / 788 / 668 | 835 / 822 / 768 | 834 / 820 / 764 | 826 / 796 / 707 | 835 / 822 / 768 |
+| SR-VP Bacteria, 658 | 390 / 378 / 191 | 651 / 649 / 580 | 651 / 650 / 581 | 641 / 635 / 560 | 651 / 650 / 580 |
+| DPANN Archaea, 1,686 | 1,542 / 1,594 / 1,512 | 1,491 / 1,522 / 1,443 | 1,546 / 1,569 / 1,499 | 1,548 / 1,574 / 1,495 | 1,549 / 1,576 / 1,500 |
+| SR-VP Archaea, 145 | 138 / 120 / 122 | 140 / 139 / 120 | 138 / 138 / 121 | 130 / 130 / 115 | 138 / 138 / 121 |
+
+- **No definition passes all four predeclared soundness criteria in both domains.** (a) is
+  closest and is the only strand-aware variant with chance at or below 5% for both frozen outputs
+  in every stratum. It misses narrowly: 38 definition-caused failures for the family-bond tree on
+  DPANN against 33 under standing; 5 of 145 SR-VP archaeal runs fall below the 16-marked-gene
+  minimum once cut (bar 2%). It has no spacing rule, so it still joins same-strand units across
+  non-member genes (100 of 204 remaining verdict-2 cases).
+- **The same-strand connector adds little as a target rule.** Opposite-strand junctions inside
+  targets are rare (lut 120 of 25,188; DPANN 116 of 40,059); nearly all family pairs score at
+  least 0.95; (c) moves resolved counts by at most 7 runs per stratum. Conserved opposite-strand
+  junctions: rlmB|tufA and rlmB|secE (lut), L28|S12 (SR-VP Bacteria), L4|S13, L3|S8 and L37e|S8e
+  (DPANN).
+- (a) equals the part-2 accurate units in 71-81% of runs and resolves more than the accurate
+  reading everywhere (embedding-list tree: lut 834 against 791, SR-VP Bacteria 651 against 626,
+  DPANN 1,546 against 1,503).
+- Remaining method-level faults under (a), embedding-list tree on DPANN: 28 splits of rearranged
+  S10 operons, 36 loci extending past the unit, 30 scorer's choice.
+Candidate single definition for a future untouched set: variant (a).

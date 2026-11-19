@@ -1,0 +1,161 @@
+ribo_audit PART 5: strand-aware cluster-level ribosomal runs on lut, DPANN and SR-VP
+written 2026-11-19 ~10:26Z; predeclared5.json written 10:18Z before any part-5 number was computed.
+ALL NUMBERS ARE DEVELOPMENT: every dataset has been seen under these definitions. The aim is one definition to declare in
+advance on a future untouched set.
+
+ANSWER
+1. None of the five definitions meets all four predeclared soundness criteria on all four strata. Variant (a), which breaks
+   the chain wherever two consecutive members lie on opposite strands, is best by the predeclared rule.
+   - In Bacteria it is sound on both datasets: Z / WA resolve 834 / 820 of 858 on lut and 651 / 650 of 658 on SR-VP.
+     Chance is 0.3-3.0%.
+   - In Archaea it restores DPANN to standing level: Z 1,546 and WA 1,569 of 1,686, against standing 1,542 / 1,594 and
+     part 4 1,491 / 1,522. Chance is 4.7 / 4.9%.
+   - It misses two criteria narrowly. WA on DPANN has 38 definition-attributable runs against 33 under standing (S3).
+     On SR-VP Archaea, 5 of 145 runs (3.4%) fall below the 16-marked minimum after the cut (S4).
+2. The DPANN failure of part 4 is gone under (a). The secY | EMC3_TMCO1-Nre_N-cbf5 junction is opposite-strand in a minority of
+   lineage groups: the cross-lineage connector for secY|cbf5 is 0.90 over 20 groups. Variants (a) and (c) both cut it.
+3. Jacob's same-strand connector is useful as a diagnostic, and adds little as a target-building rule.
+   - Opposite-strand junctions are rare inside the targets: lut 120 of 25,188, DPANN 116 of 40,059, SR-VP Bacteria 37 of
+     20,753, SR-VP Archaea 21 of 3,133.
+   - Across groups the connector is >= 0.95 for 57 of 60 lut pairs, 82 of 90 SR-VP bacterial pairs, 105 of 122 DPANN pairs
+     and 53 of 55 SR-VP archaeal pairs.
+   - Keeping the conserved opposite junctions (variant c) changes resolved by at most 7 runs per stratum against (a).
+     It keeps 13 more DPANN runs above the minimum, but fails chance (5.05%) and S3 (44 vs 33) for WA on DPANN.
+4. Variant (b), which also breaks at opposite-strand genes in the gap, matches the accurate reading's targets most often.
+   It drops more runs (lut 18, SR-VP Archaea 14) and loses resolution: WA 796 on lut, Z / WA 130 on SR-VP Archaea.
+   It is the worst strand-aware variant.
+5. Relation to the accurate reading. Variant (a) is the part-2 accurate reading with only its strand rule for consecutive
+   members kept: there is no spacing rule, no strand rule for gap genes, and no trimming. It adds the 16-marked minimum per
+   piece.
+   - Its targets equal the accurate units in 72% of lut, 77% of SR-VP bacterial, 81% of DPANN and 71% of SR-VP archaeal runs.
+   - It resolves more than the accurate reading everywhere, for Z: lut 834 vs 791, SR-VP Bacteria 651 vs 626,
+     DPANN 1,546 vs 1,503, SR-VP Archaea 138 vs 134.
+   - What argues against (a): runs cut below the minimum leave the benchmark (lut 3, DPANN 17, SR-VP Archaea 5). The missing
+     spacing rule glues same-strand units across non-member spacers (verdict-2 "spacer" 100 of 204 under (a), all outputs).
+     DPANN chance for WA sits at 4.9%, against a 5% bar.
+
+------------------------------------------------------------------------------------------------------------------------
+1. DEFINITIONS (predeclared5.json)
+  Common to every definition below: the part-4 member lists (union for every genome), the chain with <= 2 other genes between
+  consecutive members, the package g2_m16 runs, and the recovered / resolved / any-fit rules. Chance uses 5 same-contig windows
+  per target of the target length, seed 17.
+  - standing: the package run.
+  - part 4: the strand-blind chain containing the run.
+  - (a) member-strand: break between consecutive members on opposite strands.
+  - (b) gap-strand: (a) plus a break at any gene between two consecutive members that lies on the opposite strand.
+  - (c) connector: (a), except an opposite-strand member junction is kept when its connector is <= 1/3 over >= 5 other lineage
+    groups.
+    - Connector = mean over the other groups of the same domain of the share of that group's instances of the family pair
+      lying on the same strand. It is the cross-lineage form of ELSA d297985's same_frac.
+    - Reason stated in advance: a conserved relative orientation marks a conserved neighbourhood.
+  Strand-aware targets:
+  - Pieces = chains holding marked genes of the run. A piece qualifies with >= 16 package-marked genes.
+  - A run is resolved when all its qualifying pieces are resolved.
+  - A run with no qualifying piece is BELOW MINIMUM: it leaves the benchmark, and it counts as unresolved in "res/orig".
+  - No run produced two qualifying pieces except one SR-VP bacterial run under (b).
+  Code check: bio5.py reproduces the part-4 cluster-level and standing numbers and chance in every cell, on all three datasets.
+
+2. THE TABLE (resolved = res; res/orig counts below-minimum runs as unresolved; chance on the definition's targets)
+  dataset / domain        definition  runs  below   Z res  WA res  DH res   Z anyfit WA anyfit DH anyfit   Z chance WA chance DH chance
+  lut Bacteria            standing     858     0     811     788     668       834      841       673       1.83%    3.13%    2.66%
+                          part 4       858     0     835     822     768       843      838       821       2.09%    2.90%    2.61%
+                          (a)          858     3     834     820     764       842      838       821       1.92%    3.02%    2.21%
+                          (b)          858    18     826     796     707       833      826       746       2.21%    2.92%    2.32%
+                          (c)          858     3     835     822     768       843      838       821       1.88%    3.06%    2.21%
+  SR-VP Bacteria          standing     658     0     390     378     191       569      569       208       0.63%    0.92%    3.40%
+                          part 4       658     0     651     649     580       654      654       652       0.18%    0.27%    1.95%
+                          (a)          658     0     651     650     581       654      655       652       0.27%    0.68%    2.35%
+                          (b)          658     4     641     635     560       647      644       625       0.45%    0.68%    2.18%
+                          (c)          658     0     651     650     580       654      655       652       0.45%    0.68%    2.00%
+  DPANN Archaea           standing    1686     0    1542    1594    1512      1575     1631      1590       4.55%    5.05%    6.23%
+                          part 4      1686     0    1491    1522    1443      1537     1572      1598       4.41%    4.90%    7.00%
+                          (a)         1686    17    1546    1569    1499      1592     1618      1598       4.68%    4.93%    7.41%
+                          (b)         1686    24    1548    1574    1495      1584     1608      1589       4.78%    5.77%    6.56%
+                          (c)         1686     4    1549    1576    1500      1595     1625      1599       4.75%    5.05%    6.69%
+  SR-VP Archaea           standing     145     0     138     120     122       139      137       124       0.67%    0.50%    3.36%
+                          part 4       145     0     140     139     120       140      139       137       0.70%    1.05%    1.93%
+                          (a)          145     5     138     138     121       138      138       134       0.36%    0.18%    3.42%
+                          (b)          145    14     130     130     115       130      130       127       0.19%    0.19%    3.62%
+                          (c)          145     5     138     138     121       138      138       134       0.36%    0.72%    2.34%
+  Recovered (best locus >= 50%) under (a): lut Z 854, DPANN Z 1,657, SR-VP Bacteria 658, SR-VP Archaea 140; all definitions
+  are in work5/tables5.txt.
+  Runs cut by the strand rule:
+     (a): lut 4, SR-VP Bacteria 4, DPANN 40, SR-VP Archaea 12.
+     (b): 36, 21, 54, 21.
+     (c): 4, 3, 22, 12.
+  Of the runs below minimum under (a), the standing definition resolved few for Z: DPANN 3 of 17, SR-VP Archaea 3 of 5,
+  lut 0 of 3.
+     DPANN pieces are typically 14 + 9 or 15 + 3 marked genes. lut pieces are 13 + 13 or 13 + 11 marked genes on opposite
+     strands.
+
+3. PREDECLARED SOUNDNESS (S1 resolved >= max(standing, part 4) - 2% of runs; S2 chance <= 5%; S3 runs with verdict 2 or 3
+   <= standing; S4 below minimum <= 2% of runs; Z and WA)
+  part 4: Bacteria all ok. DPANN fails S1 (Z, WA) and S3 (Z, WA).
+  (a): lut, SR-VP Bacteria and DPANN Z all ok; DPANN WA fails S3 (38 vs 33); SR-VP Archaea fails S4 (5 of 145), S1-S3 ok.
+  (b): fails S4 on lut (18) and SR-VP Archaea (14); S1 on lut WA, SR-VP Bacteria WA (635 vs 635.8) and SR-VP Archaea;
+       S2 on DPANN WA (5.77%).
+  (c): DPANN WA fails S2 (5.05%) and S3 (44 vs 33); SR-VP Archaea fails S4 (5).
+  Best rule: only (a) has chance <= 5% for Z and WA everywhere, so best = (a). Sums of Z + WA resolved over the original
+  denominators: (a) 6,346, (b) 6,280, (c) 6,359, part 4 6,249.
+
+4. SAME-STRAND CONNECTOR (output-independent; connector per family pair = mean over lineage groups of the share of instances
+   on the same strand; pairs at junctions inside part-4 targets, >= 5 groups)
+                       pairs  histogram over [0,.1,.2,.3,.4,.5,.6,.7,.8,.9,.95,1]      target junctions: same / opposite
+                                                                                       (conserved, lineage-specific, other)
+  lut Bacteria           60  2 0 0 0 0 0 0 0 1 0 57                                    25,068 / 120 (111, 2, 7)
+  SR-VP Bacteria         90  1 0 0 0 0 0 1 2 4 0 82                                    20,716 / 37 (6, 16, 15)
+  DPANN Archaea         122  2 1 0 0 0 0 2 2 6 4 105                                   39,943 / 116 (19, 65, 32)
+  SR-VP Archaea          55  0 0 0 0 0 0 0 0 1 1 53                                    3,112 / 21 (0, 5, 16)
+  Junctions opposite-strand in most lineage groups (connector < 0.5, >= 5 groups):
+     lut:            rlmB|tufA (0.016, 64 groups, 105 target junctions), rlmB|secE (0.062, 16 groups, 7)
+                     Consistent with the cysS-rnc-rlmB operon lying divergent to the str / rif flank (Brandis 2021).
+     SR-VP Bacteria: L28|S12 (0.062, 16 groups, 7)
+     DPANN:          L4|S13 (0.000, 14 groups, 10), L3|S8 (0.000, 6, 8), L37e|S8e (0.127, 207, 1)
+                     The first two are divergent S10-operon / alpha-like blocks, the arrangement part 2 saw as verdict-2
+                     strand glue.
+     SR-VP Archaea:  none.
+  secY|cbf5 (DPANN) is 0.90 over 20 groups: the divergent copies behind 53 part-4 losses are lineage-specific.
+  What the cross-lineage quantity adds over a plain strand break in the genome at hand: it labels 111 lut, 6 SR-VP and
+  19 DPANN target junctions as conserved opposite orientation. Keeping them ((c) vs (a)) changes 18 DPANN runs' targets
+  (Z resolved 5 -> 8 among them, WA 3 -> 10) and nothing material in Bacteria.
+
+5. VERDICTS FOR RUNS UNRESOLVED UNDER (a) (part-2 strict on each unresolved target; runs)
+                          v1   v2   v3   v4   v5   v6   v7   unresolved
+  lut Bacteria     Z       2   15    1    0    2    1    0     21
+                   WA      1   26    3    1    1    3    0     35
+                   DH      0   29    3   29   26    4    0     91
+  SR-VP Bacteria   Z       1    4    2    0    0    0    0      7
+                   WA      1    3    2    0    2    0    0      8
+                   DH      0   19    0    3   53    2    0     77
+  DPANN Archaea    Z      28   25    3   36   30    1    0    123
+                   WA     23   28   10   11   27    1    0    100
+                   DH      0   47    8   46   69    0    0    170
+  SR-VP Archaea    Z       0    2    0    0    0    0    0      2
+                   WA      0    2    0    0    0    0    0      2
+                   DH      0    4    0    3   12    0    0     19
+  Verdict-2 subtypes under (a), all outputs: spacer 100, strand 62, spacer + strand 15, member spacer > 500 nt (alone or
+  combined) 27. Strand cases in Bacteria are single opposite-strand non-member genes inside the cluster (adk|unannotated,
+  S12|unannotated, L15|unannotated), which (b) cuts.
+  DPANN verdict 1 (Z 28, WA 23) is the method-level split of rearranged S10 operons seen in part 2; it is unchanged by any
+  definition. In DPANN WA verdict 3 (10), the target is 2-3 genes longer than the accurate unit.
+  Verdicts for (b) and (c) are in work5/tables5.txt.
+
+6. DEVIATIONS AND NOTES
+  - Development status: every number has been seen; the thresholds of S1-S4 and the connector rule are untested on untouched
+    data.
+  - No new HMM search was run. Part-4 / part-3 annotation was reused (its hmmsearch provenance is stated in REPORT4).
+  - Predeclared expectation misses:
+    - DPANN runs cut under (a) were 40, below the predicted 50-150; below minimum 17, below the predicted 20-80.
+    - (c) on DPANN was expected to lose about 50 runs against (a) by keeping secY|cbf5. That junction is same-strand in
+      most groups, so (c) cuts it too and is slightly better than (a).
+    - The DPANN conserved opposite pairs are L4|S13, L3|S8 and L37e|S8e, not the secY / cbf5 region.
+  - The pair-level connector report uses pairs held by >= 5 groups. The junction-level rule in (c) uses >= 5 OTHER groups,
+    as declared.
+  - Accurate-reading resolved counts here (lut Z 791, WA 763, DH 612; DPANN 1,503, 1,539, 1,444; SR-VP Archaea 134, 137, 110;
+    SR-VP Bacteria 626, 623, 530) use the part-4 annotation and the part-2 strict rules.
+
+7. FILES
+  Local benchmarks/redesign/ribo_audit/: predeclared5.json, REPORT5.txt, NOTEBOOK.txt; code bio5.py, tables5.py; results5/
+     (tables5.txt; per dataset score5.json / .parquet, connector5_pairs.parquet, cases5_{a,b,c}.tsv, below_min5_*.tsv).
+  Remote $RD/ribo_audit/: the same, with work5/<dataset>/junctions5.parquet (every junction with its connector class).
+  Packages and frozen outputs unchanged. Nothing committed.

@@ -1,0 +1,965 @@
+<title>ELSA Method Status</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap">
+<style>
+/* layout: one reading column (46rem) inside a 1080px frame; figures and tables break out to the frame width */
+:root{
+  --bg:#f4f6f8; --surface:#fdfdfe; --ink:#12161b; --ink-2:#434c58; --muted:#737c89; --rule:#d7dce3; --grid:#e6e9ee; --axis:#b4bcc6;
+  --accent:#1d4f91; --wash:#e8eef7; --gene:#cdd3db; --gene-2:#eceff3;
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --ref:#8a929d;
+  --q1:#86b6ef; --q2:#2a78d6; --q3:#104281;
+  --good-ink:#0a6b0a; --bad-ink:#b3261e; --bad-wash:#fbeceb;
+  --font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --math:"STIX Two Text","STIX Two Math",Cambria,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1114; --surface:#17191d; --ink:#eceef1; --ink-2:#bcc3cc; --muted:#8d95a1; --rule:#2c3139; --grid:#252a31; --axis:#414853;
+    --accent:#8db8f0; --wash:#1b2533; --gene:#3d444e; --gene-2:#252a31;
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --ref:#8a929d;
+    --q1:#1c5cab; --q2:#3987e5; --q3:#9ec5f4;
+    --good-ink:#4cc44c; --bad-ink:#f08a84; --bad-wash:#33201f;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1114; --surface:#17191d; --ink:#eceef1; --ink-2:#bcc3cc; --muted:#8d95a1; --rule:#2c3139; --grid:#252a31; --axis:#414853;
+  --accent:#8db8f0; --wash:#1b2533; --gene:#3d444e; --gene-2:#252a31;
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --ref:#8a929d;
+  --q1:#1c5cab; --q2:#3987e5; --q3:#9ec5f4;
+  --good-ink:#4cc44c; --bad-ink:#f08a84; --bad-wash:#33201f;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.55;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 72px}
+.frame{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+.col{max-width:46rem}
+h1{font-size:clamp(1.7rem,3.6vw,2.35rem);line-height:1.15;font-weight:700;letter-spacing:-.01em;margin:0;text-wrap:balance;max-width:22em}
+h2{font-size:1.4rem;line-height:1.25;font-weight:700;margin:0;text-wrap:balance}
+h3{font-size:1.02rem;font-weight:600;margin:0}
+p{margin:0}
+a{color:var(--accent)}
+a:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dateline{color:var(--ink-2);font-size:.95rem}
+header{display:flex;flex-direction:column;gap:12px}
+nav.toc{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.88rem;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:10px 0}
+nav.toc a{text-decoration:none}
+nav.toc a:hover{text-decoration:underline}
+section{display:flex;flex-direction:column;gap:18px;scroll-margin-top:16px}
+.lead{font-size:1.06rem;color:var(--ink)}
+.stack{display:flex;flex-direction:column;gap:14px}
+ul.points,ol.points{margin:0;padding-left:1.2rem;display:flex;flex-direction:column;gap:9px}
+ul.points li::marker{color:var(--muted)}
+.note{font-size:.88rem;color:var(--ink-2)}
+.tag{display:inline-block;font-family:var(--mono);font-size:.7rem;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--rule);border-radius:3px;padding:0 5px;color:var(--ink-2);vertical-align:1px;white-space:nowrap}
+code,.id{font-family:var(--mono);font-size:.86em}
+.m{font-family:var(--math);font-style:italic;font-size:1.08em}
+.mr{font-family:var(--math);font-size:1.08em}
+
+/* status cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.card .k{font-size:.82rem;color:var(--ink-2);min-height:2.5em}
+.card .v{font-size:1.7rem;font-weight:700;line-height:1.1}
+.card .d{font-size:.88rem;color:var(--ink-2)}
+
+/* definitions */
+dl.defs{display:grid;grid-template-columns:minmax(9rem,13rem) minmax(0,1fr);gap:8px 20px;margin:0;font-size:.93rem}
+dl.defs dt{font-weight:600}
+dl.defs dd{margin:0;color:var(--ink-2)}
+@media (max-width:620px){dl.defs{grid-template-columns:1fr;gap:2px 0}dl.defs dd{margin-bottom:8px}}
+
+/* figures */
+figure.fig{margin:0;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:18px 18px 14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+figure.fig h3{font-size:.98rem}
+figcaption{font-size:.84rem;color:var(--ink-2);line-height:1.45;max-width:60rem}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.pair.wide-left{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+@media (max-width:860px){.pair,.pair.wide-left{grid-template-columns:minmax(0,1fr)}}
+.scroll{overflow-x:auto;max-width:100%}
+.diagram svg{display:block;width:100%;height:auto;min-width:720px;color:var(--ink-2)}
+.plot{min-width:0;overflow:hidden;width:100%}
+.plot svg{display:block;max-width:100%}
+svg text{font-family:var(--font)}
+.d-h{font-size:13px;font-weight:600;fill:var(--ink)}
+.d-t{font-size:12px;fill:var(--ink-2)}
+.d-n{font-size:11px;fill:var(--muted)}
+.d-m{font-family:var(--math);font-style:italic;font-size:15px;fill:var(--ink)}
+.bx{fill:var(--bg);stroke:var(--axis);stroke-width:1}
+.bx.loop{fill:var(--wash);stroke:var(--accent);stroke-width:1.5}
+.ar{stroke:currentColor;stroke-width:1.5;fill:none}
+.hair{stroke:var(--grid);stroke-width:1}
+.gx{fill:var(--accent)} .gy{fill:var(--s3)} .g0{fill:var(--gene)} .gi{fill:var(--gene-2);stroke:var(--axis);stroke-width:1}
+.brk{stroke:var(--ink-2);stroke-width:1.25;fill:none}
+.wbar{fill:var(--wash);stroke:var(--axis);stroke-width:1}
+.tick{stroke:var(--ink-2);stroke-width:1.25}
+
+/* chart primitives */
+.s1{--c:var(--s1)} .s2{--c:var(--s2)} .s3{--c:var(--s3)} .ref{--c:var(--ref)} .q0{--c:var(--ref)} .q1{--c:var(--q1)} .q2{--c:var(--q2)} .q3{--c:var(--q3)}
+.grid{stroke:var(--grid);stroke-width:1}
+.axl{stroke:var(--axis);stroke-width:1}
+.ax{font-size:11px;fill:var(--muted);font-variant-numeric:tabular-nums}
+.axt{font-size:11.5px;fill:var(--ink-2)}
+.lbl{font-size:11.5px;fill:var(--ink-2)}
+.lbl.tag{font-weight:700;fill:var(--ink)}
+.ln{fill:none;stroke:var(--c);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.pt{fill:var(--c);stroke:var(--surface);stroke-width:2}
+.thr{stroke:var(--ink-2);stroke-width:1;stroke-dasharray:4 3}
+.thrt{font-size:11px;fill:var(--ink-2)}
+.region{fill:var(--wash)}
+.trail{fill:none;stroke:var(--axis);stroke-width:1.5}
+.cross{stroke:var(--ink-2);stroke-width:1}
+.hit{outline:none}
+.hit:focus-visible{stroke:var(--accent);stroke-width:2}
+.legend{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:.82rem;color:var(--ink-2)}
+.lg{display:inline-flex;align-items:center;gap:7px}
+.key-line{display:inline-block;width:18px;border-top:2px solid var(--c)}
+.key-dash{display:inline-block;width:18px;border-top:1.5px dashed var(--ink-2)}
+.key-dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c)}
+.key-dot.dia{border-radius:1px;transform:rotate(45deg) scale(.85)}
+.key-box{display:inline-block;width:12px;height:10px;border-radius:0 3px 3px 0;background:var(--c)}
+ol.key{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:3px 22px;font-size:.82rem;color:var(--ink-2)}
+ol.key li{display:grid;grid-template-columns:1.2em minmax(0,1fr) auto;gap:6px;align-items:baseline}
+ol.key b{color:var(--ink)}
+.num{font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:.94em}
+
+.bars{display:grid;grid-template-columns:minmax(0,15.5rem) minmax(0,1fr) auto;column-gap:14px;row-gap:9px;align-items:center}
+.bars .grp{grid-column:1/-1;font-size:.76rem;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.bars .grp:first-child{margin-top:0}
+.bars .lab{font-size:.86rem;color:var(--ink-2);line-height:1.25;min-width:0}
+.bars .lab small{display:block;color:var(--muted);font-size:.9em}
+.bars .track{position:relative;height:16px;border-left:1px solid var(--axis);border-radius:2px}
+.bars .bar{position:absolute;left:0;top:1px;height:14px;border-radius:0 4px 4px 0;background:var(--c);min-width:2px}
+.bars .ci{position:absolute;top:7px;height:2px;background:var(--ink);opacity:.75}
+.bars .ci::before,.bars .ci::after{content:"";position:absolute;top:-3px;width:1.5px;height:8px;background:var(--ink)}
+.bars .ci::before{left:0}.bars .ci::after{right:0}
+.bars .track.hasref::after{content:"";position:absolute;left:var(--refx);top:-5px;bottom:-5px;border-left:1.5px dashed var(--ink-2)}
+.bars .val{font-size:.86rem;font-weight:600;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+@media (max-width:620px){.bars{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}.bars .lab{grid-column:1/-1;margin-top:6px}}
+figure.fig{container-type:inline-size}
+@container (max-width:560px){.bars{grid-template-columns:minmax(0,1fr) auto;row-gap:4px}.bars .lab{grid-column:1/-1;margin-top:6px}}
+
+.tip{position:fixed;z-index:30;pointer-events:none;background:var(--ink);color:var(--bg);border-radius:6px;padding:7px 10px;font-size:.8rem;line-height:1.4;max-width:280px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.tip-row{display:flex;align-items:center;gap:6px}
+.tip-row b{font-variant-numeric:tabular-nums}
+.tip-key{display:inline-block;width:12px;height:0;border-top:2px solid var(--c);flex:none}
+
+details.dt{font-size:.82rem;color:var(--ink-2)}
+details.dt summary{cursor:pointer;width:max-content}
+details.dt table{margin-top:8px}
+
+/* tables */
+table{border-collapse:collapse;font-size:.86rem;font-variant-numeric:tabular-nums}
+th,td{padding:7px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--rule)}
+thead th{font-weight:600;font-size:.8rem;color:var(--ink-2);vertical-align:bottom}
+thead th small{display:block;font-weight:400;font-family:var(--mono);color:var(--muted);margin-top:2px}
+table.score{width:100%;min-width:880px}
+table.score td,table.score thead th{text-align:right}
+table.score td:first-child,table.score thead th:first-child{text-align:left}
+table.score tr.grp th{font-family:var(--mono);font-size:.74rem;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:500;padding-top:14px;border-bottom:1px solid var(--axis)}
+table.score td.no{background:var(--bad-wash)}
+table.score .mk{display:inline-block;width:1.1em;font-weight:700;text-align:right}
+table.score td.ok .mk{color:var(--good-ink)}
+table.score td.no .mk{color:var(--bad-ink)}
+table.score td small{display:block;color:var(--muted);font-size:.78rem;white-space:nowrap}
+table.score td:first-child small{font-size:.8rem;white-space:normal}
+table.ing td:first-child{width:21%}
+table.ing td:nth-child(2){width:27%}
+table.score tr.refrow td{font-weight:600}
+table.score td.sum{font-weight:700}
+table.plain{width:100%}
+table.plain td:first-child{font-weight:600;width:28%}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+/* algorithm steps */
+ol.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:26px;counter-reset:st}
+ol.steps>li{counter-increment:st;display:grid;grid-template-columns:2.6rem minmax(0,1fr);column-gap:8px}
+ol.steps>li::before{content:counter(st);font-family:var(--mono);font-size:.95rem;font-weight:500;color:var(--accent);border-top:2px solid var(--accent);padding-top:4px;width:1.8rem;height:max-content}
+ol.steps .body{display:flex;flex-direction:column;gap:12px;min-width:0}
+ol.steps .body>p,ol.steps .body>ul{max-width:46rem}
+.eq{font-family:var(--math);font-size:1.18rem;background:var(--wash);border-radius:6px;padding:12px 16px;overflow-x:auto;white-space:nowrap;max-width:46rem}
+.eq i{font-style:italic}
+.eq small{font-family:var(--font);font-size:.8rem;color:var(--ink-2);margin-left:14px;white-space:normal}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:60rem}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.opt{border:1px solid var(--rule);border-radius:8px;padding:14px 16px;background:var(--surface);display:flex;flex-direction:column;gap:8px;font-size:.93rem;min-width:0}
+.opt h4{margin:0;font-size:.95rem;font-weight:600}
+.opt p{color:var(--ink-2)}
+.funnel{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:stretch}
+.funnel div{flex:1 1 150px;border-top:2px solid var(--accent);padding-top:8px;min-width:0}
+.funnel b{display:block;font-size:1.5rem;line-height:1.1}
+.funnel span{font-size:.84rem;color:var(--ink-2)}
+footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:14px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="frame">
+
+<header>
+  <div class="eyebrow">ELSA redesign · status report · started 13 November 2026</div>
+  <h1>Conserved gene neighbourhoods as words: where the new method stands</h1>
+  <p class="dateline">DPANN archaea · 3,564 genomes · 3,585,303 genes · protein embeddings from ESM++ small · scored on even-numbered genomes, every setting fixed beforehand on odd-numbered genomes</p>
+  <p class="note">Updated 19 November, 04:15 UTC. Newest: the first test on untouched data, the lut test set, in its own section below. From 13 November: an adaptive pair distance brings the bond tree level with the reference engine on Spacedust's benchmark (+0.164) while keeping all seven DPANN bars. Before that: the all-bars configuration scored on Spacedust's benchmark, and the measured cost of embedding lists. Earlier: the bond tree over neighbour-list bonds clears all seven DPANN bars. Also added today: first results of the long-locus redesign (the bond tree), results on a second dataset (Spacedust's benchmark) and the run of the closest published method. Earlier today: the alignment control, the junction-phrase reading and the prior-work check.</p>
+  <nav class="toc" aria-label="Sections">
+    <a href="#summary">Summary</a><a href="#untouched">Untouched test</a><a href="#benchmark">Reading the benchmark</a><a href="#scorecard">Scorecard</a><a href="#algorithm">The algorithm</a><a href="#ingredients">What each part contributes</a><a href="#gaps">The two missing bars</a><a href="#second">Second dataset</a><a href="#vectors">Loci as vectors</a><a href="#embeddings">What embeddings add</a><a href="#biology">Screen for new complexes</a><a href="#aside">Set aside</a><a href="#prior">Prior work</a><a href="#open">Open items</a>
+  </nav>
+</header>
+
+<section id="summary">
+  <h2>Summary</h2>
+  <div class="cards">
+    <div class="card"><div class="k">Gene identity from protein families, read with phrases</div><div class="v">6 of 7 bars</div><div class="d">Misses CRISPR-Cas: F1 0.395 against 0.479 for the reference.</div></div>
+    <div class="card"><div class="k">Gene identity from embeddings alone</div><div class="v">6 of 7 bars</div><div class="d">Misses whole ribosomal loci: 1,172 resolved against a bar of 1,400.</div></div>
+    <div class="card"><div class="k">All seven bars in one configuration</div><div class="v">7 of 7</div><div class="d">The bond tree over neighbour-list bonds clears every DPANN bar. On the first untouched test set the embedding-list tree then passed all four criteria written down beforehand.</div></div>
+  </div>
+  <ul class="points col">
+    <li><strong>First test on untouched data (19 November).</strong> Two configurations were frozen as selected on DPANN and run once on 1,032 genomes built around the lanthanide <em>lut</em> cluster. The bond tree on embedding lists scores F1 0.906 on the lut loci, resolves 811 of 858 ribosomal runs and holds all 80 complete clusters. The bond tree on protein families scores F1 0.768 and misses one of its four bars. Both beat the reference engine; the published synton pipeline finds nothing.</li>
+    <li><strong>The method reads a genome as text and learns its words.</strong> A word is a run of adjacent genes that recurs in more independent lineages than random gene order predicts. One statistic scores every merge, its threshold comes from shuffled genomes, and the output needs no hand-set reading rules.</li>
+    <li><strong>With MMseqs2 families as gene identity, it outscores the reference engine</strong> by +0.181 [+0.158, +0.204] on the overall score and draws tighter loci. It loses CRISPR-Cas systems, because Cas genes are spread over many small families.</li>
+    <li><strong>With embeddings as gene identity and no families, CRISPR-Cas comes back</strong> (−0.010 against the reference, inside tolerance) and the overall score stays above the reference (+0.048 [+0.027, +0.069]). Long conserved neighbourhoods such as the ribosomal locus come out in pieces.</li>
+    <li><strong>A variant that measures independence from shared gene order is the first embedding-only output to beat the reference on CRISPR-Cas</strong> (+0.038 [+0.028, +0.049]). It runs from genomes alone, with no taxonomy and no genome grouping.</li>
+    <li><strong>Alignment hits serve as gene identity as well as embeddings do.</strong> MMseqs2 all-against-all hits, used as neighbour lists in the identical procedure, score level with the calibrated embedding lists (difference −0.007 [−0.026, +0.014]). The gain over families comes from dropping the hard family partition.</li>
+    <li><strong>A locus also works as a single vector.</strong> The mean of its genes' embeddings assigns the DefenseFinder system type with 0.970 accuracy and searches 500,842 loci in 0.03 s per query.</li>
+    <li><strong>On a second dataset with long loci, the nested parse loses to simple linking.</strong> On Spacedust's benchmark of 207 biosynthetic regions, family words tie Spacedust on excess (+0.080 against +0.065) and trail on F1 (0.48 against 0.68). Connected runs over the same pair statistic score +0.153.</li>
+    <li><strong>A redesign that grows loci by pairwise bonds fixes the long-locus weakness.</strong> With family identity it resolves 1,598 of 1,686 ribosomal runs (reference 1,512) and scores +0.126 on Spacedust's benchmark, above Spacedust. With bonds computed from neighbour lists it clears all seven DPANN bars in one output: 1,549 runs resolved, CRISPR-Cas within 0.004 of the reference, overall score +0.186 [+0.165, +0.206]. These are development results.</li>
+    <li><strong>The reference engine remains the default in the repository.</strong> The scorecard and algorithm sections below describe DPANN; the second dataset has its own section.</li>
+  </ul>
+</section>
+
+<section id="untouched">
+  <h2>First test on untouched data: the lut set</h2>
+  <p class="lead col">Two configurations were frozen exactly as selected on DPANN and run once on genomes the method had never seen. The bond tree on embedding lists passed every criterion written down beforehand. The bond tree on protein families missed one.</p>
+  <figure class="fig">
+    <h3>Loci homologous to the lanthanide <em>lut</em> cluster: F1 above random placement</h3>
+    <div class="legend"><span class="lg"><i class="key-box s2"></i>bond tree, embedding lists</span><span class="lg"><i class="key-box s1"></i>bond tree, protein families</span><span class="lg"><i class="key-box ref"></i>comparison methods</span></div>
+    <div id="c-lut"></div>
+    <figcaption>733 truth loci in 1,032 GTDB representative genomes; whiskers are 95% intervals over loci. Each row also gives plain F1 and the number of the set's 858 ribosomal runs resolved. Settings, scoring, expected values and failure criteria were written down on 14 November before the data were opened; every row ran once.</figcaption>
+  </figure>
+  <ul class="points col">
+    <li><strong>The test set.</strong> 80 genomes with the complete <em>lut</em> cluster (all Methylobacterium), 578 with partial or split arrangements, 300 close relatives with no <em>lut</em> locus, and a thin background across Alphaproteobacteria. No ELSA method had been run on it.</li>
+    <li><strong>Embedding-list tree: all four criteria.</strong> It holds each of the 80 complete clusters in one locus, and a nested locus isolates the transporter module in 75 of them.</li>
+    <li><strong>Family-bond tree: three of four.</strong> Its excess is +0.149 [+0.138, +0.161] against a required lower bound of +0.15. It still beats the reference engine by +0.041 [+0.027, +0.057] and resolves 120 more ribosomal runs.</li>
+    <li><strong>The order reversed.</strong> On DPANN the family-bond tree resolved more ribosomal runs. Here the embedding-list tree is ahead on every measure.</li>
+    <li><strong>The tree matters.</strong> Plain pair-linking on the same bonds scores F1 0.58 and 0.47 and resolves 526 and 373 runs.</li>
+    <li><strong>The published synton pipeline shows no signal</strong> and recovers no ribosomal run; its loci hold at most 12 genes.</li>
+    <li><strong>Known weakness.</strong> Every locus holding a complete cluster runs past it: a median of 62% of its genes lie inside the cluster for the embedding-list tree. All 80 complete-cluster genomes fall in a single genome group out of 179, so the cluster's cross-lineage evidence is thin.</li>
+    <li><strong>False-positive check.</strong> In the 300 relatives without a <em>lut</em> locus, isolated <em>lut</em> homologs are placed in loci no more often than background genes.</li>
+  </ul>
+</section>
+
+<section id="benchmark">
+  <h2>Reading the benchmark</h2>
+  <dl class="defs col">
+    <dt>Curated systems</dt><dd>Three purpose-built callers supply the truth set: DefenseFinder (defence systems), TXSScan (secretion systems) and CRISPRCasTyper (CRISPR-Cas loci). Each call with at least two member genes is one instance.</dd>
+    <dt>F1</dt><dd>For each instance, the best-overlapping predicted locus is scored at the gene level (harmonic mean of the share of the instance it covers and the share of the locus that belongs to the instance), then averaged over instances.</dd>
+    <dt>Excess score</dt><dd>F1 minus the F1 the same loci earn when placed at random positions. The overall score is the DefenseFinder excess plus the TXSScan excess. It rewards loci that fit systems and gives no credit for covering most of the genome.</dd>
+    <dt>Ribosomal locus</dt><dd>1,686 runs of at least 16 ribosomal-protein genes, a check that needs no curated caller. A run is <em>recovered</em> when one locus covers half of it and <em>resolved</em> when one locus covers 80% of it and at least 80% of that locus lies inside the run. 114 runs in the family Parvarchaeaceae are tracked separately, because they are the first to be lost when evidence is counted per lineage.</dd>
+    <dt>Seven bars</dt><dd>To match the reference: overall score within 0.01; each of the three F1 values within 0.02; at least 1,650 runs and 110 Parvarchaeaceae runs recovered; at least 1,400 runs resolved. To beat it, the overall-score difference must also have a 95% interval above zero.</dd>
+    <dt>Protocol</dt><dd>One output per method. Settings are selected on odd-numbered genomes and written down before any even-genome number is read. Differences are paired genome bootstraps (2,000 draws).</dd>
+  </dl>
+</section>
+
+<section id="scorecard">
+  <h2>Scorecard</h2>
+  <p class="lead col">Two variants clear six bars, and they miss different ones.</p>
+  <figure class="fig">
+    <div class="scroll">
+    <table class="score">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Overall score<small>≥ −0.01</small></th>
+          <th>DefenseFinder F1<small>≥ −0.02</small></th>
+          <th>TXSScan F1<small>≥ −0.02</small></th>
+          <th>CRISPR-Cas F1<small>≥ −0.02</small></th>
+          <th>Runs recovered<small>≥ 1,650</small></th>
+          <th>Parvarchaeaceae<small>≥ 110</small></th>
+          <th>Runs resolved<small>≥ 1,400</small></th>
+          <th>Bars met</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="refrow"><td>Reference engine <small>pair recurrence on families; absolute values</small></td><td>0.427</td><td>0.744</td><td>0.548</td><td>0.479</td><td>1,686</td><td>114</td><td>1,512</td><td></td></tr>
+        <tr class="grp"><th colspan="9">Words, gene identity from MMseqs2 families (difference from the reference)</th></tr>
+        <tr><td>Words</td>
+          <td class="ok">+0.197<span class="mk">✓</span><small>[+0.174, +0.221]</small></td><td class="ok">+0.001<span class="mk">✓</span></td><td class="ok">+0.131<span class="mk">✓</span></td><td class="no">−0.073<span class="mk">✗</span><small>[−0.086, −0.061]</small></td><td class="no">1,198<span class="mk">✗</span></td><td class="no">11<span class="mk">✗</span></td><td class="no">501<span class="mk">✗</span></td><td class="sum">3 / 7</td></tr>
+        <tr><td>Words + phrases</td>
+          <td class="ok">+0.181<span class="mk">✓</span><small>[+0.158, +0.204]</small></td><td class="ok">−0.009<span class="mk">✓</span></td><td class="ok">+0.088<span class="mk">✓</span></td><td class="no">−0.085<span class="mk">✗</span><small>[−0.096, −0.073]</small></td><td class="ok">1,684<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,420<span class="mk">✓</span></td><td class="sum">6 / 7</td></tr>
+        <tr><td>Words, independence from shared gene order</td>
+          <td class="ok">+0.147<span class="mk">✓</span><small>[+0.126, +0.168]</small></td><td class="ok">+0.025<span class="mk">✓</span></td><td class="ok">+0.154<span class="mk">✓</span></td><td class="no">−0.027<span class="mk">✗</span><small>[−0.038, −0.015]</small></td><td class="no">1,184<span class="mk">✗</span></td><td class="no">82<span class="mk">✗</span></td><td class="no">510<span class="mk">✗</span></td><td class="sum">3 / 7</td></tr>
+        <tr><td>Words + phrases, independence from shared gene order</td>
+          <td class="ok">+0.127<span class="mk">✓</span><small>[+0.107, +0.147]</small></td><td class="ok">+0.013<span class="mk">✓</span></td><td class="ok">+0.094<span class="mk">✓</span></td><td class="no">−0.049<span class="mk">✗</span></td><td class="ok">1,685<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="no">1,326<span class="mk">✗</span></td><td class="sum">5 / 7</td></tr>
+        <tr class="grp"><th colspan="9">Words, gene identity from embeddings, no families (difference from the reference)</th></tr>
+        <tr><td>Words, genome groups</td>
+          <td class="ok">+0.048<span class="mk">✓</span><small>[+0.027, +0.069]</small></td><td class="ok">+0.066<span class="mk">✓</span></td><td class="ok">+0.054<span class="mk">✓</span></td><td class="ok">−0.010<span class="mk">✓</span><small>[−0.021, +0.001]</small></td><td class="ok">1,675<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="no">1,172<span class="mk">✗</span></td><td class="sum">6 / 7</td></tr>
+        <tr><td>Words, independence from shared gene order</td>
+          <td class="ok">+0.006<span class="mk">✓</span><small>[−0.014, +0.026]</small></td><td class="ok">+0.102<span class="mk">✓</span></td><td class="ok">+0.069<span class="mk">✓</span></td><td class="ok">+0.038<span class="mk">✓</span><small>[+0.028, +0.049]</small></td><td class="no">1,582<span class="mk">✗</span></td><td class="ok">114<span class="mk">✓</span></td><td class="no">926<span class="mk">✗</span></td><td class="sum">5 / 7</td></tr>
+        <tr><td>Words + junction phrases, genome groups <small>diagnostic reading</small></td>
+          <td class="ok">+0.041<span class="mk">✓</span><small>[+0.020, +0.062]</small></td><td class="ok">+0.069<span class="mk">✓</span></td><td class="ok">+0.056<span class="mk">✓</span></td><td class="ok">0.000<span class="mk">✓</span></td><td class="ok">1,686<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="no">1,138<span class="mk">✗</span></td><td class="sum">6 / 7</td></tr>
+        <tr class="grp"><th colspan="9">Control: words, gene identity from MMseqs2 alignment hits used as lists (difference from the reference)</th></tr>
+        <tr><td>Words, genome groups</td>
+          <td class="ok">+0.041<span class="mk">✓</span><small>[+0.021, +0.062]</small></td><td class="ok">+0.075<span class="mk">✓</span></td><td class="ok">+0.057<span class="mk">✓</span></td><td class="ok">−0.004<span class="mk">✓</span></td><td class="no">1,622<span class="mk">✗</span></td><td class="no">78<span class="mk">✗</span></td><td class="no">1,079<span class="mk">✗</span></td><td class="sum">4 / 7</td></tr>
+        <tr class="grp"><th colspan="9">Long-locus redesign: bond tree, gene identity from MMseqs2 families (development result; difference from the reference)</th></tr>
+        <tr><td>Bond tree, genome groups</td>
+          <td class="ok">+0.157<span class="mk">✓</span></td><td class="ok">−0.013<span class="mk">✓</span></td><td class="ok">+0.152<span class="mk">✓</span></td><td class="no">−0.060<span class="mk">✗</span></td><td class="ok">1,680<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,598<span class="mk">✓</span></td><td class="sum">6 / 7</td></tr>
+        <tr><td>Bond tree, every node kept</td>
+          <td class="ok">+0.143<span class="mk">✓</span></td><td class="ok">+0.028<span class="mk">✓</span></td><td class="ok">+0.153<span class="mk">✓</span></td><td class="no">−0.028<span class="mk">✗</span></td><td class="ok">1,680<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,598<span class="mk">✓</span></td><td class="sum">6 / 7</td></tr>
+        <tr class="grp"><th colspan="9">Bond tree, gene identity from neighbour lists, no families (development result; difference from the reference)</th></tr>
+        <tr><td>Alignment lists, genome groups <small>selected on odd genomes</small></td>
+          <td class="ok">+0.186<span class="mk">✓</span><small>[+0.165, +0.206]</small></td><td class="ok">+0.079<span class="mk">✓</span></td><td class="ok">+0.203<span class="mk">✓</span></td><td class="ok">−0.004<span class="mk">✓</span><small>[−0.015, +0.007]</small></td><td class="ok">1,681<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,549<span class="mk">✓</span></td><td class="sum">7 / 7</td></tr>
+        <tr><td>Alignment lists, shared gene order</td>
+          <td class="ok">+0.197<span class="mk">✓</span></td><td class="ok">+0.079<span class="mk">✓</span></td><td class="ok">+0.209<span class="mk">✓</span></td><td class="ok">−0.009<span class="mk">✓</span></td><td class="ok">1,686<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,547<span class="mk">✓</span></td><td class="sum">7 / 7</td></tr>
+        <tr><td>Embedding lists, genome groups</td>
+          <td class="ok">+0.154<span class="mk">✓</span></td><td class="ok">+0.080<span class="mk">✓</span></td><td class="ok">+0.201<span class="mk">✓</span></td><td class="ok">+0.010<span class="mk">✓</span></td><td class="ok">1,681<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,542<span class="mk">✓</span></td><td class="sum">7 / 7</td></tr>
+        <tr><td>Embedding lists, shared gene order</td>
+          <td class="ok">+0.158<span class="mk">✓</span></td><td class="ok">+0.063<span class="mk">✓</span></td><td class="ok">+0.209<span class="mk">✓</span></td><td class="ok">+0.025<span class="mk">✓</span></td><td class="ok">1,681<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,533<span class="mk">✓</span></td><td class="sum">7 / 7</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <figcaption>✓ meets the bar, ✗ misses it (shaded). Brackets are 95% intervals from the paired genome bootstrap, shown where the run reported them. The junction-phrase row is a diagnostic reading, declared in advance and excluded from selection. It joins words where the gene pair at the junction passes the merge test, which differs from the cohesion phrases used with families. The control rows replace embedding lists with alignment hits and change nothing else; those lists are depth-limited, which is why they lose Parvarchaeaceae runs that one-match-per-genome lists keep.</figcaption>
+  </figure>
+
+  <div class="pair wide-left">
+    <figure class="fig">
+      <h3>Family identity trades CRISPR-Cas for overall score; embedding identity holds both</h3>
+      <div id="c-plane"></div>
+      <figcaption>Each point is one method on even-numbered genomes, read at the word level without phrases. The shaded corner is where the overall-score bar and the CRISPR-Cas bar are both met. The grey trail follows family words as the unit of evidence coarsens from single genomes to genera to genome groups. Point G is the control with alignment hits as lists; it lands beside the embedding point E. Ribosomal resolution, the third axis, is in the next panel.</figcaption>
+    </figure>
+    <figure class="fig">
+      <h3>Ribosomal runs resolved, of 1,686</h3>
+      <div class="legend"><span class="lg"><i class="key-dash"></i>bar: 1,400</span><span class="lg"><i class="key-box ref"></i>reference</span><span class="lg"><i class="key-box s1"></i>family identity</span><span class="lg"><i class="key-box s2"></i>embedding identity</span><span class="lg"><i class="key-box s3"></i>alignment lists</span></div>
+      <div id="c-ribo"></div>
+      <figcaption>Cohesion phrases lift family words from 501 to 1,420 resolved runs. Embedding words reach 1,172, and joining them at significant junctions lowers that to 1,138. The bond-tree redesign resolves 1,598.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="algorithm">
+  <h2>The algorithm</h2>
+  <p class="lead col">Two engines exist. The reference engine tests pairs of protein families and then applies reading rules; it stays the repository default and sets the bars. The candidate described here replaces the pair test and every reading rule with one objective, and it is the method all results on this page refer to as words.</p>
+
+  <figure class="fig diagram">
+    <h3>The candidate method at a glance</h3>
+    <div class="scroll">
+    <svg viewBox="0 0 980 362" role="img" aria-label="Flow of the word method: gene order and protein embeddings feed an identity step and an independence step, which feed a merge loop whose threshold is set by shuffled genomes; the loop outputs words, phrases and locus vectors.">
+      <defs><marker id="ah1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <rect class="bx" x="16" y="40" width="178" height="62" rx="6"/>
+      <text class="d-h" x="30" y="66">Gene order</text><text class="d-t" x="30" y="86">genes along each contig</text>
+      <rect class="bx" x="16" y="186" width="178" height="62" rx="6"/>
+      <text class="d-h" x="30" y="212">Protein embeddings</text><text class="d-t" x="30" y="232">ESM++ small, whitened</text>
+
+      <rect class="bx" x="246" y="126" width="200" height="76" rx="6"/>
+      <text class="d-h" x="260" y="150">Identity</text><text class="d-t" x="260" y="170">neighbour list per gene</text><text class="d-n" x="260" y="188">(or protein families)</text>
+      <rect class="bx" x="246" y="232" width="200" height="76" rx="6"/>
+      <text class="d-h" x="260" y="256">Independence</text><text class="d-t" x="260" y="276">genome groups</text><text class="d-n" x="260" y="294">(or shared gene order)</text>
+
+      <rect class="bx loop" x="498" y="28" width="240" height="214" rx="6"/>
+      <text class="d-h" x="514" y="54">Merge loop</text>
+      <text class="d-t" x="514" y="82">1  count lineages n holding the pair</text>
+      <text class="d-t" x="514" y="106">2  expected count E, random gene order</text>
+      <text class="d-t" x="514" y="130">3  Λ = n ln(n/E) − n + E</text>
+      <text class="d-t" x="514" y="154">4  merge if n ≥ 2 and Λ ≥ τ</text>
+      <line class="hair" x1="514" y1="172" x2="722" y2="172"/>
+      <text class="d-n" x="514" y="194">↻ merged pairs become single units;</text>
+      <text class="d-n" x="514" y="210">repeat until no pair passes</text>
+
+      <rect class="bx" x="498" y="282" width="240" height="62" rx="6"/>
+      <text class="d-h" x="514" y="308">Shuffled gene order</text><text class="d-t" x="514" y="328">same procedure, 1% false discoveries</text>
+
+      <rect class="bx" x="790" y="40" width="174" height="56" rx="6"/>
+      <text class="d-h" x="804" y="64">Words</text><text class="d-t" x="804" y="84">nested runs of genes</text>
+      <rect class="bx" x="790" y="124" width="174" height="72" rx="6"/>
+      <text class="d-h" x="804" y="148">Phrases</text><text class="d-t" x="804" y="168">words joined where</text><text class="d-t" x="804" y="184">neighbourhoods cohere</text>
+      <rect class="bx" x="790" y="224" width="174" height="56" rx="6"/>
+      <text class="d-h" x="804" y="248">Locus vectors</text><text class="d-t" x="804" y="268">mean of gene vectors</text>
+      <rect class="bx" x="790" y="308" width="174" height="38" rx="6"/>
+      <text class="d-t" x="804" y="332">type · map · search</text>
+
+      <path class="ar" d="M194,71 H498" marker-end="url(#ah1)"/>
+      <text class="d-n" x="300" y="63">adjacent gene pairs</text>
+      <path class="ar" d="M194,217 H220 V164 H246" marker-end="url(#ah1)"/>
+      <path class="ar" d="M220,217 V270 H246" marker-end="url(#ah1)"/>
+      <path class="ar" d="M446,164 H498" marker-end="url(#ah1)"/>
+      <path class="ar" d="M446,270 H472 V214 H498" marker-end="url(#ah1)"/>
+      <path class="ar" d="M618,282 V242" marker-end="url(#ah1)"/>
+      <text class="d-n" x="628" y="267">sets τ</text>
+      <path class="ar" d="M738,68 H790" marker-end="url(#ah1)"/>
+      <path class="ar" d="M877,96 V124" marker-end="url(#ah1)"/>
+      <path class="ar" d="M877,196 V224" marker-end="url(#ah1)"/>
+      <path class="ar" d="M877,280 V308" marker-end="url(#ah1)"/>
+    </svg>
+    </div>
+    <figcaption>Inputs are gene order and one embedding per protein. The only fitted quantity is the threshold τ, read from the same procedure run on shuffled genomes.</figcaption>
+  </figure>
+
+  <ol class="steps">
+    <li><div class="body">
+      <h3>Give every gene an identity</h3>
+      <p>The method needs to recognise "the same gene" in another genome. Two sources are described here. A third, alignment hits used as lists, is the control reported under <a href="#embeddings">What embeddings add</a>.</p>
+      <div class="two">
+        <div class="opt"><h4>Protein families</h4><p>MMseqs2 clusters (E ≤ 1e-3, 50% coverage), with families of fewer than three members joined to their best hit's family. Identity is a label, and two genes match when their labels are equal.</p></div>
+        <div class="opt"><h4>Embedding neighbour lists (no families)</h4><p>Each protein's ESM++ small embedding is whitened so that cosine similarity is informative. For a gene and another genome, the best match enters the gene's list when it stands at least 10.6 standard deviations above that gene's similarities to the rest of that genome (about 1% false matches against non-homologs; cosine near 0.50). The median list holds 437 genes; 7% of genes have an empty list.</p></div>
+      </div>
+    </div></li>
+
+    <li><div class="body">
+      <h3>Count how many independent lineages hold two neighbours together</h3>
+      <p>Every pair of neighbouring units on a contig is a candidate, with up to two genes between them, in either order and on either strand. Its support <span class="m">n</span> is the number of independent lineages in which the same two units are again neighbours. With family labels this is a sort over label pairs. With neighbour lists, a lineage supports the pair when an entry of one gene's list and an entry of the other's lie within two genes of each other on one contig.</p>
+      <figure class="fig diagram">
+        <h3>What counts as support for a pair</h3>
+        <div class="scroll">
+        <svg viewBox="0 0 840 352" role="img" aria-label="A pair of genes x and y in the genome under study, and four other lineages: two related genomes holding the pair count once, a genome with one gene between them counts, a genome with the pair reversed counts, and a genome with the genes far apart does not count. Support n equals 3.">
+          <defs><path id="gR2" d="M0,-10 H50 L62,0 L50,10 H0 Z"/><path id="gL2" d="M62,-10 H12 L0,0 L12,10 H62 Z"/></defs>
+          <text class="d-m" x="301" y="28" text-anchor="middle">x</text><text class="d-m" x="371" y="28" text-anchor="middle">y</text>
+          <text class="d-h" x="16" y="54">Genome under study</text>
+          <use href="#gR2" x="200" y="50" class="g0"/><use href="#gR2" x="270" y="50" class="gx"/><use href="#gR2" x="340" y="50" class="gy"/><use href="#gR2" x="410" y="50" class="g0"/><use href="#gR2" x="480" y="50" class="g0"/>
+          <text class="d-t" x="640" y="54">the pair being tested</text>
+          <line class="hair" x1="16" y1="84" x2="824" y2="84"/>
+
+          <text class="d-h" x="16" y="142">Lineage 1</text><text class="d-n" x="16" y="158">two close relatives</text>
+          <path class="brk" d="M188,118 H182 V172 H188"/>
+          <use href="#gR2" x="200" y="130" class="g0"/><use href="#gR2" x="270" y="130" class="gx"/><use href="#gR2" x="340" y="130" class="gy"/><use href="#gR2" x="410" y="130" class="g0"/><use href="#gR2" x="480" y="130" class="g0"/>
+          <use href="#gR2" x="200" y="160" class="g0"/><use href="#gR2" x="270" y="160" class="g0"/><use href="#gR2" x="340" y="160" class="gx"/><use href="#gR2" x="410" y="160" class="gy"/><use href="#gR2" x="480" y="160" class="g0"/>
+          <text class="d-h" x="640" y="142">✓ counted once</text><text class="d-n" x="640" y="158">relatives share one history</text>
+
+          <text class="d-h" x="16" y="210">Lineage 2</text>
+          <path class="brk" d="M188,194 H182 V218 H188"/>
+          <use href="#gR2" x="200" y="206" class="g0"/><use href="#gR2" x="270" y="206" class="gx"/><use href="#gR2" x="340" y="206" class="gi"/><use href="#gR2" x="410" y="206" class="gy"/><use href="#gR2" x="480" y="206" class="g0"/>
+          <text class="d-h" x="640" y="202">✓ counted</text><text class="d-n" x="640" y="218">one gene between (up to 2 allowed)</text>
+
+          <text class="d-h" x="16" y="256">Lineage 3</text>
+          <path class="brk" d="M188,240 H182 V264 H188"/>
+          <use href="#gR2" x="200" y="252" class="g0"/><use href="#gR2" x="270" y="252" class="g0"/><use href="#gL2" x="340" y="252" class="gy"/><use href="#gL2" x="410" y="252" class="gx"/><use href="#gR2" x="480" y="252" class="g0"/>
+          <text class="d-h" x="640" y="248">✓ counted</text><text class="d-n" x="640" y="264">order and strand are free</text>
+
+          <text class="d-h" x="16" y="302">Lineage 4</text>
+          <path class="brk" d="M188,286 H182 V310 H188"/>
+          <use href="#gR2" x="200" y="298" class="gx"/><use href="#gR2" x="270" y="298" class="g0"/><use href="#gR2" x="340" y="298" class="g0"/><use href="#gR2" x="410" y="298" class="g0"/><use href="#gR2" x="480" y="298" class="g0"/><use href="#gR2" x="550" y="298" class="gy"/>
+          <text class="d-t" x="640" y="294">no support</text><text class="d-n" x="640" y="310">the two genes are far apart</text>
+
+          <line class="hair" x1="16" y1="326" x2="824" y2="326"/>
+          <text class="d-h" x="16" y="345">n = 3 lineages hold x and y together</text>
+        </svg>
+        </div>
+        <figcaption>Support counts lineages, so a clade of near-identical genomes contributes one observation. Arrows are genes; direction is strand.</figcaption>
+      </figure>
+    </div></li>
+
+    <li><div class="body">
+      <h3>Compute how many lineages would hold them together by chance</h3>
+      <p>Under random gene order inside each genome, two units that are both common will sometimes land next to each other. The expectation <span class="m">E</span> sums, over lineages, the probability that at least one genome of the lineage shows the pair within the window:</p>
+      <div class="eq"><i>E</i> = Σ<sub>lineages</sub> [ 1 − Π<sub><i>g</i> in lineage</sub> ( 1 − min(1, 2<i>w</i> · <i>c</i><sub>x</sub>(<i>g</i>) · <i>c</i><sub>y</sub>(<i>g</i>) / <i>m</i><sub><i>g</i></sub>) ) ]<small><i>w</i> = 3</small></div>
+      <p class="note"><span class="m">c</span><sub>x</sub>(<span class="m">g</span>) is the number of copies of x in genome <span class="m">g</span> (or list entries falling in <span class="m">g</span>), and <span class="m">m</span><sub><span class="m">g</span></sub> is the number of units in that genome.</p>
+    </div></li>
+
+    <li><div class="body">
+      <h3>Score the merge with one statistic</h3>
+      <div class="eq">Λ = <i>n</i> ln(<i>n</i> / <i>E</i>) − <i>n</i> + <i>E</i><small>nats</small></div>
+      <p>Λ is the Poisson log-likelihood ratio of seeing <span class="m">n</span> lineages where <span class="m">E</span> were expected. It equals the description length saved by recording those <span class="m">n</span> occurrences as instances of one named word instead of <span class="m">n</span> coincidences. A pair merges when <span class="m">n</span> ≥ 2 and Λ ≥ τ, where τ is the cost of adding a word to the vocabulary.</p>
+      <div class="pair">
+        <figure class="fig">
+          <h3>Rarer pairs need fewer lineages</h3>
+          <div id="c-lambda"></div>
+          <figcaption>Λ against the number of supporting lineages for three chance expectations. Dashed lines mark the thresholds in use: τ = 10 for family labels and τ = 6 for embedding lists, both with genome groups. A pair expected in 0.1 lineages passes τ = 10 with four lineages; a pair expected in one lineage needs nine.</figcaption>
+        </figure>
+        <figure class="fig">
+          <h3>The threshold is read from shuffled genomes</h3>
+          <div id="c-fdr"></div>
+          <figcaption>Share of discoveries that also appear when gene order is shuffled within each genome (mean of three shuffles), log scale. τ is the smallest tested value under 1% (large markers). Family runs count word types; the embedding run counts first-round merges.</figcaption>
+        </figure>
+      </div>
+    </div></li>
+
+    <li><div class="body">
+      <h3>Commit the best merges and repeat</h3>
+      <p>Candidates are taken in decreasing Λ. A merge is committed when its genes are still unclaimed, so each gene belongs to one word. A committed pair, together with any one or two genes sitting between its halves, becomes a single unit that can merge again in the next round. Rounds continue until no pair passes (7 to 25 rounds observed). The result is a parse of every genome into nested words and background genes.</p>
+      <p>The two identity sources differ in what a word <em>is</em>. With family labels, a word is an exact composition: the pair of its children's labels. With neighbour lists, a word carries the set of spans in other genomes that supported its creation, so each instance may have a different composition and different inserted genes. A word then grows by local alignment against all other genomes at once.</p>
+      <figure class="fig diagram">
+        <h3>How a word grows, and where phrases join words</h3>
+        <div class="scroll">
+        <svg viewBox="0 0 840 228" role="img" aria-label="Nine genes on a contig. Round one merges four pairs, one of them spanning an inserted gene. Round two merges two pairs into a four-gene word. Three words result. The boundary between word one and word two has high cohesion and the two are joined into a phrase; the boundary before word three has low cohesion and stays a cut.">
+          <defs><path id="gR3" d="M0,-10 H50 L62,0 L50,10 H0 Z"/></defs>
+          <text class="d-n" x="388" y="16" text-anchor="middle">cohesion 0.34</text><line class="tick" x1="388" y1="24" x2="388" y2="72"/>
+          <text class="d-n" x="634" y="16" text-anchor="middle">cohesion 0.03</text><line class="tick" x1="634" y1="24" x2="634" y2="72"/>
+          <use href="#gR3" x="70" y="52" class="g0"/><use href="#gR3" x="152" y="52" class="g0"/><use href="#gR3" x="234" y="52" class="g0"/><use href="#gR3" x="316" y="52" class="g0"/>
+          <use href="#gR3" x="398" y="52" class="g0"/><use href="#gR3" x="480" y="52" class="gi"/><use href="#gR3" x="562" y="52" class="g0"/>
+          <use href="#gR3" x="644" y="52" class="g0"/><use href="#gR3" x="726" y="52" class="g0"/>
+          <text class="d-n" x="8" y="98">round 1</text>
+          <path class="brk" d="M70,86 V94 H214 V86"/><path class="brk" d="M234,86 V94 H378 V86"/><path class="brk" d="M398,86 V94 H624 V86"/><path class="brk" d="M644,86 V94 H788 V86"/>
+          <text class="d-n" x="8" y="126">round 2</text>
+          <path class="brk" d="M70,114 V122 H378 V114"/>
+          <text class="d-n" x="8" y="160">words</text>
+          <rect class="wbar" x="70" y="146" width="308" height="20" rx="4"/><text class="d-t" x="224" y="160" text-anchor="middle">word 1 · four genes</text>
+          <rect class="wbar" x="398" y="146" width="226" height="20" rx="4"/><text class="d-t" x="511" y="160" text-anchor="middle">word 2 · one gene inserted</text>
+          <rect class="wbar" x="644" y="146" width="144" height="20" rx="4"/><text class="d-t" x="716" y="160" text-anchor="middle">word 3</text>
+          <text class="d-n" x="8" y="204">phrases</text>
+          <rect class="wbar" x="70" y="190" width="554" height="20" rx="4"/><text class="d-t" x="347" y="204" text-anchor="middle">one locus: words 1 and 2 joined (cohesion ≥ 0.1)</text>
+          <rect class="wbar" x="644" y="190" width="144" height="20" rx="4"/><text class="d-t" x="716" y="204" text-anchor="middle">separate locus</text>
+        </svg>
+        </div>
+        <figcaption>Schematic with illustrative cohesion values. The pale gene is an inserted gene carried inside word 2.</figcaption>
+      </figure>
+    </div></li>
+
+    <li><div class="body">
+      <h3>Decide what counts as independent evidence</h3>
+      <p>This choice matters more than any other. Counting every genome separately lets shared ancestry pass for recurrence, and words chain into units hundreds of genes long. Two corrections have been tested.</p>
+      <div class="two">
+        <div class="opt"><h4>Genome groups</h4><p>Genomes are clustered by average linkage on the embedding similarity of their best-matching proteins and cut at 0.75, giving 642 groups (GTDB places these genomes in 922 genera). <span class="m">n</span> counts groups. The cut was calibrated on the odd-numbered DPANN genomes, and a rule for setting it on a new dataset has yet to be found.</p></div>
+        <div class="opt"><h4>Shared gene order (no groups, no cut)</h4><p>For two genomes, <span class="m">S</span> is the share of one genome's adjacent pairs that are also adjacent in the other. The carriers of a pair then count as <span class="mr"><i>N</i><sub>eff</sub> = <i>n</i> / (1 + (<i>n</i> − 1) · <i>s̄</i>)</span> independent observations, with <span class="m">s̄</span> their mean pairwise <span class="m">S</span>. Λ is computed per genome and scaled by <span class="mr"><i>N</i><sub>eff</sub> / <i>n</i></span>; a merge needs <span class="mr"><i>N</i><sub>eff</sub> ≥ 2</span>.</p></div>
+      </div>
+      <figure class="fig" style="max-width:46rem">
+        <h3>Genomes that share gene order count for less</h3>
+        <div id="c-neff"></div>
+        <figcaption>Effective number of independent observations against the number of genomes holding a pair, log scales. In this dataset genomes from different groups share 2% of their adjacencies on average and genomes from the same group 30%. Two hundred genomes at 30% count as about three observations.</figcaption>
+      </figure>
+    </div></li>
+
+    <li><div class="body">
+      <h3>Read loci from the parse</h3>
+      <p>The words, together with the sub-words nested inside them, are the loci. One further level handles long conserved neighbourhoods, which differ in composition from lineage to lineage and therefore parse as several words in a row.</p>
+      <p><strong>Phrases.</strong> Consecutive words at most two genes apart are joined when the boundary between them is cohesive. Cohesion asks whether the homologs of a boundary gene keep the same kind of neighbour on the side facing the boundary: it is the mean pairwise cosine among those neighbours' embeddings, and a boundary takes the lower value of its two genes. Words are joined at cohesion ≥ 0.1, a value selected on odd-numbered genomes for six of nine vocabularies.</p>
+    </div></li>
+
+    <li><div class="body">
+      <h3>Summarise each locus as one vector</h3>
+      <p>The mean of the whitened embeddings of a locus's genes is its vector. Nearest neighbours among these vectors give the locus a type, clustering them gives a map of all loci, and an index over them answers searches. Results are in <a href="#vectors">Loci as vectors</a>.</p>
+    </div></li>
+  </ol>
+
+  <div class="col stack">
+    <h3>Cost</h3>
+    <p>With family labels, one full run over 3.59 million genes takes 64 seconds on one core and 1.3 GB of memory; the shared-gene-order matrix adds under 20 seconds. With neighbour lists, building the lists takes 279 seconds and the merge rounds 529 seconds on 64 cores, excluding embedding and the similarity table. Work grows linearly with the number of genes, and no pair of genomes is ever aligned.</p>
+    <h3>What it replaces</h3>
+    <p>The reference engine takes pairs of family labels within three genes, counts the GTDB genera holding each pair, and tests that count against the same chance expectation with a Poisson tail. Each boundary between genes receives the strongest support of any significant pair spanning it. Loci are then read off by rule: runs of supported boundaries form a neighbourhood, which is cut where family co-occurrence modules change and trimmed at its ends to give a nested core. Those rules carry fixed settings (support level, module resolution, trimming factor) and the count needs a taxonomy.</p>
+    <h3>What the vocabulary looks like</h3>
+    <p>With family labels: 25,018 word types and 479,370 top-level instances covering 42% of genes; median span 2 genes, 90th percentile 5, longest 36, nesting up to 7 levels. With neighbour lists: 516,845 top-level instances covering 57% of genes, 99th-percentile span 17. Shuffled genomes run through the full embedding procedure yield 1.6% as many word instances. The reference engine places 71% of genes in loci.</p>
+  </div>
+</section>
+
+<section id="ingredients">
+  <h2>What each part contributes</h2>
+  <div class="scroll">
+  <table class="plain ing" style="min-width:640px">
+    <thead><tr><th>Ingredient</th><th>Test</th><th>Effect on even-numbered genomes</th></tr></thead>
+    <tbody>
+      <tr><td>Counting lineages</td><td>Family words with every genome as its own unit</td><td>Overall score −0.204 [−0.224, −0.183]. In the embedding run, uncorrected counting gives −0.216 and a longest word of 842 genes.</td></tr>
+      <tr><td>Threshold from shuffles</td><td>Same procedure on shuffled gene order</td><td>False discoveries fall about 25-fold per 2 nats with families and 10-fold with neighbour lists. τ = 10, 8 or 6 depending on the variant, always from the 1% rule.</td></tr>
+      <tr><td>One objective in place of reading rules</td><td>Family words against the reference engine</td><td>Overall score +0.197 [+0.174, +0.221]; TXSScan F1 0.679 against 0.548. The median locus matched to a DefenseFinder system consists only of system genes (precision 1.00 against 0.75; TXSScan 0.80 against 0.44). Part of the gain is coverage: words hold 42% of genes, the reference 71%.</td></tr>
+      <tr><td>Phrases</td><td>Family words with and without phrases</td><td>Ribosomal runs resolved 501 → 1,420; Parvarchaeaceae recovered 11 → 114. Cost: overall score −0.016, TXSScan F1 −0.043.</td></tr>
+      <tr><td>Shared gene order as the independence measure</td><td>Against genome groups, family words</td><td>CRISPR-Cas F1 0.406 → 0.452; Parvarchaeaceae recovered 11 → 82 at the word level. Overall score −0.050 [−0.066, −0.034].</td></tr>
+      <tr><td>Embedding neighbour lists as identity</td><td>Against family labels, genome groups</td><td>CRISPR-Cas F1 0.406 → 0.469; Cas genes outside every word 45.5% → 31.7%. Overall score 0.624 → 0.475 and TXSScan F1 0.679 → 0.602: family words remain stronger on those two.</td></tr>
+      <tr><td>Embeddings against alignment hits as the list source</td><td>MMseqs2 hits through the identical procedure</td><td>Overall score −0.007 [−0.026, +0.014] against calibrated embedding lists. Lists holding one match per genome recover all 114 Parvarchaeaceae runs; depth-limited lists recover 64 (embedding) and 78 (alignment).</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="gaps">
+  <h2>The two missing bars</h2>
+  <div class="two" style="max-width:none">
+    <div class="opt">
+      <h4>CRISPR-Cas with family identity</h4>
+      <p>Cas proteins are split across many small families, so the same Cas neighbourhood looks like different label pairs in different lineages and never accumulates support. 45.5% of Cas member genes sit outside every family word, against 21.2% for DefenseFinder systems and 19.9% for TXSScan systems.</p>
+      <p>The embeddings see through the split: a Cas gene's 1,000 nearest neighbours hold about 200 Cas genes from other families, against 2.7 for matched control genes. Identity has to be broad before the first merge. Grouping finished words into classes afterwards changes nothing (−0.003 [−0.007, +0.001]).</p>
+    </div>
+    <div class="opt">
+      <h4>Ribosomal loci with embedding identity</h4>
+      <p>A word built from neighbour lists keeps only the instances in other genomes that match along its whole length, and that set shrinks with every merge: a median of 224 aligned spans at two genes, 9 at ten genes and 2 at twenty. Two failure modes follow, depending on the lists.</p>
+      <p>Depth-limited lists fragment long neighbourhoods: 322 of 598 unresolved ribosomal runs are under-covered. The calibrated one-match-per-genome lists do the opposite. Words span the whole ribosomal locus and continue into its conserved flanks, and 420 of 503 unresolved runs fall below 80% precision.</p>
+      <p>Joining words where the gene pair at the junction passes the merge test recovers all 1,686 runs and resolves 1,138, fewer than before. Recurrence is the only boundary signal the objective has, and conserved flanks recur too. The missing ingredient is a boundary signal: a cut where the aligned instances diverge in what flanks them, which is what cohesion measures.</p>
+    </div>
+  </div>
+  <p class="col">The two independence measures pull in opposite directions on these bars. Genome groups favour the overall score and long neighbourhoods; shared gene order favours CRISPR-Cas and rare systems. With family words and phrases, shared gene order reaches CRISPR-Cas F1 0.430 and 1,326 resolved runs, short of both bars at once.</p>
+</section>
+
+<section id="second">
+  <h2>Second dataset: Spacedust's benchmark</h2>
+  <p class="lead col">With its DPANN settings unchanged, the word method runs and finds signal on 1,317 mostly complete bacterial genomes. It does not beat Spacedust there, and simple linking over its own pair statistic does.</p>
+  <figure class="fig">
+    <h3>Excess F1 on 207 biosynthetic gene cluster regions</h3>
+    <div class="legend"><span class="lg"><i class="key-box ref"></i>reference engine and published tools</span><span class="lg"><i class="key-box s3"></i>word pair statistic, connected runs</span><span class="lg"><i class="key-box s1"></i>word method</span><span class="lg"><i class="key-box s2"></i>bond tree (redesign)</span></div>
+    <div id="c-sd"></div>
+    <figcaption>Excess is F1 minus the F1 of the same loci placed at random; whiskers are 95% intervals over regions. Every row is scored by one evaluator. The engine union and native Spacedust combine many readings or blocks; the other rows are single outputs. Published synton interval: −0.037 to +0.034. A window of 8 genes, chosen after seeing these scores, lifts connected runs to +0.230.</figcaption>
+  </figure>
+  <ul class="points col">
+    <li><strong>The procedure transfers.</strong> The 1% shuffle rule lands on the same thresholds as on DPANN (8 and 10 nats), and both word outputs beat random placement.</li>
+    <li><strong>The parse is too short for these loci.</strong> Words span a median of 3 genes; the regions span a median of 10. Half of the gold genes lie outside every word, and the best single word covers a median 33% of a region. Excess is +0.08 to +0.15 on regions of up to 10 genes and near zero above that.</li>
+    <li><strong>Linking alone does better.</strong> Connected runs of significant first-round pairs, with up to two genes between them, beat the word parse by +0.072 to +0.093 and beat Spacedust on excess by +0.077 to +0.088, at F1 0.58 against 0.68.</li>
+    <li><strong>The closest published method does poorly outside its home setting.</strong> The synton pipeline of Hervé, Cury and Bernheim shows no signal here with its own 50%-identity families, which leave 54% of genes as singletons, and ties the word output when given our families. On DPANN it reports almost nothing, because its statistic assumes long replicons.</li>
+    <li><strong>Neither independence correction is invariant to duplicated genomes.</strong> Copying 26 genomes nine times inflates their word types 8-fold under raw counting. Genome groups shrink them to 0.75 of the original and shared-gene-order counts to 0.83, with the vocabulary shifting. The chance expectation needs the same redundancy treatment as the count.</li>
+  </ul>
+  <div class="opt" style="max-width:46rem">
+    <h4>Redesign for long loci: the bond tree (development results)</h4>
+    <p>A word has to recur with the same composition, which makes short loci precise and stalls long ones. The redesign drops word identity. Genes are linked by first-round significant bonds; each bonded run is split recursively at its weakest boundary, low-cohesion boundaries first, into a tree of nested intervals; nodes that pass the bond test as a whole are the loci.</p>
+    <p><strong>DPANN:</strong> 1,598 of 1,686 ribosomal runs resolved, +86 [+60, +115] over the reference; overall score 0.584 against 0.427 for the reference and 0.624 for words; CRISPR-Cas F1 0.419, still below the bar. <strong>Spacedust's benchmark:</strong> +0.126, level with pair-linking, above Spacedust, below the reference engine.</p>
+    <p><strong>All seven DPANN bars in one output.</strong> The tree needs only first-round bonds, so those bonds can come from neighbour lists in place of families, and list identity no longer thins as loci grow. With MMseqs2 alignment lists and genome groups: 1,549 runs resolved (+37 [+7, +69] over the reference), CRISPR-Cas F1 0.475 (−0.004), overall score 0.613. Embedding lists clear every bar as well and differ from alignment lists only on CRISPR-Cas (−0.022).</p>
+    <p><strong>The same configuration on Spacedust's benchmark, unchanged.</strong> With embedding lists it scores +0.111 [+0.072, +0.149] at F1 0.598: level with the family bond tree, above native Spacedust (+0.046 [+0.010, +0.082]) and below the reference engine (−0.073). The gap is on long regions: for regions of 11 or more genes its loci cover 62% of region genes against the engine's 89%. The engine used pairs up to 8 positions apart on this collection and the bonds used at most 2 genes between.</p>
+    <p><strong>An adaptive pair distance closes that gap.</strong> Every pair within 8 positions is tested at the smallest window that contains it, so wider pairs need more support. With family bonds the tree then scores +0.164 [+0.125, +0.202] on Spacedust's benchmark at F1 0.667: statistically level with the reference engine (−0.020 [−0.054, +0.014]) and +0.099 over Spacedust. The same setting keeps all seven DPANN bars (1,594 ribosomal runs resolved), with CRISPR-Cas only just inside its bar (−0.019) and a lower overall score (0.513). Combining it with embedding-list bonds did not give one output that passes both tests: CRISPR-Cas keeps its margin (+0.012), but ribosomal runs resolved fall to 1,497 and the Spacedust score is +0.150, below the engine.</p>
+    <p><strong>Standing candidates.</strong> Family bonds with the adaptive distance: all seven DPANN bars, 1,594 runs resolved, level with the engine on Spacedust's benchmark. Embedding-list bonds at the fixed distance: all seven DPANN bars with CRISPR-Cas margin, 1,542 runs resolved, +0.111 on Spacedust's benchmark. The next step is to freeze one and run it once on the untouched test sets.</p>
+    <p><strong>Cost of the two list sources.</strong> Embedding lists for 4.2 M sequences took 57 minutes: two passes of about 20 minutes on one A5000 and 18 minutes on 64 CPUs. Alignment lists were projected at 12 to 18 hours on 64 CPUs. On DPANN the two score the same apart from CRISPR-Cas, so embeddings supply list identity at a small fraction of the cost.</p>
+    <p>Two parts of the first design failed. Cutting at low cohesion deletes real loci, because defence systems and biosynthetic regions have low cohesion inside; cohesion works as the order of splitting. A whole-locus recurrence test had nothing to calibrate against, since shuffled genomes produce almost no nodes.</p>
+    <p><strong>What the ribosomal benchmark can show.</strong> An oracle that reports each whole conserved neighbourhood resolves 1,507 runs under the standing definition, because 179 runs make up less than 80% of their own neighbourhood. The reference's 174 failures are 157 loci that extend past the run. Passing 1,507 needs a nested output that also holds the run-sized piece.</p>
+    <p><strong>Independent audit of the failures.</strong> A separate agent classified 120 sampled failures against a rubric written beforehand. It attributes about three quarters to the benchmark definition and one quarter to the method: reference 80% / 20%, family words with phrases 82% / 15%, embedding words 58% / 40%. One rubric rule was corrected after the fact, so these shares are post hoc. The commonest artefacts are loci that take in flanking families found beside ribosomal runs in many lineages (SecY in 274 groups), nearby ribosomal genes outside the run, and a scoring rule that picks the largest overlapping locus even when a nested locus fits the run. Under a definition that allows such flank and splits runs at junctions unique to one lineage, the three outputs resolve 1,571, 1,622 and 1,490, against 1,512, 1,420 and 1,172 under the standing one.</p>
+    <p><strong>The bond tree under the same audit.</strong> It leads under the standing definition (1,598) and under every alternative (1,620 when any fitting locus counts; 1,671 under the relaxed definition). Its 56 under-covered runs are cut at junctions that recur in no other lineage above chance, mostly rearranged gene orders. The relaxed definition should be read with care: annotation alone supports only 9–13% of the flank it forgives, so the definition shares above are upper bounds. With independent support required, the bond tree still has the fewest errors: 44, against 70 for the reference, 159 for family words and 288 for embedding words.</p>
+  </div>
+</section>
+
+<section id="vectors">
+  <h2>Loci as vectors</h2>
+  <p class="lead col">Averaging a locus's gene embeddings into one vector is enough to type it, map it and search for it.</p>
+  <div class="pair">
+    <figure class="fig">
+      <h3>Assigning a locus its curated type by nearest neighbour</h3>
+      <div class="legend"><span class="lg"><i class="key-box s3"></i>locus vector</span><span class="lg"><i class="key-box ref"></i>comparison</span></div>
+      <div id="c-type"></div>
+      <figcaption>Accuracy on even-genome curated loci, with every locus from the query's own genome group withheld. In the lower half the reference loci share no MMseqs2 family with the query, so family overlap has nothing to match on.</figcaption>
+    </figure>
+    <figure class="fig">
+      <h3>Searching for loci of the same system</h3>
+      <div class="legend"><span class="lg"><i class="key-box s3"></i>locus vector</span><span class="lg"><i class="key-box ref"></i>comparison</span></div>
+      <div id="c-search"></div>
+      <figcaption>Mean average precision over DefenseFinder query loci. The locus-vector index answers in 0.03 s per query. The fitted whitening was trained without labels on odd-numbered genomes and added after the first results. The lower three rows come from the earlier search benchmark on a closely overlapping query set, where per-gene embedding ranks score 0.796.</figcaption>
+    </figure>
+  </div>
+  <ul class="points col">
+    <li><strong>Map.</strong> 500,842 loci fall into 1,206 clusters whose agreement with curated types equals that of the reference engine's module labels (adjusted mutual information 0.510 against 0.518). 306 dense clusters contain no curated system; 57 of them are mostly unannotated and 30 of those span five or more genome groups.</li>
+    <li><strong>Division of labour.</strong> Words give boundaries. Typing by word identity is pure and fragmented (homogeneity 0.993, completeness 0.420), and searching by parsing a query into words finds a tenth of the targets. Vectors do both jobs.</li>
+    <li><strong>Limits.</strong> Vector similarity has no calibrated significance yet, and the index ranks conserved loci that no caller has annotated above some curated targets.</li>
+  </ul>
+</section>
+
+<section id="embeddings">
+  <h2>What embeddings add over alignment</h2>
+  <p class="lead col">Embedding similarity beyond the family mostly recovers homology that sequence clustering had split. Its distinctive contribution is a match for a protein with no alignable relative, anchored by a conserved neighbour.</p>
+  <div class="pair">
+    <figure class="fig">
+      <h3>Nearest embedding neighbours outside the family are mostly homologs</h3>
+      <div id="c-hom"></div>
+      <figcaption>Share of protein pairs with independent homology evidence (alignment at E ≤ 1e-3, shared Pfam family or clan, CDD superfamily, or a family-profile link). Where both proteins are annotated, the top band reaches 95%.</figcaption>
+    </figure>
+    <figure class="fig">
+      <h3>Pairs called through embedding-matched neighbours co-fold</h3>
+      <div id="c-cofold"></div>
+      <figcaption>Share of ESMFold2 complex predictions with a confident interface, criteria fixed before folding; whiskers are 95% intervals. Called pairs are ones the family engine cannot call. Fisher p = 9 × 10⁻⁷ against matched pairs.</figcaption>
+    </figure>
+  </div>
+  <ul class="points col">
+    <li><strong>The split is mechanical.</strong> 59% of the ten nearest non-family neighbours align directly at E ≤ 1e-3, and 87% of those alignments cover at least half of both proteins: full-length homologs that set-cover clustering filed under different representatives.</li>
+    <li><strong>Similarity between unrelated proteins of the same kind is a small component</strong>, 2.0 to 2.4 times the baseline rate among pairs with no homology evidence.</li>
+    <li><strong>The co-folding signal needs homology on at least one side.</strong> Pairs whose support is free of homology on both sides pass 1 time in 149. Where one chain has no alignable homolog in the dataset, pairs pass 8 times in 108 against 0 in 168 (analysed after the fact).</li>
+    <li><strong>Cosine similarity carries no usable E-value</strong> (extreme-value estimates run 8 to 42 times over nominal). A fixed standardised cut does: z ≥ 10.6, 13.7 and 16.0 give false-match rates of 10⁻², 10⁻³ and 10⁻⁴, stable across genome halves.</li>
+    <li><strong>Control: alignment hits as the source of the lists.</strong> MMseqs2 all-against-all hits (E ≤ 1e-3), run through the identical word procedure, score +0.041 [+0.021, +0.062] over the reference. That is level with the calibrated embedding lists (difference −0.007 [−0.026, +0.014]) and +0.031 [+0.013, +0.050] above depth-limited embedding lists. For discovering loci, embeddings are one of two equally good sources of identity; the gain comes from dropping the hard family partition. Their distinct uses here are locus vectors and the anchored matches above.</li>
+  </ul>
+</section>
+
+<section id="biology">
+  <h2>Screen for new complexes</h2>
+  <p class="lead col">The second screen for unrecognised, co-folding blocks found none in which every member is unrecognised. The pool resolved to pairs resembling toxin–antitoxin structures.</p>
+  <div class="funnel">
+    <div><b>248</b><span>candidate blocks from unannotated map clusters and embedding-anchored pairs</span></div>
+    <div><b>47</b><span>with two distant replicates (different genome groups, ≤ 60% identity)</span></div>
+    <div><b>12</b><span>with at least one member no profile search recognises; these were folded</span></div>
+    <div><b>2</b><span>co-fold in both replicates and pass every artefact check</span></div>
+    <div><b>0</b><span>with every member unrecognised</span></div>
+  </div>
+  <div class="scroll">
+  <table class="plain" style="min-width:640px">
+    <thead><tr><th>Block</th><th>Members (observed similarity)</th><th>Interface confidence (ipTM), two replicates</th><th>Spread</th></tr></thead>
+    <tbody>
+      <tr><td>Rank 20</td><td>A Fic/Doc-domain protein of 117–133 residues and a 39–41-residue partner with no profile or structure match. The small gene overlaps the 3′ end of the larger by a median 29 nt in 90 of 92 loci.</td><td>0.88 / 0.92; controls 0.16–0.33</td><td>98 loci, 59 genome groups, 5 phyla</td></tr>
+      <tr><td>Rank 4</td><td>A DUF2283 protein and a DUF4258 protein. Structure search places the second on BrnT/RelE-type toxin folds.</td><td>0.90 / 0.93; controls 0.27–0.29</td><td>599 loci, 179 genome groups, 8 phyla</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note col">No curated caller has called either block; the toxin–antitoxin reading is a hypothesis. Cognate folds passed in 5 of 24 and partner swaps in 0 of 12. The dense map clusters of membrane-like proteins were excluded by the screen's hydrophobicity filter and remain to be screened with alignment-conditioned folds. The earlier three-gene block, two unrecognised small proteins on a caspase-like protein across seven phyla, remains the showcase.</p>
+</section>
+
+<section id="aside">
+  <h2>Tested and set aside</h2>
+  <ul class="points col">
+    <li><strong>Patching the embedding-only pair engine to parity.</strong> Four rounds reached the bars only through a second evidence tier added after the fact. This motivated the new method.</li>
+    <li><strong>Context vectors as the measure of independence.</strong> The size of a conserved unit confounds it: pairs inside the ribosomal locus are discounted 30- to 90-fold.</li>
+    <li><strong>A clustered embedding alphabet in place of families.</strong> −0.101 [−0.125, −0.076] against family words. The objective picks the coarsest clusters, which blurs locus edges.</li>
+    <li><strong>Classes of words.</strong> Description length rises with every loosening and typing stays where it was (0.473 against 0.464).</li>
+    <li><strong>Finer units of evidence than genome groups.</strong> Species-scale groups, per-genome weights and random partitions all fail, because a shuffle null is blind to inherited gene order.</li>
+    <li><strong>Covariation between partner embeddings as a predictor of co-folding.</strong> AUROC 0.573.</li>
+    <li><strong>Recognising a kind of system with all of its families withheld.</strong> AUROC falls from 0.788 to 0.595.</li>
+    <li><strong>E-values and hub corrections for cosine similarity.</strong> Both rank worse than the raw score.</li>
+  </ul>
+</section>
+
+<section id="prior">
+  <h2>Position against prior work</h2>
+  <p class="lead col">Two independent literature searches with live web access, citing only sources they opened, rate the method as known ingredients in a new combination.</p>
+  <div class="two" style="max-width:none">
+    <div class="opt"><h4>Closest published method</h4>
+      <p>Hervé, Cury and Bernheim, <em>microLife</em>, September 2026, from the group behind DefenseFinder. Poisson enrichment of family adjacency, clusters of similar genomic contexts as the counting unit, loci as connected runs of significant adjacencies, 32,791 RefSeq genomes. Their pipeline is being run on our data.</p></div>
+    <div class="opt"><h4>Already published</h4>
+      <p>Effective genome counts (CSBFinder-S 2020; Junier and Rivoire 2016). The shuffle null and its blindness to ancestry (Durand and Sankoff 2003; Gecko 3). Mean-pooled operon vectors (SAFPred 2024). Co-folding of operon partners at scale (Qi et al. 2026).</p></div>
+    <div class="opt"><h4>No close precedent found</h4>
+      <p>Greedy merging of gene order into a nested parse scored by lineage-adjusted enrichment. The effective count built from shared gene adjacency. Boundary cohesion. The finding that beyond-family embedding similarity is mostly split homology, with a standardised threshold where E-values fail.</p></div>
+    <div class="opt"><h4>Comparators reviewers will expect</h4>
+      <p>Spacedust (Zhang, Mirdita and Söding 2025), Gecko 3, CSBFinder-S, the Hervé procedure, Gaia and gLM2 for neighbourhood retrieval, SAFPred and BiG-SLiCE vectors for typing.</p></div>
+  </div>
+</section>
+
+<section id="open">
+  <h2>Open items</h2>
+  <div class="two" style="max-width:none">
+    <div class="opt"><h4>Running now</h4>
+      <p>Two fixes that an independent audit judged biologically justified, on DPANN: bridging operons that are rearranged in one lineage, and splitting at strand changes first. Both are applied to both configurations.</p>
+      <p>A second untouched set is ready and unopened: 994 dereplicated high-quality SR-VP genome bins (780 bacteria, 214 archaea, 51 phyla), with embeddings and truth tables.</p>
+      <p>Loci homologous to the lanthanide <em>lut</em> cluster around Methylobacterium, from GTDB representatives.</p>
+      <p>Embeddings for the SR-VP locked test set.</p></div>
+    <div class="opt"><h4>Next</h4>
+      <p>Embedding words on Spacedust's benchmark, which waited for the GPU.</p>
+      <p>A redundancy-aware chance expectation, after the duplicate-genome stress test.</p>
+      <p>A community dataset from the larger SR-VP bin collection, selected by completeness.</p>
+      <p>Then one frozen configuration, run once on the locked sets: SR-VP bacteria (1,382 long single contigs, sealed) and 34,719 RefSeq complete genomes (prepared).</p></div>
+    <div class="opt"><h4>Waiting</h4>
+      <p>ESM2-650M embeddings of DPANN, until the H200 GPUs are free.</p>
+      <p>gLM2 as an ablation, after standard embeddings win.</p>
+      <p>Merging words into the <code>elsa</code> package.</p></div>
+    <div class="opt"><h4>Yours to decide</h4>
+      <p>Whether conservation of protein kinds across unrelated families is in scope. The evidence here says that signal is weak in these embeddings.</p>
+      <p>Whether the acceptance bar is the reference on every caller or a chosen subset.</p>
+      <p>How to involve the Spacedust authors and the MMseqs2 developers, given that both tools serve as baseline and control.</p></div>
+  </div>
+</section>
+
+<footer>Sources: <code>docs/redesign/NOTEBOOK.md</code> and <code>benchmarks/redesign/{vocab,vocab_lists,locus_space,calib,kinds,context_units,lineagefree,showcase2}/</code> on branch <code>agent/normalized-result-contract</code>. Items analysed after results were seen are marked where they appear.</footer>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+var NS='http://www.w3.org/2000/svg';
+function h(tag,attrs){var e=document.createElement(tag),k,i,c;if(attrs)for(k in attrs){if(k==='class')e.className=attrs[k];else if(k==='text')e.textContent=attrs[k];else e.setAttribute(k,attrs[k]);}
+  for(i=2;i<arguments.length;i++){c=arguments[i];if(c==null)continue;e.appendChild(typeof c==='string'?document.createTextNode(c):c);}return e;}
+function sv(tag,attrs,parent){var e=document.createElementNS(NS,tag),k;if(attrs)for(k in attrs){if(k==='text')e.textContent=attrs[k];else e.setAttribute(k,attrs[k]);}if(parent)parent.appendChild(e);return e;}
+function lin(d0,d1,r0,r1){return function(v){return r0+(v-d0)/(d1-d0)*(r1-r0);};}
+function logsc(d0,d1,r0,r1){var a=Math.log(d0),b=Math.log(d1);return function(v){return r0+(Math.log(v)-a)/(b-a)*(r1-r0);};}
+function f3(v){return v.toFixed(3);} function f2(v){return v.toFixed(2);}
+function sci(v){var e=Math.round(Math.log(v)/Math.LN10);var sup={'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶'};return '10'+String(e).split('').map(function(ch){return sup[ch]||ch;}).join('');}
+
+var tip=h('div',{class:'tip'});tip.hidden=true;document.body.appendChild(tip);
+function showTip(rows,x,y){tip.replaceChildren();rows.forEach(function(r){var d=h('div',{class:'tip-row'});if(r.key)d.appendChild(h('span',{class:'tip-key '+r.key}));d.appendChild(h('b',{text:r.v}));if(r.l)d.appendChild(h('span',{text:r.l}));tip.appendChild(d);});
+  tip.hidden=false;var w=tip.offsetWidth,hh=tip.offsetHeight,L=x+14,T=y-hh-10;if(L+w>window.innerWidth-8)L=x-w-14;if(L<8)L=8;if(T<8)T=y+18;tip.style.left=L+'px';tip.style.top=T+'px';}
+function hideTip(){tip.hidden=true;}
+function bindTip(el,rowsFn){el.addEventListener('pointermove',function(e){showTip(rowsFn(),e.clientX,e.clientY);});el.addEventListener('pointerleave',hideTip);
+  el.addEventListener('focus',function(){var r=el.getBoundingClientRect();showTip(rowsFn(),r.left+r.width/2,r.top);});el.addEventListener('blur',hideTip);}
+
+function dataTable(host,cols,rows){var det=h('details',{class:'dt'});det.appendChild(h('summary',{text:'Data table'}));var wrap=h('div',{class:'scroll'}),t=h('table'),tr=h('tr');
+  cols.forEach(function(c){tr.appendChild(h('th',{text:c}));});t.appendChild(h('thead',null,tr));var tb=h('tbody');
+  rows.forEach(function(r){var x=h('tr');r.forEach(function(c){x.appendChild(h('td',{text:String(c)}));});tb.appendChild(x);});t.appendChild(tb);wrap.appendChild(t);det.appendChild(wrap);host.appendChild(det);}
+
+function responsive(host,draw){var w=0;function run(){var nw=Math.floor(host.clientWidth);if(!nw||nw===w)return;w=nw;draw(w);}run();
+  if('ResizeObserver' in window){new ResizeObserver(run).observe(host);}else{window.addEventListener('resize',run);}}
+
+function frame(host,W,H,m,cfg){host.replaceChildren();var svg=sv('svg',{width:W,height:H,viewBox:'0 0 '+W+' '+H,role:'img','aria-label':cfg.aria||''},null);host.appendChild(svg);
+  var x0=m.l,x1=W-m.r,y0=H-m.b,y1=m.t;var xs=(cfg.x.log?logsc:lin)(cfg.x.min,cfg.x.max,x0,x1),ys=(cfg.y.log?logsc:lin)(cfg.y.min,cfg.y.max,y0,y1);
+  cfg.y.ticks.forEach(function(t){var y=ys(t);sv('line',{x1:x0,x2:x1,y1:y,y2:y,class:'grid'},svg);sv('text',{x:x0-8,y:y+4,'text-anchor':'end',class:'ax',text:(cfg.y.fmt||String)(t)},svg);});
+  var xt=cfg.x.ticks;if(W<420&&cfg.x.ticksNarrow)xt=cfg.x.ticksNarrow;
+  xt.forEach(function(t){var x=xs(t);sv('line',{x1:x,x2:x,y1:y0,y2:y0+4,class:'axl'},svg);sv('text',{x:x,y:y0+18,'text-anchor':'middle',class:'ax',text:(cfg.x.fmt||String)(t)},svg);});
+  sv('line',{x1:x0,x2:x1,y1:y0,y2:y0,class:'axl'},svg);
+  sv('text',{x:(x0+x1)/2,y:H-6,'text-anchor':'middle',class:'axt',text:cfg.x.label},svg);
+  sv('text',{x:2,y:13,class:'axt',text:cfg.y.label},svg);
+  return {svg:svg,xs:xs,ys:ys,x0:x0,x1:x1,y0:y0,y1:y1};}
+
+function lineChart(id,cfg){var host=document.getElementById(id);if(!host)return;host.classList.add('stack');
+  var legend=h('div',{class:'legend'});cfg.series.forEach(function(se){legend.appendChild(h('span',{class:'lg'},h('i',{class:'key-line '+se.cls}),se.name));});
+  (cfg.hlines||[]).forEach(function(l){if(l.legend)legend.appendChild(h('span',{class:'lg'},h('i',{class:'key-dash'}),l.legend));});
+  var plot=h('div',{class:'plot'});host.appendChild(legend);host.appendChild(plot);
+  responsive(plot,function(W){var wide=W>=500;var m={l:50,r:wide?(cfg.rpad||92):16,t:30,b:44};var H=cfg.h||300;var f=frame(plot,W,H,m,cfg),svg=f.svg;
+    (cfg.hlines||[]).forEach(function(l){var y=f.ys(l.y);sv('line',{x1:f.x0,x2:f.x1,y1:y,y2:y,class:'thr'},svg);
+      if(l.at==='right'){if(wide)sv('text',{x:f.x1+10,y:y+4,class:'thrt',text:l.label},svg);}
+      else if(l.at==='end'){sv('text',{x:f.x1-4,y:y-6,'text-anchor':'end',class:'thrt',text:l.label},svg);}
+      else sv('text',{x:f.x0+6,y:y+(l.below?13:-5),class:'thrt',text:l.label},svg);});
+    cfg.series.forEach(function(se){var d=se.pts.map(function(p,i){return (i?'L':'M')+f.xs(p[0]).toFixed(1)+','+f.ys(p[1]).toFixed(1);}).join(' ');sv('path',{d:d,class:'ln '+se.cls},svg);});
+    cfg.series.forEach(function(se){if(!se.nodots)se.pts.forEach(function(p){var big=se.mark&&se.mark.indexOf(p[0])>=0;sv('circle',{cx:f.xs(p[0]),cy:f.ys(p[1]),r:big?6.5:3.5,class:'pt '+se.cls},svg);});
+      if(wide&&se.end){var p=se.pts[se.pts.length-1],o=se.endAt||{};sv('text',{x:f.xs(p[0])+(o.dx==null?10:o.dx),y:f.ys(p[1])+(o.dy==null?4:o.dy),'text-anchor':o.anchor||'start',class:'lbl',text:se.end},svg);}});
+    var xsAll=[];cfg.series.forEach(function(se){se.pts.forEach(function(p){if(xsAll.indexOf(p[0])<0)xsAll.push(p[0]);});});
+    var ch=sv('line',{y1:f.y1,y2:f.y0,x1:0,x2:0,class:'cross'},svg);ch.style.display='none';
+    var hit=sv('rect',{x:f.x0,y:f.y1,width:Math.max(0,f.x1-f.x0),height:f.y0-f.y1,fill:'transparent'},svg);
+    hit.addEventListener('pointermove',function(e){var r=svg.getBoundingClientRect(),px=e.clientX-r.left,best=xsAll[0],bd=1e9;xsAll.forEach(function(v){var dd=Math.abs(f.xs(v)-px);if(dd<bd){bd=dd;best=v;}});
+      ch.setAttribute('x1',f.xs(best));ch.setAttribute('x2',f.xs(best));ch.style.display='';
+      var rows=[{v:cfg.x.tip(best)}];cfg.series.forEach(function(se){var p=null;se.pts.forEach(function(q){if(q[0]===best)p=q;});if(p)rows.push({key:se.cls,v:cfg.y.tip(p[1]),l:se.name});});showTip(rows,e.clientX,e.clientY);});
+    hit.addEventListener('pointerleave',function(){ch.style.display='none';hideTip();});
+  });
+  if(cfg.table)dataTable(host,cfg.table.cols,cfg.table.rows);}
+
+function scatter(id,cfg){var host=document.getElementById(id);if(!host)return;host.classList.add('stack');
+  var legend=h('div',{class:'legend'});cfg.legend.forEach(function(l){legend.appendChild(h('span',{class:'lg'},h('i',{class:'key-dot '+l.cls+(l.shape==='d'?' dia':'')}),l.name));});
+  var plot=h('div',{class:'plot'});host.appendChild(legend);host.appendChild(plot);
+  responsive(plot,function(W){var wide=false;var m={l:50,r:18,t:30,b:44};var H=cfg.h||340;var f=frame(plot,W,H,m,cfg),svg=f.svg;
+    var rx=f.xs(cfg.region.x),ryb=f.ys(cfg.region.y);var reg=sv('rect',{x:rx,y:f.y1,width:f.x1-rx,height:ryb-f.y1,class:'region'},null);svg.insertBefore(reg,svg.firstChild);
+    sv('line',{x1:rx,x2:rx,y1:f.y1,y2:f.y0,class:'thr'},svg);sv('line',{x1:f.x0,x2:f.x1,y1:ryb,y2:ryb,class:'thr'},svg);
+    sv('text',{x:f.x1-6,y:f.y1+14,'text-anchor':'end',class:'thrt',text:cfg.region.label},svg);
+    var d=cfg.path.map(function(p,i){return (i?'L':'M')+f.xs(p[0]).toFixed(1)+','+f.ys(p[1]).toFixed(1);}).join(' ');sv('path',{d:d,class:'trail'},svg);
+    cfg.points.forEach(function(p){var cx=f.xs(p.x),cy=f.ys(p.y);
+      if(p.shape==='d')sv('rect',{x:cx-5,y:cy-5,width:10,height:10,transform:'rotate(45 '+cx+' '+cy+')',class:'pt '+p.cls},svg);else sv('circle',{cx:cx,cy:cy,r:5.5,class:'pt '+p.cls},svg);
+      var o=wide?p.lab:(p.tagAt||{dx:10,dy:4,anchor:'start'});sv('text',{x:cx+o.dx,y:cy+o.dy,'text-anchor':o.anchor,class:wide?'lbl':'lbl tag',text:wide?p.short:p.tag},svg);
+      var hc=sv('circle',{cx:cx,cy:cy,r:14,fill:'transparent',tabindex:'0',class:'hit','aria-label':p.name+': overall score '+f3(p.x)+', CRISPR-Cas F1 '+f3(p.y)},svg);
+      bindTip(hc,function(){return [{v:p.name},{v:f3(p.x),l:'overall score'},{v:f3(p.y),l:'CRISPR-Cas F1'}];});});
+  });
+  var key=h('ol',{class:'key'});cfg.points.forEach(function(p){key.appendChild(h('li',null,h('b',{text:p.tag}),h('span',{text:p.name}),h('span',{class:'num',text:f3(p.x)+' · '+f3(p.y)})));});host.appendChild(key);}
+
+function bars(id,cfg){var host=document.getElementById(id);if(!host)return;host.classList.add('stack');var g=h('div',{class:'bars'});
+  cfg.rows.forEach(function(r){if(r.group){g.appendChild(h('div',{class:'grp',text:r.group}));return;}
+    var lab=h('div',{class:'lab'},h('span',{text:r.label}));if(r.sub)lab.appendChild(h('small',{text:r.sub}));
+    var tr=h('div',{class:'track',tabindex:'0',role:'img','aria-label':r.label+': '+(r.show||cfg.fmt(r.v))});
+    if(cfg.ref!=null){tr.classList.add('hasref');tr.style.setProperty('--refx',(cfg.ref/cfg.max*100)+'%');}
+    var b=h('div',{class:'bar '+(r.cls||'s1')});b.style.width=Math.max(0,r.v/cfg.max*100)+'%';tr.appendChild(b);
+    if(r.ci){var c=h('div',{class:'ci'});c.style.left=(r.ci[0]/cfg.max*100)+'%';c.style.width=((r.ci[1]-r.ci[0])/cfg.max*100)+'%';tr.appendChild(c);}
+    g.appendChild(lab);g.appendChild(tr);g.appendChild(h('div',{class:'val',text:r.show||cfg.fmt(r.v)}));
+    bindTip(tr,function(){var rows=[{v:r.show||cfg.fmt(r.v),l:r.label}];if(r.tip)rows.push({v:r.tip});return rows;});});
+  host.appendChild(g);if(cfg.table)dataTable(host,cfg.table.cols,cfg.table.rows);}
+
+function safe(fn){try{fn();}catch(err){if(window.console)console.error(err);}}
+
+/* ---------- data ---------- */
+safe(function(){scatter('c-plane',{
+  aria:'Scatter of CRISPR-Cas F1 against overall score for seven methods',
+  x:{min:0.38,max:0.66,ticks:[0.40,0.45,0.50,0.55,0.60,0.65],ticksNarrow:[0.40,0.50,0.60],fmt:f2,label:'Overall score (excess F1, defence + secretion)'},
+  y:{min:0.38,max:0.54,ticks:[0.40,0.44,0.48,0.52],fmt:f2,label:'CRISPR-Cas F1'},
+  region:{x:0.417,y:0.459,label:'both bars met'},
+  path:[[0.420,0.504],[0.588,0.422],[0.624,0.406]],
+  legend:[{cls:'ref',shape:'d',name:'reference engine'},{cls:'s1',name:'words, family identity'},{cls:'s2',name:'words, embedding identity'},{cls:'s3',name:'words, alignment lists (control)'}],
+  points:[
+    {tag:'R',name:'Reference engine',short:'Reference',x:0.427,y:0.479,cls:'ref',shape:'d',lab:{dx:11,dy:4,anchor:'start'}},
+    {tag:'A',name:'Family words, every genome counted',short:'every genome counted',x:0.420,y:0.504,cls:'s1',lab:{dx:11,dy:4,anchor:'start'}},
+    {tag:'B',name:'Family words, 922 genera',short:'922 genera',x:0.588,y:0.422,cls:'s1',lab:{dx:-11,dy:4,anchor:'end'}},
+    {tag:'C',name:'Family words, 642 genome groups',short:'642 genome groups',x:0.624,y:0.406,cls:'s1',lab:{dx:-11,dy:4,anchor:'end'}},
+    {tag:'D',name:'Family words, shared gene order',short:'shared gene order',x:0.574,y:0.452,cls:'s1',lab:{dx:-11,dy:4,anchor:'end'}},
+    {tag:'E',name:'Embedding words, genome groups',short:'genome groups',x:0.475,y:0.469,cls:'s2',lab:{dx:11,dy:16,anchor:'start'}},
+    {tag:'F',name:'Embedding words, shared gene order',short:'shared gene order',x:0.433,y:0.517,cls:'s2',lab:{dx:11,dy:4,anchor:'start'}},
+    {tag:'G',name:'Alignment-list words, genome groups (control)',short:'alignment lists',x:0.468,y:0.475,cls:'s3',lab:{dx:-11,dy:4,anchor:'end'},tagAt:{dx:-10,dy:-5,anchor:'end'}}
+  ]});});
+
+safe(function(){bars('c-ribo',{max:1700,ref:1400,fmt:function(v){return v.toLocaleString('en-US');},rows:[
+  {label:'Reference engine',v:1512,cls:'ref'},
+  {group:'Family identity'},
+  {label:'Words',v:501,cls:'s1'},
+  {label:'Words + phrases',v:1420,cls:'s1'},
+  {label:'Words, shared gene order',v:510,cls:'s1'},
+  {label:'Words + phrases, shared gene order',v:1326,cls:'s1'},
+  {group:'Embedding identity'},
+  {label:'Words, genome groups',v:1172,cls:'s2'},
+  {label:'Words + junction phrases, genome groups',v:1138,cls:'s2'},
+  {label:'Words, shared gene order',v:926,cls:'s2'},
+  {group:'Alignment lists (control)'},
+  {label:'Words, genome groups',v:1079,cls:'s3'},
+  {group:'Bond tree (redesign)'},
+  {label:'Family identity, genome groups',v:1598,cls:'s1'},
+  {label:'Alignment lists, genome groups',v:1549,cls:'s3'},
+  {label:'Embedding lists, genome groups',v:1542,cls:'s2'}
+]});});
+
+safe(function(){
+  function L(n,E){return n*Math.log(n/E)-n+E;}
+  function mk(E){var a=[],n;for(n=2;n<=10;n++)a.push([n,L(n,E)]);return a;}
+  var s1=mk(0.01),s2=mk(0.1),s3=mk(1),rows=[],i;for(i=0;i<s1.length;i++)rows.push([s1[i][0],s1[i][1].toFixed(1),s2[i][1].toFixed(1),s3[i][1].toFixed(1)]);
+  lineChart('c-lambda',{aria:'Lambda against supporting lineages for chance expectations 0.01, 0.1 and 1',h:300,rpad:74,
+    x:{min:2,max:10,ticks:[2,3,4,5,6,7,8,9,10],fmt:String,label:'Supporting lineages n',tip:function(v){return 'n = '+v;}},
+    y:{min:0,max:60,ticks:[0,10,20,30,40,50,60],fmt:String,label:'Λ (nats)',tip:function(v){return v.toFixed(1)+' nats';}},
+    hlines:[{y:10,label:'τ = 10',at:'right',legend:'threshold τ'},{y:6,label:'τ = 6',at:'right'}],
+    series:[{name:'E = 0.01',cls:'q1',pts:s1,end:'E = 0.01'},{name:'E = 0.1',cls:'q2',pts:s2,end:'E = 0.1'},{name:'E = 1',cls:'q3',pts:s3,end:'E = 1'}],
+    table:{cols:['n','Λ at E = 0.01','Λ at E = 0.1','Λ at E = 1'],rows:rows}});});
+
+safe(function(){lineChart('c-fdr',{aria:'False-discovery share against threshold for three variants',h:300,rpad:20,
+  x:{min:4,max:12,ticks:[4,6,8,10,12],fmt:String,label:'Threshold τ (nats)',tip:function(v){return 'τ = '+v;}},
+  y:{min:0.00002,max:0.1,log:true,ticks:[0.0001,0.001,0.01,0.1],fmt:sci,label:'False-discovery share',tip:function(v){return (v*100).toPrecision(2)+'%';}},
+  hlines:[{y:0.01,label:'1% limit',at:'end',legend:'1% limit'}],
+  series:[
+    {name:'families, genome groups',cls:'s1',pts:[[6,0.062],[8,0.0113],[10,0.00044],[12,0.00005]],mark:[10]},
+    {name:'families, shared gene order',cls:'s3',pts:[[6,0.030],[8,0.0072],[10,0.0018],[12,0.0002]],mark:[8]},
+    {name:'embedding lists, genome groups',cls:'s2',pts:[[4,0.034],[6,0.0086],[8,0.0014]],mark:[6]}],
+  table:{cols:['τ','families, genome groups','families, shared gene order','embedding lists, genome groups'],rows:[[4,'','','3.4%'],[6,'6.2%','3.0%','0.86%'],[8,'1.13%','0.72%','0.14%'],[10,'0.044%','0.18%',''],[12,'0.005%','0.02%','']]}});});
+
+safe(function(){
+  var ns=[1,2,3,5,8,12,20,30,50,80,120,200];
+  function mk(sb){return ns.map(function(n){return [n,n/(1+(n-1)*sb)];});}
+  var a=mk(0),b=mk(0.02),c=mk(0.1),d=mk(0.3);
+  lineChart('c-neff',{aria:'Effective number of observations against number of genomes for four levels of shared gene order',h:310,rpad:150,
+    x:{min:1,max:200,log:true,ticks:[1,2,5,10,20,50,100,200],ticksNarrow:[1,5,20,100],fmt:String,label:'Genomes holding the pair, n',tip:function(v){return 'n = '+v;}},
+    y:{min:1,max:200,log:true,ticks:[1,2,5,10,20,50,100,200],fmt:String,label:'Effective observations',tip:function(v){return v.toFixed(1);}},
+    series:[{name:'no shared order',cls:'q0',pts:a,nodots:true,end:'no shared order'},{name:'2% shared (different groups)',cls:'q1',pts:b,nodots:true,end:'2% (different groups)'},{name:'10% shared',cls:'q2',pts:c,nodots:true,end:'10%'},{name:'30% shared (same group)',cls:'q3',pts:d,nodots:true,end:'30% (same group)'}],
+    table:{cols:['n','no shared order','2%','10%','30%'],rows:ns.map(function(n,i){return [n,a[i][1].toFixed(1),b[i][1].toFixed(1),c[i][1].toFixed(1),d[i][1].toFixed(1)];})}});});
+
+safe(function(){bars('c-lut',{max:0.32,fmt:function(v){return (v<0?'−':'+')+Math.abs(v).toFixed(3);},rows:[
+  {label:'Bond tree, embedding lists',sub:'F1 0.906 · 811 ribosomal runs resolved · all four criteria',v:0.279,cls:'s2',ci:[0.271,0.288],tip:'95% interval +0.271 to +0.288'},
+  {label:'Bond tree, protein families, adaptive distance',sub:'F1 0.768 · 788 resolved · three of four criteria',v:0.149,cls:'s1',ci:[0.138,0.161],tip:'95% interval +0.138 to +0.161'},
+  {label:'Reference engine',sub:'F1 0.660 · 668 resolved',v:0.108,cls:'ref',ci:[0.093,0.123],tip:'95% interval +0.093 to +0.123'},
+  {label:'Pair-linking on embedding lists',sub:'F1 0.579 · 526 resolved',v:0.078,cls:'ref'},
+  {label:'Pair-linking on protein families',sub:'F1 0.472 · 373 resolved',v:0.018,cls:'ref'},
+  {label:'Synton pipeline as published',sub:'F1 0.055 · 0 resolved',v:0,cls:'ref',show:'−0.009',tip:'95% interval −0.022 to +0.004'}
+]});});
+
+safe(function(){bars('c-sd',{max:0.26,fmt:function(v){return (v<0?'−':'+')+Math.abs(v).toFixed(3);},rows:[
+  {group:'Reference engine and published tools'},
+  {label:'Reference engine, single reading',sub:'F1 0.578',v:0.200,cls:'ref',ci:[0.164,0.237],tip:'95% interval +0.164 to +0.237'},
+  {label:'Reference engine, union of 42 readings',sub:'F1 0.750',v:0.184,cls:'ref',ci:[0.154,0.213],tip:'95% interval +0.154 to +0.213'},
+  {label:'Native Spacedust',sub:'F1 0.676',v:0.065,cls:'ref',ci:[0.037,0.093],tip:'95% interval +0.037 to +0.093'},
+  {label:'Synton pipeline on our families',sub:'F1 0.381',v:0.054,cls:'ref',ci:[0.018,0.090],tip:'95% interval +0.018 to +0.090'},
+  {label:'Synton pipeline as published',sub:'F1 0.190',v:0,cls:'ref',show:'−0.002',tip:'95% interval −0.037 to +0.034'},
+  {group:'Word pair statistic, connected runs'},
+  {label:'Genome groups',sub:'F1 0.580',v:0.153,cls:'s3',ci:[0.116,0.189],tip:'95% interval +0.116 to +0.189'},
+  {label:'Shared-gene-order counts',sub:'F1 0.587',v:0.142,cls:'s3',ci:[0.106,0.178],tip:'95% interval +0.106 to +0.178'},
+  {group:'Bond tree (redesign), DPANN settings'},
+  {label:'Family bonds, genome groups',sub:'F1 0.574',v:0.126,cls:'s2',ci:[0.086,0.166],tip:'95% interval +0.086 to +0.166'},
+  {label:'Family bonds, shared-gene-order counts',sub:'F1 0.600',v:0.123,cls:'s2'},
+  {label:'Embedding-list bonds, genome groups',sub:'F1 0.598 · the configuration that clears all DPANN bars',v:0.111,cls:'s2',ci:[0.072,0.149],tip:'95% interval +0.072 to +0.149'},
+  {label:'Family bonds, adaptive pair distance',sub:'F1 0.667 · also clears all DPANN bars',v:0.164,cls:'s2',ci:[0.125,0.202],tip:'95% interval +0.125 to +0.202'},
+  {group:'Word method: family words + cohesion phrases'},
+  {label:'Genome groups',sub:'F1 0.483',v:0.080,cls:'s1',ci:[0.046,0.114],tip:'95% interval +0.046 to +0.114'},
+  {label:'Shared-gene-order counts',sub:'F1 0.481',v:0.049,cls:'s1',ci:[0.014,0.084],tip:'95% interval +0.014 to +0.084'}
+]});});
+
+safe(function(){bars('c-type',{max:1,fmt:f3,rows:[
+  {group:'DefenseFinder system type'},
+  {label:'Locus vector',v:0.970,cls:'s3',ci:[0.960,0.979],tip:'95% interval 0.960 to 0.979'},
+  {label:'Shared-family overlap',v:0.958,cls:'ref'},
+  {label:'Engine module labels',v:0.803,cls:'ref'},
+  {group:'CRISPR-Cas subtype'},
+  {label:'Locus vector',v:0.720,cls:'s3',ci:[0.698,0.740],tip:'95% interval 0.698 to 0.740'},
+  {label:'Shared-family overlap',v:0.715,cls:'ref'},
+  {label:'Engine module labels',v:0.562,cls:'ref'},
+  {group:'No family shared with the query · DefenseFinder type'},
+  {label:'Locus vector',v:0.944,cls:'s3'},
+  {label:'Engine module labels',v:0.685,cls:'ref'},
+  {label:'Chance',v:0.049,cls:'ref'},
+  {group:'No family shared with the query · CRISPR-Cas subtype'},
+  {label:'Locus vector',v:0.563,cls:'s3'},
+  {label:'Engine module labels',v:0.362,cls:'ref'},
+  {label:'Chance',v:0.126,cls:'ref'}
+]});});
+
+safe(function(){bars('c-search',{max:1,fmt:f3,rows:[
+  {label:'Per-gene embedding ranks, aggregated',v:0.792,cls:'ref'},
+  {label:'Locus vector, fitted whitening',v:0.792,cls:'s3',ci:[0.781,0.804],tip:'95% interval 0.781 to 0.804'},
+  {label:'Locus vector, untrained',v:0.744,cls:'s3',ci:[0.732,0.756],tip:'95% interval 0.732 to 0.756'},
+  {group:'Earlier search benchmark'},
+  {label:'MMseqs2 alignment ranks',v:0.610,cls:'ref'},
+  {label:'Shared family labels',v:0.369,cls:'ref'},
+  {label:'Parsing the query into words',v:0.107,cls:'ref'}
+]});});
+
+safe(function(){bars('c-hom',{max:100,fmt:function(v){return v.toFixed(1)+'%';},rows:[
+  {label:'10 nearest non-family neighbours',v:67.6,cls:'s1',ci:[66.8,68.5],tip:'95% interval 66.8 to 68.5%'},
+  {label:'Neighbours ranked 11–100',v:58.7,cls:'s1'},
+  {label:'Neighbours ranked 101–1,000',v:42.7,cls:'s1'},
+  {label:'Random pairs of matched length',v:1.65,cls:'ref',show:'1.5–1.8%'}
+]});});
+
+safe(function(){bars('c-cofold',{max:14,fmt:function(v){return v.toFixed(1)+'%';},rows:[
+  {label:'Called pairs',sub:'26 of 300',v:8.67,cls:'s1',ci:[5.7,12.4],show:'8.7%',tip:'95% interval 5.7 to 12.4%'},
+  {label:'Matched pairs left uncalled',sub:'2 of 300',v:0.67,cls:'ref',ci:[0.08,2.39],show:'0.67%',tip:'95% interval 0.08 to 2.39%'},
+  {label:'Partner swapped',sub:'0 of 150',v:0,cls:'ref',ci:[0,2.4],show:'0%',tip:'95% interval 0 to 2.4%'}
+]});});
+})();
+</script>

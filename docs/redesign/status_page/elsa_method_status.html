@@ -202,9 +202,9 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <div class="eyebrow">ELSA redesign · status report · started 13 November 2026</div>
   <h1>Conserved gene neighbourhoods as words: where the new method stands</h1>
   <p class="dateline">DPANN archaea · 3,564 genomes · 3,585,303 genes · protein embeddings from ESM++ small · scored on even-numbered genomes, every setting fixed beforehand on odd-numbered genomes</p>
-  <p class="note">Updated 19 November: the audit of the bacterial ribosomal failures is in the second-test section. Updated 19 November, 07:15 UTC. Newest: the second test on untouched data (SR-VP genome bins) and the first (the lut set), each in its own section below. From 13 November: an adaptive pair distance brings the bond tree level with the reference engine on Spacedust's benchmark (+0.164) while keeping all seven DPANN bars. Before that: the all-bars configuration scored on Spacedust's benchmark, and the measured cost of embedding lists. Earlier: the bond tree over neighbour-list bonds clears all seven DPANN bars. Also added today: first results of the long-locus redesign (the bond tree), results on a second dataset (Spacedust's benchmark) and the run of the closest published method. Earlier today: the alignment control, the junction-phrase reading and the prior-work check.</p>
+  <p class="note">Updated 19 November, 17:25 UTC. Newest: the third test on untouched data (842 complete GTDB genomes) passed all five bars set beforehand; it has its own section. Also 19 November: the audit of the bacterial ribosomal failures is in the second-test section. Newest: the second test on untouched data (SR-VP genome bins) and the first (the lut set), each in its own section below. From 13 November: an adaptive pair distance brings the bond tree level with the reference engine on Spacedust's benchmark (+0.164) while keeping all seven DPANN bars. Before that: the all-bars configuration scored on Spacedust's benchmark, and the measured cost of embedding lists. Earlier: the bond tree over neighbour-list bonds clears all seven DPANN bars. Also added today: first results of the long-locus redesign (the bond tree), results on a second dataset (Spacedust's benchmark) and the run of the closest published method. Earlier today: the alignment control, the junction-phrase reading and the prior-work check.</p>
   <nav class="toc" aria-label="Sections">
-    <a href="#summary">Summary</a><a href="#untouched">Untouched test 1</a><a href="#untouched2">Untouched test 2</a><a href="#benchmark">Reading the benchmark</a><a href="#scorecard">Scorecard</a><a href="#algorithm">The algorithm</a><a href="#ingredients">What each part contributes</a><a href="#gaps">The two missing bars</a><a href="#second">Second dataset</a><a href="#vectors">Loci as vectors</a><a href="#embeddings">What embeddings add</a><a href="#biology">Screen for new complexes</a><a href="#aside">Set aside</a><a href="#prior">Prior work</a><a href="#open">Open items</a>
+    <a href="#summary">Summary</a><a href="#untouched">Untouched test 1</a><a href="#untouched2">Untouched test 2</a><a href="#untouched3">Untouched test 3</a><a href="#benchmark">Reading the benchmark</a><a href="#scorecard">Scorecard</a><a href="#algorithm">The algorithm</a><a href="#ingredients">What each part contributes</a><a href="#gaps">The two missing bars</a><a href="#second">Second dataset</a><a href="#vectors">Loci as vectors</a><a href="#embeddings">What embeddings add</a><a href="#biology">Screen for new complexes</a><a href="#aside">Set aside</a><a href="#prior">Prior work</a><a href="#open">Open items</a>
   </nav>
 </header>
 
@@ -218,6 +218,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <ul class="points col">
     <li><strong>First test on untouched data (19 November).</strong> Two configurations were frozen as selected on DPANN and run once on 1,032 genomes built around the lanthanide <em>lut</em> cluster. The bond tree on embedding lists scores F1 0.906 on the lut loci, resolves 811 of 858 ribosomal runs and holds all 80 complete clusters. The bond tree on protein families scores F1 0.768 and misses one of its four bars. Both beat the reference engine; the published synton pipeline finds nothing.</li>
     <li><strong>Second test on untouched data (19 November).</strong> On 994 SR-VP genome bins the embedding-list tree scores DefenseFinder F1 0.882 and TXSScan F1 0.754, above the reference engine on every curated measure. It recovers 802 of 803 ribosomal runs and resolves 528 under the standing rule, short of the bar set beforehand. A case-by-case audit traces 256 of the 268 unresolved bacterial runs to the benchmark's definition of a run, and none to rearrangement.</li>
+    <li><strong>Third test on untouched data (19 November): passed.</strong> The ribosomal definition, the configuration and five pass bars were frozen before 842 complete GTDB genomes were selected. The embedding-list tree resolves 666 of 688 bacterial runs (96.8%) and 110 of 113 archaeal runs (97.3%), 106 more than the reference engine [+86, +126], and passes all five bars.</li>
     <li><strong>The method reads a genome as text and learns its words.</strong> A word is a run of adjacent genes that recurs in more independent lineages than random gene order predicts. One statistic scores every merge, its threshold comes from shuffled genomes, and the output needs no hand-set reading rules.</li>
     <li><strong>With MMseqs2 families as gene identity, it outscores the reference engine</strong> by +0.181 [+0.158, +0.204] on the overall score and draws tighter loci. It loses CRISPR-Cas systems, because Cas genes are spread over many small families.</li>
     <li><strong>With embeddings as gene identity and no families, CRISPR-Cas comes back</strong> (−0.010 against the reference, inside tolerance) and the overall score stays above the reference (+0.048 [+0.027, +0.069]). Long conserved neighbourhoods such as the ribosomal locus come out in pieces.</li>
@@ -275,6 +276,31 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <li><strong>Check of that definition on the two earlier datasets</strong> (definition frozen first). On the lut set, all bacteria, it holds: 835 of 858 runs resolve, up from 811, against 768 for the reference engine. On DPANN, all archaea, it does worse than the standing rule (1,491 against 1,542 of 1,686): the corrected run ignores strand and reaches across a strand change into a neighbouring block, while the method stops there. The cluster-level definition is sound for bacteria; for archaea the standing run remains the better target.</li>
     <li><strong>A strand-aware version serves both domains</strong> (development numbers). The run breaks wherever two consecutive members sit on opposite strands. The embedding-list tree then resolves 834 of 858 runs on the lut set, 651 of 658 bacterial runs on SR-VP, and 1,546 of 1,686 on DPANN, against 764, 581 and 1,499 for the reference engine. It narrowly misses two of the four soundness criteria written beforehand, so it is the best candidate and stays a candidate.</li>
     <li><strong>Order of the two configurations.</strong> The embedding-list tree leads again, as on the lut set.</li>
+  </ul>
+</section>
+
+<section id="untouched3">
+  <h2>Third test on untouched data: complete GTDB genomes</h2>
+  <p class="lead col">The strand-aware ribosomal definition, the configuration and five pass bars were frozen before this set was selected. The embedding-list tree passes all five, and so does the family-bond tree.</p>
+  <div class="scroll">
+  <table class="plain" style="min-width:820px">
+    <thead><tr><th>Method</th><th>Runs recovered, of 801</th><th>Bacterial runs resolved, of 688</th><th>Archaeal runs resolved, of 113</th><th>Resolved, minus reference engine</th><th>Resolved at random positions (Bacteria / Archaea)</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Bar set beforehand</td><td>at least 97%</td><td>at least 90%</td><td>at least 85%</td><td>95% interval above zero</td><td>at most 5%</td><td></td></tr>
+      <tr><td>Bond tree, embedding lists (primary)</td><td>801</td><td>666 (96.8%)</td><td>110 (97.3%)</td><td>+106 [+86, +126]</td><td>0.29% / 0.00%</td><td>Passes all five</td></tr>
+      <tr><td>Bond tree, protein families (secondary)</td><td>801</td><td>659 (95.8%)</td><td>102 (90.3%)</td><td>+91 [+66, +114]</td><td>1.08% / 0.71%</td><td>Passes all five</td></tr>
+      <tr><td>Reference engine</td><td>801</td><td>586 (85.2%)</td><td>84 (74.3%)</td><td></td><td>0.84% / 2.12%</td><td>Misses both resolution bars</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <ul class="points col">
+    <li><strong>The test set.</strong> 842 genomes from GTDB: 700 Bacteria across 44 phyla and 142 Archaea across 11 phyla, chosen by a rule written before any protein was read and disjoint from every earlier dataset. 801 genomes carry a run of at least 16 ribosomal-protein genes, and each of those runs is scored. In the other 41 genomes (29 Archaea, 12 Bacteria) the ribosomal genes lie in shorter stretches.</li>
+    <li><strong>What is scored.</strong> The conserved ribosomal-protein gene cluster: the chain of ribosomal proteins and established cluster members around each run, broken wherever two consecutive members sit on opposite strands. The definition, its scorer and the bars were committed on 19 November before the genomes were chosen, and every score was computed once.</li>
+    <li><strong>The 25 runs the primary leaves unresolved.</strong> Five are single loci that the method splits; the three archaeal ones are all cuts inside the S10 operon. In 17 bacterial runs the target chain joins two or more units that the output reports as separate loci; in 11 of these the audit flags the gene at the junction (a methyltransferase between L7/L12 and rpoB, a transposase beside tufA), and those labels await a hand check. The remaining three are one each of: a correct locus larger than the target, a locus that extends past the cluster, and a fitting locus passed over by the scorer.</li>
+    <li><strong>Under the older run definition</strong> (ribosomal-protein domains only) the primary resolves 692 of 801 runs, the secondary 683 and the reference engine 298. The cluster-level definition lifts the reference engine most (298 to 670), because its loci are larger; the primary's margin is +394 runs under the older rule and +106 under the frozen one.</li>
+    <li><strong>The two configurations.</strong> They are level on bacteria (666 and 659). The embedding-list tree leads on archaea (110 against 102), and the gap is widest in Methanobacteriota (12 of 12 against 3 of 12).</li>
+    <li><strong>Where the remaining bacterial misses sit.</strong> Bacillota: 89 of 105 runs resolved by the primary, against 104 of 104 in Pseudomonadota and 81 of 83 in Bacteroidota.</li>
+    <li><strong>Annotation.</strong> Ribosomal marking and cluster-member annotation ran through Aksha. On a 20-genome sample of the second test set the rebuilt run table equals the stored one gene for gene.</li>
   </ul>
 </section>
 
@@ -739,15 +765,13 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <h2>Open items</h2>
   <div class="two" style="max-width:none">
     <div class="opt"><h4>Running now</h4>
-      <p>Two fixes that an independent audit judged biologically justified, on DPANN: bridging operons that are rearranged in one lineage, and splitting at strand changes first. Both are applied to both configurations.</p>
-      <p>A second untouched set is ready and unopened: 994 dereplicated high-quality SR-VP genome bins (780 bacteria, 214 archaea, 51 phyla), with embeddings and truth tables.</p>
-      <p>Loci homologous to the lanthanide <em>lut</em> cluster around Methylobacterium, from GTDB representatives.</p>
-      <p>Embeddings for the SR-VP locked test set.</p></div>
+      <p>All three tests on untouched data are complete; each has its own section above. No job is running.</p></div>
     <div class="opt"><h4>Next</h4>
       <p>Embedding words on Spacedust's benchmark, which waited for the GPU.</p>
       <p>A redundancy-aware chance expectation, after the duplicate-genome stress test.</p>
-      <p>A community dataset from the larger SR-VP bin collection, selected by completeness.</p>
-      <p>Then one frozen configuration, run once on the locked sets: SR-VP bacteria (1,382 long single contigs, sealed) and 34,719 RefSeq complete genomes (prepared).</p></div>
+      <p>Spacedust on the third test set, for a comparison with the published tool on the same 801 ribosomal runs.</p>
+      <p>A hand check of the 11 junction labels among the third test's unresolved runs.</p>
+      <p>The choice of the single configuration that becomes the method. The embedding-list tree led on the first two untouched sets and has the higher counts on the third; it trails on Spacedust's long biosynthetic regions.</p></div>
     <div class="opt"><h4>Waiting</h4>
       <p>ESM2-650M embeddings of DPANN, until the H200 GPUs are free.</p>
       <p>gLM2 as an ablation, after standard embeddings win.</p>

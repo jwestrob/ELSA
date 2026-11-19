@@ -83,8 +83,25 @@ Archaea
   Nanohalarchaeota          1    1    1    1    0     1,144   0.007
 The archaeal cap is 15% of the 300 target (45); measured against the 142 archaea selected, the two capped phyla are 32%.
 
-REPORT 2 — PACKAGE
-PENDING (filled when the GPU job and the finalize-and-seal job end).
+REPORT 2 — PACKAGE SEALED WITH EMBEDDINGS (2026-11-19 15:12 UTC)
+Path: $RD/testset3/package/. Seal: seal.json, seal_sha256 cf920a483f2714e5be34de17b2c4285d69277681dc5822c71abbc9ef77ff3c89
+  over 31 files (25,388,954,530 bytes): universe tables, FASTA, selection, split, embeddings, receipts, code.
+Counts: 842 genomes (700 Bacteria, 142 Archaea), 2,557,405 genes (Bacteria 2,232,853; Archaea 324,552), 1,176 contigs
+  carrying genes (metadata 1,187; Bacteria 940, Archaea 236), 3 single-gene contigs, 1,293 partial genes, 0 internal
+  stops; protein counts equal the GTDB metadata for all 842 genomes. Split: Bacteria 350 tuning / 350 test, Archaea
+  71 / 71. Unique sequences 2,530,648 (815,369,810 residues; longest 74,508 aa; 3,634 above 2,046 aa).
+Embeddings (ESM++ small, Synthyra/ESMplusplus_small rev 46c5f7d5, bf16, float32 residue mean, whole protein in one pass;
+  the package_k8 / SR-VP recipe): 2,530,648 of 2,530,648 vectors valid, 0 failed, 0 OOM splits; 960 dimensions.
+  Audits passed: worker self-check min cosine 0.99991 (32 proteins), per-shard float32 audit min cosine 0.99997 (618
+  proteins), assembly check 0 differing rows of 20,000. zca10 whitening fitted on this set (weights = rows per unique
+  sequence): f32-vs-transform min cosine 0.9999997, f16-vs-f32 min cosine 0.99995.
+Timings: packaging job 116291 56 s; GPU job 116292 4 h 20 min 51 s wall on node-128-512g-8gpu-1 (RTX A5000), of which
+  embedding 15,527 s = 163.0 unique sequences/s, 52,514 residues/s (projection was 4.0-4.3 h); finalize + zca10 +
+  manifest + seal job 116293 6 min 32 s. CPU time in total under 10 min of 24-CPU jobs.
+Deviations: (1) 142 archaea instead of about 300 (decision above); (2) CheckM2 used for the completeness / contamination
+  thresholds (CheckM1 kept in genomes.parquet); (3) contig lengths are NULL (GTDB ships proteomes; contig_extra.max_end_nt
+  is a lower bound), as in package_k8; (4) the package carries no README (anything added after the seal would change the
+  sealed manifest); this report and selection_rules.txt document it.
 
 PACKAGE LAYOUT (same file names and columns as slice_lut/testset/package_k8 where they apply)
   universe/genes.parquet       gid, protein_id ('<genome>|<Prodigal ID>'), genome, genome_code, contig, contig_code,
@@ -110,8 +127,8 @@ code/ts3_select.py + select.sbatch      selection from metadata (116282 failed a
 code/ts3_parse.py, ts3_build.py, build.sbatch   proteomes -> package (116291 COMPLETED 56 s: parse 5 s, build 20 s,
                                         embed_queue prep 27 s)
 code/embed_gpu.sbatch                   116292 ts3_esmpp, partition gpu, H200 node excluded, ran on node-128-512g-8gpu-1
-                                        (RTX A5000); started 10:45 UTC
-code/finalize_zca.sbatch + ts3_seal.py  116293 ts3_final, afterok:116292 (finalize, zca10, manifest, seal)
+                                        (RTX A5000), 10:45-15:06 UTC, COMPLETED
+code/finalize_zca.sbatch + ts3_seal.py  116293 ts3_final, afterok:116292 (finalize, zca10, manifest, seal), COMPLETED 6 min 32 s
 code/embed/                             zca10.py, embed_tokens.py, make_manifest.py copied unchanged from
                                         slice_lut/code/embed (themselves from transfer_srvp_bac)
 No HMM search was needed or run.

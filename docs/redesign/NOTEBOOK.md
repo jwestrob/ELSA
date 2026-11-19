@@ -3202,3 +3202,27 @@ Decision (mine): keep 142 as selected by the pre-written rule; lifting the phylu
 universe 11, reserved E. coli / B. subtilis representatives 4. Seven archaea fall in DPANN
 lineages. Embedding job 116292 running on the A5000 since 10:45 UTC, projected 4.0-4.3 h;
 finalize and seal chained behind it.
+
+## 2026-11-19 15:15 UTC — Third test set sealed; annotation and frozen run started
+
+Package `$RD/testset3/package/` sealed: sha256 `cf920a483f2714e5be34de17b2c4285d69277681dc5822c71abbc9ef77ff3c89`
+over 31 files (25.4 GB). 842 genomes (700 Bacteria, 142 Archaea), 2,557,405 genes, 2,530,648
+unique sequences, 1,176 contigs with genes; protein counts match GTDB metadata for every genome.
+Embeddings: ESM++ small, lut recipe, 2,530,648 valid vectors, 0 failures, zca10 whitening fitted on
+this set. Jobs: 116291 packaging 56 s; 116292 embedding 4 h 20 min on the A5000 (163 sequences/s;
+projection was 4.0-4.3 h); 116293 whitening, manifest and seal 6 min 32 s.
+
+Decisions written before any locus or score exists:
+- **All 842 genomes are scored.** The package carries a tuning/test split (Bacteria 350/350,
+  Archaea 71/71) by habit from the lut package; nothing is tuned on this set, so the split is
+  ignored. Neither `predeclared6.json` nor `FROZEN3.json` refers to a split.
+- **The package holds no ribosomal tables** (no HMM search was run while packaging). The audit
+  agent builds marked/runs outside the sealed package, with the marking rule of the lut and SR-VP
+  packages, through Aksha, and announces them in `$RD/ribo_audit/work6/testset3/RUNS_READY.json`.
+- Handoff by file: the frozen-run agent writes `$RD/long_loci/frozen3/results/locus_tables.json`
+  when its five locus tables are final; the audit agent scores from that.
+- Budgets: audit agent 2 h of 24-core job time; frozen-run agent 3 h (no job above 2 h), GPU passes
+  under 1 h each on the A5000.
+
+Go given to both agents at 15:20 UTC. Frozen hashes: `FROZEN3.json` 5f30fb51…68eb,
+`predeclared6.json` a6c997f3…9c3c, `score6.py` 6b61eeb8…2f80.

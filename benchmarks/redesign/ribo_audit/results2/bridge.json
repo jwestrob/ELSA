@@ -1,0 +1,108 @@
+{
+ "WA_L4b": {
+  "candidates": 59655,
+  "rule_i": {
+   "fires": 11944,
+   "merges_two_curated": 2,
+   "joins_one_curated": 35,
+   "fires_touching_curated": 290,
+   "fires_at_target_edges": 136,
+   "fires_inside_targets": 129
+  },
+  "rule_ii": {
+   "fires": 43194,
+   "merges_two_curated": 10,
+   "joins_one_curated": 135,
+   "fires_touching_curated": 1085,
+   "fires_at_target_edges": 182,
+   "fires_inside_targets": 148
+  },
+  "rule_iii": {
+   "fires": 23145,
+   "merges_two_curated": 5,
+   "joins_one_curated": 75,
+   "fires_touching_curated": 663,
+   "fires_at_target_edges": 59,
+   "fires_inside_targets": 144
+  },
+  "rule_i_iii": {
+   "fires": 4941,
+   "merges_two_curated": 0,
+   "joins_one_curated": 11,
+   "fires_touching_curated": 103,
+   "fires_at_target_edges": 34,
+   "fires_inside_targets": 125
+  },
+  "rule_ii_iii": {
+   "fires": 17138,
+   "merges_two_curated": 1,
+   "joins_one_curated": 52,
+   "fires_touching_curated": 427,
+   "fires_at_target_edges": 53,
+   "fires_inside_targets": 141
+  },
+  "candidates_at_target_edges": 233,
+  "candidates_inside_targets": 151,
+  "verdict1_cases": 23,
+  "repaired": {
+   "rule_i": 22,
+   "rule_ii": 22,
+   "rule_iii": 21,
+   "rule_i_iii": 21,
+   "rule_ii_iii": 21
+  }
+ },
+ "L4b": {
+  "candidates": 64539,
+  "rule_i": {
+   "fires": 5752,
+   "merges_two_curated": 0,
+   "joins_one_curated": 22,
+   "fires_touching_curated": 121,
+   "fires_at_target_edges": 71,
+   "fires_inside_targets": 192
+  },
+  "rule_ii": {
+   "fires": 45405,
+   "merges_two_curated": 2,
+   "joins_one_curated": 176,
+   "fires_touching_curated": 1047,
+   "fires_at_target_edges": 202,
+   "fires_inside_targets": 225
+  },
+  "rule_iii": {
+   "fires": 26194,
+   "merges_two_curated": 10,
+   "joins_one_curated": 103,
+   "fires_touching_curated": 731,
+   "fires_at_target_edges": 61,
+   "fires_inside_targets": 225
+  },
+  "rule_i_iii": {
+   "fires": 3009,
+   "merges_two_curated": 0,
+   "joins_one_curated": 7,
+   "fires_touching_curated": 47,
+   "fires_at_target_edges": 25,
+   "fires_inside_targets": 190
+  },
+  "rule_ii_iii": {
+   "fires": 18676,
+   "merges_two_curated": 1,
+   "joins_one_curated": 60,
+   "fires_touching_curated": 452,
+   "fires_at_target_edges": 52,
+   "fires_inside_targets": 219
+  },
+  "candidates_at_target_edges": 265,
+  "candidates_inside_targets": 231,
+  "verdict1_cases": 30,
+  "repaired": {
+   "rule_i": 19,
+   "rule_ii": 19,
+   "rule_iii": 19,
+   "rule_i_iii": 19,
+   "rule_ii_iii": 19
+  }
+ }
+}

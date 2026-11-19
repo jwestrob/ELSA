@@ -1,0 +1,64 @@
+VERDICTS FOR EVERY UNRESOLVED RUN (standing rule), count per output
+  verdict                                           TOK      L4b   WA_L4b   Z_L4bp
+  1 split one locus                                   0       31       24       30
+  2 run glues >= 2 loci                              30       22       19       24
+  3 output locus accurate, larger than run           30       13       13       24
+  4 output extends past the locus                    60        8       14       40
+  5 fitting locus exists, scorer picks larger        52       14       22       25
+  6 data problem                                      2        0        0        1
+  7 cannot tell                                       0        0        0        0
+  unresolved                                        174       88       92      144
+
+ANSWER A: RUNS RIGHT UNDER THE ACCURATE READING (all 1,686)
+  runs with >= 1 accurate target (ceiling): 1686; single locus 1622; multiple loci 64; no target 0
+  TOK      standing  1512   accurate  1485   (std-only 71, bio-only 44)
+  L4b      standing  1598   accurate  1590   (std-only 33, bio-only 25)
+  WA_L4b   standing  1594   accurate  1571   (std-only 43, bio-only 20)
+  Z_L4bp   standing  1542   accurate  1547   (std-only 34, bio-only 39)
+
+BY STRATUM (verdict counts per output)
+  TOK:
+    Aenigmatarchaeota   v2:18 v3:2 v4:1 v6:1
+    Altiarchaeota       v2:2 v5:1
+    EX4484-52           v5:1
+    Iainarchaeota       v2:1 v3:7 v4:51 v5:5
+    Micrarchaeota       v2:2 v3:3 v4:1 v5:2
+    Nanobdellota        v2:7 v3:18 v4:7 v5:42 v6:1
+    Parvarchaeaceae     v5:1
+  L4b:
+    Aenigmatarchaeota   v2:14
+    Altiarchaeota       v2:2
+    Iainarchaeota       v2:1 v3:1
+    Micrarchaeota       v2:1 v3:1
+    Nanobdellota        v1:31 v2:2 v3:6 v4:8 v5:14
+    Parvarchaeaceae     v2:2 v3:5
+  WA_L4b:
+    Aenigmatarchaeota   v2:13 v3:1
+    Altiarchaeota       v2:2
+    Iainarchaeota       v2:1 v3:1 v5:1
+    Micrarchaeota       v3:1 v4:1
+    Nanobdellota        v1:24 v2:1 v3:5 v4:13 v5:21
+    Parvarchaeaceae     v2:2 v3:5
+  Z_L4bp:
+    Aenigmatarchaeota   v2:14 v3:1 v5:1
+    Altiarchaeota       v2:3
+    Iainarchaeota       v2:1 v3:4 v4:10 v5:1
+    Micrarchaeota       v2:2 v3:2 v5:1
+    Nanobdellota        v1:30 v2:2 v3:12 v4:30 v5:22 v6:1
+    Parvarchaeaceae     v2:2 v3:5
+
+DECISIVE JUNCTIONS (verdicts 1 and 2): strand, distance, classes, inheritance
+  v1 L4b: 31 cases, 58 junctions; same strand 58; dist median 1.0; pair classes {'RR': 43, 'RX': 8, 'XR': 7}; inherited in own group (>= 1 other genome) 42/43; in >= 1 other group 43; unannotated 15; bonded 0
+      commonest: {'S17|L22': 13, 'S3|S5_C': 12, 'L22|S17': 7, 'S17|unannot': 7, 'S5_C|S3': 5, 'S3|S5': 5, 'unannot|S5': 2, 'unannot|S17': 2}
+  v1 WA_L4b: 24 cases, 24 junctions; same strand 24; dist median 1.0; pair classes {'RR': 18, 'RN': 2, 'RX': 2, 'NR': 2}; inherited in own group (>= 1 other genome) 22/22; in >= 1 other group 22; unannotated 2; bonded 0
+      commonest: {'S17|L22': 11, 'L22|S17': 6, 'S17|unannot': 2, 'sui1|L22': 2, 'S3|sui1': 1, 'S8|S4e': 1, 'L22|sui1': 1}
+  v1 Z_L4bp: 30 cases, 57 junctions; same strand 57; dist median 1.0; pair classes {'RR': 43, 'RX': 8, 'XR': 6}; inherited in own group (>= 1 other genome) 42/43; in >= 1 other group 43; unannotated 14; bonded 0
+      commonest: {'S17|L22': 13, 'S3|S5_C': 12, 'L22|S17': 7, 'S17|unannot': 7, 'S5_C|S3': 5, 'S3|S5': 5, 'unannot|S5': 2, 'unannot|S17': 2}
+  v2 TOK: 30 cases, 36 junctions; same strand 5; dist median 112.0; pair classes {'RX': 16, 'RR': 10, 'XX': 7, 'XR': 2, 'RN': 1}; inherited in own group (>= 1 other genome) 19/25; in >= 1 other group 20; unannotated 11; bonded 0
+      commonest: {'NTP_transf_2|unannot': 5, 'S13|L4e': 4, 'L3|HIT': 4, 'L4e|S13': 3, 'S19|tRNA-synt_2b': 2, 'L32e|CBS': 2, 'L3|unannot': 2, 'S2|unannot': 1}
+  v2 L4b: 22 cases, 28 junctions; same strand 1; dist median 79.5; pair classes {'RX': 15, 'RR': 7, 'XR': 3, 'XX': 2, 'NX': 1}; inherited in own group (>= 1 other genome) 16/21; in >= 1 other group 16; unannotated 7; bonded 6
+      commonest: {'L3|HIT': 4, 'S13|L4e': 3, 'S19|tRNA-synt_2b': 2, 'L32e|CBS': 2, 'L4e|S13': 2, 'S8|HIT': 1, 'S2|unannot': 1, 'DcpS_C|L3': 1}
+  v2 WA_L4b: 19 cases, 24 junctions; same strand 1; dist median 75.5; pair classes {'RX': 12, 'RR': 7, 'XX': 2, 'XR': 2, 'NX': 1}; inherited in own group (>= 1 other genome) 16/19; in >= 1 other group 16; unannotated 5; bonded 11
+      commonest: {'L3|HIT': 4, 'S13|L4e': 3, 'S19|tRNA-synt_2b': 2, 'L32e|CBS': 2, 'L4e|S13': 2, 'S8|HIT': 1, 'TrmB|dCMP_cyt_deam_1': 1, 'L7Ae|L3': 1}
+  v2 Z_L4bp: 24 cases, 26 junctions; same strand 1; dist median 94.0; pair classes {'RR': 10, 'RX': 9, 'XR': 4, 'XX': 2, 'NX': 1}; inherited in own group (>= 1 other genome) 13/18; in >= 1 other group 15; unannotated 8; bonded 9
+      commonest: {'S13|L4e': 4, 'L4e|S13': 3, 'L3|HIT': 2, 'L3|L7Ae': 2, 'S2|unannot': 1, 'NTP_transf_2|unannot': 1, 'L3|HEAT_2': 1, 'unannot|L40e': 1}

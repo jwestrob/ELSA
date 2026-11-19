@@ -2832,3 +2832,42 @@ no agent has been restarted.
   then the primary configuration, the identity check of the provisional embedding-list build, the
   comparators and the scoring, with `timeout` caps on heavy commands and dependent jobs that
   write scores to disk unattended.
+
+## 2026-11-19 02:57 UTC — Unresolved ribosomal runs judged for biological accuracy (`benchmarks/redesign/ribo_audit/REPORT2.txt`)
+
+Asked for by Jacob: resolve recovered-but-unresolved runs "only as long as it's biologically
+accurate to do so". Every unresolved run of four outputs on DPANN judged by evidence independent
+of our statistics: published organisation of ribosomal gene clusters (compiled before the loci
+were opened), strand and intergenic spacing, inheritance within the lineage group, assembly and
+gene-call facts. Strict reading splits an operon at any gap gene more than 150 nt from its
+neighbour; loose joins same-strand pairs up to 500 nt (added after the rules; labelled). One
+mapping fix (archaeal RpoD domain) also added afterwards.
+
+| Runs right (of 1,686) | Reference | Bond tree, fixed distance | Bond tree, adaptive distance (frozen primary) | Bond tree, embedding lists |
+|---|---|---|---|---|
+| Standing definition | 1,512 | 1,598 | 1,594 | 1,542 |
+| Accurate reading, strict | 1,447 | 1,538 | 1,538 | 1,504 |
+| Accurate reading, loose | 1,485 | 1,590 | 1,571 | 1,547 |
+
+- Every run has a determinable correct locus, so the ceiling is 1,686.
+- **Verdicts for the frozen primary's 92 unresolved runs (strict):** split one locus 23; benchmark
+  run glues two or more loci 23 (16 on opposite strands); output correct and larger than the run
+  11 (established members such as secY); output extends past the locus 12; a fitting locus exists
+  and the scorer picks a larger one 23.
+- **Wrong in the frozen primary:** (1) it splits co-directional operons rearranged in one lineage
+  (S17|L22, S3|S5_C, SUI1|L22), at junctions on one strand with median spacing 1 nt, shared by the
+  other genomes of the group in 21 of 21 annotated cases; (2) its bonds are strand-blind: divergent
+  blocks are reported as one locus (S13|L4e bonded at Lambda 1,334), in 14-17 runs it currently
+  "resolves"; (3) parents run into unrelated genes or the separate L1-L10-L12 operon in 12 runs.
+- **Bridging rule proposed by the audit:** bridge an unbonded junction when the two families share
+  one locus in at least 3 other groups AND the genes are on one strand at most 150 nt apart:
+  repairs 21 of 23 splits; fires at 4,941 of 59,655 unbonded junctions (8.3%); merges 0 pairs of
+  curated systems. Bridging on within-group sharing alone selects nothing (fires at 72%).
+- **Scoring corrections with independent support:** extend the target over contiguous established
+  members (secY in 60 of 69 such cases) and split it at strand changes; chance level unchanged
+  (6.3-6.4% against 6.1%). The scorer's choice of a larger parent has no biological argument
+  either way.
+- Limits: no transcript data; 40% of DPANN genes carry neither Pfam nor KO; the literature basis is
+  two comparative studies plus abstracts, none DPANN-specific.
+Queued for the `long_loci` agent after the frozen run: strand-aware splitting and the bridging
+rule as development variants of the frozen primary (part 6).

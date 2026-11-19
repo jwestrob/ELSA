@@ -202,9 +202,9 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <div class="eyebrow">ELSA redesign · status report · started 13 November 2026</div>
   <h1>Conserved gene neighbourhoods as words: where the new method stands</h1>
   <p class="dateline">DPANN archaea · 3,564 genomes · 3,585,303 genes · protein embeddings from ESM++ small · scored on even-numbered genomes, every setting fixed beforehand on odd-numbered genomes</p>
-  <p class="note">Updated 19 November, 04:15 UTC. Newest: the first test on untouched data, the lut test set, in its own section below. From 13 November: an adaptive pair distance brings the bond tree level with the reference engine on Spacedust's benchmark (+0.164) while keeping all seven DPANN bars. Before that: the all-bars configuration scored on Spacedust's benchmark, and the measured cost of embedding lists. Earlier: the bond tree over neighbour-list bonds clears all seven DPANN bars. Also added today: first results of the long-locus redesign (the bond tree), results on a second dataset (Spacedust's benchmark) and the run of the closest published method. Earlier today: the alignment control, the junction-phrase reading and the prior-work check.</p>
+  <p class="note">Updated 19 November, 07:15 UTC. Newest: the second test on untouched data (SR-VP genome bins) and the first (the lut set), each in its own section below. From 13 November: an adaptive pair distance brings the bond tree level with the reference engine on Spacedust's benchmark (+0.164) while keeping all seven DPANN bars. Before that: the all-bars configuration scored on Spacedust's benchmark, and the measured cost of embedding lists. Earlier: the bond tree over neighbour-list bonds clears all seven DPANN bars. Also added today: first results of the long-locus redesign (the bond tree), results on a second dataset (Spacedust's benchmark) and the run of the closest published method. Earlier today: the alignment control, the junction-phrase reading and the prior-work check.</p>
   <nav class="toc" aria-label="Sections">
-    <a href="#summary">Summary</a><a href="#untouched">Untouched test</a><a href="#benchmark">Reading the benchmark</a><a href="#scorecard">Scorecard</a><a href="#algorithm">The algorithm</a><a href="#ingredients">What each part contributes</a><a href="#gaps">The two missing bars</a><a href="#second">Second dataset</a><a href="#vectors">Loci as vectors</a><a href="#embeddings">What embeddings add</a><a href="#biology">Screen for new complexes</a><a href="#aside">Set aside</a><a href="#prior">Prior work</a><a href="#open">Open items</a>
+    <a href="#summary">Summary</a><a href="#untouched">Untouched test 1</a><a href="#untouched2">Untouched test 2</a><a href="#benchmark">Reading the benchmark</a><a href="#scorecard">Scorecard</a><a href="#algorithm">The algorithm</a><a href="#ingredients">What each part contributes</a><a href="#gaps">The two missing bars</a><a href="#second">Second dataset</a><a href="#vectors">Loci as vectors</a><a href="#embeddings">What embeddings add</a><a href="#biology">Screen for new complexes</a><a href="#aside">Set aside</a><a href="#prior">Prior work</a><a href="#open">Open items</a>
   </nav>
 </header>
 
@@ -217,6 +217,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   </div>
   <ul class="points col">
     <li><strong>First test on untouched data (19 November).</strong> Two configurations were frozen as selected on DPANN and run once on 1,032 genomes built around the lanthanide <em>lut</em> cluster. The bond tree on embedding lists scores F1 0.906 on the lut loci, resolves 811 of 858 ribosomal runs and holds all 80 complete clusters. The bond tree on protein families scores F1 0.768 and misses one of its four bars. Both beat the reference engine; the published synton pipeline finds nothing.</li>
+    <li><strong>Second test on untouched data (19 November).</strong> On 994 SR-VP genome bins the embedding-list tree scores DefenseFinder F1 0.882 and TXSScan F1 0.754, above the reference engine on every curated measure. It recovers 802 of 803 ribosomal runs but resolves only 528 under the standing rule, short of the bar set beforehand; a fitting locus exists in the output for 708.</li>
     <li><strong>The method reads a genome as text and learns its words.</strong> A word is a run of adjacent genes that recurs in more independent lineages than random gene order predicts. One statistic scores every merge, its threshold comes from shuffled genomes, and the output needs no hand-set reading rules.</li>
     <li><strong>With MMseqs2 families as gene identity, it outscores the reference engine</strong> by +0.181 [+0.158, +0.204] on the overall score and draws tighter loci. It loses CRISPR-Cas systems, because Cas genes are spread over many small families.</li>
     <li><strong>With embeddings as gene identity and no families, CRISPR-Cas comes back</strong> (−0.010 against the reference, inside tolerance) and the overall score stays above the reference (+0.048 [+0.027, +0.069]). Long conserved neighbourhoods such as the ribosomal locus come out in pieces.</li>
@@ -247,6 +248,30 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <li><strong>The published synton pipeline shows no signal</strong> and recovers no ribosomal run; its loci hold at most 12 genes.</li>
     <li><strong>Known weakness.</strong> Every locus holding a complete cluster runs past it: a median of 62% of its genes lie inside the cluster for the embedding-list tree. All 80 complete-cluster genomes fall in a single genome group out of 179, so the cluster's cross-lineage evidence is thin.</li>
     <li><strong>False-positive check.</strong> In the 300 relatives without a <em>lut</em> locus, isolated <em>lut</em> homologs are placed in loci no more often than background genes.</li>
+  </ul>
+</section>
+
+<section id="untouched2">
+  <h2>Second test on untouched data: SR-VP genome bins</h2>
+  <p class="lead col">On a whole metagenome community the method is well above the reference engine on curated systems, and it misses the ribosomal bar that was set beforehand.</p>
+  <div class="scroll">
+  <table class="plain" style="min-width:760px">
+    <thead><tr><th>Method</th><th>DefenseFinder F1</th><th>TXSScan F1</th><th>F1 above random placement, summed</th><th>Ribosomal runs resolved, of 803</th><th>Runs with a fitting locus in the output</th></tr></thead>
+    <tbody>
+      <tr><td>Bond tree, embedding lists (primary)</td><td>0.882</td><td>0.754</td><td>+0.753</td><td>528</td><td>708</td></tr>
+      <tr><td>Bond tree, protein families (secondary)</td><td>0.824</td><td>0.706</td><td>+0.745</td><td>498</td><td>706</td></tr>
+      <tr><td>Reference engine</td><td>0.818</td><td>0.666</td><td>+0.636</td><td>313</td><td>332</td></tr>
+      <tr><td>Pair-linking, embedding lists</td><td>0.790</td><td>0.672</td><td>+0.692</td><td>292</td><td>292</td></tr>
+      <tr><td>Synton pipeline as published</td><td>0.067</td><td>0.173</td><td>+0.032</td><td>0</td><td>0</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <ul class="points col">
+    <li><strong>The test set.</strong> 994 dereplicated, high-quality genome bins from the SR-VP wetland (780 bacteria, 214 archaea, 51 phyla), with DefenseFinder and TXSScan calls and 803 ribosomal runs as truth. Settings and pass criteria were written down before the data were opened; each configuration ran once.</li>
+    <li><strong>Curated systems: passed.</strong> The primary beats the reference engine by +0.117 [+0.104, +0.129] on the summed score.</li>
+    <li><strong>Ribosomal runs: failed.</strong> The bars were 602 runs resolved and 70% of bacterial runs. The primary resolves 528, and 59% of bacterial runs. Nearly every run is recovered (802 of 803), and archaeal runs are nearly all resolved (138 of 145).</li>
+    <li><strong>Why.</strong> In bacteria, and most of all in closed genomes, the ribosomal run sits among other conserved genes. The output holds a locus that fits the run in 88% of cases, together with a larger parent that also covers it, and the standing scoring takes the larger one.</li>
+    <li><strong>Order of the two configurations.</strong> The embedding-list tree leads again, as on the lut set.</li>
   </ul>
 </section>
 

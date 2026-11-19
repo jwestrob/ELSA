@@ -1,0 +1,28 @@
+{
+ "workstream": "long_loci part 8: best-window bond test on both bases (DPANN development, Spacedust check rows)",
+ "written_utc": "2026-11-19T07:10Z",
+ "status_when_written": "Parts 6-7 and both frozen runs reported. No best-window bond computed. Locked sets (lut, SR-VP) closed.",
+ "observation": "audit case WA_L4b-8233: S17 directly beside L22 (rearranged S10 unit, same strand, 1 nt) in 8 of 8 group genomes and 5 other groups; bond 0.0; in the usual order (run 4346) S17 and L22 are 4 genes apart in hundreds of groups. The adaptive test scores a pair only at the smallest window containing it here, so a pair adjacent here is supported only by lineages where it is also adjacent.",
+ "variants": {
+  "P-BW": "family base (frozen primary of run 1): every token pair within 8 positions is tested at every window w from its own distance d up to 8: n_w = groups holding an occurrence of the pair at distance <= w (lw.bonds_adaptive's count at window w), E_w = learner expected_groups with w, Lambda_w = n ln(n/E) - n + E; the occurrence takes max_w Lambda_w over windows with n_w >= 2 and Lambda_w >= tau. tau = smallest of (4, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50) with bond FDR (3 within-genome token shuffles, the same best-window procedure) <= 0.01. Everything after the bonds as the frozen primary (token cohesion, L4b tree, closed-form family node test at the bond tau); theta in {.02, .05, .1, .2}.",
+  "Z-BW": "list base (frozen secondary of run 1): the pairs tested are unchanged (adjacencies within <= 2 intervening genes, round-0 homolog exclusion masks K1000 as stored); for each, list-partner support is counted at every window w from 3 to 8 (partners within w positions in the other genome; E per genome min(1, 2 w c_x c_y / m), own term min(1, 2 w / m); vl group counting), and the pair takes max_w Lambda_w. tau by vl's rule applied to the whole procedure (round-0 instance FDR over 3 gene-order shuffles <= .01; ladder 4-30). Everything after the bonds as the frozen secondary (kNN cohesion, L4b+, every node kept); theta in {.02, .05, .1, .2}.",
+  "unchanged": "tokens, lists, groups, cohesion arrays, node rules, scorer; no bridging, no strand rule"
+ },
+ "gates": {
+  "P-BW": "with windows restricted to w = d only, the procedure reproduces the stored WA bonds (lw.bonds_adaptive) exactly on DPANN",
+  "Z-BW": "the window-3 column of the new kernel equals vl.pass_count (n, n_groups, E, E_groups, Lambda) on the observed order exactly; the window-w column equals zwa.pass_count_w(fixedW = w) for w = 8"
+ },
+ "selection": "theta on DPANN odd genomes by the part-1 rule [odd conditions vs DH, odd resolved, odd summed], mechanical, before the even report",
+ "reported": "seven DPANN bars; standing recovered / resolved with paired difference vs the frozen base; any-fitting-locus; audit accurate reading strict / loose; the audit's split runs (verdict 1: 23 on the family base, 29 on the list base) repaired: resolved under the standing rule and fitted on the audit's accurate target C (>= .8 both ways); case 8233 junction S17|L22 bonded or not; new pairs of distinct curated systems in one locus; share of genes in loci; loci; bonds and the distribution of the chosen window (window - own distance for P; window for Z); Spacedust source207 rows (DEVELOPMENT) at the DPANN-selected theta, paired vs the frozen base",
+ "justified": "as part 7, against the frozen base: accurate strict >= base + 50; all seven DPANN bars; 0 new pairs of distinct curated systems in one locus; summed DF + TXSS excess >= base - .01 and F1 of DefenseFinder, TXSScan, CRISPRCasTyper each >= base - .01 (even, points)",
+ "plain_question": "does the best-window test repair the rearranged-operon cuts (verdict-1 runs) without the costs of bridging (bridged unions winning the largest-overlap rule) and strand splitting (curated systems on both strands losing their nodes)?",
+ "expectations": {
+  "tau": "P-BW 6-10 (the maximum over windows inflates null Lambda); Z-BW 8-12",
+  "bonds": "P-BW 10-25% more bonded boundaries than WA; most chosen windows = own distance; the junctions of interest at window 4-6",
+  "P-BW": "verdict-1 repairs 12-23 of 23 (standing), strict +10 to +30 (fails the +50 bar), standing +5 to +30, summed within .01, F1 within .01, new pairs 0-5; NOT justified (strict bar)",
+  "Z-BW": "verdict-1 repairs 12-29 of 29, strict +10 to +35, summed -.02 to +.005; NOT justified (strict bar)",
+  "case_8233": "bonded in P-BW (Lambda from the window-4 or -5 support)",
+  "Spacedust": "P-BW +.00 to +.02 vs the frozen base; Z-BW +.00 to +.02"
+ },
+ "compute": "24-CPU jobs, chained, login-node watchdog caps ~2x expected"
+}

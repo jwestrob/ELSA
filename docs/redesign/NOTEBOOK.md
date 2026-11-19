@@ -3010,3 +3010,24 @@ once; no deviations except 40 CPUs for one memory-bound step.
   (tokens 1 h 17 min; GPU 22 min).
 Both prepared untouched sets with embeddings are now used. Part 8 (best-window pair test) starts
 on DPANN.
+
+## 2026-11-19 07:37 UTC — Best-window pair test (`benchmarks/redesign/long_loci/REPORT8.txt`)
+
+Each pair within 8 positions is tested at every window from its own distance up to 8 and keeps its
+largest Lambda; threshold from the 1% shuffle rule on the whole procedure. DPANN development,
+Spacedust check rows; predeclared; in own-window mode the code reproduces the frozen bonds.
+
+- **Family base: repairs every rearranged-operon cut.** All 23 of the audit's split runs resolve
+  (standing rule and accurate target); case 8233 (S17 beside L22) goes from no bond to Lambda 764,
+  supported at windows 5-8; resolved +30 [+19, +42] (1,624); summed excess +0.017 [+0.010,
+  +0.024]; every F1 level or up; all seven bars. **Not justified by the predeclared test:**
+  accurate strict rises by 15 (bar 50), and 5 new pairs of distinct curated systems share a locus.
+- **Embedding-list base: partial repair at a cost; not justified.** 8 of 29 split runs resolved;
+  resolved +24; DefenseFinder F1 -0.011 and CRISPR-Cas F1 -0.015; 3 new pairs. Taking the maximum
+  over windows raises the list threshold from 6 to 8, so fewer bonds survive.
+- 39% of family bonds take a window above their own distance; 75% of list bonds stay at window 3.
+- Spacedust collection: both match their base (family +0.159 against +0.164; list +0.122 against
+  +0.111).
+Reading: fragmentation at rearranged junctions is a small class and the best-window test removes
+it on the family base. The larger problem, shown by the SR-VP test on bacteria, is conglomeration:
+the fitting locus exists under a larger parent. Not adopted; the frozen configurations stand.

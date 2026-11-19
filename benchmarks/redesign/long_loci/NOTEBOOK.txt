@@ -415,9 +415,33 @@ SECOND FROZEN RUN (SR-VP genome bins, $RD/ws_srvp_bins/package; first ELSA run o
                   L >= 2 (FDR .0099), 276,715 significant pairs; DH 528,741 loci (65.5%). zprep 115663 running (40 CPUs).
 2026-11-19 06:48  zprep 115663 done (4 min 40 s, 40 CPUs, peak 90.0 GiB): adapter smoke OK (277 groups, 8,797,285 instances); kNN cohesion q50 .033; exclusion masks built. Z arm 115664 running.
 2026-11-19 06:52  Z arm 115664 done (4 min 53 s, 20.8 GB): list tau 8 (FDR at 6 / 8: .0241 / .0059); 791,717,268 list entries; 1,752,378 bonds over 1,183,285 boundaries; PRIMARY L4b+ .02 1,013,801 loci (49.3% of genes); Z L1 400,338 loci. Waiting on synton matched 115666, then scoring 115668.
-2026-11-19 07:15  Synton matched 115666 done (31 min); scoring 115668 (2 min 53 s); watchdog exited, no cancellation.
+2026-11-19 07:08  Synton matched 115666 done (31 min); scoring 115668 (2 min 53 s); watchdog exited, no cancellation.
                   PRIMARY (Z L4b+ .02): DF F1 .882, excess +.451 [+.443, +.459]; TXSS .754 / +.302; summed +.753; ribosomal
                   802 / 528 (any-fit 708; accurate 540 / 574); vs DH summed +.117 [+.104, +.129] BEATS, resolved +215.
                   SECONDARY (WA L4b .2): DF .824 / +.457; summed +.745; 803 / 498 (any-fit 706); vs DH +.108, +185.
                   DH: summed +.636, resolved 313. Both configurations FAIL F1 (resolved < 602) and F4 (Bacteria < 70%);
                   pass F2, F3. Single-contig genomes resolve fewer runs (52% vs 75%). REPORT_frozen2.txt written.
+
+PART 8 (best-window bond test on both bases)
+-----------------------------------------------
+2026-11-19 07:10  predeclared8.json written (sha256 cb7cc5f3...) before any best-window computation: variants P-BW (family
+                  base) and Z-BW (list base), gates, selection, justified test (as part 7), expectations.
+2026-11-19 07:13  p8.py (sha256 9054ffa1...) written. Login-node smoke (150 DPANN genomes): best-window code in own-window
+                  mode equals lw.bonds_adaptive exactly (113,882 bonds at tau 4); best-window mode 133,898 bonds (+18%), 42%
+                  of them with a window above the own distance. Preflight repeated (md5 unchanged; account 126 CPUs). Chain
+                  (watchdog pid 2275616): 115868 P-BW DPANN, 115869 Z-BW DPANN, 115870 P-BW Spacedust, 115871 Z-BW
+                  Spacedust, 115872 / 115873 DPANN scoring P / Z, 115874 Spacedust rows.
+2026-11-19 07:26  P-BW DPANN 115868 (8 min 54 s): gate passed on the full set (own-window bonds = WA, 3,661,195 at tau 4);
+                  bond tau 6 (FDR .0081); 3,505,845 bonds (WA 3,206,318), 39.1% with a window above the own distance (+1:
+                  725,366; +2: 320,629; ...). Scoring P 115872 (1 min 15 s): odd selection theta .1. Even / all runs: summed
+                  .530 (+.017 [+.010, +.024]), F1 DF +.001, TXSS +.023, CCT +.005; resolved 1,624 (+30 [+19, +42]); any-fit
+                  1,662; bio 1,553 / 1,600 (+15 / +29); verdict-1 split runs repaired 23 of 23 (standing and on target C);
+                  case 8233 S17|L22 boundary 0 -> Lambda 764 (covering bonds at windows 5-8); 5 new curated pairs; all seven
+                  bars -> NOT justified (strict +15 < +50; 5 new pairs). P-BW Spacedust tau 8; Z-BW Spacedust tau 10 (gates
+                  passed); Z-BW DPANN gates passed, ladder running.
+2026-11-19 07:40  Z-BW DPANN 115869 (18 min 36 s, 86.1 GB; gates passed): list tau 8; 2,151,645 bonds (75% at window 3;
+                  98,680 only through windows > 3). Scoring Z 115873: theta .02 selected; summed .601 (+.020 [+.014, +.025]),
+                  F1 DF -.011, TXSS -.002, CCT -.015; resolved 1,566 (+24); bio 1,520 / 1,560 (+16 / +13); verdict-1
+                  repaired 8 of 29 (C fit 4); case 8233 Lambda 790; 3 new pairs; seven bars met -> NOT justified.
+                  Spacedust rows 115874 (DEVELOPMENT): P-BW +.159 (-.005 [-.013, +.003]) MATCHES; Z-BW +.122 (+.011
+                  [-.002, +.024]) MATCHES. Watchdog exited, no cancellation. REPORT8.txt written.

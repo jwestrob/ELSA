@@ -1,0 +1,87 @@
+LONG_LOCI PART 8: BEST-WINDOW BOND TEST ON BOTH BASES (DPANN development, Spacedust check rows; 2026-11-19)
+==========================================================================================================
+Predeclaration predeclared8.json (07:10 UTC, sha256 cb7cc5f3...), written before any best-window computation. Locked sets
+closed. Gates passed before any score: (1) the best-window code in own-window mode reproduces the frozen WA bonds exactly
+on all of DPANN (3,661,195 bonds at tau 4); (2) the list kernel's window-3 column equals vl.pass_count (groups, E,
+Lambda) and its window-8 column equals zwa.pass_count_w at a fixed window 8, on DPANN and Spacedust; (3) frozen accurate
+reading reproduced (family 1,538 / 1,571; list 1,504 / 1,547). Odd = theta selection (mechanical), even = curated
+scores, all 1,686 ribosomal runs; paired genome bootstrap vs the frozen base.
+P-BW: every family pair within 8 positions tested at every window from its own distance to 8 (its count and expectation
+at that window), largest Lambda kept; bond tau by the 1% shuffle rule over the whole procedure. Z-BW: the frozen
+list adjacencies (<= 2 intervening genes) with list-partner support counted at windows 3-8, largest Lambda; tau by vl's
+rule over the whole procedure. Nothing else changed.
+
+ANSWER
+1. Family base (frozen primary): yes, the best-window test repairs the rearranged-operon cuts, and it does so without
+   the costs bridging and strand splitting had.
+   - All 23 of the audit's split runs are resolved, on the standing rule and on the audit's accurate target. The case
+     8233 junction S17|L22 goes from no bond to Lambda 764 (supported at windows 5-8).
+   - Resolved runs +30 [+19, +42] (1,624). No over-extended unions: any-fit rises with standing (1,662).
+   - Curated systems lose nothing: summed excess +.017 [+.010, +.024]; F1 DF +.001, TXSScan +.023, CRISPR-Cas +.005.
+     All seven bars are met.
+2. It is NOT JUSTIFIED by the predeclared test, on two conditions:
+   - the accurate (strict) count rises by only +15 (1,553; bar +50; loose +29);
+   - 5 new pairs of distinct curated systems share one locus.
+   The rearranged-operon cuts were 23 runs. The rest of the accurate-reading shortfall comes from the audit's other
+   classes, which this test leaves untouched: opposite-strand blocks joined, parents running into neighbours, a fitting
+   child under a larger parent.
+3. List base (frozen secondary): it repairs only part and costs F1. NOT JUSTIFIED.
+   - Split runs resolved: 8 of 29 (4 fitted on target C). Case 8233 is bonded (Lambda 790).
+   - Resolved +24 [+15, +34], accurate strict +16 / loose +13, summed +.020 [+.014, +.025].
+   - DefenseFinder F1 -.011 [-.016, -.006] and CRISPR-Cas -.015 [-.021, -.010], both beyond the -.01 bar; 3 new pairs.
+   - The maximum over windows raises the list tau from 6 to 8, so the list base keeps fewer bonds than before
+     (2,151,645 vs 2,246,491). 98,680 of them exist only through windows > 3. Share of genes in loci falls from .571 to
+     .544.
+4. Where the chosen windows fall:
+   - Family base: 39.1% of 3,505,845 bonds take a window above their own distance (+1: 725,366; +2: 320,629; +3:
+     164,093; +4 to +7: 162,078). Bonded boundaries 1,911,097 (frozen 1,847,718).
+   - List base: 75% stay at window 3 (window 4: 236,534; 5: 120,142; 6: 70,860; 7: 50,679; 8: 56,545).
+5. Spacedust (DEVELOPMENT): both MATCH the frozen base. Family P-BW theta .1: +.159 (-.005 [-.013, +.003]); list Z-BW:
+   +.122 (+.011 [-.002, +.024]).
+6. Against the earlier fixes on the family base:
+   - bridging alone cost 50 resolved runs (over-extended unions);
+   - strand splitting cost DefenseFinder / CRISPR-Cas F1 (-.015 / -.019);
+   - S-add kept F1 but added 3 curated pairs;
+   - the best-window test repairs all 23 split runs, raises summed excess and resolved runs, keeps every F1, and adds
+     5 curated pairs.
+   It is the cleanest of the four fixes for the rearranged-operon class. It does not touch the other classes, so the
+   accurate-reading bar (+50) is out of its reach.
+7. Expectations missed:
+   - Family-base repairs at the top of the range (23 of 23; expected 12-23).
+   - List-base repairs below range (8; expected 12-29).
+   - List-base F1 costs larger than expected; family-base summed above range (+.017; expected within .01).
+   Met:
+   - Family tau 6; list tau 8 (expected 8-12).
+   - Not justified on either base (strict bar).
+   - Case 8233 bonded.
+
+-----------------------------------------------------------------------------------------------------------------------
+TABLE 1. DPANN (theta selected on odd: family .1, list .02; the frozen theta reported beside for the family base).
+Curated: even genomes; ribosomal: all 1,686 runs; d vs the frozen base [95%]; v1 = audit verdict-1 runs resolved
+(standing / fitted on target C); pairs = new distinct-curated pairs in one locus.
+
+base   variant  theta    summed  d summed [95%]        F1 DF / TXSS / CCT   dF1 DF / TXSS / CCT     rec / res   d res [95%]     anyfit bio strict/loose  v1      bars pairs loci       genes  justified
+family frozen   .2       .513    -                     .762 / .672 / .461   -                       1685 / 1594 -               1631   1538 / 1571       0 / 0   yes  -     1,248,873  .552   -
+family P-BW     .1 sel   .530    +.017 [+.010, +.024]  .763 / .695 / .466   +.001 / +.023 / +.005   1685 / 1624 +30 [+19, +42]  1662   1553 / 1600       23 / 23 yes  5     1,253,335  .563   NO (strict +15; 5 pairs)
+family P-BW     .2       .503    -.010 [-.014, -.007]  .763 / .671 / .465   +.001 / -.000 / +.005   1685 / 1622 +28 [+18, +40]  1661   1552 / 1598       23 / 23 yes  5     1,274,700  .563   NO
+list   frozen   .02      .581    -                     .824 / .749 / .489   -                       1681 / 1542 -               1575   1504 / 1547       0 / 0   yes  -     1,282,888  .571   -
+list   Z-BW     .02 sel  .601    +.020 [+.014, +.025]  .813 / .747 / .474   -.011 / -.002 / -.015   1686 / 1566 +24 [+15, +34]  1598   1520 / 1560       8 / 4   yes  3     1,211,097  .544   NO (strict, DF / CCT F1, pairs)
+ Parvarchaeaceae 114 / 114 in every row; median boundary precision of covered instances DF 1.0, TXSS 1.0, CCT .5.
+ Bonds: family P-BW 3,505,845 at tau 6 (frozen WA 3,206,318 at tau 6), 1,911,097 bonded boundaries; list Z-BW 2,151,645
+ at tau 8 (frozen 2,246,491 at tau 6), 1,500,942 bonded boundaries. Case 8233 (gid 3,382,502|3,382,503, S17|L22):
+ frozen boundary score 0 on both bases; P-BW 764 (15 covering bonds, windows 5-8); Z-BW 790 (6 bonds, windows 5, 7, 8).
+
+TABLE 2. Spacedust source207 (DEVELOPMENT), theta as selected on DPANN; d vs the frozen base (paired region bootstrap)
+base    variant  theta  F1     control  excess [95%]           dF1 [95%]               dExcess [95%]           verdict
+family  frozen   .2     .667   .504     +.164 [+.125, +.202]   -                       -                       -
+family  P-BW     .1     .668   .508     +.159 [+.120, +.197]   +.000 [-.008, +.008]    -.005 [-.013, +.003]    MATCHES
+list    frozen   .02    .598   .487     +.111 [+.072, +.149]   -                       -                       -
+list    Z-BW     .02    .599   .477     +.122 [+.083, +.160]   +.000 [-.013, +.014]    +.011 [-.002, +.024]    MATCHES
+ Spacedust taus: P-BW 8 (5,129,897 bonds, 43.8% above own distance); Z-BW 10 (2,954,898 bonds; 186,856 only through
+ windows > 3).
+
+COSTS: P-BW DPANN 8 min 54 s (3.1 GB, incl. the full-set gate), Spacedust 10 min 54 s; Z-BW DPANN 18 min 36 s (86.1 GB,
+incl. both gates and the DPANN z lists), Spacedust 6 min 56 s (31.8 GB); scoring 1 min 15 s each; Spacedust rows 39 s;
+24-CPU jobs, no watchdog cap reached. DEVIATIONS: none from predeclared8.json.
+FILES: predeclared8.json, REPORT8.txt, code/p8.py, code/q_p8.sbatch, results/p8/*.json (local); $RD/long_loci/p8/,
+loci/{dpann,sd}_{WB,ZBW}, nodes/, results/wbuild_*_p8.json (biotite).

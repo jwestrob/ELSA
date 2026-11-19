@@ -1,0 +1,2841 @@
+{
+ "base": "Z",
+ "frozen": {
+  "name": "dpann_Z/L4bp_t0.02",
+  "bio": {
+   "strict": 1504,
+   "loose": 1547
+  },
+  "curated_pairs_in_one_locus": 53
+ },
+ "outputs": {
+  "base_t0.02": {
+   "score_odd": [
+    3,
+    781,
+    0.5906190254935817
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4903423898955435,
+     "control": 0.4358525028445735,
+     "excess": 0.05448988705097004,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7933368037480479,
+     "localized": 0.631441957313899,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8304377107432435,
+     "control": 0.477075675342677,
+     "excess": 0.3533620354005663,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8959537572254336,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7480792004842347,
+     "control": 0.5108222103912193,
+     "excess": 0.2372569900930154,
+     "median_bprec_covered": 0.8,
+     "covered50": 0.9625,
+     "localized": 0.925,
+     "median_best_span": 4.0
+    },
+    "summed_DF_TXSS_excess": 0.5906190254935817
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 781,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "52/55",
+    "median_coverage": 1.0
+   }
+  },
+  "base_t0.05": {
+   "score_odd": [
+    3,
+    774,
+    0.5550697169980015
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5003265314416999,
+     "control": 0.4461404237878546,
+     "excess": 0.054186107653845246,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7933368037480479,
+     "localized": 0.6741280583029672,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8300911080845019,
+     "control": 0.48936662581177953,
+     "excess": 0.3407244822727225,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9009083402146986,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7337073332210632,
+     "control": 0.5193620984957842,
+     "excess": 0.214345234725279,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.885,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5550697169980015
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 774,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "52/55",
+    "median_coverage": 1.0
+   }
+  },
+  "base_t0.1": {
+   "score_odd": [
+    3,
+    770,
+    0.5349024019135497
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5023163635772894,
+     "control": 0.45028262476048475,
+     "excess": 0.05203373881680465,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7933368037480479,
+     "localized": 0.6829776158250911,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8300986150284252,
+     "control": 0.4929070543742985,
+     "excess": 0.33719156065412653,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9042113955408753,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7205082559825122,
+     "control": 0.5227974147230892,
+     "excess": 0.1977108412594231,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.86,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5349024019135497
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 770,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "52/55",
+    "median_coverage": 1.0
+   }
+  },
+  "base_t0.2": {
+   "score_odd": [
+    3,
+    768,
+    0.5093734311840548
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5038194472250894,
+     "control": 0.45229026696074975,
+     "excess": 0.05152918026433962,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7933368037480479,
+     "localized": 0.6933888599687663,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8303660052214965,
+     "control": 0.4944219446753382,
+     "excess": 0.3359440605461584,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9050371593724195,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7004785649133474,
+     "control": 0.527049194275451,
+     "excess": 0.17342937063789637,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.8475,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5093734311840548
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 768,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "52/55",
+    "median_coverage": 1.0
+   }
+  },
+  "S_t0.02": {
+   "score_odd": [
+    3,
+    807,
+    0.5700706660127005
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.49017256085841854,
+     "control": 0.43794243414231,
+     "excess": 0.05223012671610856,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7933368037480479,
+     "localized": 0.648620510150963,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8208771960217046,
+     "control": 0.4795578706356607,
+     "excess": 0.341319325386044,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.893476465730801,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.738141802303752,
+     "control": 0.5093904616770956,
+     "excess": 0.22875134062665656,
+     "median_bprec_covered": 0.8333333333333334,
+     "covered50": 0.9625,
+     "localized": 0.9,
+     "median_best_span": 4.0
+    },
+    "summed_DF_TXSS_excess": 0.5700706660127005
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 807,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "52/55",
+    "median_coverage": 1.0
+   }
+  },
+  "S_t0.05": {
+   "score_odd": [
+    3,
+    807,
+    0.5532514519583362
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4943259397254882,
+     "control": 0.44277730415997885,
+     "excess": 0.05154863556550937,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7933368037480479,
+     "localized": 0.6756897449245185,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8198586073069971,
+     "control": 0.48561918917410074,
+     "excess": 0.3342394181328963,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8951279933938894,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7328403390611123,
+     "control": 0.5138283052356725,
+     "excess": 0.2190120338254399,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.885,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5532514519583362
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 807,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "52/55",
+    "median_coverage": 1.0
+   }
+  },
+  "S_t0.1": {
+   "score_odd": [
+    3,
+    806,
+    0.5385023909452796
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4954251748070242,
+     "control": 0.4448672704564547,
+     "excess": 0.050557904350569484,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7933368037480479,
+     "localized": 0.6793336803748048,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8205031425777528,
+     "control": 0.4877847891243316,
+     "excess": 0.3327183534534211,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8967795210569777,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7217274666394166,
+     "control": 0.5159434291475579,
+     "excess": 0.20578403749185853,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.865,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5385023909452796
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 806,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "52/55",
+    "median_coverage": 1.0
+   }
+  },
+  "S_t0.2": {
+   "score_odd": [
+    3,
+    804,
+    0.516606186494547
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.49652763530563254,
+     "control": 0.4461838031092777,
+     "excess": 0.050343832196354826,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7933368037480479,
+     "localized": 0.6871421134825612,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8204402272382066,
+     "control": 0.4887834999061461,
+     "excess": 0.3316567273320604,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8943022295623452,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7046063253538014,
+     "control": 0.5196568661913148,
+     "excess": 0.18494945916248667,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.86,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.516606186494547
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 804,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "52/55",
+    "median_coverage": 1.0
+   }
+  },
+  "B_t0.02": {
+   "score_odd": [
+    3,
+    785,
+    0.5904530532331701
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4904020566748465,
+     "control": 0.4359677452299466,
+     "excess": 0.054434311444899894,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.631441957313899,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8304377107432435,
+     "control": 0.47710204616425844,
+     "excess": 0.35333566457898496,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8959537572254336,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7480792004842347,
+     "control": 0.5109618118300497,
+     "excess": 0.2371173886541851,
+     "median_bprec_covered": 0.8,
+     "covered50": 0.9625,
+     "localized": 0.925,
+     "median_best_span": 4.0
+    },
+    "summed_DF_TXSS_excess": 0.5904530532331701
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 785,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "B_t0.05": {
+   "score_odd": [
+    3,
+    778,
+    0.5549208386741437
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5003861982210027,
+     "control": 0.4462547847667633,
+     "excess": 0.05413141345423954,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6741280583029672,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8300911080845019,
+     "control": 0.4893924461241399,
+     "excess": 0.3406986619603621,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9009083402146986,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7337073332210632,
+     "control": 0.5194851565072817,
+     "excess": 0.21422217671378158,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.885,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5549208386741437
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 778,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "B_t0.1": {
+   "score_odd": [
+    3,
+    774,
+    0.5347531276005465
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5023760303565923,
+     "control": 0.4503961621731742,
+     "excess": 0.05197986818341813,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6829776158250911,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8300986150284252,
+     "control": 0.4929326244551948,
+     "excess": 0.33716599057323027,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9042113955408753,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7205082559825122,
+     "control": 0.522921118955196,
+     "excess": 0.19758713702731623,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.86,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5347531276005465
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 774,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "B_t0.2": {
+   "score_odd": [
+    3,
+    772,
+    0.5092322981517363
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5038791140043922,
+     "control": 0.4524046780442765,
+     "excess": 0.051474435960115875,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6933888599687663,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8303660052214965,
+     "control": 0.49444132152749776,
+     "excess": 0.3359246836939988,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9050371593724195,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7004785649133474,
+     "control": 0.5271709504556099,
+     "excess": 0.17330761445773754,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.8475,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5092322981517363
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 772,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "SB_t0.02": {
+   "score_odd": [
+    3,
+    820,
+    0.5700314497913109
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.49049012708415635,
+     "control": 0.4380207143480505,
+     "excess": 0.052469412736105794,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.648620510150963,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8208771960217046,
+     "control": 0.4795128540527621,
+     "excess": 0.3413643419689425,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.893476465730801,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7380168023037521,
+     "control": 0.5093496944813837,
+     "excess": 0.2286671078223684,
+     "median_bprec_covered": 0.8333333333333334,
+     "covered50": 0.9625,
+     "localized": 0.9,
+     "median_best_span": 4.0
+    },
+    "summed_DF_TXSS_excess": 0.5700314497913109
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 820,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "SB_t0.05": {
+   "score_odd": [
+    3,
+    820,
+    0.553333590062105
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.49464350595122597,
+     "control": 0.4428569349730043,
+     "excess": 0.05178657097822159,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6756897449245185,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8198586073069971,
+     "control": 0.48557098541687554,
+     "excess": 0.3342876218901216,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8951279933938894,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7328403390611123,
+     "control": 0.5137943708891289,
+     "excess": 0.21904596817198338,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.885,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.553333590062105
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 820,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "SB_t0.1": {
+   "score_odd": [
+    3,
+    819,
+    0.5385766348273346
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4957427410327619,
+     "control": 0.44494904169178684,
+     "excess": 0.050793699340975024,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6793336803748048,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8205031425777528,
+     "control": 0.4877364674008447,
+     "excess": 0.33276667517690806,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8967795210569777,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7217274666394166,
+     "control": 0.5159175069889899,
+     "excess": 0.20580995965042653,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.865,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5385766348273346
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 819,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "SB_t0.2": {
+   "score_odd": [
+    3,
+    817,
+    0.5166793328134145
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4968452015313703,
+     "control": 0.4462650580294137,
+     "excess": 0.05058014350195655,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6871421134825612,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8204402272382066,
+     "control": 0.48873800572811077,
+     "excess": 0.3317022215100958,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8943022295623452,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7046063253538014,
+     "control": 0.5196292140504827,
+     "excess": 0.18497711130331873,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.86,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5166793328134145
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 817,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "Bf_t0.02": {
+   "score_odd": [
+    3,
+    785,
+    0.5904720101328284
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4904020566748465,
+     "control": 0.4359763789338562,
+     "excess": 0.05442567774099029,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.631441957313899,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8304377107432435,
+     "control": 0.47710309058272643,
+     "excess": 0.3533346201605169,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8959537572254336,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.748136018666053,
+     "control": 0.5109986286937416,
+     "excess": 0.2371373899723114,
+     "median_bprec_covered": 0.8,
+     "covered50": 0.9625,
+     "localized": 0.925,
+     "median_best_span": 4.0
+    },
+    "summed_DF_TXSS_excess": 0.5904720101328284
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 785,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "Bf_t0.05": {
+   "score_odd": [
+    3,
+    778,
+    0.5549357222739483
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5003861982210027,
+     "control": 0.44626214185383145,
+     "excess": 0.054124056367171366,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6741280583029672,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8300911080845019,
+     "control": 0.48939385754875525,
+     "excess": 0.3406972505357467,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9009083402146986,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7337641514028814,
+     "control": 0.5195256796646798,
+     "excess": 0.21423847173820157,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.885,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5549357222739483
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 778,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "Bf_t0.1": {
+   "score_odd": [
+    3,
+    774,
+    0.5349217162994429
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5023760303565923,
+     "control": 0.4504029986980352,
+     "excess": 0.05197303165855714,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6829776158250911,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8300986150284252,
+     "control": 0.49293238435214703,
+     "excess": 0.33716623067627804,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9042113955408753,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7207165893158455,
+     "control": 0.5229611036926808,
+     "excess": 0.1977554856231648,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.86,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5349217162994429
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 774,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "Bf_t0.2": {
+   "score_odd": [
+    3,
+    772,
+    0.5093944880411088
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.5038791140043922,
+     "control": 0.4524106408983002,
+     "excess": 0.05146847310609212,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6933888599687663,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8303660052214965,
+     "control": 0.4944410814244501,
+     "excess": 0.33592492379704647,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.9050371593724195,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7006868982466808,
+     "control": 0.5272173340026185,
+     "excess": 0.1734695642440623,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.8475,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5093944880411088
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 772,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "SBf_t0.02": {
+   "score_odd": [
+    3,
+    820,
+    0.5702829957113894
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4905063612370228,
+     "control": 0.4379941629190953,
+     "excess": 0.0525121983179274,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6480999479437792,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8207592297600556,
+     "control": 0.47948624495297437,
+     "excess": 0.3412729848070811,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.893476465730801,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.738516802303752,
+     "control": 0.5095067913994439,
+     "excess": 0.22901001090430825,
+     "median_bprec_covered": 0.8333333333333334,
+     "covered50": 0.9625,
+     "localized": 0.9,
+     "median_best_span": 4.0
+    },
+    "summed_DF_TXSS_excess": 0.5702829957113894
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 820,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "SBf_t0.05": {
+   "score_odd": [
+    3,
+    820,
+    0.5534522432827604
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.49465974010409236,
+     "control": 0.44283001595522614,
+     "excess": 0.051829724148866226,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6756897449245185,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8197406410453479,
+     "control": 0.4855472280620946,
+     "excess": 0.3341934129832532,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8951279933938894,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7332153390611122,
+     "control": 0.5139565087616051,
+     "excess": 0.21925883029950724,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.885,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5534522432827604
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 820,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "SBf_t0.1": {
+   "score_odd": [
+    3,
+    819,
+    0.5386935180483894
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.49575897518562834,
+     "control": 0.44491856629809506,
+     "excess": 0.050840408887533335,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6793336803748048,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8203851763161037,
+     "control": 0.48770980021160987,
+     "excess": 0.3326753761044937,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8967795210569777,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7221024666394165,
+     "control": 0.5160843246955208,
+     "excess": 0.20601814194389562,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.865,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5386935180483894
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 819,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  },
+  "SBf_t0.2": {
+   "score_odd": [
+    3,
+    817,
+    0.5167122549935091
+   ],
+   "conditions_odd": [
+    true,
+    true,
+    true
+   ],
+   "summary_odd": {
+    "CRISPRCasTyper": {
+     "n": 1921,
+     "f1": 0.4968614356842367,
+     "control": 0.44623595077998435,
+     "excess": 0.05062548490425239,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7938573659552316,
+     "localized": 0.6871421134825612,
+     "median_best_span": 2.0
+    },
+    "DefenseFinder": {
+     "n": 1211,
+     "f1": 0.8202305094397192,
+     "control": 0.4887075701721843,
+     "excess": 0.3315229392675348,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9421965317919075,
+     "localized": 0.8943022295623452,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 400,
+     "f1": 0.7049813253538015,
+     "control": 0.5197920096278271,
+     "excess": 0.18518931572597438,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9625,
+     "localized": 0.86,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5167122549935091
+   },
+   "ribo_odd": {
+    "runs": 848,
+    "recovered": 847,
+    "resolved": 817,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "55/55",
+    "parvarchaeaceae_resolved": "53/55",
+    "median_coverage": 1.0
+   }
+  }
+ },
+ "selection": {
+  "base": 0.02,
+  "S": 0.02,
+  "B": 0.02,
+  "SB": 0.02,
+  "Bf": 0.02,
+  "SBf": 0.02
+ },
+ "even": {
+  "base_t0.02": {
+   "selected": true,
+   "summary_even": {
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1": 0.48907983616268447,
+     "control": 0.4301591576113455,
+     "excess": 0.058920678551338986,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7867298578199052,
+     "localized": 0.6040021063717746,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1261,
+     "f1": 0.8238822570503777,
+     "control": 0.48220383485998264,
+     "excess": 0.34167842219039496,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9381443298969072,
+     "localized": 0.8897700237906423,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1": 0.7485999480684978,
+     "control": 0.5089743601898964,
+     "excess": 0.23962558787860144,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9628712871287128,
+     "localized": 0.9207920792079208,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5813040100689963
+   },
+   "ribo_all": {
+    "runs": 1686,
+    "recovered": 1681,
+    "resolved": 1542,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "114/114",
+    "parvarchaeaceae_resolved": "107/114",
+    "median_coverage": 1.0
+   },
+   "loci": {
+    "loci": 1282888,
+    "genes_covered": 2048384,
+    "median_span": 3.0,
+    "mean_span": 4.183949027506688
+   },
+   "genes_in_loci_frac": 0.5713280021242277,
+   "vs_DH_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8238822570503777,
+     "f1_B": 0.7439475579523818,
+     "excess_A": 0.34167842219039496,
+     "excess_B": 0.30491440952185894,
+     "d_f1": [
+      0.07993469909799579,
+      0.0650368848704187,
+      0.09535702573289713
+     ],
+     "d_excess": [
+      0.036764012668536045,
+      0.02422303379118083,
+      0.050085794358993255
+     ],
+     "d_control": [
+      0.04317068642945975,
+      0.03360066657783676,
+      0.05254445109580534
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7485999480684978,
+     "f1_B": 0.5479943434588632,
+     "excess_A": 0.23962558787860144,
+     "excess_B": 0.1221058520517378,
+     "d_f1": [
+      0.20060560460963459,
+      0.17909939653116366,
+      0.2213051110912792
+     ],
+     "d_excess": [
+      0.11751973582686365,
+      0.10049536961901369,
+      0.13443867582507055
+     ],
+     "d_control": [
+      0.08308586878277095,
+      0.07226645757943545,
+      0.0934229974511606
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.48907983616268447,
+     "f1_B": 0.479418481084168,
+     "excess_A": 0.058920678551338986,
+     "excess_B": 0.08005035325797057,
+     "d_f1": [
+      0.00966135507851645,
+      -0.0015090119390771518,
+      0.020795072233705546
+     ],
+     "d_excess": [
+      -0.021129674706631574,
+      -0.030853673746086687,
+      -0.011542444870515303
+     ],
+     "d_control": [
+      0.030791029785148027,
+      0.02321400627442685,
+      0.038450462751635626
+     ]
+    },
+    "summed": [
+     0.1542837484953997,
+     0.1329354363286644,
+     0.1755960564352045
+    ],
+    "summed_A": 0.5813040100689963,
+    "summed_B": 0.42702026157359674
+   },
+   "verdict_vs_DH": {
+    "matches": true,
+    "beats": true,
+    "summed_ok": true,
+    "f1_ok": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "ribo_ok": true,
+    "label": "beats"
+   },
+   "seven_bars": {
+    "summed": true,
+    "f1": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "recovered": true,
+    "resolved": true,
+    "parv": true,
+    "all": true
+   },
+   "vs_frozen_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8238822570503777,
+     "f1_B": 0.8238822570503777,
+     "excess_A": 0.34167842219039496,
+     "excess_B": 0.34167842219039496,
+     "d_f1": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_excess": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_control": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7485999480684978,
+     "f1_B": 0.7485999480684978,
+     "excess_A": 0.23962558787860144,
+     "excess_B": 0.23962558787860144,
+     "d_f1": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_excess": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_control": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.48907983616268447,
+     "f1_B": 0.48907983616268447,
+     "excess_A": 0.058920678551338986,
+     "excess_B": 0.058920678551338986,
+     "d_f1": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_excess": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_control": [
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "summed": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "summed_A": 0.5813040100689963,
+    "summed_B": 0.5813040100689963
+   },
+   "ribo_resolved_vs_frozen": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "any_fit_resolved": 1575,
+   "bio": {
+    "strict": 1504,
+    "loose": 1547
+   },
+   "curated_pairs_in_one_locus": 53,
+   "new_curated_pairs_vs_frozen": 0
+  },
+  "S_t0.02": {
+   "selected": true,
+   "summary_even": {
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1": 0.48947900384280435,
+     "control": 0.4325888479213315,
+     "excess": 0.05689015592147283,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7867298578199052,
+     "localized": 0.6313849394418115,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1261,
+     "f1": 0.8175232710720418,
+     "control": 0.4838597603259936,
+     "excess": 0.33366351074604833,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9381443298969072,
+     "localized": 0.8929421094369548,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1": 0.7390971695066966,
+     "control": 0.5086177939731655,
+     "excess": 0.23047937553353098,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9628712871287128,
+     "localized": 0.8985148514851485,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5641428862795793
+   },
+   "ribo_all": {
+    "runs": 1686,
+    "recovered": 1681,
+    "resolved": 1598,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 23.0,
+    "parvarchaeaceae": "114/114",
+    "parvarchaeaceae_resolved": "107/114",
+    "median_coverage": 1.0
+   },
+   "loci": {
+    "loci": 1248283,
+    "genes_covered": 2048384,
+    "median_span": 3.0,
+    "mean_span": 3.8029501323017296
+   },
+   "genes_in_loci_frac": 0.5713280021242277,
+   "vs_DH_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8175232710720418,
+     "f1_B": 0.7439475579523818,
+     "excess_A": 0.33366351074604833,
+     "excess_B": 0.30491440952185894,
+     "d_f1": [
+      0.0735757131196601,
+      0.05884789028874354,
+      0.08829949882601776
+     ],
+     "d_excess": [
+      0.028749101224189427,
+      0.015852832821956712,
+      0.04220474980040982
+     ],
+     "d_control": [
+      0.04482661189547067,
+      0.0351271797013851,
+      0.054202627017488826
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7390971695066966,
+     "f1_B": 0.5479943434588632,
+     "excess_A": 0.23047937553353098,
+     "excess_B": 0.1221058520517378,
+     "d_f1": [
+      0.19110282604783327,
+      0.1695254923513882,
+      0.21260214820183165
+     ],
+     "d_excess": [
+      0.10837352348179317,
+      0.09049526776548343,
+      0.12595691631011788
+     ],
+     "d_control": [
+      0.0827293025660401,
+      0.07211402245693621,
+      0.09309675046657974
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.48947900384280435,
+     "f1_B": 0.479418481084168,
+     "excess_A": 0.05689015592147283,
+     "excess_B": 0.08005035325797057,
+     "d_f1": [
+      0.010060522758636363,
+      -0.0012432615655799694,
+      0.021332410612720683
+     ],
+     "d_excess": [
+      -0.02316019733649773,
+      -0.03258831572573592,
+      -0.013607910897843759
+     ],
+     "d_control": [
+      0.03322072009513409,
+      0.025470754750355096,
+      0.04103102011098262
+     ]
+    },
+    "summed": [
+     0.1371226247059826,
+     0.11583859543180365,
+     0.15970051973130672
+    ],
+    "summed_A": 0.5641428862795793,
+    "summed_B": 0.42702026157359674
+   },
+   "verdict_vs_DH": {
+    "matches": true,
+    "beats": true,
+    "summed_ok": true,
+    "f1_ok": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "ribo_ok": true,
+    "label": "beats"
+   },
+   "seven_bars": {
+    "summed": true,
+    "f1": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "recovered": true,
+    "resolved": true,
+    "parv": true,
+    "all": true
+   },
+   "vs_frozen_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8175232710720418,
+     "f1_B": 0.8238822570503777,
+     "excess_A": 0.33366351074604833,
+     "excess_B": 0.34167842219039496,
+     "d_f1": [
+      -0.006358985978335701,
+      -0.01048678123477447,
+      -0.002356627586646711
+     ],
+     "d_excess": [
+      -0.008014911444346627,
+      -0.012525017892458818,
+      -0.003885766576837328
+     ],
+     "d_control": [
+      0.001655925466010925,
+      0.0005780756484680281,
+      0.0027658621047256565
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7390971695066966,
+     "f1_B": 0.7485999480684978,
+     "excess_A": 0.23047937553353098,
+     "excess_B": 0.23962558787860144,
+     "d_f1": [
+      -0.009502778561801338,
+      -0.01649303286611918,
+      -0.003699251564823231
+     ],
+     "d_excess": [
+      -0.009146212345070492,
+      -0.016235750799640486,
+      -0.0030396223014918533
+     ],
+     "d_control": [
+      -0.000356566216730846,
+      -0.0018896424752739601,
+      0.0012421841346263046
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.48947900384280435,
+     "f1_B": 0.48907983616268447,
+     "excess_A": 0.05689015592147283,
+     "excess_B": 0.058920678551338986,
+     "d_f1": [
+      0.0003991676801199125,
+      -0.003288090594628414,
+      0.004011820338059
+     ],
+     "d_excess": [
+      -0.0020305226298661487,
+      -0.005352962912062834,
+      0.001287280142347292
+     ],
+     "d_control": [
+      0.002429690309986061,
+      0.0016581700888425397,
+      0.0032255299835071633
+     ]
+    },
+    "summed": [
+     -0.01716112378941712,
+     -0.025147694361098018,
+     -0.00966614152713817
+    ],
+    "summed_A": 0.5641428862795793,
+    "summed_B": 0.5813040100689963
+   },
+   "ribo_resolved_vs_frozen": [
+    56.0,
+    42.0,
+    72.0
+   ],
+   "any_fit_resolved": 1607,
+   "bio": {
+    "strict": 1564,
+    "loose": 1613
+   },
+   "curated_pairs_in_one_locus": 53,
+   "new_curated_pairs_vs_frozen": 0
+  },
+  "B_t0.02": {
+   "selected": true,
+   "summary_even": {
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1": 0.48919551790774357,
+     "control": 0.4303176544803763,
+     "excess": 0.05887786342736727,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7867298578199052,
+     "localized": 0.6040021063717746,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1261,
+     "f1": 0.8238822570503777,
+     "control": 0.4822239015410326,
+     "excess": 0.3416583555093449,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9381443298969072,
+     "localized": 0.8897700237906423,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1": 0.7485999480684978,
+     "control": 0.5090943498593546,
+     "excess": 0.23950559820914324,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9628712871287128,
+     "localized": 0.9207920792079208,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5811639537184882
+   },
+   "ribo_all": {
+    "runs": 1686,
+    "recovered": 1685,
+    "resolved": 1551,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "114/114",
+    "parvarchaeaceae_resolved": "108/114",
+    "median_coverage": 1.0
+   },
+   "loci": {
+    "loci": 1288066,
+    "genes_covered": 2048384,
+    "median_span": 3.0,
+    "mean_span": 4.2127095971790265
+   },
+   "genes_in_loci_frac": 0.5713280021242277,
+   "vs_DH_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8238822570503777,
+     "f1_B": 0.7439475579523818,
+     "excess_A": 0.3416583555093449,
+     "excess_B": 0.30491440952185894,
+     "d_f1": [
+      0.07993469909799579,
+      0.0650368848704187,
+      0.09535702573289713
+     ],
+     "d_excess": [
+      0.036743945987486024,
+      0.02420737571543702,
+      0.05006753465076766
+     ],
+     "d_control": [
+      0.04319075311050978,
+      0.033634274235592565,
+      0.05256642050158455
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7485999480684978,
+     "f1_B": 0.5479943434588632,
+     "excess_A": 0.23950559820914324,
+     "excess_B": 0.1221058520517378,
+     "d_f1": [
+      0.20060560460963459,
+      0.17909939653116366,
+      0.2213051110912792
+     ],
+     "d_excess": [
+      0.11739974615740542,
+      0.1004026226365026,
+      0.13431881045960714
+     ],
+     "d_control": [
+      0.08320585845222918,
+      0.0724324335371801,
+      0.09353520429844933
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.48919551790774357,
+     "f1_B": 0.479418481084168,
+     "excess_A": 0.05887786342736727,
+     "excess_B": 0.08005035325797057,
+     "d_f1": [
+      0.009777036823575573,
+      -0.0013439229118679334,
+      0.021022159577020413
+     ],
+     "d_excess": [
+      -0.021172489830603294,
+      -0.030896700595906913,
+      -0.011574926046578608
+     ],
+     "d_control": [
+      0.03094952665417887,
+      0.023355199001003406,
+      0.03863405578483129
+     ]
+    },
+    "summed": [
+     0.15414369214489143,
+     0.1328255531223891,
+     0.17548026781206585
+    ],
+    "summed_A": 0.5811639537184882,
+    "summed_B": 0.42702026157359674
+   },
+   "verdict_vs_DH": {
+    "matches": true,
+    "beats": true,
+    "summed_ok": true,
+    "f1_ok": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "ribo_ok": true,
+    "label": "beats"
+   },
+   "seven_bars": {
+    "summed": true,
+    "f1": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "recovered": true,
+    "resolved": true,
+    "parv": true,
+    "all": true
+   },
+   "vs_frozen_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8238822570503777,
+     "f1_B": 0.8238822570503777,
+     "excess_A": 0.3416583555093449,
+     "excess_B": 0.34167842219039496,
+     "d_f1": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_excess": [
+      -2.00666810500276e-05,
+      -3.4361064432921325e-05,
+      -8.511467941571627e-06
+     ],
+     "d_control": [
+      2.006668105002751e-05,
+      8.7771793767056e-06,
+      3.46825159462151e-05
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7485999480684978,
+     "f1_B": 0.7485999480684978,
+     "excess_A": 0.23950559820914324,
+     "excess_B": 0.23962558787860144,
+     "d_f1": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_excess": [
+      -0.00011998966945821886,
+      -0.000217847035726549,
+      -4.6434900319163544e-05
+     ],
+     "d_control": [
+      0.00011998966945821886,
+      4.641700229119075e-05,
+      0.0002211836171540931
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.48919551790774357,
+     "f1_B": 0.48907983616268447,
+     "excess_A": 0.05887786342736727,
+     "excess_B": 0.058920678551338986,
+     "d_f1": [
+      0.00011568174505912425,
+      0.0,
+      0.00035150149621545506
+     ],
+     "d_excess": [
+      -4.281512397171623e-05,
+      -8.753211233340949e-05,
+      -1.5893308763830955e-05
+     ],
+     "d_control": [
+      0.0001584968690308404,
+      2.069797967169717e-05,
+      0.0004280522214357058
+     ]
+    },
+    "summed": [
+     -0.00014005635050824645,
+     -0.00023886734359435,
+     -6.291914340092803e-05
+    ],
+    "summed_A": 0.5811639537184882,
+    "summed_B": 0.5813040100689963
+   },
+   "ribo_resolved_vs_frozen": [
+    9.0,
+    4.0,
+    15.0
+   ],
+   "any_fit_resolved": 1584,
+   "bio": {
+    "strict": 1506,
+    "loose": 1550
+   },
+   "curated_pairs_in_one_locus": 53,
+   "new_curated_pairs_vs_frozen": 0
+  },
+  "SB_t0.02": {
+   "selected": true,
+   "summary_even": {
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1": 0.4895279149793217,
+     "control": 0.43266415817218234,
+     "excess": 0.0568637568071393,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7867298578199052,
+     "localized": 0.6313849394418115,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1261,
+     "f1": 0.8175232710720418,
+     "control": 0.48375885604278157,
+     "excess": 0.33376441502926035,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9381443298969072,
+     "localized": 0.8929421094369548,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1": 0.7390971695066966,
+     "control": 0.5085847110501066,
+     "excess": 0.23051245845658988,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9628712871287128,
+     "localized": 0.8985148514851485,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5642768734858502
+   },
+   "ribo_all": {
+    "runs": 1686,
+    "recovered": 1685,
+    "resolved": 1624,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 23.0,
+    "parvarchaeaceae": "114/114",
+    "parvarchaeaceae_resolved": "108/114",
+    "median_coverage": 1.0
+   },
+   "loci": {
+    "loci": 1252226,
+    "genes_covered": 2048384,
+    "median_span": 3.0,
+    "mean_span": 3.825493960355399
+   },
+   "genes_in_loci_frac": 0.5713280021242277,
+   "vs_DH_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8175232710720418,
+     "f1_B": 0.7439475579523818,
+     "excess_A": 0.33376441502926035,
+     "excess_B": 0.30491440952185894,
+     "d_f1": [
+      0.0735757131196601,
+      0.05884789028874354,
+      0.08829949882601776
+     ],
+     "d_excess": [
+      0.0288500055074014,
+      0.015963361304040642,
+      0.04230664218969178
+     ],
+     "d_control": [
+      0.0447257076122587,
+      0.035038994396960114,
+      0.0541243565383362
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7390971695066966,
+     "f1_B": 0.5479943434588632,
+     "excess_A": 0.23051245845658988,
+     "excess_B": 0.1221058520517378,
+     "d_f1": [
+      0.19110282604783327,
+      0.1695254923513882,
+      0.21260214820183165
+     ],
+     "d_excess": [
+      0.10840660640485207,
+      0.09071042591240985,
+      0.12596599702598546
+     ],
+     "d_control": [
+      0.0826962196429812,
+      0.07200782736017679,
+      0.09304920896122117
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.4895279149793217,
+     "f1_B": 0.479418481084168,
+     "excess_A": 0.0568637568071393,
+     "excess_B": 0.08005035325797057,
+     "d_f1": [
+      0.010109433895153667,
+      -0.0012240272794048124,
+      0.021462285010327646
+     ],
+     "d_excess": [
+      -0.023186596450831255,
+      -0.032578557826563694,
+      -0.01359784304275615
+     ],
+     "d_control": [
+      0.033296030345984926,
+      0.025579864121040075,
+      0.041106931675138375
+     ]
+    },
+    "summed": [
+     0.13725661191225347,
+     0.1160686141857828,
+     0.15954754727946457
+    ],
+    "summed_A": 0.5642768734858502,
+    "summed_B": 0.42702026157359674
+   },
+   "verdict_vs_DH": {
+    "matches": true,
+    "beats": true,
+    "summed_ok": true,
+    "f1_ok": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "ribo_ok": true,
+    "label": "beats"
+   },
+   "seven_bars": {
+    "summed": true,
+    "f1": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "recovered": true,
+    "resolved": true,
+    "parv": true,
+    "all": true
+   },
+   "vs_frozen_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8175232710720418,
+     "f1_B": 0.8238822570503777,
+     "excess_A": 0.33376441502926035,
+     "excess_B": 0.34167842219039496,
+     "d_f1": [
+      -0.006358985978335701,
+      -0.01048678123477447,
+      -0.002356627586646711
+     ],
+     "d_excess": [
+      -0.007914007161134651,
+      -0.012394989474915415,
+      -0.003818330783910374
+     ],
+     "d_control": [
+      0.00155502118279895,
+      0.00045878043367879106,
+      0.002649105305681257
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7390971695066966,
+     "f1_B": 0.7485999480684978,
+     "excess_A": 0.23051245845658988,
+     "excess_B": 0.23962558787860144,
+     "d_f1": [
+      -0.009502778561801338,
+      -0.01649303286611918,
+      -0.003699251564823231
+     ],
+     "d_excess": [
+      -0.009113129422011586,
+      -0.016211286557415244,
+      -0.002946437851736151
+     ],
+     "d_control": [
+      -0.0003896491397897501,
+      -0.001988608899892424,
+      0.0012280432272632554
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.4895279149793217,
+     "f1_B": 0.48907983616268447,
+     "excess_A": 0.0568637568071393,
+     "excess_B": 0.058920678551338986,
+     "d_f1": [
+      0.00044807881663721746,
+      -0.0032739555373207134,
+      0.004064943102981406
+     ],
+     "d_excess": [
+      -0.002056921744199679,
+      -0.005407205891857681,
+      0.0012852694179036185
+     ],
+     "d_control": [
+      0.0025050005608368963,
+      0.0016903968979286627,
+      0.0033168620551024676
+     ]
+    },
+    "summed": [
+     -0.017027136583146238,
+     -0.024964570970875094,
+     -0.009580778152110883
+    ],
+    "summed_A": 0.5642768734858502,
+    "summed_B": 0.5813040100689963
+   },
+   "ribo_resolved_vs_frozen": [
+    82.0,
+    65.0,
+    101.0
+   ],
+   "any_fit_resolved": 1633,
+   "bio": {
+    "strict": 1585,
+    "loose": 1634
+   },
+   "curated_pairs_in_one_locus": 53,
+   "new_curated_pairs_vs_frozen": 0
+  },
+  "Bf_t0.02": {
+   "selected": true,
+   "summary_even": {
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1": 0.48919551790774357,
+     "control": 0.43031477074980695,
+     "excess": 0.058880747157936626,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7867298578199052,
+     "localized": 0.6040021063717746,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1261,
+     "f1": 0.8238822570503777,
+     "control": 0.48222605675419417,
+     "excess": 0.3416562002961834,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9381443298969072,
+     "localized": 0.8897700237906423,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1": 0.7485999480684978,
+     "control": 0.5090925583340482,
+     "excess": 0.2395073897344496,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9628712871287128,
+     "localized": 0.9207920792079208,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.581163590030633
+   },
+   "ribo_all": {
+    "runs": 1686,
+    "recovered": 1685,
+    "resolved": 1551,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 24.0,
+    "parvarchaeaceae": "114/114",
+    "parvarchaeaceae_resolved": "108/114",
+    "median_coverage": 1.0
+   },
+   "loci": {
+    "loci": 1287786,
+    "genes_covered": 2048384,
+    "median_span": 3.0,
+    "mean_span": 4.211630659131253
+   },
+   "genes_in_loci_frac": 0.5713280021242277,
+   "vs_DH_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8238822570503777,
+     "f1_B": 0.7439475579523818,
+     "excess_A": 0.3416562002961834,
+     "excess_B": 0.30491440952185894,
+     "d_f1": [
+      0.07993469909799579,
+      0.0650368848704187,
+      0.09535702573289713
+     ],
+     "d_excess": [
+      0.036741790774324504,
+      0.024212430929098964,
+      0.05006996746694953
+     ],
+     "d_control": [
+      0.04319290832367129,
+      0.03363506589634039,
+      0.05257240450397892
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7485999480684978,
+     "f1_B": 0.5479943434588632,
+     "excess_A": 0.2395073897344496,
+     "excess_B": 0.1221058520517378,
+     "d_f1": [
+      0.20060560460963459,
+      0.17909939653116366,
+      0.2213051110912792
+     ],
+     "d_excess": [
+      0.11740153768271179,
+      0.10039813543834054,
+      0.13431696147695765
+     ],
+     "d_control": [
+      0.0832040669269228,
+      0.07243622697922511,
+      0.09353819255286251
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.48919551790774357,
+     "f1_B": 0.479418481084168,
+     "excess_A": 0.058880747157936626,
+     "excess_B": 0.08005035325797057,
+     "d_f1": [
+      0.009777036823575573,
+      -0.0013439229118679334,
+      0.021022159577020413
+     ],
+     "d_excess": [
+      -0.021169606100033937,
+      -0.03088372225902856,
+      -0.011588190773238295
+     ],
+     "d_control": [
+      0.03094664292360951,
+      0.023352032857632564,
+      0.038629932778364025
+     ]
+    },
+    "summed": [
+     0.1541433284570363,
+     0.1328446906407731,
+     0.17548964372272238
+    ],
+    "summed_A": 0.581163590030633,
+    "summed_B": 0.42702026157359674
+   },
+   "verdict_vs_DH": {
+    "matches": true,
+    "beats": true,
+    "summed_ok": true,
+    "f1_ok": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "ribo_ok": true,
+    "label": "beats"
+   },
+   "seven_bars": {
+    "summed": true,
+    "f1": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "recovered": true,
+    "resolved": true,
+    "parv": true,
+    "all": true
+   },
+   "vs_frozen_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8238822570503777,
+     "f1_B": 0.8238822570503777,
+     "excess_A": 0.3416562002961834,
+     "excess_B": 0.34167842219039496,
+     "d_f1": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_excess": [
+      -2.2221894211543512e-05,
+      -4.365080876200715e-05,
+      -7.364850478560298e-06
+     ],
+     "d_control": [
+      2.2221894211543336e-05,
+      8.008458315083686e-06,
+      4.497995834502594e-05
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7485999480684978,
+     "f1_B": 0.7485999480684978,
+     "excess_A": 0.2395073897344496,
+     "excess_B": 0.23962558787860144,
+     "d_f1": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "d_excess": [
+      -0.00011819814415184179,
+      -0.00021363885902125717,
+      -4.46632499265585e-05
+     ],
+     "d_control": [
+      0.00011819814415184179,
+      4.4283987155829555e-05,
+      0.00021802515547853662
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.48919551790774357,
+     "f1_B": 0.48907983616268447,
+     "excess_A": 0.058880747157936626,
+     "excess_B": 0.058920678551338986,
+     "d_f1": [
+      0.00011568174505912425,
+      0.0,
+      0.00035150149621545506
+     ],
+     "d_excess": [
+      -3.993139340236157e-05,
+      -6.966019478391089e-05,
+      -1.7656771886545524e-05
+     ],
+     "d_control": [
+      0.00015561313846148582,
+      2.264385347430116e-05,
+      0.0004083802834468164
+     ]
+    },
+    "summed": [
+     -0.0001404200383633853,
+     -0.0002435922317614732,
+     -6.455084234240943e-05
+    ],
+    "summed_A": 0.581163590030633,
+    "summed_B": 0.5813040100689963
+   },
+   "ribo_resolved_vs_frozen": [
+    9.0,
+    4.0,
+    15.0
+   ],
+   "any_fit_resolved": 1584,
+   "bio": {
+    "strict": 1506,
+    "loose": 1550
+   },
+   "curated_pairs_in_one_locus": 53,
+   "new_curated_pairs_vs_frozen": 0
+  },
+  "SBf_t0.02": {
+   "selected": true,
+   "summary_even": {
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1": 0.4895799040315504,
+     "control": 0.43266570220203365,
+     "excess": 0.05691420182951678,
+     "median_bprec_covered": 0.5,
+     "covered50": 0.7867298578199052,
+     "localized": 0.6313849394418115,
+     "median_best_span": 3.0
+    },
+    "DefenseFinder": {
+     "n": 1261,
+     "f1": 0.8175232710720418,
+     "control": 0.48377590318960556,
+     "excess": 0.33374736788243636,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9381443298969072,
+     "localized": 0.8929421094369548,
+     "median_best_span": 2.0
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1": 0.7390971695066966,
+     "control": 0.5087232093524526,
+     "excess": 0.23037396015424394,
+     "median_bprec_covered": 1.0,
+     "covered50": 0.9628712871287128,
+     "localized": 0.8985148514851485,
+     "median_best_span": 3.0
+    },
+    "summed_DF_TXSS_excess": 0.5641213280366804
+   },
+   "ribo_all": {
+    "runs": 1686,
+    "recovered": 1685,
+    "resolved": 1624,
+    "median_precision_recovered": 0.96,
+    "median_ext_left_recovered": 0.0,
+    "median_ext_right_recovered": 0.0,
+    "median_fragments": 23.0,
+    "parvarchaeaceae": "114/114",
+    "parvarchaeaceae_resolved": "108/114",
+    "median_coverage": 1.0
+   },
+   "loci": {
+    "loci": 1251913,
+    "genes_covered": 2048384,
+    "median_span": 3.0,
+    "mean_span": 3.8241978476140117
+   },
+   "genes_in_loci_frac": 0.5713280021242277,
+   "vs_DH_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8175232710720418,
+     "f1_B": 0.7439475579523818,
+     "excess_A": 0.33374736788243636,
+     "excess_B": 0.30491440952185894,
+     "d_f1": [
+      0.0735757131196601,
+      0.05884789028874354,
+      0.08829949882601776
+     ],
+     "d_excess": [
+      0.02883295836057746,
+      0.01594437755282155,
+      0.04228070259937555
+     ],
+     "d_control": [
+      0.04474275475908264,
+      0.03507255800664948,
+      0.054141423001432355
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7390971695066966,
+     "f1_B": 0.5479943434588632,
+     "excess_A": 0.23037396015424394,
+     "excess_B": 0.1221058520517378,
+     "d_f1": [
+      0.19110282604783327,
+      0.1695254923513882,
+      0.21260214820183165
+     ],
+     "d_excess": [
+      0.10826810810250614,
+      0.09034499545401967,
+      0.12577504273668152
+     ],
+     "d_control": [
+      0.08283471794532712,
+      0.07216642122453938,
+      0.09322351405720876
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.4895799040315504,
+     "f1_B": 0.479418481084168,
+     "excess_A": 0.05691420182951678,
+     "excess_B": 0.08005035325797057,
+     "d_f1": [
+      0.010161422947382375,
+      -0.0011131854857017824,
+      0.021530756402004667
+     ],
+     "d_excess": [
+      -0.023136151428453777,
+      -0.032549988521904105,
+      -0.013609184658474294
+     ],
+     "d_control": [
+      0.03329757437583615,
+      0.025580795009907696,
+      0.04107656518589943
+     ]
+    },
+    "summed": [
+     0.1371010664630836,
+     0.11586385854610011,
+     0.15954152504795663
+    ],
+    "summed_A": 0.5641213280366804,
+    "summed_B": 0.42702026157359674
+   },
+   "verdict_vs_DH": {
+    "matches": true,
+    "beats": true,
+    "summed_ok": true,
+    "f1_ok": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "ribo_ok": true,
+    "label": "beats"
+   },
+   "seven_bars": {
+    "summed": true,
+    "f1": {
+     "DefenseFinder": true,
+     "TXSScan": true,
+     "CRISPRCasTyper": true
+    },
+    "recovered": true,
+    "resolved": true,
+    "parv": true,
+    "all": true
+   },
+   "vs_frozen_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.8175232710720418,
+     "f1_B": 0.8238822570503777,
+     "excess_A": 0.33374736788243636,
+     "excess_B": 0.34167842219039496,
+     "d_f1": [
+      -0.006358985978335701,
+      -0.01048678123477447,
+      -0.002356627586646711
+     ],
+     "d_excess": [
+      -0.007931054307958589,
+      -0.012416016117439527,
+      -0.0038195678593885155
+     ],
+     "d_control": [
+      0.0015720683296228887,
+      0.00047535538398125885,
+      0.002679101525604275
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.7390971695066966,
+     "f1_B": 0.7485999480684978,
+     "excess_A": 0.23037396015424394,
+     "excess_B": 0.23962558787860144,
+     "d_f1": [
+      -0.009502778561801338,
+      -0.01649303286611918,
+      -0.003699251564823231
+     ],
+     "d_excess": [
+      -0.009251627724357525,
+      -0.016325269397716908,
+      -0.0031499386786135062
+     ],
+     "d_control": [
+      -0.00025115083744381113,
+      -0.0017966325701515443,
+      0.001349580040787251
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.4895799040315504,
+     "f1_B": 0.48907983616268447,
+     "excess_A": 0.05691420182951678,
+     "excess_B": 0.058920678551338986,
+     "d_f1": [
+      0.0005000678688659265,
+      -0.003206715411064802,
+      0.004080748044660354
+     ],
+     "d_excess": [
+      -0.002006476721822198,
+      -0.005363188006898928,
+      0.0013414268109546185
+     ],
+     "d_control": [
+      0.0025065445906881246,
+      0.001682209718499243,
+      0.003321811756632407
+     ]
+    },
+    "summed": [
+     -0.017182682032316113,
+     -0.025176653731949574,
+     -0.009732962652321948
+    ],
+    "summed_A": 0.5641213280366804,
+    "summed_B": 0.5813040100689963
+   },
+   "ribo_resolved_vs_frozen": [
+    82.0,
+    65.0,
+    101.0
+   ],
+   "any_fit_resolved": 1633,
+   "bio": {
+    "strict": 1585,
+    "loose": 1634
+   },
+   "curated_pairs_in_one_locus": 53,
+   "new_curated_pairs_vs_frozen": 0
+  }
+ },
+ "selection_written": "2026-11-19T04:44:12Z",
+ "any_fit_frozen": 1575,
+ "seconds": 328.7,
+ "peak_rss_gb": 2.3
+}

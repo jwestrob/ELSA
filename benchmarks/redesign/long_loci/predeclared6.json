@@ -1,0 +1,45 @@
+{
+ "workstream": "long_loci part 6: strand-aware splitting and bridging on both frozen bases (DPANN development; Spacedust check)",
+ "written_utc": "2026-11-19T04:15Z",
+ "status_when_written": "Read: ribo_audit REPORT2.txt and bio.py / audit.py (code). No variant has been built or scored. Known: every DPANN and Spacedust number of parts 1-5 (development), the audit's counts for the frozen primary and Z L4b+ (bio strict / loose 1,538 / 1,571 and 1,504 / 1,547; bridging (i) AND (iii): 59,655 candidates, 4,941 fires, 21 of 23 verdict-1 runs repaired, 0 curated merges, 11 joins, 34 target edges), and the lut-set result (reported; the lut set stays closed, no variant is run on it).",
+ "bases": {
+  "P": "frozen primary: rescue3 family bonds at the adaptive distance (stored nodes/<data>_WA/bonds_obs.npz; tau 6 DPANN, 8 Spacedust), L4b tree with token cohesion, closed-form family node test at the bond tau (n >= 2, Lambda >= tau, nI >= 2); frozen theta .2",
+  "Z": "frozen secondary: embedding-list bonds (stored nodes/<data>_Z/bonds_obs.npz; tau 6 DPANN, 8 Spacedust), L4b tree with kNN cohesion kappa_var_knn50, every node kept (L4b+); frozen theta .02",
+  "unchanged": "bonds, cohesion arrays, node rule of each base. Only the tree weights change."
+ },
+ "variants": {
+  "base": "w_k = s_k; bonded boundaries with kappa < theta get 1e-6 + max(kappa, 0) (part-1 L4b). Gate: equals the stored loci of the base at every theta, row for row.",
+  "S": "strand-aware splitting: every bonded boundary where the strand changes gets w = 1e-9, below every other positive weight, so it is split first and every multi-strand node has single-strand children (tie-collapsed tree: all strand changes of a node split together)",
+  "B": "bridging: an unbonded junction k (a locus of the frozen base output ends at k, another starts at k+1, same contig, no locus spans k|k+1, no bond spans it) is bridged when genes k and k+1 are on the same strand, their intergenic spacing is <= 150 nt, and the two sides are members of one top-level locus of the frozen base output in >= 3 other lineage groups (rule (i) AND (iii) of the audit). Bridged junctions get w = 1e-8 (split first after strand changes); the union is then a tree node subject to the base's node rule. The bridge set is computed once per dataset and base from the frozen base output (P: L4b theta .2; Z: L4b+ theta .02) and used at every theta.",
+  "SB": "S and B together (strand 1e-9 < bridge 1e-8 < low cohesion >= 1e-6)",
+  "own_variant": "none added: the remaining failure class in the audit's diagrams (parents running into conserved neighbours such as secY|EMC3_TMCO1, bonded at Lambda 347-359 and adjacent in 369 other groups) carries no genome-intrinsic signal (same strand, short spacing, recurrent) that separates it from a real unit; a rule cutting there would cut conserved neighbourhoods in general"
+ },
+ "bridging_co_membership": {
+  "P_families": "audit rule (i): token families of genes k and k+1 both occur in one top-level locus of genomes of >= 3 groups other than the junction's own group",
+  "Z_lists": "without families: for every genome g of another group, take the list partner of gene k in g and the list partner of gene k+1 in g (z >= 10.6 lists, one best match per genome, own group excluded, as the Z bonds use); the junction counts g when both partners exist and lie in one top-level locus of the frozen Z output; fire when such genomes span >= 3 groups (and rule (iii))",
+  "Z_family_check": "the same junctions evaluated with audit rule (i) on rescue3 tokens over the Z output's top-level loci; reported: fires of each, overlap, Jaccard, and the variant Bf / SBf (family bridges) scored at the theta selected for B / SB as a check row",
+  "gate": "my implementation on the frozen primary (DPANN) must reproduce the audit's candidate set (59,655), rule (i) AND (iii) fires (4,941), verdict-1 repairs (21 of 23), curated merges (0) / joins (11) and target-edge fires (34) before any variant is built"
+ },
+ "selection": "DPANN odd genomes only: per base and variant, theta in {.02, .05, .1, .2} by the part-1 rule (maximise [odd conditions met vs token DH, odd ribosomal resolved, odd summed DF + TXSS excess]); the tree form of the base is kept (P: L4b; Z: L4b+). The rule is mechanical and applied by the scoring job before any even number is written.",
+ "reported_DPANN": {
+  "even": "seven bars vs token DH (summed excess >= DH - .01; F1 DF, TXSS, CCT >= DH - .02; recovered >= 1,650; resolved > 1,512; Parvarchaeaceae recovered >= 110); paired differences against the frozen base (genome bootstrap 2,000): summed excess, F1 per caller; median boundary precision of the best locus over covered instances per caller",
+  "ribosomal_all_1686": "standing recovered / resolved, any fitting locus count, audit accurate reading strict and loose computed with ribo_audit bio.py (Bio, run_units, score_target imported read-only; strict = predeclared 150 / 500 nt, loose = 500 / 500 nt); paired resolved difference against the frozen base",
+  "structure": "share of genes in loci, loci count; junctions each rule changes genome-wide (S: bonded strand-change boundaries; B: bridged junctions; with share of candidates); verdict-1 repairs",
+  "curated_merge_check": "pairs of different curated instances (package gold, DefenseFinder / TXSScan / CRISPRCasTyper, >= 2 members) whose member spans both lie inside one locus of the variant while no locus of the frozen base holds both (all genomes; check only, never a selection input); for B also the audit's junction-level count (firing junctions whose two top-level loci touch different instances)"
+ },
+ "reported_Spacedust": "DEVELOPMENT rows (window 8 and these outputs seen before): source207 F1, control, excess [95%] for each base x variant at the DPANN-selected theta and at the frozen theta, paired differences (region bootstrap 10,000) against the frozen base (P +.164, Z +.111); bridges computed on Spacedust with the same rules (TS tokens and groups, Spacedust z lists, gene coordinates from the Spacedust metadata)",
+ "biological_justification": {
+  "JUSTIFIED": "all of: (j1) audit strict count >= frozen base + 10 and loose >= frozen base; (j2) even F1 DefenseFinder and CRISPRCasTyper each >= frozen base - .01 and summed excess >= frozen base - .01 (points); (j3) new distinct-curated pairs in one locus <= 10 and, for B / SB, 0 junction-level curated merges; (j4) standing resolved >= frozen base - 10",
+  "UNJUSTIFIED": "any of: (u1) new distinct-curated pairs > 25 or >= 3 junction-level curated merges; (u2) even F1 DefenseFinder or CRISPRCasTyper below the frozen base by > .02 with the paired 95% upper bound < 0; (u3) audit strict count below the frozen base; (u4) for B / SB, bridges fire at > 10% of candidate junctions",
+  "otherwise": "NOT SHOWN (neither condition set met)",
+  "which_base": "the base whose selected justified variant has the higher audit strict count while meeting all seven bars; tie within 5 runs: higher summed excess"
+ },
+ "expectations": {
+  "gates": "base equals stored loci; audit bridging counts reproduced exactly; bio counts of the frozen bases reproduced (1,538 / 1,571; 1,504 / 1,547)",
+  "S": "P: strict +8 to +20 (the 14-16 opposite-strand runs become two single-strand nodes), loose +5 to +15, standing -5 to +10, DF / CCT F1 within .01, summed within .01, new curated pairs 0-5; Z: the same within a few runs; Spacedust S -.03 to 0 (BGCs span divergent operons)",
+  "B": "P: 18-21 of 23 repaired, standing +10 to +20, strict +10 to +20, fires 4,941 (8.3%), curated pairs 0-10, summed -.01 to +.005; Z: list rule fires 3,000-8,000, agreement with the family rule Jaccard .4-.7, repairs 20-28 of 29; Spacedust B 0 to +.01",
+  "SB": "the two gains add (strict +20 to +40 on P); at least one base JUSTIFIED; the P base carries the fixes better on the ribosomal set (higher strict count), the Z base keeps the higher curated-system excess",
+  "theta": "selected theta unchanged (P .2, Z .02) for most variants"
+ },
+ "compute": "24-CPU jobs (memory permitting), watchdog caps ~2x expected, chained: bridges + DPANN builds, DPANN scoring per base, Spacedust builds + source207, tables"
+}

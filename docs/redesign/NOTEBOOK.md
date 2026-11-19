@@ -2910,3 +2910,38 @@ made before the tokens existed was reproduced row for row by the unchanged code.
 - Cost: 4 h 52 min of job wall time (24-CPU jobs 4 h 02 min, of which tokens 72 min and the two
   synton runs 139 min; GPU 43 min).
 Part 6 (strand-aware splitting and bridging) now applies the fixes to both configurations on DPANN.
+
+## 2026-11-19 04:54 UTC — Strand-aware splitting and bridging on both configurations: no variant passes the predeclared test (`benchmarks/redesign/long_loci/REPORT6.txt`)
+
+DPANN development (curated scores on even genomes; ribosomal counts over all 1,686 runs),
+Spacedust development rows; lut closed. The agent's bridging code reproduces the audit's counts
+junction for junction; every unmodified base reproduces its stored loci.
+
+| Base | Variant | Summed excess (change) | Ribosomal resolved (change) | Accurate strict / loose | All 7 bars | New curated pairs merged |
+|---|---|---|---|---|---|---|
+| Embedding lists | unmodified | 0.581 | 1,542 | 1,504 / 1,547 | yes | |
+| Embedding lists | strand-first splitting | 0.564 (-0.017) | 1,598 (+56) | 1,564 / 1,613 | yes | 0 |
+| Embedding lists | bridging | 0.581 | 1,551 (+9) | 1,506 / 1,550 | yes | 0 |
+| Embedding lists | both | 0.564 (-0.017 [-0.025, -0.010]) | 1,624 (+82 [+65, +101]) | 1,585 / 1,634 | yes | 0 |
+| Families, adaptive | unmodified | 0.513 | 1,594 | 1,538 / 1,571 | yes | |
+| Families, adaptive | strand-first splitting | 0.522 | 1,622 (+28) | 1,592 / 1,634 | CRISPR-Cas fails (0.441) | 3 |
+| Families, adaptive | bridging | 0.513 | 1,544 (-50 [-65, -36]) | 1,487 / 1,520 | yes | 0 |
+| Families, adaptive | both | 0.522 | 1,599 (+5) | 1,567 / 1,610 | CRISPR-Cas fails | 3 |
+
+- **Embedding-list base with both fixes is close:** every bar, no curated merges, CRISPR-Cas
+  unchanged, +81 / +87 accurate runs; the one failed condition is summed excess, -0.017 against a
+  predeclared limit of -0.01.
+- **Strand-first splitting does the work** (it forces a cut at about a quarter of bonded
+  boundaries); its cost falls on curated systems with genes on both strands.
+- **Bridging alone harms the family base:** in all 53 runs it loses, the bridged union covers more
+  of the run than the old locus, the largest-overlap scorer picks it, and its median precision is
+  0.63. The list base keeps every node, so a union sits beside its parts and nothing is lost.
+- Family-free bridging (through list partners) and family-token bridging fire at partly different
+  junctions (Jaccard 0.50 on DPANN, 0.26 on Spacedust) and give the same scores.
+- Spacedust collection: strand-first splitting raises excess on both bases (+0.019 [+0.001,
+  +0.037] families; +0.006 [+0.001, +0.012] lists); bridging neutral.
+Decision (mine, acted on): the predeclared verdicts stand. Part 7 tests one refinement motivated
+by the mechanism: keep every node of the unmodified tree and add the single-strand pieces. Then
+the second frozen run, on the SR-VP genome-bin set, with a configuration rule fixed in advance:
+embedding-list tree with the refined fixes if part 7 passes, otherwise the unmodified
+embedding-list tree; the family-bond adaptive tree as secondary.

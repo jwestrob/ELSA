@@ -1,0 +1,45 @@
+{
+ "data": "sd",
+ "coord_order_ok": 1.0,
+ "bases": {
+  "P": {
+   "candidates": 75518,
+   "rule_i": 11833,
+   "rule_iii": 21128,
+   "bridge": 4290,
+   "bridge_share": 0.056807648507640564,
+   "bridge_fam": 4290
+  },
+  "Z": {
+   "candidates": 130473,
+   "rule_i": 11559,
+   "rule_iii": 39823,
+   "bridge": 2130,
+   "bridge_share": 0.01632521671150353,
+   "bridge_fam": 5010,
+   "rule_i_list": 4445,
+   "list_vs_family": {
+    "both": 1460,
+    "list_only": 670,
+    "family_only": 3550,
+    "jaccard": 0.25704225352112675
+   },
+   "lists": {
+    "source": "z10.6",
+    "entries": 1194810379,
+    "uid_entries": 1202034630,
+    "list_len_q01_q10_q50_q90_max": [
+     0.0,
+     11.0,
+     155.0,
+     775.0,
+     1312.0
+    ],
+    "genes_empty": 67713,
+    "seconds": 115.7
+   }
+  }
+ },
+ "seconds": 345.2,
+ "peak_rss_gb": 30.8
+}

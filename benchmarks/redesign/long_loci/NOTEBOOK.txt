@@ -317,3 +317,48 @@ FROZEN RUN (lut test set, $RD/slice_lut/testset/package_k8; first run on untouch
                   / +.018 / 373 resolved; DH .660 / +.108 / 668; synton faithful .055 / -.009, matched .003 / -.083, 0
                   ribosomal. All 80 complete-cluster genomes in one genome group. REPORT_frozen.txt written (ANSWER lines
                   first) and synced.
+
+PART 6 (strand-aware splitting S, bridging B, SB on both frozen bases; DPANN development, Spacedust check)
+------------------------------------------------------------------------------------------------------------
+2026-11-19 04:15  Frozen report delivered; coordinator: part 6 on BOTH bases (P = frozen primary, Z = frozen secondary),
+                  list-partner bridging for Z with a family-token check. Read ribo_audit REPORT2.txt, bio.py, audit.py.
+                  predeclared6.json written before any variant build or score (gates, selection, reporting, justified /
+                  unjustified criteria, expectations). No own variant (reason in predeclared6).
+2026-11-19 04:28  p6.py (sha256 cae10bc6...) written. Bridging gate on the login node (single thread, 7 min 31 s, 6.4 GB):
+                  my implementation on the frozen primary reproduces the audit exactly: 59,655 candidate junctions (same
+                  set), rule (i) 11,944, rule (iii) 23,145, (i) AND (iii) 4,941; co-group counts and spacings equal at
+                  every junction. Preflight repeated (md5 unchanged; account 112 CPUs). Chain (24 CPUs each, login-node
+                  watchdog, caps in logs/watchdog_p6.tsv): 115595 DPANN bridges + builds (P, Z), 115596 Spacedust bridges,
+                  115597 / 115598 DPANN scoring P / Z (afterok 115595), 115599 Spacedust builds + source207 (afterok all).
+2026-11-19 04:34  Bridging gate reproduced in Slurm (115595): DPANN P candidates / rule (i) / co-groups / bridges equal to
+                  the audit table at every junction; 4,941 fires (8.3%), junction-level curated merges 0, joins 11, target
+                  edges 34, verdict-1 repairs 21 of 23 (all audit counts). Spacedust bridges (115596, 5 min 49 s, 30.8
+                  GB): P 4,290 of 75,518 candidates (5.7%); Z list rule 2,130 of 130,473 (1.6%), family rule 5,010; list vs
+                  family agreement Jaccard .257 (both 1,460, list only 670, family only 3,550).
+2026-11-19 04:40  115595 done (11 min; peak 82.5 GB in the DPANN Z list step: 3.27 G list entries). DPANN Z bridges: list
+                  rule 5,354 of 97,162 candidates (5.5%), family rule 5,078; agreement Jaccard .497 (both 3,462, list only
+                  1,892, family only 1,616); junction-level curated merges 0, joins 11, target edges 17; verdict-1 repairs
+                  15 of 29. Builds: base gates pass at every theta for P and Z (row-for-row equal to stored loci). Junctions
+                  changed genome-wide: S forces splits at 457,709 bonded strand changes for P (24.8% of 1,847,718 bonded
+                  boundaries) and 354,209 for Z (22.4% of 1,583,142); B bridges 4,941 (P) / 5,354 (Z). Genes in loci: P
+                  base .552, S / SB .533, B .552; Z .571 in every variant. Scoring jobs 115597 / 115598 running.
+2026-11-19 04:47  DPANN scoring done (115597 4 min, 115598 5.5 min). Audit bio reading of the frozen bases reproduced
+                  (P 1,538 / 1,571; Z 1,504 / 1,547). Odd selection: theta unchanged for every variant (P .2, Z .02).
+                  EVEN / all runs, P base: S summed .522 (+.009 [-.004, +.022]), F1 DF -.015 [-.022, -.007], CCT -.019
+                  [-.025, -.014] (CCT .441 fails the bar), resolved 1,622 (+28 [+15, +42]), bio 1,592 / 1,634 (+54 / +63),
+                  3 new curated pairs; B resolved 1,544 (-50 [-65, -36]), bio 1,487 / 1,520 (-51 / -51), F1 unchanged ->
+                  UNJUSTIFIED (u3); SB summed +.009, same F1 losses, resolved 1,599 (+5), bio 1,567 / 1,610, CCT bar fails.
+                  Z base: S summed .564 (-.017 [-.025, -.010]), F1 DF -.006, TXSS -.010, CCT .000, resolved 1,598 (+56 [+42,
+                  +72]), bio 1,564 / 1,613 (+60 / +66), 0 new pairs, all seven bars; B +9 resolved, bio +2 / +3; SB summed
+                  -.017, resolved 1,624 (+82 [+65, +101]), bio 1,585 / 1,634 (+81 / +87), 0 new pairs, all seven bars;
+                  Bf / SBf (family bridges) equal B / SB within .0002 summed and identical ribosomal counts.
+                  Diagnosis (p6diag.py, login node): P-B loses 53 runs, every one because B's best locus is a bridged union
+                  (best_frac >= .8, precision median .63; the base locus covered < 100% of the run, the union covers more
+                  and wins the largest-overlap rule); verdict-1 runs resolved: P base 0, B 2, S 0, SB 21 of 23; Z base 0,
+                  B 3, S 0, SB 18 of 29. Z-B loses 0 runs. By the predeclared criteria no variant is JUSTIFIED (S / SB
+                  fail j2: Z summed -.017, P DF -.015 / CCT -.019); P-B UNJUSTIFIED; the rest NOT SHOWN.
+2026-11-19 04:55  Spacedust (115599, 5 min 38 s; DEVELOPMENT): P S +.183 (+.019 [+.001, +.037]), SB +.184, B +.165; Z S
+                  +.117 (+.006 [+.001, +.012]), SB +.118, B +.112, Bf +.113, SBf +.119; base rows reproduce +.164 / +.111.
+                  Watchdog exited, no cancellation. REPORT6.txt written (ANSWER lines first, two tables). No variant JUSTIFIED
+                  by the predeclared criteria; Z carries the fixes better (SB: strict 1,585 / loose 1,634 / standing 1,624,
+                  all seven bars, 0 new pairs, CCT unchanged; summed -.017 is the failed condition).

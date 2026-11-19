@@ -1,0 +1,66 @@
+{
+ "data": "sd",
+ "base": "P",
+ "thetas": [
+  0.2
+ ],
+ "junctions": {
+  "bonded_boundaries": 2273804,
+  "bonded_strand_changes": 422350,
+  "bridges": 4290,
+  "bridges_family": 4290,
+  "candidates": 75518
+ },
+ "outputs": {
+  "base_t0.2": {
+   "loci": 1613594,
+   "genes_in_loci_frac": 0.5541970217010751,
+   "span_q50_q90_q99_max": [
+    3.0,
+    10.0,
+    33.0,
+    319.0
+   ]
+  },
+  "S_t0.2": {
+   "loci": 1462759,
+   "genes_in_loci_frac": 0.5404886071293433,
+   "span_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    27.0,
+    319.0
+   ]
+  },
+  "B_t0.2": {
+   "loci": 1616829,
+   "genes_in_loci_frac": 0.5542639619065604,
+   "span_q50_q90_q99_max": [
+    3.0,
+    10.0,
+    33.0,
+    319.0
+   ]
+  },
+  "SB_t0.2": {
+   "loci": 1465248,
+   "genes_in_loci_frac": 0.5402264833773377,
+   "span_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    27.0,
+    319.0
+   ]
+  }
+ },
+ "gate": {
+  "t0.2": true
+ },
+ "tau": 8.0,
+ "recurrence": {
+  "unique_intervals": 2557125,
+  "seconds": 99.1
+ },
+ "seconds": 116.4,
+ "peak_rss_gb": 2.3
+}

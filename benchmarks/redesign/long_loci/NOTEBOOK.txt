@@ -267,3 +267,53 @@ FROZEN RUN (lut test set, $RD/slice_lut/testset/package_k8; first run on untouch
                   llf_zprep (standard_expand_2, -c 40 FOR MEMORY) and J5b 100463 llf_zarm (24 CPUs, afterok:100462).
                   Jobs of mine now: 100452 tok, 100137 syn faithful, 100462 zprep, 100463 zarm (the two Z jobs at the
                   coordinator's request while the tokens wait).
+2026-11-14 12:24  (recorded 11-19) J1' 100452 stopped itself at the guard after the base clustering (985 s at 24 CPUs; base
+                  tokens written): 329,612 rescue query uids (47.4 M residues) against 4,464,102 uids (1.354 G residues),
+                  projected job 144 min. J5a 100462 zprep done 6 min 36 s; J5b 100463 provisional Z arm done 7 min 53 s
+                  (tau 8); J6 100137 synton faithful done 1 h 10 min 53 s. Session cut off (weekly token limit) until 11-19.
+2026-11-19 02:00  Coordinator: remaining CPU computation authorised past 2 h; resume the rescue (24 CPUs); chain the
+                  remaining steps as dependent jobs that write results and tables; cap every heavy command at ~2x its
+                  expected time. DEVIATION FROM THE REQUEST (not from FROZEN.json): the account rules (~/.claude/CLAUDE.md
+                  on biotite: 'NEVER PUT A SUBPROCESS TIMEOUT IN A SLURM JOB SCRIPT', no walltimes) forbid `timeout` in job
+                  scripts, so the caps are enforced from outside by a login-node watchdog (code/watchdog.sh, sha256
+                  9e7d220b...; nohup/setsid, one squeue per job per minute; cancels a job running past its cap or stuck in
+                  DependencyNeverSatisfied; log logs/watchdog.log). tokens_f.sbatch: GUARD_MIN env (240 for this run);
+                  the base step is skipped (its parquet exists). Preflight repeated (md5 unchanged; account 124 CPUs).
+                  Chain submitted (all 24 CPUs): 115327 score_secondary (now; provisional Z outputs + synton faithful, cap
+                  60 min), 115328 tokens rescue (cap 300), 115329 main = uid gate, cohesion, WA, engine, DH (afterok 115328,
+                  cap 90), 115330 Z rerun unchanged + description + identity check (afterok 115329, cap 40), 115331 synton
+                  matched (afterok 115328, cap 150), 115332 final scoring + tables (afterany 115329:115330:115331, cap 60).
+2026-11-19 02:10  Secondary scored (115327, 69 s; provisional build): Z L4b+ .02 lut F1 .906 [.898, .913], control .627,
+                  excess +.279 [+.271, +.288]; ribosomal 857 / 811 (any-fit 834); complete 80 held (precision median .615),
+                  module matched 75; isolated b1/b2 homologs in loci .639 vs background .665; Z L1 F1 .579, excess +.078,
+                  resolved 526; synton faithful F1 .055, excess -.009, ribosomal 0 / 0. Written into REPORT_frozen.txt
+                  (secondary section, marked provisional). z_prep peak 126.0 GB (forecast 126-135 GB).
+2026-11-19 02:56  Tokens done (115328, 54 min 23 s at 24 CPUs; the guard projection of 127 min was 2.3x too high): rescue
+                  prefilter 2,665 s (13.9 GB), align 515 s, 12,275,297 hits for 328,600 queries; rescue3 moved 85,410
+                  genes (1.9%), 69,543 base tokens emptied: 300,720 families (201,138 singletons, largest 13,717); base
+                  370,263 (254,965 singletons). Main job 115329 started: uid gate EQUAL (package uid_of_row = 06a
+                  gid2uid); token cohesion 47 s / 19.4 GB (floor .00014; kappa q50 .031; share < .2 .817). Synton matched
+                  115331 running. Watcher on 115329.
+2026-11-19 02:58  Coordinator queued part 6 (strand-aware splitting / bridging variants of the frozen primary on DPANN +
+                  Spacedust check). Not started: it waits until the frozen run is finished and REPORT_frozen.txt reported.
+2026-11-19 03:06  Main job 115329 done (11 min). PRIMARY WA build (7 min 37 s, 3.5 GB): bond tau 6 (FDR at 4 / 6 / 8:
+                  .034 / .0080 / .0016; DPANN 6); 6,217,723 bonds (distance 1-8: 28 / 19 / 14 / 11 / 9 / 7 / 6 / 5%),
+                  2,687,242 bonded boundaries (408,911 only by pairs 4-8 apart); L1 509,332 loci, 70.9% of genes; L4b
+                  theta .2 2,111,760 loci, 65.4% of genes (span q50 / q90 / q99 / max 3 / 10 / 28 / 254). Engine on the same
+                  tokens (2 min 08 s, 7.4 GB): rule P <= 1e-6 & L >= 2 chosen at the FDR target (FDR 7e-5; DPANN chose
+                  1e-4), 156,443 significant pairs, 1,295 modules; DH 845,580 loci, 71.1% of genes (25 s). Z rerun 115330
+                  running; synton matched 115331 running.
+2026-11-19 03:15  Z rerun 115330 (9 min 37 s): adapter smoke OK (gene order, contigs, 179 groups, 12,584,067 instances);
+                  fz.py arm UNCHANGED (incl. token-cohesion check tree) reproduces the provisional build exactly: L1
+                  620,574 / L4b .02 1,876,739 / L4b+ .02 2,010,875 rows identical, tau and ladder equal. The secondary is
+                  no longer provisional. kNN cohesion description: floor .00014, q50 .060, Spearman with token cohesion
+                  .580 (Spacedust .548). Z arm peak 57.4 GB at 24 CPUs. Watcher on the final scoring 115332.
+2026-11-19 04:15  Chain finished; watchdog exited at 04:05 with no cancellation. Synton matched 115331 1 h 07 min 48 s
+                  (6,005 significant pairs, 113,023 syntons, 5.7% of genes). Final scoring 115332 (2 min 19 s):
+                  results/score_lut.json, tables_lut.txt. PRIMARY lut F1 .768 [.759, .778], control .619, excess +.149
+                  [+.138, +.161] -> FAILS predeclared criterion F2 (lower bound < +.15); passes F1 (858 / 788), F3 (vs DH
+                  +.041 [+.027, +.057], resolved +120 [+97, +143]) and F4 (78 / 80 held). SECONDARY passes all four (F1 .906,
+                  excess +.279 [+.271, +.288], 857 / 811, 80 held; vs DH +.171, +143; vs primary +.130, +23). WA L1 F1 .472
+                  / +.018 / 373 resolved; DH .660 / +.108 / 668; synton faithful .055 / -.009, matched .003 / -.083, 0
+                  ribosomal. All 80 complete-cluster genomes in one genome group. REPORT_frozen.txt written (ANSWER lines
+                  first) and synced.

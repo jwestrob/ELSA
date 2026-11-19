@@ -15,6 +15,8 @@
 # from the Beijerinckiaceae package (1,855 s for 269,580 query uids against 1.306 G residues on 64 threads, per query
 # and scaled by target residues and by 64 / allocated threads) plus align at 0.17x; if the job would pass ~115 min it
 # stops and reports. Resubmitted at 24 CPUs on 2026-11-14 at the coordinator's request (64-CPU job held the queue).
+# GUARD_MIN (default 115) raises the limit: 2026-11-19 the remaining computation was authorised past 2 h (GUARD_MIN=240);
+# the base clustering of the stopped job 100452 is reused (the base step is skipped when its parquet exists).
 set -euo pipefail
 source /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen/code/env_f.sh
 WD=$FZ/tok/work; OUTT=$FZ/tok; ARM=mmseqs__seq__e3c50s75__lut
@@ -42,7 +44,7 @@ if [[ ! -f $R3.parquet ]]; then
   read Q RES <<< "$($PYT -c "import json; d=json.load(open('$U/unique.json')); print(d['query_uids'], d['residues_unique'])")"
   PROJ=$($PYT -c "q=$Q; r=$RES; p=1855.0/269580*q*(r/1306438806.0)*64.0/$T; print(int(p*1.17+300))")
   stamp "GUARD query uids $Q, target residues $RES, projected prefilter+align+rest ${PROJ} s, elapsed ${SECONDS} s"
-  if (( SECONDS + PROJ > 115*60 )); then
+  if (( SECONDS + PROJ > ${GUARD_MIN:-115}*60 )); then
     stamp "STOP: projected job time $(( (SECONDS + PROJ) / 60 )) min exceeds the ~2 h limit; rescue not started"
     exit 3
   fi

@@ -1,26 +1,202 @@
 LONG_LOCI FROZEN RUN: THE LUT TEST SET (first run on untouched data), REPORT_frozen.txt
 =======================================================================================
-STATUS 2026-11-14 10:35 UTC: IN PROGRESS. Nothing scored yet. Inputs built: z table, kNN, genome groups, float32
-vectors. The family-token job (100452) is queued; the SECONDARY configuration (embedding lists) runs first, at the
-coordinator's request, and its results enter this file as they land. The PRIMARY follows once the tokens exist.
-
-Frozen before any dataset content was opened: frozen/FROZEN.json (2026-11-14 05:44 UTC, sha256 070b5019...).
-Dataset: $RD/slice_lut/testset/package_k8 (read-only). Notebook: long_loci/NOTEBOOK.txt, section FROZEN RUN.
+FINAL, 2026-11-19 04:15 UTC. Frozen before any dataset content was opened: frozen/FROZEN.json (2026-11-14 05:44 UTC,
+sha256 070b5019...). Dataset $RD/slice_lut/testset/package_k8 (read-only): 1,032 GTDB r232 representatives, 4,507,042
+genes. Every genome scored; even half (genome_code even: 370 lut loci, 431 ribosomal runs) beside it. Nothing was tuned
+or chosen on this set; each configuration and comparator was run once. Notebook: long_loci/NOTEBOOK.txt, FROZEN RUN.
+Lut loci = 733 lut_homology_main instances (homology + co-location calls, not a curated caller; function UNVERIFIED),
+scored with the curated-system scorer (best locus per truth locus, 200 random placements, excess = F1 - control;
+95% intervals from 10,000 bootstrap draws over truth loci; paired differences by the same paired bootstrap).
 
 ANSWER
-(pending)
+1. PRIMARY (family-bond tree, adaptive distance: WA L4b theta .2) FAILS ON THIS SET by predeclared criterion F2: lut
+   excess +.149 [+.138, +.161] against the bar 'lower bound >= +.15' (F1 .768 [.759, .778], control .619). It passes
+   F1 (ribosomal 858 recovered, 788 resolved of 858), F3 (against engine DH on the same tokens: dExcess +.041 [+.027,
+   +.057] BEATS, resolved +120 [+97, +143]) and F4 (complete clusters held 78 of 80).
+2. SECONDARY (embedding-list tree, fixed distance: Z L4b+ theta .02, kNN cohesion) passes all four criteria and is the
+   best output here: lut F1 .906 [.898, .913], control .627, excess +.279 [+.271, +.288]; ribosomal 857 recovered, 811
+   resolved (834 with any fitting locus); complete clusters held 80 of 80. Secondary - primary: dExcess +.130 [+.120,
+   +.140] (489 loci better, 34 worse), resolved runs +23 [+7, +39]. On DPANN the secondary led on curated-system excess
+   and trailed by 52 resolved runs; here it leads on both.
+3. Pair-linking alone falls far short: WA L1 F1 .472, excess +.018 [+.006, +.031], resolved 373; Z L1 .579 / +.078 /
+   526. Each tree beats its own pair-linking: primary +.131 [+.118, +.144] excess and +415 runs, secondary +.201 [+.187,
+   +.215] and +285.
+4. The recurrence engine's nested reading DH on the same rescue3 tokens (it counts GTDB genera, taken from the package
+   taxonomy) gives F1 .660, excess +.108 [+.093, +.123], resolved 668: below both configurations. The published synton
+   pipeline returns no signal at the lut loci: faithful (linclust families) F1 .055, excess -.009 [-.022, +.004];
+   matched (our tokens) .003 / -.083 [-.089, -.077]; 0 ribosomal runs recovered by either (syntons hold <= 12 genes).
+5. Complete clusters (80, all Methylobacterium): all 80 genomes fall in ONE genome group of the 179, so recurrence of
+   the whole A-I cluster is counted once. Every output that holds them does so with a locus that runs past the cluster
+   (holding-locus precision median .53 primary, .62 secondary; 6 of 80 at >= .8). The transporter module (A B C E F G)
+   is isolated as a nested node by the secondary in 75 of 80 (L4b+ keeps every tree node) and by the primary in 0
+   (family node test), DH 1.
+6. False-positive side (b1 + b2: 300 lut-negative relatives, 72 isolated reverse-best lut homologs): no output places
+   them in loci more often than any b1/b2 gene (primary .500 vs background .661; secondary .639 vs .665; DH .653 vs
+   .727). Loci holding homologs of >= 3 distinct lut components in lut-negative genomes: 3 (primary, secondary; 2
+   genomes), 2 (both L1, DH), 0 (syntons). Loci holding >= 2 components: 78 / 65 (expected 0-40).
+7. Parity: the even half reproduces every all-genome number within .01 F1 and .006 excess (primary .761 / +.144,
+   secondary .901 / +.277; resolved 403 and 410 of 431).
+8. Expectations missed (FROZEN.json): genome groups 179 (expected 300-550) and the complete-cluster genomes in 1 group
+   (3-20); random-placement controls .55-.63 for every tree and DH (expected <= .55), which compresses every excess;
+   primary excess (+.149; expected +.28 to +.45), L1 excess (+.018 / +.078; expected +.10 to +.30), DH resolved (668;
+   700-815) and excess (+.108; +.22 to +.40); module matching (primary 0, expected 25-60; secondary 75, expected 30-65);
+   >= 2-component loci in lut-negative genomes (65-78; 0-40); secondary F1 .906 above its range (.72-.87); synton F1
+   below range. Inside: taus (6 / 8), ribosomal resolved of both configurations, F1 of the primary, the primary - DH
+   difference (+.041; expected -.02 to +.10), holding counts, the even-half agreement and every cost.
+9. Deviations from FROZEN.json: execution only; no output changed (section DEVIATIONS). The secondary was built before
+   the tokens existed with its unscored token-cohesion check tree deferred; the unchanged code rerun afterwards
+   reproduced its loci row for row.
+10. Cost: 4 h 52 min of job wall time in total (24-CPU jobs 4 h 02 min, one 40-CPU job 6.6 min, GPU 43 min on one
+   A5000) plus 6 min single-threaded on the login node; the longest job was the synton faithful run (1 h 11 min); the
+   token build took 72 min in two jobs (base clustering job 17 min, rescue job 54 min).
 
 -----------------------------------------------------------------------------------------------------------------------
-INPUTS (gold-free; every number produced by the rule fixed on DPANN)
- uid map       package uid_of_row: 4,464,102 uids numbered by first gid (gate against 06a gid2uid runs with the tokens)
- zca10 f32     stored transform applied to the raw means; max |f32 - stored f16| 1.2e-4, min cosine .99994 (gate passed)
- z table       2,227,054,481 entries at z >= 10.5 (per uid q50 / q90 / q99 481 / 953 / 1,006; Spacedust 1.20 G)
- kNN           exact cosine, k 2,000; cosine at rank 1 / 50 / 200 / 1,000 / 2,000 (q50) .914 / .760 / .642 / .365 / .284
- groups        179 at 0.75 for 1,032 genomes (largest 131, 95 singletons); expectation 300-550 MISSED (coarser units:
-               one group per 5.8 genomes; DPANN 5.6, Spacedust 2.1); description only: AMI with GTDB family .84, genus .63
+FAILURE CRITERIA (FROZEN.json; all genomes)
+                     F1 ribosomal (>= 644 resolved,   F2 lut excess lower bound    F3 vs engine DH            F4 complete held
+                        >= 816 recovered)                >= .15, F1 >= .60                                       >= 40 of 80
+ PRIMARY             858 / 788           pass        +.138 / .768   FAIL          +.041 [+.027,+.057], +120   78   pass
+                                                                                   pass
+ SECONDARY           857 / 811           pass        +.271 / .906   pass          +.171 [+.156,+.187], +143   80   pass
+                                                                                   pass
 
-COSTS SO FAR
- GPU z table + genome sums   22 min 49 s, A5000, 10.9 GB GPU / 9.3 GB host
- GPU kNN k 2,000             19 min 58 s, A5000, 10.5 GB GPU
- genome groups               3 s (login node)
- zca10 float32               6 min 01 s, single thread (login node)
+-----------------------------------------------------------------------------------------------------------------------
+MAIN TABLES (results/tables_lut.txt, job 115332)
+LUT LOCI (lut_homology_main), all genomes: n, F1 [95%], control F1, excess [95%], mean coverage / precision of the best locus, covered50, loci with no overlapping locus
+PRIMARY_WA_L4b_t0.2       733  0.768 [0.759, 0.778]  0.619  +0.149 [+0.138, +0.161]  cov 0.825 prec 0.794 c50 0.997 none 0
+WA_L1                     733  0.472 [0.455, 0.489]  0.454  +0.018 [+0.006, +0.031]  cov 0.983 prec 0.351 c50 1.000 none 0
+SECONDARY_Z_L4bp_t0.02    733  0.906 [0.898, 0.913]  0.627  +0.279 [+0.271, +0.288]  cov 0.905 prec 0.932 c50 1.000 none 0
+Z_L1                      733  0.579 [0.563, 0.594]  0.501  +0.078 [+0.065, +0.091]  cov 0.979 prec 0.454 c50 1.000 none 0
+engine_DH                 733  0.660 [0.644, 0.676]  0.553  +0.108 [+0.093, +0.123]  cov 0.915 prec 0.578 c50 1.000 none 0
+synton_faithful           733  0.055 [0.042, 0.068]  0.064  -0.009 [-0.022, +0.004]  cov 0.041 prec 0.086 c50 0.031 none 668
+synton_matched            733  0.003 [0.001, 0.006]  0.086  -0.083 [-0.089, -0.077]  cov 0.002 prec 0.006 c50 0.000 none 727
+
+LUT LOCI (lut_homology_main), even genomes: n, F1 [95%], control F1, excess [95%], mean coverage / precision of the best locus, covered50, loci with no overlapping locus
+PRIMARY_WA_L4b_t0.2       370  0.761 [0.747, 0.774]  0.617  +0.144 [+0.128, +0.158]  cov 0.812 prec 0.794 c50 0.997 none 0
+WA_L1                     370  0.462 [0.439, 0.486]  0.452  +0.010 [-0.008, +0.028]  cov 0.982 prec 0.343 c50 1.000 none 0
+SECONDARY_Z_L4bp_t0.02    370  0.901 [0.890, 0.912]  0.624  +0.277 [+0.265, +0.289]  cov 0.902 prec 0.927 c50 1.000 none 0
+Z_L1                      370  0.571 [0.549, 0.593]  0.497  +0.074 [+0.056, +0.092]  cov 0.977 prec 0.446 c50 1.000 none 0
+engine_DH                 370  0.658 [0.636, 0.680]  0.553  +0.105 [+0.084, +0.125]  cov 0.919 prec 0.571 c50 1.000 none 0
+synton_faithful           370  0.046 [0.031, 0.064]  0.059  -0.013 [-0.028, +0.004]  cov 0.034 prec 0.074 c50 0.022 none 341
+synton_matched            370  0.002 [0.000, 0.005]  0.082  -0.081 [-0.089, -0.072]  cov 0.001 prec 0.003 c50 0.000 none 368
+
+RIBOSOMAL RUNS (g2, >= 16 marked): recovered / resolved (standing) / resolved, any fitting locus counts | even half (431 runs)
+PRIMARY_WA_L4b_t0.2       858 /  788 /  841 of 858  median precision (recovered) 1.000  | even 431 / 403 / 428
+WA_L1                     858 /  373 /  373 of 858  median precision (recovered) 0.767  | even 431 / 174 / 174
+SECONDARY_Z_L4bp_t0.02    857 /  811 /  834 of 858  median precision (recovered) 1.000  | even 431 / 410 / 421
+Z_L1                      857 /  526 /  526 of 858  median precision (recovered) 0.862  | even 431 / 254 / 254
+engine_DH                 858 /  668 /  673 of 858  median precision (recovered) 0.939  | even 431 / 340 / 342
+synton_faithful             0 /    0 /    0 of 858  median precision (recovered) -  | even 0 / 0 / 0
+synton_matched              0 /    0 /    0 of 858  median precision (recovered) -  | even 0 / 0 / 0
+
+COMPLETE CLUSTERS (80, layer a1): held by one locus >= 80% coverage; precision of that locus median [q10, q90], >= .8; transporter module (A B C E F G) matched by a locus (cov >= .8, prec >= .8); matched by a locus nested in the holding locus
+PRIMARY_WA_L4b_t0.2      held 78/80  precision 0.533 [0.196, 0.674], >= .8:  6  module matched  0  nested  0
+WA_L1                    held 79/80  precision 0.533 [0.176, 0.533], >= .8:  0  module matched  0  nested  0
+SECONDARY_Z_L4bp_t0.02   held 80/80  precision 0.615 [0.529, 0.669], >= .8:  6  module matched 75  nested 75
+Z_L1                     held 80/80  precision 0.533 [0.529, 0.645], >= .8:  1  module matched  0  nested  0
+engine_DH                held 79/80  precision 0.533 [0.176, 0.533], >= .8:  1  module matched  1  nested  1
+synton_faithful          held  0/80  precision - [-, -], >= .8:  0  module matched  0  nested  0
+synton_matched           held  0/80  precision - [-, -], >= .8:  0  module matched  0  nested  0
+
+BY ARCHITECTURE CLASS (main, all genomes): F1 / excess (n)
+1_complete_AtoI                        0.689/+0.109 0.606/+0.062 0.876/+0.284 0.697/+0.141 0.630/+0.020 0.000/-0.148 0.000/-0.145 (58)
+1_complete_AtoI_M                      0.671/+0.050 0.364/-0.139 0.821/+0.198 0.712/+0.140 0.412/-0.190 0.000/-0.149 0.000/-0.208 (22)
+2_receptor_plus_transporter            0.789/+0.219 0.440/+0.031 0.837/+0.255 0.583/+0.112 0.628/+0.105 0.140/+0.062 0.010/-0.090 (92)
+3_transporter_module_without_receptor  0.778/+0.144 0.466/+0.014 0.927/+0.288 0.559/+0.061 0.679/+0.127 0.049/+0.000 0.003/-0.070 (551)
+4_receptor_module_without_transporter  0.746/+0.234 0.572/+0.215 0.732/+0.165 0.656/+0.216 0.667/+0.210 0.000/-0.081 0.000/-0.089 (10)
+columns: PRIMARY_WA_L4b_t0.2, WA_L1, SECONDARY_Z_L4bp_t0.02, Z_L1, engine_DH, synton_faithful, synton_matched
+
+BY GENOME LAYER (main, all genomes): F1 / excess (n)
+a1_complete                0.684/+0.093 0.540/+0.007 0.861/+0.260 0.701/+0.141 0.570/-0.037 0.000/-0.148 0.000/-0.162 (80)
+a2_receptor                0.789/+0.210 0.432/+0.023 0.862/+0.267 0.587/+0.114 0.623/+0.103 0.106/+0.030 0.009/-0.090 (126)
+a3_split                   0.816/+0.200 0.488/+0.047 0.968/+0.347 0.588/+0.099 0.694/+0.147 0.095/+0.043 0.006/-0.072 (147)
+a4_transporter_only        0.762/+0.113 0.465/+0.004 0.909/+0.255 0.544/+0.037 0.677/+0.116 0.030/-0.017 0.000/-0.068 (360)
+c2_outside_class_module    0.749/+0.262 0.466/+0.084 0.857/+0.371 0.604/+0.187 0.709/+0.278 0.091/+0.059 0.011/-0.081 (20)
+
+STRICT INSTANCES (121), all genomes: F1 / control / excess [95%]
+PRIMARY_WA_L4b_t0.2      0.736 / 0.597 / +0.139 [+0.114, +0.165]
+WA_L1                    0.533 / 0.506 / +0.027 [-0.001, +0.054]
+SECONDARY_Z_L4bp_t0.02   0.870 / 0.609 / +0.261 [+0.244, +0.278]
+Z_L1                     0.692 / 0.550 / +0.142 [+0.122, +0.162]
+engine_DH                0.611 / 0.597 / +0.014 [-0.016, +0.044]
+synton_faithful          0.047 / 0.130 / -0.082 [-0.110, -0.050]
+synton_matched           0.003 / 0.145 / -0.142 [-0.158, -0.125]
+
+PAIRED (bootstrap over truth loci / runs, 10,000 draws): d F1 [95%], d excess [95%] verdict, better/worse loci; d resolved runs [95%]
+PRIMARY_WA_L4b_t0.2__vs__engine_DH                         dF1 +0.108 [+0.093, +0.123]  dExc +0.041 [+0.027, +0.057] BEATS  420/151  dRes +120 [+97, +143] | even dExc +0.039 [+0.017, +0.060] dRes +63
+PRIMARY_WA_L4b_t0.2__vs__WA_L1                             dF1 +0.296 [+0.281, +0.311]  dExc +0.131 [+0.118, +0.144] BEATS  590/2  dRes +415 [+386, +443] | even dExc +0.134 [+0.115, +0.152] dRes +229
+PRIMARY_WA_L4b_t0.2__vs__SECONDARY_Z_L4bp_t0.02            dF1 -0.137 [-0.147, -0.128]  dExc -0.130 [-0.140, -0.120] BELOW  34/489  dRes -23 [-39, -7] | even dExc -0.133 [-0.148, -0.119] dRes -7
+PRIMARY_WA_L4b_t0.2__vs__synton_faithful                   dF1 +0.714 [+0.699, +0.729]  dExc +0.158 [+0.143, +0.174] BEATS  719/1  dRes +788 [+772, +803] | even dExc +0.156 [+0.136, +0.176] dRes +403
+PRIMARY_WA_L4b_t0.2__vs__synton_matched                    dF1 +0.765 [+0.755, +0.775]  dExc +0.232 [+0.220, +0.244] BEATS  733/0  dRes +788 [+772, +803] | even dExc +0.224 [+0.208, +0.240] dRes +403
+SECONDARY_Z_L4bp_t0.02__vs__engine_DH                      dF1 +0.245 [+0.229, +0.262]  dExc +0.171 [+0.156, +0.187] BEATS  540/16  dRes +143 [+120, +166] | even dExc +0.172 [+0.150, +0.194] dRes +70
+SECONDARY_Z_L4bp_t0.02__vs__Z_L1                           dF1 +0.327 [+0.311, +0.343]  dExc +0.201 [+0.187, +0.215] BEATS  629/0  dRes +285 [+258, +312] | even dExc +0.203 [+0.184, +0.223] dRes +156
+SECONDARY_Z_L4bp_t0.02__vs__synton_faithful                dF1 +0.851 [+0.836, +0.866]  dExc +0.288 [+0.273, +0.303] BEATS  721/0  dRes +811 [+797, +824] | even dExc +0.290 [+0.269, +0.309] dRes +410
+SECONDARY_Z_L4bp_t0.02__vs__synton_matched                 dF1 +0.903 [+0.895, +0.910]  dExc +0.362 [+0.352, +0.373] BEATS  733/0  dRes +811 [+797, +824] | even dExc +0.357 [+0.343, +0.372] dRes +410
+
+FALSE-POSITIVE SIDE (b1 + b2 genomes, no lut locus): isolated RB homologs in any locus / in a locus >= 3 genes; background b1/b2 genes; loci holding RB homologs of >= 2 / >= 3 components
+PRIMARY_WA_L4b_t0.2      isolated (n=72) 0.500 / 0.403  smallest span 2.0  background 0.661 / 0.593  loci >=2 comp 78, >=3 comp 3
+WA_L1                    isolated (n=72) 0.611 / 0.528  smallest span 7.0  background 0.718 / 0.644  loci >=2 comp 30, >=3 comp 2
+SECONDARY_Z_L4bp_t0.02   isolated (n=72) 0.639 / 0.375  smallest span 2.0  background 0.665 / 0.568  loci >=2 comp 65, >=3 comp 3
+Z_L1                     isolated (n=72) 0.639 / 0.375  smallest span 3.0  background 0.665 / 0.568  loci >=2 comp 31, >=3 comp 2
+engine_DH                isolated (n=72) 0.653 / 0.500  smallest span 4.0  background 0.727 / 0.649  loci >=2 comp 44, >=3 comp 2
+synton_faithful          isolated (n=72) 0.014 / 0.000  smallest span 2.0  background 0.049 / 0.017  loci >=2 comp 2, >=3 comp 0
+synton_matched           isolated (n=72) 0.000 / 0.000  smallest span -  background 0.053 / 0.015  loci >=2 comp 0, >=3 comp 0
+
+COVERAGE: loci, share of genes in loci, span q50 / q90 / q99 / max
+PRIMARY_WA_L4b_t0.2      2,111,760  0.654  [3.0, 10.0, 28.0, 254.0]
+WA_L1                      509,332  0.709  [4.0, 13.0, 38.0, 254.0]
+SECONDARY_Z_L4bp_t0.02   2,010,875  0.660  [3.0, 8.0, 22.0, 138.0]
+Z_L1                       620,574  0.660  [3.0, 9.0, 25.0, 138.0]
+engine_DH                  845,580  0.711  [4.0, 11.0, 30.0, 245.0]
+synton_faithful             98,966  0.052  [2.0, 3.0, 6.0, 12.0]
+synton_matched             113,023  0.058  [2.0, 3.0, 5.0, 11.0]
+
+-----------------------------------------------------------------------------------------------------------------------
+INPUTS AND BUILDS (gold-free; every number produced by the rule fixed on DPANN)
+ rescue3 tokens  base mmseqs cluster: 370,263 families (254,965 singletons); rescue: 329,612 query uids, 12,275,297 hits,
+                 85,410 genes moved (1.9%) -> 300,720 families (201,138 singletons, largest 13,717)
+ uid map         package uid_of_row equal to 06a gid2uid (4,464,102 uids)
+ zca10 f32       stored transform applied to the raw means; max |f32 - stored f16| 1.2e-4 (gate passed)
+ groups          179 at 0.75 (largest 131, 95 singletons; .70 / .80 cuts 46 / 460); lut loci in 112 groups; the 80 a1
+                 genomes in one group; description only: AMI with GTDB family .84, genus .63
+ token cohesion  floor .00014; kappa q50 .031; share of boundaries < .2: .817
+ z table / kNN   2,227,054,481 entries at z >= 10.5; exact kNN k 2,000 (rank-1 cosine q50 .914)
+ PRIMARY build   bond tau 6 (bond FDR at 4 / 6 / 8: .034 / .0080 / .0016); 6,217,723 bonds (28 / 19 / 14 / 11 / 9 / 7 / 6 /
+                 5% at distance 1-8), 2,687,242 bonded boundaries (408,911 bonded only by pairs 4-8 apart); L1 509,332 loci
+                 (70.9% of genes); L4b theta .2 2,111,760 loci (65.4%)
+ SECONDARY build list tau 8 (instance FDR at 6 / 8: .0116 / .0022); z >= 10.6 lists 2,073,059,336 entries; 4,055,223 bonds
+                 over 2,353,465 boundaries; L4b+ .02 2,010,875 loci (66.0%); kNN cohesion q50 .060, Spearman with token
+                 cohesion .580; unchanged rerun identical to the first build (results/z_identity.json)
+ engine          rule P <= 1e-6 & L >= 2 chosen by its coverage rule at FDR .01 (FDR 7e-5; DPANN chose 1e-4); 156,443
+                 significant pairs, 1,295 modules; DH 845,580 loci (71.1%)
+ synton          faithful: 1,678,995 fam50 (72.8% singletons), 66.8% of genes on replicons >= 48 genes, 13,314 pairs
+                 with score > 80, 98,966 syntons (5.2% of genes); matched: 6,005 pairs, 113,023 syntons (5.7%)
+
+DEVIATIONS FROM FROZEN.json (execution only; none changes an output)
+ D1 token job: planned 64 CPUs; run at 24 CPUs at the coordinator's request (the 64-CPU request held the account
+    queue). Its compute guard stopped the first job after the base clustering (projection 144 min at 24 CPUs); after
+    authorisation the rescue resumed from the saved base clustering. Same commands and parameters.
+ D2 Z prep on 40 CPUs (standard_expand_2) for memory (126.0 GB peak), approved by the coordinator; all other jobs 24.
+ D3 SECONDARY built before the tokens existed: fz.py unchanged, its descriptive Spearman with the token cohesion and its
+    unscored token-cohesion check tree deferred (fzrun.py). The unchanged fz.py arm rerun after the tokens reproduced
+    L1, L4b and L4b+ row for row with equal tau and ladder.
+ D4 float32 vectors and genome groups computed on the login node (single thread) instead of inside the main job.
+ D5 run-time caps (coordinator request) enforced by a login-node watchdog instead of `timeout` in job scripts, which
+    the account rules forbid; no job reached its cap.
+ D6 synton wrapper: the DPANN / Spacedust reference gate and the in-wrapper scoring of run_pipeline.sbatch removed
+    (the lut set has no synton reference; scoring by fscore.py as for every output).
+
+COSTS (wall clock, peak memory)
+ tokens: base clustering 16 min 25 s (3.3 GB); rescue prefilter 44 min 25 s (13.3 GB), align 8 min 34 s, rescue3 16 s; 24 CPUs
+ GPU z table + genome sums 22 min 49 s (A5000, 10.9 GB GPU); GPU kNN k 2,000 19 min 57 s (A5000, 10.5 GB GPU)
+ zca10 float32 6 min 01 s (login node); groups 3 s (login node)
+ PRIMARY: token cohesion 48 s (19.4 GB), WA build 7 min 37 s (3.5 GB); 24 CPUs
+ SECONDARY: Z prep 6 min 36 s (126.0 GB, 40 CPUs); Z arm 7 min 53 s first build, 9 min 15 s unchanged rerun (54.7 GB)
+ engine 2 min 08 s (7.1 GB); DH 26 s (2.6 GB)
+ synton faithful 1 h 10 min 53 s (linclust cascade 8 min 48 s; context cell 50 min 26 s; 13.4 GB); matched 1 h 07 min 48 s
+ scoring: 1 min 08 s (secondary), 2 min 19 s (all outputs), 1.4 GB
+
+FILES (local benchmarks/redesign/long_loci/frozen/, remote $RD/long_loci/frozen/)
+ FROZEN.json, REPORT_frozen.txt, code/ (fl.py, fz.py, fzrun.py, fscore.py, ftable.py, gtable_lut.py, gpu_knn_lut.py,
+ copied package / synton scripts, *.sbatch, watchdog.sh), results/ (score_lut.json, tables_lut.txt, wbuild_lut.json,
+ zbuild_lut_Z.json, dh_lut.json, prep_lut.json, z_identity.json). Loci and per-instance scores remote only:
+ loci/lut_WA, loci/lut_Z, loci/lut_engine, synton/runs/*/post, scores/.

@@ -1,0 +1,68 @@
+{
+ "R1": {
+  "loci": 566304,
+  "genes_in_loci_frac": 0.7108189806085676,
+  "span_q50_q90_q99_max": [
+   4.0,
+   11.0,
+   32.0,
+   245.0
+  ]
+ },
+ "DH": {
+  "loci": 845580,
+  "genes_in_loci_frac": 0.7108189806085676,
+  "span_q50_q90_q99_max": [
+   4.0,
+   11.0,
+   30.0,
+   245.0
+  ]
+ },
+ "engine_summary": {
+  "engine": "v1.5",
+  "null": "genome",
+  "arm": "lut__mmseqs__seq__e3c50s75_rescue3",
+  "universe": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/testset/package_k8/universe",
+  "w": 3,
+  "window_grid": null,
+  "oriented": false,
+  "perms": 3,
+  "genes": 4507042,
+  "genomes": 1032,
+  "assigned": 4507042,
+  "tokens": 300720,
+  "instances": 12494254,
+  "token_pairs": 5208850,
+  "token_pairs_L2": 656659,
+  "stats_seconds": 15.0,
+  "rule": "P<=1e-6&L>=2",
+  "significant_pairs": 156443,
+  "fdr": 7.031314919811049e-05,
+  "significant_pairs_cross_phylum": 843,
+  "significant_pairs_5_phyla": 0,
+  "genes_covered": 2989170,
+  "genes_covered_frac": 0.6632221310562448,
+  "query_genes": 0,
+  "query_genes_covered": 0,
+  "query_genes_covered_other_phylum_support": 0,
+  "tokens_in_significant_pairs": 36161,
+  "modules": {
+   "method": "louvain",
+   "module_res": 10.0,
+   "module_j": 0.5,
+   "strong_pairs": 156443,
+   "modules": 1295,
+   "tokens_in_modules": 36161,
+   "largest": 386,
+   "size_quantiles": [
+    2.0,
+    113.60000000000014,
+    249.29999999999973
+   ]
+  },
+  "seconds": 125.2
+ },
+ "seconds": 22.9,
+ "peak_rss_gb": 2.6
+}

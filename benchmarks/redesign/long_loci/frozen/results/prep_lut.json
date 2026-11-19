@@ -1,0 +1,125 @@
+{
+ "knn": {
+  "gpu": "NVIDIA RTX A5000",
+  "U": 4464102,
+  "dim": 960,
+  "k": 2000,
+  "qc": 2048,
+  "tb": 262144,
+  "limit": 0,
+  "norm_q": [
+   0.9999449253082275,
+   1.0,
+   1.0000571012496948
+  ],
+  "load_seconds": 3.1,
+  "slurm_job": "99963",
+  "host": "node-128-512g-8gpu-1",
+  "search_seconds": 1185.4,
+  "projected_full_search_seconds": 1185.4,
+  "queries_without_self_in_result": 0,
+  "peak_gpu_gb": 10.5,
+  "cosine_q10_q50_q90_at_rank": {
+   "1": [
+    0.734,
+    0.914,
+    0.986
+   ],
+   "50": [
+    0.496,
+    0.76,
+    0.906
+   ],
+   "200": [
+    0.381,
+    0.642,
+    0.848
+   ],
+   "1000": [
+    0.238,
+    0.365,
+    0.562
+   ],
+   "2000": [
+    0.195,
+    0.284,
+    0.463
+   ]
+  },
+  "seconds": 1193.3
+ },
+ "excl": {
+  "group": {
+   "lists_len_q01_q50": [
+    1000.0,
+    1000.0
+   ],
+   "shorter_than_1000": 41064,
+   "capcos_K1000_q10_q50_q90": [
+    0.23095703125,
+    0.35400390625,
+    0.55078125
+   ],
+   "orders": {
+    "-1": {
+     "instances": 12584067,
+     "excluded_K1000": 193586,
+     "excluded_K200": 102140
+    },
+    "0": {
+     "instances": 12584067,
+     "excluded_K1000": 20823,
+     "excluded_K200": 8074
+    },
+    "1": {
+     "instances": 12584067,
+     "excluded_K1000": 21193,
+     "excluded_K200": 8075
+    },
+    "2": {
+     "instances": 12584067,
+     "excluded_K1000": 21193,
+     "excluded_K200": 8180
+    }
+   },
+   "seconds": 51.2
+  },
+  "genome": {
+   "lists_len_q01_q50": [
+    1000.0,
+    1000.0
+   ],
+   "shorter_than_1000": 629,
+   "capcos_K1000_q10_q50_q90": [
+    0.238525390625,
+    0.369384765625,
+    0.5693359375
+   ],
+   "orders": {
+    "-1": {
+     "instances": 12584067,
+     "excluded_K1000": 183306,
+     "excluded_K200": 93912
+    },
+    "0": {
+     "instances": 12584067,
+     "excluded_K1000": 19042,
+     "excluded_K200": 6979
+    },
+    "1": {
+     "instances": 12584067,
+     "excluded_K1000": 19361,
+     "excluded_K200": 6923
+    },
+    "2": {
+     "instances": 12584067,
+     "excluded_K1000": 19440,
+     "excluded_K200": 6978
+    }
+   },
+   "seconds": 38.5
+  }
+ },
+ "seconds": 196.4,
+ "peak_rss_gb": 126.0
+}

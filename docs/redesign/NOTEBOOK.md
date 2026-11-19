@@ -2871,3 +2871,42 @@ mapping fix (archaeal RpoD domain) also added afterwards.
   two comparative studies plus abstracts, none DPANN-specific.
 Queued for the `long_loci` agent after the frozen run: strand-aware splitting and the bridging
 rule as development variants of the frozen primary (part 6).
+
+## 2026-11-19 04:10 UTC — First run on untouched data: the lut test set (`benchmarks/redesign/long_loci/frozen/REPORT_frozen.txt`)
+
+1,032 GTDB representatives; 733 loci homologous to the lanthanide lut cluster (80 complete) and
+858 ribosomal runs as truth. Settings, comparators, scoring, expectations and failure criteria
+were fixed in `FROZEN.json` (14 November 05:44 UTC) before the data were opened; each
+configuration and comparator ran once; all genomes scored. Six execution deviations (CPU counts,
+order of builds, watchdog in place of timeouts), none changing an output; the embedding-list build
+made before the tokens existed was reproduced row for row by the unchanged code.
+
+| Output | lut F1 | Control | Excess [95%] | Ribosomal recovered / resolved (any fitting locus) | Complete clusters held / transporter module nested |
+|---|---|---|---|---|---|
+| **Embedding-list tree, fixed distance (frozen secondary)** | 0.906 | 0.627 | +0.279 [+0.271, +0.288] | 857 / 811 (834) | 80 / 75 |
+| Family-bond tree, adaptive distance (frozen primary) | 0.768 | 0.619 | +0.149 [+0.138, +0.161] | 858 / 788 (841) | 78 / 0 |
+| Recurrence-engine reference (counts GTDB genera) | 0.660 | 0.553 | +0.108 [+0.093, +0.123] | 858 / 668 (673) | 79 / 1 |
+| Pair-linking, embedding lists | 0.579 | 0.501 | +0.078 | 857 / 526 | 80 / 0 |
+| Pair-linking, families, adaptive | 0.472 | 0.454 | +0.018 | 858 / 373 | 79 / 0 |
+| Synton pipeline as published | 0.055 | 0.064 | -0.009 [-0.022, +0.004] | 0 / 0 | 0 / 0 |
+| Synton pipeline on our families | 0.003 | 0.086 | -0.083 | 0 / 0 | 0 / 0 |
+
+- **The configuration I had frozen as primary fails its own predeclared bar** (lut excess with a
+  95% lower bound of at least +0.15; observed +0.149 [+0.138, +0.161]). It passes the other three
+  (ribosomal, beating the engine by +0.041 [+0.027, +0.057] excess and +120 runs, complete
+  clusters).
+- **The secondary passes all four and is the best output:** +0.130 [+0.120, +0.140] excess and +23
+  [+7, +39] resolved runs over the primary. On DPANN the order was the reverse on ribosomal runs.
+- Each tree beats pair-linking on its own bonds (+0.131 / +0.201 excess; +415 / +285 runs).
+- All 80 complete-cluster genomes fall in one genome group of 179, so the cluster's lineage
+  evidence is thin; every locus holding a complete cluster runs past it (median precision 0.53 /
+  0.62). A nested node isolates the transporter module in 75 of 80 for the embedding-list tree
+  and 0 for the family tree.
+- False-positive side: in 300 relatives without a lut locus, isolated homologs are placed in loci
+  no more often than background; 3 loci with at least 3 components in lut-negative genomes.
+- The parity test half agrees with all genomes within 0.01 F1.
+- Missed expectations recorded: 179 genome groups (300-550 expected); controls 0.55-0.63; the
+  primary's excess; module matching; synton below its range.
+- Cost: 4 h 52 min of job wall time (24-CPU jobs 4 h 02 min, of which tokens 72 min and the two
+  synton runs 139 min; GPU 43 min).
+Part 6 (strand-aware splitting and bridging) now applies the fixes to both configurations on DPANN.

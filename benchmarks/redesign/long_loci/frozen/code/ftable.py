@@ -6,7 +6,8 @@ import sys
 from pathlib import Path
 
 FZ = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(".")
-R = json.load(open(FZ / "results/score_lut.json"))
+SUF = sys.argv[2] if len(sys.argv) > 2 else ""
+R = json.load(open(FZ / f"results/score_lut{SUF}.json"))
 O = R["outputs"]
 ORDER = ["PRIMARY_WA_L4b_t0.2", "WA_L1", "SECONDARY_Z_L4bp_t0.02", "Z_L1", "engine_DH", "synton_faithful", "synton_matched"]
 ORDER = [x for x in ORDER if x in O]

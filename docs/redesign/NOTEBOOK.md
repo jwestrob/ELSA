@@ -2812,3 +2812,23 @@ no agent has been restarted.
   - Inputs built and gated: similarity table (22 min 49 s GPU), nearest neighbours (19 min 58 s
     GPU), 179 genome groups, float32 whitened vectors. `FROZEN.json` written 14 November 05:44 UTC
     before any dataset content was opened.
+
+## 2026-11-19 01:57 UTC — Cause of the 21.5-hour caller job; frozen run resumed
+
+- **Job 100455 (SR-VP bins, DefenseFinder + TXSScan, shard A) ran 21 h 30 min because of one
+  genome.** Per-genome records: TXSScan took 77,259 s on G03c08f50ba11988e
+  (SR-VP_9_9_2021_34_2B_1_4m PacBio contig 416_C, an Omnitrophota genome, 2.25 Mb, 96.7% complete)
+  against a median of 33 s; the next slowest was 1,538 s (a Planctomycetota genome). Every other
+  genome of the shard finished within the first hour. MacSyFinder generated 15,323 candidate
+  systems for the TXSScan T4aP model in that genome (2,480 in the second genome; 1 in a typical
+  one) and its single-threaded best-solution search over them took the 21.5 hours while the other
+  23 cores sat idle. The caller script (`srvp_bins/code/04_callers.py`) runs one MacSyFinder
+  process per genome in a pool with no time cap. Final calls for that genome: 97 best-solution
+  rows (77 T4aP, 14 T2SS), so its TXSScan entries in the truth table deserve a look before they
+  are scored. Fix for any reuse: a per-genome time cap with the genome recorded as timed out, and
+  a job-level cap.
+- Jacob authorised the remaining CPU computation for the frozen run on the lut test set. The
+  `long_loci` agent is resumed to run the family-clustering rescue step (about 2.1 h on 24 CPUs),
+  then the primary configuration, the identity check of the provisional embedding-list build, the
+  comparators and the scoring, with `timeout` caps on heavy commands and dependent jobs that
+  write scores to disk unattended.

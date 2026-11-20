@@ -231,3 +231,78 @@ Process note:
   --restamp" in its own command line, so "pgrep -f" matched it indefinitely. The coordinator killed
   it at 23:55 UTC. The re-stamp itself had finished at 11:18 UTC.
 - Lesson: wait on a PID file, never on "pgrep -f".
+
+6. DEPLOYMENT RECORD (2026-11-20, approved by Jacob)
+----------------------------------------------------
+Code, added to the PR before the merge (single trailer: Co-Authored-By: Claude Fable 5.2):
+- dee92f6 Use -1,000,000 bits for the unused KOfam cutoff slot.
+  Tested: it is exact in float32; text files read back -1000000.00; it survives hmmpress into
+  optimized profiles; the CPU searches of the K02886-type and K02874-type cases pass; the GPU
+  adapter's pressed-profile loader keeps it finite (GA pruning needs finite cutoffs).
+  No GPU job was run.
+- 8ffa8a9 --cpu-parallel {auto,queries,targets}. Port of the production patch (0.2.1 plus local
+  edits); it applied with line offsets only, and its test was ported with it.
+- 4fb56ad Release 0.2.3. aksha --version is new.
+- Merge: PR 8 merged as ceb48c8 ("Merge pull request #8"), tagged v0.2.3. Nothing was published
+  to PyPI.
+- Tests: 141 passed, 4 skipped (the GPU parity tests, run with no visible GPU).
+- Unplanned: one earlier test run, after aksha-cuda12 was installed in the test environment, ran
+  4 GPU parity subtests for seconds on the login node's 2080 Ti. They failed there; this branch
+  leaves the code they test unchanged.
+
+New environment: /groups/banfield/users/jwestrob/envs/aksha-0.2.3
+- aksha 0.2.3 built from ceb48c8, with aksha-runtime 0.1.1 and aksha-cuda12 0.1.1.
+- Smoke test: PFAM --cut_ga on the 200-protein file gave 272 rows with --cpu-parallel auto,
+  targets and queries alike, identical to the 0.2.1 output.
+
+Deployment chain (login node, deploy_20261120/chain.sh, 04:10-04:41 UTC):
+- Copy of KOFAM and RP16: 5 min.
+- Re-stamp: 21 min 04 s; 26,498 + 16 profiles rewritten; pressing 399 s; peak 3.6 GB.
+- Gates passed on the copies:
+  - 27,816 pressed profiles;
+  - every stamped profile equals ko_list by score_type;
+  - 1,318 profiles without cutoffs;
+  - K02886 reads (159.07, -1e6) and K02874 reads (-1e6, 93.93);
+  - the temporary registry carries cutoff_encoding.
+- No Aksha process or Aksha Slurm job was running.
+- Swap: the registry was backed up, the directories renamed (legacy copies kept as
+  *.legacy_20261120), cutoff_encoding recorded, and the launcher pointed at the new environment
+  (old launcher kept as aksha.prev).
+- Post-deploy checks:
+  - aksha --version gives 0.2.3;
+  - the GA line is correct;
+  - the PFAM smoke test gives 272 identical rows;
+  - KOFAM --cut_ga job 118149 (24 CPUs, 3 min 55 s; the profiles loaded in 27 s) on 4,000
+    validated proteins: 1,662 stamped pairs and 1,776 rows, identical to the validated fix.
+
+Threshold-less rows in that check (2,794 validated against 3,032 deployed) are the E-value cut
+scaling with the number of target sequences (verified from the tables):
+- All 2,794 validated rows are present in the deployed table.
+- The full-sequence E-value ratio on shared rows is 4.000 (99% of ratios fall within
+  3.981-4.018), which is 16,000/4,000.
+- 231 of the 238 extra rows form 187 new (protein, KO) pairs. All of them have E between 0.0025
+  and 0.0100 at 4,000 targets, which is 0.010 to 0.040 at 16,000, above the 0.01 cut.
+- The other 7 extra rows are weak domains inside shared pairs; their printed i-Evalues are
+  852-1,240. Inferred: domain reporting also scales with the size of the search.
+
+Final state (checked through the bare `aksha` in an ssh shell and through the full launcher path):
+- 0.2.3 is live.
+- show_installed lists PFAM, KOFAM, dbCAN, DefenseFinder, HydDB and RP16. It also added
+  CCTyper's catalog entry (not installed) to the registry, as 0.2.2+ does on any initialize call.
+- KOFAM and RP16 carry cutoff_encoding=score_type.
+- The GA lines match the new encoding.
+- The legacy directories, aksha.prev and hmm_databases.json.bak_20261120 are present.
+- ROLLBACK.sh has valid syntax and its targets exist.
+
+Stale GPU manifests: 6 KOFAM manifests under hmmer_gpu (build/kofam-*/KOFAM*.manifest.json and
+results/pressed/KOFAM.manifest.json) authenticate KOFAM.legacy_20261120. They were left as they
+are.
+
+Rollback: bash /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/aksha_check/deploy_20261120/ROLLBACK.sh
+
+Documentation:
+- Biotite ~/.claude/CLAUDE.md: the "HMM searches - always Aksha" and "Aksha - production" sections
+  are updated (backup CLAUDE.md.bak_20261120).
+- biotite-cluster-ops.md: the Aksha paragraph is updated (backup in ~/jwestrob/).
+
+Scratch: the 15 GB validation copy (fix/val/db) is deleted; aksha_check now uses 449 MB.

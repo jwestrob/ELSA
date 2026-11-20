@@ -3317,3 +3317,9 @@ has lacked (`showcase2` found 0 fully unrecognized blocks among 248 candidates).
   and the bond-tree loci, with matched control ORFs.
 Budgets 3 h, 4 h and 2 h of 24-CPU job time. A method change that came out of these would need a
 fourth untouched set before any claim; the three finished tests stay as they are.
+
+## 2026-11-20 23:41 UTC — `identity_strata` cancelled
+
+Jacob: the embeddings-against-alignment question by identity band changes no decision and he does
+not want it. Agent stopped and Slurm job 119449 cancelled about 4 minutes into its alignment step;
+no stratified number was computed. `genome_center` and `slot_rescue` continue.

@@ -1,0 +1,68 @@
+{
+ "workstream": "slot_rescue: do neighbor lists and the bond tree rescue core genes that Pfam / KOfam miss? (DPANN development data)",
+ "written_utc": "2026-11-20T23:34Z",
+ "status_when_written": "Truth table built (code/truth.py, read-only on the Sharur DPANN DB and study folders) and checked against the study's stored numbers. No ELSA list, bond, locus or call has been read for any truth or control gene. Controls not yet drawn (rule below). lut, SR-VP and testset3 untouched.",
+ "truth": {
+  "files": {"data/truth.tsv": "1c32a9d3066f0d91d03534994d7b528a6df009bca24252853f6070adb3fc4000",
+            "data/units.tsv": "0d7d5d1714491147a992f946328e6f49a5d7654281ff33d0a98751b2d1f4cadb",
+            "data/ko_proxy.tsv": "26f3e76adaf1093da4673319f3626527650744264150684014a0530573c18d92",
+            "data/labels.tsv": "8f99eced988347a2383c2866feef7d3a39bbd78813cc06f1f0a177bd1f477863",
+            "data/annot.parquet": "5941fe463e05668fff9bcd22eb3d31dd7737be9bc51c435581d09d3c82318129"},
+  "lead_X": "the 23 dark leads with dark_lead_is_X (replacement_screen_2026-11-11 tables/dark_newcomers.tsv): every protein of work/dark_instances.tsv for the lead's rows (dark = no Pfam row; in X's slot relative to Y; X-absent species representatives). 3,231 unique proteins. Study call = the lead's X; evidence = lead-level (fraction of a 60-protein sample scoring X's Pfam profile under the relaxed rule or carrying X's dominant KO; slot; length ratio), carried as recorded.",
+  "lead_X_UNVERIFIED": "leads whose best row has evidence fraction < 0.40 or dark/X length ratio outside 0.8-1.25: L10 GatC (.30), L11 EMC3_TMCO1 (.267), L22 Ribosomal_L27A (.35), L25 PhoU_div (.20, ratio .70). Scored, reported in their own row, excluded from the verified bottom line.",
+  "lead_X_ambiguous": "20 proteins listed under two is-X leads with different X (L04/L07, L02/L07, L06/L20): own row, outside the verified bottom line.",
+  "protein_status_rule": "a lead_X protein is verified when it has >= 1 verified is-X lead and all its is-X leads share one R set; UNVERIFIED when all its is-X leads are UNVERIFIED; ambiguous when its is-X leads differ in R.",
+  "lead_negative": "the 7 leads without dark_lead_is_X (L01 EXO5, L05 K06875, L08 S27e, L13 Oxidored_q4, L26 tfrA, L27 VIT1, L30 acyl-CoA dehydrogenase / cloN3+bnsG): 2,174 unique proteins, 395 of which are also lead_X proteins (394 L05 instances are listed under L02 = eL39). Correct outcome for a negative instance: no call naming the lead's X; a call naming the protein's own lead_X family (where it has one) is reported as the study-consistent own call; any other call is reported by class (another core family / non-core family) without a verdict.",
+  "DL_slot": "detection-limited slot sets recomputed with the study's own code logic and cohort (rp_report_facts.py, rp_cohort.py; reproduction exact for every stored count): eL39 = single unannotated ORF in the eL31-dsDNA_bind slot in the study's negative orders (78, identical to search_outputs/el39_slot/slot_orfs.faa) plus its flagged order Iainarchaeales (21) = 99; uL29 = unannotated <= 80 aa same-strand ORF right after uS3 (Parvarchaeales 37, Pacearchaeales 16) = 53; uL15 = unannotated gene(s) between uL30 and SecY (Parvarchaeales 27, Iainarchaeales 1) = 28. Evidence is positional (+ composition and 26/78 weak DPANN-eL39 hits for eL39); labeled study_call_positional. The slot call is partly circular for these sets; the list calls are the independent test.",
+  "DL_profile": "proteins rescued by the study's DPANN-specific ribosomal profiles (search_outputs/custom_profiles/custom.tbl; best hit E <= 1e-5; cohort genomes; protein lacks the stored family Pfam; kept when it carries no Pfam at all): 1,191 (eL39 482, eS26 312, eL31 228, eL42 66, uL29 27, eL20 26, eL34 18, uS15 12, eL24 11, eS17 6, eL33 2, eS27 1). Evidence: profile E <= 1e-5 per protein.",
+  "absent_from_gene_set": "every truth protein is a called gene of the Sharur DPANN DB, which is the ELSA DPANN universe (3,585,303 genes), so each must map by protein_id; any unmapped protein is reported as its own outcome. The study's six-frame detection hits (uncalled ORFs: Ribosomal_S14 in 2 genomes, RNase_P-MRP_p29 in 1, NiFeSe_Hases in 1; detection_check_hits.tsv) are truth ORFs absent from both gene sets and are counted as such; nothing can be scored for them.",
+  "not_used": "core_machinery_2026-11-11 DPANN-profile rescues of non-ribosomal components (paralog rules per component) and the replacement screen's called-protein detection hits (18 proteins, many carrying other Pfams): recorded, not scored."
+ },
+ "method_outputs": {
+  "groups": "$RD/lineagefree/groups/emb_hom_average_t0.75.parquet (lineage unit = group; lists exclude the own group)",
+  "Z_embedding_lists": "ws_calib table $RD/calib/table: per gene (uid from embed run uid_of_row.npy) the best gene of every genome outside the own group with within-genome z >= 10.6, ranked by z (ties keep genome order) = vl.z_lists",
+  "A_alignment_lists": "$RD/vocab_lists/mm/aln__k1000__{I,B}.npy expanded to genes outside the own group, identical sequences first, then hits in bit-score order, depth 1,000 = vl.aln_lists / softrec.expand_knn",
+  "bonds": "$RD/long_loci/nodes/dpann_{Z,A}/bonds_obs.npz (round-0 list bonds, group counting, tau 6; bond = gene pair (k, k+d), d <= 3)",
+  "loci_primary": "each arm's selected output in long_loci REPORT2: Z L4bp_t0.02 (L4b+, every node), A L4b_t0.02 (family-free node filter)",
+  "loci_secondary": "the other output of each arm at theta .02 (Z L4b_t0.02, A L4bp_t0.02), like-for-like check",
+  "gate": "for every stored bond with a query gene at either end, support recomputed from the reconstructed lists (pass_count rule: genomes / groups where a partner of one gene lies 1-3 positions from a partner of the other on one contig) equals stored n - 1 and ng - 1 exactly, both arms. Any mismatch -> STATUS FAILED before scoring."
+ },
+ "labels": {
+  "annotation": "stored Sharur Pfam (E <= 1e-5) accessions and KOs (kofam, kegg) per protein; a KO's proxy Pfams = Pfams on > 50% of its proteins (data/ko_proxy.tsv)",
+  "R_set": "per unit (units.tsv): Pfam members and proxy Pfams of X, KO members and dominant KOs of X, KOs whose proxy contains an R Pfam, Pfams proxying an R KO. A partner is right-family when it carries any R label.",
+  "broad_class": "one Sharur curated predicate per unit (units.tsv broad_class): ribosomal_protein for every ribosomal unit; L03 sec_pathway, L06 rna_polymerase, L09 / L24 atp_synthesis, L10 trna_modification, L11 membrane, L29 cytochrome_bd_oxidase, L25 none. A non-R label is same-broad-class when the predicate is assigned to it in data/labels.tsv.",
+  "core": "CORE = union of the R sets of all is-X leads and DL units, plus every label carrying ribosomal_protein. A control call 'names a core gene' when its winning label is right-family for the matched truth gene or in CORE."
+ },
+ "calls": {
+  "votes": "partner p votes for R when it carries an R label; otherwise for each of its keys (Pfam accessions plus proxy Pfams of its KOs; a KO without proxy is its own key), one vote per key per partner. Call = R if cR > every other key's count and cR >= 2; = the top other key if its count > cR and >= 2; ties and maxima < 2 -> no call. Winning other key classified same-broad-class or wrong-other.",
+  "list_call": "per arm: list = the gene's own list. first_right_rank = 1-based position of the first right-family partner (none if absent). Top-k call over the first k partners, k = 10 (primary), k = 50 (secondary).",
+  "slot_call": "per arm: requires (i) the gene inside >= 1 locus of the arm's primary output and (ii) >= 1 stored bond with the gene at one end. Supporting partners of a bond (gene t, neighbor k): partners p of t lying 1-3 positions from a partner q of k on one contig; per supporting genome the best-ranked such p; pooled over t's bonds (per genome the best-ranked p overall). Call = vote over the pooled supporting partners (rule above). Sub-checks reported for truth genes with recorded flanks: a locus holds t and every recorded flank gene; t bonded directly to a flank gene.",
+  "combined_call": "per arm: the gene's list restricted to slot-consistent partners (p lies 1-3 positions from a list partner of any gene within 3 positions of t on t's contig), then first_right_rank and the top-10 call on the restricted list. No locus or bond significance required. No truth flank is used.",
+  "outcome_classes": "right-family / wrong family same broad class / wrong other / no call (empty list, no annotated partner, tie or < 2 votes)",
+  "correct_rescue": "call = R (right family)."
+ },
+ "controls": {
+  "rule": "for each unique truth protein of lead_X and DL sets (sorted by protein_id), 3 controls drawn without replacement from the same genome: proteins with no Pfam and no KO, not the first or last gene of their contig, not a truth or negative protein, length within max(5 aa, 15%) of the truth protein, and outside conserved slots = no gene within 2 positions on the contig carries a Pfam / KO member of either unit of the 1,812 conserved pairs of the replacement screen (pairs_adjacent_ge40.tsv pass_conserved; 744 Pfam + 398 KO accessions). Fewer than 3 eligible -> all eligible taken, shortfall recorded.",
+  "seed": 20261120,
+  "scoring": "each control is scored with its matched truth protein's R set and broad class, by every call. False rescue = call names a core gene (right-family for the match or a CORE label); also reported split into matched family / other ribosomal / other core."
+ },
+ "statistics": {
+  "unit": "unique proteins per set; per-lead rows count a protein in each of its leads",
+  "intervals": "95% genome bootstrap (2,000 draws, seed 17) for bottom-line proportions and for paired route differences on verified lead_X proteins",
+  "k_secondary": "k = 50 list call and the secondary locus outputs are reported as secondary rows only"
+ },
+ "bottom_line": "verified lead_X (mapped proteins): right-family count and share for embedding list (Z, k 10), alignment list (A, k 10), slot (Z, A), combined (Z, A); each with the control false-rescue rate of the same call; the same columns for UNVERIFIED, ambiguous, DL_slot (per family) and DL_profile (per family and total); negatives by outcome class.",
+ "works_criterion": "slot rescue 'works' (step 5 sketch written) when the slot or combined call of either arm rescues >= 50% of verified lead_X proteins with a control false-rescue rate <= 2%.",
+ "expectations": {
+  "mapping": "100% of truth proteins map; >= 97% carry an embedding; A lists empty for 20-50% of lead_X proteins (short divergent proteins, E <= 1e-3); Z lists empty for 5-20%",
+  "list_Z": "right 25-50% of verified lead_X; wrong-same-broad-class 5-20%; control false rescue 2-10%",
+  "list_A": "right 15-40%; no call 40-70%; control false rescue 0-3%",
+  "slot": "Z and A each right 35-65%; in-locus 70-90%; control false rescue <= 2%",
+  "combined": "right 40-70% for Z, at least the list call of the same arm +10 points; control false rescue <= 2%",
+  "Z_vs_A": "embedding routes rescue more than alignment routes by 5-20 points on list and combined calls; slot calls within 10 points of each other",
+  "DL_slot": "uL29 / uL15 / eL39 list right 10-40%; combined right 30-70%",
+  "DL_profile": "list right 40-75% (profile-detectable families have annotated relatives)",
+  "negatives": "<= 5% of negative instances named as the lead's X by any call"
+ },
+ "budget": "2 h of 24-CPU job time; no GPU; no language-model inference; no HMM search (if one becomes necessary it goes through aksha search)"
+}

@@ -1,0 +1,55 @@
+SLOT_RESCUE NOTEBOOK (workstream slot_rescue, ELSA redesign; DPANN development data only)
+=====================================================================================
+
+2026-11-20T23:28:23Z  Brief received. Read: Sharur replacement_screen_2026-11-11 REPORT.md, scripts/screen.py + assemble.py
+                  (dark-row definition, dark_is_X rule), tables/dark_newcomers.tsv, work/dark_instances.tsv; capture
+                  2026-11-11_dpann-replacement-in-place-screen.md; dpann-exploration CONTEXT.md (slot / detection-limited);
+                  ribosomal_protein_absence_2026-10-12 (rp_report_facts.py: uL29 / uL15 / eL39 slot logic; custom.tbl
+                  DPANN-profile hits); core_machinery_2026-11-11 REPORT.md; long_loci REPORT.txt, REPORT2.txt, lb.py, ll.py;
+                  vocab_lists vl.py (pass_count, z_lists, aln_lists); softrec expand_knn; docs/redesign NOTEBOOK.md (last
+                  sections). Remote listings: long_loci/loci/dpann_{Z,A}, nodes/dpann_{Z,A}/bonds_obs.npz, calib/table,
+                  vocab_lists/mm, ws_dpann/package/universe (genes.parquet carries protein_id).
+2026-11-20T23:28:23Z  Mac Sharur DPANN DB (read-only): annotations pfam 4,218,124 / kofam 1,238,969 / kegg 52,771 rows, 3,585,303
+                  proteins, 3,564 bins: equal to the 19 Oct seal census that the ELSA DPANN package was built from, so
+                  Sharur protein_id joins ELSA gid through universe/genes.parquet.
+2026-11-20T23:34:22Z  Truth table built (code/truth.py; Mac; read-only on Sharur DB + study folders). Reproduction of the study's
+                  stored numbers exact: uL29 Parvarchaeales 37 / Pacearchaeales 16, uL15 Parvarchaeales 27 / Iainarchaeales 1,
+                  eL39 slot counts by order (all orders), eL39 negative-order ORFs 78 = slot_orfs.faa. lead_X 3,231 unique
+                  proteins (20 under two leads with different X), lead_negative 2,174 (395 also lead_X, 394 of them L05 / L02),
+                  DL_slot 180 (eL39 99, uL29 53, uL15 28), DL_profile 1,191. 0 lead proteins carry a Pfam (dark by definition).
+2026-11-20T23:34:22Z  predeclared.json written before any ELSA list, bond, locus or call was read for a truth or control gene.
+                  sha256 266f2809dfe1434f2fa8aaf66208f06ddb24d6574653c15cdd48b1b7d8fcdf84 (written_utc corrected to the real time 23:34Z before any scoring; earlier hash a82a8dab... void)
+2026-11-20T23:36:40Z  Controls drawn by the predeclared rule (code/controls.py, seed 20261120): 11,904 controls for 4,083 truth
+                  proteins (lead_X 9,429 / DL_slot 180 / DL_profile 2,295); 184 truth proteins with < 3 eligible, 53 with 0;
+                  307,235 eligible ORFs in 1,798 genomes; 64% of genes sit within 2 genes of a conserved-pair unit gene and
+                  are excluded. Length ratio control / truth q10 / q50 / q90 .878 / 1.000 / 1.121.
+                  data/controls.tsv sha256 84dafad389762fa2cfa530d45a7a36111e461c90402caf28a11f6a280a8d001d
+2026-11-20T23:44:21Z  code/score.py (biotite): lists rebuilt for query genes and their +-3 neighbors (Z: calib table z >= 10.6,
+                  own group excluded; A: aln__k1000 expanded as expand_knn), calls as predeclared. Login-node smoke (150 rows,
+                  2 processes, 70 s and 140 s, 3 GB; above the 30 s login guideline, noted): gate 457 stored bonds, 0
+                  mismatches; vectorized label build gives an identical calls table. Remote rules read in the submitting turn
+                  (~/.claude/CLAUDE.md, biotite-cluster-ops.md). Job 119461 slot_rescue (standard_expand, 24 CPUs, mark7
+                  header, exclude list; account at 232 CPUs before submission) RUNNING on node-64-768g-5.
+2026-11-20T23:46:38Z  Job 119461 COMPLETED in 1 min 02 s (24 CPUs; 17,740 query genes, 109,737 genes with rebuilt lists; Z 94.1 M,
+                  A 49.4 M entries; peak RSS 3.6 GB). GATE PASSED: 59,476 stored bonds touching query genes, support recomputed
+                  from the rebuilt lists equals stored n - 1 and ng - 1 in every case (0 mismatches). 0 truth or control
+                  proteins unmapped; 0 without an embedding. STATUS DONE. calls.parquet fetched; code/summarize.py run.
+2026-11-20T23:46:38Z  Predeclared numbers read (bottom_line.tsv). Observation: the slot call (81.5% right on verified lead_X, Z)
+                  pools one supporting partner per genome over the whole list, while list and combined calls vote the top 10;
+                  a right-family partner sits anywhere in the Z list for 2,378 / 2,904 and the k = 50 list call reaches
+                  64.9%. POST HOC diagnostic decided now (not predeclared, labeled as such): the same per-genome pooled vote
+                  over the whole list without the adjacency filter (fullg), one vote per partner over the whole list (full),
+                  and the slot-consistent whole list pooled per genome without bond / locus gating (combfull), with the same
+                  controls. It separates list depth from the positional filter.
+2026-11-20T23:53:20Z  POST HOC job 119468 slot_rescue_ph (posthoc.py; same header) COMPLETED in 47 s; STATUS rewritten DONE. Whole-list
+                  vote without the positional filter: verified lead_X Z 2,368 (= slot call count; 2 differ each way), A 2,183;
+                  control false core names Z 169 / 8,474 (1.99%; Ribosomal_L40e 92) against 11 (0.13%) for the slot call.
+                  Stratum defined after scoring (code/strata.py): 2,332 verified proteins with no Pfam and no right-family KO:
+                  slot Z 77.1%, slot A 67.1%, list Z 40.7%, list A 34.9%; slot Z - slot A +10.0 [+8.7, +11.5]. The other
+                  572 carry the right-family KO and are rescued 97-100% by every route.
+2026-11-20T23:53:20Z  American spelling pass: neighbour (x2) and labelled corrected in predeclared.json (spelling only; new
+                  sha256 dfc5b112b371bd2117be3fe0bd0d93fd5d23946f9012329a1f537bd722a5bfd0; restoring the three words gives
+                  266f2809... exactly, checked), in this notebook, REPORT.txt and score.sbatch comments. Remote copies updated.
+2026-11-20T23:53:20Z  REPORT.txt written. Cost: 1 min 49 s of 24-CPU job time (budget 2 h). Works criterion met (slot Z 81.5% at
+                  0.13% control false rescue); step-5 sketch in the report. No vault capture or CONTEXT.md edit (brief
+                  restricts writes to this folder).

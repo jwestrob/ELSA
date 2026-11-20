@@ -3323,3 +3323,35 @@ fourth untouched set before any claim; the three finished tests stay as they are
 Jacob: the embeddings-against-alignment question by identity band changes no decision and he does
 not want it. Agent stopped and Slurm job 119449 cancelled about 4 minutes into its alignment step;
 no stratified number was computed. `genome_center` and `slot_rescue` continue.
+
+## 2026-11-20 23:54 UTC — `slot_rescue`: the bond tree names dark core genes (DPANN, development)
+
+Report `benchmarks/redesign/slot_rescue/REPORT.txt`; predeclaration sha256 266f2809…cdf84 (three
+British spellings corrected after scoring; current file dfc5b112…, and reversing the three words
+reproduces the recorded hash, which I checked). Truth: the Sharur replacement-in-place screen's
+30 dark leads carried to every listed protein, plus the study's detection-limited sets; 5,836
+proteins, all mapped by protein ID. Controls: 3 unannotated length-matched ORFs per truth protein,
+same genome, outside conserved slots.
+
+| Set | Slot call, embedding lists | Slot call, alignment lists | Top-10 list call (emb. / aln.) |
+|---|---|---|---|
+| Verified leads (2,904) | 2,368 (81.5%) | 2,134 (73.5%) | 51.8% / 47.3% |
+| of which no Pfam and no right KO (2,332; stratum set after scoring) | 77.1% | 67.1% | 40.7% / 34.9% |
+| eL39 slot ORFs (99) | 97 | 40 | 17 / 5 |
+| DPANN-profile rescues (1,191) | 92.2% | 91.9% | 30.1% / 31.7% |
+| Matched controls named a core gene (8,474) | 11 (0.13%) | 15 (0.18%) | 0.13% / 0.17% |
+
+- Predeclared criterion (at least 50% rescued at no more than 2% false rescue on controls): met.
+- Slot call, embedding minus alignment: +8.1 [+7.0, +9.2] points; +10.0 [+8.7, +11.5] in the
+  no-Pfam-no-KO stratum (262 rescued by embedding lists only, 28 by alignment lists only).
+- Post hoc: a majority vote over the whole list rescues the same 2,368 and names a core gene for
+  1.99% of controls (92 of 169 Ribosomal_L40e). List depth gives the recall; the positional filter
+  cuts false core names 15-fold.
+- Limits: truth is the study's lead-level call (a 60-protein sample per lead), so single proteins
+  are not individually verified. 686 controls (8.1%) receive some other, unjudged name. The VIT1
+  lead (study says the dark protein is something else) is named VIT1 in 20 of 22 by every route;
+  UNVERIFIED either way.
+- I recounted the headline rows from `results/per_gene.tsv.gz`: 2,904 / 2,368 / 2,134 / 8,474 /
+  11 match.
+- Cost: 1 min 49 s of 24-CPU job time (jobs 119461, 119468). A whole-collection pass is sketched
+  in the report (about 15 min of one 24-CPU job on DPANN); nothing built.

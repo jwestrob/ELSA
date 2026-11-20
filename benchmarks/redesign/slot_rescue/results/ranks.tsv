@@ -1,0 +1,21 @@
+set	arm	list	n	empty	rank1	le10	le50	any	median_rank	median_len
+lead_X verified	Z	full	2904	154	1070	1654	2117	2378	2.0	2470.5
+lead_X verified	Z	slot-restricted	2904	340	1082	1640	2134	2378	2.0	1946.5
+lead_X verified	A	full	2904	336	1090	1577	2016	2223	2.0	503.5
+lead_X verified	A	slot-restricted	2904	398	1090	1577	2009	2211	2.0	300.0
+lead_X UNVERIFIED	Z	full	307	38	62	93	120	168	2.5	426.0
+lead_X UNVERIFIED	Z	slot-restricted	307	103	70	92	121	167	2.0	230.0
+lead_X UNVERIFIED	A	full	307	71	66	100	128	163	3.0	63.0
+lead_X UNVERIFIED	A	slot-restricted	307	98	67	101	126	161	3.0	29.0
+DL_slot	Z	full	180	6	68	117	162	170	6.0	2732.0
+DL_slot	Z	slot-restricted	180	10	69	87	154	170	9.5	2485.0
+DL_slot	A	full	180	47	74	87	107	117	1.0	8.0
+DL_slot	A	slot-restricted	180	47	74	87	107	117	1.0	8.0
+DL_profile	Z	full	1191	2	159	499	959	1173	16.0	1618.0
+DL_profile	Z	slot-restricted	1191	17	158	508	962	1148	16.0	1422.0
+DL_profile	A	full	1191	2	204	530	853	1163	15.0	1000.0
+DL_profile	A	slot-restricted	1191	11	200	531	850	1132	13.5	507.0
+controls (lead_X verified matched)	Z	full	8474	1222	0	0	0	4	1271.5	45.0
+controls (lead_X verified matched)	Z	slot-restricted	8474	4294	0	0	0	0		0.0
+controls (lead_X verified matched)	A	full	8474	3554	0	0	0	0		3.0
+controls (lead_X verified matched)	A	slot-restricted	8474	4913	0	0	0	0		0.0

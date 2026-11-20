@@ -1,0 +1,304 @@
+{
+ "labels": {
+  "pfam": 7304,
+  "ko": 4152,
+  "ribosomal_protein": 207,
+  "ko_with_proxy": 4001
+ },
+ "annot_proteins": 2159199,
+ "leads": {
+  "proteins_listed": 5010,
+  "protein_lead_pairs": 5871,
+  "proteins_in_conflicting_leads": 415,
+  "proteins_carrying_pfam": 0
+ },
+ "reproduce": {
+  "uL29_Parvarchaeales": {
+   "recomputed": {
+    "genomes": 52,
+    "us3_with_downstream_gene": 40,
+    "unannotated_le80_same_strand": 37,
+    "other": 2,
+    "Ribosomal_L29": 1
+   },
+   "stored": {
+    "genomes": 52,
+    "us3_with_downstream_gene": 40,
+    "unannotated_le80_same_strand": 37,
+    "other": 2,
+    "Ribosomal_L29": 1
+   },
+   "equal": true
+  },
+  "uL29_Pacearchaeales": {
+   "recomputed": {
+    "genomes": 66,
+    "us3_with_downstream_gene": 66,
+    "unannotated_le80_same_strand": 16,
+    "Ribosomal_L29": 46,
+    "other": 4
+   },
+   "stored": {
+    "genomes": 66,
+    "us3_with_downstream_gene": 66,
+    "unannotated_le80_same_strand": 16,
+    "Ribosomal_L29": 46,
+    "other": 4
+   },
+   "equal": true
+  },
+  "uL15_Parvarchaeales": {
+   "recomputed": {
+    "genomes": 52,
+    "pairs": 44,
+    "unannotated": 27,
+    "Ribosomal_L27A": 17
+   },
+   "stored": {
+    "genomes": 52,
+    "pairs": 44,
+    "unannotated": 27,
+    "Ribosomal_L27A": 17
+   },
+   "equal": true
+  },
+  "uL15_Iainarchaeales": {
+   "recomputed": {
+    "genomes": 37,
+    "pairs": 35,
+    "Ribosomal_L27A": 34,
+    "unannotated": 1
+   },
+   "stored": {
+    "genomes": 37,
+    "pairs": 35,
+    "Ribosomal_L27A": 34,
+    "unannotated": 1
+   },
+   "equal": true
+  },
+  "eL39_slot_by_order": {
+   "equal": true,
+   "recomputed": {
+    "Nanobdellota/SCGC-AAA011-G17": {
+     "genomes_with_flanks": 62,
+     "eL39_stored": 4,
+     "eL39_dpann_profile": 56,
+     "single_unannotated_orf": 2
+    },
+    "Micrarchaeota/Anstonellales": {
+     "genomes_with_flanks": 47,
+     "eL39_stored": 46,
+     "closed": 1
+    },
+    "Micrarchaeota/Norongarragalinales": {
+     "genomes_with_flanks": 9,
+     "eL39_stored": 8,
+     "closed": 1
+    },
+    "Aenigmatarchaeota/QMZP01": {
+     "genomes_with_flanks": 9,
+     "other_annotated": 1,
+     "single_unannotated_orf": 8
+    },
+    "Micrarchaeota/Fermentimicrarchaeales": {
+     "genomes_with_flanks": 5,
+     "eL39_stored": 5
+    },
+    "Nanobdellota/Woesearchaeales": {
+     "genomes_with_flanks": 86,
+     "eL39_dpann_profile": 77,
+     "eL39_stored": 3,
+     "single_unannotated_orf": 1,
+     "closed": 5
+    },
+    "Micrarchaeota/Micrarchaeales": {
+     "genomes_with_flanks": 9,
+     "eL39_stored": 9
+    },
+    "Micrarchaeota/CAILAH01": {
+     "genomes_with_flanks": 3,
+     "eL39_stored": 3
+    },
+    "Micrarchaeota/JAKAKT01": {
+     "genomes_with_flanks": 4,
+     "eL39_stored": 4
+    },
+    "Iainarchaeota/Iainarchaeales": {
+     "genomes_with_flanks": 28,
+     "eL39_stored": 6,
+     "single_unannotated_orf": 21,
+     "eL39_dpann_profile": 1
+    },
+    "Iainarchaeota/JAGGVJ01": {
+     "genomes_with_flanks": 1,
+     "eL39_stored": 1
+    },
+    "Nanobdellota/CSSed11-243R1": {
+     "genomes_with_flanks": 4,
+     "eL39_dpann_profile": 1,
+     "eL39_stored": 3
+    },
+    "Nanobdellota/PEZQ01": {
+     "genomes_with_flanks": 1,
+     "eL39_stored": 1
+    },
+    "Micrarchaeota/JACRGF01": {
+     "genomes_with_flanks": 2,
+     "eL39_stored": 2
+    },
+    "Micrarchaeota/Gugararchaeales": {
+     "genomes_with_flanks": 1,
+     "eL39_stored": 1
+    },
+    "Nanobdellota/UBA10117": {
+     "genomes_with_flanks": 3,
+     "eL39_stored": 1,
+     "eL39_dpann_profile": 1,
+     "closed": 1
+    },
+    "Micrarchaeota/JAVZCV01": {
+     "genomes_with_flanks": 1,
+     "eL39_stored": 1
+    },
+    "Aenigmatarchaeota/Aenigmatarchaeales": {
+     "genomes_with_flanks": 10,
+     "single_unannotated_orf": 10
+    },
+    "Nanobdellota/Parvarchaeales": {
+     "genomes_with_flanks": 47,
+     "single_unannotated_orf": 47
+    },
+    "Nanobdellota/Jingweiarchaeales": {
+     "genomes_with_flanks": 6,
+     "eL39_dpann_profile": 6
+    },
+    "Aenigmatarchaeota/PWEA01": {
+     "genomes_with_flanks": 5,
+     "single_unannotated_orf": 5
+    },
+    "Aenigmatarchaeota/GW2011-AR5": {
+     "genomes_with_flanks": 5,
+     "single_unannotated_orf": 4,
+     "closed": 1
+    },
+    "EX4484-52/EX4484-52": {
+     "genomes_with_flanks": 7,
+     "single_unannotated_orf": 7
+    },
+    "Nanobdellota/JAPDLS01": {
+     "genomes_with_flanks": 5,
+     "eL39_dpann_profile": 5
+    },
+    "Nanobdellota/B33-G15": {
+     "genomes_with_flanks": 1,
+     "single_unannotated_orf": 1
+    },
+    "Nanobdellota/WJKC01": {
+     "genomes_with_flanks": 1,
+     "single_unannotated_orf": 1
+    },
+    "Iainarchaeota/JAADDC01": {
+     "genomes_with_flanks": 3,
+     "single_unannotated_orf": 3
+    },
+    "Nanobdellota/Pacearchaeales": {
+     "genomes_with_flanks": 5,
+     "eL39_dpann_profile": 4,
+     "single_unannotated_orf": 1
+    },
+    "Nanohalarchaeota/Nanosalinales": {
+     "genomes_with_flanks": 10,
+     "single_unannotated_orf": 6,
+     "closed": 4
+    },
+    "Aenigmatarchaeota/JACPZZ01": {
+     "genomes_with_flanks": 1,
+     "single_unannotated_orf": 1
+    }
+   }
+  },
+  "eL39_negative_order_orfs": {
+   "recomputed": 78,
+   "stored_faa": 78,
+   "equal": true,
+   "flagged_orders": [
+    "Aenigmatarchaeota/Aenigmatarchaeales",
+    "Aenigmatarchaeota/QMZP01",
+    "EX4484-52/EX4484-52",
+    "Iainarchaeota/Iainarchaeales",
+    "Nanobdellota/Parvarchaeales",
+    "Nanohalarchaeota/Nanosalinales"
+   ],
+   "negative_orders": [
+    "Aenigmatarchaeota/CG10238-14",
+    "Aenigmatarchaeota/Aenigmatarchaeales",
+    "Aenigmatarchaeota/QMZP01",
+    "EX4484-52/EX4484-52",
+    "Nanobdellota/Parvarchaeales",
+    "Nanohalarchaeota/Nanosalinales"
+   ]
+  }
+ },
+ "DL_profile": {
+  "lacking_family_pfam": {
+   "uL29": 27,
+   "eL39": 482,
+   "eS26": 316,
+   "eL42": 67,
+   "uS15": 22,
+   "eS17": 6,
+   "eL31": 228,
+   "eL20": 26,
+   "eL24": 12,
+   "eL34": 18,
+   "eS27": 1,
+   "eL33": 2
+  },
+  "dark_kept": {
+   "uL29": 27,
+   "eL39": 482,
+   "eS26": 312,
+   "eL42": 66,
+   "uS15": 12,
+   "eS17": 6,
+   "eL31": 228,
+   "eL20": 26,
+   "eL24": 11,
+   "eL34": 18,
+   "eS27": 1,
+   "eL33": 2
+  }
+ },
+ "truth_rows_by_set": {
+  "DL_profile": 1191,
+  "DL_slot": 180,
+  "lead_X": 3697,
+  "lead_negative": 2174
+ },
+ "truth_unique_proteins_by_set": {
+  "DL_profile": 1191,
+  "DL_slot": 180,
+  "lead_X": 3231,
+  "lead_negative": 2174
+ },
+ "truth_unique_proteins": 5836,
+ "DL_by_unit": {
+  "DL_profile|eL20": 26,
+  "DL_profile|eL24": 11,
+  "DL_profile|eL31": 228,
+  "DL_profile|eL33": 2,
+  "DL_profile|eL34": 18,
+  "DL_profile|eL39": 482,
+  "DL_profile|eL42": 66,
+  "DL_profile|eS17": 6,
+  "DL_profile|eS26": 312,
+  "DL_profile|eS27": 1,
+  "DL_profile|uL29": 27,
+  "DL_profile|uS15": 12,
+  "DL_slot|eL39": 99,
+  "DL_slot|uL15": 28,
+  "DL_slot|uL29": 53
+ },
+ "lead_rows_flank_found": 5871
+}

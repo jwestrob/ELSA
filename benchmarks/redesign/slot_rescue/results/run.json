@@ -1,0 +1,44 @@
+{
+ "threads": 24,
+ "smoke": 0,
+ "timing": {
+  "lists_Z": 6.8,
+  "lists_A": 4.0,
+  "rows": 14.4,
+  "total": 59.7
+ },
+ "unmapped_rows": 0,
+ "unmapped_proteins": [],
+ "query_rows": 19146,
+ "no_embedding_rows": 0,
+ "genes_with_lists_built": 109737,
+ "list_len_Z_need_q10_q50_q90": [
+  1.0,
+  325.0,
+  2849.0
+ ],
+ "list_len_A_need_q10_q50_q90": [
+  0.0,
+  273.0,
+  1000.0
+ ],
+ "bonds_Z": {
+  "stored": 2246491,
+  "touching_queries": 23861
+ },
+ "loci_Z_L4bp_t0.02": 1282888,
+ "loci_Z_L4b_t0.02": 1145625,
+ "bonds_A": {
+  "stored": 2522221,
+  "touching_queries": 24912
+ },
+ "loci_A_L4b_t0.02": 1219964,
+ "loci_A_L4bp_t0.02": 1364388,
+ "peak_rss_gb_parent": 3.45,
+ "gate": {
+  "bonds_checked": 59476,
+  "mismatches": 0,
+  "rows_with_mismatch": 0,
+  "passed": true
+ }
+}

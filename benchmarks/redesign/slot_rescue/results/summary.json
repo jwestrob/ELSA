@@ -1,0 +1,164 @@
+{
+ "paired_differences_verified": {
+  "list_Z - list_A": [
+   0.0455,
+   0.0302,
+   0.0608
+  ],
+  "slot_Z - slot_A": [
+   0.0806,
+   0.0702,
+   0.092
+  ],
+  "comb_Z - comb_A": [
+   0.0492,
+   0.0342,
+   0.0635
+  ],
+  "slot_Z - list_Z": [
+   0.2972,
+   0.2807,
+   0.314
+  ],
+  "comb_Z - list_Z": [
+   0.0034,
+   -0.0007,
+   0.0073
+  ],
+  "slot_A - list_A": [
+   0.2621,
+   0.2451,
+   0.2796
+  ],
+  "comb_A - list_A": [
+   -0.0003,
+   -0.0024,
+   0.0017
+  ],
+  "comb_Z - slot_Z": [
+   -0.2937,
+   -0.3103,
+   -0.2776
+  ]
+ },
+ "wrong_labels_verified": {
+  "list_Z": {
+   "PF03604 Zn_ribbon_RPAB4": 12,
+   "PF02516 STT3": 7,
+   "K23255 archaeal type IV pilus assembly protein PilA": 7,
+   "PF06745 ATPase": 3,
+   "PF03065 Glyco_hydro_57": 2,
+   "PF01478 Peptidase_A24": 2,
+   "PF13385 Laminin_G_3": 2,
+   "PF01198 Ribosomal_L31e": 2
+  },
+  "list_A": {
+   "PF03604 Zn_ribbon_RPAB4": 12,
+   "K23255 archaeal type IV pilus assembly protein PilA": 9,
+   "PF06745 ATPase": 4,
+   "PF01248 Ribosomal_L7Ae": 3,
+   "PF01381 HTH_3": 2,
+   "PF01478 Peptidase_A24": 2,
+   "PF01198 Ribosomal_L31e": 2,
+   "PF15731 MqsA_antitoxin": 2
+  },
+  "slot_Z": {
+   "PF03604 Zn_ribbon_RPAB4": 12,
+   "K02107 V/A-type H+/Na+-transporting ATPase subunit G/H": 4,
+   "PF01248 Ribosomal_L7Ae": 4,
+   "PF01198 Ribosomal_L31e": 3,
+   "PF04021 Class_IIIsignal": 2,
+   "K23255 archaeal type IV pilus assembly protein PilA": 2,
+   "K02875 large subunit ribosomal protein L14e": 1,
+   "PF01750 HycI": 1
+  },
+  "slot_A": {
+   "PF03604 Zn_ribbon_RPAB4": 12,
+   "K23255 archaeal type IV pilus assembly protein PilA": 10,
+   "PF01248 Ribosomal_L7Ae": 5,
+   "PF01478 Peptidase_A24": 2,
+   "PF01198 Ribosomal_L31e": 2,
+   "PF13412 HTH_24": 1,
+   "PF01750 HycI": 1,
+   "PF13385 Laminin_G_3": 1
+  },
+  "comb_Z": {
+   "PF03604 Zn_ribbon_RPAB4": 12,
+   "PF01198 Ribosomal_L31e": 2,
+   "PF01478 Peptidase_A24": 2,
+   "K23255 archaeal type IV pilus assembly protein PilA": 2,
+   "PF10437 Lip_prot_lig_C": 1,
+   "PF07790 Pilin_N": 1,
+   "PF00149 Metallophos": 1,
+   "PF02881 SRP54_N": 1
+  },
+  "comb_A": {
+   "PF03604 Zn_ribbon_RPAB4": 12,
+   "K23255 archaeal type IV pilus assembly protein PilA": 7,
+   "PF13385 Laminin_G_3": 4,
+   "PF01248 Ribosomal_L7Ae": 3,
+   "PF01478 Peptidase_A24": 2,
+   "PF01198 Ribosomal_L31e": 1,
+   "PF10633 NPCBM_assoc": 1,
+   "K02107 V/A-type H+/Na+-transporting ATPase subunit G/H": 1
+  }
+ },
+ "control_false_labels": {
+  "list_Z": {
+   "PF01020 Ribosomal_L40e": 2,
+   "PF01655 Ribosomal_L32e": 2,
+   "K02928 K02928": 1,
+   "K02875 large subunit ribosomal protein L14e": 1,
+   "PF01283 Ribosomal_S26e": 1,
+   "PF00935 Ribosomal_L44": 1,
+   "PF00467 KOW": 1,
+   "PF07754 HVO_2753_ZBP": 1
+  },
+  "list_A": {
+   "PF01020 Ribosomal_L40e": 9,
+   "K02875 large subunit ribosomal protein L14e": 3,
+   "K02928 K02928": 1,
+   "PF00935 Ribosomal_L44": 1
+  },
+  "slot_Z": {
+   "K02875 large subunit ribosomal protein L14e": 3,
+   "PF01020 Ribosomal_L40e": 2,
+   "PF02482 Ribosomal_S30AE": 2,
+   "K02928 K02928": 1,
+   "PF02686 GatC": 1,
+   "PF01283 Ribosomal_S26e": 1,
+   "PF00935 Ribosomal_L44": 1
+  },
+  "slot_A": {
+   "PF01020 Ribosomal_L40e": 7,
+   "K02875 large subunit ribosomal protein L14e": 3,
+   "PF01283 Ribosomal_S26e": 2,
+   "PF02482 Ribosomal_S30AE": 2,
+   "PF00935 Ribosomal_L44": 1
+  },
+  "comb_Z": {
+   "PF01282 Ribosomal_S24e": 1,
+   "PF01780 Ribosomal_L37ae": 1,
+   "K02875 large subunit ribosomal protein L14e": 1,
+   "PF00935 Ribosomal_L44": 1,
+   "PF00467 KOW": 1,
+   "K02928 K02928": 1,
+   "PF01020 Ribosomal_L40e": 1
+  },
+  "comb_A": {
+   "PF01020 Ribosomal_L40e": 6,
+   "K02875 large subunit ribosomal protein L14e": 3,
+   "PF00935 Ribosomal_L44": 1,
+   "PF02482 Ribosomal_S30AE": 1
+  }
+ },
+ "core_labels": 223,
+ "counts": {
+  "verified": 2904,
+  "unverified": 307,
+  "ambiguous": 20,
+  "negatives": 2174,
+  "controls": 11904,
+  "controls_verified_matched": 8474
+ }
+}

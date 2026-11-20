@@ -200,11 +200,11 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
 
 <header>
   <div class="eyebrow">ELSA redesign · status report · started 13 November 2026</div>
-  <h1>Conserved gene neighbourhoods as words: where the new method stands</h1>
+  <h1>Conserved gene neighborhoods as words: where the new method stands</h1>
   <p class="dateline">DPANN archaea · 3,564 genomes · 3,585,303 genes · protein embeddings from ESM++ small · scored on even-numbered genomes, every setting fixed beforehand on odd-numbered genomes</p>
-  <p class="note">Updated 19 November, 17:25 UTC. Newest: the third test on untouched data (842 complete GTDB genomes) passed all five bars set beforehand; it has its own section. Also 19 November: the audit of the bacterial ribosomal failures is in the second-test section. Newest: the second test on untouched data (SR-VP genome bins) and the first (the lut set), each in its own section below. From 13 November: an adaptive pair distance brings the bond tree level with the reference engine on Spacedust's benchmark (+0.164) while keeping all seven DPANN bars. Before that: the all-bars configuration scored on Spacedust's benchmark, and the measured cost of embedding lists. Earlier: the bond tree over neighbour-list bonds clears all seven DPANN bars. Also added today: first results of the long-locus redesign (the bond tree), results on a second dataset (Spacedust's benchmark) and the run of the closest published method. Earlier today: the alignment control, the junction-phrase reading and the prior-work check.</p>
+  <p class="note">Updated 20 November, 23:55 UTC. Newest: the bond tree names core genes that annotation misses, giving the right family to 81.5% of 2,904 unannotated core genes on DPANN; see the section on dark core genes. From 19 November: the third test on untouched data (842 complete GTDB genomes) passed all five bars set beforehand; it has its own section. Also 19 November: the audit of the bacterial ribosomal failures is in the second-test section. Newest: the second test on untouched data (SR-VP genome bins) and the first (the lut set), each in its own section below. From 13 November: an adaptive pair distance brings the bond tree level with the reference engine on Spacedust's benchmark (+0.164) while keeping all seven DPANN bars. Before that: the all-bars configuration scored on Spacedust's benchmark, and the measured cost of embedding lists. Earlier: the bond tree over neighbor-list bonds clears all seven DPANN bars. Also added today: first results of the long-locus redesign (the bond tree), results on a second dataset (Spacedust's benchmark) and the run of the closest published method. Earlier today: the alignment control, the junction-phrase reading and the prior-work check.</p>
   <nav class="toc" aria-label="Sections">
-    <a href="#summary">Summary</a><a href="#untouched">Untouched test 1</a><a href="#untouched2">Untouched test 2</a><a href="#untouched3">Untouched test 3</a><a href="#benchmark">Reading the benchmark</a><a href="#scorecard">Scorecard</a><a href="#algorithm">The algorithm</a><a href="#ingredients">What each part contributes</a><a href="#gaps">The two missing bars</a><a href="#second">Second dataset</a><a href="#vectors">Loci as vectors</a><a href="#embeddings">What embeddings add</a><a href="#biology">Screen for new complexes</a><a href="#aside">Set aside</a><a href="#prior">Prior work</a><a href="#open">Open items</a>
+    <a href="#summary">Summary</a><a href="#untouched">Untouched test 1</a><a href="#untouched2">Untouched test 2</a><a href="#untouched3">Untouched test 3</a><a href="#slotrescue">Dark core genes</a><a href="#benchmark">Reading the benchmark</a><a href="#scorecard">Scorecard</a><a href="#algorithm">The algorithm</a><a href="#ingredients">What each part contributes</a><a href="#gaps">The two missing bars</a><a href="#second">Second dataset</a><a href="#vectors">Loci as vectors</a><a href="#embeddings">What embeddings add</a><a href="#biology">Screen for new complexes</a><a href="#aside">Set aside</a><a href="#prior">Prior work</a><a href="#open">Open items</a>
   </nav>
 </header>
 
@@ -213,20 +213,21 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <div class="cards">
     <div class="card"><div class="k">Gene identity from protein families, read with phrases</div><div class="v">6 of 7 bars</div><div class="d">Misses CRISPR-Cas: F1 0.395 against 0.479 for the reference.</div></div>
     <div class="card"><div class="k">Gene identity from embeddings alone</div><div class="v">6 of 7 bars</div><div class="d">Misses whole ribosomal loci: 1,172 resolved against a bar of 1,400.</div></div>
-    <div class="card"><div class="k">All seven bars in one configuration</div><div class="v">7 of 7</div><div class="d">The bond tree over neighbour-list bonds clears every DPANN bar. On the first untouched test set the embedding-list tree then passed all four criteria written down beforehand.</div></div>
+    <div class="card"><div class="k">All seven bars in one configuration</div><div class="v">7 of 7</div><div class="d">The bond tree over neighbor-list bonds clears every DPANN bar. On the first untouched test set the embedding-list tree then passed all four criteria written down beforehand.</div></div>
   </div>
   <ul class="points col">
     <li><strong>First test on untouched data (19 November).</strong> Two configurations were frozen as selected on DPANN and run once on 1,032 genomes built around the lanthanide <em>lut</em> cluster. The bond tree on embedding lists scores F1 0.906 on the lut loci, resolves 811 of 858 ribosomal runs and holds all 80 complete clusters. The bond tree on protein families scores F1 0.768 and misses one of its four bars. Both beat the reference engine; the published synton pipeline finds nothing.</li>
     <li><strong>Second test on untouched data (19 November).</strong> On 994 SR-VP genome bins the embedding-list tree scores DefenseFinder F1 0.882 and TXSScan F1 0.754, above the reference engine on every curated measure. It recovers 802 of 803 ribosomal runs and resolves 528 under the standing rule, short of the bar set beforehand. A case-by-case audit traces 256 of the 268 unresolved bacterial runs to the benchmark's definition of a run, and none to rearrangement.</li>
     <li><strong>Third test on untouched data (19 November): passed.</strong> The ribosomal definition, the configuration and five pass bars were frozen before 842 complete GTDB genomes were selected. The embedding-list tree resolves 666 of 688 bacterial runs (96.8%) and 110 of 113 archaeal runs (97.3%), 106 more than the reference engine [+86, +126], and passes all five bars.</li>
+    <li><strong>Naming genes that annotation misses (20 November, development data).</strong> A separate DPANN study found core genes that Pfam and KOfam fail to detect, each sitting in its usual place in the genome. The bond tree gives the right family to 2,368 of 2,904 of them (81.5%) by reading the annotation of the genes each one is bonded to in other lineages. It gives a core-gene name to 11 of 8,474 matched unannotated control genes (0.13%).</li>
     <li><strong>The method reads a genome as text and learns its words.</strong> A word is a run of adjacent genes that recurs in more independent lineages than random gene order predicts. One statistic scores every merge, its threshold comes from shuffled genomes, and the output needs no hand-set reading rules.</li>
     <li><strong>With MMseqs2 families as gene identity, it outscores the reference engine</strong> by +0.181 [+0.158, +0.204] on the overall score and draws tighter loci. It loses CRISPR-Cas systems, because Cas genes are spread over many small families.</li>
-    <li><strong>With embeddings as gene identity and no families, CRISPR-Cas comes back</strong> (−0.010 against the reference, inside tolerance) and the overall score stays above the reference (+0.048 [+0.027, +0.069]). Long conserved neighbourhoods such as the ribosomal locus come out in pieces.</li>
+    <li><strong>With embeddings as gene identity and no families, CRISPR-Cas comes back</strong> (−0.010 against the reference, inside tolerance) and the overall score stays above the reference (+0.048 [+0.027, +0.069]). Long conserved neighborhoods such as the ribosomal locus come out in pieces.</li>
     <li><strong>A variant that measures independence from shared gene order is the first embedding-only output to beat the reference on CRISPR-Cas</strong> (+0.038 [+0.028, +0.049]). It runs from genomes alone, with no taxonomy and no genome grouping.</li>
-    <li><strong>Alignment hits serve as gene identity as well as embeddings do.</strong> MMseqs2 all-against-all hits, used as neighbour lists in the identical procedure, score level with the calibrated embedding lists (difference −0.007 [−0.026, +0.014]). The gain over families comes from dropping the hard family partition.</li>
+    <li><strong>Alignment hits serve as gene identity as well as embeddings do.</strong> MMseqs2 all-against-all hits, used as neighbor lists in the identical procedure, score level with the calibrated embedding lists (difference −0.007 [−0.026, +0.014]). The gain over families comes from dropping the hard family partition.</li>
     <li><strong>A locus also works as a single vector.</strong> The mean of its genes' embeddings assigns the DefenseFinder system type with 0.970 accuracy and searches 500,842 loci in 0.03 s per query.</li>
     <li><strong>On a second dataset with long loci, the nested parse loses to simple linking.</strong> On Spacedust's benchmark of 207 biosynthetic regions, family words tie Spacedust on excess (+0.080 against +0.065) and trail on F1 (0.48 against 0.68). Connected runs over the same pair statistic score +0.153.</li>
-    <li><strong>A redesign that grows loci by pairwise bonds fixes the long-locus weakness.</strong> With family identity it resolves 1,598 of 1,686 ribosomal runs (reference 1,512) and scores +0.126 on Spacedust's benchmark, above Spacedust. With bonds computed from neighbour lists it clears all seven DPANN bars in one output: 1,549 runs resolved, CRISPR-Cas within 0.004 of the reference, overall score +0.186 [+0.165, +0.206]. These are development results.</li>
+    <li><strong>A redesign that grows loci by pairwise bonds fixes the long-locus weakness.</strong> With family identity it resolves 1,598 of 1,686 ribosomal runs (reference 1,512) and scores +0.126 on Spacedust's benchmark, above Spacedust. With bonds computed from neighbor lists it clears all seven DPANN bars in one output: 1,549 runs resolved, CRISPR-Cas within 0.004 of the reference, overall score +0.186 [+0.165, +0.206]. These are development results.</li>
     <li><strong>The reference engine remains the default in the repository.</strong> The scorecard and algorithm sections below describe DPANN; the second dataset has its own section.</li>
   </ul>
 </section>
@@ -273,7 +274,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <li><strong>Ribosomal runs: failed.</strong> The bars were 602 runs resolved and 70% of bacterial runs. The primary resolves 528, and 59% of bacterial runs. Nearly every run is recovered (802 of 803), and archaeal runs are nearly all resolved (138 of 145).</li>
     <li><strong>Why, after a case-by-case audit.</strong> The benchmark's definition of a ribosomal run is the cause in 256 of the 268 unresolved bacterial runs. A run is a chain of genes with ribosomal-protein domains, broken by three unmarked genes in a row. In bacteria secY, adk, map and infA sit between two ribosomal operons, so the run stops there. In 236 of these the method reports the whole cluster, which the literature treats as one; in the other 20 the run itself spans two separate units. Rearrangement accounts for none of the failures, and 4 runs extend past the cluster.</li>
     <li><strong>Under a cluster-level definition</strong> (ribosomal proteins plus the established cluster members, written after the fact): 651 of 658 bacterial runs and 140 of 145 archaeal runs resolve, against 580 and 120 for the reference engine, with a chance level near 1%. Because this definition came after the result, it needs declaring in advance on new data before it can be claimed.</li>
-    <li><strong>Check of that definition on the two earlier datasets</strong> (definition frozen first). On the lut set, all bacteria, it holds: 835 of 858 runs resolve, up from 811, against 768 for the reference engine. On DPANN, all archaea, it does worse than the standing rule (1,491 against 1,542 of 1,686): the corrected run ignores strand and reaches across a strand change into a neighbouring block, while the method stops there. The cluster-level definition is sound for bacteria; for archaea the standing run remains the better target.</li>
+    <li><strong>Check of that definition on the two earlier datasets</strong> (definition frozen first). On the lut set, all bacteria, it holds: 835 of 858 runs resolve, up from 811, against 768 for the reference engine. On DPANN, all archaea, it does worse than the standing rule (1,491 against 1,542 of 1,686): the corrected run ignores strand and reaches across a strand change into a neighboring block, while the method stops there. The cluster-level definition is sound for bacteria; for archaea the standing run remains the better target.</li>
     <li><strong>A strand-aware version serves both domains</strong> (development numbers). The run breaks wherever two consecutive members sit on opposite strands. The embedding-list tree then resolves 834 of 858 runs on the lut set, 651 of 658 bacterial runs on SR-VP, and 1,546 of 1,686 on DPANN, against 764, 581 and 1,499 for the reference engine. It narrowly misses two of the four soundness criteria written beforehand, so it is the best candidate and stays a candidate.</li>
     <li><strong>Order of the two configurations.</strong> The embedding-list tree leads again, as on the lut set.</li>
   </ul>
@@ -298,16 +299,42 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <li><strong>What is scored.</strong> The conserved ribosomal-protein gene cluster: the chain of ribosomal proteins and established cluster members around each run, broken wherever two consecutive members sit on opposite strands. The definition, its scorer and the bars were committed on 19 November before the genomes were chosen, and every score was computed once.</li>
     <li><strong>The 25 runs the primary leaves unresolved.</strong> Five are single loci that the method splits; the three archaeal ones are all cuts inside the S10 operon. In 17 bacterial runs the target chain joins two or more units that the output reports as separate loci; in 11 of these the audit flags the gene at the junction (a methyltransferase between L7/L12 and rpoB, a transposase beside tufA), and those labels await a hand check. The remaining three are one each of: a correct locus larger than the target, a locus that extends past the cluster, and a fitting locus passed over by the scorer.</li>
     <li><strong>Under the older run definition</strong> (ribosomal-protein domains only) the primary resolves 692 of 801 runs, the secondary 683 and the reference engine 298. The cluster-level definition lifts the reference engine most (298 to 670), because its loci are larger; the primary's margin is +394 runs under the older rule and +106 under the frozen one.</li>
-    <li><strong>The two configurations.</strong> They are level on bacteria (666 and 659). The embedding-list tree leads on archaea (110 against 102), and the gap is widest in Methanobacteriota (12 of 12 against 3 of 12).</li>
+    <li><strong>The two configurations.</strong> They are level on bacteria (666 and 659). The embedding-list tree leads on archaea (110 against 102), and the whole gap is Methanobacteriota (12 of 12 against 3 of 12): seven of the family-bond tree's nine misses there are the same cut, between the cbf5 and S13 genes. In all other archaea the two resolve 98 and 99 of 101 runs.</li>
     <li><strong>Where the remaining bacterial misses sit.</strong> Bacillota: 89 of 105 runs resolved by the primary, against 104 of 104 in Pseudomonadota and 81 of 83 in Bacteroidota.</li>
     <li><strong>Annotation.</strong> Ribosomal marking and cluster-member annotation ran through Aksha. On a 20-genome sample of the second test set the rebuilt run table equals the stored one gene for gene.</li>
+  </ul>
+</section>
+
+<section id="slotrescue">
+  <h2>Naming core genes that annotation misses</h2>
+  <p class="lead col">A gene that sits in a conserved position and is bonded to annotated genes in other lineages can take its name from them. On DPANN this gives the right family to 81.5% of a set of unannotated core genes, and gives a core-gene name to 0.13% of control genes.</p>
+  <div class="scroll">
+  <table class="plain" style="min-width:780px">
+    <thead><tr><th>Gene set</th><th>Genes</th><th>Position-based call, embedding lists</th><th>Position-based call, alignment lists</th><th>Ten nearest list neighbors (embedding / alignment)</th></tr></thead>
+    <tbody>
+      <tr><td>Unannotated core genes with a well-supported study call</td><td>2,904</td><td>2,368 (81.5%)</td><td>2,134 (73.5%)</td><td>51.8% / 47.3%</td></tr>
+      <tr><td>Of those, genes with no Pfam hit and no matching KO</td><td>2,332</td><td>77.1%</td><td>67.1%</td><td>40.7% / 34.9%</td></tr>
+      <tr><td>Unannotated gene in the eL39 position</td><td>99</td><td>97</td><td>40</td><td>17 / 5</td></tr>
+      <tr><td>Genes found only by DPANN-specific ribosomal profiles</td><td>1,191</td><td>92.2%</td><td>91.9%</td><td>30.1% / 31.7%</td></tr>
+      <tr><td>Matched control genes given a core-gene name</td><td>8,474</td><td>11 (0.13%)</td><td>15 (0.18%)</td><td>0.13% / 0.17%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <ul class="points col">
+    <li><strong>The truth set.</strong> A separate study of DPANN archaea screened for core genes that look lost. At 30 gene positions it found an unannotated gene in the expected place, and for most of them its evidence says that gene is the missing one (examples: SecE, eL39, Rpb4, uL29, V-ATPase subunit E). Those calls, carried to every genome with the same arrangement, give 2,904 genes with a well-supported call. The study's evidence is per position, from a sample of 60 proteins, so single genes are not individually confirmed.</li>
+    <li><strong>The position-based call.</strong> The gene lies inside a locus and is bonded. Its bonded partners in other lineages vote with their Pfam or KO annotation, one vote per genome, and a name needs at least two votes.</li>
+    <li><strong>Controls.</strong> Three unannotated genes of matched length per truth gene, from the same genome, outside conserved positions. 0.13% receive a core-gene name. A further 8% receive some other name, which this test leaves unjudged.</li>
+    <li><strong>Embedding lists against alignment lists.</strong> Embedding lists name 8.1 points more [+7.0, +9.2], and 10.0 points more [+8.7, +11.5] among genes with no Pfam hit and no matching KO. That second group was defined after the first numbers were read.</li>
+    <li><strong>Where the result comes from.</strong> A vote over a gene's whole neighbor list, ignoring position, names the same number of genes correctly and gives a core-gene name to 1.99% of controls. Depth of the list supplies the hits; position cuts false core names 15-fold. This comparison was added after the planned numbers were read.</li>
+    <li><strong>One disagreement with the study.</strong> At one position the study judged the unannotated gene to be something other than the missing gene (VIT1); every route here names 20 of its 22 instances VIT1. Both calls are unverified.</li>
+    <li><strong>Status.</strong> A development result on DPANN, with the pass criterion (at least 50% named, at most 2% false core names) written down before scoring. Naming all 1.4 million DPANN genes that lack a Pfam hit would take about 15 minutes of one 24-CPU job; that pass is unbuilt.</li>
   </ul>
 </section>
 
 <section id="benchmark">
   <h2>Reading the benchmark</h2>
   <dl class="defs col">
-    <dt>Curated systems</dt><dd>Three purpose-built callers supply the truth set: DefenseFinder (defence systems), TXSScan (secretion systems) and CRISPRCasTyper (CRISPR-Cas loci). Each call with at least two member genes is one instance.</dd>
+    <dt>Curated systems</dt><dd>Three purpose-built callers supply the truth set: DefenseFinder (defense systems), TXSScan (secretion systems) and CRISPRCasTyper (CRISPR-Cas loci). Each call with at least two member genes is one instance.</dd>
     <dt>F1</dt><dd>For each instance, the best-overlapping predicted locus is scored at the gene level (harmonic mean of the share of the instance it covers and the share of the locus that belongs to the instance), then averaged over instances.</dd>
     <dt>Excess score</dt><dd>F1 minus the F1 the same loci earn when placed at random positions. The overall score is the DefenseFinder excess plus the TXSScan excess. It rewards loci that fit systems and gives no credit for covering most of the genome.</dd>
     <dt>Ribosomal locus</dt><dd>1,686 runs of at least 16 ribosomal-protein genes, a check that needs no curated caller. A run is <em>recovered</em> when one locus covers half of it and <em>resolved</em> when one locus covers 80% of it and at least 80% of that locus lies inside the run. 114 runs in the family Parvarchaeaceae are tracked separately, because they are the first to be lost when evidence is counted per lineage.</dd>
@@ -361,7 +388,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
           <td class="ok">+0.157<span class="mk">✓</span></td><td class="ok">−0.013<span class="mk">✓</span></td><td class="ok">+0.152<span class="mk">✓</span></td><td class="no">−0.060<span class="mk">✗</span></td><td class="ok">1,680<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,598<span class="mk">✓</span></td><td class="sum">6 / 7</td></tr>
         <tr><td>Bond tree, every node kept</td>
           <td class="ok">+0.143<span class="mk">✓</span></td><td class="ok">+0.028<span class="mk">✓</span></td><td class="ok">+0.153<span class="mk">✓</span></td><td class="no">−0.028<span class="mk">✗</span></td><td class="ok">1,680<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,598<span class="mk">✓</span></td><td class="sum">6 / 7</td></tr>
-        <tr class="grp"><th colspan="9">Bond tree, gene identity from neighbour lists, no families (development result; difference from the reference)</th></tr>
+        <tr class="grp"><th colspan="9">Bond tree, gene identity from neighbor lists, no families (development result; difference from the reference)</th></tr>
         <tr><td>Alignment lists, genome groups <small>selected on odd genomes</small></td>
           <td class="ok">+0.186<span class="mk">✓</span><small>[+0.165, +0.206]</small></td><td class="ok">+0.079<span class="mk">✓</span></td><td class="ok">+0.203<span class="mk">✓</span></td><td class="ok">−0.004<span class="mk">✓</span><small>[−0.015, +0.007]</small></td><td class="ok">1,681<span class="mk">✓</span></td><td class="ok">114<span class="mk">✓</span></td><td class="ok">1,549<span class="mk">✓</span></td><td class="sum">7 / 7</td></tr>
         <tr><td>Alignment lists, shared gene order</td>
@@ -380,7 +407,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <figure class="fig">
       <h3>Family identity trades CRISPR-Cas for overall score; embedding identity holds both</h3>
       <div id="c-plane"></div>
-      <figcaption>Each point is one method on even-numbered genomes, read at the word level without phrases. The shaded corner is where the overall-score bar and the CRISPR-Cas bar are both met. The grey trail follows family words as the unit of evidence coarsens from single genomes to genera to genome groups. Point G is the control with alignment hits as lists; it lands beside the embedding point E. Ribosomal resolution, the third axis, is in the next panel.</figcaption>
+      <figcaption>Each point is one method on even-numbered genomes, read at the word level without phrases. The shaded corner is where the overall-score bar and the CRISPR-Cas bar are both met. The gray trail follows family words as the unit of evidence coarsens from single genomes to genera to genome groups. Point G is the control with alignment hits as lists; it lands beside the embedding point E. Ribosomal resolution, the third axis, is in the next panel.</figcaption>
     </figure>
     <figure class="fig">
       <h3>Ribosomal runs resolved, of 1,686</h3>
@@ -406,7 +433,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
       <text class="d-h" x="30" y="212">Protein embeddings</text><text class="d-t" x="30" y="232">ESM++ small, whitened</text>
 
       <rect class="bx" x="246" y="126" width="200" height="76" rx="6"/>
-      <text class="d-h" x="260" y="150">Identity</text><text class="d-t" x="260" y="170">neighbour list per gene</text><text class="d-n" x="260" y="188">(or protein families)</text>
+      <text class="d-h" x="260" y="150">Identity</text><text class="d-t" x="260" y="170">neighbor list per gene</text><text class="d-n" x="260" y="188">(or protein families)</text>
       <rect class="bx" x="246" y="232" width="200" height="76" rx="6"/>
       <text class="d-h" x="260" y="256">Independence</text><text class="d-t" x="260" y="276">genome groups</text><text class="d-n" x="260" y="294">(or shared gene order)</text>
 
@@ -426,7 +453,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
       <rect class="bx" x="790" y="40" width="174" height="56" rx="6"/>
       <text class="d-h" x="804" y="64">Words</text><text class="d-t" x="804" y="84">nested runs of genes</text>
       <rect class="bx" x="790" y="124" width="174" height="72" rx="6"/>
-      <text class="d-h" x="804" y="148">Phrases</text><text class="d-t" x="804" y="168">words joined where</text><text class="d-t" x="804" y="184">neighbourhoods cohere</text>
+      <text class="d-h" x="804" y="148">Phrases</text><text class="d-t" x="804" y="168">words joined where</text><text class="d-t" x="804" y="184">neighborhoods cohere</text>
       <rect class="bx" x="790" y="224" width="174" height="56" rx="6"/>
       <text class="d-h" x="804" y="248">Locus vectors</text><text class="d-t" x="804" y="268">mean of gene vectors</text>
       <rect class="bx" x="790" y="308" width="174" height="38" rx="6"/>
@@ -452,16 +479,16 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <ol class="steps">
     <li><div class="body">
       <h3>Give every gene an identity</h3>
-      <p>The method needs to recognise "the same gene" in another genome. Two sources are described here. A third, alignment hits used as lists, is the control reported under <a href="#embeddings">What embeddings add</a>.</p>
+      <p>The method needs to recognize "the same gene" in another genome. Two sources are described here. A third, alignment hits used as lists, is the control reported under <a href="#embeddings">What embeddings add</a>.</p>
       <div class="two">
         <div class="opt"><h4>Protein families</h4><p>MMseqs2 clusters (E ≤ 1e-3, 50% coverage), with families of fewer than three members joined to their best hit's family. Identity is a label, and two genes match when their labels are equal.</p></div>
-        <div class="opt"><h4>Embedding neighbour lists (no families)</h4><p>Each protein's ESM++ small embedding is whitened so that cosine similarity is informative. For a gene and another genome, the best match enters the gene's list when it stands at least 10.6 standard deviations above that gene's similarities to the rest of that genome (about 1% false matches against non-homologs; cosine near 0.50). The median list holds 437 genes; 7% of genes have an empty list.</p></div>
+        <div class="opt"><h4>Embedding neighbor lists (no families)</h4><p>Each protein's ESM++ small embedding is whitened so that cosine similarity is informative. For a gene and another genome, the best match enters the gene's list when it stands at least 10.6 standard deviations above that gene's similarities to the rest of that genome (about 1% false matches against non-homologs; cosine near 0.50). The median list holds 437 genes; 7% of genes have an empty list.</p></div>
       </div>
     </div></li>
 
     <li><div class="body">
-      <h3>Count how many independent lineages hold two neighbours together</h3>
-      <p>Every pair of neighbouring units on a contig is a candidate, with up to two genes between them, in either order and on either strand. Its support <span class="m">n</span> is the number of independent lineages in which the same two units are again neighbours. With family labels this is a sort over label pairs. With neighbour lists, a lineage supports the pair when an entry of one gene's list and an entry of the other's lie within two genes of each other on one contig.</p>
+      <h3>Count how many independent lineages hold two neighbors together</h3>
+      <p>Every pair of neighboring units on a contig is a candidate, with up to two genes between them, in either order and on either strand. Its support <span class="m">n</span> is the number of independent lineages in which the same two units are again neighbors. With family labels this is a sort over label pairs. With neighbor lists, a lineage supports the pair when an entry of one gene's list and an entry of the other's lie within two genes of each other on one contig.</p>
       <figure class="fig diagram">
         <h3>What counts as support for a pair</h3>
         <div class="scroll">
@@ -530,7 +557,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <li><div class="body">
       <h3>Commit the best merges and repeat</h3>
       <p>Candidates are taken in decreasing Λ. A merge is committed when its genes are still unclaimed, so each gene belongs to one word. A committed pair, together with any one or two genes sitting between its halves, becomes a single unit that can merge again in the next round. Rounds continue until no pair passes (7 to 25 rounds observed). The result is a parse of every genome into nested words and background genes.</p>
-      <p>The two identity sources differ in what a word <em>is</em>. With family labels, a word is an exact composition: the pair of its children's labels. With neighbour lists, a word carries the set of spans in other genomes that supported its creation, so each instance may have a different composition and different inserted genes. A word then grows by local alignment against all other genomes at once.</p>
+      <p>The two identity sources differ in what a word <em>is</em>. With family labels, a word is an exact composition: the pair of its children's labels. With neighbor lists, a word carries the set of spans in other genomes that supported its creation, so each instance may have a different composition and different inserted genes. A word then grows by local alignment against all other genomes at once.</p>
       <figure class="fig diagram">
         <h3>How a word grows, and where phrases join words</h3>
         <div class="scroll">
@@ -574,23 +601,23 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
 
     <li><div class="body">
       <h3>Read loci from the parse</h3>
-      <p>The words, together with the sub-words nested inside them, are the loci. One further level handles long conserved neighbourhoods, which differ in composition from lineage to lineage and therefore parse as several words in a row.</p>
-      <p><strong>Phrases.</strong> Consecutive words at most two genes apart are joined when the boundary between them is cohesive. Cohesion asks whether the homologs of a boundary gene keep the same kind of neighbour on the side facing the boundary: it is the mean pairwise cosine among those neighbours' embeddings, and a boundary takes the lower value of its two genes. Words are joined at cohesion ≥ 0.1, a value selected on odd-numbered genomes for six of nine vocabularies.</p>
+      <p>The words, together with the sub-words nested inside them, are the loci. One further level handles long conserved neighborhoods, which differ in composition from lineage to lineage and therefore parse as several words in a row.</p>
+      <p><strong>Phrases.</strong> Consecutive words at most two genes apart are joined when the boundary between them is cohesive. Cohesion asks whether the homologs of a boundary gene keep the same kind of neighbor on the side facing the boundary: it is the mean pairwise cosine among those neighbors' embeddings, and a boundary takes the lower value of its two genes. Words are joined at cohesion ≥ 0.1, a value selected on odd-numbered genomes for six of nine vocabularies.</p>
     </div></li>
 
     <li><div class="body">
-      <h3>Summarise each locus as one vector</h3>
-      <p>The mean of the whitened embeddings of a locus's genes is its vector. Nearest neighbours among these vectors give the locus a type, clustering them gives a map of all loci, and an index over them answers searches. Results are in <a href="#vectors">Loci as vectors</a>.</p>
+      <h3>Summarize each locus as one vector</h3>
+      <p>The mean of the whitened embeddings of a locus's genes is its vector. Nearest neighbors among these vectors give the locus a type, clustering them gives a map of all loci, and an index over them answers searches. Results are in <a href="#vectors">Loci as vectors</a>.</p>
     </div></li>
   </ol>
 
   <div class="col stack">
     <h3>Cost</h3>
-    <p>With family labels, one full run over 3.59 million genes takes 64 seconds on one core and 1.3 GB of memory; the shared-gene-order matrix adds under 20 seconds. With neighbour lists, building the lists takes 279 seconds and the merge rounds 529 seconds on 64 cores, excluding embedding and the similarity table. Work grows linearly with the number of genes, and no pair of genomes is ever aligned.</p>
+    <p>With family labels, one full run over 3.59 million genes takes 64 seconds on one core and 1.3 GB of memory; the shared-gene-order matrix adds under 20 seconds. With neighbor lists, building the lists takes 279 seconds and the merge rounds 529 seconds on 64 cores, excluding embedding and the similarity table. Work grows linearly with the number of genes, and no pair of genomes is ever aligned.</p>
     <h3>What it replaces</h3>
-    <p>The reference engine takes pairs of family labels within three genes, counts the GTDB genera holding each pair, and tests that count against the same chance expectation with a Poisson tail. Each boundary between genes receives the strongest support of any significant pair spanning it. Loci are then read off by rule: runs of supported boundaries form a neighbourhood, which is cut where family co-occurrence modules change and trimmed at its ends to give a nested core. Those rules carry fixed settings (support level, module resolution, trimming factor) and the count needs a taxonomy.</p>
+    <p>The reference engine takes pairs of family labels within three genes, counts the GTDB genera holding each pair, and tests that count against the same chance expectation with a Poisson tail. Each boundary between genes receives the strongest support of any significant pair spanning it. Loci are then read off by rule: runs of supported boundaries form a neighborhood, which is cut where family co-occurrence modules change and trimmed at its ends to give a nested core. Those rules carry fixed settings (support level, module resolution, trimming factor) and the count needs a taxonomy.</p>
     <h3>What the vocabulary looks like</h3>
-    <p>With family labels: 25,018 word types and 479,370 top-level instances covering 42% of genes; median span 2 genes, 90th percentile 5, longest 36, nesting up to 7 levels. With neighbour lists: 516,845 top-level instances covering 57% of genes, 99th-percentile span 17. Shuffled genomes run through the full embedding procedure yield 1.6% as many word instances. The reference engine places 71% of genes in loci.</p>
+    <p>With family labels: 25,018 word types and 479,370 top-level instances covering 42% of genes; median span 2 genes, 90th percentile 5, longest 36, nesting up to 7 levels. With neighbor lists: 516,845 top-level instances covering 57% of genes, 99th-percentile span 17. Shuffled genomes run through the full embedding procedure yield 1.6% as many word instances. The reference engine places 71% of genes in loci.</p>
   </div>
 </section>
 
@@ -601,11 +628,11 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <thead><tr><th>Ingredient</th><th>Test</th><th>Effect on even-numbered genomes</th></tr></thead>
     <tbody>
       <tr><td>Counting lineages</td><td>Family words with every genome as its own unit</td><td>Overall score −0.204 [−0.224, −0.183]. In the embedding run, uncorrected counting gives −0.216 and a longest word of 842 genes.</td></tr>
-      <tr><td>Threshold from shuffles</td><td>Same procedure on shuffled gene order</td><td>False discoveries fall about 25-fold per 2 nats with families and 10-fold with neighbour lists. τ = 10, 8 or 6 depending on the variant, always from the 1% rule.</td></tr>
+      <tr><td>Threshold from shuffles</td><td>Same procedure on shuffled gene order</td><td>False discoveries fall about 25-fold per 2 nats with families and 10-fold with neighbor lists. τ = 10, 8 or 6 depending on the variant, always from the 1% rule.</td></tr>
       <tr><td>One objective in place of reading rules</td><td>Family words against the reference engine</td><td>Overall score +0.197 [+0.174, +0.221]; TXSScan F1 0.679 against 0.548. The median locus matched to a DefenseFinder system consists only of system genes (precision 1.00 against 0.75; TXSScan 0.80 against 0.44). Part of the gain is coverage: words hold 42% of genes, the reference 71%.</td></tr>
       <tr><td>Phrases</td><td>Family words with and without phrases</td><td>Ribosomal runs resolved 501 → 1,420; Parvarchaeaceae recovered 11 → 114. Cost: overall score −0.016, TXSScan F1 −0.043.</td></tr>
       <tr><td>Shared gene order as the independence measure</td><td>Against genome groups, family words</td><td>CRISPR-Cas F1 0.406 → 0.452; Parvarchaeaceae recovered 11 → 82 at the word level. Overall score −0.050 [−0.066, −0.034].</td></tr>
-      <tr><td>Embedding neighbour lists as identity</td><td>Against family labels, genome groups</td><td>CRISPR-Cas F1 0.406 → 0.469; Cas genes outside every word 45.5% → 31.7%. Overall score 0.624 → 0.475 and TXSScan F1 0.679 → 0.602: family words remain stronger on those two.</td></tr>
+      <tr><td>Embedding neighbor lists as identity</td><td>Against family labels, genome groups</td><td>CRISPR-Cas F1 0.406 → 0.469; Cas genes outside every word 45.5% → 31.7%. Overall score 0.624 → 0.475 and TXSScan F1 0.679 → 0.602: family words remain stronger on those two.</td></tr>
       <tr><td>Embeddings against alignment hits as the list source</td><td>MMseqs2 hits through the identical procedure</td><td>Overall score −0.007 [−0.026, +0.014] against calibrated embedding lists. Lists holding one match per genome recover all 114 Parvarchaeaceae runs; depth-limited lists recover 64 (embedding) and 78 (alignment).</td></tr>
     </tbody>
   </table>
@@ -617,17 +644,17 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <div class="two" style="max-width:none">
     <div class="opt">
       <h4>CRISPR-Cas with family identity</h4>
-      <p>Cas proteins are split across many small families, so the same Cas neighbourhood looks like different label pairs in different lineages and never accumulates support. 45.5% of Cas member genes sit outside every family word, against 21.2% for DefenseFinder systems and 19.9% for TXSScan systems.</p>
-      <p>The embeddings see through the split: a Cas gene's 1,000 nearest neighbours hold about 200 Cas genes from other families, against 2.7 for matched control genes. Identity has to be broad before the first merge. Grouping finished words into classes afterwards changes nothing (−0.003 [−0.007, +0.001]).</p>
+      <p>Cas proteins are split across many small families, so the same Cas neighborhood looks like different label pairs in different lineages and never accumulates support. 45.5% of Cas member genes sit outside every family word, against 21.2% for DefenseFinder systems and 19.9% for TXSScan systems.</p>
+      <p>The embeddings see through the split: a Cas gene's 1,000 nearest neighbors hold about 200 Cas genes from other families, against 2.7 for matched control genes. Identity has to be broad before the first merge. Grouping finished words into classes afterwards changes nothing (−0.003 [−0.007, +0.001]).</p>
     </div>
     <div class="opt">
       <h4>Ribosomal loci with embedding identity</h4>
-      <p>A word built from neighbour lists keeps only the instances in other genomes that match along its whole length, and that set shrinks with every merge: a median of 224 aligned spans at two genes, 9 at ten genes and 2 at twenty. Two failure modes follow, depending on the lists.</p>
-      <p>Depth-limited lists fragment long neighbourhoods: 322 of 598 unresolved ribosomal runs are under-covered. The calibrated one-match-per-genome lists do the opposite. Words span the whole ribosomal locus and continue into its conserved flanks, and 420 of 503 unresolved runs fall below 80% precision.</p>
+      <p>A word built from neighbor lists keeps only the instances in other genomes that match along its whole length, and that set shrinks with every merge: a median of 224 aligned spans at two genes, 9 at ten genes and 2 at twenty. Two failure modes follow, depending on the lists.</p>
+      <p>Depth-limited lists fragment long neighborhoods: 322 of 598 unresolved ribosomal runs are under-covered. The calibrated one-match-per-genome lists do the opposite. Words span the whole ribosomal locus and continue into its conserved flanks, and 420 of 503 unresolved runs fall below 80% precision.</p>
       <p>Joining words where the gene pair at the junction passes the merge test recovers all 1,686 runs and resolves 1,138, fewer than before. Recurrence is the only boundary signal the objective has, and conserved flanks recur too. The missing ingredient is a boundary signal: a cut where the aligned instances diverge in what flanks them, which is what cohesion measures.</p>
     </div>
   </div>
-  <p class="col">The two independence measures pull in opposite directions on these bars. Genome groups favour the overall score and long neighbourhoods; shared gene order favours CRISPR-Cas and rare systems. With family words and phrases, shared gene order reaches CRISPR-Cas F1 0.430 and 1,326 resolved runs, short of both bars at once.</p>
+  <p class="col">The two independence measures pull in opposite directions on these bars. Genome groups favor the overall score and long neighborhoods; shared gene order favors CRISPR-Cas and rare systems. With family words and phrases, shared gene order reaches CRISPR-Cas F1 0.430 and 1,326 resolved runs, short of both bars at once.</p>
 </section>
 
 <section id="second">
@@ -650,14 +677,14 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <h4>Redesign for long loci: the bond tree (development results)</h4>
     <p>A word has to recur with the same composition, which makes short loci precise and stalls long ones. The redesign drops word identity. Genes are linked by first-round significant bonds; each bonded run is split recursively at its weakest boundary, low-cohesion boundaries first, into a tree of nested intervals; nodes that pass the bond test as a whole are the loci.</p>
     <p><strong>DPANN:</strong> 1,598 of 1,686 ribosomal runs resolved, +86 [+60, +115] over the reference; overall score 0.584 against 0.427 for the reference and 0.624 for words; CRISPR-Cas F1 0.419, still below the bar. <strong>Spacedust's benchmark:</strong> +0.126, level with pair-linking, above Spacedust, below the reference engine.</p>
-    <p><strong>All seven DPANN bars in one output.</strong> The tree needs only first-round bonds, so those bonds can come from neighbour lists in place of families, and list identity no longer thins as loci grow. With MMseqs2 alignment lists and genome groups: 1,549 runs resolved (+37 [+7, +69] over the reference), CRISPR-Cas F1 0.475 (−0.004), overall score 0.613. Embedding lists clear every bar as well and differ from alignment lists only on CRISPR-Cas (−0.022).</p>
+    <p><strong>All seven DPANN bars in one output.</strong> The tree needs only first-round bonds, so those bonds can come from neighbor lists in place of families, and list identity no longer thins as loci grow. With MMseqs2 alignment lists and genome groups: 1,549 runs resolved (+37 [+7, +69] over the reference), CRISPR-Cas F1 0.475 (−0.004), overall score 0.613. Embedding lists clear every bar as well and differ from alignment lists only on CRISPR-Cas (−0.022).</p>
     <p><strong>The same configuration on Spacedust's benchmark, unchanged.</strong> With embedding lists it scores +0.111 [+0.072, +0.149] at F1 0.598: level with the family bond tree, above native Spacedust (+0.046 [+0.010, +0.082]) and below the reference engine (−0.073). The gap is on long regions: for regions of 11 or more genes its loci cover 62% of region genes against the engine's 89%. The engine used pairs up to 8 positions apart on this collection and the bonds used at most 2 genes between.</p>
     <p><strong>An adaptive pair distance closes that gap.</strong> Every pair within 8 positions is tested at the smallest window that contains it, so wider pairs need more support. With family bonds the tree then scores +0.164 [+0.125, +0.202] on Spacedust's benchmark at F1 0.667: statistically level with the reference engine (−0.020 [−0.054, +0.014]) and +0.099 over Spacedust. The same setting keeps all seven DPANN bars (1,594 ribosomal runs resolved), with CRISPR-Cas only just inside its bar (−0.019) and a lower overall score (0.513). Combining it with embedding-list bonds did not give one output that passes both tests: CRISPR-Cas keeps its margin (+0.012), but ribosomal runs resolved fall to 1,497 and the Spacedust score is +0.150, below the engine.</p>
     <p><strong>Standing candidates.</strong> Family bonds with the adaptive distance: all seven DPANN bars, 1,594 runs resolved, level with the engine on Spacedust's benchmark. Embedding-list bonds at the fixed distance: all seven DPANN bars with CRISPR-Cas margin, 1,542 runs resolved, +0.111 on Spacedust's benchmark. The next step is to freeze one and run it once on the untouched test sets.</p>
     <p><strong>Cost of the two list sources.</strong> Embedding lists for 4.2 M sequences took 57 minutes: two passes of about 20 minutes on one A5000 and 18 minutes on 64 CPUs. Alignment lists were projected at 12 to 18 hours on 64 CPUs. On DPANN the two score the same apart from CRISPR-Cas, so embeddings supply list identity at a small fraction of the cost.</p>
-    <p>Two parts of the first design failed. Cutting at low cohesion deletes real loci, because defence systems and biosynthetic regions have low cohesion inside; cohesion works as the order of splitting. A whole-locus recurrence test had nothing to calibrate against, since shuffled genomes produce almost no nodes.</p>
-    <p><strong>What the ribosomal benchmark can show.</strong> An oracle that reports each whole conserved neighbourhood resolves 1,507 runs under the standing definition, because 179 runs make up less than 80% of their own neighbourhood. The reference's 174 failures are 157 loci that extend past the run. Passing 1,507 needs a nested output that also holds the run-sized piece.</p>
-    <p><strong>Independent audit of the failures.</strong> A separate agent classified 120 sampled failures against a rubric written beforehand. It attributes about three quarters to the benchmark definition and one quarter to the method: reference 80% / 20%, family words with phrases 82% / 15%, embedding words 58% / 40%. One rubric rule was corrected after the fact, so these shares are post hoc. The commonest artefacts are loci that take in flanking families found beside ribosomal runs in many lineages (SecY in 274 groups), nearby ribosomal genes outside the run, and a scoring rule that picks the largest overlapping locus even when a nested locus fits the run. Under a definition that allows such flank and splits runs at junctions unique to one lineage, the three outputs resolve 1,571, 1,622 and 1,490, against 1,512, 1,420 and 1,172 under the standing one.</p>
+    <p>Two parts of the first design failed. Cutting at low cohesion deletes real loci, because defense systems and biosynthetic regions have low cohesion inside; cohesion works as the order of splitting. A whole-locus recurrence test had nothing to calibrate against, since shuffled genomes produce almost no nodes.</p>
+    <p><strong>What the ribosomal benchmark can show.</strong> An oracle that reports each whole conserved neighborhood resolves 1,507 runs under the standing definition, because 179 runs make up less than 80% of their own neighborhood. The reference's 174 failures are 157 loci that extend past the run. Passing 1,507 needs a nested output that also holds the run-sized piece.</p>
+    <p><strong>Independent audit of the failures.</strong> A separate agent classified 120 sampled failures against a rubric written beforehand. It attributes about three quarters to the benchmark definition and one quarter to the method: reference 80% / 20%, family words with phrases 82% / 15%, embedding words 58% / 40%. One rubric rule was corrected after the fact, so these shares are post hoc. The commonest artifacts are loci that take in flanking families found beside ribosomal runs in many lineages (SecY in 274 groups), nearby ribosomal genes outside the run, and a scoring rule that picks the largest overlapping locus even when a nested locus fits the run. Under a definition that allows such flank and splits runs at junctions unique to one lineage, the three outputs resolve 1,571, 1,622 and 1,490, against 1,512, 1,420 and 1,172 under the standing one.</p>
     <p><strong>The bond tree under the same audit.</strong> It leads under the standing definition (1,598) and under every alternative (1,620 when any fitting locus counts; 1,671 under the relaxed definition). Its 56 under-covered runs are cut at junctions that recur in no other lineage above chance, mostly rearranged gene orders. The relaxed definition should be read with care: annotation alone supports only 9–13% of the flank it forgives, so the definition shares above are upper bounds. With independent support required, the bond tree still has the fewest errors: 44, against 70 for the reference, 159 for family words and 288 for embedding words.</p>
   </div>
 </section>
@@ -667,7 +694,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <p class="lead col">Averaging a locus's gene embeddings into one vector is enough to type it, map it and search for it.</p>
   <div class="pair">
     <figure class="fig">
-      <h3>Assigning a locus its curated type by nearest neighbour</h3>
+      <h3>Assigning a locus its curated type by nearest neighbor</h3>
       <div class="legend"><span class="lg"><i class="key-box s3"></i>locus vector</span><span class="lg"><i class="key-box ref"></i>comparison</span></div>
       <div id="c-type"></div>
       <figcaption>Accuracy on even-genome curated loci, with every locus from the query's own genome group withheld. In the lower half the reference loci share no MMseqs2 family with the query, so family overlap has nothing to match on.</figcaption>
@@ -688,37 +715,37 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
 
 <section id="embeddings">
   <h2>What embeddings add over alignment</h2>
-  <p class="lead col">Embedding similarity beyond the family mostly recovers homology that sequence clustering had split. Its distinctive contribution is a match for a protein with no alignable relative, anchored by a conserved neighbour.</p>
+  <p class="lead col">Embedding similarity beyond the family mostly recovers homology that sequence clustering had split. Its distinctive contribution is a match for a protein with no alignable relative, anchored by a conserved neighbor.</p>
   <div class="pair">
     <figure class="fig">
-      <h3>Nearest embedding neighbours outside the family are mostly homologs</h3>
+      <h3>Nearest embedding neighbors outside the family are mostly homologs</h3>
       <div id="c-hom"></div>
       <figcaption>Share of protein pairs with independent homology evidence (alignment at E ≤ 1e-3, shared Pfam family or clan, CDD superfamily, or a family-profile link). Where both proteins are annotated, the top band reaches 95%.</figcaption>
     </figure>
     <figure class="fig">
-      <h3>Pairs called through embedding-matched neighbours co-fold</h3>
+      <h3>Pairs called through embedding-matched neighbors co-fold</h3>
       <div id="c-cofold"></div>
       <figcaption>Share of ESMFold2 complex predictions with a confident interface, criteria fixed before folding; whiskers are 95% intervals. Called pairs are ones the family engine cannot call. Fisher p = 9 × 10⁻⁷ against matched pairs.</figcaption>
     </figure>
   </div>
   <ul class="points col">
-    <li><strong>The split is mechanical.</strong> 59% of the ten nearest non-family neighbours align directly at E ≤ 1e-3, and 87% of those alignments cover at least half of both proteins: full-length homologs that set-cover clustering filed under different representatives.</li>
+    <li><strong>The split is mechanical.</strong> 59% of the ten nearest non-family neighbors align directly at E ≤ 1e-3, and 87% of those alignments cover at least half of both proteins: full-length homologs that set-cover clustering filed under different representatives.</li>
     <li><strong>Similarity between unrelated proteins of the same kind is a small component</strong>, 2.0 to 2.4 times the baseline rate among pairs with no homology evidence.</li>
-    <li><strong>The co-folding signal needs homology on at least one side.</strong> Pairs whose support is free of homology on both sides pass 1 time in 149. Where one chain has no alignable homolog in the dataset, pairs pass 8 times in 108 against 0 in 168 (analysed after the fact).</li>
-    <li><strong>Cosine similarity carries no usable E-value</strong> (extreme-value estimates run 8 to 42 times over nominal). A fixed standardised cut does: z ≥ 10.6, 13.7 and 16.0 give false-match rates of 10⁻², 10⁻³ and 10⁻⁴, stable across genome halves.</li>
+    <li><strong>The co-folding signal needs homology on at least one side.</strong> Pairs whose support is free of homology on both sides pass 1 time in 149. Where one chain has no alignable homolog in the dataset, pairs pass 8 times in 108 against 0 in 168 (analyzed after the fact).</li>
+    <li><strong>Cosine similarity carries no usable E-value</strong> (extreme-value estimates run 8 to 42 times over nominal). A fixed standardized cut does: z ≥ 10.6, 13.7 and 16.0 give false-match rates of 10⁻², 10⁻³ and 10⁻⁴, stable across genome halves.</li>
     <li><strong>Control: alignment hits as the source of the lists.</strong> MMseqs2 all-against-all hits (E ≤ 1e-3), run through the identical word procedure, score +0.041 [+0.021, +0.062] over the reference. That is level with the calibrated embedding lists (difference −0.007 [−0.026, +0.014]) and +0.031 [+0.013, +0.050] above depth-limited embedding lists. For discovering loci, embeddings are one of two equally good sources of identity; the gain comes from dropping the hard family partition. Their distinct uses here are locus vectors and the anchored matches above.</li>
   </ul>
 </section>
 
 <section id="biology">
   <h2>Screen for new complexes</h2>
-  <p class="lead col">The second screen for unrecognised, co-folding blocks found none in which every member is unrecognised. The pool resolved to pairs resembling toxin–antitoxin structures.</p>
+  <p class="lead col">The second screen for unrecognized, co-folding blocks found none in which every member is unrecognized. The pool resolved to pairs resembling toxin–antitoxin structures.</p>
   <div class="funnel">
     <div><b>248</b><span>candidate blocks from unannotated map clusters and embedding-anchored pairs</span></div>
     <div><b>47</b><span>with two distant replicates (different genome groups, ≤ 60% identity)</span></div>
-    <div><b>12</b><span>with at least one member no profile search recognises; these were folded</span></div>
-    <div><b>2</b><span>co-fold in both replicates and pass every artefact check</span></div>
-    <div><b>0</b><span>with every member unrecognised</span></div>
+    <div><b>12</b><span>with at least one member no profile search recognizes; these were folded</span></div>
+    <div><b>2</b><span>co-fold in both replicates and pass every artifact check</span></div>
+    <div><b>0</b><span>with every member unrecognized</span></div>
   </div>
   <div class="scroll">
   <table class="plain" style="min-width:640px">
@@ -729,7 +756,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     </tbody>
   </table>
   </div>
-  <p class="note col">No curated caller has called either block; the toxin–antitoxin reading is a hypothesis. Cognate folds passed in 5 of 24 and partner swaps in 0 of 12. The dense map clusters of membrane-like proteins were excluded by the screen's hydrophobicity filter and remain to be screened with alignment-conditioned folds. The earlier three-gene block, two unrecognised small proteins on a caspase-like protein across seven phyla, remains the showcase.</p>
+  <p class="note col">No curated caller has called either block; the toxin–antitoxin reading is a hypothesis. Cognate folds passed in 5 of 24 and partner swaps in 0 of 12. The dense map clusters of membrane-like proteins were excluded by the screen's hydrophobicity filter and remain to be screened with alignment-conditioned folds. The earlier three-gene block, two unrecognized small proteins on a caspase-like protein across seven phyla, remains the showcase.</p>
 </section>
 
 <section id="aside">
@@ -741,7 +768,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <li><strong>Classes of words.</strong> Description length rises with every loosening and typing stays where it was (0.473 against 0.464).</li>
     <li><strong>Finer units of evidence than genome groups.</strong> Species-scale groups, per-genome weights and random partitions all fail, because a shuffle null is blind to inherited gene order.</li>
     <li><strong>Covariation between partner embeddings as a predictor of co-folding.</strong> AUROC 0.573.</li>
-    <li><strong>Recognising a kind of system with all of its families withheld.</strong> AUROC falls from 0.788 to 0.595.</li>
+    <li><strong>Recognizing a kind of system with all of its families withheld.</strong> AUROC falls from 0.788 to 0.595.</li>
     <li><strong>E-values and hub corrections for cosine similarity.</strong> Both rank worse than the raw score.</li>
   </ul>
 </section>
@@ -755,9 +782,9 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
     <div class="opt"><h4>Already published</h4>
       <p>Effective genome counts (CSBFinder-S 2020; Junier and Rivoire 2016). The shuffle null and its blindness to ancestry (Durand and Sankoff 2003; Gecko 3). Mean-pooled operon vectors (SAFPred 2024). Co-folding of operon partners at scale (Qi et al. 2026).</p></div>
     <div class="opt"><h4>No close precedent found</h4>
-      <p>Greedy merging of gene order into a nested parse scored by lineage-adjusted enrichment. The effective count built from shared gene adjacency. Boundary cohesion. The finding that beyond-family embedding similarity is mostly split homology, with a standardised threshold where E-values fail.</p></div>
+      <p>Greedy merging of gene order into a nested parse scored by lineage-adjusted enrichment. The effective count built from shared gene adjacency. Boundary cohesion. The finding that beyond-family embedding similarity is mostly split homology, with a standardized threshold where E-values fail.</p></div>
     <div class="opt"><h4>Comparators reviewers will expect</h4>
-      <p>Spacedust (Zhang, Mirdita and Söding 2025), Gecko 3, CSBFinder-S, the Hervé procedure, Gaia and gLM2 for neighbourhood retrieval, SAFPred and BiG-SLiCE vectors for typing.</p></div>
+      <p>Spacedust (Zhang, Mirdita and Söding 2025), Gecko 3, CSBFinder-S, the Hervé procedure, Gaia and gLM2 for neighborhood retrieval, SAFPred and BiG-SLiCE vectors for typing.</p></div>
   </div>
 </section>
 
@@ -765,12 +792,14 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <h2>Open items</h2>
   <div class="two" style="max-width:none">
     <div class="opt"><h4>Running now</h4>
-      <p>All three tests on untouched data are complete; each has its own section above. No job is running.</p></div>
+      <p>All three tests on untouched data are complete; each has its own section above.</p>
+      <p>A test of subtracting each genome's average vector from its protein vectors before whitening, on the DPANN search benchmark.</p></div>
     <div class="opt"><h4>Next</h4>
       <p>Embedding words on Spacedust's benchmark, which waited for the GPU.</p>
       <p>A redundancy-aware chance expectation, after the duplicate-genome stress test.</p>
       <p>Spacedust on the third test set, for a comparison with the published tool on the same 801 ribosomal runs.</p>
       <p>A hand check of the 11 junction labels among the third test's unresolved runs.</p>
+      <p>A pass that names every unannotated DPANN gene it can from its bonded partners, for use in Sharur.</p>
       <p>The choice of the single configuration that becomes the method. The embedding-list tree led on the first two untouched sets and has the higher counts on the third; it trails on Spacedust's long biosynthetic regions.</p></div>
     <div class="opt"><h4>Waiting</h4>
       <p>ESM2-650M embeddings of DPANN, until the H200 GPUs are free.</p>
@@ -783,7 +812,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   </div>
 </section>
 
-<footer>Sources: <code>docs/redesign/NOTEBOOK.md</code> and <code>benchmarks/redesign/{vocab,vocab_lists,locus_space,calib,kinds,context_units,lineagefree,showcase2}/</code> on branch <code>agent/normalized-result-contract</code>. Items analysed after results were seen are marked where they appear.</footer>
+<footer>Sources: <code>docs/redesign/NOTEBOOK.md</code> and <code>benchmarks/redesign/{vocab,vocab_lists,locus_space,calib,kinds,context_units,lineagefree,showcase2}/</code> on branch <code>agent/normalized-result-contract</code>. Items analyzed after results were seen are marked where they appear.</footer>
 
 </div>
 
@@ -877,7 +906,7 @@ function safe(fn){try{fn();}catch(err){if(window.console)console.error(err);}}
 /* ---------- data ---------- */
 safe(function(){scatter('c-plane',{
   aria:'Scatter of CRISPR-Cas F1 against overall score for seven methods',
-  x:{min:0.38,max:0.66,ticks:[0.40,0.45,0.50,0.55,0.60,0.65],ticksNarrow:[0.40,0.50,0.60],fmt:f2,label:'Overall score (excess F1, defence + secretion)'},
+  x:{min:0.38,max:0.66,ticks:[0.40,0.45,0.50,0.55,0.60,0.65],ticksNarrow:[0.40,0.50,0.60],fmt:f2,label:'Overall score (excess F1, defense + secretion)'},
   y:{min:0.38,max:0.54,ticks:[0.40,0.44,0.48,0.52],fmt:f2,label:'CRISPR-Cas F1'},
   region:{x:0.417,y:0.459,label:'both bars met'},
   path:[[0.420,0.504],[0.588,0.422],[0.624,0.406]],
@@ -1002,9 +1031,9 @@ safe(function(){bars('c-search',{max:1,fmt:f3,rows:[
 ]});});
 
 safe(function(){bars('c-hom',{max:100,fmt:function(v){return v.toFixed(1)+'%';},rows:[
-  {label:'10 nearest non-family neighbours',v:67.6,cls:'s1',ci:[66.8,68.5],tip:'95% interval 66.8 to 68.5%'},
-  {label:'Neighbours ranked 11–100',v:58.7,cls:'s1'},
-  {label:'Neighbours ranked 101–1,000',v:42.7,cls:'s1'},
+  {label:'10 nearest non-family neighbors',v:67.6,cls:'s1',ci:[66.8,68.5],tip:'95% interval 66.8 to 68.5%'},
+  {label:'Neighbors ranked 11–100',v:58.7,cls:'s1'},
+  {label:'Neighbors ranked 101–1,000',v:42.7,cls:'s1'},
   {label:'Random pairs of matched length',v:1.65,cls:'ref',show:'1.5–1.8%'}
 ]});});
 

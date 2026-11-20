@@ -3282,3 +3282,38 @@ I recomputed the resolved counts and the R4 interval from `results7/score6_runs.
   104: 104 / 103 / 89; Bacteroidota 83: 81 / 82 / 76; Actinomycetota 65: 63 / 55 / 56;
   Halobacteriota 45: 45 / 45 / 35; Thermoproteota 21: 19 / 20 / 15; Methanobacteriota 12:
   12 / 3 / 11.
+
+## 2026-11-20 23:18 UTC — Outside review (Gemini, relayed by Jacob): three proposals, checked against the record
+
+**Proposal 1, per-genome centering before whitening.** Untested in that form. `locus_search/REPORT3.txt`
+holds the neighboring cells: zca10 0.796 AP, whitening alone 0.777, global centering alone 0.483,
+per-genome centering alone 0.513. Per-genome centering followed by whitening was never run.
+`signals/REPORT.txt` puts genome means at 2.18% of family-centered residual variance (0.11% expected),
+so the prior is a small effect. The per-gene foreignness score the review calls free already exists in
+`signals` (criterion met; it also marks ribosomal genes, and contig-level foreignness is unrelated to
+MAG contamination). The review's "0.698 to 0.792" misreads the record: 0.698 was the three-input
+combination on unwhitened vectors.
+
+**Proposal 2, stratify by sequence identity.** The supporting claim (embedding-list tree +7.0 points on
+Archaea in test 3, read as a low-identity advantage) does not hold up. From `ribo_audit/results7`:
+the family-bond tree's archaeal deficit is Methanobacteria, 3 of 12 runs resolved against 12 of 12.
+Seven of those nine failures are one cut at the cbf5 | S13 junction and two are glues at
+EMC3_TMCO1 | L34e. Outside Methanobacteriota the two configurations resolve 99 and 98 of 101 archaeal
+runs. The two configurations also differ in tree settings (L4b+ θ 0.02 against L4b θ 0.2), so test 3
+holds no clean embedding-against-alignment contrast. The clean contrast (same tree, two list sources)
+exists on DPANN and is a tie apart from CRISPR-Cas (−0.022). What stands from the review: every truth
+set is profile-defined, so the scored loci are alignment-visible by construction.
+
+**Proposal 3, slot rescue.** The record matches (23 of 30 unannotated-newcomer leads are the lost core
+gene in its slot; `dpann-exploration/CONTEXT.md`). It supplies the truth set the dark-protein claim
+has lacked (`showcase2` found 0 fully unrecognized blocks among 248 candidates).
+
+**Launched (DPANN development data only; predeclared readouts; CPU only):**
+- `genome_center`: the missing cell and three variants on the search3 benchmark; criterion +0.010 AP
+  with the interval above zero. List rebuild only on my decision afterwards.
+- `identity_strata`: alignment lists against embedding lists per identity stratum (list, bond and
+  locus level), including how many truth loci sit in the low strata at all.
+- `slot_rescue`: the 30 leads and the larger detection-limited slot sets against both list sources
+  and the bond-tree loci, with matched control ORFs.
+Budgets 3 h, 4 h and 2 h of 24-CPU job time. A method change that came out of these would need a
+fourth untouched set before any claim; the three finished tests stay as they are.

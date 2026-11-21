@@ -795,7 +795,7 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
   <div class="two" style="max-width:none">
     <div class="opt"><h4>Running now</h4>
       <p>All three tests on untouched data are complete; each has its own section above.</p>
-      <p>A test of subtracting each genome's average vector from its protein vectors before whitening, on the DPANN search benchmark.</p></div>
+      <p>Verification of the proposed DPANN labels: below-threshold profile hits for all 175,729, and predicted structures for a sample of 300.</p></div>
     <div class="opt"><h4>Next</h4>
       <p>Embedding words on Spacedust's benchmark, which waited for the GPU.</p>
       <p>A redundancy-aware chance expectation, after the duplicate-genome stress test.</p>
@@ -806,7 +806,8 @@ footer{font-size:.84rem;color:var(--muted);border-top:1px solid var(--rule);padd
       <p>gLM2 as an ablation, after standard embeddings win.</p>
       <p>Merging words into the <code>elsa</code> package.</p></div>
     <div class="opt"><h4>Yours to decide</h4>
-      <p>Whether the 175,729 proposed labels go into the Sharur DPANN database as a table of their own.</p>
+      <p>Whether the proposed labels go into the Sharur DPANN database as a table of their own, once the names are verified.</p>
+      <p>Whether to rebuild the neighbor lists with a changed whitening. Subtracting each genome's average vector before whitening leaves search unchanged on DPANN (AP 0.796). Removing the 32 strongest between-genome directions raises it to 0.808 (+0.012 [+0.010, +0.013]) and leaves CRISPR-Cas where it was. The recommendation is to keep the frozen configuration.</p>
       <p>Whether conservation of protein kinds across unrelated families is in scope. The evidence here says that signal is weak in these embeddings.</p>
       <p>Whether the acceptance bar is the reference on every caller or a chosen subset.</p>
       <p>How to involve the Spacedust authors and the MMseqs2 developers, given that both tools serve as baseline and control.</p></div>

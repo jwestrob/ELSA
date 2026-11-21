@@ -1,0 +1,15 @@
+query	query_size	clade_size	monophyletic	support_alrt_ufb	composition	orders
+lead15	15	45	False	100/100	{'labeled_named_C': 26, 'lead15': 15, 'labeled_unannotated': 2, 'named_rep50_C': 2}	{'Woesearchaeales': 39, 'QMZS01': 6}
+set64	64	79	False	94.2/99	{'labeled_named_C': 51, 'lead15': 15, 'named_rep50_C': 10, 'labeled_unannotated': 2, 'labeled_named_P': 1}	{'Woesearchaeales': 39, 'EX4484-52': 20, 'QMZS01': 6, 'CG10238-14': 6, 'Aenigmatarchaeales': 5, 'Nanobdellales': 2}
+labeled76	76	268	False	100/100	{'named_rep50_P': 119, 'labeled_named_C': 55, 'named_rep50_C': 40, 'REF_ADPGP_IPR053177': 15, 'lead15': 15, 'REF_GalT_I': 9, 'labeled_unannotated': 5, 'REF_GalT_II': 5, 'REF_Ap4A_phosphorylase': 3, 'labeled_named_P': 1, 'ap4a_branch_C': 1}	{'Woesearchaeales': 95, 'EX4484-52': 21, 'Norongarragalinales': 17, 'Parvarchaeales': 16, 'Anstonellales': 11, 'Pacearchaeales': 10}
+REF GalT class I	9	9	True	95.5/100	{'REF_GalT_I': 9}	{}
+REF GalT class II	5	5	True	100/100	{'REF_GalT_II': 5}	{}
+REF ADPGP (Q9FK51 + 14 IPR053177)	15	18	False	96.1/96	{'REF_ADPGP_IPR053177': 15, 'named_rep50_P': 3}	{'Woesearchaeales': 2, 'Pacearchaeales': 1}
+REF Ap4A phosphorylase	3	3	True	100/100	{'REF_Ap4A_phosphorylase': 3}	{}
+named form tier P (119 reps)	119	189	False	35.3/68	{'named_rep50_P': 119, 'named_rep50_C': 30, 'REF_ADPGP_IPR053177': 15, 'REF_GalT_I': 9, 'REF_GalT_II': 5, 'labeled_named_C': 4, 'labeled_unannotated': 3, 'REF_Ap4A_phosphorylase': 3, 'ap4a_branch_C': 1}	{'Woesearchaeales': 56, 'Norongarragalinales': 17, 'Parvarchaeales': 16, 'Anstonellales': 11, 'Pacearchaeales': 10, 'Iainarchaeales': 8}
+nested clade holding lead15	15	72		45.8/57	{'labeled_named_C': 46, 'lead15': 15, 'named_rep50_C': 8, 'labeled_unannotated': 2, 'labeled_named_P': 1}	{'Woesearchaeales': 39, 'EX4484-52': 20, 'QMZS01': 6, 'CG10238-14': 5, 'Nanobdellales': 2}
+nested clade holding lead15	15	70		90.6/78	{'labeled_named_C': 46, 'lead15': 15, 'named_rep50_C': 6, 'labeled_unannotated': 2, 'labeled_named_P': 1}	{'Woesearchaeales': 39, 'EX4484-52': 20, 'QMZS01': 6, 'CG10238-14': 5}
+nested clade holding lead15	15	61		83.1/54	{'labeled_named_C': 38, 'lead15': 15, 'named_rep50_C': 5, 'labeled_unannotated': 2, 'labeled_named_P': 1}	{'Woesearchaeales': 39, 'EX4484-52': 11, 'QMZS01': 6, 'CG10238-14': 5}
+nested clade holding lead15	15	46		48.3/49	{'labeled_named_C': 26, 'lead15': 15, 'named_rep50_C': 3, 'labeled_unannotated': 2}	{'Woesearchaeales': 39, 'QMZS01': 6, 'CG10238-14': 1}
+nested clade holding lead15	15	45		100/100	{'labeled_named_C': 26, 'lead15': 15, 'labeled_unannotated': 2, 'named_rep50_C': 2}	{'Woesearchaeales': 39, 'QMZS01': 6}
+largest clade with ADPGP refs, without GalT I / D	15	136		92.6/97	{'named_rep50_P': 115, 'REF_ADPGP_IPR053177': 15, 'named_rep50_C': 3, 'labeled_named_C': 2, 'labeled_unannotated': 1}	{'Woesearchaeales': 43, 'Norongarragalinales': 17, 'Anstonellales': 11, 'Parvarchaeales': 8, 'Iainarchaeales': 8, 'IMC4': 7}

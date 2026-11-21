@@ -1,0 +1,34 @@
+galt workstream: commands run inline (Mac, <= 4 threads) that have no script of their own.
+Order: g02_refs.py (after the UniProt / PubMed / KEGG / InterPro / RCSB / AlphaFold downloads below), g01_census.py,
+g03_refseqs.py, Aksha, g04, cd-hit, g05_tree_input.py, g05_tree_sh.txt, g06 (biotite), g07, g08, g10, g13, g09 co-folds,
+g11, g12, g15 (biotite), g16, g14, g17, g18.
+
+Downloads (public, by accession or query; DPANN sequences never sent):
+  UniProt REST search reviewed:true for xref:pfam-PF01087/PF02744/PF19327/PF09830, xref:interpro-IPR026506/IPR001937/
+    IPR009163 -> ref/uniprot_query/*.tsv; JSON per accession -> ref/uniprot_json/; IPR053177 members -> ipr053177.tsv;
+    PF05693 reviewed / prokaryotic -> pf05693_*.tsv; P27472, P13807, Q9V2J8, Q8ZXN7 JSON.
+  PubMed E-utilities esearch/efetch -> ref/pubmed/ (abstracts.txt, abstracts2.txt, q*.json); McCoy 2006 full text read
+    at pmc.ncbi.nlm.nih.gov/articles/PMC2532824 (residue roles).
+  KEGG REST get/<KO> -> ref/kegg/.  InterPro API entry/<db>/<acc>?annotation=hmm -> ref/hmm_dl/ (gunzipped, renamed
+    *_hmm.txt). RCSB files.rcsb.org/download/{1GUP,1HXQ,5IN3,6GQD,1ZWJ,1Z84,4I5W,4I5V,4I5T,6K9Z}.pdb; AlphaFold DB
+    AF-{Q6ZNW5,Q8RWE8,E8MF11}-F1-model_v6.pdb -> ref/pdb/. RCSB chemcomp API to confirm CCD codes UPG GL1 ADQ B4P GDG PO4.
+
+Aksha (picked models, thresholds off):
+  cat ref/hmm_dl/*.hmm > ref/branch_models.hmm   (files later renamed *_hmm.txt / branch_models_hmm.txt)
+  cat data/census.faa ref/refs.faa > data/classify_in.faa
+  ~/.local/bin/aksha search --hmm_in ref/branch_models.hmm --prot_in data/classify_in.faa --outdir data/aksha_branch \
+      --evalue 1000 --threads 4
+
+cd-hit (named form, length >= 250, written by an inline python snippet to aln/named_ge250.faa):
+  cd-hit -i aln/named_ge250.faa -o aln/named_c70.faa -c 0.7 -n 5 -T 4 -M 2000 -d 0
+  cd-hit -i aln/named_ge250.faa -o aln/named_c60.faa -c 0.6 -n 4 -T 4 -M 2000 -d 0
+  cd-hit -i aln/named_ge250.faa -o aln/named_c50.faa -c 0.5 -n 3 -T 4 -M 2000 -d 0   (used; .clstr renamed _clstr.txt)
+
+Biotite login node (serial, single thread), remote scratch .../redesign_20261111/dpann_leads/galt/:
+  /home/jwestrob/miniconda3/envs/elsa/bin/python code/g06_voters_remote.py code/lab76_ids.txt voters
+  g15_usalign_run.py drives code/s04_usalign_remote.py (copied from invisible) over data/q2_pairs.tsv.
+
+Folding (Biohub ESMFold2, fold_biohub.py): g09_cofold_sh.txt for controls and DPANN (L1-L4); L5 command in its footer;
+  single chains: fold_biohub.py folds/single_named folds/in/named_single.faa. Inputs in folds/in/.
+Lineage-matched glgC / GalU / GT3 / named-form tests (genus and family matched) were run as inline snippets reading
+  data/q4_subfamily_members.tsv and data/genome_features.tsv; results quoted in REPORT.txt Q4.

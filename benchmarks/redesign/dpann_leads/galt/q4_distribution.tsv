@@ -1,0 +1,58 @@
+table	order	genomes	completeness_median	D	N	both	GT3	test	a	b	OR	p	group	scope	near3	background_rate	background_genomes	fold	binom_p
+by_order	Woesearchaeales	704.0	90.935	39.0	351.0	1.0	429.0												
+by_order	EX4484-52	44.0	83.30000000000001	25.0	9.0	1.0	39.0												
+by_order	Nanobdellales	25.0	85.26	16.0	2.0	0.0	22.0												
+by_order	JAPDLS01	14.0	90.97	14.0	0.0	0.0	14.0												
+by_order	QMZS01	14.0	79.955	10.0	0.0	0.0	1.0												
+by_order	CG10238-14	116.0	87.325	5.0	14.0	0.0	15.0												
+by_order	Aenigmatarchaeales	37.0	89.11	5.0	0.0	0.0	5.0												
+by_order	Parvarchaeales	216.0	86.88	0.0	209.0	0.0	170.0												
+by_order	Norongarragalinales	65.0	82.64	0.0	55.0	0.0	0.0												
+by_order	Anstonellales	200.0	87.735	0.0	54.0	0.0	52.0												
+by_order	Micrarchaeales	826.0	84.675	0.0	52.0	0.0	1.0												
+by_order	Iainarchaeales	135.0	86.39	0.0	42.0	0.0	21.0												
+by_order	IMC4	42.0	83.41	0.0	33.0	0.0	38.0												
+by_order	Fermentimicrarchaeales	14.0	96.935	0.0	14.0	0.0	0.0												
+by_order	Pacearchaeales	487.0	84.9	0.0	12.0	0.0	4.0												
+by_order	SCGC-AAA011-G17	206.0	90.79	0.0	12.0	0.0	11.0												
+by_order	CSSed11-243R1	9.0	89.52	0.0	8.0	0.0	0.0												
+by_order	QMZP01	62.0	81.95	0.0	8.0	0.0	8.0												
+by_order	B33-G15	7.0	92.18	0.0	5.0	0.0	4.0												
+by_order	GW2011-AR5	60.0	82.54499999999999	0.0	5.0	0.0	7.0												
+by_order	JAADDC01	13.0	87.28	0.0	5.0	0.0	4.0												
+by_order	JAKAKT01	6.0	92.78	0.0	5.0	0.0	6.0												
+by_order	PWEA01	20.0	85.875	0.0	5.0	0.0	4.0												
+by_order	CAILAH01	8.0	85.78	0.0	4.0	0.0	0.0												
+by_order	Tiddalikarchaeales	11.0	87.7	0.0	4.0	0.0	0.0												
+by_order	Burarchaeales	4.0	85.05000000000001	0.0	3.0	0.0	0.0												
+by_order	JACRGF01	3.0	90.04	0.0	3.0	0.0	0.0												
+by_order	JAFGQM01	2.0	80.445	0.0	2.0	0.0	2.0												
+by_order	Jingweiarchaeales	14.0	92.625	0.0	2.0	0.0	0.0												
+by_order	Gugararchaeales	1.0	93.18	0.0	1.0	0.0	0.0												
+by_order	JACQQB01	1.0	73.46	0.0	1.0	0.0	0.0												
+by_order	JAGGVJ01	1.0	94.93	0.0	1.0	0.0	1.0												
+by_order	JAVZCV01	1.0	91.01	0.0	1.0	0.0	1.0												
+by_order	JBFMAP01	1.0	86.35	0.0	1.0	0.0	0.0												
+by_order	PEZQ01	2.0	91.58	0.0	1.0	0.0	2.0												
+by_order	UBA10117	36.0	84.17	0.0	1.0	0.0	1.0												
+by_order	WJKC01	4.0	86.505	0.0	1.0	0.0	2.0												
+tests								GT3 x D, Aenigmatarchaeales	5/5 GT3 genomes carry D	0/32 others	inf	2.294119941178764e-06							
+tests								GT3 x D, CG10238-14	1/15 GT3 genomes carry D	4/101 others	1.73	0.506147528820592							
+tests								GT3 x D, EX4484-52	23/39 GT3 genomes carry D	2/5 others	2.16	0.3676105516718109							
+tests								GT3 x D, JAPDLS01	14/14 GT3 genomes carry D	0/0 others		1.0							
+tests								GT3 x D, Nanobdellales	16/22 GT3 genomes carry D	0/3 others	inf	0.0365217391304347							
+tests								GT3 x D, QMZS01	1/1 GT3 genomes carry D	9/13 others	inf	0.7142857142857143							
+tests								GT3 x D, Woesearchaeales	39/429 GT3 genomes carry D	0/275 others	inf	2.00696182542802e-09							
+tests								GT3 x D, Mantel-Haenszel over orders			19.97	2.308619961866043e-11							
+tests								Woesearchaeales glgC_ko: D genomes vs N-only genomes	13/39	12/350	14.08	3.0804588667747966e-08							
+tests								Woesearchaeales GalU: D genomes vs N-only genomes	0/39	34/350	0.0	0.0359232412767121							
+tests								Woesearchaeales GT3: D genomes vs N-only genomes	39/39	304/350	inf	0.0082317382599721							
+tests								genomes with D that also carry N	2/114										
+adjacency_GT3_within_3													lead15	Woesearchaeales	12/13	0.0041	86.0	225.1	2.9304286364429747e-28
+adjacency_GT3_within_3													lead15	all	12/13	0.0042	174.0	220.3	3.802313001030129e-28
+adjacency_GT3_within_3													labeled_unannotated	Woesearchaeales	3/5	0.0041	86.0	146.3	6.854619520076418e-07
+adjacency_GT3_within_3													labeled_unannotated	all	3/5	0.0042	174.0	143.2	7.314973862048127e-07
+adjacency_GT3_within_3													labeled_named	Woesearchaeales	23/25	0.0041	86.0	224.3	3.716075631279946e-53
+adjacency_GT3_within_3													labeled_named	all	29/49	0.0042	174.0	141.2	2.906273903074769e-56
+adjacency_GT3_within_3													named_unlabeled	Woesearchaeales	147/324	0.0041	86.0	110.6	2.2824288305485153e-256
+adjacency_GT3_within_3													named_unlabeled	all	336/922	0.0042	174.0	87.0	0.0

@@ -1,0 +1,10 @@
+Parsing protein input sequences...
+Total sequences loaded: 1361
+Searching with user-provided HMM(s)...
+Parsing HMMs...
+HMMs parsed: 14 models in 0.0s
+Bulk search: 1361 sequences × 14 HMMs (14 grouped)
+  Chunk 1/1 (14 HMMs)... done
+Results → data/aksha_branch/user_hmms_hits_df.tsv
+Temporary files removed from data/aksha_branch/tmp_results
+Process took 2.0004689693450928 seconds.

@@ -1,0 +1,816 @@
+{
+ "queries": 1247,
+ "prep": {
+  "defensefinder_rows": 367830,
+  "protein_profile_pairs": 336774,
+  "proteins": 145088,
+  "unmapped_proteins": 0,
+  "profiles": 655,
+  "curated_systems": 4495,
+  "profiles_in_curated_systems": 358,
+  "raw_profiles_in_curated_systems": 319,
+  "conserved_loci": {
+   "2": 413181,
+   "5": 177294,
+   "12": 126665,
+   "30": 130635,
+   "80": 84348
+  },
+  "genes_in_conserved_loci": 0.7023710408855263,
+  "genes_with_raw_df_hit": 0.04046743050726814
+ },
+ "methods": {
+  "M0": {
+   "unlabelled_hits": 897,
+   "per_query": 0.7193263833199679,
+   "controls": 8970,
+   "hits_with_control": 897,
+   "controls_overlapping_their_hit": 0.321850613154961,
+   "single_slot_share": 0.0,
+   "queries_with_unlabelled": 208,
+   "top10_query_share": 0.34448160535117056,
+   "type_share_AbiE": 0.0758082497212932,
+   "type_share_RM": 0.7224080267558528,
+   "df_any": {
+    "hits": 0.9955406911928651,
+    "control": 0.34258639910813826,
+    "excess": 0.6529542920847269,
+    "control_not_overlapping_hit": 0.0992931119513398
+   },
+   "df_any_e5": {
+    "hits": 0.9955406911928651,
+    "control": 0.3345596432552954,
+    "excess": 0.6609810479375697,
+    "control_not_overlapping_hit": 0.08745684695051784
+   },
+   "df_own": {
+    "hits": 0.9264214046822743,
+    "control": 0.23779264214046822,
+    "excess": 0.688628762541806,
+    "control_not_overlapping_hit": 0.008877198750616473
+   },
+   "own_ge2": {
+    "hits": 0.42474916387959866,
+    "control": 0.050724637681159424,
+    "excess": 0.37402452619843923,
+    "control_not_overlapping_hit": 0.0001643925694558606
+   },
+   "cons_any": {
+    "hits": 0.9933110367892977,
+    "control": 0.8158305462653289,
+    "excess": 0.17748049052396875,
+    "control_not_overlapping_hit": 0.7307249712313003
+   },
+   "cons_half": {
+    "hits": 0.9933110367892977,
+    "control": 0.7874024526198439,
+    "excess": 0.2059085841694538,
+    "control_not_overlapping_hit": 0.703928982409995
+   },
+   "c_module": {
+    "hits": 0.9710144927536232,
+    "control": 0.35942028985507246,
+    "excess": 0.6115942028985507,
+    "control_not_overlapping_hit": 0.07216833799112281
+   },
+   "supported": {
+    "hits": 1.0,
+    "control": 0.37279821627647713,
+    "excess": 0.6272017837235229,
+    "control_not_overlapping_hit": 0.07973039618609239
+   },
+   "supported_share_ci": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "unsupported_per_query": 0.0,
+   "supported_per_query": 0.7193263833199679,
+   "completeness_unlabelled": {
+    "mean": 0.9453177257525083,
+    "frac_full": 0.842809364548495,
+    "q25_50_75": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "completeness_correct": {
+    "n": 16724,
+    "mean": 0.9618661803396316,
+    "frac_full": 0.8807701506816551
+   },
+   "span_genes_median": 2.0,
+   "completeness_by_support": {
+    "True": 0.9453177257525084
+   },
+   "types_top": {
+    "RM_Type_III": 286,
+    "RM_Type_II": 282,
+    "RM_Type_I": 80,
+    "AbiE": 68,
+    "AbiL": 65,
+    "Hma": 60,
+    "SanaTA": 10,
+    "Dnd_ABCDE": 8
+   },
+   "raw_profiles_top": {
+    "RM_Type_II__Type_II_MTases_FAM_1": 369,
+    "RM_Type_II__Type_II_MTases_FAM_27": 356,
+    "RM_Type_II__Type_II_MTases_FAM_3": 341,
+    "RM_Type_II__Type_II_MTases_FAM_37": 334,
+    "RM_Type_II__Type_II_MTases_FAM_8": 312,
+    "RM_Type_II__Type_II_MTases_FAM_36": 309,
+    "RM_Type_II__Type_II_MTases_FAM_20": 305,
+    "RM_Type_II__Type_II_MTases_FAM_26": 292,
+    "RM_Type_II__Type_II_MTases_FAM_18": 274,
+    "RM_Type_III__Type_III_MTases_FAM_0": 246
+   }
+  },
+  "M2": {
+   "unlabelled_hits": 1143,
+   "per_query": 0.9165998396150762,
+   "controls": 11430,
+   "hits_with_control": 1143,
+   "controls_overlapping_their_hit": 0.3132108486439195,
+   "single_slot_share": 0.0,
+   "queries_with_unlabelled": 265,
+   "top10_query_share": 0.28258967629046366,
+   "type_share_AbiE": 0.07961504811898512,
+   "type_share_RM": 0.7174103237095363,
+   "df_any": {
+    "hits": 0.9921259842519685,
+    "control": 0.34033245844269466,
+    "excess": 0.6517935258092739,
+    "control_not_overlapping_hit": 0.11146496815286625
+   },
+   "df_any_e5": {
+    "hits": 0.9921259842519685,
+    "control": 0.3325459317585302,
+    "excess": 0.6595800524934383,
+    "control_not_overlapping_hit": 0.10038216560509554
+   },
+   "df_own": {
+    "hits": 0.9378827646544182,
+    "control": 0.23753280839895013,
+    "excess": 0.700349956255468,
+    "control_not_overlapping_hit": 0.015414012738853504
+   },
+   "own_ge2": {
+    "hits": 0.38757655293088367,
+    "control": 0.047244094488188976,
+    "excess": 0.34033245844269466,
+    "control_not_overlapping_hit": 0.0006369426751592356
+   },
+   "cons_any": {
+    "hits": 0.9825021872265967,
+    "control": 0.8007874015748031,
+    "excess": 0.18171478565179355,
+    "control_not_overlapping_hit": 0.7248407643312101
+   },
+   "cons_half": {
+    "hits": 0.9825021872265967,
+    "control": 0.7696412948381453,
+    "excess": 0.2128608923884514,
+    "control_not_overlapping_hit": 0.6964331210191083
+   },
+   "c_module": {
+    "hits": 0.8591426071741033,
+    "control": 0.31119860017497813,
+    "excess": 0.5479440069991252,
+    "control_not_overlapping_hit": 0.05872611464968153
+   },
+   "supported": {
+    "hits": 0.9982502187226596,
+    "control": 0.35135608048993877,
+    "excess": 0.6468941382327209,
+    "control_not_overlapping_hit": 0.07286624203821657
+   },
+   "supported_share_ci": [
+    0.9982502187226596,
+    0.9951492717916791,
+    1.0
+   ],
+   "unsupported_per_query": 0.0016038492381716118,
+   "supported_per_query": 0.9149959903769046,
+   "completeness_unlabelled": {
+    "mean": 0.9581073199183436,
+    "frac_full": 0.8783902012248469,
+    "q25_50_75": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "completeness_correct": {
+    "n": 23636,
+    "mean": 0.9699138320076718,
+    "frac_full": 0.8984599763073278
+   },
+   "span_genes_median": 2.0,
+   "completeness_by_support": {
+    "False": 1.0,
+    "True": 0.9580338884019864
+   },
+   "types_top": {
+    "RM_Type_II": 444,
+    "RM_Type_III": 296,
+    "AbiE": 91,
+    "RM_Type_I": 80,
+    "AbiL": 71,
+    "Hma": 60,
+    "Gao_Iet": 15,
+    "Kiwa": 14
+   },
+   "raw_profiles_top": {
+    "RM_Type_II__Type_II_MTases_FAM_1": 474,
+    "RM_Type_II__Type_II_MTases_FAM_27": 457,
+    "RM_Type_II__Type_II_MTases_FAM_3": 446,
+    "RM_Type_II__Type_II_MTases_FAM_37": 415,
+    "RM_Type_II__Type_II_MTases_FAM_26": 391,
+    "RM_Type_II__Type_II_MTases_FAM_8": 378,
+    "RM_Type_II__Type_II_MTases_FAM_36": 372,
+    "RM_Type_II__Type_II_MTases_FAM_20": 369,
+    "RM_Type_II__Type_II_MTases_FAM_7": 340,
+    "RM_Type_II__Type_II_MTases_FAM_38": 337
+   }
+  },
+  "M3grow_r3": {
+   "unlabelled_hits": 3508,
+   "per_query": 2.8131515637530073,
+   "controls": 35080,
+   "hits_with_control": 3508,
+   "controls_overlapping_their_hit": 0.32853477765108324,
+   "single_slot_share": 0.0,
+   "queries_with_unlabelled": 404,
+   "top10_query_share": 0.1878563283922463,
+   "type_share_AbiE": 0.09720638540478906,
+   "type_share_RM": 0.7534207525655644,
+   "df_any": {
+    "hits": 0.9697833523375142,
+    "control": 0.3488597491448119,
+    "excess": 0.6209236031927023,
+    "control_not_overlapping_hit": 0.13678624495860753
+   },
+   "df_any_e5": {
+    "hits": 0.9692132269099202,
+    "control": 0.3305017103762828,
+    "excess": 0.6387115165336374,
+    "control_not_overlapping_hit": 0.114243260454256
+   },
+   "df_own": {
+    "hits": 0.9475484606613455,
+    "control": 0.24543899657924745,
+    "excess": 0.702109464082098,
+    "control_not_overlapping_hit": 0.021693907875185735
+   },
+   "own_ge2": {
+    "hits": 0.28876852907639683,
+    "control": 0.04267388825541619,
+    "excess": 0.24609464082098065,
+    "control_not_overlapping_hit": 0.001146253449373806
+   },
+   "cons_any": {
+    "hits": 0.9897377423033067,
+    "control": 0.8503135689851767,
+    "excess": 0.13942417331812995,
+    "control_not_overlapping_hit": 0.7865421354277223
+   },
+   "cons_half": {
+    "hits": 0.9863169897377423,
+    "control": 0.7743443557582668,
+    "excess": 0.21197263397947552,
+    "control_not_overlapping_hit": 0.708511993207387
+   },
+   "c_module": {
+    "hits": 0.8457810718358039,
+    "control": 0.3033922462941847,
+    "excess": 0.5423888255416192,
+    "control_not_overlapping_hit": 0.04801528337932499
+   },
+   "supported": {
+    "hits": 0.9771949828962372,
+    "control": 0.3490022805017104,
+    "excess": 0.6281927023945268,
+    "control_not_overlapping_hit": 0.0666525153895139
+   },
+   "supported_share_ci": [
+    0.9771949828962372,
+    0.963380123271365,
+    0.9888330469644903
+   ],
+   "unsupported_per_query": 0.06415396952686447,
+   "supported_per_query": 2.7489975942261426,
+   "completeness_unlabelled": {
+    "mean": 1.205102622576967,
+    "frac_full": 0.9344355758266819,
+    "q25_50_75": [
+     1.0,
+     1.0,
+     1.5
+    ]
+   },
+   "completeness_correct": {
+    "n": 50782,
+    "mean": 1.031523636984233,
+    "frac_full": 0.9346225040368634
+   },
+   "span_genes_median": 3.0,
+   "completeness_by_support": {
+    "False": 1.3683333333333334,
+    "True": 1.2012932711007391
+   },
+   "types_top": {
+    "RM_Type_II": 1969,
+    "RM_Type_III": 396,
+    "AbiE": 341,
+    "RM_Type_I": 274,
+    "Eleos": 116,
+    "AbiL": 85,
+    "Lamassu-DS-30": 75,
+    "Hma": 60
+   },
+   "raw_profiles_top": {
+    "RM_Type_II__Type_II_MTases_FAM_0": 1487,
+    "RM_Type_II__Type_II_MTases_FAM_2": 1485,
+    "RM_Type_II__Type_II_MTases_FAM_21": 1485,
+    "Druantia_II__DruM": 1485,
+    "RM_Type_II__Type_II_MTases_FAM_15": 1483,
+    "RM_Type_II__Type_II_MTases_FAM_22": 1482,
+    "RM_Type_II__Type_II_MTases_FAM_41": 1481,
+    "DISARM_2__drmMII": 1470,
+    "RM_Type_II__Type_II_MTases_FAM_16": 1402,
+    "RM_Type_II__Type_II_MTases_FAM_1": 724
+   }
+  },
+  "M3refine_r3": {
+   "unlabelled_hits": 1855,
+   "per_query": 1.48757016840417,
+   "controls": 18550,
+   "hits_with_control": 1855,
+   "controls_overlapping_their_hit": 0.3320215633423181,
+   "single_slot_share": 0.0,
+   "queries_with_unlabelled": 349,
+   "top10_query_share": 0.23773584905660378,
+   "type_share_AbiE": 0.15902964959568733,
+   "type_share_RM": 0.6560646900269542,
+   "df_any": {
+    "hits": 0.9870619946091644,
+    "control": 0.3404312668463612,
+    "excess": 0.6466307277628032,
+    "control_not_overlapping_hit": 0.10709385844564603
+   },
+   "df_any_e5": {
+    "hits": 0.9870619946091644,
+    "control": 0.3286792452830189,
+    "excess": 0.6583827493261456,
+    "control_not_overlapping_hit": 0.0936970381728674
+   },
+   "df_own": {
+    "hits": 0.9509433962264151,
+    "control": 0.24442048517520215,
+    "excess": 0.706522911051213,
+    "control_not_overlapping_hit": 0.01339682027277863
+   },
+   "own_ge2": {
+    "hits": 0.2738544474393531,
+    "control": 0.030296495956873316,
+    "excess": 0.2435579514824798,
+    "control_not_overlapping_hit": 0.0001614074731660076
+   },
+   "cons_any": {
+    "hits": 0.98544474393531,
+    "control": 0.8220485175202157,
+    "excess": 0.16339622641509433,
+    "control_not_overlapping_hit": 0.74529900734404
+   },
+   "cons_half": {
+    "hits": 0.98544474393531,
+    "control": 0.774177897574124,
+    "excess": 0.21126684636118598,
+    "control_not_overlapping_hit": 0.70123476716972
+   },
+   "c_module": {
+    "hits": 0.8415094339622642,
+    "control": 0.3153099730458221,
+    "excess": 0.5261994609164421,
+    "control_not_overlapping_hit": 0.05221531756920345
+   },
+   "supported": {
+    "hits": 0.9962264150943396,
+    "control": 0.3599460916442048,
+    "excess": 0.6362803234501349,
+    "control_not_overlapping_hit": 0.06488580421273504
+   },
+   "supported_share_ci": [
+    0.9962264150943396,
+    0.9923284505561681,
+    0.9989173954601636
+   ],
+   "unsupported_per_query": 0.0056134723336006415,
+   "supported_per_query": 1.4819566960705695,
+   "completeness_unlabelled": {
+    "mean": 0.9659658580413298,
+    "frac_full": 0.8991913746630728,
+    "q25_50_75": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "completeness_correct": {
+    "n": 47664,
+    "mean": 0.979362132147253,
+    "frac_full": 0.9254154078549849
+   },
+   "span_genes_median": 2.0,
+   "completeness_by_support": {
+    "False": 0.6380952380952382,
+    "True": 0.9672077922077923
+   },
+   "types_top": {
+    "RM_Type_II": 584,
+    "RM_Type_III": 368,
+    "AbiE": 295,
+    "RM_Type_I": 261,
+    "AbiL": 85,
+    "Hma": 60,
+    "Lamassu-DS-30": 51,
+    "PD-Lambda-5": 49
+   },
+   "raw_profiles_top": {
+    "RM_Type_II__Type_II_MTases_FAM_1": 644,
+    "RM_Type_II__Type_II_MTases_FAM_3": 615,
+    "RM_Type_II__Type_II_MTases_FAM_27": 580,
+    "RM_Type_II__Type_II_MTases_FAM_37": 570,
+    "RM_Type_II__Type_II_MTases_FAM_26": 547,
+    "RM_Type_II__Type_II_MTases_FAM_36": 520,
+    "RM_Type_II__Type_II_MTases_FAM_20": 514,
+    "RM_Type_II__Type_II_MTases_FAM_8": 513,
+    "RM_Type_II__Type_II_MTases_FAM_38": 494,
+    "RM_Type_II__Type_II_MTases_FAM_12": 469
+   }
+  },
+  "S1": {
+   "unlabelled_hits": 5579,
+   "per_query": 4.4739374498797115,
+   "controls": 55790,
+   "hits_with_control": 5579,
+   "controls_overlapping_their_hit": 0.2708729162932425,
+   "single_slot_share": 0.0,
+   "queries_with_unlabelled": 714,
+   "top10_query_share": 0.08370675748341996,
+   "type_share_AbiE": 0.5588815199856605,
+   "type_share_RM": 0.342534504391468,
+   "df_any": {
+    "hits": 0.9802832048754258,
+    "control": 0.2695823624305431,
+    "excess": 0.7107008424448826,
+    "control_not_overlapping_hit": 0.08385368012193323
+   },
+   "df_any_e5": {
+    "hits": 0.9738304355619286,
+    "control": 0.2576088904821653,
+    "excess": 0.7162215450797633,
+    "control_not_overlapping_hit": 0.07050494124588229
+   },
+   "df_own": {
+    "hits": 0.9637927944075999,
+    "control": 0.20500089621796022,
+    "excess": 0.7587918981896397,
+    "control_not_overlapping_hit": 0.013864988445842961
+   },
+   "own_ge2": {
+    "hits": 0.09858397562287148,
+    "control": 0.01690267072952142,
+    "excess": 0.08168130489335006,
+    "control_not_overlapping_hit": 0.0005162495697920252
+   },
+   "cons_any": {
+    "hits": 0.9553683455816454,
+    "control": 0.7994801935830794,
+    "excess": 0.15588815199856598,
+    "control_not_overlapping_hit": 0.7516593736171886
+   },
+   "cons_half": {
+    "hits": 0.9539343968453128,
+    "control": 0.7876859652267432,
+    "excess": 0.16624843161856961,
+    "control_not_overlapping_hit": 0.7413835488470426
+   },
+   "c_module": {
+    "hits": 0.8533787417099838,
+    "control": 0.27673418175300235,
+    "excess": 0.5766445599569815,
+    "control_not_overlapping_hit": 0.08341118049068293
+   },
+   "supported": {
+    "hits": 0.993547230686503,
+    "control": 0.3260978670012547,
+    "excess": 0.6674493636852483,
+    "control_not_overlapping_hit": 0.09085992428339643
+   },
+   "supported_share_ci": [
+    0.993547230686503,
+    0.9899758385885277,
+    0.9964825936981171
+   ],
+   "unsupported_per_query": 0.028869286287089013,
+   "supported_per_query": 4.445068163592622,
+   "completeness_unlabelled": {
+    "mean": 0.9756318336619465,
+    "frac_full": 0.9315289478401148,
+    "q25_50_75": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "completeness_correct": {
+    "n": 42815,
+    "mean": 0.974412005138386,
+    "frac_full": 0.9150297792829616
+   },
+   "span_genes_median": 2.0,
+   "completeness_by_support": {
+    "False": 0.8287037037037037,
+    "True": 0.9765860845510854
+   },
+   "types_top": {
+    "AbiE": 3118,
+    "RM_Type_II": 1299,
+    "RM_Type_III": 449,
+    "RM_Type_I": 152,
+    "Eleos": 135,
+    "AbiL": 121,
+    "Hma": 85,
+    "SanaTA": 63
+   },
+   "raw_profiles_top": {
+    "AbiEii__AbiEii": 3050,
+    "RM_Type_II__Type_II_MTases_FAM_1": 1368,
+    "RM_Type_II__Type_II_MTases_FAM_3": 1347,
+    "RM_Type_II__Type_II_MTases_FAM_26": 1232,
+    "RM_Type_II__Type_II_MTases_FAM_37": 1177,
+    "RM_Type_II__Type_II_MTases_FAM_27": 1107,
+    "RM_Type_II__Type_II_MTases_FAM_7": 1091,
+    "RM_Type_II__Type_II_MTases_FAM_8": 1082,
+    "RM_Type_II__Type_II_MTases_FAM_12": 1077,
+    "RM_Type_II__Type_II_MTases_FAM_38": 1072
+   }
+  },
+  "S2": {
+   "unlabelled_hits": 5532,
+   "per_query": 4.436246992782679,
+   "controls": 55320,
+   "hits_with_control": 5532,
+   "controls_overlapping_their_hit": 0.27340925524222703,
+   "single_slot_share": 0.0,
+   "queries_with_unlabelled": 714,
+   "top10_query_share": 0.08387563268257411,
+   "type_share_AbiE": 0.5551337671728127,
+   "type_share_RM": 0.34273318872017355,
+   "df_any": {
+    "hits": 0.9808387563268257,
+    "control": 0.27192697035430224,
+    "excess": 0.7089117859725235,
+    "control_not_overlapping_hit": 0.08498569473815151
+   },
+   "df_any_e5": {
+    "hits": 0.9746926970354303,
+    "control": 0.26005061460592915,
+    "excess": 0.7146420824295011,
+    "control_not_overlapping_hit": 0.07187461127005847
+   },
+   "df_own": {
+    "hits": 0.9643890093998554,
+    "control": 0.20692335502530732,
+    "excess": 0.757465654374548,
+    "control_not_overlapping_hit": 0.014554049011071029
+   },
+   "own_ge2": {
+    "hits": 0.09797541576283442,
+    "control": 0.016720896601590745,
+    "excess": 0.08125451916124367,
+    "control_not_overlapping_hit": 0.00042293817639009826
+   },
+   "cons_any": {
+    "hits": 0.9551699204627621,
+    "control": 0.8007953723788864,
+    "excess": 0.15437454808387563,
+    "control_not_overlapping_hit": 0.7524070157979849
+   },
+   "cons_half": {
+    "hits": 0.9533622559652929,
+    "control": 0.7883044107013738,
+    "excess": 0.1650578452639191,
+    "control_not_overlapping_hit": 0.7425052867272048
+   },
+   "c_module": {
+    "hits": 0.8546637744034707,
+    "control": 0.280296456977585,
+    "excess": 0.5743673174258858,
+    "control_not_overlapping_hit": 0.08399054608782187
+   },
+   "supported": {
+    "hits": 0.9936731742588576,
+    "control": 0.32785610990600145,
+    "excess": 0.6658170643528561,
+    "control_not_overlapping_hit": 0.0915785545465854
+   },
+   "supported_share_ci": [
+    0.9936731742588576,
+    0.9901786056620925,
+    0.9965495028441167
+   ],
+   "unsupported_per_query": 0.028067361668003207,
+   "supported_per_query": 4.408179631114675,
+   "completeness_unlabelled": {
+    "mean": 0.9759339599903591,
+    "frac_full": 0.9323933477946493,
+    "q25_50_75": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "completeness_correct": {
+    "n": 47439,
+    "mean": 0.9734388723764554,
+    "frac_full": 0.9098631927317187
+   },
+   "span_genes_median": 2.0,
+   "completeness_by_support": {
+    "False": 0.8238095238095238,
+    "True": 0.9769025529076467
+   },
+   "types_top": {
+    "AbiE": 3071,
+    "RM_Type_II": 1288,
+    "RM_Type_III": 444,
+    "RM_Type_I": 152,
+    "Eleos": 133,
+    "AbiL": 121,
+    "Hma": 84,
+    "SanaTA": 74
+   },
+   "raw_profiles_top": {
+    "AbiEii__AbiEii": 3020,
+    "RM_Type_II__Type_II_MTases_FAM_1": 1365,
+    "RM_Type_II__Type_II_MTases_FAM_3": 1343,
+    "RM_Type_II__Type_II_MTases_FAM_26": 1224,
+    "RM_Type_II__Type_II_MTases_FAM_37": 1172,
+    "RM_Type_II__Type_II_MTases_FAM_27": 1103,
+    "RM_Type_II__Type_II_MTases_FAM_7": 1094,
+    "RM_Type_II__Type_II_MTases_FAM_12": 1075,
+    "RM_Type_II__Type_II_MTases_FAM_8": 1073,
+    "RM_Type_II__Type_II_MTases_FAM_38": 1072
+   }
+  },
+  "S3": {
+   "unlabelled_hits": 5627,
+   "per_query": 4.5124298315958296,
+   "controls": 56270,
+   "hits_with_control": 5627,
+   "controls_overlapping_their_hit": 0.2781055624666785,
+   "single_slot_share": 0.0,
+   "queries_with_unlabelled": 726,
+   "top10_query_share": 0.08245956993069131,
+   "type_share_AbiE": 0.544872934067887,
+   "type_share_RM": 0.3509863159765417,
+   "df_any": {
+    "hits": 0.980984538830638,
+    "control": 0.2744624133641372,
+    "excess": 0.7065221254665008,
+    "control_not_overlapping_hit": 0.08246965855099579
+   },
+   "df_any_e5": {
+    "hits": 0.9749422427581305,
+    "control": 0.26362182335169715,
+    "excess": 0.7113204194064333,
+    "control_not_overlapping_hit": 0.07030846114078924
+   },
+   "df_own": {
+    "hits": 0.9646347965167941,
+    "control": 0.21107161897991825,
+    "excess": 0.7535631775368759,
+    "control_not_overlapping_hit": 0.013195145368159326
+   },
+   "own_ge2": {
+    "hits": 0.11089390438955038,
+    "control": 0.0202416918429003,
+    "excess": 0.09065221254665008,
+    "control_not_overlapping_hit": 0.0003446493193175943
+   },
+   "cons_any": {
+    "hits": 0.9545050648658255,
+    "control": 0.8008885729518394,
+    "excess": 0.1536164919139862,
+    "control_not_overlapping_hit": 0.7527633490066714
+   },
+   "cons_half": {
+    "hits": 0.952550204371779,
+    "control": 0.786156033410343,
+    "excess": 0.16639417096143594,
+    "control_not_overlapping_hit": 0.7415130105118043
+   },
+   "c_module": {
+    "hits": 0.8537408921272437,
+    "control": 0.2807001954860494,
+    "excess": 0.5730406966411943,
+    "control_not_overlapping_hit": 0.08249427635951848
+   },
+   "supported": {
+    "hits": 0.9936022747467567,
+    "control": 0.33046028078905276,
+    "excess": 0.6631419939577039,
+    "control_not_overlapping_hit": 0.08889490657541665
+   },
+   "supported_share_ci": [
+    0.9936022747467567,
+    0.9902071721828863,
+    0.9964275637693286
+   ],
+   "unsupported_per_query": 0.028869286287089013,
+   "supported_per_query": 4.483560545308741,
+   "completeness_unlabelled": {
+    "mean": 0.9799449084769859,
+    "frac_full": 0.9433090456726497,
+    "q25_50_75": [
+     1.0,
+     1.0,
+     1.0
+    ]
+   },
+   "completeness_correct": {
+    "n": 47777,
+    "mean": 0.9766536897112279,
+    "frac_full": 0.9196265985725349
+   },
+   "span_genes_median": 2.0,
+   "completeness_by_support": {
+    "False": 0.8796296296296297,
+    "True": 0.9805908305014011
+   },
+   "types_top": {
+    "AbiE": 3066,
+    "RM_Type_II": 1369,
+    "RM_Type_III": 444,
+    "RM_Type_I": 150,
+    "Eleos": 133,
+    "AbiL": 121,
+    "Hma": 83,
+    "SanaTA": 74
+   },
+   "raw_profiles_top": {
+    "AbiEii__AbiEii": 3015,
+    "RM_Type_II__Type_II_MTases_FAM_1": 1425,
+    "RM_Type_II__Type_II_MTases_FAM_3": 1403,
+    "RM_Type_II__Type_II_MTases_FAM_26": 1283,
+    "RM_Type_II__Type_II_MTases_FAM_37": 1231,
+    "RM_Type_II__Type_II_MTases_FAM_27": 1163,
+    "RM_Type_II__Type_II_MTases_FAM_7": 1154,
+    "RM_Type_II__Type_II_MTases_FAM_12": 1134,
+    "RM_Type_II__Type_II_MTases_FAM_8": 1131,
+    "RM_Type_II__Type_II_MTases_FAM_38": 1131
+   }
+  }
+ },
+ "sametype_other_E0.01": {
+  "M0": {
+   "hits": 17,
+   "per_query": 0.0136327185244587,
+   "overlap_single_member_same_type": 0.5294117647058824
+  },
+  "M2": {
+   "hits": 29,
+   "per_query": 0.023255813953488372,
+   "overlap_single_member_same_type": 0.5172413793103449
+  },
+  "M3grow_r3": {
+   "hits": 89,
+   "per_query": 0.07137129109863673,
+   "overlap_single_member_same_type": 0.2696629213483146
+  },
+  "M3refine_r3": {
+   "hits": 58,
+   "per_query": 0.046511627906976744,
+   "overlap_single_member_same_type": 0.41379310344827586
+  },
+  "S1": {
+   "hits": 77,
+   "per_query": 0.061748195669607056,
+   "overlap_single_member_same_type": 0.2857142857142857
+  },
+  "S2": {
+   "hits": 78,
+   "per_query": 0.06255012028869286,
+   "overlap_single_member_same_type": 0.2948717948717949
+  },
+  "S3": {
+   "hits": 76,
+   "per_query": 0.06094627105052125,
+   "overlap_single_member_same_type": 0.3026315789473684
+  }
+ }
+}

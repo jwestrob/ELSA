@@ -1,0 +1,160 @@
+{
+ "runs": 858,
+ "by_stratum": {
+  "Bact_multi": 785,
+  "Bact_closed": 73
+ },
+ "stored": {
+  "Z": {
+   "loci": 2010875,
+   "recovered": 857,
+   "resolved": 811,
+   "any_fit": 834,
+   "equal_rc": true,
+   "by_stratum": {
+    "Bact_closed": {
+     "recovered": 73,
+     "resolved": 72,
+     "any_fit": 72
+    },
+    "Bact_multi": {
+     "recovered": 784,
+     "resolved": 739,
+     "any_fit": 762
+    }
+   },
+   "target": [
+    857,
+    811
+   ],
+   "reproduced": true
+  },
+  "WA": {
+   "loci": 2111760,
+   "recovered": 858,
+   "resolved": 788,
+   "any_fit": 841,
+   "equal_rc": true,
+   "by_stratum": {
+    "Bact_closed": {
+     "recovered": 73,
+     "resolved": 66,
+     "any_fit": 72
+    },
+    "Bact_multi": {
+     "recovered": 785,
+     "resolved": 722,
+     "any_fit": 769
+    }
+   },
+   "target": [
+    858,
+    788
+   ],
+   "reproduced": true
+  },
+  "DH": {
+   "loci": 845580,
+   "recovered": 858,
+   "resolved": 668,
+   "any_fit": 673,
+   "equal_rc": true,
+   "by_stratum": {
+    "Bact_closed": {
+     "recovered": 73,
+     "resolved": 52,
+     "any_fit": 52
+    },
+    "Bact_multi": {
+     "recovered": 785,
+     "resolved": 616,
+     "any_fit": 621
+    }
+   },
+   "target": [
+    null,
+    668
+   ],
+   "reproduced": true
+  }
+ },
+ "filtered": {
+  "Z": {
+   "loci": 2010875,
+   "recovered": 857,
+   "resolved": 811,
+   "any_fit": 834,
+   "equal_rc": true,
+   "by_stratum": {
+    "Bact_closed": {
+     "recovered": 73,
+     "resolved": 72,
+     "any_fit": 72
+    },
+    "Bact_multi": {
+     "recovered": 784,
+     "resolved": 739,
+     "any_fit": 762
+    }
+   },
+   "target": [
+    857,
+    811
+   ],
+   "reproduced": true
+  },
+  "WA": {
+   "loci": 2111760,
+   "recovered": 858,
+   "resolved": 788,
+   "any_fit": 841,
+   "equal_rc": true,
+   "by_stratum": {
+    "Bact_closed": {
+     "recovered": 73,
+     "resolved": 66,
+     "any_fit": 72
+    },
+    "Bact_multi": {
+     "recovered": 785,
+     "resolved": 722,
+     "any_fit": 769
+    }
+   },
+   "target": [
+    858,
+    788
+   ],
+   "reproduced": true
+  },
+  "DH": {
+   "loci": 845580,
+   "recovered": 858,
+   "resolved": 668,
+   "any_fit": 673,
+   "equal_rc": true,
+   "by_stratum": {
+    "Bact_closed": {
+     "recovered": 73,
+     "resolved": 52,
+     "any_fit": 52
+    },
+    "Bact_multi": {
+     "recovered": 785,
+     "resolved": 616,
+     "any_fit": 621
+    }
+   },
+   "target": [
+    null,
+    668
+   ],
+   "reproduced": true
+  }
+ },
+ "loci_reading": "stored",
+ "reproduced": {
+  "stored": true,
+  "filtered": true
+ }
+}

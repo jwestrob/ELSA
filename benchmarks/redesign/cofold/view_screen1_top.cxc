@@ -1,0 +1,43 @@
+# ELSA dark co-folding candidates, screen 1 (ESMFold2 esmfold2-2026-05, Biohub API).
+# Six models, tiled 3 x 2. Chains are coloured by chain ID; interface side chains are sticks.
+# B-factor column = pLDDT (0-100). To colour by confidence instead:
+#   color bfactor palette alphafold
+# To superpose the two phyla of rank 27:  matchmaker #4 to #3
+set bgColor white
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/work/folds_extra/pdb/tri_013_r1.pdb
+rename #1 "rank13 three-gene block | Iainarchaeota | ipTM 0.87 | 391+179+189 aa | block in 22 genomes, 5 phyla"
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/work/folds_set1/pdb/cog_013_r2.pdb
+rename #2 "rank13 pair | Nanobdellota | ipTM 0.89 | 180+182 aa"
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/work/folds_set1/pdb/cog_027_r1.pdb
+rename #3 "rank27 | Nanobdellota | ipTM 0.91 | 107+168 aa | 15 genomes, 2 phyla, no annotated homolog"
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/work/folds_set1/pdb/cog_027_r2.pdb
+rename #4 "rank27 | Aenigmatarchaeota | ipTM 0.89 | 98+164 aa"
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/work/folds_msa/pdb/msa_cog_009_r1.pdb
+rename #5 "rank9 (with block MSA) | Micrarchaeota | ipTM 0.90 | 90+222 aa | 18 genomes, 5 phyla"
+
+open /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/cofold/work/folds_set1/pdb/cog_001_r1.pdb
+rename #6 "rank1 | Nanobdellota | ipTM 0.86 | 60+70 aa | 249 genomes, 7 phyla"
+
+hide atoms
+show cartoons
+color bychain
+
+show (#1/A & (#1/B,C :< 4)) | (#1/B & (#1/A,C :< 4)) | (#1/C & (#1/A,B :< 4)) atoms
+show (#2/A & (#2/B :< 4)) | (#2/B & (#2/A :< 4)) atoms
+show (#3/A & (#3/B :< 4)) | (#3/B & (#3/A :< 4)) atoms
+show (#4/A & (#4/B :< 4)) | (#4/B & (#4/A :< 4)) atoms
+show (#5/A & (#5/B :< 4)) | (#5/B & (#5/A :< 4)) atoms
+show (#6/A & (#6/B :< 4)) | (#6/B & (#6/A :< 4)) atoms
+style stick
+color byhetero
+
+lighting soft
+graphics silhouettes true
+tile columns 3
+view
+save /private/tmp/claude-501/-Users-jacob-Documents-Sandbox-elsa-test-ELSA/4a153818-3d15-49e9-b3de-41cb21532c73/scratchpad/elsa_cofold_view.png width 1800 supersample 2

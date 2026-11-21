@@ -1,0 +1,44 @@
+K00091 3Beta_HSD P51110 2IOD_A_fam 249 1 27
+K00134 Gp_dh_C P0A9B2 6UTO_A_fam 186 1 8
+K00226 DHO_dh A2RJT9 1JUB_A_fam 303 1 20
+K00573 PCMT Q27869 1R18_A_fam 221 1 11
+K00809 DS P49366 9IEG_A_fam 322 1 29
+K00874 PfkB Q96XN9 2DCN_A_fam 307 1 23
+K00919 GHMP_kinases_N O67060 2V8P_A_fam 99 1 11
+K00965 GalP_UDP_transf P07902 6GQD_A_fam 182 1 8
+K01051 Pectinesterase P0C1A8 1QJV_A_fam 341 2 8
+K01053 SGL Q15493 3G4E_A_fam 268 1 6
+K01159 RuvC Q5SJC4 4EP4_A_fam 164 4 15
+K01178 Glyco_hydro_15 P08017 2FBA_A_fam 475 2 1
+K01443 Amidohydro_1 O32445 3IV8_A_fam 338 1 15
+K01624 F_bP_aldolase P0AB71 5VJE_A_fam 334 1 14
+K01805 AP_endonuc_2 P15587 1MUW_A_fam 287 2 8
+K01921 Dala_Dala_lig_C P07862 4C5C_A_fam 214 2 60
+K01937 GATase Q980S6 3NVA_A_fam 240 3 7
+K02683 DNA_primase_S P49642 6RB4_A_fam 248 2 29
+K03432 Proteasome P28074 5LE5_K_fam 189 1 1
+K03741 LMWPc P0A006 2CD7_A_fam 131 3 4
+K03782 peroxidase O59651 3VLI_A_fam 643 1 1
+K04077 Cpn60_TCP1 Q6LX38 3RUV_A_fam 499 2 10
+K04487 Aminotran_5 O29689 4EB5_A_fam 371 1 4
+K04771 Trypsin_2 P0AEE3 3LGI_A_fam 156 3 1
+K05992 Alpha-amylase P19531 1QHO_A_fam 379 2 23
+K07130 Cyclase Q81PP9 4CO9_A_fam 160 1 6
+K07407 Melibiase G4FEF4 6GVD_A_fam 158 1 6
+K12132 PD40 P37562 6G4J_A_fam 232 1 10
+K12721 Acyl-CoA_dh_1 Q5W271 5ZW7_A_fam 159 1 10
+K14418 ECH_1 A5JTM5 1NZY_A_fam 263 2 9
+K15633 Metalloenzyme Q5HHP2 7TL8_A_fam 485 1 17
+K16704 Acetyltransf_1 Q8FBQ3 2FT0_A_fam 112 1 9
+K17218 Pyr_redox_2 Q7ZAG8 3H8L_A_fam 333 1 11
+K20209 Abhydrolase_1 O33472 3IBT_A_fam 249 1 6
+K23370 ParB_N Q5JD03 5X0B_A_fam 96 1 14
+status
+no_reviewed_entry_with_EC_active_site_structure    159
+no_complete_EC                                      58
+no_experimental_chain_with_active_site              27
+ok                                                  22
+no_entry_in_label_family                            19
+ok_but_length_incompatible                          13
+Name: count, dtype: int64
+54 genes in 22 families with a reference

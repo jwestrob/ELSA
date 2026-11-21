@@ -1,0 +1,58 @@
+{
+ "Z_heldout_ap": 0.796108651215888,
+ "report3_M1z": 0.7961079531037453,
+ "abs_diff": 6.981121427607206e-07,
+ "cond_a": true,
+ "queries": 2447,
+ "matched_queries": 2447,
+ "share_query_absdiff_le_0_01": 1.0,
+ "max_query_absdiff": 0.0008888049009871668,
+ "share_query_identical": 0.6669391091131999,
+ "cond_b": true,
+ "folds_same_as_report3": true,
+ "Z_chosen": [
+  {
+   "w": 1.0,
+   "wx": 8,
+   "tau": 3.0,
+   "train_ap": 0.7990537587682707,
+   "queries": 1969
+  },
+  {
+   "w": 1.0,
+   "wx": 8,
+   "tau": 3.0,
+   "train_ap": 0.7925956554273362,
+   "queries": 1962
+  },
+  {
+   "w": 1.0,
+   "wx": 8,
+   "tau": 3.0,
+   "train_ap": 0.7974879266604292,
+   "queries": 1900
+  },
+  {
+   "w": 1.0,
+   "wx": 8,
+   "tau": 3.0,
+   "train_ap": 0.7944195762838873,
+   "queries": 1992
+  },
+  {
+   "w": 1.0,
+   "wx": 8,
+   "tau": 3.0,
+   "train_ap": 0.7970438140079567,
+   "queries": 1965
+  }
+ ],
+ "Z_odd": {
+  "w": 1.0,
+  "wx": 8,
+  "tau": 3.0,
+  "train_ap": 0.8004222235624701,
+  "queries": 1200
+ },
+ "pass": true
+}

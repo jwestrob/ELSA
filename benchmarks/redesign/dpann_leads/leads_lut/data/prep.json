@@ -1,0 +1,28 @@
+{
+ "collection": "lut",
+ "cap": 12,
+ "tiers": [
+  "T2",
+  "T2b",
+  "rest",
+  "T1c",
+  "contradicted"
+ ],
+ "labeled_genes": 122421,
+ "genes_in_scope": 78064,
+ "genes_with_supporters": 78064,
+ "unique_label_carrying_supporters": 133951,
+ "residues": 43017449,
+ "shards": 8,
+ "proteins_per_shard": [
+  16744,
+  16744,
+  16744,
+  16744,
+  16744,
+  16744,
+  16744,
+  16743
+ ],
+ "est_cpu_hours_at_1p1s": 40.9
+}

@@ -1,0 +1,257 @@
+grammar workstream: REPORT (2026-11-12, DPANN, ESM++ small, rescue3 families)
+==================================================================================
+
+QUESTION
+Does a small critic s(a,b) = u(x_a) . v(x_b), trained to tell adjacent gene pairs from far pairs of the same
+genome (class-balanced logistic loss, so the logit estimates neighbourhood PMI), identify functionally coupled
+neighbours on GTDB orders it never saw better than token-pair PMI estimated from the same training orders, most
+of all for rare families?
+
+ANSWER
+1. The critic learns a transferable neighbourhood signal. On held-out orders it ranks curated-system adjacencies
+   above other adjacencies better than PMI from the training orders for all three callers (DefenseFinder 0.824 vs
+   0.785, TXSScan 0.852 vs 0.811, CRISPRCasTyper 0.685 vs 0.643), and the gain sits where the counts have no data:
+   token pairs never co-located in the training orders 0.768 vs 0.544, singleton families 0.786 vs 0.500; where a
+   pair recurs in 1-4 training genomes the two are equal (0.801 vs 0.802).
+2. Predeclared: G1 NOT MET (overall +0.039 [+0.029, +0.048] against a +0.05 bar; the never-seen part, +0.224, is
+   met). G2 NOT MET (co-folding AUROC 0.692 against the engine's 0.748; the four uncalled co-folders rank 53, 153,
+   198 and 211 of 297). G3 MET (shuffled-order critic 0.519).
+3. Where a pair has been seen, counts mark system boundaries better than the critic (DefenseFinder against
+   straddling neighbours: PMI 0.870, engine 0.845, critic 0.830).
+4. The signal is pair-specific. The interaction term alone gives 0.814 and the per-gene term alone 0.290; within
+   deciles of raw embedding cosine the never-seen gain holds (0.743 vs 0.547) and the overall gain falls to
+   +0.023. Tandem homologs split across families take the highest scores and carry part of the overall gain.
+5. Loci read from held-out critic scores are precise and incomplete: summed DefenseFinder + TXSScan excess +0.586
+   against +0.444 for the engine default, at lower F1 on every caller, and they fail the ribosomal guard (31 / 114
+   Parvarchaeaceae).
+6. Beyond paralogs, the top unscored pairs are one recurring type in 28 distinct family pairs the engine does not
+   call: a ~50-aa protein whose nearest annotated neighbours carry T4SS_pilin / TrbC / Class_IIIsignal beside a
+   longer protein whose neighbours carry SLT / Peptidase_M23 / TPM_phosphatase / PKD (observed domains of
+   neighbours; UNVERIFIED as any system).
+Reading: the embedding critic complements family counts for lineage-specific pairs with no recurrence evidence;
+it does not replace them, and it does not predict co-folding better than the engine.
+
+PREDECLARED OUTCOMES (predeclared.json, written 13:05 UTC before any code ran)
+  G1  DefenseFinder within-system vs no-gold adjacencies, held-out orders (pooled 5-fold CV; 2,362 vs 3,231,256):
+        overall      critic 0.824 [0.815, 0.833]  PMI 0.785 [0.777, 0.793]  difference +0.039 [+0.029, +0.048]  bar +0.05  NOT MET
+        never seen   critic 0.768                 PMI 0.544                 difference +0.224 [+0.180, +0.267]  bar +0.10  met
+        (335 vs 2,251,561 adjacencies whose token pair is never co-located within 3 genes in the training orders)
+      G1 needs both parts: NOT MET. The phylum split gives +0.050 [+0.034, +0.064] overall and +0.239 never seen.
+  G2  folded unannotated adjacent pairs of screen 1 (597; 44 with ipTM >= 0.75), each scored by the critic that held
+      out its order: critic 0.692 [0.604, 0.770]; engine -log P 0.748 [0.675, 0.813]; difference -0.055 [-0.138,
+      +0.029]. NOT MET (below 0.70 and below the engine).
+  G3  shuffled-order critic, DefenseFinder vs no-gold: 0.519 [0.506, 0.532], inside 0.45-0.55. MET; G1 and G2
+      stand as measured.
+  Predeclared refuters, as they fell:
+    G1 artefact readings: accent ablation (genome mean left in) 0.820 vs 0.824 (same), shuffled control at chance,
+      raw cosine 0.703 (below the critic overall) - none reproduces the critic; the self-similarity refuter (b)
+      is partly borne out, see EXPLORATORY below.
+    G2 length reading: summed length alone 0.567 [0.475, 0.667]; critic minus length +0.123 [-0.018, +0.256]
+      (point estimate below the critic; the interval does not exclude a length contribution).
+
+DESIGN AS RUN
+  Input: per-gene L2 residue means (l2_f32__row.npy) minus each genome's mean, soft-ZCA (alpha 0.1) fitted on the
+  training side of each split, unit length. Critic towers 960 -> MLP -> d; opposite-strand pairs are trained in
+  both orders and scored as the mean of both; strand is never an input. Positives: offset-1 pairs (offsets 1-3 for
+  w3). Negatives: in-chunk pairs of the same genome > 50 genes apart or on different contigs (chunks of 128
+  positives from one genome, 32 chunks per batch), so every negative is a within-genome shuffle pair.
+  Holdout: 5 folds grouped by GTDB order (greedy gene balance); validation = order-grouped 18-30% of the training
+  side (early stopping and configuration choice; no gold label enters). Phylum split: train Nanobdellota (1,738
+  genomes), score 8 other phyla (1,826 genomes).
+  Baseline (i) uses the whole training side (train + validation orders), which favours it.
+
+TRAINING (validation AUROC, adjacent vs in-chunk far pairs, validation orders; best epoch index 7 = the cap for
+c1-c6 and glob, except c4 in cv4 at 6)
+  split   c1     c2     c3     c4(lin) c5     c6     | w3     shuf   glob   | train / val pairs     | wall
+  cv0     0.731  0.733  0.728  0.720   0.727  0.741  | 0.693  0.501  0.741  | 1,999,448 / 493,440   | 2 h 49 m
+  cv1     0.741  0.743  0.739  0.727   0.737  0.755  | 0.713  0.501  0.754  | 2,195,667 / 520,272   | 2 h 54 m
+  cv2     0.742  0.743  0.741  0.728   0.738  0.753  | 0.697  0.500  0.752  | 2,203,369 / 531,986   | 2 h 55 m
+  cv3     0.757  0.758  0.754  0.741   0.752  0.769  | 0.720  0.501  0.768  | 2,238,546 / 495,533   | 2 h 57 m
+  cv4     0.719  0.720  0.718  0.710   0.715  0.728  | 0.683  0.501  0.728  | 1,970,304 / 766,739   | 3 h 04 m
+  phylum  0.742  0.744  0.739  0.732   0.738  0.751  | 0.702  0.500  0.751  | 1,326,766 / 416,918   | 1 h 46 m
+  c6 (960-512-512-128) was selected in every split. The predeclared 8-epoch cap binds for every non-shuffled
+  model except one (still rising at the cap). The bilinear critic (c4) sits 0.017-0.028 below c6.
+
+EVALUATION 1 - curated systems, pooled 5-fold CV (AUROC; diff = critic minus PMI, 95% genome bootstrap)
+  caller / negatives / stratum          n_pos   n_neg       critic  PMI    engine  cosine shuf   glob   w3    | diff [95%]
+  DefenseFinder  no-gold  all            2,362  3,231,256   0.824   0.785  0.638   0.703  0.519  0.820  0.818 | +0.039 [+0.029, +0.048]
+                          never seen       335  2,251,561   0.768   0.544  0.425   0.647  0.495  0.769  0.778 | +0.224 [+0.180, +0.267]
+                          1-4 genomes      438    292,124   0.801   0.802  0.466   0.658  0.517  0.798  0.803 | -0.001 [-0.034, +0.032]
+                          >= 5 genomes   1,589    687,571   0.569   0.398  0.274   0.628  0.524  0.556  0.534 | +0.170 [+0.160, +0.182]
+                          singleton fam     63    336,407   0.786   0.500  0.525   0.691  0.475  0.779  0.809 | +0.286 [+0.190, +0.376]
+                 straddle all            2,362      9,430   0.830   0.870  0.845   0.725  0.505  0.829  0.808 | -0.040 [-0.051, -0.028]
+                          never seen       335      6,955   0.689   0.582  0.590   0.647  0.482  0.688  0.668 | +0.107 [+0.058, +0.158]
+                          1-4 genomes      438      1,487   0.670   0.735  0.650   0.673  0.499  0.672  0.639 | -0.065 [-0.107, -0.021]
+                          >= 5 genomes   1,589        988   0.755   0.690  0.669   0.643  0.506  0.753  0.721 | +0.066 [+0.043, +0.090]
+  TXSScan        no-gold  all            1,328  3,231,256   0.852   0.811  0.766   0.768  0.541  0.833  0.857 | +0.041 [+0.031, +0.051]
+                          never seen       196  2,251,561   0.753   0.574  0.671   0.737  0.601  0.736  0.809 | +0.179 [+0.127, +0.234]
+                 straddle all            1,328      3,777   0.844   0.826  0.755   0.796  0.555  0.833  0.835 | +0.018 [+0.005, +0.032]
+  CRISPRCasTyper no-gold  all            3,041  3,231,256   0.685   0.643  0.529   0.688  0.539  0.684  0.700 | +0.041 [+0.031, +0.051]
+                          never seen       994  2,251,561   0.652   0.477  0.404   0.684  0.541  0.666  0.670 | +0.175 [+0.155, +0.196]
+                 straddle all            3,041    103,215   0.708   0.657  0.531   0.729  0.533  0.704  0.723 | +0.051 [+0.040, +0.061]
+  Phylum split (train Nanobdellota; DefenseFinder no-gold): critic 0.843, PMI 0.794, +0.050 [+0.034, +0.064];
+  never seen 0.769 vs 0.530 (+0.239); straddle all 0.827 vs 0.856 (-0.029). TXSScan no-gold 0.853 vs 0.771;
+  CRISPRCasTyper 0.736 vs 0.663.
+  Per fold (DefenseFinder no-gold, critic / PMI): cv0 0.804 / 0.776, cv1 0.873 / 0.834, cv2 0.836 / 0.765,
+  cv3 0.847 / 0.805, cv4 0.775 / 0.755: the critic leads in all five.
+  Average precision is tiny for every method (positives are 0.07% of adjacencies): DefenseFinder critic 0.0022,
+  PMI 0.0018, cosine 0.0015, engine 0.0010.
+  Baseline variants: PMI pseudocount 0.1 0.795, 10 0.781; training genome count 0.765; training-only -log P
+  0.778. The best discrete variant (PMI a0.1) leaves the critic at +0.029 overall.
+  The frequent stratum (>= 5 training genomes) inverts every count statistic (PMI 0.398, engine 0.274): the
+  most recurrent no-gold adjacencies (conserved housekeeping neighbourhoods) outrank defense pairs on counts.
+  Against straddle negatives (one gene in the instance, the other outside) counts beat the critic overall
+  (0.870 vs 0.830): the counts mark system boundaries better wherever the pair has been seen.
+  Descriptive variant, not predeclared: scoring every pair by the mean of both orders gives DefenseFinder 0.866
+  (frequent stratum 0.739), TXSScan 0.831, CRISPRCasTyper 0.706; the transcription-order term helps geometry
+  (evaluation 3) and works against defense pairs.
+
+EXPLORATORY (added after the pipeline test or after the final evaluation; not predeclared)
+  A. Interaction vs per-gene terms. s = scale (U_a - mean_g U).(V_b - mean_g V) [interaction, 'dc'] + the rest
+     [per-gene, 'marg'], with tower outputs centred over each held-out genome's genes (exactly the score minus its
+     row and column means against the genome). Written before any real result (13:30 UTC), run on the final models.
+     5-fold CV, AUROC                 interaction  per-gene  full critic  PMI    | interaction - PMI
+     DefenseFinder no-gold all        0.814        0.290     0.824        0.785  | +0.028 [+0.019, +0.037]
+                   no-gold never      0.779        0.341     0.768        0.544  | +0.235 [+0.192, +0.276]
+                   no-gold singleton  0.831        0.233     0.786        0.500  | +0.331
+                   straddle all       0.835        0.243     0.830        0.870  | -0.035 [-0.047, -0.024]
+     TXSScan       no-gold all        0.882        0.138     0.852        0.811  | +0.071 [+0.062, +0.079]
+                   no-gold never      0.859        0.176     0.753        0.574  | +0.285
+     CRISPRCasTyper no-gold all       0.697        0.389     0.685        0.643  | +0.054
+     shuffled control (DefenseFinder no-gold all): interaction 0.494, per-gene 0.566.
+     Phylum split: DefenseFinder interaction 0.830 (never 0.787), TXSScan 0.914 (never 0.897).
+     The per-gene part ranks system pairs BELOW ordinary adjacencies; the separation is carried by the pair term.
+     Evaluation 2 with the interaction term: 0.694 [0.609, 0.769] (unchanged). Evaluation 3: 0.721.
+  B. Embedding similarity held fixed (written after the final evaluation 1 and 5 results). Within-system pairs are
+     more alike than ordinary neighbours (median raw cosine 0.912 for DefenseFinder pairs vs 0.839 for no-gold).
+     AUROC within deciles of raw cosine (n_pos x n_neg weighted mean) and on pairs below the adjacent-pair median
+     cosine 0.839 (507 DefenseFinder positives, 116 of them never seen):
+                                       cosine-binned                         below-median cosine
+                                       critic  interaction  PMI    cosine    critic  interaction  PMI
+     DefenseFinder no-gold all         0.769   0.759        0.746  0.517     0.843   0.846        0.813
+                   no-gold never       0.743   0.756        0.547  0.539     0.687   0.748        0.518
+     TXSScan       no-gold all         0.798   0.831        0.765  0.554     0.856   0.904        0.828
+                   no-gold never       0.718   0.833        0.592  0.518     0.657   0.816        0.639
+     CRISPRCasTyper no-gold all        0.625   0.636        0.608  0.512     0.666   0.700        0.634
+     With similarity held fixed the overall DefenseFinder gain over PMI is +0.023 and the never-seen gain +0.196.
+     Refuted if the never-seen gain had vanished inside cosine bins (it did not).
+
+EVALUATION 2 - co-folding (AUROC for ipTM >= 0.75; pair bootstrap, 2,000 draws)
+  set                 n    hits  critic                engine -log P         summed length (shorter first)
+  cognate+uncalled    597  44    0.692 [0.604, 0.770]  0.748 [0.675, 0.813]  0.567 [0.475, 0.667]
+  cognate             300  39    0.609 [0.512, 0.701]  0.600 [0.499, 0.698]  0.570
+  uncalled            297   5    0.565 [0.312, 0.850]  0.666 [0.343, 0.939]  0.617
+  shuffled critic, cognate+uncalled: 0.525 [0.429, 0.614]; critic minus shuffled +0.167 [+0.061, +0.272].
+  The four uncalled pairs that passed criteria 1-3 rank 53 (unc_071_r2), 153 (unc_002_r1), 198 (unc_087_r1) and
+  211 (unc_069_r2) of 297 uncalled pairs (percentiles 0.83, 0.49, 0.34, 0.29); the engine places three of them in
+  its top 20%. The critic does not rank them near the top.
+  Within the cognate class the critic and the engine are equal (0.609 vs 0.600); the engine's overall lead comes
+  from separating cognate (called) from uncalled pairs, which is how the classes were defined.
+
+EVALUATION 3 - geometry sanity (same strand with <= 50 nt between vs opposite strands; 1,477,865 vs 1,061,490)
+  critic 0.724 [0.723, 0.725], offsets 1-3 0.716, accent 0.725, PMI 0.676, engine 0.660, cosine 0.637,
+  shuffled 0.503. Against divergent pairs only 0.721, convergent only 0.727. Phylum split: critic 0.700, PMI
+  0.651. Scoring every pair by the mean of both orders lowers the critic to 0.678 (the oriented term carries
+  transcription-order information); with 'a = upstream' alone 0.714.
+  Refuted if the critic needed strand as a feature (it never sees strand) or if the shuffled control matched it.
+
+EVALUATION 4 - loci from held-out critic scores (runs of adjacencies above the 99th percentile of the same
+critic's scores on random same-genome pairs of the held-out genomes; gap 0 and gap 2 runs, like the engine's
+conserved and conserved_g2 kinds; package scorer, min members 2; paired against the engine default table)
+  critic: 697,728 of 3,353,826 adjacencies on (20.8%; the null threshold admits 1%); 78.3% of DefenseFinder
+  within-system adjacencies on, 20.8% of no-gold. 374,962 gap-0 loci (median 2 genes, q90 5, max 42) covering
+  1,072,690 genes (30%). Engine level 2: 2,143,829 boundaries, 2,563,690 genes (71.5%).
+  locus set                          DF F1   DF excess  TXSS F1  TXSS excess  CCT F1  DF+TXSS excess vs engine default
+  engine default (full table)        0.833   +0.274     0.753    +0.171       0.595   +0.444 (reference)
+  engine level 2 (2 kinds)           0.684   +0.283     0.409    +0.045       0.428   -0.117 [-0.129, -0.105]
+  critic (offset 1)                  0.667   +0.343     0.602    +0.243       0.315   +0.142 [+0.122, +0.162]
+  critic (offsets 1-3)               0.652   +0.328     0.593    +0.233       0.317   +0.117 [+0.097, +0.137]
+  critic AND engine level 2          0.654   +0.369     0.600    +0.254       0.297   +0.178 [+0.159, +0.198]
+  critic OR engine level 2           0.680   +0.253     0.406    +0.035       0.439   -0.156 [-0.170, -0.141]
+  (test genomes only: critic +0.130 [+0.101, +0.161], intersection +0.171 [+0.143, +0.201])
+  Ribosomal acceptance (runs >= 16, gap 2; guard >= 1,650 / 1,686 recovered and >= 110 / 114 Parvarchaeaceae):
+    engine level 2: 1,686 recovered, 704 resolved, 114 / 114. critic: 1,360 recovered, 902 resolved (median
+    precision 0.964), 31 / 114 - fails. offsets 1-3: 1,489, 1,163 resolved, 107 / 114 - fails. intersection:
+    1,360, 31 / 114 - fails. union: 1,686, 698, 114 / 114 - passes, at -0.156 excess.
+  Reading: the critic's runs are precise and incomplete. They raise the excess (precision against random
+  placement) and lower F1 on every caller against the engine's full table; the excess gain is the same
+  precision-for-recall trade seen in earlier embedding arms. The single-threshold critic reading beats the
+  engine's single level-2 reading on TXSScan F1 (0.602 vs 0.409) and is close on DefenseFinder (0.667 vs 0.684).
+  No arm built here passes the ribosomal guard and beats the engine default.
+
+EVALUATION 5 - what it learned
+  Eligible: held-out adjacencies with both genes unannotated, no gold member, distinct tokens, token pair not
+  engine-called: 436,082 (292,801 pair types; 55,324 in >= 2 genomes). 43,770 (10.0%) exceed the critic's own
+  99th percentile of random same-genome pairs (1% expected).
+  Top 30 types by mean critic score (>= 2 genomes): scores 10.1-18.8 (null q99 1.43-1.55), raw cosine between the
+  two genes 0.78-0.98 (median 0.952), all within one order, 2-8 genomes, engine L = 1 for all; both genes' nearest
+  annotated neighbours share domains in most types, and several are consecutive token ids (161278-161279,
+  381689-381690, 125223-125224, 66734-66735). These are mostly tandem homologs split across MMseqs2 families. (u, v)
+  clustering (cv0 critic, average linkage, cosine distance 0.5): 29 in one cluster. Table: learned_top30.tsv.
+  Same list restricted to raw cosine < 0.839 (exploratory; 147,959 eligible adjacencies, 5,913 above the null
+  q99): scores 7.4-12.4, raw cosine 0.63-0.83, 2-5 genomes, 1-2 orders, 27 of 30 in Nanobdellota. 28 of 30 types
+  are one pattern - a short protein (median 50 aa) whose 10 nearest annotated genes carry T4SS_pilin, TrbC or
+  Class_IIIsignal (embedding cosine to them ~0.95) beside a longer protein (180-1,070 aa) whose neighbours carry SLT,
+  Peptidase_M23, TPM_phosphatase, 3D, PKD, DUF3160 or VanY (cosine ~0.98-0.99). The (u, v) clustering puts exactly
+  these 28 in one cluster; the two others are T12 (neighbours DUF5667 / PepSY / Thioredoxin beside HTH_20 / HTH_24;
+  2 phyla) and T21 (neighbours SMC_ScpB beside DUF2666 / NOG1_N / SBDS_N). Several pattern types sit side by side
+  in one locus (GCA_014240455.1 JAAZWY010000003.1: T05 at positions 34-35, T04 at 39-40; the same two
+  types sit within six genes of each other in a second genome, MBT6023044.1-MBT6023050.1). Observed domains on
+  embedding neighbours only; no curated caller emitted a call on these genes; UNVERIFIED.
+  Co-fold screen candidates (not folded):
+    1. pattern representative, low-cosine T04: gids 1186030 -> 1186029 (MBT6023045.1 / MBT6023044.1; 63 / 203 aa
+       medians), 4 genomes, Nanobdellota; also 1107176 -> 1107175 (MBT5274642.1 / MBT5274641.1).
+    2. pattern representative, low-cosine T05: 436727 -> 436728 (JAAZWY010000003.1_35 / _36; 352 / 49 aa medians),
+       4 genomes; also 1186035 -> 1186034 (MBT6023050.1 / MBT6023049.1).
+    3. pattern in a second phylum, low-cosine T29: 18915 -> 18914 (KHO47691.1 / KHO47690.1; 277 / 44 aa medians),
+       Aenigmatarchaeota GW2011-AR5, 5 genomes.
+    4. low-cosine T12: 644092 -> 644093 (MBI4170966.1 / MBI4170967.1; 120 / 71 aa medians), Aenigmatarchaeota and
+       Nanobdellota (2 orders).
+    5. low-cosine T21: 963593 -> 963594 (MBS3107817.1 / MBS3107818.1; 184 / 131 aa medians), Nanobdellota.
+    6. top-30 T06 (separate (u, v) cluster; raw cosine 0.89): 3363579 -> 3363580 (MFA4820036.1 / MFA4820037.1;
+       144 / 93 aa medians), neighbours STT3 / PCYCGC beside Cupredoxin_1, Aenigmatarchaeota.
+    Controls for such a screen: the pattern's short protein swapped against long partners of other pattern types
+    (tests type-level vs pair-specific co-folding), and paralog-like top-30 pairs (expected to score as homologous
+    surfaces, not partners).
+
+READINGS AND WHAT WOULD REFUTE THEM
+  R1 "The critic transfers neighbourhood PMI to lineages it never saw, where counts are blind." Supported: never-seen
+     DefenseFinder +0.224, TXSScan +0.179, CRISPRCasTyper +0.175; phylum split +0.239; interaction term carries it;
+     survives cosine binning; shuffled control at chance. Would have been refuted by the gain vanishing within
+     cosine bins, by the accent ablation or shuffled control reproducing it, or by the per-gene term carrying it.
+  R2 "It replaces counts." Refuted: overall gain +0.039 (below the bar), equal at 1-4 training genomes, behind
+     counts on system boundaries (straddle -0.040), and behind the engine on co-folding (-0.055). A stacked score
+     (counts where seen, critic where not) is the use this result supports; it was not built here.
+  R3 "Part of the score is self-similarity." Supported for the top of the ranking (top-30 raw cosine median 0.952)
+     and for about 40% of the overall gain (+0.039 -> +0.023 within cosine bins). Not for the never-seen gain.
+  R4 "The critic finds unrecognised coupled pairs." Not established. The co-fold test (G2) fails, and the top
+     non-paralogous types are one envelope-like pattern seen in 2-5 genomes of one order each. That pattern is a
+     candidate class for a co-fold screen (list above), not a finding.
+  R5 Loci: the excess gain is a precision gain at lower F1, not admissible under the ribosomal guard.
+
+DEVIATIONS, BUGS, CAVEATS
+  - Bug fixed before the final evaluation: training-only -log P (a sensitivity variant of baseline i) was looked up
+    with keys on the global token base while recurrence.colocalization() encodes on (max token present + 1). cv4
+    and the phylum split lacked the largest token id in training, so 502 / 364 adjacencies matched. Patched (job
+    83502; cv0-cv3 values unchanged to the bit); the primary PMI and the strata never used that path.
+  - Six folded 'uncalled' pairs are engine-called under the rescue3 tokens (screen 1 used the pre-rescue base);
+    classes are kept as folded.
+  - Whitening uses the training side of each split; genome-mean removal uses each genome's own genes (label-free).
+  - Pooled CV AUROC mixes five critics; per-fold AUROC agrees in direction (critic leads PMI in 5 / 5 folds).
+  - The critic sees offset-1 positives only; strata use window-3 co-location (offset-1 strata in eval1.tsv).
+  - CRISPRCasTyper instances are 93% single-member and 99% 'cas_putative'; its rows carry little weight here.
+
+ARTIFACTS
+  Local (benchmarks/redesign/grammar/): predeclared.json, NOTEBOOK.txt, REPORT.txt, prep.py, train.py,
+  evaluate.py (e123, loci, learned, dc), fix_nlogp.py, explore_cos.py, summarize.py, pull_results.sh,
+  run_prep.sbatch, run_train.sbatch, run_eval.sbatch, run_fix.sbatch, run_explore.sbatch; results/ (eval/*.tsv,
+  eval_summary.json, learned_*.tsv, loci/*/compare_vs_engine.txt and ribosomal_check.*, runs/*/summary.json and
+  train_log.tsv, prep/splits.json; results/interim/ = the 4-fold interim, superseded).
+  Biotite $RD/grammar/: prep/ (genes_meta, adj1 with labels, engine statistics and cosine, base_<split>.npz,
+  folded.parquet, splits.json), runs/<split>/ (models/*.pt, scores_adj1.npz, null_scores.npz,
+  scores_folded.parquet, uv_primary.npz, summary.json, train_log.tsv), eval/ (assembled_*.npz, dc_*.npz,
+  folded_scored_*.parquet, tables), loci/<set>/ (loci_all_genomes.parquet, score_min2/, ribosomal_check.*).
+  Jobs: 80894 prep; 80895 smoke; 80954-80958 cv0-cv4; 80959 phylum; 81025 final evaluation; 83502 key patch;
+  84198 exploratory cosine control; interim 82446, 82587, 83335; pipeline tests 80965, 80980, 81024, 81027.
+  Compute: 6 training jobs x 64 CPUs (16.4 h wall in total), evaluation jobs 24 CPUs. No GPU, no
+  protein-language-model inference.

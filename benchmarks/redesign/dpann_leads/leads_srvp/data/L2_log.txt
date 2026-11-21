@@ -1,0 +1,54 @@
+                                  step    T2  T2b  rest  T1c  contradicted  main_T2_T2b_rest
+                         labeled genes 11819 7346 15210 3904          2322             34375
+        label carriers with a KOfam KO  6364 2566  4800 1678          1114             13730
+       STRONG partner-derived function  4904 1735  3022 1158           822              9661
+            STRONG enzyme (KO with EC)  1520  243   470  224           186              2233
+        100-600 aa and ILVFMAWC < 0.45   736  121   158  156           129              1015
+ named by own relaxed Pfam hit (PFSET)   241   59    81  132            87               381
+named by own relaxed KOfam hit (KOSET)   539  104   130  130            65               773
+   named by CDD (model, COG, name, EC)   289   32    43   54            31               364
+            already named (any source)   604  108   136  151           104               848
+         unannotated profile-invisible   132   13    22    5            25               167
+main population functions: 298 | unannotated: 167 genes, 67 functions
+         n  unannot            label
+func                                
+K01154  58       22      Methylase_S
+K28560  34        0   Acetyltransf_1
+K13280  34        0    Peptidase_S26
+K06152  28       20  Gluconate_2-dh3
+K17992  26        0  2Fe-2S_thioredx
+K00201  23        0    Molybdopterin
+K21349  23        0  Glycos_transf_2
+K00386  22        0  Dehyd-heme_bind
+K02340  21        0   DNA_pol3_delta
+K03405  19        0  Sigma54_activat
+K00986  18        4            RVT_1
+K10794  18        0             GRDB
+K03605  17        1             HycI
+K04069  11        1      Radical_SAM
+K24700  11        0            CDO_I
+K14747  10        1           CapK_C
+K15512   9        0        PaaA_PaaC
+K22931   9        2  SQHop_cyclase_C
+K24122   8        2    Amino_oxidase
+K03427   8        5         N6_Mtase
+K07316   8        1      N6_N4_Mtase
+K10700   8        1    Molybdopterin
+K00283   8        0          GcvP2_C
+K00903   8        0             CbiA
+K20930   8        5      Aconitase_C
+K21216   8        3  Glycos_transf_2
+K23370   7        0           ParB_N
+K00333   7        0   Complex1_49kDa
+K03269   7        0      Metallophos
+K00978   6        0  NTP_transferase
+K20571   6        0  GFO_IDH_MocA_C2
+K25916   6        0            URO-D
+K20591   6        4  DegT_DnrJ_EryC1
+K01793   6        6        C5-epim_C
+K12902   5        2      Radical_SAM
+K01443   5        0     Amidohydro_1
+K01607   5        3              CMD
+K17218   5        0      Pyr_redox_2
+K02482   5        0             HAMP
+K01809   5        0    MPI_cupin_dom

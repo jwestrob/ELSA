@@ -1,0 +1,94 @@
+SLOT_RESCUE NOTEBOOK (workstream slot_rescue, ELSA redesign; DPANN development data only)
+=====================================================================================
+
+2026-11-20T23:28:23Z  Brief received. Read: Sharur replacement_screen_2026-11-11 REPORT.md, scripts/screen.py + assemble.py
+                  (dark-row definition, dark_is_X rule), tables/dark_newcomers.tsv, work/dark_instances.tsv; capture
+                  2026-11-11_dpann-replacement-in-place-screen.md; dpann-exploration CONTEXT.md (slot / detection-limited);
+                  ribosomal_protein_absence_2026-10-12 (rp_report_facts.py: uL29 / uL15 / eL39 slot logic; custom.tbl
+                  DPANN-profile hits); core_machinery_2026-11-11 REPORT.md; long_loci REPORT.txt, REPORT2.txt, lb.py, ll.py;
+                  vocab_lists vl.py (pass_count, z_lists, aln_lists); softrec expand_knn; docs/redesign NOTEBOOK.md (last
+                  sections). Remote listings: long_loci/loci/dpann_{Z,A}, nodes/dpann_{Z,A}/bonds_obs.npz, calib/table,
+                  vocab_lists/mm, ws_dpann/package/universe (genes.parquet carries protein_id).
+2026-11-20T23:28:23Z  Mac Sharur DPANN DB (read-only): annotations pfam 4,218,124 / kofam 1,238,969 / kegg 52,771 rows, 3,585,303
+                  proteins, 3,564 bins: equal to the 19 Oct seal census that the ELSA DPANN package was built from, so
+                  Sharur protein_id joins ELSA gid through universe/genes.parquet.
+2026-11-20T23:34:22Z  Truth table built (code/truth.py; Mac; read-only on Sharur DB + study folders). Reproduction of the study's
+                  stored numbers exact: uL29 Parvarchaeales 37 / Pacearchaeales 16, uL15 Parvarchaeales 27 / Iainarchaeales 1,
+                  eL39 slot counts by order (all orders), eL39 negative-order ORFs 78 = slot_orfs.faa. lead_X 3,231 unique
+                  proteins (20 under two leads with different X), lead_negative 2,174 (395 also lead_X, 394 of them L05 / L02),
+                  DL_slot 180 (eL39 99, uL29 53, uL15 28), DL_profile 1,191. 0 lead proteins carry a Pfam (dark by definition).
+2026-11-20T23:34:22Z  predeclared.json written before any ELSA list, bond, locus or call was read for a truth or control gene.
+                  sha256 266f2809dfe1434f2fa8aaf66208f06ddb24d6574653c15cdd48b1b7d8fcdf84 (written_utc corrected to the real time 23:34Z before any scoring; earlier hash a82a8dab... void)
+2026-11-20T23:36:40Z  Controls drawn by the predeclared rule (code/controls.py, seed 20261120): 11,904 controls for 4,083 truth
+                  proteins (lead_X 9,429 / DL_slot 180 / DL_profile 2,295); 184 truth proteins with < 3 eligible, 53 with 0;
+                  307,235 eligible ORFs in 1,798 genomes; 64% of genes sit within 2 genes of a conserved-pair unit gene and
+                  are excluded. Length ratio control / truth q10 / q50 / q90 .878 / 1.000 / 1.121.
+                  data/controls.tsv sha256 84dafad389762fa2cfa530d45a7a36111e461c90402caf28a11f6a280a8d001d
+2026-11-20T23:44:21Z  code/score.py (biotite): lists rebuilt for query genes and their +-3 neighbors (Z: calib table z >= 10.6,
+                  own group excluded; A: aln__k1000 expanded as expand_knn), calls as predeclared. Login-node smoke (150 rows,
+                  2 processes, 70 s and 140 s, 3 GB; above the 30 s login guideline, noted): gate 457 stored bonds, 0
+                  mismatches; vectorized label build gives an identical calls table. Remote rules read in the submitting turn
+                  (~/.claude/CLAUDE.md, biotite-cluster-ops.md). Job 119461 slot_rescue (standard_expand, 24 CPUs, mark7
+                  header, exclude list; account at 232 CPUs before submission) RUNNING on node-64-768g-5.
+2026-11-20T23:46:38Z  Job 119461 COMPLETED in 1 min 02 s (24 CPUs; 17,740 query genes, 109,737 genes with rebuilt lists; Z 94.1 M,
+                  A 49.4 M entries; peak RSS 3.6 GB). GATE PASSED: 59,476 stored bonds touching query genes, support recomputed
+                  from the rebuilt lists equals stored n - 1 and ng - 1 in every case (0 mismatches). 0 truth or control
+                  proteins unmapped; 0 without an embedding. STATUS DONE. calls.parquet fetched; code/summarize.py run.
+2026-11-20T23:46:38Z  Predeclared numbers read (bottom_line.tsv). Observation: the slot call (81.5% right on verified lead_X, Z)
+                  pools one supporting partner per genome over the whole list, while list and combined calls vote the top 10;
+                  a right-family partner sits anywhere in the Z list for 2,378 / 2,904 and the k = 50 list call reaches
+                  64.9%. POST HOC diagnostic decided now (not predeclared, labeled as such): the same per-genome pooled vote
+                  over the whole list without the adjacency filter (fullg), one vote per partner over the whole list (full),
+                  and the slot-consistent whole list pooled per genome without bond / locus gating (combfull), with the same
+                  controls. It separates list depth from the positional filter.
+2026-11-20T23:53:20Z  POST HOC job 119468 slot_rescue_ph (posthoc.py; same header) COMPLETED in 47 s; STATUS rewritten DONE. Whole-list
+                  vote without the positional filter: verified lead_X Z 2,368 (= slot call count; 2 differ each way), A 2,183;
+                  control false core names Z 169 / 8,474 (1.99%; Ribosomal_L40e 92) against 11 (0.13%) for the slot call.
+                  Stratum defined after scoring (code/strata.py): 2,332 verified proteins with no Pfam and no right-family KO:
+                  slot Z 77.1%, slot A 67.1%, list Z 40.7%, list A 34.9%; slot Z - slot A +10.0 [+8.7, +11.5]. The other
+                  572 carry the right-family KO and are rescued 97-100% by every route.
+2026-11-20T23:53:20Z  American spelling pass: neighbour (x2) and labelled corrected in predeclared.json (spelling only; new
+                  sha256 dfc5b112b371bd2117be3fe0bd0d93fd5d23946f9012329a1f537bd722a5bfd0; restoring the three words gives
+                  266f2809... exactly, checked), in this notebook, REPORT.txt and score.sbatch comments. Remote copies updated.
+2026-11-20T23:53:20Z  REPORT.txt written. Cost: 1 min 49 s of 24-CPU job time (budget 2 h). Works criterion met (slot Z 81.5% at
+                  0.13% control false rescue); step-5 sketch in the report. No vault capture or CONTEXT.md edit (brief
+                  restricts writes to this folder).
+
+PASS (whole-DPANN slot-rescue pass; coordinator message: Jacob approved the step-5 sketch; budget 1 h of 24-CPU job time)
+2026-11-21T00:16:40Z  Candidates checked on the Mac DB: 2,140,312 proteins carry a Pfam row, so 1,444,991 candidates; 2,798 of the
+                  Pfam proteins carry only name-form rows (PQQ_3, TYW2_N_arc, Ribosomal_L2, ...; data/pfam_nameonly.tsv), which
+                  the test's label tables (accession form) never read. data/regression_sets.json: 2,904 verified rows, 8,474
+                  controls, 223 CORE labels; expected 2,368 / 11 (recomputed from per_gene.tsv.gz).
+2026-11-21T00:16:40Z  predeclared_pass.json written before any pass computation (predeclared.json untouched). sha256 d8f2c33eb6287ba436c60b51a5b5b4832c38514fc161a12b1c50ddbd2b8eb348
+2026-11-21T00:25:38Z  Slurm preflight read in this turn (remote ~/.claude/CLAUDE.md + biotite-cluster-ops.md, 1,131 lines). Smoke job
+                  119513 (SMOKE=300; pass.sbatch, mark7 header, 24 CPUs) DONE in 37 s: regression subset 0 mismatches, tables
+                  written; outputs moved to tmp/smoke119513. Pass job 119515 DONE in 3 min 04 s (peak 4.5 GB, 1,656% CPU).
+                  Regression a1: 19,146 rows identical to calls.parquet; 2,368 / 2,904 and 11 / 8,474. a2 (empty right set):
+                  2,368 and 11, 0 changes. Bond gate 0 mismatches. Candidates 1,444,991; Z-bonded 502,275 (all in a locus);
+                  called 175,729. Calibration: 48,418 of 50,000 called, 98.85% agree (Pfam only 98.04%); candidate-weighted
+                  expected 89.3%. KO: 12,537 agree / 82 disagree / 212 unmapped. Alignment same label 71.4%.
+                  pass/dpann_slot_rescue_pass.parquet 8,725,195 B, sha256 b346af742df6529776c18f33523d321b32d4ba1bf25614154d7f21c258d182d7,
+                  copied locally. DuckDB read_parquet join on protein_id verified read-only on the Mac Sharur DB: all 175,729
+                  rows join, bin / contig / gene_index equal, 0 with a Pfam row. REPORT_pass.txt written. Pass cost 3 min 41 s
+                  of the 1 h budget.
+
+VERIFY (coordinator: two independent checks before any load into Sharur)
+2026-11-21T00:38:26Z  Tools checked: aksha 0.2.3 search reports below gathering cuts with --evalue / --domE; Aksha PFAM store
+                  Pfam-A.hmm 27,481 models, KOFAM per-KO files; Mac has no Foldseek / TM-align / US-align (pyenv shim only),
+                  biotite has /shared/software/bin/USalign (20231222) and foldseek. fold_biohub.py read (plain fold default
+                  esmfold2-fast-2026-05; strips trailing '*'); ESM_API_KEY set on the Mac. 1,761 Pfam + 52 KO labels.
+2026-11-21T00:38:26Z  verify/predeclared_verify.json written before either check computed anything. sha256 72d13c1b13ae97c8ccbbc30b25878830418d58fac028a48466ded5f71c81f64c
+2026-11-21T00:45:22Z  Check B prep: data/B_order.tsv (S1 86,250 / S2 41,478 / S3 38,103 proteins of 40-600 aa; first 200 of each
+                  order); partnersB.py run on the biotite login node as a serial script (50 s): 600 / 600 calls reproduced, 600
+                  with a supporter carrying the label as a stored row, bond gate 0 mismatches. Sample = first 100 per stratum;
+                  300 null pairs, none widened beyond 20%; 155 distinct labels; 564 unique sequences folded (max 861 aa).
+                  data/B_sample.tsv 9bea1fb4..., data/B_pairs.tsv 86c8c0be..., B/fold_input.faa bdb31355....
+2026-11-21T00:45:22Z  Check B driver launched on the Mac (nohup, PID 80263 in verify/B/driver.pid; log verify/B/driver.log,
+                  fold log verify/B/fold.log): Biohub batch API folds, then US-align on the biotite login node (serial), tables,
+                  verify/STATUS_B. 236 folds returned within 2 min.
+2026-11-21T00:45:22Z  Check A: data/labeled.faa (175,729 sequences, sha256 986460c3...) copied to biotite. Aksha output format
+                  checked on a 2,000 x 61 login-node test. Models: 1,812 of 1,813 labels (PF12676 absent from the Aksha PFAM
+                  store). Smoke job 119536 (2,000 proteins) DONE in 25 s. Note: Aksha exposes --evalue / --domE but no --max,
+                  so HMMER's acceleration filters stay on; the weakest reportable hit is bounded by the Forward filter
+                  (P <= 1e-5 per comparison). Full job 119541 (slot_verifyA, mark7 header, 24 CPUs) RUNNING; its last step
+                  writes $RD/slot_rescue/verify/STATUS_A. Preflight rule files read in this turn before both submissions.

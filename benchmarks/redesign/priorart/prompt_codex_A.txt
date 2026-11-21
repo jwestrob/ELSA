@@ -1,0 +1,35 @@
+You are doing a prior-work check for a methods paper in comparative microbial genomics. This is literature research only: use live web search and open the sources. Do not read or modify any local files; everything you need is in this prompt. Your final message is the deliverable (plain text, no Markdown tables wider than 110 characters).
+
+THE METHOD BEING CHECKED (unpublished; describe it to no one, just compare it with the literature)
+Goal: find conserved gene neighbourhoods (operon-like loci, defence systems, secretion systems, biosynthetic clusters) across thousands of prokaryotic genomes, de novo.
+C1. Merge procedure. Each contig is a sequence of genes. Every pair of neighbouring units (up to 2 intervening genes, either order, either strand) is a candidate. A candidate is scored and the best-scoring pairs are merged greedily into a single unit, which can merge again; rounds repeat until nothing passes. The result is a hierarchical parse of each genome into nested "words" (conserved runs of genes) and background genes.
+C2. Score. n = number of independent lineages in which the two units are neighbours. E = number of lineages expected to show them as neighbours if gene order within each genome were random, computed from per-genome copy numbers. Score = n ln(n/E) - n + E (the Poisson log-likelihood ratio), read as the description length saved by naming the pair as one word. One threshold, set so that the same procedure run on genomes with gene order shuffled within each genome yields at most 1% as many discoveries.
+C3. Independence of evidence. Counting every genome separately lets shared ancestry pass for recurrence. Two corrections: (a) count data-derived genome groups (clusters of genomes by protein similarity, no taxonomy) instead of genomes; (b) an effective count N_eff = n / (1 + (n - 1) * s), where s is the mean, over pairs of genomes carrying the pair, of the fraction of gene adjacencies the two genomes share (a direct measure of inherited gene order), with the score scaled by N_eff / n.
+C4. Null model. Shuffling gene order within each genome (contig sizes kept), used both for the expectation E and to calibrate the threshold; the observation that such a null cannot see gene order inherited within a clade.
+C5. Benchmarks and validation. Scoring de novo loci against curated system callers (DefenseFinder, TXSScan, CRISPRCasTyper), with a random-placement control subtracted from F1; a ribosomal-protein locus check.
+
+YOUR SCOPE (agent A): the comparative-genomics literature on conserved gene clusters and synteny.
+A second agent covers language-model, compression and embedding approaches; leave those to it except where a paper spans both.
+Search for, open and assess prior work on at least these themes. The examples in parentheses are starting points recalled from memory, possibly misremembered and certainly incomplete: verify each, and search beyond them for whatever else exists.
+ 1. Formal models of gene clusters and their significance tests (gene teams, common intervals, max-gap clusters, r-windows; statistical tests for gene clustering such as work by Durand and Sankoff and by Hoberman, Sankoff and Durand).
+ 2. Conserved gene neighbourhood methods for functional coupling in prokaryotes (Overbeek and colleagues on gene clusters and functional coupling; Rogozin and colleagues on connected gene neighbourhoods; the neighbourhood channel of STRING; operon prediction from conservation).
+ 3. De novo discovery tools for conserved gene clusters at scale (Spacedust from the Steinegger group is the most direct competitor: establish exactly what its statistic, null model and clustering are, what benchmark it used, and how it handles redundant or closely related genomes; also Gecko, and whatever other reference-free cluster finders exist).
+ 4. Synteny block and collinearity tools (MCScanX, DAGchainer, i-ADHoRe and newer ones): what statistics and nulls they use.
+ 5. Any method that grows clusters by iterative pairwise merging of adjacent genes or blocks, or that produces a nested or hierarchical description of gene neighbourhoods.
+ 6. Corrections for phylogenetic non-independence or database redundancy when scoring gene co-localisation or co-occurrence (lineage counting, tree-aware weighting, sequence-weighting schemes transplanted to genomes, effective numbers of genomes, phylogenetically informed nulls). In particular, anything that measures inherited gene order between genome pairs and uses it to down-weight evidence, as C3(b) does.
+ 7. Guilt-by-association discovery of defence systems from "defence islands" and similar neighbourhood-enrichment screens: what statistics they use.
+ 8. How de novo neighbourhood methods have been benchmarked, and which baselines a reviewer would expect in a paper of this kind.
+
+RULES OF EVIDENCE
+- Cite only works you opened in this session. For each: authors, year, venue, title, DOI or URL, and one or two sentences on what the method actually does, taken from the paper or its documentation (abstract-only reading must be flagged as such).
+- Anything you recall but could not open goes in a separate list headed UNVERIFIED.
+- Be precise about what is the same and what differs. "Similar in spirit" is not a finding; say which of C1-C5 the work anticipates and to what degree.
+- Report searches that found nothing (give the queries), since absence matters here.
+
+DELIVERABLE (final message), in this order
+ 1. VERDICT PER COMPONENT C1-C5: one of "published essentially as is", "known ingredients, new combination", "no close precedent found", each with the two or three closest works and the specific difference.
+ 2. CLOSEST PRIOR WORK OVERALL: the three to six papers a reviewer would say this method must be compared with or positioned against, and why.
+ 3. ANNOTATED BIBLIOGRAPHY by theme (1-8 above).
+ 4. EXPECTED BASELINES AND BENCHMARKS: tools and datasets reviewers would expect.
+ 5. RISKS: claims that would be unsafe to make as novel, stated plainly.
+ 6. UNVERIFIED list, and the list of null searches.

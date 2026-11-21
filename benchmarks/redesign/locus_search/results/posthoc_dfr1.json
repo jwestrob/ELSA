@@ -1,0 +1,209 @@
+{
+ "localization_correct_hits_E0.01": {
+  "DefenseFinder": {
+   "M0_r1|even": {
+    "hits": 16724,
+    "median_boundary_precision": 1.0,
+    "mean_boundary_precision": 0.8094608728458286,
+    "mean_coverage": 0.9741708522681973,
+    "median_span": 3.0,
+    "mean_span": 3.9367974168859123,
+    "exact_span": 0.896854819421191
+   },
+   "M0_r1|odd": {
+    "hits": 16507,
+    "median_boundary_precision": 1.0,
+    "mean_boundary_precision": 0.789261855011234,
+    "mean_coverage": 0.978145635185073,
+    "median_span": 3.0,
+    "mean_span": 4.13788089901254,
+    "exact_span": 0.903434906403344
+   },
+   "M1_r1|even": {
+    "hits": 19858,
+    "median_boundary_precision": 1.0,
+    "mean_boundary_precision": 0.7963431443697583,
+    "mean_coverage": 0.9653321918957934,
+    "median_span": 3.0,
+    "mean_span": 3.8846812367811463,
+    "exact_span": 0.8501359653540135
+   },
+   "M1_r1|odd": {
+    "hits": 19781,
+    "median_boundary_precision": 1.0,
+    "mean_boundary_precision": 0.7933741618526037,
+    "mean_coverage": 0.967194951384325,
+    "median_span": 3.0,
+    "mean_span": 3.90920580354886,
+    "exact_span": 0.8625954198473282
+   },
+   "M2_r1|even": {
+    "hits": 23636,
+    "median_boundary_precision": 1.0,
+    "mean_boundary_precision": 0.7963762772833732,
+    "mean_coverage": 0.9733182433575901,
+    "median_span": 3.0,
+    "mean_span": 4.045439160602471,
+    "exact_span": 0.8853020815704857
+   },
+   "M2_r1|odd": {
+    "hits": 23629,
+    "median_boundary_precision": 1.0,
+    "mean_boundary_precision": 0.7825825991095862,
+    "mean_coverage": 0.9753558480398381,
+    "median_span": 3.0,
+    "mean_span": 4.193533370011426,
+    "exact_span": 0.8890769816750603
+   }
+  }
+ },
+ "defensefinder_even_per_type_ap": {
+  "macro_over_types": {
+   "M0_r1": 0.6303,
+   "M1_r1": 0.5625,
+   "M2_r1": 0.7401
+  },
+  "types": 36,
+  "largest_types": {
+   "RM_Type_II": {
+    "queries": 431,
+    "M0_r1": 0.126,
+    "M1_r1": 0.2017,
+    "M2_r1": 0.2837
+   },
+   "RM_Type_I": {
+    "queries": 256,
+    "M0_r1": 0.3758,
+    "M1_r1": 0.5671,
+    "M2_r1": 0.7073
+   },
+   "AbiE": {
+    "queries": 156,
+    "M0_r1": 0.4294,
+    "M1_r1": 0.5752,
+    "M2_r1": 0.7153
+   },
+   "RM_Type_III": {
+    "queries": 132,
+    "M0_r1": 0.5724,
+    "M1_r1": 0.6647,
+    "M2_r1": 0.8134
+   },
+   "ShosTA": {
+    "queries": 52,
+    "M0_r1": 0.5874,
+    "M1_r1": 0.5013,
+    "M2_r1": 0.7554
+   },
+   "Eleos": {
+    "queries": 28,
+    "M0_r1": 0.4398,
+    "M1_r1": 0.3278,
+    "M2_r1": 0.4763
+   },
+   "PD-Lambda-5": {
+    "queries": 22,
+    "M0_r1": 0.8001,
+    "M1_r1": 0.6263,
+    "M2_r1": 0.893
+   },
+   "AbiL": {
+    "queries": 16,
+    "M0_r1": 1.0,
+    "M1_r1": 0.7482,
+    "M2_r1": 0.9982
+   },
+   "MazEF": {
+    "queries": 16,
+    "M0_r1": 0.5406,
+    "M1_r1": 0.4489,
+    "M2_r1": 0.6949
+   },
+   "Kiwa": {
+    "queries": 11,
+    "M0_r1": 0.4032,
+    "M1_r1": 0.7875,
+    "M2_r1": 0.8203
+   },
+   "PrrC": {
+    "queries": 10,
+    "M0_r1": 0.1772,
+    "M1_r1": 0.1126,
+    "M2_r1": 0.2248
+   },
+   "pAgo_S2B": {
+    "queries": 10,
+    "M0_r1": 0.4463,
+    "M1_r1": 0.5731,
+    "M2_r1": 0.6225
+   }
+  }
+ },
+ "targets_found_even_E0.01": {
+  "DefenseFinder": {
+   "all_even_pairs": {
+    "pairs": 583413,
+    "tok_visible": 148016,
+    "tok_invisible": 435397,
+    "tok_invisible_emb_visible": 120946
+   },
+   "found": {
+    "M0_r1": {
+     "found": 16724,
+     "tok_visible": 16722,
+     "tok_invisible": 2,
+     "tok_invisible_emb_visible": 1,
+     "tok_invisible_emb_invisible": 1
+    },
+    "M1_r1": {
+     "found": 19858,
+     "tok_visible": 16824,
+     "tok_invisible": 3034,
+     "tok_invisible_emb_visible": 3023,
+     "tok_invisible_emb_invisible": 11
+    },
+    "M2_r1": {
+     "found": 23636,
+     "tok_visible": 23496,
+     "tok_invisible": 140,
+     "tok_invisible_emb_visible": 116,
+     "tok_invisible_emb_invisible": 24
+    }
+   },
+   "versus_M0": {
+    "M1_r1": {
+     "found_not_by_M0": 12487,
+     "found_by_M0_not_this": 9353,
+     "extra_tok_invisible": 3034,
+     "extra_tok_invisible_emb_visible": 3023,
+     "extra_types": {
+      "RM_Type_I": 6416,
+      "RM_Type_II": 2643,
+      "RM_Type_III": 1669,
+      "AbiE": 1285,
+      "ShosTA": 85,
+      "Kiwa": 68,
+      "AbiL": 67,
+      "MazEF": 60
+     }
+    },
+    "M2_r1": {
+     "found_not_by_M0": 6943,
+     "found_by_M0_not_this": 31,
+     "extra_tok_invisible": 138,
+     "extra_tok_invisible_emb_visible": 115,
+     "extra_types": {
+      "RM_Type_I": 6208,
+      "RM_Type_II": 361,
+      "RM_Type_III": 123,
+      "AbiL": 78,
+      "ShosTA": 52,
+      "Kiwa": 42,
+      "PsyrTA": 23,
+      "PD-Lambda-5": 12
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,69 @@
+{
+ "significant_pairs.parquet": {
+  "rows": [
+   162786,
+   162786
+  ],
+  "columns_compared": [
+   "key",
+   "lo",
+   "hi",
+   "G",
+   "L",
+   "NP",
+   "n_other",
+   "J",
+   "E",
+   "P",
+   "F_lo",
+   "F_hi",
+   "module"
+  ],
+  "equal": true
+ },
+ "token_modules.parquet": {
+  "rows": [
+   40577,
+   40577
+  ],
+  "columns_compared": [
+   "token",
+   "module"
+  ],
+  "equal": true
+ },
+ "loci_all_genomes.parquet": {
+  "rows": [
+   2990356,
+   2990356
+  ],
+  "columns_compared": [
+   "genome",
+   "contig",
+   "start",
+   "end",
+   "kind",
+   "level",
+   "module_id"
+  ],
+  "equal": true
+ },
+ "rules.tsv": {
+  "equal": true
+ },
+ "boundary_support.npy": {
+  "equal": true
+ },
+ "summary": {
+  "rule": true,
+  "fdr": true,
+  "significant_pairs": true,
+  "significant_pairs_cross_phylum": true,
+  "genes_covered": true,
+  "token_pairs_L2": true,
+  "L_quantiles": true,
+  "modules": true,
+  "loci_all_genomes": true
+ },
+ "all_equal": true
+}

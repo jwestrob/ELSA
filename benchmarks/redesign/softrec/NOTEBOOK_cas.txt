@@ -1,0 +1,146 @@
+WS_CAS NOTEBOOK: why embedding-only recurrence (softrec) scores lower than the token engine on CRISPR-Cas loci (DPANN)
+=======================================================================================================================
+Workstream ws_cas, 2026-11-13 UTC. Embedding side = landscape rw1000_e50 read by round 4's post hoc configuration
+('post': instance-graph labels ic:k5o0.3_g1, trimming f 0.8, DH) and by round 2's selected configuration ('r2sel':
+validated l2000 modules, Louvain 0.3, f 0.5, DH). Token side = rescue3 engine landscape, DH. Code diag_cas.py
+(local benchmarks/redesign/softrec/, biotite $RD/softrec/cas/code/), outputs $RD/softrec/cas/{results,loci,scores}.
+
+2026-11-13 01:10 UTC  Read REPORT4, REPORT2, softrec4.py, readings4.py, predeclared4.json, recurrence.py, rules.py,
+  blib.py, readings2.py, softrec.py, the scorer and the NOTEBOOK.md tail; both cluster documents read in full
+  (remote ~/.claude/CLAUDE.md, biotite-cluster-ops.md) before any sbatch.
+  Facts used in the design: token significant pairs have L q10/q50/q90 = 2/3/12 (rule P <= 1e-4 & L >= 2; 162,786
+  pairs); the embedding candidate rw1000_e50 has L q10/q50/q90 = 6/46/195 (W >= 1 & L >= 2; 2,547,427 instances).
+  Scored CRISPRCasTyper gold (resolved, order-trusted, >= 2 members): 3,820 instances (even 1,899, odd 1,921), median
+  2 members, median span 3 genes; subtypes I-A 1,711, III-A 588, III-B 404, I-B 260, IV-A1 161.
+  Caller gene labels: crispr_cas_systems.profile_names mapped to gids through (genome, protein_id): 57,645 member
+  genes, each labelled once (cas_gene_labels.parquet; evaluation only).
+2026-11-13 01:23 UTC  Jobs submitted: 87512 (A, 64 CPU: repro; part1), 87513 (B, 24 CPU: pairs = Part 2 + Part 4),
+  87514 (C, 64 CPU, afterok B: lists = Part 3, per-lineage recovery, reciprocity).
+  EXPECTATIONS, written before any ws_cas number was read:
+  - Part 1: most of the CCT F1 deficit (token DH .479 vs post .443 even) sits in gold loci whose token best locus has
+    boundaries with no embedding support ("landscape: missing support"; classes missed / truncated / fragmented),
+    because round 2 found Cas member genes touching support .656 vs .774 and MMseqs2 modules on the same landscape
+    did not help. Refuted if reading-classed losses (support present on every boundary of the token's best locus)
+    carry >= 50% of the summed F1 loss.
+  - Part 2: the lost instances (token-significant, embedding not) have small token L (most in 2-3) and also fail
+    embedding W >= 1 with embedding L >= 2, i.e. support is seen in few lineages at deep ranks. Competing readings
+    to be told apart by the data: (i) rarity alone (non-Cas instances at the same token L are lost at the same rate);
+    (ii) Cas-specific representation (Cas homologs missing from the depth-1,000 lists, lower recovery of the token's
+    supporting genera than matched non-Cas); (iii) homolog exclusion of adjacent paralogous Cas genes (embedding
+    excluded flag). My prior: (i) dominates, (ii) contributes, (iii) is small.
+  - Part 4: at fixed L, no stored statistic separates lost Cas instances from null instances well (AUC < 0.7);
+    a threshold marking half of the lost Cas instances has genome-wide null FDR well above 0.01.
+2026-11-13 01:25 UTC  REPRODUCTION (job 87512, before any comparison): token DH and R1 rescored from the stored loci,
+  per-instance F1 and control max diff 0 against boundary/scores/rescue3; even CCT F1 token DH .479418 (= stored JSON),
+  token R1 .425975. post R1 / DH and r2sel R1 / DH rebuilt with readings4 and rescored: per-instance max diff 0 against
+  r4/scores/all; even CCT F1 post DH .442717, r2sel DH .441560, both equal to the stored JSONs. My best-locus rule
+  equals the scorer's per-instance F1 exactly (max diff 0) for token, post and r2sel.
+  Job 87514 (lists) started before a code patch (genome field) reached biotite; cancelled, resubmitted as 87538.
+2026-11-13 01:28 UTC  PART 2 + PART 4 (job 87513, read now).
+  Instances (d <= 3) with both genes inside a scored gold CCT span: 20,637 (even 10,342). Token-significant 9,216,
+  embedding-significant 7,421, both 6,432, LOST (token yes, embedding no) 2,784 = 30.2% of token-significant (even
+  1,410 = 30.4%), inverse (embedding only) 989, token same-family 234, embedding homolog-excluded (L = -1) 1,188.
+  Lost: token L 2: 814, 3: 381, 4-7: 603, 8-15: 579, 16-63: 333, 64+: 74; share token L 2-7 = .646 (found .296).
+  Embedding L of lost: 649 EXCLUDED (23.3%), median W_e50 .009. Excluded lost pairs are adjacent RAMP / effector genes
+  (Cas7|Cas5 122, Csm3/4/5 ~110, Cas7|Cas3 45, Cas8|Cas3 20, Csm4|Cas10 33), subtypes III-A 210, I-B 188, I-A 81.
+  Cas vs non-Cas at matched token L (genome bootstrap): Cas instances are lost LESS often in every L bin (L = 2: .675
+  vs .725; 3: .447 vs .539; 4-7: .366 vs .447; 16-63: .124 vs .207); standardized on (token L x family genera)
+  cells, observed .302 vs expected .338, -0.036 [-0.047, -0.024]. Reading: my prior "rarity alone" (i) is refuted as
+  the Cas-specific cause: rare pairs are lost everywhere, Cas pairs no more than others.
+  Part 4 (genome-wide null FDR, 3 nulls): W >= t & L >= 2 marks half of the lost Cas instances only at t ~ 0.009
+  (FDR .40); count L >= 3 at depth 1,000 marks 57% (FDR .98). The Poisson tail of G given E at depth 1,000 separates
+  lost instances from null at fixed L >= 5 (AUC .935 at L 5-7, .987 at 8-15, 1.00 at 16+; W AUC .60-.76): the rule
+  P <= 1e-4 & L >= 2 @1000 has null FDR .0002, marks 35.6% of lost Cas instances, 49% of lost Cas boundaries and
+  52.6% of lost non-Cas instances; it keeps 90.4% of the current significant set. At L 2-4 no stored statistic
+  separates well (AUC .67-.81). Expectation "AUC < 0.7 at fixed L" refuted for L >= 5 (Poisson at depth 1,000).
+2026-11-13 01:29 UTC  PART 1 (job 87512, read now). Even, post vs token DH: dF1 -0.0367 over 1,899 loci. Losses:
+  landscape (an unsupported boundary inside the token's best locus) 377 loci, -0.0673; reading with the same support
+  109, -0.0121; reading with extra embedding support 64, -0.0055. Gains: landscape 87, +0.0134; reading with extra
+  support 315, +0.0307 (merged / over-extended token loci); same support 63, +0.0042. Net landscape -0.054, net reading
+  +0.017. Class "missed" (no embedding locus touches any member) alone: 209 loci, -0.0530. Odd and r2sel the same to
+  within 0.002. Expectation held (refuter: reading >= 50% of the loss; observed 21% of the loss, net positive).
+  Oracles (diagnostic; post reading, added instances unlabelled), even DH vs post: + all 1,114,418 token-significant
+  instances: CCT +0.047 [+0.039, +0.055], summed -0.070, resolved 1,270; + only the 11,645 token-significant
+  instances within 3 genes of a gold Cas span: CCT +0.051 [+0.043, +0.059] (F1 .4933 > token .4794), summed -0.0009,
+  TXSS 0, resolved 1,404; dropping the 3,060 non-token embedding instances near Cas: CCT -0.018. Token L values in
+  place of embedding L near Cas: no further change (.4835 vs .4843). The deficit is local: missing instances in and
+  next to Cas loci.
+  Lists kernel (job 87538) reproduces stored L at depths 200 and 1,000 and W exactly on 2,000 observed and 3 x 1,000
+  null instances (max relative W diff 3e-8).
+  Next (running, job 87594 'attrib'): boundary-level split of the landscape losses into homolog exclusion vs the
+  W floor; oracles adding only excluded or only floor instances; the method-level union rule W >= 1 or P <= 1e-e.
+2026-11-13 01:31 UTC  PART 3 + LIST STATISTICS (job 87538, read now). Kernel L / W equal to stored on 19,449 Cas, 40,000
+  non-Cas and 60,000 null instances (0 mismatches).
+  Per-lineage recovery of the token's support (non-excluded lost Cas instances, n 2,135): token's other genera median 3;
+  genera whose family-consistent pair is in the depth-1,000 lists median 1 (mean share .585; none recovered .185);
+  best family-consistent rank m median 107 (q25 33, q75 287) -> W_fam median .038, none >= 1. Found Cas: median 13
+  genera recovered, best m 8. Non-Cas lost: share .641, best m 82. Per supporting genus (lost incl. excluded): both
+  homologs in lists .541 Cas vs .338 non-Cas; neither .114 vs .317. Cas homologs are in the lists, at deep ranks.
+  Single genes (family members outside the gene's genus in its top-1,000 list): Cas lost-pair genes (4,096) capped
+  share mean .841 (median share .826) vs matched non-Cas (10,926; same family size and genera bins) .792 (.786);
+  non-family entries ranked above the last family member median 190 vs 297; cosine of in-list family members .69
+  vs .64. Cas lists hold a mean 200 Cas genes of other MMseqs2 families (101 of the same Cas gene class) per list;
+  controls 2.7. Representation is not the cause (expectation (ii) refuted).
+  Reciprocity (a in N(a'), b in N(b')): rank-weighted reciprocal support W_rec AUC vs null at fixed L .73-.80 (W .69-.74);
+  TPR at null FPR 1e-2 <= .39. Even oracle family-consistent support separates only .69-.85 at L 2-15 (null instances
+  carry family-consistent chance support at .14-.49).
+2026-11-13 01:33 UTC  ATTRIBUTION (job 87594, read now). Exclusion genome-wide 1.74% of instances; token-significant
+  Cas 7.0% vs non-Cas 1.8%; share of lost that is excluded Cas .233 vs non-Cas .055. Boundary-level split of the even
+  landscape loss (-0.0673; 377 loci): floor only 344 loci -0.0584, excluded only 22 -0.0059, both 11 -0.0031 (odd
+  -0.0622 / -0.0042 / -0.0015). Poisson P <= 1e-4 @1000 marks every missing boundary in 169 of the 377 loci (-0.029).
+  Oracles vs post (even): + 1,064 excluded token instances near Cas CCT +0.008 [+0.005, +0.012]; + 10,581 floor token
+  instances near Cas CCT +0.046 [+0.038, +0.054], summed -0.0009; + all 60,412 excluded token instances CCT +0.008,
+  DF +0.008 [+0.003, +0.013], summed +0.002; + all 1,054,006 floor token instances CCT +0.042, summed -0.072,
+  resolved 1,270. Method-level UNGATED union W >= 1 or P <= 1e-e @1000 (& L >= 2), added instances unlabelled:
+  e 3 / 4 / 6: rule FDR .0042 / .0022 / .0022, CCT +0.049 / +0.045 / +0.035, summed -0.164 / -0.141 / -0.113, DF
+  -0.055 / -0.042 / -0.033, resolved 1,274 / 1,308 / 1,376 (odd alike). Rare-pair support helps Cas loci and hurts
+  every locus that tier 1 already supports.
+2026-11-13 01:36 UTC  PREDECLARATION written (predeclared_cas.json; copied to $RD/softrec/cas/ before the job):
+  gated second tier (Poisson P <= 1e-e at depth 1,000, L >= 2, only in gene intervals untouched by tier 1; tier-2
+  instances unlabelled), base = round-4 post hoc configuration, e in {3, 4, 6, 8}, combined FDR <= 0.01, round-4 odd
+  score, coordinator's matches / beats on even. Expectation: CCT +0.015 to +0.030 over the base on even, other
+  callers and summed within 0.005, resolved 1,404 +- 5; MATCHES and BEATS (coordinator) with probability ~0.6.
+  Refuted if CCT rises < 0.010, or DF / TXSS F1 or summed moves > 0.01, or resolved moves > 5.
+  Job 87666 (24 CPU): fix_cas.py tune (odd). EXPECTATION FOR ODD (written before reading it): base odd shortfall 0.57
+  (CCT only); the gated tier lowers it; e = 4 or 6 selected; combined FDR ~ .003 for every e.
+2026-11-13 01:40 UTC  ODD TUNING (job 87666, read now; no even number of a gated configuration exists).
+  Base reproduced on odd: DH summed .4914, F1 .8075/.5281/.4472, ribosomal 847/718/55, shortfall 0.569 (CCT -0.57 only),
+  = round 4's post hoc odd values. Gate check: tier-1 boundary support identical to the base in every configuration.
+    e   tier-2 inst  islands  FDR comb / tier2  shortfall  summed  F1 DF / TXSS / CCT        DF / TXSS control  resolved
+    -   0            0        .00283 / -        0.569      .4914   .8075 / .5281 / .4472     .4264 / .4178      718
+    3   248,597      141,184  .00553 / .0332    0          .4080   .8315 / .5283 / .5045     .5019 / .4499      718
+    4   198,818      119,514  .00289 / .0037    0          .4223   .8293 / .5283 / .4956     .4904 / .4449      718
+    6   144,944       91,717  .00268 / .0000    0          .4432   .8269 / .5283 / .4849     .4742 / .4378      718
+    8   115,781       75,045  .00271 / .0000    0          .4554   .8268 / .5283 / .4768     .4661 / .4335      718
+  Token DH odd: summed .4179, F1 .7429 / .5442 / .4786, resolved 769 (bars 830 / 54 / 705).
+  SELECTED (predeclared rule: max (-shortfall, odd summed); all four have shortfall 0): e = 8 (gate_p1e-8).
+  The odd expectation (e = 4 or 6) did not hold: every e meets every odd bar and the summed-excess tie-breaker picks
+  the most conservative tier. Already on odd, summed excess falls -0.036 against the base and DF F1 rises +0.019:
+  islands form genome-wide (75,045), raising the controls of DefenseFinder and TXSScan (random placements now hit
+  island loci). My predeclared expectation "summed within 0.005 of the base" is contradicted on odd.
+  EXPECTATION FOR EVEN (written now, before the test job): CCT F1 +0.025 to +0.035 over the base (.4427 -> ~.47-.48,
+  bar .4594); DF F1 +0.015 to +0.02; TXSScan unchanged (-0.017 vs token); summed -0.03 to -0.04 vs the base, i.e.
+  about +0.025 to +0.035 over token DH with the lower bound > 0; resolved 1,404 unchanged. Verdict expected: MATCHES
+  and BEATS (coordinator's definition), not round 4's beats (TXSScan -0.017 < -0.01). Predeclared refuter (b) is
+  expected to FIRE on summed excess and DF F1 (> 0.01 change vs the base), refuting "the gate isolates tier 2", while
+  (a) (CCT gain >= 0.010) and (c) (resolved within 5) are expected to hold.
+2026-11-13 01:43 UTC  EVEN TEST (job 87693, read now). Base reproduced: post DH per-instance F1 and control max diff 0.
+  gate_p1e-8 (tier 2 115,781 instances, 75,045 island runs; tier-1 boundary support identical to the base):
+    even DH: summed .4543, F1 DF .8243 / TXSS .5325 / CCT .4729, control .4700 / .4324 / .4118; ribosomal 1,681
+    recovered / 1,404 resolved / Parv 114 rec, 100 res; genes in loci 2,384,010 (base 2,173,246).
+    vs token DH (even, paired): summed +0.0273 [+0.0096, +0.0466]; dF1 DF +0.0803 [+0.0665, +0.0946], TXSS -0.0154
+    [-0.0290, -0.0023], CCT -0.0065 [-0.0164, +0.0034].
+    VERDICT (predeclared): MATCHES; BEATS under the coordinator's definition (summed lower bound > 0); not round 4's
+    'beats' (TXSScan -0.015 < -0.01). The base configuration was chosen post hoc in round 4.
+    vs base (even): CCT +0.0302 [+0.0248, +0.0361], DF +0.0186 [+0.0123, +0.0252], TXSS +0.0017, summed -0.0377
+    [-0.0451, -0.0309]; control F1 DF +0.041, TXSS +0.017, CCT +0.032. Odd vs base: CCT +0.030, summed -0.036.
+  Refuters: (a) CCT gain >= 0.010: holds (+0.030). (b) DF / TXSS F1 and summed within 0.01 of the base: FIRES (summed
+  -0.038, DF +0.019), as written at 01:40 after the odd grid; the gate keeps tier-1 loci unchanged but its islands
+  form genome-wide and raise every caller's random-placement control. (c) resolved within 5: holds (1,404 = 1,404).
+  Even expectation of 01:40: held on every quantity (CCT +0.030 in +0.025..+0.035; DF +0.019; TXSS unchanged; summed
+  -0.038 inside -0.03..-0.04; resolved unchanged; verdict as expected).
+  Per-locus (local, part1 classes): the islands touch 83 of 209 even 'missed' loci (71 now >= token F1); missed-class
+  loss -0.0530 -> -0.0305; truncated / fragmented / merged / over-extended classes move <= 0.0007.
+  Per caller (job 87680; post vs token DH, even): DF span boundaries supported .891 emb vs .880 token, landscape net
+  +0.020, 19.5% of token-significant span instances lost; TXSS landscape net -0.003, reading net -0.014; CCT .544 vs
+  .696, landscape net -0.054, 30.2% lost, 209 missed loci.

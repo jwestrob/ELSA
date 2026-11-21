@@ -1,0 +1,73 @@
+LEAD SEARCH ON THREE MORE COLLECTIONS: SHARED BRIEF (coordinator, 2026-11-21 UTC)
+================================================================================
+Read BRIEF.txt in this folder first: its purpose, the PI's two criteria (A "things we can study", B "a functional
+assignment we can actually infer"), the naming rule (OBSERVED versus NAMED, UNVERIFIED tags), the tool rules (Aksha for
+every HMM search, Biohub ESMFold2 as the only service that may receive sequences, cluster rules, no .md files, no git
+commits, American spelling) and the deliverable formats all apply here. This file adds what is different.
+
+WHAT WE LEARNED ON DPANN (read dpann_leads/invisible/REPORT.txt; it is the template for your work)
+- Requiring a gene's own profile hit before calling a lead supported selects genes that existing annotation already
+  sees. The valuable population is the opposite: position-labeled genes with NO profile hit of their own.
+- A fixed structure-and-residue assay (ESMFold2 model superposed on the family's experimental reference; curated
+  catalytic residues in place) separates them cleanly: 25 of 132 profile-invisible, unannotated enzyme calls passed
+  against 0 of 354 negatives, positives 35 of 38.
+- The specific function must come from the voting partners' own annotation: with a partner-derived KO 22 of 33
+  passed; with a function guessed from the label's general meaning 3 of 99 passed.
+- Names from few annotated partners are unreliable (support = votes_for / supporting_genomes; label amplification).
+- Routine housekeeping rescues and unnamed families are not leads. Conserved relatives that keep the fold and lack
+  the active site are reported as an observation, without interpretation.
+
+THE COLLECTIONS (remote root RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111)
+  name      genomes  genes       protein FASTA (header = integer gene id "gid")
+  testset3    842    2,557,405   $RD/testset3/package/proteins_gid.faa            complete GTDB genomes, public
+  srvp        994    3,211,751   $RD/ws_srvp_bins/package/universe/proteins.faa   the PI's own bins, UNPUBLISHED
+  lut       1,032    4,507,042   $RD/slice_lut/testset/package_k8/proteins_gid.faa  GTDB representatives, public
+  Whole-proteome Pfam (Aksha, --cut_ga): $RD/annot_gpu/<name>/PFAM.parquet (README_annotation.txt beside it).
+  Position-based labeling pass: $RD/dpann_leads/pass_port/out/<name>/ with <name>_slot_rescue_pass.parquet (the
+    DPANN columns plus support, label_annotated_count, label_amplification, unannotated_supporters, n_carriers and
+    empty partner-function columns), supporters/part_*.parquet (gid, supporters[], carries_label[]), tiers.parquet
+    (T1 own weak hit to the family; T1c own weak hit to a sister family in the same clan; T2, T2b no hit with support
+    at least 50% or 20-50%; contradicted; rest), weakhit/, README.txt, STATUS. Inputs and code are described in
+    R/benchmarks/redesign/dpann_leads/pass_port/INPUTS.txt (R = /Users/jacob/Documents/Sandbox/elsa_test/ELSA).
+  Not available in these collections: KOfam (none yet), a broad domain-database best-hit table, alignment-based
+    neighbor lists (so "embedding-only versus both" cannot be reported; say so once and move on), curated system
+    callers except where the collection's own notes say otherwise.
+  SR-VP sequences are unpublished. They may go to the Biohub folding API and nowhere else, and no SR-VP sequence or
+    structure is copied into the repository (keep models under your remote scratch or a git-ignored local folder).
+
+WHAT TO DO
+ 1. Partner function. Run KOfam through Aksha (--cut_ga, picked database KOFAM) on the unique supporters that carry
+    the winning label (carries_label true) of the labeled genes; this is a small subset of the proteome. Cost about
+    1.1 CPU-s per protein: state the protein count and CPU-hours before submitting; up to 60 CPU-hours per collection
+    is approved, as 24-CPU jobs of under an hour each. Then derive each labeled gene's function exactly as the DPANN
+    gap screen did (plurality KO among label-carrying supporters; STRONG at >= 3 KO-annotated carriers and share
+    >= 0.70; code in dpann_leads/gapscreen/code/ and pass_port/code/), with EC numbers from the same local KEGG
+    snapshot. Write the KO table to $RD/annot_gpu/<name>/KOFAM_partners.parquet.
+ 2. Population. Labeled genes with no own profile hit to the proposed family (T2, T2b, rest; report T1c and
+    contradicted separately), STRONG partner-derived enzyme function, 100-600 aa, fraction ILVFMAWC under 0.45.
+ 3. Novelty filter, with counts at each step. Establish whether existing tools would already name each candidate:
+    (i) its own KOfam and full-Pfam hits at relaxed thresholds through Aksha on the candidate set only; (ii) a broad
+    domain-database search if the tooling and database that built the Sharur `protein_resemblance` tables exist on
+    biotite (find the script in the Sharur repository and check; this is not an HMM search, run it on the candidate
+    set only; if it is unavailable say so and carry (i) alone). Split candidates into "already named" and
+    "unannotated" and score both, as the DPANN run did.
+ 4. Assay. Use dpann_leads/invisible/assay_rule.json UNCHANGED and the code in dpann_leads/invisible/code/, so the
+    rates are comparable across collections. Positives are proteins of the same collection annotated at the gathering
+    threshold for the family; negatives A (mismatched reference) and B (matched unlabeled proteins) as before. Run
+    the pilot gate first. Up to 600 folds.
+ 5. Leads. For every passing unannotated gene: function ("consistent with"), residues, TM, pLDDT, taxonomy from the
+    collection's own package tables (no taxonomy classifier), how many related labeled genes in how many genomes,
+    whether the genome otherwise carries the function (Pfam table, plus a picked-profile KOfam search of that genome's
+    proteins for the KO and for non-homologous enzymes of the same reaction), conserved neighbors, criterion A with a
+    substrate or cofactor co-fold for the strongest few (same protocol on a positive control). Rank by how much the
+    assignment changes what the organism or clade is believed able to do. Housekeeping enzymes go in a separate list.
+ 6. Also report: families where the fold is kept and the catalytic residues are consistently absent (table only).
+ 7. Verdict for the collection: pass rate among unannotated profile-invisible calls with confidence interval, the
+    negative rate, and whether it reproduces the DPANN result (18.9% against 0%).
+
+WAITING AND REPORTING
+ Short Slurm jobs you expect to finish within 30 minutes and folding batches may be waited on inline. Anything longer:
+ record job ID, status file and expected duration in REPORT.txt and end your turn. One final report, no interim
+ notices. Folder: R/benchmarks/redesign/dpann_leads/leads_<name>/ ; remote scratch $RD/dpann_leads/leads_<name>/.
+ Deliver REPORT.txt (at most 120 lines, bottom line first), leads.tsv, families.tsv, funnel.tsv, code/. Final
+ message to the coordinator: at most 25 lines.

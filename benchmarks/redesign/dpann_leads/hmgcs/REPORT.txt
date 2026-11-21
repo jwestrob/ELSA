@@ -1,0 +1,120 @@
+WORKSTREAM hmgcs: REPORT (2026-11-20)
+=====================================
+BOTTOM LINE
+- Lead 1: SUPPORTED as an HMGS-type condensing enzyme; mevalonate-pathway role UNVERIFIED (the next step, HMG-CoA
+  reductase, HMGCR, is absent from all 17 genomes). The 580-aa protein is a long-form HMG-CoA synthase (bacterial/
+  eukaryotic type), no fused partner, Glu-Cys-His triad at the curated positions, TM 0.91-0.92 to E. faecalis HMGS 1YSL;
+  as a homodimer it binds acetyl-CoA at the Cys.
+- The 17 are sub-threshold members of a 288-gene Micrarchaeota family that Pfam names at GA in 155 members; a 78-aa
+  insertion splits the Pfam C domain into two halves under the domain GA. 13/17 calls are embedding-only: a clean
+  methods example with a routine family label.
+- Biology: the family replaces the canonical archaeal HMGCS (3 genomes carry both vs 51 expected, Fisher p = 4e-24) and
+  runs without the archaeal DUF35 scaffold. Micrarchaeum_A keeps it while HMGCR is absent in 44/44 genus genomes, with
+  the Thermoplasma-type mevalonate-3-kinase route present downstream.
+- DPANN-wide, a blank HMGS step is mostly a threshold artifact: 557/1,012 HMGS-blank lipid genomes carry a ~348-aa
+  protein scoring 205 bits against KOfam K01641 (threshold 282) that Pfam labels ACP_syn_III_C. HMGCR-blank genomes
+  show zero sub-threshold reductase hits, so that absence is real.
+
+LEAD 1: hmgcs_long_form (17 genes / 17 genomes, label HMG_CoA_synt_C)
+VERDICT: SUPPORTED (function); pathway role UNVERIFIED
+Rung 1, slot call: support (votes_for/supporting_genomes) 24/35 (8 genes), 24/43 (4), 24/36 (1), 24/33 (1), 3/3 (3);
+  median 0.686. vote_share 1.0 for all 17 (every annotated voter said PF08540). Label amplification 0.065 (17/261).
+Rung 2, own weak hits (Aksha, Pfam-A, E <= 10): HMG_CoA_synt_C sequence-level 28.3-41.8 bits (E 4e-10 to 6e-6;
+  sequence GA 25.1), split into 256-361 (HMM 26-108/280, 8.8 bits) and 429-491 (HMM 143-207, 17.0 bits), both under the
+  domain GA of 25.1. HMG_CoA_synt_N 164-227 (HMM 113-171/174) and ACP_syn_III_C 438-480 in 14/17 each. KOfam K01641
+  130.8-154.8 bits (threshold 282.27). CDD best hit COG3425, 25-518, E 8.6e-33 ("PksG" is the COG gene symbol; the
+  record's description is "3-hydroxy-3-methylglutaryl CoA synthase"). No ACP, OB, zinc-ribbon, ECH or KS hit at E <= 10.
+Architecture and length:
+  - Characterized members: archaeal HMGCS 343-361 aa (A0A384E143 349), E. faecalis MvaS 383 (Q9FD71), PksG 420
+    (P40830), CurD 442 (Q6DNE9), Haloferax 445 (D4GWR6), human HMGCS1 520 (Q01581). Lead 580-591 aa; family median
+    561-565 aa; canonical DPANN HMGCS ~350 aa.
+  - Segments vs archaeal 6ESQ chain I (OJT94780.1): 1-22 (dimer interface, pLDDT 78), 139-152, 286-316 (pLDDT 49 loop),
+    346-423 (78 aa, pLDDT 88), 523-580 (58 aa). Against human 2P8U only 1-17, 140-149, 293-314, 380-403 and 570-580
+    stay unmatched: a long-form HMGS, not a fusion. No insertion contains a Cys.
+  - Identity 21-26% to characterized HMGS (top Haloferax D4GWR6 24.7-26.0%), 17-20% to PksG/CurD, 21.7% to canonical.
+Rung 3, residues (curated UniProt FT records; MSA plus structure):
+  - Classes: HMGS Glu/Cys/His (Q9FD71 E79/C111/H233; Q01581 E95/C129/H264; A0A384E143 E82/C114/H238); PksG same triad
+    (P40830 E82/C114/H250); KAS III Cys/His/Asn (P0A6R0 C112/H244/N274); thiolase Cys/His/Cys (P07097 C89/H348/C378);
+    KAS II Cys/His/His (P0AAI5 C164/H304/H341); type III PKS (P30074 C164).
+  - OJT94780.1 carries E120/C168/H330 at the HMGS triad in 17/17 genes (MSA) and 6/6 distinct sequences (superposition).
+    It has N442/F472 at thiolase H348/C378 and N442 at KAS II H341, excluding both classes. Glu120 marks the HMGS/HCS
+    clade (the thiolase control has Val there). HMG-CoA-binding N275/S308 = N442/S474, conserved.
+  - HMGS vs HMG-ACP synthase: the cationic CoA-site residues are present (K263, K335 at archaeal R203/K243 and human
+    K46/K269, experimental evidence); PksG/CurD carry D/G there. One deviation: Tyr339 at the HMG-CoA-binding Lys
+    (Q9FD71 K242 / human K273), where PksG has Gly.
+Rung 4, structure (ESMFold2; US-align TM normalized by the experimental chain):
+  - Leads: pLDDT 84.9-89.4, pTM 0.90-0.94. TM to 1YSL 0.911-0.920, PksG 4YXT 0.904-0.915, human 2P8U 0.860-0.885,
+    archaeal 6ESQ-I 0.878-0.885, FabH 1HNJ 0.847-0.861, CHS 1BI5 0.740-0.745, thiolase 1DM3 0.578-0.581.
+  - Same-family GA members 0.905-0.919 to 1YSL. Positive control (DPANN canonical HMGCS at GA, CAISET010000016.1_25 and
+    AJF61242.1): 0.975-0.983 to 6ESQ-I, triad in place. Negative controls (DPANN carbamoyltransferase-family and
+    dihydroxy-acid dehydratase-family proteins, 568/569 aa): 0.27-0.38, triad not superposed. Thiolase control
+    (WP_203134943.1): 0.974 to 1DM3, 0.59 to 1YSL.
+  - TM alone does not separate HMGS from FabH (0.86 vs 0.91); the residue positions above do.
+Rung 5, genome context:
+  - Canonical HMGCS blank in 17/17 by Pfam GA (N and C), KOfam and kegg. A relaxed E <= 10 search of 80,446 proteins in
+    genera Micrarchaeum_A and JAJZYD01 finds only this family (plus one 633-aa gene in another genome). Leucine
+    catabolism and HMGCL KOs (K01968/K01969/K05607/K01640) 0/17.
+  - Present: thiolase (Pfam Thiolase_N 12/17, K00626 10/17); mevalonate-3-kinase route K18689 11/17, K18690 10/17,
+    K22813 9/17; MVK 2/17; MVD 4/17; IPK 14/17; IDI 14/17; GGGPS 12/17, DGGGPS 17/17, CarS 16/17, GGR 17/17.
+  - BLANK: HMGCR 17/17, with 0 hits even at E <= 10 (Pfam HMG-CoA_red, KOfam K00021/K00054).
+  - Completeness median 86% (58.5-93.8) vs Micrarchaeota median 85.4%. Micrarchaeum_A genomes at >= 90% completeness
+    have HMGCR 0/10, so incompleteness does not explain the gap.
+Rung 6, distribution (bins.taxonomy):
+  - All 17 in f__Micrarchaeaceae: Micrarchaeum_A acidiphilum_A 10/26 genomes, Micrarchaeum_A sp021797495 4/4,
+    JAJZYD01 sp021811605 3/4. Three sequence clusters: A (10 genes, >= 99% identical), B (4, 71% to A), C (3, 46% to A).
+  - Family: 292/1,146 Micrarchaeota genomes (Micrarchaeaceae 266/504, CABMGC01 26/322); 0 outside Micrarchaeota.
+Rung 7, alignment-list call: same label in 4/17, no call in 13/17. Embedding-only share 0.76.
+Q2, partners:
+  - Curated records: archaeal HMGCS A0A384E143 channels with thiolase A0A384E138 and DUF35 scaffold A0A384E139
+    (OB_ChsH2_C + zf-ChsH2) (PubMed 29531083; PDB 6ESQ). PksG P40830 works with AcpK Q7PC63, PksF P40804, PksH P40805
+    and PksI P40802 on PksL Q05470 thiolation domains (PubMed 16757561, 17234808).
+  - In the lead: none fused, none within +-6 genes (0/17 thiolase, DUF35, ACP, KS, ECH), DUF35 genome-wide 0/17.
+    Family-wide, DUF35 sits in 20/289 long-form genomes vs 132/197 canonical-HMGCS genomes. The long form runs as a
+    standalone homodimer, like MvaS and HMGCS1 (Q9FD71/Q01581 SUBUNIT: homodimer).
+  - Conserved neighbors across the 17: DUF2666 adjacent (17/17), 73-aa HrcA_DNA-bdg/TrmB-like (17/17), ribosomal L40e
+    (14/17), COG4412 (13/17), SpeD AdoMet_dc (12/17), Cytochrom_B_N_2 at -1 (10/17). The same locus holds in the other
+    272 family members: DUF2666 72%, TrmB-like 71%, L40e 60%.
+Q3, why 17: the matching position in other Micrarchaeota holds the same family, GA-annotated (24/24 voters PF08540).
+  Of 288 members, 155 carry the GA label; of the 133 unannotated, 17 have a slot call and 116 have no pass-table row.
+  So 17 reflects call coverage on insertion-split members of three species, not a separate lineage.
+Criterion A: passes.
+  - ILVFMAWC 0.374-0.397 (soluble); 580-591 aa; characterized relatives are homodimers.
+  - Co-fold (homodimer + 2 acetyl-CoA, family MSA of 160 rows): ipTM 0.92 (OJT94780.1) and 0.94 (JAJZNR010000018.1_8);
+    TM 0.938 to the 1YSL dimer. Each acetyl-CoA sits in one active site: thioester S/acetyl C 2.3-2.6 A from Cys SG,
+    His 3.1-3.5 A, Glu 4.3-4.4 A. 14-15/19 human 2P8U CoA-contact positions recovered (0.74-0.79), with K63, K263,
+    K335 and N442 in contact. Positive control co-fold: ipTM 0.92, Cys 2.5 A, 9/19.
+UNVERIFIED: substrate pair (acetoacetyl-CoA or another 3-oxoacyl thioester, given Tyr339); HMG-CoA fate in
+  Micrarchaeum_A. Criterion B: weak; the new content is the clade-level replacement and the HMGCR gap below.
+
+FRAME-CHALLENGE GATE (trigger 3: HMGCR absent where the premise "lead fills a pathway gap" needs it)
+Pinned anomalies: (1) HMGCR 0/17 and 0/44 in the genus, downstream mevalonate-3-kinase route present; (2) long form
+  exclusive of canonical HMGCS yet with HMGCR in JAJYXL01 26/33, JAKARM01 17/18, JAKATK01 13/13; (3) Tyr339 at the
+  HMG-CoA-binding Lys; (4) no pathway genes near the lead. Hypotheses: (a) host supplies mevalonate; (b) neofunctionalized
+  condensing enzyme; (c) non-homologous HMGCR; (d) HMG-CoA consumed by another route.
+Tests run: (b), proposed by the fresh-context critic: pocket residues by genus vs HMGCR status give one pocket family-wide
+  (Tyr 100% in HMGCR-carrying JAKARM01, JAKATK01 and in HMGCR-blank Micrarchaeum_A 0/33; triad and N/S invariant in
+  270/270), so (b) is disfavored and in HMGCR genera the long form is the only HMGS upstream of HMGCR. (d): HMGCL and
+  leucine-catabolism KOs 0/17. (c): profiling in Micrarchaeaceae (125 HMGCR+ vs 139 HMGCR- mevalonate-using genomes)
+  found no reductase-like family; top enriched family LacAB_rpiB (78% vs 15%; rpib workstream's family, UNVERIFIED link).
+  - (a) stays open; it needs wet-lab or host-symbiont data.
+
+Q4, DPANN-wide (lipid genomes = >= 70% complete with GGGPS, DGGGPS or CarS; % carrying each step by annotation)
+phylum            lipid/all  thiol HMGS(any)       HMGCR MVK/alt decarb IPK IDI | HMGS-blank with sub-threshold K01641
+Micrarchaeota      990/1020   65   45 (19 can+26 LF)  56    60     67    52  50  | 323/542
+Aenigmatarchaeota  170/286    69   21                 66    72     76    50  70  |  95/134
+Iainarchaeota      141/173    74   39                 76    74     74    50  62  |  52/86
+Altiarchaeota       49/55     94   10                 94    96     96    73  24  |  41/44
+EX4484-52           26/40     88   15                 88    81     96    85  23  |  19/22
+Undinarchaeota      14/14     86    0                 93   100     29    93   0  |  12/14
+Nanobdellota       182/1634   43    7                 12    10     12     9  32  |  15/169
+(thiol = Pfam Thiolase_N, where K00626 gives only 0-13%; can = canonical, LF = long form; Nanohalarchaeota 1/44 and
+Huberarchaeota 0/10 carry lipid steps.)
+- Alternative enzymes: the mevalonate-3-kinase route (K18689/K18690/K22813) in 75 Micrarchaeota (64 Micrarchaeaceae);
+  MVD K01597 for decarboxylation; PMDC K17942 and the dehydratase route (K25517/K09128/K25518) 0 DPANN-wide.
+- HMGS-blank: 557/1,012 genomes carry a ~348-aa protein with K01641 205 bits median (max 238 vs 282.27; E ~1e-59),
+  Pfam-labeled ACP_syn_III_C in 521/572, consistent with canonical archaeal HMGCS below thresholds. HMGCR-blank: 696
+  genomes (435 Micrarchaeota, 161 Nanobdellota, 58 Aenigmatarchaeota, 34 Iainarchaeota), 0/696 with a reductase hit.
+- Slot calls for blank steps: HMGS 17 (this lead); HMGCR 0 DPANN-wide; thiolase 16 fragments (median 85 aa); GHMP/MVK
+  47 genes (13 in blank genomes, median 116 aa); IPK/IDI/decarboxylase 0. No conserved unlabeled neighbor fills HMGCR.
+FILES: leads.tsv; code/s01-s22 (bash as *.sh.txt); s*_*.txt outputs; *_residue*/usalign_*/cofold_*/census_*/pocket_*
+  tables; genome_steps.parquet; folds/ (17/120 budget); ref/. Remote scratch: .../redesign_20261111/dpann_leads/hmgcs.

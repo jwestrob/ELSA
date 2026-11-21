@@ -1,0 +1,29 @@
+{
+ "rule_source": "ws_srvp_bins/package/code/03_build_package.py st_ribosomal (= slice_lut package_k8/code/15_ribosomal_truth.py)",
+ "tool": "Aksha /home/jwestrob/.local/bin/aksha search --hmm_in ribo.hmm --cut_ga --threads 24",
+ "hmm": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/testset/work/ribo.hmm",
+ "hmm_sha256": "b2ce8369acd81894f9b437a64ecacc59c7ac35175f69b1454624dd4bdc6e1e49",
+ "aksha_seconds": 73.7,
+ "aksha_rows": 52518,
+ "hits": 52518,
+ "marked_genes": 45292,
+ "models_hit": 101,
+ "runs": {
+  "g0_m8": 927,
+  "g0_m16": 642,
+  "g2_m8": 850,
+  "g2_m16": 801
+ },
+ "g2_m16_genomes": 801,
+ "genomes": 842,
+ "g2_m16_by_domain": {
+  "Bacteria": 688,
+  "Archaea": 113
+ },
+ "genomes_without_g2_m16": 41,
+ "genomes_without_g2_m16_by_domain": {
+  "Archaea": 29,
+  "Bacteria": 12
+ },
+ "seconds": 75.8
+}

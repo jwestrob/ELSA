@@ -1,0 +1,232 @@
+CONTEXT_UNITS (ws_context): INDEPENDENCE OF EVIDENCE AND LOCUS BOUNDARIES FROM GENOMIC CONTEXT AS A VECTOR (DPANN, 2026-11-13)
+==========================================================================================================================
+Even genomes = verdict, odd genomes = selection; paired genome bootstrap (2,000 draws, seed 17). Token reference reproduced
+exactly through this workstream's driver before any comparison (DH summed even .42702, F1 .744/.548/.479, ribosomal 1,686 /
+1,512; significant pairs, per-instance F1 and control F1 identical to the stored rescue3 run).
+
+ANSWER IN EIGHT LINES
+1. N_eff (effective number of independent genomic contexts) does NOT replace the genus count. Predeclared selection raw
+   W50 t2, even DH vs genus: summed -0.003 [-0.018, +0.012], F1 +.006/-.016/-.017, ribosomal 1,686 / 1,437, Parv 114/106:
+   TXSScan and CRISPR-Cas lose more than 0.01. None of 48 configurations (raw/gc x W 10-100 x t 1.5-3 x noise z 0/2) met the
+   three odd conditions; CRISPR-Cas F1 sits below the genus run in every one.
+2. The context is informative and the failure is in the principle of reading descent from a +-W window. Shuffled contexts
+   reproduce the every-genome-its-own-lineage unit (DF -0.093, CCT -0.091); real contexts recover +0.100 / +0.081 of that.
+   Context cosine of two instances of one pair falls from .76 (same species) to .48 / .28 / .17 / .11 / .08 (genus / family /
+   order / class / other phylum; raw W25) and stays 15x the floor mean across phyla (10+ null s.e. once pooled over 20
+   genomes), because inside a conserved multi-gene unit the window is the unit. One cosine mixes shared descent with unit
+   size: the ribosomal superoperon gets N_eff ~1-3 in every genome (t3, W10: 0-3 of 848 odd runs recovered) while a pair in
+   50 genomes of one genus gets N_eff ~2.2 (passes t2; genus L = 1). A noise model (z = 2) and windows outside the pass-1
+   locus (post hoc) do not repair it; the CRISPR-Cas loss sits on two-genus systems with shared flanks and short contigs.
+3. Test 2 (embedding-only kernel, same-context list exclusion + per-instance N_eff) fails: DH -0.173 [-0.203, -0.144] vs
+   round 2 with the genus, F1 -.087/-.215/-.060, 0 of 1,686 ribosomal runs recovered (support touches 5.4% of ribosomal genes,
+   round 2 97.3%).
+4. Test 3 is positive: label-free variety cuts replace module labels and beat them. A boundary's cohesion = mean pairwise
+   cosine of the neighbours (strand-oriented, facing the boundary) of each gene's homologs, min over the two genes; cut where
+   it falls under theta. Genus token landscape, LFvar theta 0.05 vs module-cut DH: +0.065 [+0.050, +0.079], F1 +.050/+.081/
+   +.010, ribosomal 1,686 / 1,456, Parv 114/108. Round-2 embedding landscape (support still counts genera) read with kNN
+   homologs, so with no families and no modules: LFvar 0.2 vs its module DH +0.057 [+0.041, +0.073], TXSScan F1 +0.101; vs
+   token DH +0.097, F1 +.050/+.053/-.025, ribosomal 1,228.
+5. The predeclared taxonomy-free, label-free token method (N_eff landscape + LFvar 0.05) against the token engine's adopted
+   output (genus + module DH): +0.059 [+0.040, +0.079], F1 .789/.614/.477 (+.045/+.066/-.002), ribosomal 1,686 / 1,507, Parv
+   114/106: every "matches" bar, with the summed-excess interval above 0. Under the same reading, N_eff vs genus is -0.005
+   [-0.019, +0.009], F1 -.005/-.015/-.013: the cut supplies the gain, the unit still costs TXSScan and CRISPR-Cas.
+6. Caveat on every cut gain: more, smaller loci (808k vs 650k; mean 4.6 vs 5.9 genes) raise the random-placement control
+   F1 too (+.028/+.039/+.035). Excess gains are DF +0.023, TXSS +0.042, CRISPR-Cas -0.025 (its F1 gain is all control);
+   boundary precision rises (DF .75 -> 1.0, TXSS .44 -> .67). Continuity cuts give larger F1 gains (TXSS +0.16) and resolve
+   fewer ribosomal runs (1,310-1,376).
+7. Direct statement: the method runs with NO module labels (better than with them; on embeddings also with no families).
+   It runs with NO lineage array only on the token route, where N_eff + label-free cuts match the genus+module output; N_eff
+   does not replace the genus like for like, and the embedding-only route does not run without a lineage array (Test 2).
+   Best taxonomy-free output found (post hoc): lineagefree emb_hom g0.75 groups + LFvar 0.05, +0.063 vs token DH, F1
+   +.051/+.072/+.006, ribosomal 1,460.
+8. Cost: noise floor + N_eff for 813k candidate pairs (6.1M instances) and three nulls at four W in ~40 s on 24 CPUs after
+   a 2.7 min vector load and 14.7 GB of prefix sums; cohesion arrays ~2 min; readings unchanged (~1 min per output); Test 2
+   728 s on 64 CPUs. Every step is linear in genes x dimension.
+
+--------------------------------------------------------------------------------------------------------------------------
+PREDECLARATION AND ORDER OF EVENTS (predeclared.json, NOTEBOOK.txt; UTC; file mtimes)
+- main 02:06 (before any computation; only the contig-length table read). amendment_1 02:19 (noise-aware rho_z, after the
+  descriptive output of job 87979 and before any score of any context variant). amendment_2_test2 02:27 (Test 2 fixed before
+  its run; 9 odd Test-1 numbers read by then). amendment_3_posthoc 02:48 (exterior windows; POST HOC, before its numbers).
+- Test 1 selection 03:19, Test 3 selections 02:55 (genus landscape), 03:00 (embedding landscape), 03:29 (N_eff landscape);
+  each written before the even numbers of the selected output were read. Job logs print odd numbers only.
+- POST HOC and labelled: the exterior windows; label-free cuts on the lineagefree emb_hom g0.75 and every-genome landscapes;
+  the short-contig strata (evaluation, read after the Test-1 selection).
+
+--------------------------------------------------------------------------------------------------------------------------
+1. THE STATISTIC
+x_g      zca10 unit vector of gene g (uid-level soft-ZCA alpha 0.1 of ESM++ small means, as softrec), 960-d.
+Context  instance (a, b) on contig c, lo = min, hi = max: window = genes [lo - W, lo - 1] and [hi + 1, hi + W] inside c (the
+         instance and the genes between excluded). S = sum of x over the window (variant gc: x - mu_genome); n_ctx = window
+         size; B = S / ||S|| (undefined for n_ctx = 0: 0.54% of instances).
+Genome   B_g = unit(sum of B over the pair's instances in genome g); g is informative if one instance has n_ctx >= 1.
+Pooling  k informative genomes: c_bar = (||sum_g B_g||^2 - k) / (k (k - 1)) = mean pairwise cosine; O(k d) per pair.
+Noise    unrelated contexts: cos(B, B') with mean c0, sd sd0 over 2,000,000 random pairs of observed instances in different
+         genomes; the mean of k(k-1)/2 such cosines has null sd sd0 sqrt(2 / (k (k - 1))).
+           raw: c0 .003/.005/.006/.007, sd .064/.079/.088/.094 (W 10/25/50/100); c0 rises with window size (n_ctx 1-2: .0004;
+                51-200: .016; sd .05 -> .13), the per-genome composition component (same-genome gene cosine .0148 vs .0003).
+           gc:  c0 .0002-.0003, sd .051-.057, flat in n_ctx (within .0012).
+         rho = clip((c_bar - c0) / (1 - c0), 0, 1)            (main);  rho_z: subtract z = 2 null sd from c_bar (amendment_1).
+N_eff    G / (1 + (G - 1) rho), G = genomes carrying the pair. Kish design effect under equicorrelation; for clusters of identical
+         contexts with nothing shared between clusters it equals G^2 / sum n_c^2, the inverse Simpson index (order-2
+         similarity-sensitive diversity with a linear kernel). k < 2 -> rho = 0 (3,907 of 813,477 observed candidate pairs).
+Engine   rule P <= 1e-e & N_eff >= t (engine selection of e: FDR <= 0.01, top 12, most genes); landscape value 2 N_eff / t,
+         floored at 2; Louvain weights J log2(max(value, 2)); readings unchanged (R1; DH with Louvain 0.3, trimming 0.5).
+         Computed for pairs with G >= 2 and P <= 1e-2 in the observed order and three gene-order nulls (null instances carry the
+         real contexts of their positions). No taxonomy column is read (recurrence_lf.Universe, one unit per genome).
+Contig truncation: median n_ctx 16 / 27 / 30 / 30 at W 10 / 25 / 50 / 100; full windows 38% / 19% / 10% / 5% of instances.
+
+2. TEST 1: TOKEN ENGINE WITH N_eff IN PLACE OF L
+Odd genomes, DH vs genus (d summed [95%]; dF1 DF / TXSS / CCT; odd ribosomal recovered / resolved of 848; conditions met):
+  config         sig pairs  d summed                 dF1                     ribo odd   met
+  genus            162,786  0                        0                       848 / 769   3
+  raw_W10_t2        97,585  +0.007 [-0.011, +0.025]  +.012 / -.007 / -.024   842 / 585   1
+  raw_W25_t2       108,933  -0.011 [-0.029, +0.005]  +.012 / -.023 / -.015   848 / 662   0
+  raw_W50_t2 SEL   115,047  +0.011 [-0.005, +0.027]  +.014 / -.007 / -.021   848 / 731   2
+  raw_W100_t2      118,292  -0.006 [-0.024, +0.011]  +.010 / -.024 / -.020   848 / 724   2
+  gc_W10_t2        114,907  -0.004 [-0.019, +0.011]  +.013 / -.006 / -.011   831 / 262   1
+  gc_W25_t2        141,629  +0.002 [-0.014, +0.017]  +.010 / -.006 / -.014   848 / 703   1
+  gc_W50_t2        162,189  +0.002 [-0.013, +0.015]  +.007 / -.016 / -.036   848 / 745   2
+  gc_W100_t2       178,877  -0.005 [-0.016, +0.007]  +.007 / -.021 / -.032   848 / 720   2
+  raw_z2_W10_t2     84,716  +0.029 [+0.010, +0.047]  +.008 / +.009 / -.022   842 / 587   1
+  raw_z2_W50_t2    145,247  -0.020 [-0.036, -0.004]  +.016 / -.034 / -.017   848 / 699   0
+  gc_z2_W25_t2     163,054  +0.003 [-0.015, +0.019]  +.008 / -.002 / -.013   848 / 601   1
+  gc_z2_W50_t2     188,283  +0.001 [-0.013, +0.015]  -.002 / +.001 / -.024   848 / 751   2
+  t ladder: t1.5 admits 190-370k pairs and loses 0.01-0.04 summed (DF and CCT); t3 admits 39-87k pairs, gains summed
+  (+0.02 to +0.11) and loses CRISPR-Cas (-0.03 to -0.07) and, at W10-25, the ribosomal runs (0-62 resolved).
+  Controls (t2): shuffled contexts ~495k pairs, DF -0.08 to -0.09, CCT -0.09 (all W, both variants); member vectors (pair's own
+  proteins minus family means) t1.5 / t2 / t3: -0.053 / -0.110 / -0.111.
+  Full table: results/odd_table.txt (all 48 + controls + post hoc).
+Even verdict (selected raw_W50_t2):
+  DH summed .4237; vs genus -0.0033 [-0.018, +0.012]; F1 .750/.532/.462 (dF1 +.006 [-.002, +.015] / -.016 [-.028, -.004] /
+  -.017 [-.024, -.010]); ribosomal 1,686 / 1,437 (genus 1,512), Parv 114 / 106. Replaces the genus: NO (two F1 conditions).
+  Against the 'matches token DH' bars it passes (summed, F1 within 0.02, ribosomal >= 1,400).
+  vs lineagefree emb_hom g0.75 +0.006 [-0.006, +0.018] (F1 +.005/-.006/-.015); emb_mean g0.55 -0.037; fam_jac g0.2 -0.020;
+  every-genome-own-lineage +0.017 [-0.006, +0.042] (F1 +.100/+.003/+.081). Shuffled contexts raw W50: vs genus -0.019, F1
+  -.093/-.000/-.091. Other even rows: results/even_table.txt.
+Short contigs (even, DH vs genus, gold instances on contigs < 2W + 2 genes vs the rest): raw_W50_t2 short (5,623 instances)
+  -0.001, CCT -0.019 / long (1,473) +0.009, DF +0.034, CCT -0.009; raw_W10_t2 short CCT -0.028 / long -0.002; gc_W25_t2 short
+  -0.019, CCT -0.018 / long +0.013, CCT -0.001. The CRISPR-Cas deficit sits on truncated windows.
+N_eff and taxonomy (evaluation only; results/evaluate_taxa.json): among candidate pairs with P <= 1e-4, raw W50 N_eff has
+  Spearman .666 with the genus count, .538 families, .413 orders, .338 phyla, .502 G; partial given G .573 / .447 / .330 /
+  .259 (E7 holds; gc W25: .670, partial .575). By G: 2-3 genomes median N_eff 1.26 (genera 1), 4-10 1.47 (1), 11-50 2.19 (3),
+  >= 51 4.46 (26; families 6): N_eff saturates for widespread pairs, the conserved-unit effect of Section 3.
+Recently transferred blocks (two genomes of different GTDB orders, both member proteins at zca10 cosine >= 0.95):
+  3,621 candidate pairs (3,096 at P <= 1e-4, median G 6, median genus count 2). The genus rule counts
+  all of them as >= 2 lineages; N_eff >= 2 holds for 32% (raw W50; 27-51% over variants and W), median N_eff / L 0.63 against
+  1.16 for the other pairs. A recently transferred block arrives with its flanks, so N_eff counts it as about one event.
+  Gold-spanning pairs that are genus-significant and lose significance under N_eff (raw W50 t2): CRISPR-Cas 809 of 4,579
+  (17.7%; median G 4, genus count 2, N_eff 1.61; 15% with G = 2; 5% recent transfers), DefenseFinder 141 of 2,993 (4.7%),
+  TXSScan 314 of 2,792 (11.2%; median G 10). Recent transfers are 29% / 33% / 3% of the CRISPR-Cas / DefenseFinder / TXSScan
+  gold pairs N_eff keeps, so the CRISPR-Cas loss comes mainly from systems seen in two genera with shared flanks (rho ~0.5),
+  where the genus count says two and the contexts say one.
+
+3. DIAGNOSIS: CONTEXT VECTOR OR PRINCIPLE (evaluation; 200,000 instance pairs of one token pair per relation; job 88446)
+  mean cos(B, B')    same species  genus   family  order   class   other phylum   (floor sd)
+  raw W10             .817          .511    .298    .190    .139    .102           .064
+  raw W25             .762          .475    .277    .172    .114    .075           .079
+  raw W50             .731          .458    .272    .167    .101    .062           .088
+  raw W100            .714          .450    .270    .165    .097    .057           .094
+  gc W25              .708          .373    .194    .128    .105    .086           .054
+  gc W100             .614          .301    .155    .105    .081    .069           .057
+  member (centred)    .909          .490    .264    .169    .067    -.001          .052
+  (no 'same phylum, other class' pairs occur in DPANN GTDB here.)
+  - Noise is not the limit: the floor sd (0.05-0.09) is far below every relation's mean, and the z = 2 noise model changes
+    CRISPR-Cas F1 by under 0.015. W is not the limit: the curve flattens beyond W25 (contigs truncate windows; median n_ctx 30
+    at W50 and W100), and every W fails. Contig length matters for CRISPR-Cas (above) but long-contig instances alone would
+    still lose TXSScan at W50 (-0.017).
+  - The principle: similarity of flanks measures shared descent and the extent of the conserved unit at once. Across phyla
+    the cosine stays at .06-.10 (about 1 single-pair floor sd, 12-60x the floor mean, 10+ null s.e. for a pooled mean over
+    20 genomes): conserved neighbourhoods extend past the pair, so the window holds
+    the rest of the unit in every lineage. The design effect then discounts large conserved units as if inherited (ribosomal
+    superoperon; t3 loses every run) and counts deep pairs within one genus as ~2 independent contexts (rho ~0.45 within a
+    genus caps N_eff at ~2.2 for any G). No threshold separates the two, because they occupy the same range of rho.
+  - Moving the window outside the pass-1 locus (post hoc, 12 configurations) removes the relatedness signal entirely (DF
+    -0.06 to -0.08, CCT -0.08 to -0.09 vs genus = the genome unit; ribosomal 314-777 odd).
+  - Expectations (predeclared): E1 holds (raw c0 .003 -> .007 with W; gc within .0003 of 0); E2 holds (median N_eff / G
+    .506 / .525 / .535 at W 25 / 50 / 100, raw); E3 holds in its verdict (gc fails on CRISPR-Cas), not in its mechanism (gc
+    W50 t2 admits 162k pairs, the genus 163k); E4 holds (raw selected, fails); E5 holds (shuffled = genome unit; refuter R2 did
+    not fire); E6 refuted (member vectors lose 0.05-0.11 summed and the most DefenseFinder F1); E7 holds (partial .573);
+    E8 holds (variety cuts resolve fewer runs than module cuts, 1,456 vs 1,512; continuity behaves like profile units).
+    Refuter R1 fired: no (variant, W) at t 2 meets the even replacement criterion.
+  - Coarse relatedness (what the genus and the lineagefree groups supply, at family-like scale) is weakly carried by flanks:
+    at family level the context cosine is .17-.30, at genus .30-.51, so 'one context' is effectively 'one genus or closer'.
+
+4. TEST 2: EMBEDDING-ONLY KERNEL WITH CONTEXTS (softctx.py; job 88670; predeclared amendment_2_test2, single output)
+  Lists: zca10 kNN k 2,000 -> gene lists depth 1,000 excluding the own genome and genes whose position context has cosine
+  >= tau = 0.494 (q99.9 of random position-context cosines, 128-d projection; floor c0 .005, sd .121) with the query gene's:
+  median 2, q90 32, q99 251 exclusions per list. Per instance: N_eff over the own context and the first supporting b' context
+  of each supporting genome (z = 2); W_ctx = rank-weighted genome sum / design effect; rule W_ctx >= 1 & N_eff >= 2 (FDR
+  0.0044; 1,794,913 significant instances, round 2 with the genus 2,547,427); Leiden r2000 families (760,097 communities);
+  Louvain weights with token-pair N_eff.
+  Even: DH summed .2941; vs round 2 with the genus -0.173 [-0.203, -0.144], F1 .716/.285/.382 (-.087/-.215/-.060); ribosomal
+  0 of 1,686 recovered; vs lineagefree emb_hom g0.75 round 2 -0.192; vs every-genome round 2 -0.019 [-0.047, +0.009].
+  Significant support touches 5.4% of ribosomal-run genes (round 2: 97.3%). Likely mechanism (UNVERIFIED; per-instance arrays
+  not stored): with same-genus genes in the lists, ribosomal instances have hundreds of supporting genomes and rho ~0.3 inside
+  the superoperon, so W / (1 + (k - 1) rho) falls under 1. Not repaired: the route already failed at the unit level (Test 1).
+
+5. TEST 3: LABEL-FREE CUTS IN PLACE OF MODULE-LABEL CUTS (cuts.py; jobs 88358, 88741)
+  Cohesion (var): for gene i and the side facing boundary k (downstream if i is on +), A = sum of the zca10 vectors of the
+  neighbours on that side of the other members of i's homolog set, n of them; cohesion = (||A||^2 - n) / (n (n - 1)) minus the
+  gene-pair floor (.0003); kappa(k) = min over genes k and k+1 (NaN when < 2 homologs with a neighbour: no cut). Homolog set =
+  token family (token landscapes) or the genes of the top-50 zca10 kNN unique sequences, at most 200 (embedding landscape).
+  Family aggregates make it O(N d). Continuity (cont): Jaccard of the genome sets of the best pairs spanning k and k+1.
+  Reading LF: level-2 neighbourhood + cores cut where kappa < theta, end-trimmed (0.5), nested (as DH).
+  Odd selection (most conditions vs the same landscape's DH, then summed): var 0.05 on token landscapes, var 0.2 on the
+  embedding landscape. Even, against the same landscape's module-cut DH:
+    landscape                  reading     d summed vs its DH        dF1 DF / TXSS / CCT       ribosomal res (DH)   Parv res
+    genus tokens               LFvar0.05   +0.065 [+0.050, +0.079]   +.050 / +.081 / +.010     1,456 (1,512)        108
+    N_eff tokens (raw W50 t2)  LFvar0.05   +0.063 [+0.048, +0.078]   +.039 / +.082 / +.015     1,507 (1,437)        106
+    round 2 embeddings         LFvar0.2    +0.057 [+0.041, +0.073]   -.009 / +.101 / +.013     1,228 (1,263)        100
+  Against the token genus DH: N_eff + LFvar0.05 +0.059 [+0.040, +0.079], F1 +.045/+.066/-.002; round 2 + LFvar0.2 +0.097
+  [+0.076, +0.118], F1 +.050/+.053/-.025 (ribosomal 1,228: fails 1,400); round 2 + LFvar0.1 (not selected) +0.089, F1
+  +.071/+.038/-.016, ribosomal 1,304.
+  Where the gain comes from (even, LF vs DH, genus tokens): dcontrol +.028/+.039/+.035, dexcess +.023/+.042/-.025; loci
+  808,428 vs 650,438, median span 3 vs 4; median boundary precision DF .75 -> 1.0, TXSS .44 -> .67, CCT .40 -> .50. The TXSScan
+  gain survives the control; the CRISPR-Cas F1 gain does not.
+  Other thetas (even, genus tokens): var 0.1 +0.055 (ribosomal 1,383); var 0.2-0.4 +0.002 to +0.022 with Parv resolved 13/114;
+  cont 0.1 / 0.2 / 0.3 / 0.5 +0.039 / +0.059 / +0.074 / +0.070, TXSS F1 +.086 to +.170, ribosomal 1,376 / 1,341 / 1,310 / 728.
+  E8 holds: continuity behaves like the profile-unit reading (high F1, fewer resolved runs).
+  POST HOC (labelled): every-genome-own-lineage + LFvar0.05 vs token DH +0.002 [-0.020, +0.024], F1 +.025/+.065/-.006,
+  ribosomal 1,297; lineagefree emb_hom g0.75 + LFvar0.05 +0.063 [+0.045, +0.081], F1 +.051/+.072/+.006, ribosomal 1,460, Parv
+  108. N_eff vs genome unit under LFvar0.05: +0.057 [+0.038, +0.078], ribosomal +210.
+
+6. RUN TIME (biotite, 24 CPUs unless stated)
+  Vector load + zca10 whitening 299 s with single-threaded BLAS, 160 s threaded; prefix sums (3.82M x 960 float32, 14.7 GB)
+  ~10 s; floor sampling (2M pairs x 4 W) + N_eff for 813,477 observed and ~71k null candidate pairs per null ~40 s per
+  variant; rule selection + R1 + DH scoring ~70-90 s per configuration (16-24 configurations per 24-CPU job, 31-35 min,
+  max RSS 33-44 GB). Cohesion arrays 114 s (tokens) / 139 s (kNN), including the vector load. Test 2: 728 s on 64 CPUs, max
+  RSS 69 GB. Evaluation jobs 2-3 min.
+
+CAVEATS
+- Test 1's selected unit fails on the F1 rule by 0.006-0.007 per caller; the 'matches' bars it meets are the coordinator's
+  looser bars, not the replacement criterion.
+- The cut gains include more, smaller loci; the scorer's best-locus F1 rises with locus count, which the control F1 tracks
+  (excess numbers are net of it). CRISPR-Cas excess falls under every label-free cut.
+- Theta for the cuts came from a predeclared ladder chosen before any cohesion value was seen; the selected theta sits at the
+  ladder's low edge (0.05) on token landscapes. Lower thetas were not run.
+- Ribosomal 'resolved' for the round-2 embedding landscape is below 1,400 for its own DH (1,263) and for every cut.
+- The member_raw_cosine row of evaluate_decay.json compared unaligned genes and is void (fixed in evaluate.py, not rerun;
+  the row is not used here).
+- Test 2 uses 128-d random projections of the contexts (per-instance pooling budget); Test 1 uses the full 960-d vectors.
+- Exterior-window and post hoc cut landscapes are labelled; none enters a predeclared verdict.
+
+ARTIFACTS
+Local benchmarks/redesign/context_units/: ctxrec.py (N_eff engine driver, refcheck), cuts.py (label-free cuts, token and kNN
+  cohesion), softctx.py (Test 2 kernel), evaluate.py (decay, taxa, contigs), collect.py, compare.py, kernel_test.py,
+  cuts_test.py, softctx_test.py, run_job.sbatch, run_big.sbatch, step*.sh, predeclared.json, NOTEBOOK.txt, REPORT.txt,
+  results/odd_table.txt, results/selection.json.
+Biotite $RD/context_units/: code/, results/ (*.odd.json, full/*.json, descriptive_*.json, refcheck_genus.json,
+  evaluate_*.json, compare_*.json, odd_table.txt, even_table.txt, selection.json), scores/ and loci/ (per-instance scores and
+  locus tables of every output), rdir/ (engine-format result directories per configuration), ctx/ (pairs_<variant>.parquet
+  with c_bar, k, N_eff per W; kappa_var_tokens.npy; kappa_var_knn50.npy), softctx/ctx_raw_W50_z2/cand/, logs/.
+Jobs: 87978 (refcheck + raw / shuf_raw / member), 87979 (gc / shuf_gc), 88328 (z2), 88358 (cuts: genus tokens, round-2
+  embeddings), 88446 (decay), 88546 (post hoc exterior), 88670 (Test 2, 64 CPUs), 88741 (cuts: N_eff landscape + post hoc),
+  88815 (taxa / transferred blocks / gold pairs).
+
+NEXT STEPS (not started)
+- Adopt the label-free variety cut in the engine's reading (token and embedding routes), then re-select theta below 0.05
+  and test a CRISPR-Cas-preserving variant (cut only where both sides' cohesion is low).
+- Pair the variety cut with the lineagefree emb_hom g0.75 groups (post hoc +0.063, every bar met) under a predeclared test.
+- A relatedness signal at family scale from embeddings (genome-level, as lineagefree) remains needed; flank similarity
+  carries genus-and-closer relatedness and unit extent together.

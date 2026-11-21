@@ -1,0 +1,86 @@
+group
+ann2_N        60
+ann2_C        60
+ann1          60
+lead_N        26
+lead_C        26
+lead_short     6
+Name: count, dtype: int64
+conservation of the T. maritima residue among 78 reviewed ThyX: {'H53': np.float64(0.96), 'T55': np.float64(0.19), 'Q75': np.float64(0.56), 'R78': np.float64(1.0), 'H79': np.float64(1.0), 'R80': np.float64(1.0), 'E86': np.float64(0.41), 'S88': np.float64(1.0), 'R90': np.float64(0.99), 'E144': np.float64(0.65), 'R147': np.float64(0.91), 'N163': np.float64(0.82), 'R165': np.float64(0.77), 'N169': np.float64(0.27), 'R174': np.float64(1.0)}
+core residues (>= 85% identical in reviewed ThyX): ['H53', 'R78', 'H79', 'R80', 'S88', 'R90', 'R147', 'R174']
+            count      mean       std  min  25%  50%   75%  max
+group                                                          
+ann1         60.0  7.233333  1.184171  4.0  7.0  8.0  8.00  8.0
+ann2_C       60.0  4.166667  0.886178  1.0  4.0  4.0  4.00  6.0
+ann2_N       60.0  4.416667  0.869281  3.0  4.0  4.0  5.00  7.0
+lead_C       26.0  4.038462  0.598717  3.0  4.0  4.0  4.00  5.0
+lead_N       26.0  3.730769  0.724303  3.0  3.0  4.0  4.00  5.0
+lead_short    6.0  4.333333  0.516398  4.0  4.0  4.0  4.75  5.0
+ref          78.0  7.858974  0.350301  7.0  8.0  8.0  8.00  8.0
+H53 {'ref': np.float64(0.96), 'ann1': np.float64(0.8), 'ann2_N': np.float64(0.62), 'ann2_C': np.float64(0.1), 'lead_N': np.float64(0.96), 'lead_C': np.float64(0.12), 'lead_short': np.float64(0.83)}
+R78 {'ref': np.float64(1.0), 'ann1': np.float64(0.83), 'ann2_N': np.float64(0.05), 'ann2_C': np.float64(0.98), 'lead_N': np.float64(0.04), 'lead_C': np.float64(1.0), 'lead_short': np.float64(0.83)}
+H79 {'ref': np.float64(1.0), 'ann1': np.float64(0.85), 'ann2_N': np.float64(0.15), 'ann2_C': np.float64(0.85), 'lead_N': np.float64(0.12), 'lead_C': np.float64(0.77), 'lead_short': np.float64(0.5)}
+R80 {'ref': np.float64(1.0), 'ann1': np.float64(0.88), 'ann2_N': np.float64(0.62), 'ann2_C': np.float64(0.87), 'lead_N': np.float64(0.0), 'lead_C': np.float64(0.54), 'lead_short': np.float64(0.5)}
+S88 {'ref': np.float64(1.0), 'ann1': np.float64(1.0), 'ann2_N': np.float64(1.0), 'ann2_C': np.float64(0.2), 'lead_N': np.float64(1.0), 'lead_C': np.float64(0.5), 'lead_short': np.float64(0.33)}
+R90 {'ref': np.float64(0.99), 'ann1': np.float64(0.98), 'ann2_N': np.float64(1.0), 'ann2_C': np.float64(0.17), 'lead_N': np.float64(1.0), 'lead_C': np.float64(0.0), 'lead_short': np.float64(0.5)}
+R147 {'ref': np.float64(0.91), 'ann1': np.float64(0.95), 'ann2_N': np.float64(0.93), 'ann2_C': np.float64(0.02), 'lead_N': np.float64(0.5), 'lead_C': np.float64(0.12), 'lead_short': np.float64(0.17)}
+R174 {'ref': np.float64(1.0), 'ann1': np.float64(0.93), 'ann2_N': np.float64(0.05), 'ann2_C': np.float64(0.98), 'lead_N': np.float64(0.12), 'lead_C': np.float64(1.0), 'lead_short': np.float64(0.67)}
+                                name H53 R78 H79 R80 S88 R90 R147 R174  core_match
+  DAHXIT010000017.1_9|lead_C:276-466   K   R   Q   R   D   L    W    R           3
+    DAHXIT010000017.1_9|lead_N:1-275   H   L   Q   S   S   R    R    L           4
+ DAHXKI010000011.1_17|lead_C:276-466   K   R   Q   R   D   L    W    R           3
+   DAHXKI010000011.1_17|lead_N:1-275   H   L   Q   S   S   R    R    L           4
+ DAOVIF010000002.1_60|lead_C:267-565   Y   R   H   S   S   Y    L    R           4
+   DAOVIF010000002.1_60|lead_N:1-266   H   G   L   C   S   R    N    R           4
+           HJO15200.1|lead_C:275-463   K   R   Q   R   D   L    R    R           4
+             HJO15200.1|lead_N:1-274   H   L   Q   P   S   R    R    A           4
+           HRZ85409.1|lead_C:283-558   Y   R   H   S   S   Y    L    R           4
+             HRZ85409.1|lead_N:1-282   H   G   F   V   S   R    N    Q           3
+         HYD03630.1|lead_short:1-321   H   R   H   R   M   D    D    R           5
+ JACWAL010000022.1_32|lead_C:380-595   Y   R   H   R   T   L    E    R           4
+   JACWAL010000022.1_32|lead_N:1-379   H   G   H   P   S   R    R    M           5
+  JAFCCB010000016.1_4|lead_C:272-564   Y   R   H   S   S   Y    L    R           4
+    JAFCCB010000016.1_4|lead_N:1-271   H   G   L   C   S   R    N    N           3
+  JAFCCD010000008.1_6|lead_C:259-530   N   R   H   A   S   Y    L    R           4
+    JAFCCD010000008.1_6|lead_N:1-258   H   G   L   V   S   R    N    K           3
+  JAFCEG010000023.1_4|lead_C:271-567   Q   R   H   A   S   Y    L    R           4
+    JAFCEG010000023.1_4|lead_N:1-270   H   G   L   C   S   R    N    R           4
+ JAGVGF010000004.1_10|lead_C:333-586   H   R   H   R   L   H    N    R           5
+   JAGVGF010000004.1_10|lead_N:1-332   H   E   T   V   S   R    R    M           4
+  JAHFJQ010000034.1_2|lead_C:361-584   G   R   H   R   V   L    E    R           4
+    JAHFJQ010000034.1_2|lead_N:1-360   H   G   H   P   S   R    R    M           5
+  JAJZAH010000008.1_4|lead_C:276-466   K   R   Q   R   D   L    W    R           3
+    JAJZAH010000008.1_4|lead_N:1-275   H   L   Q   S   S   R    R    L           4
+JAUWXZ010000042.1_5|lead_short:1-407   H   R   N   V   S   R    K    L           4
+           MAG61266.1|lead_C:269-463   K   R   Q   R   D   L    R    R           4
+             MAG61266.1|lead_N:1-268   H   L   Q   P   S   R    R    A           4
+           MAG79090.1|lead_C:262-559   Y   R   H   A   S   Y    A    R           4
+             MAG79090.1|lead_N:1-261   H   G   L   V   S   R    N    K           3
+       MBN1175995.1|lead_short:1-197   H   R   Y   H   M   R    -    R           4
+         MBN1792291.1|lead_C:377-594   H   R   H   R   T   L    E    R           5
+           MBN1792291.1|lead_N:1-376   H   G   H   P   S   R    R    M           5
+       MBS3141613.1|lead_short:1-184   -   R   H   R   V   L    D    R           4
+       MBS3141614.1|lead_short:1-368   H   A   S   A   S   R    R    L           4
+         MBU1129323.1|lead_C:316-561   Y   R   H   A   S   Y    L    R           4
+           MBU1129323.1|lead_N:1-315   H   G   L   V   S   R    N    E           3
+         MCK5624856.1|lead_C:289-562   Y   R   H   S   S   Y    L    R           4
+           MCK5624856.1|lead_N:1-288   H   G   L   C   S   R    N    R           4
+         MCX6749213.1|lead_C:284-570   Y   R   H   A   S   Y    L    R           4
+           MCX6749213.1|lead_N:1-283   H   G   L   V   S   R    N    Q           3
+         MEK6947948.1|lead_C:325-601   L   R   H   R   R   L    Q    R           4
+           MEK6947948.1|lead_N:1-324   D   M   N   P   S   R    R    L           3
+         MEM4152697.1|lead_C:301-553   Y   R   H   A   S   Y    I    R           4
+           MEM4152697.1|lead_N:1-300   H   G   L   V   S   R    S    E           3
+         MEM4215394.1|lead_C:301-553   Y   R   H   A   S   Y    I    R           4
+           MEM4215394.1|lead_N:1-300   H   G   L   V   S   R    S    E           3
+         MFA5724626.1|lead_C:265-524   Y   R   H   R   S   Y    I    R           5
+           MFA5724626.1|lead_N:1-264   H   G   A   T   S   R    S    A           3
+           NMB66601.1|lead_C:244-535   Y   R   H   R   S   Y    I    R           5
+             NMB66601.1|lead_N:1-243   H   G   A   T   S   R    S    A           3
+         NPA86484.1|lead_short:1-329   H   R   H   R   G   Y    V    R           5
+     PWLK01000080.1_2|lead_C:289-561   H   R   H   R   M   N    D    R           5
+       PWLK01000080.1_2|lead_N:1-288   H   A   T   A   S   R    R    L           4
+     SKHC01000094.1_6|lead_C:278-548   Y   R   H   K   I   G    D    R           3
+       SKHC01000094.1_6|lead_N:1-277   H   R   G   Y   S   R    R    M           5
+           VVB80407.1|lead_C:251-464   K   R   Q   R   D   L    R    R           4
+             VVB80407.1|lead_N:1-250   H   L   Q   P   S   R    R    L           4

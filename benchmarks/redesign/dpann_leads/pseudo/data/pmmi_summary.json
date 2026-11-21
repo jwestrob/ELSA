@@ -1,0 +1,59 @@
+{
+ "family": "pmmi",
+ "title": "Phosphinomethylmalate isomerase relatives (SR-VP), label Aconitase_C, partner function K20930; extended-tier reference member",
+ "verdict": "MIXED",
+ "n_labeled_genes": 9,
+ "n_labeled_groups": 5,
+ "n_canonical_genes": 246,
+ "n_canonical_groups": 85,
+ "positions_total": 9,
+ "verdict_positions": 9,
+ "verdict_position_list": "T15;D16;N60;S65;S66;R67;E68;R89;N94",
+ "positions_top_sub_ge70": 0,
+ "positions_top_sub_lt50": 9,
+ "labeled_replaced_rate": 0.733,
+ "control_replaced_rate": 0.139,
+ "control_kind": "fallback: GA canonical, identity-matched",
+ "control_genes": 5,
+ "control_groups": 4,
+ "identity_window": [
+  0.23,
+  0.334
+ ],
+ "labeled_identity_median": 0.289,
+ "control_identity_median": 0.331,
+ "canonical_identity_median": 0.453,
+ "shift_rate_pooled": 0.091,
+ "control_keeps_canonical": true,
+ "paralog": {
+  "labeled_genomes": 8,
+  "labeled_genomes_with_intact": 0,
+  "clade_genomes_without_labeled": 127,
+  "without_labeled_with_intact": 19,
+  "labeled_groups": 5,
+  "labeled_groups_with_intact": 0,
+  "nonlabeled_groups": 8,
+  "nonlabeled_groups_with_intact": 4,
+  "clade": "Burkholderiales;Dehalococcoidales;Rhizobiales;UBA10030;UBA10806",
+  "canonical_members": 246,
+  "canonical_intact": 187,
+  "labeled_genomes_with_any_canonical": 0,
+  "without_labeled_with_any_canonical": 28,
+  "labeled_genomes_with_active_site_canonical": 0,
+  "without_labeled_with_active_site_canonical": 28
+ },
+ "own_invariant_n": 1,
+ "own_invariant_residues": "G",
+ "own_invariant_same_pocket": 0,
+ "own_invariant_elsewhere": 1,
+ "own_invariant_unmapped": 0,
+ "structure": "K20930_ref.pdb: 9/9 verdict positions mapped",
+ "extra_roles": {
+  "named": {
+   "genes": 3,
+   "groups": 3,
+   "replaced_rate": 0.667,
+   "identity_median": 0.327
+  }
+ }
+}

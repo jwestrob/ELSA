@@ -1,0 +1,43 @@
+## Problem
+
+Every GPU search on biotite has aborted since the H200 node moved to Ubuntu 24.04.5 (glibc 2.39) on 2026-11-17: `RuntimeError: post-filter workspace is unavailable`.
+
+Two defects combined:
+
+1. **Single point of failure.** The CUDA bias filter evaluates `log` on the device; the CPU pipeline uses the host libm. `plan7_bias_environment_attested` trusted only the environments audited when each GPU was admitted: glibc 2.35, one pinned libm GNU build ID per target and one pinned CPU signature. Any OS update therefore disabled the GPU bias math.
+2. **The fallback aborted.** In an unattested environment the post-filter returned early, retaining every candidate for the CPU, before it created its workspace. The sealed F2 compaction then raised instead of falling back.
+
+## Change
+
+- **Self-attestation (native).** `plan7_bias_self_attest` runs the project's own exhaustive audit in process. It compares the production device log with the host libm log (the symbol whose module supplies the build ID) for every positive finite binary32 input (2,139,095,039 values) and requires zero mismatches. That is the criterion that admitted the original targets. Binary64 differences are reported for characterization only. On success the live libm build ID, CPU identity and device target are registered.
+- **Re-binding a cached record.** `plan7_bias_register_attestation` accepts a cached record only when all three equal the live identity and the record is a complete zero-mismatch audit of the current algorithm.
+- **Unchanged.** The built-in allow-list, the device allow-list and the floating-point check stay as they were.
+- **Exact fallback (native).** When the post-filter keeps every candidate for the CPU, or receives none, it now invalidates its resident results. The F2 compaction then reports an unsupported view, so the host records are used and the "workspace unavailable" error no longer happens.
+- **Trust per environment (Aksha).** A GPU search evaluates bias-math trust at start:
+  - built-in environment: trusted;
+  - otherwise: a one-time audit (2.5 s on an H200 with 28 threads), whose record is cached under a key of the CUDA extension SHA-256, libm build ID, glibc, CPU identity, device product, CUDA runtime and driver. Any change to these produces a new key and a fresh audit.
+- **Untrusted environments.** The search completes on GPU SSV plus the exact CPU path, with exactly one warning line that names what is untrusted and how to restore GPU use.
+- **Controls.** `AKSHA_GPU_SELF_ATTEST=auto|never|force` and `AKSHA_GPU_ATTESTATION_DIR` control the audit and its cache. `ASTRA_GPU_UNTRUSTED_NATIVE_FALLBACK=1` is an audit control that keeps the session route on the native per-stage fallback.
+- **`aksha gpu-check`.** Reports, per manifest and CUDA device, one of `GPU`, `GPU after self-attestation`, `SSV only` or `refused`, with the reason. Flags: `--attest`, `--json`. Exit status: 0 ready, 2 pending, 1 fallback.
+- **Docs.** Design record and rejected options: `docs/development/GPU_BIAS_ATTESTATION.md`. User documentation: `release/INSTALL.md`. Changelog entry under Unreleased. Version `0.2.4.dev0`.
+
+The native parts need a new `aksha-cuda12` build; this PR leaves the published pins (`aksha-cuda12==0.1.1`) for the release step. With 0.1.1 the application already falls back instead of aborting.
+
+## Validation (biotite, H200 node-224-2t-8gpu-1, glibc 2.39, libm `d53fcbff`)
+
+Build: dev wheel `aksha-cuda12 0.1.2.dev0` from these sources, using `release/build.py` `build_gpu` unchanged in the manylinux2014 maintainer container (devtoolset-10, CUDA 12.5.82, runtime 0.1.1 ABI `a01d5d4b`). It is installed side by side in `envs/aksha-0.2.4.dev0`.
+
+The sample is 4,000 random testset3 proteins. Reference rows come from production Aksha 0.2.3 running on CPU (Slurm job 119815).
+
+| Gate | Result |
+|---|---|
+| (a) test suites | 165 passed, 8 skipped (CPU node, CUDA hidden); native attestation tests 4/4 on the H200 |
+| (b) CPU path vs production | Pfam 6,872 rows and KOfam 6,360 rows, byte-identical |
+| (c) GPU (self-attested, GPU-through-Forward) vs CPU | Pfam 6,872 and KOfam 6,360 rows, byte-identical (21.6 s / 165.9 s) |
+| (d) H200 first-1000 audit | PASS: 27,481/27,481 Pfam models, 0 mismatches, CPU = GPU payload SHA-256 `a0d92890...`, non-vacuous GPU work |
+| (e) untrusted (`AKSHA_GPU_SELF_ATTEST=never`) | Pfam and KOfam byte-identical on both the SSV-only route and the native fallback route (the route that used to abort); exactly one warning line per search; no record written |
+| (f) readiness | no record: PENDING, exit 2; self-attestation disabled: FALLBACK / `SSV only`, exit 1; `--attest`: READY, exit 0 (audit 2.5 s, 0 binary32 mismatches); from the cached record: READY, exit 0 |
+
+Characterization: on this node 215,332 of the 2,139,095,039 inputs differ by one binary64 ulp (CUDA `log` is not correctly rounded), with zero differences at binary32. The Forward and domain kernels round to binary32 after adding `log`, so their exactness still rests on that rounding and on full-output identity tests, as before this change.
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)

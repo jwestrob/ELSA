@@ -1,0 +1,524 @@
+{
+ "structure": {
+  "runs": 1686,
+  "runs_with_neighbour_run_within_1_5": 0,
+  "consecutive_run_gap_hist_1_10": {
+   "1": 0,
+   "2": 0,
+   "3": 0,
+   "4": 0,
+   "5": 0,
+   "6": 0,
+   "7": 0,
+   "8": 0,
+   "9": 0,
+   "10": 0
+  },
+  "marked_fragments": 67473,
+  "fragments_by_marked": {
+   "1": 34982,
+   "2-3": 22807,
+   "4-7": 5564,
+   "8-15": 2434
+  },
+  "runs_with_fragment_within_3_5": 376,
+  "extra_marked_genes_q50_q90_max_among_those": [
+   2.0,
+   7.0,
+   19.0
+  ],
+  "run_over_neighbourhood_len_q10_q50_among_those": [
+   0.6,
+   0.8
+  ],
+  "runs_whose_neighbourhood_fails_precision": 179,
+  "neighbourhood_len_q50_q90_max": [
+   25.0,
+   33.5,
+   68.0
+  ],
+  "oracle_exact_span": {
+   "recovered": 1686,
+   "resolved": 1686
+  },
+  "oracle_merged_neighbourhood": {
+   "recovered": 1686,
+   "resolved": 1507,
+   "resolved_among_runs_with_fragment": 197
+  }
+ },
+ "outputs": {
+  "token_DH": {
+   "resolved": 1512,
+   "unresolved": 174,
+   "under_covered": 17,
+   "over_extended": 157,
+   "under_covered_no_locus": 0,
+   "under_covered_best_frac_q50": 0.6956521739130435,
+   "under_covered_fragments_q50": 4.0,
+   "over_extended_outside_genes": 3644,
+   "outside_per_run_q10_q50_q90_max": [
+    7.0,
+    18.0,
+    47.60000000000002,
+    110.0
+   ],
+   "outside_frac_a_other_run": 0.0,
+   "outside_frac_b_gap_between_runs": 0.0,
+   "outside_frac_c_other": 1.0,
+   "outside_c_in_small_g2_run": 0.0038419319429198683,
+   "outside_c_marked_outside_runs": 0.1446212952799122,
+   "outside_c1_within_merged_neighbourhood": 0.31201975850713504,
+   "outside_c2_marked_beyond_neighbourhood": 0.03402854006586169,
+   "outside_c3_rest": 0.6539517014270033,
+   "over_extended_runs_with_fragment": 88,
+   "unresolved_runs_with_fragment": 96,
+   "over_extended_runs_reaching_other_run": 0,
+   "over_extended_runs_with_neighbour_1_5": 0,
+   "unresolved_runs_with_neighbour_1_5": 0,
+   "merged_targets_resolved": 1466,
+   "merged_targets_recovered": 1685,
+   "merged_targets_resolved_among_runs_with_fragment": 234,
+   "standing_resolved_among_runs_with_fragment": 280,
+   "runs_resolved_standing_or_merged": 1570,
+   "outside_pfam_top30_gene_counts": [
+    [
+     "GTP_EFTU",
+     120
+    ],
+    [
+     "MMR_HSR1",
+     63
+    ],
+    [
+     "TrmB",
+     63
+    ],
+    [
+     "Ribosomal_L7Ae",
+     54
+    ],
+    [
+     "GTP_EFTU_D2",
+     52
+    ],
+    [
+     "SecY",
+     47
+    ],
+    [
+     "GTP_EFTU_D4",
+     45
+    ],
+    [
+     "eIF2_C",
+     44
+    ],
+    [
+     "S1",
+     44
+    ],
+    [
+     "Ribosomal_S27",
+     43
+    ],
+    [
+     "SHS2_Rpb7-N",
+     43
+    ],
+    [
+     "Ribosomal_S24e",
+     43
+    ],
+    [
+     "Spt4",
+     43
+    ],
+    [
+     "IF-2",
+     41
+    ],
+    [
+     "EMC3_TMCO1",
+     41
+    ],
+    [
+     "RNA_pol_Rpb1_5",
+     40
+    ],
+    [
+     "Ribosomal_L24e",
+     38
+    ],
+    [
+     "Ribosomal_S28e",
+     38
+    ],
+    [
+     "Rce1-like",
+     38
+    ],
+    [
+     "NDK",
+     37
+    ],
+    [
+     "Ribosomal_S6e",
+     37
+    ],
+    [
+     "tRNA-synt_1c",
+     36
+    ],
+    [
+     "PIN_9",
+     34
+    ],
+    [
+     "RtcB",
+     31
+    ],
+    [
+     "ResIII",
+     29
+    ],
+    [
+     "TsaD",
+     29
+    ],
+    [
+     "Prefoldin",
+     28
+    ],
+    [
+     "DEAD",
+     28
+    ],
+    [
+     "Helicase_C",
+     28
+    ],
+    [
+     "Plug_translocon",
+     26
+    ]
+   ],
+   "outside_genes_without_pfam": 957
+  },
+  "words_Vmob": {
+   "resolved": 501,
+   "unresolved": 1185,
+   "under_covered": 1159,
+   "over_extended": 26,
+   "under_covered_no_locus": 0,
+   "under_covered_best_frac_q50": 0.52,
+   "under_covered_fragments_q50": 8.0,
+   "over_extended_outside_genes": 236,
+   "outside_per_run_q10_q50_q90_max": [
+    7.0,
+    9.5,
+    11.0,
+    12.0
+   ],
+   "outside_frac_a_other_run": 0.0,
+   "outside_frac_b_gap_between_runs": 0.0,
+   "outside_frac_c_other": 1.0,
+   "outside_c_in_small_g2_run": 0.0,
+   "outside_c_marked_outside_runs": 0.06779661016949153,
+   "outside_c1_within_merged_neighbourhood": 0.3135593220338983,
+   "outside_c2_marked_beyond_neighbourhood": 0.0,
+   "outside_c3_rest": 0.6864406779661016,
+   "over_extended_runs_with_fragment": 17,
+   "unresolved_runs_with_fragment": 299,
+   "over_extended_runs_reaching_other_run": 0,
+   "over_extended_runs_with_neighbour_1_5": 0,
+   "unresolved_runs_with_neighbour_1_5": 0,
+   "merged_targets_resolved": 493,
+   "merged_targets_recovered": 1126,
+   "merged_targets_resolved_among_runs_with_fragment": 69,
+   "standing_resolved_among_runs_with_fragment": 77,
+   "runs_resolved_standing_or_merged": 517,
+   "outside_pfam_top30_gene_counts": [
+    [
+     "SecY",
+     23
+    ],
+    [
+     "EMC3_TMCO1",
+     20
+    ],
+    [
+     "tRNA-synt_2d",
+     17
+    ],
+    [
+     "Ribosomal_L34e",
+     16
+    ],
+    [
+     "tRNA_synthFbeta",
+     14
+    ],
+    [
+     "B5",
+     14
+    ],
+    [
+     "TrmB",
+     12
+    ],
+    [
+     "Plug_translocon",
+     11
+    ],
+    [
+     "RNA_helicase_helical",
+     10
+    ],
+    [
+     "Helicase_C",
+     10
+    ],
+    [
+     "ERCC4",
+     10
+    ],
+    [
+     "DNA_primase_lrg",
+     9
+    ],
+    [
+     "DEAD",
+     9
+    ],
+    [
+     "KOW",
+     9
+    ],
+    [
+     "ResIII",
+     9
+    ],
+    [
+     "Regulator_TrmB",
+     9
+    ],
+    [
+     "HHH_2",
+     9
+    ],
+    [
+     "Peptidase_M48",
+     8
+    ],
+    [
+     "HHH_5",
+     8
+    ],
+    [
+     "DNA_primase_S",
+     6
+    ],
+    [
+     "Toprim",
+     6
+    ],
+    [
+     "PCC",
+     5
+    ],
+    [
+     "DUF34_NIF3",
+     5
+    ],
+    [
+     "TraB_PrgY_gumN",
+     4
+    ],
+    [
+     "Yip1",
+     3
+    ],
+    [
+     "Lactamase_B_2",
+     3
+    ],
+    [
+     "HHH",
+     3
+    ],
+    [
+     "Toprim_4",
+     3
+    ],
+    [
+     "ODP",
+     3
+    ],
+    [
+     "Lactamase_B",
+     3
+    ]
+   ],
+   "outside_genes_without_pfam": 58
+  },
+  "words_Vcoh0.1": {
+   "resolved": 1420,
+   "unresolved": 266,
+   "under_covered": 69,
+   "over_extended": 197,
+   "under_covered_no_locus": 0,
+   "under_covered_best_frac_q50": 0.6756756756756757,
+   "under_covered_fragments_q50": 6.0,
+   "over_extended_outside_genes": 1854,
+   "outside_per_run_q10_q50_q90_max": [
+    6.600000000000001,
+    9.0,
+    14.400000000000006,
+    20.0
+   ],
+   "outside_frac_a_other_run": 0.0,
+   "outside_frac_b_gap_between_runs": 0.0,
+   "outside_frac_c_other": 1.0,
+   "outside_c_in_small_g2_run": 0.01348435814455232,
+   "outside_c_marked_outside_runs": 0.05879180151024811,
+   "outside_c1_within_merged_neighbourhood": 0.25674217907227614,
+   "outside_c2_marked_beyond_neighbourhood": 0.0005393743257820927,
+   "outside_c3_rest": 0.7427184466019418,
+   "over_extended_runs_with_fragment": 87,
+   "unresolved_runs_with_fragment": 123,
+   "over_extended_runs_reaching_other_run": 0,
+   "over_extended_runs_with_neighbour_1_5": 0,
+   "unresolved_runs_with_neighbour_1_5": 0,
+   "merged_targets_resolved": 1369,
+   "merged_targets_recovered": 1666,
+   "merged_targets_resolved_among_runs_with_fragment": 202,
+   "standing_resolved_among_runs_with_fragment": 253,
+   "runs_resolved_standing_or_merged": 1473,
+   "outside_pfam_top30_gene_counts": [
+    [
+     "SecY",
+     158
+    ],
+    [
+     "EMC3_TMCO1",
+     139
+    ],
+    [
+     "Ribosomal_L34e",
+     69
+    ],
+    [
+     "DNA_primase_lrg",
+     66
+    ],
+    [
+     "Helicase_C",
+     64
+    ],
+    [
+     "ERCC4",
+     63
+    ],
+    [
+     "tRNA-synt_2d",
+     63
+    ],
+    [
+     "RNA_helicase_helical",
+     63
+    ],
+    [
+     "DEAD",
+     61
+    ],
+    [
+     "ResIII",
+     60
+    ],
+    [
+     "HHH_2",
+     58
+    ],
+    [
+     "HHH_5",
+     57
+    ],
+    [
+     "Peptidase_M48",
+     54
+    ],
+    [
+     "KOW",
+     53
+    ],
+    [
+     "tRNA_synthFbeta",
+     52
+    ],
+    [
+     "B5",
+     51
+    ],
+    [
+     "Plug_translocon",
+     45
+    ],
+    [
+     "TrmB",
+     45
+    ],
+    [
+     "Toprim",
+     36
+    ],
+    [
+     "Prefoldin",
+     28
+    ],
+    [
+     "AAA_18",
+     27
+    ],
+    [
+     "Regulator_TrmB",
+     27
+    ],
+    [
+     "DNA_primase_S",
+     24
+    ],
+    [
+     "TraB_PrgY_gumN",
+     24
+    ],
+    [
+     "Toprim_4",
+     23
+    ],
+    [
+     "AI-2E_transport",
+     22
+    ],
+    [
+     "PYNP_C",
+     21
+    ],
+    [
+     "Glycos_transf_3",
+     21
+    ],
+    [
+     "PRC",
+     21
+    ],
+    [
+     "TruB_N",
+     19
+    ]
+   ],
+   "outside_genes_without_pfam": 483
+  }
+ },
+ "written": "2026-11-13T11:16:15Z"
+}

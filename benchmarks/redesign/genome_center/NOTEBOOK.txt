@@ -1,0 +1,40 @@
+GENOME_CENTER NOTEBOOK (ELSA redesign, DPANN development collection). Times UTC (date -u).
+
+2026-11-20 23:29:46 UTC  predeclared.json written before any arm, list, grid or readout was computed.
+  sha256 8aa2763cb7e1d359b6e3ff08a9e9a508f5ea86c8a34f68825ae71f7e655d088a
+  Read before writing it: locus_search/REPORT3.txt, search3.py, run_s3.sbatch, tables3.py, results/criterion3.json and
+  round3 JSONs (M1z held-out AP 0.7961079531037453; lists.json; CRISPRCasTyper M1z null runs 18,886 CPU-s for 1,899
+  queries); signals/REPORT.txt + prep.py (residual share definition); long_loci/frozen3/FROZEN3.json + fz3.py (PRIMARY
+  lists are z >= 10.6, one best match per genome, own group excluded: no fixed depth); lineagefree/REPORT.txt (0.75
+  groups); softrec/REPORT_cas.txt + diag_cas.py (107 is a pair-level statistic). Remote code md5 = local (search3,
+  bench, locus_search, embed_tokens). Gold tables carry no per-gene component names (members.parquet: instance_id,
+  caller, gid), so the component is operationalized as (caller, label, rescue3 token).
+
+2026-11-20 23:35 UTC  Smoke job 119447 (24 CPUs, node-64-768g-28): vectors loaded in 177 s, then 12 min on one core with
+  no progress past the zca10 step. Main thread: 244 s user, 710 s system time; node had 9 GB free and 660 GB page cache,
+  so every fresh multi-GB allocation (per-block temporaries, per-chunk score matrix, np.partition row copies) paid
+  direct-reclaim page faults. Cancelled at 17 min 37 s (counted against the 3 h budget). Input-stage total share before
+  the cancel: genome means hold 5.47% of total variance of the unit-L2 vectors (0.099% expected).
+2026-11-20 23:56 UTC  Rewrite (no change to any predeclared definition): memory-mapped vectors gathered and
+  normalized by a numba kernel; preallocated score/scratch buffers; in-place quickselect replaces np.partition copies;
+  float16 rounding by a bit-exact numba kernel; family sums and residual share by numba kernels. Local tests: float16
+  rounding bit-identical to numpy astype on 3,000,008 values; the list kernel equals locus_search.topk_rows exactly (idx
+  and s, with float16-induced ties); S3/S4 readouts equal a numpy reference; residual share (uid mode) equals the
+  signals/prep.py formula. The list job also asserts equality with topk_rows on 4 rows of its first chunk.
+
+2026-11-20 23:56 UTC  Smoke job 119484 (2 min 52 s): Z on 512 member genes. topk_rows exactness check passed; residual
+  share of genome means on Z 2.179% (row mode) / 2.180% (signals' uid mode; signals reported 2.18%); total share 5.47% on
+  unit-L2 input, 1.54% on Z; Z lists vs stored head lists: 0 of 512 rows identical, overlap of differing rows >= 0.9999
+  (median 1.0), max |ds| 0.034 (near-tie reorderings from float16 flips; the gate decides). search3 grid rows of M1z vs
+  REPORT3 grid_main: 640 rows, max |dAP| 0; two CRISPRCasTyper null runs vs REPORT3 final_x: AP, recall, wrong and
+  unlabeled identical. List matmul at 256 genes per chunk ran ~4 s per chunk (memory-traffic bound); chunk raised to
+  1,024 genes with 64-row kernel sub-batches (local test: identical output).
+2026-11-21 00:01 UTC  Chain submitted (submit_chain.sh): lists 119494 (Z,G1) 119495 (G05,B8) 119496 (B32);
+  grid 119497; nullx 119498 119499 119500; final 119501 (writes $RD/genome_center/STATUS). gc.py md5 a7e8dd44.
+
+2026-11-21 00:46 UTC  Chain finished, all eight jobs COMPLETED; STATUS "DONE gate pass; G1 -0.0001 [-0.0011, +0.0011]
+  helps=no; G05 +0.0003 [-0.0000, +0.0007] helps=no; B8 +0.0104 [+0.0093, +0.0116] helps=yes; B32 +0.0118 [+0.0104,
+  +0.0134] helps=yes". Gate: Z held-out AP 0.796109 (REPORT3 0.796108), every query within 0.0009, 66.7% identical.
+2026-11-21 00:51 UTC  Results copied to results/. POST HOC on the Mac (light): per-fold intervals for B8 / B32
+  (all above 0; B8 fold 1 +0.0089), fold SD 0.0011 / 0.0018, B32 - B8 +0.0014 [+0.0007, +0.0021]. REPORT.txt written.
+  Budget used: 129 min of 24-CPU job time (incl. both smoke jobs), no GPU. No new jobs after the chain.

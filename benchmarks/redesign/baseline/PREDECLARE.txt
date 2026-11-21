@@ -1,0 +1,50 @@
+BASELINE WORKSTREAM (ws_baseline) - predeclared readings, written 2026-11-12 12:58 UTC, before any run
+
+Question. On DPANN (3,564 genomes, 3,585,303 genes, ESM++ small vectors), how does the legacy ELSA
+pipeline (gene-level kNN anchors -> collinear chaining -> blocks; research checkout, branch
+agent/normalized-result-contract) compare in accuracy with the redesigned recurrence engine
+(base e3c50s75 w3, engine v1.5; and the rescue3 default), scored by the same gold-locus scorer
+and the same ribosomal acceptance check?
+
+Variants (legacy): raw cosine >= 0.85 ("raw"); soft-ZCA alpha 0.1 fitted on DPANN, cosine >= 0.30
+("zca"); each as shipped (all blocks) and calibrated (per block size 2,3,4,5,6+, the smallest cut on
+mean anchor cosine with mean permuted / observed <= 0.05 over 3 within-contig gene-order
+permutations, seeds 17/18/19). In this pipeline the kNN anchor set does not depend on gene order
+(no neighbourhood selection, no anchor extension), so the valid null keeps the anchors and permutes
+gene positions within each contig before grouping and chaining (the first order-dependent step).
+Replay check: re-chaining the saved anchors with the identity order must reproduce the observed
+block count and intervals exactly.
+
+Scoring. Every block contributes its interval on each of its two contigs; score_dpann_loci.py
+with --min-members 2, and with --min-members 2 --max-span 30; dpann_compare.py against the base and
+rescue3 (genome bootstrap, odd = tune, even = test). The scorer de-duplicates identical intervals,
+so distinct intervals are scored (exactly equivalent).
+
+Expected readings and what would refute each:
+R1 Raw cosine 0.85 is inert on ESM++ small (retains nearly all top-60 cross-genome neighbours).
+   Refuted if < 80% of retrieved cross-genome neighbours pass 0.85.
+R2 Legacy as-shipped blocks carry many chance blocks of 2-3 anchors (permuted/observed >= 0.5 at
+   size 2 in the raw arm). Refuted if the size-2 ratio is < 0.1 in both arms.
+R3 On even genomes, the redesign base has a higher summed DefenseFinder + TXSScan excess (F1 minus
+   random placement) than every legacy variant. Refuted if any legacy variant's paired difference
+   (legacy - base) has a 95% interval entirely above 0; a tie if the interval spans 0.
+R4 Legacy blocks recover the ribosomal runs (best interval >= 50% of the run) in most genomes but
+   resolve fewer than the base's 711 at precision >= 0.8, because blocks overshoot run ends.
+   Refuted if a legacy variant resolves >= 711 runs.
+R5 Boundary precision (members / locus span) of covering loci is lower for legacy than for the
+   base. Refuted if the legacy median at the smallest containing interval is >= the base's.
+Interpretation guard: the best-of-many-intervals advantage applies to F1 and to its random
+control alike; the excess is the readout. Absolute F1 is reported but not interpreted alone.
+
+ADDENDUM 2026-11-12 14:05 UTC (coordinator's note on best-of-readings; written before any full-run score)
+Both sides are scored as several readings, labelled, and never maximized across readings:
+ engine  full table (11 readings, as scored so far) | conserved@2 (one reading) | boundary rule H (one reading)
+ legacy  all block intervals (each gene sits in up to hundreds of overlapping block intervals, one per
+         partner: a best-of-many reading, larger than the engine's best-of-11) | union of the block
+         intervals per contig (maximal runs of gene boundaries spanned by >= 1 block: one reading)
+ for each legacy variant (raw, raw_cal, zca, zca_cal) separately; no best-of across legacy variants.
+The like-for-like comparisons are single vs single (legacy union vs engine conserved@2 and H) and
+many vs many (legacy all intervals vs engine full table), each with its own random control.
+R3 applies to the single-reading pairing. Spacedust extra: the notebook's engine source207 figure
+"conserved g0-2" is a best-of-42 reading (3 gap rules x 14 levels); rescored as conserved@2 alone, and
+the legacy calibrated blocks rescored as their union, with the same evaluate() and 200 controls.

@@ -1,0 +1,77 @@
+{
+ "stage": "build",
+ "selection": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/testset/selection/selection_k8.tsv",
+ "selection_sha256": "1bcb342c7640ddef379d13984e717b425d080f75e0099d88768f82829c1e5cef",
+ "qc": {
+  "selected": 1032,
+  "genes": 4507042,
+  "genomes": 1032,
+  "contigs": 161964,
+  "dup_contig_position": 0,
+  "contigs_noncontiguous_gid": 0,
+  "dup_protein_id": 0,
+  "split": {
+   "tuning": 516,
+   "test": 516
+  },
+  "layers": {
+   "a1_complete": 80,
+   "a2_receptor": 96,
+   "a3_split": 141,
+   "a4_transporter_only": 341,
+   "b1_same_genus_negative": 166,
+   "b2_same_family_negative": 134,
+   "c1_class_background": 56,
+   "c2_outside_class_module": 18
+  },
+  "fasta_records": 4507042,
+  "fasta_residues": 1361583935,
+  "unique_sequences": 4464102,
+  "lut_instances": [
+   {
+    "definition": "main",
+    "arch_class": "1_complete_AtoI",
+    "n": 58
+   },
+   {
+    "definition": "main",
+    "arch_class": "1_complete_AtoI_M",
+    "n": 22
+   },
+   {
+    "definition": "main",
+    "arch_class": "2_receptor_plus_transporter",
+    "n": 92
+   },
+   {
+    "definition": "main",
+    "arch_class": "3_transporter_module_without_receptor",
+    "n": 551
+   },
+   {
+    "definition": "main",
+    "arch_class": "4_receptor_module_without_transporter",
+    "n": 10
+   },
+   {
+    "definition": "strict",
+    "arch_class": "1_complete_AtoI",
+    "n": 55
+   },
+   {
+    "definition": "strict",
+    "arch_class": "1_complete_AtoI_M",
+    "n": 22
+   },
+   {
+    "definition": "strict",
+    "arch_class": "2_receptor_plus_transporter",
+    "n": 44
+   }
+  ],
+  "lut_members": 4585,
+  "seconds": 44.2
+ },
+ "code_sha256": "82615485404483be56ea57bffad016c85e5b11e829de5a826ebbbaf3085c9364",
+ "date": "2026-11-13T13:43:19Z"
+}

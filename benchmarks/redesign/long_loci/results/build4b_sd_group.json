@@ -1,0 +1,107 @@
+{
+ "data": "sd",
+ "count": "group",
+ "tau": 10.0,
+ "outputs": {
+  "L4b_t0.02": {
+   "loci": 1311818,
+   "genes_in_loci_frac": 0.48354668468650025,
+   "span_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    24.0,
+    236.0
+   ]
+  },
+  "L4b_t0.05": {
+   "loci": 1351353,
+   "genes_in_loci_frac": 0.4835570193147155,
+   "span_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    24.0,
+    236.0
+   ]
+  },
+  "L4b_t0.1": {
+   "loci": 1376507,
+   "genes_in_loci_frac": 0.4835882580772753,
+   "span_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    23.0,
+    236.0
+   ]
+  },
+  "L4b_t0.2": {
+   "loci": 1407233,
+   "genes_in_loci_frac": 0.4836136248919855,
+   "span_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    23.0,
+    236.0
+   ]
+  }
+ },
+ "nodes": {
+  "0.02": {
+   "nodes": 1489129,
+   "kept": 1311818,
+   "roots": 491362,
+   "kept_low_cohesion_parents": 485063,
+   "low_cohesion_parents": 586762,
+   "kept_size_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    24.0,
+    236.0
+   ]
+  },
+  "0.05": {
+   "nodes": 1564082,
+   "kept": 1351353,
+   "roots": 491362,
+   "kept_low_cohesion_parents": 776255,
+   "low_cohesion_parents": 935633,
+   "kept_size_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    24.0,
+    236.0
+   ]
+  },
+  "0.1": {
+   "nodes": 1604011,
+   "kept": 1376507,
+   "roots": 491362,
+   "kept_low_cohesion_parents": 960997,
+   "low_cohesion_parents": 1150271,
+   "kept_size_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    23.0,
+    236.0
+   ]
+  },
+  "0.2": {
+   "nodes": 1647056,
+   "kept": 1407233,
+   "roots": 491362,
+   "kept_low_cohesion_parents": 1154481,
+   "low_cohesion_parents": 1367221,
+   "kept_size_q50_q90_q99_max": [
+    3.0,
+    8.0,
+    23.0,
+    236.0
+   ]
+  }
+ },
+ "recurrence": {
+  "unique_intervals": 1829109,
+  "seconds": 41.7,
+  "keys": 656733
+ },
+ "seconds": 59.1
+}

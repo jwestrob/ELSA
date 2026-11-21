@@ -1,0 +1,85 @@
+{
+ "workstream": "ribo_audit",
+ "written_utc": "2026-11-13T11:12Z",
+ "seen_before_writing": "code of ribosomal_check.py, vscore.py, vscore2a.py, vl_score.py, blib.py ribo helpers; the three REPORTs; aggregate facts only: 1,686 runs in 1,686 genomes (no genome has two), runs per phylum, Parvarchaeaceae = 114 runs all in Nanobdellota, 436 of 642 groups carry a run, 289 runs touch a contig end, every genome order_trusted, position_index = gid - contig first_gid. No individual run, locus or case inspected.",
+
+ "definition_as_implemented": {
+  "marker": "gene with any Pfam hit (annotations.source='pfam', ws_dpann/input/sharur.duckdb) whose name matches regexp '^ribosom(al)?_' case-insensitive (includes Ribosom_S12_S23, Ribosomal_60s, Ribosomal_S30AE, ribosomal_L24); 177,848 marked genes",
+  "run": "maximal set of marked genes on one contig in which consecutive marked genes are <= 3 positions apart (<= 2 unmarked genes between); the run span gid_start..gid_end includes the unmarked gap genes; primary set g2_m16 = runs with >= 16 MARKED genes (not >= 16 genes); 1,686 runs; span 17-45 genes, median 24",
+  "parvarchaeaceae": "114 runs = 114 genomes (the check counts genomes, one run per genome)",
+  "best_locus": "the single locus with the largest overlap (genes of the span, gap genes included) with the run; ties -> the shorter locus; further ties -> the locus with the smaller start",
+  "recovered": "best overlap / run span >= 0.5 (equivalent to: any locus covers >= 50%)",
+  "resolved": "best overlap / run span >= 0.8 AND best overlap / best-locus length >= 0.8, evaluated on the BEST locus only; a smaller locus that satisfies both does not count if a larger-overlap locus exists",
+  "loci": "stored locus tables; single-gene loci are absent (vscore Ctx.table keeps e > s)"
+ },
+
+ "outputs": {
+  "TOK": {"desc": "token engine nested reading (token DH)", "loci": "$RD/boundary/loci/rescue3/DH_coreH_res0.3_f0.5.parquet", "target": [1686, 1512]},
+  "WCP": {"desc": "stage-1 family words + cohesion phrases V-coh0.1", "loci": "$RD/vocab/loci/runs_main_tau10_s1coh_V-coh0.1.parquet", "target": [1684, 1420]},
+  "EMB": {"desc": "embedding words on calibrated z10.6 neighbour lists, V-nest", "loci": "$RD/vocab_lists/loci/z10.6_V-nest.parquet", "target": [1675, 1172]},
+  "reproduction": "own scorer and ribosomal_check.score (read-only import, numba cache redirected to $RD/ribo_audit) must both give the targets exactly before sampling"
+ },
+
+ "sampling": {
+  "strata": "Parvarchaeaceae (family) as one stratum; every phylum (its non-Parvarchaeaceae runs) as one stratum; strata processed in sorted name order; within a stratum candidates sorted by run_id",
+  "allocation": "largest-remainder rounding of N x (stratum count / total count), remainders ordered by size then stratum name",
+  "unresolved_per_output": "N = 40 from that output's unresolved runs, allocation by the output's unresolved counts; rng numpy default_rng(20261113 + k), k = 0 TOK, 1 WCP, 2 EMB; rng.choice without replacement per stratum",
+  "unresolved_in_all_three": "N = 20 from runs unresolved in all three outputs; default_rng(20261116); each case is evaluated under all three outputs",
+  "controls": "N = 20 resolved runs per output, allocation proportional to that output's UNRESOLVED stratum counts (phylum-matched to its failures); a stratum short of resolved runs gives its excess to the others by largest remainder of their resolved counts; default_rng(20261117 + k)",
+  "overlap": "samples are drawn independently; a run may appear in several samples"
+ },
+
+ "evidence": {
+  "window": "the run span plus 10 genes on each side, clipped to the contig",
+  "groups": "$RD/lineagefree/groups/emb_hom_average_t0.75.parquet (642 lineage-free genome groups); the case's own group is removed from every count and expectation below (leave-own-group-out)",
+  "family": "MMseqs2 rescue3 token ($RD/engine/dpann_tokens/mmseqs__seq__e3c50s75_rescue3__dpann.parquet)",
+  "Lambda": "Lambda(n, E) = n ln(n/E) - n + E nats for n > E, else 0 (Poisson log-likelihood ratio, the ws_vocab statistic)",
+  "A_flank_association": {
+   "statistic": "flank of a run = genes within 10 positions outside the run on its contig. n_X = groups with >= 1 genome whose flank holds a gene of family X; E_X = sum over groups of [1 - prod over the group's genomes WITH a run of (1 - min(1, c_X(g) W_g / (N_g - L_g)))], c_X(g) = copies of X in genome g outside its run, W_g = flank genes, N_g = genes, L_g = run span",
+   "call": "X is run-associated iff n' >= 3 and Lambda(n', E') >= 10 (own group removed); 10 nats = the null-calibrated word cost of ws_vocab stage 1"
+  },
+  "B_other_kind_member": {
+   "statistic": "among genomes with a run: G_X = groups in which family X occurs, G_in_X = groups in which >= 1 copy of X lies inside a run (own group removed from both)",
+   "call": "a marked run member is OTHER-KIND iff (G_X' >= 5 and G_in_X'/G_X' < 0.5) or (protein length > 2 x the median length of all marked genes with the same top-scoring marker)"
+  },
+  "C_junction_recurrence": {
+   "statistic": "family pair (X, Y): n = groups (all 3,564 genomes) with >= 1 genome in which distinct genes of X and Y lie <= 3 positions apart on one contig; E = sum over groups of [1 - prod over genomes (1 - min(1, 2*3*c_X c_Y / m_g))] (ws_vocab expectation, w = 3); own group removed",
+   "call": "recurrent iff n' >= 3 and Lambda >= 10; testable iff X and Y each occur in >= 10 groups other than the own group",
+   "break": "a junction between core positions p and p+1 is a BREAK iff no gene pair crossing it (x <= p < y, y - x <= 3, both in the core) is recurrent and at least one crossing pair is testable"
+  },
+  "D_gene_call_anomaly": "(i) two adjacent genes with the same family token or the same top marker; (ii) a gene shorter than 0.5 x the median length of its family token (families with >= 5 genes); genome order flags are all clean so they cannot apply",
+  "E_contig_edge": "the core touches the first or last gene of its contig"
+ },
+
+ "rubric": {
+  "notation": "core = genes whose coverage is required (recall); adm = genes a locus may contain without penalty (precision); best = locus with the largest overlap with core (ties shorter, then smaller start); resolved at a state iff |best & core| >= 0.8 |core| and |best & adm| >= 0.8 |best|",
+  "order": "cumulative states; a case takes the label of the FIRST state at which it is resolved; if none, the data check, then the junction state, then a method label",
+  "S0b": {"label": "DEF_SCORING", "kind": "definition (scoring rule)", "rule": "some locus of the output has overlap >= 0.8 |run| and >= 0.8 of its own length inside the run, but it is not the largest-overlap locus"},
+  "S1": {"label": "DEF_NEARBY_RIBO", "kind": "definition", "rule": "core = run; adm = R5: the run extended outward through marked genes separated by <= 5 unmarked genes (iterated), including the genes between"},
+  "S2": {"label": "DEF_OTHER_KIND", "kind": "definition", "rule": "core = the maximal g2 piece of the run rebuilt from its marked genes minus OTHER-KIND members, the piece with the largest overlap with the run (unchanged if none); adm = S1 adm (removed members stay admissible)"},
+  "S3": {"label": "DEF_ASSOC_FLANK", "kind": "definition", "rule": "core = S2 core; adm = S2 adm extended outward on each side through genes that are marked or of run-associated families, bridging <= 2 consecutive genes that are neither, at most 10 genes beyond the S2 adm edge"},
+  "DATA": {"applies": "unresolved at S3 with |best & core| < 0.8 |core| at S3",
+           "DATA_CONTIG_EDGE": "core touches a contig end and every core gene outside the best locus lies between the best locus and that end",
+           "DATA_GENE_CALL": "a core gene adjacent to the best locus but outside it, or a core gene in no locus, lies within 1 position of a gene-call anomaly (D)"},
+  "S4": {"label": "DEF_JUNCTION", "kind": "definition", "applies": "unresolved at S3, coverage failure at S3, data check negative", "rule": "core = the piece of the S3 core between BREAK junctions with the largest overlap with the S3 best locus; adm = S3 adm"},
+  "METHOD": {"applies": "everything else; evaluated at the S3 state",
+             "METHOD_SPLIT": "|best & core| < 0.8 |core| and, among core genes outside the best locus, those inside another locus of the output >= those in no locus",
+             "METHOD_UNCOVERED": "|best & core| < 0.8 |core| and core genes in no locus outnumber those in other loci",
+             "METHOD_EXTENSION": "coverage met, precision < 0.8 even with nearby ribosomal genes and run-associated flank genes admissible: the locus extends into genes with no measured association",
+             "flag_ext": "coverage labels carry +ext when S3 precision < 0.8 as well"},
+  "OTHER": "evidence not computable, or manual reading of the layout shows the automated evidence was computed on a wrong premise; each listed individually with the reason",
+  "manual_review": "every sampled case's diagram is read; disagreements are recorded as notes; a label is changed only for a demonstrable computation error, which is then fixed in code for all cases"
+ },
+
+ "shares": {
+  "definition": "DEF_SCORING + DEF_NEARBY_RIBO + DEF_OTHER_KIND + DEF_ASSOC_FLANK + DEF_JUNCTION; also reported without DEF_SCORING and without DEF_JUNCTION",
+  "data": "DATA_CONTIG_EDGE + DATA_GENE_CALL",
+  "method": "METHOD_SPLIT + METHOD_UNCOVERED + METHOD_EXTENSION",
+  "interval": "Wilson 95% score interval on the sampled proportion; a census of all unresolved runs with the same automated rules is reported alongside as a check"
+ },
+
+ "full_set": {
+  "nearby_runs": "over all 1,686 runs: pairs of g2_m16 runs within 5 genes (<= 5 intervening genes) on one contig; runs with any other marked gene, any g2 cluster of >= 2 marked genes, and any g2_m8 run within <= 5 intervening unmarked genes outside the span",
+  "sensitivity": "resolved counts of the three outputs on all 1,686 runs under V0b (any locus), V1 (S1), V2 (S1+S2), V3 (S1+S2+S3, the candidate fairer definition), V4 (V3 + S4 pieces); the standing definition is unchanged"
+ }
+}

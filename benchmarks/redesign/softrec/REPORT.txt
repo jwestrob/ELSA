@@ -1,0 +1,207 @@
+SOFTREC WORKSTREAM: TOKEN-FREE RECURRENCE FROM RANKED NEIGHBOUR LISTS (DPANN, 2026-11-12)
+==========================================================================================
+
+QUESTION
+Jacob asked whether properly whitened embeddings had been tested for discovery. Until now they had entered only as
+hard families (Leiden communities of the zca10 kNN graph, used as engine tokens). Here the same whitened vectors
+enter discovery as graded evidence: each gene's ranked neighbour list replaces its family token. The token engine is
+the special case in which a gene's list is its family.
+
+ANSWER IN EIGHT LINES
+1. Predeclared outcome: neither MATCHES nor BEATS. The selected variant (zca10, top 1,000 genes outside the genus, count
+   rule L >= 15) raises the summed DefenseFinder + TXSScan excess on held-out even genomes by +0.061 [+0.041, +0.080]
+   (enough for "beats"), but TXSScan F1 is 0.699 against 0.758 (-0.059; the bars were -0.02 and -0.01).
+2. It is the first single-input (embedding-only) discovery arm that is both above the base and admissible: ribosomal
+   check 1,681 / 1,686 runs, 114 / 114 Parvarchaeaceae, 984 runs resolved (base 711). Hard zca10 families above the base
+   lost the locus (V0 r19000: +0.038, 1,155 runs, 6 / 114).
+3. At the engine's default single reading (conserved@2) softrec beats the token engine: +0.054 [+0.032, +0.075] summed
+   excess, DefenseFinder F1 +0.038, TXSScan F1 +0.036, CRISPRCasTyper -0.009 [-0.020, +0.002] (even genomes).
+4. The full-table TXSScan loss sits in the locus reading: the unit reading (TXSScan F1 0.655 vs 0.722) and four
+   missing intermediate readings (rule L >= 15 leaves no support between 2 and 14 genera, so 7 distinct readings vs 11).
+5. The CRISPRCasTyper loss (F1 0.499 vs 0.589) sits in the statistic: at depth 1,000 chance support forces L >= 15, and
+   variable Cas pairs fall below it (CRISPR-Cas member genes touching support 0.616 vs 0.765).
+6. The kernel reproduces the token engine exactly when the list is the family: all 9,350,064 instances have the
+   engine's L and G, and all 2,939,492 loci of the 11 readings equal the v5 base.
+7. The machinery alone (counting G and E over other genera, family lists) gives +0.011 / +0.014 at unchanged TXSScan
+   F1; the embedding lists add about +0.05 on top, through DefenseFinder localization (DF excess +0.071, TXSS -0.011).
+8. Depth-50 count variants gain the most (+0.064 to +0.068 test) and are inadmissible (97-101 / 114 Parvarchaeaceae);
+   the Poisson statistic, which makes whole families usable, fails with deep lists (-0.066 to -0.104 tune).
+
+------------------------------------------------------------------------------------------------------------------
+DESIGN (predeclared.json, 13:27 UTC, before any job; amended by the coordinator's 14:05 request, see section 5)
+- Instance: every gene pair (a, b) within 3 positions on one contig (9,399,310). Homologous pairs excluded as the engine
+  excludes ta == tb (family lists: same token, 49,246; embedding lists: identical sequence or cosine(a, b) >= max(0.32,
+  the cosine at which b would enter a's list or a b's), 56,037 at depth 50 to 163,435 at depth 1,000).
+- List N(a): ranked genes outside a's genus (own-genus genes can never add a lineage; Parvarchaeum alone has 190
+  genomes). Embedding lists: unique-sequence HNSW top-2000 (M 32, efC 200, efSearch 2001; recall vs exact on 2,000
+  queries: zca10 0.999 / 0.999 / 0.994 at 50 / 200 / 1,000; head 0.999 / 0.999 / 0.995), identical sequences first,
+  ties share the tail rank, cut at depth K (50, 200, 1,000 genes) and cosine floor f (none, 0.4).
+- Statistic per instance: L_o = genera other than a's genus with a pair (a', b') within 3 genes on one contig,
+  a' in N(a), b' in N(b), a' != b'; G_o genomes; E_o = sum_G min(1, 2w c_a c_b / n_G); graded S = sum over genera of the
+  best pair's min(log(N_db / tail rank)). Engine convention L = L_o + 1, G = G_o + 1, P = Poisson(X >= G | E).
+- Null: gene order shuffled within each genome (contig sizes kept), RNG seeds 1000-1002 exactly as the engine
+  (verified: same permutations); instances and target co-location both recomputed on the shuffled order.
+- Rules per statistic family: count L >= m; poisson P <= 1e-e & L >= 2|3; graded S >= t. The engine's selection at the
+  instance level: FDR (mean null instances / observed instances) <= 0.01, top 12 by count, most genes covered.
+- Loci: the engine's 11 readings (conserved and conserved_g2 at 2 / 5 / 12 / 30 / 80 genera, unit@0.5 on the genome
+  sets of the best instance per boundary), module_id -1 (no tokens, no modules).
+- Selection: highest odd-genome summed excess vs the base among admissible pool variants (ribosomal >= 1,650 runs and
+  >= 110 / 114 Parvarchaeaceae). Pool: zca10 and head lists x 3 depths x 2 floors x 3 statistics, plus the first
+  end-to-end zca10_k50 (stored top-50 unique kNN); 42 results, 30 admissible.
+- Criteria on even genomes vs base (DF F1 .806, TXSS .758, summed .447): matches = summed >= -0.01 with DF and TXSS F1
+  each >= base - 0.02; beats = summed >= +0.02 (interval above 0) with neither F1 below base by > 0.01.
+
+------------------------------------------------------------------------------------------------------------------
+1. THE KERNEL REPRODUCES THE TOKEN ENGINE (lists = base family members outside the own genome; job 81042)
+  - 9,350,064 non-excluded instances = the engine's; excluded set identical. L equal for 9,350,064 / 9,350,064, G equal
+    for all, E within 3.8e-6. Engine rule P <= 1e-4 & L >= 2: 3,322,691 significant instances in both, all shared.
+  - Forced engine rule: boundary_support.npy identical (0 of 3,585,303 boundaries differ); all 2,939,492 loci of the 11
+    readings equal v5 once L ties at a boundary are broken in the engine's (d, left) order (fixed 13:50 UTC; the first
+    run broke ties by (left, d) and differed in 2% of unit loci). Scored: +0.000 [+0.000, +0.000] on both splits.
+  - Independent python recount (slot dictionary): 0 mismatches in 600 observed + 200 null instances for every source
+    (fam, zca10_k50, zca10, head).
+
+2. WHAT THE MACHINERY ALONE CHANGES (family lists; A - B vs base, full table; tune = odd, test = even)
+  lists / statistic                         rule            inst FDR  sig inst   tune A-B          test A-B [95%]          test F1 DF/TXSS/CCT  ribo
+  base fam, outside genome, forced          P<=1e-4&L>=2    0.0006    3,322,691  -0.000            +0.000 [+.000,+.000]    .806/.758/.589       1686/711/114
+  base fam, outside genome, poisson         P<=1e-3&L>=2    0.0052    3,452,927  -0.007            -0.014 [-.018,-.010]    .814/.759/.603       1686/687/114
+  base fam, outside GENUS, poisson          P<=1e-3&L>=2    0.0077    3,132,884  +0.014            +0.011 [+.005,+.016]    .813/.760/.565       1681/756/114
+  rescue3 fam, outside genus, poisson       P<=1e-3&L>=2    0.0080    3,198,446  +0.015            +0.014 [+.006,+.022]    .835/.759/.573       1681/750/114
+  base fam, graded / count                  S>=260 / L>=50                          -0.027 / -0.063   -0.031 / -0.055         .321-.223 DF F1      1678/1166-1237/114
+  - Instance-level rule selection by itself costs -0.007 / -0.014 (it prefers P <= 1e-3; the engine's rule has instance
+    FDR 0.0006 against its pair-level 0.0044).
+  - Counting G and E over other genera only (a lineage-aware expectation) gains +0.011 / +0.014 with the same families
+    and unchanged TXSScan F1. The rescue3 version meets the predeclared "matches" bar (it is a control outside the pool).
+  - Count rules need L >= 50 with whole families: large families co-locate by chance in many genera.
+
+3. VARIANT POOL (tune, full table; A - B vs base; ribosomal recovered / Parvarchaeaceae)
+  source   depth  floor  count                       graded                      poisson
+  zca10    1000   none   +0.068 [+.050,+.087] 1681/114  +0.046 1681/114             -0.089 1682/114
+  zca10    1000   0.4    +0.054 1681/114             +0.049 1681/114             -0.066 1682/114
+  zca10     200   none   +0.033 1681/114             +0.020 1681/114             -0.021 1686/114
+  zca10     200   0.4    +0.036 1681/114             +0.027 1681/114             -0.020 1686/114
+  zca10      50   none   +0.064 1656/97 (inadm.)     = count                     +0.006 1681/114
+  zca10      50   0.4    +0.064 1656/97 (inadm.)     = count                     +0.008 1681/114
+  head     1000   none   +0.023 1682/114             +0.021 1682/114             -0.104 1682/114
+  head     1000   0.4    +0.024 1682/114             +0.027 1682/114             -0.093 1682/114
+  head      200   none   +0.023 1681/114             +0.011 1681/114             -0.037 1686/114
+  head      200   0.4    +0.024 1681/114             +0.012 1681/114             -0.036 1686/114
+  head       50   *      +0.053 1659/101 (inadm.)    = count                     +0.004 1684/114
+  zca10_k50  50   *      +0.062 1577/29 (inadm.)     = count                     +0.001 / +0.003 1675/114
+  - At depth 50 the graded rule S >= 16 selects the same instances as L >= 3 (each genus adds 11.2-15.1).
+  - Chance support grows with depth: null instances with L >= 2 are 0.19 M at depth 50, 1.3 M at 200 and 7.8 M at
+    1,000 (observed 3.1 M / 4.2 M / 7.1 M); the count rule at 1% FDR rises from L >= 3 to L >= 4 to L >= 15.
+  - Poisson fails on deep lists: E per instance is 2.3 (median) at depth 1,000 and the selection picks P <= 1e-3 over
+    3.5 M weak instances.
+  - The learned head trails zca10 at every admissible depth (best +0.027 vs +0.068), although it ranks homologs better
+    in search (head workstream: +0.017 AP).
+  SELECTED (16:13 UTC, tune only): zca10, depth 1,000, no floor, count rule L >= 15.
+
+4. TEST: SELECTED VARIANT, FULL TABLE (even genomes; A = softrec, B = base / default rescue3)
+  vs base     summed excess A +0.508 B +0.447  A-B +0.061 [+0.041, +0.080]
+              DefenseFinder  F1 .843 vs .806  +0.037 [+0.020, +0.054]   excess +0.071 [+0.057, +0.087]
+              TXSScan        F1 .699 vs .758  -0.059 [-0.073, -0.044]   excess -0.011 [-0.023, +0.001]
+              CRISPRCasTyper F1 .499 vs .589  -0.090 [-0.102, -0.078]   excess -0.011 [-0.022, -0.001]
+  vs default  summed +0.057 [+0.039, +0.076]; F1 DF .843 vs .826 (+0.017 [+0.001, +0.031]), TXSS .699 vs .757, CCT .499 vs .597
+  tune (odd)  summed +0.068 [+0.050, +0.087]; F1 DF .850 / TXSS .693 / CCT .503 (base .822 / .748 / .582)
+  Rule L >= 15: instance FDR 0.0046 (null mean 10,818 of 2,330,685 instances; L >= 20 has FDR 0.00004). Genes covered
+    1,822,058 (50.8%; base 2,256,894, 62.9%). L of significant instances q10 / q50 / q90 = 19 / 56 / 203.
+  Loci (all genomes): conserved 700,970 (base 932,123), conserved_g2 541,670 (734,036), unit 997,360 (1,273,333);
+    median span 3 / 4 / 2. Distinct readings: 7 (levels 5 and 12 coincide with level 2 under L >= 15) vs 11.
+  All genomes (scorer summary, softrec vs base): random-placement F1 DF .502 / .545, TXSS .535 / .580, CCT .444 / .519;
+    covered50 DF .951 / .913, TXSS .975 / .991, CCT .782 / .884; localized DF .928 / .899, TXSS .795 / .947, CCT .672 /
+    .770; median boundary precision at the best locus DF 1.0 / 1.0, TXSS 0.75 / 0.75, CCT 0.5 / 0.5.
+  Complementarity (even; instances with F1 < 0.5 in one arm recovered at F1 >= 0.5 by the other):
+    vs base     DF: token-poor 131 -> softrec recovers 90; softrec-poor 82 -> token recovers 41.
+                TXSS: 9 -> 3; 22 -> 16.   CCT: 381 -> 75; 591 -> 285.
+    vs default  DF: 106 -> 69; 82 -> 45.  TXSS: 10 -> 3; 22 -> 15.   CCT: 367 -> 70; 591 -> 294.
+  Ribosomal (default reading conserved@2): 1,681 / 1,686 recovered, 984 resolved (base 711), 114 / 114 Parvarchaeaceae,
+    random windows 0.301 / 0.033; resolved at conserved@80 1,350 (base 1,317), unit@0.5 511 (base 149).
+
+5. SINGLE READINGS AND RULE H (coordinator request; not predeclared; even genomes unless noted)
+  The scorer takes the best locus of the whole table, so every full-table F1 above is best-of-11 (best-of-7 for this
+  softrec variant). softrec writes the engine's readings, so (1) above is full table against full table. (2) and (3):
+  reading           A-B summed [95%]          F1 A (DF/TXSS/CCT)   F1 B               ribosomal A (rec/res/Parv)
+  R1 vs base R1     +0.054 [+0.032, +0.075]   .711/.448/.412       .673/.412/.422     1681/984/114  (B 1686/711/114)
+  R1 vs resc. R1    +0.050 [+0.028, +0.073]   .711/.448/.412       .688/.409/.426     (B 1686/704/114)
+  R1 vs base R1 odd +0.067 [+0.046, +0.089]
+  A vs base A       +0.040 [+0.018, +0.062]   .731/.460/.408       .688/.443/.408     1679/1104/114 (B 1685/1139/114)
+  A vs base H       -0.028 [-0.049, -0.007]   .731/.460/.408       .723/.558/.451     (H: 1554 resolved, 114/114)
+  UA vs base H      +0.021 [-0.002, +0.045]   .826/.655/.476       .723/.558/.451     833/511/0  INADMISSIBLE
+  token UA vs H     -0.022 [-0.040, -0.004]   (the analogue on the token landscape, for calibration)
+  - R1 single-reading per-caller F1 changes: DF +0.038 [+0.020, +0.055], TXSS +0.036 [+0.022, +0.051], CCT -0.009
+    [-0.020, +0.002]. With the predeclared thresholds applied to this reading, softrec beats the token engine.
+  - Rule H itself needs token-pair modules (Louvain res 0.3 on the significant token-pair graph); softrec has none. A is
+    H's trimming step (f 0.5); UA (profile units, then A) is the token-free analogue, 0.022 weaker than H on the token
+    landscape. Against token H: softrec A is -0.028; softrec UA is +0.021 with higher F1 on every caller but loses the
+    ribosomal locus (units cut it), so no admissible softrec single reading reaches H.
+
+6. WHICH PART FAILS (predeclared attribution)
+  - Machinery: no. The kernel and locus reading reproduce the engine exactly (section 1); instance-level selection costs
+    0.007-0.014; lineage-aware G/E gains 0.011-0.014.
+  - Null: no. Rule L >= 15 holds instance FDR 0.0046; the threshold is high because chance support is real at depth
+    1,000 (null L >= 2 instances 7.8 M vs 7.1 M observed).
+  - Statistic (CRISPR-Cas): yes. The count threshold that the deep-list null forces (L >= 15) removes variable Cas pairs:
+    CRISPR-Cas member genes touching a supported boundary 0.616 vs 0.765, covered50 0.782 vs 0.884.
+  - Locus reading (TXSScan): yes. TXSScan members keep support (0.951 vs 0.979 touch a supported boundary) and the
+    default reading is better (+0.036 F1), but localization falls (0.795 vs 0.947). Per reading, TXSScan F1 softrec /
+    token (share of instances whose full-table best it reaches): conserved@2 .448 / .412 (.18 / .11), conserved@80
+    .347 / .355, conserved_g2@80 .334 / .373, unit@0.5 .655 / .722 (.69 / .77); levels 5 and 12 absent in softrec.
+  Unit mechanism (exploratory, head K1000 f0.4 graded, job 82007 / 82194; tune TXSS F1 by unit Jaccard): 0.3 .627,
+    0.5 .691, 0.7 .708, 0.85 .706; genus-level profiles .674 (test TXSS F1 .631 / .710 / .724 / .721; genus .691).
+    Softrec units are over-merged: a bounded list is filled by the genome's closest relatives, so every instance in a
+    genome draws its supporting genome set from the same relatives and profiles stay alike across system edges; a
+    token pair's profile is the pair's own incidence and changes at the edge. Stricter Jaccard recovers +0.017 and
+    saturates 0.04 below the base, so the threshold cannot replace pair-specific profiles. (My first reading at 15:20,
+    "units fragment", was refuted by the 0.3 run and corrected in the notebook.)
+
+7. READINGS AND WHAT WOULD HAVE REFUTED THEM (written before the test numbers, NOTEBOOK.txt 15:05 / 16:13)
+  - "Graded whitened evidence localizes defense systems better than MMseqs2 families": would be refuted if family lists
+    through the same machinery gained as much. They gain +0.011 / +0.014 against +0.061; DefenseFinder excess +0.071.
+  - "The selected variant fails on TXSScan F1 while its summed excess is higher" (prediction from tune): would be refuted
+    by even-genome TXSScan F1 within 0.02 of 0.758. Observed 0.699.
+  - "The TXSScan loss is in the locus reading, not the statistic": would be refuted if TXSScan F1 at the default reading
+    were also lower, or members lost support. Default-reading TXSScan F1 +0.036; support 0.951 vs 0.979.
+  - "The CRISPR-Cas loss is in the statistic": would be refuted if Cas member genes kept support. 0.616 vs 0.765.
+  - "The k50 ribosomal loss is own-genus crowding": refuted in part; lists of 50 genes outside the genus still recover
+    only 97-101 / 114 Parvarchaeaceae at L >= 3; depth 200 restores 114 / 114.
+
+8. ENGINEERING (biotite, standard_expand -c 24; standard_expand_2 was at its submit cap all night)
+  - Kernel: numba over per-gene lists in slot space; marks of a's list cover each member's 3-gene window, probes of b's
+    list are single lookups; one pass computes all depth x floor variants (a' with the smallest rank dominates).
+  - Pass time at depth 1,000, 6 variants, 9.4 M instances, 24 threads: 87-113 s observed, 86-105 s per null. Family lists
+    (sum of squared family sizes 3.3e9): 62-110 s observed, 90-196 s per null. Whole zca10 run (lists, 4 passes, 18
+    result directories): 1,207 s; job with scoring 29 min.
+  - Memory: zca10 / head deep runs peak 59 GB process RSS (Slurm MaxRSS 85 GB with the mapped 30 GB kNN files);
+    family runs 5 GB. Gene lists at depth 1,000: 14.3 GB int32 + 7.2 GB rank + 7.2 GB genome per entry.
+  - kNN top-2000: zca10 2 h 14 min (graph 924 s, search 6,952 s at 366 queries/s, peak 61 GB); head 51 min (319 s +
+    2,655 s at 960 queries/s, 39 GB).
+
+CAVEATS
+  - zca10 mean and covariance use all 2.5 M sequences, including even genomes (unsupervised, as in the head workstream).
+  - The pool held 42 results; the selected variant's tune-to-test drop is 0.007 (0.068 -> 0.061).
+  - The floor 0.4 was set by zca10's cosine scale; in head space it sits near the random-pair q99.9 (0.39).
+  - Homolog-pair exclusion for embedding lists is a cosine rule (no family exists); it removes 0.6-1.7% of instances.
+  - Single-reading and rule-H comparisons were requested after predeclaration; the selection used the full table.
+  - Exploratory unit runs (Jaccard, genus profiles) used one head variant; they are diagnostics, not candidates.
+
+ARTIFACTS
+  Local benchmarks/redesign/softrec/: softrec.py (lists, kernels, null, rules, loci), knn_deep.py, readings.py, collect.py,
+    embed_tokens.py (copy), run_knn.sbatch, run_soft.sbatch, run_py.sbatch, score_dirs.sh, predeclared.json, NOTEBOOK.txt,
+    REPORT.txt, results/remote/ (mirror: engine_results_all.tsv, engine_results_tune.tsv, readings_*.json,
+    analyses_selected.json, run.json per source, kNN manifests, per-result summary / rules / compare / ribosomal files).
+  Biotite $RD/softrec/: code/, knn/ (zca10__k2000__{I,D}.npy 20 + 10 GB, head__k2000__{I,D}.npy, manifests),
+    runs/<source>/ (run.json, observed_stats.npz per-instance L/G/E/S for every variant), readings/ (per-instance scores
+    of single readings), results/. Result directories (engine format, scorer + compare + ribosomal inside):
+    $RD/engine/results_dpann_softrec/dpann__softrec__<source>__<variant>__<stat>[__u<mode><tau>]__w3/;
+    selected: dpann__softrec__zca10__K1000_fnone__count__w3.
+  Jobs (all COMPLETED): 81041 zca10 kNN; 81123 head kNN; 81042 family controls; 81043 zca10_k50; 81053 zca10 deep;
+    81247 head deep + tie-break re-run; 81368, 81807, 82413 readings; 82007, 82194 unit exploration.
+    Logs $RD/logs/softrec_{knn,soft,py}_<job>.log.
+
+NEXT (not started; one line each)
+  - Unit profiles that do not inherit list depth: e.g. communities of the significant-instance graph (a token-free
+    module graph) feeding boundary rule C / H, to test whether TXSScan F1 returns with DefenseFinder kept.
+  - Two-tier statistic: count rule on deep lists OR Poisson rule on depth-50 lists, to recover variable CRISPR-Cas pairs.
+  - Lineage-aware expectation (G and E over other genera) as an engine change on rescue3 families: +0.014 [+0.006,
+    +0.022] at unchanged TXSScan F1 here; worth its own predeclared test.

@@ -1,0 +1,11 @@
+# bash script as run (saved as .txt to keep to the workstream file types)
+#!/bin/bash
+# ESMFold2 via the Biohub API (the only service that receives DPANN sequences). 34 folds in five runs.
+cd /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/thy
+FB=/Users/jacob/Documents/Sandbox/Sharur/Sharur/scripts/fold_biohub.py
+python3 $FB data/fold/singles data/fold/singles.faa > data/fold/singles_log.txt 2>&1 &
+python3 $FB data/fold/dimer_lig data/fold/dimer_lig.faa --copies 2 --ligand FAD:4 --ligand UMP:4 --pae > data/fold/dimer_lig_log.txt 2>&1 &
+python3 $FB data/fold/tetramer_lig data/fold/tetramer_lig.faa --copies 4 --ligand FAD:4 --ligand UMP:4 > data/fold/tetramer_lig_log.txt 2>&1 &
+python3 $FB data/fold/monomer_lig data/fold/monomer_lig.faa --ligand FAD:2 --ligand UMP:2 > data/fold/monomer_lig_log.txt 2>&1 &
+python3 $FB data/fold/long_tetramer data/fold/long_tetramer.faa --copies 4 > data/fold/long_tetramer_log.txt 2>&1 &
+wait

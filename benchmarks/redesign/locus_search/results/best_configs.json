@@ -1,0 +1,89 @@
+{
+ "DefenseFinder": {
+  "M0": {
+   "mode": "tok",
+   "w": 1.0,
+   "wx": 8,
+   "tau": 3.0,
+   "odd_map": 0.3671246116169228,
+   "odd_map_strict": 0.24303357504596554,
+   "grid_name": "M0"
+  },
+  "M1": {
+   "mode": "emb",
+   "w": 1.0,
+   "wx": 8,
+   "tau": 2.0,
+   "odd_map": 0.4479508577534134,
+   "odd_map_strict": 0.2499870992430932,
+   "grid_name": "M1"
+  },
+  "M2": {
+   "mode": "comb",
+   "w": 0.5,
+   "wx": 8,
+   "tau": 0.0,
+   "odd_map": 0.5750649364000842,
+   "odd_map_strict": 0.3460247061339646,
+   "grid_name": "M2w0.5"
+  }
+ },
+ "TXSScan": {
+  "M0": {
+   "mode": "tok",
+   "w": 1.0,
+   "wx": 8,
+   "tau": 2.0,
+   "odd_map": 0.22758925099149446,
+   "odd_map_strict": 0.06944511217147299,
+   "grid_name": "M0"
+  },
+  "M1": {
+   "mode": "emb",
+   "w": 1.0,
+   "wx": 8,
+   "tau": 1.0,
+   "odd_map": 0.5132884837770905,
+   "odd_map_strict": 0.10803166398742418,
+   "grid_name": "M1"
+  },
+  "M2": {
+   "mode": "comb",
+   "w": 1.0,
+   "wx": 8,
+   "tau": 1.0,
+   "odd_map": 0.5944703871359351,
+   "odd_map_strict": 0.1267365163832789,
+   "grid_name": "M2w1"
+  }
+ },
+ "CRISPRCasTyper": {
+  "M0": {
+   "mode": "tok",
+   "w": 1.0,
+   "wx": 4,
+   "tau": 3.0,
+   "odd_map": 0.08548850918905128,
+   "odd_map_strict": 0.06016291076874441,
+   "grid_name": "M0"
+  },
+  "M1": {
+   "mode": "emb",
+   "w": 1.0,
+   "wx": 2,
+   "tau": 3.0,
+   "odd_map": 0.07954119848052728,
+   "odd_map_strict": 0.04984474759316193,
+   "grid_name": "M1"
+  },
+  "M2": {
+   "mode": "comb",
+   "w": 0.5,
+   "wx": 4,
+   "tau": 0.0,
+   "odd_map": 0.10991112231726005,
+   "odd_map_strict": 0.07192206234047964,
+   "grid_name": "M2w0.5"
+  }
+ }
+}

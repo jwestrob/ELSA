@@ -1,0 +1,236 @@
+{
+ "workstream": "ws_showcase2",
+ "part1_written_utc": "2026-11-13 05:00 UTC (date -u 04:59:51 immediately before writing)",
+ "part1_written_before": "any triage result was read (triage job 89564 running, 0 of 90 families complete) and before any fold of this workstream",
+ "goal": "conserved gene blocks whose members fold together with high confidence and of which at least one member is recognised by no profile search; candidates from the locus-space uncalled dense clusters and from the kinds co-fold passers",
+ "candidates": {
+  "code": "code/sc2_candidates.py (docstring holds the full rule), run 04:5x UTC; outputs results/candidates/candidates_all.tsv (248 rows), candidates.tsv (47 kept), reps.tsv",
+  "sources": {
+   "locus_space": "MEAN map clusters with >= 10 cores and no curated-caller member (306); candidate = (cluster, span k in 2-5); realisations = cores of span k whose every position has whitened zca10 cosine >= 0.32 to the reference core (reference family set = the canonical rescue3 token tuple seen in the most genome groups)",
+   "kinds": "the 21 passers that cleared the kinds split-gene and zipping rules; realisations = their support pairs at list depth 1,000 with both chains at whitened cosine >= 0.32 to the passer's chains"
+  },
+  "replicate_eligibility": "every protein 40-400 aa, sum <= 700 aa, >= 1 unannotated gene, no X, hydrophobic fraction <= 0.45, SEG-trigger low complexity <= 0.145, Prodigal partial 00 or unrecorded, >= 1 gene from the contig end, each length within 0.8-1.25x of the realisation median at that position, unordered rescue3 family set never folded before (work/earlier_folds.tsv), kinds replicates outside the passer's genome group",
+  "replicates": "two realisations in different data-derived genome groups (lineagefree emb_hom_average t 0.75); per-position global identity (BLOSUM62 -10/-0.5, identical / shorter) <= 0.60 at every position (identity ceiling); tier A (both replicates at cosine >= 0.50 to the reference at every position) before tier B (>= 0.32); within a tier the lowest maximum identity",
+  "matching_to_earlier_folds": "family set = unordered set of rescue3 MMseqs2 tokens (permissive e3c50s75 rescue3) of the folded genes; earlier folds = screens 1-3 cognate folds and uncalled windows, deep dive c1 cognate/fused/abc and c2 pairs, kinds classes a/b/d (1,776 folds, 1,407 family sets). A realisation whose family set equals an earlier one is never a replicate; a locus-space candidate whose reference family set had an earlier two-replicate cognate test is removed",
+  "abc_exclusion": "any candidate carrying token 81718, 393054, 130016 or the known variants 247277, 399854, 190823",
+  "ranking": "genome groups of the realisations, then distinct family sets; phyla reported for evaluation only; length preference (each <= 300 aa, sum <= 450 aa) recorded as the 'short' column",
+  "dedupe": "a candidate sharing a replicate gene or its reference family set with a better-ranked one is removed"
+ },
+ "triage": {
+  "code": "code/sc2_triage.py (+ sc2_triage.sbatch), code/sc2_triage_parse.py",
+  "searches": "per rescue3 token of a replicate chain: mafft --auto -> HHblits UniRef30_2020_06 (-n 2, -e 1e-3, -M first) -> HHsearch of the enriched A3M and of the DPANN-only alignment vs Pfam 39.0 (HH, screen-2 build) and PDB100 2021-03-03; hmmsearch Pfam 39.0 (-E 0.01 --domE 0.01; --cut_ga); RPS-BLAST CDD 3.20 (query + up to 9 members, -evalue 1). Tokens whose replicate gene carries a curated Pfam hit with characterised wording are characterised without HH search",
+  "family_rule": "screen-2 rule unchanged: characterised = HHsearch probability >= 90 % over >= 30 aligned columns to an entry without unknown-function wording, or the same CDD model at E <= 0.01 in >= 2 instances, or Pfam GA in >= 2 members (>= 10 % when > 20); unknown_function = the same met only by DUF/UPF/uncharacterised entries; weak = HHsearch 50-90 % or sub-threshold CDD/hmmsearch; none otherwise",
+  "block_rule": "fold a block when at least one position has no characterised hit in the families of both replicates (the task's rule); every hit at probability >= 50 % is recorded (data/triage_hits.tsv)",
+  "label_kept": "blocks with every position unrecognised are labelled all_unrecognised; blocks with a characterised member are folded and labelled partial"
+ },
+ "fold_engine": {
+  "api": "Biohub batch, endpoint fold_all_atom",
+  "model": "esmfold2-2026-05",
+  "msa": "none",
+  "client": "code/biohub_cofold.py (byte-identical copy of cofold/biohub_cofold.py, sha256 80a4257e...)",
+  "include_pae": true,
+  "include_pair_chains_iptm": true,
+  "chains": "k chains in reference order A, B, ..."
+ },
+ "design": {
+  "cognate": "sc2c_<rank>_r1, sc2c_<rank>_r2",
+  "swap_control": "one per block (census rule): odd rank -> replicate 1 with chain index 1 (B) replaced; even rank -> replicate 2 with chain index k-2 (A for pairs) replaced; donor = a chain of another folded block's replicate with the same replicate number, one-to-one Hungarian on relative length difference + hydrophobic-fraction difference; forbidden donors: same block, a token of the receiving block, or whitened cosine >= 0.32 to any chain of the receiving block (homologous donors). Fold id sc2s_<rank>_r<rep>_s<slot>",
+  "margin_completion": "for every interface passing the per-replicate rule in both replicates, the control its other margin needs (rep 1: the control replacing j; rep 2: the control replacing i) is folded after the screen with the same donor rule (sc2f_*)",
+  "monomers": "every chain of every interface passing both replicates, both replicates (sc2m_*), for the zipping rule",
+  "budget": "at most 500 Biohub items in total for this workstream, all classes included"
+ },
+ "calls": {
+  "pass_in_a_replicate": "pair_iptm = max(M[i][j], M[j][i]) of pair_chains_iptm >= 0.75, inter-chain contacts (CB-CB <= 8 A, CA for Gly) >= 10, interface PAE (mean symmetrised PAE over contact pairs) <= 5 A, interface pLDDT >= 70",
+  "interface_hit": "passes in both replicates and both margins >= 0.30 (rep-1 margin = cognate minus the control replacing j; rep-2 margin = cognate minus the control replacing i); for k = 2 this is screen-1 criteria 1-4",
+  "full_block_cofold": "k >= 3: the interface hits connect all k chains",
+  "passing_block": "a block with an interface hit (k = 2) or a full-block co-fold or interface hit (k >= 3) that survives every refutation below",
+  "new_unrecognised_cofolding_block": "a passing block in which every member family is unrecognised by the triage (none / weak / unknown_function) and no chain has a strong or moderate Foldseek match in both replicates; a passing block with a recognised member is reported separately as 'co-folds, partly recognised'"
+ },
+ "refutations": {
+  "promiscuity": "a kept chain reaches pair_iptm >= 0.6 with >= 10 contacts against the swapped-in chain",
+  "disorder_zipping": ">= 50 % of a chain's interface residues have pLDDT < 60 in that chain's monomer fold, or the chain's mean pLDDT in the complex < 60",
+  "low_complexity": "a chain with SEG-trigger fraction > 0.145 (excluded before folding; re-checked on the folded chains and their interface residues)",
+  "split_gene": "MMseqs2 18 (-s 7.5, E <= 1e-3) of the chains of both replicates vs all 3,585,303 DPANN proteins: a target outside the candidate's realisations hit by both chains of an interface in collinear segments overlapping <= 10 % of the shorter, each >= 50 % query coverage, is a fused homolog; artefact if fused homologs occur in >= 25 % as many genomes as the candidate or in the genus of a replicate",
+  "single_lineage": "an interface passing in one replicate only is not a hit",
+  "structure_recognition": "Foldseek 10 of every chain of a passing block, both replicates, vs PDB (2025-01-01) and AFDB Swiss-Prot (v6) at /shared/db/foldseek/latest/db: strong = E <= 1e-3 and alignment TM >= 0.5; moderate = E <= 0.1, prob >= 0.9, TM >= 0.5; a strong or moderate match in both replicates moves the chain to 'resembles a known fold' (observation; the co-fold call stands)"
+ },
+ "after_folding_observations": [
+  "spread of realisations across genome groups and phyla",
+  "observed domains of every member and of +-3 flanking genes (Pfam, KOfam, CDD, raw DefenseFinder/TXSScan profiles, curated-caller membership) with same-contig control windows",
+  "replicate agreement: interface correspondence through the sequence alignment of replicate chains and US-align TM-score of the replicate complexes"
+ ],
+ "what_would_refute": [
+  "no block passes: zero new co-folding blocks (an acceptable answer)",
+  "a passing block's swap control in either replicate comes within 0.30 of the cognate pair ipTM, or binds the kept chain at >= 0.6",
+  "zipping, split gene or low complexity on a passing interface",
+  "a characterised profile or structure match for every member (then the block is recognised, not new)"
+ ],
+ "expectation_before_folding": "from screens 1-3 and kinds: per-fold pass rates near 5-20 % for short (< 300 aa) cognate pairs and near 1 % for swaps; 0-3 interface hits expected among about 30-45 folded blocks, most with toxin-antitoxin-like or other recognised partners",
+ "post_hoc_labelling": "any relaxed bar, new rule or extra fold decided after the screen's folds are read is labelled post hoc",
+ "part2_written_utc": "2026-11-13 06:02:33 UTC",
+ "part2_written_before": "any fold of this workstream (no Biohub item submitted yet); after the triage results were read",
+ "triage_outcome": {
+  "families": {
+   "characterised": 96,
+   "unknown_function": 5,
+   "weak": 17
+  },
+  "blocks_triaged": 47,
+  "fold_primary_rule": 10,
+  "all_positions_unrecognised": 0,
+  "amendment_wording_sensitivity": "written before any fold: a family whose characterised call rests only on PDB entries from structural-genomics consortia or de novo designs (code/sc2_triage_sens.py, regex STRUCT_GEN) is re-classed unknown_function in a sensitivity column; 2 families (49439, 279903: PDB 3bu2, NESG 'tRNA-binding protein') flip; blocks gaining an unrecognised position this way form a secondary fold set (kd_kA_091, kd_kA_120), labelled 'secondary' in every table"
+ },
+ "fold_list": [
+  {
+   "rank": 4,
+   "cand": "kd_kA_091",
+   "set": "secondary",
+   "k": 2,
+   "groups": 179,
+   "famsets": 67,
+   "phyla": 8,
+   "len_med": "117;109",
+   "position_cls": "characterised;characterised",
+   "position_cls_sens": "unknown_function;characterised"
+  },
+  {
+   "rank": 15,
+   "cand": "kd_kA_120",
+   "set": "secondary",
+   "k": 2,
+   "groups": 88,
+   "famsets": 43,
+   "phyla": 5,
+   "len_med": "111;118",
+   "position_cls": "characterised;characterised",
+   "position_cls_sens": "characterised;unknown_function"
+  },
+  {
+   "rank": 20,
+   "cand": "ls_c764_k2",
+   "set": "primary",
+   "k": 2,
+   "groups": 59,
+   "famsets": 11,
+   "phyla": 5,
+   "len_med": "132;40",
+   "position_cls": "characterised;weak",
+   "position_cls_sens": "characterised;weak"
+  },
+  {
+   "rank": 31,
+   "cand": "ls_c778_k2",
+   "set": "primary",
+   "k": 2,
+   "groups": 17,
+   "famsets": 3,
+   "phyla": 1,
+   "len_med": "156;168",
+   "position_cls": "weak;characterised",
+   "position_cls_sens": "weak;characterised"
+  },
+  {
+   "rank": 34,
+   "cand": "ls_c987_k2",
+   "set": "primary",
+   "k": 2,
+   "groups": 14,
+   "famsets": 4,
+   "phyla": 4,
+   "len_med": "214;305",
+   "position_cls": "characterised;weak",
+   "position_cls_sens": "characterised;weak"
+  },
+  {
+   "rank": 37,
+   "cand": "ls_c920_k2",
+   "set": "primary",
+   "k": 2,
+   "groups": 11,
+   "famsets": 4,
+   "phyla": 1,
+   "len_med": "163;189",
+   "position_cls": "characterised;weak",
+   "position_cls_sens": "characterised;weak"
+  },
+  {
+   "rank": 39,
+   "cand": "ls_c1095_k2",
+   "set": "primary",
+   "k": 2,
+   "groups": 10,
+   "famsets": 1,
+   "phyla": 4,
+   "len_med": "76;127",
+   "position_cls": "unknown_function;characterised",
+   "position_cls_sens": "unknown_function;characterised"
+  },
+  {
+   "rank": 40,
+   "cand": "ls_c1077_k2",
+   "set": "primary",
+   "k": 2,
+   "groups": 5,
+   "famsets": 2,
+   "phyla": 1,
+   "len_med": "219;185",
+   "position_cls": "weak;characterised",
+   "position_cls_sens": "weak;characterised"
+  },
+  {
+   "rank": 41,
+   "cand": "ls_c778_k3",
+   "set": "primary",
+   "k": 3,
+   "groups": 5,
+   "famsets": 2,
+   "phyla": 1,
+   "len_med": "137;169;164",
+   "position_cls": "characterised;weak;characterised",
+   "position_cls_sens": "characterised;weak;characterised"
+  },
+  {
+   "rank": 42,
+   "cand": "ls_c968_k3",
+   "set": "primary",
+   "k": 3,
+   "groups": 5,
+   "famsets": 1,
+   "phyla": 1,
+   "len_med": "216;271;193",
+   "position_cls": "characterised;unknown_function;weak",
+   "position_cls_sens": "characterised;unknown_function;weak"
+  },
+  {
+   "rank": 43,
+   "cand": "ls_c640_k2",
+   "set": "primary",
+   "k": 2,
+   "groups": 3,
+   "famsets": 1,
+   "phyla": 1,
+   "len_med": "207;160",
+   "position_cls": "weak;characterised",
+   "position_cls_sens": "weak;characterised"
+  },
+  {
+   "rank": 45,
+   "cand": "ls_c1170_k2",
+   "set": "primary",
+   "k": 2,
+   "groups": 2,
+   "famsets": 1,
+   "phyla": 1,
+   "len_med": "90;143",
+   "position_cls": "weak;characterised",
+   "position_cls_sens": "weak;characterised"
+  }
+ ],
+ "fold_items_screen": {
+  "cognate": 24,
+  "swap": 12,
+  "total": 36,
+  "manifest": "work/manifest.tsv (gids, lengths, hydrophobicity, tokens, swap donors)"
+ },
+ "expectation_part2": "all 12 folded blocks carry a recognised member (enzyme- or regulator-like partners: Fic, Peptidase_C39_2, Phage_integrase, ACT, Lactamase_B, acetyltransferase, PTPS, homing-endonuclease-like, PapD-like) or are DUF2283/DUF4258 kinds pairs; so the count of new blocks with every member unrecognised is 0 by construction of this candidate set, and folds decide only 'co-folds, partly recognised'. Expected interface hits: 0-2."
+}

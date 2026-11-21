@@ -1,0 +1,170 @@
+Aksha GPU mode: fix and protection against OS-update failures (report 2026-11-21 06:00 UTC)
+Remote work folder: $RD/aksha_check/gpufix (RD = /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111).
+Local scripts: benchmarks/redesign/annot_gpu/fix/. Pull request: https://github.com/jwestrob/aksha/pull/9 (open, not merged).
+
+RESULT
+All six gates passed. The promotion chain is running on the biotite login node. It is waiting, as the
+20 November deployment did, until no Aksha job or process is running. Right now the CPU annotation
+campaign's arrays (pfam_srvp, pfam_testset3, pfam_lut, euk_*) are running, so the launcher swap happens
+when they finish. Production is unchanged until then. The status file is written last:
+  $RD/aksha_check/deploy_20261121/STATUS   (log: logs/chain.log; chain pid 1624680)
+Rollback command: bash $RD/aksha_check/deploy_20261121/ROLLBACK.sh
+The new GPU path can be used now, before the swap, through the side-by-side environment:
+  /groups/banfield/users/jwestrob/envs/aksha-0.2.4.dev0/bin/python -I /groups/banfield/users/jwestrob/envs/aksha-0.2.4.dev0/bin/aksha ...
+
+WHAT WAS WRONG
+1. Single point of failure. The bias filter computes (float)log((double)x) on the GPU, and the CPU
+   pipeline computes the same value with the host libm. They agree only when the two log
+   implementations agree. The runtime therefore admitted only the environments that were audited
+   offline when each GPU target was admitted: glibc 2.35, one libm GNU build ID per target and one CPU
+   signature. The H200 node moved to Ubuntu 24.04.5 (glibc 2.39, libm d53fcbff...) on 2026-11-17, and
+   every bias-dependent stage then reported "not attested".
+2. A latent native bug turned that state into an abort. In the unattested case the post-filter returned
+   early (every candidate marked CPU_REQUIRED) before it created its workspace. The sealed F2 compaction
+   (ssv_cuda.cu, plan7_ssv_sequence_batch_compact_postfilter_f2) then raised "post-filter workspace is
+   unavailable". The project's documented intent was that "all other environments retain candidates for
+   CPU scoring".
+
+DESIGN CHOSEN: self-attestation at first use, cached per environment
+- The project's own attestation (hmmer_gpu oracle/bias_log_attestation.cu,
+  results/cuda/bias-log-attestation-sm75.json) compared device and host log for all 2,139,095,039
+  positive finite binary32 inputs and required zero mismatches. The CUDA extension now runs that same
+  audit in process (plan7_bias_self_attest):
+    - the device side is the production device function;
+    - the host side is the libm log reached through the same symbol whose module supplies the build ID;
+    - on zero binary32 mismatches the process registers the live libm build ID, the full CPU identity
+      and the device target, and each later classification checks all three again.
+- Aksha runs the audit once per environment (about 2.5 s on an H200 with 28 threads) and caches the
+  record. The cache key covers the CUDA extension SHA-256, audit algorithm, glibc, libm build ID, CPU
+  identity, device product, CUDA runtime, driver API level and nvcc build.
+- A later process re-binds the cached record through plan7_bias_register_attestation. It refuses any
+  record that differs from the live identity in build ID, CPU or target, or that is not a complete
+  zero-mismatch audit.
+- Built-in environments stay trusted without an audit. The device allow-list (H200, RTX 2080 Ti; CUDA
+  12.5.82, runtime 12050) and the floating-point environment check are unchanged.
+- The correctness policy is not weakened. The criterion is exactly the one that admitted the original
+  targets; only where and when it runs changed.
+
+Options rejected
+- Adding d53fcbff to the allow-list after a manual audit: this fixes today and keeps the single point of
+  failure for the next glibc update.
+- Making results independent of the host libm, by vendoring one log implementation into both the
+  private Easel/HMMER runtime and the device: this changes the CPU reference itself, needs a runtime
+  rebuild and a full requalification, and departs from the project's rule that HMMER 3.4 with the host
+  libm defines correctness.
+- Auditing at every process start with no cache: it would be correct and cheap on the H200, but the
+  readiness check could not answer without running on a GPU, and slower hosts would pay the cost on
+  every search.
+- Sampled or partial audits: these are weaker than the original exhaustive criterion.
+
+Graceful degradation: when the bias math is untrusted (audit disabled or failed, or the device or host
+is not admitted), the search continues exactly. The GPU runs only the SSV filter, and the bias filter,
+Viterbi, Forward and domain stages run on the CPU pipeline. The search prints one warning line that
+names what is untrusted and how to restore GPU use. Separately, the native fix lets the session route
+complete through the host records (audit control ASTRA_GPU_UNTRUSTED_NATIVE_FALLBACK=1).
+
+Readiness check: aksha gpu-check --gpu-manifest DB=PATH ... [--attest] [--json]
+- For each database manifest and CUDA device it reports one of GPU / GPU after self-attestation /
+  SSV only / refused, with the reason.
+- Exit status: 0 ready, 2 pending, 1 fallback.
+- GPU searches run the same evaluation at start.
+- Controls: AKSHA_GPU_SELF_ATTEST=auto|never|force and AKSHA_GPU_ATTESTATION_DIR (default
+  ~/.cache/aksha/gpu-attestation).
+
+FILES CHANGED (branch fix/gpu-environment-attestation; commits 09f468b, e1c3fc5, e4a185a)
+  native/cuda/bias_cuda.h, bias_cuda.cu
+      self-attestation, registration, classification codes, per-ordinal device identity; the built-in
+      allow-list is unchanged
+  native/cuda/ssv_cuda.cu, postfilter_cuda.h, postfilter_cuda.cu
+      resident-result invalidation on the fallback and empty paths; the F2 compaction returns an
+      unsupported view instead of raising
+  native/python/plan7_gpu/_native.pyx
+      bias_environment_status, bias_self_attest, bias_register_attestation, bias_clear_attestation,
+      bias_cuda_devices, BIAS_ATTESTATION_ALGORITHM
+  aksha/gpu_attestation.py (new)   trust evaluation, cache key and record, warning line
+  aksha/gpu_check.py (new), aksha/main.py   gpu-check subcommand
+  aksha/search.py   trust evaluated before preflight; untrusted runs keep only GPU SSV; the line is logged
+  tests/test_gpu_attestation.py (new, 24 CPU tests)
+      untrusted path, cache reuse, OS-update and extension-rebuild re-audit, tampered records,
+      failed/forced/never/report modes, routing, search-start warning, readiness states and exit codes
+  tests/test_gpu_attestation_native.py (new, 4 GPU tests)
+      real exhaustive audit; registration refuses a different libm build, CPU, target, algorithm or an
+      incomplete audit
+  docs/development/GPU_BIAS_ATTESTATION.md (new), release/INSTALL.md (readiness section)
+  CHANGELOG.md (Unreleased entry, written directly), pyproject.toml (version 0.2.4.dev0)
+  Published pins (aksha-cuda12==0.1.1) are left for the release step. With 0.1.1 the application already
+  falls back instead of aborting; self-attestation needs the new CUDA wheel.
+
+BUILD AND ENVIRONMENT
+- The dev wheel aksha_cuda12-0.1.2.dev0 (sha256 bd02d4a0...) was built from these sources with
+  release/build.py build_gpu, unchanged, inside the maintainer manylinux2014 container that built 0.1.1
+  (devtoolset-10, staged CUDA 12.5.82, runtime 0.1.1 private ABI a01d5d4b). It was not auditwheel-
+  repaired: it is a local wheel for this environment only and is not to be published.
+- Side-by-side environment /groups/banfield/users/jwestrob/envs/aksha-0.2.4.dev0 (uv, Python 3.12.0):
+  aksha 0.2.4.dev0 (commit e4a185a), aksha-runtime 0.1.1, the dev CUDA wheel, and the same dependency
+  versions as production.
+- The existing PFAM/KOFAM manifests in $RD/annot_gpu/manifests stay valid, because the runtime ABI is
+  unchanged.
+
+GATES (sample: the 4,000 testset3 proteins; reference: production 0.2.3 CPU rows, job 119815)
+ (a) test suites: 165 passed, 8 skipped (152 pytest + 13 unittest, on a CPU node with CUDA hidden; the
+     skips are 4 pre-existing and the 4 GPU tests). The native GPU tests passed 4/4 on the H200
+     (job 119892). The baseline at 0.2.3 was 135 passed, 4 skipped.
+ (b) CPU path regression (job 119891, 24 CPUs):
+       Pfam  6,872 rows, byte-identical to production (39.5 s)
+       KOfam 6,360 rows, byte-identical to production (247.7 s)
+ (c) GPU versus CPU (job 119893): exact GPU-through-Forward after self-attestation.
+       Pfam  6,872 rows, byte-identical (21.6 s)
+       KOfam 6,360 rows, byte-identical (165.9 s)
+ (d) H200 first-1000 audit (job 119894; production-namespace port of
+     hmmer_gpu/tests/audit_h200_pfam_first1000.py, $RD/aksha_check/gpufix/audit_h200_pfam_first1000_aksha.py,
+     sha256 e0ce005e...):
+       PASS on 27,481 of 27,481 Pfam models, 0 mismatches
+       CPU and GPU payload SHA-256 both a0d928902cd8f6c3342b05c71aedaf0190ac2e02478ff879988a41d250de85b1
+       non-vacuous GPU work; 84.7 s
+ (e) simulated untrusted environment (AKSHA_GPU_SELF_ATTEST=never, empty cache; job 119892):
+       Pfam and KOfam byte-identical on the default SSV-only route (23.8 s / 190.2 s)
+       Pfam and KOfam byte-identical on the native-fallback session route, the route that used to abort
+       (23.7 s / 188.9 s)
+       exactly one WARNING line per search; no record written
+ (f) readiness check:
+       no record: PENDING ("GPU after self-attestation"), exit 2
+       self-attestation disabled: FALLBACK ("SSV only", with the reason and restore hint), exit 1
+       --attest: READY, exit 0 (audit 2.5 s, 0 binary32 mismatches over 2,139,095,039 inputs)
+       from the cached record: READY, exit 0
+ Characterization, not a gate: 215,332 inputs differ by one binary64 ulp between CUDA log and glibc 2.39
+ log, and none differ at binary32. The Forward and domain kernels add log((double)x) and then round to
+ binary32, so their exactness still rests on that rounding plus full-output identity tests (gates c and
+ d), as it did before this change. Making binary64 a gate would disable those kernels everywhere.
+
+PROMOTION (pattern of deploy_20261120; files in $RD/aksha_check/deploy_20261121/)
+ chain.sh steps:
+   1. preconditions: GATES_PASSED lists all six gates; forward and reverse dry runs of the
+      CLAUDE.md / ops-note edits restore both files exactly
+   2. activity gate
+   3. back up the launcher to ~/.local/bin/aksha.bak_20261121, then swap the launcher to the new
+      environment; ~/.local/bin/aksha.prev is left untouched for the 20 November rollback
+   4. post-deploy checks: version, gpu-check available, Pfam smoke test of 272 rows identical to the
+      reference
+   5. update only the factual Aksha lines:
+        - /home/jwestrob/.claude/CLAUDE.md: section heading date, version/commit/PR/environment line,
+          rollback paragraph, GPU status paragraph
+        - cluster-ops note: launcher version line and last_updated
+ ROLLBACK.sh restores the launcher and reverses exactly those line edits. It moves aside the attestation
+ cache only if the promotion created it (none existed before). Databases, the registry, manifests and
+ envs/aksha-0.2.3 are never touched.
+ Note: array tasks that start after the swap will run 0.2.4.dev0 for CPU searches. Their rows are
+ identical to 0.2.3 (gate b).
+
+GPU-HOURS: 758 GPU-seconds, about 0.21 GPU-hours, all on one H200 (probe 2 s, G1 460 s, G2 212 s,
+G3 84 s; one GPU job at a time; budget 3 GPU-hours).
+
+WHAT AN OS UPDATE DOES FROM NOW ON
+- New glibc/libm, CPU, driver, CUDA runtime or a rebuilt extension: the key changes, so the first GPU
+  search (or aksha gpu-check --attest) runs the 2.5-s exhaustive audit and caches it.
+    - Zero binary32 mismatches: the GPU path continues with no other action.
+    - Mismatches: the search completes exactly on GPU SSV plus the CPU, with one warning naming the
+      mismatch count and the first input. The GPU then needs a different libm or device.
+- A GPU product that is not admitted: SSV only, with a warning. Admitting new hardware is still a
+  deliberate allow-list and audit step.
+- In every case the result is either identical GPU output or an exact CPU fallback; no case aborts.

@@ -1,0 +1,308 @@
+Aksha: KOfam cutoffs that follow ko_list score_type
+Report date 2026-11-20. Work and scratch on biotite:
+/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/aksha_check/fix/
+
+The production environment, the launcher, ~/.config/Astra and ~/.config/Aksha are untouched.
+
+1. CODE CHANGE (branch fix/kofam-score-type-cutoffs, from origin/main 7263c10 = 0.2.2)
+---------------------------------------------------------------------------------------
+Repository state found (verified):
+- Main checkout: local main sat at 5072d4a, carrying uncommitted edits.
+- git fetch moved origin/main forward 4 commits to 7263c10 (release 0.2.2, KOFAM/dbCAN install fixes, CCTyper).
+- The --cpu-parallel patch that is live in production exists on no remote branch. It lives only in the
+  main checkout's uncommitted working tree and in the production env (main.py and search.py there differ
+  from the 0.2.1 package checksums).
+- The work happened in a separate worktree at aksha_check/fix/aksha. The main working tree is unchanged.
+
+Encoding (aksha/initialize.py):
+- KOs with score_type "full":   GA/TC/NC = thr      -1000.00  (sequence slot = threshold)
+- KOs with score_type "domain": GA/TC/NC = -1000.00 thr       (domain slot = threshold)
+
+Why -1000 (verified with pyhmmer 0.12 as patched by astra, and by reading the native code):
+- -99999 is HMMER's p7_CUTOFF_UNSET. An optimized profile (.h3p) reads it as "cutoff missing", and the
+  search raises MissingCutoffs (tested).
+- -inf round-trips through text and pressed files, but the GPU path rejects it: adapter.py,
+  _native.pyx and domain_rescore_cuda.cu all require finite GA. The GPU GA pruning uses only the
+  sequence slot, as a reject when its upper bound < GA1. With GA1 = -1000 it never prunes. It reads
+  GA2 only for its census statistics.
+- -1000 survived text write and read, hmmpress, .h3m and .h3p reading, and a bit-cutoff search (tested).
+
+Functions in aksha/initialize.py:
+- ko_thresholds returns (KO, threshold, score_type); kofam_cutoffs builds the pair.
+- add_threshold(path, thr, score_type) rewrites only when the values differ, through a .tmp file and a rename.
+- stamp_kofam_cutoffs, repress_hmm_database, record_cutoff_encoding, restamp_kofam_database, local_ko_list.
+
+Install and CLI behaviour:
+- install_KOFAM stamps through stamp_kofam_cutoffs. It presses again when a rerun changed any cutoff
+  and records the encoding.
+- install_RP16 stamps all 16 markers from ko_list, including copies taken from an old-encoded KOFAM.
+- New CLI flag: aksha initialize --restamp --hmms KOFAM,RP16. It reads the local ko_list in db_path
+  (falling back to the database's parent directory), downloads nothing, presses again when a profile
+  changed, and prints a reminder to regenerate the GPU manifest.
+- Registry: each KOFAM or RP16 entry in ~/.config/Aksha/hmm_databases.json now gets
+  "cutoff_encoding": "score_type". An entry without the field uses the old encoding.
+- aksha/search.py adds warn_legacy_kofam_cutoffs. It prints and logs a WARNING when
+  --cut_ga/--cut_tc/--cut_nc/--cascade (or --16rp) uses a KOFAM or RP16 entry that lacks the field.
+  It was seen in the validation log of the production-database run.
+
+Profiles with no cutoff:
+- 1,318 KOFAM profiles have no threshold in ko_list. They stay unstamped, as before.
+- With --cut_ga alone they report hits at Aksha's default E-value inclusion (0.01).
+- With --cascade they are searched at E = 1e-15.
+
+Other files changed: aksha/main.py (--restamp flag), docs/database-setup.md (KOfam thresholds
+section), CHANGELOG.md (Unreleased), tests/test_initialize.py (new signatures), and the new file
+tests/test_kofam_cutoffs.py.
+
+Tests (verified):
+- Full suite: 135 passed, 4 skipped. The baseline on origin/main was 121 passed, 4 skipped.
+- New tests cover:
+  - the encoding;
+  - stamping of full and domain KOs, and missing or zero thresholds;
+  - pressing into optimized profiles;
+  - the controlled K02886-type case (full score >= threshold > best domain): assigned now, empty
+    output under the old encoding, checked both in memory and from a pressed file, and with --cascade;
+  - the mirror case of K02874 (domain type, full score >= threshold > best domain): rejected;
+  - domain type decided by the best domain alone (a sequence slot set above the full score rejects,
+    while the domain encoding assigns);
+  - re-stamping a pressed legacy KOFAM, including idempotence (the second run leaves the pressed
+    files untouched);
+  - a missing ko_list (database unchanged), the CLI dispatch, the RP16 install and the warning.
+- The literal symmetric case (best domain >= threshold > full score) cannot be built for a
+  single-domain hit. HMMER's full score is the larger of the Forward score and the domain
+  reconstruction, so it is at least the best positive domain score. I searched 4,800 synthetic
+  targets without finding one. On real data: 0 such pairs among 201,737 scored domain-type pairs (section 2).
+
+2. VALIDATION (16,000 SR-VP proteins, full KOFAM of 27,816 profiles)
+---------------------------------------------------------------------
+Sample:
+- 8,000 bacterial plus 8,000 archaeal proteins, drawn uniformly at random (seed 20261119) from the
+  3,211,751 proteins in ws_srvp_bins/package; they come from 988 genomes.
+- I chose 16,000 from a calibration: about 0.98 CPU-s per protein for a full KOFAM search, so 3
+  searches were expected to take about 45 min on 24 CPUs.
+- The job actually took 2 h 11 min (job 117732, node-64-768g-26). The first run spent 65 min loading
+  the freshly pressed scratch copy from VAST (cold cache) plus 13 min in the cutoff-availability scan.
+  The search phase itself took 11.6 min under the new encoding and 11.7 min under the production
+  encoding.
+
+Software and runs:
+- Each run was "aksha search --installed_hmms KOFAM --threads 24", using the same branch build.
+- (i)   production KOFAM (read-only, threshold in both slots), --cut_ga
+- (ii)  re-stamped scratch copy, --cut_ga
+- (iii) re-stamped copy with every bit threshold at -1000. KofamScan's rule was then computed from
+        its output by compare_encodings.py: full score or best domain score, chosen by score_type,
+        compared with the threshold.
+
+Assignments, (sequence, KO) pairs among the 26,498 KOs with a threshold:
+- (i)   production:               6,536
+- (ii)  fix:                      6,588
+- (iii) KofamScan rule:           6,587, plus 1 tie (below)
+- Gained (ii) vs (i): 52, all score_type full (0 domain). Lost: 0.
+- (i) equals "full >= thr AND best domain >= thr" computed from (iii), apart from the same tie.
+  This confirms the old semantics.
+
+Agreement of the fix with KofamScan's rule:
+- They agree on all 6,588 pairs.
+- The one listed difference is a tie: protein 1376737, K01992 (domain type, threshold 18.70).
+  - Its best domain prints as 18.70 in the 2-decimal tables.
+  - HMMER's float comparison counts it as >= 18.70, so both (i) and (ii) assign it.
+  - My printed-score reference called it below the threshold. It is the only pair within 0.006 bits
+    of its threshold.
+- Row-level check: the rows of (ii) equal the (iii) rows that the rule implies (all domains for
+  full-type pairs, domains >= threshold for domain-type pairs). There is 1 differing row, from the
+  same tie.
+
+Which proteins gain:
+- 52 pairs on 44 proteins: 32 bacterial and 20 archaeal pairs.
+- By shape: 46 multi-domain hits (2-17 domains, none reaching the threshold) and 6 single-domain
+  hits whose best domain is below it.
+- Full score minus threshold: median +21.2 bits (range +0.19 to +1,009.6).
+- Best domain minus threshold: median -27 bits (range -440 to -0.06).
+- These are mostly split alignments, which are far from a near-threshold rounding effect.
+- 39 proteins gain their first KO, and 9 gains add a KO to an already-annotated protein. The best KO
+  per protein, by full score, changes for 1 protein.
+- Examples:
+  - large transporters: 4 RND multidrug-efflux KOs on one 2,072-aa protein;
+  - two-component sensors (FixL, K14986, on 1,547- and 1,559-aa proteins);
+  - nitrate reductase alpha (4 domains);
+  - leucyl-tRNA synthetase and topoisomerase I;
+  - ribosomal protein L3 (K02906, an RP16 marker) on one archaeal protein;
+  - one 1,358-aa Nitrospirota TPR-type protein that gains 5 KOs (tight adherence protein D, DnaJ C3,
+    DnaJ C7, rhomboid GluP, APC3).
+
+Rows:
+- Total rows: 18,420 -> 18,707 (+287, +1.6%).
+- All 288 new rows carry a domain score below the threshold: 181 belong to the 52 gained pairs and
+  107 to 89 kept pairs.
+- The lowest domain score among (ii) rows is -15.73.
+
+Consumers that keep one row per (protein, KO):
+- The best-domain row is identical in all 6,536 kept pairs.
+- Taking the first row, or the highest full score with the first row breaking ties, picks a
+  different row in 39 kept pairs.
+- Sharur's kofam_scores keeps the best-domain row, so it is unaffected.
+- Aksha's rp16 ranks by full score, so it picks the same protein.
+
+The 1,318 threshold-less profiles: they produced 11,846 rows (657 KOs) under --cut_ga, identical in
+(i) and (ii). They make up 63% of all rows in a KOFAM --cut_ga search.
+
+Re-stamp cost (verified on the full scratch copy):
+- aksha initialize --restamp --hmms KOFAM took 20 min 47 s on the login node, single-threaded.
+- 26,498 profiles were rewritten (about 14 min), then 27,816 profiles were pressed again (394 s).
+- Peak RSS was 3.6 GB.
+
+3. WHERE THE WORK LIVES
+-----------------------
+- Branch fix/kofam-score-type-cutoffs, pushed to origin.
+- Pull request: https://github.com/jwestrob/aksha/pull/8. It was opened with the Mac's gh, because
+  the gh token on biotite lacks createPullRequest.
+- Commits:
+  - 9c1ced6 Apply each KOfam threshold to the score its score_type names
+  - c9b8e4e Re-stamp installed KOfam databases and warn about the earlier encoding
+  - b90996f Document score_type-aware KOfam cutoffs and --restamp
+- Each commit ends with two trailers: Co-Authored-By: Claude Opus 5.5, then Claude Fable 5.2 as the
+  last line.
+- Scratch uses 16 GB under aksha_check; 15 GB of that is the re-stamped KOFAM copy in fix/val/db,
+  which can be deleted after review.
+- The branch environment is fix/venv (aksha 0.2.2 editable, aksha-runtime 0.1.1).
+
+4. DEPLOYMENT CHECKLIST FOR JACOB (not done)
+--------------------------------------------
+a. Decide on --cpu-parallel. Production is 0.2.1 plus an uncommitted --cpu-parallel patch, and the
+   branch lacks it. Commit the patch upstream first, or accept losing the flag.
+b. Merge PR 8 and release it (app-only build per release/PUBLISH.md; aksha-runtime and aksha-cuda12
+   stay at 0.1.1). Bump the version, because KOFAM --cut_ga output changes.
+c. Install into a new environment beside the old one, for example
+   /groups/banfield/users/jwestrob/envs/aksha-0.2.3. Use uv with UV_CACHE_DIR on /groups and pyenv
+   3.12.0. Smoke test with a PFAM --cut_ga search on the 200-protein file in aksha_check/input; the
+   expected result is 272 rows.
+d. Back up before re-stamping:
+   - ~/.config/Aksha/hmm_databases.json
+   - /groups/banfield/users/jwestrob/.config/Astra/KOFAM (15.4 GB: the .hmm files are rewritten in
+     place and the 4 pressed files are deleted and rebuilt), for example
+     cp -a KOFAM KOFAM.legacy_20261120
+   - the RP16 directory (4.7 MB)
+e. Point ~/.local/bin/aksha at the new environment and keep the previous launcher as aksha.prev.
+f. On the login node, with no KOFAM or RP16 searches running (about 21 min), run:
+   aksha initialize --restamp --hmms KOFAM,RP16
+g. Verify:
+   - the registry entries carry "cutoff_encoding": "score_type";
+   - grep '^GA' K02886.hmm gives "159.07 -1000.00", and K02874.hmm gives "-1000.00 93.93";
+   - a --cut_ga search prints no warning.
+h. Regenerate any GPU manifest for KOFAM and RP16 (create_pressed_manifest). The old manifests and
+   any recorded hashes of the KOFAM pressed files stop matching.
+i. Expect the first KOFAM search after re-stamping to load slowly from a compute node: here it took
+   65 min, against 19 s on a warm database.
+j. Update both CLAUDE.md files. The line "a hit needs both its full-sequence score and its domain
+   score" becomes "Aksha applies each threshold to the score its score_type names, as KofamScan
+   does".
+
+What it invalidates:
+- GPU manifests and recorded hashes of the KOFAM and RP16 pressed files.
+- Exact comparability of new KOFAM --cut_ga tables with earlier ones. On this sample assignments
+  rise 0.8% (52/6,536) and rows 1.6%.
+- Earlier --16rp marker sets: markers near threshold can now be assigned.
+- KOFAM annotations already loaded in Sharur databases stay on the old rule until they are rerun.
+
+Rollback:
+- Point the launcher back at aksha.prev.
+- mv KOFAM KOFAM.restamped; mv KOFAM.legacy_20261120 KOFAM (seconds, on the same filesystem).
+- Restore hmm_databases.json.
+
+5. POINTS AGAINST DEPLOYING, OR TO SETTLE FIRST
+-----------------------------------------------
+- KofamScan's full-score rule rewards repeat and split proteins. One TPR-type protein gains 5
+  different KOs, and one 2,072-aa protein gains 4 paralogous RND KOs. The fix reproduces KofamScan
+  exactly, so this is KofamScan's behaviour; consumers that treat every assigned KO as a functional
+  call inherit it.
+- Margin of the permissive value: the unthresholded search shows domain scores down to -698.41 bits
+  (protein 1684679, K14308; 154 rows below -100). Under -1000, a domain scoring below -1000 inside an
+  assigned full-type protein would lose its row; the assignment stays. A value such as -1e6 (finite,
+  and different from -99999) removes that risk with a one-line change. It needs no new search, since
+  every observed score is above -1000. The decision is yours before release.
+- Consumers that keep the first row per (protein, KO) pick a different row in 39 kept pairs (0.6%).
+  Best-domain consumers (Sharur) and full-score consumers (rp16) are unaffected.
+- The production software drift in step a.
+No result argues against the change itself: 0 assignments lost, and the fix matches KofamScan's rule
+exactly.
+
+Process note:
+- The validation chain stalled for 12.6 h. My remote waiter carried the pattern "aksha initialize
+  --restamp" in its own command line, so "pgrep -f" matched it indefinitely. The coordinator killed
+  it at 23:55 UTC. The re-stamp itself had finished at 11:18 UTC.
+- Lesson: wait on a PID file, never on "pgrep -f".
+
+6. DEPLOYMENT RECORD (2026-11-20, approved by Jacob)
+----------------------------------------------------
+Code, added to the PR before the merge (single trailer: Co-Authored-By: Claude Fable 5.2):
+- dee92f6 Use -1,000,000 bits for the unused KOfam cutoff slot.
+  Tested: it is exact in float32; text files read back -1000000.00; it survives hmmpress into
+  optimized profiles; the CPU searches of the K02886-type and K02874-type cases pass; the GPU
+  adapter's pressed-profile loader keeps it finite (GA pruning needs finite cutoffs).
+  No GPU job was run.
+- 8ffa8a9 --cpu-parallel {auto,queries,targets}. Port of the production patch (0.2.1 plus local
+  edits); it applied with line offsets only, and its test was ported with it.
+- 4fb56ad Release 0.2.3. aksha --version is new.
+- Merge: PR 8 merged as ceb48c8 ("Merge pull request #8"), tagged v0.2.3. Nothing was published
+  to PyPI.
+- Tests: 141 passed, 4 skipped (the GPU parity tests, run with no visible GPU).
+- Unplanned: one earlier test run, after aksha-cuda12 was installed in the test environment, ran
+  4 GPU parity subtests for seconds on the login node's 2080 Ti. They failed there; this branch
+  leaves the code they test unchanged.
+
+New environment: /groups/banfield/users/jwestrob/envs/aksha-0.2.3
+- aksha 0.2.3 built from ceb48c8, with aksha-runtime 0.1.1 and aksha-cuda12 0.1.1.
+- Smoke test: PFAM --cut_ga on the 200-protein file gave 272 rows with --cpu-parallel auto,
+  targets and queries alike, identical to the 0.2.1 output.
+
+Deployment chain (login node, deploy_20261120/chain.sh, 04:10-04:41 UTC):
+- Copy of KOFAM and RP16: 5 min.
+- Re-stamp: 21 min 04 s; 26,498 + 16 profiles rewritten; pressing 399 s; peak 3.6 GB.
+- Gates passed on the copies:
+  - 27,816 pressed profiles;
+  - every stamped profile equals ko_list by score_type;
+  - 1,318 profiles without cutoffs;
+  - K02886 reads (159.07, -1e6) and K02874 reads (-1e6, 93.93);
+  - the temporary registry carries cutoff_encoding.
+- No Aksha process or Aksha Slurm job was running.
+- Swap: the registry was backed up, the directories renamed (legacy copies kept as
+  *.legacy_20261120), cutoff_encoding recorded, and the launcher pointed at the new environment
+  (old launcher kept as aksha.prev).
+- Post-deploy checks:
+  - aksha --version gives 0.2.3;
+  - the GA line is correct;
+  - the PFAM smoke test gives 272 identical rows;
+  - KOFAM --cut_ga job 118149 (24 CPUs, 3 min 55 s; the profiles loaded in 27 s) on 4,000
+    validated proteins: 1,662 stamped pairs and 1,776 rows, identical to the validated fix.
+
+Threshold-less rows in that check (2,794 validated against 3,032 deployed) are the E-value cut
+scaling with the number of target sequences (verified from the tables):
+- All 2,794 validated rows are present in the deployed table.
+- The full-sequence E-value ratio on shared rows is 4.000 (99% of ratios fall within
+  3.981-4.018), which is 16,000/4,000.
+- 231 of the 238 extra rows form 187 new (protein, KO) pairs. All of them have E between 0.0025
+  and 0.0100 at 4,000 targets, which is 0.010 to 0.040 at 16,000, above the 0.01 cut.
+- The other 7 extra rows are weak domains inside shared pairs; their printed i-Evalues are
+  852-1,240. Inferred: domain reporting also scales with the size of the search.
+
+Final state (checked through the bare `aksha` in an ssh shell and through the full launcher path):
+- 0.2.3 is live.
+- show_installed lists PFAM, KOFAM, dbCAN, DefenseFinder, HydDB and RP16. It also added
+  CCTyper's catalog entry (not installed) to the registry, as 0.2.2+ does on any initialize call.
+- KOFAM and RP16 carry cutoff_encoding=score_type.
+- The GA lines match the new encoding.
+- The legacy directories, aksha.prev and hmm_databases.json.bak_20261120 are present.
+- ROLLBACK.sh has valid syntax and its targets exist.
+
+Stale GPU manifests: 6 KOFAM manifests under hmmer_gpu (build/kofam-*/KOFAM*.manifest.json and
+results/pressed/KOFAM.manifest.json) authenticate KOFAM.legacy_20261120. They were left as they
+are.
+
+Rollback: bash /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/aksha_check/deploy_20261120/ROLLBACK.sh
+
+Documentation:
+- Biotite ~/.claude/CLAUDE.md: the "HMM searches - always Aksha" and "Aksha - production" sections
+  are updated (backup CLAUDE.md.bak_20261120).
+- biotite-cluster-ops.md: the Aksha paragraph is updated (backup in ~/jwestrob/).
+
+Scratch: the 15 GB validation copy (fix/val/db) is deleted; aksha_check now uses 449 MB.

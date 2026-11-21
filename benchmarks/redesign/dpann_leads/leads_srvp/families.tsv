@@ -1,0 +1,562 @@
+assay	func	function	label	label_name	status	genes	genomes	unannotated_genes	top_orders	ref_acc	ref_entry	ref_chain	ref_family_len	n_catalytic	n_binding	unannotated_folded	unannotated_fold_match	unannotated_cat_all	unannotated_PASS	unannotated_TM_ref_median	named_folded	named_PASS	positives	negA	negB	fold_match_cat_all_share	n_members	n_reps	curated_record	exp_chain	ref_member	n_site	n_curated	unannotated_site_ok	unannotated_TM_exp_median
+fixed	K23370	L-serine kinase (ADP) [EC:2.7.1.226]	PF02195	ParB_N	informative	7	7	0	40CM-2-53-6,Bathyarchaeales	Q5JD03	SERK_THEKO	5X0B_A	96.0	1.0	14.0	0.0	0.0	0.0	0.0		4.0	4.0	2/2	0/4	0/4										
+fixed	K01443	N-acetylglucosamine-6-phosphate deacetylase [EC:3.5.1.25]	PF01979	Amidohydro_1	informative	5	5	0	Sedimentisphaerales,Anaerolineales,BSN033	O32445	NAGA_VIBCH	3IV8_A	338.0	1.0	15.0	0.0	0.0	0.0	0.0		4.0	4.0	2/2	0/4	0/4										
+fixed	K00965	UDPglucose--hexose-1-phosphate uridylyltransferase [EC:2.7.7.12]	PF01087	GalP_UDP_transf	informative	3	3	0	Nitrososphaerales,Hadarchaeales,Thermodesulfovibrionales	P07902	GALT_HUMAN	6GQD_A	182.0	1.0	8.0	0.0	0.0	0.0	0.0		3.0	1.0	2/2	0/3	0/3										
+fixed	K01053	gluconolactonase [EC:3.1.1.17]	PF08450	SGL	informative	3	3	0	Burkholderiales,Terriglobales	Q15493	RGN_HUMAN	3G4E_A	268.0	1.0	6.0	0.0	0.0	0.0	0.0		3.0	0.0	2/2	0/3	0/3										
+fixed	K02683	DNA primase small subunit [EC:2.7.7.102]	PF01896	DNA_primase_S	informative	3	3	0	CG10238-14,Methanomicrobiales	P49642	PRI1_HUMAN	6RB4_A	248.0	2.0	29.0	0.0	0.0	0.0	0.0		3.0	1.0	2/2	0/3	0/3										
+fixed	K01805	xylose isomerase [EC:5.3.1.5]	PF01261	AP_endonuc_2	informative	2	2	0	Sedimentisphaerales	P15587	XYLA_STROL	1MUW_A	287.0	2.0	8.0	0.0	0.0	0.0	0.0		2.0	0.0	1/2	0/2	0/2										
+fixed	K00874	2-dehydro-3-deoxygluconokinase [EC:2.7.1.45]	PF00294	PfkB	informative	1	1	0	UBA10030	Q96XN9	KDGK_SULTO	2DCN_A	307.0	1.0	23.0	0.0	0.0	0.0	0.0		1.0	0.0	2/2	0/1	0/1										
+fixed	K00919	4-diphosphocytidyl-2-C-methyl-D-erythritol kinase [EC:2.7.1.148]	PF00288	GHMP_kinases_N	informative	1	1	0	RBG-16-71-46	O67060	ISPE_AQUAE	2V8P_A	99.0	1.0	11.0	0.0	0.0	0.0	0.0		1.0	0.0	2/2	0/1	0/1										
+fixed	K01624	fructose-bisphosphate aldolase, class II [EC:4.1.2.13]	PF01116	F_bP_aldolase	informative	1	1	0	Dehalococcoidales	P0AB71	ALF_ECOLI	5VJE_A	334.0	1.0	14.0	0.0	0.0	0.0	0.0		1.0	1.0	2/2	0/1	0/1										
+fixed	K07130	arylformamidase [EC:3.5.1.9]	PF04199	Cyclase	informative	1	1	0	Hadarchaeales	Q81PP9	KYNB_BACAN	4CO9_A	160.0	1.0	6.0	0.0	0.0	0.0	0.0		1.0	0.0	2/2	0/1	0/1										
+fixed	K07407	alpha-galactosidase [EC:3.2.1.22]	PF02065	Melibiase	informative	1	1	0	Atabeyarchaeales	G4FEF4	AGAL_THEMA	6GVD_A	158.0	1.0	6.0	0.0	0.0	0.0	0.0		1.0	0.0	1/1	0/1	0/1										
+fixed	K28560	bacterial ceramide synthase [EC:2.3.1.-]	PF00583	Acetyltransf_1	no_complete_EC	34	32	0	BSN033,UBA10806,Gemmatimonadales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03605	hydrogenase maturation protease [EC:3.4.23.-]	PF01750	HycI	no_complete_EC	17	17	1	UBA7540,Palsa-1439,Aminicenantales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14747	benzoylacetate-CoA ligase [EC:6.2.1.-]	PF27533	CapK_C	no_complete_EC	10	10	1	Sedimentisphaerales,UBA9217,Limisphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21216	glycosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	8	8	3	RBG-16-68-12,ATCC43930,Sedimentisphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20571	dehydrogenase [EC:1.1.1.-]	PF01408	GFO_IDH_MocA	no_complete_EC	6	6	0	Bryobacterales,Aminicenantales,UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20591	pyridoxal phosphate-dependent aminotransferase [EC:2.6.1.-]	PF01041	DegT_DnrJ_EryC1	no_complete_EC	6	6	4	Methanomicrobiales,Terriglobales,Tepidihabitantales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K23103	O18-antigen biosynthesis glycosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	5	5	5	Bryobacterales,Terriglobales,Acidiferrales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K23105	O111-antigen biosynthesis colitosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	5	5	3	Gemmatimonadales,UBA10105,Terriglobales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12633	N-methyl-transferase [EC:2.1.1.-]	PF13489	Methyltransf_23	no_complete_EC	4	4	1	UBA10030,Methanomicrobiales,Anaerolineales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12984	(heptosyl)LPS beta-1,4-glucosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	4	4	0	UBA9217,UBA10030,Adiutricales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15575	naphthyl-2-oxomethyl-succinyl-CoA thiolase subunit [EC:2.3.1.-]	PF22691	Thiolase_C_1	no_complete_EC	4	4	1	Tepidiformales,Dehalococcoidales,BSN033							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K18682	ribonucrease Y [EC:3.1.-.-]	PF01966	HD	no_complete_EC	4	4	0	Ignavibacteriales,B13-G15,JACQBZ01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01423	beta-barrel assembly-enhancing protease [EC:3.4.-.-]	PF01435	Peptidase_M48	no_complete_EC	3	3	0	Acidiferrales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07263	zinc protease [EC:3.4.24.-]	PF05193	Peptidase_M16_C	no_complete_EC	3	3	0	JAJPHL01,UBA5066,UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K08301	ribonuclease G [EC:3.1.26.-]	PF10150	RNase_E_G	no_complete_EC	3	3	0	Acidiferrales,UBA7540,Bryobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K09952	CRISPR-associated endonuclease Csn1 [EC:3.1.-.-]	PF13395	HNH_4	no_complete_EC	3	3	0	Burkholderiales,Tepidaquicellales,ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14245	PKS ketosynthase (KS/KS alpha) [EC:2.3.1.-]	PF00109	ketoacyl-synt	no_complete_EC	3	3	1	UBA9217,Thermodesulfovibrionales,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14246	PKS chain-length factor (CLF/KS beta) [EC:2.3.1.-]	PF00109	ketoacyl-synt	no_complete_EC	3	3	3	Burkholderiales,Campylobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14374	avermectin B 5-O-methyltransferase [EC:2.1.1.-]	PF08241	Methyltransf_11	no_complete_EC	3	3	3	Thermodesulfovibrionales,40CM-2-53-6,WVXT01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15857	CDP-3, 6-dideoxy-D-glycero-D-glycero-4-hexulose-5-epimerase [EC:5.1.-.	PF00908	dTDP_sugar_isom	no_complete_EC	3	3	1	Thermodesulfovibrionales,Campylobacterales,JACRGQ01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01932	gamma-polyglutamate synthase [EC:6.3.2.-]	PF08245	Mur_ligase_M	no_complete_EC	2	2	0	Aminicenantales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02509	2-oxo-hept-3-ene-1,7-dioate hydratase [EC:4.2.1.-]	PF01557	FAA_hydrolase	no_complete_EC	2	2	0	Binatales,Rhizobiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K04085	tRNA 2-thiouridine synthesizing protein A [EC:2.8.1.-]	PF01206	TusA	no_complete_EC	2	2	1	QHBQ01,Dehalococcoidales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06936	archaeosine synthase beta-subunit [EC:2.6.1.-]	PF04055	Radical_SAM	no_complete_EC	2	2	0	RBG-16-68-12							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12628	puromycin biosynthesis protein Pur10 [EC:1.-.-.-]	PF01408	GFO_IDH_MocA	no_complete_EC	2	2	2	Versatilivoradales,UBA7540							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15574	naphthyl-2-oxomethyl-succinyl-CoA thiolase subunit [EC:2.3.1.-]	PF01796	OB_ChsH2_C	no_complete_EC	2	2	0	Nitrososphaerales,RBG-13-61-14							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15769	p-toluenesulfonate methyl-monooxygenase reductase component TsaB [EC:1	PF10418	DHODB_Fe-S_bind	no_complete_EC	2	2	2	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K25510	DNA double-strand break repair nuclease NurA [EC:3.1.-.-]	PF09376	NurA	no_complete_EC	2	2	2	Desulfobaccales,Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K28639	3-sulfopropionaldehyde dehydrogenase [EC:1.2.1.-]	PF00171	Aldedh	no_complete_EC	2	2	0	Bryobacterales,4572-78							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00313	electron transfer flavoprotein-quinone oxidoreductase [EC:1.5.5.-]	PF12831	FAD_oxidored	no_complete_EC	1	1	0	B13-G15							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01463	N-acetylglucosamine malate deacetylase 1 [EC:3.5.1.-]	PF02585	PIG-L	no_complete_EC	1	1	0	Sedimentisphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K04773	protease IV [EC:3.4.21.-]	PF01343	Peptidase_S49	no_complete_EC	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07037	cyclic-di-AMP phosphodiesterase PgpH [EC:3.1.4.-]	PF01966	HD	no_complete_EC	1	1	0	Sedimentisphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07171	mRNA interferase MazF [EC:3.1.-.-]	PF02452	PemK_toxin	no_complete_EC	1	1	0	Terriglobales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07451	5-methylcytosine-specific restriction enzyme A [EC:3.1.21.-]	PF01844	HNH	no_complete_EC	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K08602	oligoendopeptidase F [EC:3.4.24.-]	PF01432	Peptidase_M3	no_complete_EC	1	1	0	ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12574	ribonuclease J [EC:3.1.-.-]	PF12706	Lactamase_B_2	no_complete_EC	1	1	0	Methylomirabilales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12630	puromycin biosynthesis protein Pur4 [EC:2.-.-.-]	PF01041	DegT_DnrJ_EryC1	no_complete_EC	1	1	1	JACQBZ01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14375	dTDP-L-oleandrosyltransferase [EC:2.4.1.-]	PF00201	UDPGT	no_complete_EC	1	1	1	Binatales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14645	serine protease [EC:3.4.21.-]	PF00082	Peptidase_S8	no_complete_EC	1	1	1	Phycocordibacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15571	naphthyl-2-methylsuccinyl-CoA dehydrogenase [EC:1.3.99.-]	PF02770	Acyl-CoA_dh_M	no_complete_EC	1	1	0	Adiutricales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15959	O-methyltransferase [EC:2.1.1.-]	PF00891	Methyltransf_2	no_complete_EC	1	1	0	GIF9							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K17733	peptidoglycan LD-endopeptidase CwlK [EC:3.4.-.-]	PF02557	VanY	no_complete_EC	1	1	0	Micropepsales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K18106	D-galacturonate reductase [EC:1.1.1.-]	PF01408	GFO_IDH_MocA	no_complete_EC	1	1	0	UBA7540							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K19304	murein DD-endopeptidase [EC:3.4.24.-]	PF01551	Peptidase_M23	no_complete_EC	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K19313	aminocyclitol acetyltransferase [EC:2.3.-.-]	PF14602	Hexapep_2	no_complete_EC	1	1	0	UBA6911							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K19544	aminoglycoside 4'-adenylyltransferase [EC:2.7.7.-]	PF01909	NTP_transf_2	no_complete_EC	1	1	0	DTKX01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20441	5-epi-valiolone oxidase [EC:1.1.3.-]	PF05199	GMC_oxred_C	no_complete_EC	1	1	0	Binatales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20578	glycosyltransferase [EC:2.4.1.-]	PF13439	Glyco_transf_4	no_complete_EC	1	1	0	Terriglobales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20583	deacetylase [EC:3.5.1.-]	PF02585	PIG-L	no_complete_EC	1	1	0	JAJYGY01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K22684	metacaspase [EC:3.4.22.-]	PF00656	Peptidase_C14	no_complete_EC	1	1	0	UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K25135	cyclic di-GMP phosphodiesterase [EC:3.1.4.-]	PF01966	HD	no_complete_EC	1	1	0	Polyangiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K28275	ribonuclease VapC35/45/46/47 [EC:3.1.-.-]	PF01850	PIN	no_complete_EC	1	1	0	Thermodesulfovibrionales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02340	DNA polymerase III subunit delta [EC:2.7.7.7]	PF06144	DNA_pol3_delta	no_entry_in_label_family	21	21	0	UBA6257,Deferrimicrobiales,Caulobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K17223	L-cysteine S-thiosulfotransferase [EC:2.8.5.2]	PF00034	Cytochrom_C	no_entry_in_label_family	4	4	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01602	ribulose-bisphosphate carboxylase small chain [EC:4.1.1.39]	PF00101	RuBisCO_small	no_entry_in_label_family	3	3	3	Acidiferrobacterales,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02323	DNA polymerase II small subunit [EC:2.7.7.7]	PF04042	DNA_pol_E_B	no_entry_in_label_family	2	2	0	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03651	3',5'-cyclic-AMP phosphodiesterase [EC:3.1.4.53]	PF00149	Metallophos	no_entry_in_label_family	2	2	0	Acidiferrobacterales,Rokubacteriales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K05518	phosphoserine phosphatase RsbX [EC:3.1.3.3]	PF07228	SpoIIE	no_entry_in_label_family	2	2	0	Burkholderiales,UBA4820							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00428	cytochrome c peroxidase [EC:1.11.1.5]	PF03150	CCP_MauG	no_entry_in_label_family	1	1	0	GN15							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00640	serine O-acetyltransferase [EC:2.3.1.30]	PF00132	Hexapep	no_entry_in_label_family	1	1	0	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00963	UTP--glucose-1-phosphate uridylyltransferase [EC:2.7.7.9]	PF00483	NTP_transferase	no_entry_in_label_family	1	1	0	UBA920							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01839	phosphopentomutase [EC:5.4.2.7]	PF01676	Metalloenzyme	no_entry_in_label_family	1	1	0	Myxococcales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02338	DNA polymerase III subunit beta [EC:2.7.7.7]	PF02767	DNA_pol3_beta_2	no_entry_in_label_family	1	1	0	Dehalococcoidales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03060	DNA-directed RNA polymerase subunit omega [EC:2.7.7.6]	PF01192	RNA_pol_Rpb6	no_entry_in_label_family	1	1	0	WVXT01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03722	ATP-dependent DNA helicase DinG [EC:5.6.2.3]	PF13307	Helicase_C_2	no_entry_in_label_family	1	1	0	Acidiferrales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K04066	primosomal protein N' (replication factor Y) (superfamily II helicase)	PF17764	PriA_3primeBD	no_entry_in_label_family	1	1	0	2-12-FULL-50-11							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K05973	poly(3-hydroxybutyrate) depolymerase [EC:3.1.1.75]	PF06850	PHB_depo_C	no_entry_in_label_family	1	1	0	Rhizobiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07154	serine/threonine-protein kinase HipA [EC:2.7.11.1]	PF20613	HipA_2	no_entry_in_label_family	1	1	1	JAJPHL01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K13075	N-acyl homoserine lactone hydrolase [EC:3.1.1.81]	PF00753	Lactamase_B	no_entry_in_label_family	1	1	0	ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20074	PPM family protein phosphatase [EC:3.1.3.16]	PF13672	PP2C_2	no_entry_in_label_family	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K26370	Iridovirus probable DNA-directed RNA polymerase subunit [EC:2.7.7.6]	PF04998	RNA_pol_Rpb1_5	no_entry_in_label_family	1	1	0	Woykebacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K13280	signal peptidase I [EC:3.4.21.89]	PF10502	Peptidase_S26	no_experimental_chain_with_active_site	34	34	0	Bathyarchaeales,Terriglobales,40CM-2-53-6							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00986	RNA-directed DNA polymerase [EC:2.7.7.49]	PF00078	RVT_1	no_experimental_chain_with_active_site	18	10	4	Terriglobales,UBA7540,Bryobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01809	mannose-6-phosphate isomerase [EC:5.3.1.8]	PF21621	MPI_cupin_dom	no_experimental_chain_with_active_site	5	5	0	JAJPHL01,Versatilivoradales,Sedimentisphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02372	3-hydroxyacyl-[acyl-carrier-protein] dehydratase [EC:4.2.1.59]	PF07977	FabA	no_experimental_chain_with_active_site	5	5	0	UBA5066							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02482	two-component system, NtrC family, sensor kinase [EC:2.7.13.3]	PF00672	HAMP	no_experimental_chain_with_active_site	5	5	0	Ignavibacteriales,UBA10030,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01810	glucose-6-phosphate isomerase [EC:5.3.1.9]	PF00342	PGI	no_experimental_chain_with_active_site	4	4	0	UBA7540,Terriglobales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K18979	epoxyqueuosine reductase [EC:1.17.99.6]	PF13484	Fer4_16	no_experimental_chain_with_active_site	4	4	0	Methylomirabilales,40CM-2-53-6,Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K22451	4-alpha-glucanotransferase [EC:2.4.1.25]	PF03065	Glyco_hydro_57	no_experimental_chain_with_active_site	4	4	0	JAOAEQ01,Bryobacterales,2-01-FULL-45-10							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06864	cysteine-dependent pyridinium-3,5-bisthiocarboxylic acid mononucleotid	PF02540	NAD_synthase	no_experimental_chain_with_active_site	4	4	0	Burkholderiales,Anaerolineales,Jordiarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K13371	aralkylamine dehydrogenase light chain [EC:1.4.9.2]	PF02975	Me-amine-dh_L	no_experimental_chain_with_active_site	3	3	3	Terriglobales,Ktedonobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K23975	L-aspartate semialdehyde sulfurtransferase [EC:2.8.1.16]	PF01837	HcyBio	no_experimental_chain_with_active_site	3	3	3	Terriglobales,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00451	homogentisate 1,2-dioxygenase [EC:1.13.11.5]	PF20510	HgmA_N	no_experimental_chain_with_active_site	2	1	1	Polyangiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00764	amidophosphoribosyltransferase [EC:2.4.2.14]	PF13522	GATase_6	no_experimental_chain_with_active_site	2	2	0	Burkholderiales,Acidiferrales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00799	glutathione S-transferase [EC:2.5.1.18]	PF00043	GST_C	no_experimental_chain_with_active_site	2	2	0	Micropepsales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01006	pyruvate, orthophosphate dikinase [EC:2.7.9.1]	PF00391	PEP-utilizers	no_experimental_chain_with_active_site	2	2	0	SAR324							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01040	glutaconate CoA-transferase, subunit B [EC:2.8.3.12]	PF01144	CoA_trans	no_experimental_chain_with_active_site	2	2	0	Caulobacterales,Methylomirabilales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06178	23S rRNA pseudouridine2605 synthase [EC:5.4.99.22]	PF00849	PseudoU_synth_2	no_experimental_chain_with_active_site	2	2	2	Limnocylindrales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K13598	two-component system, NtrC family, nitrogen regulation sensor histidin	PF00672	HAMP	no_experimental_chain_with_active_site	2	2	0	Binatales,UBA9968							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20738	chymopapain [EC:3.4.22.6]	PF00112	Peptidase_C1	no_experimental_chain_with_active_site	2	2	1	Binatales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K22373	lactate racemase [EC:5.1.2.1]	PF21113	LarA_C	no_experimental_chain_with_active_site	2	2	0	Nitrososphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00762	orotate phosphoribosyltransferase [EC:2.4.2.10]	PF00156	Pribosyltran	no_experimental_chain_with_active_site	1	1	0	JAWLBW01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00784	ribonuclease Z [EC:3.1.26.11]	PF12706	Lactamase_B_2	no_experimental_chain_with_active_site	1	1	0	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01039	glutaconate CoA-transferase, subunit A [EC:2.8.3.12]	PF01144	CoA_trans	no_experimental_chain_with_active_site	1	1	0	SM23-61							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01406	serralysin [EC:3.4.24.40]	PF00353	HemolysinCabind	no_experimental_chain_with_active_site	1	1	1	ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02480	two-component system, NarL family, sensor kinase [EC:2.7.13.3]	PF02518	HATPase_c	no_experimental_chain_with_active_site	1	1	1	Bryobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06001	tryptophan synthase beta chain [EC:4.2.1.20]	PF00291	PALP	no_experimental_chain_with_active_site	1	1	0	Thermodesulfovibrionales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06941	23S rRNA (adenine2503-C2)-methyltransferase [EC:2.1.1.192]	PF04055	Radical_SAM	no_experimental_chain_with_active_site	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21038	Bordetella phage reverse transcriptase [EC:2.7.7.49]	PF00078	RVT_1	no_experimental_chain_with_active_site	1	1	0	JACPGU01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01818	L-fucose/D-arabinose isomerase [EC:5.3.1.25 5.3.1.3]	PF02952	Fucose_iso_C	no_experimental_chain_with_active_site	1	1	0	JAJPHL01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02527	3-deoxy-D-manno-octulosonic-acid transferase [EC:2.4.99.12 2.4.99.13 2	PF04413	Glycos_transf_N	no_experimental_chain_with_active_site	1	1	0	WVWN01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K19802	L-Ala-D/L-Glu epimerase / N-acetyl-D-glutamate racemase [EC:5.1.1.20 5	PF02746	MR_MLE_N	no_experimental_chain_with_active_site	1	1	0	Bacteroidales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01154	type I restriction enzyme, S subunit [EC:3.1.21.3]	PF01420	Methylase_S	no_reviewed_entry_with_EC_active_site_structure	58	52	22	Burkholderiales,Nitrospirales,Bryobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06152	gluconate 2-dehydrogenase gamma chain [EC:1.1.99.3]	PF13618	Gluconate_2-dh3	no_reviewed_entry_with_EC_active_site_structure	28	26	20	Acetobacterales,Myxococcales,SAR324							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K17992	NADP-reducing hydrogenase subunit HndB [EC:1.12.1.3]	PF01257	2Fe-2S_thioredx	no_reviewed_entry_with_EC_active_site_structure	26	26	0	Thermodesulfovibrionales,BSN033,Sedimentisphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00201	formylmethanofuran dehydrogenase subunit B [EC:1.2.7.12]	PF00384	Molybdopterin	no_reviewed_entry_with_EC_active_site_structure	23	23	0	Methanosarcinales,Burkholderiales,Methanomicrobiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21349	glucosylglycerate synthase [EC:2.4.1.268]	PF21969	MGS_GT	no_reviewed_entry_with_EC_active_site_structure	23	21	0	Versatilivoradales,Bryobacterales,Nitrospirales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00386	sulfite dehydrogenase (cytochrome) subunit B [EC:1.8.2.1]	PF09098	Dehyd-heme_bind	no_reviewed_entry_with_EC_active_site_structure	22	22	0	UBA9217,Thermodesulfovibrionales,Deferrimicrobiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03405	magnesium chelatase subunit I [EC:6.6.1.1]	PF00158	Sigma54_activat	no_reviewed_entry_with_EC_active_site_structure	19	16	0	Terriglobales,Acidiferrales,Versatilivoradales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K10794	D-proline reductase (dithiol) PrdB [EC:1.21.4.1]	PF07355	GRDB	no_reviewed_entry_with_EC_active_site_structure	18	18	0	SAR324,Rokubacteriales,UBA9968							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K04069	pyruvate formate lyase activating enzyme [EC:1.97.1.4]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	11	10	1	UBA7540,BSN033,Thermoanaerobaculales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K24700	3-mercaptopropionate dioxygenase [EC:1.13.11.91]	PF05995	CDO_I	no_reviewed_entry_with_EC_active_site_structure	11	10	0	SAR324,Burkholderiales,SMXQ01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15512	benzoyl-CoA 2,3-epoxidase subunit B [EC:1.14.13.208]	PF05138	PaaA_PaaC	no_reviewed_entry_with_EC_active_site_structure	9	8	0	Burkholderiales,Binatales,Rokubacteriales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K22931	(+)-kolavenyl diphosphate synthase [EC:5.5.1.29]	PF13243	SQHop_cyclase_C	no_reviewed_entry_with_EC_active_site_structure	9	8	2	Versatilivoradales,Nitrospirales,Aminicenantales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00283	glycine cleavage system P protein (glycine dehydrogenase) subunit 2 [E	PF21478	GcvP2_C	no_reviewed_entry_with_EC_active_site_structure	8	8	0	Sedimentisphaerales,SMXQ01,Tepidiformales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00903	protein-tyrosine kinase [EC:2.7.10.3]	PF13614	AAA_31	no_reviewed_entry_with_EC_active_site_structure	8	8	0	Bryobacterales,VGOG01,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03427	type I restriction enzyme M protein [EC:2.1.1.72]	PF02384	N6_Mtase	no_reviewed_entry_with_EC_active_site_structure	8	8	5	Methanomicrobiales,Aminicenantales,TCS64							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07316	adenine-specific DNA-methyltransferase [EC:2.1.1.72]	PF01555	N6_N4_Mtase	no_reviewed_entry_with_EC_active_site_structure	8	8	1	Aminicenantales,Sedimentisphaerales,J045							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K10700	ethylbenzene hydroxylase subunit alpha [EC:1.17.99.2]	PF00384	Molybdopterin	no_reviewed_entry_with_EC_active_site_structure	8	8	1	Syntrophales,Deferrimicrobiales,Methylomirabilales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20930	phosphinomethylmalate isomerase [EC:4.2.1.166]	PF00694	Aconitase_C	no_reviewed_entry_with_EC_active_site_structure	8	7	5	Burkholderiales,Rhizobiales,Dehalococcoidales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K24122	limonene dehydrogenase [EC:1.17.99.8]	PF01593	Amino_oxidase	no_reviewed_entry_with_EC_active_site_structure	8	8	2	Deferrimicrobiales,Thermodesulfovibrionales,Myxococcales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00333	NADH-quinone oxidoreductase subunit D [EC:7.1.1.2]	PF00346	Complex1_49kDa	no_reviewed_entry_with_EC_active_site_structure	7	7	0	Muellerivitales,UBA7540,Myxococcales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03269	UDP-2,3-diacylglucosamine hydrolase [EC:3.6.1.54]	PF00149	Metallophos	no_reviewed_entry_with_EC_active_site_structure	7	7	0	Burkholderiales,SAR324,Tepidaquicellales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00978	glucose-1-phosphate cytidylyltransferase [EC:2.7.7.33]	PF00483	NTP_transferase	no_reviewed_entry_with_EC_active_site_structure	6	6	0	Terriglobales,Acidiferrales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01793	heparosan-N-sulfate-glucuronate 5-epimerase [EC:5.1.3.17]	PF06662	C5-epim_C	no_reviewed_entry_with_EC_active_site_structure	6	6	6	Palsa-1439,UBA7540,Aminicenantales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K25916	methoxylated aromatic compound---corrinoid protein Co-methyltransferas	PF01208	URO-D	no_reviewed_entry_with_EC_active_site_structure	6	6	0	Dehalococcoidales,GIF9,Jordiarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01607	4-carboxymuconolactone decarboxylase [EC:4.1.1.44]	PF02627	CMD	no_reviewed_entry_with_EC_active_site_structure	5	4	3	Acetobacterales,Thermodesulfovibrionales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12902	phosphonoacetaldehyde methylase [EC:2.1.1.308]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	5	4	2	Tepidaquicellales,Methylomirabilales,MSB-5A5							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15393	beta-cyclopiazonate dehydrogenase [EC:1.21.99.1]	PF00890	FAD_binding_2	no_reviewed_entry_with_EC_active_site_structure	5	4	5	RBG-16-68-12,GN15,Atabeyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K22362	alkene monooxygenase ferredoxin reductase component [EC:1.18.1.3]	PF00175	NAD_binding_1	no_reviewed_entry_with_EC_active_site_structure	5	5	0	SAR324,Versatilivoradales,UBA4738							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03388	heterodisulfide reductase subunit A2 [EC:1.8.7.3 1.8.98.4 1.8.98.5 1.8	PF13450	NAD_binding_8	no_reviewed_entry_with_EC_active_site_structure	5	4	0	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00170	pyruvate ferredoxin oxidoreductase beta subunit [EC:1.2.7.1]	PF02775	TPP_enzyme_C	no_reviewed_entry_with_EC_active_site_structure	4	4	0	,Jordiarchaeales,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00202	formylmethanofuran dehydrogenase subunit C [EC:1.2.7.12]	PF01493	GXGXG	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Vicinamibacterales,Methanosarcinales,Gemmatimonadales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00457	4-hydroxyphenylpyruvate dioxygenase [EC:1.13.11.27]	PF00903	Glyoxalase	no_reviewed_entry_with_EC_active_site_structure	4	4	0	RBG-16-68-12							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03775	FKBP-type peptidyl-prolyl cis-trans isomerase SlyD [EC:5.2.1.8]	PF00254	FKBP_C	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06381	stage II sporulation protein D (peptidoglycan lytic transglycosylase) 	PF08486	SpoIID	no_reviewed_entry_with_EC_active_site_structure	4	4	0	UBA7540,Gemmatimonadales,JACQBZ01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07053	3',5'-nucleoside bisphosphate phosphatase [EC:3.1.3.97]	PF02811	PHP	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Gemmatimonadales,Aminicenantales,Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K16554	polysaccharide biosynthesis transport protein [EC:2.7.10.3]	PF02706	Wzz	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Terriglobales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21673	caffeine dehydrogenase subunit alpha [EC:1.17.5.2]	PF20256	MoCoBD_2	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Acidiferrales,Adiutricales,ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K27986	branched-chain 2-oxoacid:malonyl-[acyl-carrier protein] acyltransferas	PF00364	Biotin_lipoyl	no_reviewed_entry_with_EC_active_site_structure	4	4	2	Polyangiales,Binatales,Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K28214	UDP-galactopyranose mutase [EC:5.4.99.9]	PF01593	Amino_oxidase	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Bryobacterales,JAJPHL01,JACQBW01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00175	2-oxoglutarate/2-oxoacid ferredoxin oxidoreductase subunit beta [EC:1.	PF02775	TPP_enzyme_C	no_reviewed_entry_with_EC_active_site_structure	4	4	0	DSPP01,Tepidaquicellales,Methanofastidiosales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01153	type I restriction enzyme, R subunit [EC:3.1.21.3]	PF04851	ResIII	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Bathyarchaeales,Geobacterales,Acidiferrobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01156	type III restriction enzyme [EC:3.1.21.5]	PF04851	ResIII	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Thermodesulfovibrionales,Anaerolineales,Limnocylindrales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01265	methionyl aminopeptidase [EC:3.4.11.18]	PF00557	Peptidase_M24	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Nitrososphaerales,UBA10834,Acetobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01858	myo-inositol-1-phosphate synthase [EC:5.5.1.4]	PF01658	Inos-1-P_synth	no_reviewed_entry_with_EC_active_site_structure	3	3	0	GIF9,Aminicenantales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01880	glycyl-tRNA synthetase [EC:6.1.1.14]	PF03129	HGTP_anticodon	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Binatales,UBA10834,Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01912	phenylacetate-CoA ligase [EC:6.2.1.30]	PF00501	AMP-binding	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Limisphaerales,Sedimentisphaerales,Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03271	D-sedoheptulose 7-phosphate isomerase [EC:5.3.1.28]	PF13580	SIS_2	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Gemmatimonadales,Acidiferrales,Desulfobaccales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K05394	atrazine chlorohydrolase [EC:3.8.1.8]	PF01979	Amidohydro_1	no_reviewed_entry_with_EC_active_site_structure	3	2	1	UBA7540,JAIQFV01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06988	8-hydroxy-5-deazaflavin:NADPH oxidoreductase [EC:1.5.1.40]	PF03446	NAD_binding_2	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Gemmatimonadales,Bacteroidales,DATECO01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07056	16S rRNA (cytidine1402-2'-O)-methyltransferase [EC:2.1.1.198]	PF00590	TP_methylase	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Burkholderiales,UBA7540							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K09691	homopolymeric O-antigen transport system ATP-binding protein [EC:7.5.2	PF00005	ABC_tran	no_reviewed_entry_with_EC_active_site_structure	3	3	0	4572-78,Acidiferrales,Rhizobiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K10026	7-carboxy-7-deazaguanine synthase [EC:4.3.99.3]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Levybacterales,Sedimentisphaerales,UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K17810	D-aspartate ligase [EC:6.3.1.12]	PF02786	CPSase_L_D2	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Bathyarchaeales,GN15,Nitrospirales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K28743	6-hydroxymusizin-2-carbonyl-[acyl-carrier protein] thioesterase [EC:3.	PF00753	Lactamase_B	no_reviewed_entry_with_EC_active_site_structure	3	3	1	Binatales,UBA7656,Anaerolineales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03390	heterodisulfide reductase subunit C2 [EC:1.8.7.3 1.8.98.4 1.8.98.5 1.8	PF13534	Fer4_17	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Bathyarchaeales,GN15							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03737	pyruvate-ferredoxin/flavodoxin oxidoreductase [EC:1.2.7.1 1.2.8.1]	PF02775	TPP_enzyme_C	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Tepidaquicellales,Sysuimicrobiales,							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K19725	O-ureido-L-serine/cysteine synthase [EC:2.6.99.3 2.5.1.47]	PF00291	PALP	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Limnocylindrales,Sysuimicrobiales,UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00376	nitrous-oxide reductase [EC:1.7.2.4]	PF18764	nos_propeller	no_reviewed_entry_with_EC_active_site_structure	2	2	0	UBA9160,UBA5066							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00394	adenylylsulfate reductase, subunit A [EC:1.8.99.2]	PF00890	FAD_binding_2	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Thermodesulfovibrionales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00688	glycogen phosphorylase [EC:2.4.1.1]	PF00343	Phosphorylase	no_reviewed_entry_with_EC_active_site_structure	2	2	0	JAIQFV01,Fimbriimonadales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00721	dolichol-phosphate mannosyltransferase [EC:2.4.1.83]	PF00535	Glycos_transf_2	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Hebobacterales,Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00859	dephospho-CoA kinase [EC:2.7.1.24]	PF13238	AAA_18	no_reviewed_entry_with_EC_active_site_structure	2	2	0	GIF9,UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00992	N-acetyl-alpha-D-muramate 1-phosphate uridylyltransferase [EC:2.7.7.99	PF00483	NTP_transferase	no_reviewed_entry_with_EC_active_site_structure	2	2	0	DSPP01,MSB-5A5							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01653	acetolactate synthase I/III small subunit [EC:2.2.1.6]	PF10369	ALS_ss_C	no_reviewed_entry_with_EC_active_site_structure	2	2	1	UBA7540							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01709	CDP-glucose 4,6-dehydratase [EC:4.2.1.45]	PF01370	Epimerase	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Polyangiales,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01804	L-arabinose isomerase [EC:5.3.1.4]	PF11762	Arabinose_Iso_C	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Aminicenantales,Fimbriimonadales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01890	phenylalanyl-tRNA synthetase beta chain [EC:6.1.1.20]	PF03484	B5	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Bathyarchaeales,Portnoybacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02495	oxygen-independent coproporphyrinogen III oxidase [EC:1.3.98.3]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Gemmatimonadales,							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02636	cytochrome b6-f complex iron-sulfur subunit [EC:7.1.1.6]	PF00355	Rieske	no_reviewed_entry_with_EC_active_site_structure	2	2	0	UBA5066,UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06034	sulfopyruvate decarboxylase subunit alpha [EC:4.1.1.79]	PF02776	TPP_enzyme_N	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07317	adenine-specific DNA-methyltransferase [EC:2.1.1.72]	PF02384	N6_Mtase	no_reviewed_entry_with_EC_active_site_structure	2	2	1	RBG-16-68-12,UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K08300	ribonuclease E [EC:3.1.26.12]	PF10150	RNase_E_G	no_reviewed_entry_with_EC_active_site_structure	2	2	1	Caulobacterales,ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K13306	dTDP-4-dehydro-6-deoxyglucose reductase [EC:1.1.1.266]	PF01073	3Beta_HSD	no_reviewed_entry_with_EC_active_site_structure	2	2	2	SAR324,UBA7656							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14138	acetyl-CoA synthase [EC:2.3.1.169]	PF18537	CODH_A_N	no_reviewed_entry_with_EC_active_site_structure	2	2	2	BSN033							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15513	benzoyl-CoA-dihydrodiol lyase [EC:4.1.2.44]	PF00378	ECH_1	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Mycobacteriales,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K16212	4-O-beta-D-mannosyl-D-glucose phosphorylase [EC:2.4.1.281]	PF04041	Glyco_hydro_130	no_reviewed_entry_with_EC_active_site_structure	2	2	0	UBA7540,Sedimentisphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K16870	N-acetylglucosaminyl-diphospho-decaprenol L-rhamnosyltransferase [EC:2	PF00535	Glycos_transf_2	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Aminicenantales,UBA10105							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20573	2'-deamino-2'-hydroxyneamine 1-alpha-D-kanosaminyltransferase [EC:2.4.	PF13692	Glyco_trans_1_4	no_reviewed_entry_with_EC_active_site_structure	2	2	1	Burkholderiales,UBA7540							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20615	capreomycidine synthase [EC:4.2.1.145]	PF00155	Aminotran_1_2	no_reviewed_entry_with_EC_active_site_structure	2	2	2	Terriglobales,UBA4820							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20809	2-halobenzoate 1,2-dioxygenase electron transfer component [EC:1.18.1.	PF00175	NAD_binding_1	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Limnocylindrales,Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21271	aurachin B dehydrogenase [EC:1.1.1.394]	PF01370	Epimerase	no_reviewed_entry_with_EC_active_site_structure	2	2	1	Acidiferrales,Thermodesulfovibrionales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21674	caffeine dehydrogenase subunit beta [EC:1.17.5.2]	PF00941	FAD_binding_5	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Micropepsales,Rhizobiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20565	paromamine 6'-oxidase / 6'''-hydroxyneomycin C oxidase [EC:1.1.3.43 1.	PF05199	GMC_oxred_C	no_reviewed_entry_with_EC_active_site_structure	2	2	1	Terriglobales,Micropepsales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00096	glycerol-1-phosphate dehydrogenase [NAD(P)+] [EC:1.1.1.261]	PF13685	Fe-ADH_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Methanosarcinales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00163	pyruvate dehydrogenase E1 component [EC:1.2.4.1]	PF00456	Transketolase_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00179	indolepyruvate ferredoxin oxidoreductase, alpha subunit [EC:1.2.7.8]	PF02775	TPP_enzyme_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	MPNO01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00548	5-methyltetrahydrofolate--homocysteine methyltransferase [EC:2.1.1.13]	PF02965	Met_synt_B12	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00571	site-specific DNA-methyltransferase (adenine-specific) [EC:2.1.1.72]	PF01555	N6_N4_Mtase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA7540							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00853	L-ribulokinase [EC:2.7.1.16]	PF02782	FGGY_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	QNDG01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01556	kynureninase [EC:3.7.1.3]	PF00266	Aminotran_5	no_reviewed_entry_with_EC_active_site_structure	1	1	0	SZUA-252							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01843	lysine 2,3-aminomutase [EC:5.4.3.2]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Gemmatimonadales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01845	glutamate-1-semialdehyde 2,1-aminomutase [EC:5.4.3.8]	PF00202	Aminotran_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	GN15							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01868	threonyl-tRNA synthetase [EC:6.1.1.3]	PF07973	tRNA_SAD	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Anaerolineales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01875	seryl-tRNA synthetase [EC:6.1.1.11]	PF00587	tRNA-synt_2b	no_reviewed_entry_with_EC_active_site_structure	1	1	0	JAJPHL01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01881	prolyl-tRNA synthetase [EC:6.1.1.15]	PF00587	tRNA-synt_2b	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA10834							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01945	phosphoribosylamine---glycine ligase [EC:6.3.4.13]	PF01071	GARS_A	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01953	asparagine synthase (glutamine-hydrolysing) [EC:6.3.5.4]	PF13537	GATase_7	no_reviewed_entry_with_EC_active_site_structure	1	1	0	GN15							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02283	pilus assembly protein CpaF [EC:7.4.2.8]	PF00437	T2SSE	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Micropepsales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K02493	release factor glutamine methyltransferase [EC:2.1.1.297]	PF05175	MTS	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Geobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03106	signal recognition particle subunit SRP54 [EC:3.6.5.4]	PF02978	SRP_SPB	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03150	2-iminoacetate synthase [EC:4.1.99.19]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	JAOAEQ01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03330	glutamyl-tRNA(Gln) amidotransferase subunit E [EC:6.3.5.7]	PF02934	GatB_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03644	lipoyl synthase [EC:2.8.1.8]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA9160							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03769	peptidyl-prolyl cis-trans isomerase C [EC:5.2.1.8]	PF00639	Rotamase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03809	NAD(P)H dehydrogenase (quinone) [EC:1.6.5.2]	PF03358	FMN_red	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03821	poly[(R)-3-hydroxyalkanoate] polymerase subunit PhaC [EC:2.3.1.304]	PF00561	Abhydrolase_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03886	quinol---cytochrome c reductase iron-sulfur subunit, bacillus type [EC	PF00355	Rieske	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Anaerolineales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K04070	putative pyruvate formate lyase activating enzyme [EC:1.97.1.4]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K05889	polyvinyl alcohol dehydrogenase (cytochrome) [EC:1.1.2.6]	PF01011	PQQ	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Terriglobales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K05914	photinus-luciferin 4-monooxygenase (ATP-hydrolysing) [EC:1.13.12.7]	PF00501	AMP-binding	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Acidiferrales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06015	N-acyl-D-amino-acid deacylase [EC:3.5.1.81]	PF07969	Amidohydro_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Thermodesulfovibrionales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06044	(1->4)-alpha-D-glucan 1-alpha-D-glucosylmutase [EC:5.4.99.15]	PF00128	Alpha-amylase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Binatales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K06162	alpha-D-ribose 1-methylphosphonate 5-triphosphate diphosphatase [EC:3.	PF07969	Amidohydro_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	SAR324							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07047	N-substituted formamide deformylase [EC:3.5.1.91]	PF01979	Amidohydro_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Terriglobales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07102	N-acetylmuramate 1-kinase [EC:2.7.1.221]	PF01636	APH	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K07755	arsenite methyltransferase [EC:2.1.1.137]	PF01135	PCMT	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA9217							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K08093	3-hexulose-6-phosphate synthase [EC:4.1.2.43]	PF00215	OMPdecase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	JAJPHL01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K08679	UDP-glucuronate 4-epimerase [EC:5.1.3.6]	PF01073	3Beta_HSD	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Nitrospirales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K09882	cobaltochelatase CobS [EC:6.6.1.2]	PF07728	AAA_5	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Micropepsales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K10206	LL-diaminopimelate aminotransferase [EC:2.6.1.83]	PF00155	Aminotran_1_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Geobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K11261	formylmethanofuran dehydrogenase subunit E [EC:1.2.7.12]	PF00994	MoCF_biosynth	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Bryobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K11782	chorismate dehydratase [EC:4.2.1.151]	PF02621	VitK2_biosynth	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Ignavibacteriales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12909	carboxyvinyl-carboxyphosphonate phosphorylmutase [EC:2.7.8.23]	PF00463	ICL	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12910	2-phosphinomethylmalate synthase [EC:2.3.3.18]	PF00682	HMGL-like	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Gemmatimonadales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12914	P-methyltransferase [EC:2.1.1.326]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Hadarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K13290	serine---pyruvate transaminase [EC:2.6.1.51]	PF00266	Aminotran_5	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K13552	paromamine 6'-oxidase [EC:1.1.3.43]	PF00732	GMC_oxred_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA9968							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14330	fatty aldehyde-generating acyl-ACP reductase [EC:1.2.1.80]	PF01488	Shikimate_DH	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Anaerolineales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15023	5-methyltetrahydrofolate corrinoid/iron sulfur protein methyltransfera	PF00809	Pterin_bind	no_reviewed_entry_with_EC_active_site_structure	1	1	0	B13-G15							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15449	tRNA wybutosine-synthesizing protein 1 [EC:4.1.3.44]	PF08608	Wyosine_form	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K16842	allantoinase [EC:3.5.2.5]	PF01522	Polysacc_deac_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K17070	dichloromethane dehalogenase [EC:4.5.1.3]	PF00043	GST_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Micropepsales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K17224	S-sulfosulfanyl-L-cysteine sulfohydrolase [EC:3.1.6.20]	PF02872	5_nucleotid_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K18431	CMP-N,N'-diacetyllegionaminic acid synthase [EC:2.7.7.82]	PF02348	CTP_transf_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Sedimentisphaerales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K19884	7-chloro-L-tryptophan oxidase [EC:1.4.3.23]	PF00890	FAD_binding_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Thermodesulfovibrionales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K19889	demethylrebeccamycin-D-glucose O-methyltransferase [EC:2.1.1.164]	PF08241	Methyltransf_11	no_reviewed_entry_with_EC_active_site_structure	1	1	0	JAJYGY01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20681	dTDP-3-amino-3,6-dideoxy-alpha-D-galactopyranose 3-N-acetyltransferase	PF00132	Hexapep	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Bryobacterales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20764	2-nitroimidazole nitrohydrolase [EC:3.5.99.9]	PF19420	DDAH_eukar	no_reviewed_entry_with_EC_active_site_structure	1	1	1	UBA9160							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21539	mycinamicin III 3''-O-methyltransferase [EC:2.1.1.237]	PF05711	TylF	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Gygaellales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21612	coenzyme F430 synthetase [EC:6.4.1.9]	PF27274	CfbE_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Thermodesulfovibrionales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K22227	AdoMet-dependent heme synthase [EC:1.3.98.6]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Anaerolineales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K27188	[DsrC]-trisulfide reductase subunit K [EC:1.8.5.10]	PF13183	Fer4_8	no_reviewed_entry_with_EC_active_site_structure	1	1	0	JAZDOA01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K27875	selenate reductase (quinol) subunit B [EC:1.97.1.14]	PF04879	Molybdop_Fe4S4	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Bacteroidales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K27876	selenate reductase (quinol) subunit C [EC:1.97.1.14]	PF03916	NrfD	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Polyangiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K27979	altemicidin L-isoleucyltransferase [EC:2.3.2.39]	PF00133	tRNA-synt_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	JAHISW01							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00830	alanine-glyoxylate transaminase / serine-glyoxylate transaminase / ser	PF00266	Aminotran_5	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UTPRO1							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00974	tRNA nucleotidyltransferase (CCA-adding enzyme) [EC:2.7.7.72 3.1.3.- 3	PF01743	PolyA_pol	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA10030							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K08355	arsenite oxidase small subunit [EC:1.20.2.1 1.20.9.1]	PF00355	Rieske	no_reviewed_entry_with_EC_active_site_structure	1	1	0	RBG-16-68-12							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K09828	Delta24-sterol reductase [EC:1.3.1.72 1.3.1.-]	PF01565	FAD_binding_4	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Burkholderiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K11779	FO synthase [EC:2.5.1.147 4.3.1.32]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Polyangiales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14126	F420-non-reducing hydrogenase large subunit [EC:1.12.99.- 1.8.98.5]	PF00374	NiFeSe_Hases	no_reviewed_entry_with_EC_active_site_structure	1	1	0	GIF9							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K17830	digeranylgeranylglycerophospholipid reductase [EC:1.3.1.101 1.3.7.11]	PF01494	FAD_binding_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Dehalococcoidales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20566	paromamine 6'-oxidase / 2'-deamino-2'-hydroxyparomamine 6'-oxidase [EC	PF13450	NAD_binding_8	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Syntrophales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20568	neamine transaminase / 2'-deamino-2'-hydroxyneamine transaminase [EC:2	PF00202	Aminotran_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Versatilivoradales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K23990	nepetalactol dehydrogenase / (+)-cis,trans-nepetalactol synthase [EC:1	PF09176	Mpt_N	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Bathyarchaeales							0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K05343	maltose alpha-D-glucosyltransferase / alpha-amylase [EC:5.4.99.16 3.2.	PF00128	Alpha-amylase	not_assayed	1	1	0	Versatilivoradales	P06278	AMY_BACLI	1VJS_A	352.0	2.0	15.0	0.0	0.0	0.0	0.0		1.0	0.0		0/1	0/1										
+fixed	K00226	dihydroorotate dehydrogenase (fumarate) [EC:1.3.98.1]	PF01180	DHO_dh	ok_but_length_incompatible	5	5	0	Acidiferrales,UBA7540,Gemmatimonadales	A2RJT9	PYRDA_LACLM	1JUB_A	303.0	1.0	20.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K17218	sulfide:quinone oxidoreductase [EC:1.8.5.4]	PF07992	Pyr_redox_2	ok_but_length_incompatible	5	5	0	JACQBZ01,QHBQ01,SAR324	Q7ZAG8	SQRD_ACIAM	3H8L_A	333.0	1.0	11.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00641	homoserine O-acetyltransferase/O-succinyltransferase [EC:2.3.1.31 2.3.	PF00561	Abhydrolase_1	ok_but_length_incompatible	5	5	0	Burkholderiales,Acidiferrales,Dehalococcoidales	P45131	METXA_HAEIN	2B61_A	323.0	3.0	2.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K03782	catalase-peroxidase [EC:1.11.1.21]	PF00141	peroxidase	ok_but_length_incompatible	3	3	0	Thermoanaerobaculales,Acidiferrales,Bryobacterales	O59651	KATG2_HALMA	3VLI_A	643.0	1.0	1.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00091	dihydroflavonol-4-reductase [EC:1.1.1.219]	PF01073	3Beta_HSD	ok_but_length_incompatible	2	2	0	Thermodesulfovibrionales,Reyranellales	P51110	DFRA_VITVI	2IOD_A	249.0	1.0	27.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K12132	eukaryotic-like serine/threonine-protein kinase [EC:2.7.11.1]	PF07676	PD40	ok_but_length_incompatible	2	2	2	UBA5066	P37562	PKN1_BACSU	6G4J_A	232.0	1.0	10.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K00134	glyceraldehyde 3-phosphate dehydrogenase (phosphorylating) [EC:1.2.1.1	PF02800	Gp_dh_C	ok_but_length_incompatible	1	1	0	Gemmatimonadales	P0A9B2	G3P1_ECOLI	6UTO_A	186.0	1.0	8.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01178	glucoamylase [EC:3.2.1.3]	PF00723	Glyco_hydro_15	ok_but_length_incompatible	1	1	0	Bathyarchaeales	P08017	AMYG_SACFI	2FBA_A	475.0	2.0	1.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K04077	chaperonin GroEL [EC:5.6.1.7]	PF00118	Cpn60_TCP1	ok_but_length_incompatible	1	1	0	ATCC43930	Q6LX38	THS_METMP	3RUV_A	499.0	2.0	10.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K04487	cysteine desulfurase [EC:2.8.1.7]	PF00266	Aminotran_5	ok_but_length_incompatible	1	1	0	Bathyarchaeales	O29689	ISCS2_ARCFU	4EB5_A	371.0	1.0	4.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K05992	maltogenic alpha-amylase [EC:3.2.1.133]	PF00128	Alpha-amylase	ok_but_length_incompatible	1	1	1	Terriglobales	P19531	AMYM_GEOSE	1QHO_A	379.0	2.0	23.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K14418	4-chlorobenzoyl-CoA dehalogenase [EC:3.8.1.7]	PF00378	ECH_1	ok_but_length_incompatible	1	1	1	Bryobacterales	A5JTM5	CBADH_PSEUC	1NZY_A	263.0	2.0	9.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K15633	2,3-bisphosphoglycerate-independent phosphoglycerate mutase [EC:5.4.2.	PF01676	Metalloenzyme	ok_but_length_incompatible	1	1	0	Anaerolineales	Q5HHP2	GPMI_STAAC	7TL8_A	485.0	1.0	17.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K20209	3-hydroxy-4-oxoquinoline 2,4-dioxygenase [EC:1.13.11.47]	PF00561	Abhydrolase_1	ok_but_length_incompatible	1	1	1	UBA10030	O33472	QDO_PSEPU	3IBT_A	249.0	1.0	6.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K05366	penicillin-binding protein 1A [EC:2.4.99.28 3.4.16.4]	PF00905	Transpeptidase	ok_but_length_incompatible	1	1	0	ATCC43930	D0C8Z9	MRDA_ACIB2	7ZG8_AAA	341.0	1.0	4.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K21071	ATP-dependent phosphofructokinase / diphosphate-dependent phosphofruct	PF00365	PFK	ok_but_length_incompatible	1	1	0	Burkholderiales	P00512	PFKA_GEOSE	4I7E_A	285.0	1.0	35.0	0.0	0.0	0.0	0.0		0.0	0.0													
+fixed	K01921	D-alanine-D-alanine ligase [EC:6.3.2.4]	PF07478	Dala_Dala_lig_C	uninformative_positive_control_failed	5	5	0	Bryobacterales,Gemmatimonadales,UBA10030	P07862	DDLB_ECOLI	4C5C_A	214.0	2.0	60.0	0.0	0.0	0.0	0.0		5.0	0.0	0/2	0/5	0/5										
+fixed	K00809	deoxyhypusine synthase [EC:2.5.1.46]	PF01916	DS	uninformative_positive_control_failed	4	4	4	GN15	P49366	DHYS_HUMAN	9IEG_A	322.0	1.0	29.0	4.0	4.0	0.0	0.0	0.679	0.0	0.0	0/2	0/4	0/4	0.0									
+fixed	K16704	dTDP-4-amino-4,6-dideoxy-D-galactose acyltransferase [EC:2.3.1.210]	PF00583	Acetyltransf_1	uninformative_positive_control_failed	4	4	0	Bathyarchaeales,4572-78	Q8FBQ3	WECD_ECOL6	2FT0_A	112.0	1.0	9.0	0.0	0.0	0.0	0.0		3.0	0.0	0/2	0/3	0/3										
+fixed	K01051	pectinesterase [EC:3.1.1.11]	PF01095	Pectinesterase	uninformative_positive_control_failed	3	3	3	Sedimentisphaerales,Limisphaerales	P0C1A8	PMEA_DICCH	1QJV_A	341.0	2.0	8.0	2.0	1.0	0.0	0.0	0.551	0.0	0.0	0/2	0/2	0/2	0.0									
+fixed	K01159	crossover junction endodeoxyribonuclease RuvC [EC:3.1.21.10]	PF02075	RuvC	uninformative_positive_control_failed	3	3	0	Binatales,Aminicenantales,Acidiferrobacterales	Q5SJC4	RUVC_THET8	4EP4_A	164.0	4.0	15.0	0.0	0.0	0.0	0.0		3.0	0.0	0/2	0/3	0/3										
+fixed	K03432	proteasome alpha subunit [EC:3.4.25.1]	PF00227	Proteasome	uninformative_positive_control_failed	2	2	0	RBG-16-55-9,Limisphaerales	P28074	PSB5_HUMAN	5LE5_K	189.0	1.0	1.0	0.0	0.0	0.0	0.0		2.0	0.0	0/2	0/2	0/2										
+fixed	K00573	protein-L-isoaspartate(D-aspartate) O-methyltransferase [EC:2.1.1.77]	PF01135	PCMT	uninformative_positive_control_failed	1	1	0	Caulobacterales	Q27869	PIMT_DROME	1R18_A	221.0	1.0	11.0	0.0	0.0	0.0	0.0		1.0	0.0	0/2	0/1	0/1										
+fixed	K01937	CTP synthase [EC:6.3.4.2]	PF00117	GATase	uninformative_positive_control_failed	1	1	0	Terriglobales	Q980S6	PYRG_SACS2	3NVA_A	240.0	3.0	7.0	0.0	0.0	0.0	0.0		1.0	0.0	0/2	0/1	0/1										
+fixed	K03741	arsenate reductase (thioredoxin) [EC:1.20.4.4]	PF01451	LMWPc	uninformative_positive_control_failed	1	1	0	Burkholderiales	P0A006	ARSC_STAAU	2CD7_A	131.0	3.0	4.0	0.0	0.0	0.0	0.0		1.0	0.0	0/2	0/1	0/1										
+fixed	K04771	serine protease Do [EC:3.4.21.107]	PF13365	Trypsin_2	uninformative_positive_control_failed	1	1	0	JAIQFV01	P0AEE3	DEGS_ECOLI	3LGI_A	156.0	3.0	1.0	0.0	0.0	0.0	0.0		1.0	0.0	0/2	0/1	0/1										
+fixed	K12721	L-prolyl-[peptidyl-carrier protein] dehydrogenase [EC:1.3.8.14]	PF00441	Acyl-CoA_dh_1	uninformative_positive_control_failed	1	1	0	Sedimentisphaerales	Q5W271	PIGA_PROCF	5ZW7_A	159.0	1.0	10.0	0.0	0.0	0.0	0.0		1.0	0.0	0/2	0/1	0/1										
+fixed	K07012	CRISPR-associated endonuclease/helicase Cas3 [EC:3.1.-.- 5.6.2.4]	PF22590	Cas3-like_C_2	uninformative_positive_control_failed	1	1	1	Rhizobiales	P46063	RECQ1_HUMAN	2V1X_A	188.0	1.0	7.0	1.0	0.0	0.0	0.0	0.318	0.0	0.0	0/2	0/1	0/1										
+extended	K03427		PF02384	N6_Mtase	dropped: positives < 80%	8	8	5					333.0			5.0	0.0		0.0	0.213	3.0	0.0	0/5	0/8	0/8		249.0	115.0	P10484	7BTO_A (P10484)	381351.0	6.0	0.0	0.0	0.219
+extended	K03605		PF01750	HycI	dropped: positives < 80%	17	17	1					176.0			1.0	1.0		0.0	0.52	5.0	2.0	1/5	0/6	0/6		448.0	328.0			1939209.0	4.0	0.0	0.0	
+extended	K00451		PF20510	HgmA_N	dropped: positives < 80%	2	1	1					261.0			1.0	0.0		0.0	0.421	1.0	0.0	3/5	0/2	0/2		78.0	31.0	Q88E47	3ZDS_A (Q88E47)	2491165.0	3.0	0.0	0.0	0.395
+extended	K20738		PF00112	Peptidase_C1	dropped: positives < 80%	2	2	1					241.0			1.0	1.0		0.0	0.72	1.0	0.0	3/4	0/2	0/2		22.0	18.0	P14080	1YAL_A (P14080)	536999.0	16.0	0.0	0.0	0.65
+extended	K27876		PF03916	NrfD	dropped: positives < 80%	1	1	1					351.0			1.0	0.0		0.0	0.211	0.0	0.0	3/5	0/1	0/1		1077.0	377.0			750347.0	5.0	0.0	0.0	
+extended	K03269		PF00149	Metallophos	dropped: positives < 80%	7	7	0					221.0			0.0	0.0		0.0		5.0	0.0	0/5	0/5	0/5		106.0	64.0	A6T5R0	5B4B_A (Q9I2V0)	2127577.0	13.0	0.0	0.0	
+extended	K03388		PF13450	NAD_binding_8	dropped: positives < 80%	5	4	0					69.0			0.0	0.0		0.0		5.0	0.0	2/5	0/5	0/5		321.0	92.0	Q6LWL2		415566.0	14.0	11.0	0.0	
+extended	K13280		PF10502	Peptidase_S26	in_scope_not_planned_budget	34	34	0																			40.0	29.0	P00803	1B12_A (P00803)					
+extended	K28560		PF00583	Acetyltransf_1	in_scope_not_planned_budget	34	32	0																			36.0	22.0							
+extended	K00201		PF00384	Molybdopterin	in_scope_not_planned_budget	23	23	0																			99.0	19.0							
+extended	K03405		PF00158	Sigma54_activat	in_scope_not_planned_budget	19	16	0																			35.0	18.0							
+extended	K10794		PF07355	GRDB	in_scope_not_planned_budget	18	18	0																			78.0	40.0	Q9Z4Q7						
+extended	K00170		PF02775	TPP_enzyme_C	in_scope_not_planned_budget	4	4	0																			426.0	114.0	P94692	2C42_A (P94692)					
+extended	K00175		PF02775	TPP_enzyme_C	in_scope_not_planned_budget	4	4	0																			572.0	156.0	Q96XT4	5B46_B (Q96XT4)					
+extended	K01810		PF00342	PGI	in_scope_not_planned_budget	4	4	0																			171.0	102.0	P06744	9FCW_A (P06744)					
+extended	K06381		PF08486	SpoIID	in_scope_not_planned_budget	4	4	0																			103.0	70.0							
+extended	K06864		PF02540	NAD_synthase	in_scope_not_planned_budget	4	4	0																			77.0	45.0	F9UST4	6B2M_A (F9UST4)					
+extended	K07053		PF02811	PHP	in_scope_not_planned_budget	4	4	0																			72.0	20.0	Q7NXD4	2YB1_A (Q7NXD4)					
+extended	K12984		PF00535	Glycos_transf_2	in_scope_not_planned_budget	4	4	0																			131.0	95.0							
+extended	K17223		PF00034	Cytochrom_C	in_scope_not_planned_budget	4	4	0																			32.0	24.0							
+extended	K18682		PF01966	HD	in_scope_not_planned_budget	4	4	0																			27.0	16.0							
+extended	K18979		PF13484	Fer4_16	in_scope_not_planned_budget	4	4	0																			45.0	31.0	P97030	5D08_A (P97030)					
+extended	K28214		PF01593	Amino_oxidase	in_scope_not_planned_budget	4	4	0																			26.0	18.0							
+extended	K01153		PF04851	ResIII	in_scope_not_planned_budget	3	3	0																			78.0	47.0	P08956						
+extended	K01156		PF04851	ResIII	in_scope_not_planned_budget	3	3	0																			142.0	97.0	Q5ZND2	4ZCF_C (Q5ZND2)					
+extended	K01265		PF00557	Peptidase_M24	in_scope_not_planned_budget	3	3	0																			538.0	202.0	P0AE18	2GG2_A (P0AE18)					
+extended	K01858		PF01658	Inos-1-P_synth	in_scope_not_planned_budget	3	3	0																			146.0	18.0	P11986	1P1J_A (P11986)					
+extended	K01880		PF03129	HGTP_anticodon	in_scope_not_planned_budget	3	3	0																			161.0	57.0	P41250	2ZT5_A (P41250)					
+extended	K01912		PF00501	AMP-binding	in_scope_not_planned_budget	3	3	0																			70.0	30.0	B6HVC6						
+extended	K03271		PF13580	SIS_2	in_scope_not_planned_budget	3	3	0																			35.0	23.0	Q93UJ2	8V4J_A (Q93UJ2)					
+extended	K03390		PF13534	Fer4_17	in_scope_not_planned_budget	3	3	0																			425.0	172.0							
+extended	K08301		PF10150	RNase_E_G	in_scope_not_planned_budget	3	3	0																			113.0	61.0							
+extended	K09691		PF00005	ABC_tran	in_scope_not_planned_budget	3	3	0																			225.0	196.0							
+extended	K10026		PF04055	Radical_SAM	in_scope_not_planned_budget	3	3	0																			221.0	88.0	O31677	5TH5_A (O31677)					
+extended	K19725		PF00291	PALP	in_scope_not_planned_budget	3	3	0																			41.0	16.0	P45040	1Y7L_A (P45040)					
+extended	K00721		PF00535	Glycos_transf_2	in_scope_not_planned_budget	2	2	0																			63.0	33.0	Q8U4M3	5MLZ_A (Q8U4M3)					
+extended	K00764		PF13522	GATase_6	in_scope_not_planned_budget	2	2	0																			381.0	115.0							
+extended	K01040		PF01144	CoA_trans	in_scope_not_planned_budget	2	2	0																			217.0	73.0	Q59112	1POI_B (Q59112)					
+extended	K01709		PF01370	Epimerase	in_scope_not_planned_budget	2	2	0																			118.0	76.0							
+extended	K01890		PF03484	B5	in_scope_not_planned_budget	2	2	0																			119.0	58.0	P27002	1B7Y_B (P27002)					
+extended	K02323		PF04042	DNA_pol_E_B	in_scope_not_planned_budget	2	2	0																			65.0	22.0		8TLT_F (P46957)					
+extended	K02636		PF00355	Rieske	in_scope_not_planned_budget	2	2	0																			130.0	74.0	P83794	1RFS_A (P08980)					
+extended	K03651		PF00149	Metallophos	in_scope_not_planned_budget	2	2	0																			136.0	55.0	D4P095						
+extended	K05518		PF07228	SpoIIE	in_scope_not_planned_budget	2	2	0																			44.0	41.0		3W42_A (P17906)					
+extended	K06034		PF02776	TPP_enzyme_N	in_scope_not_planned_budget	2	2	0																			22.0	15.0							
+extended	K13598		PF00672	HAMP	in_scope_not_planned_budget	2	2	0																			42.0	22.0	P0AEJ4						
+extended	K15513		PF00378	ECH_1	in_scope_not_planned_budget	2	2	0																			97.0	32.0							
+extended	K16870		PF00535	Glycos_transf_2	in_scope_not_planned_budget	2	2	0																			64.0	58.0							
+extended	K21674		PF00941	FAD_binding_5	in_scope_not_planned_budget	2	2	0																			142.0	70.0	D7REY4						
+extended	K28639		PF00171	Aldedh	in_scope_not_planned_budget	2	2	0																			137.0	65.0							
+extended	K00313		PF12831	FAD_oxidored	in_scope_not_planned_budget	1	1	0																			95.0	33.0							
+extended	K00428		PF03150	CCP_MauG	in_scope_not_planned_budget	1	1	0																			24.0	15.0	P14532	2VHD_A (P14532)					
+extended	K00571		PF01555	N6_N4_Mtase	in_scope_not_planned_budget	1	1	0																			48.0	45.0	P0CAW2	6PBD_A (P0CAW2)					
+extended	K00640		PF00132	Hexapep	in_scope_not_planned_budget	1	1	0																			24.0	15.0		1T3D_A (P0A9D4)					
+extended	K00963		PF00483	NTP_transferase	in_scope_not_planned_budget	1	1	0																			35.0	18.0	Q975F9	2GGO_A (Q975F9)					
+extended	K01039		PF01144	CoA_trans	in_scope_not_planned_budget	1	1	0																			29.0	16.0	Q59112	1POI_B (Q59112)					
+extended	K02493		PF05175	MTS	in_scope_not_planned_budget	1	1	0																			66.0	53.0	Q9WYV8	1NV8_A (Q9WYV8)					
+extended	K02527		PF04413	Glycos_transf_N	in_scope_not_planned_budget	1	1	0																			33.0	25.0	O66663	2XCI_A (O66663)					
+extended	K03644		PF04055	Radical_SAM	in_scope_not_planned_budget	1	1	0																			121.0	45.0	O43766	8TRW_A (O43766)					
+extended	K06941		PF04055	Radical_SAM	in_scope_not_planned_budget	1	1	0																			93.0	27.0	P36979	3RFA_A (P36979)					
+extended	K07047		PF01979	Amidohydro_1	in_scope_not_planned_budget	1	1	0																			42.0	26.0							
+extended	K07451		PF01844	HNH	in_scope_not_planned_budget	1	1	0																			19.0	17.0							
+extended	K07755		PF01135	PCMT	in_scope_not_planned_budget	1	1	0																			252.0	130.0							
+extended	K10206		PF00155	Aminotran_1_2	in_scope_not_planned_budget	1	1	0																			67.0	23.0	Q93ZN9	3EI9_A (Q93ZN9)					
+extended	K12914		PF04055	Radical_SAM	in_scope_not_planned_budget	1	1	0																			78.0	42.0							
+extended	K13075		PF00753	Lactamase_B	in_scope_not_planned_budget	1	1	0																			41.0	25.0	P0CJ63	3DHA_A (P0CJ63)					
+extended	K13290		PF00266	Aminotran_5	in_scope_not_planned_budget	1	1	0																			110.0	37.0	P21549	5F9S_A (P21549)					
+extended	K13552		PF00732	GMC_oxred_N	in_scope_not_planned_budget	1	1	0																			148.0	66.0	Q53U15						
+extended	K14126		PF00374	NiFeSe_Hases	in_scope_not_planned_budget	1	1	0																			135.0	28.0							
+extended	K15023		PF00809	Pterin_bind	in_scope_not_planned_budget	1	1	0																			88.0	21.0	Q46389	1F6Y_A (Q46389)					
+extended	K15571		PF02770	Acyl-CoA_dh_M	in_scope_not_planned_budget	1	1	0																			25.0	18.0							
+extended	K19304		PF01551	Peptidase_M23	in_scope_not_planned_budget	1	1	0																			45.0	23.0							
+extended	K19544		PF01909	NTP_transf_2	in_scope_not_planned_budget	1	1	0																			27.0	22.0							
+extended	K20074		PF13672	PP2C_2	in_scope_not_planned_budget	1	1	0																			67.0	32.0	P9WHW5	1TXO_A (P9WHW5)					
+extended	K22227		PF04055	Radical_SAM	in_scope_not_planned_budget	1	1	0																			42.0	28.0	Q30Y73						
+extended	K25135		PF01966	HD	in_scope_not_planned_budget	1	1	0																			17.0	15.0							
+extended	K28275		PF01850	PIN	in_scope_not_planned_budget	1	1	0																			57.0	48.0							
+extended	K06152		PF13618	Gluconate_2-dh3	kept	28	26	20					152.0			19.0	19.0		0.0	0.668	5.0	0.0	5/5	0/24	0/24		92.0	67.0			360589.0	3.0	0.0	0.0	
+extended	K20930		PF00694	Aconitase_C	kept	8	7	5					115.0			5.0	4.0		0.0	0.88	3.0	0.0	5/5	0/8	0/8		246.0	104.0	D9XF46		534598.0	9.0	0.0	0.0	
+extended	K23103		PF00535	Glycos_transf_2	kept	5	5	5					185.0			5.0	0.0		0.0	0.292	0.0	0.0	4/5	0/5	0/5		535.0	355.0			264246.0	3.0	0.0	0.0	
+extended	K21216		PF00535	Glycos_transf_2	kept	8	8	3					183.0			3.0	0.0		0.0	0.24	5.0	0.0	4/5	0/8	0/8		579.0	334.0			2084735.0	4.0	0.0	0.0	
+extended	K23105		PF00535	Glycos_transf_2	kept	5	5	3					174.0			3.0	1.0		0.0	0.292	2.0	0.0	4/5	0/5	0/5		431.0	320.0			788253.0	5.0	0.0	0.0	
+extended	K12902		PF04055	Radical_SAM	kept	5	4	2					187.0			2.0	1.0		0.0	0.487	3.0	0.0	5/5	0/5	0/5		93.0	54.0	Q56184		984718.0	4.0	0.0	0.0	
+extended	K27986		PF00364	Biotin_lipoyl	kept	4	4	2					79.0			2.0	0.0		0.0	0.291	2.0	0.0	5/5	0/4	0/4		68.0	51.0			192109.0	3.0	0.0	0.0	
+extended	K12628		PF01408	GFO_IDH_MocA	kept	2	2	2					140.0			2.0	0.0		0.0	0.267	0.0	0.0	5/5	0/2	0/2		169.0	86.0			1494208.0	4.0	0.0	0.0	
+extended	K13306		PF01073	3Beta_HSD	kept	2	2	2					186.0			2.0	0.0		0.0	0.221	0.0	0.0	5/5	0/2	0/2		178.0	103.0			246613.0	4.0	0.0	0.0	
+extended	K15769		PF10418	DHODB_Fe-S_bind	kept	2	2	2					58.0			2.0	0.0		0.0	0.387	0.0	0.0	5/5	0/2	0/2		135.0	55.0			1887670.0	3.0	0.0	0.0	
+extended	K20615		PF00155	Aminotran_1_2	kept	2	2	2					368.0			2.0	0.0		0.0	0.199	0.0	0.0	5/5	0/2	0/2		307.0	113.0			3099680.0	8.0	0.0	0.0	
+extended	K04069		PF04055	Radical_SAM	kept	11	10	1					180.0			1.0	0.0		0.0	0.205	5.0	0.0	4/5	0/6	0/6		264.0	113.0	P0A9N4	8FSI_A (P0A9N4)	1652583.0	8.0	0.0	0.0	0.197
+extended	K07316		PF01555	N6_N4_Mtase	kept	8	8	1					274.0			1.0	0.0		0.0	0.239	5.0	0.0	4/5	0/6	0/6		146.0	126.0	P0CAW2	6PBD_A (P0CAW2)	1735058.0	10.0	0.0	0.0	0.268
+extended	K15575		PF22691	Thiolase_C_1	kept	4	4	1					155.0			1.0	1.0		0.0	0.569	3.0	0.0	4/5	0/4	0/4		128.0	60.0			1029880.0	3.0	0.0	0.0	
+extended	K15857		PF00908	dTDP_sugar_isom	kept	3	3	1					155.0			1.0	1.0		0.0	0.817	2.0	0.0	4/5	0/3	0/3		142.0	75.0			984660.0	7.0	0.0	0.0	
+extended	K21271		PF01370	Epimerase	kept	2	2	1					240.0			1.0	0.0		0.0	0.188	1.0	0.0	4/5	0/2	0/2		278.0	165.0			564409.0	5.0	0.0	0.0	
+extended	K00283		PF21478	GcvP2_C	kept	8	8	0					133.0			0.0	0.0		0.0		5.0	0.0	4/5	0/5	0/5		452.0	111.0		6I35_A (P23378)	1456001.0	15.0	0.0	0.0	
+extended	K00903		PF13614	AAA_31	kept	8	8	0					189.0			0.0	0.0		0.0		5.0	2.0	5/5	0/5	0/5		95.0	73.0			2408822.0	11.0	0.0	0.0	
+extended	K00333		PF00346	Complex1_49kDa	kept	7	7	0					281.0			0.0	0.0		0.0		5.0	0.0	5/5	0/5	0/5		730.0	166.0	Q91WD5	8OM1_D (Q91WD5)	3189168.0	26.0	0.0	0.0	
+extended	K00978		PF00483	NTP_transferase	kept	6	6	0					245.0			0.0	0.0		0.0		5.0	0.0	5/5	0/5	0/5		223.0	135.0	Q8Z5I4	1TZF_A (Q8Z5I4)	1345398.0	27.0	13.0	0.0	
+extended	K20571		PF01408	GFO_IDH_MocA	kept	6	6	0					131.0			0.0	0.0		0.0		5.0	0.0	4/5	0/5	0/5		201.0	106.0			1857239.0	4.0	0.0	0.0	
+extended	K01602		PF00101	RuBisCO_small	out_of_scope: fewer than 15 annotated members	3	3	3																			10.0								
+extended	K13371		PF02975	Me-amine-dh_L	out_of_scope: fewer than 15 annotated members	3	3	3																			8.0								
+extended	K23975		PF01837	HcyBio	out_of_scope: fewer than 15 annotated members	3	3	3																			7.0								
+extended	K22931		PF13243	SQHop_cyclase_C	out_of_scope: fewer than 15 annotated members	9	8	2																			6.0								
+extended	K06178		PF00849	PseudoU_synth_2	out_of_scope: fewer than 15 annotated members	2	2	2																			12.0								
+extended	K25510		PF09376	NurA	out_of_scope: fewer than 15 annotated members	2	2	2																			5.0								
+extended	K12633		PF13489	Methyltransf_23	out_of_scope: fewer than 15 annotated members	4	4	1																			13.0								
+extended	K01653		PF10369	ALS_ss_C	out_of_scope: fewer than 15 annotated members	2	2	1																			6.0								
+extended	K01406		PF00353	HemolysinCabind	out_of_scope: fewer than 15 annotated members	1	1	1																			4.0								
+extended	K02480		PF02518	HATPase_c	out_of_scope: fewer than 15 annotated members	1	1	1																			3.0								
+extended	K07154		PF20613	HipA_2	out_of_scope: fewer than 15 annotated members	1	1	1																			3.0								
+extended	K12630		PF01041	DegT_DnrJ_EryC1	out_of_scope: fewer than 15 annotated members	1	1	1																			13.0								
+extended	K12910		PF00682	HMGL-like	out_of_scope: fewer than 15 annotated members	1	1	1																			12.0								
+extended	K14375		PF00201	UDPGT	out_of_scope: fewer than 15 annotated members	1	1	1																			3.0								
+extended	K14645		PF00082	Peptidase_S8	out_of_scope: fewer than 15 annotated members	1	1	1																			5.0								
+extended	K20764		PF19420	DDAH_eukar	out_of_scope: fewer than 15 annotated members	1	1	1																			3.0								
+extended	K23990		PF09176	Mpt_N	out_of_scope: fewer than 15 annotated members	1	1	1																			9.0								
+extended	K00386		PF09098	Dehyd-heme_bind	out_of_scope: fewer than 15 annotated members	22	22	0																			5.0								
+extended	K24700		PF05995	CDO_I	out_of_scope: fewer than 15 annotated members	11	10	0																			4.0								
+extended	K15512		PF05138	PaaA_PaaC	out_of_scope: fewer than 15 annotated members	9	8	0																			7.0								
+extended	K00457		PF00903	Glyoxalase	out_of_scope: fewer than 15 annotated members	4	4	0																			9.0								
+extended	K03775		PF00254	FKBP_C	out_of_scope: fewer than 15 annotated members	4	4	0																			6.0								
+extended	K22451		PF03065	Glyco_hydro_57	out_of_scope: fewer than 15 annotated members	4	4	0																			9.0								
+extended	K09952		PF13395	HNH_4	out_of_scope: fewer than 15 annotated members	3	3	0																			3.0								
+extended	K17810		PF02786	CPSase_L_D2	out_of_scope: fewer than 15 annotated members	3	3	0																			14.0								
+extended	K00688		PF00343	Phosphorylase	out_of_scope: fewer than 15 annotated members	2	2	0																			5.0								
+extended	K00992		PF00483	NTP_transferase	out_of_scope: fewer than 15 annotated members	2	2	0																			12.0								
+extended	K01006		PF00391	PEP-utilizers	out_of_scope: fewer than 15 annotated members	2	2	0																			7.0								
+extended	K01804		PF11762	Arabinose_Iso_C	out_of_scope: fewer than 15 annotated members	2	2	0																			8.0								
+extended	K01932		PF08245	Mur_ligase_M	out_of_scope: fewer than 15 annotated members	2	2	0																			8.0								
+extended	K02495		PF04055	Radical_SAM	out_of_scope: fewer than 15 annotated members	2	2	0																			14.0								
+extended	K06936		PF04055	Radical_SAM	out_of_scope: fewer than 15 annotated members	2	2	0																			7.0								
+extended	K22373		PF21113	LarA_C	out_of_scope: fewer than 15 annotated members	2	2	0																			8.0								
+extended	K00163		PF00456	Transketolase_N	out_of_scope: fewer than 15 annotated members	1	1	0																			7.0								
+extended	K00548		PF02965	Met_synt_B12	out_of_scope: fewer than 15 annotated members	1	1	0																			7.0								
+extended	K00830		PF00266	Aminotran_5	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K00853		PF02782	FGGY_C	out_of_scope: fewer than 15 annotated members	1	1	0																			11.0								
+extended	K01463		PF02585	PIG-L	out_of_scope: fewer than 15 annotated members	1	1	0																			6.0								
+extended	K01556		PF00266	Aminotran_5	out_of_scope: fewer than 15 annotated members	1	1	0																			6.0								
+extended	K01845		PF00202	Aminotran_3	out_of_scope: fewer than 15 annotated members	1	1	0																			4.0								
+extended	K01868		PF07973	tRNA_SAD	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K01875		PF00587	tRNA-synt_2b	out_of_scope: fewer than 15 annotated members	1	1	0																			7.0								
+extended	K01953		PF13537	GATase_7	out_of_scope: fewer than 15 annotated members	1	1	0																			14.0								
+extended	K02283		PF00437	T2SSE	out_of_scope: fewer than 15 annotated members	1	1	0																			12.0								
+extended	K02338		PF02767	DNA_pol3_beta_2	out_of_scope: fewer than 15 annotated members	1	1	0																			5.0								
+extended	K03106		PF02978	SRP_SPB	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K03150		PF04055	Radical_SAM	out_of_scope: fewer than 15 annotated members	1	1	0																			11.0								
+extended	K03330		PF02934	GatB_N	out_of_scope: fewer than 15 annotated members	1	1	0																			3.0								
+extended	K03809		PF03358	FMN_red	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K03821		PF00561	Abhydrolase_1	out_of_scope: fewer than 15 annotated members	1	1	0																			5.0								
+extended	K04066		PF17764	PriA_3primeBD	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K04773		PF01343	Peptidase_S49	out_of_scope: fewer than 15 annotated members	1	1	0																			10.0								
+extended	K05889		PF01011	PQQ	out_of_scope: fewer than 15 annotated members	1	1	0																			5.0								
+extended	K05973		PF06850	PHB_depo_C	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K06001		PF00291	PALP	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K06015		PF07969	Amidohydro_3	out_of_scope: fewer than 15 annotated members	1	1	0																			6.0								
+extended	K06162		PF07969	Amidohydro_3	out_of_scope: fewer than 15 annotated members	1	1	0																			10.0								
+extended	K07037		PF01966	HD	out_of_scope: fewer than 15 annotated members	1	1	0																			4.0								
+extended	K07102		PF01636	APH	out_of_scope: fewer than 15 annotated members	1	1	0																			5.0								
+extended	K08093		PF00215	OMPdecase	out_of_scope: fewer than 15 annotated members	1	1	0																			7.0								
+extended	K08355		PF00355	Rieske	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K08602		PF01432	Peptidase_M3	out_of_scope: fewer than 15 annotated members	1	1	0																			3.0								
+extended	K11782		PF02621	VitK2_biosynth	out_of_scope: fewer than 15 annotated members	1	1	0																			9.0								
+extended	K12574		PF12706	Lactamase_B_2	out_of_scope: fewer than 15 annotated members	1	1	0																			4.0								
+extended	K12909		PF00463	ICL	out_of_scope: fewer than 15 annotated members	1	1	0																			4.0								
+extended	K14330		PF01488	Shikimate_DH	out_of_scope: fewer than 15 annotated members	1	1	0																			4.0								
+extended	K15959		PF00891	Methyltransf_2	out_of_scope: fewer than 15 annotated members	1	1	0																			14.0								
+extended	K16842		PF01522	Polysacc_deac_1	out_of_scope: fewer than 15 annotated members	1	1	0																			3.0								
+extended	K17733		PF02557	VanY	out_of_scope: fewer than 15 annotated members	1	1	0																			3.0								
+extended	K18106		PF01408	GFO_IDH_MocA	out_of_scope: fewer than 15 annotated members	1	1	0																			8.0								
+extended	K18431		PF02348	CTP_transf_3	out_of_scope: fewer than 15 annotated members	1	1	0																			13.0								
+extended	K20568		PF00202	Aminotran_3	out_of_scope: fewer than 15 annotated members	1	1	0																			9.0								
+extended	K21539		PF05711	TylF	out_of_scope: fewer than 15 annotated members	1	1	0																			9.0								
+extended	K21612		PF27274	CfbE_C	out_of_scope: fewer than 15 annotated members	1	1	0																			3.0								
+extended	K22684		PF00656	Peptidase_C14	out_of_scope: fewer than 15 annotated members	1	1	0																			3.0								
+extended	K26370		PF04998	RNA_pol_Rpb1_5	out_of_scope: fewer than 15 annotated members	1	1	0																			5.0								
+extended	K27979		PF00133	tRNA-synt_1	out_of_scope: fewer than 15 annotated members	1	1	0																			4.0								
+extended	K01793		PF06662	C5-epim_C	out_of_scope: fewer than 15 representatives at 70% identity	6	6	6																			18.0	14.0							
+extended	K14138		PF18537	CODH_A_N	out_of_scope: fewer than 15 representatives at 70% identity	2	2	2																			15.0	9.0							
+extended	K28743		PF00753	Lactamase_B	out_of_scope: fewer than 15 representatives at 70% identity	3	3	1																			54.0	13.0							
+extended	K04085		PF01206	TusA	out_of_scope: fewer than 15 representatives at 70% identity	2	2	1																			16.0	12.0							
+extended	K17992		PF01257	2Fe-2S_thioredx	out_of_scope: fewer than 15 representatives at 70% identity	26	26	0																			29.0	10.0							
+extended	K21349		PF21969	MGS_GT	out_of_scope: fewer than 15 representatives at 70% identity	23	21	0																			19.0	9.0							
+extended	K25916		PF01208	URO-D	out_of_scope: fewer than 15 representatives at 70% identity	6	6	0																			20.0	12.0							
+extended	K01809		PF21621	MPI_cupin_dom	out_of_scope: fewer than 15 representatives at 70% identity	5	5	0																			16.0	6.0							
+extended	K00202		PF01493	GXGXG	out_of_scope: fewer than 15 representatives at 70% identity	4	4	0																			15.0	12.0							
+extended	K01423		PF01435	Peptidase_M48	out_of_scope: fewer than 15 representatives at 70% identity	3	3	0																			28.0	6.0							
+extended	K03737		PF02775	TPP_enzyme_C	out_of_scope: fewer than 15 representatives at 70% identity	3	3	0																			18.0	11.0							
+extended	K06988		PF03446	NAD_binding_2	out_of_scope: fewer than 15 representatives at 70% identity	3	3	0																			48.0	10.0							
+extended	K07056		PF00590	TP_methylase	out_of_scope: fewer than 15 representatives at 70% identity	3	3	0																			23.0	11.0							
+extended	K00376		PF18764	nos_propeller	out_of_scope: fewer than 15 representatives at 70% identity	2	2	0																			37.0	14.0							
+extended	K00394		PF00890	FAD_binding_2	out_of_scope: fewer than 15 representatives at 70% identity	2	2	0																			55.0	5.0							
+extended	K00799		PF00043	GST_C	out_of_scope: fewer than 15 representatives at 70% identity	2	2	0																			25.0	13.0							
+extended	K00859		PF13238	AAA_18	out_of_scope: fewer than 15 representatives at 70% identity	2	2	0																			18.0	7.0							
+extended	K02509		PF01557	FAA_hydrolase	out_of_scope: fewer than 15 representatives at 70% identity	2	2	0																			18.0	5.0							
+extended	K16212		PF04041	Glyco_hydro_130	out_of_scope: fewer than 15 representatives at 70% identity	2	2	0																			22.0	5.0							
+extended	K00096		PF13685	Fe-ADH_2	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			37.0	12.0							
+extended	K00762		PF00156	Pribosyltran	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			17.0	12.0							
+extended	K00784		PF12706	Lactamase_B_2	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			17.0	8.0							
+extended	K00974		PF01743	PolyA_pol	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			26.0	12.0							
+extended	K01818		PF02952	Fucose_iso_C	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			15.0	7.0							
+extended	K01839		PF01676	Metalloenzyme	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			18.0	11.0							
+extended	K01843		PF04055	Radical_SAM	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			58.0	13.0							
+extended	K01881		PF00587	tRNA-synt_2b	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			15.0	9.0							
+extended	K01945		PF01071	GARS_A	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			36.0	6.0							
+extended	K03722		PF13307	Helicase_C_2	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			61.0	14.0							
+extended	K03769		PF00639	Rotamase	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			20.0	12.0							
+extended	K03886		PF00355	Rieske	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			15.0	14.0							
+extended	K04070		PF04055	Radical_SAM	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			18.0	9.0							
+extended	K05914		PF00501	AMP-binding	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			47.0	13.0							
+extended	K08679		PF01073	3Beta_HSD	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			22.0	7.0							
+extended	K09828		PF01565	FAD_binding_4	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			18.0	12.0							
+extended	K09882		PF07728	AAA_5	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			44.0	1.0							
+extended	K11261		PF00994	MoCF_biosynth	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			17.0	12.0							
+extended	K11779		PF04055	Radical_SAM	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			19.0	9.0							
+extended	K15449		PF08608	Wyosine_form	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			33.0	8.0							
+extended	K17070		PF00043	GST_C	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			32.0	14.0							
+extended	K17224		PF02872	5_nucleotid_C	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			27.0	13.0							
+extended	K17830		PF01494	FAD_binding_3	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			15.0	10.0							
+extended	K19802		PF02746	MR_MLE_N	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			22.0	6.0							
+extended	K20583		PF02585	PIG-L	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			16.0	9.0							
+extended	K27188		PF13183	Fer4_8	out_of_scope: fewer than 15 representatives at 70% identity	1	1	0																			51.0	7.0							
+extended	K01154		PF01420	Methylase_S	out_of_scope: fewer than 3 site positions	58	52	22																			640.0	629.0							
+extended	K15393		PF00890	FAD_binding_2	out_of_scope: fewer than 3 site positions	5	4	5																			197.0	66.0							
+extended	K00986		PF00078	RVT_1	out_of_scope: fewer than 3 site positions	18	10	4																			85.0	80.0	P03366						
+extended	K20591		PF01041	DegT_DnrJ_EryC1	out_of_scope: fewer than 3 site positions	6	6	4																			36.0	27.0							
+extended	K01607		PF02627	CMD	out_of_scope: fewer than 3 site positions	5	4	3																			34.0	16.0							
+extended	K14246		PF00109	ketoacyl-synt	out_of_scope: fewer than 3 site positions	3	3	3																			64.0	43.0							
+extended	K14374		PF08241	Methyltransf_11	out_of_scope: fewer than 3 site positions	3	3	3																			362.0	230.0							
+extended	K24122		PF01593	Amino_oxidase	out_of_scope: fewer than 3 site positions	8	8	2																			151.0	60.0							
+extended	K14747		PF27533	CapK_C	out_of_scope: fewer than 3 site positions	10	10	1																			104.0	92.0							
+extended	K10700		PF00384	Molybdopterin	out_of_scope: fewer than 3 site positions	8	8	1																			195.0	80.0							
+extended	K05394		PF01979	Amidohydro_1	out_of_scope: fewer than 3 site positions	3	2	1																			55.0	38.0	P72156	4V1X_A (P72156)					
+extended	K14245		PF00109	ketoacyl-synt	out_of_scope: fewer than 3 site positions	3	3	1																			58.0	42.0							
+extended	K07317		PF02384	N6_Mtase	out_of_scope: fewer than 3 site positions	2	2	1																			19.0	17.0	P10484	7BTO_A (P10484)					
+extended	K20565		PF05199	GMC_oxred_C	out_of_scope: fewer than 3 site positions	2	2	1																			151.0	73.0	Q53U15						
+extended	K20573		PF13692	Glyco_trans_1_4	out_of_scope: fewer than 3 site positions	2	2	1																			63.0	62.0							
+extended	K20566		PF13450	NAD_binding_8	out_of_scope: fewer than 3 site positions	1	1	1																			68.0	46.0							
+extended	K20681		PF00132	Hexapep	out_of_scope: fewer than 3 site positions	1	1	1																			80.0	77.0							
+extended	K02340		PF06144	DNA_pol3_delta	out_of_scope: fewer than 3 site positions	21	21	0																			260.0	135.0		1JQL_B (P28630)					
+extended	K02372		PF07977	FabA	out_of_scope: fewer than 3 site positions	5	5	0																			69.0	37.0	O33877	8B72_A (O33877)					
+extended	K02482		PF00672	HAMP	out_of_scope: fewer than 3 site positions	5	5	0																			75.0	40.0	P0AEJ4						
+extended	K22362		PF00175	NAD_binding_1	out_of_scope: fewer than 3 site positions	5	5	0																			409.0	203.0	P07771	1KRH_A (P07771)					
+extended	K21673		PF20256	MoCoBD_2	out_of_scope: fewer than 3 site positions	4	4	0																			326.0	150.0	D7REY3						
+extended	K07263		PF05193	Peptidase_M16_C	out_of_scope: fewer than 3 site positions	3	3	0																			339.0	190.0							
+extended	K15574		PF01796	OB_ChsH2_C	out_of_scope: fewer than 3 site positions	2	2	0																			90.0	55.0							
+extended	K20809		PF00175	NAD_binding_1	out_of_scope: fewer than 3 site positions	2	2	0																			396.0	197.0	P07771	1KRH_A (P07771)					
+extended	K03060		PF01192	RNA_pol_Rpb6	out_of_scope: fewer than 3 site positions	1	1	0																			59.0	35.0		8FVW_H (P0A800)					
+extended	K07171		PF02452	PemK_toxin	out_of_scope: fewer than 3 site positions	1	1	0																			139.0	93.0							
+extended	K19313		PF14602	Hexapep_2	out_of_scope: fewer than 3 site positions	1	1	0																			41.0	41.0							
+extended	K19884		PF00890	FAD_binding_2	out_of_scope: fewer than 3 site positions	1	1	0																			39.0	22.0							
+extended	K19889		PF08241	Methyltransf_11	out_of_scope: fewer than 3 site positions	1	1	0																			391.0	254.0	Q8KZ94	3BUS_A (Q8KZ94)					
+extended	K20441		PF05199	GMC_oxred_C	out_of_scope: fewer than 3 site positions	1	1	0																			146.0	69.0							
+extended	K20578		PF13439	Glyco_transf_4	out_of_scope: fewer than 3 site positions	1	1	0																			46.0	37.0							
+extended	K21038		PF00078	RVT_1	out_of_scope: fewer than 3 site positions	1	1	0																			70.0	65.0	P03366						
+extended	K07012		PF22590	Cas3-like_C_2	out_of_scope: fixed reference after EC fix	1	1	1																			36.0	32.0							
+extended	K00641		PF00561	Abhydrolase_1	out_of_scope: fixed reference after EC fix	5	5	0																			170.0	60.0	A0QSZ0	6IOG_A (A0QSZ0)					
+extended	K05343		PF00128	Alpha-amylase	out_of_scope: fixed reference after EC fix	1	1	0																			0.0								
+extended	K05366		PF00905	Transpeptidase	out_of_scope: fixed reference after EC fix	1	1	0																			17.0	7.0							
+extended	K21071		PF00365	PFK	out_of_scope: fixed reference after EC fix	1	1	0																			10.0								
+extended	K08300		PF10150	RNase_E_G	out_of_scope: no definition member of 100-600 aa	2	2	1																			35.0	25.0							
+extended	K16554		PF02706	Wzz	out_of_scope: no definition member of 100-600 aa	4	4	0																			178.0	143.0							
+extended	K00179		PF02775	TPP_enzyme_C	out_of_scope: no definition member of 100-600 aa	1	1	0																			45.0	15.0							
+extended	K06044		PF00128	Alpha-amylase	out_of_scope: no definition member of 100-600 aa	1	1	0																			24.0	19.0							
+extended	K27875		PF04879	Molybdop_Fe4S4	out_of_scope: no definition member of 100-600 aa	1	1	0																			44.0	30.0							

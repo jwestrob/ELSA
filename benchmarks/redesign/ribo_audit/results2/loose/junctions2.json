@@ -1,0 +1,9579 @@
+[
+{
+"case_id": "TOK-4314",
+"junctions": []
+},
+{
+"case_id": "TOK-4316",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-4316",
+"junctions": []
+},
+{
+"case_id": "TOK-4317",
+"junctions": []
+},
+{
+"case_id": "TOK-4328",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 110,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 178,
+"linked": true,
+"unannot": false,
+"own_adj": 1,
+"own_both": 2,
+"other_groups_adj": 31,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-4340",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 127.5
+},
+{
+"kind": "edge",
+"rel": 29,
+"left": "L14e",
+"right": "LDcluster4",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 18,
+"linked": false,
+"unannot": false,
+"own_adj": 9,
+"own_both": 9,
+"other_groups_adj": 2,
+"bond_this": 161.7
+}
+]
+},
+{
+"case_id": "WA_L4b-4340",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 133.0
+},
+{
+"kind": "edge",
+"rel": 29,
+"left": "L14e",
+"right": "LDcluster4",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 18,
+"linked": false,
+"unannot": false,
+"own_adj": 9,
+"own_both": 9,
+"other_groups_adj": 2,
+"bond_this": 176.7
+}
+]
+},
+{
+"case_id": "Z_L4bp-4340",
+"junctions": []
+},
+{
+"case_id": "TOK-4344",
+"junctions": [
+{
+"kind": "glue",
+"rel": 9,
+"left": "S8",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 560,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 3,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-4344",
+"junctions": [
+{
+"kind": "glue",
+"rel": 9,
+"left": "S8",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 560,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 3,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-4344",
+"junctions": [
+{
+"kind": "glue",
+"rel": 9,
+"left": "S8",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 560,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 3,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-4344",
+"junctions": [
+{
+"kind": "glue",
+"rel": 9,
+"left": "S8",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 560,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 3,
+"bond_this": 6.4
+}
+]
+},
+{
+"case_id": "WA_L4b-4346",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-4346",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-4347",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-4347",
+"junctions": []
+},
+{
+"case_id": "TOK-4353",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-4356",
+"junctions": [
+{
+"kind": "edge",
+"rel": 26,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 30,
+"linked": true,
+"unannot": false,
+"own_adj": 13,
+"own_both": 17,
+"other_groups_adj": 369,
+"bond_this": 960.6
+}
+]
+},
+{
+"case_id": "TOK-4385",
+"junctions": []
+},
+{
+"case_id": "L4b-4418",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-4418",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-4418",
+"junctions": []
+},
+{
+"case_id": "TOK-4424",
+"junctions": []
+},
+{
+"case_id": "TOK-4429",
+"junctions": []
+},
+{
+"case_id": "TOK-4440",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 220,
+"linked": true,
+"unannot": false,
+"own_adj": 9,
+"own_both": 9,
+"other_groups_adj": 31,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 382,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-4446",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "Memo",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 47,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 256,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-4447",
+"junctions": []
+},
+{
+"case_id": "L4b-4448",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-4448",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-4448",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-4450",
+"junctions": []
+},
+{
+"case_id": "L4b-4452",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "unannot",
+"right": "S5",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 0,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-4452",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "unannot",
+"right": "S5",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 0,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-4455",
+"junctions": []
+},
+{
+"case_id": "L4b-4456",
+"junctions": [
+{
+"kind": "cut",
+"rel": 7,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 24,
+"left": "S5_C",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-4456",
+"junctions": [
+{
+"kind": "cut",
+"rel": 7,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 24,
+"left": "S5_C",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-4480",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "Memo",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 71,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 47,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 163,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-4526",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 95,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 13.9
+},
+{
+"kind": "edge",
+"rel": 25,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 30,
+"linked": true,
+"unannot": false,
+"own_adj": 15,
+"own_both": 15,
+"other_groups_adj": 119,
+"bond_this": 1015.6
+}
+]
+},
+{
+"case_id": "Z_L4bp-4531",
+"junctions": []
+},
+{
+"case_id": "TOK-4537",
+"junctions": []
+},
+{
+"case_id": "TOK-4541",
+"junctions": [
+{
+"kind": "glue",
+"rel": 23,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 507,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-4544",
+"junctions": [
+{
+"kind": "glue",
+"rel": 27,
+"left": "TrmB",
+"right": "dCMP_cyt_deam_1",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 8,
+"linked": false,
+"unannot": false,
+"own_adj": 4,
+"own_both": 16,
+"other_groups_adj": 5,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-4544",
+"junctions": [
+{
+"kind": "glue",
+"rel": 27,
+"left": "TrmB",
+"right": "dCMP_cyt_deam_1",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 8,
+"linked": false,
+"unannot": false,
+"own_adj": 4,
+"own_both": 16,
+"other_groups_adj": 5,
+"bond_this": 41.7
+}
+]
+},
+{
+"case_id": "WA_L4b-4544",
+"junctions": [
+{
+"kind": "glue",
+"rel": 27,
+"left": "TrmB",
+"right": "dCMP_cyt_deam_1",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 8,
+"linked": false,
+"unannot": false,
+"own_adj": 4,
+"own_both": 16,
+"other_groups_adj": 5,
+"bond_this": 19.3
+}
+]
+},
+{
+"case_id": "Z_L4bp-4544",
+"junctions": [
+{
+"kind": "glue",
+"rel": 27,
+"left": "TrmB",
+"right": "dCMP_cyt_deam_1",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 8,
+"linked": false,
+"unannot": false,
+"own_adj": 4,
+"own_both": 16,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-4556",
+"junctions": [
+{
+"kind": "glue",
+"rel": 4,
+"left": "L7Ae",
+"right": "L3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 292,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 8,
+"other_groups_adj": 1,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-4556",
+"junctions": [
+{
+"kind": "glue",
+"rel": 4,
+"left": "L7Ae",
+"right": "L3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 292,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 8,
+"other_groups_adj": 1,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-4556",
+"junctions": [
+{
+"kind": "glue",
+"rel": 4,
+"left": "L7Ae",
+"right": "L3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 292,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 8,
+"other_groups_adj": 1,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-4556",
+"junctions": [
+{
+"kind": "glue",
+"rel": 4,
+"left": "L7Ae",
+"right": "L3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 292,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 8,
+"other_groups_adj": 1,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-4559",
+"junctions": []
+},
+{
+"case_id": "TOK-4562",
+"junctions": [
+{
+"kind": "glue",
+"rel": 17,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 77,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-4562",
+"junctions": [
+{
+"kind": "glue",
+"rel": 17,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 77,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-4562",
+"junctions": [
+{
+"kind": "glue",
+"rel": 17,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 77,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 1334.4
+}
+]
+},
+{
+"case_id": "Z_L4bp-4562",
+"junctions": [
+{
+"kind": "glue",
+"rel": 17,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 77,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-4564",
+"junctions": [
+{
+"kind": "glue",
+"rel": 17,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 78,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-4564",
+"junctions": [
+{
+"kind": "glue",
+"rel": 17,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 78,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-4564",
+"junctions": [
+{
+"kind": "glue",
+"rel": 17,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 78,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 1334.4
+}
+]
+},
+{
+"case_id": "Z_L4bp-4564",
+"junctions": [
+{
+"kind": "glue",
+"rel": 17,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 78,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-4593",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 278,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-4593",
+"junctions": [
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": 72.2
+}
+]
+},
+{
+"case_id": "TOK-4596",
+"junctions": []
+},
+{
+"case_id": "TOK-4607",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 278,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-4607",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": 72.2
+}
+]
+},
+{
+"case_id": "TOK-4608",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 278,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-4608",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": 72.2
+}
+]
+},
+{
+"case_id": "TOK-4609",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 278,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-4609",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": 72.2
+}
+]
+},
+{
+"case_id": "TOK-4612",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 278,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-4612",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 127,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": 72.2
+}
+]
+},
+{
+"case_id": "Z_L4bp-4621",
+"junctions": []
+},
+{
+"case_id": "TOK-4632",
+"junctions": []
+},
+{
+"case_id": "TOK-4662",
+"junctions": [
+{
+"kind": "glue",
+"rel": 8,
+"left": "S14",
+"right": "S4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 552,
+"linked": false,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 460,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-4662",
+"junctions": [
+{
+"kind": "glue",
+"rel": 8,
+"left": "S14",
+"right": "S4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 552,
+"linked": false,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 460,
+"bond_this": 1029.8
+}
+]
+},
+{
+"case_id": "Z_L4bp-4700",
+"junctions": []
+},
+{
+"case_id": "TOK-4704",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 110,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 178,
+"linked": true,
+"unannot": false,
+"own_adj": 1,
+"own_both": 2,
+"other_groups_adj": 31,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-4721",
+"junctions": [
+{
+"kind": "glue",
+"rel": 7,
+"left": "S8",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 182,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "glue",
+"rel": 16,
+"left": "S3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 51,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-4721",
+"junctions": [
+{
+"kind": "glue",
+"rel": 7,
+"left": "S8",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 182,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "glue",
+"rel": 16,
+"left": "S3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 51,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1160.0
+}
+]
+},
+{
+"case_id": "WA_L4b-4721",
+"junctions": [
+{
+"kind": "glue",
+"rel": 7,
+"left": "S8",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 182,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "glue",
+"rel": 16,
+"left": "S3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 51,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1160.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-4721",
+"junctions": [
+{
+"kind": "glue",
+"rel": 7,
+"left": "S8",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 182,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 10.8
+},
+{
+"kind": "glue",
+"rel": 16,
+"left": "S3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 51,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1386.4
+}
+]
+},
+{
+"case_id": "L4b-4722",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -29,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 4,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 17,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-4722",
+"junctions": [
+{
+"kind": "cut",
+"rel": 17,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-4722",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -29,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 4,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 17,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-4743",
+"junctions": []
+},
+{
+"case_id": "TOK-4780",
+"junctions": [
+{
+"kind": "glue",
+"rel": 10,
+"left": "S19",
+"right": "tRNA-synt_2b",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 86,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 0,
+"bond_this": null
+},
+{
+"kind": "glue",
+"rel": 15,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 54,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "glue",
+"rel": 21,
+"left": "L32e",
+"right": "CBS",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -10,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 3,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-4780",
+"junctions": [
+{
+"kind": "glue",
+"rel": 10,
+"left": "S19",
+"right": "tRNA-synt_2b",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 86,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 0,
+"bond_this": 1461.9
+},
+{
+"kind": "glue",
+"rel": 15,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 54,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 11,
+"bond_this": 0.0
+},
+{
+"kind": "glue",
+"rel": 21,
+"left": "L32e",
+"right": "CBS",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -10,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 3,
+"bond_this": 1201.0
+}
+]
+},
+{
+"case_id": "WA_L4b-4780",
+"junctions": [
+{
+"kind": "glue",
+"rel": 10,
+"left": "S19",
+"right": "tRNA-synt_2b",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 86,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 0,
+"bond_this": 1657.0
+},
+{
+"kind": "glue",
+"rel": 15,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 54,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 11,
+"bond_this": 0.0
+},
+{
+"kind": "glue",
+"rel": 21,
+"left": "L32e",
+"right": "CBS",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -10,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 3,
+"bond_this": 1201.0
+}
+]
+},
+{
+"case_id": "TOK-4786",
+"junctions": []
+},
+{
+"case_id": "TOK-4799",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-4802",
+"junctions": []
+},
+{
+"case_id": "TOK-4814",
+"junctions": []
+},
+{
+"case_id": "L4b-4835",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-4835",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-4835",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-4849",
+"junctions": [
+{
+"kind": "edge",
+"rel": -5,
+"left": "Prefoldin",
+"right": "L14e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 18,
+"bond_this": 100.6
+},
+{
+"kind": "edge",
+"rel": 26,
+"left": "L3",
+"right": "Glycos_transf_2",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 194,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 0,
+"bond_this": 65.2
+}
+]
+},
+{
+"case_id": "TOK-4851",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-4855",
+"junctions": []
+},
+{
+"case_id": "TOK-4856",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-4857",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "S3",
+"right": "sui1",
+"left_cls": "R",
+"right_cls": "N",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 49,
+"own_both": 51,
+"other_groups_adj": 508,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-4883",
+"junctions": []
+},
+{
+"case_id": "TOK-4884",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-4884",
+"junctions": []
+},
+{
+"case_id": "TOK-4888",
+"junctions": []
+},
+{
+"case_id": "TOK-4901",
+"junctions": []
+},
+{
+"case_id": "L4b-4901",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-4901",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 0,
+"linked": true,
+"unannot": false,
+"own_adj": 42,
+"own_both": 45,
+"other_groups_adj": 369,
+"bond_this": 616.1
+}
+]
+},
+{
+"case_id": "Z_L4bp-4936",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 0,
+"linked": true,
+"unannot": false,
+"own_adj": 11,
+"own_both": 11,
+"other_groups_adj": 369,
+"bond_this": 806.3
+},
+{
+"kind": "edge",
+"rel": 24,
+"left": "L3",
+"right": "DNA_primase_lrg",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 594,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 20,
+"bond_this": 134.3
+}
+]
+},
+{
+"case_id": "Z_L4bp-4945",
+"junctions": []
+},
+{
+"case_id": "L4b-4950",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "secY",
+"right": "L15",
+"left_cls": "N",
+"right_cls": "R",
+"same_strand": true,
+"dist": 775,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 186,
+"bond_this": 1114.7
+},
+{
+"kind": "edge",
+"rel": 24,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 463,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 127.5
+}
+]
+},
+{
+"case_id": "WA_L4b-4950",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "secY",
+"right": "L15",
+"left_cls": "N",
+"right_cls": "R",
+"same_strand": true,
+"dist": 775,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 186,
+"bond_this": 1345.3
+},
+{
+"kind": "edge",
+"rel": 24,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 463,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 127.5
+}
+]
+},
+{
+"case_id": "TOK-4959",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5007",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "PMT_2",
+"right": "L15",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 63,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 1,
+"bond_this": 1158.9
+}
+]
+},
+{
+"case_id": "TOK-5014",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 153,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 38,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 5,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 47,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-5030",
+"junctions": [
+{
+"kind": "glue",
+"rel": 19,
+"left": "L3",
+"right": "L7Ae",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 253,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 8,
+"other_groups_adj": 1,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-5037",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 229,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "Bro-N",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 172,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-5049",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5052",
+"junctions": []
+},
+{
+"case_id": "TOK-5056",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5063",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 30,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 952.2
+},
+{
+"kind": "edge",
+"rel": 23,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 128,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 32.4
+}
+]
+},
+{
+"case_id": "TOK-5077",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 173,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 22,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 47,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-5079",
+"junctions": []
+},
+{
+"case_id": "TOK-5081",
+"junctions": []
+},
+{
+"case_id": "L4b-5091",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 54,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 3,
+"other_groups_adj": 369,
+"bond_this": 286.9
+},
+{
+"kind": "edge",
+"rel": 24,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 185,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 69.2
+}
+]
+},
+{
+"case_id": "WA_L4b-5091",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 54,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 3,
+"other_groups_adj": 369,
+"bond_this": 347.5
+},
+{
+"kind": "edge",
+"rel": 24,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 185,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 49.0
+}
+]
+},
+{
+"case_id": "TOK-5094",
+"junctions": []
+},
+{
+"case_id": "L4b-5099",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5099",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5099",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 180,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 15.3
+},
+{
+"kind": "edge",
+"rel": 29,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 29,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 923.9
+}
+]
+},
+{
+"case_id": "L4b-5103",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 105,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 69.2
+},
+{
+"kind": "edge",
+"rel": 26,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 34,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 3,
+"other_groups_adj": 369,
+"bond_this": 286.9
+}
+]
+},
+{
+"case_id": "WA_L4b-5103",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 105,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 49.0
+},
+{
+"kind": "edge",
+"rel": 26,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 34,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 3,
+"other_groups_adj": 369,
+"bond_this": 347.5
+}
+]
+},
+{
+"case_id": "L4b-5111",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5111",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5111",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 180,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 15.3
+},
+{
+"kind": "edge",
+"rel": 29,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 29,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 923.9
+}
+]
+},
+{
+"case_id": "L4b-5114",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5114",
+"junctions": []
+},
+{
+"case_id": "TOK-5120",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 178,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 101,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 47,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-5124",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 30,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 952.2
+},
+{
+"kind": "edge",
+"rel": 23,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 128,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 32.5
+}
+]
+},
+{
+"case_id": "L4b-5127",
+"junctions": [
+{
+"kind": "cut",
+"rel": 7,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 122,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5127",
+"junctions": [
+{
+"kind": "cut",
+"rel": 7,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 122,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5127",
+"junctions": [
+{
+"kind": "cut",
+"rel": 7,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 122,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-5129",
+"junctions": []
+},
+{
+"case_id": "L4b-5130",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 23,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5130",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5130",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 23,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-5133",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 41,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 187,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-5153",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 116,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 21,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5153",
+"junctions": [
+{
+"kind": "cut",
+"rel": 21,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5153",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 116,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 21,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-5161",
+"junctions": []
+},
+{
+"case_id": "TOK-5186",
+"junctions": []
+},
+{
+"case_id": "TOK-5195",
+"junctions": []
+},
+{
+"case_id": "TOK-5202",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5202",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "Prefoldin",
+"right": "L14e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 52,
+"bond_this": 79.3
+},
+{
+"kind": "edge",
+"rel": 25,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 324,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 17.2
+}
+]
+},
+{
+"case_id": "TOK-5209",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5209",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "Prefoldin",
+"right": "L14e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 18,
+"bond_this": 86.8
+}
+]
+},
+{
+"case_id": "TOK-5216",
+"junctions": []
+},
+{
+"case_id": "TOK-5221",
+"junctions": []
+},
+{
+"case_id": "TOK-5233",
+"junctions": []
+},
+{
+"case_id": "TOK-5252",
+"junctions": []
+},
+{
+"case_id": "L4b-5254",
+"junctions": [
+{
+"kind": "cut",
+"rel": 2,
+"left": "unannot",
+"right": "S5",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 4,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5254",
+"junctions": [
+{
+"kind": "cut",
+"rel": 2,
+"left": "unannot",
+"right": "S5",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 4,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5255",
+"junctions": []
+},
+{
+"case_id": "L4b-5258",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 152,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 69.2
+},
+{
+"kind": "edge",
+"rel": 30,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 193,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 286.9
+}
+]
+},
+{
+"case_id": "WA_L4b-5258",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 152,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 49.8
+},
+{
+"kind": "edge",
+"rel": 30,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 193,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 347.5
+}
+]
+},
+{
+"case_id": "Z_L4bp-5258",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 152,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 15.3
+},
+{
+"kind": "edge",
+"rel": 30,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 193,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 981.8
+}
+]
+},
+{
+"case_id": "L4b-5267",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 3,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 19,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5267",
+"junctions": [
+{
+"kind": "cut",
+"rel": 19,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5267",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 3,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 19,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-5268",
+"junctions": [
+{
+"kind": "cut",
+"rel": 11,
+"left": "unannot",
+"right": "S17",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 26,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 63,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 4,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5268",
+"junctions": [
+{
+"kind": "cut",
+"rel": 11,
+"left": "unannot",
+"right": "S17",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 26,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 63,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 4,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5270",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "S5",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1385.9
+}
+]
+},
+{
+"case_id": "L4b-5271",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 139,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5271",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 139,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-5273",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5273",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5273",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5283",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5283",
+"junctions": []
+},
+{
+"case_id": "TOK-5284",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 321,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 87,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-5285",
+"junctions": [
+{
+"kind": "edge",
+"rel": 38,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 47,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "WA_L4b-5295",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 151,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 49.0
+},
+{
+"kind": "edge",
+"rel": 30,
+"left": "secY",
+"right": "unannot",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 187,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 213.5
+}
+]
+},
+{
+"case_id": "L4b-5315",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 8,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5315",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5315",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 8,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-5322",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 60,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5322",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 60,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-5327",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 8,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5327",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5327",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 8,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-5336",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 8,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5336",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5336",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 8,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-5377",
+"junctions": []
+},
+{
+"case_id": "TOK-5387",
+"junctions": [
+{
+"kind": "edge",
+"rel": 23,
+"left": "S17e",
+"right": "Alba",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 40,
+"linked": true,
+"unannot": false,
+"own_adj": 16,
+"own_both": 16,
+"other_groups_adj": 230,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-5398",
+"junctions": []
+},
+{
+"case_id": "TOK-5419",
+"junctions": [
+{
+"kind": "edge",
+"rel": 23,
+"left": "S17e",
+"right": "Alba",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 40,
+"linked": true,
+"unannot": false,
+"own_adj": 16,
+"own_both": 16,
+"other_groups_adj": 230,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-5434",
+"junctions": [
+{
+"kind": "edge",
+"rel": -5,
+"left": "Alba",
+"right": "S17e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 40,
+"linked": true,
+"unannot": false,
+"own_adj": 16,
+"own_both": 16,
+"other_groups_adj": 230,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-5458",
+"junctions": []
+},
+{
+"case_id": "L4b-5466",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5466",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5466",
+"junctions": []
+},
+{
+"case_id": "TOK-5467",
+"junctions": [
+{
+"kind": "glue",
+"rel": 22,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 117,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 12,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-5467",
+"junctions": [
+{
+"kind": "glue",
+"rel": 22,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 117,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5467",
+"junctions": [
+{
+"kind": "glue",
+"rel": 22,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 117,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-5471",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5471",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5471",
+"junctions": [
+{
+"kind": "edge",
+"rel": 26,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 54,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 369,
+"bond_this": 981.2
+}
+]
+},
+{
+"case_id": "L4b-5477",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5477",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5477",
+"junctions": []
+},
+{
+"case_id": "TOK-5508",
+"junctions": []
+},
+{
+"case_id": "TOK-5519",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 117,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 12,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-5519",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 117,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5519",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 117,
+"linked": false,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-5526",
+"junctions": []
+},
+{
+"case_id": "TOK-5582",
+"junctions": []
+},
+{
+"case_id": "TOK-5583",
+"junctions": []
+},
+{
+"case_id": "TOK-5589",
+"junctions": []
+},
+{
+"case_id": "L4b-5617",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5617",
+"junctions": []
+},
+{
+"case_id": "L4b-5620",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "unannot",
+"right": "S19",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 19,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5639",
+"junctions": [
+{
+"kind": "edge",
+"rel": 22,
+"left": "L27A",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 4,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1114.7
+}
+]
+},
+{
+"case_id": "TOK-5641",
+"junctions": []
+},
+{
+"case_id": "TOK-5664",
+"junctions": []
+},
+{
+"case_id": "TOK-5667",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5691",
+"junctions": []
+},
+{
+"case_id": "TOK-5701",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5766",
+"junctions": []
+},
+{
+"case_id": "L4b-5910",
+"junctions": [
+{
+"kind": "glue",
+"rel": 14,
+"left": "rnp1",
+"right": "unannot",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": false,
+"dist": 59,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-5910",
+"junctions": [
+{
+"kind": "glue",
+"rel": 14,
+"left": "rnp1",
+"right": "unannot",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": false,
+"dist": 59,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-5910",
+"junctions": [
+{
+"kind": "glue",
+"rel": 14,
+"left": "rnp1",
+"right": "unannot",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": false,
+"dist": 59,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-5917",
+"junctions": []
+},
+{
+"case_id": "L4b-5920",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5920",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-5920",
+"junctions": []
+},
+{
+"case_id": "TOK-5929",
+"junctions": [
+{
+"kind": "glue",
+"rel": 4,
+"left": "S10",
+"right": "L3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 523,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 4,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-5930",
+"junctions": []
+},
+{
+"case_id": "TOK-5931",
+"junctions": [
+{
+"kind": "glue",
+"rel": 23,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 507,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-5932",
+"junctions": [
+{
+"kind": "glue",
+"rel": 0,
+"left": "S10",
+"right": "L3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 790,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 4,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-5940",
+"junctions": []
+},
+{
+"case_id": "TOK-5941",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-5948",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "S8",
+"right": "S4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 156,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 178,
+"other_groups_adj": 73,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-5967",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L4e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 79,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 20,
+"left": "EF2",
+"right": "Peptidase_A24",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 373,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 5,
+"other_groups_adj": 0,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-5975",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "unannot",
+"right": "L14e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 0,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 216.2
+}
+]
+},
+{
+"case_id": "TOK-5992",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 298,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 48,
+"left": "S27",
+"right": "Rce1-like",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 92,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 1,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-6081",
+"junctions": [
+{
+"kind": "glue",
+"rel": 2,
+"left": "L23",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 20,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-6081",
+"junctions": [
+{
+"kind": "glue",
+"rel": 2,
+"left": "L23",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 20,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-6081",
+"junctions": [
+{
+"kind": "glue",
+"rel": 2,
+"left": "L23",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 20,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-6106",
+"junctions": [
+{
+"kind": "glue",
+"rel": 26,
+"left": "L14e",
+"right": "DUF1761",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 0,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": null
+},
+{
+"kind": "glue",
+"rel": 28,
+"left": "S2",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -14,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-6106",
+"junctions": [
+{
+"kind": "glue",
+"rel": 26,
+"left": "L14e",
+"right": "DUF1761",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 0,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": 0.0
+},
+{
+"kind": "glue",
+"rel": 28,
+"left": "S2",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -14,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-6106",
+"junctions": [
+{
+"kind": "glue",
+"rel": 26,
+"left": "L14e",
+"right": "DUF1761",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 0,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": 0.0
+},
+{
+"kind": "glue",
+"rel": 28,
+"left": "S2",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -14,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-6110",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-6110",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L34e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 374.6
+},
+{
+"kind": "edge",
+"rel": 26,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 165,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 30.5
+}
+]
+},
+{
+"case_id": "L4b-6147",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-6147",
+"junctions": []
+},
+{
+"case_id": "TOK-6149",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "NTP_transf_2",
+"right": "unannot",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 149,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-6149",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "NTP_transf_2",
+"right": "unannot",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 149,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-6149",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "NTP_transf_2",
+"right": "unannot",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 149,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-6171",
+"junctions": []
+},
+{
+"case_id": "TOK-6175",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 267,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 133,
+"linked": true,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 31,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-6184",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "Memo",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 38,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 4,
+"other_groups_adj": 47,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 165,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-6197",
+"junctions": [
+{
+"kind": "edge",
+"rel": -15,
+"left": "Memo",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 206,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 47,
+"bond_this": 61.1
+},
+{
+"kind": "edge",
+"rel": 22,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 174,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 11.2
+}
+]
+},
+{
+"case_id": "Z_L4bp-6198",
+"junctions": []
+},
+{
+"case_id": "TOK-6209",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-6209",
+"junctions": []
+},
+{
+"case_id": "TOK-6218",
+"junctions": [
+{
+"kind": "glue",
+"rel": 10,
+"left": "S19",
+"right": "tRNA-synt_2b",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 86,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 0,
+"bond_this": null
+},
+{
+"kind": "glue",
+"rel": 15,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 54,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "glue",
+"rel": 21,
+"left": "L32e",
+"right": "CBS",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -10,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 3,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-6218",
+"junctions": [
+{
+"kind": "glue",
+"rel": 10,
+"left": "S19",
+"right": "tRNA-synt_2b",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 86,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 0,
+"bond_this": 1461.9
+},
+{
+"kind": "glue",
+"rel": 15,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 54,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 11,
+"bond_this": 0.0
+},
+{
+"kind": "glue",
+"rel": 21,
+"left": "L32e",
+"right": "CBS",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -10,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 3,
+"bond_this": 1201.0
+}
+]
+},
+{
+"case_id": "WA_L4b-6218",
+"junctions": [
+{
+"kind": "glue",
+"rel": 10,
+"left": "S19",
+"right": "tRNA-synt_2b",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 86,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 0,
+"bond_this": 1657.0
+},
+{
+"kind": "glue",
+"rel": 15,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 54,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 11,
+"bond_this": 0.0
+},
+{
+"kind": "glue",
+"rel": 21,
+"left": "L32e",
+"right": "CBS",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": -10,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 3,
+"bond_this": 1201.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-6449",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 368,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 25.7
+},
+{
+"kind": "edge",
+"rel": 25,
+"left": "secY",
+"right": "unannot",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": false,
+"dist": 88,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 957.6
+}
+]
+},
+{
+"case_id": "L4b-6772",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-6772",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-6772",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7060",
+"junctions": []
+},
+{
+"case_id": "L4b-7098",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7098",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7098",
+"junctions": []
+},
+{
+"case_id": "L4b-7104",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7104",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7104",
+"junctions": []
+},
+{
+"case_id": "TOK-7181",
+"junctions": []
+},
+{
+"case_id": "TOK-7186",
+"junctions": []
+},
+{
+"case_id": "TOK-7195",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 298,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 49,
+"left": "S27",
+"right": "Rce1-like",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 92,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 1,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7196",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 118,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 225,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7200",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 118,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 225,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7208",
+"junctions": []
+},
+{
+"case_id": "TOK-7210",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 276,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 122,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7212",
+"junctions": [
+{
+"kind": "edge",
+"rel": -7,
+"left": "Rce1-like",
+"right": "S27",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 92,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 1,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 43,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 298,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7213",
+"junctions": [
+{
+"kind": "edge",
+"rel": -7,
+"left": "Rce1-like",
+"right": "S27",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 51,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 112,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 44,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 239,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7219",
+"junctions": [
+{
+"kind": "edge",
+"rel": -7,
+"left": "Rce1-like",
+"right": "S27",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 92,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 1,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 42,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 298,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7221",
+"junctions": []
+},
+{
+"case_id": "L4b-7231",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 3,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 18,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": -38,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7231",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 3,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 18,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": -38,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-7235",
+"junctions": []
+},
+{
+"case_id": "L4b-7247",
+"junctions": [
+{
+"kind": "cut",
+"rel": 9,
+"left": "unannot",
+"right": "S17",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -38,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S5",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 3,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7247",
+"junctions": [
+{
+"kind": "cut",
+"rel": 9,
+"left": "unannot",
+"right": "S17",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -38,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 22,
+"left": "S5",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 3,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7267",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 77,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 14.7
+},
+{
+"kind": "edge",
+"rel": 24,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 30,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": 988.2
+}
+]
+},
+{
+"case_id": "TOK-7287",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 191,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 35,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 36,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 4,
+"other_groups_adj": 47,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7331",
+"junctions": []
+},
+{
+"case_id": "L4b-7331",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7331",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 338,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 66.4
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "secY",
+"right": "23S_rRNA_IVP",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 152,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 11,
+"other_groups_adj": 0,
+"bond_this": 286.9
+}
+]
+},
+{
+"case_id": "Z_L4bp-7331",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7334",
+"junctions": []
+},
+{
+"case_id": "TOK-7339",
+"junctions": [
+{
+"kind": "glue",
+"rel": 8,
+"left": "HIT",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 107,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 9,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-7339",
+"junctions": [
+{
+"kind": "glue",
+"rel": 8,
+"left": "HIT",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 107,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 9,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7339",
+"junctions": [
+{
+"kind": "glue",
+"rel": 8,
+"left": "HIT",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 107,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 9,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7339",
+"junctions": [
+{
+"kind": "glue",
+"rel": 8,
+"left": "HIT",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 107,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 9,
+"bond_this": 8.8
+}
+]
+},
+{
+"case_id": "Z_L4bp-7352",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L27A",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 67,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1338.7
+}
+]
+},
+{
+"case_id": "TOK-7360",
+"junctions": [
+{
+"kind": "glue",
+"rel": 18,
+"left": "L3",
+"right": "L7Ae",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 299,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 5,
+"other_groups_adj": 0,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-7360",
+"junctions": [
+{
+"kind": "glue",
+"rel": 18,
+"left": "L3",
+"right": "L7Ae",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 299,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 5,
+"other_groups_adj": 0,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7360",
+"junctions": [
+{
+"kind": "glue",
+"rel": 18,
+"left": "L3",
+"right": "L7Ae",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 299,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 5,
+"other_groups_adj": 0,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7360",
+"junctions": [
+{
+"kind": "glue",
+"rel": 18,
+"left": "L3",
+"right": "L7Ae",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 299,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 5,
+"other_groups_adj": 0,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-7367",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7367",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7367",
+"junctions": []
+},
+{
+"case_id": "L4b-7374",
+"junctions": [
+{
+"kind": "edge",
+"rel": 27,
+"left": "L14e",
+"right": "LDcluster4",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 20,
+"linked": false,
+"unannot": false,
+"own_adj": 9,
+"own_both": 9,
+"other_groups_adj": 2,
+"bond_this": 161.7
+}
+]
+},
+{
+"case_id": "WA_L4b-7374",
+"junctions": [
+{
+"kind": "edge",
+"rel": 27,
+"left": "L14e",
+"right": "LDcluster4",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 20,
+"linked": false,
+"unannot": false,
+"own_adj": 9,
+"own_both": 9,
+"other_groups_adj": 2,
+"bond_this": 176.7
+}
+]
+},
+{
+"case_id": "Z_L4bp-7374",
+"junctions": [
+{
+"kind": "edge",
+"rel": 27,
+"left": "L14e",
+"right": "LDcluster4",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 20,
+"linked": false,
+"unannot": false,
+"own_adj": 9,
+"own_both": 9,
+"other_groups_adj": 2,
+"bond_this": 215.2
+}
+]
+},
+{
+"case_id": "L4b-7406",
+"junctions": [
+{
+"kind": "glue",
+"rel": 5,
+"left": "unannot",
+"right": "L4e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 205,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7406",
+"junctions": [
+{
+"kind": "glue",
+"rel": 5,
+"left": "unannot",
+"right": "L4e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 205,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-7411",
+"junctions": [
+{
+"kind": "glue",
+"rel": 7,
+"left": "DcpS_C",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 131,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 2,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-7411",
+"junctions": [
+{
+"kind": "glue",
+"rel": 7,
+"left": "DcpS_C",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 131,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 2,
+"other_groups_adj": 11,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7411",
+"junctions": [
+{
+"kind": "glue",
+"rel": 7,
+"left": "DcpS_C",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 131,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 2,
+"other_groups_adj": 11,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7411",
+"junctions": [
+{
+"kind": "glue",
+"rel": 7,
+"left": "DcpS_C",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 131,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 2,
+"other_groups_adj": 11,
+"bond_this": 17.1
+}
+]
+},
+{
+"case_id": "L4b-7416",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7416",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7416",
+"junctions": []
+},
+{
+"case_id": "TOK-7431",
+"junctions": []
+},
+{
+"case_id": "L4b-7432",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 9,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7432",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7432",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 9,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-7434",
+"junctions": []
+},
+{
+"case_id": "TOK-7435",
+"junctions": []
+},
+{
+"case_id": "TOK-7437",
+"junctions": []
+},
+{
+"case_id": "TOK-7443",
+"junctions": []
+},
+{
+"case_id": "TOK-7445",
+"junctions": []
+},
+{
+"case_id": "TOK-7490",
+"junctions": [
+{
+"kind": "edge",
+"rel": 18,
+"left": "secY",
+"right": "unannot",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 257,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7502",
+"junctions": []
+},
+{
+"case_id": "TOK-7504",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 130,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 235,
+"linked": true,
+"unannot": false,
+"own_adj": 9,
+"own_both": 9,
+"other_groups_adj": 31,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7525",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7534",
+"junctions": []
+},
+{
+"case_id": "TOK-7542",
+"junctions": []
+},
+{
+"case_id": "TOK-7543",
+"junctions": []
+},
+{
+"case_id": "TOK-7556",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 118,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7557",
+"junctions": [
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 58,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-7557",
+"junctions": [
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 58,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": 54.3
+}
+]
+},
+{
+"case_id": "TOK-7563",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 188,
+"linked": true,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 233,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7564",
+"junctions": [
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 58,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-7564",
+"junctions": [
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 58,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": 54.2
+}
+]
+},
+{
+"case_id": "L4b-7565",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7565",
+"junctions": []
+},
+{
+"case_id": "TOK-7576",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 220,
+"linked": true,
+"unannot": false,
+"own_adj": 9,
+"own_both": 9,
+"other_groups_adj": 31,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7578",
+"junctions": []
+},
+{
+"case_id": "L4b-7581",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7581",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7581",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-7587",
+"junctions": [
+{
+"kind": "edge",
+"rel": 19,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-7587",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 9,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 3,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7587",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7587",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 9,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 3,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-7590",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 37,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 123,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7591",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 123,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 37,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-7606",
+"junctions": []
+},
+{
+"case_id": "TOK-7634",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 118,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7650",
+"junctions": []
+},
+{
+"case_id": "TOK-7652",
+"junctions": [
+{
+"kind": "edge",
+"rel": -8,
+"left": "Rce1-like",
+"right": "S27",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 281,
+"linked": true,
+"unannot": false,
+"own_adj": 19,
+"own_both": 20,
+"other_groups_adj": 112,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 42,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 240,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7656",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "S17",
+"right": "sui1",
+"left_cls": "R",
+"right_cls": "N",
+"same_strand": true,
+"dist": 576,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 294,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-7673",
+"junctions": [
+{
+"kind": "edge",
+"rel": 23,
+"left": "secY",
+"right": "unannot",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 103,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1018.2
+}
+]
+},
+{
+"case_id": "WA_L4b-7675",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7684",
+"junctions": [
+{
+"kind": "edge",
+"rel": 28,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 262,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 946.8
+}
+]
+},
+{
+"case_id": "L4b-7686",
+"junctions": [
+{
+"kind": "cut",
+"rel": 2,
+"left": "unannot",
+"right": "S5_C",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 0,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 20,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 7,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7686",
+"junctions": [
+{
+"kind": "cut",
+"rel": 2,
+"left": "unannot",
+"right": "S5_C",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 0,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 20,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 7,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-7689",
+"junctions": [
+{
+"kind": "cut",
+"rel": 7,
+"left": "unannot",
+"right": "S5_C",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 24,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": -16,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7689",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7689",
+"junctions": [
+{
+"kind": "cut",
+"rel": 7,
+"left": "unannot",
+"right": "S5_C",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 24,
+"left": "S17",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": -16,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7698",
+"junctions": [
+{
+"kind": "edge",
+"rel": 24,
+"left": "L27A",
+"right": "CDPS",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 13,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": 1339.9
+}
+]
+},
+{
+"case_id": "Z_L4bp-7703",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "DoxX",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 154,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 0,
+"bond_this": 14.3
+},
+{
+"kind": "edge",
+"rel": 25,
+"left": "L27A",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 3,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1347.6
+}
+]
+},
+{
+"case_id": "Z_L4bp-7708",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "Prefoldin",
+"right": "L14e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 52,
+"bond_this": 87.1
+}
+]
+},
+{
+"case_id": "Z_L4bp-7715",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "DoxX",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 154,
+"linked": true,
+"unannot": false,
+"own_adj": 2,
+"own_both": 2,
+"other_groups_adj": 0,
+"bond_this": 13.2
+},
+{
+"kind": "edge",
+"rel": 25,
+"left": "L27A",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 3,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 1334.8
+}
+]
+},
+{
+"case_id": "Z_L4bp-7718",
+"junctions": [
+{
+"kind": "edge",
+"rel": -3,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 39,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 901.3
+},
+{
+"kind": "edge",
+"rel": 33,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 187,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 14.7
+}
+]
+},
+{
+"case_id": "L4b-7721",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 140,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 4,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 17,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -11,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7721",
+"junctions": [
+{
+"kind": "cut",
+"rel": 17,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -11,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7721",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 140,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 4,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 17,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -11,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 6,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-7722",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 152,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 69.2
+},
+{
+"kind": "edge",
+"rel": 28,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 30,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 286.9
+}
+]
+},
+{
+"case_id": "WA_L4b-7722",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 152,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 64.3
+},
+{
+"kind": "edge",
+"rel": 28,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 30,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 347.5
+}
+]
+},
+{
+"case_id": "L4b-7723",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7723",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-7723",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 130,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 15.0
+},
+{
+"kind": "edge",
+"rel": 26,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 74,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 982.2
+}
+]
+},
+{
+"case_id": "L4b-7731",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-7731",
+"junctions": []
+},
+{
+"case_id": "TOK-7741",
+"junctions": []
+},
+{
+"case_id": "L4b-7741",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "Polysacc_deac_1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": false,
+"dist": 42,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 17,
+"other_groups_adj": 0,
+"bond_this": 456.1
+}
+]
+},
+{
+"case_id": "WA_L4b-7741",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "Polysacc_deac_1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": false,
+"dist": 42,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 17,
+"other_groups_adj": 0,
+"bond_this": 535.9
+}
+]
+},
+{
+"case_id": "Z_L4bp-7741",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "Polysacc_deac_1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": false,
+"dist": 42,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 17,
+"other_groups_adj": 0,
+"bond_this": 856.0
+}
+]
+},
+{
+"case_id": "TOK-7747",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "Memo",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 111,
+"linked": true,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 8,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-7752",
+"junctions": []
+},
+{
+"case_id": "TOK-7772",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 237,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 73,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 47,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-7772",
+"junctions": [
+{
+"kind": "edge",
+"rel": 37,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 73,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 47,
+"bond_this": 65.1
+}
+]
+},
+{
+"case_id": "L4b-7775",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 35,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-7775",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-7775",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 35,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-7780",
+"junctions": [
+{
+"kind": "glue",
+"rel": 23,
+"left": "unannot",
+"right": "NTP_transf_2",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 183,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7798",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "NTP_transf_2",
+"right": "unannot",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 183,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-7815",
+"junctions": [
+{
+"kind": "edge",
+"rel": -4,
+"left": "MTS",
+"right": "cbf5",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 59,
+"linked": true,
+"unannot": false,
+"own_adj": 5,
+"own_both": 5,
+"other_groups_adj": 5,
+"bond_this": 71.7
+}
+]
+},
+{
+"case_id": "Z_L4bp-7837",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 79,
+"linked": true,
+"unannot": false,
+"own_adj": 16,
+"own_both": 20,
+"other_groups_adj": 22,
+"bond_this": 881.1
+},
+{
+"kind": "edge",
+"rel": 23,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 330,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 15.2
+}
+]
+},
+{
+"case_id": "Z_L4bp-7975",
+"junctions": [
+{
+"kind": "glue",
+"rel": 30,
+"left": "unannot",
+"right": "L40e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 301,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-7983",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "NTP_transf_2",
+"right": "unannot",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 161,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-7995",
+"junctions": [
+{
+"kind": "glue",
+"rel": 3,
+"left": "NTP_transf_2",
+"right": "unannot",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 161,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-8001",
+"junctions": []
+},
+{
+"case_id": "TOK-8002",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "Memo",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 36,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 4,
+"other_groups_adj": 47,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 163,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-8006",
+"junctions": [
+{
+"kind": "edge",
+"rel": -6,
+"left": "tRNA-synt_1c",
+"right": "eIF2",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": false,
+"dist": 11,
+"linked": false,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 0,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-8006",
+"junctions": []
+},
+{
+"case_id": "TOK-8017",
+"junctions": [
+{
+"kind": "glue",
+"rel": 6,
+"left": "L3",
+"right": "HEAT_2",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 276,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8017",
+"junctions": [
+{
+"kind": "glue",
+"rel": 6,
+"left": "L3",
+"right": "HEAT_2",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 276,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8017",
+"junctions": [
+{
+"kind": "glue",
+"rel": 6,
+"left": "L3",
+"right": "HEAT_2",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 276,
+"linked": false,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 0,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-8038",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-8038",
+"junctions": []
+},
+{
+"case_id": "TOK-8044",
+"junctions": [
+{
+"kind": "glue",
+"rel": 4,
+"left": "NTP_transf_2",
+"right": "unannot",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 180,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-8044",
+"junctions": [
+{
+"kind": "glue",
+"rel": 4,
+"left": "NTP_transf_2",
+"right": "unannot",
+"left_cls": "X",
+"right_cls": "X",
+"same_strand": false,
+"dist": 180,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-8045",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 265,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 83,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 4,
+"other_groups_adj": 47,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-8062",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 74,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 9,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8062",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 74,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 9,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8062",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 74,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 9,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8062",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 74,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 9,
+"bond_this": 8.7
+}
+]
+},
+{
+"case_id": "Z_L4bp-8088",
+"junctions": []
+},
+{
+"case_id": "TOK-8092",
+"junctions": [
+{
+"kind": "glue",
+"rel": 13,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 40,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 12,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "WA_L4b-8092",
+"junctions": [
+{
+"kind": "glue",
+"rel": 13,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 40,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 12,
+"bond_this": 1304.6
+}
+]
+},
+{
+"case_id": "Z_L4bp-8092",
+"junctions": [
+{
+"kind": "glue",
+"rel": 13,
+"left": "S13",
+"right": "L4e",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 40,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 12,
+"bond_this": 1128.3
+}
+]
+},
+{
+"case_id": "TOK-8098",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 74,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 9,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8098",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 74,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 9,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8098",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 74,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 9,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8098",
+"junctions": [
+{
+"kind": "glue",
+"rel": 16,
+"left": "L3",
+"right": "HIT",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 74,
+"linked": false,
+"unannot": false,
+"own_adj": 7,
+"own_both": 9,
+"other_groups_adj": 9,
+"bond_this": 8.7
+}
+]
+},
+{
+"case_id": "TOK-8132",
+"junctions": [
+{
+"kind": "glue",
+"rel": 6,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 40,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 12,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "WA_L4b-8132",
+"junctions": [
+{
+"kind": "glue",
+"rel": 6,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 40,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 12,
+"bond_this": 1304.6
+}
+]
+},
+{
+"case_id": "Z_L4bp-8132",
+"junctions": [
+{
+"kind": "glue",
+"rel": 6,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 40,
+"linked": false,
+"unannot": false,
+"own_adj": 1,
+"own_both": 1,
+"other_groups_adj": 12,
+"bond_this": 1128.1
+}
+]
+},
+{
+"case_id": "Z_L4bp-8139",
+"junctions": []
+},
+{
+"case_id": "TOK-8145",
+"junctions": []
+},
+{
+"case_id": "L4b-8145",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-8145",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-8149",
+"junctions": []
+},
+{
+"case_id": "TOK-8154",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 210,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 37,
+"left": "S2",
+"right": "Memo",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 0,
+"own_both": 0,
+"other_groups_adj": 47,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-8160",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 89,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 28.4
+},
+{
+"kind": "edge",
+"rel": 26,
+"left": "secY",
+"right": "EMC3_TMCO1",
+"left_cls": "N",
+"right_cls": "X",
+"same_strand": true,
+"dist": 36,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 1022.2
+}
+]
+},
+{
+"case_id": "TOK-8230",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 180,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 4,
+"other_groups_adj": 31,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 266,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8233",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 3,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8233",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8233",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 3,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-8237",
+"junctions": []
+},
+{
+"case_id": "L4b-8245",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 3,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8245",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8245",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 3,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-8246",
+"junctions": []
+},
+{
+"case_id": "L4b-8246",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-8246",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-8246",
+"junctions": []
+},
+{
+"case_id": "TOK-8250",
+"junctions": [
+{
+"kind": "edge",
+"rel": 23,
+"left": "L27A",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 12,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "Z_L4bp-8250",
+"junctions": []
+},
+{
+"case_id": "TOK-8251",
+"junctions": [
+{
+"kind": "edge",
+"rel": 22,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 392,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8251",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8251",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8251",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5_C",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 6,
+"own_both": 6,
+"other_groups_adj": 4,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": -4,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "L4b-8252",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-8252",
+"junctions": []
+},
+{
+"case_id": "TOK-8254",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 169,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 303,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8255",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-8255",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-8255",
+"junctions": []
+},
+{
+"case_id": "TOK-8261",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "TrmB",
+"right": "S2",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 164,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 262,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8267",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-8267",
+"junctions": []
+},
+{
+"case_id": "Z_L4bp-8267",
+"junctions": []
+},
+{
+"case_id": "TOK-8269",
+"junctions": [
+{
+"kind": "edge",
+"rel": 21,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 170,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-8272",
+"junctions": [
+{
+"kind": "edge",
+"rel": -9,
+"left": "unannot",
+"right": "L14e",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": false,
+"dist": 36,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-8274",
+"junctions": []
+},
+{
+"case_id": "TOK-8277",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 225,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 118,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "TOK-8280",
+"junctions": [
+{
+"kind": "edge",
+"rel": -3,
+"left": "unannot",
+"right": "sui1",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 18,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 26,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 42,
+"linked": true,
+"unannot": false,
+"own_adj": 25,
+"own_both": 25,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8281",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 18,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8281",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8281",
+"junctions": [
+{
+"kind": "cut",
+"rel": 5,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 18,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-8294",
+"junctions": [
+{
+"kind": "edge",
+"rel": -1,
+"left": "unannot",
+"right": "L3",
+"left_cls": "X",
+"right_cls": "R",
+"same_strand": true,
+"dist": 222,
+"linked": true,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": null
+},
+{
+"kind": "edge",
+"rel": 36,
+"left": "S2",
+"right": "TrmB",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": true,
+"dist": 161,
+"linked": true,
+"unannot": false,
+"own_adj": 17,
+"own_both": 18,
+"other_groups_adj": 11,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8297",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 3,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8297",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8297",
+"junctions": [
+{
+"kind": "cut",
+"rel": 4,
+"left": "S3",
+"right": "S5",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 3,
+"own_both": 3,
+"other_groups_adj": 3,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 16,
+"left": "S17",
+"right": "L22",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 2,
+"linked": true,
+"unannot": false,
+"own_adj": 8,
+"own_both": 8,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8301",
+"junctions": [
+{
+"kind": "edge",
+"rel": -2,
+"left": "EMC3_TMCO1",
+"right": "secY",
+"left_cls": "X",
+"right_cls": "N",
+"same_strand": true,
+"dist": 30,
+"linked": true,
+"unannot": false,
+"own_adj": 122,
+"own_both": 140,
+"other_groups_adj": 119,
+"bond_this": 951.9
+},
+{
+"kind": "edge",
+"rel": 28,
+"left": "L3",
+"right": "unannot",
+"left_cls": "R",
+"right_cls": "X",
+"same_strand": false,
+"dist": 130,
+"linked": false,
+"unannot": true,
+"own_adj": null,
+"own_both": null,
+"other_groups_adj": null,
+"bond_this": 27.3
+}
+]
+},
+{
+"case_id": "WA_L4b-8308",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "sui1",
+"right": "L22",
+"left_cls": "N",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 5,
+"other_groups_adj": 8,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8308",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-8324",
+"junctions": [
+{
+"kind": "cut",
+"rel": 16,
+"left": "sui1",
+"right": "L22",
+"left_cls": "N",
+"right_cls": "R",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 5,
+"other_groups_adj": 8,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8324",
+"junctions": []
+},
+{
+"case_id": "WA_L4b-8332",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "sui1",
+"left_cls": "R",
+"right_cls": "N",
+"same_strand": true,
+"dist": -1,
+"linked": true,
+"unannot": false,
+"own_adj": 4,
+"own_both": 5,
+"other_groups_adj": 8,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8332",
+"junctions": []
+},
+{
+"case_id": "TOK-8355",
+"junctions": []
+},
+{
+"case_id": "TOK-8369",
+"junctions": [
+{
+"kind": "glue",
+"rel": 2,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 81,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": null
+}
+]
+},
+{
+"case_id": "L4b-8369",
+"junctions": [
+{
+"kind": "glue",
+"rel": 2,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 81,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8369",
+"junctions": [
+{
+"kind": "glue",
+"rel": 2,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 81,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 1334.4
+}
+]
+},
+{
+"case_id": "Z_L4bp-8369",
+"junctions": [
+{
+"kind": "glue",
+"rel": 2,
+"left": "L4e",
+"right": "S13",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": false,
+"dist": 81,
+"linked": false,
+"unannot": false,
+"own_adj": 3,
+"own_both": 5,
+"other_groups_adj": 12,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8370",
+"junctions": []
+},
+{
+"case_id": "TOK-8376",
+"junctions": []
+},
+{
+"case_id": "L4b-8397",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 18,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 8,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "WA_L4b-8397",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "Z_L4bp-8397",
+"junctions": [
+{
+"kind": "cut",
+"rel": 6,
+"left": "L22",
+"right": "S17",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 1,
+"linked": true,
+"unannot": false,
+"own_adj": 14,
+"own_both": 17,
+"other_groups_adj": 5,
+"bond_this": 0.0
+},
+{
+"kind": "cut",
+"rel": 18,
+"left": "S5_C",
+"right": "S3",
+"left_cls": "R",
+"right_cls": "R",
+"same_strand": true,
+"dist": 8,
+"linked": true,
+"unannot": false,
+"own_adj": 12,
+"own_both": 14,
+"other_groups_adj": 4,
+"bond_this": 0.0
+}
+]
+},
+{
+"case_id": "TOK-8412",
+"junctions": []
+}
+]

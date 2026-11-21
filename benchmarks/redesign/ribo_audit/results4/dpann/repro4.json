@@ -1,0 +1,129 @@
+{
+ "runs": 1686,
+ "by_stratum": {
+  "Archaea": 1686
+ },
+ "stored": {
+  "Z": {
+   "loci": 1282888,
+   "recovered": 1681,
+   "resolved": 1542,
+   "any_fit": 1575,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 1681,
+     "resolved": 1542,
+     "any_fit": 1575
+    }
+   },
+   "target": [
+    1681,
+    1542
+   ],
+   "reproduced": true
+  },
+  "WA": {
+   "loci": 1248873,
+   "recovered": 1685,
+   "resolved": 1594,
+   "any_fit": 1631,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 1685,
+     "resolved": 1594,
+     "any_fit": 1631
+    }
+   },
+   "target": [
+    1685,
+    1594
+   ],
+   "reproduced": true
+  },
+  "DH": {
+   "loci": 650438,
+   "recovered": 1686,
+   "resolved": 1512,
+   "any_fit": 1590,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 1686,
+     "resolved": 1512,
+     "any_fit": 1590
+    }
+   },
+   "target": [
+    1686,
+    1512
+   ],
+   "reproduced": true
+  }
+ },
+ "filtered": {
+  "Z": {
+   "loci": 1282888,
+   "recovered": 1681,
+   "resolved": 1542,
+   "any_fit": 1575,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 1681,
+     "resolved": 1542,
+     "any_fit": 1575
+    }
+   },
+   "target": [
+    1681,
+    1542
+   ],
+   "reproduced": true
+  },
+  "WA": {
+   "loci": 1248873,
+   "recovered": 1685,
+   "resolved": 1594,
+   "any_fit": 1631,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 1685,
+     "resolved": 1594,
+     "any_fit": 1631
+    }
+   },
+   "target": [
+    1685,
+    1594
+   ],
+   "reproduced": true
+  },
+  "DH": {
+   "loci": 650438,
+   "recovered": 1686,
+   "resolved": 1512,
+   "any_fit": 1590,
+   "equal_rc": true,
+   "by_stratum": {
+    "Archaea": {
+     "recovered": 1686,
+     "resolved": 1512,
+     "any_fit": 1590
+    }
+   },
+   "target": [
+    1686,
+    1512
+   ],
+   "reproduced": true
+  }
+ },
+ "loci_reading": "stored",
+ "reproduced": {
+  "stored": true,
+  "filtered": true
+ }
+}

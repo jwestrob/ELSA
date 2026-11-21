@@ -1,0 +1,41 @@
+{
+  "written_utc": "2026-11-12T08:07:00Z",
+  "workstream": "context_kernel",
+  "written_before": "any edge, context, family or engine computation of this workstream",
+  "hypothesis": "With one input (ESM++ small zca10 vectors) plus gene order, weighting similarity edges by neighbourhood agreement before clustering, K(a,a') = k(x_a,x_a') * sum_{d,d'} k(x_{a+d}, x_{a'+d'}), gives families as good as MMseqs2 families for the recurrence engine and removes the TXSScan loss of context-free embedding families.",
+  "definitions": {
+    "vectors": "embed_queue run dpann__esmpp_small__20261111, mean_raw_f32__uid.npy, transform zca10 exactly as embed_tokens.py (weights = genes per unique sequence)",
+    "candidate_edges": "for each gene a with a vector: genes b in other genomes whose unique sequence is a's own (cosine 1) or one of the 50 HNSW neighbours of a's unique sequence (knn__esmpp_small__zca10__k50__hnsw.npz), ordered by cosine, ties (copies of one unique sequence) in random order (seed 17), capped at 64 per gene; undirected union of the directed lists; sim = zca10 cosine",
+    "neighbours": "genes within +-w positions on the same contig that carry a vector, w in {1, 3, 5}",
+    "dense": "c_a . c_a' / (n_a n_a') with c_a the sum of the neighbours' zca10 unit vectors (mean pairwise neighbour cosine)",
+    "matched": "0.5 * (sum_{i in N(a)} max_{j in N(a')} max(0, cos_ij - 0.14) + sum_{j in N(a')} max_{i in N(a)} max(0, cos_ij - 0.14))",
+    "null": "per edge, the higher-gid endpoint replaced by a uniform random other gene of its genome (seed 17), one draw per edge, same score",
+    "support": "per (form, w): edge supported if score >= t*, t* = smallest t > 0 with N_null(>=t) / N_obs(>=t) <= 0.01",
+    "edge_weight_sim_x_ctx": "sim * max(ctx, 0)",
+    "gold_pairs": "candidate edges whose two genes are both curated-caller members (gold/members.parquet); positive = the two genes share a (caller, system_type); per caller = both genes members of that caller; TXSScan-vs-nongold: one gene a TXSScan member, the other a TXSScan member of the same type (positive) or a gene in no gold instance (negative)",
+    "splits": "tune = both genes in odd genome_code, test = both genes in even genome_code (edge level); engine: dpann_compare.py tune (odd) / test (even)"
+  },
+  "context_variant_selection": "the (form, w) with the highest pooled AUROC of sim x ctx (same-type vs different-type gold pairs) on tune edges is the primary variant; the best variant of the other form on the same criterion is the secondary variant",
+  "arms": {
+    "V0 sim_all": "all candidate edges, weight sim (gene-level context-free control on the same edges)",
+    "V1 simctx_sup": "supported edges of the primary variant, weight sim x ctx",
+    "V2 sim_sup": "supported edges of the primary variant, weight sim (control: selection without weighting)",
+    "V3 simctx_all": "all candidate edges, weight sim x ctx of the primary variant (control: weighting without selection)",
+    "V1b simctx_sup secondary": "supported edges of the secondary variant, weight sim x ctx",
+    "clustering": "igraph Leiden, modularity, n_iterations -1, seed 17; resolutions from a grid, up to 4 per arm chosen by token count only (nearest to 120k, 200k, 300k, 430k within roughly 100k-450k; if an arm cannot reach the range, its lowest achievable token counts are used and this is reported)",
+    "token_file": "$RD/engine/dpann_tokens/ctx__esmpp_small__<variant>.parquet, all 3,585,303 gids, genes without an edge as singletons"
+  },
+  "engine": "run_recurrence_dpann_arm.sbatch, W=3, OUTDIR=results_dpann_ctx, compare_vs_base.txt against results_dpann_v2/dpann__mmseqs__seq__e3c50s75__w3",
+  "selection_rule": "among the context arms (V1, V1b, V3 at all resolutions) the arm with the highest tune (odd) summed DefenseFinder + TXSScan excess A - B is the chosen arm; V0 and V2 are controls and cannot be chosen",
+  "criteria_on_test_even": {
+    "P1": "chosen arm TXSScan excess A - B >= -0.04 (point estimate; 95% genome-bootstrap interval reported). Context-free graph arms: -0.074 to -0.095.",
+    "P2": "chosen arm summed DefenseFinder + TXSScan excess A - B >= -0.01 (single input competitive); >= +0.02 counts as beating MMseqs2 families",
+    "P3": "edge level, test edges, pooled callers, primary variant (or the variant of the chosen arm if that is the secondary): AUROC(sim x ctx) - AUROC(sim) >= 0.05 for same-type vs different-type gold pairs (genome-bootstrap 95% interval reported)"
+  },
+  "readings_and_refuters": {
+    "context weighting rescues TXSScan": "refuted if P1 fails; also refuted as a weighting effect if V2 (same supported edges, sim weight) reaches the same TXSScan excess (then edge selection, not weighting, does the work), and as a context effect if V0 (same candidate edges, no context) reaches it (then the gene-level edge construction does the work)",
+    "single input competitive with MMseqs2 families": "refuted if P2 fails",
+    "context separates functional partners at the edge level": "refuted if P3 fails, or if the TXSScan-vs-nongold AUROC of sim x ctx is not above that of sim (then context does not remove the composition-driven false similarity)"
+  },
+  "known_caveat_declared_in_advance": "context-derived tokens use true gene order; the engine's within-genome token shuffle does not rebuild tokens, so its null is anti-conservative for these arms (BRIEF trap 3). Engine significant-pair counts and null pass rates are reported beside the base to show the size of this effect; the gold scorer's random-placement control is unaffected."
+}

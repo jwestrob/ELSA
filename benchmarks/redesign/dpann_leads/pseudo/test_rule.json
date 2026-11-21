@@ -1,0 +1,103 @@
+{
+  "name": "pseudoenzyme test: selected substitute versus mixed decay at former catalytic positions",
+  "written_utc": "2026-11-21T09:48Z",
+  "written_before_any_computation": true,
+  "hypothesis_tested": "Labeled genes with 'family fold kept, canonical active-site residues replaced' are conserved pseudoenzymes: ONE substitute residue selected at each former catalytic position across independent lineages, an intact paralog in the same genome, and canonical residues retained in genuinely divergent active members. Random decay or a relocated site predicts mixed substitutions.",
+  "families": [
+    {
+      "id": 1,
+      "family": "RpiB-fold family in Micrarchaeales (DPANN)",
+      "source": "R/rpib/",
+      "notes": "287 labeled genes, 462 carriers"
+    },
+    {
+      "id": 2,
+      "family": "PEPCK_GTP relatives lacking the catalytic Cys (DPANN)",
+      "source": "R/invisible/",
+      "notes": "11 of 11 assayed"
+    },
+    {
+      "id": 3,
+      "family": "Gluconate 2-dehydrogenase gamma-subunit relatives with the invariant Asn replaced (SR-VP)",
+      "source": "R/leads_srvp/",
+      "notes": "24 of 24; SR-VP sequences stay on biotite or in tables only"
+    },
+    {
+      "id": 4,
+      "family": "Alarmone-synthetase (RelA_SpoT) relatives lacking the Mg and ATP residues (DPANN Woesearchaeales)",
+      "source": "R/gapscreen/ lead L4",
+      "notes": "52 genes, 3 checked"
+    },
+    {
+      "id": 5,
+      "family": "Phosphinomethylmalate isomerase relatives (SR-VP)",
+      "source": "R/leads_srvp/",
+      "notes": "7 of 8"
+    },
+    {
+      "id": "5+",
+      "family": "every other family in the 'fold kept, residues absent' tables of R/invisible, R/leads_srvp, R/leads_testset3 with at least 10 genes",
+      "source": "those tables",
+      "notes": "each its own row"
+    }
+  ],
+  "R": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads",
+  "independent_unit": "genome group (one vote per group; the group's vote is the majority residue among its labeled genes); groups from R/pass_port/INPUTS.txt (DPANN: the DPANN pass genome groups)",
+  "readouts_per_family_and_curated_catalytic_or_invariant_position": {
+    "a_residue": "residue carried by each labeled gene; most common residue; fraction of independent genome groups carrying it (one vote per group, majority residue within group); the same for canonical annotated members of the same collection (expected: canonical residue)",
+    "b_shift_control": "whether the canonical residue type occurs within +/-3 alignment positions in the labeled genes (shifted alignment rather than replacement); report the rate; for families with predicted structures the structural residue map is the arbiter",
+    "c_divergence_control": "same read-out on genuinely divergent ACTIVE members: genes of the family named only by a relaxed-threshold hit or the broad domain database (the 'already named' groups of the earlier assays) at similar sequence distance from the reference as the labeled genes",
+    "d_paralog": "fraction of genomes carrying the labeled gene that also carry a canonical member of the family with the catalytic residues intact, against the fraction among genomes of the same clade without the labeled gene",
+    "e_own_conservation": "positions invariant (one residue in >= 90% of genome groups) among the labeled genes and NOT invariant or different in the canonical family; count, residue types, and location on the fold relative to the old site (same pocket or elsewhere) when a structure exists"
+  },
+  "verdict_rules_per_family": {
+    "order_of_application": [
+      "ARTIFACT",
+      "SELECTED SUBSTITUTE",
+      "MIXED",
+      "INTERMEDIATE"
+    ],
+    "SELECTED_SUBSTITUTE": "at a majority of the catalytic positions one substitute residue is carried by >= 70% of genome groups, AND shift control < 20%, AND divergence control keeps the canonical residue",
+    "MIXED": "the most common substitute is below 50% of genome groups at most catalytic positions",
+    "ARTIFACT": "divergence control shows the same replaced rate (within 15 percentage points), OR shift control > 50%",
+    "INTERMEDIATE": "otherwise",
+    "extra_lines_per_family": [
+      "whether an intact paralog co-occurs (d)",
+      "whether the family has its own invariant positions (e); MIXED old-site residues plus a strong new invariant set elsewhere = relocated or new site, distinct from decay"
+    ]
+  },
+  "overall": {
+    "count_per_verdict": true,
+    "pseudoenzyme_prediction_holds_if": "at least 3 of 5 families are SELECTED SUBSTITUTE with intact paralogs",
+    "state_plainly_if_it_fails": true
+  },
+  "operational_definitions_fixed_before_computation": {
+    "replaced_rate": "fraction of genome groups whose majority residue at a catalytic position differs from the canonical residue (gap counts as replaced)",
+    "divergence_control_keeps_canonical": "canonical residue carried by >= 70% of divergent-active genome groups at a majority of catalytic positions; if no divergent-active members exist in the collection, report 'no control available' and the family cannot be SELECTED (verdict falls to MIXED / INTERMEDIATE by the other rules)",
+    "shift_rate": "fraction of labeled genes whose residue at the position is non-canonical while the canonical residue type occurs within +/-3 alignment columns",
+    "intact_paralog": "a canonical (gathering-threshold) family member in the same genome carrying the canonical residue at all curated catalytic positions",
+    "alignment": "mafft (local) of labeled genes + family curated reference + annotated canonical members; existing workstream alignments and structural residue maps reused where present; no new folding beyond a small top-up",
+    "denominators": "genome groups"
+  },
+  "constraints": [
+    "existing files only",
+    "no cluster jobs",
+    "at most about one hour",
+    "SR-VP sequences never copied into the repository",
+    "Biohub only service that may receive project sequences",
+    "no .md files",
+    "no git commits",
+    "American spelling"
+  ],
+  "addendum_before_computation": {
+    "written_utc": "2026-11-21T09:51Z",
+    "position_set": "curated Active-site and Binding-site residues of each family reference (the record each earlier workstream used: RpiB P37351/P9WKD7, PEPCK A5TYT6, RelA_SpoT O31611) plus, for the SR-VP extended-tier families, their invariant site positions; verdict positions = those where the canonical members of the same collection carry the reference residue in >= 70% of genome groups (positions conserved in the canonical family as observed); the rest are reported only",
+    "test_set": "all labeled genes of the family in the collection (positional calls carrying the family label and function)",
+    "canonical_set": "family members at the gathering threshold (family Pfam at GA; DPANN also KOfam KO), excluding labeled genes and excluding members in the labeled genes slot (positional orthologs)",
+    "divergence_control": "primary: non-labeled family members outside the labeled slot named only by a broad or relaxed source (CDD best hit naming the family, no family Pfam at GA), identity to the curated reference inside the 10th-90th percentile of the labeled genes identity; fallback when the primary has < 5 genome groups: GA canonical members inside the same identity window (stated as fallback); the earlier assays named stratum is reported as a secondary row where it exists",
+    "identity": "fraction identical over alignment columns where both the reference and the gene carry a residue",
+    "shift_window": "gene residues in alignment columns from the column of reference position p-3 to p+3 (insert columns included)",
+    "own_invariant": "alignment columns where >= 90% of labeled genome groups (group majority, gaps count as their own state and cannot be the invariant residue) carry one residue, and the canonical groups carry that residue in < 90% or carry a different majority residue; located on the reference structure by CA distance to the centroid of the verdict-position CAs (same pocket <= 12 A)",
+    "clade_for_paralog": "order from bins.taxonomy (DPANN) or the package order field (SR-VP)"
+  }
+}

@@ -1,0 +1,158 @@
+WS RIBO_AUDIT ADDENDUM: THE BOND TREE (L4b, L4b+, L1) AND THE INDEPENDENCE OF THE FLANK CRITERION (2026-11-13)
+=================================================================================================================
+Same code and rules as REPORT.txt (audit.py commands annot, addendum; no new sampling: every number below is a census of
+all failures). Outputs: $RD/long_loci/loci/dpann_group/L4b_t0.1.parquet (L4b), L4bp_t0.1.parquet (L4b+), L1.parquet
+(L1, pair-linking alone). Bonds: $RD/long_loci/nodes/dpann_group/bonds_obs.npz. The long_loci ribosomal diagnosis
+section was left unread. Plan and annotation tiers fixed in NOTEBOOK.txt (11:44 UTC) before any number of these outputs.
+"corrected" = REPORT.txt's rubric with the one post hoc OTHER-KIND fix; "strict" = nearby Ribosomal_* genes admissible
+only when run-associated. Intervals: Wilson 95%.
+
+ANSWER
+1. Reproduced exactly (own scorer = ribosomal_check.score run by run): L4b 1,680 recovered / 1,598 resolved (56
+   under-covered, 32 over-extended, 0 both; Parvarchaeaceae 114 / 107); L4b+ identical to L4b run by run (same best
+   locus for all 1,686 runs); L1 1,680 / 1,036 (53 / 594 / 3; Parvarchaeaceae 114 / 106).
+2. L4b's failures are 94.3% [87.4, 97.5] definition artefacts by the corrected rubric (83 of 88: 54 junction splits,
+   22 scoring rule, 7 flank), 3 method errors and 2 data. L4b holds the fewest method errors of the six outputs under
+   the corrected and strict rubrics (3 and 5 runs; TOK 29 / 64, WCP 48 / 56, EMB 136 / 163, L1 186 / 251). L1's 650 failures are 71.1% definition
+   (flank 252, nearby Ribosomal_* 156, junction 54) and 28.6% method (186 extensions into unassociated flank).
+3. The gaps in the 56 under-covered L4b runs are lineage-specific junctions: 159 junctions without a bond, none above
+   chance in other groups (Lambda 0 for every crossing pair; at most 15 other groups, median 6; 24 in fewer than 3);
+   every universal junction inside these runs carries a bond. L4b cuts its best locus at rearranged junctions,
+   S3_C|S5_C (23 of 83 cuts) and S17|L22 (20), in Nanobdellota 32, Aenigmatarchaeota 14, Parvarchaeaceae 7 runs.
+4. Sensitivity (resolved of 1,686; random-window chance in parentheses): L4b standing 1,598 (2.41%), any locus 1,620
+   (2.81%), conserved-flank precision 1,617 (2.52%), + junction split 1,671, + any locus 1,679. L4b leads under the
+   standing rule and under every alternative; under the proposed definition (flank + junction split) L4b 1,671,
+   WCP 1,622, TOK 1,571, EMB 1,490, L1 1,433.
+5. Independence: the flank criterion and the junction split both rest on cross-group recurrence, the signal the
+   methods use. An annotation-only test (KO-derived roles, no gene order) backs 9-13% of the conserved-flank gain with
+   the narrow translation tier (L4b 0%) and 26-51% with a broad, knowledge-informed tier; strand flips, the one
+   recurrence-free sign of a junction break, back 12 of 12 TOK, 12 of 21 WCP, 10 of 20 EMB, 18 of 54 L4b junction
+   cases. Requiring independent support for both moves the method share to TOK 40.2%, WCP 59.8%, EMB 56.0%, L4b
+   50.0%, L1 79.5%: the definition-artefact shares in REPORT.txt are upper bounds, and WCP's and L4b's depend most on
+   the recurrence criteria. In absolute errors L4b stays lowest (44 vs TOK 70, WCP 159, EMB 288, L1 517).
+
+--------------------------------------------------------------------------------------------------------------
+A1. REPRODUCTION (results/repro_add.json)
+  output  loci       recovered  resolved  cov-only / prec-only / both   Parvarchaeaceae rec / res
+  L4b     1,007,174  1,680      1,598     56 / 32 / 0                    114 / 107
+  L4b+    1,210,640  1,680      1,598     56 / 32 / 0                    114 / 107
+  L1        426,696  1,680      1,036     53 / 594 / 3                   114 / 106
+  No single-gene loci in any table. ribosomal_check.score gives the same recovered / resolved flags run by run.
+
+A2. CATEGORY TABLE, ALL FAILURES (corrected rubric; census, no sampling)
+  category             TOK    WCP    EMB    L4b   L4b+    L1
+  failures             174    266    514     88     88   650
+  DEF_SCORING           78     13    126     22     22     0
+  DEF_NEARBY_RIBO       43     66     86      4      4   156
+  DEF_OTHER_KIND         0      0      4      0      0     0
+  DEF_ASSOC_FLANK        9    111    135      3      3   252
+  DEF_JUNCTION          14     21     21     54     54    54
+  DATA_CONTIG_EDGE       1      5      3      1      1     1
+  DATA_GENE_CALL         0      2      3      1      1     1
+  METHOD_SPLIT           2     41    110      0      0     0
+  METHOD_UNCOVERED       0      0      0      0      0     0
+  METHOD_EXTENSION      27      7     26      3      3   186
+  definition share     82.8%  79.3%  72.4%  94.3%  94.3%  71.1%
+                       [76.5, 87.6] [74.1, 83.8] [68.4, 76.1] [87.4, 97.5] [87.4, 97.5] [67.5, 74.4]
+  method share         16.7%  18.0%  26.5%   3.4%   3.4%  28.6%
+                       [11.9, 22.9] [13.9, 23.1] [22.8, 30.4] [1.2, 9.5] [1.2, 9.5] [25.3, 32.2]
+  method count, predeclared / corrected / strict:  TOK 2 / 29 / 64; WCP 19 / 48 / 56; EMB 124 / 136 / 163;
+    L4b 3 / 3 / 5; L4b+ 3 / 3 / 5; L1 186 / 186 / 251.
+  method + scoring-rule cases (corrected): TOK 61.5%, WCP 22.9%, EMB 51.0%, L4b 28.4% [20.0, 38.6], L1 28.6%.
+  L4b by failure type: under-covered 56 = DEF_JUNCTION 54, DATA_CONTIG_EDGE 1, DATA_GENE_CALL 1; over-extended 32 =
+    DEF_SCORING 22, DEF_NEARBY_RIBO 4, DEF_ASSOC_FLANK 3, METHOD_EXTENSION 3. L4b+ carries the same label on every run.
+  L1: under-covered 56 (53 + 3 both) are the junction runs again (54 DEF_JUNCTION); its 594 over-extensions split into
+    run-associated flank 252, nearby Ribosomal_* genes 156, unassociated flank 186.
+
+A3. SENSITIVITY (resolved of 1,686; Parvarchaeaceae of 114; chance = share of 8,325 length-matched random windows
+    resolved under the same rule; junction pieces need a run and have no window equivalent)
+  definition                     TOK     WCP     EMB     L4b    L4b+     L1    Parv T/W/E/L4b/L4b+/L1
+  standing                     1,512   1,420   1,172   1,598   1,598   1,036   113/109/106/107/107/106
+     chance                     7.96%   0.04%   1.39%   2.41%   2.51%   2.09%
+  any locus counts             1,590   1,433   1,298   1,620   1,620   1,036   114/109/106/107/107/106
+     chance                    10.16%   0.04%   1.42%   2.81%   2.91%   2.09%
+  conserved-flank precision    1,559   1,601   1,470   1,617   1,617   1,380   113/109/107/107/107/107
+     chance                     8.14%   0.04%   1.41%   2.52%   2.62%   2.19%
+  + junction split (PROPOSED)  1,571   1,622   1,490   1,671   1,671   1,433   113/113/114/114/114/114
+  + any locus counts           1,621   1,623   1,517   1,679   1,679   1,433   114/113/114/114/114/114
+  annotation-backed flank variants (A5):
+  flank: associated AND tier T 1,518   1,440   1,206   1,598   1,598   1,066   chance 8.05/0.04/1.41/2.44/2.53/2.11%
+  flank: associated AND tier I 1,536   1,506   1,306   1,603   1,603   1,150   chance 8.05/0.04/1.41/2.44/2.53/2.11%
+  flank: tier T alone          1,524   1,440   1,216   1,598   1,598   1,074   chance 8.73/0.04/1.45/2.59/2.69/2.28%
+  flank: tier I alone          1,548   1,517   1,330   1,604   1,604   1,166   chance 9.39/0.04/1.49/2.74/2.83/2.45%
+  Every standing-resolved run stays resolved under each chain on its own (0 lost, all six outputs).
+
+A4. WHAT THE GAPS IN THE UNDER-COVERED L4b RUNS ARE (results/gaps_L4b.tsv; a gap = boundary inside the run with no
+    bond spanning it, s_k = 0)
+  All 56 under-covered runs hold >= 1 gap: 159 gaps (one more run among the over-extended holds 2). For each gap, the
+  recurrence of the adjacent pair and of the best crossing pair (<= 3 apart) in other groups, statistic C:
+    best crossing pair: n' < 3 in 24, n' 3-15 in 135, n' >= 16 in 0; median 6; Lambda 0 in all 159 (n' <= E': the
+      adjacency is no commoner across groups than the two families' abundance predicts)
+    adjacent pair:      n' < 3 in 90, n' 3-15 in 69
+    recurrent by the audit's test (n' >= 3 and Lambda >= 10): 0 of 159
+    a family of the gap in <= 10 groups (adjacency untestable across lineages): 40 of 159
+    strand flips at the gap: 31 of 159
+  So L4b misses no universal junction: every junction inside these runs that recurs across groups carries a bond.
+  The 83 places where L4b's best locus ends inside the run (cuts) sit at:
+    S3_C|S5_C 23, S17|L22 20, S17 beside an unmarked gene 10, L3 beside an unmarked gene 7, two unmarked genes 7,
+    L2_C|S11 5, other 11. The domain pairs adjacent here (Ribosomal_S3_C with Ribosomal_S5_C, Ribosomal_S17 with
+    Ribosomal_L22) have other neighbours in most runs (S3_C beside L22 / L29; S5_C beside L5e / L30): rearranged
+    gene orders.
+  Strata of the 56 runs: Nanobdellota 32, Aenigmatarchaeota 14 (the opposite-strand superoperon halves of REPORT.txt),
+    Parvarchaeaceae 7, Altiarchaeota 2, Micrarchaeota 1.
+  The audit's DEF_JUNCTION label and L4b's bonds are near-identical statistics (pair recurrence across groups, w = 3),
+  so the 54 junction labels restate that the gap carries no bond; A5 gives the independent part.
+
+A5. INDEPENDENCE OF THE CRITERIA (the coordinator's caution)
+  Both definition corrections that matter use cross-group recurrence: conserved-flank precision (a flank family recurs
+  beside runs in >= 3 other groups) and the junction split (a junction recurs in no other group). The methods grow and
+  stop loci on the same kind of signal, so these corrections can favour any output built on recurrence. Two checks
+  independent of locus calling were available:
+  (a) Annotation only. Sharur semantic_terms holds KO-derived role terms (KOfam / KEGG; no gene order). Tier T =
+      {ribosomal_protein, translation, translation_factor} (the marker's own function; 227,373 genes = 6.3%). Tier I =
+      T + {trna_synthetase, trna_modification, rna_processing, transcription, rna_polymerase, replication, sec_pathway,
+      signal_recognition} (354,300 genes = 9.9%); tier I is KNOWLEDGE-INFORMED: it was written after SecY and the
+      primase were seen in the flanks.
+      Share of each output's conserved-flank gain (runs resolved by the flank rule beyond standing) that survives when
+      the flank genes must also pass the tier:
+                                   TOK         WCP          EMB          L4b        L1
+        gain (associated flank)    47          181          298          19         344
+        associated AND tier T      6 (13%)     20 (11%)     34 (11%)     0 (0%)     30 (9%)
+        associated AND tier I      24 (51%)    86 (48%)     134 (45%)    5 (26%)    114 (33%)
+        tier T alone               12 (26%)    20 (11%)     44 (15%)     0 (0%)     38 (11%)
+        tier I alone               36 (77%)    97 (54%)     158 (53%)    6 (32%)    130 (38%)
+      Annotation alone raises chance slightly (TOK 7.96% -> 8.73 / 9.39%); association AND annotation leaves it at
+      8.05%. Of the 54 all-group run-associated families, 7 carry tier T on most members and 10 tier I. Commonest
+      associated flank families and their tier coverage (share of members): SecY T 0 / I .53; unannotated-by-Pfam KOW
+      family 90081 T .81 (a ribosomal protein by KO that carries no Ribosomal_* Pfam hit, so the marker misses it);
+      DNA_primase_lrg 0 / .01; both EMC3_TMCO1 families 0 / 0; DEAD helicase 0 / .31; B5 / tRNA_synthFbeta .99;
+      Peptidase_M48 0 / 0; RtcB 0 / .98; Prefoldin 0 / 0; TruB / PUA .41 / .41; Toprim 0 / 0.
+  (b) Strand flips at the junction break (order-based, recurrence-free): TOK 12 of 12 DEF_JUNCTION runs, WCP 12 of 21,
+      EMB 10 of 20, L4b 18 of 54, L4b+ 18 of 54, L1 17 of 53.
+  Method share when both corrections need independent support (flank genes must pass tier I; junction cases need a
+  strand flip), strict rubric otherwise:
+        TOK 70 / 174 = 40.2% [33.2, 47.7]    WCP 159 / 266 = 59.8% [53.8, 65.5]    EMB 288 / 514 = 56.0% [51.7, 60.3]
+        L4b 44 / 88 = 50.0% [39.8, 60.2]     L4b+ 44 / 88 = 50.0%                  L1 517 / 650 = 79.5% [76.3, 82.5]
+     with tier T in place of tier I: TOK 83 (47.7%), WCP 221 (83.1%), EMB 353 (68.7%), L4b 46 (52.3%), L1 601 (92.5%).
+  Implication: no independent criterion covers the bulk of the flank genes. SecY, the EMC3_TMCO1 and primase families,
+  Peptidase_M48 and Prefoldin are admitted on recurrence alone, so the definition-artefact share of REPORT.txt is an
+  upper bound and the independent-evidence share above is a lower bound. WCP's verdict moves most (method 18% ->
+  60%), because its failures are flank extensions. L4b's flank cases are few (7), but its 54 junction cases rest on the
+  statistic that defines its bonds; 18 carry an independent strand flip. L4b has the fewest absolute method errors
+  under every reading except the predeclared rubric (TOK 2, L4b 3): L4b 3-46, TOK 29-83, WCP 48-221, EMB 136-353,
+  L1 186-601 (from the corrected rubric to the tier-T bound).
+
+CAVEATS
+- Tier I was chosen after the flank genes were seen; tier T is the only annotation tier fixed by the marker's function.
+- KO roles cover a gene only when KOfam assigns a KO above threshold; unannotated genes fail every tier.
+- Strand flips miss same-strand rearrangements (S3|S5, S17|L22), so (b) undercounts real lineage-specific junctions.
+- Login node, one thread: annot under 1 min; addendum (reproduction, census of three outputs, five flank rules for six outputs
+  over 1,686 runs and 8,325 windows, gap table) 100 s, 0.9 GB. No Slurm job.
+
+FILES (added)
+Local benchmarks/redesign/ribo_audit/: REPORT_addendum.txt; audit.py (Loci reads s/e tables; Ev.adm_rule; commands
+  annot, addendum); results/repro_add.json, census_add.tsv (L4b, L4b+, L1 x 1,686 runs, three rubrics),
+  sens_add.tsv (six outputs x 1,686 runs, every sensitivity state), random_windows_add_summary.tsv, gaps_L4b.tsv
+  (159 + 2 gap junctions with recurrence statistics), annot.json (tier sizes).
+Biotite $RD/ribo_audit/work/: annot.npz, annot.json, repro_add.json, census_add.parquet, sens_add.parquet,
+  random_windows_add.parquet, bond_sk.npy, gaps_L4b.tsv.

@@ -1,0 +1,6 @@
+2026-11-12T06:24:02Z cancelled 78191 at 1 h (S prefilter in progress; D, C, B complete); S rerun as 4 query shards, s 7.5, max-seqs 8000
+2026-11-12T06:32Z shards 78284-78287 prefilter done (438-451 s each), align running; expected done ~07:10Z
+2026-11-12T06:55:06Z shards done; analysis jobs composite=78312 fragment+giants=78313 tokens+gold=78314 (afterok)
+2026-11-12T06:59:26Z gate numbers sent to coordinator; interp job 78318
+2026-11-12T07:02:47Z coordinator follow-ups: interp2 job 78321
+2026-11-12T07:07:04Z interp2 done (job 78321); final report returned to coordinator

@@ -1,0 +1,94 @@
+{
+ "rule": "most odd conditions met, then odd summed DH excess",
+ "pool": "raw,gc,raw_z2,gc_z2",
+ "t": 2.0,
+ "candidates": [
+  {
+   "n_met": 2,
+   "d_summed": 0.011123462700837389,
+   "tag": "raw_W50_t2"
+  },
+  {
+   "n_met": 2,
+   "d_summed": 0.0019773287813997786,
+   "tag": "gc_W50_t2"
+  },
+  {
+   "n_met": 2,
+   "d_summed": 0.0011553027306417676,
+   "tag": "gc_z2_W50_t2"
+  },
+  {
+   "n_met": 2,
+   "d_summed": -0.0044810976982307855,
+   "tag": "gc_W100_t2"
+  },
+  {
+   "n_met": 2,
+   "d_summed": -0.005992231156049393,
+   "tag": "raw_W100_t2"
+  },
+  {
+   "n_met": 2,
+   "d_summed": -0.0069131891485463785,
+   "tag": "gc_z2_W100_t2"
+  },
+  {
+   "n_met": 1,
+   "d_summed": 0.028745827873932244,
+   "tag": "raw_z2_W10_t2"
+  },
+  {
+   "n_met": 1,
+   "d_summed": 0.007393296564597822,
+   "tag": "raw_W10_t2"
+  },
+  {
+   "n_met": 1,
+   "d_summed": 0.0045382984894634226,
+   "tag": "raw_z2_W25_t2"
+  },
+  {
+   "n_met": 1,
+   "d_summed": 0.002590943002647194,
+   "tag": "gc_z2_W25_t2"
+  },
+  {
+   "n_met": 1,
+   "d_summed": 0.0016646431892847775,
+   "tag": "gc_W25_t2"
+  },
+  {
+   "n_met": 1,
+   "d_summed": -0.0016222298375337101,
+   "tag": "gc_z2_W10_t2"
+  },
+  {
+   "n_met": 1,
+   "d_summed": -0.0035873540953999684,
+   "tag": "gc_W10_t2"
+  },
+  {
+   "n_met": 1,
+   "d_summed": -0.011117967555256163,
+   "tag": "raw_z2_W100_t2"
+  },
+  {
+   "n_met": 0,
+   "d_summed": -0.0113607862501217,
+   "tag": "raw_W25_t2"
+  },
+  {
+   "n_met": 0,
+   "d_summed": -0.02001486218295222,
+   "tag": "raw_z2_W50_t2"
+  }
+ ],
+ "selected": {
+  "tag": "raw_W50_t2",
+  "variant": "raw",
+  "W": 50,
+  "n_met": 2,
+  "d_summed_odd": 0.011123462700837389
+ }
+}

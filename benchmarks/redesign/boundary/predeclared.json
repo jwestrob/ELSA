@@ -1,0 +1,225 @@
+{
+  "written_utc": "2026-11-12T13:12:00Z",
+  "workstream": "boundary (ws_boundary)",
+  "seen_before_writing": "Odd-genome (tune) numbers only: explore.json (job 80784): references conserved@2, full engine table and fixed levels 2-200 on odd-genome gold and the 848 odd-genome ribosomal runs; AUROC of boundary features (internal vs extension) for odd-genome gold instances and runs. No even-genome gold or ribosomal number of any rule has been computed.",
+  "task1": {
+    "question": "Is there a locus-reading rule, computed only from the engine's own outputs (boundary support landscape, significant pairs, modules), that draws tighter boundaries without losing loci?",
+    "arm": "rescue3 = engine/results_dpann_repair/dpann__mmseqs__seq__e3c50s75_rescue3__w3 (current DPANN default, w3, rule P<=1e-4&L>=2)",
+    "landscape_definitions": {
+      "b": "boundary_support.npy: max genera L over significant instances spanning the boundary (reproduced exactly from tokens + significant_pairs.parquet)",
+      "arg": "significant pair that sets b (engine tie rule)",
+      "bJ": "max J over significant instances spanning the boundary",
+      "pair module": "Louvain module shared by both tokens of the pair (-1 between modules); Louvain on the significant-pair token graph, weight J*log2(max(L,2)), seed 17, as the engine",
+      "level-2 locus": "maximal run of boundaries with b >= 2 (conserved@2, the default reading)"
+    },
+    "rules": {
+      "F_fixed": {
+        "definition": "conserved@level alone (runs of b >= level)",
+        "grid": {
+          "level": [
+            3,
+            5,
+            8,
+            12,
+            20,
+            30,
+            50,
+            80,
+            120,
+            200
+          ]
+        },
+        "role": "baseline rule"
+      },
+      "A_trim": {
+        "definition": "(a) relative trimming: drop end genes of each level-2 locus while the end boundary's b < f * median b of the untrimmed locus",
+        "grid": {
+          "f": [
+            0.02,
+            0.05,
+            0.1,
+            0.2,
+            0.3,
+            0.5,
+            0.7,
+            1.0
+          ]
+        }
+      },
+      "B_level": {
+        "definition": "(b) per-locus level: for each level-2 locus, among ladder levels (2,3,5,8,12,20,30,50,80,120,200,300,500,800) <= its max b, read the runs at the level maximizing the mean edge contrast log(mean b of the h boundaries inside an edge) - log(max(mean b of the h boundaries outside, 1)) (outside stops at the level-2 locus end); a level above 2 needs contrast >= level-2 contrast + gain; keep_low=0 reports only the runs at the chosen level, keep_low=1 also reports the stretches between them (>= 2 genes; the junction gene stays with the run), i.e. a segmentation",
+        "grid": {
+          "h": [
+            1,
+            2,
+            3
+          ],
+          "gain": [
+            0,
+            0.25,
+            0.5,
+            1.0,
+            1.5,
+            2.0
+          ],
+          "keep_low": [
+            0,
+            1
+          ]
+        }
+      },
+      "C_module": {
+        "definition": "(c) module-consistent segmentation: inside each level-2 locus, boundary labels = module of the pair that sets b (-1/-2 filled from the nearest labelled boundary, forward then backward); cut where the label changes; the shared junction gene stays with the side whose junction boundary has the larger b",
+        "grid": {
+          "louvain_resolution": [
+            0.1,
+            0.3,
+            1,
+            3,
+            10,
+            30
+          ]
+        }
+      },
+      "D_nested": {
+        "definition": "(d) nested output: the level-2 locus (neighbourhood) plus a core inside it; scored as the two-reading table (best locus per instance; ribosomal best = largest overlap, ties to the shorter locus, as ribosomal_check.py). The core alone is the corresponding single rule.",
+        "grid": {
+          "core": "every config of A_trim, B_level with keep_low=0, F_fixed, C_module and E_consistency"
+        }
+      },
+      "E_consistency": {
+        "definition": "added rule: runs of boundaries with bJ >= theta (a boundary is kept only if a significant pair spanning it co-locates consistently relative to its rarer token)",
+        "grid": {
+          "theta": [
+            0.05,
+            0.1,
+            0.2,
+            0.3,
+            0.4,
+            0.5,
+            0.6,
+            0.7
+          ]
+        }
+      }
+    },
+    "scoring": "score_dpann_loci.score, min_members 2, 200 controls, seed 17; ribosomal: ribosomal_check.score/summarize on g2 runs with >= 16 marked genes (1,686; 848 odd, 838 even), resolved = best locus covers >= 80% at precision >= 0.8, recovered = best covers >= 50%.",
+    "references": {
+      "R1_primary": "conserved@2 alone, the default reading named in the task (ribosomal 704 resolved on all runs)",
+      "R2_secondary": "the engine's full locus table loci_all_genomes.parquet (11 readings, best per instance), the source of every DPANN F1 in the notebook"
+    },
+    "tuning": {
+      "data": "odd genome_code only: odd-genome gold instances (shadow package pkg_odd) and the 848 odd-genome ribosomal runs",
+      "per_family_selection": "lexicographic: (1) number of the three adoption conditions met on odd genomes against R1, with the ribosomal thresholds scaled to the odd runs (resolved >= 554 of 848, recovered >= 830 of 848, Parvarchaeaceae >= 54 of 55; ceil of the scaled 1,100 / 1,650 / 110), condition (ii) as point estimate summed DF+TXSS excess - R1 >= +0.02, condition (iii) each caller F1 - R1 >= -0.01; (2) larger odd summed DF+TXSS excess",
+      "families": "B_level counts as one family (keep_low is a parameter); D_nested is one family over all cores"
+    },
+    "adoption_criteria_test": {
+      "data": "even genome_code gold instances; ribosomal on all 1,686 runs as the condition states (even-run subset also reported)",
+      "i": "ribosomal resolved >= 1,100 of 1,686 AND recovered >= 1,650 AND Parvarchaeaceae recovered >= 110 of 114",
+      "ii": "summed DefenseFinder + TXSScan excess (rule - R1) >= +0.02 AND its 95% paired genome-bootstrap interval excludes 0 (2,000 draws, seed 17, genomes resampled jointly for both callers, as dpann_compare.py)",
+      "iii": "no caller (DefenseFinder, TXSScan, CRISPRCasTyper) loses more than 0.01 F1 against R1 (point estimate; interval reported)",
+      "adopt": "all three. If several families pass, the preferred one has the larger odd summed excess. Every family's selected config is reported against all three conditions, with the blocking condition named.",
+      "secondary": "the same three conditions against R2 for the same selected configs (no re-tuning); reported as whether the rule could replace the engine's full table"
+    },
+    "also_reported": "per caller F1, control F1, excess (with paired intervals), median boundary precision of the best locus over instances it covers (coverage >= 0.5), covered50, localized; ribosomal recovered / resolved / median precision / Parvarchaeaceae; number of loci, genes covered, median span",
+    "refutation": {
+      "tighter_without_losing_loci": "refuted for a rule if its median boundary precision rises while covered50 falls by > 0.01 for any caller or ribosomal recovered falls below 1,650 (tighter by dropping loci), or if its excess gain comes with an F1 loss (control falling faster than F1)",
+      "rule_vs_families": "the rule does the work if its gain over each arm's own R1 has the same sign and comparable size (within a factor of 2) on the base (no rescue) and hybrid arms; the families do the work if the gain appears on one arm only"
+    },
+    "follow_up_arms": "the adopted rule (or, if none passes, the two families with the most conditions met on even, then larger even summed excess; descriptive only) with its rescue3-tuned parameters, unchanged, on base = engine/results_dpann_v5/dpann__mmseqs__seq__e3c50s75__w3 and hybrid = engine/results_dpann_emb1/dpann__hybrid__esmpp_small__genomecentred__e3c50cpmr0p05__w3, each against its own R1 and R2 on even genomes plus the ribosomal check",
+    "json_fix_note": "2026-11-12T13:52Z: the 13:12 file had one string without a key under tuning ('B_level counts as one family...'); keyed as 'families', content unchanged",
+    "amendment_1": {
+      "written_utc": "2026-11-12T13:52:00Z",
+      "seen_before": "odd-genome tuning results of F, A, B, C, E (all configs) and the first 25 D configs; no even-genome number of any rule",
+      "reason": "On odd genomes, module-label cuts (C) separate the ribosomal core from its overshoot and support-step segmentation that keeps both sides (B keep_low=1) gives the largest F1 gains for all three callers; the two use different cuts, so their composition is the rule the data suggest.",
+      "rules": {
+        "G_module_then_level": {
+          "definition": "C segmentation at Louvain resolution res, then B per-locus level with keep_low=1 applied to each C segment as if it were a level-2 locus (edge contrast window h, gain)",
+          "grid": {
+            "res": [
+              0.1,
+              0.3,
+              1,
+              3,
+              10,
+              30
+            ],
+            "h": [
+              1,
+              2
+            ],
+            "gain": [
+              0,
+              0.5,
+              1.0
+            ]
+          }
+        },
+        "H_module_then_trim": {
+          "definition": "C segmentation at resolution res, then A relative end trimming of each C segment with factor f (median of the segment)",
+          "grid": {
+            "res": [
+              0.1,
+              0.3,
+              1,
+              3,
+              10,
+              30
+            ],
+            "f": [
+              0.1,
+              0.3,
+              0.5
+            ]
+          }
+        }
+      },
+      "selection": "same per-family lexicographic rule on odd genomes; G and H are two more families; the adoption criteria and the preference among passing families (larger odd summed excess) are unchanged"
+    }
+  },
+  "task2": {
+    "written_utc": "2026-11-12T13:58:00Z",
+    "seen_before": "task-1 results only; no merged-universe number exists",
+    "question": "Does treating each adjacent broken-call-like split pair (38,651 pairs, repair/results/split_pairs.parquet) as one gene position raise localization of the gold instances that contain such a pair, without lowering the rest?",
+    "build": "merge_universe.py: every gb (= ga + 1) merges into the position of gb - 1 (chains collapse to one position); merged gene keeps the first piece's identifiers, start = min, end = max; positions, gids, contig n_genes / first_gid and genome n_genes recomputed; gold member gids mapped and deduplicated; the merged position takes the rescue3 token of its longest piece (ties: lowest old gid). Package untouched; everything under $RD/boundary/merged/.",
+    "engine": "unmodified $RD/engine/code/recurrence.py on the merged universe, rescue3 tokens as above, w 3, genome-shuffle null, 3 permutations, rule chosen by the engine (FDR <= 0.01, largest coverage), --all-genome-loci; scored with score_dpann_loci.py --min-members 2 on the merged package (full locus table, as the engine wrapper).",
+    "default": "engine/results_dpann_repair/dpann__mmseqs__seq__e3c50s75_rescue3__w3/score_min2 (unmerged universe, same tokens, same scoring)",
+    "sets": {
+      "contains_pair": "both pieces of a split pair among the instance's members and >= 2 members after merging",
+      "unaffected": "no piece of any split pair inside the instance's first-to-last member span (>= 2 members in both universes)",
+      "remaining": ">= 2 members in both universes",
+      "touched": "any member is a piece, >= 2 members after merging",
+      "left": "instances whose members merge into one position (leave the >= 2-member set); counted by caller"
+    },
+    "criteria_even_genomes": {
+      "a": "mean F1 on contains_pair instances, merged - default >= +0.03, 95% paired genome-bootstrap interval excluding 0 (2,000 draws, seed 17)",
+      "b": "summed DefenseFinder + TXSScan excess on unaffected instances, merged - default, 95% lower bound > -0.005",
+      "adopt": "both a and b"
+    },
+    "also_reported": "the same on remaining and touched sets, per caller, odd genomes; engine significant pairs, FDR, genes covered; ribosomal check in the merged universe (runs remapped); the task-1 adopted rule D (level-2 + level-200 core) read on both universes and compared the same way",
+    "caveat": "merging changes the genome-shuffle null (fewer genes per genome) and the random-placement control (spans in genes change), so merged and unmerged excess differ in both terms",
+    "refutation": "if F1 on contains_pair instances rises only through instances whose span shrinks to fewer genes while the control rises equally (excess flat), the gain is a coordinate effect of merging, not localization; reported via the excess on the same set"
+  },
+  "followup_1": {
+    "written_utc": "2026-11-12T13:56:52Z",
+    "requested_by": "coordinator, after the task-1 report",
+    "seen_before": "all task-1 results (tuning, test, follow-up arms, robustness) and task 2; no number of the rule below exists",
+    "rule": "DH = nested output of two readings: the level-2 locus (conserved@2, neighbourhood) plus rule H's locus (C module segmentation at Louvain res 0.3 seed 17, then relative end trimming f 0.5) as the core; parameters fixed at the task-1 H selection, no tuning. Built as D with core H (rules.py Builder.build('D', {core: 'H', res: 0.3, f: 0.5})). Scored as a two-reading table (best locus per instance); ribosomal best = largest overlap, ties to the shorter locus.",
+    "evaluation": "rescue3 arm, even genome_code gold, paired genome bootstrap (2,000, seed 17) against R1 (conserved@2 alone) and R2 (full engine table); ribosomal on all 1,686 runs; covered50 and genes in loci",
+    "replaces_D_if": [
+      "conditions (i), (ii), (iii) of task 1 all met against R1",
+      "covered50 within 0.01 of R1 for every caller (DH covered50 >= R1 covered50 - 0.01 for DefenseFinder, TXSScan, CRISPRCasTyper)",
+      "ribosomal resolved > D's 1,377 of 1,686",
+      "Parvarchaeaceae resolved >= 100 of 114"
+    ],
+    "otherwise": "D stays the adopted rule; DH is reported with the condition that blocks it"
+  },
+  "followup_2": {
+    "written_utc": "2026-11-12T13:56:52Z",
+    "what": "descriptive reading inventory, no decision attached: for the base and rescue3 arms on even genomes, F1, control and excess per caller for each of the 11 readings of loci_all_genomes (conserved and conserved_g2 at levels 2, 5, 12, 30, 80 recomputed in full from boundary_support.npy with the engine's run rule; unit@0.5 from the table) and for the full table; per caller, the share of instances for which each reading attains the full-table best F1 (attains), is the only reading that does (sole), and the reading assigned by table order (conserved 2..80, conserved_g2 2..80, unit) among those that attain it"
+  },
+  "timestamp_correction": {
+    "written_utc": "2026-11-12T13:58:00Z",
+    "note": "Two written_utc values were typed by hand and are later than the clock. amendment_1 (labelled 13:52) was written ~13:18 UTC, before tuning job 80947 (submitted 13:19:12 UTC) and before the first even-genome number (13:37 UTC). task2 (labelled 13:58) was written before 13:48:32 UTC (upload) and the merged build (job 81224 started 13:48:42 UTC). task1 (labelled 13:12) was written ~13:10 UTC. Original labels kept above; order of events unchanged."
+  }
+}

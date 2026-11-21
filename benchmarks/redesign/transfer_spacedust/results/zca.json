@@ -1,0 +1,23 @@
+{
+ "transform": "zca10",
+ "global_mean_norm": 0.811280977873652,
+ "eigenvalue_q": [
+  2.7506383502553135e-11,
+  1.350460152262798e-05,
+  0.0001622566887984222,
+  0.13140798625544312
+ ],
+ "participation_ratio_before": 5.721482749138388,
+ "genes": 4257531,
+ "unique": 4231484,
+ "invalid_unique": 0,
+ "duplicate_copy_cosine_n": 14571,
+ "duplicate_copy_cosine_min_q01_q50": [
+  0.9999868273735046,
+  1.0,
+  1.0
+ ],
+ "source": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/spacedust/model_scaling_20260913/results/esmc300m/embedding",
+ "seconds": 413.7,
+ "peak_rss_gb": 39.83
+}

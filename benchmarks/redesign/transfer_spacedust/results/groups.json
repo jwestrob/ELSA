@@ -1,0 +1,60 @@
+{
+ "genomes": 1317,
+ "theta": 0.75,
+ "groups": 618,
+ "largest": 20,
+ "singletons": 388,
+ "size_q50_q90_q99": [
+  1.0,
+  4.0,
+  15.830000000000041
+ ],
+ "pair_q50_q90_q99_q999": [
+  0.6173189123832231,
+  0.6476101630425561,
+  0.7258205459047921,
+  0.7764565329426385
+ ],
+ "nn_q10_q50_q90": [
+  0.7194378099848019,
+  0.7734011647099635,
+  0.8026454812371564
+ ],
+ "groups_by_theta": {
+  "0.5": 1,
+  "0.55": 1,
+  "0.6": 4,
+  "0.65": 70,
+  "0.7": 229,
+  "0.75": 618,
+  "0.8": 1230,
+  "0.85": 1313,
+  "0.9": 1316,
+  "0.95": 1317
+ },
+ "query_genome_groups": {
+  "Kutzneria sp. 744": 261,
+  "Micromonospora sp. ATCC 39149": 242,
+  "Micromonospora sp. M42": 242,
+  "Streptomyces albus J1074": 250,
+  "Streptomyces ghanaensis ATCC 14672": 250,
+  "Streptomyces himastatinicus ATCC 53653": 250,
+  "Streptomyces pristinaespiralis ATCC 25486": 250,
+  "Streptomyces sp. AA4": 262,
+  "Streptomyces sp. C": 250
+ },
+ "query_group_sizes": {
+  "Kutzneria sp. 744": 2,
+  "Micromonospora sp. ATCC 39149": 5,
+  "Micromonospora sp. M42": 5,
+  "Streptomyces albus J1074": 6,
+  "Streptomyces ghanaensis ATCC 14672": 6,
+  "Streptomyces himastatinicus ATCC 53653": 6,
+  "Streptomyces pristinaespiralis ATCC 25486": 6,
+  "Streptomyces sp. AA4": 6,
+  "Streptomyces sp. C": 6
+ },
+ "ami_family_ref": 0.6971550218748157,
+ "ami_genus_ref": 0.15126180908523273,
+ "seconds": 2.3
+}

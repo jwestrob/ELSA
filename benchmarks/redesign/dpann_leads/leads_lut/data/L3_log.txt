@@ -1,0 +1,78 @@
+/Users/jacob/.pyenv/versions/miniconda3-latest/lib/python3.12/site-packages/Bio/Align/__init__.py:4414: BiopythonDeprecationWarning: The attribute 'target_end_gap_score' was renamed to 'end_insertion_score'. This was done to be consistent with the
+AlignmentCounts object returned by the .counts method of an Alignment object.
+  warnings.warn(
+/Users/jacob/.pyenv/versions/miniconda3-latest/lib/python3.12/site-packages/Bio/Align/__init__.py:4414: BiopythonDeprecationWarning: The attribute 'query_end_gap_score' was renamed to 'end_deletion_score'. This was done to be consistent with the
+AlignmentCounts object returned by the .counts method of an Alignment object.
+  warnings.warn(
+K00035 GFO_IDH_MocA Q53TZ2 6JNJ_A_fam 122 1 3
+K00114 PQQ Q9Z4J7 1FLG_A_fam 544 1 15
+K00226 DHO_dh A2RJT9 1JUB_A_fam 303 1 20
+K00549 Meth_synt_2 Q9X112 1T7L_A_fam 340 1 18
+K00558 DNA_methylase P20589 1DCT_A_fam 324 1 4
+K00690 Alpha-amylase A0ZZH6 6FME_A_fam 187 1 5
+K00799 GST_N Q65XA0 5D9T_A_fam 188 1 6
+K00868 Phos_pyr_kin P39610 2I5B_A_fam 268 1 11
+K01079 Hydrolase Q58989 1L7M_A_fam 187 2 9
+K01142 Exo_endo_phos O26314 3G91_A_fam 256 1 5
+K01174 SNase Q8NXI6 3QOJ_A_fam 113 3 2
+K01185 Phage_lysozyme P00720 5JDT_A_fam 148 2 4
+K01236 Alpha-amylase Q55088 3VGB_A_fam 392 2 17
+K01443 Amidohydro_1 O32445 3IV8_A_fam 338 1 15
+K01465 Amidohydro_1 Q58885 9YD7_A_fam 386 1 12
+K01493 dCMP_cyt_deam_1 P16006 1VQ2_A_fam 140 1 8
+FAILED https://files.rcsb.org/download/9sx4.pdb HTTP Error 404: Not Found
+K01555 FAA_hydrolase P16930 9SX4_A_fam 305 1 12
+K01560 Hydrolase Q51645 2NO4_A_fam 199 1 5
+K01561 Abhydrolase_1 Q1JU72 1Y37_A_fam 268 2 5
+K01623 Glycolytic Q8SSM8 3MBD_A_fam 336 2 2
+K01755 Lyase_1 P04424 1K62_A_fam 301 2 4
+K01785 Aldose_epim P39840 3MWX_A_fam 319 2 3
+K01790 dTDP_sugar_isom O27818 1EP0_A_fam 183 2 10
+K01805 AP_endonuc_2 P15587 1MUW_A_fam 287 2 8
+K01821 Tautomerase P70994 2OPA_A_fam 61 1 4
+K01921 Dala_Dala_lig_C P07862 4C5C_A_fam 214 2 60
+K02342 RNase_T P03007 2GUI_A_fam 176 1 9
+K02501 GATase P33734 1OX6_A_fam 220 3 1
+K03215 tRNA_U5-meth_tr P55135 1UWV_A_fam 328 1 7
+K03500 Methyltr_RsmB-F P36929 1SQG_A_fam 200 1 11
+K03655 DEAD P46063 2V1X_A_fam 188 1 7
+K03741 LMWPc P0A006 2CD7_A_fam 131 3 4
+K03781 Catalase O52762 4E37_A_fam 397 2 12
+K03782 peroxidase O59651 3VLI_A_fam 643 1 1
+K04066 DEAD P46063 2V1X_A_fam 188 1 7
+K04077 Cpn60_TCP1 Q6LX38 3RUV_A_fam 499 2 10
+K04095 Fic Q9BVA6 6I7H_A_fam 117 1 12
+K04771 Trypsin P0AEE3 3LGI_A_fam 187 3 8
+K05992 Alpha-amylase P19531 1QHO_A_fam 379 2 23
+K06118 Epimerase O48917 1I24_A_fam 302 3 25
+K06969 Methyltrans_SAM Q5SIT4 1WXX_A_fam 219 1 7
+K07130 Cyclase Q81PP9 4CO9_A_fam 160 1 6
+K07154 HipA_C Q8EIX3 4PU5_A_fam 263 1 14
+K07258 Peptidase_S11 P39042 1ES5_A_fam 249 3 1
+K07638 HisKA P0AE82 4BIX_A_fam 81 1 5
+K08640 Peptidase_M15_3 P00733 1LBU_A_fam 135 1 4
+K08678 Epimerase Q9ZUY6 6H0N_A_fam 291 1 19
+K11066 Amidase_2 P82974 2Y28_A_fam 161 1 3
+K13590 GGDEF P31129 3TVK_A_fam 168 1 15
+K13598 Response_reg P0AE82 4BIX_A_fam 229 1 20
+K13877 Aldedh Q1JUP4 5X5T_A_fam 474 2 10
+K14418 ECH_1 A5JTM5 1NZY_A_fam 263 2 9
+K15510 Bac_luciferase Q0RVH7 5LXE_A_fam 305 2 13
+K17218 Pyr_redox_2 Q7ZAG8 3H8L_A_fam 333 1 11
+K17680 DnaB_C Q9X4C9 2R6A_A_fam 253 1 13
+K18639 Pkinase P37562 6G4J_A_fam 232 1 10
+K18679 Pkinase P37562 6G4J_A_fam 232 1 10
+K18680 Pkinase P9WI77 2H34_A_fam 206 1 10
+K18981 3Beta_HSD Q7CRQ0 3RFT_A_fam 172 1 20
+K21158 Pkinase P37562 6G4J_A_fam 232 1 10
+K22278 Polysacc_deac_1 Q81EJ6 5N1P_A_fam 123 1 3
+K22342 HODM_asu-like A4XXY9 5LTE_A_fam 294 1 5
+status
+no_reviewed_entry_with_EC_active_site_structure    253
+no_complete_EC                                      69
+ok                                                  39
+no_experimental_chain_with_active_site              38
+ok_but_length_incompatible                          23
+no_entry_in_label_family                            22
+Name: count, dtype: int64
+128 genes in 39 families with a reference

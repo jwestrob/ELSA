@@ -1,0 +1,49 @@
+Micrarchaeota all: n=1146; 560fam=292, canonical=200, both=3 (expected 51.0), Fisher OR=0.035 p=4.35e-24; HMGCR in 560fam genomes 91/292 (0.31) vs canonical genomes 152/200 (0.76)
+Micrarchaeota comp>=70: n=1020; 560fam=266, canonical=192, both=3 (expected 50.1), Fisher OR=0.034 p=7.05e-24; HMGCR in 560fam genomes 88/266 (0.33) vs canonical genomes 147/192 (0.77)
+Micrarchaeaceae comp>=70: n=434; 560fam=241, canonical=35, both=2 (expected 19.4), Fisher OR=0.041 p=1.04e-10; HMGCR in 560fam genomes 69/241 (0.29) vs canonical genomes 26/35 (0.74)
+
+# 560-family genomes (comp >= 70) by genus: HMGCR / M3K route / MVK / canonical HMGCS
+                                       n  HMGCR  M3K  MVK  canon
+fam                genus                                        
+f__Micrarchaeaceae g__Micrarchaeum_A  34      0   17   10      1
+                   g__JAJYXL01        33     26    6   28      0
+                   g__JAJZAB01        30      0    4   15      0
+                   g__JAJZYD01        26      8    0   13      0
+                   g__JAMCYB01        25      1    2   16      0
+                   g__JAMCYW01        21      0   20    2      0
+                   g__JAKARM01        18     17    0   16      0
+                   g__JAKATK01        13     13    0   12      0
+                   g__JAMCYM01        12      0    0    1      0
+                   g__JAKAWW01         9      0    0    9      0
+                   g__JAJZYW01         9      0    2    3      0
+f__CABMGC01        g__JAGWGW01         4      4    0    4      0
+f__Micrarchaeaceae g__JAMCYG01         4      0    0    1      0
+f__CABMGC01        g__JAKAON01         4      3    0    1      0
+                   g__JAJYVH01         3      3    0    0      0
+                   g__JAJYVZ01         3      3    0    3      0
+                   g__JAJZZD01         3      3    0    3      0
+f__Micrarchaeaceae g__JAGWFU01         2      0    0    1      0
+                   g__CAIOIN01         2      2    0    2      0
+f__CABMGC01        g__JAJZOD01         2      2    0    2      0
+                   g__JAJYJW01         2      0    0    0      0
+                   g__JAGWGI01         2      0    0    0      1
+f__Micrarchaeaceae g__JAGWHI01         1      0    0    1      0
+f__CABMGC01        g__JAGDYD01         1      0    0    1      0
+f__Micrarchaeaceae g__ARM-1            1      1    0    1      1
+                   g__A-MIC-10         1      1    0    1      0
+f__CABMGC01        g__JAGDXZ01         1      1    0    1      0
+
+# profiling set: Micrarchaeaceae comp>=70 with MVK or M3K route: HMGCR+ 125, HMGCR- 139
+# families enriched in HMGCR-blank genomes (prev_minus >= 0.6, prev_plus <= 0.2)
+                          family_id  n_plus  n_minus  prev_plus  prev_minus  diff  len_med                  annot                          cdd
+fam:5ad133d455:DAHXLY010000023.1_26    19.0    108.0       0.15        0.78  0.62    193.0             LacAB_rpiB             RpiB; LacAB_rpiB
+          fam:5ad133d455:NCN86930.1     9.0     85.0       0.07        0.61  0.54    137.0 tRNA-Thr_ED; HATPase_c        tRNA-Thr_ED; PRK03991
+        fam:5ad133d455:MBI4021686.1    23.0     99.0       0.18        0.71  0.53    158.0  NUDIX; K03574; K17816        MTH1; Nudix_Hydrolase
+fam:5ad133d455:DAHWZX010000010.1_16    12.0     84.0       0.10        0.60  0.51     70.0                    NaN                          NaN
+ fam:5ad133d455:DAHXEU010000058.1_9    17.0     88.0       0.14        0.63  0.50    371.0                   None           PRK08026; PLN02191
+          fam:5ad133d455:EET89857.1    23.0     85.0       0.18        0.61  0.43    199.0                   None HAD_5-3dNT; PLDc_C_DEXD_like
+
+# leucine-catabolism / HMG-CoA lyase KOs in the 17 lead genomes
+Empty DataFrame
+Columns: [accession, genomes]
+Index: []

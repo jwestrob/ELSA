@@ -1,0 +1,210 @@
+softrec workstream NOTEBOOK (append-only; UTC timestamps)
+==========================================================
+
+2026-11-12 13:27 UTC  Design fixed, predeclared.json written before any job was submitted.
+  Question: token-free recurrence from per-gene ranked neighbour lists vs the token engine.
+  Key design decision: lists exclude the gene's own genus. Reason: Parvarchaeum has 190 genomes (largest
+  genus; 922 genera, median 2 genomes per genus); a top-50 list that may include own-genus genes would be
+  consumed by same-genus copies, which can never add a lineage to L. Depth is therefore counted in genes
+  outside the own genus. Consequence: G and E are computed over other-genus genomes (the engine counts
+  own-genus genomes in G and E); L is unaffected. The skip-genome family run checks the engine identity.
+  MMseqs2 hit lists: $RD/repair/hits (1,093,510 rescue/split query uniques) and $RD/subgenic/hits (S queries from
+  356 sampled genomes + gold neighbourhoods; giants/bench sets) cover < 1.47 M of 2,547,528 unique sequences;
+  no fair genome-wide list exists -> degenerate family lists are the control, as instructed.
+  Family-list cost: sum over tokens of size^2 = 3.34e9 (base), 3.41e9 (rescue3): the full degenerate run is
+  affordable with the same kernel.
+  zca10 random-pair cosine quantiles (2 M pairs): q50 -0.003, q99 0.14, q99.9 0.321, q99.99 0.677;
+  stored k50 kNN cosine at rank 1/10/50 median 0.86/0.725/0.631.
+
+2026-11-12 13:31 UTC  Jobs. standard_expand_2 was at its 10-submitted-job cap (other agents), so every job runs on
+  standard_expand -c 24.
+  81041 sr_knn   knn_deep.py --source zca10 --k 2000 (HNSW M32 efC200 efSearch 2001; recall vs exact on 2,000 queries)
+  81042 sr_fam   softrec fam lists: e3c50s75 skip genome (+ engine check, forced rule P<=1e-4&L>=2), e3c50s75 skip
+                 genus, rescue3 skip genus; then scorer + compare + ribosomal per result dir (score_dirs.sh)
+  81043 sr_k50   softrec zca10_k50 (stored top-50 uniques; depth 50, floors none/0.4): first embedding end-to-end
+  81053 sr_zca10 softrec zca10 deep (depths 50/200/1000 x floors none/0.4), afterok:81041
+  Instances: 9,399,310 (all pairs within 3 on a contig); the engine keeps 9,350,064 after ta != tb.
+  Base family lists: median 307 members per gene's family, q99 5,988, max 7,674.
+
+2026-11-12 13:45 UTC  Degenerate check (job 81042, fam e3c50s75, lists outside own genome): EXACT.
+  Engine instances 9,350,064 = softrec non-excluded instances; excluded set identical (same-token pairs, 49,246).
+  L equal for 9,350,064 / 9,350,064; G equal for 9,350,064; E max |diff| 3.8e-6 (float32).
+  Engine rule P<=1e-4 & L>=2: engine 3,322,691 significant instances, softrec 3,322,691, both 3,322,691.
+  Brute-force python recount (independent slot-dictionary implementation): 0 / 600 observed, 0 / 200 null mismatches.
+  Pass times (24 CPUs): observed 104 s incl. numba compile, nulls 190-196 s (random order costs cache misses).
+
+2026-11-12 13:46 UTC  First end-to-end embedding variant (job 81043, zca10_k50 = stored top-50 unique kNN expanded to
+  genes outside the own genus; 349,020 genes with < 50 entries; total job 5 min 46 s incl. scoring).
+  TUNE (odd) only. Base tune summed excess +0.436.
+  variant / stat      rule            inst FDR  sig inst   genes cov  tune sum A  A-B [95%]              ribo rec  Parv
+  K50 none count      L>=3            0.0019   1,940,781  1,674,752   +0.498     +0.062 [+0.042,+0.082]  1,577     29/114  INADMISSIBLE
+  K50 none graded     S>=16 (= L>=3 set; S per genus is 11.2-15.1 at depth 50, so S>=16 <=> 2 other genera)  same
+  K50 none poisson    P<=1e-4&L>=2    0.0042   2,515,988  1,990,577   +0.438     +0.001 [-0.017,+0.021]  1,675     114/114 admissible
+  K50 f0.4 *          ~identical to fnone (floor 0.4 binds for 10% of genes at depth 50)
+  Reading (to test): count rules at depth 50 trade the ribosomal locus for DefenseFinder localization, as plain-similarity
+  families did (V0 +0.038, 6/114). Parvarchaeum (190 genomes) genes have few other-genus genes in a top-50 unique list.
+  Refuter for "it is list depth": the deep (2000-unique, 50 genes outside genus) lists also lose Parvarchaeaceae at L>=3.
+
+2026-11-12 13:55 UTC  Degenerate lists through the full softrec pipeline (fam e3c50s75, skip genome). TUNE only.
+  stat (instance-FDR selection)   rule           inst FDR  sig inst   tune A-B vs base [95%]    ribo rec / res  Parv
+  forced engine rule              P<=1e-4&L>=2   -         3,322,691  -0.000 [-0.002,+0.001]    1,686 / 711     114
+  poisson                         P<=1e-3&L>=2   0.0052    3,452,927  -0.007 [-0.012,-0.001]    see table
+  graded                          S>=260         -         -          -0.027 [-0.056,+0.000]    1,678 / 1,166   114
+  count                           L>=50          0.0014    958,497    -0.063 [-0.091,-0.034]    1,678 / 1,237   114
+  Forced arm vs v5: boundary_support.npy identical (0 of 3,585,303 differ; 2,105,032 supported); conserved and
+  conserved_g2 loci identical (932,123 / 734,036); unit loci 1,248,475 shared of 1,269,692 / 1,273,333 because ties in L
+  at a boundary were broken by instance order (left, d) where the engine uses (d, left). Code fixed at 13:50 UTC
+  (write_result sorts significant instances by (d, left)); runs started after that use the engine's tie-break.
+  Reading: the softrec kernel and locus reading reproduce the token engine; instance-level rule selection by itself
+  costs -0.007 on tune for family lists (picks P<=1e-3 over 1e-4); count-only rules need L>=50 with whole families
+  because large families co-locate by chance in many genera (the Poisson expectation is what makes family counts usable).
+  Forced arm summary: instance-level FDR of the engine's rule P<=1e-4&L>=2 is 0.0006 (engine pair-level 0.0044);
+  genes covered 2,256,894 = the engine's v5 figure. Poisson own selection (P<=1e-3&L>=2) ribosomal: 1,686 / 687 / 114.
+  zca10 HNSW graph build 924 s (24 CPUs); head 319 s; head search 817 queries/s.
+
+2026-11-12 14:05 UTC  Coordinator note: the DPANN scorer takes the best locus of the whole loci_all_genomes table (11
+  readings), so full-table F1 is best-of-11 (rescue3 conserved@2 alone, even: DF .688 / TXSS .409 / CCT .426, summed .337).
+  softrec writes the same 11 readings (conserved and conserved_g2 at 2/5/12/30/80, unit@0.5), so the predeclared
+  full-table comparison stands as declared. Added readings.py: single-reading scores (R1 = conserved@2; A = boundary
+  rule A f 0.5; UA = profile units then A f 0.5 as the token-free analogue of rule H, which needs token-pair modules),
+  paired against token R1 (boundary workstream scores), token A/UA (same code on the token landscapes) and token H.
+  fam_e3c50s75_genus (lists outside own genus; same families): poisson tune +0.014 [+0.007, +0.021], ribosomal
+  1,681 / 756 / 114 (admissible); graded -0.028; count -0.063. Counting G and E over other genera is itself a small gain.
+
+2026-11-12 14:12 UTC  Family controls finished (job 81042, 35 min). TUNE A-B vs base:
+  fam_rescue3_genus: poisson +0.015 [+0.007, +0.024] (ribosomal 1,681 / 750 / 114); graded -0.013; count -0.061.
+  Job 81368 (sr_read): readings.py smoke test on the forced family arm and zca10_k50 poisson, odd split only.
+
+2026-11-12 14:20 UTC  readings.py smoke test (job 81368, 2 min 17 s), ODD split, single readings, A - B summed DF+TXSS excess:
+  forced fam arm vs token base: R1 +0.000, A +0.000, UA -0.001 (machinery reproduces every reading).
+  token base itself, odd: R1 summed .327 (F1 DF .668 / TXSS .410 / CCT .417); A .380 (+0.053 [+0.045, +0.061] over R1);
+     UA .430; boundary rule H .448 (F1 .719 / .551); token UA vs token H -0.018 [-0.035, -0.002].
+  zca10_k50 poisson vs token base: R1 +0.070 [+0.052, +0.089] (F1 DF .741 vs .668, TXSS .433 vs .410, CCT .413 vs .417);
+     A vs A +0.046 [+0.028, +0.066]; UA vs UA -0.010; vs token H: R1 -0.050, A -0.022 [-0.042, +0.000], UA -0.027.
+  Ribosomal on single readings (zca10_k50 poisson): R1 1,675 recovered / 842 resolved / 114 Parv (admissible on the
+     default reading); A 1,675 / 890; UA 138 recovered (profile units cut the run; 66/114 Parv).
+  Reading: full-table parity (+0.001) hides a default-reading gain (+0.070 on odd): softrec's level-2 loci are
+  tighter (median span 3 vs 4; 2.22 M genes in loci vs 2.52 M), and the best-of-11 table lets the token engine
+  recover that precision at higher levels. Refuter: the even split shows no R1 gain, or the gain comes with lost
+  coverage (covered50 down > 0.01).
+
+2026-11-12 14:33 UTC  Head kNN (job 81123): HNSW build 319 s, search 2,655 s (973-989 queries/s on 24 CPUs), recall vs exact
+  (2,000 queries) @50 0.9992, @200 0.9991, @1000 0.995, @2000 0.9795. Head random-pair cosine q50 -0.002, q99 0.229,
+  q99.9 0.391, q99.99 0.832; cosine at rank 1/50/200/1000/2000 median 0.927/0.783/0.689/0.476/0.388.
+  Floor 0.4 in head space sits near its random-pair q99.9 (zca10: 0.32). Head softrec job 81247 started 06:32 PST.
+  zca10 kNN search runs at 352 q/s (ETA ~07:50 PST).
+
+2026-11-12 15:00 UTC  Head lists (job 81247; lists outside own genus from head top-2000; observed pass 99 s, nulls 86-88 s;
+  brute 0/600 and 0/200). TUNE full table, A - B vs base [95%]; ribosomal recovered / resolved / Parvarchaeaceae:
+  variant      count                          graded                         poisson
+  K50  none    +0.053 [+.035,+.073] 1659/810/101  = count (same set)          +0.004 [-.012,+.022] 1684/783/114
+  K50  f0.4    +0.053 [+.035,+.073] 1659/810/101  = count                     +0.004 [-.012,+.022] 1684/783/114
+  K200 none    +0.023 [+.007,+.040] 1681/902/114  +0.011 [-.005,+.028] 1681/873  -0.037 [-.053,-.021] 1686/751/114
+  K200 f0.4    +0.024 [+.008,+.042] 1681/902/114  +0.012 [-.004,+.029] 1681/873  -0.036 [-.051,-.019] 1686/751/114
+  K1000 none   +0.023 [+.005,+.042] 1682/909/114  +0.021 [+.003,+.039] 1682/907  -0.104 [-.120,-.088] 1682/715/114
+  K1000 f0.4   +0.024 [+.005,+.044] 1682/913/114  +0.027 [+.008,+.046] 1682/912  -0.093 [-.110,-.077] 1682/714/114
+  Rules: K1000 none count L>=10? (see table), graded S>=80, poisson P<=1e-3&L>=2 (3.58 M instances at f0.4).
+  Refuter check written at 13:46 ("depth 50 outside the genus also loses Parvarchaeaceae at L>=3"): it does
+  (101/114 with lists of 50 genes outside the genus), so the k50 ribosomal loss is not only own-genus crowding;
+  depth 200 restores 114/114 at half the gain.
+  Poisson on deep lists fails: E grows with list depth and the rule picks P<=1e-3 over many weak instances.
+
+2026-11-12 15:05 UTC  Tune table (collect.py, tune only) written to $RD/softrec/results/engine_results_tune.tsv.
+  Base tune F1 (forced arm): DF .822, TXSS .747, CCT .582. Head K1000 f0.4 graded (best admissible head variant so far):
+  tune F1 DF .853, TXSS .691, CCT .519; the summed-excess gain comes from DefenseFinder while TXSScan F1 falls 0.056.
+  Every admissible embedding variant with a positive tune sum has TXSS F1 .690-.697 on tune.
+  PREDICTION written before any test number: if the selected variant is one of these, it fails the predeclared F1
+  condition on even genomes (TXSS F1 >= 0.738 needed) while its summed excess is above the base; the outcome would be
+  "fails (F1 condition), summed excess higher". Refuter: even-genome TXSS F1 within 0.02 of 0.758.
+  Family controls with lists outside the genus (poisson) keep TXSS F1 (.750) and gain +0.014/+0.015.
+
+2026-11-12 15:12 UTC  Tie-break re-run (job 81247, fam_e3c50s75_genome_tb, forced rule): loci_all_genomes identical to v5 in
+  all 11 readings (2,939,492 of 2,939,492 loci shared, 0 differ); tune A-B +0.000 [+0.000, +0.000]; ribosomal 1,686/711/114.
+  Job 81807: readings.py --ladder on head K1000 f0.4 graded vs base (odd only), to locate the TXSScan F1 loss.
+
+2026-11-12 15:20 UTC  Ladder diagnostic (job 81807, 3 min 57 s), ODD split, head K1000 f0.4 graded (A) vs token base (B):
+  single readings: R1 A-B +0.050 [+0.029, +0.072] (F1 DF .719/.668, TXSS .439/.410, CCT .409/.417); A vs A +0.050;
+     UA vs UA -0.001; vs token H: R1 -0.071, A -0.017 [-0.039, +0.006], UA -0.018.
+  each reading alone (F1 / share of instances whose full-table best F1 it reaches), TXSScan:
+     reading          softrec           token
+     conserved@2      .439 / .12        .410 / .10
+     conserved@80     .366 / .18        .357 / .24
+     conserved_g2@80  .342 / .14        .387 / .25
+     unit@0.5         .638 / .67        .720 / .81
+     DefenseFinder unit@0.5 .834 / .87 vs .805 / .87; CRISPR-Cas unit .495 vs .555.
+  softrec has no separate conserved@5 loci: with rule S>=80 every significant instance has L well above 5, so the
+  level-5 runs equal the level-2 runs and the engine's own de-duplication (genome, contig, start, end, kind) drops them.
+  READING: the full-table TXSScan F1 loss is a locus-reading effect, located in the unit reading. Units cut where the
+  genome sets of the best instances at adjacent boundaries have Jaccard < 0.5. In the token engine every instance of a
+  family pair carries the pair's whole genome set; in softrec each instance's set is limited by its two lists (1,000
+  genes outside the genus), so neighbouring boundaries of a large conserved system disagree and the unit splits.
+  Ribosomal on the soft UA reading: 808 recovered, 0/114 Parvarchaeaceae (units cut the run), same mechanism.
+  Refuter: TXSScan instances' best unit loci in softrec are not shorter than the token's (span ratio >= 1).
+
+2026-11-12 15:38 UTC  EXPLORATORY (outside the pool; job 82007): unit reading variants on head K1000 f0.4 graded, everything
+  else fixed (same rule S>=80, same 2,732,915 instances). TUNE:
+  unit on genus sets, Jaccard 0.5: units 1,101,772 (genome sets: 1,120,426); summed +0.015 [-0.004, +0.035];
+     F1 DF .852, TXSS .674 (genome-set units .691), CCT .517; ribosomal 1,682/912/114.
+  The genus folding does not restore TXSScan: the "genome sets truncated within genera" half of the 15:20 reading is
+  not supported. Pending: genome sets at Jaccard 0.3 (fewer cuts).
+
+2026-11-12 15:45 UTC  zca10 kNN (job 81041): build 924 s, search 6,952 s (366 q/s, 24 CPUs), recall vs exact @50 0.9991,
+  @200 0.9986, @1000 0.9943, @2000 0.9784; peak RSS 61 GB. zca10 cosine at rank 1/50/200/1000/2000 median
+  0.870/0.658/0.557/0.389/0.293, so floor 0.4 binds for more than half of the genes at depth 1,000.
+  zca10 deep softrec (job 81053) started 07:44 PST.
+
+2026-11-12 15:52 UTC  EXPLORATORY: unit reading on genome sets at Jaccard 0.3: units 915,683 (0.5: 1,120,426); TUNE summed +0.006
+  [-0.014, +0.027]; F1 DF .849, TXSS .627, CCT .507. Fewer cuts make TXSScan worse.
+  CORRECTION of the 15:20 reading: softrec units are OVER-merged, not fragmented. Revised reading: a bounded ranked list
+  is filled by the genome's closest relatives, so every instance of a genome draws its supporting genome set from the
+  same relatives; neighbouring boundaries then have similar profiles across system edges and units extend past them.
+  A token pair's profile is the pair's own incidence and changes at a system edge. Genus folding (more similar
+  profiles, fewer cuts) also lowered TXSScan (.674). PREDICTION: Jaccard 0.7 / 0.85 cut more and raise TXSScan F1 above
+  .691. Refuter: TXSScan F1 at 0.7 and 0.85 <= .691.
+
+2026-11-12 16:13 UTC  SELECTION (predeclared rule, tune numbers only; no even-genome number of any pool variant read yet).
+  Pool: 42 variant x statistic results (zca10_k50 6, zca10 18, head 18); admissible 30 (all depth-50 count/graded
+  variants fail Parvarchaeaceae: zca10_k50 29/114, zca10 K50 97/114, head K50 101/114).
+  SELECTED: zca10, depth 1,000 genes outside the genus, no floor, count statistic. Rule L>=15 (instance FDR 0.0046),
+  2,330,685 significant instances, 1,822,058 genes covered; ribosomal 1,681 / 984 / 114. Tune A-B vs base +0.068
+  [+0.050, +0.087] (A +0.505, B +0.436); tune F1 DF .850 (base .822), TXSS .693 (.747), CCT .503 (.582).
+  Runner-up admissible: zca10 K1000 f0.4 count +0.054, zca10 K1000 f0.4 graded +0.049, zca10 K1000 none graded +0.046.
+  The tune TXSS F1 is 0.054 below the base: the 15:05 prediction (fails on the F1 condition) applies to this variant.
+
+2026-11-12 16:25 UTC  TEST REVEAL, selected variant zca10 K1000 none count (full table, 11 readings), EVEN genomes:
+  vs base:    summed excess A +0.508 B +0.447  A-B +0.061 [+0.041, +0.080]
+              DF F1 .843 vs .806 (+0.037 [+0.020, +0.054]); TXSS F1 .699 vs .758 (-0.059 [-0.073, -0.044]);
+              CCT F1 .499 vs .589 (-0.090 [-0.102, -0.078]); excess DF +0.071, TXSS -0.011 [-0.023, +0.001], CCT -0.011
+  vs default (rescue3): summed +0.057 [+0.039, +0.076]; DF F1 .843 vs .826; TXSS .699 vs .757; CCT .499 vs .597
+  PREDECLARED OUTCOME: neither "matches" nor "beats". Summed excess clears the "beats" bar (+0.061, interval above 0)
+  but TXSScan F1 is 0.059 below the base (bar: -0.02 for matches, -0.01 for beats). As predicted at 15:05.
+  All genomes, full table: covered50 / localized: DF .951/.928 (base .913/.899); TXSS .975/.795 (.991/.947);
+  CCT .782/.672 (.884/.770). Random-placement control F1: DF .502 (.545), TXSS .535 (.580), CCT .444 (.519).
+  Complementarity (even, vs base): DF token F1<0.5 131 -> softrec F1>=0.5 90; softrec F1<0.5 82 -> token F1>=0.5 41.
+     TXSS 9 -> 3; 22 -> 16. CCT 381 -> 75; 591 -> 285. (vs default: DF 106 -> 69, 82 -> 45; TXSS 10 -> 3, 22 -> 15;
+     CCT 367 -> 70, 591 -> 294.) Median boundary precision at best locus: equal to the base for every caller
+     (DF 1.0, TXSS 0.75, CCT 0.5); median best span DF 2/2, TXSS 4/3.5, CCT 2/2.
+  Gold member genes touching a supported boundary (even): DF .805 (base .775), TXSS .951 (.979), CCT .616 (.765).
+  Ribosomal: 1,681 recovered, 984 resolved (base 711), 114/114 Parvarchaeaceae; resolved at conserved@80 1,350
+     (base 1,317); unit@0.5 511 (base 149).
+
+2026-11-12 16:27 UTC  EXPLORATORY unit-reading Jaccard sweep (head K1000 f0.4 graded, tune; job 82194):
+  tau      units      TXSS F1  DF F1  CCT F1  summed A-B
+  0.3      915,683    .627     .849   .507    +0.006
+  0.5    1,120,426    .691     .853   .519    +0.027
+  0.7    1,264,811    .708     .855   .522    +0.019 [+0.002, +0.036]
+  0.85   1,336,311    .706     .856   .523    +0.010
+  genus 0.5 1,101,772 .674     .852   .517    +0.015
+  The 15:52 prediction (TXSS F1 above .691 at 0.7/0.85) holds, but the gain is +0.017 and saturates 0.04 below the base
+  (.748). Over-merged units explain part of the TXSScan loss; a threshold on bounded-list profiles cannot recover
+  the token engine's pair-specific profiles.
+
+2026-11-12 16:45 UTC  Single readings for the selected variant (job 82413, 6 min; odd and even; vs base and rescue3):
+  even R1 vs base R1 +0.054 [+0.032, +0.075] (F1 DF .711/.673, TXSS .448/.412, CCT .412/.422); vs rescue3 R1 +0.050
+  [+0.028, +0.073]; odd +0.067. A vs A +0.040; A vs token H -0.028 [-0.049, -0.007]; UA vs token H +0.021 [-0.002,
+  +0.045] with UA ribosomal 833 / 0 Parvarchaeaceae (inadmissible); token UA vs H -0.022. token R1 here reproduces the
+  boundary workstream's R1 scores (check True). Ladder (even): softrec has 7 distinct readings (levels 5 and 12 coincide
+  with 2 under L >= 15); TXSScan F1 per reading softrec/token: conserved@2 .448/.412, unit .655/.722.
+  Controls on even (outside the pool): base family outside genus, poisson +0.011 [+0.005, +0.016] (F1 .813/.760/.565);
+  rescue3 outside genus, poisson +0.014 [+0.006, +0.022] (F1 .835/.759/.573; meets the "matches" bar).
+  REPORT.txt written. Results mirrored to results/remote/.

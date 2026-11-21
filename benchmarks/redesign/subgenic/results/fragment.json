@@ -1,0 +1,211 @@
+{
+ "sample_genes": 353941,
+ "fragment_genes_sample": 14885,
+ "fragment_frac_sample": {
+  "est": 0.04205503177083186,
+  "ci95": [
+   0.03923033742669452,
+   0.04471653415280209
+  ]
+ },
+ "evaluable_genes_sample": 312131,
+ "fragment_frac_of_evaluable_sample": {
+  "est": 0.04768831035686939,
+  "ci95": [
+   0.044511294030945864,
+   0.050658792837206285
+  ]
+ },
+ "genes_with_any_frag_partner_sample": 138985,
+ "by_position": [
+  {
+   "class": "edge",
+   "genes": 30113,
+   "evaluable": 24910,
+   "fragments": 9764,
+   "rate_all": 0.3242453425430877,
+   "rate_evaluable": 0.39197109594540347,
+   "rate_evaluable_ci95": [
+    0.38592560605645576,
+    0.3980499009564812
+   ]
+  },
+  {
+   "class": "terminal_not_edge",
+   "genes": 12514,
+   "evaluable": 10635,
+   "fragments": 481,
+   "rate_all": 0.03843695061531085,
+   "rate_evaluable": 0.04522802068641279,
+   "rate_evaluable_ci95": [
+    0.041440045906128764,
+    0.049344424463276866
+   ]
+  },
+  {
+   "class": "interior",
+   "genes": 311314,
+   "evaluable": 276586,
+   "fragments": 4640,
+   "rate_all": 0.01490456580815511,
+   "rate_evaluable": 0.01677597564591122,
+   "rate_evaluable_ci95": [
+    0.01630400115602142,
+    0.01726137328540926
+   ]
+  }
+ ],
+ "by_completeness": [
+  {
+   "completeness": "[0,50)",
+   "class": "edge",
+   "genomes": 1,
+   "evaluable": 13,
+   "fragments": 2,
+   "rate": 0.15384615384615385,
+   "ci95": [
+    0.04325726318273798,
+    0.4223517050863101
+   ]
+  },
+  {
+   "completeness": "[0,50)",
+   "class": "interior",
+   "genomes": 1,
+   "evaluable": 404,
+   "fragments": 8,
+   "rate": 0.019801980198019802,
+   "ci95": [
+    0.010067253905901062,
+    0.0385830063912339
+   ]
+  },
+  {
+   "completeness": "[0,50)",
+   "class": "all",
+   "genomes": 1,
+   "evaluable": 426,
+   "fragments": 10,
+   "rate": 0.023474178403755867,
+   "ci95": [
+    0.012799575612445742,
+    0.04266643791439763
+   ]
+  },
+  {
+   "completeness": "[50,70)",
+   "class": "edge",
+   "genomes": 28,
+   "evaluable": 2357,
+   "fragments": 972,
+   "rate": 0.412388629613916,
+   "ci95": [
+    0.3926733399949228,
+    0.4323890445377794
+   ]
+  },
+  {
+   "completeness": "[50,70)",
+   "class": "interior",
+   "genomes": 28,
+   "evaluable": 15968,
+   "fragments": 327,
+   "rate": 0.020478456913827655,
+   "ci95": [
+    0.018394251971266592,
+    0.022793334061392282
+   ]
+  },
+  {
+   "completeness": "[50,70)",
+   "class": "all",
+   "genomes": 28,
+   "evaluable": 19143,
+   "fragments": 1346,
+   "rate": 0.07031290811262603,
+   "ci95": [
+    0.06677655282731397,
+    0.07402168723333395
+   ]
+  },
+  {
+   "completeness": "[70,90)",
+   "class": "edge",
+   "genomes": 215,
+   "evaluable": 17272,
+   "fragments": 6802,
+   "rate": 0.3938165817508106,
+   "ci95": [
+    0.3865542170065285,
+    0.4011261701533076
+   ]
+  },
+  {
+   "completeness": "[70,90)",
+   "class": "interior",
+   "genomes": 215,
+   "evaluable": 160799,
+   "fragments": 2868,
+   "rate": 0.017835931815496364,
+   "ci95": [
+    0.017200430380925,
+    0.01849447116986949
+   ]
+  },
+  {
+   "completeness": "[70,90)",
+   "class": "all",
+   "genomes": 215,
+   "evaluable": 185472,
+   "fragments": 10016,
+   "rate": 0.054002760524499656,
+   "ci95": [
+    0.05298331209414485,
+    0.05504068406169738
+   ]
+  },
+  {
+   "completeness": "[90,101)",
+   "class": "edge",
+   "genomes": 112,
+   "evaluable": 5268,
+   "fragments": 1988,
+   "rate": 0.3773728170083523,
+   "ci95": [
+    0.36437685505741835,
+    0.3905474962356857
+   ]
+  },
+  {
+   "completeness": "[90,101)",
+   "class": "interior",
+   "genomes": 112,
+   "evaluable": 99415,
+   "fragments": 1437,
+   "rate": 0.014454559171151234,
+   "ci95": [
+    0.01373115451877964,
+    0.015215487321794775
+   ]
+  },
+  {
+   "completeness": "[90,101)",
+   "class": "all",
+   "genomes": 112,
+   "evaluable": 107090,
+   "fragments": 3513,
+   "rate": 0.03280418339714259,
+   "ci95": [
+    0.03175397967396338,
+    0.0338879050037453
+   ]
+  }
+ ],
+ "length_median_fragment": 99.0,
+ "length_median_evaluable": 224.0,
+ "partner_to_fragment_length_ratio_q25_q50_q75": [
+  2.182741116751269,
+  2.6525096525096523,
+  3.6851063829787236
+ ]
+}

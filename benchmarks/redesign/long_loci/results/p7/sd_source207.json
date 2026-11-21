@@ -1,0 +1,356 @@
+{
+ "label": "DEVELOPMENT",
+ "selection_from_dpann": {
+  "P": {
+   "Sadd": 0.2,
+   "SaddB": 0.2
+  },
+  "Z": {
+   "Sadd": 0.05,
+   "SaddB": 0.05
+  }
+ },
+ "outputs": {
+  "PSadd_t0.2": {
+   "score": {
+    "selection": "p7 sd PSadd 0.2",
+    "n_intervals": 31064,
+    "f1_observed": 0.6807425704636261,
+    "f1_random": 0.5151308234856233,
+    "f1_excess": 0.16561174697800277,
+    "ci_lo": 0.12666452133577882,
+    "ci_hi": 0.2038237522192091,
+    "localized_observed": 0.6714975845410628,
+    "localized_random": 0.41330917874396134,
+    "median_boundary_precision": 1.0,
+    "median_coverage": 0.6666666666666666,
+    "median_union_coverage": 0.8333333333333334,
+    "regions_better_than_random": 156,
+    "query_gene_coverage": 0.6021772800381248,
+    "interval_span_q": [
+     2.0,
+     4.0,
+     11.0,
+     43.0,
+     167.0
+    ],
+    "by_size": {
+     "1-5": {
+      "regions": 46,
+      "f1": 0.6589119817380688,
+      "control": 0.5004740015491531,
+      "excess": 0.1584379801889157,
+      "coverage_q50": 0.75,
+      "precision_q50": 1.0,
+      "best_span_q50": 3.0,
+      "size_q50": 4.0
+     },
+     "6-10": {
+      "regions": 68,
+      "f1": 0.7406613395356337,
+      "control": 0.5392523501824824,
+      "excess": 0.20140898935315124,
+      "coverage_q50": 0.6666666666666666,
+      "precision_q50": 1.0,
+      "best_span_q50": 6.0,
+      "size_q50": 9.0
+     },
+     "11-20": {
+      "regions": 54,
+      "f1": 0.6430036618915279,
+      "control": 0.5293445988873644,
+      "excess": 0.1136590630041635,
+      "coverage_q50": 0.6306818181818181,
+      "precision_q50": 1.0,
+      "best_span_q50": 8.0,
+      "size_q50": 14.0
+     },
+     "21-+": {
+      "regions": 39,
+      "f1": 0.6542715921911242,
+      "control": 0.47067969840862806,
+      "excess": 0.18359189378249616,
+      "coverage_q50": 0.5454545454545454,
+      "precision_q50": 1.0,
+      "best_span_q50": 15.0,
+      "size_q50": 28.0
+     }
+    }
+   },
+   "vs_frozen": {
+    "f1": [
+     0.013512640459386499,
+     0.006889081956569077,
+     0.02202086422344216
+    ],
+    "excess": [
+     0.0018849676191820758,
+     -0.004760373999833359,
+     0.010460356481071286
+    ],
+    "win_tie_loss_f1": [
+     19,
+     188,
+     0
+    ]
+   },
+   "verdict_vs_frozen": "MATCHES"
+  },
+  "PSaddB_t0.2": {
+   "score": {
+    "selection": "p7 sd PSaddB 0.2",
+    "n_intervals": 31104,
+    "f1_observed": 0.6821065943340439,
+    "f1_random": 0.5155377839695716,
+    "f1_excess": 0.16656881036447216,
+    "ci_lo": 0.12739912105700774,
+    "ci_hi": 0.2047835154129681,
+    "localized_observed": 0.6714975845410628,
+    "localized_random": 0.4140096618357488,
+    "median_boundary_precision": 1.0,
+    "median_coverage": 0.6666666666666666,
+    "median_union_coverage": 0.8333333333333334,
+    "regions_better_than_random": 156,
+    "query_gene_coverage": 0.6021772800381248,
+    "interval_span_q": [
+     2.0,
+     4.0,
+     11.0,
+     43.0,
+     167.0
+    ],
+    "by_size": {
+     "1-5": {
+      "regions": 46,
+      "f1": 0.6589119817380688,
+      "control": 0.5005587935687277,
+      "excess": 0.15835318816934105,
+      "coverage_q50": 0.75,
+      "precision_q50": 1.0,
+      "best_span_q50": 3.0,
+      "size_q50": 4.0
+     },
+     "6-10": {
+      "regions": 68,
+      "f1": 0.7448135886705819,
+      "control": 0.5396791311622587,
+      "excess": 0.20513445750832307,
+      "coverage_q50": 0.6833333333333333,
+      "precision_q50": 1.0,
+      "best_span_q50": 6.0,
+      "size_q50": 9.0
+     },
+     "11-20": {
+      "regions": 54,
+      "f1": 0.6430036618915279,
+      "control": 0.5298397499075439,
+      "excess": 0.11316391198398398,
+      "coverage_q50": 0.6306818181818181,
+      "precision_q50": 1.0,
+      "best_span_q50": 8.0,
+      "size_q50": 14.0
+     },
+     "21-+": {
+      "regions": 39,
+      "f1": 0.6542715921911242,
+      "control": 0.4713099836794588,
+      "excess": 0.18296160851166546,
+      "coverage_q50": 0.5454545454545454,
+      "precision_q50": 1.0,
+      "best_span_q50": 15.0,
+      "size_q50": 28.0
+     }
+    }
+   },
+   "vs_frozen": {
+    "f1": [
+     0.01487666432980423,
+     0.008028072017385798,
+     0.023507673517025686
+    ],
+    "excess": [
+     0.002842031005651438,
+     -0.004074815979739281,
+     0.011553150262739561
+    ],
+    "win_tie_loss_f1": [
+     21,
+     186,
+     0
+    ]
+   },
+   "verdict_vs_frozen": "MATCHES"
+  },
+  "ZSadd_t0.05": {
+   "score": {
+    "selection": "p7 sd ZSadd 0.05",
+    "n_intervals": 30696,
+    "f1_observed": 0.6009697521006829,
+    "f1_random": 0.49497431481732806,
+    "f1_excess": 0.10599543728335503,
+    "ci_lo": 0.06648509928496478,
+    "ci_hi": 0.1436553763646772,
+    "localized_observed": 0.5169082125603864,
+    "localized_random": 0.34932367149758453,
+    "median_boundary_precision": 1.0,
+    "median_coverage": 0.5,
+    "median_union_coverage": 0.6666666666666666,
+    "regions_better_than_random": 142,
+    "query_gene_coverage": 0.5553702269613391,
+    "interval_span_q": [
+     2.0,
+     3.0,
+     8.0,
+     23.0,
+     80.0
+    ],
+    "by_size": {
+     "1-5": {
+      "regions": 46,
+      "f1": 0.6380560260995044,
+      "control": 0.5100779270778678,
+      "excess": 0.12797809902163665,
+      "coverage_q50": 0.75,
+      "precision_q50": 1.0,
+      "best_span_q50": 2.5,
+      "size_q50": 4.0
+     },
+     "6-10": {
+      "regions": 68,
+      "f1": 0.6722713257158729,
+      "control": 0.5308641920845755,
+      "excess": 0.14140713363129742,
+      "coverage_q50": 0.6,
+      "precision_q50": 1.0,
+      "best_span_q50": 5.0,
+      "size_q50": 9.0
+     },
+     "11-20": {
+      "regions": 54,
+      "f1": 0.5803902013904454,
+      "control": 0.49910563681816966,
+      "excess": 0.08128456457227566,
+      "coverage_q50": 0.4460227272727273,
+      "precision_q50": 1.0,
+      "best_span_q50": 6.0,
+      "size_q50": 14.0
+     },
+     "21-+": {
+      "regions": 39,
+      "f1": 0.46140103744873745,
+      "control": 0.4088622838890428,
+      "excess": 0.0525387535596947,
+      "coverage_q50": 0.25,
+      "precision_q50": 1.0,
+      "best_span_q50": 9.0,
+      "size_q50": 28.0
+     }
+    }
+   },
+   "vs_frozen": {
+    "f1": [
+     0.002628251216457113,
+     -0.0017398031522219432,
+     0.008329336864756653
+    ],
+    "excess": [
+     -0.004990909569984934,
+     -0.009402564694976457,
+     0.0006056962116166031
+    ],
+    "win_tie_loss_f1": [
+     7,
+     193,
+     7
+    ]
+   },
+   "verdict_vs_frozen": "MATCHES"
+  },
+  "ZSaddB_t0.05": {
+   "score": {
+    "selection": "p7 sd ZSaddB 0.05",
+    "n_intervals": 30726,
+    "f1_observed": 0.6018791013476281,
+    "f1_random": 0.49536769425517646,
+    "f1_excess": 0.10651140709245162,
+    "ci_lo": 0.06740140124549081,
+    "ci_hi": 0.14439091434930704,
+    "localized_observed": 0.5169082125603864,
+    "localized_random": 0.3501932367149758,
+    "median_boundary_precision": 1.0,
+    "median_coverage": 0.5,
+    "median_union_coverage": 0.6666666666666666,
+    "regions_better_than_random": 143,
+    "query_gene_coverage": 0.5553702269613391,
+    "interval_span_q": [
+     2.0,
+     3.0,
+     8.0,
+     23.0,
+     80.0
+    ],
+    "by_size": {
+     "1-5": {
+      "regions": 46,
+      "f1": 0.6380560260995044,
+      "control": 0.510092839701476,
+      "excess": 0.12796318639802837,
+      "coverage_q50": 0.75,
+      "precision_q50": 1.0,
+      "best_span_q50": 2.5,
+      "size_q50": 4.0
+     },
+     "6-10": {
+      "regions": 68,
+      "f1": 0.6722713257158729,
+      "control": 0.5310461751031691,
+      "excess": 0.14122515061270383,
+      "coverage_q50": 0.6,
+      "precision_q50": 1.0,
+      "best_span_q50": 5.0,
+      "size_q50": 9.0
+     },
+     "11-20": {
+      "regions": 54,
+      "f1": 0.5803902013904454,
+      "control": 0.4995766555240792,
+      "excess": 0.0808135458663662,
+      "coverage_q50": 0.4460227272727273,
+      "precision_q50": 1.0,
+      "best_span_q50": 6.0,
+      "size_q50": 14.0
+     },
+     "21-+": {
+      "regions": 39,
+      "f1": 0.46622758345175414,
+      "control": 0.40996314818558627,
+      "excess": 0.05626443526616786,
+      "coverage_q50": 0.2647058823529412,
+      "precision_q50": 1.0,
+      "best_span_q50": 9.0,
+      "size_q50": 28.0
+     }
+    }
+   },
+   "vs_frozen": {
+    "f1": [
+     0.0035376004634022676,
+     -0.0011936340950142873,
+     0.009570781199672631
+    ],
+    "excess": [
+     -0.004474939760888334,
+     -0.009225528904044948,
+     0.0015073947182999065
+    ],
+    "win_tie_loss_f1": [
+     8,
+     192,
+     7
+    ]
+   },
+   "verdict_vs_frozen": "MATCHES"
+  }
+ },
+ "seconds": 229.6
+}

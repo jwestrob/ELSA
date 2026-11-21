@@ -1,0 +1,445 @@
+func	label	label_name	genes	median_len	ecs	status	ref_acc	ref_entry	ref_organism	ref_domain	ref_len	ref_has_label_pfam	pf_match	region	pdb_chain	ref_file	ref_fam_len	resolution	method	chain_uniprot_identity	n_active_residues	n_binding_residues	notes	length_compatible
+K00035	PF01408	GFO_IDH_MocA	2	206.5	1.1.1.48	ok	Q53TZ2	ARAA_AZOBR	Azospirillum brasilense	Bacteria	309.0	True	PF01408	1-125	6JNJ_A	ref/6JNJ_A_fam.pdb	122.0	1.5	X-ray diffraction	1.0	1.0	3.0		True
+K00096	PF13685	Fe-ADH_2	1	169.0	1.1.1.261	no_reviewed_entry_with_EC_active_site_structure																		False
+K00114	PF01011	PQQ	1	270.0	1.1.2.8	ok_but_length_incompatible	Q9Z4J7	QEDH_PSEAE	Pseudomonas aeruginosa (strain ATCC 15692 / DSM 22644 / CIP 104116 / JCM 14847 / LMG 12228 / 1C / PRS 101 / PAO1)	Bacteria	623.0	True	PF01011	44-587	1FLG_A	ref/1FLG_A_fam.pdb	544.0	2.6	X-ray diffraction	1.0	1.0	15.0		False
+K00147	PF00171	Aldedh	6	143.0	1.2.1.41	no_reviewed_entry_with_EC_active_site_structure																		False
+K00163	PF00456	Transketolase_N	3	141.0	1.2.4.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K00164	PF00676	E1_dh	1	299.0	1.2.4.2	no_experimental_chain_with_active_site																	Q8NRC3:no_active_or_binding_in_region;A0R2B1:no_active_or_binding_in_region	False
+K00170	PF02775	TPP_enzyme_C	1	110.0	1.2.7.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K00174	PF01855	POR_N	4	213.5	1.2.7.11;1.2.7.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K00175	PF02775	TPP_enzyme_C	4	106.0	1.2.7.11;1.2.7.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K00179	PF02775	TPP_enzyme_C	8	438.5	1.2.7.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K00200	PF07969	Amidohydro_3	1	101.0	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure																		False
+K00202	PF01493	GXGXG	39	264.0	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure																		False
+K00226	PF01180	DHO_dh	1	108.0	1.3.98.1	ok_but_length_incompatible	A2RJT9	PYRDA_LACLM	Lactococcus lactis subsp. cremoris (strain MG1363)	Bacteria	311.0	True	PF01180	1-303	1JUB_A	ref/1JUB_A_fam.pdb	303.0	1.4	X-ray diffraction	0.997	1.0	20.0		False
+K00283	PF21478	GcvP2_C	8	224.0	1.4.4.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K00305	PF04268	SoxG	3	184.0	1.5.3.1;1.5.3.24	no_reviewed_entry_with_EC_active_site_structure																		False
+K00331	PF01058	Oxidored_q6	1	108.0	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K00333	PF00346	Complex1_49kDa	6	123.0	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K00334	PF01257	2Fe-2S_thioredx	4	159.0	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K00341	PF00361	Proton_antipo_M	1	102.0	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K00368	PF07732	Cu-oxidase_3	2	206.5	1.7.2.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K00376	PF00116	COX2	1	395.0	1.7.2.4	no_reviewed_entry_with_EC_active_site_structure																		False
+K00386	PF09098	Dehyd-heme_bind	51	109.0	1.8.2.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K00428	PF03150	CCP_MauG	1	398.0	1.11.1.5	no_entry_in_label_family (1 with EC+structure+active site)																		False
+K00448	PF00775	Dioxygenase_C	1	113.0	1.13.11.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K00450	PF07883	Cupin_2	3	210.0	1.13.11.4	no_reviewed_entry_with_EC_active_site_structure																		False
+K00451	PF20510	HgmA_N	2	130.0	1.13.11.5	no_experimental_chain_with_active_site																	Q88E47:no_active_or_binding_in_region	False
+K00507	PF00487	FA_desaturase	1	320.0	1.14.19.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K00537	PF03960	ArsC	1	141.0	1.20.4.1	no_experimental_chain_with_active_site																	P08692:no_active_or_binding_in_region	False
+K00549	PF01717	Meth_synt_2	4	124.5	2.1.1.14	ok_but_length_incompatible	Q9X112	METE_THEMA	Thermotoga maritima (strain ATCC 43589 / DSM 3109 / JCM 10099 / NBRC 100826 / MSB8)	Bacteria	734.0	True	PF01717	394-734	1T7L_A	ref/1T7L_A_fam.pdb	340.0	2.0	X-ray diffraction	0.999	1.0	18.0		False
+K00558	PF00145	DNA_methylase	1	173.0	2.1.1.37	ok_but_length_incompatible	P20589	MTH3_HAEAE	Haemophilus aegyptius	Bacteria	330.0	True	PF00145	1-330	1DCT_A	ref/1DCT_A_fam.pdb	324.0	2.8	X-ray diffraction	1.0	1.0	4.0	P05102:no_active_or_binding_in_region	False
+K00570	PF13649	Methyltransf_25	5	200.0	2.1.1.17;2.1.1.71	no_reviewed_entry_with_EC_active_site_structure																		False
+K00571	PF01555	N6_N4_Mtase	2	213.5	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure																		False
+K00595	PF00590	TP_methylase	1	329.0	2.1.1.132;2.1.1.196;2.1.1.289	no_reviewed_entry_with_EC_active_site_structure																		False
+K00641	PF00561	Abhydrolase_1	18	144.5	2.3.1.31;2.3.1.46	no_reviewed_entry_with_EC_active_site_structure																		False
+K00655	PF01553	Acyltransferase	1	103.0	2.3.1.51	no_reviewed_entry_with_EC_active_site_structure																		False
+K00690	PF00128	Alpha-amylase	1	318.0	2.4.1.7	ok	A0ZZH6	SUCP_BIFAA	Bifidobacterium adolescentis (strain ATCC 15703 / DSM 20083 / NCTC 11814 / E194a)	Bacteria	504.0	True	PF00128	25-211	6FME_A	ref/6FME_A_fam.pdb	187.0	1.51	X-ray diffraction	0.998	1.0	5.0		True
+K00700	PF02806	Alpha-amylase_C	3	117.0	2.4.1.18	no_experimental_chain_with_active_site																	Q93HU3:no_active_or_binding_in_region;P07762:no_active_or_binding_in_region;P9WN45:no_active_or_binding_in_region;Q04446:no_active_or_binding_in_region;Q6FJV0:no_active_or_binding_in_region;Q01401:no_active_or_binding_in_region	False
+K00759	PF00156	Pribosyltran	1	120.0	2.4.2.7	no_reviewed_entry_with_EC_active_site_structure																		False
+K00762	PF00156	Pribosyltran	7	230.0	2.4.2.10	no_experimental_chain_with_active_site																	P11172:no_active_or_binding_in_region	False
+K00763	PF02749	QRPTase_N	7	269.0	6.3.4.21	no_reviewed_entry_with_EC_active_site_structure																		False
+K00764	PF00156	Pribosyltran	8	116.0	2.4.2.14	no_experimental_chain_with_active_site																	P0AG16:no_active_or_binding_in_region;Q06203:no_active_or_binding_in_region;Q9STG9:no_active_or_binding_in_region	False
+K00766	PF02885	Glycos_trans_3N	1	219.0	2.4.2.18	no_experimental_chain_with_active_site																	P00905:no_active_or_binding_in_region	False
+K00799	PF02798	GST_N	2	126.0	2.5.1.18	ok	Q65XA0	DHAR1_ORYSJ	Oryza sativa subsp. japonica (Rice)	Eukaryota	213.0	False	PF13410,PF13417	9-196	5D9T_A	ref/5D9T_A_fam.pdb	188.0	1.9	X-ray diffraction	1.0	1.0	6.0		True
+K00830	PF00266	Aminotran_5	3	147.0	2.6.1.44;2.6.1.45;2.6.1.51	no_reviewed_entry_with_EC_active_site_structure																		False
+K00831	PF00266	Aminotran_5	254	388.0	2.6.1.52	no_reviewed_entry_with_EC_active_site_structure																		False
+K00851	PF01202	SKI	2	126.0	2.7.1.12	no_reviewed_entry_with_EC_active_site_structure																		False
+K00867	PF00485	PRK	3	117.0	2.7.1.33	no_entry_in_label_family (14 with EC+structure+active site)																		False
+K00868	PF08543	Phos_pyr_kin	2	122.5	2.7.1.35	ok_but_length_incompatible	P39610	PDXK_BACSU	Bacillus subtilis (strain 168)	Bacteria	271.0	True	PF08543	3-270	2I5B_A	ref/2I5B_A_fam.pdb	268.0	2.8	X-ray diffraction	1.0	1.0	11.0		False
+K00929	PF00871	Acetate_kinase	1	191.0	2.7.2.7	no_reviewed_entry_with_EC_active_site_structure																		False
+K00939	PF00406	ADK	1	123.0	2.7.4.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K00969	PF01467	CTP_transf_like	2	162.0	2.7.7.18	no_reviewed_entry_with_EC_active_site_structure																		False
+K00978	PF00483	NTP_transferase	3	248.0	2.7.7.33	no_reviewed_entry_with_EC_active_site_structure																		False
+K00986	PF00078	RVT_1	17	143.0	2.7.7.49	no_experimental_chain_with_active_site																	P63128:no_active_or_binding_in_region;P16088:no_active_or_binding_in_region;P14350:no_active_or_binding_in_region;P11204:no_active_or_binding_in_region;P32542:no_active_or_binding_in_region;P23074:no_active_or_binding_in_region;P24740:no_active_or_binding_in_region;O89290:no_active_or_binding_in_region	False
+K00992	PF00483	NTP_transferase	5	159.0	2.7.7.99	no_reviewed_entry_with_EC_active_site_structure																		False
+K01011	PF00581	Rhodanese	1	100.0	2.8.1.1;2.8.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K01026	PF01144	CoA_trans	5	180.0	2.8.3.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K01039	PF01144	CoA_trans	1	153.0	2.8.3.12	no_experimental_chain_with_active_site																	Q59112:no_active_or_binding_in_region	False
+K01040	PF01144	CoA_trans	19	265.0	2.8.3.12	no_experimental_chain_with_active_site																	Q59112:no_active_or_binding_in_region	False
+K01045	PF01731	Arylesterase	3	360.0	3.1.1.2;3.1.8.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K01079	PF00702	Hydrolase	1	150.0	3.1.3.3	ok	Q58989	SERB_METJA	Methanocaldococcus jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440) (Methanococcus jannaschii)	Archaea	211.0	True	PF00702	1-189	1L7M_A	ref/1L7M_A_fam.pdb	187.0	1.48	X-ray diffraction	1.0	2.0	9.0		True
+K01129	PF13286	HD_assoc	2	331.0	3.1.5.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K01130	PF00884	Sulfatase	1	204.0	3.1.6.1	no_experimental_chain_with_active_site																	P51691:no_chain	False
+K01142	PF03372	Exo_endo_phos	1	117.0	3.1.11.2	ok_but_length_incompatible	O26314	UREND_METTH	Methanothermobacter thermautotrophicus (strain ATCC 29096 / DSM 1053 / JCM 10044 / NBRC 100330 / Delta H) (Methanobacterium thermoautotrophicum)	Archaea	257.0	True	PF03372	1-257	3G91_A	ref/3G91_A_fam.pdb	256.0	1.23	X-ray diffraction	0.992	1.0	5.0		False
+K01154	PF01420	Methylase_S	47	231.0	3.1.21.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K01156	PF04851	ResIII	3	300.0	3.1.21.5	no_reviewed_entry_with_EC_active_site_structure																		False
+K01160	PF05866	RusA	3	137.0	3.1.21.10	no_entry_in_label_family (8 with EC+structure+active site)																		False
+K01174	PF00565	SNase	3	229.0	3.1.31.1	ok	Q8NXI6	NUC_STAAW	Staphylococcus aureus (strain MW2)	Bacteria	228.0	True	PF00565	102-228	3QOJ_A	ref/3QOJ_A_fam.pdb	113.0	1.6	X-ray diffraction	0.961	3.0	2.0		True
+K01185	PF00959	Phage_lysozyme	4	276.5	3.2.1.17	ok	P00720	ENLYS_BPT4	Enterobacteria phage T4 (Bacteriophage T4)	Eukaryota	164.0	True	PF00959	1-148	5JDT_A	ref/5JDT_A_fam.pdb	148.0	1.0	X-ray diffraction	0.97	2.0	4.0	Q37875:no_active_or_binding_in_region;P78285:no_active_or_binding_in_region;P27359:no_active_or_binding_in_region	True
+K01214	PF02922	CBM_48	1	156.0	3.2.1.68	no_experimental_chain_with_active_site																	P10342:no_active_or_binding_in_region;O04196:no_active_or_binding_in_region;D0TZF0:no_active_or_binding_in_region	False
+K01236	PF00128	Alpha-amylase	2	228.0	3.2.1.141	ok_but_length_incompatible	Q55088	TREZ_SACSO	Saccharolobus solfataricus (Sulfolobus solfataricus)	Archaea	559.0	True	PF00128	106-497	3VGB_A	ref/3VGB_A_fam.pdb	392.0	2.65	X-ray diffraction	1.0	2.0	17.0		False
+K01247	PF00730	HhH-GPD	1	114.0	3.2.2.21	no_experimental_chain_with_active_site																	P04395:no_active_or_binding_in_region;Q92383:no_active_or_binding_in_region	False
+K01338	PF02190	LON_substr_bdg	1	134.0	3.4.21.53	no_experimental_chain_with_active_site																	P37945:no_active_or_binding_in_region;P0A9M0:no_active_or_binding_in_region;Q72KS4:no_active_or_binding_in_region;P0CAW0:no_active_or_binding_in_region;P36776:no_active_or_binding_in_region;P36775:no_active_or_binding_in_region	False
+K01358	PF00574	CLP_protease	16	190.5	3.4.21.92	no_experimental_chain_with_active_site																	Q5HQW0:no_active_or_binding_in_region;Q5SKM8:no_active_or_binding_in_region;Q2G036:no_active_or_binding_in_region;A7WZR9:no_active_or_binding_in_region;P63786:no_active_or_binding_in_region;Q2YSF8:no_active_or_binding_in_region;Q83DJ2:no_active_or_binding_in_region;Q6GIM3:no_active_or_binding_in_region	False
+K01406	PF00353	HemolysinCabind	4	294.5	3.4.24.40	no_experimental_chain_with_active_site																	P16317:no_active_or_binding_in_region;Q03023:no_active_or_binding_in_region;P23694:no_active_or_binding_in_region;P07268:no_active_or_binding_in_region	False
+K01423	PF01435	Peptidase_M48	3	268.0		no_complete_EC																		False
+K01443	PF01979	Amidohydro_1	3	336.0	3.5.1.25	ok	O32445	NAGA_VIBCH	Vibrio cholerae serotype O1 (strain ATCC 39315 / El Tor Inaba N16961)	Bacteria	378.0	True	PF01979	41-378	3IV8_A	ref/3IV8_A_fam.pdb	338.0	2.53	X-ray diffraction	1.0	1.0	15.0		True
+K01465	PF01979	Amidohydro_1	1	162.0	3.5.2.3	ok_but_length_incompatible	Q58885	PYRC_METJA	Methanocaldococcus jannaschii (strain ATCC 43067 / DSM 2661 / JAL-1 / JCM 10045 / NBRC 100440) (Methanococcus jannaschii)	Archaea	423.0	True	PF01979	37-423	9YD7_A	ref/9YD7_A_fam.pdb	386.0	1.87	X-ray diffraction	1.0	1.0	12.0		False
+K01485	PF07969	Amidohydro_3	1	214.0	3.5.4.1;3.5.4.21	no_reviewed_entry_with_EC_active_site_structure																		False
+K01493	PF00383	dCMP_cyt_deam_1	1	253.0	3.5.4.12	ok	P16006	DCTD_BPT4	Enterobacteria phage T4 (Bacteriophage T4)	Eukaryota	193.0	True	PF00383	1-160	1VQ2_A	ref/1VQ2_A_fam.pdb	140.0	2.2	X-ray diffraction	0.994	1.0	8.0		True
+K01547	PF00122	E1-E2_ATPase	2	177.0	7.2.2.6	no_experimental_chain_with_active_site																	P03960:no_active_or_binding_in_region	False
+K01555	PF01557	FAA_hydrolase	1	396.0	3.7.1.2	ok	P16930	FAAA_HUMAN	Homo sapiens (Human)	Eukaryota	419.0	True	PF01557,PF09298	115-419	9SX4_A	ref/9SX4_A_fam.pdb	305.0	1.42	X-ray diffraction	1.0	1.0	12.0		True
+K01556	PF00266	Aminotran_5	1	124.0	3.7.1.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K01560	PF00702	Hydrolase	1	109.0	3.8.1.2	ok_but_length_incompatible	Q51645	HAD4_BURCE	Burkholderia cepacia (Pseudomonas cepacia)	Bacteria	231.0	True	PF00702	1-199	2NO4_A	ref/2NO4_A_fam.pdb	199.0	1.93	X-ray diffraction	0.996	1.0	5.0		False
+K01561	PF00561	Abhydrolase_1	1	187.0	3.8.1.3	ok	Q1JU72	DEHA_BURSP	Burkholderia sp	Bacteria	304.0	True	PF00561	16-283	1Y37_A	ref/1Y37_A_fam.pdb	268.0	1.5	X-ray diffraction	1.0	2.0	5.0	Q6NAM1:no_chain	True
+K01602	PF00101	RuBisCO_small	3	139.0	4.1.1.39	no_entry_in_label_family (26 with EC+structure+active site)																		False
+K01607	PF02627	CMD	22	185.0	4.1.1.44	no_reviewed_entry_with_EC_active_site_structure																		False
+K01623	PF00274	Glycolytic	1	143.0	4.1.2.13	ok_but_length_incompatible	Q8SSM8	ALF_ENCCU	Encephalitozoon cuniculi (strain GB-M1) (Microsporidian parasite)	Eukaryota	338.0	True	PF00274	1-338	3MBD_A	ref/3MBD_A_fam.pdb	336.0	2.0	X-ray diffraction	1.0	2.0	2.0	P60053:no_active_or_binding_in_region	False
+K01644	PF03328	HpcH_HpaI	1	206.0	4.1.3.34	no_reviewed_entry_with_EC_active_site_structure																		False
+K01696	PF00291	PALP	2	133.0	4.2.1.20	no_experimental_chain_with_active_site																	P0A879:no_active_or_binding_in_region	False
+K01709	PF01370	Epimerase	1	119.0	4.2.1.45	no_reviewed_entry_with_EC_active_site_structure																		False
+K01719	PF09731	Mitofilin	17	568.0	4.2.1.75	no_reviewed_entry_with_EC_active_site_structure																		False
+K01733	PF24857	THR4_C	1	259.0	4.2.3.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K01755	PF00206	Lyase_1	1	159.0	4.3.2.1	ok_but_length_incompatible	P04424	ARLY_HUMAN	Homo sapiens (Human)	Eukaryota	464.0	True	PF00206,PF14698	1-315	1K62_A	ref/1K62_A_fam.pdb	301.0	2.65	X-ray diffraction	0.993	2.0	4.0		False
+K01768	PF00211	Guanylate_cyc	1	173.0	4.6.1.1	no_entry_in_label_family (1 with EC+structure+active site)																		False
+K01785	PF01263	Aldose_epim	2	219.0	5.1.3.3	ok	P39840	GALM_BACSU	Bacillus subtilis (strain 168)	Bacteria	325.0	True	PF01263	5-325	3MWX_A	ref/3MWX_A_fam.pdb	319.0	1.45	X-ray diffraction	1.0	2.0	3.0		True
+K01790	PF00908	dTDP_sugar_isom	1	149.0	5.1.3.13	ok	O27818	RMLC_METTH	Methanothermobacter thermautotrophicus (strain ATCC 29096 / DSM 1053 / JCM 10044 / NBRC 100330 / Delta H) (Methanobacterium thermoautotrophicum)	Archaea	185.0	True	PF00908	1-185	1EP0_A	ref/1EP0_A_fam.pdb	183.0	1.5	X-ray diffraction	1.0	2.0	10.0		True
+K01799	PF17645	Amdase	3	121.0	5.2.1.1	no_experimental_chain_with_active_site																	Q5YXQ1:no_chain	False
+K01800	PF02798	GST_N	1	126.0	5.2.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K01805	PF01261	AP_endonuc_2	1	118.0	5.3.1.5	ok_but_length_incompatible	P15587	XYLA_STROL	Streptomyces olivochromogenes	Bacteria	387.0	True	PF01261	30-316	1MUW_A	ref/1MUW_A_fam.pdb	287.0	0.86	X-ray diffraction	0.997	2.0	8.0		False
+K01810	PF00342	PGI	9	269.0	5.3.1.9	no_experimental_chain_with_active_site																	Q5SLL6:no_active_or_binding_in_region;Q5HHC2:no_active_or_binding_in_region;P13376:no_active_or_binding_in_region;Q9X1A5:no_active_or_binding_in_region;Q81K75:no_active_or_binding_in_region;Q5NFC4:no_active_or_binding_in_region;P0A6T1:no_active_or_binding_in_region;Q8YF86:no_active_or_binding_in_region	False
+K01815	PF04962	KduI	1	183.0	5.3.1.17	no_reviewed_entry_with_EC_active_site_structure																		False
+K01821	PF01361	Tautomerase	15	134.0	5.3.2.6	ok	P70994	4OT_BACSU	Bacillus subtilis (strain 168)	Bacteria	62.0	True	PF01361	1-62	2OPA_A	ref/2OPA_A_fam.pdb	61.0	2.4	X-ray diffraction	1.0	1.0	4.0	Q01468:no_active_or_binding_in_region;P49172:no_active_or_binding_in_region	True
+K01843	PF04055	Radical_SAM	3	122.0	5.4.3.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K01858	PF01658	Inos-1-P_synth	1	221.0	5.5.1.4	no_reviewed_entry_with_EC_active_site_structure																		False
+K01861	PF00106	adh_short	2	154.5	5.5.1.35	no_reviewed_entry_with_EC_active_site_structure																		False
+K01866	PF22421	SYY_C-terminal	1	120.0	6.1.1.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K01867	PF00579	tRNA-synt_1b	1	124.0	6.1.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K01870	PF00133	tRNA-synt_1	1	140.0	6.1.1.5	no_reviewed_entry_with_EC_active_site_structure																		False
+K01875	PF02403	Seryl_tRNA_N	6	149.0	6.1.1.11	no_reviewed_entry_with_EC_active_site_structure																		False
+K01881	PF00587	tRNA-synt_2b	3	123.0	6.1.1.15	no_reviewed_entry_with_EC_active_site_structure																		False
+K01885	PF19269	Anticodon_2	1	102.0	6.1.1.17	no_reviewed_entry_with_EC_active_site_structure																		False
+K01887	PF00750	tRNA-synt_1d	1	256.0	6.1.1.19	no_reviewed_entry_with_EC_active_site_structure																		False
+K01912	PF00501	AMP-binding	3	169.0	6.2.1.30	no_reviewed_entry_with_EC_active_site_structure																		False
+K01921	PF07478	Dala_Dala_lig_C	1	128.0	6.3.2.4	ok_but_length_incompatible	P07862	DDLB_ECOLI	Escherichia coli (strain K12)	Bacteria	306.0	True	PF07478	93-306	4C5C_A	ref/4C5C_A_fam.pdb	214.0	1.4	X-ray diffraction	1.0	2.0	60.0		False
+K01953	PF00733	Asn_synthase	1	356.0	6.3.5.4	no_experimental_chain_with_active_site																	P22106:no_active_or_binding_in_region;P08243:no_active_or_binding_in_region	False
+K01963	PF01039	Carboxyl_trans	4	137.5	2.1.3.15;6.4.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K02045	PF00005	ABC_tran	1	154.0	7.3.2.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K02170	PF12697	Abhydrolase_6	2	212.5	3.1.1.85	no_entry_in_label_family (4 with EC+structure+active site)																		False
+K02229	PF03460	NIR_SIR_ferr	3	179.0	1.14.13.83	no_reviewed_entry_with_EC_active_site_structure																		False
+K02275	PF00116	COX2	1	293.0	7.1.1.9	no_reviewed_entry_with_EC_active_site_structure																		False
+K02276	PF00510	COX3	1	151.0	7.1.1.9	no_reviewed_entry_with_EC_active_site_structure																		False
+K02283	PF00437	T2SSE	7	118.0	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K02297	PF06481	COX_ARM	2	262.5	7.1.1.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K02316	PF13155	Toprim_2	10	243.5	2.7.7.101	no_entry_in_label_family (1 with EC+structure+active site)																		False
+K02337	PF02811	PHP	2	159.5	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)																		False
+K02340	PF06144	DNA_pol3_delta	223	343.0	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)																		False
+K02342	PF00929	RNase_T	12	179.5	2.7.7.7	ok	P03007	DPO3E_ECOLI	Escherichia coli (strain K12)	Bacteria	243.0	True	PF00929	1-185	2GUI_A	ref/2GUI_A_fam.pdb	176.0	1.6	X-ray diffraction	1.0	1.0	9.0		True
+K02352	PF08450	SGL	1	172.0		no_complete_EC																		False
+K02482	PF00672	HAMP	2	218.5	2.7.13.3	no_experimental_chain_with_active_site																	P0AE82:no_active_or_binding_in_region	False
+K02493	PF05175	MTS	1	131.0	2.1.1.297	no_reviewed_entry_with_EC_active_site_structure																		False
+K02495	PF04055	Radical_SAM	1	251.0	1.3.98.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K02501	PF00117	GATase	1	124.0	4.3.2.10	ok_but_length_incompatible	P33734	HIS5_YEAST	Saccharomyces cerevisiae (strain ATCC 204508 / S288c) (Baker's yeast)	Eukaryota	552.0	True	PF00117	1-220	1OX6_A	ref/1OX6_A_fam.pdb	220.0	2.4	X-ray diffraction	1.0	3.0	1.0	Q7SIC0:no_active_or_binding_in_region;Q9X0C8:no_active_or_binding_in_region;Q9KSX0:no_active_or_binding_in_region	False
+K02509	PF01557	FAA_hydrolase	47	268.0		no_complete_EC																		False
+K02527	PF04413	Glycos_transf_N	2	173.0	2.4.99.12;2.4.99.13;2.4.99.14;2.4.99.15	no_reviewed_entry_with_EC_active_site_structure																		False
+K02533	PF00588	SpoU_methylase	4	120.5		no_complete_EC																		False
+K02621	PF00521	DNA_topoisoIV	1	171.0	5.6.2.2	no_experimental_chain_with_active_site																	P72065:no_active_or_binding_in_region;P0AFI2:no_active_or_binding_in_region;O67108:no_active_or_binding_in_region;Q6G9K4:no_active_or_binding_in_region;O51396:no_active_or_binding_in_region;P05653:no_active_or_binding_in_region;Q8DPM2:no_active_or_binding_in_region;P72525:no_active_or_binding_in_region	False
+K03060	PF01192	RNA_pol_Rpb6	2	108.5	2.7.7.6	no_entry_in_label_family (3 with EC+structure+active site)																		False
+K03106	PF02978	SRP_SPB	3	103.0	3.6.5.4	no_reviewed_entry_with_EC_active_site_structure																		False
+K03196	PF00437	T2SSE	1	179.0	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K03199	PF03135	CagE_TrbE_VirB	1	332.0	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K03215	PF05958	tRNA_U5-meth_tr	8	209.0	2.1.1.190	ok	P55135	RLMD_ECOLI	Escherichia coli (strain K12)	Bacteria	433.0	True	PF05958	105-433	1UWV_A	ref/1UWV_A_fam.pdb	328.0	1.95	X-ray diffraction	1.0	1.0	7.0		True
+K03218	PF00588	SpoU_methylase	1	140.0	2.1.1.185	no_reviewed_entry_with_EC_active_site_structure																		False
+K03269	PF00149	Metallophos	2	199.0	3.6.1.54	no_reviewed_entry_with_EC_active_site_structure																		False
+K03270	PF08282	Hydrolase_3	1	190.0	3.1.3.45	no_reviewed_entry_with_EC_active_site_structure																		False
+K03273	PF00702	Hydrolase	1	113.0	3.1.3.82;3.1.3.83	no_reviewed_entry_with_EC_active_site_structure																		False
+K03335	PF01261	AP_endonuc_2	1	145.0	4.2.1.44	no_reviewed_entry_with_EC_active_site_structure																		False
+K03379	PF00743	FMO-like	1	244.0	1.14.13.22	no_reviewed_entry_with_EC_active_site_structure																		False
+K03391	PF01494	FAD_binding_3	2	176.0	1.14.13.50	no_reviewed_entry_with_EC_active_site_structure																		False
+K03396	PF04828	GFA	1	142.0	4.4.1.22	no_reviewed_entry_with_EC_active_site_structure																		False
+K03412	PF01339	CheB_methylest	2	122.0	3.1.1.61;3.5.1.44	no_reviewed_entry_with_EC_active_site_structure																		False
+K03427	PF02384	N6_Mtase	8	144.0	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure																		False
+K03430	PF00266	Aminotran_5	2	175.5	2.6.1.37	no_reviewed_entry_with_EC_active_site_structure																		False
+K03500	PF01189	Methyltr_RsmB-F	3	130.0	2.1.1.176	ok	P36929	RSMB_ECOLI	Escherichia coli (strain K12)	Bacteria	429.0	True	PF01189,PF22458	229-429	1SQG_A	ref/1SQG_A_fam.pdb	200.0	1.65	X-ray diffraction	1.0	1.0	11.0		True
+K03605	PF01750	HycI	5	158.0		no_complete_EC																		False
+K03642	PF03330	DPBB_1	1	125.0	4.2.2.29	no_reviewed_entry_with_EC_active_site_structure																		False
+K03644	PF04055	Radical_SAM	3	128.0	2.8.1.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K03651	PF00149	Metallophos	12	173.5	3.1.4.53	no_entry_in_label_family (7 with EC+structure+active site)																		False
+K03655	PF00270	DEAD	1	302.0	5.6.2.4	ok	P46063	RECQ1_HUMAN	Homo sapiens (Human)	Eukaryota	649.0	True	PF00270,PF00271	83-270	2V1X_A	ref/2V1X_A_fam.pdb	188.0	2.0	X-ray diffraction	1.0	1.0	7.0		True
+K03722	PF13307	Helicase_C_2	2	492.0	5.6.2.3	no_entry_in_label_family (3 with EC+structure+active site)																		False
+K03734	PF02424	ApbE	1	115.0	2.7.1.180	no_reviewed_entry_with_EC_active_site_structure																		False
+K03737	PF02775	TPP_enzyme_C	5	191.0	1.2.7.1;1.2.8.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K03741	PF01451	LMWPc	1	128.0	1.20.4.4	ok	P0A006	ARSC_STAAU	Staphylococcus aureus	Bacteria	131.0	True	PF01451	1-131	2CD7_A	ref/2CD7_A_fam.pdb	131.0	1.5	X-ray diffraction	0.992	3.0	4.0		True
+K03769	PF00639	Rotamase	5	181.0	5.2.1.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K03770	PF13145	Rotamase_2	8	130.5	5.2.1.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K03771	PF13624	SurA_N_3	1	161.0	5.2.1.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K03781	PF00199	Catalase	11	364.0	1.11.1.6	ok	O52762	CATA_PSEAE	Pseudomonas aeruginosa (strain ATCC 15692 / DSM 22644 / CIP 104116 / JCM 14847 / LMG 12228 / 1C / PRS 101 / PAO1)	Bacteria	482.0	True	PF00199	1-400	4E37_A	ref/4E37_A_fam.pdb	397.0	2.53	X-ray diffraction	1.0	2.0	12.0		True
+K03782	PF00141	peroxidase	4	146.5	1.11.1.21	ok_but_length_incompatible	O59651	KATG2_HALMA	Haloarcula marismortui (strain ATCC 43049 / DSM 3752 / JCM 8966 / VKM B-1809) (Halobacterium marismortui)	Archaea	731.0	True	PF00141	68-713	3VLI_A	ref/3VLI_A_fam.pdb	643.0	1.7	X-ray diffraction	0.999	1.0	1.0		False
+K03797	PF03572	Peptidase_S41	1	130.0	3.4.21.102	no_experimental_chain_with_active_site																	O35002:no_active_or_binding_in_region;P23865:no_active_or_binding_in_region;O04073:no_active_or_binding_in_region	False
+K03799	PF01435	Peptidase_M48	1	111.0		no_complete_EC																		False
+K03809	PF03358	FMN_red	3	103.0	1.6.5.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K03821	PF00561	Abhydrolase_1	16	171.0	2.3.1.304	no_reviewed_entry_with_EC_active_site_structure																		False
+K03824	PF00583	Acetyltransf_1	1	130.0		no_complete_EC																		False
+K04034	PF04055	Radical_SAM	1	197.0	1.21.98.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K04036	PF02830	V4R	1	211.0		no_complete_EC																		False
+K04066	PF00270	DEAD	1	116.0	5.6.2.4	ok	P46063	RECQ1_HUMAN	Homo sapiens (Human)	Eukaryota	649.0	True	PF00270,PF00271	83-270	2V1X_A	ref/2V1X_A_fam.pdb	188.0	2.0	X-ray diffraction	1.0	1.0	7.0		True
+K04069	PF04055	Radical_SAM	3	109.0	1.97.1.4	no_reviewed_entry_with_EC_active_site_structure																		False
+K04075	PF01171	ATP_bind_3	3	170.0	6.3.4.19	no_reviewed_entry_with_EC_active_site_structure																		False
+K04077	PF00118	Cpn60_TCP1	1	142.0	5.6.1.7	ok_but_length_incompatible	Q6LX38	THS_METMP	Methanococcus maripaludis (strain DSM 14266 / JCM 13030 / NBRC 101832 / S2 / LL)	Archaea	543.0	True	PF00118	21-529	3RUV_A	ref/3RUV_A_fam.pdb	499.0	2.242	X-ray diffraction	0.992	2.0	10.0		False
+K04090	PF01558	POR	9	454.0	1.2.7.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K04094	PF01134	GIDA	1	112.0	2.1.1.74	no_reviewed_entry_with_EC_active_site_structure																		False
+K04095	PF02661	Fic	1	106.0	2.7.7.108	ok	Q9BVA6	FICD_HUMAN	Homo sapiens (Human)	Eukaryota	458.0	True	PF02661	275-391	6I7H_A	ref/6I7H_A_fam.pdb	117.0	2.25	X-ray diffraction	0.997	1.0	12.0	Q06277:no_active_or_binding_in_region	True
+K04102	PF09084	NMT1	37	301.0	4.1.1.55	no_reviewed_entry_with_EC_active_site_structure																		False
+K04518	PF00800	PDT	1	164.0	4.2.1.51	no_reviewed_entry_with_EC_active_site_structure																		False
+K04564	PF02777	Sod_Fe_C	2	110.5	1.15.1.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K04566	PF01921	tRNA-synt_1f	2	167.5	6.1.1.6	no_reviewed_entry_with_EC_active_site_structure																		False
+K04771	PF00089	Trypsin	3	139.0	3.4.21.107	ok	P0AEE3	DEGS_ECOLI	Escherichia coli (strain K12)	Bacteria	355.0	False	PF13180,PF13365	70-355	3LGI_A	ref/3LGI_A_fam.pdb	187.0	1.652	X-ray diffraction	1.0	3.0	8.0		True
+K04773	PF01343	Peptidase_S49	1	112.0		no_complete_EC																		False
+K05301	PF00174	Oxidored_molyb	1	176.0	1.8.2.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K05303	PF13578	Methyltransf_24	1	251.0		no_complete_EC																		False
+K05343	PF16657	Malt_amylase_C	3	446.0	3.2.1.1;5.4.99.16	no_reviewed_entry_with_EC_active_site_structure																		False
+K05366	PF00905	Transpeptidase	2	200.5	2.4.99.28;3.4.16.4	no_reviewed_entry_with_EC_active_site_structure																		False
+K05367	PF00905	Transpeptidase	1	212.0	2.4.99.28	no_experimental_chain_with_active_site																	Q8DR59:no_active_or_binding_in_region;Q04707:no_active_or_binding_in_region;O66874:no_active_or_binding_in_region;I6YGX2:no_active_or_binding_in_region;P71707:no_active_or_binding_in_region;Q07806:no_active_or_binding_in_region;P02919:no_active_or_binding_in_region;P31776:no_active_or_binding_in_region	False
+K05394	PF01979	Amidohydro_1	3	177.0	3.8.1.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K05518	PF07228	SpoIIE	1	126.0	3.1.3.3	no_entry_in_label_family (6 with EC+structure+active site)																		False
+K05555	PF00753	Lactamase_B	2	123.5		no_complete_EC																		False
+K05774	PF13238	AAA_18	2	200.0	2.7.4.23	no_reviewed_entry_with_EC_active_site_structure																		False
+K05914	PF00501	AMP-binding	5	143.0	1.13.12.7	no_reviewed_entry_with_EC_active_site_structure																		False
+K05915	PF01966	HD	2	174.0	1.13.11.78;1.13.11.89	no_reviewed_entry_with_EC_active_site_structure																		False
+K05973	PF06850	PHB_depo_C	7	172.0	3.1.1.75	no_entry_in_label_family (1 with EC+structure+active site)																		False
+K05992	PF00128	Alpha-amylase	7	262.0	3.2.1.133	ok	P19531	AMYM_GEOSE	Geobacillus stearothermophilus (Bacillus stearothermophilus)	Bacteria	719.0	True	PF00128	36-414	1QHO_A	ref/1QHO_A_fam.pdb	379.0	1.7	X-ray diffraction	1.0	2.0	23.0		True
+K06015	PF07969	Amidohydro_3	1	259.0	3.5.1.81	no_reviewed_entry_with_EC_active_site_structure																		False
+K06016	PF01546	Peptidase_M20	1	103.0	3.5.1.6;3.5.1.87	no_reviewed_entry_with_EC_active_site_structure																		False
+K06042	PF02570	CbiC	18	299.0	5.4.99.60;5.4.99.61	no_reviewed_entry_with_EC_active_site_structure																		False
+K06044	PF00128	Alpha-amylase	12	301.5	5.4.99.15	no_reviewed_entry_with_EC_active_site_structure																		False
+K06118	PF01370	Epimerase	1	111.0	3.13.1.1	ok_but_length_incompatible	O48917	SQD1_ARATH	Arabidopsis thaliana (Mouse-ear cress)	Eukaryota	477.0	True	PF01370	77-385	1I24_A	ref/1I24_A_fam.pdb	302.0	1.2	X-ray diffraction	0.995	3.0	25.0		False
+K06133	PF01648	ACPS	1	209.0		no_complete_EC																		False
+K06139	PF13186	SPASM	1	102.0	1.21.98.4	no_reviewed_entry_with_EC_active_site_structure																		False
+K06151	PF00732	GMC_oxred_N	1	277.0	1.1.99.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K06152	PF13618	Gluconate_2-dh3	3	175.0	1.1.99.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K06162	PF01979	Amidohydro_1	7	286.0	3.6.1.63	no_reviewed_entry_with_EC_active_site_structure																		False
+K06163	PF06007	PhnJ	2	229.5	4.7.1.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K06178	PF00849	PseudoU_synth_2	20	249.0	5.4.99.22	no_experimental_chain_with_active_site																	P37765:no_active_or_binding_in_region	False
+K06223	PF02086	MethyltransfD12	2	233.0	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure																		False
+K06864	PF00733	Asn_synthase	42	271.0	4.4.1.37;4.4.1.45	no_reviewed_entry_with_EC_active_site_structure																		False
+K06876	PF04244	DPRP	1	207.0	4.1.99.13	no_reviewed_entry_with_EC_active_site_structure																		False
+K06897	PF00753	Lactamase_B	2	128.0	2.5.1.105	no_reviewed_entry_with_EC_active_site_structure																		False
+K06898	PF00731	AIRC	1	141.0	2.5.1.143	no_reviewed_entry_with_EC_active_site_structure																		False
+K06920	PF06508	QueC	1	101.0	6.3.4.20	no_reviewed_entry_with_EC_active_site_structure																		False
+K06937	PF04055	Radical_SAM	1	162.0	1.21.98.5	no_reviewed_entry_with_EC_active_site_structure																		False
+K06941	PF04055	Radical_SAM	4	127.0	2.1.1.192	no_experimental_chain_with_active_site																	P36979:no_active_or_binding_in_region	False
+K06952	PF12917	YfbR-like	8	217.5	3.1.3.89	no_reviewed_entry_with_EC_active_site_structure																		False
+K06969	PF10672	Methyltrans_SAM	4	119.5	2.1.1.191	ok_but_length_incompatible	Q5SIT4	RLM_THET8	Thermus thermophilus (strain ATCC 27634 / DSM 579 / HB8)	Bacteria	382.0	True	PF10672	155-373	1WXX_A	ref/1WXX_A_fam.pdb	219.0	1.8	X-ray diffraction	1.0	1.0	7.0		False
+K06984	PF00288	GHMP_kinases_N	1	140.0	2.4.2.54	no_reviewed_entry_with_EC_active_site_structure																		False
+K06988	PF03807	F420_oxidored	1	130.0	1.5.1.40	no_reviewed_entry_with_EC_active_site_structure																		False
+K07062	PF01850	PIN	2	106.0		no_complete_EC																		False
+K07072	PF01968	Hydantoinase_A	1	215.0	2.5.1.131	no_reviewed_entry_with_EC_active_site_structure																		False
+K07102	PF01636	APH	2	144.0	2.7.1.221	no_reviewed_entry_with_EC_active_site_structure																		False
+K07106	PF22645	GKRP_SIS_N	1	113.0	4.2.1.126	no_experimental_chain_with_active_site																	P44862:no_active_or_binding_in_region	False
+K07130	PF04199	Cyclase	1	106.0	3.5.1.9	ok	Q81PP9	KYNB_BACAN	Bacillus anthracis	Bacteria	209.0	True	PF04199	1-162	4CO9_A	ref/4CO9_A_fam.pdb	160.0	1.95	X-ray diffraction	1.0	1.0	6.0		True
+K07147	PF00174	Oxidored_molyb	1	107.0		no_complete_EC																		False
+K07154	PF07804	HipA_C	1	159.0	2.7.11.1	ok	Q8EIX3	HIPA_SHEON	Shewanella oneidensis (strain ATCC 700550 / JCM 31522 / CIP 106686 / LMG 19005 / NCIMB 14063 / MR-1)	Bacteria	433.0	True	PF07804,PF13657	136-398	4PU5_A	ref/4PU5_A_fam.pdb	263.0	1.834	X-ray diffraction	1.0	1.0	14.0		True
+K07171	PF02452	PemK_toxin	120	143.0		no_complete_EC																		False
+K07215	PF01126	Heme_oxygenase	7	205.0	1.14.99.58	no_reviewed_entry_with_EC_active_site_structure																		False
+K07258	PF00768	Peptidase_S11	2	190.0	3.4.16.4	ok	P39042	DACX_STRSK	Streptomyces sp. (strain K15)	Bacteria	291.0	True	PF00768	18-280	1ES5_A	ref/1ES5_A_fam.pdb	249.0	1.4	X-ray diffraction	0.977	3.0	1.0		True
+K07263	PF05193	Peptidase_M16_C	3	108.0		no_complete_EC																		False
+K07281	PF12804	NTP_transf_3	2	146.0	2.7.7.74	no_reviewed_entry_with_EC_active_site_structure																		False
+K07316	PF01555	N6_N4_Mtase	5	205.0	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure																		False
+K07451	PF01844	HNH	27	122.0		no_complete_EC																		False
+K07452	PF00004	AAA	1	567.0		no_complete_EC																		False
+K07516	PF00378	ECH_1	1	208.0	1.1.1.35	no_experimental_chain_with_active_site																	P28793:no_active_or_binding_in_region;P21177:no_active_or_binding_in_region;Q9ZPI5:no_active_or_binding_in_region	False
+K07637	PF26769	HAMP_PhoQ	2	223.0	2.7.13.3	no_experimental_chain_with_active_site																	P0AE82:no_active_or_binding_in_region	False
+K07638	PF00512	HisKA	1	214.0	2.7.13.3	ok	P0AE82	CPXA_ECOLI	Escherichia coli (strain K12)	Bacteria	457.0	True	PF00512,PF00672,PF02518	229-309	4BIX_A	ref/4BIX_A_fam.pdb	81.0	2.0	X-ray diffraction	0.996	1.0	5.0		True
+K08296	PF00300	His_Phos_1	10	142.5		no_complete_EC																		False
+K08300	PF20833	RNase_E_G_Thio	32	204.0	3.1.26.12	no_reviewed_entry_with_EC_active_site_structure																		False
+K08309	PF01464	SLT	26	359.5	4.2.2.29	no_reviewed_entry_with_EC_active_site_structure																		False
+K08355	PF00355	Rieske	1	104.0	1.20.2.1;1.20.9.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K08356	PF00384	Molybdopterin	3	162.0	1.20.2.1;1.20.9.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K08590	PF00795	CN_hydrolase	1	134.0	3.5.1.111	no_reviewed_entry_with_EC_active_site_structure																		False
+K08602	PF08439	Peptidase_M3_N	1	100.0		no_complete_EC																		False
+K08640	PF08291	Peptidase_M15_3	1	179.0	3.4.17.14	ok	P00733	CBPM_STRAL	Streptomyces albus G	Bacteria	255.0	True	PF08291	117-251	1LBU_A	ref/1LBU_A_fam.pdb	135.0	1.8	X-ray diffraction	1.0	1.0	4.0		True
+K08678	PF01370	Epimerase	1	104.0	4.1.1.35	ok_but_length_incompatible	Q9ZUY6	AXS1_ARATH	Arabidopsis thaliana (Mouse-ear cress)	Eukaryota	389.0	True	PF01370	10-300	6H0N_A	ref/6H0N_A_fam.pdb	291.0	3.02	X-ray diffraction	1.0	1.0	19.0		False
+K08686	PF00848	Ring_hydroxyl_A	1	177.0	1.14.12.13	no_reviewed_entry_with_EC_active_site_structure																		False
+K09691	PF00005	ABC_tran	2	260.0	7.5.2.14	no_reviewed_entry_with_EC_active_site_structure																		False
+K09709	PF13452	FAS1_DH_region	1	111.0	4.2.1.153	no_reviewed_entry_with_EC_active_site_structure																		False
+K09882	PF07728	AAA_5	15	183.0	6.6.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K09952	PF13395	HNH_4	3	309.0		no_complete_EC																		False
+K10026	PF04055	Radical_SAM	5	172.0	4.3.99.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K10027	PF01593	Amino_oxidase	3	151.0	1.3.99.26;1.3.99.28;1.3.99.29;1.3.99.31	no_reviewed_entry_with_EC_active_site_structure																		False
+K10210	PF01593	Amino_oxidase	1	196.0	1.14.99.44	no_reviewed_entry_with_EC_active_site_structure																		False
+K10215	PF00743	FMO-like	3	260.0		no_complete_EC																		False
+K10700	PF00384	Molybdopterin	4	192.0	1.17.99.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K10773	PF00730	HhH-GPD	1	107.0		no_complete_EC																		False
+K10794	PF07355	GRDB	31	309.0	1.21.4.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K10857	PF00929	RNase_T	1	199.0		no_complete_EC																		False
+K10960	PF13450	NAD_binding_8	1	195.0	1.3.1.111;1.3.1.83	no_reviewed_entry_with_EC_active_site_structure																		False
+K11066	PF01510	Amidase_2	1	116.0	3.5.1.28	ok	P82974	AMPD_CITFR	Citrobacter freundii	Bacteria	187.0	True	PF01510	17-177	2Y28_A	ref/2Y28_A_fam.pdb	161.0	1.8	X-ray diffraction	1.0	1.0	3.0		True
+K11148	PF00106	adh_short	2	109.0		no_complete_EC																		False
+K11261	PF00994	MoCF_biosynth	1	335.0	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure																		False
+K11472	PF01565	FAD_binding_4	1	157.0	1.1.99.14	no_reviewed_entry_with_EC_active_site_structure																		False
+K11717	PF00155	Aminotran_1_2	6	216.0	2.8.1.7;4.4.1.16	no_reviewed_entry_with_EC_active_site_structure																		False
+K11754	PF08245	Mur_ligase_M	2	152.0	6.3.2.12;6.3.2.17	no_reviewed_entry_with_EC_active_site_structure																		False
+K11927	PF00271	Helicase_C	6	122.5	5.6.2.7	no_reviewed_entry_with_EC_active_site_structure																		False
+K12573	PF00773	RNB	2	208.0	3.1.13.1	no_entry_in_label_family (1 with EC+structure+active site)																		False
+K12574	PF12706	Lactamase_B_2	1	306.0		no_complete_EC																		False
+K12628	PF01408	GFO_IDH_MocA	2	118.0		no_complete_EC																		False
+K12629	PF00293	NUDIX	1	149.0		no_complete_EC																		False
+K12632	PF00583	Acetyltransf_1	5	179.0		no_complete_EC																		False
+K12633	PF06325	PrmA	1	165.0		no_complete_EC																		False
+K12685	PF12951	PATR	4	377.0		no_complete_EC																		False
+K12721	PF02770	Acyl-CoA_dh_M	1	124.0	1.3.8.14	no_experimental_chain_with_active_site																	Q5W271:no_active_or_binding_in_region	False
+K12902	PF04055	Radical_SAM	1	216.0	2.1.1.308	no_reviewed_entry_with_EC_active_site_structure																		False
+K12914	PF04055	Radical_SAM	3	174.0	2.1.1.326	no_reviewed_entry_with_EC_active_site_structure																		False
+K12922	PF00067	p450	1	308.0	1.14.14.106	no_reviewed_entry_with_EC_active_site_structure																		False
+K12976	PF09411	PagL	7	211.0		no_complete_EC																		False
+K12984	PF00535	Glycos_transf_2	1	132.0		no_complete_EC																		False
+K12989	PF00534	Glycos_transf_1	1	222.0		no_complete_EC																		False
+K12990	PF00535	Glycos_transf_2	1	322.0		no_complete_EC																		False
+K13004	PF13692	Glyco_trans_1_4	5	348.0		no_complete_EC																		False
+K13075	PF00753	Lactamase_B	5	150.0	3.1.1.81	no_entry_in_label_family (2 with EC+structure+active site)																		False
+K13270	PF00685	Sulfotransfer_1	1	100.0	2.8.2.25	no_reviewed_entry_with_EC_active_site_structure																		False
+K13306	PF01073	3Beta_HSD	1	106.0	1.1.1.266	no_reviewed_entry_with_EC_active_site_structure																		False
+K13320	PF04989	RMNT_CmcI	1	234.0	2.1.1.239	no_reviewed_entry_with_EC_active_site_structure																		False
+K13371	PF02975	Me-amine-dh_L	2	223.0	1.4.9.2	no_experimental_chain_with_active_site																	P84887:no_chain	False
+K13552	PF00732	GMC_oxred_N	1	157.0	1.1.3.43	no_reviewed_entry_with_EC_active_site_structure																		False
+K13590	PF00990	GGDEF	2	210.0	2.7.7.65	ok	P31129	DGCZ_ECOLI	Escherichia coli (strain K12)	Bacteria	296.0	True	PF00990	120-293	3TVK_A	ref/3TVK_A_fam.pdb	168.0	1.8	X-ray diffraction	0.994	1.0	15.0		True
+K13598	PF00072	Response_reg	1	444.0	2.7.13.3	ok	P0AE82	CPXA_ECOLI	Escherichia coli (strain K12)	Bacteria	457.0	False	PF00512,PF00672,PF02518	171-457	4BIX_A	ref/4BIX_A_fam.pdb	229.0	2.0	X-ray diffraction	0.996	1.0	20.0		True
+K13658	PF13692	Glyco_trans_1_4	1	367.0	2.4.1.251	no_reviewed_entry_with_EC_active_site_structure																		False
+K13747	PF00278	Orn_DAP_Arg_deC	1	377.0	4.1.1.96	no_reviewed_entry_with_EC_active_site_structure																		False
+K13877	PF00171	Aldedh	1	136.0	1.2.1.26	ok_but_length_incompatible	Q1JUP4	KGSD1_AZOBR	Azospirillum brasilense	Bacteria	481.0	True	PF00171	7-481	5X5T_A	ref/5X5T_A_fam.pdb	474.0	2.25	X-ray diffraction	1.0	2.0	10.0		False
+K13932	PF01039	Carboxyl_trans	1	229.0	4.1.1.87	no_reviewed_entry_with_EC_active_site_structure																		False
+K13995	PF00857	Isochorismatase	1	135.0	3.5.1.107	no_reviewed_entry_with_EC_active_site_structure																		False
+K14162	PF17657	DNA_pol3_finger	1	111.0	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)																		False
+K14245	PF00109	ketoacyl-synt	2	114.5		no_complete_EC																		False
+K14374	PF08241	Methyltransf_11	6	145.5		no_complete_EC																		False
+K14375	PF04101	Glyco_tran_28_C	11	260.0		no_complete_EC																		False
+K14418	PF00378	ECH_1	10	238.0	3.8.1.7	ok	A5JTM5	CBADH_PSEUC	Pseudomonas sp. (strain CBS-3)	Bacteria	269.0	True	PF00378	1-263	1NZY_A	ref/1NZY_A_fam.pdb	263.0	1.8	X-ray diffraction	0.989	2.0	9.0		True
+K14449	PF19315	MC_hydratase	3	106.0	4.2.1.148	no_reviewed_entry_with_EC_active_site_structure																		False
+K14577	PF00107	ADH_zinc_N	1	146.0	4.1.2.46	no_reviewed_entry_with_EC_active_site_structure																		False
+K14604	PF00561	Abhydrolase_1	5	115.0		no_complete_EC																		False
+K14747	PF00501	AMP-binding	2	446.0		no_complete_EC																		False
+K15240	PF00903	Glyoxalase	3	160.0	1.13.11.66	no_reviewed_entry_with_EC_active_site_structure																		False
+K15257	PF08003	Methyltransf_9	1	109.0		no_complete_EC																		False
+K15393	PF00890	FAD_binding_2	1	191.0	1.21.99.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K15510	PF00296	Bac_luciferase	2	112.5	1.1.98.2	ok_but_length_incompatible	Q0RVH7	FGD1_RHOJR	Rhodococcus jostii (strain RHA1)	Bacteria	335.0	True	PF00296	1-315	5LXE_A	ref/5LXE_A_fam.pdb	305.0	1.47	X-ray diffraction	1.0	2.0	13.0		False
+K15512	PF05138	PaaA_PaaC	13	354.0	1.14.13.208	no_reviewed_entry_with_EC_active_site_structure																		False
+K15513	PF00378	ECH_1	1	361.0	4.1.2.44	no_reviewed_entry_with_EC_active_site_structure																		False
+K15515	PF00171	Aldedh	2	145.5	1.2.1.81	no_reviewed_entry_with_EC_active_site_structure																		False
+K15574	PF12172	zf-ChsH2	2	108.5		no_complete_EC																		False
+K15575	PF22691	Thiolase_C_1	19	188.0		no_complete_EC																		False
+K15740	PF08443	RimK	1	200.0	6.3.2.33	no_reviewed_entry_with_EC_active_site_structure																		False
+K15754	PF07746	LigA	1	118.0		no_complete_EC																		False
+K15857	PF00908	dTDP_sugar_isom	2	146.5		no_complete_EC																		False
+K15865	PF04055	Radical_SAM	2	122.5	2.8.4.5	no_reviewed_entry_with_EC_active_site_structure																		False
+K15899	PF02348	CTP_transf_3	1	145.0	2.7.7.81	no_reviewed_entry_with_EC_active_site_structure																		False
+K15969	PF03992	ABM	5	117.0	1.13.12.21	no_reviewed_entry_with_EC_active_site_structure																		False
+K16147	PF21702	GLGE_C	3	329.0	2.4.99.16	no_experimental_chain_with_active_site																	Q9L1K2:no_active_or_binding_in_region;P9WQ16:no_active_or_binding_in_region	False
+K16427	PF00378	ECH_1	1	451.0	1.13.11.80	no_reviewed_entry_with_EC_active_site_structure																		False
+K16515	PF02585	PIG-L	2	143.5	4.2.1.83	no_reviewed_entry_with_EC_active_site_structure																		False
+K16554	PF02706	Wzz	6	426.5	2.7.10.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K16558	PF13579	Glyco_trans_4_4	5	399.0		no_complete_EC																		False
+K16649	PF00535	Glycos_transf_2	2	239.5	2.4.1.287	no_reviewed_entry_with_EC_active_site_structure																		False
+K16653	PF01565	FAD_binding_4	1	134.0	1.1.98.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K16842	PF01522	Polysacc_deac_1	7	192.0	3.5.2.5	no_reviewed_entry_with_EC_active_site_structure																		False
+K16845	PF08666	SAF	10	108.5	4.4.1.24	no_reviewed_entry_with_EC_active_site_structure																		False
+K16870	PF00535	Glycos_transf_2	1	133.0	2.4.1.289	no_reviewed_entry_with_EC_active_site_structure																		False
+K16899	PF12705	PDDEXK_1	16	316.0		no_complete_EC																		False
+K16967	PF00296	Bac_luciferase	14	140.5	1.14.13.131	no_reviewed_entry_with_EC_active_site_structure																		False
+K17068	PF00107	ADH_zinc_N	1	124.0	1.2.98.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K17218	PF07992	Pyr_redox_2	8	194.0	1.8.5.4	ok_but_length_incompatible	Q7ZAG8	SQRD_ACIAM	Acidianus ambivalens (Desulfurolobus ambivalens)	Archaea	409.0	True	PF07992	1-334	3H8L_A	ref/3H8L_A_fam.pdb	333.0	2.57	X-ray diffraction	0.997	1.0	11.0		False
+K17223	PF00034	Cytochrom_C	67	157.0	2.8.5.2	no_entry_in_label_family (3 with EC+structure+active site)																		False
+K17224	PF02872	5_nucleotid_C	6	248.5	3.1.6.20	no_reviewed_entry_with_EC_active_site_structure																		False
+K17675	PF00271	Helicase_C	40	371.0	5.6.2.6	no_reviewed_entry_with_EC_active_site_structure																		False
+K17680	PF03796	DnaB_C	1	139.0	5.6.2.3	ok_but_length_incompatible	Q9X4C9	DNAB_GEOSE	Geobacillus stearothermophilus (Bacillus stearothermophilus)	Bacteria	454.0	True	PF03796	175-450	2R6A_A	ref/2R6A_A_fam.pdb	253.0	2.9	X-ray diffraction	1.0	1.0	13.0		False
+K17723	PF01207	Dus	2	159.5	1.3.1.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K17733	PF13539	Peptidase_M15_4	4	142.0		no_complete_EC																		False
+K17810	PF15632	ATPgrasp_Ter	1	389.0	6.3.1.12	no_reviewed_entry_with_EC_active_site_structure																		False
+K18014	PF03061	4HBT	1	130.0	4.3.1.14	no_reviewed_entry_with_EC_active_site_structure																		False
+K18162	PF08241	Methyltransf_11	9	237.0		no_complete_EC																		False
+K18199	PF01965	DJ-1_PfpI	1	116.0	4.2.1.103	no_reviewed_entry_with_EC_active_site_structure																		False
+K18223	PF02332	Phenol_Hydrox	1	342.0	1.14.13.227	no_reviewed_entry_with_EC_active_site_structure																		False
+K18247	PF00487	FA_desaturase	1	102.0	1.14.19.5	no_reviewed_entry_with_EC_active_site_structure																		False
+K18372	PF00144	Beta-lactamase	1	117.0	3.1.1.114	no_reviewed_entry_with_EC_active_site_structure																		False
+K18639	PF00069	Pkinase	2	376.5	2.7.11.1	ok	P37562	PKN1_BACSU	Bacillus subtilis (strain 168)	Bacteria	338.0	True	PF00069	18-249	6G4J_A	ref/6G4J_A_fam.pdb	232.0	1.599	X-ray diffraction	1.0	1.0	10.0		True
+K18679	PF00069	Pkinase	1	327.0	2.7.11.1	ok	P37562	PKN1_BACSU	Bacillus subtilis (strain 168)	Bacteria	338.0	True	PF00069	18-249	6G4J_A	ref/6G4J_A_fam.pdb	232.0	1.599	X-ray diffraction	1.0	1.0	10.0		True
+K18680	PF00069	Pkinase	1	559.0	2.7.11.1	ok	P9WI77	PKNE_MYCTU	Mycobacterium tuberculosis (strain ATCC 25618 / H37Rv)	Bacteria	566.0	True	PF00069	6-239	2H34_A	ref/2H34_A_fam.pdb	206.0	2.8	X-ray diffraction	1.0	1.0	10.0		True
+K18981	PF01073	3Beta_HSD	2	151.5	1.1.1.203	ok	Q7CRQ0	URODH_AGRFC	Agrobacterium fabrum (strain C58 / ATCC 33970) (Agrobacterium tumefaciens (strain C58))	Bacteria	265.0	False	PF01370	1-172	3RFT_A	ref/3RFT_A_fam.pdb	172.0	1.9	X-ray diffraction	1.0	1.0	20.0		True
+K19180	PF01370	Epimerase	1	153.0	1.1.1.339	no_reviewed_entry_with_EC_active_site_structure																		False
+K19191	PF01571	GCV_T	1	177.0	1.5.3.19	no_reviewed_entry_with_EC_active_site_structure																		False
+K19291	PF07238	PilZ	8	378.5	2.4.1.33	no_reviewed_entry_with_EC_active_site_structure																		False
+K19304	PF01551	Peptidase_M23	9	285.0		no_complete_EC																		False
+K19313	PF00132	Hexapep	4	181.0		no_complete_EC																		False
+K19653	PF00107	ADH_zinc_N	1	111.0	1.1.1.347	no_reviewed_entry_with_EC_active_site_structure																		False
+K19670	PF01663	Phosphodiest	1	188.0	3.11.1.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K19884	PF01593	Amino_oxidase	3	128.0	1.4.3.23	no_reviewed_entry_with_EC_active_site_structure																		False
+K19889	PF08241	Methyltransf_11	4	158.0	2.1.1.164	no_reviewed_entry_with_EC_active_site_structure																		False
+K20074	PF00481	PP2C	2	251.0	3.1.3.16	no_entry_in_label_family (70 with EC+structure+active site)																		False
+K20137	PF00089	Trypsin	1	135.0	3.4.21.74	no_reviewed_entry_with_EC_active_site_structure																		False
+K20144	PF01370	Epimerase	1	346.0	1.3.1.122	no_entry_in_label_family (1 with EC+structure+active site)																		False
+K20527	PF00437	T2SSE	2	145.5	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K20530	PF19044	P-loop_TraG	3	159.0	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K20534	PF00535	Glycos_transf_2	2	199.5		no_complete_EC																		False
+K20542	PF01270	Glyco_hydro_8	25	408.0	3.2.1.4	no_experimental_chain_with_active_site																	P37651:no_active_or_binding_in_region;P37696:no_active_or_binding_in_region;A3DC29:no_active_or_binding_in_region	False
+K20565	PF00732	GMC_oxred_N	1	141.0	1.1.3.43;1.1.3.44	no_reviewed_entry_with_EC_active_site_structure																		False
+K20569	PF01262	AlaDh_PNT_C	10	329.5		no_complete_EC																		False
+K20571	PF01408	GFO_IDH_MocA	3	147.0		no_complete_EC																		False
+K20573	PF00534	Glycos_transf_1	35	387.0	2.4.1.301	no_reviewed_entry_with_EC_active_site_structure																		False
+K20578	PF00534	Glycos_transf_1	2	129.5		no_complete_EC																		False
+K20581	PF00300	His_Phos_1	1	108.0		no_complete_EC																		False
+K20583	PF02585	PIG-L	1	136.0		no_complete_EC																		False
+K20592	PF05401	NodS	1	126.0		no_complete_EC																		False
+K20610	PF01522	Polysacc_deac_1	1	148.0	4.2.2.25	no_reviewed_entry_with_EC_active_site_structure																		False
+K20615	PF00155	Aminotran_1_2	3	105.0	4.2.1.145	no_reviewed_entry_with_EC_active_site_structure																		False
+K20678	PF01593	Amino_oxidase	8	276.5	5.4.99.59	no_reviewed_entry_with_EC_active_site_structure																		False
+K20681	PF00132	Hexapep	2	223.5	2.3.1.197	no_reviewed_entry_with_EC_active_site_structure																		False
+K20761	PF21006	NHase_beta_N	1	129.0	3.5.5.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K20809	PF00111	Fer2	2	107.5	1.18.1.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K20831	PF07470	Glyco_hydro_88	1	386.0	3.2.1.179	no_experimental_chain_with_active_site																	Q9RC92:no_active_or_binding_in_region	False
+K20845	PF02156	Glyco_hydro_26	5	307.0	3.2.1.32	no_entry_in_label_family (2 with EC+structure+active site)																		False
+K20930	PF00694	Aconitase_C	21	177.0	4.2.1.166	no_reviewed_entry_with_EC_active_site_structure																		False
+K21018	PF00135	COesterase	1	101.0	3.1.1.87	no_experimental_chain_with_active_site																	D2D3B6:no_active_or_binding_in_region	False
+K21062	PF00701	DHDPS	1	104.0	3.5.4.22	no_reviewed_entry_with_EC_active_site_structure																		False
+K21158	PF00069	Pkinase	1	214.0	2.7.11.1	ok	P37562	PKN1_BACSU	Bacillus subtilis (strain 168)	Bacteria	338.0	True	PF00069	18-249	6G4J_A	ref/6G4J_A_fam.pdb	232.0	1.599	X-ray diffraction	1.0	1.0	10.0		True
+K21216	PF00535	Glycos_transf_2	7	118.0		no_complete_EC																		False
+K21262	PF04101	Glyco_tran_28_C	10	255.0		no_complete_EC																		False
+K21271	PF01370	Epimerase	1	127.0	1.1.1.394	no_reviewed_entry_with_EC_active_site_structure																		False
+K21272	PF01494	FAD_binding_3	1	120.0	1.14.13.222	no_reviewed_entry_with_EC_active_site_structure																		False
+K21281	PF02771	Acyl-CoA_dh_N	1	282.0	1.14.14.30	no_reviewed_entry_with_EC_active_site_structure																		False
+K21298	PF21250	SOGP_2nd	1	211.0	2.4.1.333	no_reviewed_entry_with_EC_active_site_structure																		False
+K21593	PF01979	Amidohydro_1	1	143.0	3.5.4.45	no_reviewed_entry_with_EC_active_site_structure																		False
+K21673	PF20256	MoCoBD_2	3	112.0	1.17.5.2	no_reviewed_entry_with_EC_active_site_structure																		False
+K21677	PF01593	Amino_oxidase	2	200.5	1.17.8.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K21836	PF01565	FAD_binding_4	3	173.0	1.1.99.6	no_reviewed_entry_with_EC_active_site_structure																		False
+K21929	PF03167	UDG	3	105.0	3.2.2.27	no_experimental_chain_with_active_site																	Q2G0J7:no_active_or_binding_in_region;Q6GJ88:no_active_or_binding_in_region;P39615:no_active_or_binding_in_region;Q9KPK8:no_active_or_binding_in_region;P9WFQ9:no_active_or_binding_in_region;P12295:no_active_or_binding_in_region;Q83CW4:no_active_or_binding_in_region;Q9RWH9:no_active_or_binding_in_region	False
+K21934	PF02436	PYC_OADA	1	151.0	2.3.3.19	no_reviewed_entry_with_EC_active_site_structure																		False
+K22004	PF00206	Lyase_1	1	145.0	4.1.1.113	no_experimental_chain_with_active_site																	A0A0U2UYC4:no_active_or_binding_in_region	False
+K22079	PF03815	LCCL	1	125.0	3.4.21.84	no_reviewed_entry_with_EC_active_site_structure																		False
+K22081	PF13522	GATase_6	3	174.0	2.1.1.21	no_reviewed_entry_with_EC_active_site_structure																		False
+K22082	PF01493	GXGXG	6	133.5	2.1.1.21	no_reviewed_entry_with_EC_active_site_structure																		False
+K22083	PF01645	Glu_synthase	1	100.0	2.1.1.21	no_reviewed_entry_with_EC_active_site_structure																		False
+K22087	PF04268	SoxG	11	188.0	1.5.99.5	no_reviewed_entry_with_EC_active_site_structure																		False
+K22278	PF01522	Polysacc_deac_1	6	129.0	3.5.1.104	ok	Q81EJ6	PGDA2_BACCR	Bacillus cereus (strain ATCC 14579 / DSM 31 / CCUG 7414 / JCM 2152 / NBRC 15305 / NCIMB 9373 / NCTC 2599 / NRRL B-3711)	Bacteria	273.0	True	PF01522	56-190	5N1P_A	ref/5N1P_A_fam.pdb	123.0	1.448	X-ray diffraction	1.0	1.0	3.0		True
+K22310	PF13444	Acetyltransf_5	1	149.0	2.3.2.30	no_reviewed_entry_with_EC_active_site_structure																		False
+K22342	PF11927	HODM_asu-like	10	197.0	1.14.13.238	ok	A4XXY9	HODMA_ECTM1	Ectopseudomonas mendocina (strain ymp) (Pseudomonas mendocina)	Bacteria	338.0	True	PF11927	44-337	5LTE_A	ref/5LTE_A_fam.pdb	294.0	1.65	X-ray diffraction	1.0	1.0	5.0		True
+K22348	PF07731	Cu-oxidase_2	4	180.0	1.16.3.3	no_reviewed_entry_with_EC_active_site_structure																		False
+K22578	PF01571	GCV_T	1	131.0	2.1.5.1	no_reviewed_entry_with_EC_active_site_structure																		False
+K22619	PF13202	EF-hand_5	31	192.0	1.13.12.24	no_reviewed_entry_with_EC_active_site_structure																		False
+K22622	PF00034	Cytochrom_C	1	125.0	1.8.2.6	no_reviewed_entry_with_EC_active_site_structure																		False
+K22677	PF00561	Abhydrolase_1	5	110.0		no_complete_EC																		False
+K22844	PF00535	Glycos_transf_2	2	162.0	2.4.1.356	no_reviewed_entry_with_EC_active_site_structure																		False
+K22879	PF07992	Pyr_redox_2	1	223.0	1.14.13.113	no_reviewed_entry_with_EC_active_site_structure																		False
+K22996	PF13640	2OG-FeII_Oxy_3	1	313.0	1.14.20.14	no_reviewed_entry_with_EC_active_site_structure																		False
+K23019	PF07883	Cupin_2	2	221.5	1.13.11.86	no_reviewed_entry_with_EC_active_site_structure																		False
+K23103	PF00535	Glycos_transf_2	9	279.0		no_complete_EC																		False
+K23105	PF00535	Glycos_transf_2	4	236.5		no_complete_EC																		False
+K23274	PF12318	FAD-SLDH	3	165.0	1.1.5.14	no_entry_in_label_family (1 with EC+structure+active site)																		False
+K23464	PF00296	Bac_luciferase	1	152.0		no_complete_EC																		False
+K24122	PF01593	Amino_oxidase	7	222.0	1.17.99.8	no_reviewed_entry_with_EC_active_site_structure																		False
+K24217	PF00583	Acetyltransf_1	1	105.0		no_complete_EC																		False
+K24700	PF05995	CDO_I	19	197.0	1.13.11.91	no_reviewed_entry_with_EC_active_site_structure																		False
+K27188	PF13183	Fer4_8	2	125.0	1.8.5.10	no_reviewed_entry_with_EC_active_site_structure																		False
+K27684	PF00278	Orn_DAP_Arg_deC	1	237.0	4.1.1.127	no_reviewed_entry_with_EC_active_site_structure																		False
+K27844	PF08241	Methyltransf_11	1	247.0	2.1.1.393	no_reviewed_entry_with_EC_active_site_structure																		False
+K27875	PF00037	Fer4	1	244.0	1.97.1.14	no_reviewed_entry_with_EC_active_site_structure																		False
+K27979	PF08264	Anticodon_1	3	133.0	2.3.2.39	no_reviewed_entry_with_EC_active_site_structure																		False
+K27986	PF08545	ACP_syn_III	1	114.0	2.3.1.328	no_reviewed_entry_with_EC_active_site_structure																		False
+K28279	PF01850	PIN	1	117.0		no_complete_EC																		False
+K28367	PF13193	AMP-binding_C	4	367.0	6.2.1.78	no_reviewed_entry_with_EC_active_site_structure																		False
+K28386	PF02754	CCG	1	298.0	1.8.4.17	no_reviewed_entry_with_EC_active_site_structure																		False
+K28641	PF13607	Succ_CoA_lig	1	277.0		no_complete_EC																		False
+K28721	PF08450	SGL	2	125.5	3.1.1.125	no_reviewed_entry_with_EC_active_site_structure																		False
+K28732	PF13378	MR_MLE_C	1	157.0	4.2.1.185	no_reviewed_entry_with_EC_active_site_structure																		False
+K28743	PF00753	Lactamase_B	1	105.0	3.1.2.35	no_reviewed_entry_with_EC_active_site_structure																		False
+K28885	PF00149	Metallophos	1	107.0	3.1.4.14	no_reviewed_entry_with_EC_active_site_structure																		False
+K28919	PF03734	YkuD	8	206.0		no_complete_EC																		False

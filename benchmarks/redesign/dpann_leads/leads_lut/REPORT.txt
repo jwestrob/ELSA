@@ -1,0 +1,110 @@
+LEADS_LUT: STRUCTURE-AND-RESIDUE LEAD SEARCH ON LUT (1,032 GTDB representatives)   STATUS: DONE 2026-11-21
+====================================================================================================================
+BOTTOM LINE
+1. No SUPPORTED lead in lut. Fixed assay (assay_rule.json, unchanged): unannotated profile-invisible candidates pass 0/19
+   in informative families (Wilson 95% 0-16.8%; 0/39 over all families), negatives 0/118 (0-3.2%), positives 42/44 (95.5%).
+   This does not reproduce DPANN (25/132, 18.9%): two-sided Fisher p = 0.044. The pilot gate passed (below).
+2. Extended tier (assay_rule_extended.json; reported apart, never pooled): unannotated candidates pass 2/96 in 22 kept
+   families (2.1%, 0.6-7.3%), negatives 0/192 (0-2.0%), held-out positives 100/104 (96.2%); one-sided Fisher p = 0.11, so the
+   tier shows no enrichment. Both passes are MazF-family toxins (K07171): verdict WEAK.
+3. Why the yield is null (Frame-Challenge Gate, two null checkpoints): 156/171 assayed unannotated genes are homologs of
+   their label-carrying partner (own frame, identity median 0.43, coverage 0.87), yet only 44/171 cover the partner's
+   label-Pfam domain. Fold match 38/44 when they cover it, 17/127 when they miss it. Of the 127 that miss it, 45 carry the
+   label Pfam on a gene 1-3 positions away (39 adjacent, all same strand) against 1/44 of the covering genes (one-sided Fisher
+   p = 2.0e-6). In this dense collection the position call hands the label of multi-domain or split partners to the gene
+   homologous to the other part; the partner KO follows the partner, so the function is transferred at protein level and
+   misses at domain level. A candidate-to-carrier alignment that must cover the label envelope would remove these calls.
+4. Fold kept, catalytic residues absent (observation only): fixed K02342 (RNase_T label, DNA pol III epsilon): 10/10 fold
+   (TM 0.74), catalytic 0/10, all already named. Extended K20542 (Glyco_hydro_8, endoglucanase): 10/10 fold (TM 0.70), 9/10
+   cover the label domain, 0-1 of 30 invariant positions in place.
+5. lut_loci topic, one line: K22619 (EF-hand_5 label, partner KO "calcium-regulated photoprotein") holds 31 unannotated genes
+   in 31 genomes / 7 genera; it falls outside both assays (no curated reference; extended scope not met). Left to lut_loci.
+
+STEP 1, PARTNER FUNCTION WITH THE CAP (coordinator instruction)
+  Carriers of a labeled gene = first 12 label-carrying supporters in list order (uncapped median 11; the cap removes the long
+  tail). Unique carriers T2/T2b/rest 463,931 -> 120,626 (36.9 CPU-h est.); T1c + contradicted added with the same cap (27,851)
+  so the side populations are reportable: 133,951 proteins, 43.0 M residues, 40.9 CPU-h est. Aksha 0.2.3, installed KOFAM,
+  --cut_ga, Slurm array 120132 (8 x 24 CPUs) + merge/novelty job 120133 (DONE 08:49 UTC). 102,340 KO rows on 62,218 proteins
+  -> RD/annot_gpu/lut/KOFAM_partners.parquet. STRONG rule unchanged (>= 3 KO-annotated carriers, share >= 0.70). T1 genes
+  (own profile hit) are outside the KOfam scope.
+
+FUNNEL (funnel.tsv; genes; main = T2 / T2b / rest)
+  labeled 69,229 (22,952 / 13,680 / 32,597) -> carrier KO 27,658 -> STRONG 20,132 -> enzyme 5,785 -> 100-600 aa, ILVFMAWC <
+  0.45: 2,527 (1,367 / 475 / 685; 444 functions) -> named by any source 1,979 (own relaxed Pfam 812, own relaxed KOfam 1,854,
+  CDD 992) -> unannotated profile-invisible 548 (290 / 90 / 168) in 387 genomes, 192 genera, 107 functions.
+  Side populations (counted, not assayed): T1c 310 -> 22 unannotated; contradicted 175 -> 31 unannotated.
+  Largest unannotated functions: K07171 MazF 73 genes / 59 genomes / 37 genera; K17675 SUV3 helicase 39 / 39 / 30;
+  K20573 GT1 35 / 34 / 23; K22619 31 / 31 / 7; K20542 GH8 23 / 22 / 5; K08300 RNase E 21 / 21 / 21; K06042 CbiC 18 / 18 / 11.
+  Novelty sources: own Aksha Pfam-A and KOfam at E <= 0.01, rpsblast CDD 3.20 best-per-region (the Sharur protein_resemblance
+  recipe, available on biotite), candidate set only. No alignment lists exist: embedding-only versus both is not reportable.
+
+FIXED ASSAY (assay_rule.json, sha256 f41709ef7c50a1bd42a1a2aa632dec1320a409068caf37bccc966fc3fdd9124d)
+  References: 39 of 444 population functions have the reviewed record + experimental chain the rule needs (253 no reviewed
+  entry with EC, active site and structure; 69 no complete EC; 38 no chain resolving the active site; 23 length-incompatible;
+  22 no entry in the label family). They hold 42 of the 548 unannotated genes.
+  Pilot at the rule's upper sizes: 6 families with the most unannotated candidates, 6 candidates each (unannotated first, then
+  already named to reach 6; K07258 has 2), positives counted from all full-run candidates (2-3 per family). Positives 7/14,
+  negative A 0/32, negative B 0/32 (17 distinct proteins), Fisher p = 6.4e-5 against each: GATE PASSED (positives exactly at
+  the 50% bar). Candidates 0/32. Uninformative at the pilot: K03781, K05992, K14418 (positives miss the catalytic residue).
+  Full run: 112 candidates (39 unannotated), 78 positives, 112 negative B, 414 US-align pairs. Informative families 21.
+  Per family, unannotated (fold / catalytic / PASS): K22342 HODM_asu 10 (0/0/0; models at mean pLDDT 32-49, so mostly
+  uninterpretable); K22278 Polysacc_deac_1 6 (1/0/0; the fold match, TM 0.80, lacks the catalytic residue); K07258 2 (0/0/0);
+  K01493 1 (0/0/0). Uninformative families: K14418 ECH 6 (5/0), K05992 6 (0/1), K03781 2 (2/0), six singletons.
+  Tier T2 0/13, T2b 0/5, rest 0/1; support >= 50% 0/13, 20-50% 0/5, 5-20% 0/1. Already-named stratum 3/40 (all K01443).
+  Fixed-assay passes (leads.tsv): 3 NagA genes (K01443; Roseibium, JANQPX01, Denitrobaculum), D270 in place, TM 0.85-0.88,
+  verdict PASS-NAMED: own relaxed KOfam and CDD name them and each genome carries NagA elsewhere. Routine, not leads.
+
+EXTENDED TIER (assay_rule_extended.json, sha256 54fed579cbf5f26cf94380400f7570bbddb673108a8bb27341a440f8a8e3c5e9)
+  Scope: 382 population families fail the fixed reference rule; 139 qualify (>= 15 representatives at 70% identity, >= 3 site
+  positions; out: 110 < 15 members, 76 < 15 representatives, 48 < 3 site positions, 9 no member 100-600 aa); 32 of the 139
+  hold unannotated genes (226 genes).
+  Budget rule (code/E0_budget.py, data/ext/budget_rule.json, fixed after E1 and before any extended fold): the 32 families with
+  unannotated genes; already-named stratum not folded (its cap of 5 is a maximum); unannotated cap 10 per family (largest
+  step of 40, 35, ... that fits 384 remaining folds less a 30-fold reserve); 107 families listed not_assayed_budget.
+  Run: 32 reference members (K07451 used its rank-1 member, rank-0 pLDDT < 70), 132 candidates, 148 held-out positives,
+  132 negative B, 716 US-align pairs. Kept 22 families; dropped 10 on held-out positives < 80% (K20930 3/5, K15575 3/5,
+  K23103 3/5, K03427 3/5, K07316 3/5, K11148 3/5, K13270 3/4, K03060 2/4, K01768 2/3, K28743 1/3); no negative passed.
+  Unannotated in kept families: fold 26/96, site 2/96, PASS 2/96; T2 0/61, T2b 0/7, rest 2/28; support >= 50% 0/61,
+  20-50% 0/12, 5-20% 2/22, < 5% 0/1. Wording: a pass is "conserved-core residues in place", weaker than curated catalytic
+  residues.
+
+LEAD (extended tier) MazF-family toxin, label PemK_toxin, function K07171   VERDICT: WEAK
+  3896218 (Labrys wisconsinensis, Rhizobiales; function absent otherwise in its genome) and 1902889 (Rhodomicrobium sp963756335;
+  genome carries an annotated PemK gene: WEAK-redundant). 145 aa, ILVFMAWC 0.38-0.41, tier rest, votes 8/123 and 7/117.
+  Site: invariant R30, T52, S77 of the reference member all in place (R33/T56/S84 and R34/T57/S85), site pLDDT 82, TM 0.77-0.78
+  (family candidates: fold 10/10, site 2/10). Curated record: reviewed EndoA (P96622, B. subtilis) marks R25 "transition
+  state stabilizer" (aligned to R30) and S73 by mutagenesis (100-fold weaker RNA binding; aligned to S77); T52 aligns one
+  residue from the mutagenized T48. Family: 140 labeled genes / 106 genomes; PemK Pfam in 247/527 Rhizobiales genomes.
+  Context: PhdYeFM_antitox at +1 in both. Criterion A: the characterized relative is a homodimer; homodimer co-folds give
+  ipTM 0.40 and 0.13 against 0.87 for the positive control 4421930, so the leads' dimer is not confidently predicted.
+  Criterion B: a toxin of a toxin-antitoxin pair that the label already names; it adds little to what the organisms can do.
+  UNVERIFIED: activity, cleavage specificity, pairing with the adjacent antitoxin.
+
+FAMILIES WITH THE FOLD KEPT AND THE SITE ABSENT (data/absent_site_families.tsv, data/ext/absent_site_families_ext.tsv)
+  fixed     K02342 RNase_T / DNA pol III epsilon: folded 10, fold 10 (TM 0.74), catalytic in place 0, positives 2/3
+  extended  K20542 GH8 (kept): 10, fold 10 (TM 0.70), site 0/10 (0-1 of 30); K20930 Aconitase_C (dropped): 9, fold 9 (TM
+            0.89), site 0 (0-2 of 4); K15575 Thiolase_C_1 (dropped): 9, fold 8, site 0 (0-2 of 6); K23103 GT2 (dropped): 5,
+            fold 3, site 0. K07171 sits at the 20% line (2/10).
+
+FRAME CHALLENGE (code/X1-X3, data/partner_homology.tsv, label_domain_overlap.tsv, split_neighbors.tsv, frame_challenge.json)
+  Anomaly: lut candidates fail the fold itself (fixed 1/19 fold match in informative families; extended 26/96), whereas DPANN
+  failures mostly kept the fold. A fresh-context critic proposed shadow ORFs, pseudogene fragments and unrelated slot
+  occupants. Tests on data in hand: (X1) candidate vs its label-carrying partner, local alignment: 156/171 homologous (>= 25%
+  identity over >= 50% of the candidate), score above the length-matched negative in 95.9%: the called ORF itself is the
+  homolog, so shadow ORFs and unrelated occupants explain few calls. (X2) aligned partner region vs the partner's label
+  envelope: covered (>= 50%) by 44/171; median 0.0 among fold failures; partners median 385 aa vs candidates 195 aa.
+  (X3) label Pfam within 3 genes: 45/127 non-covering vs 1/44 covering. Mechanism class supported: domain-level mismatch
+  (multi-domain partners, split arrangements). Among the 44 domain-covering genes the assays pass 2.
+
+CHANGES FROM THE TESTSET3 CODE (theirs untouched)
+  r1_partners.py: carrier cap and tier scope; merge reads output directories only. L4_select.py and E2_select.py: round-robin
+  over genera (coordinator: sample across genera); L4 pilot fills to 6 candidates and counts positives from all full-run
+  candidates; E2 reads the budget rule. E5_stats.py: not_assayed_budget status. L8_leads.py: genus counts. New: r1_smoke.py,
+  E0_budget.py, X1-X4. E1, E3, E4, E6, r6_members.py: byte copies of the final testset3 versions (copied after their run).
+COMPUTE  Slurm 120132 + 120133 (about 41 CPU-h est.); ESMFold2 541 of 600 folds (63 pilot, 153 full, 33 extended
+  references, 289 extended, 3 homodimer co-folds); US-align 1,240 pairs, biotite login node, serial (above the brief's
+  "few hundred"; the 600-fold budget implies it). Mac disk 171 MB. Taxonomy from the package genomes table.
+FILES  REPORT.txt, leads.tsv (3 fixed-assay passes), leads_extended.tsv (2), families.tsv (fixed, 444 functions),
+  families_extended.tsv (382), funnel.tsv, assay_rule.json, assay_rule_extended.json, code/, data/ (selections, US-align,
+  read-outs, residues, rates, stats, ext/, frame-challenge tables), ref/, folds/ (models, co-folds). Remote:
+  RD/dpann_leads/leads_lut/ (partners/, novelty/, data/, usalign/, usalign_ext/, context/).

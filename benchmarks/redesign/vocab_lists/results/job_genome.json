@@ -1,0 +1,1551 @@
+{
+ "arms": [
+  "syn",
+  "ctx",
+  "ctxshuf",
+  "gen"
+ ],
+ "excl": "genome",
+ "lists": {
+  "emb": {
+   "source": "zca10",
+   "ku": 2000,
+   "depths": [
+    200,
+    1000
+   ],
+   "floors": [
+    -2.0
+   ],
+   "variants": [
+    "K200_fnone",
+    "K1000_fnone"
+   ],
+   "genes_with_list": 3585303,
+   "list_len_q01_q10_q50": [
+    1000.0,
+    1000.0,
+    1000.0
+   ],
+   "genes_list_shorter_than_depth": {
+    "200": 0,
+    "1000": 0
+   },
+   "identical_copies_q50_q99": [
+    0.0,
+    15.0
+   ],
+   "cap_q10_q50_q90": {
+    "K200_fnone": [
+     200.0,
+     200.0,
+     200.0
+    ],
+    "K1000_fnone": [
+     1000.0,
+     1000.0,
+     1000.0
+    ]
+   },
+   "capcos_q10_q50_q90": {
+    "K200_fnone": [
+     0.377,
+     0.603,
+     0.822
+    ],
+    "K1000_fnone": [
+     0.264,
+     0.436,
+     0.695
+    ]
+   }
+  }
+ },
+ "ladder": {
+  "syn": {
+   "-1": {
+    "counts": {
+     "4.0": 3143602,
+     "6.0": 2764356,
+     "8.0": 2451423,
+     "10.0": 2211959,
+     "12.0": 2009726,
+     "15.0": 1769258,
+     "20.0": 1409785
+    },
+    "adjacencies": 9238557,
+    "sec_A": 56.3,
+    "sec_B": 96.8
+   },
+   "0": {
+    "counts": {
+     "4.0": 29077,
+     "6.0": 2958,
+     "8.0": 281,
+     "10.0": 37,
+     "12.0": 0,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385146,
+    "sec_A": 50.5,
+    "sec_B": 53.8
+   },
+   "1": {
+    "counts": {
+     "4.0": 29365,
+     "6.0": 2836,
+     "8.0": 301,
+     "10.0": 26,
+     "12.0": 3,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385112,
+    "sec_A": 50.4,
+    "sec_B": 52.6
+   },
+   "2": {
+    "counts": {
+     "4.0": 29623,
+     "6.0": 2829,
+     "8.0": 291,
+     "10.0": 45,
+     "12.0": 7,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385104,
+    "sec_A": 50.0,
+    "sec_B": 50.2
+   }
+  },
+  "ctx": {
+   "-1": {
+    "counts": {
+     "4.0": 3087610,
+     "6.0": 2624494,
+     "8.0": 2249817,
+     "10.0": 1938989,
+     "12.0": 1656872,
+     "15.0": 1290652,
+     "20.0": 885217
+    },
+    "adjacencies": 9238557,
+    "sec_A": 42.9,
+    "sec_B": 88.0
+   },
+   "0": {
+    "counts": {
+     "4.0": 19524,
+     "6.0": 1749,
+     "8.0": 151,
+     "10.0": 14,
+     "12.0": 0,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385146,
+    "sec_A": 49.9,
+    "sec_B": 1.6
+   },
+   "1": {
+    "counts": {
+     "4.0": 19835,
+     "6.0": 1758,
+     "8.0": 166,
+     "10.0": 9,
+     "12.0": 0,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385112,
+    "sec_A": 49.7,
+    "sec_B": 1.6
+   },
+   "2": {
+    "counts": {
+     "4.0": 19859,
+     "6.0": 1672,
+     "8.0": 157,
+     "10.0": 26,
+     "12.0": 5,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385104,
+    "sec_A": 46.7,
+    "sec_B": 1.6
+   }
+  },
+  "ctxshuf": {
+   "-1": {
+    "counts": {
+     "4.0": 4954045,
+     "6.0": 4535734,
+     "8.0": 4236388,
+     "10.0": 4010059,
+     "12.0": 3830779,
+     "15.0": 3617333,
+     "20.0": 3358732
+    },
+    "adjacencies": 9238557,
+    "sec_A": 43.7,
+    "sec_B": 81.6
+   },
+   "0": {
+    "counts": {
+     "4.0": 30960,
+     "6.0": 3277,
+     "8.0": 340,
+     "10.0": 45,
+     "12.0": 2,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385146,
+    "sec_A": 49.7,
+    "sec_B": 1.6
+   },
+   "1": {
+    "counts": {
+     "4.0": 31168,
+     "6.0": 3143,
+     "8.0": 345,
+     "10.0": 33,
+     "12.0": 5,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385112,
+    "sec_A": 49.3,
+    "sec_B": 1.5
+   },
+   "2": {
+    "counts": {
+     "4.0": 31503,
+     "6.0": 3154,
+     "8.0": 332,
+     "10.0": 47,
+     "12.0": 9,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385104,
+    "sec_A": 47.1,
+    "sec_B": 1.5
+   }
+  },
+  "gen": {
+   "-1": {
+    "counts": {
+     "4.0": 4957731,
+     "6.0": 4539949,
+     "8.0": 4240409,
+     "10.0": 4014174,
+     "12.0": 3834836,
+     "15.0": 3621467,
+     "20.0": 3362812
+    },
+    "adjacencies": 9238557,
+    "sec_A": 44.2,
+    "sec_B": 0.0
+   },
+   "0": {
+    "counts": {
+     "4.0": 31388,
+     "6.0": 3334,
+     "8.0": 343,
+     "10.0": 46,
+     "12.0": 2,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385146,
+    "sec_A": 50.8,
+    "sec_B": 0.0
+   },
+   "1": {
+    "counts": {
+     "4.0": 31616,
+     "6.0": 3192,
+     "8.0": 356,
+     "10.0": 33,
+     "12.0": 5,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385112,
+    "sec_A": 49.2,
+    "sec_B": 0.0
+   },
+   "2": {
+    "counts": {
+     "4.0": 31940,
+     "6.0": 3211,
+     "8.0": 342,
+     "10.0": 50,
+     "12.0": 9,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 9385104,
+    "sec_A": 47.5,
+    "sec_B": 0.0
+   }
+  }
+ },
+ "floors": {
+  "-1": {
+   "False": {
+    "c0": 0.00559833324869344,
+    "sd0": 0.08672073062851708,
+    "n": 1984994,
+    "q50_q99_q999": [
+     -0.005310249134140747,
+     0.2872406611833883,
+     0.47581298415591766
+    ]
+   },
+   "True": {
+    "c0": 0.0055530209592701005,
+    "sd0": 0.08589033500446255,
+    "n": 1992527,
+    "q50_q99_q999": [
+     -0.005318364907317742,
+     0.28448013826336693,
+     0.4729105412255604
+    ]
+   }
+  },
+  "0": {
+   "False": {
+    "c0": 0.006774829552660947,
+    "sd0": 0.08897483260793951,
+    "n": 1985056,
+    "q50_q99_q999": [
+     -0.0032856908316463785,
+     0.29151432831403984,
+     0.46492898573381164
+    ]
+   },
+   "True": {
+    "c0": 0.006671403664913823,
+    "sd0": 0.08802659812180788,
+    "n": 1992489,
+    "q50_q99_q999": [
+     -0.0031863914361445517,
+     0.28778573116294554,
+     0.4629671399778804
+    ]
+   }
+  },
+  "1": {
+   "False": {
+    "c0": 0.006797550351984324,
+    "sd0": 0.08902847790157103,
+    "n": 1984898,
+    "q50_q99_q999": [
+     -0.003272686977261202,
+     0.2908887052894737,
+     0.4658723945575937
+    ]
+   },
+   "True": {
+    "c0": 0.006648521792285712,
+    "sd0": 0.08801901997788311,
+    "n": 1992628,
+    "q50_q99_q999": [
+     -0.0033165190839859133,
+     0.28692228174559103,
+     0.4671638329457056
+    ]
+   }
+  },
+  "2": {
+   "False": {
+    "c0": 0.006760760474219214,
+    "sd0": 0.08903957697428841,
+    "n": 1985117,
+    "q50_q99_q999": [
+     -0.003371730598239253,
+     0.2912702552530729,
+     0.4614835558115179
+    ]
+   },
+   "True": {
+    "c0": 0.006617321524131723,
+    "sd0": 0.08795178879111283,
+    "n": 1992566,
+    "q50_q99_q999": [
+     -0.003268063610329538,
+     0.2870723022377313,
+     0.4619498596223512
+    ]
+   }
+  }
+ },
+ "syn_S": {
+  "-1": {
+   "seconds": 54.6,
+   "supported_adjacencies_q50": 2257.5,
+   "offdiag_mean": 0.026185974109490955,
+   "offdiag_q50_q90_q99_max": [
+    0.006478739744516896,
+    0.0747129983154613,
+    0.25623390907180665,
+    1.0
+   ],
+   "same_group_mean": 0.2978195256010574,
+   "other_group_mean": 0.021545380808152013
+  },
+  "0": {
+   "seconds": 51.7,
+   "supported_adjacencies_q50": 2115.0,
+   "offdiag_mean": 0.0007617326930559406,
+   "offdiag_q50_q90_q99_max": [
+    0.0002756339581036384,
+    0.001987999414581064,
+    0.006047156015556888,
+    0.7005057658107141
+   ],
+   "same_group_mean": 0.006678492086501979,
+   "other_group_mean": 0.0006606506512533384
+  },
+  "1": {
+   "seconds": 50.6,
+   "supported_adjacencies_q50": 2109.5,
+   "offdiag_mean": 0.0007618408372045955,
+   "offdiag_q50_q90_q99_max": [
+    0.0002756339581036384,
+    0.001986687617520822,
+    0.006049469263734642,
+    0.6904779058597503
+   ],
+   "same_group_mean": 0.0066572208092308596,
+   "other_group_mean": 0.0006611240418867622
+  },
+  "2": {
+   "seconds": 48.2,
+   "supported_adjacencies_q50": 2108.5,
+   "offdiag_mean": 0.0007618474396998745,
+   "offdiag_q50_q90_q99_max": [
+    0.0002757859900717044,
+    0.001987996759489141,
+    0.006047512290853302,
+    0.6871128173806824
+   ],
+   "same_group_mean": 0.0066695671363812955,
+   "other_group_mean": 0.0006609198322667444
+  }
+ },
+ "round0_obs": {
+  "syn": {
+   "lamG_ge10": 4014174,
+   "pass_tau10": 2211959,
+   "neff_over_n_q": [
+    0.010653428329584604,
+    0.020890059188615424,
+    0.04906208171300748,
+    0.10204953285570542,
+    0.20115533369599908
+   ],
+   "n_q": [
+    47.0,
+    242.0,
+    637.0
+   ],
+   "neff_q": [
+    4.84874888623196,
+    9.251310375449178,
+    19.22534751141322
+   ],
+   "kinf_q": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "ctx": {
+   "lamG_ge10": 4014174,
+   "pass_tau10": 1938989,
+   "neff_over_n_q": [
+    0.0073090595519826225,
+    0.01247043067835037,
+    0.03106479247570238,
+    0.0839106697465366,
+    0.17437162467566217
+   ],
+   "n_q": [
+    54.0,
+    273.0,
+    651.0
+   ],
+   "neff_q": [
+    3.6678251348780777,
+    6.472976304276159,
+    16.985491806194233
+   ],
+   "kinf_q": [
+    33.0,
+    33.0,
+    33.0
+   ]
+  },
+  "ctxshuf": {
+   "lamG_ge10": 4014174,
+   "pass_tau10": 4010059,
+   "neff_over_n_q": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "n_q": [
+    15.0,
+    77.0,
+    534.0
+   ],
+   "neff_q": [
+    15.0,
+    75.75017067477144,
+    519.0
+   ],
+   "kinf_q": [
+    15.0,
+    33.0,
+    33.0
+   ]
+  },
+  "gen": {
+   "lamG_ge10": 4014174,
+   "pass_tau10": 4014174,
+   "neff_over_n_q": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "n_q": [
+    15.0,
+    77.0,
+    534.0
+   ],
+   "neff_q": [
+    15.0,
+    77.0,
+    534.0
+   ],
+   "kinf_q": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "tau": {
+  "syn": {
+   "table": [
+    {
+     "tau": 4.0,
+     "observed": 3143602,
+     "null_mean": 29355.0,
+     "fdr": 0.009338014163370554
+    },
+    {
+     "tau": 6.0,
+     "observed": 2764356,
+     "null_mean": 2874.3333333333335,
+     "fdr": 0.001039784070262055
+    },
+    {
+     "tau": 8.0,
+     "observed": 2451423,
+     "null_mean": 291.0,
+     "fdr": 0.000118706563493938
+    },
+    {
+     "tau": 10.0,
+     "observed": 2211959,
+     "null_mean": 36.0,
+     "fdr": 1.627516604060021e-05
+    },
+    {
+     "tau": 12.0,
+     "observed": 2009726,
+     "null_mean": 3.3333333333333335,
+     "fdr": 1.6586008905359903e-06
+    },
+    {
+     "tau": 15.0,
+     "observed": 1769258,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    },
+    {
+     "tau": 20.0,
+     "observed": 1409785,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    }
+   ],
+   "tau_star": 4.0
+  },
+  "ctx": {
+   "table": [
+    {
+     "tau": 4.0,
+     "observed": 3087610,
+     "null_mean": 19739.333333333332,
+     "fdr": 0.006393078573179039
+    },
+    {
+     "tau": 6.0,
+     "observed": 2624494,
+     "null_mean": 1726.3333333333333,
+     "fdr": 0.0006577775881115877
+    },
+    {
+     "tau": 8.0,
+     "observed": 2249817,
+     "null_mean": 158.0,
+     "fdr": 7.022793409419521e-05
+    },
+    {
+     "tau": 10.0,
+     "observed": 1938989,
+     "null_mean": 16.333333333333332,
+     "fdr": 8.423633828419517e-06
+    },
+    {
+     "tau": 12.0,
+     "observed": 1656872,
+     "null_mean": 1.6666666666666667,
+     "fdr": 1.0059115409438187e-06
+    },
+    {
+     "tau": 15.0,
+     "observed": 1290652,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    },
+    {
+     "tau": 20.0,
+     "observed": 885217,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    }
+   ],
+   "tau_star": 4.0
+  },
+  "ctxshuf": {
+   "table": [
+    {
+     "tau": 4.0,
+     "observed": 4954045,
+     "null_mean": 31210.333333333332,
+     "fdr": 0.006299969688069715
+    },
+    {
+     "tau": 6.0,
+     "observed": 4535734,
+     "null_mean": 3191.3333333333335,
+     "fdr": 0.0007035979917105662
+    },
+    {
+     "tau": 8.0,
+     "observed": 4236388,
+     "null_mean": 339.0,
+     "fdr": 8.0020999020864e-05
+    },
+    {
+     "tau": 10.0,
+     "observed": 4010059,
+     "null_mean": 41.666666666666664,
+     "fdr": 1.0390537063586014e-05
+    },
+    {
+     "tau": 12.0,
+     "observed": 3830779,
+     "null_mean": 5.333333333333333,
+     "fdr": 1.3922320586317646e-06
+    },
+    {
+     "tau": 15.0,
+     "observed": 3617333,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    },
+    {
+     "tau": 20.0,
+     "observed": 3358732,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    }
+   ],
+   "tau_star": 4.0
+  },
+  "gen": {
+   "table": [
+    {
+     "tau": 4.0,
+     "observed": 4957731,
+     "null_mean": 31648.0,
+     "fdr": 0.006383565385052154
+    },
+    {
+     "tau": 6.0,
+     "observed": 4539949,
+     "null_mean": 3245.6666666666665,
+     "fdr": 0.0007149125830855515
+    },
+    {
+     "tau": 8.0,
+     "observed": 4240409,
+     "null_mean": 347.0,
+     "fdr": 8.183172896765383e-05
+    },
+    {
+     "tau": 10.0,
+     "observed": 4014174,
+     "null_mean": 43.0,
+     "fdr": 1.0712041879599638e-05
+    },
+    {
+     "tau": 12.0,
+     "observed": 3834836,
+     "null_mean": 5.333333333333333,
+     "fdr": 1.3907591702313563e-06
+    },
+    {
+     "tau": 15.0,
+     "observed": 3621467,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    },
+    {
+     "tau": 20.0,
+     "observed": 3362812,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    }
+   ],
+   "tau_star": 4.0
+  }
+ },
+ "full": {
+  "syn": {
+   "obs": {
+    "arm": "syn",
+    "lists": "emb",
+    "K": 1000,
+    "order": -1,
+    "tau": 4.0,
+    "instances": 1449551,
+    "top_instances": 588738,
+    "genes_in_top": 2439839,
+    "genes_in_top_frac": 0.6805112427038942,
+    "rounds": 11,
+    "seconds": 483.9,
+    "top_span_q": [
+     3.0,
+     8.0,
+     17.0,
+     63.0
+    ]
+   },
+   "rounds": [
+    {
+     "round": 0,
+     "adjacencies": 9238557,
+     "candidates": 3143602,
+     "committed": 868878,
+     "live": 2446328,
+     "list_entries": 244415848,
+     "empty_lists": 0,
+     "max_lam": 154.30882698470285,
+     "sec_A": 42.3,
+     "sec_B": 76.0,
+     "seconds": 210.2
+    },
+    {
+     "round": 1,
+     "adjacencies": 4134299,
+     "candidates": 746817,
+     "committed": 374030,
+     "live": 1985805,
+     "list_entries": 123748667,
+     "empty_lists": 0,
+     "max_lam": 128.83960405233768,
+     "sec_A": 22.4,
+     "sec_B": 12.9,
+     "seconds": 46.2
+    },
+    {
+     "round": 2,
+     "adjacencies": 3257590,
+     "candidates": 243372,
+     "committed": 149336,
+     "live": 1804256,
+     "list_entries": 83385807,
+     "empty_lists": 0,
+     "max_lam": 110.70644624693078,
+     "sec_A": 16.7,
+     "sec_B": 8.7,
+     "seconds": 30.1
+    },
+    {
+     "round": 3,
+     "adjacencies": 2963368,
+     "candidates": 64444,
+     "committed": 46731,
+     "live": 1747216,
+     "list_entries": 73551518,
+     "empty_lists": 0,
+     "max_lam": 79.07981119253378,
+     "sec_A": 15.3,
+     "sec_B": 7.7,
+     "seconds": 26.5
+    },
+    {
+     "round": 4,
+     "adjacencies": 2878121,
+     "candidates": 11412,
+     "committed": 9295,
+     "live": 1735776,
+     "list_entries": 72207572,
+     "empty_lists": 0,
+     "max_lam": 44.58252550183991,
+     "sec_A": 14.8,
+     "sec_B": 7.1,
+     "seconds": 25.1
+    },
+    {
+     "round": 5,
+     "adjacencies": 2860805,
+     "candidates": 1330,
+     "committed": 1179,
+     "live": 1734345,
+     "list_entries": 72100929,
+     "empty_lists": 0,
+     "max_lam": 34.75387987847498,
+     "sec_A": 14.6,
+     "sec_B": 7.2,
+     "seconds": 24.9
+    },
+    {
+     "round": 6,
+     "adjacencies": 2858578,
+     "candidates": 98,
+     "committed": 75,
+     "live": 1734235,
+     "list_entries": 72098838,
+     "empty_lists": 0,
+     "max_lam": 12.427890378751906,
+     "sec_A": 14.5,
+     "sec_B": 7.1,
+     "seconds": 24.8
+    },
+    {
+     "round": 7,
+     "adjacencies": 2858348,
+     "candidates": 26,
+     "committed": 14,
+     "live": 1734217,
+     "list_entries": 72098132,
+     "empty_lists": 0,
+     "max_lam": 8.823985613957529,
+     "sec_A": 14.5,
+     "sec_B": 7.2,
+     "seconds": 24.9
+    },
+    {
+     "round": 8,
+     "adjacencies": 2858308,
+     "candidates": 13,
+     "committed": 7,
+     "live": 1734209,
+     "list_entries": 72097434,
+     "empty_lists": 0,
+     "max_lam": 8.431155808352688,
+     "sec_A": 14.4,
+     "sec_B": 7.2,
+     "seconds": 24.6
+    },
+    {
+     "round": 9,
+     "adjacencies": 2858292,
+     "candidates": 7,
+     "committed": 6,
+     "live": 1734202,
+     "list_entries": 72097434,
+     "empty_lists": 0,
+     "max_lam": 8.491079545050551,
+     "sec_A": 14.4,
+     "sec_B": 7.2,
+     "seconds": 24.6
+    },
+    {
+     "round": 10,
+     "adjacencies": 2858276,
+     "candidates": 0,
+     "committed": 0,
+     "seconds": 21.8
+    }
+   ],
+   "reciprocity": {
+    "merges": 2000,
+    "supporting_pairs": 572269,
+    "a_reciprocal": 0.8524889518740313,
+    "b_reciprocal": 0.861930315987761,
+    "both": 0.7633368223685015
+   },
+   "null0": {
+    "arm": "syn",
+    "lists": "emb",
+    "K": 1000,
+    "order": 0,
+    "tau": 4.0,
+    "instances": 28491,
+    "top_instances": 28458,
+    "genes_in_top": 84076,
+    "genes_in_top_frac": 0.0234501798034922,
+    "rounds": 3,
+    "seconds": 224.2,
+    "top_span_q": [
+     3.0,
+     4.0,
+     4.0,
+     7.0
+    ]
+   },
+   "word_fdr": 0.019655051805697075
+  },
+  "ctx": {
+   "obs": {
+    "arm": "ctx",
+    "lists": "emb",
+    "K": 1000,
+    "order": -1,
+    "tau": 4.0,
+    "instances": 1480454,
+    "top_instances": 563893,
+    "genes_in_top": 2552309,
+    "genes_in_top_frac": 0.7118809763079996,
+    "rounds": 14,
+    "seconds": 511.8,
+    "top_span_q": [
+     3.0,
+     9.0,
+     18.0,
+     54.0
+    ]
+   },
+   "rounds": [
+    {
+     "round": 0,
+     "adjacencies": 9238557,
+     "candidates": 3087610,
+     "committed": 848996,
+     "live": 2401728,
+     "list_entries": 228490933,
+     "empty_lists": 0,
+     "max_lam": 3426.8867285877454,
+     "sec_A": 42.2,
+     "sec_B": 74.5,
+     "seconds": 148.9
+    },
+    {
+     "round": 1,
+     "adjacencies": 4052024,
+     "candidates": 748503,
+     "committed": 378689,
+     "live": 1918606,
+     "list_entries": 110052331,
+     "empty_lists": 0,
+     "max_lam": 698.6534066545828,
+     "sec_A": 21.0,
+     "sec_B": 22.3,
+     "seconds": 53.1
+    },
+    {
+     "round": 2,
+     "adjacencies": 3122175,
+     "candidates": 261899,
+     "committed": 162844,
+     "live": 1712856,
+     "list_entries": 75048279,
+     "empty_lists": 0,
+     "max_lam": 489.1020224175062,
+     "sec_A": 15.5,
+     "sec_B": 12.8,
+     "seconds": 32.9
+    },
+    {
+     "round": 3,
+     "adjacencies": 2770820,
+     "candidates": 84149,
+     "committed": 61036,
+     "live": 1634337,
+     "list_entries": 66042546,
+     "empty_lists": 0,
+     "max_lam": 131.8216140000032,
+     "sec_A": 13.9,
+     "sec_B": 9.8,
+     "seconds": 27.0
+    },
+    {
+     "round": 4,
+     "adjacencies": 2640288,
+     "candidates": 25582,
+     "committed": 19723,
+     "live": 1608869,
+     "list_entries": 64118103,
+     "empty_lists": 0,
+     "max_lam": 44.36708048377389,
+     "sec_A": 13.4,
+     "sec_B": 9.0,
+     "seconds": 25.3
+    },
+    {
+     "round": 5,
+     "adjacencies": 2597699,
+     "candidates": 8141,
+     "committed": 6217,
+     "live": 1600738,
+     "list_entries": 63671868,
+     "empty_lists": 0,
+     "max_lam": 34.95709727328391,
+     "sec_A": 13.4,
+     "sec_B": 9.1,
+     "seconds": 25.5
+    },
+    {
+     "round": 6,
+     "adjacencies": 2583727,
+     "candidates": 2666,
+     "committed": 2026,
+     "live": 1598083,
+     "list_entries": 63568975,
+     "empty_lists": 0,
+     "max_lam": 18.068687506815444,
+     "sec_A": 13.4,
+     "sec_B": 8.8,
+     "seconds": 25.1
+    },
+    {
+     "round": 7,
+     "adjacencies": 2579023,
+     "candidates": 807,
+     "committed": 639,
+     "live": 1597268,
+     "list_entries": 63547243,
+     "empty_lists": 0,
+     "max_lam": 16.13719588345579,
+     "sec_A": 13.1,
+     "sec_B": 8.9,
+     "seconds": 25.0
+    },
+    {
+     "round": 8,
+     "adjacencies": 2577539,
+     "candidates": 247,
+     "committed": 188,
+     "live": 1597022,
+     "list_entries": 63541418,
+     "empty_lists": 0,
+     "max_lam": 12.514213260589479,
+     "sec_A": 13.2,
+     "sec_B": 8.9,
+     "seconds": 25.1
+    },
+    {
+     "round": 9,
+     "adjacencies": 2577090,
+     "candidates": 82,
+     "committed": 58,
+     "live": 1596951,
+     "list_entries": 63538565,
+     "empty_lists": 0,
+     "max_lam": 10.08059174964995,
+     "sec_A": 13.3,
+     "sec_B": 8.9,
+     "seconds": 25.2
+    },
+    {
+     "round": 10,
+     "adjacencies": 2576974,
+     "candidates": 31,
+     "committed": 20,
+     "live": 1596918,
+     "list_entries": 63537093,
+     "empty_lists": 0,
+     "max_lam": 11.305907623830313,
+     "sec_A": 13.4,
+     "sec_B": 8.8,
+     "seconds": 25.2
+    },
+    {
+     "round": 11,
+     "adjacencies": 2576911,
+     "candidates": 17,
+     "committed": 12,
+     "live": 1596895,
+     "list_entries": 63534827,
+     "empty_lists": 0,
+     "max_lam": 9.843357530139544,
+     "sec_A": 13.2,
+     "sec_B": 9.0,
+     "seconds": 25.2
+    },
+    {
+     "round": 12,
+     "adjacencies": 2576869,
+     "candidates": 8,
+     "committed": 6,
+     "live": 1596887,
+     "list_entries": 63533917,
+     "empty_lists": 0,
+     "max_lam": 11.355753170440758,
+     "sec_A": 13.3,
+     "sec_B": 8.9,
+     "seconds": 25.1
+    },
+    {
+     "round": 13,
+     "adjacencies": 2576859,
+     "candidates": 0,
+     "committed": 0,
+     "seconds": 23.1
+    }
+   ]
+  },
+  "ctxshuf": {
+   "obs": {
+    "arm": "ctxshuf",
+    "lists": "emb",
+    "K": 1000,
+    "order": -1,
+    "tau": 4.0,
+    "instances": 2200178,
+    "top_instances": 424749,
+    "genes_in_top": 3151341,
+    "genes_in_top_frac": 0.8789608577015666,
+    "rounds": 15,
+    "seconds": 340.8,
+    "top_span_q": [
+     4.0,
+     15.0,
+     54.0,
+     842.0
+    ]
+   },
+   "rounds": [
+    {
+     "round": 0,
+     "adjacencies": 9238557,
+     "candidates": 4954045,
+     "committed": 1083127,
+     "live": 2162203,
+     "list_entries": 257787453,
+     "empty_lists": 0,
+     "max_lam": 3711.2060688401593,
+     "sec_A": 42.5,
+     "sec_B": 78.3,
+     "seconds": 161.6
+    },
+    {
+     "round": 1,
+     "adjacencies": 3012258,
+     "candidates": 1400314,
+     "committed": 557565,
+     "live": 1495047,
+     "list_entries": 98439141,
+     "empty_lists": 0,
+     "max_lam": 3320.808375233398,
+     "sec_A": 16.3,
+     "sec_B": 16.7,
+     "seconds": 43.6
+    },
+    {
+     "round": 2,
+     "adjacencies": 1882829,
+     "candidates": 646743,
+     "committed": 296439,
+     "live": 1152570,
+     "list_entries": 46136217,
+     "empty_lists": 0,
+     "max_lam": 3144.016373383813,
+     "sec_A": 9.2,
+     "sec_B": 5.7,
+     "seconds": 19.6
+    },
+    {
+     "round": 3,
+     "adjacencies": 1388749,
+     "candidates": 292347,
+     "committed": 148977,
+     "live": 984627,
+     "list_entries": 32491301,
+     "empty_lists": 0,
+     "max_lam": 2083.406529514589,
+     "sec_A": 6.9,
+     "sec_B": 2.3,
+     "seconds": 12.4
+    },
+    {
+     "round": 4,
+     "adjacencies": 1164787,
+     "candidates": 124419,
+     "committed": 68444,
+     "live": 908758,
+     "list_entries": 29577512,
+     "empty_lists": 0,
+     "max_lam": 1258.3725699326371,
+     "sec_A": 5.8,
+     "sec_B": 1.5,
+     "seconds": 10.2
+    },
+    {
+     "round": 5,
+     "adjacencies": 1066664,
+     "candidates": 48957,
+     "committed": 29052,
+     "live": 876944,
+     "list_entries": 28887063,
+     "empty_lists": 0,
+     "max_lam": 521.8310315992876,
+     "sec_A": 5.6,
+     "sec_B": 1.4,
+     "seconds": 9.7
+    },
+    {
+     "round": 6,
+     "adjacencies": 1026425,
+     "candidates": 17459,
+     "committed": 11128,
+     "live": 864813,
+     "list_entries": 28683984,
+     "empty_lists": 0,
+     "max_lam": 145.11556843035478,
+     "sec_A": 5.5,
+     "sec_B": 1.3,
+     "seconds": 9.5
+    },
+    {
+     "round": 7,
+     "adjacencies": 1011070,
+     "candidates": 5619,
+     "committed": 3747,
+     "live": 860699,
+     "list_entries": 28615154,
+     "empty_lists": 0,
+     "max_lam": 42.49257862816866,
+     "sec_A": 5.5,
+     "sec_B": 1.3,
+     "seconds": 9.6
+    },
+    {
+     "round": 8,
+     "adjacencies": 1005724,
+     "candidates": 1781,
+     "committed": 1165,
+     "live": 859368,
+     "list_entries": 28596839,
+     "empty_lists": 0,
+     "max_lam": 30.204616277894306,
+     "sec_A": 5.4,
+     "sec_B": 1.4,
+     "seconds": 9.7
+    },
+    {
+     "round": 9,
+     "adjacencies": 1003903,
+     "candidates": 560,
+     "committed": 352,
+     "live": 858952,
+     "list_entries": 28586948,
+     "empty_lists": 0,
+     "max_lam": 25.9014794678158,
+     "sec_A": 5.5,
+     "sec_B": 1.2,
+     "seconds": 9.5
+    },
+    {
+     "round": 10,
+     "adjacencies": 1003260,
+     "candidates": 198,
+     "committed": 123,
+     "live": 858795,
+     "list_entries": 28582863,
+     "empty_lists": 0,
+     "max_lam": 25.9014794678158,
+     "sec_A": 5.4,
+     "sec_B": 1.5,
+     "seconds": 9.7
+    },
+    {
+     "round": 11,
+     "adjacencies": 1003005,
+     "candidates": 67,
+     "committed": 39,
+     "live": 858741,
+     "list_entries": 28581764,
+     "empty_lists": 0,
+     "max_lam": 25.881632615769785,
+     "sec_A": 5.4,
+     "sec_B": 1.3,
+     "seconds": 9.5
+    },
+    {
+     "round": 12,
+     "adjacencies": 1002913,
+     "candidates": 24,
+     "committed": 16,
+     "live": 858716,
+     "list_entries": 28580623,
+     "empty_lists": 0,
+     "max_lam": 9.085100429684992,
+     "sec_A": 5.5,
+     "sec_B": 1.3,
+     "seconds": 9.6
+    },
+    {
+     "round": 13,
+     "adjacencies": 1002868,
+     "candidates": 5,
+     "committed": 4,
+     "live": 858711,
+     "list_entries": 28580568,
+     "empty_lists": 0,
+     "max_lam": 10.61297798674487,
+     "sec_A": 5.5,
+     "sec_B": 1.4,
+     "seconds": 9.7
+    },
+    {
+     "round": 14,
+     "adjacencies": 1002860,
+     "candidates": 0,
+     "committed": 0,
+     "seconds": 6.8
+    }
+   ]
+  },
+  "gen": {
+   "obs": {
+    "arm": "gen",
+    "lists": "emb",
+    "K": 1000,
+    "order": -1,
+    "tau": 4.0,
+    "instances": 2205214,
+    "top_instances": 423319,
+    "genes_in_top": 3153990,
+    "genes_in_top_frac": 0.8796997073887479,
+    "rounds": 15,
+    "seconds": 217.9,
+    "top_span_q": [
+     4.0,
+     15.0,
+     54.0,
+     842.0
+    ]
+   },
+   "rounds": [
+    {
+     "round": 0,
+     "adjacencies": 9238557,
+     "candidates": 4957731,
+     "committed": 1083922,
+     "live": 2163653,
+     "list_entries": 259231583,
+     "empty_lists": 0,
+     "max_lam": 3711.2060688401593,
+     "sec_A": 42.8,
+     "sec_B": 0.0,
+     "seconds": 80.9
+    },
+    {
+     "round": 1,
+     "adjacencies": 3014181,
+     "candidates": 1407924,
+     "committed": 558916,
+     "live": 1494432,
+     "list_entries": 98951925,
+     "empty_lists": 0,
+     "max_lam": 3406.5550302351226,
+     "sec_A": 15.5,
+     "sec_B": 0.0,
+     "seconds": 25.8
+    },
+    {
+     "round": 2,
+     "adjacencies": 1880806,
+     "candidates": 652637,
+     "committed": 297873,
+     "live": 1150149,
+     "list_entries": 46184590,
+     "empty_lists": 0,
+     "max_lam": 3050.0750842399025,
+     "sec_A": 9.2,
+     "sec_B": 0.0,
+     "seconds": 13.8
+    },
+    {
+     "round": 3,
+     "adjacencies": 1384015,
+     "candidates": 295300,
+     "committed": 149898,
+     "live": 981198,
+     "list_entries": 32362932,
+     "empty_lists": 0,
+     "max_lam": 2083.406529514589,
+     "sec_A": 6.7,
+     "sec_B": 0.0,
+     "seconds": 10.0
+    },
+    {
+     "round": 4,
+     "adjacencies": 1158938,
+     "candidates": 125902,
+     "committed": 68902,
+     "live": 904728,
+     "list_entries": 29414437,
+     "empty_lists": 0,
+     "max_lam": 1258.3725699326371,
+     "sec_A": 6.0,
+     "sec_B": 0.0,
+     "seconds": 8.8
+    },
+    {
+     "round": 5,
+     "adjacencies": 1059891,
+     "candidates": 49413,
+     "committed": 29199,
+     "live": 872758,
+     "list_entries": 28719414,
+     "empty_lists": 0,
+     "max_lam": 447.07134640140134,
+     "sec_A": 5.7,
+     "sec_B": 0.0,
+     "seconds": 8.4
+    },
+    {
+     "round": 6,
+     "adjacencies": 1019501,
+     "candidates": 17463,
+     "committed": 11150,
+     "live": 860626,
+     "list_entries": 28518841,
+     "empty_lists": 0,
+     "max_lam": 142.34087557812302,
+     "sec_A": 5.5,
+     "sec_B": 0.0,
+     "seconds": 8.1
+    },
+    {
+     "round": 7,
+     "adjacencies": 1004163,
+     "candidates": 5565,
+     "committed": 3707,
+     "live": 856560,
+     "list_entries": 28447618,
+     "empty_lists": 0,
+     "max_lam": 42.49257862816866,
+     "sec_A": 5.3,
+     "sec_B": 0.0,
+     "seconds": 8.0
+    },
+    {
+     "round": 8,
+     "adjacencies": 998890,
+     "candidates": 1695,
+     "committed": 1123,
+     "live": 855284,
+     "list_entries": 28425128,
+     "empty_lists": 0,
+     "max_lam": 30.3346430504437,
+     "sec_A": 5.4,
+     "sec_B": 0.0,
+     "seconds": 8.0
+    },
+    {
+     "round": 9,
+     "adjacencies": 997140,
+     "candidates": 542,
+     "committed": 335,
+     "live": 854879,
+     "list_entries": 28415614,
+     "empty_lists": 0,
+     "max_lam": 30.204616277894306,
+     "sec_A": 5.2,
+     "sec_B": 0.0,
+     "seconds": 8.1
+    },
+    {
+     "round": 10,
+     "adjacencies": 996498,
+     "candidates": 207,
+     "committed": 127,
+     "live": 854720,
+     "list_entries": 28408778,
+     "empty_lists": 0,
+     "max_lam": 22.26932526493201,
+     "sec_A": 5.3,
+     "sec_B": 0.0,
+     "seconds": 8.0
+    },
+    {
+     "round": 11,
+     "adjacencies": 996255,
+     "candidates": 74,
+     "committed": 42,
+     "live": 854661,
+     "list_entries": 28405237,
+     "empty_lists": 0,
+     "max_lam": 9.433050781677336,
+     "sec_A": 5.5,
+     "sec_B": 0.0,
+     "seconds": 8.2
+    },
+    {
+     "round": 12,
+     "adjacencies": 996151,
+     "candidates": 25,
+     "committed": 17,
+     "live": 854635,
+     "list_entries": 28405023,
+     "empty_lists": 0,
+     "max_lam": 9.634209063210713,
+     "sec_A": 5.4,
+     "sec_B": 0.0,
+     "seconds": 8.1
+    },
+    {
+     "round": 13,
+     "adjacencies": 996104,
+     "candidates": 3,
+     "committed": 3,
+     "live": 854632,
+     "list_entries": 28404968,
+     "empty_lists": 0,
+     "max_lam": 10.61297798674487,
+     "sec_A": 5.4,
+     "sec_B": 0.0,
+     "seconds": 8.1
+    },
+    {
+     "round": 14,
+     "adjacencies": 996101,
+     "candidates": 0,
+     "committed": 0,
+     "seconds": 5.4
+    }
+   ]
+  }
+ },
+ "seconds": 3942.9
+}

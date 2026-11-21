@@ -1,0 +1,232 @@
+ws_cofold2 - remote-homology triage of the screen-1 dossier and co-fold screen 2 (DPANN, engine v1.5)
+12 November 2026. Biohub ESMFold2 (esmfold2-2026-05, fold_all_atom). All names below are observations of
+similarity (UNVERIFIED as system assignments); no curated caller emitted a system call on any candidate gene.
+
+HEADLINE
+- Every screen-2 block that co-folds resembles a recognised family. Of 61 screen-2 blocks, triage removed 37 as
+  resembling characterised families; the remaining 24 were folded, and 0 of them have every chain free of
+  detectable similarity (148 triaged families: 62 characterised, 12 unknown-function Pfam/CDD families, 72 weak
+  only, 2 none).
+- One block passes the predeclared multi-chain bar as a whole: s2 rank 34, a 4-gene block (138/162/133/270 aa,
+  10 genomes, 7 genera, 2 orders, 1 phylum, Nanobdellota). Four of its six interfaces pass in both replicates
+  with controls and connect all four chains, unchanged with the block-paired MSA. Its chains carry Pfam
+  DUF7287 / DUF7288 (unknown function, Pfam 39), a class III (prepilin-type) signal peptide on chain A, and
+  Foldseek similarity of chain A to the minor pilin EpdB. It reads as a minor-pilin-like cassette.
+- Part A: 9 of the 10 screen-1 dossier blocks have >= 1 chain resembling a characterised family (mostly
+  toxin-antitoxin-type domains: RHH, PIN, ParD/ParE, RelE/YoeB, MazE, SocA). Rank 1 (60/70 aa, 249 genomes,
+  21 orders, 7 phyla) is the only block below the bar in every chain and every search.
+
+==============================================================================================================
+PART A - triage of the screen-1 dossier
+==============================================================================================================
+Searches per family (all DPANN members of the engine token, <= 250 unique sequences, query = the folded chain):
+ - HHblits 3.1 (UniRef30_2020_06, 2 iterations) -> enriched A3M; HHsearch of enriched and DPANN-only MSAs vs
+   Pfam 39.0 (HH database built here from Pfam-A.seed 39.0 with hhmake -M 50; 53,275 HMMs; self-test PF00004,
+   PF01850, PF02604 each rank first at P 98.8-99.9) and vs PDB100 2021-03-03 (HH-suite copy in the RoseTTAFold2 db).
+ - RPS-BLAST CDD v3.20 (query + up to 9 members; orchestrator's 20 chains merged).
+ - hmmsearch Pfam 39.0 GA thresholds over all members.
+ - Foldseek 10 of the predicted chains (both replicates) vs PDB (2025-01-01) and AFDB Swiss-Prot (v6).
+Rule (predeclared, predeclared_criteria_screen2.json): characterised = HHsearch P >= 90 % over >= 30 columns,
+CDD model/superfamily E <= 0.01 in >= 2 instances, or Pfam GA in >= 2 members, to an entry without
+unknown-function wording; structure = Foldseek E <= 1e-3 and TM >= 0.5 (strong) or E <= 0.1, prob >= 0.9,
+TM >= 0.5 in both replicates.
+
+Rank (chain, token, aa): best profile evidence | structure  -> observation
+27  A 100239 107: Pfam RHH_1 P=97.7 (qcov .36); PDB 2jxg P=98.3 | none            -> RHH
+    B 199393 168: Pfam DUF3368 'PIN domain' P=99.8 (qcov .95); CDD cd09879 PIN_VapC_AF0591 E 8e-7, 5 inst. |
+                  strong both reps (AF0591 1o4w; YacL)                               -> PIN
+13  A 221251 189: Pfam SocA_Panacea antitoxin P=97.0 (qcov .58) | DarTG 7yk3 strong   -> SocA/Panacea-like
+    B 351854 179: Pfam DUF3368 PIN P=99.9; CDD COG2405 | RRP44 PIN moderate both     -> PIN
+    C 164787 391: best Pfam P=60 (no profile hit) | strong both reps: queuine tRNA-ribosyltransferase/TGT
+                  (AFDB Q65ZW4 E 7e-9, TM .56; PDB TGT 6rkt/6h62 E <= 1.2e-6)          -> TGT-fold by structure only
+67  A 229034  97: Pfam ParD_antitoxin P=98.4; PDB 5ceg P=99.2                        -> ParD-like
+    B 423021  86: Pfam ParE_toxin P=98.5; PDB RelE 1wmi P=99.2 | RelBE strong        -> ParE/RelE-like
+38  A  23083  81: best Pfam P=61 | moderate to RelBE2 in rep 1 only                  -> weak only
+    B  68571 102: CDD TIGR02609 / MazE E 1.3e-5 (3 inst.); PDB EcMazE P=98.7         -> MazE/AbrB-like
+106 A  27009  79: PDB encapsulated ferritin 5n5e P=92.4 (qcov .96)                   -> ferritin-like helical
+    B  27010  67: PDB 4-helix bundle 1mft P=97.2; Pfam Rubrerythrin P=92; CDD Mn_catalase_like E .011 (3 inst.) |
+                  EncC cargo TM .95 (moderate)                                       -> ferritin-like helical
+71  A 171614 133: Pfam MarR P=99.1 | HlyU strong                                     -> MarR-type HTH
+    B 322104 183: weak profile (DUF8170 P=84) | Swiss-Prot Cap12 moderate both (E 2e-3, TM .62) -> weak/structure-moderate
+6   A 322564 108: Pfam YoeB_toxin P=98.5 | RelE4 strong                              -> YoeB/RelE-like
+    B 326340  87: Pfam Mnd1 HTH P=94.4                                               -> HTH
+14  A  48264 180: Pfam UPF0175 P=98.7 (unknown-function family)                      -> UPF0175
+    B 404027 225: Pfam DUF3368 PIN P=99.8; Pfam GA DUF3368                           -> PIN
+9   A 114055  90: PDB 2qvo P=96.4; Foldseek CggR DNA-binding domain (moderate both)  -> HTH
+    B 318532 222: Pfam STM3845 retron effector P=95.7 (qcov .40) | strong both reps to the Retron-Eco1 effector
+                  (8qbl, E 5e-5)                                                     -> retron-effector-like
+1   A  81718  60: best Pfam DUF7713 P=89 (qcov .33), PDB HlyU P=84 | none            -> no detectable similarity
+    B 393054  70: Pfam Trans_reg_C P=66; CDD trans_reg_C E .008 in 1 instance | none -> no detectable similarity
+Uncalled high scorers: unc_002 A Peptidase_U32_C (P=99, Foldseek MJ0090 E 1e-7), B weak; unc_069 both weak;
+unc_071 A MqsA antitoxin (P=99), B DUF4258 (P=98.9); unc_087 A Nudix/NUDT22 (PDB P=99.7), B none.
+Table: partA_triage.tsv; Foldseek: screen2_tables/partA_foldseek_*.tsv.
+
+A.4 Overlapping frames (overlap_check.py -> overlap_check.tsv; contigs from Sharur genomes_fna[_new]; every
+contig SHA-256 equals assembly_contig_provenance and every CDS re-translates exactly to the stored protein).
+ Rank 27 (16 instances, 15 genomes): B has its own start codon in all 16 (ATG 14, TTG 2). Overlap 14-38 nt in
+ 13 instances (median 32), 4 nt (ATGA) in 1, none in 2 (gaps 4 and 7 nt). B is in A's +1 frame in all 13 with
+ >= 14 nt overlap. B's frame is closed by an in-frame stop 1-20 codons (median 5) upstream of its start in all
+ 16, so a fusion would need a +1 shift inside a 3-60 nt window; no +1 shift motif occurs anywhere from 60 nt
+ upstream of B to A's stop; -1 slippery heptamers occur in 6/16 at inconsistent positions (-41 to +16 nt) and
+ cannot reach B's frame; 0 fused homologs among 3.59 M DPANN proteins.
+ Rank 106 (7 instances): overlap exactly 20 nt and B in A's +1 frame in 7/7; B starts ATG (5) / GTG (2); B's
+ frame closed 0-6 codons upstream; no shift motif; 0 fused DPANN homologs.
+ Reading: two translationally coupled genes in both cases; a frameshift fusion is not supported.
+ Refuted by: a homolog outside DPANN encoded as one ORF spanning both (UniRef hits were not checked for
+ collinear A+B coverage).
+
+A.5 The four uncalled high scorers (uncalled_diag.py -> uncalled_diag.tsv; engine rule P <= 1e-4 and L >= 2).
+ All four fail L >= 2: every co-location lies in one genus.
+ unc_002_r1 (ipTM .805): B token is a singleton; G = 1 genome, P = 3.7e-3; A token 282 members, 81 % dark.
+ unc_071_r2 (ipTM .868): B token singleton; G = 1, P = 4.4e-3; A token 228 members, 62 % dark.
+ unc_069_r2 (ipTM .754): tokens of 5 and 21 members; G = 5 (genus JAJZNA01), P = 3.0e-10.
+ unc_087_r1 (ipTM .786): tokens of 10 and 4 members; G = 4 (genus GCA-2686295), P = 2.0e-9.
+
+==============================================================================================================
+PART B - screen 2
+==============================================================================================================
+Pool (s2_build_pool.py; build_candidates.py unchanged, windows to 8 genes): 16,211 block types, 9,300 in
+>= 3 genomes; with the new length rule (each family 60-1,200 aa, sum <= 2,500) and every screen-1 filter, 392
+pass (k 2: 321, 3: 54, 4: 13, 5: 3, 6: 1). Screen 2 = all 71 multi-gene types reduced to 42 by removing token
+subsets of better-ranked blocks, plus 19 pairs with one family > 700 aa: 61 blocks. Rank = orders, phyla,
+k (larger first), genomes, integrity; no length term. Every block that cleared triage was folded (no cap), so
+the order does not select by length.
+
+Triage (all 61 blocks, 124 families; criteria fixed before any triage result was read):
+ - removed 37 blocks (k2 16, k3 14, k4 5, k5 1, k6 1); folded 24 (k3 18, k4 3, k2 3).
+ - longpairs: 16 of 19 removed (glycoside hydrolase 38C, transglutaminase, VWA, NPCBM/NEW3, Big_1/Big_7 Ig,
+   Lon_C protease, HATPase/OapC, EriC, choice-of-anchor D, PT-HINT); multi: 21 of 42 removed (PIN/SocA, nSTAND3
+   NTPase, protein kinase, NPCBM, HNH, WxL, TPR, CBM35, 4p99-like, BRCC36-like).
+ - which source flagged the 62 characterised families (overlapping): PDB100 HHsearch 54, CDD 18, Pfam HHsearch 8,
+   Pfam GA 4.
+ - folded blocks by class: 15 'weak' (chains with only weak signals), 9 'unknown function' (Pfam DUF7287/7288/
+   7289, DUF21357). Blocks with a protein > 400 aa that cleared: 4 (3 longpairs, 1 triple).
+ - the weak tier is broad: hmmsearch below GA at E <= 0.01 against 53,275 models is near the chance level.
+
+Fold design (s2_design.py; manifest screen2_tables/fold_manifest2.tsv): per candidate 2 replicates (distant:
+different order or phylum), non-cognate controls replacing every chain except the first (rep 1) or the last
+(rep 2) with a length/hydrophobicity-matched chain of another candidate (Hungarian; same token forbidden),
+uncalled k-windows (non-significant token pairs, matched per position, mostly order-level), 72 curated positives
+(k 2 long-protein 16, k3 24, k4 16, k5 8, k6 8). MSA mode (orchestrator request): every fold with summed length
+>= 450 aa also folded with a block-paired MSA (rows = genomes carrying the same ordered token tuple; median depth
+12 for candidates and their controls, 3.5 for positives, 1 for uncalled windows; folds with no row beyond the
+query reuse their single-sequence result, 53 items).
+
+Class level (per fold: >= 1 interface meeting the per-replicate pass rule; non-cognate folds count only
+interfaces of the replaced chain):
+ single, multi-chain: cognate 12/42 (28.6 %), positive 17/56 (30.4 %), uncalled 3/42 (7.1 %), non-cognate 3/90
+   (3.3 %). Cognate vs uncalled Fisher OR 5.2, p = 0.020; vs non-cognate OR 11.6, p = 6.5e-5; max pair ipTM
+   Mann-Whitney vs uncalled p = 4.4e-5.
+ single, pairs (longpairs): cognate 0/6, positive 2/16, uncalled 0/6, non-cognate 0/6.
+ msa, multi-chain: cognate 9/35, positive 8/34, uncalled 1/9, non-cognate 3/77 (vs non-cognate p = 0.0013).
+ Of the 12 passing cognate folds, 10 come from blocks containing DUF7287/DUF7288 families (ranks 7, 9, 11,
+ 17, 33, 34) and 2 from the 93909/212044 group (ranks 31, 37).
+
+Pass rate by summed length (per fold; single / MSA with depth-1 folds counted as single; k/n):
+ class        300-450   450-800        >800
+ cognate      1/7       10/31 | 8/31   1/10 | 1/10
+ positive     -         1/8   | 1/8    18/64 | 14/64
+ uncalled     0/6       3/34  | 2/34   0/8  | 0/8
+ non-cognate  0/13      3/67  | 3/67   0/16 | 0/16
+ Screen 2 has no fold under 300 aa. The block-paired MSA lowers or keeps every class here; at depths of 1-12
+ rows it gives no length rescue. The screen-1 length trend (orchestrator's numbers) cannot be tested below 300 aa
+ with this pool.
+
+Interface calls (single mode: 75 candidate interfaces, 10 pass in both replicates, 6 are hits after the control
+rule; MSA mode: 69, 12, 5):
+ s2 34 AB, AD, BC, BD (single and MSA) -> full-block co-fold; CD passes both replicates but fails the control
+       (rep 2 swap ipTM 0.74 with token 142248, another DUF7288 family) and is flagged promiscuous.
+ s2 11 AC (single), AB (MSA). Same genomes, contigs and genes as rank 34 (its D-C-B subset): one locus, not
+       independent evidence.
+ s2 7  BC (single; pair ipTM .84/.82, controls .11/.17). MSA: ipTM .79/.75 but interface PAE 5.5/6.3 A -> not a
+       hit in MSA mode.
+ s2 33 (rank-34 paralog variant, 142248 in place of 354137): AB, AD pass both replicates in single mode, 5
+       interfaces in MSA mode, all fail controls (control pair ipTM .57-.80).
+Refutation checks on the hits:
+ - split gene: 0 fused homologs for every interface of ranks 34, 11, 7 (MMseqs2 vs 3.59 M DPANN proteins; job
+   78365). Across all 72 screen-2 interfaces, 5 have 1-2 fused targets (<= 18 % of block genomes), 0 artefacts.
+ - disorder zipping (monomer folds of every chain, both replicates): 0 flags; monomer pLDDT 77-96; at most 25 %
+   of a chain's interface residues are < 60 in its monomer.
+ - promiscuity: no hit interface is promiscuous; rank 34 CD and rank 7 AB are (paralog donors).
+ - generic adjacency: cognate multi-chain passes exceed uncalled windows (12/42 vs 3/42).
+ - structure recognition after folding (Foldseek, job 78368; multimer search vs PDB with Foldseek 9): rank 34
+   chain A = minor pilin EpdB (Swiss-Prot, E 8.6e-4, TM .67 rep 1; moderate rep 2); chain B = AF_0763
+   (uncharacterised, E 1.7e-6 rep 2); chain C = MJ1284 (uncharacterised, moderate rep 2); chain D none. Rank 7
+   chain A = AF_0763 strong in both replicates (E 4e-9, TM .78-.80). Complex-level PDB matches: none (complex
+   TM-score <= 0.14).
+ - interface location: every chain of ranks 34, 11 and 7 has a hydrophobic N-terminal 30 residues (57-70 %
+   ILVFMAWC; class III signal/alpha-1 region); 0-52 % of each chain's interface residues lie there, the rest on
+   the globular domains.
+
+SHORTLIST (fit to: conserved across deep divergence, unrecognised by profile and structure, obviously co-folds,
+survives every refutation)
+1. s2 rank 34 - 4 genes, tokens 15180-287285-354137-96948, lengths (family medians) 138/162/133/270, same strand,
+   intergenic 0/7/-10 nt, 10 genomes, 7 genera, 5 families, 2 orders (SCGC-AAA011-G17, Woesearchaeales),
+   1 phylum (Nanobdellota); block integrity 1.00; inside an engine conserved locus in 100 % of instances.
+   r1 GCA_016188045.1 JACPIM010000016.1 genes 13-10, 13938-16005 (-): MBI2499528.1 / 27.1 / 26.1 / 25.1
+   (138/171/133/264 aa); r2 GCA_016784165.1 JADHVD010000005.1 genes 20-17, 17760-20038 (-): MBL7050894.1 /
+   93.1 / 92.1 / 91.1 (156/192/140/271 aa).
+   Fold: complex ipTM .85/.81 (MSA .83/.81); hit interfaces AB .85/.83 (ctrl .35/.49), AD .86/.81 (ctrl .08/.48),
+   BC .84/.79 (ctrl .38/.08), BD .85/.82 (ctrl .08/.07); interface PAE 1.6-4.1 A, contacts 39-92, interface
+   pLDDT 79-88. All four reproduce with the MSA.
+   Searches: A class III signal peptide (Pfam PF04021 P=97.6 over 25 columns) + Pfam DUF7287 via HHsearch,
+   Foldseek EpdB minor pilin; B DUF7287 (P=99.5), Foldseek AF_0763; C DUF7288 (P=98.5), MJ1284; D weak only
+   (DUF8429 coiled coil P=64; CDD FABP E <= 0.01 in one instance). UniRef30 top hits: 'putative membrane
+   protein' (Methanobacterium) for A-C.
+   Fit: conserved within one phylum only; recognised as DUF families of unknown function and as pilin-like;
+   co-folds as a full block; survives split-gene, zipping, promiscuity (hit interfaces) and MSA.
+   Would still refute: (i) pilin alpha-1 helix packing as the driver - a control swapping in non-cassette
+   class III-signal pilins (for example curated archaeal T4P/archaellum pilins) scoring as high; (ii) the
+   cleaved signal peptide (first ~5-12 residues) taking part in the predicted interfaces - refold with
+   prepilin-peptidase-processed N-termini; (iii) a curated caller (TXSScan archaeal T4P) placing these genes in
+   a known pilus/archaellum system in the same genomes.
+2. s2 rank 7 - 3 genes, tokens 55170-410168-55171 (DUF7287, DUF7288, 277-aa partner), 28 genomes, 11 genera,
+   3 orders, 2 phyla (Micrarchaeota 25, Iainarchaeota 3). r1 GCA_013426015.1 CP058998.1 genes 592-594,
+   524902-526632 (+) QLJ52758.1-QLJ52760.1 (166/131/277); r2 GCA_024277355.1 JAJRVL010000002.1 genes 17-15,
+   16703-18476 (-) (166/139/289). Single-mode hit BC (.84/.82, ctrl .11/.17, PAE 3.5/2.9 A); AB fails control
+   (.74 with a DUF7288 paralog); MSA mode BC .79/.75 with PAE 5.5/6.3 A (not a hit). Chain A = AF_0763 by
+   Foldseek (strong both). The same DUF7287/DUF7288 cassette in a second and third phylum; weaker co-fold.
+3. Part A rank 1 (screen 1) - 2 genes, 60/70 aa, 249 genomes, 21 orders, 7 phyla; the only block with no
+   detectable similarity in any search and any chain; ipTM .856/.708 (MSA .790/.731), non-cognate .17/.10;
+   164/268 instances overlap by ATGA; fused 133-139 aa homologs in 3 genomes. Fails the screen-1 bar in
+   replicate 2 and is tiny.
+Near misses (single, best pair ipTM min over replicates): rank 9 (55170-142248-96948) .74, rank 37 (.77),
+rank 40 (.76, controls .63/.68), rank 17 (.71), rank 52 (.69). The 93909/37039/212044 blocks (ranks 15, 31,
+37, 38, 40, 42, 43, 53) sit at complex ipTM .5-.73 in both modes, with 37039 showing a weak CDD PulG
+(pseudopilin) signal.
+
+The best candidates therefore all resemble known families: 0 of 61 screen-2 blocks clear triage with every chain
+'none'; the 24 folded blocks carry chains with weak signals (15) or unknown-function Pfam families (9); the
+single full-block co-fold is a DUF7287/DUF7288 minor-pilin-like cassette.
+
+==============================================================================================================
+RESOURCES, DEVIATIONS, OPEN PROBLEMS
+==============================================================================================================
+Biohub items this task: 472 of 2,000 (screen 2 single 264 incl. 72 positives; MSA mode 185; monomers 20;
+payload verifications 3: 6-chain and 4-chain complexes, 4-chain MSA complex).
+Slurm (all -c 24 standard_expand, exclude list, <= 4 at once after the orchestrator's update): 78254 CDD + hmmsearch
++ families (1:22:29), 78255 Foldseek Part A (per-chain searches complete; multimer step aborted -> FAILED), 78274
+Pfam HH build (FAILED self-test: Pfam seeds mark no insert columns, hhmake -M a2m failed for 46,966 families),
+78294 rebuild with -M 50 (passed), 78275 / 78276 / 78304 family workers (shared lock directories), 78365
+MMseqs2 split-gene (1 min), 78368 Foldseek screen 2 (1 min). No GPU job; nothing run locally except mafft
+(single thread) and analysis.
+Deviations: Pfam HH database built from Pfam-A.seed 39.0 downloaded from EBI (the installed HMMER3 models
+segfault HH-suite 3.1); CDD superfamily table downloaded from NCBI. Protenix inputs not staged (orchestrator).
+MSA mode applied per fold (>= 450 aa), so rank 6 replicate 1 (< 450 aa) has no MSA fold.
+Open: (1) the non-cognate donor pool contains DUF7287/DUF7288 paralogs split across tokens, so controls for this
+cassette are partly paralog swaps (stricter for the hit interfaces, the source of the two promiscuity flags);
+(2) UniRef hits were not scanned for collinear A+B fusions outside DPANN; (3) MSA depth for positives and
+uncalled windows is shallow (median 3.5 and 1), which limits the MSA-mode comparison; (4) Foldseek 10
+multimer search aborts in expandmultimer (std::out_of_range) on the PDB database; Foldseek 9 completes.
+
+FILES (benchmarks/redesign/cofold/)
+REPORT_screen2.txt (this), predeclared_criteria_screen2.json, partA_triage.tsv, overlap_check.tsv,
+uncalled_diag.tsv, screen2_tables/ (pool, replicates, families, triage_family, triage_blocks_explained,
+fold_manifest2, s2_blocks, s2_calls, s2_class(+tests), s2_length_classes_cells, s2_fold_level, s2_split_check,
+s2_zipping, s2_iface_location, s2_foldseek_*, partA_foldseek_*). Code: s2_build_pool.py, s2_select.py,
+s2_triage_remote.py (+ s2_triage*.sbatch), s2_triage_analyze.py, s2_partA_table.py, overlap_extract_nt.py,
+overlap_check.py, uncalled_diag.py, s2_design.py, s2_submit_cleared.py, s2_msa_build.py, s2_msa_align.py,
+s2_analyze_folds.py, s2_followup.py, s2_zipping.py, s2_split_check.py (+ s2_splitgene.sbatch),
+s2_foldseek.sbatch, s2_foldseek_summary.py, s2_split_chains.py, s2_iface_location.py. Structures and PAE:
+work/s2/folds_s2*/ (git-ignored). Biotite: $RD/cofold/s2/ (triage/out per-family .hhr and A3M, db/pfam39 HH
+database, fs/, split/, logs/).

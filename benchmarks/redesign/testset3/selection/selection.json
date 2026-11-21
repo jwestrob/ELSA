@@ -1,0 +1,132 @@
+{
+ "reps_in_metadata": {
+  "Archaea": 10122,
+  "Bacteria": 189801
+ },
+ "reps_with_proteome": {
+  "Archaea": 10122,
+  "Bacteria": 189801
+ },
+ "exclusion_list_sizes": {
+  "lut_package_k8": 1032,
+  "dpann_universe": 3564,
+  "spacedust_collection": 1308
+ },
+ "exclusion_list_rows": {
+  "lut_package_k8": 1032,
+  "dpann_universe": 3564,
+  "spacedust_collection": 1317
+ },
+ "reserved_species_reps": [
+  "Bacillus subtilis",
+  "Bacillus subtilis_G",
+  "Escherichia coli",
+  "Escherichia coli_E",
+  "Escherichia coli_F"
+ ],
+ "dpann_phyla": [
+  "Aenigmatarchaeota",
+  "Altiarchaeota",
+  "EX4484-52",
+  "Huberarchaeota",
+  "Iainarchaeota",
+  "Micrarchaeota",
+  "Nanobdellota",
+  "Nanohalarchaeota",
+  "Undinarchaeota"
+ ],
+ "complete_q_removed_by_exclusion": {
+  "lut_package_k8": 97,
+  "dpann_universe": 11,
+  "spacedust_collection": 919,
+  "reserved_species": 4
+ },
+ "selected": [
+  [
+   "Archaea",
+   "complete",
+   132
+  ],
+  [
+   "Archaea",
+   "fill",
+   10
+  ],
+  [
+   "Bacteria",
+   "complete",
+   700
+  ]
+ ],
+ "total": 842,
+ "families": {
+  "Archaea": 54,
+  "Bacteria": 308
+ },
+ "genera": {
+  "Archaea": 110,
+  "Bacteria": 564
+ },
+ "phyla": {
+  "Archaea": 11,
+  "Bacteria": 44
+ },
+ "per_family_hist": [
+  [
+   "Archaea",
+   1,
+   17
+  ],
+  [
+   "Archaea",
+   2,
+   10
+  ],
+  [
+   "Archaea",
+   3,
+   3
+  ],
+  [
+   "Archaea",
+   4,
+   24
+  ],
+  [
+   "Bacteria",
+   1,
+   144
+  ],
+  [
+   "Bacteria",
+   2,
+   40
+  ],
+  [
+   "Bacteria",
+   3,
+   20
+  ],
+  [
+   "Bacteria",
+   4,
+   104
+  ]
+ ],
+ "dpann_archaea": 7,
+ "dpann_by_phylum": {
+  "Nanobdellota": 6,
+  "Nanohalarchaeota": 1
+ },
+ "proteins_expected": 2557405,
+ "proteins_by_domain": {
+  "Archaea": 324552,
+  "Bacteria": 2232853
+ },
+ "contigs_total": 1187,
+ "max_contigs": 23,
+ "rules_sha256": "f3cbed1a7d63ec27f6346fa21a92a7ec4640043d0a7b37e62ae8d9c6fe71f171",
+ "selection_sha256": "71ae766830d6dec368505e754e6bafca65edb64aeb8b08267d282ca3c24b2c63",
+ "seconds": 20.3,
+ "written_utc": "2026-11-19T10:40:09Z"
+}

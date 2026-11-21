@@ -1,0 +1,276 @@
+{
+ "runs": 1686,
+ "unmapped": 0,
+ "v1": {
+  "fam_f33": {
+   "ribo": {
+    "runs": 1686,
+    "units": 1,
+    "largest_share": 1.0,
+    "families_for_90pct": 1,
+    "largest_members": 28829,
+    "largest_purity": 0.1775
+   },
+   "systems": {
+    "purity": 0.5423,
+    "families_ge3_called": 16,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 1.0,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.964,
+      "units_for_90pct": 1,
+      "in_families": 0.964
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 1.0,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.118,
+      "units_for_90pct": 47,
+      "in_families": 0.368
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 13,
+      "in_families": 0.714
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.231,
+      "units_for_90pct": 8,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.5,
+      "units_for_90pct": 2,
+      "in_families": 0.917
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.977,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.967,
+      "units_for_90pct": 1,
+      "in_families": 0.982
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": false,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  },
+  "fam_f25": {
+   "ribo": {
+    "runs": 1686,
+    "units": 1,
+    "largest_share": 1.0,
+    "families_for_90pct": 1,
+    "largest_members": 30165,
+    "largest_purity": 0.1696
+   },
+   "systems": {
+    "purity": 0.5396,
+    "families_ge3_called": 13,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 1.0,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.982,
+      "units_for_90pct": 1,
+      "in_families": 0.982
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 1.0,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.184,
+      "units_for_90pct": 46,
+      "in_families": 0.395
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 13,
+      "in_families": 0.714
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.231,
+      "units_for_90pct": 8,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.5,
+      "units_for_90pct": 2,
+      "in_families": 0.917
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.984,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.98,
+      "units_for_90pct": 1,
+      "in_families": 0.987
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": false,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  },
+  "fam_f50": {
+   "ribo": {
+    "runs": 1686,
+    "units": 4,
+    "largest_share": 0.9982,
+    "families_for_90pct": 1,
+    "largest_members": 19437,
+    "largest_purity": 0.2609
+   },
+   "systems": {
+    "purity": 0.9446,
+    "families_ge3_called": 17,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.917
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.714,
+      "units_for_90pct": 12,
+      "in_families": 0.75
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 0.714,
+      "units_for_90pct": 4,
+      "in_families": 0.786
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.039,
+      "units_for_90pct": 66,
+      "in_families": 0.079
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.107,
+      "units_for_90pct": 23,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.154,
+      "units_for_90pct": 9,
+      "in_families": 0.538
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.417,
+      "units_for_90pct": 7,
+      "in_families": 0.417
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.751,
+      "units_for_90pct": 2,
+      "in_families": 0.979
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.777,
+      "units_for_90pct": 20,
+      "in_families": 0.889
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  }
+ }
+}

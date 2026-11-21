@@ -1,0 +1,128 @@
+{
+ "classes": {
+  "LANM": 347,
+  "LANMW": 841,
+  "EF1": 1217,
+  "EFS": 812,
+  "PQQDH": 2172,
+  "CBB3": 7585,
+  "SBP3": 7972,
+  "RIESKE": 8239,
+  "LACB": 13687,
+  "C14": 2612,
+  "COXG": 1325,
+  "GFA": 4139,
+  "ANK": 1453,
+  "DCTM": 9525,
+  "DCTQ": 7460,
+  "DCTP": 9519,
+  "MMSB": 5066,
+  "MOCOBD": 9770,
+  "CNNM": 1416,
+  "SBP5": 13141,
+  "D2158": 111,
+  "SIG": 13615,
+  "S58": 885,
+  "R3P": 1180,
+  "MASE4": 182,
+  "LDC": 1469,
+  "THDPS": 7719,
+  "M20": 9453,
+  "METRES": 543,
+  "CCME": 1010,
+  "MPHOS": 5471,
+  "D6163": 450,
+  "TANN": 205,
+  "DAO": 17189,
+  "ADHS": 49506,
+  "D4394": 171,
+  "YCAO": 484,
+  "TFUA": 141,
+  "SOXYZ": 611,
+  "HK3": 887,
+  "GERE": 8795,
+  "ABC": 100846,
+  "TONB": 7503,
+  "RR": 53771
+ },
+ "census": {
+  "in_lut_locus_span": [
+   37,
+   347
+  ],
+  "lut_lanM_member": [
+   37,
+   347
+  ],
+  "pqqdh_5": [
+   7,
+   347
+  ],
+  "abc_5": [
+   72,
+   347
+  ],
+  "tonb_5": [
+   48,
+   347
+  ],
+  "rr_5": [
+   65,
+   347
+  ],
+  "cnnm_5": [
+   2,
+   347
+  ],
+  "lactB_5": [
+   35,
+   347
+  ],
+  "soxyz_5": [
+   0,
+   347
+  ],
+  "soxyz_10": [
+   4,
+   347
+  ],
+  "sbp5_5": [
+   32,
+   347
+  ],
+  "hk3_5": [
+   9,
+   347
+  ],
+  "gere_5": [
+   17,
+   347
+  ],
+  "isolated": [
+   255,
+   347
+  ],
+  "lanm_genomes": 272,
+  "lut_lanM_members_total": 49,
+  "lut_lanM_members_that_are_LANM": 37,
+  "lut_lanM_coorientation": {
+   "n": 49,
+   "same_strand_chain": 41,
+   "operonic_lt500": 41,
+   "nearest_component": {
+    "H": 29,
+    "I": 10,
+    "A": 5,
+    "B": 2,
+    "E": 2,
+    "F": 1
+   },
+   "dist": {
+    "1": 45,
+    "2": 3,
+    "3": 1
+   }
+  }
+ },
+ "nrep": 100
+}

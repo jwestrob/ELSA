@@ -1,0 +1,258 @@
+source207, matched protocol (F1 / control / excess [95%] / median boundary precision / median coverage / query genes in loci / intervals)
+output                                                   F1   ctrl             excess [95%]  bprec   cov qgenes   n_int
+engine reference (best of 42, hybrid w8)               .750   .566 +0.184 [+0.154, +0.213]  1.000   .83   .773   19741
+engine single reading (conserved level 2)              .578   .377 +0.200 [+0.164, +0.237]   .762   .90   .762    4378
+native Spacedust (all blocks)                          .676   .612 +0.065 [+0.037, +0.093]  1.000   .60   .786   63756
+engine, rescue3 tokens, w3 (union)                     .707   .580 +0.127 [+0.092, +0.162]  1.000   .70   .698   26474
+engine, rescue3 tokens, w3 (single, level 2)           .599   .455 +0.144 [+0.108, +0.181]  1.000   .57   .678    7179
+engine, rescue3 tokens, w8 (union)                     .756   .566 +0.190 [+0.158, +0.221]  1.000   .85   .786   20156
+engine, rescue3 tokens, w8 (single, level 2)           .590   .362 +0.229 [+0.190, +0.266]   .818   .90   .775    4242
+P2 V-top secondary reading                             .474   .428 +0.046 [+0.011, +0.080]  1.000   .33   .539    9487
+P2 V-nest secondary reading                            .482   .443 +0.039 [+0.004, +0.074]  1.000   .33   .539   15505
+P2 V-mob secondary reading                             .478   .440 +0.038 [+0.003, +0.072]  1.000   .33   .539   14870
+P2 V-phr secondary reading                             .538   .459 +0.079 [+0.041, +0.118]  1.000   .44   .551   10789
+P2 V-coh0.02 secondary reading                         .530   .451 +0.079 [+0.041, +0.116]  1.000   .44   .546   10640
+P2 V-coh0.05 secondary reading                         .496   .436 +0.060 [+0.024, +0.095]  1.000   .37   .541    9929
+P2 V-coh0.1 PRIMARY                                    .481   .432 +0.049 [+0.014, +0.084]  1.000   .33   .539    9702
+P2 V-coh0.2 secondary reading                          .475   .429 +0.046 [+0.011, +0.080]  1.000   .33   .539    9565
+P2 CC1 secondary (CC baseline)                         .552   .437 +0.115 [+0.079, +0.151]  1.000   .44   .561    8409
+P2 CC2 secondary (CC baseline)                         .587   .445 +0.142 [+0.106, +0.178]  1.000   .50   .600    7634
+P1 V-top secondary reading                             .476   .398 +0.078 [+0.044, +0.111]  1.000   .33   .474    9064
+P1 V-nest secondary reading                            .484   .410 +0.073 [+0.039, +0.107]  1.000   .33   .474   14113
+P1 V-mob secondary reading                             .483   .409 +0.073 [+0.039, +0.107]  1.000   .33   .474   13656
+P1 V-phr secondary reading                             .536   .424 +0.111 [+0.074, +0.148]  1.000   .44   .484   10147
+P1 V-coh0.02 secondary reading                         .527   .421 +0.106 [+0.069, +0.142]  1.000   .40   .480   10077
+P1 V-coh0.05 secondary reading                         .497   .407 +0.090 [+0.055, +0.124]  1.000   .33   .476    9467
+P1 V-coh0.1 PRIMARY                                    .483   .402 +0.080 [+0.046, +0.114]  1.000   .33   .475    9267
+P1 V-coh0.2 secondary reading                          .477   .400 +0.077 [+0.043, +0.111]  1.000   .33   .474    9141
+P1 CC1 secondary (CC baseline)                         .536   .411 +0.125 [+0.088, +0.163]  1.000   .40   .498    8408
+P1 CC2 secondary (CC baseline)                         .580   .427 +0.153 [+0.116, +0.189]  1.000   .50   .535    7850
+
+paired differences (A - reference; F1 and excess, 95% region bootstrap; verdict on excess)
+P2 V-top
+    engine_ref: F1 -0.276 [-0.318, -0.234] exc -0.138 [-0.175, -0.101] BELOW
+    engine_single: F1 -0.104 [-0.161, -0.048] exc -0.155 [-0.205, -0.105] BELOW
+    spacedust: F1 -0.203 [-0.237, -0.169] exc -0.019 [-0.054, +0.015] MATCHES
+P2 V-nest
+    engine_ref: F1 -0.268 [-0.311, -0.225] exc -0.145 [-0.182, -0.108] BELOW
+    engine_single: F1 -0.096 [-0.154, -0.038] exc -0.162 [-0.212, -0.112] BELOW
+    spacedust: F1 -0.195 [-0.230, -0.161] exc -0.026 [-0.061, +0.008] BELOW
+P2 V-mob
+    engine_ref: F1 -0.272 [-0.314, -0.229] exc -0.146 [-0.183, -0.109] BELOW
+    engine_single: F1 -0.100 [-0.157, -0.043] exc -0.163 [-0.213, -0.113] BELOW
+    spacedust: F1 -0.198 [-0.233, -0.165] exc -0.027 [-0.062, +0.007] BELOW
+P2 V-phr
+    engine_ref: F1 -0.212 [-0.253, -0.170] exc -0.104 [-0.143, -0.066] BELOW
+    engine_single: F1 -0.040 [-0.095, +0.016] exc -0.121 [-0.172, -0.072] BELOW
+    spacedust: F1 -0.138 [-0.174, -0.104] exc +0.014 [-0.021, +0.050] MATCHES
+P2 V-coh0.02
+    engine_ref: F1 -0.220 [-0.261, -0.178] exc -0.105 [-0.143, -0.067] BELOW
+    engine_single: F1 -0.048 [-0.103, +0.008] exc -0.121 [-0.172, -0.071] BELOW
+    spacedust: F1 -0.146 [-0.183, -0.111] exc +0.014 [-0.022, +0.050] MATCHES
+P2 V-coh0.05
+    engine_ref: F1 -0.254 [-0.295, -0.211] exc -0.124 [-0.161, -0.087] BELOW
+    engine_single: F1 -0.082 [-0.138, -0.025] exc -0.141 [-0.191, -0.092] BELOW
+    spacedust: F1 -0.180 [-0.216, -0.146] exc -0.005 [-0.041, +0.030] MATCHES
+P2 V-coh0.1
+    engine_ref: F1 -0.269 [-0.311, -0.226] exc -0.135 [-0.173, -0.097] BELOW
+    engine_single: F1 -0.097 [-0.154, -0.040] exc -0.152 [-0.202, -0.101] BELOW
+    spacedust: F1 -0.195 [-0.230, -0.162] exc -0.016 [-0.051, +0.018] MATCHES
+P2 V-coh0.2
+    engine_ref: F1 -0.275 [-0.317, -0.233] exc -0.138 [-0.175, -0.101] BELOW
+    engine_single: F1 -0.103 [-0.160, -0.046] exc -0.155 [-0.205, -0.106] BELOW
+    spacedust: F1 -0.202 [-0.236, -0.168] exc -0.019 [-0.054, +0.015] MATCHES
+P2 CC1
+    engine_ref: F1 -0.198 [-0.238, -0.156] exc -0.069 [-0.106, -0.031] BELOW
+    engine_single: F1 -0.026 [-0.080, +0.030] exc -0.086 [-0.136, -0.036] BELOW
+    spacedust: F1 -0.124 [-0.159, -0.090] exc +0.050 [+0.015, +0.085] BEATS
+P2 CC2
+    engine_ref: F1 -0.163 [-0.198, -0.126] exc -0.041 [-0.074, -0.007] BELOW
+    engine_single: F1 +0.009 [-0.040, +0.058] exc -0.058 [-0.104, -0.014] BELOW
+    spacedust: F1 -0.089 [-0.124, -0.055] exc +0.077 [+0.044, +0.111] BEATS
+P1 V-top
+    engine_ref: F1 -0.274 [-0.312, -0.235] exc -0.106 [-0.139, -0.072] BELOW
+    engine_single: F1 -0.102 [-0.155, -0.049] exc -0.123 [-0.170, -0.076] BELOW
+    spacedust: F1 -0.201 [-0.236, -0.166] exc +0.013 [-0.022, +0.048] MATCHES
+    P2:V-coh0.1: F1 -0.005 [-0.029, +0.019] exc +0.029 [+0.005, +0.053] BEATS
+    P2:CC1: F1 -0.076 [-0.106, -0.046] exc -0.037 [-0.067, -0.007] BELOW
+    P2:CC2: F1 -0.111 [-0.142, -0.081] exc -0.065 [-0.095, -0.035] BELOW
+P1 V-nest
+    engine_ref: F1 -0.266 [-0.305, -0.227] exc -0.111 [-0.144, -0.077] BELOW
+    engine_single: F1 -0.094 [-0.149, -0.040] exc -0.127 [-0.175, -0.080] BELOW
+    spacedust: F1 -0.193 [-0.228, -0.159] exc +0.008 [-0.027, +0.043] MATCHES
+    P2:V-coh0.1: F1 +0.002 [-0.021, +0.027] exc +0.024 [-0.000, +0.049] MATCHES
+    P2:CC1: F1 -0.069 [-0.099, -0.038] exc -0.042 [-0.073, -0.011] BELOW
+    P2:CC2: F1 -0.104 [-0.135, -0.072] exc -0.069 [-0.101, -0.039] BELOW
+P1 V-mob
+    engine_ref: F1 -0.267 [-0.305, -0.228] exc -0.110 [-0.144, -0.077] BELOW
+    engine_single: F1 -0.095 [-0.149, -0.041] exc -0.127 [-0.175, -0.080] BELOW
+    spacedust: F1 -0.194 [-0.229, -0.159] exc +0.009 [-0.027, +0.043] MATCHES
+    P2:V-coh0.1: F1 +0.002 [-0.022, +0.026] exc +0.024 [+0.000, +0.049] BEATS
+    P2:CC1: F1 -0.069 [-0.100, -0.039] exc -0.042 [-0.072, -0.011] BELOW
+    P2:CC2: F1 -0.104 [-0.136, -0.073] exc -0.069 [-0.100, -0.039] BELOW
+P1 V-phr
+    engine_ref: F1 -0.214 [-0.252, -0.175] exc -0.072 [-0.107, -0.037] BELOW
+    engine_single: F1 -0.042 [-0.094, +0.010] exc -0.089 [-0.137, -0.042] BELOW
+    spacedust: F1 -0.141 [-0.176, -0.105] exc +0.046 [+0.012, +0.081] BEATS
+    P2:V-coh0.1: F1 +0.055 [+0.029, +0.081] exc +0.062 [+0.037, +0.088] BEATS
+    P2:CC1: F1 -0.016 [-0.045, +0.013] exc -0.004 [-0.032, +0.026] MATCHES
+    P2:CC2: F1 -0.051 [-0.078, -0.026] exc -0.031 [-0.058, -0.005] BELOW
+P1 V-coh0.02
+    engine_ref: F1 -0.223 [-0.261, -0.183] exc -0.077 [-0.113, -0.042] BELOW
+    engine_single: F1 -0.051 [-0.103, +0.001] exc -0.094 [-0.142, -0.048] BELOW
+    spacedust: F1 -0.149 [-0.187, -0.113] exc +0.041 [+0.005, +0.078] BEATS
+    P2:V-coh0.1: F1 +0.046 [+0.019, +0.073] exc +0.057 [+0.031, +0.085] BEATS
+    P2:CC1: F1 -0.025 [-0.056, +0.006] exc -0.009 [-0.040, +0.023] MATCHES
+    P2:CC2: F1 -0.060 [-0.090, -0.031] exc -0.036 [-0.066, -0.007] BELOW
+P1 V-coh0.05
+    engine_ref: F1 -0.253 [-0.291, -0.214] exc -0.094 [-0.128, -0.059] BELOW
+    engine_single: F1 -0.081 [-0.133, -0.029] exc -0.111 [-0.157, -0.065] BELOW
+    spacedust: F1 -0.180 [-0.217, -0.144] exc +0.025 [-0.011, +0.060] MATCHES
+    P2:V-coh0.1: F1 +0.016 [-0.009, +0.040] exc +0.041 [+0.017, +0.066] BEATS
+    P2:CC1: F1 -0.056 [-0.085, -0.025] exc -0.025 [-0.055, +0.005] BELOW
+    P2:CC2: F1 -0.091 [-0.121, -0.061] exc -0.052 [-0.083, -0.023] BELOW
+P1 V-coh0.1
+    engine_ref: F1 -0.267 [-0.306, -0.228] exc -0.103 [-0.138, -0.069] BELOW
+    engine_single: F1 -0.095 [-0.148, -0.042] exc -0.120 [-0.168, -0.074] BELOW
+    spacedust: F1 -0.194 [-0.229, -0.159] exc +0.015 [-0.020, +0.050] MATCHES
+    P2:V-coh0.1: F1 +0.002 [-0.022, +0.025] exc +0.031 [+0.008, +0.055] BEATS
+    P2:CC1: F1 -0.070 [-0.099, -0.040] exc -0.035 [-0.064, -0.004] BELOW
+    P2:CC2: F1 -0.105 [-0.135, -0.075] exc -0.062 [-0.092, -0.033] BELOW
+P1 V-coh0.2
+    engine_ref: F1 -0.273 [-0.311, -0.234] exc -0.107 [-0.140, -0.072] BELOW
+    engine_single: F1 -0.101 [-0.154, -0.048] exc -0.123 [-0.170, -0.077] BELOW
+    spacedust: F1 -0.200 [-0.235, -0.165] exc +0.012 [-0.023, +0.047] MATCHES
+    P2:V-coh0.1: F1 -0.004 [-0.028, +0.020] exc +0.028 [+0.004, +0.052] BEATS
+    P2:CC1: F1 -0.075 [-0.105, -0.046] exc -0.038 [-0.068, -0.008] BELOW
+    P2:CC2: F1 -0.110 [-0.141, -0.080] exc -0.065 [-0.096, -0.036] BELOW
+P1 CC1
+    engine_ref: F1 -0.214 [-0.253, -0.173] exc -0.058 [-0.094, -0.022] BELOW
+    engine_single: F1 -0.042 [-0.096, +0.015] exc -0.075 [-0.125, -0.026] BELOW
+    spacedust: F1 -0.140 [-0.175, -0.106] exc +0.060 [+0.025, +0.095] BEATS
+    P2:V-coh0.1: F1 +0.055 [+0.023, +0.086] exc +0.076 [+0.044, +0.108] BEATS
+    P2:CC1: F1 -0.016 [-0.038, +0.004] exc +0.010 [-0.011, +0.030] MATCHES
+    P2:CC2: F1 -0.051 [-0.077, -0.025] exc -0.017 [-0.043, +0.008] MATCHES
+P1 CC2
+    engine_ref: F1 -0.170 [-0.205, -0.133] exc -0.031 [-0.064, +0.003] BELOW
+    engine_single: F1 +0.002 [-0.047, +0.052] exc -0.048 [-0.093, -0.003] BELOW
+    spacedust: F1 -0.097 [-0.132, -0.063] exc +0.088 [+0.054, +0.121] BEATS
+    P2:V-coh0.1: F1 +0.099 [+0.067, +0.129] exc +0.104 [+0.073, +0.133] BEATS
+    P2:CC1: F1 +0.028 [+0.002, +0.053] exc +0.038 [+0.012, +0.063] BEATS
+    P2:CC2: F1 -0.007 [-0.026, +0.010] exc +0.010 [-0.008, +0.028] MATCHES
+
+by gold-region size (F1 / control / excess; median best-interval span vs median region size)
+engine reference (best of 42, hybrid w8)             1-5: .629/.470/+0.159 span 4/4  6-10: .775/.568/+0.207 span 8/9  11-20: .796/.614/+0.182 span 11/14  21-+: .784/.610/+0.175 span 22/28
+engine single reading (conserved level 2)            1-5: .355/.264/+0.091 span 18/4  6-10: .589/.367/+0.222 span 10/9  11-20: .671/.421/+0.251 span 11/14  21-+: .690/.468/+0.223 span 20/28
+native Spacedust (all blocks)                        1-5: .761/.678/+0.083 span 4/4  6-10: .792/.653/+0.139 span 6/9  11-20: .610/.594/+0.016 span 6/14  21-+: .468/.486/-0.018 span 8/28
+engine, rescue3 tokens, w3 (union)                   1-5: .680/.532/+0.148 span 4/4  6-10: .760/.595/+0.165 span 6/9  11-20: .706/.612/+0.093 span 9/14  21-+: .648/.564/+0.084 span 17/28
+engine, rescue3 tokens, w3 (single, level 2)         1-5: .522/.386/+0.137 span 4/4  6-10: .683/.470/+0.212 span 6/9  11-20: .602/.494/+0.108 span 7/14  21-+: .539/.453/+0.086 span 10/28
+engine, rescue3 tokens, w8 (union)                   1-5: .587/.469/+0.118 span 4/4  6-10: .799/.569/+0.231 span 8/9  11-20: .796/.614/+0.182 span 12/14  21-+: .826/.611/+0.215 span 23/28
+engine, rescue3 tokens, w8 (single, level 2)         1-5: .338/.251/+0.086 span 13/4  6-10: .604/.350/+0.254 span 10/9  11-20: .661/.401/+0.260 span 13/14  21-+: .765/.456/+0.309 span 21/28
+P2 V-top secondary reading                           1-5: .515/.436/+0.078 span 2/4  6-10: .603/.474/+0.130 span 4/9  11-20: .406/.435/-0.028 span 4/14  21-+: .293/.329/-0.036 span 5/28
+P2 V-nest secondary reading                          1-5: .534/.473/+0.062 span 2/4  6-10: .613/.489/+0.124 span 4/9  11-20: .408/.440/-0.032 span 4/14  21-+: .293/.330/-0.037 span 5/28
+P2 V-mob secondary reading                           1-5: .528/.469/+0.059 span 2/4  6-10: .606/.486/+0.120 span 4/9  11-20: .408/.439/-0.030 span 4/14  21-+: .293/.330/-0.037 span 5/28
+P2 V-phr secondary reading                           1-5: .523/.440/+0.082 span 2/4  6-10: .659/.492/+0.168 span 5/9  11-20: .496/.477/+0.019 span 5/14  21-+: .404/.399/+0.005 span 7/28
+P2 V-coh0.02 secondary reading                       1-5: .525/.440/+0.084 span 2/4  6-10: .649/.491/+0.158 span 5/9  11-20: .505/.468/+0.036 span 5/14  21-+: .366/.371/-0.005 span 6/28
+P2 V-coh0.05 secondary reading                       1-5: .515/.438/+0.077 span 2/4  6-10: .621/.480/+0.141 span 4/9  11-20: .444/.447/-0.004 span 4/14  21-+: .329/.343/-0.014 span 6/28
+P2 V-coh0.1 PRIMARY                                  1-5: .515/.437/+0.077 span 2/4  6-10: .603/.477/+0.127 span 4/9  11-20: .421/.441/-0.020 span 4/14  21-+: .311/.336/-0.025 span 5/28
+P2 V-coh0.2 secondary reading                        1-5: .515/.437/+0.078 span 2/4  6-10: .603/.475/+0.129 span 4/9  11-20: .410/.437/-0.027 span 4/14  21-+: .294/.332/-0.037 span 5/28
+P2 CC1 secondary (CC baseline)                       1-5: .567/.413/+0.154 span 3/4  6-10: .657/.473/+0.184 span 5/9  11-20: .530/.458/+0.072 span 5/14  21-+: .384/.375/+0.008 span 8/28
+P2 CC2 secondary (CC baseline)                       1-5: .566/.395/+0.171 span 4/4  6-10: .677/.470/+0.206 span 5/9  11-20: .574/.478/+0.096 span 6/14  21-+: .474/.413/+0.061 span 9/28
+P1 V-top secondary reading                           1-5: .498/.404/+0.093 span 2/4  6-10: .592/.442/+0.150 span 4/9  11-20: .436/.402/+0.034 span 4/14  21-+: .304/.310/-0.006 span 5/28
+P1 V-nest secondary reading                          1-5: .524/.433/+0.090 span 2/4  6-10: .597/.454/+0.142 span 4/9  11-20: .436/.407/+0.030 span 4/14  21-+: .304/.312/-0.007 span 5/28
+P1 V-mob secondary reading                           1-5: .524/.432/+0.092 span 2/4  6-10: .595/.453/+0.141 span 4/9  11-20: .436/.406/+0.030 span 4/14  21-+: .304/.311/-0.007 span 5/28
+P1 V-phr secondary reading                           1-5: .506/.408/+0.098 span 2/4  6-10: .646/.459/+0.187 span 5/9  11-20: .509/.438/+0.071 span 5/14  21-+: .416/.365/+0.051 span 6/28
+P1 V-coh0.02 secondary reading                       1-5: .505/.408/+0.097 span 2/4  6-10: .629/.458/+0.170 span 4/9  11-20: .520/.434/+0.086 span 6/14  21-+: .386/.352/+0.034 span 6/28
+P1 V-coh0.05 secondary reading                       1-5: .498/.405/+0.092 span 2/4  6-10: .607/.448/+0.159 span 4/9  11-20: .464/.414/+0.051 span 4/14  21-+: .348/.326/+0.022 span 5/28
+P1 V-coh0.1 PRIMARY                                  1-5: .498/.405/+0.093 span 2/4  6-10: .592/.445/+0.147 span 4/9  11-20: .448/.408/+0.040 span 4/14  21-+: .324/.318/+0.006 span 5/28
+P1 V-coh0.2 secondary reading                        1-5: .498/.404/+0.093 span 2/4  6-10: .592/.443/+0.149 span 4/9  11-20: .436/.404/+0.032 span 4/14  21-+: .309/.313/-0.004 span 5/28
+P1 CC1 secondary (CC baseline)                       1-5: .559/.398/+0.162 span 2/4  6-10: .641/.451/+0.189 span 5/9  11-20: .506/.424/+0.081 span 5/14  21-+: .369/.337/+0.032 span 6/28
+P1 CC2 secondary (CC baseline)                       1-5: .557/.390/+0.166 span 4/4  6-10: .682/.461/+0.221 span 5/9  11-20: .560/.451/+0.109 span 6/14  21-+: .456/.378/+0.079 span 8/28
+
+tau ladder syn: tau* = 8.0
+   tau     4  obs types  120009  null mean   14452.7  FDR 0.12043  genes in words 0.521  rounds 10  74 s  2.2 GB
+   tau     6  obs types  112534  null mean    3315.0  FDR 0.02946  genes in words 0.506  rounds 10  75 s  2.2 GB
+   tau     8  obs types  103490  null mean     738.7  FDR 0.00714  genes in words 0.489  rounds 10  76 s  2.2 GB
+   tau    10  obs types   88943  null mean     145.0  FDR 0.00163  genes in words 0.468  rounds 9  79 s  2.2 GB
+   tau    12  obs types   68961  null mean      21.7  FDR 0.00031  genes in words 0.442  rounds 11  86 s  2.2 GB
+   tau    15  obs types   46036  null mean       0.3  FDR 0.00001  genes in words 0.405  rounds 8  81 s  2.2 GB
+   tau    20  obs types   26897  null mean       0.0  FDR 0.00000  genes in words 0.359  rounds 10  90 s  2.3 GB
+   tau    25  obs types   17458  null mean       0.0  FDR 0.00000  genes in words 0.322  rounds 8  86 s  2.2 GB
+   tau    30  obs types   12009  null mean       0.0  FDR 0.00000  genes in words 0.290  rounds 9  99 s  2.2 GB
+   tau    40  obs types    6229  null mean       0.0  FDR 0.00000  genes in words 0.231  rounds 10  110 s  2.3 GB
+   tau    50  obs types    3368  null mean       0.0  FDR 0.00000  genes in words 0.176  rounds 8  104 s  2.2 GB
+   tau    70  obs types    1210  null mean       0.0  FDR 0.00000  genes in words 0.110  rounds 7  104 s  2.3 GB
+   tau   100  obs types     258  null mean       0.0  FDR 0.00000  genes in words 0.047  rounds 5  92 s  2.3 GB
+
+tau ladder group: tau* = 10.0
+   tau     4  obs types  185533  null mean   67174.3  FDR 0.36206  genes in words 0.556  rounds 15  243 s  2.0 GB
+   tau     6  obs types  159788  null mean   17382.0  FDR 0.10878  genes in words 0.523  rounds 17  248 s  2.0 GB
+   tau     8  obs types  130328  null mean    3518.0  FDR 0.02699  genes in words 0.491  rounds 13  243 s  2.0 GB
+   tau    10  obs types   87698  null mean     440.3  FDR 0.00502  genes in words 0.455  rounds 14  246 s  2.0 GB
+   tau    12  obs types   62571  null mean      18.7  FDR 0.00030  genes in words 0.429  rounds 9  235 s  2.0 GB
+   tau    15  obs types   46498  null mean       0.0  FDR 0.00000  genes in words 0.405  rounds 8  219 s  2.0 GB
+   tau    20  obs types   31131  null mean       0.0  FDR 0.00000  genes in words 0.373  rounds 8  227 s  2.0 GB
+   tau    25  obs types   23261  null mean       0.0  FDR 0.00000  genes in words 0.351  rounds 9  238 s  2.0 GB
+   tau    30  obs types   18346  null mean       0.0  FDR 0.00000  genes in words 0.333  rounds 8  172 s  2.0 GB
+   tau    40  obs types   12778  null mean       0.0  FDR 0.00000  genes in words 0.307  rounds 7  169 s  2.0 GB
+   tau    50  obs types    9648  null mean       0.0  FDR 0.00000  genes in words 0.286  rounds 7  156 s  2.0 GB
+   tau    70  obs types    6289  null mean       0.0  FDR 0.00000  genes in words 0.256  rounds 7  114 s  2.0 GB
+   tau   100  obs types    3928  null mean       0.0  FDR 0.00000  genes in words 0.222  rounds 7  103 s  2.0 GB
+tau ladder genome: tau* = 10.0
+   tau     4  obs types  253993  null mean   74758.3  FDR 0.29433  genes in words 0.608  rounds 13  212 s  2.1 GB
+   tau     6  obs types  228980  null mean   20653.0  FDR 0.09020  genes in words 0.582  rounds 11  202 s  2.1 GB
+   tau     8  obs types  198094  null mean    4489.0  FDR 0.02266  genes in words 0.556  rounds 11  218 s  2.1 GB
+   tau    10  obs types  140217  null mean     609.7  FDR 0.00435  genes in words 0.520  rounds 12  245 s  2.1 GB
+   tau    12  obs types  103667  null mean      29.7  FDR 0.00029  genes in words 0.492  rounds 10  237 s  2.1 GB
+   tau    15  obs types   80673  null mean       0.3  FDR 0.00000  genes in words 0.468  rounds 9  229 s  2.1 GB
+   tau    20  obs types   55877  null mean       0.0  FDR 0.00000  genes in words 0.436  rounds 9  230 s  2.1 GB
+   tau    25  obs types   42807  null mean       0.0  FDR 0.00000  genes in words 0.413  rounds 8  236 s  2.1 GB
+   tau    30  obs types   34107  null mean       0.0  FDR 0.00000  genes in words 0.393  rounds 8  175 s  2.1 GB
+   tau    40  obs types   24450  null mean       0.0  FDR 0.00000  genes in words 0.366  rounds 7  162 s  2.1 GB
+   tau    50  obs types   18861  null mean       0.0  FDR 0.00000  genes in words 0.345  rounds 7  125 s  2.1 GB
+   tau    70  obs types   12797  null mean       0.0  FDR 0.00000  genes in words 0.315  rounds 7  118 s  2.1 GB
+   tau   100  obs types    8514  null mean       0.0  FDR 0.00000  genes in words 0.284  rounds 7  109 s  2.1 GB
+
+P2 vocabulary: types 103,490, instances 1,232,186, top-level 595,811 (93,955 types), genes in top-level words 0.489 (slots 1,827,997, inserted 252,020); top span q10/q25/q50/q75/q90/q99/max [2.0, 2.0, 3.0, 4.0, 6.0, 13.0, 59.0]; on query genomes 9,487 instances, span q50/q90/q99/max [3.0, 7.0, 14.139999999999418, 49.0]; max slots 52, depth {'1': 47725, '2': 31524, '3': 16808, '4': 5953, '5': 1241, '6': 214, '7': 22, '8': 3}; Lambda q [8.1, 8.9, 12.8, 27.9, 67.2]; units per word q10/q50/q90/q99 [3.0, 5.0, 18.0, 116.0]; rounds 10
+P2 gold member genes outside every top-level word: 0.473
+P2 phrases: {"V-phr": {"multi": 74845, "span_q50_q90_max": [8.0, 21.0, 242.0]}, "V-coh0.02": {"multi": 73624, "genes_in_multi": 709991, "span_q50_q90_max": [8.0, 16.0, 93.0]}, "V-coh0.05": {"multi": 31466, "genes_in_multi": 307182, "span_q50_q90_max": [8.0, 16.0, 82.0]}, "V-coh0.1": {"multi": 16038, "genes_in_multi": 164851, "span_q50_q90_max": [8.0, 18.0, 71.0]}, "V-coh0.2": {"multi": 6891, "genes_in_multi": 73200, "span_q50_q90_max": [8.0, 19.0, 60.0]}, "CC1": {"loci": 530074, "span_q50_q90_max": [3.0, 8.0, 237.0]}, "CC2": {"loci": 501767, "span_q50_q90_max": [3.0, 9.0, 247.0]}}
+   V-top      loci   595,811  genes in loci 0.489  query genes 0.539  span q10/q50/q90/q99/max [2.0, 3.0, 6.0, 13.0, 59.0]  query span [2.0, 3.0, 7.0, 14.139999999999418, 49.0]
+   V-nest     loci   952,954  genes in loci 0.489  query genes 0.539  span q10/q50/q90/q99/max [2.0, 3.0, 6.0, 12.0, 59.0]  query span [2.0, 3.0, 7.0, 14.0, 49.0]
+   V-mob      loci   924,991  genes in loci 0.489  query genes 0.539  span q10/q50/q90/q99/max [2.0, 3.0, 6.0, 12.0, 59.0]  query span [2.0, 3.0, 6.0, 14.0, 49.0]
+   V-phr      loci   670,656  genes in loci 0.498  query genes 0.551  span q10/q50/q90/q99/max [2.0, 3.0, 8.0, 23.0, 242.0]  query span [2.0, 3.0, 10.0, 27.0, 110.0]
+   V-coh0.02  loci   669,435  genes in loci 0.496  query genes 0.546  span q10/q50/q90/q99/max [2.0, 3.0, 8.0, 19.0, 93.0]  query span [2.0, 3.0, 9.0, 20.0, 81.0]
+   V-coh0.05  loci   627,277  genes in loci 0.491  query genes 0.541  span q10/q50/q90/q99/max [2.0, 3.0, 7.0, 16.0, 82.0]  query span [2.0, 3.0, 8.0, 16.0, 71.0]
+   V-coh0.1   loci   611,849  genes in loci 0.490  query genes 0.539  span q10/q50/q90/q99/max [2.0, 3.0, 6.0, 15.0, 71.0]  query span [2.0, 3.0, 7.0, 15.0, 53.0]
+   V-coh0.2   loci   602,702  genes in loci 0.489  query genes 0.539  span q10/q50/q90/q99/max [2.0, 3.0, 6.0, 14.0, 60.0]  query span [2.0, 3.0, 7.0, 15.0, 49.0]
+   CC1        loci   530,074  genes in loci 0.519  query genes 0.561  span q10/q50/q90/q99/max [2.0, 3.0, 8.0, 22.0, 237.0]  query span [2.0, 3.0, 9.0, 24.0, 70.0]
+   CC2        loci   501,767  genes in loci 0.549  query genes 0.600  span q10/q50/q90/q99/max [2.0, 3.0, 9.0, 26.0, 247.0]  query span [2.0, 3.0, 11.0, 30.0, 96.0]
+
+P1 vocabulary: types 87,698, instances 1,130,145, top-level 569,461 (78,846 types), genes in top-level words 0.455 (slots 1,699,606, inserted 238,435); top span q10/q25/q50/q75/q90/q99/max [2.0, 2.0, 3.0, 4.0, 6.0, 13.0, 57.0]; on query genomes 9,064 instances, span q50/q90/q99/max [3.0, 6.0, 13.0, 56.0]; max slots 51, depth {'1': 41423, '2': 26238, '3': 13515, '4': 4863, '5': 1229, '6': 305, '7': 79, '8': 23, '9': 12, '10': 6, '11': 3, '12': 2}; Lambda q [10.0, 10.3, 14.5, 45.1, 240.8]; units per word q10/q50/q90/q99 [2.0, 4.0, 13.0, 72.0]; rounds 14
+P1 gold member genes outside every top-level word: 0.491
+P1 phrases: {"V-phr": {"multi": 66501, "span_q50_q90_max": [8.0, 20.0, 230.0]}, "V-coh0.02": {"multi": 67506, "genes_in_multi": 639830, "span_q50_q90_max": [8.0, 16.0, 90.0]}, "V-coh0.05": {"multi": 29147, "genes_in_multi": 280526, "span_q50_q90_max": [8.0, 16.0, 76.0]}, "V-coh0.1": {"multi": 15085, "genes_in_multi": 152973, "span_q50_q90_max": [8.0, 17.0, 69.0]}, "V-coh0.2": {"multi": 6567, "genes_in_multi": 71600, "span_q50_q90_max": [8.0, 22.0, 64.0]}, "CC1": {"loci": 515362, "span_q50_q90_max": [3.0, 7.0, 177.0]}, "CC2": {"loci": 491362, "span_q50_q90_max": [3.0, 8.0, 236.0]}}
+   V-top      loci   569,461  genes in loci 0.455  query genes 0.474  span q10/q50/q90/q99/max [2.0, 3.0, 6.0, 13.0, 57.0]  query span [2.0, 3.0, 6.0, 13.0, 56.0]
+   V-nest     loci   895,543  genes in loci 0.455  query genes 0.474  span q10/q50/q90/q99/max [2.0, 3.0, 5.0, 12.0, 57.0]  query span [2.0, 3.0, 6.0, 13.0, 56.0]
+   V-mob      loci   870,702  genes in loci 0.455  query genes 0.474  span q10/q50/q90/q99/max [2.0, 2.0, 5.0, 12.0, 57.0]  query span [2.0, 3.0, 6.0, 13.0, 56.0]
+   V-phr      loci   635,962  genes in loci 0.464  query genes 0.484  span q10/q50/q90/q99/max [2.0, 3.0, 8.0, 22.0, 230.0]  query span [2.0, 3.0, 8.0, 23.0, 69.0]
+   V-coh0.02  loci   636,967  genes in loci 0.463  query genes 0.480  span q10/q50/q90/q99/max [2.0, 3.0, 7.0, 19.0, 90.0]  query span [2.0, 3.0, 8.0, 19.23999999999978, 56.0]
+   V-coh0.05  loci   598,608  genes in loci 0.457  query genes 0.476  span q10/q50/q90/q99/max [2.0, 3.0, 7.0, 16.0, 76.0]  query span [2.0, 3.0, 7.0, 15.340000000000146, 56.0]
+   V-coh0.1   loci   584,546  genes in loci 0.456  query genes 0.475  span q10/q50/q90/q99/max [2.0, 3.0, 6.0, 14.0, 69.0]  query span [2.0, 3.0, 7.0, 15.0, 56.0]
+   V-coh0.2   loci   576,028  genes in loci 0.456  query genes 0.474  span q10/q50/q90/q99/max [2.0, 3.0, 6.0, 14.0, 64.0]  query span [2.0, 3.0, 6.0, 14.0, 56.0]
+   CC1        loci   515,362  genes in loci 0.484  query genes 0.498  span q10/q50/q90/q99/max [2.0, 3.0, 7.0, 20.0, 177.0]  query span [2.0, 3.0, 7.0, 19.0, 61.0]
+   CC2        loci   491,362  genes in loci 0.512  query genes 0.535  span q10/q50/q90/q99/max [2.0, 3.0, 8.0, 24.0, 236.0]  query span [2.0, 3.0, 9.0, 24.0, 78.0]
+
+genome groups at 0.75: 618 groups (largest 20, singletons 388, size q50/q90/q99 [1.0, 4.0, 15.830000000000041]); emb_hom pairs q50/q90/q99/q999 [0.617, 0.648, 0.726, 0.776]; nn q10/q50/q90 [0.719, 0.773, 0.803]; AMI GTDB family 0.697, genus 0.151; query genome groups {'Kutzneria sp. 744': 261, 'Micromonospora sp. ATCC 39149': 242, 'Micromonospora sp. M42': 242, 'Streptomyces albus J1074': 250, 'Streptomyces ghanaensis ATCC 14672': 250, 'Streptomyces himastatinicus ATCC 53653': 250, 'Streptomyces pristinaespiralis ATCC 25486': 250, 'Streptomyces sp. AA4': 262, 'Streptomyces sp. C': 250} sizes {'Kutzneria sp. 744': 2, 'Micromonospora sp. ATCC 39149': 5, 'Micromonospora sp. M42': 5, 'Streptomyces albus J1074': 6, 'Streptomyces ghanaensis ATCC 14672': 6, 'Streptomyces himastatinicus ATCC 53653': 6, 'Streptomyces pristinaespiralis ATCC 25486': 6, 'Streptomyces sp. AA4': 6, 'Streptomyces sp. C': 6}
+
+stress test: clade {'rank': 'family', 'name': 'Lactobacillaceae', 'genomes': 26, 'genes': 54760, 'candidates': {'Metamycoplasmataceae': 26, 'Lactobacillaceae': 26, 'Enterobacteriaceae': 25, 'Lachnospiraceae': 24, 'Microbacteriaceae': 21, 'Sphingomonadaceae': 20}, 'tie_genes': {'Metamycoplasmataceae': 17824, 'Lactobacillaceae': 54760}}
+   genome_k0  {"word_types": 140217, "clade_types": 3805, "rest_types": 136412, "genes_in_words_clade_originals": 0.5665631848064281, "genes_in_words_rest": 0.5193870900888962, "seconds": 41.4, "seconds_total": 43.0}
+   group_k0   {"word_types": 87698, "clade_types": 2890, "rest_types": 84808, "genes_in_words_clade_originals": 0.46594229364499634, "genes_in_words_rest": 0.45506310003566697, "seconds": 43.4, "groups": 618, "clade_groups": 5, "seconds_total": 44.8}
+   syn_k0     {"word_types": 103490, "clade_types": 3509, "rest_types": 99981, "genes_in_words_clade_originals": 0.5369430241051862, "genes_in_words_rest": 0.4879195178609541, "seconds": 39.7, "seconds_total": 66.4}
+   genome_k1  {"word_types": 143229, "clade_types": 6757, "rest_types": 136472, "genes_in_words_clade_originals": 0.6969685902118334, "genes_in_words_rest": 0.5195355635603273, "seconds": 38.2, "jaccard_clade_vs_k0": 0.4597622626041809, "jaccard_rest_vs_k0": 0.9692869725936408, "clade_types_vs_k0": 1.7758212877792379, "rest_types_vs_k0": 1.000439844001994, "seconds_total": 39.9}
+   group_k1   {"word_types": 87466, "clade_types": 2695, "rest_types": 84771, "genes_in_words_clade_originals": 0.43988312636961285, "genes_in_words_rest": 0.454803509398918, "seconds": 43.8, "groups": 618, "clade_groups": 5, "jaccard_clade_vs_k0": 0.863077434363576, "jaccard_rest_vs_k0": 0.9888334995014955, "clade_types_vs_k0": 0.9325259515570934, "rest_types_vs_k0": 0.9995637204037355, "seconds_total": 45.2}
+   syn_k1     {"word_types": 103534, "clade_types": 3587, "rest_types": 99947, "genes_in_words_clade_originals": 0.5463476990504017, "genes_in_words_rest": 0.4878412361748951, "seconds": 40.0, "jaccard_clade_vs_k0": 0.7629374075899458, "jaccard_rest_vs_k0": 0.9751756579142414, "clade_types_vs_k0": 1.0222285551439156, "rest_types_vs_k0": 0.9996599353877237, "seconds_total": 66.0}
+   genome_k3  {"word_types": 163355, "clade_types": 26677, "rest_types": 136678, "genes_in_words_clade_originals": 0.9952885317750183, "genes_in_words_rest": 0.5197696948037378, "seconds": 37.1, "jaccard_clade_vs_k0": 0.1144604472750959, "jaccard_rest_vs_k0": 0.9398712797354478, "clade_types_vs_k0": 7.011038107752957, "rest_types_vs_k0": 1.0019499750755065, "seconds_total": 39.1}
+   group_k3   {"word_types": 87142, "clade_types": 2482, "rest_types": 84660, "genes_in_words_clade_originals": 0.4137509130752374, "genes_in_words_rest": 0.4543828345631965, "seconds": 43.7, "groups": 618, "clade_groups": 5, "jaccard_clade_vs_k0": 0.7829099307159353, "jaccard_rest_vs_k0": 0.9740423152204306, "clade_types_vs_k0": 0.8588235294117647, "rest_types_vs_k0": 0.998254881614942, "seconds_total": 45.2}
+   syn_k3     {"word_types": 103294, "clade_types": 3313, "rest_types": 99981, "genes_in_words_clade_originals": 0.5384769905040175, "genes_in_words_rest": 0.48733990027055957, "seconds": 37.9, "jaccard_clade_vs_k0": 0.6338360037700282, "jaccard_rest_vs_k0": 0.9332527206771463, "clade_types_vs_k0": 0.9441436306640069, "rest_types_vs_k0": 1.0, "seconds_total": 65.9}
+   genome_k9  {"word_types": 167543, "clade_types": 30949, "rest_types": 136594, "genes_in_words_clade_originals": 0.9997078159240321, "genes_in_words_rest": 0.5196626225887635, "seconds": 36.7, "jaccard_clade_vs_k0": 0.0910076175140893, "jaccard_rest_vs_k0": 0.8823655364382956, "clade_types_vs_k0": 8.13377135348226, "rest_types_vs_k0": 1.001334193472715, "seconds_total": 38.8}
+   group_k9   {"word_types": 86768, "clade_types": 2156, "rest_types": 84612, "genes_in_words_clade_originals": 0.38449598246895544, "genes_in_words_rest": 0.45347676568625794, "seconds": 50.4, "groups": 618, "clade_groups": 5, "jaccard_clade_vs_k0": 0.6746317512274959, "jaccard_rest_vs_k0": 0.9448527722908724, "clade_types_vs_k0": 0.7460207612456747, "rest_types_vs_k0": 0.9976888972738421, "seconds_total": 51.9}
+   syn_k9     {"word_types": 102964, "clade_types": 2918, "rest_types": 100046, "genes_in_words_clade_originals": 0.5252556610664719, "genes_in_words_rest": 0.4861723372508281, "seconds": 43.4, "jaccard_clade_vs_k0": 0.49164030727519203, "jaccard_rest_vs_k0": 0.8582759165760087, "clade_types_vs_k0": 0.8315759475634084, "rest_types_vs_k0": 1.0006501235234695, "seconds_total": 74.2}

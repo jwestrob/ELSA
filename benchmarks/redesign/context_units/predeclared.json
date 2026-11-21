@@ -1,0 +1,106 @@
+{
+ "workstream": "ws_context (context_units)",
+ "written_utc": "2026-11-13T02:06Z",
+ "written_before": "any computation of this workstream (only file listings and the contig-length table were read: median 8 genes per contig, mean 15.5)",
+ "statistic": {
+  "gene_vector": "x_g = zca10 unit vector of gene g (uid-level transform of embed_tokens.transform, identical to softrec), indexed by gid via uid_of_row",
+  "variants": {
+   "raw": "context built from x_g",
+   "gc": "context built from x_g - mu_genome(g) (mean of x over the genes of the genome; no renormalisation): removes the per-genome composition component, leaves positional context",
+   "shuf": "CONTROL: raw or gc context vectors permuted at random among all instances (seed 17) before pooling",
+   "member": "CONTROL (protein-divergence version): instance vector = (x_a - mu_tok(a)) + (x_b - mu_tok(b)), mu_tok = mean vector of the gene's token family; the pair's own proteins, family identity removed; W-independent"
+  },
+  "context_vector": "instance (a, b) on contig c, lo = min, hi = max: window = genes [lo - W, lo - 1] and [hi + 1, hi + W] inside the contig (the instance's own genes and the genes between them excluded). S = sum of the window's vectors; n_ctx = window size; B = S / ||S|| (undefined when n_ctx = 0).",
+  "W_ladder": [
+   10,
+   25,
+   50,
+   100
+  ],
+  "per_genome": "B_g = unit-normalised sum of B over the pair's instances in genome g with n_ctx >= 1 (paralogous copies pooled); a genome is informative if it has one such instance",
+  "pooling": "k informative genomes: c_bar = (||sum_g B_g||^2 - k) / (k (k - 1)) = mean pairwise cosine between genome contexts (O(k d))",
+  "noise_floor": "c0(variant, W) = mean B.B' over 2,000,000 random pairs of observed instances in different genomes (seed 17); its sd and quantiles reported, and c0 by n_ctx stratum (short-contig study)",
+  "neff": "rho = clip((c_bar - c0) / (1 - c0), 0, 1); N_eff = G / (1 + (G - 1) rho)  (Kish design effect under equicorrelation; with clusters of exactly shared contexts it equals the inverse Simpson index of cluster sizes, i.e. the order-2 similarity-sensitive diversity). G = genomes carrying the pair. k < 2 -> rho = 0 (N_eff = G); the count of such pairs is reported.",
+  "computed_for": "pairs with G >= 2 and Poisson P <= 1e-2 (the loosest rule in the family), observed and each of the 3 gene-order nulls (seeds 1000 + r, the engine's); contexts in the null are the real contexts at the null instance positions"
+ },
+ "engine_use": {
+  "rule_family": "P <= 1e-e & N_eff >= t, e in (2, 3, 4, 6, 8, 10, 15, 20, 30); e chosen by the engine's selection (FDR <= 0.01, top 12 by observed count, most genes covered)",
+  "t_primary": 2,
+  "t_ladder_secondary": [
+   1.5,
+   2,
+   3
+  ],
+  "landscape_value": "L := 2 * N_eff / t for each significant pair (so the rule floor is level 2 and the level-2 neighbourhood = any significant support). This value enters per-boundary support, the trimming median (scale-free) and the Louvain weights J * log2(max(L, 2)) at the reading's resolution 0.3 and at the engine's resolution 10 (token_modules). Louvain resolution 0.3 and trimming factor 0.5 are not re-tuned.",
+  "reading": "nested DH (level-2 neighbourhood + module-cut, end-trimmed core; boundary/rules.py Builder D core H res 0.3 f 0.5); R1 reported too",
+  "no_taxonomy": "the run uses recurrence_lf.Universe with --lineage-genome semantics (no genomes.parquet taxonomy column read); taxonomy is read only by the evaluation script"
+ },
+ "reference_check": "Before any new comparison: the same driver in 'genus' mode (L = genus count from lineagefree/groups/genus_map.parquet, rule family P <= 1e-e & L >= 2) must reproduce the stored rescue3 significant pairs and the DH summed even excess 0.4270 exactly.",
+ "test1": {
+  "selection_on_odd": "Among (variant in {raw, gc}) x (W in ladder) at t = 2: most odd conditions met (summed DH excess vs genus >= -0.01; no caller dF1 < -0.01; odd ribosomal recovered >= 830, Parvarchaeaceae recovered >= 54, resolved >= 705 = ceil(1400 * 848 / 1686)), then largest odd summed DH excess. Secondary: t in ladder at the selected (variant, W), same rule. Selection written to NOTEBOOK.txt before any even number of a context unit is read; job logs print odd numbers only.",
+  "replaces_genus_criterion_even": "DH summed DF+TXSS excess >= genus - 0.01 (the literal |d| <= 0.01 also reported), no caller F1 more than 0.01 below genus, ribosomal recovered >= 1,650, Parvarchaeaceae recovered >= 110 of 114, resolved >= 1,400 (the lineagefree 'within 3% of genus' reading also reported)",
+  "comparators": "genus DH (stored boundary scores); lineagefree DH of emb_hom g0.75 (its recommended unit), emb_mean g0.55 and fam_jac g0.2; lineagefree 'every genome its own lineage'. Paired genome bootstrap, 2,000 draws, seed 17.",
+  "controls": "shuffled contexts (both variants, every W, t = 2); member vectors (t = 2); short contigs: n_ctx distribution, c0 and rho by n_ctx stratum, and DH F1 differences vs genus for gold instances on contigs shorter than 2W + 2 genes vs the rest (evaluation)",
+  "evaluation_only": "Spearman of N_eff with genera, families, phyla per pair, and partial correlation given G; recently transferred blocks = observed pairs with two genomes of different GTDB orders whose member proteins both have zca10 cosine >= 0.95: N_eff vs genus count and significance under each"
+ },
+ "test2": "Embedding-only kernel (softrec4 / lineagefree softrec_lf round-2 configuration): own-genus list exclusion replaced by same-context exclusion (neighbour excluded when its gene's context cosine with the query gene's context exceeds the context noise floor's q99.9) and genus count L replaced by N_eff of the supporting genomes' contexts. Details fixed in an amendment before any run, if Test 1's machinery is in place in time; same criteria vs the genus round-2 DH (stored).",
+ "test3": {
+  "cuts": "Label-free core cuts inside each level-2 neighbourhood, then end trimming f 0.5, nested with the neighbourhood (as DH). Cohesion of boundary k (genes k, k+1): (var) successor variety: for each gene i, the neighbours (strand-oriented side facing the boundary) of the other members of i's homolog set; cohesion = mean pairwise cosine of those neighbours' zca10 vectors (O(n d) via the resultant), kappa = min of the two genes' cohesions. Homolog set = token family (token landscapes) or the top-50 zca10 kNN list (embedding landscape). (cont) continuity: Jaccard of the genome sets of the best significant pairs spanning k and k+1 (genome-level continuity). Cut where kappa < theta.",
+  "theta_ladder": {
+   "var": [
+    0.05,
+    0.1,
+    0.2,
+    0.3,
+    0.4
+   ],
+   "cont": [
+    0.1,
+    0.2,
+    0.3,
+    0.5
+   ]
+  },
+  "landscapes": "token genus landscape (isolates labels vs label-free), Test 1's selected N_eff landscape, and the embedding-only round-2 landscape (if available in time)",
+  "selection": "odd genomes, same conditions vs the same landscape's DH, then odd summed",
+  "criterion_even": "'matches' DH of the same landscape: summed excess >= -0.01, each caller F1 >= -0.02, ribosomal recovered >= 1,650, Parvarchaeaceae >= 110, resolved >= 1,400"
+ },
+ "expectations_before_numbers": {
+  "E1": "raw context vectors carry a per-genome composition component that adds coherently over a window: c0(raw) clearly above 0 and rising with W; c0(gc) within 0.01 of 0",
+  "E2": "most windows are truncated by contig ends (median contig 8 genes): N_eff barely changes between W = 25 and W = 100",
+  "E3": "gc behaves like the species-gap units of lineagefree (more significant pairs than genus; CRISPR-Cas F1 loss > 0.01): fails",
+  "E4": "raw does better than gc but also fails at least one condition (CRISPR-Cas F1 or ribosomal resolved)",
+  "E5": "shuffled contexts behave like 'every genome its own lineage' (DF and CCT F1 drop > 0.05): fails",
+  "E6": "member vectors (protein divergence) give the coarsest relatedness and do best of the three on CRISPR-Cas",
+  "E7": "N_eff correlates with the genus count at fixed G (partial Spearman > 0.3 for raw)",
+  "E8": "label-free cuts: variety cuts resolve fewer ribosomal runs than module cuts (TXSScan F1 and resolved are the sensitive measures); continuity cuts behave like the profile-unit reading (high F1, low ribosomal resolution)"
+ },
+ "refuters": {
+  "R1": "Test 1 principle refuted for this implementation if no (variant, W) at t = 2 meets the even replacement criterion; diagnosis then compares the selected unit with its shuffled control (context informative or not), the member control (representation vs context), W trend, and short-contig strata",
+  "R2": "E5 refuted if the shuffled control meets all replacement conditions (then the context carries nothing the pooled count does not)"
+ },
+ "amendment_1": {
+  "written_utc": "2026-11-13T02:19Z",
+  "written_after": "the descriptive output of job 87979 (gene-pair cosines, n_ctx quantiles, gc noise floor c0 = 0.0002-0.0003 with sd 0.051-0.057); before any odd or even score of any context variant was computed or read",
+  "problem": "With rho clipped at 0 and t = 2, a pair with G = 2 passes N_eff >= 2 only when c_bar <= c0; for unrelated contexts c_bar scatters around c0 with sd ~0.05, so about half of all G = 2 pairs fail on noise alone. The primary statistic has no noise model for the sampling error of c_bar.",
+  "noise_aware_rho": "rho_z = clip((c_bar - c0 - z * sd0 * sqrt(2 / (k (k - 1)))) / (1 - c0), 0, 1), z = 2; sd0 = the sd of B.B' over random instance pairs at that W (mean of k(k-1)/2 uncorrelated pairwise cosines). Shared context counts only when the mean pairwise cosine exceeds the floor by two null standard errors. N_eff = G / (1 + (G - 1) rho_z).",
+  "runs": "variants raw_z2 and gc_z2 (W ladder, t = 2, plus t = 1.5 and 3 for the secondary t selection), same code otherwise; one extra job after 87978/87979.",
+  "selection_change": "The odd-selection pool for the primary verdict becomes {raw, gc, raw_z2, gc_z2} x W at t = 2, same rule (most odd conditions met, then odd summed DH excess). Everything else in the main declaration is unchanged.",
+  "expectation": "z2 variants admit more G = 2 and G = 3 pairs than z0 at t = 2; their odd summed excess and F1 are closer to the genus run than z0's."
+ },
+ "amendment_2_test2": {
+  "written_utc": "2026-11-13T02:27Z",
+  "written_before": "any Test-2 run; after odd Test-1 numbers of 9 configurations had been read (no even number of any context unit read)",
+  "configuration": "softctx.py (single output, no tuning): round-2 token-free configuration (zca10 kNN k 2,000 -> gene lists depth 1,000, rank weights e50, validated edges, Leiden r2000, Louvain 0.3, DH) with (i) lists excluding the own genome and every gene whose position context has cosine >= tau with the query gene's (tau = q99.9 of random position-context cosines in different genomes), in place of own-genus exclusion; (ii) per instance N_eff over the instance's context and the first supporting b' context of each supporting genome, z = 2 noise model (amendment_1); (iii) rule W_ctx >= t & N_eff >= 2, W_ctx = rank-weighted genome sum / design effect, t by the engine selection (FDR <= 0.01, top 12, most genes); (iv) landscape value N_eff; (v) Louvain weights J * log2(max(N_eff, 2)) with token-pair N_eff from instance contexts. Contexts are 128-d Gaussian projections (seed 17) of zca10 vectors (the 960-d computation does not fit the per-instance kernel budget).",
+  "variant_and_W": "the (variant, W) selected on odd genomes in Test 1's primary pool (amendment_1); if the selected unit is a z0 unit the kernel still uses z = 2 (the kernel statistic has k = 2 for single-support instances, where z0 is a coin flip)",
+  "criterion_even": "vs round 2 with the genus (stored selected__rw1000_e50__l2000__0.3__DH): replaces the genus if summed >= -0.01, no caller F1 below -0.01, ribosomal recovered >= 1,650, Parvarchaeaceae >= 110, resolved >= 1,400 (round 2's genus reading resolves 1,263, so this bar is the 'matches' bar; the lineagefree reading 'resolved within 3% of the genus run' is reported too). Also paired against lineagefree emb_hom g0.75 and every-genome-its-own-lineage token-free runs.",
+  "expectation": "fails like the species-scale and genome-scale units in the token-free route (lineagefree: -0.07 and -0.15 summed), because the list exclusion keeps same-genus genes whose contexts diverged and N_eff counts them as independent"
+ },
+ "amendment_3_posthoc": {
+  "written_utc": "2026-11-13T02:48Z",
+  "status": "POST HOC: written after the odd numbers of the z0 pool and the member control were read; before any number of this construction exists. It never enters the primary selection; its even numbers are reported with the post hoc label.",
+  "observation_motivating_it": "At t = 3 the W10 contexts lose every ribosomal run (gc 0 / raw 3 of 848 odd runs recovered): inside a conserved unit longer than the window, every instance's flanks are the unit itself in every genome, so 'same flanks' is read as shared descent.",
+  "construction": "exterior windows: the window starts outside the pass-1 level-2 locus that contains the instance ([S - W, S - 1] and [E + 1, E + W], S..E = the locus), pass 1 = the taxonomy-free 'every genome its own lineage' engine landscape (lineagefree LFgenome result directory). Variants raw and gc, W 25 and 50, z = 2, t = 2 (and 1.5, 3 reported).",
+  "reading_before_numbers": "Exterior windows restore the ribosomal runs at t 2-3 and leave the CRISPR-Cas deficit (which sits in small, rare loci where the window is already exterior)."
+ }
+}

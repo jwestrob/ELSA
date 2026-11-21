@@ -1,0 +1,12 @@
+condition	transform	mean_norm	isotropy	auc	recall_at_5pct_fpr	threshold_at_5pct_fpr	precision_at_k	neighbour_churn_vs_raw	seconds
+raw	raw	0.9318	0.1187	0.8796	0.5806	0.9523	0.3019	0.0	0.8
+r1_center	r1_center	0.0686	0.1192	0.9218	0.7091	0.4649	0.3165	0.3282	0.9
+r2_project	r2_project	0.0621	0.1189	0.9202	0.7084	0.4649	0.3161	0.343	0.9
+random_direction	random_direction(seed=18)	0.9317	0.1186	0.8797	0.5806	0.9523	0.3019	0.0084	0.8
+abtt_k1	abtt(k=1)	0.0784	0.1595	0.9393	0.7661	0.3835	0.3281	0.4597	7.6
+abtt_k2	abtt(k=2)	0.077	0.178	0.9418	0.7752	0.3624	0.3297	0.4826	7.2
+abtt_k3	abtt(k=3)	0.0598	0.2001	0.9371	0.7861	0.3247	0.3392	0.5159	6.9
+soft_zca_a50	soft_zca(alpha=0.5)	0.0513	0.5218	0.9699	0.8993	0.1709	0.4078	0.5386	1.2
+soft_zca_a10	soft_zca(alpha=0.1)	0.0385	0.8073	0.9712	0.912	0.1112	0.4294	0.5946	1.2
+soft_zca_a01	soft_zca(alpha=0.01)	0.0318	0.9247	0.9672	0.9009	0.0967	0.4365	0.6179	1.2
+pca_whiten	pca_whiten(n_components=320)	0.0303	0.9357	0.9653	0.8973	0.0952	0.4381	0.6229	5.9

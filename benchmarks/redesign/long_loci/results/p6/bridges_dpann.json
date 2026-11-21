@@ -1,0 +1,60 @@
+{
+ "data": "dpann",
+ "coord_order_ok": 1.0,
+ "bases": {
+  "P": {
+   "candidates": 59655,
+   "rule_i": 11944,
+   "rule_iii": 23145,
+   "bridge": 4941,
+   "bridge_share": 0.0828262509429218,
+   "bridge_fam": 4941,
+   "audit_candidates_equal": true,
+   "audit_rule_i_equal": true,
+   "audit_co_groups_equal": true,
+   "audit_bridge_equal": true,
+   "audit_fires": 4941,
+   "curated_merges_junction_level": 0,
+   "curated_joins_junction_level": 11,
+   "fires_at_target_edges": 34,
+   "verdict1_cases": 23,
+   "verdict1_repaired": 21
+  },
+  "Z": {
+   "candidates": 97162,
+   "rule_i": 12189,
+   "rule_iii": 39138,
+   "bridge": 5354,
+   "bridge_share": 0.0551038471830551,
+   "bridge_fam": 5078,
+   "rule_i_list": 12393,
+   "list_vs_family": {
+    "both": 3462,
+    "list_only": 1892,
+    "family_only": 1616,
+    "jaccard": 0.49670014347202296
+   },
+   "lists": {
+    "source": "z10.6",
+    "entries": 3265088204,
+    "uid_entries": 2210144087,
+    "list_len_q01_q10_q50_q90_max": [
+     0.0,
+     2.0,
+     437.0,
+     2879.0,
+     3505.0
+    ],
+    "genes_empty": 256897,
+    "seconds": 328.6
+   },
+   "curated_merges_junction_level": 0,
+   "curated_joins_junction_level": 11,
+   "fires_at_target_edges": 17,
+   "verdict1_cases": 29,
+   "verdict1_repaired": 15
+  }
+ },
+ "seconds": 475.0,
+ "peak_rss_gb": 82.5
+}

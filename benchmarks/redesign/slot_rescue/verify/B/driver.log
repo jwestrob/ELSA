@@ -1,0 +1,16 @@
+2026-11-21T00:43:22Z RUN /Users/jacob/.pyenv/versions/miniconda3-latest/bin/python3 /Users/jacob/Documents/Sandbox/Sharur/Sharur/scripts/fold_biohub.py /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/B/folds /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/B/fold_input.faa
+2026-11-21T01:47:11Z rc -15
+2026-11-21T01:47:11Z RUN ssh -o BatchMode=yes jwestrob@biotite.berkeley.edu mkdir -p /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slot_rescue/verify/B/folds
+2026-11-21T01:47:12Z rc 0
+2026-11-21T01:47:12Z RUN scp -q /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/B/folds/*.pdb /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/B/folds/summary.tsv jwestrob@biotite.berkeley.edu:/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slot_rescue/verify/B/folds/
+2026-11-21T01:48:47Z rc 0
+2026-11-21T01:48:47Z RUN scp -q /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/data/B_pairs.tsv jwestrob@biotite.berkeley.edu:/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slot_rescue/verify/data/B_pairs.tsv
+2026-11-21T01:48:48Z rc 0
+2026-11-21T01:48:48Z RUN ssh -o BatchMode=yes jwestrob@biotite.berkeley.edu cd /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slot_rescue/verify && OMP_NUM_THREADS=1 /home/jwestrob/miniconda3/envs/elsa/bin/python code/usalign_pairs.py data/B_pairs.tsv B/folds B/usalign_pairs.tsv
+600 pairs; 596 ok
+2026-11-21T01:50:07Z rc 0
+2026-11-21T01:50:07Z RUN scp -q jwestrob@biotite.berkeley.edu:/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slot_rescue/verify/B/usalign_pairs.tsv /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/B/usalign_pairs.tsv
+2026-11-21T01:50:08Z rc 0
+2026-11-21T01:50:08Z RUN scp -q /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/B/checkB_pairs.tsv /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/B/checkB_summary.tsv /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/verify/B/checkB_top20_labels.tsv jwestrob@biotite.berkeley.edu:/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slot_rescue/verify/B/
+2026-11-21T01:50:09Z rc 0
+2026-11-21T01:50:09Z DONE 2026-11-21T01:50:09Z folds 562 (fold rc -15, 3829 s) pairs ok 596 of 600 (US-align 79 s) checkB_pairs.tsv checkB_summary.tsv checkB_top20_labels.tsv

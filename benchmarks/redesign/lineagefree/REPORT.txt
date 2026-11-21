@@ -1,0 +1,266 @@
+LINEAGEFREE: A TAXONOMY-FREE LINEAGE UNIT FOR THE RECURRENCE ENGINE (DPANN, 2026-11-13)
+=====================================================================================
+Even genomes = verdict, odd genomes = selection; paired genome bootstrap (2,000 draws, seed 17) against the
+genus-based run of the same method. Genus references (even): token engine DH summed DF+TXSS excess .4270, F1
+.744/.548/.479 (DF/TXSS/CCT), ribosomal 1,686 recovered / 1,512 resolved, Parvarchaeaceae 114/114 recovered,
+113/114 resolved; token-free round 2 DH .4669, F1 .802/.500/.442, 1,681 / 1,263, Parvarchaeaceae 114 / 100.
+
+ANSWER IN TEN LINES
+1. The genus can be replaced by data-derived GROUPS, but only at a scale coarser than the genus, and the threshold
+   that reaches that scale comes from odd-genome calibration. The internal criterion picks the species gap and
+   fails. Weights (L_eff) fail at every threshold.
+2. Internal criterion (predeclared): the antimode of the genomes' nearest-neighbour similarity. Embedding mean
+   best-match cosine: 0.753 (1.50x deep), giving 1,965 groups. Homolog-level cosine: 0.894 (2.67x), giving 1,882
+   groups. These are GTDB species (AMI .904 / .963). Family Jaccard has no antimode (deepest 1.21x). The engine has
+   no plateau to read either: significant pairs rise monotonically with the number of units (89k at 172 groups,
+   163k at 922 genera, 288k at 1,965, 548k at 3,564 genomes).
+3. Species-gap units DO NOT replace the genus (token engine, even DH): summed +0.010/+0.011 (groups) and
+   +0.025/+0.028 (weights), but CRISPR-Cas F1 -0.025 to -0.043 and ribosomal resolved 1,407-1,412 (-100 to -105,
+   -6.6 to -6.9%). emb_mean groups also lose DefenseFinder F1 (-0.029).
+4. Odd-selected coarse groups REPLACE the genus on the token engine (even DH). Each meets every condition:
+     fam_jac 0.2 (232 groups): +0.017 [+0.002,+0.033]; F1 +.005/-.003/+.005; resolved 1,487 (-1.7%); Parv 114 / 107
+     emb_mean 0.55 (562): +0.033 [+0.020,+0.046]; F1 +.007/+.027/-.004; 1,477 (-2.3%); Parv 114 / 113
+     emb_hom 0.75 (642): -0.009 [-0.020,+0.003]; F1 +.001/-.010/-.002; 1,476 (-2.4%); Parv 114 / 113 (margins
+                         0.0007 on summed and 0.0004 on TXSS F1)
+   The default single reading R1 gains as well: +0.044 / +0.027 / +0.008 summed, and resolves 806 / 725 / 726
+   ribosomal runs against 704. Post hoc, fam_jac 0.25 and emb_mean 0.525 also pass. The band is about 170-650 groups
+   for every similarity, and the neighbouring points each miss one condition by a small margin.
+5. Token-free round 2 (own-group exclusion in the lists, group counts, Leiden r2000, Louvain 0.3, DH). Only emb_hom
+   0.75 replaces the genus: +0.019 [+0.006,+0.032]; F1 -.000/-.000/-.008; resolved 1,271 against 1,263; Parv 113.
+   emb_mean 0.55 fails on CRISPR-Cas F1 (-0.024 [-0.031,-0.017]) at +0.029 summed. fam_jac 0.2 fails on CRISPR-Cas
+   F1 (-0.044) and recovers 108 of 114 Parvarchaeaceae runs, at +0.078 summed. The species-gap units fail:
+   -0.072 and -0.066. Every genome as its own lineage gives -0.154.
+6. What the unit buys (every genome its own lineage). Token engine: DH -0.020 [-0.041,-0.000], F1 -.094/-.019/-.098,
+   resolved -148; R1 -0.124. Token-free: DH -0.154, R1 -0.221.
+7. Mechanism: the engine's null shuffles gene order inside each genome independently, so it cannot see order
+   inherited within a clade. Every finer unit turns shared ancestry into recurrence. Significant pairs grow with
+   the unit count, loci extend (DH genes in loci 2.56M under genus, 2.78M under species units), and DefenseFinder
+   and CRISPR-Cas F1 fall. TXSScan F1 rises (+0.018 to +0.027). What the genus supplies is a coarse partition of
+   related genomes. The data match it at family-like scale: the passing groups have AMI .78-.82 with GTDB family.
+   Relatedness matters, not only the number of units. Random partitions with genus group sizes (post hoc) behave
+   like "every genome its own lineage" (548k significant pairs, DF/CCT F1 -0.09). The gap criterion finds species
+   because similarity has a gap there; genera are rank-normalised, with no gap.
+8. Recommendation: groups by average linkage on 1 - S, not weights. For one unit serving both routes: the
+   homolog-level best-match cosine (emb_hom) at theta 0.75. For the token engine alone, needing nothing beyond its
+   own family table: family Jaccard at theta 0.2 (15 s similarity + 20 s grouping). All thresholds are calibrated on
+   DPANN odd genomes. The passing band is narrow in theta and consistent in scale (about one group per 6-20
+   genomes; Section 4).
+9. Reproduction: the genus map fed through both copies reproduces the deployed outputs exactly. Token engine:
+   significant pairs, rules, boundary support, modules, all-genome loci, R1/DH loci and per-instance scores.
+   Token-free: L, G, E and W, sidx, b, edge endpoints, Leiden families and per-instance R1/DH scores. Edge cosines
+   differ by at most 3e-7 (float32), and the partition is unchanged.
+10. Running the pipeline needs taxonomy in three places, each replaced in this workstream's copies by a lineage map:
+   the engine Universe (genus -> L), the softrec Universe (genus -> list exclusion and L), and the engine pair
+   statistics behind the token-free Louvain weights. Every other read is reporting or evaluation (Section 5).
+
+------------------------------------------------------------------------------------------------------------------
+PREDECLARED (predeclared.json) AND ORDER OF EVENTS (NOTEBOOK.txt; UTC)
+- main 23:59 (before any computation): constructions, comparisons and the replacement conditions. The conditions
+  are: DH summed within 0.01; no caller's F1 more than 0.01 lower; ribosomal recovered >= 1,650, Parvarchaeaceae
+  >= 110 of 114, resolved within 3% of genus.
+- amendment_1 00:07 (after the similarity distributions and the genus reproduction; before any engine run with a
+  derived unit, and before any comparison of groups with taxonomy). Internal criterion = the nearest-neighbour
+  antimode, usable at >= 1.4x depth; fam_jac has none, so its theta is selected on odd genomes. Also fixed: the
+  ladders, the verdict units, and a reading of the summed condition that guards against loss (a gain above +0.01
+  counts as met, and the literal |d| <= 0.01 is reported too).
+- amendment_2 00:43 (after the odd numbers of all 47 ladder runs; before any even number of a derived unit). Odd
+  selections, the emb odd-selected units added as secondary verdict units, and four readings written before the
+  even numbers.
+- Every job log printed odd numbers only, and odd results went to separate files. Even numbers were first read at
+  00:47.
+- POST HOC (after the verdict; labelled): ladder extensions and two size-matched random partitions (Section 4b).
+
+Readings and what would have refuted them (amendment_2, before the even numbers):
+ (1) "Species-gap units fail on even": refuted if any met all three conditions. All four fail (CCT and ribosomal):
+     holds.
+ (2) "Odd-selected coarse groups pass on even": refuted if any failed a condition. fam_jac 0.2, emb_mean 0.55 and
+     emb_hom 0.75 all pass: holds (emb_hom by margins under 0.001).
+ (3) "Weights fail CRISPR-Cas on even": refuted if a selected weight unit had CCT dF1 >= -0.01. The CCT dF1 values
+     are -0.020, -0.086 and -0.066: holds.
+ (4) "The degenerate unit fails": holds.
+ The amendment_1 expectation ("the species-gap units pass") was refuted on odd genomes and again on even.
+
+------------------------------------------------------------------------------------------------------------------
+1. SIMILARITIES AND INTERNAL THRESHOLDS (Task 1; job 86526; no taxonomy read)
+ similarity (mean-symmetrised)            pairs q50 / q99 / q99.9   nearest neighbour q10 / q50   antimode (depth)
+ fam_jac  Jaccard of rescue3 family sets  .114 / .365 / .593        .297 / .624                   none usable (.566, 1.21x)
+ fam_con  gene-weighted containment       .220 / .551 / .759        .477 / .783                   none (.625, 1.02x)
+ emb_mean mean best-match cosine (floor   .413 / .598 / .789        .583 / .825                   .753 (1.50x)
+          .32 for entries under it)
+ emb_hom  mean best-match cosine over     .638 / .764 / .933        .766 / .950                   .894 (2.67x); pairs .917
+          genes with a match >= .5
+ Nearest-neighbour similarity is bimodal for both embedding measures: one mode for genomes with no close
+ relative (emb_mean .57-.63, emb_hom .78-.82) and one for genomes with one (.90-.92 / .97-.98). Family-set
+ similarity is flat from .30 to .99, because 50%-coverage MMseqs2 families are shared alike by a genus's species
+ and by its near-identical genomes. Average-linkage merge-height gaps are uninformative (the largest sit at the
+ root). The engine-plateau criterion fails as well: significant pairs and covered genes rise monotonically with
+ the unit count for every similarity (Section 4).
+ Groups at the chosen thresholds against GTDB (descriptive; results/groups_vs_taxonomy.json):
+   unit                 groups  AMI species / genus / family   Parvarchaeum (190 genomes) split into
+   genus                   922        .646 / 1.00 / .648        1
+   emb_mean 0.753        1,965        .904 / .642 / .372        43
+   emb_hom 0.894         1,882        .963 / .674 / .394        27
+   fam_jac 0.2             232        .339 / .587 / .824        3 (99% in one group)
+   emb_mean 0.55           562        .454 / .732 / .789        1
+   emb_hom 0.75            642        .518 / .816 / .783        1
+   (genus-matched counts: fam_jac 0.3 = 886 groups, AMI genus .755; emb_mean 0.6 = 1,029, .885; emb_hom 0.8 =
+    1,264, .851)
+
+2. TOKEN ENGINE WITH EACH UNIT (Task 2; rescue3 families, w 3, genome-order null, 3 permutations, rule selection at
+   FDR 0.01; recurrence_lf.py --lineage-map / --lineage-weights / --lineage-genome)
+ Reproduction (job 86553): genus map -> identical significant_pairs (162,786 rows, every column), rules.tsv,
+ boundary_support, token_modules, loci_all_genomes (2,990,356), summary; R1 and DH loci identical to the boundary
+ workstream's stored loci; per-instance F1 and control F1 identical.
+ The rule selected is P <= 1e-4 & L >= 2 for every group unit with at least 29 groups (fam_jac 0.1, with 13
+ groups, takes 1e-3). Weights take the same rule at fam >= 0.4, emb_mean >= 0.65 and emb_hom >= 0.8; coarser
+ weights take 1e-3 or 1e-2. Engine FDR: groups .0028-.0053, weights .0003-.0087 (genus .0042).
+ Even genomes, DH (nested reading); d = A - genus [95%]; dF1 DF / TXSS / CCT; resolved of 1,686 (Parv resolved):
+   unit (how chosen)            units   sig pairs  d summed [95%]          dF1                      resolved     verdict
+   genus                          922   162,786    .4270                   .744/.548/.479           1,512 (113)
+   emb_mean g 0.753 (internal)  1,965   288,397    +0.011 [-0.003,+0.024]  -.029/+.027/-.043        1,412 (113)  FAIL F1, ribo
+   emb_mean w 0.753 (internal)  1,894*  221,426    +0.025 [+0.012,+0.037]  +.002/+.004/-.025        1,410 (113)  FAIL F1, ribo
+   emb_hom  g 0.894 (internal)  1,882   275,960    +0.010 [-0.001,+0.020]  -.009/+.018/-.030        1,408 (113)  FAIL F1, ribo
+   emb_hom  w 0.894 (internal)  1,874*  223,465    +0.028 [+0.015,+0.042]  -.003/+.005/-.038        1,407 (113)  FAIL F1, ribo
+   fam_jac  g 0.2   (odd)         232   102,040    +0.017 [+0.002,+0.033]  +.005/-.003/+.005        1,487 (107)  REPLACES
+   fam_jac  w 0.4   (odd)       1,363*  128,975    +0.052 [+0.036,+0.068]  -.006/+.031/-.020        1,434 (113)  FAIL F1, ribo
+   emb_mean g 0.55  (odd, am.2)   562   125,660    +0.033 [+0.020,+0.046]  +.007/+.027/-.004        1,477 (113)  REPLACES
+   emb_mean w 0.55  (odd, am.2)   443*   32,519    +0.019 [-0.004,+0.043]  -.141/+.016/-.086        1,532 (107)  FAIL F1
+   emb_hom  g 0.75  (odd, am.2)   642   139,494    -0.009 [-0.020,+0.003]  +.001/-.010/-.002        1,476 (113)  REPLACES
+   emb_hom  w 0.75  (odd, am.2)   556*   48,340    +0.008 [-0.016,+0.032]  -.118/+.010/-.066        1,488 (107)  FAIL F1
+   genome (degenerate)          3,564   548,139    -0.020 [-0.041,-0.000]  -.094/-.019/-.098        1,364 (113)  FAIL all
+   (* effective genomes, the sum of the weights.) Every unit keeps recovered at 1,686 and Parvarchaeaceae
+   recovered at 114/114, except the weights at fam 0.2 and emb_mean 0.5 (1,685 / 1,679).
+ Paired ribosomal resolved vs genus: fam_jac 0.2 -25 [-46,-4], emb_mean 0.55 -35 [-53,-17], emb_hom 0.75
+ -36 [-54,-18]; species-gap units -100 to -105.
+ R1 (default single reading), even: genus .3375; fam_jac 0.2 +0.044 [+0.030,+0.058] (F1 +.019/+.038/+.014,
+ resolved 806); emb_mean 0.55 +0.027 [+0.014,+0.039] (+.015/+.022/+.005, 725); emb_hom 0.75 +0.008 [-0.002,+0.018]
+ (+.003/+.014/+.000, 726); species-gap groups -0.035 / -0.039 (F1 -0.020 to -0.036); genome -0.124.
+
+3. TOKEN-FREE ROUND 2 WITH EACH UNIT (Task 3; softrec_lf.py: rw1000_e50 lists outside the own group, rule selection
+   W >= t & L >= 2 at FDR 0.01, validated edges, Leiden r2000, Louvain 0.3 on engine pair statistics with the same
+   unit, DH; one 64-CPU job per unit, 22.6-26.5 min, 49 min when kNN reading from /groups was I/O-bound)
+ Reproduction (job 86644): genus map -> L, G, E and W equal round 2's stats at K1000; rule W >= 1; sidx and b
+ equal; validated edge endpoints equal (183,264,288 edges), cosines differ by <= 3.0e-7 on 58% of edges (float32
+ zca10 products); Leiden l2000 partition identical; per-instance R1 and DH F1 identical to the stored round-2
+ scores.
+ Even, DH against the genus rerun (= stored round 2):
+   unit                     units  rule  sig instances  d summed [95%]          dF1 DF/TXSS/CCT            rec / res (Parv rec)  verdict
+   genus                      922  W>=1  2,547,427      .4669                   .802/.500/.442             1,681 / 1,263 (114)
+   emb_mean g 0.753 (int.)  1,965  W>=1  4,006,602      -0.072 [-0.086,-0.057]  -.020/-.020/+.002          1,686 / 1,076 (114)    FAIL
+   emb_hom  g 0.894 (int.)  1,882  W>=1  3,762,158      -0.066 [-0.079,-0.054]  -.011/-.025/+.012          1,686 / 1,096 (114)    FAIL
+   fam_jac  g 0.2   (odd)     232  W>=1  1,915,161      +0.078 [+0.062,+0.093]  -.006/+.023/-.044          1,675 / 1,300 (108)    FAIL CCT, Parv
+   emb_mean g 0.55  (odd)     562  W>=1  2,079,062      +0.029 [+0.015,+0.043]  +.000/-.002/-.024          1,685 / 1,274 (113)    FAIL CCT
+   emb_hom  g 0.75  (odd)     642  W>=1  2,154,833      +0.019 [+0.006,+0.032]  -.000/-.000/-.008          1,685 / 1,271 (113)    REPLACES
+   genome                   3,564  W>=1  6,192,593      -0.154 [-0.175,-0.133]  -.146/-.020/-.026          1,686 / 1,053 (114)    FAIL
+ R1, even: genus .4288; emb_hom 0.75 +0.026 [+0.013,+0.037]; emb_mean 0.55 +0.039; fam_jac 0.2 +0.096 (CCT
+ -0.027); species-gap -0.067 / -0.074; genome -0.221.
+ In the token-free route the unit also sets which genes may enter a gene's list. Groups as coarse as fam_jac 0.2
+ (largest group 814 genomes) exclude whole families of relatives from the lists; CRISPR-Cas support then falls,
+ and so does the recovery of Parvarchaeaceae runs (108). The weight construction was not run here (predeclared):
+ list exclusion needs groups.
+
+4. SENSITIVITY (Task 4; even genomes, token engine DH; all ladder points; full table results/sensitivity_even.txt)
+ groups, d summed / CCT dF1 / resolved:
+   fam_jac   0.1 (13, post hoc) -0.017 / -.281 / 1,481 | 0.2 (232) +0.017 / +.005 / 1,487 | 0.3 (886) +0.011 / -.010 / 1,457
+             0.4 (1,467) -0.006 / -.029 / 1,424 | 0.5 -0.015 / -.046 / 1,409 | 0.6-0.9 -0.003 to -0.018 / -.047 to -.090
+   emb_mean  0.5 (172) +0.013 / +.003 / 1,495 | 0.55 (562) +0.033 / -.004 / 1,477 | 0.6 (1,029) +0.004 / -.007 / 1,432
+             0.65 -0.001 / -.021 / 668 (DH collapses) | 0.7 -0.010 / -.027 | 0.753 +0.011 / -.043 | 0.8-0.9 -0.009 to -0.017 / -.050 to -.073
+   emb_hom   0.75 (642) -0.009 / -.002 / 1,476 | 0.8 (1,264) -0.014 / -.015 / 1,368 | 0.85 -0.011 / -.029 | 0.894 +0.010 / -.030
+             0.92 -0.002 / -.045 | 0.95 -0.008 / -.056
+ Passing points: fam_jac 0.2; emb_mean 0.5 and 0.55; emb_hom 0.75. At genus-matched counts (fam_jac 0.3, 886 groups;
+ emb_mean 0.6, 1,029) the summed excess and every F1 hold (+0.011 / +0.004; worst F1 -0.010 / -0.007), but the
+ resolved count is 3.6% / 5.3% below genus. With significant pairs equal to genus (162,464 against 162,786), DH
+ ribosomal resolution still differs. It depends on the Louvain partition, and the H reading's parameters were
+ selected on the genus landscape.
+ Fragility: DH ribosomal resolution falls to its R1 level (572-692 resolved, Parv resolved 1-46) at five points
+ (emb_mean g0.65, g0.9; fam_jac w0.7, w0.8, w0.9). There the Louvain res-0.3 partition stops cutting ribosomal runs.
+ Weights: every weight unit loses CRISPR-Cas F1 (-0.020 to -0.264). At coarse theta, DefenseFinder collapses as well
+ (-0.07 to -0.54), because few pairs reach L_eff >= 2 and the rule moves to P <= 1e-3 or 1e-2.
+ 4b. POST HOC (after the verdict; job 87092; reading written first in NOTEBOOK.txt)
+   unit (groups)             sig pairs  d summed [95%]          dF1 DF/TXSS/CCT        resolved (Parv)  all three
+   fam_jac  0.1  (13)            8,080  -0.017 [-0.048,+0.013]  -.494/+.044/-.281      1,481 (107)      no
+   fam_jac  0.15 (60)           63,130  +0.052 [+0.037,+0.069]  -.002/+.014/-.010      1,550 (107)      no (CCT -0.0101)
+   fam_jac  0.25 (548)         132,313  +0.014 [-0.001,+0.030]  +.009/+.002/-.005      1,477 (113)      yes
+   emb_mean 0.45 (29)           51,333  +0.075 [+0.057,+0.093]  +.005/+.008/-.016      1,583 (107)      no (CCT)
+   emb_mean 0.525 (352)        108,833  +0.018 [+0.005,+0.032]  +.007/+.003/+.002      1,545 (113)      yes
+   emb_hom  0.7  (156)          81,418  +0.020 [+0.003,+0.038]  +.007/-.012/+.002      1,556 (113)      no (TXSS)
+   emb_hom  0.775 (968)        171,896  +0.024 [+0.013,+0.035]  -.005/+.034/-.005      1,455 (113)      no (ribo -3.8%)
+   perm_genus (922 random groups with genus sizes)
+                               547,651  -0.015 [-0.038,+0.004]  -.092/-.009/-.095        564 (1)        no
+   perm_fam_jac_g0.2 (232 random groups with fam_jac 0.2 sizes)
+                               536,883  -0.010 [-0.031,+0.010]  -.098/+.008/-.093      1,524 (114)      no
+ - Passing band (token engine): fam_jac 0.2-0.25 (232-548 groups); emb_mean 0.5-0.55 (172-562); emb_hom 0.75 (642).
+   The neighbours on both sides each fail one condition by small margins. All three similarities pass at about the
+   same scale, roughly one group per 6-20 genomes (AMI with GTDB family .78-.82 at the selected points).
+ - Coarser still, the summed excess keeps rising (+0.052 at 60 groups, +0.075 at 29) until CRISPR-Cas F1 drops, and
+   it collapses at 13 groups. On this metric the genus is not the optimum: fewer, coarser units keep only pairs
+   recurrent across distant lineages, which gives tighter loci.
+ - Random partitions with the same group sizes (genus sizes; fam_jac 0.2 sizes) behave like "every genome its own
+   lineage": 537-548k significant pairs (548k for genome), DF and CCT F1 about -0.09. The reading "relatedness, not
+   only the number of units, is what the grouping supplies" holds; its refuter (perm_genus meeting all three) did
+   not fire.
+ - Ribosomal condition: the predeclared "within 3%" was applied two-sided. Counting resolved values above the genus
+   as met (the loss-guard reading used for the summed excess) changes no verdict; emb_mean 0.45 and the
+   fam_jac w0.2 weight unit also fail an F1 condition.
+
+5. genome_groups.py AND THE TAXONOMY READS (Task 5)
+ genome_groups.py (no taxonomy read; genomes.parquet columns genome, genome_code, n_genes only):
+   famsim  family table + universe -> fam_jac, fam_con (3,564 x 3,564): 15.1 s (scipy sparse product)
+   embsim  stored per-genome best matches (4.28 G entries) -> emb_mean, emb_hom, emb_id95: 105 s on 24 CPUs
+           (read 36 s, accumulate 68 s)
+   groups  S, theta(s) -> genome -> group (average linkage) and genome -> weight, n_close: ~20 s per similarity
+           (login node, 2 threads; 8-9 thetas)
+   describe  distributions, antimodes, cluster counts: 4.4 s
+ Pipeline code that reads taxonomy:
+   needed to run (today; each removed in this workstream's copies):
+     engine/recurrence.py Universe: genus -> lineage -> L (rules, support landscape and loci, Louvain module
+       weights J x log2 L). Replaced by --lineage-map / --lineage-weights / --lineage-genome (recurrence_lf.py).
+     softrec/softrec.py Universe: genus -> lin_of_genome (lists exclude own genus; L_o counts genera; W sums over
+       genera), used by softrec2.run_pass2, Lists, extract_edges. Replaced by LFUniverse (softrec_lf.py).
+     softrec/readings2.py modules(): engine pair statistics on ctx.u = recurrence.Universe -> genus L in the Louvain
+       weights. Overridden with the unit in softrec_lf.py.
+   read but unused for any locus (remove the read): boundary/blib.py Landscape and readings2.Ctx construct
+     recurrence.Universe (reads genus and phylum); loci use L from significant_pairs.parquet.
+   reporting only: recurrence.py phylum -> NP (cross-phylum counts in summary.json and significant_pairs) and
+     stratum -> n_other (source207 query benchmark; absent in DPANN). recurrence_lf.py reads phylum only with
+     --report-taxonomy.
+   evaluation only: ribosomal/ribosomal_check.py (phylum/class/ord/family/genus summaries, the Parvarchaeaceae
+     count); eval_taxonomy.py (genus map for the reproduction; AMI description).
+   upstream metadata: ws_dpann/package/code/build_dpann_package.py joins GTDB r232 to fill genomes.parquet; the
+     columns become unnecessary once the engine takes a lineage map.
+   taxonomy-free already: rescue3 token build (repair/code), package scorer (score_dpann_loci.py), rules.py,
+     dpann_compare.py (genome_code parity splits).
+
+------------------------------------------------------------------------------------------------------------------
+CAVEATS
+- No internal criterion reached the working scale: thresholds that pass are calibrated on DPANN odd genomes (gold),
+  in similarity units that depend on the family clustering (fam_jac) or the embedding model and whitening
+  (emb_mean, emb_hom). A new dataset or model needs the same calibration, or a scale rule (Section 4b).
+- The odd selection score maximises odd summed excess among units meeting the most conditions, so it picks
+  coarse units; the fam_jac pick (0.2) sat at the edge of its predeclared ladder (extended post hoc).
+- emb_hom 0.75 passes the token engine by margins under 0.001 (summed -0.0093, TXSS F1 -0.0096).
+- The DH reading's Louvain resolution (0.3) and trimming (0.5) were selected on the genus landscape and were not
+  re-tuned for any unit; ribosomal resolution is the condition this most affects.
+- Token-free edge cosines are not bit-reproducible (<= 3e-7); the Leiden partition was unaffected in the genus
+  rerun.
+- Two diagnostics on the login node ran 67 s and ~20 s (over the 30 s guidance once: an edge-array comparison).
+
+NEXT (not started; one line each)
+- A scale rule in place of a theta: cut the dendrogram at a fixed group count relative to the genome count (about
+  1 per 6-20 genomes), or a fixed number of merges above the species gap. Test it on a second dataset, because the
+  DPANN calibration fixes only one point.
+- Re-select the DH reading's Louvain resolution and trimming on the adopted unit (odd genomes). The remaining
+  ribosomal deficit (-1.7% to -2.4%) comes from parameters tuned on the genus landscape.
+
+FILES
+Local benchmarks/redesign/lineagefree/: genome_groups.py, recurrence_lf.py, readings_lf.py, softrec_lf.py,
+  eval_taxonomy.py, compare_rdir.py, collect.py, compact.py, verdict.py, sr_compare.py, run_job.sbatch,
+  run_big.sbatch, step_*.sh, list_*.txt, predeclared.json, NOTEBOOK.txt, REPORT.txt, results/ (sim/describe_*.json,
+  groups_vs_taxonomy.json, ladder_odd.txt, ladder_even.txt, verdict_even.txt, sensitivity_even.txt,
+  softrec_compare.json).
+Biotite $RD/lineagefree/: sim/ (similarity matrices), groups/ (genome -> group / weight per theta; genus_map,
+  genome_map, perm_*), results/ (tok_<unit>.json and .odd.json, engine_<unit>.log, refcheck_engine_genus.json,
+  softrec_compare.json), scores/ (tok_* and sr_* per-instance), loci/, softrec/<unit>/ (cand arrays, fam_l2000.npy,
+  result.json), code/. Engine result dirs: $RD/engine/results_dpann_lineagefree/. Jobs 86526 (similarities), 86553
+  (genus reproduction), 86617-86620 (ladders), 87092 (post hoc), 86644 / 86655-86657 / 87063-87065 (token-free).
+  Logs $RD/logs/linfree_<job>.log, linfree_big_<job>.log.

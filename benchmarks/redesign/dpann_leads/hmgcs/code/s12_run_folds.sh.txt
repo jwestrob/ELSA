@@ -1,0 +1,10 @@
+#!/bin/bash
+# bash script (saved as .txt because the campaign allows only .txt/.tsv/.json/.py/.parquet/.faa/.pdb); run with: bash FILE
+# Launch ESMFold2 (Biohub API) folds: 14 single chains (plain) and 3 homodimer + 2 acetyl-CoA (CCD ACO) co-folds with family MSAs.
+W=/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/hmgcs
+F=/Users/jacob/Documents/Sandbox/Sharur/Sharur/scripts/fold_biohub.py
+cd $W
+nohup python3 $F folds/single fold_in/single.faa --pae > folds_single.txt 2>&1 &
+for q in OJT94780.1 JAJZNR010000018.1_8 CAISET010000016.1_25; do
+  nohup python3 $F folds/cofold_ACO fold_in/cofold_$q/$q.faa --msa fold_in/cofold_$q/$q.msa.faa --copies 2 --ligand ACO:2 > folds_cofold_$q.txt 2>&1 &
+done

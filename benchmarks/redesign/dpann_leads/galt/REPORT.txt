@@ -1,0 +1,120 @@
+GALT WORKSTREAM: WHAT DO THE 15 PROFILE-INVISIBLE GalT-LIKE GENES IN DPANN GLYCOGEN LOCI DO? (2026-11-21 UTC)
+=================================================================================================================
+BOTTOM LINE   VERDICT: WEAK (reaction class inferred; nucleotide open). Criterion A passes.
+1. Most specific function supported: a GalT-branch HIT nucleotidyltransferase acting on the glucose-nucleotide pool of
+   a GT3 glycogen-synthase locus. The reaction consistent with every observation is NDP-glucose phosphorolysis
+   (NDP-Glc + Pi <-> NDP + Glc-1-P), as in ADP-glucose phosphorylase. UNVERIFIED: which nucleotide (ADP vs UDP),
+   direction in vivo, activity. Leloir GalT (UDP-Glc + Gal-1-P) is unsupported: no genome has a Gal-1-P source (galK 0/15,
+   0/704 Woesearchaeales) and the GalT hexose-1-P subsite is rebuilt.
+2. The 15 are the profile-invisible members of a DPANN subfamily ("D": 116 genes, 114 genomes, 7 orders; 98 named only
+   by a CDD COG1085 best hit, 1 by Pfam, 17 by nothing). The 15 share a 45-taxon clade (SH-aLRT/UFBoot 100/100) with the
+   other 2 unannotated and 26 COG1085-named genes of the 64; they do not form their own clade.
+3. The named DPANN form (1,205 genes, 926 genomes, 34 orders) is an ADP-glucose-phosphorylase-family enzyme by tree
+   (115/119 representatives share a 92.6/97 clade with all 15 ADPGP references) and by PANTHER (1,209/1,245). D sits
+   outside that clade and outside GalT class I; D replaces the named form (both in 2/114 D genomes).
+4. Co-folding confirms a homodimeric NDP-sugar site at the nucleophilic His and cannot separate ADP- from UDP-glucose
+   (controls: placement non-discriminating; pair ipTM picks the cognate nucleotide in 3/4).
+5. Embedding vs alignment (Q6): no PF01087/PF02744 hit at E <= 1000 (15/15). Embedding voters are Pfam-labeled
+   named-form genes at 29% median identity; the alignment list's syntenic supporters are other unlabeled D genes
+   (median 28/30), so it has no voter. The embedding call crosses a ~30%-identity gap at a conserved locus position.
+
+SETS, REFERENCES (code/g01_census.py, g02_refs.py, g03_refseqs.py)
+  64 = invisible's GalP_UDP_transf-labeled novel genes (47 COG1085 best hit, 17 no family row; 15 folded, passing).
+  Named form = Pfam PF01087/PF02744, KOfam/KEGG K00965 or CDD cd00608/COG1085/PRK11720 (median 318 aa; D 344 aa).
+  Characterized branches (UniProt by accession; ECO:0000269 reactions): GalT class I P09148, P07902, Q8ZXN7 (PMID
+  31693208); GalT class II E8MF11; ADP-glucose phosphorylase Q9FK51 (PMID 16519510: ADP-Glc + Pi <-> ADP + Glc-1-P, Keq
+  5-40 toward Glc-1-P, 700-fold over UDP-Glc/Gal-1-P); Ap4A phosphorylase P16550, P22108 (PMID 23628156); GDP-hexose
+  phosphorylases Q6ZNW5, Q5ZR76 (GDP-D-Glc, PMID 21507950), Q8RWE8, Q9FLP9 (GDP-L-Gal, PMID 17462988). Two reaction
+  classes: nucleotidyl transfer to a hexose-1-P (GalT) and Pi phosphorolysis of an NDP-sugar or Ap4A (the rest).
+
+Q1 PHYLOGENY (code/g05_tree_input.py, g05_tree_sh.txt, g14_tree_summary.py; q1_phylogeny.tsv, aln/)
+  273 taxa: all 76 labeled genes, 159 named-form representatives (cd-hit 50%), 1 DPANN Ap4A-branch gene, 37 references
+  (23 reviewed incl. every characterized member above, plus 14 unreviewed IPR053177 to give ADPGP a branch). MAFFT
+  L-INS-i, trimAl -gt 0.5 (312 columns), IQ-TREE 2.4 Q.pfam+F+R8 (BIC), 1,000 SH-aLRT / UFBoot. Supports are read as
+  bipartitions; rooting on the GDP-hexose phosphorylases (100/100) is an assumption used only for "smallest clade".
+  Reference branches: GalT class I 95.5/100, class II 100/100, Ap4A 100/100, GDP-hexose 100/100, ADPGP refs + 3 named
+  reps 96.1/96. Named form: 115/119 reps + all ADPGP refs, 136 taxa, 92.6/97 (GalT I outside).
+  Subfamily D = smallest clade holding the 64: 79 taxa, 94.2/99, no reference inside; Woesearchaeales 39, EX4484-52 20,
+  QMZS01 6, CG10238-14 6, Aenigmatarchaeales 5, Nanobdellales 2, JAPDLS01 1. Nested: 72 (45.8/57), 70 (90.6/78), 61
+  (83.1/54), 45 (100/100: the 15 + 26 COG1085-named + 2 unannotated + 2 QMZS01 COG1085-only reps). D's attachment to
+  the other branches is unresolved (alternative split 35.3/68).
+  Profile check (code/g04_profile_class.py; Aksha, picked PANTHER/NCBIfam/Pfam models, thresholds off, E <= 1000):
+  reference control 37/37 correct. 15 leads: PF01087 0/15, PF02744 0/15, GalT-I PANTHER 1/15 (13 bits), ADPGP PANTHER
+  4/15 (12-16 bits), Ap4A PANTHER 13/15 (12.6-30.3 bits). The Ap4A signal is unsupported by structure: the Apa2
+  auxiliary base domain (N277-K288) is absent 15/15 and TM to Apa2 is 0.45 vs 0.69 to E. coli GalT.
+
+Q2 DETERMINANT RESIDUES BY STRUCTURE (code/g12_ref_contacts.py, g15_usalign_run.py, g16_q2_residues.py; q2_residues.tsv)
+  Positions = residues within 4 A of a ligand moiety in 1GUP (E. coli GalT + UDP-Gal), 1Z84 (ADPGP + AMP), 4I5V (Apa2 +
+  Ap4A), 6K9Z (Pyrobaculum GalT + UDP); US-align (pairs within 5 A) onto 15 lead models, 10 labeled-named, 15 named-form
+  models, AlphaFold GDPGP1/VTC2/class II. E. coli numbering; GalT Ecoli/human | ADPGP | Apa2 | GDPGP1 -> leads | named.
+  Catalysis and phosphate identical in 15/15: H164, H166, Q168 (motif HGHMQ), N153, S161; E317 15/15.
+  D78 uridine Asp (D/D | L95 | K93 | N158):    leads V7 I7 L1 (ADPGP-like hydrophobic)   | named K11/15
+  54 base stacking (L/L | F65 | F68 | F126):  leads F14 L1                              | named F14
+  75 base (F/F | I92 | L90 | V155):           leads A10 G2 C2 S1                        | named F8 I3
+  79 ribose (F/F | Y96 | F94 | V159):         leads A15                                 | named F8 Y5
+  81 base (A/A | A98 | V96 | L162):           leads Y15                                 | named A7 Y3
+  82 base (L/L | L99 | V97 | E163, VTC2 E183): leads D14 E1                             | named V8 L3
+  106 ribose (S/C | H124 | H100 | H166):      leads H14 S1                              | named H12
+  GalT hexose-1-P subsite (partly the other subunit): K311 absent 15/15, F312 -> D 15/15, Y316 -> M13, W170 -> V8 L4.
+  Reading: HIT nucleophile and phosphate site intact; ADPGP/Apa/GDPGP-type residues at 54, 78, 106; GalT uridine Asp
+  lost; base pocket A75-A79-Y81-D82 matches no characterized branch, so the nucleotide cannot be read from residues.
+  Genome groups SM23-78 (5), GCA-2686295 (4), other Woesearchaeales (4), QMZS01 (2) differ only at 53, 60, 75.
+  TM by model: 0.69 E. coli GalT, 0.66 human GALT and ADPGP, 0.60 Pyrobaculum, 0.45-0.50 Apa2/GDPGP1/VTC2/class II.
+
+Q3 LOCUS (code/g08_locus.py, g10_genome_features.py, g13_locus_distribution.py; q3_locus.tsv). OBSERVED rows only.
+  Within 3 genes of the 15: GT3 glycogen synthase 12/15 (Pfam Glycogen_syn + KO K00693 GYS, EC 2.4.1.11 + CDD cd03793
+  GT3_GSY2-like, 591-600 aa); GDE_C 7/15; PF00483 sugar-1-P nucleotidyltransferase 6/15 (CDD Arch_glmU 4, glgC-like
+  PRK05293 1, rmlA_long 1); GH57 (K07405) 4/15 (12/15 within 5); DUF5752 4/15; glycogen phosphorylase 0/15. QMZS01 loci
+  carry GT4/GT5-domain glycosyltransferases with GH57, GDE_C, GH15 instead of GT3. Characterized GT3 synthases (17
+  reviewed, all eukaryotic; P27472, P13807, ECO:0000269) use UDP-glucose; the donor of these archaeal GT3s is UNVERIFIED.
+  Named form within 3 genes: GT3 336/1,245, GH57 194, GDE_C 179, PF00483 185 (GalU-type UGPase COG1210/cd02541 123).
+  Routes, 15 lead genomes: GT3 13, GT5 0, GH57 15, GDE_C 14, GH15 10, glycogen phosphorylase 4, PGM 11, glgC (K00975)
+  6, Arch_glmU 12, UGP (K00963/PF01704) 0, GalU-type 0, galK 0, galM 0, galE 9, GMPP 0.
+  Coherence: GalT lacks its Gal-1-P donor (no galK, no galactose route): incoherent. GDP-hexose phosphorylase: no GDP-
+  sugar route (GMPP 0/15): incoherent. Ap4A phosphorylase: unrelated to a glucan locus, base domain absent: incoherent.
+  Coherent: NDP-Glc + Pi <-> NDP + Glc-1-P beside the synthase (donor recycling, or donor synthesis without PPi, which
+  ADPGP catalyzes reversibly). Distinguishing observation: purified enzyme with ADP-Glc vs UDP-Glc + Pi (Glc-1-P
+  release) and Gal-1-P as acceptor; or a nucleotide complex of the A75/A79/Y81/D82 pocket.
+
+Q4 DISTRIBUTION (code/g17_clade_q4.py, g13; q4_distribution.tsv; denominators = genomes per order in bins.taxonomy)
+  D: Woesearchaeales 39/704, EX4484-52 25/44, Nanobdellales 16/25, JAPDLS01 14/14, QMZS01 10/14, CG10238-14 5/116,
+  Aenigmatarchaeales 5/37. Named form N in 34 orders (e.g. Parvarchaeales 209/216, Woesearchaeales 351/704).
+  Replacement: 2/114 D genomes carry N; within the Woesearchaeales genera that hold D: N in 1/39 D vs 6/19 other
+  genomes (Fisher p 0.004). Genus SM23-78: D in 16/16 genomes.
+  GT3 co-occurrence: Woesearchaeales GT3 genomes carry D 39/429 vs 0/275 without GT3 (p 2e-9); Mantel-Haenszel over
+  orders OR 20 (p 2e-11); genus-matched GT3 39/39 D vs 14/19 (p 0.003). Adjacency within 3 genes of a GT3: leads 12/13,
+  D 42/100, N 338/889; background 0.0042 per gene (174 GT3 genomes without the family), so D is 100-fold enriched.
+  The GT3 link is family-wide (N: Woesearchaeales 305/429 vs 45/275, OR 12.6); D's specific features are replacement
+  and the divergent site. glgC: D 13/39 vs N-only 12/350 Woesearchaeales genomes (OR 14, p 3e-8), family-matched 13/39
+  vs 2/42 (p 0.001), genus-matched 13/39 vs 2/19 (OR 4.3, p 0.11): mostly lineage. GalU-type: 0/39 vs 34/350, 0/19
+  genus-matched (lineage). D outside DPANN is untested (no public search with DPANN sequences is permitted).
+
+Q5 CRITERION A AND CO-FOLDS (code/g09_cofold_sh.txt, g11_cofold_geometry.py; q5_cofold.tsv; 45 ESMFold2 all-atom folds)
+  Relatives' oligomers: GalT class I (1GUP, 5IN3, 6K9Z) and ADPGP (1Z84) homodimers; Apa1/Apa2 monomers (4I5V); GDPGP1/
+  VTC2 undetermined. Leads: 344-381 aa, ILVFMAWC 0.36-0.43, single soluble chain forming a homodimer.
+  Protocol, identical for all 9 proteins: 2 copies + 2 nucleotide + 2 acceptor; sets UDP-Glc+Gal-1-P, ADP-Glc+Pi,
+  Ap4A+Pi, GDP-Glc+Pi, UDP-Glc+Pi. Controls E. coli GalT, ADPGP, Apa2, GDPGP1; leads MBN2459053.1, MBC8495864.1,
+  JAUXEA010000008.1_3; named PIN86834.1; labeled EX4484-52 MBU4299876.1.
+  Oligomer test works: dimer ipTM GalT 0.86-0.93, ADPGP 0.80-0.90 vs Apa2 0.24-0.42, GDPGP1 0.18-0.43; leads 0.78-0.96.
+  Placement does not discriminate: His NE2 - alpha-P <= 4 A in 5/5 cognate and 11/15 non-cognate control folds (3.1-3.7
+  A). Protein-ligand pair ipTM ranks the cognate nucleotide first in 3/4 controls (GalT UDP-Glc 0.83 vs 0.71; GDPGP1
+  GDP-Glc 0.84 vs 0.68; ADPGP ADP-Glc 0.84 vs 0.80) and last in Apa2 (Ap4A 0.45). Leads rank ADP-Glc first in 3/3
+  (0.87/0.91/0.90) over UDP-Glc+Pi (0.83/0.88/0.88): margins 0.02-0.04, at or below the ADPGP control's 0.04. Named
+  PIN86834.1 is flat (0.85-0.86). Ap4A sits 17-19 A from the His in 2/3 leads (placed at the His in 3/4 controls).
+
+Q6 EMBEDDING VS ALIGNMENT (code/g06_voters_remote.py, g07_q6.py; q6_identity.tsv)
+  Exact reconstruction of both lists and the slot supporters on biotite (Z supporter counts match stored values 76/76).
+  15 leads (median, range): Z supporters 55 (3-113), Z voters (PF01087-carrying) 17 (2-82); identity to voters 29%
+  (26-60%) over 36% coverage; best voter 46%. Nearest Pfam/KOfam-named gene 31% (27-36%, coverage 70-83%); nearest
+  COG1085-only gene 48% (40-90%, QMZS01). Alignment list (MMseqs2 kNN, k <= 1,000): 73 entries (57-92),
+  12 named + 48 D genes; first named at rank 31; its slot supporters 30 (0-44), 28 of them unlabeled D genes; voters 0.
+  Profile scores, thresholds off: PF01087 and PF02744 no hit at E <= 1000 (15/15); best family-level signal Ap4A
+  PANTHER 12.6-30.3 bits (see Q1). The embedding lists reach syntenic Pfam-labeled named-form genes that alignment
+  ranks below the divergent subfamily's own members.
+
+EVIDENCE LADDER: slot support median 0.49, embedding-only 15/15; T1 0/15 (rung 2 fails: no own weak hit at any E);
+  catalytic His and phosphate site 15/15, substrate residues of every branch replaced (rung 3 partial); TM 0.63-0.64 by
+  reference (invisible; positives 0.73-0.82, negatives <= 0.37); named form absent in 15/15 genomes, glycogen steps
+  present, completeness 86.1% vs clade 90.9%. Brief's rule: SUPPORTED needs rungs 2-5; rung 2 fails, so WEAK.
+NOTES  Folds: 56 new (45 co-fold, 11 single chain), 29 single-chain models reused from invisible. US-align 376 pairs and
+  list reconstruction on the biotite login node, serial; no Slurm. Aksha for every HMM search. Mac disk ~60 MB.

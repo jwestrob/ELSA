@@ -1,0 +1,178 @@
+{
+ "fam": "rela",
+ "title": "RelA_SpoT small alarmone synthetase relatives (DPANN, mostly Woesearchaeales); ref O31611 YJBM_BACSU",
+ "aln": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/rela_aln.faa",
+ "meta": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/rela_meta.tsv",
+ "ref_id": "O31611",
+ "positions": [
+  [
+   21,
+   "K",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   22,
+   "V",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   23,
+   "K",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   24,
+   "L",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   25,
+   "K",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   26,
+   "G",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   27,
+   "I",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   28,
+   "R",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   41,
+   "E",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   42,
+   "F",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   46,
+   "R",
+   "binding:ATP"
+  ],
+  [
+   47,
+   "V",
+   "binding:ATP"
+  ],
+  [
+   48,
+   "K",
+   "binding:ATP"
+  ],
+  [
+   52,
+   "S",
+   "binding:ATP"
+  ],
+  [
+   56,
+   "K",
+   "binding:ATP"
+  ],
+  [
+   57,
+   "A",
+   "binding:ATP"
+  ],
+  [
+   58,
+   "R",
+   "binding:ATP"
+  ],
+  [
+   59,
+   "R",
+   "binding:ATP"
+  ],
+  [
+   72,
+   "D",
+   "binding:ATP"
+  ],
+  [
+   77,
+   "R",
+   "binding:ATP"
+  ],
+  [
+   105,
+   "R",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   112,
+   "K",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   113,
+   "E",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   114,
+   "S",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   120,
+   "H",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   139,
+   "E",
+   "active"
+  ],
+  [
+   148,
+   "N",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   151,
+   "A",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   152,
+   "T",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   153,
+   "I",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   154,
+   "E",
+   "binding:guanosine 3'-diphosp"
+  ],
+  [
+   155,
+   "H",
+   "binding:guanosine 3'-diphosp"
+  ]
+ ],
+ "roles": {
+  "labeled": "labeled",
+  "canonical": "canonical",
+  "cdd_only": "cdd_only",
+  "extra": []
+ },
+ "genomes_tsv": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/dpann_genomes.tsv",
+ "pdb": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/gapscreen/ref/5DEC_A.pdb",
+ "out": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data"
+}

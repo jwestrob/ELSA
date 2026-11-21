@@ -1,0 +1,66 @@
+{
+  "written_utc": "2026-11-21, before any fold of this workstream was requested and before any US-align comparison",
+  "workstream": "invisible",
+  "population": {
+    "start": "slot_rescue/pass/dpann_slot_rescue_pass.parquet joined to verify/verification_per_protein.parquet",
+    "no_own_profile_hit": "tiers T2, T2b, rest (no weak Aksha hit, E <= 10, to the proposed family). Tier 'contradicted' (weak hits to other label families only, sister families included) is a side population: its genes are visible to profile methods through another family, so it is counted and left out of the assay.",
+    "function": "gapscreen/data/genes_function.parquet; func_source 'partners' preferred, 'label' fallback kept and flagged",
+    "enzyme": "function KO carries an EC number (genes_function.enzyme)",
+    "length_composition": "100-600 aa and fraction ILVFMAWC < 0.45",
+    "novelty_filter": "code/s01_population.py docstring: gene dropped when its own annotations, CDD best hits (protein_resemblance), the HHsearch-Pfam / HHblits-PDB100 annotations of its protein family (family_annotations, probability >= 50) or family_stats majority labels place it in the family (label Pfam or KO, Pfams carried by >= 30% of the KO's DPANN carriers) or its function (KOs sharing a complete EC)",
+    "family_unit": "function KO (func); label recorded"
+  },
+  "reference": {
+    "rule": "code/s02_references.py docstring: reviewed UniProt entry with an EC of the function, Active site and Binding site features inside the label-Pfam region, experimental (X-ray / EM) chain resolving every Active site residue; chain trimmed to the family region (label Pfam span +-10)",
+    "testable_family": "status 'ok' in data/references.tsv (median candidate length >= 0.6x the reference family region)",
+    "accepted_substitutions": "none: no selected curated record documents an accepted substitution at a curated position; identity is required"
+  },
+  "fold": {
+    "tool": "python3 /Users/jacob/Documents/Sandbox/Sharur/Sharur/scripts/fold_biohub.py OUT in.faa (Biohub ESMFold2, endpoint fold, model esmfold2-fast-2026-05, single chain, no MSA)",
+    "same_pipeline_for": "candidates, positive controls, negative B proteins (check-B folds of slot_rescue/verify/B were made with the same model and endpoint and are reused for negative B)"
+  },
+  "comparison": {
+    "tool": "/shared/software/bin/USalign MODEL.pdb REF_fam.pdb (default sequential alignment), biotite login node, serial",
+    "fold_match": "TM-score normalized by the reference family-region chain (US-align 'TM-score normalized by length of Structure_2') >= 0.50"
+  },
+  "residue_readout": {
+    "mapping": "UniProt position -> trimmed reference chain index (global alignment of UniProt sequence to chain ATOM sequence) -> aligned model residue in the US-align alignment",
+    "in_place": "model residue identical to the curated reference residue AND the aligned pair is marked ':' by US-align (C-alpha distance < 5.0 A after superposition)",
+    "catalytic": "every UniProt 'Active site' residue inside the family region; ALL must be in place",
+    "binding": "UniProt 'Binding site' positions inside the family region (ranges expanded to residues), resolved in the chain; in-place share >= 0.50",
+    "site_confidence": "mean pLDDT (0-100, PDB B-factor) of the model residues aligned to the catalytic residues >= 70; a catalytic residue left unaligned fails"
+  },
+  "pass": "fold_match AND all catalytic in place AND binding share >= 0.50 AND site pLDDT >= 70",
+  "controls": {
+    "positive": "DPANN proteins with a kofam/kegg row for the function KO AND a Pfam row (Sharur Pfam annotation, gathering threshold) for the reference family Pfam (label Pfam, else the matched PFSET Pfam); 100-600 aa; ILVFMAWC < 0.45; not in the slot-labeled table. Number per family: 2 (< 10 candidates folded), 3 (10-29), 4 (>= 30). One per order first, random seed 17.",
+    "negative_A": "every candidate scored against the reference of a different testable family: closest family-region length among families whose EC differs at the first three levels",
+    "negative_B": "per family, as many proteins as candidates folded, each length-matched to one candidate (nearest length, without replacement inside the family), drawn from DPANN proteins with no Pfam row, not labeled with the family label and without the family KO, ILVFMAWC < 0.45, 100-600 aa; first from the 300 check-B labeled-gene folds, else new folds of random proteins meeting the same rule (seed 17)",
+    "family_informative": "positive-control pass share >= 0.50; otherwise the family is dropped as uninformative and reported"
+  },
+  "sampling": {
+    "dedup": "cd-hit -c 0.9 within each family; one gene per cluster",
+    "order": "embedding-only calls first, then round-robin across orders and tiers, seed 17",
+    "cap_per_family": 40
+  },
+  "pilot": {
+    "families": "the 6 testable families with the most candidates",
+    "size": "6 candidates per family plus that family's positives; negative A on the same 36; negative B length-matched (36)",
+    "gate": "continue only if pilot positives pass >= 50% AND negative A <= 10% AND negative B <= 10% AND one-sided Fisher p < 0.01 for positives vs each negative set; otherwise stop and report"
+  },
+  "family_level_absent_site": "family informative, >= 3 candidates with fold_match, and <= 20% of those with all catalytic residues in place: reported as 'fold kept, catalytic residues absent' without interpretation",
+  "statistics": {
+    "intervals": "Wilson 95%",
+    "base_rate": "pooled negative A + negative B pass rate in informative families",
+    "support_bins": "votes_for / supporting_genomes: < 0.05, 0.05-0.20, 0.20-0.50, >= 0.50",
+    "verdict": "YES when the candidate pass rate in informative families exceeds the pooled negative rate with one-sided Fisher p < 0.05; also reported per family"
+  },
+  "amendments": [
+    {
+      "when": "2026-11-21, after the pilot gate passed and the full-run folds were requested, before any full-run comparison was scored",
+      "what": "novelty filter only (the assay, thresholds and controls are unchanged)",
+      "why": "the first pass recognized CDD placements through Pfam-derived models, EC strings and the DPANN KO/Pfam association of a model; it missed CDD models that name the function in words and have few annotated DPANN hits (COG1085 'Galactose-1-phosphate uridylyltransferase' on 47 of the 64 GalP_UDP_transf-labeled genes)",
+      "added_sources": "code/s01b_novelty_amend.py: CDD COG model listed in the KEGG DBLINKS of a KOSET KO; CDD model or HHblits-PDB100 hit description containing an enzyme name of the function (KEGG KO name, reviewed UniProt names for its EC)",
+      "analysis": "pass rates for the profile-invisible, unannotated population use the amended filter; folded genes that the amendment places in the family are reported as a separate stratum ('named by CDD/PDB text')"
+    }
+  ]
+}

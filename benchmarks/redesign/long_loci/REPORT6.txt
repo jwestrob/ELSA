@@ -1,0 +1,130 @@
+LONG_LOCI PART 6: STRAND-AWARE SPLITTING (S), BRIDGING (B) AND BOTH (SB) ON THE TWO FROZEN BASES (2026-11-19)
+==============================================================================================================
+DPANN development (odd genome_code = selection of theta, even = report; ribosomal counts over all 1,686 runs; paired
+genome bootstrap 2,000 draws vs the frozen base) and the Spacedust collection as DEVELOPMENT rows (source207, region
+bootstrap 10,000). The lut set stayed closed. Predeclaration predeclared6.json (04:15 UTC), written before any variant was
+built or scored. Bases: P = frozen primary (family bonds, adaptive distance, L4b theta .2, family node test); Z = frozen
+secondary (embedding-list bonds, L4b+ theta .02, kNN cohesion). Bonds, cohesion and node rules unchanged; only tree
+weights change (S: bonded strand changes split first; B: bridged junctions joined, split right after strand changes).
+Gates passed before any score: (1) my bridging implementation reproduces the audit on the frozen primary at every
+junction (59,655 candidates, rule (i) 11,944, rule (iii) 23,145, (i) AND (iii) 4,941, curated merges 0, joins 11,
+target-edge fires 34, verdict-1 repairs 21 of 23); (2) the base variant equals the stored loci row for row at every theta
+(both bases, DPANN and Spacedust); (3) the audit's accurate reading of the frozen bases reproduced (P 1,538 strict / 1,571
+loose; Z 1,504 / 1,547); Spacedust frozen rows reproduced (+.164, +.111).
+
+ANSWER
+1. P base (family-bond tree, adaptive distance): the fixes are NOT biologically justified by the predeclared checks.
+   - S gains the most accurate loci of any P variant: audit strict 1,592 (+54), loose 1,634 (+63), standing resolved
+     1,622 (+28 [+15, +42]), 3 new curated pairs.
+   - It costs DefenseFinder F1 -.015 [-.022, -.007] and CRISPR-Cas F1 -.019 [-.025, -.014]. CRISPR-Cas .441 falls
+     below the DPANN bar. Verdict: NOT SHOWN.
+   - B is UNJUSTIFIED: strict 1,487 (-51), standing -50 [-65, -36]. Every one of the 53 runs it loses is taken by a
+     bridged union. The union covers more of the run than the base locus did and so wins the largest-overlap rule, at
+     median precision .63. Inside the tree it repairs only 2 of the audit's 23 split runs.
+   - SB repairs 21 of the 23 (the audit's count on paper) but loses 54 other runs to over-extended unions: net strict
+     +29, standing +5. CRISPR-Cas bar fails. Verdict: NOT SHOWN.
+2. Z base (embedding-list tree, fixed distance): the fixes come close to justified but are NOT SHOWN by the predeclared
+   criteria. The single failed condition is summed curated excess.
+   - SB: strict 1,585 (+81), loose 1,634 (+87), standing 1,624 (+82 [+65, +101]); recovered 1,685; all seven bars met;
+     0 new curated pairs; CRISPR-Cas F1 unchanged (.490). Costs: DefenseFinder F1 -.006 [-.010, -.002], TXSScan F1
+     -.010, summed excess -.017 [-.025, -.010] against the predeclared -.01.
+   - S alone: +60 / +66 / +56 at the same cost.
+   - B alone: +2 / +3 / +9, loses no run, changes no curated score.
+3. Z carries the fixes better.
+   - Its SB variant reaches the highest accurate-reading count of the eight variants (1,585 strict, 1,634 loose).
+   - It keeps every DPANN bar, adds no curated pair, leaves CRISPR-Cas untouched, and loses 1 run where it gains 83.
+   - P's best variant (S, 1,592 strict) fails the CRISPR-Cas bar, and P's bridges cost runs.
+   - The difference is the node rule. Z keeps every node, so a bridged union sits beside its parts. P's family node test
+     keeps unions that over-extend, and the largest-overlap scorer then prefers them.
+4. Strand-aware splitting is the change that carries the biology. It changes 24.8% (P: 457,709) and 22.4% (Z: 354,209)
+   of bonded boundaries genome-wide and supplies most of the accurate-reading gain on both bases. Its cost falls on
+   curated systems whose members lie on both strands (TXSScan / DefenseFinder F1 -.003 to -.015). Boundary precision of
+   the best locus is unchanged (median 1.0 / 1.0 / .5 for DF / TXSS / CCT in every variant); P's share of genes in loci
+   drops from .552 to .533, Z's stays at .571.
+5. Bridging rule for the list base, evaluated without families: for each genome of another lineage group, the list
+   partners of the two junction genes in that genome (z >= 10.6 lists, one best match per genome, own group excluded)
+   must lie in one top-level locus of the frozen Z output; the rule fires when such genomes span >= 3 groups and the
+   junction is same-strand with <= 150 nt spacing.
+   - DPANN: list rule 5,354 fires (5.5% of 97,162 candidates), family-token rule 5,078; agreement Jaccard .497.
+   - Spacedust: 2,130 vs 5,010; Jaccard .257.
+   - The firing sets agree only partly, yet the outcomes agree. DPANN B vs Bf and SB vs SBf have identical ribosomal
+     counts and summed excess within .0002. Spacedust: +.112 vs +.113 and +.118 vs +.119.
+6. Curated-merge check (pairs of distinct curated instances in one locus that no frozen locus held together): P S / SB
+   3 (the frozen P holds 45 such pairs), B 0; Z 0 in every variant (frozen 53). Junction-level merges at bridges: 0 on
+   both bases.
+7. Spacedust (DEVELOPMENT; theta as selected on DPANN, unchanged for every variant):
+   - P: S +.183 [+.142, +.224] (dExcess +.019 [+.001, +.037], dF1 -.026), SB +.184 (+.020), B +.165 (+.001).
+   - Z: S +.117 (+.006 [+.001, +.012]), SB +.118 (+.007), B +.112 (+.001).
+   - Strand splits lower the random-placement control more than F1, so excess rises while F1 falls.
+8. Expectations missed:
+   - P-S gain much larger than expected (+54 strict; expected +8 to +20) with larger F1 losses (expected within .01).
+   - P-B wrong in sign (-50 standing; expected +10 to +20).
+   - Z-B repairs 15 of 29 split runs (expected 20-28).
+   - No base produced a JUSTIFIED variant (expected at least one).
+   - Spacedust S positive (expected -.03 to 0).
+9. Cost: 32 min of 24-CPU jobs (DPANN bridges 8.0 min / 86 GB peak with the DPANN z lists; builds 3.0 min; scoring
+   9.7 min; Spacedust bridges 5.8 min / 32 GB; Spacedust builds and source207 5.6 min) plus a 7.5-min single-thread
+   gate on the login node; no watchdog cap reached.
+
+-----------------------------------------------------------------------------------------------------------------------
+TABLE 1. DPANN, selected theta (odd rule; P .2 and Z .02 for every variant). Even genomes for curated scores, all 1,686
+runs for ribosomal counts. d = paired difference vs the frozen base [95%]. bars = all seven DPANN bars vs token DH.
+bio = ribo_audit accurate reading (strict / loose). anyfit = some locus fits >= 80% both ways. v1 = audit verdict-1 runs
+(one unit, split by the output) now resolved. pairs = new curated pairs in one locus. junctions = boundaries changed.
+
+base var  summed  d summed [95%]        F1 DF / TXSS / CCT    dF1 DF / CCT            rec / res   d res [95%]     anyfit bio strict / loose  bars v1     pairs junctions        verdict
+P    base .513    -                     .762 / .672 / .461    -                       1685 / 1594 -               1631   1538 / 1571         yes  0/23   -     -                frozen
+P    S    .522    +.009 [-.004, +.022]  .748 / .669 / .441    -.015 / -.019           1685 / 1622 +28 [+15, +42]  1636   1592 / 1634         CCT  0/23   3     457,709 strand   NOT SHOWN
+P    B    .513    -.0002 [-.0003,-.0001] .762 / .672 / .461    .000 / .000             1685 / 1544 -50 [-65, -36]  1634   1487 / 1520         yes  2/23   0     4,941 bridges    UNJUSTIFIED (u3)
+P    SB   .522    +.009 [-.004, +.022]  .748 / .669 / .441    -.015 / -.019           1685 / 1599 +5 [-16, +27]   1658   1567 / 1610         CCT  21/23  3     both             NOT SHOWN
+Z    base .581    -                     .824 / .749 / .489    -                       1681 / 1542 -               1575   1504 / 1547         yes  0/29   -     -                frozen
+Z    S    .564    -.017 [-.025, -.010]  .818 / .739 / .489    -.006 / .000            1681 / 1598 +56 [+42, +72]  1607   1564 / 1613         yes  0/29   0     354,209 strand   NOT SHOWN (summed)
+Z    B    .581    -.0001 [-.0002,-.0001] .824 / .749 / .489    .000 / .000             1685 / 1551 +9 [+4, +15]    1584   1506 / 1550         yes  3/29   0     5,354 bridges    NOT SHOWN (gain < 10)
+Z    SB   .564    -.017 [-.025, -.010]  .818 / .739 / .490    -.006 / .000            1685 / 1624 +82 [+65, +101] 1633   1585 / 1634         yes  18/29  0     both             NOT SHOWN (summed)
+Z    Bf   .581    -.0001                 .824 / .749 / .489    .000 / .000             1685 / 1551 +9 [+4, +15]    1584   1506 / 1550         yes  -      0     5,078 bridges    check (family bridges)
+Z    SBf  .564    -.017 [-.025, -.010]  .818 / .739 / .490    -.006 / +.001           1685 / 1624 +82 [+65, +101] 1633   1585 / 1634         yes  -      0     both             check (family bridges)
+ vs token DH (even): P S / SB summed +.095, CCT F1 -.038 [-.050, -.026]; Z S / SB summed +.137, CCT +.010 [-.001, +.021].
+ Parvarchaeaceae 114 / 114 recovered in every row. Boundary precision (median, covered instances): DF 1.0, TXSS 1.0,
+ CCT .5 in every row. Share of genes in loci: P base / B .552, S / SB .533; Z .571 in every row.
+ Ribosomal gains and losses vs the frozen base (runs): P S +36 / -8, B +3 / -53, SB +59 / -54; Z S +57 / -1, B +9 / 0,
+ SB +83 / -1. Every P-B loss: best locus = bridged union, best_frac >= .8, precision median .63.
+
+TABLE 2. Spacedust collection, source207 (DEVELOPMENT rows: these outputs and window 8 seen before). F1 / control /
+excess [95%]; d vs the frozen base (paired region bootstrap); verdict by the standing rule.
+base var  theta  F1     control  excess [95%]           dF1 [95%]               dExcess [95%]           verdict   junctions
+P    base .2     .667   .504     +.164 [+.125, +.202]   -                       -                       frozen    -
+P    S    .2     .641   .458     +.183 [+.142, +.224]   -.026 [-.045, -.009]    +.019 [+.001, +.037]    BEATS     422,350 strand
+P    B    .2     .669   .504     +.165 [+.126, +.203]   +.001 [+.000, +.003]    +.001 [-.000, +.003]    MATCHES   4,290 bridges
+P    SB   .2     .642   .458     +.184 [+.142, +.224]   -.026 [-.044, -.008]    +.020 [+.001, +.038]    BEATS     both
+Z    base .02    .598   .487     +.111 [+.072, +.149]   -                       -                       frozen    -
+Z    S    .02    .596   .479     +.117 [+.078, +.156]   -.002 [-.007, +.004]    +.006 [+.001, +.012]    BEATS     270,012 strand
+Z    B    .02    .599   .488     +.112 [+.073, +.150]   +.001 [+.000, +.003]    +.001 [-.000, +.002]    MATCHES   2,130 bridges (list)
+Z    SB   .02    .596   .479     +.118 [+.078, +.156]   -.002 [-.007, +.005]    +.007 [+.001, +.013]    BEATS     both
+Z    Bf   .02    .601   .488     +.113 [+.074, +.151]   +.003 [+.000, +.006]    +.002 [-.001, +.005]    MATCHES   5,010 bridges (family)
+Z    SBf  .02    .598   .479     +.119 [+.080, +.157]   -.000 [-.006, +.006]    +.008 [+.002, +.015]    BEATS     both
+
+-----------------------------------------------------------------------------------------------------------------------
+METHODS AND DEFINITIONS
+ Weights: w = s (largest Lambda of a bond spanning the boundary); bonded boundaries with cohesion < theta: 1e-6 +
+ max(kappa, 0); S: bonded boundaries with a strand change: 1e-9 (split first; all strand changes of a node split together
+ in the tie-collapsed tree); B: bridged junctions (previously unbonded): 1e-8. P keeps nodes with n >= 2, Lambda >= tau
+ (6), nI >= 2 (closed-form family test, ll.recurrence); Z keeps every node with >= 2 genes.
+ Bridges: computed once per dataset and base from the frozen output (P L4b .2, Z L4b+ .02): candidate = a locus ends at
+ k, another starts at k + 1, same contig, no locus spans k|k+1, no bond spans it; (iii) same strand and intergenic
+ spacing <= 150 nt (gene coordinates: DPANN package; Spacedust metadata / crosswalk start-end); (i) families: token
+ families of both genes in one top-level locus in >= 3 other lineage groups; (i) lists: see ANSWER 5.
+ Selection: theta in {.02, .05, .1, .2} on odd genomes by [odd conditions vs DH, odd resolved, odd summed]; applied
+ mechanically before the even report (results/p6/score_dpann_*.json, 'selection'). Odd scores: P S [2, 817, .527] vs
+ base [3, 806, .522] (S misses the odd CCT condition at every theta); Z SB [3, 820, .570] vs base [3, 781, .591].
+ Accurate reading: ribo_audit bio.py imported read-only (Bio, run_units, score_target), strict 150 / 500 nt, loose
+ 500 / 500 nt. Curated-merge check: member spans of package gold instances (>= 2 members, one contig), pairs inside one
+ locus of the variant and inside no locus of the frozen base.
+ Criteria (predeclared6.json): JUSTIFIED = strict >= base + 10 and loose >= base, DF / CCT F1 >= base - .01 and
+ summed >= base - .01, <= 10 new pairs and 0 junction-level merges, standing >= base - 10; UNJUSTIFIED = > 25 new
+ pairs, DF / CCT F1 below base by > .02 with upper bound < 0, strict below base, or bridges at > 10% of candidates.
+
+DEVIATIONS: none from predeclared6.json. Bf / SBf were built and odd-scored at every theta (only the B / SB theta is
+reported, as declared).
+
+FILES: local benchmarks/redesign/long_loci/ (predeclared6.json, REPORT6.txt, code/p6.py, p6diag.py, q_p6.sbatch,
+results/p6/*.json); biotite $RD/long_loci/ (p6/, loci/p6_*, scores/p6_sd_*, logs/p6_*, logs/watchdog_p6.*).

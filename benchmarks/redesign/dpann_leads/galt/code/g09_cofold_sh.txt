@@ -1,0 +1,26 @@
+#!/bin/bash
+# galt step 9: ESMFold2 all-atom co-folds (Biohub), identical protocol for every protein: homodimer (--copies 2) plus two
+# copies of the nucleotide substrate and two copies of the acceptor of one candidate reaction.
+#   L1_GalT   UPG (UDP-alpha-D-glucose) x2 + GL1 (alpha-D-galactose 1-phosphate) x2   GalT (EC 2.7.7.12)
+#   L2_ADPGP  ADQ (ADP-glucose) x2 + PO4 x2                                            ADP-glucose phosphorylase
+#   L3_Ap4A   B4P (Ap4A) x2 + PO4 x2                                                    Ap4A phosphorylase (EC 2.7.7.53)
+#   L4_GDPGP  GDG (GDP-alpha-D-glucose) x2 + PO4 x2                                     GDP-hexose phosphorylase (EC 2.7.7.78)
+# usage: g09_cofold.sh INPUT.faa TAG     (writes folds/cofold_<TAG>_<L>/)
+set -uo pipefail
+H=/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/galt
+F=/Users/jacob/Documents/Sandbox/Sharur/Sharur/scripts/fold_biohub.py
+IN=$1; TAG=$2
+for L in L1_GalT L2_ADPGP L3_Ap4A L4_GDPGP; do
+  OUT=$H/folds/cofold_${TAG}_${L}
+  mkdir -p $OUT
+  case $L in
+    L1_GalT) A="--ligand UPG:2 --ligand GL1:2";; L2_ADPGP) A="--ligand ADQ:2 --ligand PO4:2";;
+    L3_Ap4A) A="--ligand B4P:2 --ligand PO4:2";; L4_GDPGP) A="--ligand GDG:2 --ligand PO4:2";;
+  esac
+  python3 $F $OUT $IN --copies 2 $A > $OUT/log.txt 2>&1 &
+done
+wait
+echo DONE > $H/folds/cofold_${TAG}.STATUS
+# Added after the first two runs: L5_UDPGlcPi  UPG x2 + PO4 x2 on all nine proteins (controls + DPANN), separating the
+# nucleotide effect from the acceptor (L1 carries GL1, L2-L4 carry PO4):
+#   python3 $F $H/folds/cofold_all9_L5_UDPGlcPi $H/folds/in/all9.faa --copies 2 --ligand UPG:2 --ligand PO4:2

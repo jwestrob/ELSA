@@ -1,0 +1,180 @@
+{
+ "clade": {
+  "rank": "family",
+  "name": "Lactobacillaceae",
+  "genomes": 26,
+  "genes": 54760,
+  "candidates": {
+   "Metamycoplasmataceae": 26,
+   "Lactobacillaceae": 26,
+   "Enterobacteriaceae": 25,
+   "Lachnospiraceae": 24,
+   "Microbacteriaceae": 21,
+   "Sphingomonadaceae": 20
+  },
+  "tie_genes": {
+   "Metamycoplasmataceae": 17824,
+   "Lactobacillaceae": 54760
+  }
+ },
+ "taus": {
+  "genome": 10.0,
+  "group": 10.0,
+  "syn": 8.0
+ },
+ "runs": {
+  "genome_k0": {
+   "word_types": 140217,
+   "clade_types": 3805,
+   "rest_types": 136412,
+   "genes_in_words_clade_originals": 0.5665631848064281,
+   "genes_in_words_rest": 0.5193870900888962,
+   "seconds": 41.4,
+   "seconds_total": 43.0
+  },
+  "group_k0": {
+   "word_types": 87698,
+   "clade_types": 2890,
+   "rest_types": 84808,
+   "genes_in_words_clade_originals": 0.46594229364499634,
+   "genes_in_words_rest": 0.45506310003566697,
+   "seconds": 43.4,
+   "groups": 618,
+   "clade_groups": 5,
+   "seconds_total": 44.8
+  },
+  "syn_k0": {
+   "word_types": 103490,
+   "clade_types": 3509,
+   "rest_types": 99981,
+   "genes_in_words_clade_originals": 0.5369430241051862,
+   "genes_in_words_rest": 0.4879195178609541,
+   "seconds": 39.7,
+   "seconds_total": 66.4
+  },
+  "genome_k1": {
+   "word_types": 143229,
+   "clade_types": 6757,
+   "rest_types": 136472,
+   "genes_in_words_clade_originals": 0.6969685902118334,
+   "genes_in_words_rest": 0.5195355635603273,
+   "seconds": 38.2,
+   "jaccard_clade_vs_k0": 0.4597622626041809,
+   "jaccard_rest_vs_k0": 0.9692869725936408,
+   "clade_types_vs_k0": 1.7758212877792379,
+   "rest_types_vs_k0": 1.000439844001994,
+   "seconds_total": 39.9
+  },
+  "group_k1": {
+   "word_types": 87466,
+   "clade_types": 2695,
+   "rest_types": 84771,
+   "genes_in_words_clade_originals": 0.43988312636961285,
+   "genes_in_words_rest": 0.454803509398918,
+   "seconds": 43.8,
+   "groups": 618,
+   "clade_groups": 5,
+   "jaccard_clade_vs_k0": 0.863077434363576,
+   "jaccard_rest_vs_k0": 0.9888334995014955,
+   "clade_types_vs_k0": 0.9325259515570934,
+   "rest_types_vs_k0": 0.9995637204037355,
+   "seconds_total": 45.2
+  },
+  "syn_k1": {
+   "word_types": 103534,
+   "clade_types": 3587,
+   "rest_types": 99947,
+   "genes_in_words_clade_originals": 0.5463476990504017,
+   "genes_in_words_rest": 0.4878412361748951,
+   "seconds": 40.0,
+   "jaccard_clade_vs_k0": 0.7629374075899458,
+   "jaccard_rest_vs_k0": 0.9751756579142414,
+   "clade_types_vs_k0": 1.0222285551439156,
+   "rest_types_vs_k0": 0.9996599353877237,
+   "seconds_total": 66.0
+  },
+  "genome_k3": {
+   "word_types": 163355,
+   "clade_types": 26677,
+   "rest_types": 136678,
+   "genes_in_words_clade_originals": 0.9952885317750183,
+   "genes_in_words_rest": 0.5197696948037378,
+   "seconds": 37.1,
+   "jaccard_clade_vs_k0": 0.1144604472750959,
+   "jaccard_rest_vs_k0": 0.9398712797354478,
+   "clade_types_vs_k0": 7.011038107752957,
+   "rest_types_vs_k0": 1.0019499750755065,
+   "seconds_total": 39.1
+  },
+  "group_k3": {
+   "word_types": 87142,
+   "clade_types": 2482,
+   "rest_types": 84660,
+   "genes_in_words_clade_originals": 0.4137509130752374,
+   "genes_in_words_rest": 0.4543828345631965,
+   "seconds": 43.7,
+   "groups": 618,
+   "clade_groups": 5,
+   "jaccard_clade_vs_k0": 0.7829099307159353,
+   "jaccard_rest_vs_k0": 0.9740423152204306,
+   "clade_types_vs_k0": 0.8588235294117647,
+   "rest_types_vs_k0": 0.998254881614942,
+   "seconds_total": 45.2
+  },
+  "syn_k3": {
+   "word_types": 103294,
+   "clade_types": 3313,
+   "rest_types": 99981,
+   "genes_in_words_clade_originals": 0.5384769905040175,
+   "genes_in_words_rest": 0.48733990027055957,
+   "seconds": 37.9,
+   "jaccard_clade_vs_k0": 0.6338360037700282,
+   "jaccard_rest_vs_k0": 0.9332527206771463,
+   "clade_types_vs_k0": 0.9441436306640069,
+   "rest_types_vs_k0": 1.0,
+   "seconds_total": 65.9
+  },
+  "genome_k9": {
+   "word_types": 167543,
+   "clade_types": 30949,
+   "rest_types": 136594,
+   "genes_in_words_clade_originals": 0.9997078159240321,
+   "genes_in_words_rest": 0.5196626225887635,
+   "seconds": 36.7,
+   "jaccard_clade_vs_k0": 0.0910076175140893,
+   "jaccard_rest_vs_k0": 0.8823655364382956,
+   "clade_types_vs_k0": 8.13377135348226,
+   "rest_types_vs_k0": 1.001334193472715,
+   "seconds_total": 38.8
+  },
+  "group_k9": {
+   "word_types": 86768,
+   "clade_types": 2156,
+   "rest_types": 84612,
+   "genes_in_words_clade_originals": 0.38449598246895544,
+   "genes_in_words_rest": 0.45347676568625794,
+   "seconds": 50.4,
+   "groups": 618,
+   "clade_groups": 5,
+   "jaccard_clade_vs_k0": 0.6746317512274959,
+   "jaccard_rest_vs_k0": 0.9448527722908724,
+   "clade_types_vs_k0": 0.7460207612456747,
+   "rest_types_vs_k0": 0.9976888972738421,
+   "seconds_total": 51.9
+  },
+  "syn_k9": {
+   "word_types": 102964,
+   "clade_types": 2918,
+   "rest_types": 100046,
+   "genes_in_words_clade_originals": 0.5252556610664719,
+   "genes_in_words_rest": 0.4861723372508281,
+   "seconds": 43.4,
+   "jaccard_clade_vs_k0": 0.49164030727519203,
+   "jaccard_rest_vs_k0": 0.8582759165760087,
+   "clade_types_vs_k0": 0.8315759475634084,
+   "rest_types_vs_k0": 1.0006501235234695,
+   "seconds_total": 74.2
+  }
+ },
+ "seconds": 622.0
+}

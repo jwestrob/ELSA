@@ -1,0 +1,892 @@
+<title>ELSA Bond Tree</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: one reading column (max 1180px). Each figure is a bordered panel; the gene track scrolls inside its own frame,
+   the tree and the comparison strip fit the panel width. */
+:root{
+  --bg:#F3F5F6; --panel:#FFFFFF; --ink:#15212A; --ink-2:#44525C; --muted:#6B7984; --rule:#D5DCE0; --rule-2:#E9EEF1;
+  --gene:#E2E8EB; --gene-line:#8D9AA3; --ribo:#CBE7E2; --onaccent:#FFFFFF;
+  --bond:#008A7E; --bond-soft:rgba(0,138,126,.15);
+  --cut:#CF4F17; --cut-soft:rgba(207,79,23,.14);
+  --locus:#3B47B5; --locus-soft:rgba(59,71,181,.14);
+  --font-text:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-cond:"IBM Plex Sans Condensed", "Arial Narrow", "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1418; --panel:#161D22; --ink:#E3EAEE; --ink-2:#B4C1C9; --muted:#87969F; --rule:#2C383F; --rule-2:#212B31;
+    --gene:#27333B; --gene-line:#62737D; --ribo:#1B4642; --onaccent:#0F1418;
+    --bond:#1FA396; --bond-soft:rgba(31,163,150,.2);
+    --cut:#EA6530; --cut-soft:rgba(234,101,48,.2);
+    --locus:#7987EE; --locus-soft:rgba(121,135,238,.2);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1418; --panel:#161D22; --ink:#E3EAEE; --ink-2:#B4C1C9; --muted:#87969F; --rule:#2C383F; --rule-2:#212B31;
+  --gene:#27333B; --gene-line:#62737D; --ribo:#1B4642; --onaccent:#0F1418;
+  --bond:#1FA396; --bond-soft:rgba(31,163,150,.2);
+  --cut:#EA6530; --cut-soft:rgba(234,101,48,.2);
+  --locus:#7987EE; --locus-soft:rgba(121,135,238,.2);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-text); font-size:15px; line-height:1.5}
+.page{max-width:1180px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:28px 56px; display:flex; flex-direction:column; gap:30px}
+h1,h2,h3{font-family:var(--font-cond); text-wrap:balance; margin:0; font-weight:600; letter-spacing:-.005em}
+h1{font-size:40px; line-height:1.05}
+h2{font-size:22px; line-height:1.2; display:flex; gap:10px; align-items:baseline}
+h2 .num{font-family:var(--font-mono); font-size:14px; font-weight:500; color:var(--bond)}
+p{margin:0; max-width:68ch}
+.eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted)}
+.lede{font-size:17px; color:var(--ink-2); max-width:62ch}
+.sub{color:var(--ink-2); font-size:14.5px}
+.small{font-size:13px; color:var(--muted)}
+.mono{font-family:var(--font-mono); font-variant-numeric:tabular-nums}
+em.pf{font-style:italic; color:var(--muted)}
+b{font-weight:600}
+header{display:flex; flex-direction:column; gap:12px}
+section{display:flex; flex-direction:column; gap:12px; min-width:0}
+
+/* glossary strip */
+.gloss{display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; margin-top:6px}
+.term{display:grid; grid-template-columns:62px minmax(0,1fr); gap:10px; align-items:start; padding:10px 0; border-top:2px solid var(--ink)}
+.term svg{width:62px; height:30px; margin-top:2px}
+.term h3{font-size:15px}
+.term p{font-size:13.5px; color:var(--ink-2)}
+@media (max-width:900px){ .gloss{grid-template-columns:repeat(2, minmax(0,1fr))} }
+@media (max-width:520px){ .gloss{grid-template-columns:minmax(0,1fr)} }
+
+.panel{background:var(--panel); border:1px solid var(--rule); border-radius:10px; padding:16px; min-width:0}
+
+/* section 1: one bond */
+.pick{display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.pick span{font-size:13px; color:var(--muted); margin-right:4px}
+.seg{font:500 13px/1 var(--font-cond); padding:7px 11px; border-radius:6px; border:1px solid var(--rule); background:var(--panel);
+  color:var(--ink); cursor:pointer}
+.seg[aria-pressed="true"]{background:var(--ink); color:var(--panel); border-color:var(--ink)}
+.seg:focus-visible, .btn:focus-visible, input[type=range]:focus-visible, [tabindex]:focus-visible{outline:2px solid var(--locus); outline-offset:2px}
+.bondgrid{display:grid; grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:22px; margin-top:12px}
+@media (max-width:860px){ .bondgrid{grid-template-columns:minmax(0,1fr)} }
+.rows{display:flex; flex-direction:column}
+.row{display:grid; grid-template-columns:minmax(0,1.25fr) 74px 178px minmax(0,1fr); gap:10px; align-items:center;
+  padding:6px 0; border-bottom:1px solid var(--rule-2); font-size:13.5px}
+.row.head{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; border-bottom:1px solid var(--rule)}
+.row.focal{background:var(--bond-soft); border-radius:6px; padding-inline:6px; margin-bottom:4px}
+.row .sp{min-width:0}
+.row .sp i{font-style:italic}
+.row .sp small{display:block; color:var(--muted); font-size:12px}
+.row .grp{font-family:var(--font-mono); font-size:12px; color:var(--ink-2)}
+.row svg{width:178px; height:22px; display:block}
+.row .vd{font-size:13px}
+.vd.yes{color:var(--bond); font-weight:500}
+.vd.no{color:var(--muted)}
+@media (max-width:560px){
+  .row{grid-template-columns:minmax(0,1fr) 64px; grid-template-areas:"sp grp" "mini mini" "vd vd"; row-gap:4px}
+  .row .sp{grid-area:sp} .row .grp{grid-area:grp; text-align:right} .row svg{grid-area:mini} .row .vd{grid-area:vd}
+  .row.head{display:none}
+}
+.tally{display:flex; flex-direction:column; gap:0}
+.tally .t{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; padding:8px 0; border-bottom:1px solid var(--rule-2); align-items:baseline}
+.tally .t span{font-size:13.5px; color:var(--ink-2)}
+.tally .t b{font-family:var(--font-mono); font-size:17px; font-weight:500; font-variant-numeric:tabular-nums; text-align:right}
+.tally .t.big b{font-size:24px; color:var(--bond)}
+.tally .t.big span{color:var(--ink)}
+.tally svg{width:100%; height:auto; margin-top:10px}
+.foot{font-size:12.5px; color:var(--muted); max-width:none}
+
+/* section 2: the figure */
+.figtop{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:space-between}
+.controls{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.btn{font:500 13px/1 var(--font-cond); display:inline-flex; gap:6px; align-items:center; padding:8px 11px; border-radius:6px;
+  border:1px solid var(--rule); background:var(--panel); color:var(--ink); cursor:pointer; min-height:34px}
+.btn svg{width:14px; height:14px}
+.btn.play{background:var(--ink); color:var(--panel); border-color:var(--ink); min-width:92px; justify-content:center}
+.scrub{display:flex; align-items:center; gap:10px; flex:1 1 260px; min-width:0}
+.scrub input{flex:1; min-width:0; accent-color:var(--cut)}
+.scrub .mono{font-size:13px; color:var(--ink-2); white-space:nowrap}
+.readout{margin-top:12px; padding:10px 12px; border-radius:8px; background:var(--bg); display:flex; flex-direction:column; gap:4px; min-height:74px}
+.readout .nar{font-size:14.5px}
+.readout .det{font-size:13.5px; color:var(--ink-2); min-height:1.5em}
+.readout .det:empty::before{content:attr(data-empty); color:var(--muted)}
+.scroller{overflow-x:auto; overflow-y:hidden; margin-top:12px; border-top:1px solid var(--rule-2); border-bottom:1px solid var(--rule-2);
+  -webkit-overflow-scrolling:touch; scrollbar-width:thin}
+.scroller svg{display:block}
+.treebox{margin-top:14px}
+.treebox h3, .cmpbox h3{font-size:14px; font-family:var(--font-cond); font-weight:600; color:var(--ink-2)}
+.treebox svg{display:block; width:100%; margin-top:6px}
+.cmpbox svg{display:block; width:100%}
+.legend{display:flex; flex-wrap:wrap; gap:8px 20px; margin-top:12px; font-size:12.5px; color:var(--ink-2)}
+.legend span{display:inline-flex; align-items:center; gap:7px}
+.legend svg{width:24px; height:16px; flex:none}
+.kappa-note{font-size:12.5px; color:var(--muted); margin-top:6px; max-width:none}
+
+/* SVG classes */
+svg text{font-family:var(--font-cond)}
+.g-arrow{fill:var(--gene); stroke:var(--gene-line); stroke-width:1}
+.g-arrow.ribo{fill:var(--ribo)}
+.g-out{opacity:.45}
+.g-in .g-arrow{fill:var(--locus-soft); stroke:var(--locus); stroke-width:1.5}
+.g-sel .g-arrow{stroke:var(--ink); stroke-width:2}
+.lab{font-size:12px; font-weight:500; fill:var(--ink)}
+.lab.pf{font-size:11px; font-style:italic; font-weight:400; fill:var(--muted)}
+.lab.un{font-size:11px; font-style:italic; font-weight:400; fill:var(--muted); opacity:.8}
+.bar{fill:var(--bond)}
+.bar.out{opacity:.4}
+.bar.hl{fill:var(--ink)}
+.nob{stroke:var(--muted); stroke-width:1.4}
+.grid{stroke:var(--rule); stroke-width:1; stroke-dasharray:2 3}
+.base{stroke:var(--ink-2); stroke-width:1}
+.axis{font-size:10.5px; fill:var(--muted); font-family:var(--font-mono)}
+#track .axis{paint-order:stroke; stroke:var(--panel); stroke-width:3px; stroke-linejoin:round}
+.kap{fill:var(--panel); stroke:var(--cut); stroke-width:1.5}
+.kapt{font-size:10px; fill:var(--cut); font-family:var(--font-mono)}
+.cutl{stroke:var(--cut); stroke-width:2.2; stroke-linecap:round}
+.cutb{fill:var(--cut)}
+.cutn{fill:var(--onaccent); font-size:10px; font-family:var(--font-mono); font-weight:500}
+.cut{opacity:0; transition:opacity .3s ease}
+.cut.on{opacity:1}
+.cut.newest .cutb{stroke:var(--ink); stroke-width:1.5}
+.band{fill:var(--rule)}
+.bandt{font-size:11px; fill:var(--muted)}
+.brk{fill:none; stroke:var(--rule); stroke-width:1.5; stroke-dasharray:3 3; stroke-linecap:round; transition:stroke .3s ease}
+.brk.on{stroke:var(--locus); stroke-width:2.2; stroke-dasharray:none}
+.brk.hl{stroke:var(--ink); stroke-width:3.2}
+.brk.on.newest{stroke:var(--cut)}
+.hit{fill:transparent; cursor:pointer}
+.arc{fill:none; stroke:var(--ink); stroke-width:1.6}
+.tedge{fill:none; stroke:var(--rule); stroke-width:1.2; stroke-dasharray:3 3; transition:stroke .3s ease}
+.tedge.on{stroke:var(--ink-2); stroke-dasharray:none}
+.tnode{fill:var(--panel); stroke:var(--rule); stroke-width:1.4; stroke-dasharray:2 2; transition:fill .3s ease, stroke .3s ease}
+.tnode.on{fill:var(--locus); stroke:var(--locus); stroke-dasharray:none}
+.tnode.on.newest{fill:var(--cut); stroke:var(--cut)}
+.tnode.hl{stroke:var(--ink); stroke-width:2.6}
+.tlab{font-size:10.5px; fill:var(--muted); font-family:var(--font-mono)}
+.tlab.on{fill:var(--ink-2)}
+.cmp-run{fill:var(--rule)}
+.cmp-node{fill:none; stroke-width:2.4; stroke-linecap:butt}
+.cmp-node.rep{stroke:var(--locus)}
+.cmp-node.drop{stroke:var(--muted); stroke-dasharray:2 2}
+.cmp-node.hl{stroke:var(--ink); stroke-width:3.6}
+.cmp-hit{stroke:transparent; stroke-width:7; fill:none; cursor:pointer}
+.cmp-title{font-size:12.5px; fill:var(--ink); font-weight:600}
+.cmp-lm{font-size:11px; fill:var(--ink-2)}
+.cmp-tick{stroke:var(--gene-line); stroke-width:1}
+.cmp-region{fill:var(--bond-soft)}
+@media (prefers-reduced-motion: reduce){
+  .cut, .brk, .tedge, .tnode{transition:none}
+}
+.notes{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:18px 28px}
+@media (max-width:760px){ .notes{grid-template-columns:minmax(0,1fr)} }
+.notes ul{margin:6px 0 0; padding-left:18px; display:flex; flex-direction:column; gap:6px; font-size:13.5px; color:var(--ink-2)}
+.notes h3{font-size:15px}
+</style>
+
+<main class="page">
+<header>
+  <div class="eyebrow">ELSA · how conserved loci are called</div>
+  <h1>The bond tree</h1>
+  <p class="lede">Two genes get a <b>bond</b> when their matches in other genomes also sit side by side, in more genome groups than chance allows. Bonded genes form a run. The run is cut at its weakest boundary, then each piece the same way. The pieces nest into a tree; each piece is a reported locus.</p>
+  <div class="gloss" aria-label="Terms used on this page">
+    <div class="term">
+      <svg viewBox="0 0 62 30" aria-hidden="true"><path d="M2 5h14l4 4-4 4H2z" fill="var(--bond)"/><g stroke="var(--muted)" stroke-dasharray="2 2" fill="none"><path d="M20 9 L34 4"/><path d="M20 9 L34 15"/><path d="M20 9 L34 26"/></g><g fill="var(--gene)" stroke="var(--gene-line)"><path d="M36 1h12l3 3-3 3H36z"/><path d="M36 12h12l3 3-3 3H36z"/><path d="M36 23h12l3 3-3 3H36z"/></g></svg>
+      <div><h3>Neighbor list</h3><p>A gene's best match in each genome outside its own genome group, kept when the protein-embedding score is z ≥ 10.6.</p></div>
+    </div>
+    <div class="term">
+      <svg viewBox="0 0 62 30" aria-hidden="true"><path d="M14 18 Q31 0 48 18" fill="none" stroke="var(--bond)" stroke-width="2"/><g fill="var(--gene)" stroke="var(--gene-line)"><path d="M3 18h20l4 5-4 5H3z"/><path d="M33 18h20l4 5-4 5H33z"/></g></svg>
+      <div><h3>Bond</h3><p>Two genes at most 3 positions apart whose matches also lie at most 3 apart in many genome groups. Its strength is Λ.</p></div>
+    </div>
+    <div class="term">
+      <svg viewBox="0 0 62 30" aria-hidden="true"><g fill="none" stroke="var(--bond)" stroke-width="1.6"><path d="M7 18 Q13 9 19 18"/><path d="M19 18 Q25 9 31 18"/><path d="M31 18 Q37 9 43 18"/><path d="M43 18 Q49 9 55 18"/></g><g fill="var(--gene)" stroke="var(--gene-line)"><path d="M1 19h9l3 4-3 4H1z"/><path d="M13 19h9l3 4-3 4h-9z"/><path d="M25 19h9l3 4-3 4h-9z"/><path d="M37 19h9l3 4-3 4h-9z"/><path d="M49 19h9l3 4-3 4h-9z"/></g></svg>
+      <div><h3>Bonded run</h3><p>Consecutive genes with a bond across every boundary. A boundary with no bond ends the run.</p></div>
+    </div>
+    <div class="term">
+      <svg viewBox="0 0 62 30" aria-hidden="true"><g fill="none" stroke="var(--locus)" stroke-width="2" stroke-linecap="round"><path d="M3 9V4h56v5"/><path d="M3 18v-4h30v4"/><path d="M38 18v-4h21v4"/><path d="M3 27v-4h12v4"/><path d="M19 27v-4h14v4"/></g><path d="M35.5 2v26" stroke="var(--cut)" stroke-width="2"/></svg>
+      <div><h3>Bond tree</h3><p>The run, cut at its weakest boundary, then each piece the same way. Every piece of 2 or more genes is a node; the nodes are the loci.</p></div>
+    </div>
+  </div>
+</header>
+
+<section aria-labelledby="s1">
+  <h2 id="s1"><span class="num">1</span>Scoring one bond</h2>
+  <p class="sub" id="s1sub"></p>
+  <div class="panel">
+    <div class="pick" role="group" aria-label="Choose an example bond"><span>Example bond</span><span id="bondpick"></span></div>
+    <div class="bondgrid">
+      <div class="rows" id="bondrows" aria-live="polite"></div>
+      <div class="tally" id="tally"></div>
+    </div>
+    <p class="foot" id="bondfoot" style="margin-top:12px"></p>
+  </div>
+</section>
+
+<section aria-labelledby="s2">
+  <h2 id="s2"><span class="num">2</span>Bonds along the chromosome, cut weakest first</h2>
+  <p class="sub" id="s2sub"></p>
+  <div class="panel" id="fig">
+    <div class="figtop">
+      <div class="controls" role="group" aria-label="Animation controls">
+        <button class="btn" id="b-restart" type="button" title="Back to the uncut run"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2v10M12 2 5 7l7 5z" fill="currentColor" stroke="currentColor" stroke-width="1.4"/></svg>Restart</button>
+        <button class="btn" id="b-back" type="button" title="One cut back"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M10 2 4 7l6 5z" fill="currentColor"/></svg>Back</button>
+        <button class="btn play" id="b-play" type="button"><svg viewBox="0 0 14 14" aria-hidden="true"><path id="playicon" d="M3 2l9 5-9 5z" fill="currentColor"/></svg><span id="playtxt">Play cuts</span></button>
+        <button class="btn" id="b-fwd" type="button" title="One cut forward">Forward<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2l6 5-6 5z" fill="currentColor"/></svg></button>
+      </div>
+      <label class="scrub" for="step"><span class="small">Cut</span><input type="range" id="step" min="0" max="1" value="1" step="1"><span class="mono" id="stepnum"></span></label>
+    </div>
+    <div class="readout"><div class="nar" id="nar" aria-live="polite"></div><div class="det" id="det" data-empty="Hover or tap a gene, a bar or a bracket for details; tap empty space to clear."></div></div>
+    <div class="scroller" id="scroller" tabindex="0" role="img" aria-label="Gene track with bond strengths, cuts and nested loci. Use left and right arrow keys to step through genes."><svg id="track"></svg></div>
+    <div class="legend" aria-hidden="true">
+      <span><svg viewBox="0 0 24 16"><rect x="9" y="3" width="6" height="13" rx="2" fill="var(--bond)"/></svg>boundary strength Λ: the strongest bond across it (log scale, from τ = 8)</span>
+      <span><svg viewBox="0 0 24 16"><path d="M12 0v11" stroke="var(--cut)" stroke-width="2.2"/><circle cx="12" cy="11" r="5" fill="var(--cut)"/></svg>cut, numbered in order</span>
+      <span><svg viewBox="0 0 24 16"><path d="M12 3l5 5-5 5-5-5z" fill="var(--panel)" stroke="var(--cut)" stroke-width="1.5"/></svg>low cohesion κ: cut before any bond-strength cut</span>
+      <span><svg viewBox="0 0 24 16"><path d="M2 12V5h20v7" fill="none" stroke="var(--locus)" stroke-width="2.2"/></svg>locus (tree node)</span>
+      <span><svg viewBox="0 0 24 16"><path d="M2 12V5h20v7" fill="none" stroke="var(--rule)" stroke-width="1.5" stroke-dasharray="3 3"/></svg>node after a later cut</span>
+      <span><svg viewBox="0 0 24 16"><path d="M2 3h9l3 5-3 5H2z" fill="var(--ribo)" stroke="var(--gene-line)"/></svg>ribosomal protein</span>
+    </div>
+    <p class="kappa-note" id="kappanote"></p>
+    <div class="treebox">
+      <h3 id="treetitle">The tree</h3>
+      <svg id="tree" tabindex="0" role="img" aria-label="Bond tree of the run. Use left and right arrow keys to step through nodes."></svg>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="s3">
+  <h2 id="s3"><span class="num">3</span>The same region with bonds from sequence families</h2>
+  <p class="sub" id="s3sub"></p>
+  <div class="panel cmpbox">
+    <svg id="cmp" role="img" aria-label="Loci of both versions over the same 169 genes"></svg>
+    <div class="readout" style="min-height:0"><div class="det" id="cmpdet" data-empty="Hover or tap a bracket to see its genes."></div></div>
+  </div>
+</section>
+
+<section class="notes" aria-label="Notes">
+  <div>
+    <h3>Where this page simplifies</h3>
+    <ul id="simpl"></ul>
+  </div>
+  <div>
+    <h3>Data</h3>
+    <ul id="datanotes"></ul>
+  </div>
+</section>
+</main>
+
+<script id="bt-data" type="application/json">{"source":"ELSA redesign, long_loci third frozen run (testset3), read-only extraction by extract.py","genome":{"accession":"GCF_003431975.1","species":"Bacillus pumilus_N","phylum":"Bacillota","cls":"Bacilli","order":"Bacillales","family":"Bacillaceae","n_genes":3986,"n_contigs":1,"group":44,"group_size":36,"first_gid":1647160,"first_pos":1543},"collection":{"name":"testset3","genomes":842,"groups":353},"window":{"n_genes":169,"main_run":[78,153],"ribo_run":[118,138]},"params":{"tau_primary":8.0,"theta_primary":0.02,"tau_secondary":8.0,"theta_secondary":0.2,"zcut":10.6,"wgap":3},"genes":[{"gid":1647160,"pos":1543,"strand":-1,"start":1537159,"end":1537710,"aa":183,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647161,"pos":1544,"strand":1,"start":1537806,"end":1538453,"aa":215,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647162,"pos":1545,"strand":1,"start":1538402,"end":1538941,"aa":179,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647163,"pos":0,"strand":1,"start":1,"end":1341,"aa":446,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647164,"pos":1,"strand":1,"start":1537,"end":2673,"aa":378,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647165,"pos":2,"strand":1,"start":2824,"end":3039,"aa":71,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647166,"pos":3,"strand":1,"start":3056,"end":4168,"aa":370,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647167,"pos":4,"strand":1,"start":4186,"end":4431,"aa":81,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647168,"pos":5,"strand":1,"start":4483,"end":6405,"aa":640,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647169,"pos":6,"strand":1,"start":6636,"end":9140,"aa":834,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647170,"pos":7,"strand":-1,"start":14535,"end":15503,"aa":322,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647171,"pos":8,"strand":1,"start":15625,"end":17091,"aa":488,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647172,"pos":9,"strand":1,"start":17252,"end":18577,"aa":441,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647173,"pos":10,"strand":-1,"start":18620,"end":20098,"aa":492,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647174,"pos":11,"strand":1,"start":20344,"end":21228,"aa":294,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647175,"pos":12,"strand":1,"start":21249,"end":21839,"aa":196,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647176,"pos":13,"strand":1,"start":22159,"end":23433,"aa":424,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647177,"pos":14,"strand":1,"start":23536,"end":24366,"aa":276,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647178,"pos":15,"strand":-1,"start":24677,"end":25336,"aa":219,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647179,"pos":16,"strand":-1,"start":25333,"end":25956,"aa":207,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647180,"pos":17,"strand":-1,"start":26036,"end":27337,"aa":433,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647181,"pos":18,"strand":-1,"start":27383,"end":27937,"aa":184,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647182,"pos":19,"strand":1,"start":28017,"end":28493,"aa":158,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647183,"pos":20,"strand":1,"start":29164,"end":30876,"aa":570,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647184,"pos":21,"strand":1,"start":30903,"end":31226,"aa":107,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647185,"pos":22,"strand":1,"start":31242,"end":31838,"aa":198,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647186,"pos":23,"strand":1,"start":31857,"end":32081,"aa":74,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647187,"pos":24,"strand":1,"start":32148,"end":32411,"aa":87,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647188,"pos":25,"strand":1,"start":37875,"end":38066,"aa":63,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647189,"pos":26,"strand":1,"start":38195,"end":38809,"aa":204,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647190,"pos":27,"strand":1,"start":38829,"end":39881,"aa":350,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647191,"pos":28,"strand":1,"start":39959,"end":41368,"aa":469,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647192,"pos":29,"strand":1,"start":41365,"end":42003,"aa":212,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647193,"pos":30,"strand":1,"start":42047,"end":42412,"aa":121,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647194,"pos":31,"strand":1,"start":42425,"end":42865,"aa":146,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647195,"pos":32,"strand":1,"start":42877,"end":43866,"aa":329,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647196,"pos":33,"strand":1,"start":43869,"end":44696,"aa":275,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647197,"pos":34,"strand":1,"start":44711,"end":45064,"aa":117,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647198,"pos":35,"strand":1,"start":45120,"end":45863,"aa":247,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647199,"pos":36,"strand":1,"start":45850,"end":46152,"aa":100,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647200,"pos":37,"strand":1,"start":46130,"end":47008,"aa":292,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647201,"pos":38,"strand":-1,"start":47053,"end":47337,"aa":94,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647202,"pos":39,"strand":1,"start":47864,"end":49864,"aa":666,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647203,"pos":40,"strand":1,"start":49948,"end":50715,"aa":255,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647204,"pos":41,"strand":1,"start":50960,"end":52162,"aa":400,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647205,"pos":42,"strand":1,"start":52323,"end":52880,"aa":185,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647206,"pos":43,"strand":1,"start":52877,"end":53755,"aa":292,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647207,"pos":44,"strand":1,"start":53886,"end":54770,"aa":294,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647208,"pos":45,"strand":1,"start":54984,"end":55241,"aa":85,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647209,"pos":46,"strand":1,"start":55426,"end":55590,"aa":54,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647210,"pos":47,"strand":1,"start":55737,"end":56606,"aa":289,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647211,"pos":48,"strand":1,"start":56662,"end":57495,"aa":277,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647212,"pos":49,"strand":1,"start":57534,"end":57911,"aa":125,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647213,"pos":50,"strand":1,"start":58136,"end":58432,"aa":98,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647214,"pos":51,"strand":1,"start":58631,"end":60001,"aa":456,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647215,"pos":52,"strand":1,"start":60024,"end":60977,"aa":317,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647216,"pos":53,"strand":1,"start":61117,"end":61743,"aa":208,"label":"L25","src":"KO","ko":"K02897","pfam":null,"ribo":false},{"gid":1647217,"pos":54,"strand":1,"start":61884,"end":62450,"aa":188,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647218,"pos":55,"strand":1,"start":62506,"end":62736,"aa":76,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647219,"pos":56,"strand":1,"start":62804,"end":66337,"aa":1177,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647220,"pos":57,"strand":1,"start":66477,"end":67013,"aa":178,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647221,"pos":58,"strand":1,"start":67215,"end":68819,"aa":534,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647222,"pos":59,"strand":1,"start":68809,"end":70293,"aa":494,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647223,"pos":60,"strand":1,"start":70290,"end":70550,"aa":86,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647224,"pos":61,"strand":1,"start":70625,"end":70933,"aa":102,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647225,"pos":62,"strand":1,"start":70930,"end":71568,"aa":212,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647226,"pos":63,"strand":1,"start":71587,"end":71961,"aa":124,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647227,"pos":64,"strand":1,"start":72044,"end":72439,"aa":131,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647228,"pos":65,"strand":1,"start":72991,"end":75474,"aa":827,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647229,"pos":66,"strand":1,"start":75551,"end":76288,"aa":245,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647230,"pos":67,"strand":1,"start":76266,"end":77279,"aa":337,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647231,"pos":68,"strand":1,"start":77376,"end":78779,"aa":467,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647232,"pos":69,"strand":1,"start":78795,"end":79334,"aa":179,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647233,"pos":70,"strand":1,"start":79430,"end":81334,"aa":634,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647234,"pos":71,"strand":1,"start":81485,"end":82273,"aa":262,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647235,"pos":72,"strand":1,"start":82288,"end":83163,"aa":291,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647236,"pos":73,"strand":1,"start":83210,"end":84118,"aa":302,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647237,"pos":74,"strand":1,"start":84196,"end":85119,"aa":307,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647238,"pos":75,"strand":1,"start":85245,"end":86663,"aa":472,"label":"Chorismate_bind","src":"Pfam","ko":null,"pfam":"Anth_synt_I_N,Chorismate_bind","ribo":false},{"gid":1647239,"pos":76,"strand":1,"start":86677,"end":87270,"aa":197,"label":"GATase","src":"Pfam","ko":null,"pfam":"GATase,Peptidase_C26","ribo":false},{"gid":1647240,"pos":77,"strand":1,"start":87267,"end":88115,"aa":282,"label":"Aminotran_4","src":"Pfam","ko":null,"pfam":"Aminotran_4","ribo":false},{"gid":1647241,"pos":78,"strand":1,"start":88124,"end":88981,"aa":285,"label":"Pterin_bind","src":"Pfam","ko":null,"pfam":"Pterin_bind","ribo":false},{"gid":1647242,"pos":79,"strand":1,"start":88998,"end":89336,"aa":112,"label":"FolB","src":"Pfam","ko":null,"pfam":"FolB","ribo":false},{"gid":1647243,"pos":80,"strand":1,"start":89333,"end":89836,"aa":167,"label":"HPPK","src":"Pfam","ko":null,"pfam":"HPPK","ribo":false},{"gid":1647244,"pos":81,"strand":1,"start":89788,"end":90021,"aa":77,"label":"HTH_3","src":"Pfam","ko":null,"pfam":"HTH_31,HTH_19,HTH_26,HTH_3","ribo":false},{"gid":1647245,"pos":82,"strand":1,"start":90014,"end":91015,"aa":333,"label":"Dus","src":"Pfam","ko":null,"pfam":"Dus,His_biosynth","ribo":false},{"gid":1647246,"pos":83,"strand":1,"start":91106,"end":92605,"aa":499,"label":"tRNA-synt_2","src":"Pfam","ko":null,"pfam":"tRNA_anti-codon,tRNA-synt_2","ribo":false},{"gid":1647247,"pos":84,"strand":1,"start":104562,"end":105026,"aa":154,"label":"CtsR","src":"Pfam","ko":null,"pfam":"CtsR,CtsR_C","ribo":false},{"gid":1647248,"pos":85,"strand":1,"start":105116,"end":105598,"aa":160,"label":"UVR","src":"Pfam","ko":null,"pfam":"UVR","ribo":false},{"gid":1647249,"pos":86,"strand":1,"start":105603,"end":106694,"aa":363,"label":"ATP-gua_Ptrans","src":"Pfam","ko":null,"pfam":"ATP-gua_Ptrans,McsB_C","ribo":false},{"gid":1647250,"pos":87,"strand":1,"start":106691,"end":109126,"aa":811,"label":"AAA_2","src":"Pfam","ko":null,"pfam":"Clp_N,Clp_N,NBD_SMAX1,AAA,AAA_lid_9,UVR,Sigma54_activat,AAA_2,AAA_5,AAA,ClpB_D2-small","ribo":false},{"gid":1647251,"pos":88,"strand":1,"start":109280,"end":110599,"aa":439,"label":"AAA_25","src":"Pfam","ko":null,"pfam":"AAA_25,DnaB_C,ATPase,ChlI,Lon_C","ribo":false},{"gid":1647252,"pos":89,"strand":1,"start":110602,"end":111681,"aa":359,"label":"DisA-linker","src":"Pfam","ko":null,"pfam":"DAC,DisA-linker","ribo":false},{"gid":1647253,"pos":90,"strand":1,"start":111811,"end":112935,"aa":374,"label":"YCF81_N","src":"Pfam","ko":null,"pfam":"YCF81_N,PIN","ribo":false},{"gid":1647254,"pos":91,"strand":1,"start":112949,"end":113638,"aa":229,"label":"IspD","src":"Pfam","ko":null,"pfam":"IspD,NTP_transf_3","ribo":false},{"gid":1647255,"pos":92,"strand":1,"start":113642,"end":114118,"aa":158,"label":"YgbB","src":"Pfam","ko":null,"pfam":"YgbB","ribo":false},{"gid":1647256,"pos":93,"strand":1,"start":114213,"end":115664,"aa":483,"label":"tRNA-synt_1c","src":"Pfam","ko":null,"pfam":"tRNA-synt_1c,Anticodon_2","ribo":false},{"gid":1647257,"pos":94,"strand":1,"start":115866,"end":116630,"aa":254,"label":"Hexapep","src":"Pfam","ko":null,"pfam":"SATase_N,Hexapep","ribo":false},{"gid":1647258,"pos":95,"strand":1,"start":116627,"end":118027,"aa":466,"label":"cysS","src":"KO","ko":"K01883","pfam":"tRNA-synt_1e,tRNA-synt_1g,tRNA-synt_1,tRNA-synt_1g,DALR_2,CysS_C","ribo":false},{"gid":1647259,"pos":96,"strand":1,"start":118031,"end":118462,"aa":143,"label":"Ribonuclease_3","src":"Pfam","ko":null,"pfam":"Ribonuclease_3","ribo":false},{"gid":1647260,"pos":97,"strand":1,"start":118446,"end":119195,"aa":249,"label":"rlmB","src":"KO","ko":"K03218","pfam":"SpoU_sub_bind,SpoU_methylase","ribo":false},{"gid":1647261,"pos":98,"strand":1,"start":119198,"end":119710,"aa":170,"label":"NYN_YacP","src":"Pfam","ko":null,"pfam":"NYN_YacP","ribo":false},{"gid":1647262,"pos":99,"strand":1,"start":119774,"end":120430,"aa":218,"label":"Sigma70_r2","src":"Pfam","ko":null,"pfam":"Sigma70_r2,Sigma70_r4_2","ribo":false},{"gid":1647263,"pos":100,"strand":1,"start":120691,"end":120867,"aa":58,"label":"secE","src":"KO","ko":"K03073","pfam":"SecE","ribo":false},{"gid":1647264,"pos":101,"strand":1,"start":121039,"end":121572,"aa":177,"label":"nusG","src":"KO","ko":"K02601","pfam":"NusG,KOW","ribo":false},{"gid":1647265,"pos":102,"strand":1,"start":121744,"end":122169,"aa":141,"label":"L11","src":"KO","ko":"K02867","pfam":"Ribosomal_L11_N,Ribosomal_L11","ribo":false},{"gid":1647266,"pos":103,"strand":1,"start":122269,"end":122967,"aa":232,"label":"L1","src":"KO","ko":"K02863","pfam":"Ribosomal_L1","ribo":false},{"gid":1647267,"pos":104,"strand":1,"start":123226,"end":123726,"aa":166,"label":"L10","src":"KO","ko":"K02864","pfam":"Ribosomal_L10,RL10_C","ribo":false},{"gid":1647268,"pos":105,"strand":1,"start":123769,"end":124134,"aa":121,"label":"L7/L12","src":"KO","ko":"K02935","pfam":"Ribosomal_L12_N,Ribosomal_L12","ribo":false},{"gid":1647269,"pos":106,"strand":1,"start":124231,"end":124836,"aa":201,"label":"MTS","src":"Pfam","ko":null,"pfam":"tRNA_U5-meth_tr,MTS,PrmA,Methyltransf_31,Methyltransf_25","ribo":false},{"gid":1647270,"pos":107,"strand":1,"start":125092,"end":128673,"aa":1193,"label":"rpoB","src":"KO","ko":"K03043","pfam":"RNA_pol_Rpb2_1,RNA_pol_Rpb2_2,RNA_pol_Rpb2_2,RNA_pol_Rpb2_3,RNA_pol_Rpb2_45,RNA_pol_Rpb2_6,RNA_pol_Rpb2_7","ribo":false},{"gid":1647271,"pos":108,"strand":1,"start":128735,"end":132334,"aa":1199,"label":"rpoC","src":"KO","ko":"K03046","pfam":"RNA_pol_Rpb1_1,RNA_pol_Rpb1_2,RNA_pol_Rpb1_3,RNA_pol_Rpb1_4,RNA_pol_Rpb1_5","ribo":false},{"gid":1647272,"pos":109,"strand":1,"start":132480,"end":132728,"aa":82,"label":"L7A","src":"KO","ko":"K07590","pfam":"Ribosomal_L7Ae","ribo":false},{"gid":1647273,"pos":110,"strand":1,"start":132841,"end":133260,"aa":139,"label":"S12","src":"KO","ko":"K02950","pfam":"Ribosom_S12_S23","ribo":false},{"gid":1647274,"pos":111,"strand":1,"start":133382,"end":133852,"aa":156,"label":"S7","src":"KO","ko":"K02992","pfam":"Ribosomal_S7","ribo":false},{"gid":1647275,"pos":112,"strand":1,"start":133907,"end":135985,"aa":692,"label":"fusA","src":"KO","ko":"K02355","pfam":"GTP_EFTU,EF-G_D2,GTP_EFTU_D2,EFG_III,EFG_IV,EFG_C","ribo":false},{"gid":1647276,"pos":113,"strand":1,"start":136104,"end":137294,"aa":396,"label":"tuf","src":"KO","ko":"K02358","pfam":"GTP_EFTU,GTP_EFTU_D2,GTP_EFTU_D3","ribo":false},{"gid":1647277,"pos":114,"strand":1,"start":137404,"end":138363,"aa":319,"label":"Abhydrolase_1","src":"Pfam","ko":null,"pfam":"Hydrolase_4,Abhydrolase_1,Abhydrolase_6","ribo":false},{"gid":1647278,"pos":115,"strand":1,"start":138582,"end":138890,"aa":102,"label":"S10","src":"KO","ko":"K02946","pfam":"Ribosomal_S10","ribo":true},{"gid":1647279,"pos":116,"strand":1,"start":138928,"end":139557,"aa":209,"label":"L3","src":"KO","ko":"K02906","pfam":"Ribosomal_L3","ribo":true},{"gid":1647280,"pos":117,"strand":1,"start":139585,"end":140208,"aa":207,"label":"L4","src":"KO","ko":"K02926","pfam":"Ribosomal_L4","ribo":true},{"gid":1647281,"pos":118,"strand":1,"start":140208,"end":140495,"aa":95,"label":"L23","src":"KO","ko":"K02892","pfam":"Ribosomal_L23","ribo":true},{"gid":1647282,"pos":119,"strand":1,"start":140524,"end":141357,"aa":277,"label":"L2","src":"KO","ko":"K02886","pfam":"Ribosomal_L2_N,Ribosomal_L2_C","ribo":true},{"gid":1647283,"pos":120,"strand":1,"start":141415,"end":141693,"aa":92,"label":"S19","src":"KO","ko":"K02965","pfam":"Ribosomal_S19","ribo":true},{"gid":1647284,"pos":121,"strand":1,"start":141711,"end":142052,"aa":113,"label":"L22","src":"KO","ko":"K02890","pfam":"Ribosomal_L22","ribo":true},{"gid":1647285,"pos":122,"strand":1,"start":142056,"end":142712,"aa":218,"label":"S3","src":"KO","ko":"K02982","pfam":"KH_2,Ribosomal_S3_C","ribo":true},{"gid":1647286,"pos":123,"strand":1,"start":142714,"end":143148,"aa":144,"label":"L16","src":"KO","ko":"K02878","pfam":"Ribosomal_L16","ribo":true},{"gid":1647287,"pos":124,"strand":1,"start":143138,"end":143338,"aa":66,"label":"L29","src":"KO","ko":"K02904","pfam":"Ribosomal_L29","ribo":true},{"gid":1647288,"pos":125,"strand":1,"start":143364,"end":143627,"aa":87,"label":"S17","src":"KO","ko":"K02961","pfam":"Ribosomal_S17","ribo":true},{"gid":1647289,"pos":126,"strand":1,"start":143667,"end":144035,"aa":122,"label":"L14","src":"KO","ko":"K02874","pfam":"Ribosomal_L14","ribo":true},{"gid":1647290,"pos":127,"strand":1,"start":144071,"end":144382,"aa":103,"label":"L24","src":"KO","ko":"K02895","pfam":"KOW,ribosomal_L24","ribo":true},{"gid":1647291,"pos":128,"strand":1,"start":144408,"end":144947,"aa":179,"label":"L5","src":"KO","ko":"K02931","pfam":"Ribosomal_L5,Ribosomal_L5_C","ribo":true},{"gid":1647292,"pos":129,"strand":1,"start":144970,"end":145155,"aa":61,"label":"S14","src":"KO","ko":"K02954","pfam":"Ribosomal_S14","ribo":true},{"gid":1647293,"pos":130,"strand":1,"start":145187,"end":145585,"aa":132,"label":"S8","src":"KO","ko":"K02994","pfam":"Ribosomal_S8","ribo":true},{"gid":1647294,"pos":131,"strand":1,"start":145617,"end":146153,"aa":178,"label":"L6","src":"KO","ko":"K02933","pfam":"Ribosomal_L6,Ribosomal_L6","ribo":true},{"gid":1647295,"pos":132,"strand":1,"start":146186,"end":146548,"aa":120,"label":"L18","src":"KO","ko":"K02881","pfam":"Ribosomal_L18p","ribo":true},{"gid":1647296,"pos":133,"strand":1,"start":146573,"end":147073,"aa":166,"label":"S5","src":"KO","ko":"K02988","pfam":"Ribosomal_S5,Ribosomal_S5_C","ribo":true},{"gid":1647297,"pos":134,"strand":1,"start":147087,"end":147269,"aa":60,"label":"L30","src":"KO","ko":"K02907","pfam":"Ribosomal_L30","ribo":true},{"gid":1647298,"pos":135,"strand":1,"start":147300,"end":147740,"aa":146,"label":"L15","src":"KO","ko":"K02876","pfam":"Ribosomal_L27A","ribo":true},{"gid":1647299,"pos":136,"strand":1,"start":147742,"end":149034,"aa":430,"label":"secY","src":"KO","ko":"K03076","pfam":"SecY","ribo":false},{"gid":1647300,"pos":137,"strand":1,"start":149092,"end":149745,"aa":217,"label":"adk","src":"KO","ko":"K00939","pfam":"ADK,AAA_17,ADK_lid","ribo":false},{"gid":1647301,"pos":138,"strand":1,"start":149742,"end":150488,"aa":248,"label":"map","src":"KO","ko":"K01265","pfam":"Peptidase_M24","ribo":false},{"gid":1647302,"pos":139,"strand":1,"start":150802,"end":151020,"aa":72,"label":"infA","src":"KO","ko":"K02518","pfam":"eIF-1a","ribo":false},{"gid":1647303,"pos":140,"strand":1,"start":151052,"end":151165,"aa":37,"label":"L36","src":"KO","ko":"K02919","pfam":"Ribosomal_L36","ribo":false},{"gid":1647304,"pos":141,"strand":1,"start":151187,"end":151552,"aa":121,"label":"S13","src":"KO","ko":"K02952","pfam":"Ribosomal_S13","ribo":false},{"gid":1647305,"pos":142,"strand":1,"start":151573,"end":151968,"aa":131,"label":"S11","src":"KO","ko":"K02948","pfam":"Ribosomal_S11","ribo":false},{"gid":1647306,"pos":143,"strand":1,"start":152144,"end":153088,"aa":314,"label":"rpoA","src":"KO","ko":"K03040","pfam":"RNA_pol_L,RNA_pol_A_bac,RNA_pol_A_CTD","ribo":false},{"gid":1647307,"pos":144,"strand":1,"start":153164,"end":153526,"aa":120,"label":"L17","src":"KO","ko":"K02879","pfam":"Ribosomal_L17","ribo":false},{"gid":1647308,"pos":145,"strand":1,"start":153651,"end":154493,"aa":280,"label":"ecfA1","src":"KO","ko":"K16786","pfam":"ABC_tran,EcfA1_C","ribo":false},{"gid":1647309,"pos":146,"strand":1,"start":154469,"end":155338,"aa":289,"label":"ecfA2","src":"KO","ko":"K16787","pfam":"ABC_tran,AAA_21","ribo":false},{"gid":1647310,"pos":147,"strand":1,"start":155335,"end":156132,"aa":265,"label":"ecfT","src":"KO","ko":"K16785","pfam":"CbiQ","ribo":false},{"gid":1647311,"pos":148,"strand":1,"start":156144,"end":156887,"aa":247,"label":"truA","src":"KO","ko":"K06173","pfam":"PseudoU_synth_1,PseudoU_synth_1","ribo":false},{"gid":1647312,"pos":149,"strand":1,"start":157055,"end":157492,"aa":145,"label":"L13","src":"KO","ko":"K02871","pfam":"Ribosomal_L13","ribo":false},{"gid":1647313,"pos":150,"strand":1,"start":157513,"end":157905,"aa":130,"label":"S9","src":"KO","ko":"K02996","pfam":"Ribosomal_S9","ribo":false},{"gid":1647314,"pos":151,"strand":1,"start":158095,"end":158610,"aa":171,"label":"Acetyltransf_3","src":"Pfam","ko":null,"pfam":"Acetyltransf_3,Acetyltransf_1","ribo":false},{"gid":1647315,"pos":152,"strand":1,"start":158708,"end":159454,"aa":248,"label":"Amidohydro_2","src":"Pfam","ko":null,"pfam":"Amidohydro_2","ribo":false},{"gid":1647316,"pos":153,"strand":1,"start":159477,"end":159950,"aa":157,"label":"Acetyltransf_1","src":"Pfam","ko":null,"pfam":"Acetyltransf_3,Acetyltransf_9,Acetyltransf_1,Acetyltransf_10,Acetyltransf_7,FR47","ribo":false},{"gid":1647317,"pos":154,"strand":1,"start":160040,"end":160156,"aa":38,"label":null,"src":null,"ko":null,"pfam":null,"ribo":false},{"gid":1647318,"pos":155,"strand":1,"start":160199,"end":161056,"aa":285,"label":"Beta-lactamase2","src":"Pfam","ko":null,"pfam":"Beta-lactamase2","ribo":false},{"gid":1647319,"pos":156,"strand":-1,"start":161094,"end":161660,"aa":188,"label":"DUF4825","src":"Pfam","ko":null,"pfam":"DUF4825","ribo":false},{"gid":1647320,"pos":157,"strand":1,"start":161808,"end":162251,"aa":147,"label":"DUF2521","src":"Pfam","ko":null,"pfam":"DUF2521","ribo":false},{"gid":1647321,"pos":158,"strand":1,"start":162310,"end":163023,"aa":237,"label":"Amidase_3","src":"Pfam","ko":null,"pfam":"Amidase_3","ribo":false},{"gid":1647322,"pos":159,"strand":1,"start":163127,"end":164185,"aa":352,"label":"ParA","src":"Pfam","ko":null,"pfam":"ParA,AAA_31,MipZ,ArsA_ATPase,CbiA","ribo":false},{"gid":1647323,"pos":160,"strand":-1,"start":164224,"end":164808,"aa":194,"label":"GerD","src":"Pfam","ko":null,"pfam":"GerD","ribo":false},{"gid":1647324,"pos":161,"strand":1,"start":164899,"end":165501,"aa":200,"label":"KbaA","src":"Pfam","ko":null,"pfam":"KbaA","ribo":false},{"gid":1647325,"pos":162,"strand":-1,"start":165494,"end":166258,"aa":254,"label":"Polysacc_deac_1","src":"Pfam","ko":null,"pfam":"Polysacc_deac_1","ribo":false},{"gid":1647326,"pos":163,"strand":1,"start":171764,"end":173437,"aa":557,"label":"Sulfate_transp","src":"Pfam","ko":null,"pfam":"Sulfate_transp,Sulfate_transp,STAS","ribo":false},{"gid":1647327,"pos":164,"strand":1,"start":173496,"end":174461,"aa":321,"label":"SBF","src":"Pfam","ko":null,"pfam":"SBF","ribo":false},{"gid":1647328,"pos":165,"strand":-1,"start":174502,"end":175749,"aa":415,"label":"NamZ_N","src":"Pfam","ko":null,"pfam":"NamZ_N,NamZ_C","ribo":false}],"bounds":[{"s":0.0,"kap":0.06827,"bk":null,"bd":null,"s2":0.0,"kap2":0.01036,"bk2":null,"bd2":null},{"s":0.0,"kap":0.10315,"bk":null,"bd":null,"s2":14.748,"kap2":0.00618,"bk2":1,"bd2":1},{"s":0.0,"kap":null,"bk":null,"bd":null,"s2":0.0,"kap2":null,"bk2":null,"bd2":null},{"s":448.341,"kap":0.78143,"bk":3,"bd":1,"s2":933.703,"kap2":0.15923,"bk2":3,"bd2":1},{"s":288.654,"kap":0.57375,"bk":4,"bd":2,"s2":592.874,"kap2":0.06699,"bk2":4,"bd2":2},{"s":288.654,"kap":0.67939,"bk":4,"bd":2,"s2":592.874,"kap2":0.12758,"bk2":4,"bd2":2},{"s":225.109,"kap":0.38325,"bk":6,"bd":2,"s2":195.978,"kap2":0.09655,"bk2":4,"bd2":5},{"s":225.109,"kap":0.51468,"bk":6,"bd":2,"s2":195.978,"kap2":0.06374,"bk2":4,"bd2":5},{"s":508.129,"kap":0.6593,"bk":8,"bd":1,"s2":195.978,"kap2":0.13079,"bk2":4,"bd2":5},{"s":0.0,"kap":0.08911,"bk":null,"bd":null,"s2":21.035,"kap2":0.00736,"bk2":7,"bd2":7},{"s":0.0,"kap":0.29962,"bk":null,"bd":null,"s2":21.035,"kap2":0.00482,"bk2":7,"bd2":7},{"s":8.285,"kap":0.47175,"bk":11,"bd":1,"s2":21.035,"kap2":0.01886,"bk2":7,"bd2":7},{"s":11.086,"kap":0.01734,"bk":12,"bd":3,"s2":21.035,"kap2":0.00249,"bk2":7,"bd2":7},{"s":13.946,"kap":0.0658,"bk":13,"bd":2,"s2":62.856,"kap2":0.00666,"bk2":13,"bd2":1},{"s":446.662,"kap":0.67158,"bk":14,"bd":1,"s2":569.554,"kap2":0.26891,"bk2":14,"bd2":1},{"s":9.432,"kap":0.28617,"bk":15,"bd":1,"s2":13.714,"kap2":0.00736,"bk2":15,"bd2":1},{"s":0.0,"kap":0.01351,"bk":null,"bd":null,"s2":18.591,"kap2":0.00461,"bk2":16,"bd2":6},{"s":0.0,"kap":0.01514,"bk":null,"bd":null,"s2":18.591,"kap2":0.01463,"bk2":16,"bd2":6},{"s":0.0,"kap":0.48294,"bk":null,"bd":null,"s2":18.591,"kap2":0.03792,"bk2":16,"bd2":6},{"s":0.0,"kap":0.05851,"bk":null,"bd":null,"s2":18.591,"kap2":0.0121,"bk2":16,"bd2":6},{"s":0.0,"kap":0.03598,"bk":null,"bd":null,"s2":18.591,"kap2":0.01022,"bk2":16,"bd2":6},{"s":0.0,"kap":0.06426,"bk":null,"bd":null,"s2":18.591,"kap2":0.00372,"bk2":16,"bd2":6},{"s":50.394,"kap":0.2269,"bk":22,"bd":1,"s2":31.385,"kap2":0.00403,"bk2":22,"bd2":3},{"s":422.233,"kap":0.77181,"bk":23,"bd":1,"s2":423.629,"kap2":0.06791,"bk2":23,"bd2":1},{"s":612.891,"kap":0.87896,"bk":24,"bd":1,"s2":862.963,"kap2":0.23672,"bk2":24,"bd2":1},{"s":64.092,"kap":0.39546,"bk":25,"bd":2,"s2":58.62,"kap2":0.00714,"bk2":25,"bd2":2},{"s":64.092,"kap":0.31927,"bk":25,"bd":2,"s2":58.62,"kap2":0.26971,"bk2":25,"bd2":2},{"s":14.55,"kap":0.06392,"bk":27,"bd":1,"s2":12.03,"kap2":0.0604,"bk2":27,"bd2":1},{"s":0.0,"kap":0.03497,"bk":null,"bd":null,"s2":19.709,"kap2":0.04223,"bk2":28,"bd2":4},{"s":0.0,"kap":0.1983,"bk":null,"bd":null,"s2":19.709,"kap2":0.17385,"bk2":28,"bd2":4},{"s":0.0,"kap":0.06617,"bk":null,"bd":null,"s2":19.709,"kap2":0.02479,"bk2":28,"bd2":4},{"s":0.0,"kap":0.41504,"bk":null,"bd":null,"s2":84.816,"kap2":0.01653,"bk2":31,"bd2":1},{"s":36.236,"kap":0.5106,"bk":32,"bd":1,"s2":183.931,"kap2":0.05064,"bk2":32,"bd2":3},{"s":64.241,"kap":0.27964,"bk":33,"bd":3,"s2":183.931,"kap2":0.10757,"bk2":32,"bd2":3},{"s":75.251,"kap":0.25936,"bk":34,"bd":2,"s2":183.931,"kap2":0.04603,"bk2":32,"bd2":3},{"s":75.251,"kap":0.67125,"bk":34,"bd":2,"s2":262.293,"kap2":0.10553,"bk2":35,"bd2":1},{"s":87.29,"kap":0.54544,"bk":36,"bd":2,"s2":121.851,"kap2":0.06191,"bk2":36,"bd2":6},{"s":87.29,"kap":0.61334,"bk":36,"bd":2,"s2":121.851,"kap2":0.40175,"bk2":36,"bd2":6},{"s":105.156,"kap":0.30399,"bk":38,"bd":2,"s2":121.851,"kap2":0.02004,"bk2":36,"bd2":6},{"s":105.156,"kap":0.30253,"bk":38,"bd":2,"s2":121.851,"kap2":0.01667,"bk2":36,"bd2":6},{"s":92.965,"kap":0.46308,"bk":40,"bd":1,"s2":129.669,"kap2":0.01354,"bk2":40,"bd2":2},{"s":74.323,"kap":0.37819,"bk":40,"bd":2,"s2":129.669,"kap2":0.00865,"bk2":40,"bd2":2},{"s":271.651,"kap":0.69724,"bk":42,"bd":1,"s2":380.757,"kap2":0.03723,"bk2":42,"bd2":1},{"s":94.423,"kap":0.48181,"bk":43,"bd":3,"s2":127.319,"kap2":0.01344,"bk2":43,"bd2":3},{"s":94.423,"kap":0.48164,"bk":43,"bd":3,"s2":127.319,"kap2":0.17495,"bk2":43,"bd2":3},{"s":94.423,"kap":0.7456,"bk":43,"bd":3,"s2":127.319,"kap2":0.02774,"bk2":43,"bd2":3},{"s":25.529,"kap":0.42161,"bk":46,"bd":1,"s2":108.103,"kap2":0.01562,"bk2":46,"bd2":4},{"s":35.253,"kap":0.44491,"bk":47,"bd":1,"s2":108.103,"kap2":0.25392,"bk2":46,"bd2":4},{"s":39.537,"kap":0.40481,"bk":48,"bd":2,"s2":108.103,"kap2":0.1785,"bk2":46,"bd2":4},{"s":39.537,"kap":0.33798,"bk":48,"bd":2,"s2":108.103,"kap2":0.03047,"bk2":46,"bd2":4},{"s":46.393,"kap":0.63105,"bk":50,"bd":3,"s2":153.256,"kap2":0.03806,"bk2":50,"bd2":5},{"s":81.203,"kap":0.51169,"bk":51,"bd":3,"s2":153.256,"kap2":0.0093,"bk2":50,"bd2":5},{"s":81.203,"kap":0.40686,"bk":51,"bd":3,"s2":153.256,"kap2":0.00656,"bk2":50,"bd2":5},{"s":96.53,"kap":0.65903,"bk":53,"bd":2,"s2":153.256,"kap2":0.02227,"bk2":50,"bd2":5},{"s":217.652,"kap":0.79966,"bk":54,"bd":1,"s2":279.132,"kap2":0.02964,"bk2":54,"bd2":1},{"s":565.205,"kap":0.4316,"bk":55,"bd":2,"s2":572.624,"kap2":0.0693,"bk2":55,"bd2":1},{"s":565.205,"kap":0.36345,"bk":55,"bd":2,"s2":754.721,"kap2":0.20439,"bk2":56,"bd2":1},{"s":168.73,"kap":0.5169,"bk":57,"bd":2,"s2":219.652,"kap2":0.03793,"bk2":57,"bd2":2},{"s":168.73,"kap":0.53832,"bk":57,"bd":2,"s2":219.652,"kap2":0.01589,"bk2":57,"bd2":2},{"s":65.348,"kap":0.33786,"bk":59,"bd":1,"s2":60.431,"kap2":0.02467,"bk2":59,"bd2":3},{"s":56.418,"kap":0.35939,"bk":60,"bd":2,"s2":60.431,"kap2":0.2168,"bk2":59,"bd2":3},{"s":56.418,"kap":0.56645,"bk":60,"bd":2,"s2":60.431,"kap2":0.07878,"bk2":59,"bd2":3},{"s":76.38,"kap":0.45433,"bk":62,"bd":1,"s2":24.665,"kap2":0.07442,"bk2":60,"bd2":3},{"s":80.656,"kap":0.4684,"bk":63,"bd":1,"s2":78.162,"kap2":0.11453,"bk2":63,"bd2":1},{"s":63.682,"kap":0.58311,"bk":64,"bd":1,"s2":35.511,"kap2":0.49129,"bk2":63,"bd2":4},{"s":37.116,"kap":0.40823,"bk":63,"bd":3,"s2":35.511,"kap2":0.46549,"bk2":63,"bd2":4},{"s":32.838,"kap":0.52187,"bk":66,"bd":1,"s2":35.511,"kap2":0.17004,"bk2":63,"bd2":4},{"s":18.78,"kap":0.3505,"bk":67,"bd":1,"s2":28.35,"kap2":0.08004,"bk2":63,"bd2":8},{"s":28.965,"kap":0.43397,"bk":68,"bd":1,"s2":29.516,"kap2":0.3848,"bk2":68,"bd2":3},{"s":25.19,"kap":0.42597,"bk":69,"bd":1,"s2":33.353,"kap2":0.60221,"bk2":69,"bd2":1},{"s":14.988,"kap":0.24409,"bk":69,"bd":3,"s2":29.516,"kap2":0.01699,"bk2":68,"bd2":3},{"s":115.624,"kap":0.55871,"bk":71,"bd":2,"s2":490.411,"kap2":0.04492,"bk2":71,"bd2":2},{"s":212.859,"kap":0.67367,"bk":72,"bd":1,"s2":490.411,"kap2":0.03855,"bk2":71,"bd2":2},{"s":9.907,"kap":0.30858,"bk":73,"bd":3,"s2":190.48,"kap2":0.01632,"bk2":73,"bd2":8},{"s":9.907,"kap":0.48079,"bk":73,"bd":3,"s2":190.48,"kap2":0.03673,"bk2":73,"bd2":8},{"s":13.248,"kap":0.14871,"bk":75,"bd":2,"s2":190.48,"kap2":0.01916,"bk2":73,"bd2":8},{"s":13.248,"kap":0.12914,"bk":75,"bd":2,"s2":190.48,"kap2":0.00377,"bk2":73,"bd2":8},{"s":0.0,"kap":0.27624,"bk":null,"bd":null,"s2":190.48,"kap2":0.00935,"bk2":73,"bd2":8},{"s":578.474,"kap":0.43791,"bk":78,"bd":1,"s2":755.268,"kap2":0.11452,"bk2":78,"bd2":1},{"s":49.856,"kap":0.37953,"bk":78,"bd":2,"s2":190.48,"kap2":0.00947,"bk2":73,"bd2":8},{"s":13.419,"kap":0.35183,"bk":78,"bd":3,"s2":190.48,"kap2":0.00573,"bk2":73,"bd2":8},{"s":126.935,"kap":0.62451,"bk":81,"bd":2,"s2":172.335,"kap2":0.05167,"bk2":81,"bd2":2},{"s":182.078,"kap":0.66406,"bk":82,"bd":1,"s2":199.016,"kap2":0.06345,"bk2":82,"bd2":1},{"s":20.646,"kap":0.30726,"bk":83,"bd":1,"s2":24.008,"kap2":0.01881,"bk2":80,"bd2":8},{"s":20.646,"kap":0.3069,"bk":84,"bd":1,"s2":24.008,"kap2":0.00823,"bk2":80,"bd2":8},{"s":53.357,"kap":0.31252,"bk":85,"bd":1,"s2":24.008,"kap2":0.00878,"bk2":80,"bd2":8},{"s":19.761,"kap":0.06588,"bk":86,"bd":2,"s2":24.008,"kap2":0.00325,"bk2":80,"bd2":8},{"s":127.078,"kap":0.70914,"bk":87,"bd":3,"s2":139.475,"kap2":0.19784,"bk2":87,"bd2":1},{"s":188.819,"kap":0.79442,"bk":88,"bd":1,"s2":339.012,"kap2":0.44162,"bk2":88,"bd2":1},{"s":198.976,"kap":0.81325,"bk":89,"bd":1,"s2":250.265,"kap2":0.01727,"bk2":89,"bd2":1},{"s":97.738,"kap":0.64704,"bk":90,"bd":1,"s2":82.015,"kap2":0.00559,"bk2":90,"bd2":1},{"s":96.976,"kap":0.48442,"bk":91,"bd":2,"s2":147.572,"kap2":0.0321,"bk2":91,"bd2":1},{"s":96.976,"kap":0.28861,"bk":91,"bd":2,"s2":66.097,"kap2":0.07028,"bk2":91,"bd2":2},{"s":146.731,"kap":0.61117,"bk":93,"bd":2,"s2":223.623,"kap2":0.05131,"bk2":93,"bd2":1},{"s":146.731,"kap":0.54311,"bk":93,"bd":2,"s2":395.679,"kap2":0.08432,"bk2":94,"bd2":1},{"s":129.313,"kap":0.5915,"bk":95,"bd":3,"s2":145.849,"kap2":0.00697,"bk2":95,"bd2":3},{"s":129.313,"kap":0.59776,"bk":95,"bd":3,"s2":145.849,"kap2":0.00881,"bk2":95,"bd2":3},{"s":129.313,"kap":0.6329,"bk":95,"bd":3,"s2":145.849,"kap2":0.01735,"bk2":95,"bd2":3},{"s":121.282,"kap":0.76182,"bk":98,"bd":2,"s2":151.211,"kap2":0.01355,"bk2":98,"bd2":1},{"s":161.054,"kap":0.66677,"bk":99,"bd":1,"s2":115.864,"kap2":0.02275,"bk2":98,"bd2":2},{"s":104.71,"kap":0.77727,"bk":100,"bd":2,"s2":132.221,"kap2":0.01323,"bk2":100,"bd2":2},{"s":104.71,"kap":0.69954,"bk":100,"bd":2,"s2":132.221,"kap2":0.26845,"bk2":100,"bd2":2},{"s":55.81,"kap":0.20872,"bk":102,"bd":1,"s2":49.588,"kap2":0.07543,"bk2":100,"bd2":4},{"s":505.599,"kap":0.68801,"bk":103,"bd":2,"s2":297.936,"kap2":0.30201,"bk2":103,"bd2":1},{"s":1069.95,"kap":0.83556,"bk":104,"bd":1,"s2":1557.03,"kap2":0.37492,"bk2":104,"bd2":1},{"s":1221.14,"kap":0.8571,"bk":105,"bd":1,"s2":1475.61,"kap2":0.47895,"bk2":105,"bd2":1},{"s":1037.36,"kap":0.68686,"bk":106,"bd":2,"s2":1068.67,"kap2":0.31677,"bk2":106,"bd2":2},{"s":1037.36,"kap":0.84144,"bk":106,"bd":2,"s2":1239.53,"kap2":0.45017,"bk2":107,"bd2":1},{"s":838.648,"kap":0.49355,"bk":108,"bd":2,"s2":906.503,"kap2":0.16376,"bk2":108,"bd2":2},{"s":838.648,"kap":0.63081,"bk":108,"bd":2,"s2":906.503,"kap2":0.17504,"bk2":108,"bd2":2},{"s":802.599,"kap":0.92336,"bk":108,"bd":3,"s2":1455.35,"kap2":0.64681,"bk2":110,"bd2":1},{"s":602.507,"kap":0.5536,"bk":111,"bd":2,"s2":586.607,"kap2":0.08235,"bk2":111,"bd2":2},{"s":602.507,"kap":0.53261,"bk":111,"bd":2,"s2":586.607,"kap2":0.08041,"bk2":111,"bd2":2},{"s":1264.38,"kap":0.91761,"bk":113,"bd":1,"s2":1727.39,"kap2":0.53227,"bk2":113,"bd2":1},{"s":1115.52,"kap":0.86906,"bk":114,"bd":1,"s2":1268.58,"kap2":0.12406,"bk2":114,"bd2":1},{"s":853.592,"kap":0.73577,"bk":115,"bd":3,"s2":805.918,"kap2":0.0964,"bk2":114,"bd2":4},{"s":853.592,"kap":0.01666,"bk":115,"bd":3,"s2":805.918,"kap2":0.01187,"bk2":114,"bd2":4},{"s":853.592,"kap":0.01696,"bk":115,"bd":3,"s2":805.918,"kap2":0.00624,"bk2":114,"bd2":4},{"s":1147.4,"kap":0.84162,"bk":118,"bd":1,"s2":1154.07,"kap2":0.33829,"bk2":118,"bd2":1},{"s":1235.62,"kap":0.88232,"bk":119,"bd":1,"s2":1565.76,"kap2":0.50985,"bk2":119,"bd2":1},{"s":1290.21,"kap":0.82717,"bk":120,"bd":2,"s2":1354.44,"kap2":0.53213,"bk2":120,"bd2":2},{"s":1294.91,"kap":0.84416,"bk":121,"bd":1,"s2":1354.44,"kap2":0.45814,"bk2":120,"bd2":2},{"s":1259.79,"kap":0.91753,"bk":122,"bd":1,"s2":1708.49,"kap2":0.56177,"bk2":122,"bd2":1},{"s":1238.12,"kap":0.77391,"bk":123,"bd":2,"s2":1469.84,"kap2":0.38455,"bk2":123,"bd2":1},{"s":1238.12,"kap":0.87272,"bk":123,"bd":2,"s2":1536.25,"kap2":0.44565,"bk2":124,"bd2":1},{"s":1262.96,"kap":0.89019,"bk":125,"bd":1,"s2":1558.95,"kap2":0.63577,"bk2":125,"bd2":1},{"s":1255.96,"kap":0.84381,"bk":125,"bd":3,"s2":1301.44,"kap2":0.3709,"bk2":126,"bd2":2},{"s":1255.96,"kap":0.80438,"bk":125,"bd":3,"s2":1301.44,"kap2":0.25838,"bk2":126,"bd2":2},{"s":1312.6,"kap":0.85365,"bk":128,"bd":1,"s2":1706.14,"kap2":0.48099,"bk2":128,"bd2":1},{"s":1268.15,"kap":0.8243,"bk":129,"bd":2,"s2":1565.05,"kap2":0.43844,"bk2":129,"bd2":1},{"s":1268.15,"kap":0.8155,"bk":129,"bd":2,"s2":1565.02,"kap2":0.45334,"bk2":130,"bd2":1},{"s":1226.95,"kap":0.6257,"bk":131,"bd":3,"s2":1352.26,"kap2":0.37235,"bk2":131,"bd2":2},{"s":1226.95,"kap":0.61485,"bk":131,"bd":3,"s2":1352.26,"kap2":0.33657,"bk2":131,"bd2":2},{"s":1226.95,"kap":0.85918,"bk":131,"bd":3,"s2":1432.35,"kap2":0.54306,"bk2":133,"bd2":1},{"s":1166.66,"kap":0.84159,"bk":134,"bd":1,"s2":1569.39,"kap2":0.54651,"bk2":134,"bd2":1},{"s":1139.5,"kap":0.83181,"bk":134,"bd":2,"s2":1572.31,"kap2":0.47037,"bk2":135,"bd2":1},{"s":1115.41,"kap":0.79779,"bk":136,"bd":2,"s2":1310.66,"kap2":0.30606,"bk2":136,"bd2":2},{"s":1115.41,"kap":0.79489,"bk":136,"bd":2,"s2":1310.66,"kap2":0.35547,"bk2":136,"bd2":2},{"s":1068.03,"kap":0.78625,"bk":138,"bd":1,"s2":1468.85,"kap2":0.50837,"bk2":138,"bd2":1},{"s":706.088,"kap":0.70538,"bk":139,"bd":2,"s2":840.866,"kap2":0.15554,"bk2":139,"bd2":5},{"s":706.088,"kap":0.42895,"bk":139,"bd":2,"s2":840.866,"kap2":0.07792,"bk2":139,"bd2":5},{"s":551.053,"kap":0.2253,"bk":141,"bd":3,"s2":840.866,"kap2":0.05748,"bk2":139,"bd2":5},{"s":741.14,"kap":0.5453,"bk":142,"bd":2,"s2":840.866,"kap2":0.17009,"bk2":139,"bd2":5},{"s":741.14,"kap":0.63345,"bk":142,"bd":2,"s2":880.37,"kap2":0.25932,"bk2":143,"bd2":1},{"s":1254.58,"kap":0.84524,"bk":144,"bd":1,"s2":1564.16,"kap2":0.49913,"bk2":144,"bd2":1},{"s":955.796,"kap":0.70031,"bk":145,"bd":1,"s2":589.756,"kap2":0.33508,"bk2":139,"bd2":7},{"s":859.383,"kap":0.87393,"bk":145,"bd":2,"s2":1371.91,"kap2":0.45767,"bk2":146,"bd2":1},{"s":77.658,"kap":0.44375,"bk":147,"bd":3,"s2":240.28,"kap2":0.03351,"bk2":147,"bd2":5},{"s":77.658,"kap":0.63839,"bk":147,"bd":3,"s2":240.28,"kap2":0.00945,"bk2":147,"bd2":5},{"s":107.523,"kap":0.64601,"bk":149,"bd":2,"s2":240.28,"kap2":0.00945,"bk2":147,"bd2":5},{"s":133.135,"kap":0.60744,"bk":150,"bd":1,"s2":240.28,"kap2":0.03141,"bk2":147,"bd2":5},{"s":244.322,"kap":0.50305,"bk":151,"bd":1,"s2":270.007,"kap2":0.04475,"bk2":151,"bd2":1},{"s":1230.32,"kap":0.85531,"bk":152,"bd":1,"s2":1560.02,"kap2":0.57462,"bk2":152,"bd2":1},{"s":0.0,"kap":0.01326,"bk":null,"bd":null,"s2":17.291,"kap2":0.00323,"bk2":153,"bd2":8},{"s":0.0,"kap":0.01486,"bk":null,"bd":null,"s2":17.291,"kap2":0.00312,"bk2":153,"bd2":8},{"s":0.0,"kap":0.00659,"bk":null,"bd":null,"s2":17.291,"kap2":0.00997,"bk2":153,"bd2":8},{"s":0.0,"kap":0.00685,"bk":null,"bd":null,"s2":17.291,"kap2":0.00826,"bk2":153,"bd2":8},{"s":0.0,"kap":0.01142,"bk":null,"bd":null,"s2":17.291,"kap2":0.01481,"bk2":153,"bd2":8},{"s":0.0,"kap":0.01021,"bk":null,"bd":null,"s2":17.291,"kap2":0.02963,"bk2":153,"bd2":8},{"s":0.0,"kap":0.06185,"bk":null,"bd":null,"s2":17.291,"kap2":0.17512,"bk2":153,"bd2":8},{"s":10.145,"kap":0.27376,"bk":160,"bd":3,"s2":17.291,"kap2":0.01938,"bk2":153,"bd2":8},{"s":24.803,"kap":0.40598,"bk":161,"bd":1,"s2":8.811,"kap2":0.02062,"bk2":161,"bd2":2},{"s":24.666,"kap":0.4142,"bk":162,"bd":2,"s2":12.776,"kap2":0.01353,"bk2":162,"bd2":1},{"s":24.789,"kap":0.37974,"bk":163,"bd":2,"s2":17.468,"kap2":0.56459,"bk2":163,"bd2":1},{"s":24.789,"kap":0.27619,"bk":163,"bd":2,"s2":10.571,"kap2":0.01093,"bk2":163,"bd2":2},{"s":0.0,"kap":0.0137,"bk":null,"bd":null,"s2":0.0,"kap2":0.00491,"bk2":null,"bd2":null},{"s":0.0,"kap":0.01032,"bk":null,"bd":null,"s2":0.0,"kap2":0.0114,"bk2":null,"bd2":null},{"s":0.0,"kap":0.01852,"bk":null,"bd":null,"s2":0.0,"kap2":0.00565,"bk2":null,"bd2":null}],"primary":{"runs":[[3,9],[11,16],[22,28],[32,77],[78,153],[160,165]],"nodes":[{"id":64936,"lo":3,"hi":4,"parent":106661,"m":448.341},{"id":106661,"lo":3,"hi":6,"parent":134708,"m":288.654},{"id":134708,"lo":3,"hi":9,"parent":-1,"m":225.109},{"id":54619,"lo":8,"hi":9,"parent":134708,"m":508.129},{"id":624962,"lo":11,"hi":12,"parent":654566,"m":8.28524},{"id":654566,"lo":11,"hi":16,"parent":-1,"m":0.0173407},{"id":536381,"lo":13,"hi":15,"parent":600437,"m":13.946},{"id":600437,"lo":13,"hi":16,"parent":654566,"m":9.43242},{"id":65243,"lo":14,"hi":15,"parent":536381,"m":446.662},{"id":348356,"lo":22,"hi":27,"parent":529922,"m":50.3942},{"id":529922,"lo":22,"hi":28,"parent":-1,"m":14.55},{"id":70316,"lo":23,"hi":25,"parent":311785,"m":422.233},{"id":311785,"lo":23,"hi":27,"parent":348356,"m":64.0917},{"id":39354,"lo":24,"hi":25,"parent":70316,"m":612.891},{"id":398200,"lo":32,"hi":46,"parent":449509,"m":36.2362},{"id":449509,"lo":32,"hi":67,"parent":493937,"m":25.5294},{"id":493937,"lo":32,"hi":70,"parent":525339,"m":18.7802},{"id":525339,"lo":32,"hi":73,"parent":590330,"m":14.9876},{"id":590330,"lo":32,"hi":77,"parent":-1,"m":9.90726},{"id":311450,"lo":33,"hi":46,"parent":398200,"m":64.2412},{"id":288151,"lo":34,"hi":41,"parent":289943,"m":75.2511},{"id":289943,"lo":34,"hi":46,"parent":311450,"m":74.3227},{"id":267317,"lo":36,"hi":41,"parent":288151,"m":87.2896},{"id":239637,"lo":38,"hi":40,"parent":258616,"m":105.156},{"id":258616,"lo":38,"hi":41,"parent":267317,"m":92.9646},{"id":113260,"lo":42,"hi":43,"parent":256419,"m":271.651},{"id":256419,"lo":42,"hi":46,"parent":289943,"m":94.4232},{"id":402179,"lo":47,"hi":66,"parent":412362,"m":35.253},{"id":412362,"lo":47,"hi":67,"parent":449509,"m":32.8383},{"id":385476,"lo":48,"hi":65,"parent":394700,"m":39.537},{"id":394700,"lo":48,"hi":66,"parent":402179,"m":37.1163},{"id":361236,"lo":50,"hi":65,"parent":385476,"m":46.3927},{"id":277390,"lo":51,"hi":59,"parent":308853,"m":81.203},{"id":308853,"lo":51,"hi":60,"parent":330814,"m":65.3483},{"id":330814,"lo":51,"hi":65,"parent":361236,"m":56.4181},{"id":253076,"lo":53,"hi":59,"parent":277390,"m":96.53},{"id":138918,"lo":54,"hi":57,"parent":171831,"m":217.652},{"id":171831,"lo":54,"hi":59,"parent":253076,"m":168.73},{"id":45333,"lo":55,"hi":57,"parent":138918,"m":565.205},{"id":286128,"lo":62,"hi":64,"parent":312716,"m":76.3801},{"id":312716,"lo":62,"hi":65,"parent":330814,"m":63.6822},{"id":278410,"lo":63,"hi":64,"parent":286128,"m":80.6557},{"id":431009,"lo":68,"hi":69,"parent":451469,"m":28.9652},{"id":451469,"lo":68,"hi":70,"parent":493937,"m":25.1901},{"id":225248,"lo":71,"hi":73,"parent":525339,"m":115.624},{"id":141717,"lo":72,"hi":73,"parent":225248,"m":212.859},{"id":543381,"lo":75,"hi":77,"parent":590330,"m":13.2485},{"id":43490,"lo":78,"hi":79,"parent":350111,"m":578.474},{"id":350111,"lo":78,"hi":80,"parent":541674,"m":49.856},{"id":541674,"lo":78,"hi":116,"parent":660526,"m":13.4186},{"id":660526,"lo":78,"hi":153,"parent":-1,"m":0.0166655},{"id":211452,"lo":81,"hi":83,"parent":480076,"m":126.935},{"id":480076,"lo":81,"hi":86,"parent":486563,"m":20.6459},{"id":486563,"lo":81,"hi":116,"parent":541674,"m":19.7612},{"id":161767,"lo":82,"hi":83,"parent":211452,"m":182.078},{"id":339318,"lo":85,"hi":86,"parent":480076,"m":53.3574},{"id":211295,"lo":87,"hi":90,"parent":251173,"m":127.078},{"id":251173,"lo":87,"hi":91,"parent":252343,"m":97.7375},{"id":252343,"lo":87,"hi":102,"parent":332460,"m":96.9762},{"id":332460,"lo":87,"hi":116,"parent":486563,"m":55.8102},{"id":157122,"lo":88,"hi":90,"parent":211295,"m":188.819},{"id":150408,"lo":89,"hi":90,"parent":157122,"m":198.976},{"id":190759,"lo":93,"hi":95,"parent":208769,"m":146.731},{"id":208769,"lo":93,"hi":98,"parent":218132,"m":129.313},{"id":218132,"lo":93,"hi":100,"parent":240272,"m":121.282},{"id":240272,"lo":93,"hi":102,"parent":252343,"m":104.71},{"id":177910,"lo":99,"hi":100,"parent":218132,"m":161.054},{"id":55107,"lo":103,"hi":116,"parent":332460,"m":505.599},{"id":14407,"lo":104,"hi":106,"parent":15332,"m":1069.95},{"id":15332,"lo":104,"hi":108,"parent":23883,"m":1037.36},{"id":23883,"lo":104,"hi":110,"parent":26151,"m":838.648},{"id":26151,"lo":104,"hi":111,"parent":40433,"m":802.599},{"id":40433,"lo":104,"hi":116,"parent":55107,"m":602.507},{"id":7510,"lo":105,"hi":106,"parent":14407,"m":1221.14},{"id":2966,"lo":113,"hi":114,"parent":12757,"m":1264.38},{"id":12757,"lo":113,"hi":115,"parent":23050,"m":1115.52},{"id":23050,"lo":113,"hi":116,"parent":40433,"m":853.592},{"id":657878,"lo":117,"hi":153,"parent":660526,"m":0.016965},{"id":10974,"lo":118,"hi":135,"parent":11447,"m":1147.4},{"id":11447,"lo":118,"hi":136,"parent":12766,"m":1139.5},{"id":12766,"lo":118,"hi":138,"parent":14470,"m":1115.41},{"id":14470,"lo":118,"hi":139,"parent":31833,"m":1068.03},{"id":31833,"lo":118,"hi":141,"parent":47547,"m":706.088},{"id":47547,"lo":118,"hi":147,"parent":283822,"m":551.053},{"id":283822,"lo":118,"hi":153,"parent":657878,"m":77.6582},{"id":6150,"lo":119,"hi":131,"parent":6946,"m":1235.62},{"id":6946,"lo":119,"hi":134,"parent":10354,"m":1226.95},{"id":10354,"lo":119,"hi":135,"parent":10974,"m":1166.66},{"id":1658,"lo":120,"hi":122,"parent":3280,"m":1290.21},{"id":3280,"lo":120,"hi":123,"parent":5835,"m":1259.79},{"id":5835,"lo":120,"hi":131,"parent":6150,"m":1238.12},{"id":1478,"lo":121,"hi":122,"parent":1658,"m":1294.91},{"id":3067,"lo":125,"hi":126,"parent":3619,"m":1262.96},{"id":3619,"lo":125,"hi":131,"parent":5835,"m":1255.96},{"id":873,"lo":128,"hi":129,"parent":2731,"m":1312.6},{"id":2731,"lo":128,"hi":131,"parent":3619,"m":1268.15},{"id":29115,"lo":142,"hi":147,"parent":47547,"m":741.14},{"id":3799,"lo":144,"hi":145,"parent":17976,"m":1254.57},{"id":17976,"lo":144,"hi":146,"parent":22686,"m":955.796},{"id":22686,"lo":144,"hi":147,"parent":29115,"m":859.383},{"id":236205,"lo":149,"hi":153,"parent":283822,"m":107.523},{"id":204476,"lo":150,"hi":153,"parent":236205,"m":133.135},{"id":125048,"lo":151,"hi":153,"parent":204476,"m":244.322},{"id":6667,"lo":152,"hi":153,"parent":125048,"m":1230.32},{"id":585448,"lo":160,"hi":165,"parent":-1,"m":10.1449},{"id":453717,"lo":161,"hi":162,"parent":454531,"m":24.8029},{"id":454531,"lo":161,"hi":165,"parent":585448,"m":24.6656},{"id":453811,"lo":163,"hi":165,"parent":454531,"m":24.7886}]},"secondary":{"runs":[[1,2],[3,165]],"nodes":[{"lo":1,"hi":2,"parent":-1,"reported":false,"m":0.00618419},{"lo":3,"hi":165,"parent":-1,"reported":true,"m":0.00249068},{"lo":3,"hi":12,"parent":1,"reported":true,"m":0.00482157},{"lo":3,"hi":10,"parent":2,"reported":true,"m":0.00735884},{"lo":3,"hi":9,"parent":3,"reported":true,"m":0.063745},{"lo":3,"hi":7,"parent":4,"reported":true,"m":0.0669939},{"lo":3,"hi":4,"parent":5,"reported":true,"m":0.159228},{"lo":5,"hi":7,"parent":5,"reported":true,"m":0.0965551},{"lo":5,"hi":6,"parent":7,"reported":true,"m":0.127576},{"lo":8,"hi":9,"parent":4,"reported":true,"m":0.130791},{"lo":11,"hi":12,"parent":2,"reported":false,"m":0.0188598},{"lo":13,"hi":165,"parent":1,"reported":true,"m":0.00312581},{"lo":13,"hi":154,"parent":11,"reported":true,"m":0.0032294},{"lo":13,"hi":153,"parent":12,"reported":true,"m":0.0032512},{"lo":13,"hi":86,"parent":13,"reported":true,"m":0.00371982},{"lo":13,"hi":21,"parent":14,"reported":false,"m":0.00461574},{"lo":13,"hi":16,"parent":15,"reported":true,"m":0.00665828},{"lo":14,"hi":16,"parent":16,"reported":true,"m":0.0073572},{"lo":14,"hi":15,"parent":17,"reported":true,"m":569.554},{"lo":17,"hi":21,"parent":15,"reported":false,"m":0.0102207},{"lo":17,"hi":20,"parent":19,"reported":false,"m":0.0120961},{"lo":17,"hi":19,"parent":20,"reported":false,"m":0.0146283},{"lo":18,"hi":19,"parent":21,"reported":false,"m":0.0379227},{"lo":22,"hi":86,"parent":14,"reported":true,"m":0.0037737},{"lo":22,"hi":76,"parent":23,"reported":true,"m":0.00402778},{"lo":23,"hi":76,"parent":24,"reported":true,"m":0.00656272},{"lo":23,"hi":52,"parent":25,"reported":true,"m":0.00714106},{"lo":23,"hi":25,"parent":26,"reported":true,"m":0.0679079},{"lo":24,"hi":25,"parent":27,"reported":true,"m":862.963},{"lo":26,"hi":52,"parent":26,"reported":true,"m":0.00864954},{"lo":26,"hi":41,"parent":29,"reported":true,"m":0.0135404},{"lo":26,"hi":40,"parent":30,"reported":true,"m":0.0165337},{"lo":26,"hi":31,"parent":31,"reported":true,"m":0.0247934},{"lo":26,"hi":30,"parent":32,"reported":false,"m":0.042231},{"lo":26,"hi":28,"parent":33,"reported":true,"m":0.0603981},{"lo":26,"hi":27,"parent":34,"reported":false,"m":58.6202},{"lo":29,"hi":30,"parent":33,"reported":false,"m":0.173853},{"lo":32,"hi":40,"parent":31,"reported":true,"m":0.016676},{"lo":32,"hi":39,"parent":37,"reported":true,"m":0.0200364},{"lo":32,"hi":38,"parent":38,"reported":true,"m":0.0460351},{"lo":32,"hi":34,"parent":39,"reported":true,"m":0.0506365},{"lo":33,"hi":34,"parent":40,"reported":true,"m":0.107575},{"lo":35,"hi":38,"parent":39,"reported":true,"m":0.0619071},{"lo":35,"hi":36,"parent":42,"reported":true,"m":0.105533},{"lo":37,"hi":38,"parent":42,"reported":true,"m":121.851},{"lo":42,"hi":52,"parent":29,"reported":true,"m":0.00930065},{"lo":42,"hi":51,"parent":45,"reported":true,"m":0.0134454},{"lo":42,"hi":43,"parent":46,"reported":true,"m":0.0372262},{"lo":44,"hi":51,"parent":46,"reported":true,"m":0.0156182},{"lo":44,"hi":46,"parent":48,"reported":true,"m":0.0277385},{"lo":44,"hi":45,"parent":49,"reported":false,"m":0.174947},{"lo":47,"hi":51,"parent":48,"reported":true,"m":0.0304664},{"lo":47,"hi":49,"parent":51,"reported":true,"m":0.178505},{"lo":47,"hi":48,"parent":52,"reported":true,"m":108.103},{"lo":50,"hi":51,"parent":51,"reported":true,"m":0.0380577},{"lo":53,"hi":76,"parent":25,"reported":true,"m":0.0158957},{"lo":53,"hi":58,"parent":55,"reported":true,"m":0.022271},{"lo":54,"hi":58,"parent":56,"reported":true,"m":0.0296445},{"lo":55,"hi":58,"parent":57,"reported":true,"m":0.037927},{"lo":55,"hi":57,"parent":58,"reported":true,"m":0.0693021},{"lo":56,"hi":57,"parent":59,"reported":true,"m":754.721},{"lo":59,"hi":76,"parent":55,"reported":true,"m":0.0163226},{"lo":59,"hi":73,"parent":61,"reported":true,"m":0.0169927},{"lo":59,"hi":70,"parent":62,"reported":true,"m":0.0246714},{"lo":60,"hi":70,"parent":63,"reported":true,"m":0.0744174},{"lo":60,"hi":62,"parent":64,"reported":true,"m":0.0787836},{"lo":60,"hi":61,"parent":65,"reported":false,"m":60.4307},{"lo":63,"hi":70,"parent":64,"reported":true,"m":0.0800416},{"lo":63,"hi":67,"parent":67,"reported":true,"m":0.114534},{"lo":64,"hi":67,"parent":68,"reported":true,"m":0.170045},{"lo":64,"hi":66,"parent":69,"reported":true,"m":35.511},{"lo":68,"hi":70,"parent":67,"reported":true,"m":29.516},{"lo":69,"hi":70,"parent":71,"reported":true,"m":33.3532},{"lo":71,"hi":73,"parent":62,"reported":true,"m":0.0385549},{"lo":71,"hi":72,"parent":73,"reported":true,"m":0.0449229},{"lo":74,"hi":76,"parent":61,"reported":false,"m":0.0191604},{"lo":74,"hi":75,"parent":75,"reported":false,"m":0.0367319},{"lo":77,"hi":86,"parent":23,"reported":true,"m":0.00573493},{"lo":77,"hi":80,"parent":77,"reported":true,"m":0.00934839},{"lo":78,"hi":80,"parent":78,"reported":true,"m":0.00947125},{"lo":78,"hi":79,"parent":79,"reported":true,"m":0.114518},{"lo":81,"hi":86,"parent":77,"reported":true,"m":0.00822601},{"lo":81,"hi":84,"parent":81,"reported":true,"m":0.018808},{"lo":81,"hi":83,"parent":82,"reported":true,"m":0.0516752},{"lo":82,"hi":83,"parent":83,"reported":true,"m":0.0634517},{"lo":85,"hi":86,"parent":81,"reported":true,"m":0.00878308},{"lo":87,"hi":153,"parent":13,"reported":true,"m":0.00558643},{"lo":87,"hi":90,"parent":86,"reported":true,"m":0.0172744},{"lo":87,"hi":89,"parent":87,"reported":true,"m":0.19784},{"lo":88,"hi":89,"parent":88,"reported":true,"m":339.012},{"lo":91,"hi":153,"parent":86,"reported":true,"m":0.00624243},{"lo":91,"hi":117,"parent":90,"reported":true,"m":0.00696914},{"lo":91,"hi":95,"parent":91,"reported":true,"m":0.0320994},{"lo":92,"hi":95,"parent":92,"reported":true,"m":0.0513081},{"lo":92,"hi":93,"parent":93,"reported":true,"m":0.0702832},{"lo":94,"hi":95,"parent":93,"reported":true,"m":0.0843178},{"lo":96,"hi":117,"parent":91,"reported":true,"m":0.00880707},{"lo":97,"hi":117,"parent":96,"reported":true,"m":0.0118675},{"lo":97,"hi":116,"parent":97,"reported":true,"m":0.0132275},{"lo":97,"hi":100,"parent":98,"reported":true,"m":0.013549},{"lo":97,"hi":98,"parent":99,"reported":true,"m":0.0173523},{"lo":99,"hi":100,"parent":99,"reported":true,"m":0.0227482},{"lo":101,"hi":116,"parent":98,"reported":true,"m":0.0754317},{"lo":101,"hi":102,"parent":102,"reported":true,"m":132.221},{"lo":103,"hi":116,"parent":102,"reported":true,"m":0.0804143},{"lo":103,"hi":112,"parent":104,"reported":true,"m":0.0823518},{"lo":103,"hi":111,"parent":105,"reported":true,"m":0.16376},{"lo":103,"hi":108,"parent":106,"reported":true,"m":297.936},{"lo":104,"hi":108,"parent":107,"reported":true,"m":1068.67},{"lo":104,"hi":106,"parent":108,"reported":true,"m":1475.61},{"lo":104,"hi":105,"parent":109,"reported":true,"m":1557.03},{"lo":107,"hi":108,"parent":108,"reported":true,"m":1239.53},{"lo":109,"hi":111,"parent":106,"reported":true,"m":0.175039},{"lo":110,"hi":111,"parent":112,"reported":true,"m":1455.35},{"lo":113,"hi":116,"parent":104,"reported":true,"m":0.0963971},{"lo":113,"hi":115,"parent":114,"reported":true,"m":0.124061},{"lo":113,"hi":114,"parent":115,"reported":true,"m":1727.39},{"lo":118,"hi":153,"parent":90,"reported":true,"m":0.00944641},{"lo":118,"hi":149,"parent":117,"reported":true,"m":0.00944749},{"lo":118,"hi":148,"parent":118,"reported":true,"m":0.033515},{"lo":118,"hi":147,"parent":119,"reported":true,"m":0.0574839},{"lo":118,"hi":141,"parent":120,"reported":true,"m":0.0779212},{"lo":118,"hi":140,"parent":121,"reported":true,"m":0.155545},{"lo":118,"hi":139,"parent":122,"reported":true,"m":1154.07},{"lo":119,"hi":139,"parent":123,"reported":true,"m":1301.44},{"lo":119,"hi":126,"parent":124,"reported":true,"m":1354.44},{"lo":119,"hi":120,"parent":125,"reported":true,"m":1565.76},{"lo":122,"hi":126,"parent":125,"reported":true,"m":1469.84},{"lo":122,"hi":123,"parent":127,"reported":true,"m":1708.49},{"lo":124,"hi":126,"parent":127,"reported":true,"m":1536.25},{"lo":125,"hi":126,"parent":129,"reported":true,"m":1558.95},{"lo":128,"hi":139,"parent":124,"reported":true,"m":1310.66},{"lo":128,"hi":136,"parent":131,"reported":true,"m":1352.26},{"lo":128,"hi":131,"parent":132,"reported":true,"m":1565.02},{"lo":128,"hi":130,"parent":133,"reported":true,"m":1565.05},{"lo":128,"hi":129,"parent":134,"reported":true,"m":1706.14},{"lo":133,"hi":136,"parent":132,"reported":true,"m":1432.34},{"lo":134,"hi":136,"parent":136,"reported":true,"m":1569.39},{"lo":135,"hi":136,"parent":137,"reported":true,"m":1572.31},{"lo":138,"hi":139,"parent":131,"reported":true,"m":1468.85},{"lo":142,"hi":147,"parent":120,"reported":true,"m":0.170095},{"lo":143,"hi":147,"parent":140,"reported":true,"m":589.756},{"lo":143,"hi":145,"parent":141,"reported":true,"m":880.37},{"lo":144,"hi":145,"parent":142,"reported":true,"m":1564.16},{"lo":146,"hi":147,"parent":141,"reported":true,"m":1371.91},{"lo":150,"hi":153,"parent":117,"reported":true,"m":0.0314154},{"lo":151,"hi":153,"parent":145,"reported":true,"m":0.0447518},{"lo":152,"hi":153,"parent":146,"reported":true,"m":1560.02},{"lo":155,"hi":165,"parent":11,"reported":true,"m":0.00825616},{"lo":155,"hi":156,"parent":148,"reported":false,"m":0.00996955},{"lo":157,"hi":165,"parent":148,"reported":true,"m":0.010936},{"lo":157,"hi":164,"parent":150,"reported":true,"m":0.0135338},{"lo":157,"hi":162,"parent":151,"reported":false,"m":0.0148151},{"lo":158,"hi":162,"parent":152,"reported":false,"m":0.0193792},{"lo":158,"hi":160,"parent":153,"reported":false,"m":0.0296326},{"lo":159,"hi":160,"parent":154,"reported":false,"m":0.175124},{"lo":161,"hi":162,"parent":153,"reported":false,"m":0.0206186},{"lo":163,"hi":164,"parent":151,"reported":true,"m":17.4684}]},"examples":[{"x":122,"y":123,"genomes_x":802,"genomes_y":663,"groups_x":349,"groups_y":302,"genomes_both":662,"groups_both":301,"genomes_support":660,"groups_support":299,"groups_apart_only":2,"genomes_apart":2,"n":300.0,"E":1.66536,"E_own":0.00150527,"lam":1259.79,"support_by_distance":{"1":655,"3":2,"2":3},"sample":[{"G":49,"grp":42,"dist":1,"cat":"support","genome":"GCA_022870745.1","species":"Silvibacterium sp022870745","phylum":"Acidobacteriota"},{"G":7,"grp":7,"dist":1,"cat":"support","genome":"GCA_002284915.1","species":"IMCC26077 sp002284915","phylum":"Actinomycetota"},{"G":57,"grp":50,"dist":1,"cat":"support","genome":"GCA_025998675.1","species":"GBS-DC sp025998675","phylum":"Armatimonadota"},{"G":23,"grp":19,"dist":1,"cat":"support","genome":"GCA_016699125.1","species":"AWTP1-30 sp016699125","phylum":"Babelota"},{"G":18,"grp":14,"dist":1,"cat":"support","genome":"GCA_011082265.1","species":"Lachnocurva vaginae","phylum":"Bacillota"},{"G":234,"grp":42,"dist":1,"cat":"support","genome":"GCA_963703075.1","species":"Korobacter sp963703075","phylum":"Acidobacteriota"},{"G":26,"grp":22,"dist":10,"cat":"apart","genome":"GCA_016699265.1","species":"CAZLQR01 sp016699265","phylum":"Patescibacteriota"},{"G":36,"grp":32,"dist":10,"cat":"apart","genome":"GCA_016700135.1","species":"UBA1450 sp016700135","phylum":"Patescibacteriota"},{"G":0,"grp":0,"dist":null,"cat":"xonly","genome":"GCA_000145985.1","species":"Ignisphaera aggregans","phylum":"Thermoproteota"},{"G":95,"grp":77,"dist":null,"cat":"yonly","genome":"GCA_046704725.1","species":"SKIA01 sp046704725","phylum":"Nanobdellota"}],"stored_lam":1259.79,"recomputed_equals_stored":true},{"x":151,"y":152,"genomes_x":622,"genomes_y":700,"groups_x":265,"groups_y":320,"genomes_both":568,"groups_both":258,"genomes_support":166,"groups_support":76,"groups_apart_only":182,"genomes_apart":402,"n":77.0,"E":1.20496,"E_own":0.00150527,"lam":244.322,"support_by_distance":{"1":147,"2":7,"3":12},"sample":[{"G":7,"grp":7,"dist":1,"cat":"support","genome":"GCA_002284915.1","species":"IMCC26077 sp002284915","phylum":"Actinomycetota"},{"G":57,"grp":50,"dist":1,"cat":"support","genome":"GCA_025998675.1","species":"GBS-DC sp025998675","phylum":"Armatimonadota"},{"G":18,"grp":14,"dist":1,"cat":"support","genome":"GCA_011082265.1","species":"Lachnocurva vaginae","phylum":"Bacillota"},{"G":63,"grp":55,"dist":1,"cat":"support","genome":"GCA_027925325.1","species":"Hepatoplasma scabrum","phylum":"Bacillota_I"},{"G":3,"grp":3,"dist":1,"cat":"support","genome":"GCA_000525675.1","species":"Bdellovibrio bacteriovorus_A","phylum":"Bdellovibrionota"},{"G":406,"grp":7,"dist":2,"cat":"support","genome":"GCA_965268675.1","species":"AAA044-D11 sp009705075","phylum":"Actinomycetota"},{"G":5,"grp":5,"dist":196,"cat":"apart","genome":"GCA_001940665.2","species":"Odinarchaeum yellowstonii","phylum":"Asgardarchaeota"},{"G":6,"grp":6,"dist":65,"cat":"apart","genome":"GCA_002243285.1","species":"Fluviicola riflensis","phylum":"Bacteroidota"},{"G":11,"grp":9,"dist":18,"cat":"apart","genome":"GCA_002838205.1","species":"Mariniplasma sp002838205","phylum":"Bacillota_I"},{"G":1,"grp":1,"dist":null,"cat":"xonly","genome":"GCA_000166095.1","species":"Methanothermus fervidus","phylum":"Methanobacteriota"},{"G":4,"grp":4,"dist":null,"cat":"yonly","genome":"GCA_000965745.1","species":"GCA-965745 sp000965745","phylum":"Thermoplasmatota"}],"stored_lam":244.322,"recomputed_equals_stored":true},{"x":82,"y":83,"genomes_x":221,"genomes_y":447,"groups_x":107,"groups_y":204,"genomes_both":209,"groups_both":101,"genomes_support":90,"groups_support":47,"groups_apart_only":54,"genomes_apart":119,"n":48.0,"E":0.401023,"E_own":0.00150527,"lam":182.078,"support_by_distance":{"1":90},"sample":[{"G":7,"grp":7,"dist":1,"cat":"support","genome":"GCA_002284915.1","species":"IMCC26077 sp002284915","phylum":"Actinomycetota"},{"G":164,"grp":122,"dist":1,"cat":"support","genome":"GCA_963665925.1","species":"G963665925 sp963665925","phylum":"Bacillota"},{"G":22,"grp":18,"dist":1,"cat":"support","genome":"GCA_015709675.1","species":"H2-BAC3 sp015709675","phylum":"Bacteroidota"},{"G":351,"grp":217,"dist":1,"cat":"support","genome":"GCA_965227145.1","species":"JACKAQ01 sp965227145","phylum":"Calditrichota"},{"G":168,"grp":108,"dist":1,"cat":"support","genome":"GCA_963667035.1","species":"Zophobacter sp963667035","phylum":"Cloacimonadota"},{"G":157,"grp":18,"dist":1,"cat":"support","genome":"GCA_963664845.1","species":"CAIYTF01 sp963664845","phylum":"Bacteroidota"},{"G":8,"grp":8,"dist":2263,"cat":"apart","genome":"GCA_002355455.1","species":"Stanieria sp002355455","phylum":"Cyanobacteriota"},{"G":9,"grp":8,"dist":1218,"cat":"apart","genome":"GCA_002356215.1","species":"MRBY01 sp002356215","phylum":"Cyanobacteriota"},{"G":10,"grp":8,"dist":986,"cat":"apart","genome":"GCA_002368355.1","species":"Waterburya sp002368355","phylum":"Cyanobacteriota"},{"G":109,"grp":85,"dist":null,"cat":"xonly","genome":"GCA_902809825.1","species":"Hydrogenisulfobacillus filiaventi","phylum":"Bacillota"},{"G":6,"grp":6,"dist":null,"cat":"yonly","genome":"GCA_002243285.1","species":"Fluviicola riflensis","phylum":"Bacteroidota"}],"stored_lam":182.078,"recomputed_equals_stored":true}],"checks":{"primary_runs_cut_by_window":0,"secondary_runs_cut_by_window":2,"primary_tree_port_equals_stored_nodes":true,"primary_reported_loci_equal_tree_nodes":true,"primary_stored_m_equals_min_w":true,"primary_s_positive_inside_runs":true,"secondary_tree_port_equals_stored_nodes":true,"secondary_reported_subset_of_nodes":true}}</script>
+<script>
+(function () {
+  "use strict";
+  var D = JSON.parse(document.getElementById("bt-data").textContent);
+  var G = D.genes, BD = D.bounds, PR = D.params;
+  var RUN = D.window.main_run, RIBO = D.window.ribo_run;
+  var W0 = RUN[0] - 3, W1 = RUN[1] + 3;
+  var NS = "http://www.w3.org/2000/svg";
+  var motionQ = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : { matches: false };
+  var SP = D.genome.species;
+
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    if (attrs) for (var k in attrs) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function h(tag, cls, html, parent) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (html != null) e.innerHTML = html;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function fmt(v, d) {
+    if (d == null) d = 1;
+    return Number(v).toLocaleString("en-US", { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function gname(i) { return G[i] && G[i].label ? G[i].label : "unnamed"; }
+  function gHTML(i) {
+    var g = G[i];
+    if (!g || !g.label) return '<em class="pf">unnamed</em>';
+    return g.src === "Pfam" ? '<em class="pf">' + esc(g.label) + "</em>" : "<b>" + esc(g.label) + "</b>";
+  }
+  function spanHTML(lo, hi) { return gHTML(lo) + " … " + gHTML(hi); }
+  function wPrimary(j) {
+    var b = BD[j];
+    if (b.s > 0 && b.kap !== null && b.kap < PR.theta_primary) return 1e-6 + Math.max(b.kap, 0);
+    return b.s;
+  }
+  function isKappaCut(j) { var b = BD[j]; return b.s > 0 && b.kap !== null && b.kap < PR.theta_primary; }
+
+  /* ------------------------------------------------------------------ tree of the main run */
+  var nodes = D.primary.nodes.filter(function (n) { return n.lo >= RUN[0] && n.hi <= RUN[1]; });
+  var byId = {};
+  nodes.forEach(function (n) { byId[n.id] = n; n.kids = []; n.size = n.hi - n.lo + 1; });
+  var root = null;
+  nodes.forEach(function (n) {
+    if (n.parent >= 0 && byId[n.parent]) byId[n.parent].kids.push(n); else root = n;
+  });
+  nodes.forEach(function (n) { n.kids.sort(function (a, b) { return a.lo - b.lo; }); });
+  (function setDepth(n, d) { n.depth = d; n.kids.forEach(function (c) { setDepth(c, d + 1); }); })(root, 0);
+  var maxDepth = Math.max.apply(null, nodes.map(function (n) { return n.depth; }));
+  var events = nodes.filter(function (n) { return n.hi - n.lo >= 2; })
+    .sort(function (a, b) { return a.m - b.m || a.lo - b.lo; });
+  var cutStep = {};
+  root.step = 0;
+  events.forEach(function (e, k) {
+    // the cut boundaries of a node are the ones that no child spans (children = the pieces of 2 or more genes)
+    e.cuts = [];
+    for (var j = e.lo; j < e.hi; j++) {
+      var inside = e.kids.some(function (c) { return c.lo <= j && j + 1 <= c.hi; });
+      if (!inside) {
+        e.cuts.push(j); cutStep[j] = k + 1;
+        if (Math.abs(wPrimary(j) - e.m) > 1e-3 * Math.max(1, e.m)) console.warn("cut weight differs from node value", j, wPrimary(j), e.m);
+      }
+    }
+    if (!e.cuts.length) console.warn("no cut found for node", e.lo, e.hi);
+    e.kids.forEach(function (c) { c.step = k + 1; });
+    e.splitStep = k + 1;
+  });
+  var NSTEP = events.length;
+  var benchNode = nodes.filter(function (n) { return n.lo === RIBO[0] && n.hi === RIBO[1]; })[0] || null;
+
+  /* ------------------------------------------------------------------ section 1: one bond */
+  var ex = D.examples;
+  document.getElementById("s1sub").innerHTML = "Real numbers for <i>" + esc(SP) + "</i> (" + esc(D.genome.accession) +
+    "), checked against the " + (D.collection.genomes - D.genome.group_size) + " genomes outside its own genome group. A genome group is a cluster of genomes with similar proteins (" +
+    D.collection.groups + " groups among the " + D.collection.genomes + " complete genomes of the test set); each group counts once, so close relatives add no extra support.";
+  var pick = document.getElementById("bondpick");
+  var btns = [];
+  ex.forEach(function (e, i) {
+    var b = h("button", "seg", esc(gname(e.x)) + "–" + esc(gname(e.y)) + ' <span class="mono" style="margin:0;color:inherit;opacity:.75">Λ ' + fmt(e.lam, 0) + "</span>", pick);
+    b.type = "button";
+    b.setAttribute("aria-pressed", i === 0 ? "true" : "false");
+    b.addEventListener("click", function () { showBond(i); });
+    btns.push(b);
+  });
+
+  function arrowPath(x, y, w, hgt, strand) {
+    var hd = Math.min(6, w / 3), y1 = y + hgt, ym = y + hgt / 2;
+    if (strand >= 0) return "M" + x + " " + y + "H" + (x + w - hd) + "L" + (x + w) + " " + ym + "L" + (x + w - hd) + " " + y1 + "H" + x + "Z";
+    return "M" + (x + w) + " " + y + "H" + (x + hd) + "L" + x + " " + ym + "L" + (x + hd) + " " + y1 + "H" + (x + w) + "Z";
+  }
+  function mini(cat, dist, xl, yl) {
+    var s = el("svg", { viewBox: "0 0 178 22", "aria-hidden": "true" });
+    var GW = 34, GH = 16, y = 3;
+    function gene(x, lab, kind) {
+      var p = el("path", { d: arrowPath(x, y, GW, GH, 1) }, s);
+      if (kind === "x" || kind === "y") { p.setAttribute("fill", "var(--bond)"); p.setAttribute("stroke", "var(--bond)"); }
+      else if (kind === "none") { p.setAttribute("fill", "none"); p.setAttribute("stroke", "var(--muted)"); p.setAttribute("stroke-dasharray", "2 2"); }
+      else { p.setAttribute("fill", "var(--gene)"); p.setAttribute("stroke", "var(--gene-line)"); }
+      if (lab) {
+        var t = el("text", { x: x + (GW - 5) / 2, y: y + 12, "text-anchor": "middle", "font-size": "10", fill: kind === "none" ? "var(--muted)" : "var(--onaccent)" }, s);
+        t.textContent = lab;
+      }
+    }
+    if (cat === "support") {
+      var x = 2;
+      gene(x, xl, "x"); x += GW + 3;
+      for (var k = 1; k < dist; k++) { gene(x, "", "other"); x += GW + 3; }
+      gene(x, yl, "y");
+    } else if (cat === "apart") {
+      gene(2, xl, "x");
+      var t = el("text", { x: 89, y: 15, "text-anchor": "middle", "font-size": "10.5", fill: "var(--muted)" }, s);
+      t.textContent = dist == null ? "other contig" : "← " + dist + " genes →";
+      gene(140, yl, "y");
+    } else if (cat === "xonly") { gene(2, xl, "x"); gene(39, "–", "none"); }
+    else { gene(2, "–", "none"); gene(39, yl, "y"); }
+    return s;
+  }
+
+  function showBond(i) {
+    btns.forEach(function (b, k) { b.setAttribute("aria-pressed", k === i ? "true" : "false"); });
+    var e = ex[i], xl = gname(e.x), yl = gname(e.y);
+    var rows = document.getElementById("bondrows");
+    rows.innerHTML = "";
+    var hd = h("div", "row head", null, rows);
+    h("span", "", "Genome", hd); h("span", "", "Group", hd); h("span", "", "Matches of " + esc(xl) + " and " + esc(yl), hd); h("span", "", "Counted?", hd);
+    var f = h("div", "row focal", null, rows);
+    h("div", "sp", "<i>" + esc(SP) + "</i><small>this genome · " + esc(D.genome.phylum) + "</small>", f);
+    h("div", "grp", "own group", f);
+    f.appendChild(mini("support", e.y - e.x, xl, yl));
+    h("div", "vd yes", "own group counts 1 (its " + (D.genome.group_size - 1) + " other genomes are skipped)", f);
+    var shownGroups = {};
+    e.sample.forEach(function (p) {
+      var r = h("div", "row", null, rows);
+      h("div", "sp", "<i>" + esc(p.species) + "</i><small>" + esc(p.phylum) + " · " + esc(p.genome) + "</small>", r);
+      h("div", "grp", "group " + p.grp, r);
+      r.appendChild(mini(p.cat, p.dist, xl, yl));
+      var v;
+      if (p.cat === "support") {
+        v = shownGroups[p.grp] ? '✓ within 3 genes · group already counted' : "✓ within 3 genes · group counts 1";
+        shownGroups[p.grp] = true;
+        h("div", "vd yes", v, r);
+      } else if (p.cat === "apart") {
+        h("div", "vd no", "✗ " + (p.dist == null ? "on different contigs" : p.dist + " genes apart") + " · adds to chance only", r);
+      } else {
+        h("div", "vd no", "only " + esc(p.cat === "xonly" ? xl : yl) + " has a match · not used", r);
+      }
+    });
+    var more = h("div", "small", null, rows);
+    more.style.paddingTop = "6px";
+    more.textContent = "Showing " + e.sample.length + " of the " + (e.genomes_x + e.genomes_y - e.genomes_both) +
+      " genomes that hold a match of either gene; the counts on the right use all of them.";
+
+    var t = document.getElementById("tally");
+    var lo = 1, hi = 3000, W = 300;
+    function lx(v) { return 10 + (Math.log(v) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)) * (W - 20); }
+    var ticks = [1, 10, 100, 1000];
+    var svg = '<svg viewBox="0 0 ' + W + ' 58" role="img" aria-label="Strength ' + fmt(e.lam, 1) + ' against threshold ' + PR.tau_primary + '">' +
+      '<line x1="10" x2="' + (W - 10) + '" y1="30" y2="30" stroke="var(--rule)" stroke-width="2"/>' +
+      ticks.map(function (v) { return '<line x1="' + lx(v) + '" x2="' + lx(v) + '" y1="27" y2="33" stroke="var(--gene-line)"/><text x="' + lx(v) + '" y="48" text-anchor="middle" class="axis">' + fmt(v, 0) + "</text>"; }).join("") +
+      '<rect x="' + lx(PR.tau_primary) + '" y="26" width="' + (lx(e.lam) - lx(PR.tau_primary)) + '" height="8" rx="2" fill="var(--bond-soft)"/>' +
+      '<line x1="' + lx(PR.tau_primary) + '" x2="' + lx(PR.tau_primary) + '" y1="14" y2="38" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="3 2"/>' +
+      '<text x="' + lx(PR.tau_primary) + '" y="10" text-anchor="middle" class="axis" style="fill:var(--ink)">τ = ' + PR.tau_primary + "</text>" +
+      '<circle cx="' + lx(e.lam) + '" cy="30" r="6" fill="var(--bond)" stroke="var(--panel)" stroke-width="2"/>' +
+      '<text x="' + Math.min(lx(e.lam), W - 30) + '" y="10" text-anchor="middle" class="axis" style="fill:var(--bond)">Λ = ' + fmt(e.lam, 0) + "</text>" + "</svg>";
+    t.innerHTML =
+      '<div class="t"><span>Genome groups holding matches of both genes</span><b>' + e.groups_both + "</b></div>" +
+      '<div class="t"><span>…where the two matches lie within 3 positions (0–2 genes between)</span><b>' + e.groups_support + "</b></div>" +
+      '<div class="t"><span>n = those groups + 1 for the own group</span><b>' + fmt(e.n, 0) + "</b></div>" +
+      '<div class="t"><span>E = groups expected to show this by chance</span><b>' + fmt(e.E, 2) + "</b></div>" +
+      '<div class="t big"><span>Strength Λ = n·ln(n/E) − n + E</span><b>' + fmt(e.lam, 1) + "</b></div>" +
+      '<div class="t"><span>Bond placed when n ≥ 2 and Λ ≥ τ</span><b style="color:var(--bond)">' + (e.n >= 2 && e.lam >= PR.tau_primary ? "yes" : "no") + "</b></div>" + svg +
+      '<p class="small" style="margin-top:8px">Supporting genomes: ' + e.genomes_support + " of " + e.genomes_both + " that hold both matches (" +
+      Object.keys(e.support_by_distance).sort().map(function (k) { return e.support_by_distance[k] + " at distance " + k; }).join(", ") +
+      "). This Λ is the bar between " + esc(xl) + " and " + esc(yl) + " in section 2.</p>";
+  }
+  document.getElementById("bondfoot").innerHTML =
+    "Chance per genome = 6 ÷ (genes in that genome): the probability that the two matches land within 3 positions at random. " +
+    "A group's chance is 1 − ∏(1 − chance) over its genomes that hold both matches; E sums the groups plus the own-group term. " +
+    "τ = " + PR.tau_primary + " is the smallest Λ at which shuffling gene order inside every genome leaves at most 1% as many bonds as the real order (0.89% on this collection). " +
+    "Each Λ here, recomputed from the neighbor lists, equals the stored bond.";
+  showBond(0);
+
+  /* ------------------------------------------------------------------ section 2: track */
+  var nRun = RUN[1] - RUN[0] + 1;
+  document.getElementById("s2sub").innerHTML = nRun + " consecutive genes of <i>" + esc(SP) + "</i> form one bonded run (genome positions " +
+    (D.genome.first_pos + RUN[0]).toLocaleString("en-US") + "–" + (D.genome.first_pos + RUN[1]).toLocaleString("en-US") +
+    " of " + D.genome.n_genes.toLocaleString("en-US") + "). The page opens on the finished tree. <b>Play cuts</b> rebuilds it one cut at a time; drag the slider to move through the cuts.";
+  var SW = 30, PL = 66, PRR = 72;
+  var nW = W1 - W0 + 1;
+  var TWID = PL + nW * SW + PRR;
+  var Y = { lab: 90, gT: 96, gH: 18, sTop: 126, sBase: 202, badge: 216, band: 232, brk: 262, row: 12 };
+  var THEIGHT = Y.brk + (maxDepth + 1) * Y.row + 10;
+  var track = document.getElementById("track");
+  track.setAttribute("viewBox", "0 0 " + TWID + " " + THEIGHT);
+  track.setAttribute("width", TWID);
+  track.setAttribute("height", THEIGHT);
+  function gx(i) { return PL + (i - W0) * SW; }
+  function bx(j) { return PL + (j + 1 - W0) * SW; }
+  var SMAX = 1600;
+  function sh(s) { return Math.max(2, (Math.log(s / PR.tau_primary) / Math.log(SMAX / PR.tau_primary)) * (Y.sBase - Y.sTop)); }
+
+  var gGrid = el("g", null, track);
+  [100, 1000].forEach(function (v) {
+    var yy = Y.sBase - sh(v);
+    el("line", { x1: PL - 6, x2: TWID - PRR + 10, y1: yy, y2: yy, class: "grid" }, gGrid);
+    for (var i = W0; i <= W1; i += 25) {
+      var t = el("text", { x: i === W0 ? PL - 10 : gx(i) + 4, y: yy - 3, class: "axis", "text-anchor": i === W0 ? "end" : "start" }, gGrid);
+      t.textContent = fmt(v, 0);
+    }
+  });
+  el("line", { x1: PL - 6, x2: TWID - PRR + 10, y1: Y.sBase, y2: Y.sBase, class: "base" }, gGrid);
+  var tt = el("text", { x: PL - 10, y: Y.sBase + 4, class: "axis", "text-anchor": "end" }, gGrid); tt.textContent = "τ 8";
+  var at = el("text", { x: 4, y: Y.sTop - 8, class: "axis" }, gGrid); at.textContent = "Λ";
+
+  var gGenes = el("g", null, track), geneEls = [];
+  var gLabs = el("g", null, track);
+  for (var i = W0; i <= W1; i++) {
+    var g = G[i], out = i < RUN[0] || i > RUN[1];
+    var gg = el("g", { class: out ? "g-out" : "" }, gGenes);
+    el("path", { d: arrowPath(gx(i) + 3, Y.gT, SW - 6, Y.gH, g.strand), class: "g-arrow" + (isRibo(i) ? " ribo" : "") }, gg);
+    var hr = el("rect", { x: gx(i), y: Y.lab - 70, width: SW, height: Y.gT + Y.gH - (Y.lab - 70), class: "hit" }, gg);
+    hr.dataset.gene = i;
+    geneEls[i] = gg;
+    var cx = gx(i) + SW / 2;
+    var lt = el("text", { x: cx, y: Y.lab, transform: "rotate(-52 " + cx + " " + Y.lab + ")", class: "lab" + (!g.label ? " un" : g.src === "Pfam" ? " pf" : "") }, gLabs);
+    var L = g.label || "unnamed";
+    lt.textContent = L.length > 15 ? L.slice(0, 14) + "…" : L;
+    if (out) lt.setAttribute("opacity", ".5");
+  }
+  function isRibo(i) { return G[i].label && G[i].src === "KO" && /^[LS]\d|^L7/.test(G[i].label); }
+
+  var gBars = el("g", null, track), barEls = {};
+  for (var j = W0; j < W1; j++) {
+    var b = BD[j], x = bx(j), outB = j < RUN[0] || j >= RUN[1];
+    if (b.s > 0) {
+      var hh = sh(b.s), y0 = Y.sBase - hh;
+      var r = Math.min(3, hh / 2);
+      var p = el("path", { d: "M" + (x - 3) + " " + Y.sBase + "V" + (y0 + r) + "Q" + (x - 3) + " " + y0 + " " + x + " " + y0 + "Q" + (x + 3) + " " + y0 + " " + (x + 3) + " " + (y0 + r) + "V" + Y.sBase + "Z", class: "bar" + (outB ? " out" : "") }, gBars);
+      barEls[j] = p;
+      if (isKappaCut(j) && !outB) {
+        el("path", { d: "M" + x + " " + (y0 - 13) + "l5 5-5 5-5-5z", class: "kap" }, gBars);
+        var kt = el("text", { x: x, y: y0 - 17, "text-anchor": "middle", class: "kapt" }, gBars); kt.textContent = "κ";
+      }
+    } else {
+      el("path", { d: "M" + (x - 4) + " " + (Y.sBase - 8) + "l8 8M" + (x + 4) + " " + (Y.sBase - 8) + "l-8 8", class: "nob" }, gBars);
+    }
+    var hb = el("rect", { x: x - 9, y: Y.sTop - 8, width: 18, height: Y.sBase - Y.sTop + 12, class: "hit" }, gBars);
+    hb.dataset.bound = j;
+  }
+  var gArc = el("g", null, track);
+
+  /* run edges + benchmark band */
+  var gBand = el("g", null, track);
+  el("rect", { x: gx(RIBO[0]) + 3, y: Y.band - 4, width: (RIBO[1] - RIBO[0] + 1) * SW - 6, height: 5, rx: 2, class: "band" }, gBand);
+  var bt = el("text", { x: gx(RIBO[0]) + 3, y: Y.band + 12, class: "bandt" }, gBand);
+  bt.textContent = "benchmark ribosomal run (" + (RIBO[1] - RIBO[0] + 1) + " genes, " + gname(RIBO[0]) + "…" + gname(RIBO[1]) + ")";
+
+  var gCuts = el("g", null), cutEls = {};
+  track.insertBefore(gCuts, gBars);   // cut lines sit behind the strength bars
+  Object.keys(cutStep).forEach(function (k) {
+    var j = +k, x = bx(j), c = el("g", { class: "cut" }, gCuts);
+    el("line", { x1: x, x2: x, y1: Y.gT - 6, y2: Y.badge - 8, class: "cutl" }, c);
+    el("circle", { cx: x, cy: Y.badge, r: 8.5, class: "cutb" }, c);
+    var n = el("text", { x: x, y: Y.badge + 3.5, "text-anchor": "middle", class: "cutn" }, c); n.textContent = cutStep[j];
+    cutEls[j] = c;
+  });
+
+  var gBrk = el("g", null, track), brkEls = {};
+  nodes.forEach(function (n) {
+    var x1 = gx(n.lo) + 4, x2 = gx(n.hi) + SW - 4, y = Y.brk + n.depth * Y.row;
+    var p = el("path", { d: "M" + x1 + " " + (y + 7) + "V" + (y + 1) + "H" + x2 + "V" + (y + 7), class: "brk" }, gBrk);
+    var hit = el("rect", { x: x1, y: y - 2, width: x2 - x1, height: Y.row, class: "hit" }, gBrk);
+    hit.dataset.node = n.id;
+    brkEls[n.id] = p;
+  });
+
+  /* ------------------------------------------------------------------ tree (fits width) */
+  var tree = document.getElementById("tree"), treeEls = {}, treeLab = {}, treeEdge = {};
+  function drawTree() {
+    var Wd = Math.max(300, Math.round(tree.getBoundingClientRect().width) || 600);
+    var padL = 10, padR = 34, rowH = 24, top = 16;
+    var Ht = top + maxDepth * rowH + 22;
+    tree.setAttribute("viewBox", "0 0 " + Wd + " " + Ht);
+    tree.setAttribute("height", Ht);
+    tree.innerHTML = "";
+    var span = nRun;
+    function tx(v) { return padL + (v - RUN[0] + 0.5) / span * (Wd - padL - padR); }
+    var ge = el("g", null, tree), gn = el("g", null, tree);
+    nodes.forEach(function (n) {
+      n.tx = tx((n.lo + n.hi) / 2); n.ty = top + n.depth * rowH;
+    });
+    nodes.forEach(function (n) {
+      n.kids.forEach(function (c) {
+        var ym = n.ty + rowH / 2;
+        treeEdge[c.id] = el("path", { d: "M" + n.tx + " " + n.ty + "V" + ym + "H" + c.tx + "V" + c.ty, class: "tedge" }, ge);
+      });
+    });
+    nodes.forEach(function (n) {
+      var r = 3 + 3.5 * Math.sqrt(n.size / nRun);
+      var c = el("circle", { cx: n.tx, cy: n.ty, r: r, class: "tnode" }, gn);
+      treeEls[n.id] = c;
+      if (n.size >= 6) {
+        var t = el("text", { x: n.tx + r + 3, y: n.ty + 3.5, class: "tlab" }, gn);
+        t.textContent = n.size;
+        treeLab[n.id] = t;
+      } else treeLab[n.id] = null;
+      var hit = el("circle", { cx: n.tx, cy: n.ty, r: Math.max(9, r + 4), class: "hit" }, gn);
+      hit.dataset.node = n.id;
+    });
+    var lg = el("text", { x: Wd - 4, y: 12, "text-anchor": "end", class: "tlab" }, tree);
+    lg.textContent = "numbers = genes in the locus";
+    applyStep(false);
+    applyHL();
+  }
+
+  /* ------------------------------------------------------------------ state */
+  var step = NSTEP, timer = null, sel = null, pinned = false;
+  var slider = document.getElementById("step");
+  slider.max = NSTEP; slider.value = NSTEP;
+  document.getElementById("treetitle").textContent = "The tree: " + nodes.length + " nodes, every one reported as a locus in this version";
+
+  function cutText(e) {
+    var parts = e.cuts.map(function (j) { return gHTML(j) + " | " + gHTML(j + 1); });
+    var j0 = e.cuts[0];
+    var where = parts.length > 1 ? "boundaries " + parts.join(" and ") : "boundary " + parts[0];
+    if (isKappaCut(j0)) return "its lowest-cohesion " + where + " (κ = " + fmt(BD[j0].kap, 4) + ", below " + PR.theta_primary + "; the bond strength there is " + fmt(BD[j0].s, 1) + ")";
+    return "its weakest " + where + " (Λ = " + fmt(BD[j0].s, 1) + (parts.length > 1 ? ", equal strength, cut together" : "") + ")";
+  }
+  function piecesText(e) {
+    var bits = [], st = e.lo;
+    e.cuts.concat([e.hi + 1]).forEach(function (c, k) {
+      var a = st, b = k < e.cuts.length ? c : e.hi;
+      if (b - a + 1 >= 2) bits.push((b - a + 1) + " genes (" + spanHTML(a, b) + ")");
+      else bits.push("single gene " + gHTML(a));
+      st = c + 1;
+    });
+    return bits.join(", ");
+  }
+  var atRest = true;
+  function narrate() {
+    var nar = document.getElementById("nar");
+    if (atRest && step === NSTEP) {
+      nar.innerHTML = "<b>Finished tree.</b> " + NSTEP + " cuts split the " + nRun + "-gene run into " + nodes.length +
+        " nodes (brackets below the genes, and the tree at the bottom); each node is reported as a locus." +
+        (benchNode ? " The node " + spanHTML(benchNode.lo, benchNode.hi) + " equals the benchmark ribosomal run." : "") +
+        " Press <b>Play cuts</b> to rebuild it, weakest boundary first.";
+    } else if (step === 0) {
+      nar.innerHTML = "<b>Start.</b> One bonded run of " + nRun + " genes, " + spanHTML(RUN[0], RUN[1]) +
+        ". No bond crosses the boundary on either side (×), so the run stops there.";
+    } else {
+      var e = events[step - 1];
+      nar.innerHTML = "<b>Cut " + step + " of " + NSTEP + ".</b> The piece " + spanHTML(e.lo, e.hi) + " (" + e.size + " genes) is cut at " +
+        cutText(e) + ". New pieces: " + piecesText(e) + "." +
+        (step === NSTEP ? " <b>Done:</b> " + nodes.length + " nodes, all reported as loci." +
+          (benchNode ? " The node " + spanHTML(benchNode.lo, benchNode.hi) + " equals the benchmark ribosomal run." : "") : "");
+    }
+    document.getElementById("stepnum").textContent = step + " / " + NSTEP;
+  }
+  function applyStep(scroll) {
+    nodes.forEach(function (n) {
+      var on = n.step <= step, newest = !atRest && step > 0 && n.step === step;
+      brkEls[n.id].setAttribute("class", "brk" + (on ? " on" : "") + (newest ? " newest" : ""));
+      if (treeEls[n.id]) {
+        treeEls[n.id].setAttribute("class", "tnode" + (on ? " on" : "") + (newest ? " newest" : ""));
+        if (treeEdge[n.id]) treeEdge[n.id].setAttribute("class", "tedge" + (on ? " on" : ""));
+        if (treeLab[n.id]) treeLab[n.id].setAttribute("class", "tlab" + (on ? " on" : ""));
+      }
+    });
+    Object.keys(cutEls).forEach(function (k) {
+      var s = cutStep[k];
+      cutEls[k].setAttribute("class", "cut" + (s <= step ? " on" : "") + (!atRest && s === step ? " newest" : ""));
+    });
+    slider.value = step;
+    narrate();
+    applyHL();
+    if (scroll && step > 0) {
+      var e = events[step - 1], sc = document.getElementById("scroller");
+      var xa = bx(e.cuts[0]), xb = bx(e.cuts[e.cuts.length - 1]);
+      if (xa < sc.scrollLeft + 60 || xb > sc.scrollLeft + sc.clientWidth - 60) {
+        sc.scrollTo({ left: Math.max(0, (xa + xb) / 2 - sc.clientWidth / 2), behavior: motionQ.matches ? "auto" : "smooth" });
+      }
+    }
+  }
+  function setStep(s, scroll) { atRest = false; step = Math.max(0, Math.min(NSTEP, s)); applyStep(scroll); }
+  function play() {
+    if (timer) return stop();
+    if (step >= NSTEP) setStep(0, true);
+    document.getElementById("playtxt").textContent = "Pause";
+    document.getElementById("playicon").setAttribute("d", "M3 2h3v10H3zM8 2h3v10H8z");
+    timer = setInterval(function () {
+      if (step >= NSTEP) { stop(); return; }
+      setStep(step + 1, true);
+      if (step >= NSTEP) stop();
+    }, 1100);
+  }
+  function stop() {
+    clearInterval(timer); timer = null;
+    document.getElementById("playtxt").textContent = step >= NSTEP ? "Play cuts" : "Resume";
+    document.getElementById("playicon").setAttribute("d", "M3 2l9 5-9 5z");
+  }
+  document.getElementById("b-play").addEventListener("click", play);
+  document.getElementById("b-restart").addEventListener("click", function () { stop(); setStep(0, true); document.getElementById("scroller").scrollTo({ left: 0 }); });
+  document.getElementById("b-back").addEventListener("click", function () { stop(); setStep(step - 1, true); });
+  document.getElementById("b-fwd").addEventListener("click", function () { stop(); setStep(step + 1, true); });
+  slider.addEventListener("input", function () { stop(); setStep(+slider.value, true); });
+
+  /* ------------------------------------------------------------------ highlight + details */
+  function chainOf(i) { return nodes.filter(function (n) { return n.lo <= i && i <= n.hi; }).sort(function (a, b) { return a.depth - b.depth; }); }
+  function applyHL() {
+    var hlNodes = {}, inGenes = {}, selGene = -1;
+    Object.keys(barEls).forEach(function (k) { barEls[k].classList.remove("hl"); });
+    gArc.innerHTML = "";
+    var det = document.getElementById("det");
+    if (!sel) { det.innerHTML = ""; }
+    else if (sel.type === "node") {
+      var n = byId[sel.id];
+      hlNodes[n.id] = true;
+      for (var i = n.lo; i <= n.hi; i++) inGenes[i] = true;
+      var txt = "<b>Locus</b> " + spanHTML(n.lo, n.hi) + ": " + n.size + " genes, depth " + n.depth + " in the tree, " +
+        (n.step === 0 ? "the whole run (root)" : "appears at cut " + n.step) + ". ";
+      if (n.kids.length || n.hi - n.lo >= 2) txt += "Later cut at " + cutText(n) + " (cut " + n.splitStep + ").";
+      else txt += "Smallest locus: two genes joined by a boundary of Λ = " + fmt(BD[n.lo].s, 1) + ".";
+      if (benchNode && n === benchNode) txt += " This node equals the benchmark ribosomal run.";
+      det.innerHTML = txt;
+    } else if (sel.type === "gene") {
+      var i2 = sel.i, g = G[i2], ch = chainOf(i2);
+      selGene = i2;
+      ch.forEach(function (n) { hlNodes[n.id] = true; });
+      det.innerHTML = gHTML(i2) + " · " + (g.ko ? "KOfam " + esc(g.ko) : "no KO call") + (g.pfam ? " · Pfam: " + esc(g.pfam.replace(/,/g, ", ")) : " · no Pfam row") +
+        " · " + g.aa + " aa, " + (g.strand > 0 ? "+" : "−") + " strand, genome position " + (D.genome.first_pos + i2).toLocaleString("en-US") +
+        (ch.length ? " · inside " + ch.length + " nested loci (" + ch.map(function (n) { return n.size; }).join(" ⊃ ") + " genes)" : " · outside the run");
+    } else if (sel.type === "bound") {
+      var j = sel.j, b = BD[j];
+      if (barEls[j]) barEls[j].classList.add("hl");
+      var t2 = gHTML(j) + " | " + gHTML(j + 1) + ": ";
+      if (b.s > 0) {
+        var x1 = gx(b.bk) + SW / 2, x2 = gx(b.bk + b.bd) + SW / 2, ya = Y.gT - 2;
+        el("path", { d: "M" + x1 + " " + ya + "C" + x1 + " " + (ya - 26) + " " + x2 + " " + (ya - 26) + " " + x2 + " " + ya, class: "arc" }, gArc);
+        t2 += "strength Λ = " + fmt(b.s, 1) + ", set by the bond " + gHTML(b.bk) + "–" + gHTML(b.bk + b.bd) +
+          (b.bd > 1 ? " (" + b.bd + " positions apart, spanning " + b.bd + " boundaries)" : " (adjacent genes)") +
+          " · cohesion κ = " + (b.kap == null ? "n/a" : fmt(b.kap, 3)) + " · ";
+        t2 += cutStep[j] ? "cut at cut " + cutStep[j] + (isKappaCut(j) ? " (low cohesion: cut first)" : "") : (j >= RUN[0] && j < RUN[1] ? "never cut: it lies inside a two-gene locus" : "belongs to a neighboring run");
+      } else t2 += "no bond crosses this boundary, so a run ends here.";
+      det.innerHTML = t2;
+    }
+    for (var i3 = W0; i3 <= W1; i3++) {
+      var base = (i3 < RUN[0] || i3 > RUN[1]) ? "g-out" : "";
+      geneEls[i3].setAttribute("class", base + (inGenes[i3] ? " g-in" : "") + (i3 === selGene ? " g-sel" : ""));
+    }
+    nodes.forEach(function (n) {
+      brkEls[n.id].classList.toggle("hl", !!hlNodes[n.id]);
+      if (treeEls[n.id]) treeEls[n.id].classList.toggle("hl", !!hlNodes[n.id]);
+    });
+  }
+  function selFromTarget(t) {
+    if (!t || !t.dataset) return null;
+    if (t.dataset.node != null) return { type: "node", id: +t.dataset.node };
+    if (t.dataset.gene != null) return { type: "gene", i: +t.dataset.gene };
+    if (t.dataset.bound != null) return { type: "bound", j: +t.dataset.bound };
+    return null;
+  }
+  [track, tree].forEach(function (svg) {
+    svg.addEventListener("pointerover", function (ev) {
+      if (pinned || ev.pointerType === "touch") return;
+      var s = selFromTarget(ev.target);
+      if (s) { sel = s; applyHL(); }
+    });
+    svg.addEventListener("pointerleave", function () { if (!pinned) { sel = null; applyHL(); } });
+    svg.addEventListener("click", function (ev) {
+      var s = selFromTarget(ev.target);
+      if (s) { sel = s; pinned = true; } else { sel = null; pinned = false; }
+      applyHL();
+    });
+  });
+  var scroller = document.getElementById("scroller");
+  document.getElementById("fig").addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape") { sel = null; pinned = false; applyHL(); }
+  });
+  scroller.addEventListener("keydown", function (ev) {
+    if (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft") return;
+    ev.preventDefault();
+    var i = sel && sel.type === "gene" ? sel.i : W0 - 1;
+    i = Math.max(W0, Math.min(W1, i + (ev.key === "ArrowRight" ? 1 : -1)));
+    sel = { type: "gene", i: i }; pinned = true; applyHL();
+    var x = gx(i);
+    if (x < scroller.scrollLeft + 40 || x > scroller.scrollLeft + scroller.clientWidth - 40) scroller.scrollLeft = x - scroller.clientWidth / 2;
+  });
+  var order = nodes.slice().sort(function (a, b) { return a.lo - b.lo || b.size - a.size; });
+  tree.addEventListener("keydown", function (ev) {
+    if (ev.key !== "ArrowRight" && ev.key !== "ArrowLeft") return;
+    ev.preventDefault();
+    var k = sel && sel.type === "node" ? order.indexOf(byId[sel.id]) : -1;
+    k = Math.max(0, Math.min(order.length - 1, k + (ev.key === "ArrowRight" ? 1 : -1)));
+    sel = { type: "node", id: order[k].id }; pinned = true; applyHL();
+  });
+
+  var nk = Object.keys(cutStep).filter(function (k) { return isKappaCut(+k); }).length;
+  document.getElementById("kappanote").innerHTML =
+    "Cohesion κ of a boundary: take the 50 nearest embedding neighbors of each flanking gene, look at the genes beside them on that side, and measure how alike those genes are (mean pairwise similarity, corrected for the background level); κ is the lower of the two sides. " +
+    "Boundaries with κ below " + PR.theta_primary + " are cut first, lowest κ first (" + nk + " here); every other cut takes the weakest Λ in its piece. Equal values are cut together.";
+
+  /* ------------------------------------------------------------------ section 3: comparison strip */
+  var cmp = document.getElementById("cmp");
+  var NG = D.window.n_genes;
+  var pAll = D.primary.nodes, sAll = D.secondary.nodes;
+  (function depths() {
+    var pid = {};
+    pAll.forEach(function (n) { pid[n.id] = n; });
+    pAll.forEach(function (n) { var d = 0, q = n; while (q.parent >= 0 && pid[q.parent]) { q = pid[q.parent]; d++; } n.d = d; });
+    sAll.forEach(function (n) { var d = 0, q = n; while (q.parent >= 0) { q = sAll[q.parent]; d++; } n.d = d; });
+  })();
+  var pDepth = Math.max.apply(null, pAll.map(function (n) { return n.d; }));
+  var sDepth = Math.max.apply(null, sAll.map(function (n) { return n.d; }));
+  var sRun = D.secondary.runs.reduce(function (a, r) { return r[1] - r[0] > a[1] - a[0] ? r : a; });
+  var sRep = sAll.filter(function (n) { return n.reported; }).length;
+  var lowShare = 0, nb = 0;
+  for (var q = sRun[0]; q < sRun[1]; q++) { nb++; if (BD[q].s2 > 0 && BD[q].kap2 !== null && BD[q].kap2 < PR.theta_secondary) lowShare++; }
+  function jac(a, b) { var i = Math.max(0, Math.min(a[1], b[1]) - Math.max(a[0], b[0]) + 1); return i / ((a[1] - a[0] + 1) + (b[1] - b[0] + 1) - i); }
+  var bestS = sAll.slice().sort(function (a, b) { return jac([b.lo, b.hi], RIBO) - jac([a.lo, a.hi], RIBO); })[0];
+  var pRuns = D.primary.runs;
+  document.getElementById("s3sub").innerHTML =
+    "The secondary version labels genes by sequence family and tests family pairs up to 8 positions apart. Here its bonds join <b>" +
+    (sRun[1] - sRun[0] + 1) + " genes into one run</b>; the embedding-list bonds give " + pRuns.length + " runs (" +
+    pRuns.map(function (r) { return r[1] - r[0] + 1; }).join(", ") + " genes). " +
+    "In that run " + Math.round(100 * lowShare / nb) + "% of boundaries have cohesion below " + PR.theta_secondary + ", so cohesion sets most of its cut order, and a node test keeps " +
+    sRep + " of its " + sAll.length + " nodes as loci. The family tree holds no node equal to the benchmark ribosomal run; its closest node is " +
+    spanHTML(bestS.lo, bestS.hi) + " (" + (bestS.hi - bestS.lo + 1) + " genes). The shaded span is the run of section 2; each line is one locus, deeper rows are nested inside the rows above.";
+
+  function drawCmp() {
+    var Wd = Math.max(300, Math.round(cmp.getBoundingClientRect().width) || 600), pad = 6, rowd = 4;
+    function x(i) { return pad + i / NG * (Wd - 2 * pad); }
+    var yLM = 18, yA = 50, yAn = yA + 16, yB = yAn + (pDepth + 1) * rowd + 34, yBn = yB + 16;
+    var Ht = yBn + (sDepth + 1) * rowd + 12;
+    cmp.setAttribute("viewBox", "0 0 " + Wd + " " + Ht);
+    cmp.setAttribute("height", Ht);
+    cmp.innerHTML = "";
+    el("rect", { x: x(RUN[0]), y: yLM + 8, width: x(RUN[1] + 1) - x(RUN[0]), height: Ht - yLM - 8, class: "cmp-region" }, cmp);
+    var lms = [RUN[0], D.genes.findIndex(function (g) { return g.label === "rpoB"; }), RIBO[0], RIBO[1], RUN[1]].filter(function (v, k, a) { return v >= 0 && a.indexOf(v) === k; });
+    var lastX = -999;
+    lms.forEach(function (i) {
+      var xx = x(i + 0.5);
+      el("line", { x1: xx, x2: xx, y1: yLM + 2, y2: yLM + 7, class: "cmp-tick" }, cmp);
+      if (xx - lastX > 34) {
+        var t = el("text", { x: xx, y: yLM - 2, "text-anchor": "middle", class: "cmp-lm" }, cmp);
+        t.textContent = gname(i); lastX = xx;
+      }
+    });
+    el("rect", { x: x(RIBO[0]), y: yLM + 3, width: x(RIBO[1] + 1) - x(RIBO[0]), height: 3, class: "band" }, cmp);
+    var ta = el("text", { x: pad, y: yA - 6, class: "cmp-title" }, cmp);
+    ta.textContent = "Embedding neighbor lists: " + pRuns.length + " runs, " + pAll.length + " loci (all nodes)";
+    pRuns.forEach(function (r) { el("rect", { x: x(r[0]) + 0.5, y: yA, width: Math.max(1, x(r[1] + 1) - x(r[0]) - 1), height: 7, rx: 2, class: "cmp-run" }, cmp); });
+    var tb = el("text", { x: pad, y: yB - 6, class: "cmp-title" }, cmp);
+    tb.textContent = "Sequence families: " + D.secondary.runs.length + " runs, " + sRep + " of " + sAll.length + " nodes reported";
+    D.secondary.runs.forEach(function (r) { el("rect", { x: x(r[0]) + 0.5, y: yB, width: Math.max(1, x(r[1] + 1) - x(r[0]) - 1), height: 7, rx: 2, class: "cmp-run" }, cmp); });
+    var all = pAll.map(function (n) { return { n: n, v: "p", y: yAn + n.d * rowd, rep: true }; })
+      .concat(sAll.map(function (n) { return { n: n, v: "s", y: yBn + n.d * rowd, rep: n.reported }; }));
+    var gL = el("g", null, cmp), gH = el("g", null, cmp);
+    all.forEach(function (o, k) {
+      var x1 = x(o.n.lo) + 0.8, x2 = x(o.n.hi + 1) - 0.8;
+      o.el = el("line", { x1: x1, x2: Math.max(x1 + 1, x2), y1: o.y, y2: o.y, class: "cmp-node " + (o.rep ? "rep" : "drop") }, gL);
+      var hl = el("line", { x1: x1, x2: Math.max(x1 + 1, x2), y1: o.y, y2: o.y, class: "cmp-hit" }, gH);
+      hl.dataset.k = k;
+    });
+    var cur = null;
+    function show(k, pin) {
+      if (cur) cur.el.classList.remove("hl");
+      cur = k == null ? null : all[k];
+      var d = document.getElementById("cmpdet");
+      if (!cur) { d.innerHTML = ""; return; }
+      cur.el.classList.add("hl");
+      var n = cur.n;
+      d.innerHTML = (cur.v === "p" ? "Embedding-list tree" : "Family tree") + ": " + spanHTML(n.lo, n.hi) + ", " + (n.hi - n.lo + 1) + " genes · " +
+        (cur.v === "p" ? "reported (every node is)" : n.reported ? "reported: passes the node test" : "dropped by the node test");
+    }
+    cmp.onpointerover = function (ev) { if (ev.target.dataset && ev.target.dataset.k != null) show(+ev.target.dataset.k); };
+    cmp.onclick = function (ev) { show(ev.target.dataset && ev.target.dataset.k != null ? +ev.target.dataset.k : null); };
+    cmp.onpointerleave = function () { show(null); };
+  }
+  document.getElementById("cmpdet").innerHTML = "";
+
+  /* ------------------------------------------------------------------ notes */
+  var simpl = [
+    "Section 1 lists " + (function () { var a = ex.map(function (e) { return e.sample.length; }), lo = Math.min.apply(null, a), hi = Math.max.apply(null, a); return lo === hi ? lo : lo + "–" + hi; })() + " genomes per bond; every count and Λ uses all genomes of the test set.",
+    "Bonds also join genes 2 or 3 positions apart (0–2 genes between). Each bar shows the strongest bond across that boundary; hover a bar to see which bond sets it.",
+    "Gene pairs that are homologs of each other are left unbonded, and bonds ignore strand and gene order inside the pair. The mini tracks in section 1 draw every pair left to right.",
+    "The secondary version tests each family pair at its own distance (up to 8 positions) and reports a node when its families recur together within twice its length in at least 2 other genome groups, above chance (Λ ≥ " + PR.tau_secondary + ")."
+  ];
+  simpl.forEach(function (t) { h("li", "", t, document.getElementById("simpl")); });
+  var dn = [
+    "Genome: <i>" + esc(D.genome.species) + "</i>, " + esc(D.genome.accession) + " (GTDB r232 species representative, " + D.genome.n_contigs + " contig, " + D.genome.n_genes.toLocaleString("en-US") + " genes), from the third untouched test set: " + D.collection.genomes + " complete GTDB genomes in " + D.collection.groups + " genome groups.",
+    "Primary version (sections 1–2): embedding-list bond tree, frozen run 3 (Z lists at z ≥ " + PR.zcut + ", group counting, τ = " + PR.tau_primary + ", cohesion cut line " + PR.theta_primary + ", every node reported). Secondary (section 3): family-bond tree (rescue3 families, adaptive distance, τ = " + PR.tau_secondary + ", cohesion cut line " + PR.theta_secondary + ", node test).",
+    "Every number on the page comes from the stored outputs: bonds, cohesion, tree nodes and loci. The split order recomputed from the boundary values reproduces the stored tree nodes exactly in both versions.",
+    "Gene names: KOfam calls (Aksha) shown as KEGG symbols, ribosomal proteins by name; genes without a KO call show their first observed Pfam domain in gray italics; genes with neither read “unnamed”.",
+    "Extracted read-only on 2026-11-20 by extract.py (beside this page, with bond_tree_data.json)."
+  ];
+  dn.forEach(function (t) { h("li", "", t, document.getElementById("datanotes")); });
+
+  /* ------------------------------------------------------------------ boot */
+  applyStep(false);
+  drawTree();
+  drawCmp();
+  var rt0 = null;
+  window.addEventListener("resize", function () { clearTimeout(rt0); rt0 = setTimeout(function () { drawTree(); drawCmp(); }, 120); });
+  // open the scroller on the ribosomal block so the first view shows the familiar genes
+  requestAnimationFrame(function () { scroller.scrollLeft = Math.max(0, gx(RUN[0] + 26) - 20); });
+})();
+</script>

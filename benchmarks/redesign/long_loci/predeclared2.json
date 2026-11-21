@@ -1,0 +1,114 @@
+{
+ "workstream": "long_loci part 2 (DPANN only)",
+ "written_utc": "2026-11-13T11:37Z",
+ "status_when_written": "No list-based bond, locus or score of this workstream exists. Read before writing: vocab_lists/REPORT.txt, vl.py (kernels, list sources, Learner.evaluate, cmd_job), the stored ladder counts in vocab_lists/results/job_z.json and job_aln.json (gold-free), the part-1 results of this workstream (all odd and even DPANN numbers of the family arms are known: part-1 L4b theta .1 even 1,680 / 1,598, summed .584, F1 .731/.700/.419).",
+ "question": "Does the L4b tree over list-based first-round bonds clear all seven DPANN bars in one output while keeping ribosomal resolved above 1,512?",
+ "seven_bars": "on even genomes against token DH: summed DF+TXSS excess >= DH - 0.01 (point); F1 DefenseFinder, TXSScan, CRISPRCasTyper each >= DH - 0.02 (point, as vscore.verdict); ribosomal recovered >= 1,650; ribosomal resolved > 1,512 (all 1,686 runs); Parvarchaeaceae recovered >= 110",
+ "arms": {
+  "Z": "bonds from vl.py round 0 (Learner.round0, kernels pass_count / pass_synneff imported read-only from $RD/vocab_lists/code/vl.py) with ws_calib z >= 10.6 lists (vl.z_lists over $RD/calib/table, one best match per genome, own group excluded), group counting (vl 'grp': n = 1 + supporting groups, E over groups, Lambda >= tau, n >= 2), round-0 homolog exclusion mask $RD/vocab_lists/excl/group_order{-1,0,1,2}.npz (K1000), tau = stored tau* 6 (vocab_lists job_z.json)",
+  "A": "the same with MMseqs2 alignment lists (vl.aln_lists over $RD/vocab_lists/mm/aln__k1000__{I,B}.npy, depth 1,000, own group excluded), excl group masks, stored tau* 6 (job_aln.json)",
+  "Zs": "z10.6 lists with own GENOME excluded (vl convention for the synteny unit), excl genome masks, vl 'syn' counting (Lambda over genomes x N_eff / n, N_eff from the synteny-retention matrix of this list set and order, <= 64 carriers, N_eff >= 2); tau* from vl's rule (round-0 instance FDR over 3 gene-order shuffles <= 0.01, ladder 4-20) computed here",
+  "As": "aln lists, own genome excluded, syn counting, tau* computed here as for Zs",
+  "F": "part-1 family arms (groups, tau 10; token kappa) for reference: L1, L4b, L4b+ at every theta (L4b+ newly odd-scored)",
+  "FZ": "EXPLORATORY: boundary bonded when the family bond (F, tau 10) or the Z bond (tau 6) spans it; s_k = max of the two Lambdas; tree and filter as the list arms (Z lists)"
+ },
+ "reproduction_gate": "the observed and shuffled round-0 ladder counts of Z and A must equal the stored counts in job_z.json / job_aln.json exactly before any locus is built from them",
+ "outputs_per_arm": "L1 (runs of bonded boundaries), L4b(theta) and L4b+(theta) with part-1 tree code unchanged (ll.build_tree / tree / boundary_score), theta in {0.02, 0.05, 0.1, 0.2}",
+ "cohesion": "list arms and FZ: kappa_var_knn50.npy (context_units, kNN homologs, family-free) primary; the same outputs with kappa_var_tokens.npy reported as a check for the selected theta. F: tokens (as part 1)",
+ "family_free_node_filter": {
+  "definition": "identity of a node gene = its list partners. For node I: genes of I with a non-empty list = |I|; q = max(2, ceil(0.5 |I|)); W = 2 |I|; a genome holds I when a window of <= W consecutive genes on one contig contains list partners of >= q distinct genes of I (each partner position counted for one node gene only, the lowest-indexed one listing it). n = groups other than the node's own with such a genome; E = closed form of part 1 with c_f(g) = list partners of node gene f in genome g; kept if n >= 2 and Lambda(n, E) >= the arm's bond tau. For the syn arms the node test counts groups (as part 1).",
+  "why": "the family test asks whether half of the node's families recur together; with no families, a node gene's identity is the set of genes that list it, which is the same object the bonds are made of"
+ },
+ "selection_odd": "per arm, among L1 / L4b(theta) / L4b+(theta) with the arm's primary kappa (9 candidates): maximise [odd conditions met vs DH (vscore.odd_conditions), odd ribosomal resolved, odd summed] (part-1 rule, amendment_1). Written to predeclared2.json (amendment) before any even number.",
+ "even_report": "per arm, the selected output: the seven quantities; paired intervals (genome bootstrap 2,000 draws, seed 17) against token DH, against part-1 L4b theta .1, and Z against A (selected outputs); ribosomal resolved paired vs DH and vs part-1 L4b; boundary precision; share of genes in loci; CRISPR-Cas member genes (instances >= 2 members) outside every locus; for the 56 runs that part-1 L4b leaves under-covered: how many have every internal boundary bonded in the arm, and how many each arm resolves; wall time and peak memory. Token-kappa check of the selected output; FZ exploratory.",
+ "expectations": {
+  "reproduction": "Z and A ladders equal the stored counts",
+  "tau": "Zs and As tau* 4-6",
+  "Z": "L1 over-extends (resolved 800-1,100); selected L4b or L4b+: resolved 1,500-1,620, recovered >= 1,675, Parv 114, CCT F1 .45-.50, DF .76-.81, TXSS .64-.70, summed .50-.58",
+  "A": "within .02 summed and .015 CCT F1 of Z; resolved within 60 of Z",
+  "Zs_As": "CCT F1 +.02 to +.04 above Z / A, summed within -.03 of them",
+  "FZ": "between F and Z on CCT; resolved 1,560-1,620",
+  "all_bars": "probability about one half that one output (most likely Zs or As L4b / L4b+) meets all seven bars; CRISPR-Cas F1 is the bar most likely to remain short, then summed excess (list bonds lengthen loci and raise the control)",
+  "under_covered_56": "list bonds bond every internal boundary of 25-50 of the 56 runs, and the selected list outputs resolve 15-40 of them",
+  "cas_outside": "CRISPR-Cas member genes outside every locus: F L4b 30-40%, list arms 15-28%"
+ },
+ "amendment_1_selection": {
+  "written_utc": "2026-11-13T12:09Z",
+  "status_when_written": "Odd scores of F (L1, L4b, L4b+), Z, A, As, FZ read. Zs still building (no Zs number exists). No even-genome number of any part-2 output computed or read.",
+  "selected": {
+   "F": {
+    "output": "L4b_t0.02",
+    "odd_score": [
+     2,
+     810,
+     0.6067025444772797
+    ]
+   },
+   "Z": {
+    "output": "L4bp_t0.02",
+    "odd_score": [
+     3,
+     781,
+     0.5906190254935817
+    ]
+   },
+   "A": {
+    "output": "L4b_t0.02",
+    "odd_score": [
+     3,
+     785,
+     0.614246660806447
+    ]
+   },
+   "As": {
+    "output": "L4b_t0.02",
+    "odd_score": [
+     3,
+     785,
+     0.6200889929298928
+    ]
+   },
+   "FZ": {
+    "output": "L4b_t0.02",
+    "odd_score": [
+     3,
+     784,
+     0.6225784630173683
+    ]
+   }
+  },
+  "even_outputs": {
+   "F": [
+    "L4b_t0.02 (selected)"
+   ],
+   "Z": [
+    "L4bp_t0.02 (selected)",
+    "L4b_t0.02 (like-for-like with A)",
+    "L4bptok_t0.02 (token-cohesion check)"
+   ],
+   "A": [
+    "L4b_t0.02 (selected)",
+    "L4bp_t0.02 (like-for-like with Z)",
+    "L4btok_t0.02 (token check)"
+   ],
+   "As": [
+    "L4b_t0.02 (selected)",
+    "L4btok_t0.02 (token check)"
+   ],
+   "FZ": [
+    "L4b_t0.02 (selected, EXPLORATORY)",
+    "L4btok_t0.02"
+   ],
+   "Zs": "selected by the same rule once built; recorded in amendment_2 before its even numbers"
+  },
+  "pairs": "Z vs A: selected vs selected, L4b_t0.02 vs L4b_t0.02, L4bp_t0.02 vs L4bp_t0.02; Zs vs As when Zs exists",
+  "expectation_update": "A / As L4b .02 (all three odd conditions met; odd resolved 785 vs DH 769): even resolved 1,530-1,580 with every F1 bar met; probability that at least one of them meets all seven bars about 0.6, resolved the bar most likely to fail (odd margin +16). Z's selection is L4b+ because its L4b misses the CRISPR-Cas condition (odd .448)."
+ },
+ "amendment_2_Zs": {
+  "written_utc": "2026-11-13T12:23Z",
+  "status_when_written": "Odd Zs read; even numbers of F, Z, A, As, FZ read (job 93147). No even number of Zs computed.",
+  "selected": "Zs L4bp_t0.02 (odd [3, 777, .586]); even outputs: L4bp_t0.02 (selected), L4b_t0.02 (like-for-like with As), L4bptok_t0.02 (token check)",
+  "pairs": "Zs vs As (selected vs selected; L4b vs L4b); every selected list output vs part-1 L4b theta .1 including ribosomal resolved",
+  "expectation": "Zs L4b+ .02 even: all seven bars (as Z L4b+), resolved 1,530-1,560, CRISPR-Cas F1 .48-.50, summed .57-.59"
+ }
+}

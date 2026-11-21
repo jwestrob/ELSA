@@ -1,0 +1,79 @@
+LONG_LOCI PART 7: S-ADD (STRAND-FIRST PIECES ADDED TO THE UNMODIFIED TREE) ON BOTH FROZEN BASES (2026-11-19)
+==========================================================================================================
+DPANN development (odd = theta selection, even = curated scores, all 1,686 ribosomal runs; paired genome bootstrap vs
+the frozen base) and Spacedust DEVELOPMENT rows. lut and SR-VP sets closed. Predeclaration predeclared7.json (04:56 UTC,
+sha256 8c68108e...), written before the mechanism check, any build and any score. Gates: unmodified trees equal the stored
+loci at every theta (both bases); frozen accurate reading reproduced (P 1,538 / 1,571, Z 1,504 / 1,547).
+S-add = kept nodes of the unmodified tree UNION the single-strand nodes of the strand-first tree (part-6 S weights) not
+already nodes, under the base's own node rule; S-add+B = the same over the part-6 B / SB trees.
+
+ANSWER
+1. The mechanism is confirmed. Of the curated instances whose best locus got worse under part-6 S, 79.1% (list base,
+   397) and 67.1% (family base, 648) have members on both strands, against 28.3% of all 7,096 instances (22-27% of the
+   unchanged and improved ones); 92.4% / 88.0% have a strand change inside the member span (39.0% of all). DefenseFinder
+   instances that got worse: 94.4% / 89.9% two-strand.
+2. S-add gives the curated systems their tight nodes back: at the frozen theta every curated F1 rises above the base on
+   both bases (list base DF +.007, TXSS +.002, CCT +.011; family base DF +.010, TXSS +.018, CCT +.009) while keeping
+   the ribosomal gain of strand-first splitting (accurate strict +60 list / +54 family; with bridges +81 on the list
+   base).
+3. NOT JUSTIFIED on the list base (predeclared test). S-add+B at the odd-selected theta .05: accurate strict 1,596 (+92),
+   loose 1,642 (+95), standing resolved 1,627 (+85 [+67, +105]), all seven bars, 0 new curated pairs, but summed excess
+   .529 (-.052 [-.060, -.044]) and TXSScan F1 -.012. At the frozen theta .02 (reported like-for-like): strict +81, every
+   F1 up, summed -.019 [-.022, -.016]: the added nodes raise the random-placement control more than they raise F1, so
+   excess falls although every F1 improves. S-add alone: the same pattern (theta .05 summed -.052; theta .02 -.019).
+4. NOT JUSTIFIED on the family base, by one condition. S-add at theta .2 (selected = frozen): strict 1,592 (+54), loose
+   1,634 (+63), standing 1,630 (+36 [+25, +48]), all seven bars, summed +.001 [-.006, +.009], every F1 up (DF +.010,
+   TXSS +.018, CCT +.009); it fails only 'no new pair of distinct curated systems in one locus' (3 pairs, of which the
+   frozen base already holds 45 others). S-add+B on the family base: strict +29 (fails +50), 3 new pairs.
+5. Added nodes cross the unmodified tree more often than expected: list base theta .02 adds 211,176 nodes (+16.5%), of
+   which 135,429 (64%) partially overlap a kept node without nesting; family base adds 152,864 (+12.2%), 121,161
+   crossing (79%). Strand-first splitting reorders the low-cohesion cuts beneath each strand break, so its pieces cut
+   across the unmodified tree's nodes rather than nesting inside them. Share of genes in loci: list base .571
+   (unchanged), family base .558 (frozen .552).
+6. Consequence for the second frozen run (rule fixed by the coordinator): S-add+B is not justified on the list base,
+   so the SR-VP PRIMARY is the unmodified embedding-list tree exactly as run on the lut set.
+7. Spacedust (DEVELOPMENT): S-add MATCHES the frozen base on both bases (family +.166, dExcess +.002 [-.005, +.010];
+   list +.106, -.005 [-.009, +.001]) with higher F1 (+.014 family, +.003 list); S-add+B the same within .001.
+8. Expectations missed: list-base summed change (-.019 to -.052; expected -.008 to +.002); crossing nodes 64-79% of added
+   (expected few); family-base S-add met every condition except the curated-pair one (expected bars met, F1 back within
+   .01: both held). Met: mechanism share (>= .6), list-base strict (+60 to +92; expected +45 to +80), 0 new pairs on the
+   list base.
+
+-----------------------------------------------------------------------------------------------------------------------
+TABLE 1. DPANN. Theta: odd-selected (sel) and frozen (fz). Curated: even genomes; ribosomal: all 1,686 runs; d vs frozen
+base [95%]. bio = audit accurate reading strict / loose. pairs = new distinct-curated pairs in one locus. bars = seven.
+
+base   variant      theta     summed  d summed [95%]        F1 DF / TXSS / CCT   dF1 DF / TXSS / CCT     rec / res   d res [95%]      anyfit bio strict/loose bars pairs loci       genes  justified
+list   frozen       .02       .581    -                     .824 / .749 / .489   -                       1681 / 1542 -                1575   1504 / 1547      yes  -     1,282,888  .571   -
+list   S-add        .05 sel   .529    -.052 [-.060, -.044]  .827 / .736 / .507   +.003 / -.012 / +.018   1681 / 1601 +59 [+44, +76]   1614   1575 / 1621      yes  0     1,624,839  .571   NO (summed, TXSS)
+list   S-add        .02 fz    .563    -.019 [-.022, -.015]  .831 / .751 / .500   +.007 / +.002 / +.011   1681 / 1599 +57 [+44, +72]   1609   1564 / 1613      yes  0     1,494,064  .571   NO (summed)
+list   S-add+B      .05 sel   .529    -.052 [-.061, -.045]  .827 / .736 / .507   +.003 / -.012 / +.018   1685 / 1627 +85 [+67, +105]  1640   1596 / 1642      yes  0     1,633,451  .571   NO (summed, TXSS)
+list   S-add+B      .02 fz    .562    -.019 [-.022, -.016]  .831 / .751 / .500   +.007 / +.002 / +.011   1685 / 1625 +83 [+67, +102]  1635   1585 / 1634      yes  0     1,502,676  .571   NO (summed)
+family frozen       .2        .513    -                     .762 / .672 / .461   -                       1685 / 1594 -                1631   1538 / 1571      yes  -     1,248,873  .552   -
+family S-add        .2 sel=fz .515    +.001 [-.006, +.009]  .772 / .690 / .469   +.010 / +.018 / +.009   1685 / 1630 +36 [+25, +48]   1639   1592 / 1634      yes  3     1,401,737  .558   NO (3 new pairs)
+family S-add+B      .2 sel=fz .514    +.001 [-.006, +.009]  .772 / .690 / .469   +.010 / +.018 / +.009   1685 / 1607 +13 [-7, +33]    1662   1567 / 1610      yes  3     1,408,158  .558   NO (strict +29, pairs)
+ Parvarchaeaceae 114 / 114 in every row; median boundary precision of covered instances DF 1.0, TXSS 1.0, CCT .5 in every
+ row. Added nodes (theta of the row): list S-add .05 196,086 (161,940 crossing), .02 211,176 (135,429); list S-add+B .05
+ 199,520 (165,374), .02 214,610 (138,863); family S-add 152,864 (121,161); family S-add+B 155,322 (123,548).
+
+MECHANISM CHECK (part-6 S vs frozen base, all genomes; members on both strands / strand change inside the member span)
+ list base   worse 397: .791 / .924   unchanged 6,332: .252 / .355   better 367: .267 / .401   all 7,096: .283 / .390
+ family base worse 648: .671 / .880   unchanged 6,089: .246 / .339   better 359: .223 / .359   all 7,096: .283 / .390
+ worse by caller (two-strand share, mean dF1): list DF 144 (.944, -.244), CCT 209 (.699, -.197), TXSS 44 (.727, -.226);
+ family DF 178 (.899, -.377), CCT 399 (.591, -.261), TXSS 71 (.549, -.215). Even genomes give the same shares (.805 /
+ .660 among worse).
+
+TABLE 2. Spacedust source207 (DEVELOPMENT), theta as selected on DPANN; d vs the frozen base (paired region bootstrap)
+base   variant   theta  F1     control  excess [95%]           dF1 [95%]               dExcess [95%]           verdict
+family frozen    .2     .667   .504     +.164 [+.125, +.202]   -                       -                       -
+family S-add     .2     .681   .515     +.166 [+.127, +.204]   +.014 [+.007, +.022]    +.002 [-.005, +.010]    MATCHES
+family S-add+B   .2     .682   .516     +.167 [+.127, +.205]   +.015 [+.008, +.024]    +.003 [-.004, +.012]    MATCHES
+list   frozen    .02    .598   .487     +.111 [+.072, +.149]   -                       -                       -
+list   S-add     .05    .601   .495     +.106 [+.066, +.144]   +.003 [-.002, +.008]    -.005 [-.009, +.001]    MATCHES
+list   S-add+B   .05    .602   .495     +.107 [+.067, +.144]   +.004 [-.001, +.010]    -.004 [-.009, +.002]    MATCHES
+ S-add raises F1 on both bases and the control with it; excess stays level (part-6 S on Spacedust: +.019 / +.006).
+
+COSTS: mechanism check + builds 4.0 min, scoring 2.2 + 2.3 min, Spacedust 3.9 min; all 24-CPU jobs, no watchdog cap
+reached. DEVIATIONS: none from predeclared7.json.
+FILES: predeclared7.json, REPORT7.txt, code/p7.py, code/q_p7.sbatch, results/p7/*.json (local); $RD/long_loci/p7/,
+loci/p7_*, logs/p7_* (biotite).

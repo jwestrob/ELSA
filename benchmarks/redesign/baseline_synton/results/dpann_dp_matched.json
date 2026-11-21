@@ -1,0 +1,301 @@
+{
+ "references": {
+  "DH": {
+   "summed": 0.42702026157359674,
+   "f1": {
+    "DefenseFinder": 0.7439475579523818,
+    "TXSScan": 0.5479943434588632,
+    "CRISPRCasTyper": 0.479418481084168
+   },
+   "control": {
+    "DefenseFinder": 0.4390331484305228,
+    "TXSScan": 0.4258884914071254,
+    "CRISPRCasTyper": 0.3993681278261974
+   },
+   "bprec": {
+    "DefenseFinder": 0.75,
+    "TXSScan": 0.4444444444444444,
+    "CRISPRCasTyper": 0.4
+   },
+   "ribo_recovered": 1686,
+   "ribo_resolved": 1512,
+   "parvarchaeaceae": "114/114",
+   "parvarchaeaceae_resolved": "113/114"
+  },
+  "word": {
+   "summed": 0.6082031367314683,
+   "f1": {
+    "DefenseFinder": 0.7351236392473506,
+    "TXSScan": 0.6358801058677297,
+    "CRISPRCasTyper": 0.3947823244969936
+   },
+   "control": {
+    "DefenseFinder": 0.3597115538579632,
+    "TXSScan": 0.4030890545256486,
+    "CRISPRCasTyper": 0.32412909720834593
+   },
+   "bprec": {
+    "DefenseFinder": 1.0,
+    "TXSScan": 0.6666666666666666,
+    "CRISPRCasTyper": 0.5
+   },
+   "ribo_recovered": 1684,
+   "ribo_resolved": 1420,
+   "parvarchaeaceae": "114/114",
+   "parvarchaeaceae_resolved": "109/114"
+  }
+ },
+ "outputs": {
+  "dp_matched": {
+   "card": {
+    "summed": -0.0005225701708043241,
+    "f1": {
+     "DefenseFinder": 0.0,
+     "TXSScan": 0.0,
+     "CRISPRCasTyper": 0.0
+    },
+    "control": {
+     "DefenseFinder": 4.81477285600997e-05,
+     "TXSScan": 0.0004744224422442244,
+     "CRISPRCasTyper": 0.00013680421737293776
+    },
+    "bprec": {
+     "DefenseFinder": null,
+     "TXSScan": null,
+     "CRISPRCasTyper": null
+    },
+    "ribo_recovered": 0,
+    "ribo_resolved": 0,
+    "parvarchaeaceae": "0/114",
+    "parvarchaeaceae_resolved": "0/114"
+   },
+   "summary_even": {
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1": 0.0,
+     "control": 0.00013680421737293776,
+     "excess": -0.00013680421737293776,
+     "median_bprec_covered": null,
+     "covered50": 0.0,
+     "localized": 0.0,
+     "median_best_span": null
+    },
+    "DefenseFinder": {
+     "n": 1261,
+     "f1": 0.0,
+     "control": 4.81477285600997e-05,
+     "excess": -4.81477285600997e-05,
+     "median_bprec_covered": null,
+     "covered50": 0.0,
+     "localized": 0.0,
+     "median_best_span": null
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1": 0.0,
+     "control": 0.0004744224422442244,
+     "excess": -0.0004744224422442244,
+     "median_bprec_covered": null,
+     "covered50": 0.0,
+     "localized": 0.0,
+     "median_best_span": null
+    },
+    "summed_DF_TXSS_excess": -0.0005225701708043241
+   },
+   "ribo": {
+    "all": {
+     "runs": 1686,
+     "recovered": 0,
+     "resolved": 0,
+     "median_precision_recovered": null,
+     "median_ext_left_recovered": null,
+     "median_ext_right_recovered": null,
+     "median_fragments": 0.0,
+     "parvarchaeaceae": "0/114",
+     "parvarchaeaceae_resolved": "0/114",
+     "median_coverage": 0.0
+    },
+    "even": {
+     "runs": 838,
+     "recovered": 0,
+     "resolved": 0,
+     "median_precision_recovered": null,
+     "median_ext_left_recovered": null,
+     "median_ext_right_recovered": null,
+     "median_fragments": 0.0,
+     "parvarchaeaceae": "0/59",
+     "parvarchaeaceae_resolved": "0/59",
+     "median_coverage": 0.0
+    }
+   },
+   "loci": {
+    "loci": 218,
+    "genes_covered": 487,
+    "median_span": 2.0,
+    "mean_span": 2.2339449541284404
+   },
+   "vs_DH_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.0,
+     "f1_B": 0.7439475579523818,
+     "excess_A": -4.81477285600997e-05,
+     "excess_B": 0.30491440952185894,
+     "d_f1": [
+      -0.7439475579523818,
+      -0.760469468506378,
+      -0.7274383381379126
+     ],
+     "d_excess": [
+      -0.304962557250419,
+      -0.3220287745564571,
+      -0.2878299931700289
+     ],
+     "d_control": [
+      -0.4389850007019627,
+      -0.4515588405908859,
+      -0.4276745788293469
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.0,
+     "f1_B": 0.5479943434588632,
+     "excess_A": -0.0004744224422442244,
+     "excess_B": 0.1221058520517378,
+     "d_f1": [
+      -0.5479943434588632,
+      -0.5685200966407756,
+      -0.5274044335823838
+     ],
+     "d_excess": [
+      -0.12258027449398202,
+      -0.13782669353236074,
+      -0.10763857352735821
+     ],
+     "d_control": [
+      -0.4254140689648812,
+      -0.4389342780802368,
+      -0.41324672466640794
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.0,
+     "f1_B": 0.479418481084168,
+     "excess_A": -0.00013680421737293776,
+     "excess_B": 0.08005035325797057,
+     "d_f1": [
+      -0.479418481084168,
+      -0.49214057347183143,
+      -0.465925258342851
+     ],
+     "d_excess": [
+      -0.08018715747534351,
+      -0.0891080942081628,
+      -0.07172037487212392
+     ],
+     "d_control": [
+      -0.39923132360882446,
+      -0.40843541407628636,
+      -0.38932932742249066
+     ]
+    },
+    "summed": [
+     -0.427542831744401,
+     -0.45036322482200253,
+     -0.40454660856575797
+    ],
+    "summed_A": -0.0005225701708043241,
+    "summed_B": 0.42702026157359674
+   },
+   "vs_word_even": {
+    "DefenseFinder": {
+     "n": 1261,
+     "f1_A": 0.0,
+     "f1_B": 0.7351236392473506,
+     "excess_A": -4.81477285600997e-05,
+     "excess_B": 0.37541208538938736,
+     "d_f1": [
+      -0.7351236392473506,
+      -0.7569016389991517,
+      -0.7152341064181198
+     ],
+     "d_excess": [
+      -0.3754602331179474,
+      -0.3954094719273554,
+      -0.3557953356518964
+     ],
+     "d_control": [
+      -0.3596634061294032,
+      -0.37162931100979674,
+      -0.3493802625407805
+     ]
+    },
+    "TXSScan": {
+     "n": 404,
+     "f1_A": 0.0,
+     "f1_B": 0.6358801058677297,
+     "excess_A": -0.0004744224422442244,
+     "excess_B": 0.23279105134208097,
+     "d_f1": [
+      -0.6358801058677297,
+      -0.6532754192136094,
+      -0.6158091845296874
+     ],
+     "d_excess": [
+      -0.2332654737843252,
+      -0.24957811111468425,
+      -0.2159919243299997
+     ],
+     "d_control": [
+      -0.40261463208340437,
+      -0.4147457688760264,
+      -0.39131286238626106
+     ]
+    },
+    "CRISPRCasTyper": {
+     "n": 1899,
+     "f1_A": 0.0,
+     "f1_B": 0.3947823244969936,
+     "excess_A": -0.00013680421737293776,
+     "excess_B": 0.07065322728864765,
+     "d_f1": [
+      -0.3947823244969936,
+      -0.4096106313107893,
+      -0.3786630606421362
+     ],
+     "d_excess": [
+      -0.07079003150602058,
+      -0.08235135497297197,
+      -0.06003466193481314
+     ],
+     "d_control": [
+      -0.32399229299097293,
+      -0.3333323369124549,
+      -0.3141964000984484
+     ]
+    },
+    "summed": [
+     -0.6087257069022726,
+     -0.6351089970518645,
+     -0.5831764917745501
+    ],
+    "summed_A": -0.0005225701708043241,
+    "summed_B": 0.6082031367314683
+   },
+   "ribo_resolved_vs_DH": [
+    -1512.0,
+    -1536.0,
+    -1486.0
+   ],
+   "ribo_resolved_vs_word": [
+    -1420.0,
+    -1450.0,
+    -1389.0
+   ]
+  }
+ },
+ "between": {},
+ "written": "2026-11-13T10:27:29Z"
+}

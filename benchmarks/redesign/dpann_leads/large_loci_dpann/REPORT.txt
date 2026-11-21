@@ -1,0 +1,150 @@
+LARGE_LOCI_DPANN: ATLAS OF LARGE CONSERVED LOCI IN 3,564 DPANN GENOMES (workstream large_loci_dpann, 2026-11-21 UTC)
+=====================================================================================================================
+BOTTOM LINE
+- 34,530 outermost loci hold >= 10 genes (528,702 genes; side count 6-9 genes: 64,271 loci). They group into 462
+  locus families of >= 2 loci (30,404 loci; 4,126 singletons); 222 families span >= 3 genome groups, 89 span >= 10.
+- Classes of 462 families (amended rule [predeclared]): KNOWN 66 [22], KNOWN-EXTENDED 138 [57], MIXED 103 [185], DARK
+  66 [73], COHERENT-UNNAMED 56 [82], MOBILE 33 [43]; with >= 3 groups 53 / 64 / 51 / 21 / 27 / 6. KNOWN families hold
+  53% of family loci (16,215 / 30,404), KNOWN + KNOWN-EXTENDED 60%, MOBILE 0.5% (151).
+- Plainly: the large conserved loci of DPANN are mostly housekeeping superoperons (ribosomal, RNAP, exosome-proteasome,
+  translation factors, Sec/SRP, A-type ATPase), type IV pilus loci and textbook pathways. Of the top 20 non-KNOWN
+  families by the predeclared score, a manual reading puts 7 as textbook operons the automatic rule missed (Mbh
+  hydrogenase, AglB N-glycosylation, LysW lysine pathway, GatCAB, NAD salvage, gas vesicles, a housekeeping mix), 5 as
+  pilus loci, 1 as S-layer glycosylation and 7 as something else. Three stand out:
+  1. Family 17 (Micrarchaeota, 599 of 1,146 genomes; 547 of 826 Micrarchaeales; 36 groups, 6 orders; 16 genes, 67%
+     unannotated): a locus anchored on the genome's only topo VI B carries the architecture of the open A2M-like lead
+     c25065 (~244-aa wHTH, ~50-aa protein, ~795-aa A2M-like chain) and supplies its partner list: a DUF87 (HerA/VirB4-
+     family) ATPase, a 277-aa 2-TM protein, an 8-TM 374-aa protein and three small proteins.
+  2. Family 54 (Woesearchaeales 61/704, Pacearchaeales 44/487; 122 loci, 53 groups): a MoxR AAA+ / DUF58-VWA /
+     BatA-type VWA module beside Ig- and cadherin-fold surface proteins, an M36-type metallopeptidase and Laminin_G_3
+     giants (median 2,267 aa, up to 9,660 aa) in 42 loci.
+  3. Family 29 (Pacearchaeales 237/487 + SCGC-AAA011-G17 103/206; 82 groups): three conserved unannotated genes beside
+     the Orc1/Cdc6-PolD replication-origin module; one folds as a SecB-like chaperone (TM 0.52-0.56, E 4e-5 to the
+     M. tuberculosis Rv1957 SecB-like chaperone), the other two as winged-HTH regulators.
+  Every function name above is "consistent with" and UNVERIFIED (no curated caller covers these loci).
+- Grouping: the predeclared rule chained (one component of 28,829 loci) and failed; amended rule v2 (reciprocal list
+  partners, collinear chains, Louvain) passes both purity bars (ribosomal 0.998, systems 0.951) and misses both
+  concentration bars (ribosomal largest family 0.729, T4P 0.339). Shuffled null: 0 edges, 0 families, both rules.
+
+A. UNITS AND NESTING (predeclared.json)
+- Outermost node of the frozen Z L4b+ theta .02 tree = the L1 runs (465,242 of 465,242 equal). Size bins: 2: 176,840;
+  3-5: 189,601; 6-9: 64,271; 10-14: 22,293; 15-24: 9,000; 25-49: 2,975; >= 50: 262 (max 130).
+- Nested nodes of >= 10 genes (44,864, in 17,946 of the 34,530 large loci) are represented by their outermost locus
+  (families.tsv nested_ge10_share).
+- 31,170 / 34,530 large loci (90.3%) have a root node that passes the method's own whole-locus test (present in L4b).
+
+B. LOCUS FAMILIES: RULE, FAILURE, AMENDMENT, VALIDATION
+- Correspondence = the method's Z lists (z >= 10.6, own group excluded, best gene per genome; slot_rescue z_chunk).
+- Predeclared rule: edge if >= 5 and >= 1/3 of each locus's genes have a list partner in the other locus; components.
+  Result: 6.7 M edges; one component of 28,829 (1/3), 30,165 (1/4), 19,437 (1/2) loci; purity of the ribosomal family
+  0.18 / 0.17 / 0.26 (bar 0.80); system purity 0.54 / 0.54 / 0.94. FAILED.
+- amendment_2 (written before any v2 number): reciprocal list pairs (140 M of 297 M directed pairs), edge = collinear
+  chain >= 5 and >= 1/3 of both loci (6.37 M edges), top-30 sparsification (519,788 edges), Louvain at six resolutions,
+  smallest resolution meeting all bars on odd-genome loci. No resolution met all five; gamma 0.5 met the most (3/5)
+  and is used. Components of the v2 graph still chain (25,277 loci in one).
+  validation (all loci; odd / even agree within .02)   gamma .5   gamma 2   gamma 8   v2 components   v1 1/3
+    families                                           462        490       544       406             311
+    ribosomal runs (1,686): largest family share       0.729      0.494     0.175     1.000           1.000
+    families holding 90% of runs                       3          4         7         1               1
+    purity of that family (>= 5 ribosomal genes)       0.998      1.000     1.000     0.202           0.178
+    curated-system purity (loci-weighted)              0.951      0.963     0.969     0.802           0.542
+    Archaeal-T4P (613 loci): largest family share      0.339      0.339     0.272     0.949           -
+  Ribosomal runs split by extent, all at purity ~1: family 1 (30-gene superoperon, 382 groups) 1,229 runs; family 4
+  (S5-L30-SecY end) 165; family 41 (41-gene superoperon + SecY + RNAP concatenations) 162; family 16 (L2-L22-S19 head)
+  97; family 9 31. T4P loci spread over families 21 (208), 0 (155), 25, 15, 36 (55-61 each). HydDB NiFe 426 loci
+  (largest 0.62); RM_Type_I 76 loci in 58 units. Records: data/validation_v1.json, validation_v2.json.
+
+C. FAMILY DESCRIPTION (families.tsv, 462 rows x 46 columns; core genes per family in data/core_clusters.tsv)
+  Lineages (genomes, groups, phyla, orders), size, core (>= 50% of members) / variable genes, core presence, order
+  conservation, annotation and unannotated shares (all sources incl. CDD), curated, ribosomal, housekeeping and mobile
+  overlap, edge rate, contig size, completeness, contamination, whole-locus test, nesting, class, rank, reading.
+  Gene clusters = components of reciprocal list pairs between member loci (48.7 M links). Mobile families are kept.
+
+D. CLASSES BY SIZE BIN (median member size; amended rule / predeclared rule)
+  class               10-14       15-24      >= 25     all
+  KNOWN               63 / 19     1 / 1      2 / 2     66 / 22
+  KNOWN-EXTENDED      114 / 42    21 / 12    3 / 3     138 / 57
+  MIXED               91 / 168    12 / 17    0 / 0     103 / 185
+  DARK                53 / 60     11 / 11    2 / 2     66 / 73
+  COHERENT-UNNAMED    47 / 72     9 / 10     0 / 0     56 / 82
+  MOBILE              18 / 25     12 / 15    3 / 3     33 / 43
+  KNOWN basis: textbook (ribosomal / RNAP / ATPase / KEGG module) 32, housekeeping cluster 29, curated call 5.
+  amendment_3 (POST HOC): housekeeping predicates count as coverage, KNOWN at >= 1/2 covered core, ranking needs >= 3
+  core genes. Textbook operons without KOfam/KEGG support (Mbh, AglB, LysW, gvp) are corrected by manual readings.
+
+E. TOP 20 (top20_maps.txt; eligible = not KNOWN, >= 3 groups, >= 2 orders, >= 5 loci, >= 3 core genes: 52 families)
+  rank family groups/orders reading
+   1  64  30/8   Mbh hydrogenase / Mrp antiporter (textbook)       11  49  39/5   GatCAB / GatDE (textbook)
+   2  77  11/7   housekeeping mix + 280-aa dark gene              12  74  18/5   pilus locus
+   3  59  50/16  Nitro_FeMo-Co / COG1149 ATPase module            13  33  30/5   pilus locus (Micrarchaeales)
+   4  50  64/4   AglB N-glycosylation (textbook)                  14  43  54/8   Pacearchaeales isomerase + NTase + dark
+   5  29  82/9   Orc1/Cdc6-PolD + 3 dark genes                    15  96  21/7   head-tail provirus (MOBILE)
+   6  36  84/19  pilus locus                                      16  72  37/4   NAD salvage (textbook)
+   7  15  240/29 pilus locus                                      17  198 3/2    thiol / Fe-S module (5 loci)
+   8  17  36/6   Micrarchaeota topo VIB / A2M-like / DUF87 locus  18  39  60/17  S-layer glycosylation
+   9  0   241/20 pilus loci (loose, 1,309 loci)                   19  118 13/6   gas vesicle gvp cluster
+  10  75  19/6   LysW lysine pathway (textbook)                   20  150 6/3    Aenigmatarchaeota dark (all on edges)
+  Outside the top 20 and worth a look: family 54 (rank 28, DARK; MoxR-VWA + giant surface proteins, below).
+
+F. CLOSER LOOK (data/closer_<family>.txt; folds: 44 ESMFold2 models of unexplained core genes, 2 per gene from two
+   orders, local Foldseek vs PDB; data/fold_reps.tsv, folds/foldseek_pdb.tsv; no co-folds were run)
+F17 Micrarchaeota topo VI B / A2M-like / DUF87 locus. Distribution: Micrarchaeales 547/826, Anstonellales 39/200,
+  Fermentimicrarchaeales 7/14, JAKAKT01 4/6; 0 outside Micrarchaeota. Composition: topo VI B (the genome's only copy in
+  474 of 599 genomes; topo VI A sits elsewhere in 528/528), KRR1-type KH protein, a ~795-aa protein in 560/611 loci
+  (adjacent to topo VI B in 467; 1 TM helix in 390/621, hyd 0.40; = the c25065 A2M-like chain), a 244-aa winged-HTH
+  protein (family HHsearch CdvB_HTH, prob 97, 73/570 genes), DUF87 HerA/VirB4-family ATPase (504 aa, 95% of members),
+  277-aa 2-TM protein (family HHsearch CedB_2nd, prob 93, only 57/1,105 genes), 374-aa 8-10 TM protein (hyd 0.55,
+  membrane, not folded), 132-aa 2-TM, 102-aa and 49-aa proteins, ArsR-type regulator. Consistent with a membrane
+  machine with a VirB4/HerA-type motor (as in Ced DNA import or T4SS-like transfer) carrying a large anchored A2M-like
+  protein; UNVERIFIED. Unexplained: the 277, 132, 102, 49-aa proteins fold confidently (pLDDT 67-90) with no PDB match.
+  Distinct from the nearest known systems: VirB6/TrbL, VirB8, VirB11 and T2SSF rows 0/611 loci, pilin rows 6/611, plus
+  an A2M-like cargo. Identity with c25065 rests on architecture (protein IDs of the v6 cluster were not mapped). Intact:
+  314/611 members have >= 3 flanking genes on both sides; core presence is the same on intact members (0.54-0.96).
+  Decisive analysis: profile the DUF87 ATPase and the 277-aa protein against CedA/CedB and VirB4/VirB8 references
+  with residue checks of the Walker motifs, and test the A2M-like chain for the thioester motif; experimentally,
+  localize the A2M-like protein (surface vs cytoplasm) in a Micrarchaeota co-culture.
+F54 MoxR-VWA module with giant surface proteins. Woesearchaeales 61/704, Pacearchaeales 44/487, QMZP01 8/62,
+  SCGC-AAA011-G17 6/206, Aenigmatarchaeota 8/315. Core: 654-aa protein (M36-type metallopeptidase CDD hit; folds as
+  Ig/cadherin repeats, E 8e-18 to titin I65-I70), 393-aa CARDB/BsuPI protein (Ig-like, pLDDT 94), 140-aa adhesin-like
+  domain (TM 0.44 to DraE/AfaE), MoxR AAA+ (336 aa), DUF58-VWA (298 aa), BatA-type VWA (312 aa, 3 TM), 74-aa small
+  protein; Laminin_G_3 giants in 42 loci (48 with +-5 flanks). Consistent with a MoxR-VWA chaperone/insertion module
+  dedicated to secreted adhesins; UNVERIFIED. Intact 50/122; largest protein per locus median 1,382 aa. Nearest known:
+  bacterial MoxR-VWA (BatABCDE aerotolerance) modules, which carry no surface-protein block. Decisive analysis: VWA MIDAS
+  motif check (DxSxS...T...D) in BatA/DUF58 and co-occurrence of the module with Laminin_G_3 giants genome-wide.
+F29 replication-origin locus. Pacearchaeales 237/487, SCGC-AAA011-G17 103/206, 7 more orders with 1-5. Core: Orc1/Cdc6
+  (403 aa), PolD DP1 (527 aa) and DP2 (1,156 aa), PRC-barrel protein, TctA permease (398 aa, 11 TM), and three
+  unannotated genes: 212-aa winged HTH (folds to AbfR/MepR/ST1710, E 2e-4; family HHsearch TubR-like PDB hit in 3 genes),
+  89-aa MarR/PadR-type wHTH (TM 0.66-0.73, E 1e-4), 142-aa SecB-like chaperone fold (TM 0.52-0.56 to Rv1957, qcov 0.94,
+  both representatives). SecB is a bacterial chaperone, so a SecB-like fold beside an archaeal origin is the unexplained
+  item; Rv1957 belongs to the HigBA-SecB toxin-antitoxin-chaperone (TAC) system, and the loci carry no HigB/RelE-type
+    toxin row (integrase rows in 29 loci). UNVERIFIED. Intact 183/358. Decisive analysis: chaperone-addiction (ChAD)
+  motif search in the two wHTH proteins and a co-fold of the SecB-like protein with each (mismatched-pair control).
+F96 head-tail provirus (MOBILE). 23 loci, 21 groups, 7 orders (Woesearchaeales 12/704). Capsid (HK97 fold),
+  HK97 gp10, connector (folds to phage neck / GTA neck, E 2e-6), tail terminator (TM 0.61, E 2e-5), tail tube
+  (TM 0.62-0.66 to diffocin / AFP tube), tape measure; portal and terminase in some members. 16/23 on contig edges,
+  7/23 intact. Consistent with a siphovirus-like provirus in DPANN; integration site and host range UNVERIFIED.
+F59 metallocluster module. Broadest non-housekeeping family (50 groups, 16 orders, 6 phyla; 99 genomes): Nitro_FeMo-Co
+  (NifX/NafY-type), DUF134, DUF5320, COG1149 MinD-type ATPase with inserted ferredoxin, CcdA, cation efflux / ZIP
+  permeases in flanks. Only 3 core genes; extends the 2026-11-02 dark module 2897. UNVERIFIED metal identity.
+F118 gas vesicle cluster. GvpA, GvpF/L, GvpG, GvpK, GvpN, GvpO, a GvpI-like protein (family HHsearch), an Hsp20-fold
+  chaperone (E 2e-5 to S. solfataricus Hsp20.1) and two unannotated genes in 15 genomes (Woesearchaeales 5/704,
+  SCGC-AAA011-G17 4/206, Altiarchaeota IMC4 3/42, Aenigmatarchaeota 2). Textbook system; 10/15 on contig edges and
+  completeness median 84, so contig provenance needs checking before any claim of gas vesicles in DPANN.
+F43 KILLED: three unannotated core genes fold poorly (pLDDT 37-72), no PDB hits. F72 KILLED as gap-filler: NAD salvage
+  is complete in members (PncA 54/57, PncB 38/57, NadE 57/57, NadK 54/57); the 327-aa gene is an extra component.
+
+G. CONTROLS
+- Lineage: counts are in genome groups (642, emb_hom_average_t0.75) and GTDB orders, genome counts beside them.
+- Assembly: edge = < 3 genes to a contig end. Edge rate per family in families.tsv; F17 0.49, F29 0.49, F54 0.59,
+  F96 0.70, F118 0.67. Intact-member core presence matches all-member presence for F17, F29, F43, F54.
+- Null (iii): gene identities shuffled within genomes (each locus keeps size and genome): v1 0 edges at every fraction;
+  v2 32.2 M reciprocal pairs, 0 edges, 0 families. Method threshold: 90.3% of large loci pass the whole-locus test.
+- Hydrophobic screen (iv): 3 of 47 representatives not folded (F17 374-aa, hyd 0.55, 7-10 TM; one F17 132-aa, 0.53).
+
+FILES (local benchmarks/redesign/dpann_leads/large_loci_dpann/; remote $RD/dpann_leads/large_loci_dpann/out, out2)
+  REPORT.txt, families.tsv, top20_maps.txt, predeclared.json (rule, bars, amendments 1-3 with times); data/ (validation,
+  core_clusters, family_genes, closer_*, reps_*, fold_reps); folds/ (44 ESMFold2 models, summary.tsv, foldseek_pdb.tsv)
+  code/: families.py/.sbatch (v1, job 120545, 8 min, 24 CPUs, 42 GB; smoke 120544), families2.py/.sbatch (v2, job
+  120550, 3.6 min), val_attrs.py, annot_export.py, describe.py, maps.py, closer.py, fold_select.py.
+  Sources read: Sharur annotations (pfam, kofam, kegg, defensefinder, txsscan, hyddb), CDD, family HHsearch/HHblits
+  (prob >= 90), curated system tables, predicates, TMHMM. No HMM search run; nothing written to Sharur; 44 folds.

@@ -1,0 +1,11 @@
+set	arm	n	in_locus_pri	in_locus_sec	bonded	with_flanks	locus_with_all_flanks	locus_with_a_flank	bonded_to_flank	median_locus_size
+lead_X verified	Z	2904	2692	2683	2464	2904	2661	2663	2428	2.0
+lead_X verified	A	2904	2675	2687	2426	2904	2647	2648	2379	3.0
+lead_X UNVERIFIED	Z	307	254	251	187	307	247	247	178	3.0
+lead_X UNVERIFIED	A	307	260	267	206	307	253	253	196	3.0
+DL_slot	Z	180	174	174	170	180	174	174	170	3.0
+DL_slot	A	180	143	143	96	180	143	143	96	4.0
+DL_profile	Z	1191	1138	1122	1126	0	0	0	0	2.0
+DL_profile	A	1191	1147	1151	1138	0	0	0	0	2.0
+controls (lead_X verified matched)	Z	8474	3622	3068	2858	0	0	0	0	3.0
+controls (lead_X verified matched)	A	8474	3273	3802	2951	0	0	0	0	3.0

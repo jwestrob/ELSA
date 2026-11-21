@@ -1,0 +1,46 @@
+{
+ "collection": "srvp",
+ "labeled": {
+  "T2": 11819,
+  "T2b": 7346,
+  "rest": 15210,
+  "T1c": 3904,
+  "contradicted": 2322,
+  "T1": 0
+ },
+ "kofam_rows": 146196,
+ "kofam_proteins": 90559,
+ "with_carrier_ko": {
+  "T2": 6364,
+  "T2b": 2566,
+  "rest": 4800,
+  "T1c": 1678,
+  "contradicted": 1114,
+  "T1": 0
+ },
+ "strong_partner": {
+  "T2": 4904,
+  "T2b": 1735,
+  "rest": 3022,
+  "T1c": 1158,
+  "contradicted": 822,
+  "T1": 0
+ },
+ "strong_enzyme": {
+  "T2": 1520,
+  "T2b": 243,
+  "rest": 470,
+  "T1c": 224,
+  "contradicted": 186,
+  "T1": 0
+ },
+ "len100_600_soluble": {
+  "T2": 736,
+  "T2b": 121,
+  "rest": 158,
+  "T1c": 156,
+  "contradicted": 129,
+  "T1": 0
+ },
+ "novelty_input_proteins": 1300
+}

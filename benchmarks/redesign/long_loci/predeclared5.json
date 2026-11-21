@@ -1,0 +1,34 @@
+{
+ "workstream": "long_loci part 5: Z-WA (embedding-list bonds at the adaptive pair distance), CPU only",
+ "written_utc": "2026-11-13T15:25Z",
+ "status_when_written": "No Z-WA bond, mask, locus or score exists. Known: all part 1-4 numbers (part-2 Z L4b+ .02 on DPANN 7/7 bars, CRISPR-Cas +.010; part-3 Z on Spacedust +.111; part-4 family WA L4b .2 DPANN 7/7 with CRISPR-Cas -.019, summed .513, Spacedust +.164; WA L1 Spacedust +.247).",
+ "question": "Does one output meet all seven DPANN bars with margin on CRISPR-Cas and sit level with or above the engine reference on the Spacedust collection, and at what cost in DPANN summed excess?",
+ "arm": {
+  "lists": "ws_calib z >= 10.6 lists, own group excluded (part-2 Z on DPANN; part-3 Z on Spacedust)",
+  "counting": "genome groups (vl 'grp': n = 1 + supporting groups, E over groups)",
+  "adaptive_bonds": "every pair of genes within 8 positions on one contig (adjacency over distance d = 1..8, homolog pairs excluded by the round-0 exclusion rule extended to d <= 8) is tested at its own window: a list partner pair (p, q) supports the pair only if p and q lie within d positions of each other in the other genome; E per genome = min(1, 2 d c_x c_y / m), own term min(1, 2 d / m); Lambda over groups; bond if n >= 2 and Lambda >= tau",
+  "kernel": "copy of vl.py mark / pass_count / adjacency with a per-adjacency window; marks record the minimum distance from any list partner. Gate before use: in fixed-window mode at window 3 the copy must reproduce vl.pass_count's round-0 n, n_groups, E and E_groups exactly on the observed DPANN order; the d <= 3 part of the new exclusion masks must equal the stored masks",
+  "exclusion_masks": "softrec.exclusion mode 1, K1000 variant (identical sequence, or cosine >= max(.32, min(capcos))) over instances up to distance 8, observed order and 3 shuffles; DPANN capcos from vl.emb_lists (the stored zca10 kNN, group lineage), Spacedust capcos from the part-3 exact kNN",
+  "tau": "bond-level 1% rule on the adaptive procedure: smallest of {4, 6, 8, 10, 12, 15, 20, 25, 30} with mean shuffled bonds / observed bonds <= .01 (3 gene-order shuffles, softrec.null_order seeds 1000-1002)",
+  "outputs": "L1; L4b(theta) and L4b+(theta), theta in {.02, .05, .1, .2}, kNN cohesion (DPANN context_units kappa_var_knn50; Spacedust part-3 kappa_var_knn50); L4b node filter = part-2 family-free list test at the bond tau"
+ },
+ "selection_dpann_odd": "among L1 / L4b(theta) / L4b+(theta): maximise [odd conditions met vs DH, odd ribosomal resolved, odd summed] (standing rule); recorded before any even number",
+ "dpann_even": "selected output: the seven quantities; paired intervals vs token DH, part-2 Z (L4b+ .02), part-4 family WA (L4b .2), part-1 L4b (.1) and part-2 A (L4b .02) for the summed-excess cost; ribosomal resolved paired vs DH, part-2 Z and part-4 WA; CRISPR-Cas margin = d F1 CCT vs DH + .02",
+ "spacedust": "primary = the DPANN-selected Z-WA output; other Z-WA outputs (L1; L4b and L4b+ at the selected theta) are DEVELOPMENT rows; comparisons as part 4 (part-1 L4b, part-1 L1, CC2, engine reference, native Spacedust) plus part-3 Z and part-4 WA L4b; coverage by region size; excess by region size; share of genes in loci; boundary precision",
+ "success_definition": "one output: all seven DPANN bars with CRISPR-Cas d F1 >= -.01 (margin >= .01) AND Spacedust d excess vs the engine reference >= -.02 (MATCHES or BEATS)",
+ "expectations": {
+  "tau": "DPANN 6-8; Spacedust 8-10",
+  "dpann": "selected output L4b+ or L4b at theta .02-.1; resolved 1,540-1,620; CRISPR-Cas F1 .47-.50; summed .52-.60 (cost against part-1 L4b -.06 to 0; against part-2 Z L4b+ -.06 to +.02)",
+  "spacedust": "selected output +.14 to +.19; Z-WA L1 +.20 to +.25",
+  "success": "about 0.4: CRISPR-Cas margin likely (lists), Spacedust level with the engine less likely because nested outputs raise the control (part 4: WA L4b -.020)",
+  "cost": "DPANN job ~45 min on 64 CPUs, Spacedust ~20 min; peak < 150 GB"
+ },
+ "amendment_1_selection": {
+  "written_utc": "2026-11-13T16:07Z",
+  "status_when_written": "Gates passed on both datasets (kernel at window 3 identical to vl.pass_count on the observed order: DPANN 8,015,534 rows, Spacedust 12,000,081; mask d <= 3 parts equal the stored masks in all 4 orders). Bond taus by the 1% rule: DPANN 8, Spacedust 8. Odd scores of the 9 DPANN Z-WA outputs read. No even and no source207 number of Z-WA computed or read.",
+  "selected": "L4bp_t0.02 odd [3, 758, 0.5716132064312468]",
+  "note": "every L4b+ output meets the three odd conditions; odd resolved 758 is below DH odd 769, so the primary ribosomal criterion (> 1,512 on all runs) is at risk on even",
+  "dpann_even": "L4bp_t0.02 (selected) and L4b_t0.02 (labelled secondary)",
+  "spacedust": "PRIMARY L4bp_t0.02; DEVELOPMENT L1, L4b_t0.02"
+ }
+}

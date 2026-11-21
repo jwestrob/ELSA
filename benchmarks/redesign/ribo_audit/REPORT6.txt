@@ -1,0 +1,172 @@
+ribo_audit PART 6: frozen ribosomal benchmark for testset3, external operon check, scorer
+written 2026-11-19 ~10:57Z. $RD/testset3 was not opened.
+
+ANSWER
+1. FROZEN: predeclared6.json, sha256 a6c997f337368830679752018e8050d0505c2d51136f1509d1a66a6aecde9c3c (frozen 10:47Z,
+   recorded in NOTEBOOK.txt).
+   - Object scored: the conserved ribosomal-protein gene cluster, i.e. the strand-consistent member chain around each
+     ribosomal run, not single transcription units.
+   - Definition: variant (a) of part 5 exactly. Below-minimum runs stay in the denominator as unresolved.
+   - Bars, set by you: R1 recovered >= 97%, R2 bacterial resolved >= 90%, R3 archaeal resolved >= 85%, R4 minus engine
+     > 0 with a 95% bootstrap interval excluding zero, R5 chance <= 5% per domain.
+2. AKSHA ROUTE IS EQUIVALENT. On 20 SR-VP genomes (72,657 genes) it reproduces the stored annotation: KO, class and name are
+   identical for every gene, and the supplement hits are identical (224 / 224).
+   - Window Pfam reproduces all 2,442 stored domains and adds 1. That domain sits exactly at its Pfam GA threshold: 22.80
+     against 22.8 at Aksha's 2-decimal precision. It is descriptive only and outside the member classes.
+   - One difference was resolved before the freeze. The developed procedure's hmmsearch -E 1e-3 at chunk size had dropped
+     4 L35 KO hits. That cut is now emulated exactly from the profile Forward statistics.
+3. E. coli K-12 MG1655:
+   - The target is rplQ..rpsJ, 28 genes on one strand. It equals the union of three RegulonDB transcription units:
+     S10 (11 genes), spc (12) and alpha (5).
+   - It merges those three units and splits none.
+   - str, L11-rif and secE-nusG lie elsewhere with <= 4 ribosomal markers, so they are not scored.
+4. B. subtilis 168:
+   - The target is cysS..rpsI, 58 genes on one strand.
+   - It holds whole both experimentally mapped units checked: S10-spc-alpha as one ~15 kb transcript (Li et al. 1997) and
+     str (rulS / ybxF-rpsL-rpsG-fusA-tufA; Sojka et al. 2007).
+   - It also merges the L11, L10-L12-rpoBC, rpmGB-secE-nusG, cysS-region and ecf-truA-rplM-rpsI genes.
+   - It splits nothing. The standing run (rpsJ..rplO) cuts the mapped S10-spc-alpha unit at secY; the frozen target does not.
+   - Nothing contradicts the literature. Merging transcription units into the conserved cluster is the declared object.
+5. SCORER READY.
+   - score6.py (sha256 6b61eeb8...2f80) reproduces part 5 on SR-VP in all 126 checked cells and every per-run value.
+     It reports R1-R5 for primary and secondary plus the descriptive measures; verdicts are optional.
+   - annot6.py plus a 24-CPU Aksha sbatch template (not submitted) annotates a sealed package. Expected job time is
+     about 1 hour for about 3.5 M proteins.
+
+------------------------------------------------------------------------------------------------------------------------
+A. THE FREEZE (predeclared6.json, sha256 a6c997f337368830679752018e8050d0505c2d51136f1509d1a66a6aecde9c3c)
+  - Object scored: the conserved ribosomal-protein gene cluster (for example S10, spc and alpha together when on one strand),
+    not individual transcription units.
+  - Definition: variant (a) of part 5, as computed by bio5.py.
+    - Runs: package g2 runs with >= 16 Pfam 38.1 ^ribosom(al)?_ markers (121 models at GA).
+    - Members: R = Pfam marker, or best KO among the 226 searched whose definition names a ribosomal protein. N = the part-2
+      archaeal list (25 KOs, 20 Pfam models, EF2) plus the 16 bacterial-supplement KOs. Both lists apply to every genome.
+    - Chain: consecutive members join when <= 2 other genes lie between them and both are on the same strand.
+    - Targets: pieces holding run markers that contain >= 16 marked genes. Below-minimum runs stay in the denominator as
+      unresolved.
+    - Recovered, resolved, any fitting locus and chance exactly as in part 5. No further tuning.
+  - Known limitations, stated in the file:
+    - Below-minimum drop-out: SR-VP Archaea 5 of 145, DPANN 17, lut 3.
+    - No spacing rule: verdict-2 'spacer' cases were 100 of 204 in part 5.
+  - Bars, as you set them:
+    - Primary = embedding-list bond tree; R1 recovered >= 97% overall; R2 resolved >= 90% of bacterial runs; R3 resolved
+      >= 85% of archaeal runs.
+    - R4 = sum over runs of (primary resolved - engine resolved), paired bootstrap over runs with 2,000 resamples and
+      seed 17; it passes when the 95% percentile interval lies above zero.
+    - R5 chance <= 5% in each domain. Pass = all five.
+    - The secondary (family-bond adaptive tree) uses the same criteria and is reported beside the primary.
+  - Reported without bars: standing, part 4, part-2 accurate reading, closed vs multi-contig, phylum table, and verdicts
+    after scoring.
+  - Development values under the frozen definition, for reference only (primary):
+    - R1: lut 99.5%, DPANN 98.3%, SR-VP 99.4%
+    - R2: lut 97.2%, SR-VP 98.9%
+    - R3: DPANN 91.7%, SR-VP 95.2%
+    - R5: chance <= 4.68%
+
+  AKSHA ROUTE (annot6.py; profiles and ko_list fixed by sha256 in predeclared6.json)
+  - Aksha runs with --hmm_in, --evalue 1000 and --domE 1000, with no cutoffs.
+  - The script applies the cutoffs:
+    - KO: ko_list threshold by score_type (full = sequence bitscore; domain = best domain bitscore).
+    - The developed E-value cut is emulated as E = (N_total / 24) * exp(-lambda (bitscore - tau)) from the profile's
+      STATS LOCAL FORWARD line: <= 1e-3 for base KOs and <= 1e-5 for the supplement.
+    - Check of that formula: Aksha's own E-values give an implied Z of 72,658 (median) for 72,657 searched sequences.
+    - Pfam: sequence bitscore >= GA1, and for domains dom_bitscore >= GA2.
+  - Equivalence test: 20 SR-VP genomes drawn with rng 17 (15 Bacteria, 5 Archaea); 72,657 genes, 1,486 window genes.
+  - Results:
+    - Before emulation: 4 genes gained K02916 (L35; scores 19.3-21.1 against threshold 19.03). Their E-values at the
+      developed chunk size were 0.0017-0.0061, above 1e-3, which is why the stored annotation lacks them.
+    - After emulation: base KO, class and name are identical for all 72,657 genes, and the supplement is identical
+      (224 / 224, scores within 0.05 bit rounding).
+    - Window Pfam-A: all 2,442 stored domains reproduced, plus 1 extra: gene 1910665, Rubrerythrin, domain score 22.80
+      against GA 22.8. This is a threshold tie at Aksha's 2-decimal output; HMMER 3.3 excluded it. It affects only the
+      descriptive window annotation, not the member classes that define targets.
+  - The Aksha fix for production KOfam cutoffs is not needed here; thresholds are applied in the script.
+
+B. EXTERNAL CHECK: E. coli K-12 MG1655 and B. subtilis 168 (independent of method outputs; does not change the freeze)
+  Inputs:
+  - RefSeq GCF_000005845.2 (MG1655) and GCF_000009045.1 (168): genomic.gff.gz and protein.faa.gz downloaded from the NCBI FTP
+    (sha256 in NOTEBOOK.txt). Gene calls are the RefSeq CDS with a protein: 4,303 and 4,240 genes.
+  - Markers, members and targets come from the frozen procedure through Aksha (ext6.py, annot6.py), with
+    N_total = 8,543 proteins.
+  Operon references:
+  - E. coli: the repo's RegulonDB snapshot,
+    benchmarks/evaluation/ecoli_authoritative_tu_2026-09-09_v2/sources/transcriptionUnits.json, genes.json and
+    operons.json. Source: regulondb-docs commit 4e425fe, file sha256 in its source_snapshot_manifest.json.
+  - B. subtilis: the repo file benchmarks/operons/bsubtilis/operons.tsv has no provenance and lacks spc and alpha.
+    benchmarks/operons/ecoli/OperonSet.txt is an HTML page from a failed download. Published definitions were used instead:
+    - Li X, Lindahl L, Sha Y, Zengel JM (1997) J Bacteriol 179:7046-7054: S10-spc-alpha transcribed as one ~15 kb unit from
+      two S10 promoters, with no internal terminators or active promoters in exponential growth.
+    - Suh JW, Boylan SA, Oh SH, Price CW (1996) Gene 169:17-23: spc-alpha 22-gene unit, with weaker internal secY and map
+      promoters.
+    - Boylan SA et al. (1989) J Bacteriol 171:2553: alpha region IF1-L36-S13-S11-alpha-L17, S4 absent.
+    - Sojka L et al. (2007) J Bacteriol 189:4809-4814: str operon is a 5-gene unit ybxF-rpsL-rpsG-fus-tuf with the main
+      promoter upstream of ybxF.
+    - SubtiWiki refused automated access (HTTP 403).
+
+  Results:
+  genome      package-rule run               frozen target                   mapped units inside the target       split
+  E. coli     rplQ..rpsJ (26 markers, 28)    rplQ..rpsJ (28 genes, - strand)  S10 rpsJ..rpsQ (11), spc rplN..rpmJ (12),  none
+                                                                             alpha rpsM..rplQ (5): all whole
+  B. subtilis rpsJ..rplO (21 markers, 21)    cysS..rpsI (58 genes, + strand)  S10-spc-alpha rpsJ..rplQ (31, Li 1997):   none
+                                                                             whole; str rulS..tufA (5, Sojka 2007):
+                                                                             whole; plus unmapped here: cysS-mrnC-rlmB-
+                                                                             raeA-sigH, rpmGB-secE-nusG, rplK-rplA,
+                                                                             rplJ-rplL-rlmG-rpoB-rpoC, ybaC,
+                                                                             ecfA-ecfAB-ecfT-truA-rplM-rpsI
+  Gene by gene:
+  - E. coli: the target merges three RegulonDB transcription units, S10 + spc + alpha, all on the minus strand. secY is the
+    only unmarked gene between L15 and L36.
+    - It stops at rpsJ, because gspB / gspA (type II secretion) follow.
+    - The str operon (rpsLG-fusA-tufA, 3.47 Mb) lies 17 genes away (b3322-b3338: gsp genes, chiA, bfd-bfr). L11-rif
+      (rplKAJL-rpoBC) and secE-nusG are at 4.18 Mb. These loci carry 2 and 4 ribosomal markers, form no >= 16-marker run,
+      and are therefore not scored.
+    - The standing run equals the target.
+  - B. subtilis: the target is the whole conserved cluster as described in Brandis 2021 for Bacilli (cysS, secE-nusG, L11,
+    L10-L12, rpoBC, str, S10, spc, alpha, ecf), all on the plus strand.
+    - Non-member genes inside it: mrnC, raeA, sigH, rlmG, ybaC, ybzG (each within the <= 2-gene gap).
+    - The package-rule run stops at L15 because secY-adk-mapA-ybzG-infA puts 5 genes before L36. The standing definition
+      therefore cuts Li et al.'s single S10-spc-alpha unit; the frozen target keeps it whole.
+  - Nothing in the frozen targets contradicts the mapped units: no mapped unit is split, and no target crosses a strand
+    change. The merging of several transcription units is the declared object of the benchmark. No fault found.
+
+  DIAGRAMS (gene order on the replicon; [ ] = frozen target; | separates the mapped units named below each diagram)
+  E. coli MG1655 (minus strand, coordinates increase to the right; transcription runs right to left):
+    zntR yhdN [rplQ rpoA rpsD rpsK rpsM | rpmJ secY rplO rpmD rpsE rplR rplF rpsH rpsN rplE rplX rplN | rpsQ rpmC rplP rpsC
+    rplV rpsS rplB rplW rplD rplC rpsJ] gspB gspA (gspC ... on the plus strand)
+      alpha TU = rpsM..rplQ (5) | spc TU = rplN..rpmJ (12) | S10 TU = rpsJ..rpsQ (11)   (RegulonDB)
+  B. subtilis 168 (plus strand, transcription left to right):
+    gltX cysE [cysS mrnC rlmB raeA sigH rpmGB secE nusG rplK rplA rplJ rplL rlmG rpoB rpoC | rulS rpsL rpsG fusA tufA | ybaC |
+    rpsJ rplC rplD rplW rplB rpsS rplV rpsC rplP rpmC rpsQ rplNA rplX rplE rpsNA rpsH rplF rplR rpsE rpmD rplO secY adk mapA
+    ybzG infA rpmJ rpsM rpsK rpoA rplQ | ecfA ecfAB ecfT truA rplM rpsI] ybaJ ybaK ...
+      str = rulS..tufA (Sojka 2007) | S10-spc-alpha = rpsJ..rplQ, one transcript (Li 1997) | package run = rpsJ..rplO
+
+C. SCORER (score6.py, sha256 6b61eeb8cac4f960696e2f70b27240b6d12ad1e44a3b2fa066ee2066c9d32f80)
+  - Input: a package path (universe tables plus ribosomal tables in either package layout), the annot6 output directory,
+    and the primary, secondary and engine locus tables. Groups are optional.
+  - Output: score6.json, score6_runs.parquet and table6.txt, with R1-R5 for primary and secondary; definitions standing,
+    part 4 and (a) by domain; the accurate reading; closed vs multi; the phylum table. --verdicts adds part-2 verdicts and
+    below-minimum listings per output.
+  - End-to-end test on SR-VP (stored annotation, frozen2 loci):
+    - 126 checked cells equal part 5 (score5.json): runs, below-minimum, targets, recovered, resolved, any-fit and chance
+      for standing, part 4 and (a) in both domains, plus the accurate reading.
+    - Every per-run target and flag is identical.
+    - Its table on SR-VP: primary R1 99.4%, R2 98.9%, R3 95.2%, R4 +87 [+70, +104], R5 0.27% / 0.36% (PASS);
+      secondary 99.3%, 98.8%, 95.2%, +86 [+68, +105], 0.68% / 0.18% (PASS). These are development numbers.
+  - annot6.sbatch (sha256 d68c8c96...a9d4) is a template, not submitted. It runs annot6.py through Aksha with
+    $SLURM_CPUS_ON_NODE threads and N_total = the package protein count.
+  - Estimated time from the sample timings (8 threads: 226 KOs 35 s, supplement 20 s, Pfam-A on 1,486 window proteins
+    105 s): about 1 hour on 24 CPUs for about 3.5 M proteins and 100,000 window genes.
+  - Order on testset3, after your go: annot6.sbatch, then score6.py on the frozen loci, then verdicts.
+
+DEVIATIONS AND NOTES
+  - The external check uses RefSeq CDS gene calls; packages use their own calls. The check concerns operon structure only.
+  - B. subtilis transcription units outside S10-spc-alpha and str were not checked against B. subtilis mapping data.
+  - predeclared6.json's written_utc field reads 10:48Z; the freeze happened at 10:47Z. The field was left unchanged to keep
+    the hash.
+  - Everything was computed on the biotite login node within the thread cap (Aksha at 8 threads); no Slurm job in this part.
+
+FILES
+  Local benchmarks/redesign/ribo_audit/: predeclared6.json, REPORT6.txt, NOTEBOOK.txt; code annot6.py, annot6.sbatch,
+  ext6.py, score6.py; ext6/ (downloads, genes6.tsv, ext6.json); results6/ (equiv6.json, test_srvp table6.txt / score6.json).
+  Remote $RD/ribo_audit/: the same; work6/equiv, work6/ext, work6/test_srvp.
+  Nothing committed.

@@ -1,0 +1,74 @@
+{
+ "workstream": "ribo_audit part 2: the biologically correct locus for each unresolved ribosomal run",
+ "written_utc": "2026-11-19T02:20Z",
+ "prior_exposure": "From part 1 and its addendum the author has seen: every TOK / WCP / EMB diagram of the part-1 sample, the census labels of TOK, L4b, L4b+, L1, and the L4b gap table (junction marker pairs, strand flips, recurrence). No WA L4b or Z L4b+ case has been opened. The literature list below was compiled from the papers cited, not from our flanks; genes seen in part-1 flanks enter only where a cited paper lists them (SecY, cytidylate kinase, TruB/Cbf5, ndk, infB, enolase do; EMC3_TMCO1, DNA_primase_lrg, Peptidase_M48, Prefoldin, TrmB do not).",
+
+ "outputs": {
+  "TOK": "$RD/boundary/loci/rescue3/DH_coreH_res0.3_f0.5.parquet (target 1,686 / 1,512)",
+  "L4b": "$RD/long_loci/loci/dpann_group/L4b_t0.1.parquet (target 1,680 / 1,598); bonds $RD/long_loci/nodes/dpann_group/bonds_obs.npz",
+  "WA_L4b": "$RD/long_loci/loci/dpann_WA/L4b_t0.2.parquet, FROZEN PRIMARY (target 1,685 / 1,594); bonds $RD/long_loci/nodes/dpann_WA/bonds_obs.npz",
+  "Z_L4bp": "$RD/long_loci/loci/dpann_Z/L4bp_t0.02.parquet (target 1,681 / 1,542); bonds $RD/long_loci/nodes/dpann_Z/bonds_obs.npz",
+  "locked_test_sets_not_opened": ["$RD/slice_lut/testset", "$RD/ws_srvp_bins", "$RD/ws_srvp_bac", "$RD/ws_refseq_synton"]
+ },
+
+ "literature_opened": {
+  "W09": "Wang J, Dasgupta I, Fox GE (2009) Many nonuniversal archaeal ribosomal proteins are found in conserved gene clusters. Archaea 2:241-251. doi:10.1155/2009/971494 (PMC2686390, full text read)",
+  "T23": "Tirumalai MR, Sivaraman RV, Kutty LA, Song EL, Fox GE (2023) Ribosomal protein cluster organization in Asgard archaea. Archaea 2023:5512414. doi:10.1155/2023/5512414 (PMC10833476, full text read; compares Asgard, DPANN, TACK, Euryarchaeota)",
+  "S00": "Salgado H, Moreno-Hagelsieb G, Smith TF, Collado-Vides J (2000) Operons in Escherichia coli: genomic analyses and predictions. PNAS 97:6652. doi:10.1073/pnas.110147297 (PMC18690, read)",
+  "P05": "Price MN, Huang KH, Alm EJ, Arkin AP (2005) A novel method for accurate operon predictions in all sequenced prokaryotes. NAR 33:880-892. doi:10.1093/nar/gki232 (PMC549399, read)",
+  "Wa03": "Waters E et al. (2003) The genome of Nanoarchaeum equitans: insights into early archaeal evolution and derived parasitism. PNAS 100:12984. doi:10.1073/pnas.1735403100 (PMC240731, read)",
+  "SD89": "Shimmin LC, Dennis PP (1989) Characterization of the L11, L1, L10 and L12 equivalent ribosomal protein gene cluster of the halophilic archaebacterium Halobacterium cutirubrum. EMBO J 8:1225-1235 (abstract and citing records only)",
+  "CV05": "Coenye T, Vandamme P (2005) Organisation of the S10, spc and alpha ribosomal protein gene clusters in prokaryotic genomes. FEMS Microbiol Lett 242:117-126 (abstract only)",
+  "A89": "Auer J, Spicker G, Boeck A (1989) J Mol Biol 209:21-36 and Auer J et al. (1991) Biochimie: Methanococcus vannielii spc-homologous unit with secY at its promoter-distal end (abstracts only)"
+ },
+
+ "established_cluster_content": {
+  "S10_spc_core": {"genes": "uL22, uS3, uL29, uS17, uL14, uL24, uL5, uS14, uS8, uL6, uL18, uS5, uL30, uL15 (14-gene core in Asgard, non-Asgard archaea and bacteria) + archaeal S4e, L32e, L19e, RNase P protein component 1 (RNP1) + secY at the distal end; uS19 precedes uL22", "sources": "W09 (spc: L14-L24-S4e-L5-S14-S8-L6-L32e-L19e-L18-S5-L30-L15-secY in 92% of 26 genomes), T23 (core + RNP1, S4e, L32e, L19e; SUI1 homolog in the cluster figures), A89 (secY distal in the M. vannielii spc unit)"},
+  "S10_small": {"genes": "uS10, uL3, uL4, uL23, uL2; uL3-uL4-uL23 always co-occur; uS10 often elsewhere", "variation": "occurs separately from the 14-gene core in Asgard and many non-Asgard archaea (T23); contiguous with it in the bacterial S10 operon", "sources": "T23"},
+  "alpha_L13": {"genes": "uS13, uS4, uS11, rpoD; frequently followed by L18e, uL13, uS9, rpoN (rpoK in some); one transcription unit incl. eno in Haloarcula marismortui", "variation": "split into S13-S4-S11 and rpoD-L18e-L13-S9 in Asgard; S13-S4-S11 found with L34e-L14e-Cbf5 near the S10-spc cluster in five Asgard genomes", "sources": "W09, T23"},
+  "L34e_group": {"genes": "L34e, cytidylate kinase (cmk), L14e; Cbf5 (TruB-family pseudouridine synthase) in Asgard", "status": "uncertain cluster (W09)", "sources": "W09, T23"},
+  "L7ae_group": {"genes": "L7ae, S28e, L24e, ndk, infB (IF-2), S6e, eIF2-gamma, Utp24", "status": "separate cluster", "sources": "W09, T23"},
+  "L30e_str": {"genes": "rpoH, rpoB (split), rpoA (split), L30e, nusA, uS12, uS7, EF-2, EF-1alpha", "status": "separate cluster", "sources": "W09, T23"},
+  "L11_group": {"genes": "uL11, uL1, uL10, P1 (L12 equivalent); secE, spt5 nearby", "status": "separate operon", "sources": "SD89, T23"},
+  "other_separate": "S24e-S27ae with rpoE1/rpoE2; pNP-S15-S3ae; S19e-COG2118-L39e-L31e-eIF6-LXa; L21e-rpoF; L37ae-rpoP; L44e-S27e-eIF2alpha; S6e-eIF2gamma; L15e (W09, T23)",
+  "variation_known": "gene order and content vary (CV05); spc split onto opposite strands in Methanopyrus (W09); L24-S4e separated in Pyrobaculum (W09); clusters dispersed in Nanoarchaeum equitans (Wa03, W09); alpha split in Asgard (T23); uL10/L16 outside the S10 operon in most archaea (W09)",
+  "operon_spacing": "within-operon distances peak at short values including overlaps of 1 and 4 nt, borders are flat (S00); distance models are genome-specific, co-expression drops near 20 bp in Halobacterium and 50 bp in H. pylori, opposite-strand pairs are a different class (P05)"
+ },
+
+ "annotation_mapping_rules": {
+  "R_ribosomal_protein": "Pfam hit named '^ribosom(al)?_' (the run marker) OR KOfam KO whose KEGG name (DB source 'kegg') contains 'ribosomal protein'",
+  "N_literature_member": {
+   "secY": "KO K03076 or Pfam SecY", "rnp1": "KO K03538 (POP4) or Pfam RNase_P-MRP_p29", "sui1": "KO K03113 or Pfam SUI1",
+   "rpoD_N_K": "KO K03047 / K03058 / K03055 or Pfam RNA_pol_L / RNA_pol_N / RNA_pol_Rpb6", "eno": "KO K01689 or Pfam Enolase_N / Enolase_C",
+   "cmk": "Pfam Cytidylate_kin or Cytidylate_kin2", "cbf5_truB": "KO K03177 / K11130 or Pfam TruB_N / TruB_C_2 / DKCLD",
+   "ndk": "KO K00940 or Pfam NDK", "infB": "Pfam IF-2", "eIF2": "KO K03242 / K03237 / K03238", "nusA": "KO K02600",
+   "EF1a": "KO K03231", "EF2": "Pfam architecture with EFG_C or EFG_IV and GTP_EFTU", "rpoH_B_A_E_F_P": "KO K03053 / K13798 / K03040 / K03041 / K03042 / K03049 / K03051 / K03059",
+   "spt5": "KO K15172", "secE": "Pfam SecE", "eIF6": "KO K03264"
+  },
+  "X_other": "every other gene; genes with neither Pfam nor KO are X and flagged 'unannotated'",
+  "naming": "observed domains and these literature names only; no other functional names"
+ },
+
+ "evidence_rules": {
+  "b_operon_structure": "adjacent genes are LINKED if on the same strand and intergenic distance d = start(next) - end(prev) - 1 <= 150 nt, or <= 500 nt when both genes are members (R or N; functional class supports the link as in S00). A strand change is never linked.",
+  "component": "maximal chain of linked genes; cut where >= 3 consecutive X genes occur; leading and trailing X genes trimmed; qualifies with >= 2 member genes including >= 1 R. X genes inside a qualifying component are co-transcribed inserts and belong to the locus.",
+  "accurate_description_of_a_run": "units = qualifying components containing >= 1 marked run gene, plus each marked run gene outside every qualifying component as a singleton unit. ONE locus iff one unit; that component is C. Multiple loci otherwise: the targets are the qualifying components with >= 3 member genes.",
+  "c_inheritance": "for each decisive junction (cut, glue or edge), gene identities = KO, else Pfam architecture, else none; counts of other genomes of the own lineage group ($RD/lineagefree/groups/emb_hom_average_t0.75) and of other groups holding the two identities <= 2 positions apart, and of group genomes holding both identities at all. Reported beside each case; used for the inherited / single-genome flag, not for the verdict.",
+  "d_data": "gene-call anomaly within 1 gene of the decisive point: adjacent same-strand genes sharing a KO or a Pfam domain (split ORF), a member longer than 2x or shorter than 0.5x the median of its KO or top marker (fusion / fragment); contig end inside or at the edge of C",
+  "excluded_from_verdict": "family-token bonds, recurrence counts, cohesion and every statistic of the methods (reported only)"
+ },
+
+ "verdicts": {
+  "procedure": "for each run unresolved by an output (standing rule): (7) no qualifying unit, or coordinates missing -> cannot tell; else (6) a data anomaly within 1 gene of the decisive point -> data problem; else (2) multiple units -> the benchmark glues them; else (one locus C): (3) the output resolves C (best locus by overlap with C, >= 80% of C and >= 80% inside C); (5) some other output locus resolves C; (1) best covers < 80% of C -> the output split C (the cut junctions are reported with strand, distance, classes, inheritance); (4) coverage met, precision against C < 0.8 -> the output extends beyond C, should have stopped at C's edges",
+  "flags": "unannotated gene at the decisive junction; junction single-genome in its group (no other group genome with the same adjacency although >= 1 holds both identities)",
+  "correct_output_for_1_and_4": "C itself (gene ids and positions given)",
+  "review": "every case diagram read; a verdict is changed only for a demonstrated computation error, fixed in code for all cases; disagreements recorded"
+ },
+
+ "answers_plan": {
+  "A": "all 1,686 runs: right iff every target (C, or each component with >= 3 members) is resolved by its largest-overlap locus at 80 / 80; ceiling = runs with >= 1 target",
+  "B": "on the frozen primary (WA L4b) and L4b, with each output's own bonds (s_k = 0 = unbonded): (i) bridge an unbonded junction between two loci when the two flanking gene families lie in one locus of the same output in >= 3 other lineage groups; (ii) bridge when >= 1 other genome of the own group holds the two families <= 3 positions apart. Report: verdict-1 cases repaired (C resolved after merging loci across firing junctions); fires over all junctions where one locus ends and the next starts on the same contig in DPANN; merges of two different curated instances (package gold: DefenseFinder, TXSScan, CRISPRCasTyper, instances with >= 2 member genes) against merges inside one instance",
+  "C": "scoring corrections justified by (a)-(d): target = accurate loci (members and co-transcribed inserts included, units split at strand changes / non-member gaps, singleton marked genes dropped); resolved counts of all four outputs; chance = random windows (5 per run, same starts as the part-1 controls) with length equal to the target length",
+  "D": "configuration features of the frozen primary that the verdicts contradict, with counts"
+ }
+}

@@ -1,0 +1,184 @@
+                 clustering_run       level  is_default  families                                                                                                                       par
+0         pfr-8a31f5747e-family      family        True    701297  {"min_seq_id": 0.3, "coverage": 0.8, "cov_mode": 0, "sensitivity": 6.0, "max_seqs": 50, "cluster_mode": 0, "cluster_reas
+1      pfr-8a31f5747e-subfamily   subfamily        True   1123690  {"min_seq_id": 0.5, "coverage": 0.8, "cov_mode": 0, "sensitivity": 6.0, "max_seqs": 50, "cluster_mode": 0, "cluster_reas
+2           permissive-e3c50s75  permissive       False    430471  {"command": "mmseqs cluster -s 7.5 -e 1e-3 --min-seq-id 0 -c 0.5 --cov-mode 0 --cluster-mode 0", "mmseqs_commit": "8cc5c
+3   permissive-e3c50s75-rescue3  permissive       False    363307  {"base_run": "permissive-e3c50s75", "base_command": "mmseqs cluster -s 7.5 -e 1e-3 --min-seq-id 0 -c 0.5 --cov-mode 0 --
+4  permissive-e3c50s75-rescue3c  permissive       False    396905  {"base_run": "permissive-e3c50s75", "repair": "rescue3c (anchored fragment rescue)", "rule": "rescue3 (a gene in a base 
+
+## sub:8a31f5747e:DAHWMA010000022.1_31 (pfr-8a31f5747e-subfamily): 33 members, 1 phyla
+              protein_id  len                ph                 fam                               sp            pfam    ko   cdd            slot
+0    DAHXHU010000039.1_2  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG            None
+1   DAHXHM010000013.1_23  581  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp021827665            None  None  PksG            None
+2    JAJZWZ010000028.1_6  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+3       DARC01000020.1_9  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+4         WP_203134402.1  580  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+5           MCL4372010.1  536  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp023485295            None  None  PksG            None
+6    DAHXHO010000020.1_4  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG            None
+7   DAHVGB010000005.1_47  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+8             OWP53669.1  580  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+9    DAHVPW010000012.1_8  581  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp021827665            None  None  PksG            None
+10  DAHVGA010000004.1_47  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+11   JAJZJP010000013.1_4  579  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp023380795            None  None  PksG            None
+12          MCL5404631.1  536  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp023485295            None  None  PksG            None
+13            OJT94780.1  580  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+14   DAHXHN010000058.1_9  564  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp027339055            None  None  PksG            None
+15   DAHXHZ010000026.1_2  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG            None
+16   DAIDLN010000011.1_2  569  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp023473395  HMG_CoA_synt_C  None  PksG            None
+17          MCL5680306.1  581  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp021797495            None  None  PksG  HMG_CoA_synt_C
+18          MEM3883680.1  580  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG            None
+19   DAIDNJ010000063.1_6  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+20          MCL4388136.1  578  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp023380795            None  None  PksG            None
+21   DAHXHR010000064.1_1  496  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG            None
+22   JAKAUR010000025.1_8  581  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp021827665            None  None  PksG            None
+23     DAKF01000034.1_99  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+24   DAHXHW010000016.1_4  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG            None
+25          MEM0154817.1  545  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp038729265  HMG_CoA_synt_C  None  PksG            None
+26   DAHXHY010000025.1_6  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG            None
+27  JAJZZO010000004.1_34  582  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp021797495            None  None  PksG  HMG_CoA_synt_C
+28          MCL4404475.1  568  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp023473395  HMG_CoA_synt_C  None  PksG            None
+29  DAHXHL010000007.1_27  582  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp021797495            None  None  PksG  HMG_CoA_synt_C
+30   DAHXHS010000023.1_6  580  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG            None
+31      DAUN01000032.1_9  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  PksG  HMG_CoA_synt_C
+32  DAHWMA010000022.1_31  582  p__Micrarchaeota  f__Micrarchaeaceae    s__Micrarchaeum_A sp021797495            None  None  PksG  HMG_CoA_synt_C
+
+## fam:4472b6ad41:DAHWNI010000033.1_6 (permissive-e3c50s75): 11 members, 1 phyla
+              protein_id  len                ph                 fam                               sp            pfam    ko                cdd            slot
+0      DAIB01000033.1_96  283  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+1             OJI07176.1  301  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+2    DAHWNI010000033.1_6  143  p__Micrarchaeota  f__Micrarchaeaceae          s__JAJZAB01 sp021791775            None  None               PksG            None
+3       DAUN01000032.1_9  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG  HMG_CoA_synt_C
+4    JBAMLI010000012.1_1  251  p__Micrarchaeota         f__CABMGC01          s__JAGDYD01 sp039793645  HMG_CoA_synt_C  None               PksG            None
+5    DAHXHR010000064.1_1  496  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+6    DAHVKK010000042.1_1  199  p__Micrarchaeota  f__Micrarchaeaceae          s__JAMCYW01 sp021792395  HMG_CoA_synt_C  None           PLN02577            None
+7    DAHWQN010000099.1_1  253  p__Micrarchaeota         f__CABMGC01          s__JAJZOD01 sp027340645  HMG_CoA_synt_C  None           PLN02577            None
+8           MDE1811194.1  199  p__Micrarchaeota  f__Micrarchaeaceae          s__JAGWFU01 sp028867845  HMG_CoA_synt_C  None               PksG            None
+9   JAKAOJ010000018.1_10  262  p__Micrarchaeota  f__Micrarchaeaceae          s__JAMCYM01 sp021812205            None  None               PksG            None
+10     DARF01000024.1_10  186  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  init_cond_enzymes            None
+
+## fam:8a31f5747e:DAIDBM010000026.1_5 (pfr-8a31f5747e-family): 22 members, 1 phyla
+              protein_id  len                ph                 fam                       sp            pfam    ko   cdd            slot
+0    DAHXDG010000058.1_2  582  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+1   DAHXDM010000009.1_39  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+2   DAHXDD010000033.1_16  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+3    DAHXDE010000048.1_1  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+4    DAIDBK010000028.1_5  579  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027310825            None  None  PksG            None
+5   DAHXDO010000058.1_11  591  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp021811605            None  None  PksG  HMG_CoA_synt_C
+6   DAIDBL010000005.1_47  580  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027310825            None  None  PksG            None
+7    DAHXDF010000042.1_1  535  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+8   DAHXDI010000009.1_16  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+9   DAHXDL010000062.1_11  506  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+10   DAHXDK010000020.1_1  576  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+11   DAIDBM010000026.1_5  580  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027310825            None  None  PksG            None
+12  JAKATK010000001.1_62  580  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+13   DAHXLY010000035.1_3  550  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027365735  HMG_CoA_synt_C  None  PksG            None
+14  DAIDAC010000001.1_12  579  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027310825            None  None  PksG            None
+15  DAHVLV010000015.1_16  576  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp021807115            None  None  PksG            None
+16   DAHXDP010000001.1_8  591  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp021811605            None  None  PksG  HMG_CoA_synt_C
+17  DAHWHU010000033.1_23  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+18  DAHXCZ010000008.1_11  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+19  DAHXDJ010000053.1_16  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+20   JAJZNR010000018.1_8  591  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp021811605            None  None  PksG  HMG_CoA_synt_C
+21  DAHXDA010000002.1_60  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+
+## sub:8a31f5747e:DAIDBM010000026.1_5 (pfr-8a31f5747e-subfamily): 22 members, 1 phyla
+              protein_id  len                ph                 fam                       sp            pfam    ko   cdd            slot
+0   DAHXDD010000033.1_16  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+1    DAHXDE010000048.1_1  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+2   DAHXDA010000002.1_60  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+3    DAHXDF010000042.1_1  535  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+4   DAHXDI010000009.1_16  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+5   DAIDBL010000005.1_47  580  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027310825            None  None  PksG            None
+6   DAHXDO010000058.1_11  591  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp021811605            None  None  PksG  HMG_CoA_synt_C
+7   DAIDAC010000001.1_12  579  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027310825            None  None  PksG            None
+8    DAIDBK010000028.1_5  579  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027310825            None  None  PksG            None
+9    DAIDBM010000026.1_5  580  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027310825            None  None  PksG            None
+10   DAHXDK010000020.1_1  576  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+11  JAKATK010000001.1_62  580  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+12   DAHXLY010000035.1_3  550  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp027365735  HMG_CoA_synt_C  None  PksG            None
+13   DAHXDG010000058.1_2  582  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+14  DAHXDM010000009.1_39  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+15  DAHXDL010000062.1_11  506  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+16  DAHWHU010000033.1_23  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995  HMG_CoA_synt_C  None  PksG            None
+17  DAHXCZ010000008.1_11  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+18  DAHXDJ010000053.1_16  583  p__Micrarchaeota  f__Micrarchaeaceae  s__JAKATK01 sp021827995            None  None  PksG            None
+19   JAJZNR010000018.1_8  591  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp021811605            None  None  PksG  HMG_CoA_synt_C
+20  DAHVLV010000015.1_16  576  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp021807115            None  None  PksG            None
+21   DAHXDP010000001.1_8  591  p__Micrarchaeota  f__Micrarchaeaceae  s__JAJZYD01 sp021811605            None  None  PksG  HMG_CoA_synt_C
+
+## fam:0746177997:DAHWNI010000033.1_6 (permissive-e3c50s75-rescue3): 11 members, 1 phyla
+              protein_id  len                ph                 fam                               sp            pfam    ko                cdd            slot
+0       DAUN01000032.1_9  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG  HMG_CoA_synt_C
+1    DAHVKK010000042.1_1  199  p__Micrarchaeota  f__Micrarchaeaceae          s__JAMCYW01 sp021792395  HMG_CoA_synt_C  None           PLN02577            None
+2    DAHWQN010000099.1_1  253  p__Micrarchaeota         f__CABMGC01          s__JAJZOD01 sp027340645  HMG_CoA_synt_C  None           PLN02577            None
+3    JBAMLI010000012.1_1  251  p__Micrarchaeota         f__CABMGC01          s__JAGDYD01 sp039793645  HMG_CoA_synt_C  None               PksG            None
+4      DAIB01000033.1_96  283  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+5           MDE1811194.1  199  p__Micrarchaeota  f__Micrarchaeaceae          s__JAGWFU01 sp028867845  HMG_CoA_synt_C  None               PksG            None
+6   JAKAOJ010000018.1_10  262  p__Micrarchaeota  f__Micrarchaeaceae          s__JAMCYM01 sp021812205            None  None               PksG            None
+7    DAHXHR010000064.1_1  496  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+8             OJI07176.1  301  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+9    DAHWNI010000033.1_6  143  p__Micrarchaeota  f__Micrarchaeaceae          s__JAJZAB01 sp021791775            None  None               PksG            None
+10     DARF01000024.1_10  186  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  init_cond_enzymes            None
+
+## fam:4472b6ad41:DAIDBP010000029.1_20 (permissive-e3c50s75): 281 members, 1 phyla
+                                                  n  len_med
+ph               pfam                                       
+p__Micrarchaeota HMG_CoA_synt_C                 119    561.0
+                 HMG_CoA_synt_C,HMG_CoA_synt_N    3    541.0
+                 HMG_CoA_synt_N                  30    557.5
+                 HMG_CoA_synt_N,HMG_CoA_synt_C    1    541.0
+                 NaN                            128    565.5
+
+## fam:5ad133d455:DAIDBP010000029.1_20 (permissive-e3c50s75-rescue3c): 288 members, 1 phyla
+                                                  n  len_med
+ph               pfam                                       
+p__Micrarchaeota HMG_CoA_synt_C                 119    561.0
+                 HMG_CoA_synt_C,HMG_CoA_synt_N    1    541.0
+                 HMG_CoA_synt_N                  32    557.0
+                 HMG_CoA_synt_N,HMG_CoA_synt_C    3    541.0
+                 NaN                            133    565.0
+
+## fam:5ad133d455:DAHWNI010000033.1_6 (permissive-e3c50s75-rescue3c): 11 members, 1 phyla
+              protein_id  len                ph                 fam                               sp            pfam    ko                cdd            slot
+0      DARF01000024.1_10  186  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None  init_cond_enzymes            None
+1      DAIB01000033.1_96  283  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+2    DAHXHR010000064.1_1  496  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+3    JBAMLI010000012.1_1  251  p__Micrarchaeota         f__CABMGC01          s__JAGDYD01 sp039793645  HMG_CoA_synt_C  None               PksG            None
+4    DAHVKK010000042.1_1  199  p__Micrarchaeota  f__Micrarchaeaceae          s__JAMCYW01 sp021792395  HMG_CoA_synt_C  None           PLN02577            None
+5    DAHWQN010000099.1_1  253  p__Micrarchaeota         f__CABMGC01          s__JAJZOD01 sp027340645  HMG_CoA_synt_C  None           PLN02577            None
+6       DAUN01000032.1_9  581  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG  HMG_CoA_synt_C
+7             OJI07176.1  301  p__Micrarchaeota  f__Micrarchaeaceae  s__Micrarchaeum_A acidiphilum_A            None  None               PksG            None
+8    DAHWNI010000033.1_6  143  p__Micrarchaeota  f__Micrarchaeaceae          s__JAJZAB01 sp021791775            None  None               PksG            None
+9           MDE1811194.1  199  p__Micrarchaeota  f__Micrarchaeaceae          s__JAGWFU01 sp028867845  HMG_CoA_synt_C  None               PksG            None
+10  JAKAOJ010000018.1_10  262  p__Micrarchaeota  f__Micrarchaeaceae          s__JAMCYM01 sp021812205            None  None               PksG            None
+
+## fam:0746177997:DAIDBP010000029.1_20 (permissive-e3c50s75-rescue3): 288 members, 1 phyla
+                                                  n  len_med
+ph               pfam                                       
+p__Micrarchaeota HMG_CoA_synt_C                 119    561.0
+                 HMG_CoA_synt_C,HMG_CoA_synt_N    3    541.0
+                 HMG_CoA_synt_N                  32    557.0
+                 HMG_CoA_synt_N,HMG_CoA_synt_C    1    541.0
+                 NaN                            133    565.0
+
+## fam:8a31f5747e:DAHVLD010000001.1_183 (pfr-8a31f5747e-family): 120 members, 1 phyla
+                                                 n  len_med
+ph               pfam                                      
+p__Micrarchaeota HMG_CoA_synt_C                 58    561.0
+                 HMG_CoA_synt_C,HMG_CoA_synt_N   2    541.0
+                 HMG_CoA_synt_N,HMG_CoA_synt_C   2    595.0
+                 NaN                            58    552.0
+
+## DPANN genes with HMG_CoA_synt Pfam (GA): 516 genes, 511 genomes
+                                     genes  genomes  len_med  len_min  len_max
+ph                   pf                                                       
+p__Aenigmatarchaeota HMG_CoA_synt_C     21       21    453.0      343      531
+                     HMG_CoA_synt_N     38       38    349.5      204      575
+p__Altiarchaeota     HMG_CoA_synt_C      1        1    347.0      347      347
+                     HMG_CoA_synt_N      5        5    351.0      349      352
+p__EX4484-52         HMG_CoA_synt_N      5        5    349.0      346      368
+p__Iainarchaeota     HMG_CoA_synt_C      6        6    355.5      343      502
+                     HMG_CoA_synt_N     54       54    346.0      193      502
+p__Micrarchaeota     HMG_CoA_synt_C    212      208    567.0      154      700
+                     HMG_CoA_synt_N    177      176    352.0       99      649
+p__Nanobdellota      HMG_CoA_synt_C     21       21    390.0      315      521
+                     HMG_CoA_synt_N     30       30    362.0      148      482

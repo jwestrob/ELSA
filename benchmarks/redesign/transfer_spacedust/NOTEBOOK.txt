@@ -1,0 +1,226 @@
+transfer_spacedust NOTEBOOK (workstream transfer_spacedust; times UTC from `date -u` unless marked)
+==============================================================================================
+2026-11-13 07:44  Read vocab/REPORT.txt, REPORT2A.txt, vocab_lists/report_algorithm_draft.txt, NOTEBOOK.txt, REPORT.txt
+                  (read-only), lineagefree/REPORT.txt, context_units/REPORT.txt, calib/REPORT.txt; vocab.py, vocab2a.py,
+                  vscore2a.py, vscore.py (readings), cuts.py, genome_groups.py, vl.py (structure), engine/recurrence.py,
+                  repair/build_arms.py + repair_lib.py + search_shard.sbatch; docs/redesign/NOTEBOOK.md 11-12 Nov entries
+                  on the Spacedust collection (incl. the 12 Nov correction: engine source207 figures are a best of 42
+                  readings); vault CONTEXT.md Spacedust sections.
+2026-11-13 07:45  Read /home/jwestrob/.claude/CLAUDE.md and obsidian-vault/biotite-cluster-ops.md on biotite.
+                  Collection facts verified: universe $RD/universe = 4,257,531 genes (67,148 query, 4,190,383 reference),
+                  1,317 genomes (9 query + 1,308 reference), 2,061 contigs; source207 = 207 regions on 7 of the 9 query
+                  genomes (Kutzneria 38, S. sp. AA4 32, Micromonospora M42 30, S. ghanaensis 30, Micromonospora ATCC
+                  39149 27, S. albus 26, S. pristinaespiralis 24), contiguous member sets of 1-73 genes (q25 6, q50 10,
+                  q75 16.5, q90 27.4). Query genomes carry no GTDB genus, so the engine Universe counts each as its own
+                  lineage.
+2026-11-13 07:46  Stored references located:
+                  engine v1.1 $RD/engine/results_v2/hybrid__esm2_650m__genomecentred__mm30cpmr0p05__w8 (rule P<=1e-4&L>=3,
+                    329,844 significant pairs), "conserved loci, gaps 0-2" (union of 3 gap rules x 14 support levels,
+                    19,741 query intervals): F1 .7498, random .5660, excess .1838 [.1537, .2134] = the brief's .750/+.184.
+                    Same engine on the permissive MMseqs base (e3c50s75, w8): .7446 / .5609 / .1837.
+                  native Spacedust: seq_invisible_20261111/results/block_fdr/spacedust_native.json, all 1,641,181 native
+                    blocks (63,756 query intervals): F1 .6765, random .6115, excess .0649 [.0365, .0927]; per-region
+                    values not stored (rescoring needed for paired differences).
+                  Matched protocol = model_scaling_20260913/code/evaluate_spacedust_queries.evaluate on query-genome
+                    intervals: per region the best single interval by gene-level F1; 200 rigid translations of the exact
+                    membership pattern within its contig (seed 17 per region) scored against the same interval set;
+                    excess = mean over regions of (F1 - mean control F1); 10,000 region bootstrap draws (rng seed 17).
+2026-11-13 07:47  Tokens: an equivalent rescue3 table for the collection does not exist ($RD/tokens has the base
+                  mmseqs__seq__e3c50s75: 601,584 tokens, 433,844 singletons; 553,026 genes in tokens of < 3 members).
+                  Build rescue3 here with the repair recipe.
+2026-11-13 07:48  Embeddings: model_scaling_20260913/results/esmc300m/embedding/{query,reference}/embeddings.npy =
+                  biohub/ESMC-300M rev a59b8317, transformers ESMCModel, bf16 inference, last_hidden_state (after the
+                  final LayerNorm) residue mean excluding special tokens, float32, L2-normalised, whole sequence. DPANN:
+                  Synthyra/ESMplusplus_small rev 46c5f7d5, bf16, final hidden state after the last LayerNorm, residue
+                  mean, whole sequence. weights_check.py (CPU, no model run): all 308 ESM++ small tensors
+                  (332,997,184 parameters) are bitwise identical (float32 hash) to tensors of the ESMC-300M checkpoint;
+                  the only unmatched entries are 90 empty `_extra_state` buffers. Same network, same pooling: the stored
+                  vectors are reused as the ESM++ small equivalent (remaining difference: bf16 numerics of two
+                  implementations; not measured, a GPU spot check would need the gpu partition, held by another agent's
+                  pending job 90861). zca10 is refitted on this collection (first step of zca10 is L2 normalisation, so
+                  stored normalised vectors are a valid input).
+2026-11-13 07:50  Note on the brief: cohesion phrases (V-coh) read ws_context's token cohesion, which is the mean pairwise
+                  zca10 cosine of the neighbours of a gene's token family; P2 therefore needs the zca10 vectors too
+                  (available from the stored ESM-C 300M vectors, so this does not delay P2).
+2026-11-13 07:55  Job 91199 (ts_fam, 64 CPUs, node-64-768g-31; account 332 CPUs running before it): unique sequences,
+                  MMseqs2 rescue search (prefilter -s 7.5 --max-seqs 1000; align -e 1e-5 -a), rescue3 rule.
+2026-11-13 07:57  Coordinator: two secondary items, to run after P2 and P1 are recorded: (1) connected-component
+                  baseline on round-0 significant pairs (gap 1, and 2), (2) duplicate-genome stress test. Declared in
+                  predeclared.json (amendment_0) before any number.
+2026-11-13 08:05  prep code written (refs.py, s207.py, emb.py, gtable.py, words.py, wscore.py, portcheck.py); learner smoke
+                  test on 40 genomes with base tokens (login node, 21 s): group-with-one-genome-per-group == genome mode,
+                  synteny N_eff with S = I == genome mode, live nodes tile genes, instances match types. Account at 396
+                  CPUs: prep job waits for room (watcher armed).
+2026-11-13 08:10  Hardware check (srun --overlap in job 91199): node-64-768g = 2 x Xeon E5-2683 v4 (Broadwell, AVX2,
+                  32 cores / 64 threads). An exhaustive all-vs-all on CPU (4.23 M unique x 4.26 M genes x 960) is ~3.5e16
+                  flop, ~9-10 h on one such node; on one A5000 ~25 min (DPANN table: 12 min for half the work). P1 and P3
+                  need that pass; it waits for the gpu partition (job 90861 of another agent pending there).
+2026-11-13 08:10  Stress-test clade (amendment_0 rule): no GTDB genus has 20-50 reference genomes (largest 14); families
+                  with 20-50: Metamycoplasmataceae 26, Lactobacillaceae 26 (tie), Enterobacteriaceae 25, Lachnospiraceae 24,
+                  Microbacteriaceae 21, Sphingomonadaceae 20. Tie-break fixed now, before any stress number: more genes
+                  in total -> Lactobacillaceae (Metamycoplasmataceae are reduced genomes). Coded in stress.py.
+2026-11-13 08:12  Job 91364 (ts_prep, 24 CPUs, node-64-768g-23; account 372 CPUs running before it): reference rescoring
+                  (engine stored loci, native Spacedust, engine single reading), learner port check on DPANN, zca10 refit,
+                  engine rerun (hybrid tokens, w 8) and comparison with the stored summary.
+2026-11-13 08:16  REFERENCE REPRODUCED (job 91364, refs.py rescore; results/refcheck.json): stored engine v1.1 hybrid w8 query
+                  loci rescored with the engine's own selection sequence: all 8 selections equal on n_intervals, F1,
+                  control F1, excess, both CI bounds, localized fractions and every per-region F1; the reference row
+                  "conserved loci, gaps 0-2" = F1 .7498, control .5660, excess .1838 [.1537, .2134]. Native Spacedust, all
+                  1,641,181 blocks: equal on every field (F1 .6765, control .6115, excess .0649 [.0365, .0927], median
+                  boundary precision, query gene coverage). Engine single reading (stored loci, conserved level 2; one
+                  reading, 4,378 query intervals): F1 .5778, control .3773, excess .2005 [.1641, .2371].
+2026-11-13 08:17  PORT CHECK (job 91364, portcheck.py; results/portcheck.json): this workstream's copied learner on the DPANN
+                  inputs reproduces the stored vocabularies exactly: stage-1 group arm tau 10 ($RD/vocab/runs/main/tau10):
+                  25,018 types, every word row (sym, a, b, n, occ) and every instance (sym, s, e, a, b) equal, 24.7 s;
+                  synteny-retention arm tau 8 ($RD/vocab/runs2a/neff_syn/tau8): 43,964 types, words, instances and b0
+                  equal, 38.0 s. Embedding rows: reference and query metadata gene_id order equals the universe order.
+2026-11-13 08:24  zca10 refit (job 91364; emb/zca.json): 4,231,484 unique sequences (26,047 duplicate genes), no invalid
+                  vector; gene-weighted mean norm .811, covariance participation ratio 5.72 before whitening; copies of
+                  one sequence embedded in different batches agree to cosine >= .99999 (14,571 pairs); 414 s, 39.8 GB.
+2026-11-13 08:37  ENGINE RERUN REPRODUCED (job 91364; results/refcheck_rerun.json): recurrence.py (unchanged copy, md5
+                  49e7eb94) on the stored hybrid tokens at w 8 gives the stored run exactly: rule P<=1e-4&L>=3, 329,844
+                  significant pairs, FDR .00565, 2,440,774 genes covered, and all 8 source207 selections equal including
+                  every per-region F1. 12 min 42 s on 24 CPUs, 17.0 GB peak. Prep job done 08:36.
+2026-11-13 08:42  DEVIATION (declared before any group or P1 number): the gpu partition is still held by job 90861 (another
+                  workstream; waits on its running CPU job), and the exact all-vs-all would take ~9 h on CPU. Job 91643
+                  (ts_cpugrp, 64 CPUs, node-64-768g-8; account 328 CPUs before it) runs cpu_groups.py: stage 1 estimates
+                  emb_hom for every directed genome pair from 300 sampled genes per genome (seed 17) with exact
+                  per-genome maxima over all genes of the target genome; stage 2 recomputes emb_hom exactly (all genes,
+                  both directions) for every genome pair whose estimate is >= 0.65 (ten points below the cut). Groups
+                  are then cut at 0.75 as predeclared. If the gpu partition frees, the exact GPU table (gtable.py) is run
+                  as well; if its groups differ, P1 is rescored on them and that score is the predeclared P1.
+                  Token job 91199: prefilter 2,705 s, align started 08:41.
+2026-11-13 08:49  Job 91199 done (53 min 44 s). Unique sequences 4,231,484 (27.7 s); rescue queries 552,111 uids (110 M aa)
+                  against all uids: prefilter 2,705 s (99.5% of queries reach max-seqs 1000; DPANN 99.3%), align 438 s,
+                  convert 16 s; 14,774,603 hits (E <= 1e-5) for 215,877 queries; rescue3 rule 17 s, 4.1 GB.
+                  rescue3 tokens (tok/mmseqs__seq__e3c50s75_rescue3__spacedust): 523,853 families (base 601,584), 376,082
+                  singletons, 97,968 genes moved (2.30%; DPANN 2.33%), 903 chains, 448 cycles, largest family 11,978;
+                  moved genes' best hits: identity q10/q50/q90 .26/.39/.73, target family size q50 43.
+2026-11-13 08:50  Job 91728 (ts_p2, 64 CPUs, node-64-768g-9; account 312 CPUs before it): cohesion, synteny ladder
+                  (13 tau x obs + 3 shuffles), P2 readings and scores, engine on rescue3 tokens at w 3 and w 8.
+2026-11-13 08:51  Cohesion (emb/cohesion.json; 44 s, 19.7 GB): gene-pair floor c0 .00018 (999,045 pairs); within-contig
+                  boundary kappa q05/q25/q50/q75/q95 .002/.007/.017/.052/.331, NaN 2.8%; share of boundaries below
+                  .02/.05/.1/.2: .535/.722/.809/.879.
+2026-11-13 08:55  P2 ladder (results/ladder_syn.json; 52 runs on 52 processes, 3 min 51 s incl. 82 s for 4 synteny
+                  matrices): S off-diagonal q50/q90/q99/max observed .031/.070/.148/.817, shuffle .0006/.0016/.0036/.049
+                  (DPANN observed .029/.068/.216). Word-type FDR at tau 4/6/8/10/12: .120/.0295/.0071/.0016/.0003 ->
+                  tau* = 8 (DPANN 8; FDR at 8 .0071 vs .0072). At tau* 103,490 types, 2,080,017 genes in top-level words
+                  (48.9%); runs 86-110 s on one core, 2.2-2.3 GB.
+                  Expectation for the P2 score unchanged from predeclared.json (written before any score; the scoring step
+                  is running now): F1 .50-.62, control .38-.48, excess +.08 to +.15; BELOW the engine reference.
+2026-11-13 08:58  P2 SCORED (job 91728, wscore.py; results/score_P2.json; 190 s for 10 readings). PRIMARY V-coh0.1: 9,702
+                  query intervals, F1 .481, control .432, excess +.049 [+.014, +.084]; median boundary precision 1.00,
+                  median coverage .33; 54.0% of query genes in loci. vs engine reference (best of 42): d excess -.135
+                  [-.173, -.097] BELOW; vs engine single reading -.152 [-.202, -.102] BELOW; vs native Spacedust -.016
+                  [-.051, +.018] MATCHES (F1 difference in score_P2.json).
+                  Against the expectation (written 07:59): T2 holds (lower bound > 0) and the verdicts held in direction
+                  (BELOW engine; MATCHES Spacedust on excess); the magnitudes did not: F1 .481 below the expected .50-.62
+                  and excess +.049 below the expected +.08 to +.15.
+                  Secondary readings (not selected): V-top .474/+.046, V-nest .482/+.039, V-mob .478/+.038, V-phr
+                  .538/+.079, V-coh .02/.05/.2: +.079/+.060/+.046. SECONDARY CC baseline (amendment_0): CC1 F1 .552,
+                  excess +.115 [+.079, +.151]; CC2 .587, +.142 [+.106, +.178] (vs Spacedust +.078 [+.044, +.111]).
+                  The pair statistic alone, assembled as connected runs, scores well above the word parse here.
+2026-11-13 09:02  P2 diagnostics (score_P2.json): top-level word span median 3 (q90 6, q99 13) overall and 3 / 7 / 14 on
+                  query genomes; 47.3% of gold member genes lie outside every top-level word. P2 V-coh0.1 by region
+                  size (F1 / control / excess; median best-interval span vs region size): 1-5 genes .515/.437/+.077
+                  (2 vs 4); 6-10 .603/.477/+.127 (4 vs 9); 11-20 .421/.441/-.020 (4 vs 14); 21+ .311/.336/-.025 (5 vs 28).
+                  Engine reference by size: +.159/+.207/+.182/+.175 (best span 4/8/11/22); Spacedust +.083/+.139/+.016/-.018.
+                  Paired (pairs.py; results/pairs.json): SECONDARY CC1 - P2 V-coh0.1 excess +.066 [+.040, +.092], F1 +.071;
+                  CC2 - P2 V-coh0.1 +.093 [+.067, +.121], F1 +.106 (win/tie/loss 107/76/24); V-phr - V-coh0.1 +.030
+                  [+.016, +.046]; CC2 - V-phr +.063 [+.040, +.087]. References: engine single - engine union excess +.017
+                  [-.015, +.047] (F1 -.172); Spacedust - engine union -.119 [-.151, -.086] (F1 -.073).
+2026-11-13 09:16  Job 91728 done 09:14. Engine (unchanged) on this workstream's rescue3 tokens, reference rows (refs.py engine;
+                  results/ref_engine_r3_w{3,8}.json): w 3 union of 42 readings F1 .707 / control .580 / excess +.127
+                  [+.092, +.162] (26,474 intervals); w 3 single reading (conserved level 2) .599 / .455 / +.144 [+.108,
+                  +.181]; w 8 union .756 / .566 / +.190 [+.158, +.221]; w 8 single .590 / .362 / +.229 [+.190, +.266].
+                  Paired: P2 V-coh0.1 - engine r3 w3 single -.095 [-.128, -.064] (F1 -.118); - engine r3 w3 union -.078;
+                  - engine r3 w8 union -.141. SECONDARY CC2 (P2) - engine r3 w3 single -.002 [-.022, +.018] (F1 -.012):
+                  the connected-run baseline reproduces the engine's single reading at the same window and tokens.
+                  engine r3 w8 union - stored reference +.006 [-.017, +.029]; engine r3 w3 - w8 (union) -.062 [-.091, -.033].
+                  Cost: cohesion 47 s / 20.6 GB; synteny ladder 3 min 51 s (52 runs, <= 2.6 GB per process); P2 scoring
+                  3 min 12 s / 1.7 GB; engine w3 5 min, w8 10.6 min on 64 CPUs (7.3 / 17.3 GB).
+2026-11-13 09:19  Fragmentation (tmp/frag.py on per-region tables; median over the 207 regions; in brackets regions of >= 11
+                  genes): share of region genes covered by the UNION of an output's intervals / by its BEST single interval /
+                  best span over region size: P2 V-top .583 (.500) / .333 (.214) / .333; P2 V-coh0.1 .588 (.500) / .333
+                  (.222) / .345; P2 V-phr .600 (.548) / .438 (.273) / .444; CC2 (P2) .750 (.655) / .500 (.364) / .529; engine
+                  r3 w3 single .800 (.727) / .571 (.417) / .619; engine reference 1.000 (.889) / .833 (.733) / .900; Spacedust
+                  .955 (.909) / .600 (.357) / .600. Two losses for the words: fewer region genes in any word (59% vs 75-80%
+                  for the pair-statistic runs) and the region split across several words (union .59, best .33).
+2026-11-13 09:43  cpu_groups stage 1 done (3,465 s on 64 threads; 393,256 sampled genes = 300 per genome, all genes for
+                  smaller genomes): 93,774 of 866,586 genome pairs have an estimated symmetrised emb_hom >= 0.65 and are
+                  recomputed exactly in stage 2 (~2,000 pairs per 64 s, ~50 min). gpu partition still held by 90861.
+2026-11-13 10:27  Session interrupted ~09:50-10:25 by an API authentication error (coordinator message). State on return:
+                  job 91643 (cpu groups) in stage 2, 62,000 / 93,774 exact pairs at 2,649 s; no other job of this
+                  workstream running. The gpu partition now runs another workstream's SR-VP embedding job (92238); no GPU
+                  submission until it clears. Next: interim REPORT.txt, then P1 when the groups land.
+2026-11-13 10:48  Job 91643 done (2 h 6 min, 17.4 GB; stage 1 3,465 s, stage 2 4,002 s for 93,774 exact pairs). GROUPS at 0.75
+                  (groups/groups.json): 618 groups for 1,317 genomes (largest 20, 388 singletons; one group per 2.1
+                  genomes, DPANN one per 5.6); groups by theta .65/.70/.75/.80 = 70/229/618/1,230. emb_hom (symmetrised)
+                  pairs q50/q90/q99 .617/.648/.726; nearest neighbour q10/q50/q90 .719/.773/.803. Description only (GTDB
+                  read for evaluation): AMI with family .70, genus .15 (reference genomes). Query genomes: the 5
+                  Streptomyces queries share one group of 6 (with a reference genome), S. sp. AA4 another group of 6, the
+                  two Micromonospora one group of 5, Kutzneria a group of 2.
+2026-11-13 10:49  Slurm preflight repeated after the interruption (both rule files re-read; unchanged, 665 / 422 lines).
+                  Job 92549 (ts_p1, 64 CPUs, node-64-768g-8; account 228 CPUs before it): group + genome ladders, P1
+                  scores. Job 92550 (ts_dev, DEVELOPMENT w 8 ladders and scores) chained afterok on 92549. Stress test
+                  moved to its own job (stress.sbatch), submitted after P1 ends (two-job limit).
+                  Expectation for P1 (predeclared, unchanged): below P2 by .01-.05 excess; F1 .47-.60, excess +.06 to +.13.
+                  Given P2's realised +.049, the predeclared range for P1 is likely too high as well.
+2026-11-13 10:55  P1 ladder (results/ladder_group_genome.json; job 92549): group unit word-type FDR at tau 4/6/8/10/12 =
+                  .362/.109/.027/.0050/.0003 -> tau* 10 (DPANN 10); at tau* 87,698 types, 45.5% of genes in top-level
+                  words. Genome unit (diagnostic, for the stress test): FDR .294/.090/.023/.0043/.0003 -> tau* 10;
+                  140,217 types, 52.0% of genes. P1 scoring running; expectation as written at 10:49.
+2026-11-13 10:58  P1 SCORED (job 92549 done 10:57; results/score_P1.json). PRIMARY V-coh0.1: 9,267 query intervals, F1 .483,
+                  control .402, excess +.080 [+.046, +.114]; median boundary precision 1.00, coverage .33; 47.5% of query
+                  genes in loci. vs engine reference -.104 [-.138, -.069] BELOW; vs engine single -.120 [-.168, -.074]
+                  BELOW; vs engine r3 w3 single -.064 [-.099, -.030] BELOW; vs native Spacedust +.015 [-.020, +.050]
+                  MATCHES; P1 - P2 (both V-coh0.1) +.031 [+.008, +.055], F1 +.002.
+                  Against the expectation (10:49 / predeclared): F1 and excess inside the predeclared ranges (.47-.60;
+                  +.06 to +.13); "P1 below P2 by .01-.05" REFUTED (P1 is above P2 by .031). Mechanism visible in the
+                  control: P1's words cover fewer query genes (47.5% vs 54.0%), so its random-placement control is lower
+                  (.402 vs .432) at equal F1.
+                  Secondary readings: V-top +.078, V-nest +.073, V-mob +.074, V-phr +.111, V-coh .02/.05/.2
+                  +.106/+.090/+.077. SECONDARY CC baseline: CC1 .536/+.125, CC2 .580/+.153 [+.116, +.189]; CC2 - P1
+                  V-coh0.1 +.072 [+.045, +.100] (F1 +.097); CC1 - P1 +.045 [+.015, +.075]; P1 CC2 - engine r3 w3 single
+                  +.008 [-.020, +.035]; P1 CC2 - P2 CC2 +.010 [-.008, +.028].
+2026-11-13 10:58  Job 92550 (ts_dev, DEVELOPMENT w 8) started 10:57 after 92549; job 92632 (ts_stress) submitted (account
+                  268 CPUs before it).
+2026-11-13 10:59  P1 diagnostics: 87,698 types (depth 1-12, max 51 slots), 1,130,145 instances, 569,461 top-level; 45.5% of
+                  genes in top-level words; top span q50 3, q90 6, q99 13 (query genomes 3 / 6 / 13); committed Lambda
+                  q50 14.5; groups per word q50 4 (q99 72); 14 rounds. 49.1% of gold member genes outside every word.
+                  By size (F1/control/excess; best span vs size): 1-5 .498/.405/+.093 (2/4); 6-10 .592/.445/+.147 (4/9);
+                  11-20 .448/.408/+.040 (4/14); 21+ .324/.318/+.006 (5/28). Fragmentation: union .52 (>= 11 genes .50),
+                  best interval .33 (.24); CC2 .71 (.66) / .50 (.36). Cost: group + genome ladders 5 min 15 s (104 runs,
+                  <= 2.4 GB each); scoring 3 min 6 s.
+2026-11-13 11:04  Stress job 92632 failed after its k = 0 runs (IndexError: clade mask indexed with the copies' genome codes;
+                  fixed in stress.py). Its k = 0 runs reproduce the primary vocabularies (genome unit 140,217 types =
+                  genome ladder tau 10; groups 87,698 = P1, 618 groups recomputed from emb_hom; synteny 103,490 = P2).
+                  Resubmitted as 92655 (account 268 CPUs before it).
+2026-11-13 11:16  STRESS TEST done (job 92655, 10 min 24 s; results/stress.json). Clade Lactobacillaceae, 26 genomes, 54,760
+                  genes; tau fixed at k = 0 tau* (genome 10, group 10, synteny 8). Clade word types relative to k = 0 at
+                  k = 1 / 3 / 9; Jaccard of clade types with k = 0; share of clade (original) genes in words:
+                    genome unit  x1.78 / x7.01 / x8.13; J .46 / .11 / .09; genes .567 -> .697 / .995 / 1.000
+                    groups       x0.93 / x0.86 / x0.75; J .86 / .78 / .68; genes .466 -> .440 / .414 / .384
+                    synteny N_eff x1.02 / x0.94 / x0.83; J .76 / .63 / .49; genes .537 -> .546 / .538 / .525
+                  Rest of the vocabulary: types x1.000-1.002 in every run; Jaccard with k = 0 .97/.94/.88 (genome), .99/.97/
+                  .95 (groups), .98/.93/.86 (synteny); genes in words of other genomes unchanged (+-.002).
+                  Against the expectation (amendment_0): genome-unit inflation HOLDS and exceeds the predicted size
+                  (x8.1 vs +30% to +300%); groups within +-5% / Jaccard >= .9 REFUTED (they deflate: -7/-14/-25%, because
+                  copies in one group raise that group's E); synteny within +-20% HOLDS for counts (-17% at k = 9),
+                  Jaccard >= .8 REFUTED (.76/.63/.49).
+2026-11-13 11:20  DEVELOPMENT w 8 (job 92550, 14 min 31 s ladder of 104 runs <= 5.1 GB, then scoring; chosen after the
+                  source207 numbers; labelled DEVELOPMENT): tau* 10 for both units (synteny FDR at 8 / 10 .016 / .0033;
+                  groups .044 / .0029); 60,229 (synteny) and 54,453 (groups) types. V-coh0.1: P2w8 F1 .482, excess +.071
+                  [+.034, +.109] (vs P2 +.022 [-.006, +.050]); P1w8 .482, +.085 [+.047, +.123] (vs P1 +.005 [-.025,
+                  +.033]); against the engine w8 single reading on the same tokens -.157 / -.144. V-phr +.109 / +.128.
+                  CC at the run's full window (CC7, <= 7 intervening genes): P2w8 F1 .620, excess +.230 [+.191, +.269];
+                  P1w8 .636, +.233 [+.194, +.272]; vs engine r3 w8 single +.002 [-.036, +.040] / +.004 [-.032, +.041]
+                  (MATCHES); vs engine union (same tokens) +.040 / +.043 (BEATS on excess, F1 -.137 / -.120); vs stored
+                  engine reference +.047 [+.013, +.079] / +.049 [+.018, +.080]; vs Spacedust +.165 / +.168; CC7 - words
+                  (same run) +.159 / +.148. By size (CC7, P1w8): +.179 / +.273 / +.214 / +.253.
+                  Reading: at either window the word parse sits ~.15 below connected runs of its own round-0 significant
+                  pairs, and those runs reproduce the engine's single reading at the same window.
+2026-11-13 11:22  REPORT.txt finalised (P2, P1, CC baseline, development w 8, stress test complete; P3 not run). No job of
+                  this workstream is running or pending; no GPU job was submitted. The gpu partition still runs 92238
+                  (SR-VP embedding). Next when it clears: code/gtable.sbatch (exact table: z lists for P3 and exact
+                  groups to check the CPU-fallback grouping).

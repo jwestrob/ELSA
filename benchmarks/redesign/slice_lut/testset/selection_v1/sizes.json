@@ -1,0 +1,29 @@
+{
+ "sizes": {
+  "250": 1,
+  "500": 1,
+  "1000": 1
+ },
+ "seed": 17,
+ "candidates": 23811,
+ "status_counts": {
+  "S0_negative": 17301,
+  "S5_transporter_only": 3055,
+  "S4_split": 1924,
+  "S7_receptor_only": 1093,
+  "S2_receptor_transporter": 336,
+  "S1_complete": 80,
+  "S3_receptor_module": 17,
+  "S6_other_locus": 5
+ },
+ "status_counts_class": {
+  "S0_negative": 16625,
+  "S5_transporter_only": 2106,
+  "S4_split": 1406,
+  "S7_receptor_only": 982,
+  "S2_receptor_transporter": 252,
+  "S1_complete": 80,
+  "S3_receptor_module": 17,
+  "S6_other_locus": 5
+ }
+}

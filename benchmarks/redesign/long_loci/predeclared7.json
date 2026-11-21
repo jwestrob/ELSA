@@ -1,0 +1,32 @@
+{
+ "workstream": "long_loci part 7: S-add (strand-first pieces added to the unmodified tree) on both frozen bases; DPANN development, Spacedust check rows",
+ "written_utc": "2026-11-19T04:56Z",
+ "status_when_written": "Part 6 complete and read (REPORT6.txt): S / SB gain 54-81 accurate runs and cost DefenseFinder / CRISPR-Cas F1 (family base) or summed excess -.017 (list base). No part-7 variant built or scored; the mechanism check below not yet run. The lut set and the SR-VP set stay closed.",
+ "mechanism_check": {
+  "when": "before any part-7 variant is scored",
+  "data": "part-6 S outputs at the frozen theta (family base L4b .2, list base L4b+ .02) against the frozen base, per curated instance (package gold, DefenseFinder / TXSScan / CRISPRCasTyper, >= 2 members, scorer rule), all genomes and even genomes",
+  "worse": "instance F1 under S lower than under the base",
+  "spans_strand_change": "the instance's member genes lie on both strands (primary); also reported: a strand change anywhere between its first and last member",
+  "report": "share spanning a strand change among worse instances, among unchanged and among better instances, and among all instances; by caller",
+  "expectation": "share among worse >= .6 against <= .35 among all instances"
+ },
+ "variants": {
+  "S-add": "nodes of the unmodified tree of the base (kept as the base keeps them) UNION the single-strand nodes (no strand change inside) of the strand-first tree (part-6 S weights) that are not already nodes of the unmodified tree; added nodes pass the base's own node rule (family base: closed-form family node test at the bond tau; list base: every node with >= 2 genes). Reported: nodes added, and added nodes that cross a kept base node without nesting",
+  "S-add+B": "the same construction with part-6 bridges applied to both trees: nodes of the B tree UNION the single-strand nodes of the SB tree not already in the B tree",
+  "unchanged": "bonds, cohesion, bridges (part-6 sets), node rules, scorer"
+ },
+ "bases": "list base Z (primary interest) and family base P, as in part 6",
+ "selection": "theta in {.02, .05, .1, .2} on DPANN odd genomes by the part-1 rule [odd conditions vs DH, odd resolved, odd summed]; applied mechanically before the even report",
+ "justified": "all of, against the frozen base: accurate ribosomal runs (audit strict) >= base + 50; all seven DPANN bars; 0 new pairs of distinct curated systems in one locus; summed DF + TXSS excess >= base - .01 and F1 of DefenseFinder, TXSScan and CRISPRCasTyper each >= base - .01 (even genomes, points)",
+ "reported": "part-6 tables (even curated scores, seven bars, paired vs frozen base, standing recovered / resolved with paired difference, any fitting locus, audit strict / loose, boundary precision, curated-pair check, verdict-1 repairs) plus share of genes in loci and number of loci; Spacedust source207 rows (DEVELOPMENT) for S-add and S-add+B on both bases at the DPANN-selected theta, paired against the frozen base",
+ "expectations": {
+  "mechanism": "confirmed: >= 60% of worse instances span a strand change",
+  "Z_S-add": "strict +45 to +60, loose +50 to +70, standing +40 to +60, all seven bars, 0 new pairs, summed -.008 to +.002, every F1 within .005 of the base; JUSTIFIED with probability about one half (the +50 strict bar is the uncertain condition)",
+  "Z_S-add+B": "strict +60 to +80, same curated scores as S-add; JUSTIFIED with probability about 0.6",
+  "P_S-add": "strict +40 to +55, CRISPR-Cas F1 back within .01 of the base, summed within .01; bars met",
+  "P_S-add+B": "bridged unions remain and keep costing runs: strict below P S-add",
+  "added_nodes": "adds 5-15% more loci; crossing nodes: few, since strand-first pieces nest inside unmodified runs (crossings arise where an unmodified node ends inside a single-strand piece)",
+  "Spacedust": "S-add between the base and S (+.000 to +.015)"
+ },
+ "compute": "24-CPU jobs, chained, watchdog caps ~2x expected"
+}

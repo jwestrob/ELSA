@@ -1,0 +1,64 @@
+{
+ "collection": "srvp",
+ "kofam_scope_tiers": [
+  "T2",
+  "T2b",
+  "rest",
+  "T1c",
+  "contradicted"
+ ],
+ "scope_counts": [
+  {
+   "tiers": [
+    "T2",
+    "T2b",
+    "rest"
+   ],
+   "labeled_genes": 34375,
+   "unique_label_carriers": 133331,
+   "est_cpu_hours": 40.7
+  },
+  {
+   "tiers": [
+    "T2",
+    "T2b",
+    "rest",
+    "T1c"
+   ],
+   "labeled_genes": 38279,
+   "unique_label_carriers": 144498,
+   "est_cpu_hours": 44.2
+  },
+  {
+   "tiers": [
+    "T2",
+    "T2b",
+    "rest",
+    "T1c",
+    "contradicted"
+   ],
+   "labeled_genes": 40601,
+   "unique_label_carriers": 152832,
+   "est_cpu_hours": 46.7
+  },
+  {
+   "tiers": [
+    "T1",
+    "T1c",
+    "T2",
+    "T2b",
+    "contradicted",
+    "rest"
+   ],
+   "labeled_genes": 69701,
+   "unique_label_carriers": 230287,
+   "est_cpu_hours": 70.4
+  }
+ ],
+ "labeled_genes": 40601,
+ "genes_with_supporters": 40601,
+ "unique_label_carrying_supporters": 152832,
+ "residues": 49093298,
+ "shards": 6,
+ "est_cpu_hours_at_1p1s": 46.7
+}

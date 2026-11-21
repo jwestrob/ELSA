@@ -1,0 +1,1079 @@
+Legend as in part 2/3; upper case = extended-run span; '*' in the gene line = inside the span.
+
+lut-cluster-Z-1086  Bact_multi  extended run 26 genes (run 25)  std bf 0.65 prec 1.0 -> VERDICT 1  targets 0..25 (window starts at -1)
+    junction_txt: cut@8 L6|S8 same d=9 grp 0/0 othergrp 173
+    genes: unannot S11* S13* ADK* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA*
+    |u R R X N R R R R R R R R R R R R R R R R R R R R R N |
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . T T T T T T T T T T T T T T T T T T T T T T T T T T 
+     . o o o o o o o . . B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1101  Bact_multi  extended run 39 genes (run 37)  std bf 1.00 prec 0.8 -> VERDICT 5  targets 0..38 (window starts at -11)
+    best_beyond_C: P-II,Gln-synt_C,Isochorismatase,GcrA,Meth_synt_2,MgtE,Acylphosphatase,CPSase_L_D2,Carboxyl_trans,PseudoU_synth_2
+    genes: PMSR P-II Gln-synt_C Isochorismatase GcrA Meth_synt_2 MgtE Acylphosphatase CPSase_L_D2 Carboxyl_trans PseudoU_synth_2 L33* L17* rpoD* S11* S13* ADK* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* tufA* Carbam_trans_N DUF5989 unannot
+     x x x|x x x x/x x x x R R N R R X N R R R R R R R R R R R R R R R R R R R R R N R R N N R R R R N N/x x u |
+     > > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o 
+lut-cluster-Z-1110  Bact_multi  extended run 27 genes (run 21)  std bf 1.00 prec 0.71 -> VERDICT 2  targets 0..22;24..26 (window starts at -1)
+    junction_txt: glue@22 adk|unannot OPP d=53 grp None/None othergrp None
+    genes: GTP_EFTU_D3 S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* S11* rpoD* L17* Trypsin_2 DLH MgsA_C Na_H_Exchanger PseudoU_synth_2 Response_reg HAD_2 unannot ATP12 Carboxyl_trans
+    |x R R R R R R R R R R R R R R R R R R R R R N N|U|R N R x x x x x/x x u x x |
+     > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > > > > > > > > 
+     . T T T T T T T T T T T T T T T T T T T T T T T . T T T . . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-WA-1117  Bact_closed  extended run 39 genes (run 35)  std bf 0.51 prec 1.0 -> VERDICT 6  targets 0..28;29..37 (window starts at -4)
+    junction_txt: glue@28 S7|rpoC same d=588 grp 19/24 othergrp 103
+    why: gene-call anomaly at the decisive point: 27:split
+    genes: MgsA_C Trypsin_2 PepSY_2 MCPsignal L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* unannot Aminotran_3 AlaDh_PNT_C VTT_dom
+     x x|x|x/R N R R N N R R R R R R R R R R R R R R R R R R R R N N R/N N R R R R N N N|N u x x x 
+     < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > > > > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B o o o o o o o o o o o o o o o o o o o . o o . 
+lut-cluster-DH-1117  Bact_closed  extended run 39 genes (run 35)  std bf 1.00 prec 0.68 -> VERDICT 6  targets 0..28;29..37 (window starts at -14)
+    junction_txt: glue@28 S7|rpoC same d=588 grp 19/24 othergrp 103
+    why: gene-call anomaly at the decisive point: 27:split
+    genes: unannot Carboxyl_trans unannot unannot ATP12 AsmA HAD_2 PseudoU_synth_2 CRCB Isochorismatase MgsA_C Trypsin_2 PepSY_2 MCPsignal L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* unannot Aminotran_3 AlaDh_PNT_C VTT_dom Gln-synt_C Radical_SAM
+     u x u u x x x x x x x x|x|x/R N R R N N R R R R R R R R R R R R R R R R R R R R N N R/N N R R R R N N N|N u x x x x x 
+     < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > > > > > > 
+     . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1118  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 0..30;32..40 (window starts at -13)
+    junction_txt: glue@30 S12|unannot same d=674 grp None/None othergrp None
+    genes: Proteasome MgtE ATP12 HAD_2 Tlde1_dom unannot PseudoU_synth_2 CRCB DUF3376 Guanylate_cyc MgsA_C Trypsin_2 MCPsignal L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* unannot MCPsignal COX4_pro COX3
+     x x|x x|x u|x x x|x|x x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/U N N R R R R N N N|N|u/x/x x 
+     > > < < > > < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < 
+     . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T T . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . o o 
+lut-cluster-DH-1120  Bact_multi  extended run 37 genes (run 32)  std bf 1.00 prec 0.7 -> VERDICT 2  targets 0..31;34..36 (window starts at -17)
+    junction_txt: glue@31 S12|unannot same d=393 grp None/None othergrp None
+    genes: unannot Transpeptidase ATP12 Pyr_redox_2 POR_N TPP_enzyme_C MFS_1 unannot unannot TctC Peptidase_M20 PseudoU_synth_2 MFS_3 unannot MgsA_C Trypsin_2 Spermine_synth L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* unannot* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* Transgly* rpoC* rpoB* L12*
+     u|x x|x x x/x|u u/x x x x u x x|x|R N R R N N R R R R U R R R R R R R R R R R R R R R R R N N R R/U X/N N R |
+     > < < > > > > < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . T T T 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-Z-1134  Bact_closed  extended run 47 genes (run 28)  std bf 1.00 prec 0.69 -> VERDICT 2  targets 1..7;14..46 (window starts at -4)
+    junction_txt: glue@7 L7/L12|RNA_pol_Rpb2_1 same d=200 grp 0/0 othergrp 1
+    genes: unannot Glyco_trans_1_4 Glycos_transf_1 Methyltransf_11 rlmB* tufA* secE* nusG* L11* L1* L10* L7/L12* RNA_pol_Rpb2_1* rpoB* unannot* RNA_pol_Rpb1_2* rpoC* unannot* S12* S7* EF2* tufA* GTP_EFTU_D3* S10* unannot* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C Scaffold DLH CRCB PseudoU_synth_2 AsmA ATP12 Glyco_hydro_25 unannot Carboxyl_trans Peptidase_S9_N CPSase_L_D2 TauE Acylphosphatase unannot TMEM43 LplA-B_cat MgtE unannot Acyl-CoA_dh_1 GST_C_7
+     u|x x/x N|N N N R R R R/X N|U|X N/U/R R N N X R U R R R R R R R R R R R R R R R R R R R R N N R R N R/x x|x x|x x x x x|u|x/x x x x|u|x|x|x u x x 
+     > < < < < > > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > > > > > < > > > > > < > < > > > > 
+     . . . . . T T T T T T T . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1134  Bact_closed  extended run 47 genes (run 28)  std bf 1.00 prec 0.62 -> VERDICT 2  targets 1..7;14..46 (window starts at -9)
+    junction_txt: glue@7 L7/L12|RNA_pol_Rpb2_1 same d=200 grp 0/0 othergrp 1
+    genes: CoA_transf_3 Epimerase Glycos_transf_1 GATase_7 Asn_synthase unannot Glyco_trans_1_4 Glycos_transf_1 Methyltransf_11 rlmB* tufA* secE* nusG* L11* L1* L10* L7/L12* RNA_pol_Rpb2_1* rpoB* unannot* RNA_pol_Rpb1_2* rpoC* unannot* S12* S7* EF2* tufA* GTP_EFTU_D3* S10* unannot* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C Scaffold DLH CRCB PseudoU_synth_2 AsmA ATP12 Glyco_hydro_25 unannot Carboxyl_trans Peptidase_S9_N CPSase_L_D2 TauE Acylphosphatase unannot TMEM43 LplA-B_cat MgtE unannot Acyl-CoA_dh_1 GST_C_7
+     x/x/x|x x u|x x/x N|N N N R R R R/X N|U|X N/U/R R N N X R U R R R R R R R R R R R R R R R R R R R R N N R R N R/x x|x x|x x x x x|u|x/x x x x|u|x|x|x u x x 
+     < < < > > > < < < < > > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > > > > > < > > > > > < > < > > > > 
+     . . . . . . . . . . T T T T T T T . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-Z-1141  Bact_multi  extended run 26 genes (run 26)  std bf 0.38 prec 1.0 -> VERDICT 1  targets 0..25 (window starts at -4)
+    junction_txt: cut@6 L15|S5 same d=8 grp 0/0 othergrp 171 ; cut@16 L29|L16 same d=4 grp 0/0 othergrp 10
+    genes: GreA_GreB_N ATP-synt_ab OSCP UPF0102 L17* rpoD* S11* S13* ADK* secY* L15* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* GTP_EFTU_D3
+     x x x x R N R R X N R R R R R R R R R R R R R R R R R R R R x |
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T . 
+     . . . . o o o o o o o B B B B B B B B B B . o o o o o o o o o 
+lut-cluster-WA-1142  Bact_multi  extended run 40 genes (run 38)  std bf 1.00 prec 0.63 -> VERDICT 2  targets 0..30;31..34;36..39 (window starts at -21)
+    junction_txt: glue@30 S12|rpoC same d=522 grp 24/114 othergrp 111 ; glue@34 L10|HemolysinCabind same d=601 grp 0/0 othergrp 0
+    genes: unannot Carboxyl_trans TPR_11 ATP12 Pyr_redox_2 POR_N LPG_synthase_TM TPP_enzyme_C unannot unannot PseudoU_synth_2 unannot MFS_3 unannot unannot TctC MgsA_C unannot Trypsin_2 Cytochrom_C Ank_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* HemolysinCabind* L1* L11* nusG* secE* unannot unannot YbjQ_1 Cupin_2
+    |u|x|x|x|x x/x x|u|u|x u x u u|x|x u x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/N N R R/X/R R N N|u u|x x 
+     > < > < > > > > < > < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < 
+     . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1152  Bact_multi  extended run 28 genes (run 28)  std bf 1.00 prec 0.78 -> VERDICT 4  targets 0..27 (window starts at -1)
+    junction_txt: edge@27 L17|DUF5938 OPP d=250 grp 2/2 othergrp 0
+    best_beyond_C: DUF5938,adh_short_C2,TetR_N,adh_short,Porin_O_P,ADH_zinc_N_2,Trypsin_2,MgsA_C
+    genes: GTP_EFTU_D3 S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* rpoD* L17* DUF5938 adh_short_C2 TetR_N adh_short Porin_O_P ADH_zinc_N_2 Trypsin_2 MgsA_C Acetyltransf_2
+    |x R R R R R R R R R R R R R R R R R R R R R N N R R N N R|x x|x/x|x/x|x x x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > > < < > > > 
+     . T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1155  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.76 -> VERDICT 4  targets 0..30 (window starts at -11)
+    junction_txt: edge@-1 unannot|S12 OPP d=831 grp None/None othergrp None
+    best_beyond_C: L10,L7/L12,rpoB,rpoC,unannot,Amino_oxidase,ABC_tran,FAD_binding_3,Glycos_transf_2,unannot
+    genes: unannot L10 L7/L12 rpoB rpoC unannot Amino_oxidase ABC_tran FAD_binding_3 Glycos_transf_2 unannot S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* adh_short MarR Porin_2 ADH_zinc_N_2
+     u|r r n n/u/x x|x|x|u|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x|x|x|x 
+     < > > > > > > > < > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > < 
+     . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-WA-1157  Bact_closed  extended run 40 genes (run 31)  std bf 1.00 prec 0.68 -> VERDICT 2  targets 0..30;32..39 (window starts at -18)
+    junction_txt: glue@30 S12|YbjN OPP d=447 grp 3/3 othergrp 1
+    genes: HATPase_c FliMN_C LplA-B_cat DUF4282 DUF3291 S12 Pterin_bind FolB HPPK ATP12 HAD_2 DUF1801 PseudoU_synth_2 CRCB MgsA_C Orn_Arg_deC_N unannot Epimerase L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* YbjN* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* HisKA_2 Response_reg unannot Glyoxalase
+     x|x|x x x r x x x|x x x x x x|x u|x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|X|N N R R R R N N/x x|u|x 
+     > < > > > > > > > < < < < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < < > < 
+     . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o 
+lut-cluster-Z-1177  Bact_multi  extended run 38 genes (run 31)  std bf 1.00 prec 0.73 -> VERDICT 2  targets 0..32;34..37 (window starts at -4)
+    junction_txt: glue@32 adk|unannot OPP d=10 grp None/None othergrp None
+    genes: nusG Rhodanese PemK_toxin MazE_antitoxin L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* S13* S11* rpoD* L17* unannot Trypsin_2 CbiA MgsA_C CRCB PseudoU_synth_2 HAD_2 ATP12 AsnC_trans_reg TPP_enzyme_N DUF4260 Adenine_glyco MFS_1 Carboxyl_trans UCR_Fe-S_N
+     n/x|x x|R R R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N|U|R R N R/u x|x|x x x x x|x|x|x|x x x|x 
+     > > < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < > > > > > < > < > > > < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T . . . . . . . . . . . . . . . 
+     o . o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-Z-1200  Bact_multi  extended run 40 genes (run 31)  std bf 1.00 prec 0.75 -> VERDICT 2  targets 0..30;32..39 (window starts at -13)
+    junction_txt: glue@30 S12|unannot same d=297 grp None/None othergrp None
+    genes: unannot Acylphosphatase CPSase_L_D2 Carboxyl_trans ATP12 AsmA HAD_2 unannot PseudoU_synth_2 Lyase_1 Aconitase MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* GTP_EFTU_D3
+     u x x x x x x u x/x|x|x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/U/N N R R R R N N/x |
+     < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1209  Bact_multi  extended run 33 genes (run 31)  std bf 1.00 prec 0.79 -> VERDICT 5  targets 0..32 (window starts at -10)
+    best_beyond_C: P-II,Gln-synt_C,Isochorismatase,GcrA,Meth_synt_2,MgtE,Acylphosphatase,CPSase_L_D2,Carboxyl_trans
+    genes: PMSR P-II Gln-synt_C Isochorismatase GcrA Meth_synt_2 MgtE Acylphosphatase CPSase_L_D2 Carboxyl_trans L33* L17* rpoD* S11* S13* ADK* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* EF2* S7* S12* rpoC* rpoB*
+     x x x|x x x x/x x x R R N R R X N R R R R R R R R R R R R R R R R R R R R R N R R N N |
+     > > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1240  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.7 -> VERDICT 4  targets 0..30 (window starts at -12)
+    junction_txt: edge@-1 Inhibitor_I78|S12 OPP d=824 grp 0/2 othergrp 0 ; edge@30 L17|Trypsin_2 same d=134 grp 0/0 othergrp 0
+    best_beyond_C: secE,nusG,L11,L1,L10,L7/L12,rpoB,rpoC,Amino_oxidase,ABC_tran,Inhibitor_I78,Trypsin_2,MgsA_C
+    genes: unannot secE nusG L11 L1 L10 L7/L12 rpoB rpoC Amino_oxidase ABC_tran Inhibitor_I78 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C unannot PseudoU_synth_2
+     u/n n r r/r r n n/x x|x|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x/x u x 
+     > > > > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > 
+     . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o 
+lut-cluster-DH-1249  Bact_multi  extended run 28 genes (run 20)  std bf 1.00 prec 0.74 -> VERDICT 5  targets 0..27 (window starts at 0)
+    best_beyond_C: Ank_2,Cytochrom_C,Trypsin_2,MgsA_C,unannot,MFS_3,PseudoU_synth_2,unannot,HTH_20,AHSA1
+    genes: tufA* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* secY* adk* S13* S11* rpoD* L17* Ank_2 Cytochrom_C Trypsin_2 MgsA_C unannot MFS_3 PseudoU_synth_2 unannot HTH_20 AHSA1
+    |N R R R R R R R R R R R R R R R R R R R R N N N R R N R x x x x u x x u x x |
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > 
+     T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-WA-1259  Bact_multi  extended run 33 genes (run 31)  std bf 1.00 prec 0.58 -> VERDICT 3  targets 2..32 (window starts at 0)
+    genes: rpoC* Transgly* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C AIG2_2 CRCB PseudoU_synth_2 ATP12 DUF4260 LplA-B_cat MgtE GFO_IDH_MocA DegT_DnrJ_EryC1 Na_Ca_ex DUF1489 MipZ unannot DnaJ Peptidase_S11 ClpS AAA_2 HIT FemAB_like GDPD YjgF_endoribonc EipB_like unannot
+    |N X/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x x x x x|x x|x x x x x x u x|x|x x|x x x x|x|u 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > > > > > > > > < > > < < < < > < 
+     . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1316  Bact_multi  extended run 25 genes (run 25)  std bf 1.00 prec 0.71 -> VERDICT 5  targets 0..24 (window starts at 0)
+    best_beyond_C: Trypsin_2,MgsA_C,unannot,DUF190,CRCB,MgtC,PseudoU_synth_2,Cupin_2,ATP12,Carboxyl_trans
+    genes: L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C unannot DUF190 CRCB MgtC PseudoU_synth_2 Cupin_2 ATP12 Carboxyl_trans
+    |R R R R R R R R R R R R R R R R R R R N N R R N R x x|u x x|x x x x x |
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < > > > > > 
+     T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1322  Bact_multi  extended run 32 genes (run 25)  std bf 1.00 prec 0.71 -> VERDICT 4  targets 0..31 (window starts at -4)
+    junction_txt: edge@31 S12|Acetyltransf_6 same d=633 grp 7/11 othergrp 1
+    best_beyond_C: Acetyltransf_6,FAD_binding_3,ABC_tran,Amino_oxidase,rpoC,rpoB,L7/L12,L10,unannot,L1,L11,nusG,secE
+    genes: Trypsin_2 HxlR ADH_zinc_N_2 unannot L17* rpoD* S11* S13* adk* unannot* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* Acetyltransf_6 FAD_binding_3 ABC_tran Amino_oxidase rpoC rpoB L7/L12 L10 unannot L1 L11 nusG secE ADH_N
+     x x|x|u/R N R R N U N R R R R R R R R R R R R R R R R R R R R R N N R R/x|x|x/x/n n r r/u/r r n n|x 
+     < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < < < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1362  Bact_multi  extended run 27 genes (run 25)  std bf 1.00 prec 0.79 -> VERDICT 4  targets 0..26 (window starts at -8)
+    junction_txt: edge@-1 unannot|adk same d=69 grp None/None othergrp None
+    best_beyond_C: L17,rpoD,S11,S13,unannot,ELFV_dehydrog,unannot
+    genes: Beta-lactamase L17 rpoD S11 S13 unannot ELFV_dehydrog unannot adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* PilZ unannot Acetyltransf_3 HTH_1
+     x r n r r|u|x u N N R R R R R R R R R R R R R R R R R R R R R N N R R/x|u|x x 
+     < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < 
+     . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . . 
+lut-cluster-Z-1365  Bact_multi  extended run 21 genes (run 21)  std bf 1.00 prec 0.78 -> VERDICT 5  targets 0..20 (window starts at -7)
+    best_beyond_C: ATP12,HAD_2,PseudoU_synth_2,CRCB,BLUF,MgsA_C
+    genes: 4HBT ATP12 HAD_2 PseudoU_synth_2 CRCB BLUF MgsA_C L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22*
+     x x x x x x x R N R R N N R R R R R R R R R R R R R R R |
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . T T T T T T T T T T T T T T T T T T T T T 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1365  Bact_multi  extended run 21 genes (run 21)  std bf 1.00 prec 0.78 -> VERDICT 5  targets 0..20 (window starts at -7)
+    best_beyond_C: ATP12,HAD_2,PseudoU_synth_2,CRCB,BLUF,MgsA_C
+    genes: 4HBT ATP12 HAD_2 PseudoU_synth_2 CRCB BLUF MgsA_C L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22*
+     x x x x x x x R N R R N N R R R R R R R R R R R R R R R |
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . T T T T T T T T T T T T T T T T T T T T T 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1377  Bact_multi  extended run 23 genes (run 23)  std bf 1.00 prec 0.56 -> VERDICT 5  targets 0..22 (window starts at 0)
+    best_beyond_C: Trypsin_2,MgsA_C,unannot,DCC1-like,CRCB,PseudoU_synth_2,AsmA,ATP12,Carboxyl_trans,CPSase_L_D2,Acylphosphatase,LplA-B_cat,PTA_PTB,MgtE,LysR_substrate ...
+    genes: L2_C* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C unannot DCC1-like CRCB PseudoU_synth_2 AsmA ATP12 Carboxyl_trans CPSase_L_D2 Acylphosphatase LplA-B_cat PTA_PTB MgtE LysR_substrate 4HBT 4HBT_2 Acyl-CoA_dh_1 DUF1761
+    |R R R R R R R R R R R R R R R R R N N R R N R x x|u x|x x x x x x x|x|x x|x|x x x x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > < < > > > > > > > < > > < > > > > 
+     T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1384  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.78 -> VERDICT 4  targets 0..30 (window starts at -4)
+    junction_txt: edge@30 S12|unannot same d=668 grp None/None othergrp None
+    best_beyond_C: unannot,FAD_binding_3,Beta_helix,ABC_membrane,Amino_oxidase,rpoC,rpoB,L7/L12,L10
+    genes: Porin_2 HxlR ADH_zinc_N_2 adh_short L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot FAD_binding_3 Beta_helix ABC_membrane Amino_oxidase rpoC rpoB L7/L12 L10 adh_short_C2
+     x|x|x|x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/u|x/x|x x/n n r r/x 
+     > < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1394  Bact_multi  extended run 41 genes (run 37)  std bf 1.00 prec 0.55 -> VERDICT 5  targets 1..40 (window starts at -4)
+    best_beyond_C: rlmB,Trypsin_2,MgsA_C,CRCB,PseudoU_synth_2,HAD_2,AsmA,ATP12,Carboxyl_trans,2TM,CPSase_L_D2,unannot,Acylphosphatase,Zn_ribbon_TFIIB,LplA-B_cat ...
+    genes: TusA MarR VTT_dom Alpha-amylase rlmB* tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C CRCB PseudoU_synth_2 HAD_2 AsmA ATP12 Carboxyl_trans 2TM CPSase_L_D2 unannot Acylphosphatase Zn_ribbon_TFIIB LplA-B_cat PTA_PTB MgtE unannot MerR_1 4HBT_2 4HBT Acyl-CoA_dh_1 Pmp3 Ribonuc_L-PSP adh_short DUF3291 unannot Acyl-CoA_dh_1 DSBA Carboxyl_trans CPSase_L_D2 Response_reg Hpt DUF1489 Aldedh ADH_N_2
+     x x|x x/N|N N N R R R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x x x x x x/x x x u x|x x|x x u x/x x/x x x x x u x x/x x x x x x x 
+     > > < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > > > > > > > > > > > > > > > > > > > > > 
+     . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+     o o o . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1408  Bact_multi  extended run 41 genes (run 37)  std bf 1.00 prec 0.73 -> VERDICT 5  targets 0..39 (window starts at -16)
+    best_beyond_C: MerR_1,MgtE,unannot,HTH_18,LplA-B_cat,SelR,Acylphosphatase,IspA,ATP12,AsmA,HAD_2,PseudoU_synth_2,CRCB,MgsA_C,unannot ...
+    genes: unannot MerR_1 MgtE unannot HTH_18 LplA-B_cat SelR Acylphosphatase IspA ATP12 AsmA HAD_2 PseudoU_synth_2 CRCB MgsA_C unannot L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* unannot Relaxase Phage_GPA Phage_integrase
+     u x x/u/x|x|x x|x|x x x x x x|u|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N N|N u|x/x/x 
+     < < < < < > < < > < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < 
+     . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . . 
+lut-cluster-WA-1412  Bact_multi  extended run 38 genes (run 31)  std bf 1.00 prec 0.64 -> VERDICT 2  targets 2..32;34..37 (window starts at -7)
+    junction_txt: glue@1 L1|L10 same d=560 grp 33/59 othergrp 160 ; glue@32 adk|GIY-YIG OPP d=102 grp 0/1 othergrp 0
+    genes: UvrD-helicase secE nusG Trypsin_2 Fer2 PemK_toxin MazE_antitoxin L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* GIY-YIG* S13* S11* rpoD* L17* unannot Trypsin_2 CbiA MgsA_C CRCB PseudoU_synth_2 CMD HAD_2 ATP12 AsnC_trans_reg TPP_enzyme_N Lactamase_B DUF4260 Adenine_glyco Sugar_tr Carboxyl_trans
+     x|n n/x x|x x|R R/R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N|X|R R N R u x|x|x/x x x x x|x|x x|x|x x x 
+     < > > > > < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < > > > > > > < > > < > > > 
+     . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T . . . . . . . . . . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-Z-1417  Bact_multi  extended run 28 genes (run 21)  std bf 1.00 prec 0.76 -> VERDICT 2  targets 0..22;24..27 (window starts at -1)
+    junction_txt: glue@22 adk|Tad OPP d=193 grp 0/3 othergrp 0
+    genes: GTP_EFTU_D3 S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* Tad* S13* S11* rpoD* L17* unannot Trypsin_2 CbiA MgsA_C CRCB PseudoU_synth_2 HAD_2 ATP12 AsnC_trans_reg
+    |x R R R R R R R R R R R R R R R R R R R R R N N|X|R R N R/u x|x|x x x x x|x 
+     > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < > > > > > < 
+     . T T T T T T T T T T T T T T T T T T T T T T T . T T T T . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-WA-1417  Bact_multi  extended run 28 genes (run 21)  std bf 1.00 prec 0.76 -> VERDICT 2  targets 0..22;24..27 (window starts at -1)
+    junction_txt: glue@22 adk|Tad OPP d=193 grp 0/3 othergrp 0
+    genes: GTP_EFTU_D3 S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* Tad* S13* S11* rpoD* L17* unannot Trypsin_2 CbiA MgsA_C CRCB PseudoU_synth_2 HAD_2 ATP12 AsnC_trans_reg
+    |x R R R R R R R R R R R R R R R R R R R R R N N|X|R R N R/u x|x|x x x x x|x 
+     > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < > > > > > < 
+     . T T T T T T T T T T T T T T T T T T T T T T T . T T T T . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-Z-1441  Bact_multi  extended run 40 genes (run 24)  std bf 0.78 prec 1.0 -> VERDICT 2  targets 0..7;9..12;14..39 (window starts at -4)
+    junction_txt: glue@7 secE|Bac_globin same d=477 grp 0/0 othergrp 0 ; glue@12 S13|dnstrm_HI1420 OPP d=608 grp 0/0 othergrp 0
+    genes: PdxJ VapB_antitoxin PIN Methyltransf_3 rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* Bac_globin* L17* rpoD* S11* S13* dnstrm_HI1420* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7*
+     x x x|x N N R R R R N N/X R N R R|X|N N R R R R R R R R R R R R R R R R R R R R R N N R |
+     > > > < < < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . T T T T T T T T . T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T 
+     o o o . o o o o o o o o . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-WA-1441  Bact_multi  extended run 40 genes (run 24)  std bf 0.78 prec 1.0 -> VERDICT 2  targets 0..7;9..12;14..39 (window starts at -4)
+    junction_txt: glue@7 secE|Bac_globin same d=477 grp 0/0 othergrp 0 ; glue@12 S13|dnstrm_HI1420 OPP d=608 grp 0/0 othergrp 0
+    genes: PdxJ VapB_antitoxin PIN Methyltransf_3 rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* Bac_globin* L17* rpoD* S11* S13* dnstrm_HI1420* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7*
+     x x x|x N N R R R R N N/X R N R R|X|N N R R R R R R R R R R R R R R R R R R R R R N N R |
+     > > > < < < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . T T T T T T T T . T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T 
+     o o o . o o o o o o o o . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1441  Bact_multi  extended run 40 genes (run 24)  std bf 0.78 prec 1.0 -> VERDICT 2  targets 0..7;9..12;14..39 (window starts at -4)
+    junction_txt: glue@7 secE|Bac_globin same d=477 grp 0/0 othergrp 0 ; glue@12 S13|dnstrm_HI1420 OPP d=608 grp 0/0 othergrp 0
+    genes: PdxJ VapB_antitoxin PIN Methyltransf_3 rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* Bac_globin* L17* rpoD* S11* S13* dnstrm_HI1420* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7*
+     x x x|x N N R R R R N N/X R N R R|X|N N R R R R R R R R R R R R R R R R R R R R R N N R |
+     > > > < < < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . T T T T T T T T . T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T 
+     o o o . o o o o o o o o . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-Z-1449  Bact_multi  extended run 36 genes (run 27)  std bf 0.53 prec 1.0 -> VERDICT 6  targets 0..3;5..15;17..28;31..35 (window starts at -4)
+    junction_txt: glue@3 S3|unannot OPP d=59 grp None/None othergrp None ; glue@15 S12|unannot OPP d=1519 grp None/None othergrp None ; glue@28 adk|unannot same d=176 grp None/None othergrp None
+    why: gene-call anomaly at the decisive point: 3:len
+    genes: Bac_export_2 PAS_8 HATPase_c RecA_N S17* L29* L16* S3* unannot* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* VCH_CASS14* S13* S11* Lactamase_B* rpoD* L17* Response_reg Response_reg HATPase_c CheB_methylest
+     x/x x/x|R R R R|U|R R R R R R R N N R R|U/R R R R R R R R R R N N/U|X|R R X N R|x x x x 
+     > > > > < < < < > < < < < < < < < < < < > > > > > > > > > > > > > > < > > > > > < < < < 
+     . . . . T T T T . T T T T T T T T T T T . T T T T T T T T T T T T . . T T T T T . . . . 
+     o o o o o o o o o o o o o o o o o o o o . B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-WA-1449  Bact_multi  extended run 36 genes (run 27)  std bf 0.53 prec 1.0 -> VERDICT 6  targets 0..3;5..15;17..28;31..35 (window starts at -4)
+    junction_txt: glue@3 S3|unannot OPP d=59 grp None/None othergrp None ; glue@15 S12|unannot OPP d=1519 grp None/None othergrp None ; glue@28 adk|unannot same d=176 grp None/None othergrp None
+    why: gene-call anomaly at the decisive point: 3:len
+    genes: Bac_export_2 PAS_8 HATPase_c RecA_N S17* L29* L16* S3* unannot* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* VCH_CASS14* S13* S11* Lactamase_B* rpoD* L17* Response_reg Response_reg HATPase_c CheB_methylest
+     x/x x/x|R R R R|U|R R R R R R R N N R R|U/R R R R R R R R R R N N/U|X|R R X N R|x x x x 
+     > > > > < < < < > < < < < < < < < < < < > > > > > > > > > > > > > > < > > > > > < < < < 
+     . . . . T T T T . T T T T T T T T T T T . T T T T T T T T T T T T . . T T T T T . . . . 
+     o o o o o o o o o o o o o o o o o o o o . B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1449  Bact_multi  extended run 36 genes (run 27)  std bf 0.53 prec 1.0 -> VERDICT 6  targets 0..3;5..15;17..28;31..35 (window starts at -4)
+    junction_txt: glue@3 S3|unannot OPP d=59 grp None/None othergrp None ; glue@15 S12|unannot OPP d=1519 grp None/None othergrp None ; glue@28 adk|unannot same d=176 grp None/None othergrp None
+    why: gene-call anomaly at the decisive point: 3:len
+    genes: Bac_export_2 PAS_8 HATPase_c RecA_N S17* L29* L16* S3* unannot* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* VCH_CASS14* S13* S11* Lactamase_B* rpoD* L17* Response_reg Response_reg HATPase_c CheB_methylest
+     x/x x/x|R R R R|U|R R R R R R R N N R R|U/R R R R R R R R R R N N/U|X|R R X N R|x x x x 
+     > > > > < < < < > < < < < < < < < < < < > > > > > > > > > > > > > > < > > > > > < < < < 
+     . . . . T T T T . T T T T T T T T T T T . T T T T T T T T T T T T . . T T T T T . . . . 
+     o o o o o o o o o o o o o o o o o o o o . B B B B B B B B B B B B B B B B B B B . o o o 
+lut-cluster-WA-1476  Bact_multi  extended run 36 genes (run 36)  std bf 1.00 prec 0.77 -> VERDICT 2  targets 0..3;4..18;19..35 (window starts at -12)
+    junction_txt: glue@3 rpoC|S12 same d=600 grp 45/114 othergrp 111 ; glue@18 S17|L14 same d=532 grp 65/119 othergrp 166
+    genes: Methyltransf_11 tufA PTS_2-RNA secE nusG L11 L1 Sulf_transp Rhodanese unannot Aminotran_1_2 DUF4070 L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* Lactamase_B* rpoD* L17* HATPase_c HATPase_c CheB_methylest Response_reg
+     x/n x/n n r r|x x/u|x/x/R R N N/R R N N R R R R R R R R R R R/R R R R R R R R R R N N R R X N R|x x x x 
+     > > > > > > > < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < < 
+     . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-WA-1502  Bact_multi  extended run 32 genes (run 28)  std bf 1.00 prec 0.52 -> VERDICT 2  targets 3..31 (window starts at -30)
+    junction_txt: glue@1 Pept_tRNA_hydro|unannot OPP d=14 grp None/None othergrp None
+    genes: unannot RrnaAD PdxA SurA_N LptD APH NTP_transferase Radical_SAM LplA-B_cat DUF493 Aminotran_4 Peptidase_S11 DPBB_1 SLT_2 FTSW_RODA_SPOVE Transpeptidase MreC MreB_Mbl GatC Amidase GatB_N unannot Prok-JAB PrmC_N PCRF GlutR_N TPR_19 LolB GHMP_kinases_N Pribosyltran_N L25* Pept_tRNA_hydro* unannot* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* L36* S13* S11* S4* rpoD* L17* DUF3470 TauE LysR_substrate PAPS_reduct
+     u|x x x x|x x|x x x x x x x x x/x x|x x x u|x x x x|x x x x R X|U|N R R R R R R R R R R R R R R R R R R R R R N R R R R N R|x x|x|x 
+     > < < < < > > < < < < < < < < < < < > > > > < < < < > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > < 
+     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1527  Bact_multi  extended run 28 genes (run 27)  std bf 1.00 prec 0.7 -> VERDICT 5  targets 0..27 (window starts at 0)
+    best_beyond_C: Trypsin_2,MgsA_C,Flavodoxin_5,CRCB,PseudoU_synth_2,HAD_2,ATP12,Carboxyl_trans,unannot,EamA,Esterase,CPSase_L_D2
+    genes: tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C Flavodoxin_5 CRCB PseudoU_synth_2 HAD_2 ATP12 Carboxyl_trans unannot EamA Esterase CPSase_L_D2 CMAS
+    |N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x x x x x x x u/x|x|x x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > 
+     T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1537  Bact_multi  extended run 41 genes (run 37)  std bf 1.00 prec 0.68 -> VERDICT 5  targets 0..39 (window starts at -14)
+    best_beyond_C: ArsP_1,HTH_20,unannot,Acylphosphatase,unannot,His_Phos_1,ATP12,HAD_2,PseudoU_synth_2,CRCB,Isochorismatase,MgsA_C,Trypsin_2,rlmB,Cupin_2 ...
+    genes: DcsG_N ArsP_1 HTH_20 unannot Acylphosphatase unannot His_Phos_1 ATP12 HAD_2 PseudoU_synth_2 CRCB Isochorismatase MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* Cupin_2 Aminotran_3 AlaDh_PNT_C Gln-synt_C unannot Aminotran_3 PAS_5
+     x x x u/x u|x|x x/x x/x/x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N N|N|x|x x/x|u|x|x 
+     < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < > > > < > < 
+     . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-Z-1551  Bact_multi  extended run 39 genes (run 24)  std bf 1.00 prec 0.75 -> VERDICT 2  targets 0..3;8..33;35..38 (window starts at -4)
+    junction_txt: glue@4 RNA_pol_Rpb2_1|rpoB same d=515 grp 0/0 othergrp 3 ; glue@34 GT87|S13 same d=223 grp 0/0 othergrp 0
+    genes: HATPase_c unannot EutC EutB L11* L1* L10* L7/L12* RNA_pol_Rpb2_1* rpoB* rpoC* unannot* S12* S7* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* GT87* S13* S11* rpoD* L17* GGDEF MgsA_C PseudoU_synth_2 AsmA ATP12 Acylphosphatase VTT_dom unannot LplA-B_cat PTA_PTB DnaJ
+     x u|x x|R R R R X/N N|U|R R N R R R R R R R R R R R R R R R R R R R R R N N X/R R N R|x|x x/x x x x|u x|x x 
+     > > < < > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < < > > 
+     . . . . T T T T . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T . . . . . . . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1553  Bact_multi  extended run 41 genes (run 31)  std bf 1.00 prec 0.42 -> VERDICT 2  targets 0..30;32..35;37..40 (window starts at -40)
+    junction_txt: glue@30 S12|SBP_bac_11 same d=435 grp 9/9 othergrp 0 ; glue@35 L10|unannot OPP d=531 grp None/None othergrp None
+    genes: MotA_ExbB Aldedh Inh GST_C_2 DctP CDP-OH_P_transf PS_Dcarbxylase ABC_membrane Lysine_decarbox Glyoxalase HMGL-like unannot Acetyltransf_10 cysS unannot MarR_2 GST_N_3 DUF2865 NAD_synthase DAHP_synth_2 Pyr_redox_2 DUF2059 Rib_5-P_isom_A HAD_2 unannot Mob_synth_C ATP12 Pyr_redox_2 POR_N TPP_enzyme_C AHSA1 unannot AHSA1 AHSA1 HTH_20 unannot PseudoU_synth_2 MgsA_C Trypsin_2 Cytochrom_C L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* SBP_bac_11* rpoC* rpoB* L7/L12* L10* unannot* L1* L11* nusG* secE* DUF3828 Pyr_redox_3 CPSase_L_D2 Tad
+     x|x x x|x x x x|x|x x u x n|u x x x|x x x x x|x|u|x|x|x x x|x u x x x u x x x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/X N N R R|U|R R N N|x/x x|x 
+     < > > > < < < < > < < < < < > > > > < < < < < > < > < > > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < > > > < 
+     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T . T T T T . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . o o . 
+lut-cluster-DH-1556  Bact_multi  extended run 46 genes (run 30)  std bf 1.00 prec 0.64 -> VERDICT 2  targets 5..8;11..13;16..45 (window starts at -6)
+    junction_txt: glue@8 L1|L10 same d=580 grp 53/113 othergrp 160 ; glue@10 unannot|L7/L12 same d=162 grp None/None othergrp None ; glue@13 rpoC|DUF1501 same d=322 grp 0/0 othergrp 0
+    genes: DUF4118 unannot unannot unannot unannot unannot rlmB* unannot* unannot* tufA* unannot* secE* nusG* L11* L1* L10* unannot* L7/L12* rpoB* rpoC* DUF1501* unannot* S12* S7* EF2* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Cytochrome_CBB3 Spermine_synth Ank_2 Metallophos_2 Polysacc_deac_1 Trypsin_2 MgsA_C PseudoU_synth_2 Methyltransf_24 unannot TPP_enzyme_C Methyltransf_11 POR_N Pyr_redox_2 AMP-binding ECH_1 HAD_2 DUF2188 ATP12 Flg_hook Bac_export_2 DUF6165
+     x u/u u|u u|N|U U/N|U|N N R R/R U/R N N/X U/R R N R R R R R R R R R R R R R R R R R R R R R N N R R N R x|x|x|x x|x x x x u|x x x x/x x|x/x x x x|x 
+     < < < < > > < > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > < < > > > > > < < < < < < > > > > > < 
+     . . . . . . . . . . . T T T T . . T T T . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1557  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.78 -> VERDICT 4  targets 0..30 (window starts at -10)
+    junction_txt: edge@-1 Acetyltransf_6|S12 same d=682 grp 7/11 othergrp 1
+    best_beyond_C: L10,L7/L12,RNA_pol_Rpb2_1,rpoB,rpoC,Amino_oxidase,ABC_membrane,FAD_binding_3,Acetyltransf_6
+    genes: unannot L10 L7/L12 RNA_pol_Rpb2_1 rpoB rpoC Amino_oxidase ABC_membrane FAD_binding_3 Acetyltransf_6 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* adh_short ADH_zinc_N_2 ADH_N Porin_O_P
+     u|r r/x n n/x x|x|x/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x|x x x 
+     < > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < 
+     . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-Z-1562  Bact_multi  extended run 32 genes (run 32)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 0..4;6..31 (window starts at -10)
+    junction_txt: glue@4 S13|ADK same d=201 grp 0/0 othergrp 3
+    genes: DctM ATP12 AsmA HAD_2 PseudoU_synth_2 MgsA_C AAA unannot PDZ_6 Trypsin_2 L17* L17* rpoD* S11* S13* ADK* secY* L15* L30* S5_C* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* Transpeptidase Glyoxalase SnoaL HTH_11
+     x|x x x x x/x/u x x R R N R R/X N R R R R R R R R R R R R R R R R R R R R R N N R R|x|x x x 
+     > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < 
+     . . . . . . . . . . T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . o o o 
+lut-cluster-WA-1565  Bact_multi  extended run 32 genes (run 25)  std bf 0.56 prec 1.0 -> VERDICT 2  targets 0..13;14..24;26..31 (window starts at -4)
+    junction_txt: glue@13 L16|L14 same d=553 grp 0/0 othergrp 5 ; glue@24 L15|unannot OPP d=288 grp None/None othergrp None
+    genes: RNA_pol_Rpb1_5 unannot unannot HemolysinCabind S12* S7* EF2* tufA* S10* L3* L4* L23* L2* L2* S19* L22* S3* L16* L14* L24* L5* L5* S14* S8* L6* L18* S5* L30* L15* unannot* secY* adk* S13* S11* rpoD* L17* PhaC_N unannot Aminotran_1_2 Fe-S_biosyn
+     x/u/u x/R R N N R R R R R R R R R R/R R R R R R R R R R R|U|N N R R N R|x|u x x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < > > > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T . . . . 
+     o o o o o o o o o o o o o o o o o o B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1569  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.78 -> VERDICT 6  targets 0..32;34..40 (window starts at -13)
+    junction_txt: glue@32 rpoB|unannot OPP d=932 grp None/None othergrp None
+    why: gene-call anomaly at the decisive point: 32:len
+    genes: Tll0287-like Acylphosphatase CPSase_L_D2 unannot Carboxyl_trans ATP12 AsmA AsmA HAD_2 PseudoU_synth_2 Isochorismatase MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* unannot* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* EF-hand_5 ABC_tran Acyltransferase FAD_binding_4
+     x/x x|u|x x x x x x x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N|U|R R R R N N N|N x|x x x 
+     < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < > > < < < 
+     . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . . 
+lut-cluster-WA-1571  Bact_multi  extended run 32 genes (run 29)  std bf 0.62 prec 1.0 -> VERDICT 2  targets 2..11;12..31 (window starts at 0)
+    junction_txt: glue@11 L2|S3 same d=840 grp 0/119 othergrp 4
+    genes: rpoB* RNA_pol_Rpb2_6* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* TMEM43 Cytochrom_C Spermine_synth Trypsin_2
+    |N X/N R R N N R R R R R/R R R R R R R R R R R R R R N N R R N R/x x|x|x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > 
+     . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o o o o o o o o o o o o B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1571  Bact_multi  extended run 32 genes (run 29)  std bf 1.00 prec 0.63 -> VERDICT 2  targets 2..11;12..31 (window starts at 0)
+    junction_txt: glue@11 L2|S3 same d=840 grp 0/119 othergrp 4
+    genes: rpoB* RNA_pol_Rpb2_6* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* TMEM43 Cytochrom_C Spermine_synth Trypsin_2 MgsA_C unannot unannot PseudoU_synth_2 unannot TPP_enzyme_C unannot POR_N Pyr_redox_2 ATP12 unannot unannot Carboxyl_trans unannot PIN FKBP_C
+    |N X/N R R N N R R R R R/R R R R R R R R R R R R R R N N R R N R/x x|x|x x u u/x u|x u x x|x|u|u/x u x x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < < < < > < > > > > > 
+     . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1573  Bact_multi  extended run 39 genes (run 37)  std bf 1.00 prec 0.75 -> VERDICT 2  targets 0..30;31..38 (window starts at -13)
+    junction_txt: glue@30 S12|rpoC same d=590 grp 12/20 othergrp 111
+    genes: DUF1236 Carboxyl_trans Carboxyl_trans unannot ATP12 HAD_2 PseudoU_synth_2 Lactate_perm unannot Tae4 MgsA_C Trypsin_2 Epimerase L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* YbjQ_1 unannot PepSY_2 unannot
+     x|x x u/x x x|x|u x x x/x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/N N R R R R N N/x/u/x u 
+     > < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . 
+lut-cluster-WA-1577  Bact_multi  extended run 40 genes (run 23)  std bf 0.68 prec 1.0 -> VERDICT 2  targets 0..7;9..39 (window starts at -4)
+    junction_txt: glue@8 RNA_pol_Rpb1_5|S12 same d=317 grp 1/1 othergrp 6
+    genes: NTP_transferase RmlD_sub_bind Epimerase UDPG_MGDP_dh_N secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* RNA_pol_Rpb1_5* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S8* L6* L18* S5* L15* secY* adk* CN_hydrolase* PALP* S13* S11* rpoD* L17* ABC_tran unannot BCA_ABC_TP_C unannot
+     x x x x|N N R R R R N N X/R R N N R R R R R R R R R R R R R R R R R R R N N X X R R N R|x u x/u 
+     < < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < < 
+     . . . . T T T T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o o o o o o o o o o o o o o 
+lut-cluster-WA-1580  Bact_multi  extended run 43 genes (run 32)  std bf 1.00 prec 0.8 -> VERDICT 2  targets 0..3;5..8;11..42 (window starts at -4)
+    junction_txt: glue@3 L1|unannot OPP d=144 grp None/None othergrp None ; glue@10 SBP_bac_11|S12 same d=398 grp 9/9 othergrp 0
+    genes: rve_3 unannot Ricin_B_lectin Peptidase_S74 secE* nusG* L11* L1* unannot* L10* L7/L12* rpoB* rpoC* RNA_pol_Rpb1_5* SBP_bac_11* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* unannot* rpoD* L17* Trypsin_2 MgsA_C Acetyltransf_2 unannot PseudoU_synth_2 unannot AHSA1 TPP_enzyme_C POR_N Pyr_redox_2 ATP12 Mob_synth_C
+     x/u|x/x/N N R R|U|R R N N X X/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R U N R x x x u x u x|x x x|x|x 
+     < < > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < > < 
+     . . . . T T T T . T T T T . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1580  Bact_multi  extended run 43 genes (run 32)  std bf 1.00 prec 0.51 -> VERDICT 2  targets 0..3;5..8;11..42 (window starts at -4)
+    junction_txt: glue@3 L1|unannot OPP d=144 grp None/None othergrp None ; glue@10 SBP_bac_11|S12 same d=398 grp 9/9 othergrp 0
+    genes: rve_3 unannot Ricin_B_lectin Peptidase_S74 secE* nusG* L11* L1* unannot* L10* L7/L12* rpoB* rpoC* RNA_pol_Rpb1_5* SBP_bac_11* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* unannot* rpoD* L17* Trypsin_2 MgsA_C Acetyltransf_2 unannot PseudoU_synth_2 unannot AHSA1 TPP_enzyme_C POR_N Pyr_redox_2 ATP12 Mob_synth_C PEGA HAD_2 Rib_5-P_isom_A DUF2059 Pyr_redox_2 DAHP_synth_2 NAD_synthase DUF2865 GST_N_3 MarR_2 unannot cysS Acetyltransf_10 unannot unannot HMGL-like Glyoxalase dCMP_cyt_deam_1 Lysine_decarbox ABC_membrane PS_Dcarbxylase CDP-OH_P_transf DctP GST_C_2 Aldedh MotA_ExbB MotB_plug K_trans
+     x/u|x/x/N N R R|U|R R N N X X/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R U N R x x x u x u x|x x x|x|x x/x|x x x/x/x|x x x/u|n/x u u x x|x x|x x x x|x x|x x/x 
+     < < > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < > < < < > > > > > < < < < > > > > > > < < > > > > < < > > > 
+     . . . . T T T T . T T T T . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+     . o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1581  Bact_multi  extended run 38 genes (run 31)  std bf 1.00 prec 0.76 -> VERDICT 6  targets 0..2;7..37 (window starts at -9)
+    junction_txt: glue@2 rpoB|unannot OPP d=321 grp None/None othergrp None
+    why: gene-call anomaly at the decisive point: 4:split
+    genes: secE nusG Methyltransf_24 L11 L1 TctC TctC unannot unannot L10* L7/L12* rpoB* unannot* rpoC* RNA_pol_Rpb1_5* Radical_SAM* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Ank_2 Cytochrom_C Trypsin_2 MgsA_C unannot
+     n n x r r|x/x u|u/R R N|U|N X|X|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x/x x x u 
+     > > > > > < < < > > > > < > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > 
+     . . . . . . . . . T T T . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-WA-1583  Bact_multi  extended run 39 genes (run 36)  std bf 0.59 prec 1.0 -> VERDICT 1  targets 0..38 (window starts at -4)
+    junction_txt: cut@15 L14|L29 same d=12 grp 19/19 othergrp 159
+    genes: unannot unannot Helicase_C unannot L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* TPP_enzyme_C ABC_tran unannot unannot
+     u u x u/R N R R N N R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N N|x x|u/u 
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o o o . o o o o o o o o o o o o o o o o B B B B B B B B B B B B B B B B B B B B B B B . . . . 
+lut-cluster-WA-1586  Bact_multi  extended run 42 genes (run 37)  std bf 1.00 prec 0.68 -> VERDICT 3  targets 0..38 (window starts at -21)
+    genes: unannot DUF1489 HMGL-like CPSase_L_D2 ECH_1 Carboxyl_trans adh_short Acyl-CoA_dh_1 LTXXQ PTA_PTB LplA-B_cat Trypsin_2 MgsA_C WXXGXW PseudoU_synth_2 unannot unannot Carboxyl_trans CPSase_L_D2 Acylphosphatase MFS_3 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* unannot* tufA* rlmB* unannot unannot ABC_sub_bind SpoVR
+     u/x x x x x x x|x|x|x x x x x|u|u x x x x|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N|U|N|N/u|u x x 
+     < < < < < < < < > < > > > > > < > > > > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < > > < < < 
+     . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . o 
+lut-cluster-DH-1586  Bact_multi  extended run 42 genes (run 37)  std bf 1.00 prec 0.68 -> VERDICT 3  targets 0..38 (window starts at -21)
+    genes: unannot DUF1489 HMGL-like CPSase_L_D2 ECH_1 Carboxyl_trans adh_short Acyl-CoA_dh_1 LTXXQ PTA_PTB LplA-B_cat Trypsin_2 MgsA_C WXXGXW PseudoU_synth_2 unannot unannot Carboxyl_trans CPSase_L_D2 Acylphosphatase MFS_3 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* unannot* tufA* rlmB* unannot unannot ABC_sub_bind SpoVR
+     u/x x x x x x x|x|x|x x x x x|u|u x x x x|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N|U|N|N/u|u x x 
+     < < < < < < < < > < > > > > > < > > > > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < > > < < < 
+     . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . o 
+lut-cluster-WA-1588  Bact_multi  extended run 45 genes (run 31)  std bf 1.00 prec 0.46 -> VERDICT 6  targets 3..7;8..11;14..44 (window starts at -4)
+    junction_txt: glue@7 L1|L10 same d=662 grp 24/24 othergrp 160 ; glue@13 Aldo_ket_red|S12 same d=293 grp 0/2 othergrp 0
+    why: gene-call anomaly at the decisive point: 8:len
+    genes: TonB_dep_Rec_b-barrel HTH_18 Sugar_tr Beta_elim_lyase rlmB* unannot* Methyltransf_24* tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* RNA_pol_Rpb1_5* Aldo_ket_red* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C FUSC_2 Chromate_transp Chromate_transp CRCB LprI PseudoU_synth_2 LysR_substrate peroxidase DUF308 HAD_2 ATP12 unannot unannot FliMN_C LplA-B_cat Acylphosphatase ADH_N Glyoxalase_7 MgtE K_trans DUF3253 DUF599 DUF1489 GST_N_2 unannot Multi_Drug_Res unannot Pantoate_ligase DnaJ Peptidase_S11 ClpS AAA_2 Beta-lactamase unannot HIT FemAB_like GDPD YjgF_endoribonc
+     x|x|x|x|N|U X/N N N R R/R R N N X X/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x x x x x x x|x|x|x|x x u|u/x|x|x|x/x x/x|x x x x u|x/u|x|x|x|x x x/u|x x x x 
+     < > < > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > < > > > < < > < > > > > < < < < < > > < > < > > > > < < < < 
+     . . . . . . . T T T T T T T T T . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+     o o . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-Z-1591  Bact_multi  extended run 42 genes (run 26)  std bf 1.00 prec 0.79 -> VERDICT 2  targets 0..30;33..40 (window starts at -12)
+    junction_txt: glue@30 S12|YbjN OPP d=443 grp 0/0 othergrp 1
+    genes: unannot Carboxyl_trans Glyoxalase ATP12 Aldo_ket_red PseudoU_synth_2 CRCB DUF190 AIG2_2 Flavodoxin_5 MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* S19* L2* unannot* L4* L3* S10* tufA* EFG_C* EF2* S7* S12* YbjN* MFS_1* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* rlmB* unannot Cupin_2 unannot THF_DHG_CYH_C
+     u x|x|x x x|x x|x/x x x/R N R R N N R R R R R R R R R R R R R R R R U R R R N X N R R|X/X|N N R R R R N N|N|u/x|u|x 
+     < < > < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < < < < < < > < < > < 
+     . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . o 
+lut-cluster-WA-1591  Bact_multi  extended run 42 genes (run 26)  std bf 0.52 prec 1.0 -> VERDICT 2  targets 0..30;33..40 (window starts at -4)
+    junction_txt: glue@30 S12|YbjN OPP d=443 grp 0/0 othergrp 1
+    genes: AIG2_2 Flavodoxin_5 MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* S19* L2* unannot* L4* L3* S10* tufA* EFG_C* EF2* S7* S12* YbjN* MFS_1* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* rlmB* unannot Cupin_2 unannot THF_DHG_CYH_C
+     x/x x x/R N R R N N R R R R R R R R R R R R R R R R U R R R N X N R R|X/X|N N R R R R N N|N|u/x|u|x 
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < < < < < < > < < > < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . T T T T T T T T . . . . . 
+     o o o o o o o o o o o o o o o o o o o o o o o o B B B B B B B B B B B B B B B B B B B B B B . o o o 
+lut-cluster-DH-1591  Bact_multi  extended run 42 genes (run 26)  std bf 1.00 prec 0.79 -> VERDICT 2  targets 0..30;33..40 (window starts at -12)
+    junction_txt: glue@30 S12|YbjN OPP d=443 grp 0/0 othergrp 1
+    genes: unannot Carboxyl_trans Glyoxalase ATP12 Aldo_ket_red PseudoU_synth_2 CRCB DUF190 AIG2_2 Flavodoxin_5 MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* S19* L2* unannot* L4* L3* S10* tufA* EFG_C* EF2* S7* S12* YbjN* MFS_1* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* rlmB* unannot Cupin_2 unannot THF_DHG_CYH_C
+     u x|x|x x x|x x|x/x x x/R N R R N N R R R R R R R R R R R R R R R R U R R R N X N R R|X/X|N N R R R R N N|N|u/x|u|x 
+     < < > < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < < < < < < > < < > < 
+     . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . o o 
+lut-cluster-DH-1592  Bact_multi  extended run 28 genes (run 27)  std bf 1.00 prec 0.57 -> VERDICT 4  targets 0..27 (window starts at -19)
+    junction_txt: edge@-1 EFG_C|tufA same d=121 grp 0/0 othergrp 7 ; edge@27 L17|unannot same d=259 grp None/None othergrp None
+    best_beyond_C: secE,nusG,L11,L1,L10,L7/L12,rpoB,unannot,RNA_pol_Rpb1_2,RNA_pol_Rpb1_3,rpoC,S12,S7,GTP_EFTU,unannot ...
+    genes: YbjQ_1 secE nusG L11 L1 L10 L7/L12 rpoB unannot RNA_pol_Rpb1_2 RNA_pol_Rpb1_3 rpoC S12 S7 GTP_EFTU unannot EF-G_D2 EFG_IV EFG_C tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* unannot Trypsin_2 MgsA_C Tae4
+     x/n n r r r r n|u|x x n r r x u x x x N R R R R R R R R R R R R R R R R R R R R R N N R R N R/u x x x 
+     > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > 
+     . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1597  Bact_multi  extended run 44 genes (run 25)  std bf 1.00 prec 0.59 -> VERDICT 6  targets 0..31;33..38;40..43 (window starts at -32)
+    junction_txt: glue@31 S12|SBP_bac_11 same d=398 grp 9/9 othergrp 0 ; glue@38 L10|unannot OPP d=526 grp None/None othergrp None
+    why: gene-call anomaly at the decisive point: 33:split
+    genes: Aldedh DctP CDP-OH_P_transf PS_Dcarbxylase ABC_membrane Lysine_decarbox Glyoxalase HMGL-like unannot Acetyltransf_10 cysS unannot MarR GST_N_3 DUF2865 NAD_synthase DAHP_synth_2 Pyr_redox_2 DUF2059 Rib_5-P_isom_A HAD_2 PEGA Mob_synth_C ATP12 Pyr_redox_2 POR_N TPP_enzyme_C AHSA1 unannot PseudoU_synth_2 MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* unannot* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* SBP_bac_11* rpoC* rpoC* RNA_pol_Rpb1_1* rpoB* L7/L12* L10* unannot* L1* L11* nusG* secE* DUF3828
+     x|x x x/x|x|x x u x n|u/x x x|x x/x x x|x/x x|x|x x x|x u x x x R N R R N N U R R R R R R R R R R R R R R R R R R R R R N N R R/X N N X N R R|U|R R N N|x |
+     > < < < < > < < < < < > > > > < < < < < > > > < > > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < > 
+     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T . T T T T . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-WA-1600  Bact_multi  extended run 30 genes (run 29)  std bf 1.00 prec 0.68 -> VERDICT 5  targets 0..29 (window starts at -4)
+    best_beyond_C: RNA_pol_Rpb1_5,unannot,unannot,rpoC,RNA_pol_Rpb1_1,RNA_pol_Rpb2_6,rpoB,L7/L12,L10,L1,L11,nusG,secE,tufA
+    genes: MmeI_N Lactamase_B unannot unannot rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* L3* S10* tufA* EF2* S7* RNA_pol_Rpb1_5 unannot unannot rpoC RNA_pol_Rpb1_1 RNA_pol_Rpb2_6 rpoB L7/L12 L10 L1 L11 nusG secE tufA rlmB
+     x/x|u|u/N R R N N R R R R R R R R R R R R R R R R R R R R R R N N R/x|u u|n x/x n r r r r n n n|n 
+     < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < < < < < < < < < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1600  Bact_multi  extended run 30 genes (run 29)  std bf 1.00 prec 0.7 -> VERDICT 4  targets 0..29 (window starts at -4)
+    junction_txt: edge@29 S7|RNA_pol_Rpb1_5 same d=687 grp 2/2 othergrp 4
+    best_beyond_C: RNA_pol_Rpb1_5,unannot,unannot,rpoC,RNA_pol_Rpb1_1,RNA_pol_Rpb2_6,rpoB,L7/L12,L10,L1,L11,nusG,secE
+    genes: MmeI_N Lactamase_B unannot unannot rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* L3* S10* tufA* EF2* S7* RNA_pol_Rpb1_5 unannot unannot rpoC RNA_pol_Rpb1_1 RNA_pol_Rpb2_6 rpoB L7/L12 L10 L1 L11 nusG secE tufA
+     x/x|u|u/N R R N N R R R R R R R R R R R R R R R R R R R R R R N N R/x|u u|n x/x n r r r r n n n 
+     < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . 
+     . o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-Z-1601  Bact_multi  extended run 35 genes (run 25)  std bf 0.80 prec 0.78 -> VERDICT 6  targets 6..17;19..27;29..34 (window starts at -9)
+    junction_txt: glue@1 RNA_pol_A_CTD|unannot OPP d=41 grp None/None othergrp None ; glue@4 S13|ADK same d=843 grp 0/0 othergrp 1 ; glue@17 L5|unannot same d=359 grp None/None othergrp None ; glue@27 L2|unannot OPP d=6 grp None/None othergrp None
+    why: gene-call anomaly at the decisive point: 17:len
+    genes: unannot PseudoU_synth_2 PseudoU_synth_2 S4 unannot MgsA_C AAA Trypsin_2 unannot L17* RNA_pol_A_CTD* unannot* S11* S13* ADK* secY* unannot* secY* unannot* L15* L30* S5* L18* L6* S8* S14* L5* unannot* L24* L14* S17* L29* L16* S3* L22* S19* L2* unannot* L3* S10* tufA* EF2* S7* S12* unannot DUF6282 unannot rpoC
+     u x x x u x x/x/u R X|U|R R/X/N U N U R R R R R R R R/U R R R R R R R R R|U|R R N N R R|u|x/u/n 
+     < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < > < < < 
+     . . . . . . . . . . . . . . . T T T T T T T T T T T T . T T T T T T T T T . T T T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . o o o o o . . . o 
+lut-cluster-WA-1601  Bact_multi  extended run 35 genes (run 25)  std bf 1.00 prec 0.7 -> VERDICT 6  targets 6..17;19..27;29..34 (window starts at -4)
+    junction_txt: glue@1 RNA_pol_A_CTD|unannot OPP d=41 grp None/None othergrp None ; glue@4 S13|ADK same d=843 grp 0/0 othergrp 1 ; glue@17 L5|unannot same d=359 grp None/None othergrp None ; glue@27 L2|unannot OPP d=6 grp None/None othergrp None
+    why: gene-call anomaly at the decisive point: 17:len
+    genes: MgsA_C AAA Trypsin_2 unannot L17* RNA_pol_A_CTD* unannot* S11* S13* ADK* secY* unannot* secY* unannot* L15* L30* S5* L18* L6* S8* S14* L5* unannot* L24* L14* S17* L29* L16* S3* L22* S19* L2* unannot* L3* S10* tufA* EF2* S7* S12* unannot DUF6282 unannot rpoC rpoB rpoB L7/L12 L10 L1 L11 nusG secE dCMP_cyt_deam_1
+     x x/x/u R X|U|R R/X/N U N U R R R R R R R R/U R R R R R R R R R|U|R R N N R R|u|x/u/n n n/r r/r r n n/x 
+     < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < > < < < < < < < < < < < < 
+     . . . . . . . . . . T T T T T T T T T T T T . T T T T T T T T T . T T T T T T . . . . . . . . . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1612  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.7 -> VERDICT 4  targets 0..30 (window starts at -4)
+    junction_txt: edge@30 S12|FAD_binding_3 OPP d=687 grp 5/8 othergrp 0
+    best_beyond_C: FAD_binding_3,ABC_membrane,Amino_oxidase,rpoC,rpoB,RNA_pol_Rpb2_1,L7/L12,L10,2-Hacid_dh_C,L1,L11,nusG,secE
+    genes: MgsA_C Trypsin_2 ADH_zinc_N_2 unannot L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* FAD_binding_3 ABC_membrane Amino_oxidase rpoC rpoB RNA_pol_Rpb2_1 L7/L12 L10 2-Hacid_dh_C L1 L11 nusG secE sCache_2
+     x x|x u|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|x|x/x/n n x/r r/x r r n n|x 
+     < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < < < < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-WA-1617  Bact_multi  extended run 33 genes (run 24)  std bf 1.00 prec 0.67 -> VERDICT 4  targets 0..32 (window starts at -4)
+    junction_txt: edge@32 L17|Spermine_synth OPP d=9 grp 7/9 othergrp 1
+    best_beyond_C: Spermine_synth,Trypsin_2,PDZ_2,MgsA_C,unannot,PseudoU_synth_2,unannot,unannot,unannot,unannot,TPP_enzyme_C,POR_N,Pyr_redox_2,ATP12,unannot ...
+    genes: ABC_tran unannot WD40 CHAT S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L5* S14* S8* L6* L18* S5* L30* L15* secY* ADK* ADK* S13* S13* S11* unannot* rpoD* L17* Spermine_synth Trypsin_2 PDZ_2 MgsA_C unannot PseudoU_synth_2 unannot unannot unannot unannot TPP_enzyme_C POR_N Pyr_redox_2 ATP12 unannot Carboxyl_trans unannot
+     x|u|x x/R R N N R R R R R R R R R R R R R R R R R R R R N X X R R R U N R|x|x x x u x u u u/u|x x x|x|u|x|u 
+     > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > > > > < < < > < > < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . 
+     o . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1631  Bact_multi  extended run 44 genes (run 27)  std bf 1.00 prec 0.79 -> VERDICT 2  targets 0..32;34..42 (window starts at -11)
+    junction_txt: glue@32 S12|unannot OPP d=183 grp None/None othergrp None
+    genes: unannot LplA-B_cat Acylphosphatase CPSase_L_D2 Carboxyl_trans ATP12 AsmA HAD_2 PseudoU_synth_2 MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* tufA* EFG_IV* fusA* S7* S12* unannot* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* PMSR SelR DNA_binding_1 ADH_N
+     u|x|x x x x x x x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N X N R R|U|N N R R R R N N N|N/x x|x x 
+     < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < > > > < < 
+     . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . 
+lut-cluster-DH-1635  Bact_multi  extended run 41 genes (run 31)  std bf 1.00 prec 0.75 -> VERDICT 2  targets 0..3;5..8;10..40 (window starts at -4)
+    junction_txt: glue@3 L1|Meth_synt_2 OPP d=158 grp 1/8 othergrp 0 ; glue@9 SBP_bac_11|S12 same d=422 grp 9/9 othergrp 0
+    genes: ADH_zinc_N Peptidase_S8 unannot unannot secE* nusG* L11* L1* Meth_synt_2* L10* L7/L12* rpoB* rpoC* SBP_bac_11* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C PseudoU_synth_2 unannot TPP_enzyme_C POR_N Pyr_redox_2 ATP12 Mob_synth_C HAD_2 Rib_5-P_isom_A Pyr_redox_2 DAHP_synth_2 Omptin MIP
+     x|x|u u/N N R R|X|R R N N X/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x x/x|u/x x x|x|x x|x x/x/x|x 
+     > < > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < < > < < > > > > < 
+     . . . . T T T T . T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . 
+     o . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1647  Bact_multi  extended run 32 genes (run 27)  std bf 1.00 prec 0.7 -> VERDICT 4  targets 0..31 (window starts at -11)
+    junction_txt: edge@-1 Acetyltransf_6|S12 same d=627 grp 7/11 othergrp 1 ; edge@31 L17|Acyl_transf_3 same d=73 grp 1/6 othergrp 1
+    best_beyond_C: L10,L7/L12,rpoB,rpoC,unannot,Amino_oxidase,ABC_membrane,unannot,FAD_binding_3,Acetyltransf_6,Acyl_transf_3,ADH_zinc_N_2,Trypsin_2,MgsA_C
+    genes: unannot L10 L7/L12 rpoB rpoC unannot Amino_oxidase ABC_membrane unannot FAD_binding_3 Acetyltransf_6 S12* S7* EF2* tufA* unannot* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Acyl_transf_3 ADH_zinc_N_2 Trypsin_2 MgsA_C PseudoU_synth_2
+     u/r r n n|u|x/x|u x|x/R R N N U R R R R R R R R R R R R R R R R R R R R R N N R R N R x|x|x x/x 
+     > > > > > < > > < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > 
+     . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-Z-1658  Bact_multi  extended run 29 genes (run 27)  std bf 1.00 prec 0.78 -> VERDICT 3  targets 0..27 (window starts at -8)
+    genes: Carboxyl_trans ATP12 AsmA HAD_2 PseudoU_synth_2 Isochorismatase MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* rlmB* EF-hand_5 Cupin_2 Aminotran_3 AlaDh_PNT_C
+    |x x x x x x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N|N/x|x|x x 
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < > > 
+     . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . o o o 
+lut-cluster-DH-1658  Bact_multi  extended run 29 genes (run 27)  std bf 1.00 prec 0.69 -> VERDICT 3  targets 0..27 (window starts at -8)
+    genes: Carboxyl_trans ATP12 AsmA HAD_2 PseudoU_synth_2 Isochorismatase MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* rlmB* EF-hand_5 Cupin_2 Aminotran_3 AlaDh_PNT_C Gln-synt_C HATPase_c
+    |x x x x x x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N|N/x|x|x x/x|x 
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < > > > < 
+     . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-Z-1704  Bact_multi  extended run 27 genes (run 27)  std bf 1.00 prec 0.68 -> VERDICT 2  targets 0..6;8..26 (window starts at -14)
+    junction_txt: glue@6 L15|unannot OPP d=177 grp None/None othergrp None
+    genes: GGDEF MerR_1 MgtE LplA-B_cat GGDEF Acylphosphatase ATP12 HAD_2 ArsP_1 HTH_20 PseudoU_synth_2 Hydrolase MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* unannot* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10*
+     x|x x|x/x|x x x x x x x x x R N R R N N R|U|R R R R R R R R R R R R R R R R R R R |
+     > < < > > < < < < < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . . . . . . . T T T T T T T . T T T T T T T T T T T T T T T T T T T 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1728  Bact_multi  extended run 41 genes (run 37)  std bf 1.00 prec 0.76 -> VERDICT 5  targets 0..39 (window starts at -14)
+    best_beyond_C: Acylphosphatase,SnoaL_2,CPSase_L_D2,PqiA,2TM,Carboxyl_trans,ATP12,unannot,HAD_2,PseudoU_synth_2,CRCB,MgsA_C,Trypsin_2,rlmB
+    genes: HATPase_c Acylphosphatase SnoaL_2 CPSase_L_D2 PqiA 2TM Carboxyl_trans ATP12 unannot HAD_2 PseudoU_synth_2 CRCB MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* unannot Aldedh rve_3 unannot
+     x x|x|x|x|x x x u x x x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N N|N u x|x u 
+     < < > < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > > < < 
+     . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . o o 
+lut-cluster-DH-1736  Bact_closed  extended run 41 genes (run 37)  std bf 1.00 prec 0.76 -> VERDICT 5  targets 0..39 (window starts at -14)
+    best_beyond_C: MgtE,PAPS_reduct,NAD_binding_7,FliMN_C,LplA-B_cat,CPSase_L_D2,Carboxyl_trans,ATP12,HAD_2,PseudoU_synth_2,CRCB,MgsA_C,Trypsin_2,rlmB
+    genes: Response_reg MgtE PAPS_reduct NAD_binding_7 FliMN_C LplA-B_cat CPSase_L_D2 Carboxyl_trans ATP12 HAD_2 PseudoU_synth_2 CRCB MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* MFS_1 BSH_RND MarR unannot
+     x x/x x/x|x|x x x x x x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N N|N|x x x/u 
+     < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < 
+     . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o . 
+lut-cluster-DH-1744  Bact_closed  extended run 41 genes (run 37)  std bf 1.00 prec 0.77 -> VERDICT 5  targets 1..40 (window starts at -4)
+    best_beyond_C: rlmB,Trypsin_2,MgsA_C,CRCB,PseudoU_synth_2,HAD_2,ATP12,LplA-B_cat,FliMN_C,NAD_binding_7,PAPS_reduct,MgtE,Kelch_KLHDC2_KLHL20_DRC7
+    genes: GcpE polyprenyl_synt DXP_synthase_N unannot rlmB* tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C CRCB PseudoU_synth_2 HAD_2 ATP12 LplA-B_cat FliMN_C NAD_binding_7 PAPS_reduct MgtE Kelch_KLHDC2_KLHL20_DRC7 Acetyltransf_7
+     x x x/u|N|N N N R R R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x x x x x|x|x/x x/x x x 
+     > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > 
+     . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . 
+     o o o . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1746  Bact_multi  extended run 41 genes (run 37)  std bf 1.00 prec 0.67 -> VERDICT 5  targets 1..40 (window starts at -4)
+    best_beyond_C: rlmB,Trypsin_2,MgsA_C,CRCB,unannot,PseudoU_synth_2,Abhydrolase_1,HAD_2,ATP12,Carboxyl_trans,CPSase_L_D2,HATPase_c,LplA-B_cat,FliMN_C,PTA_PTB ...
+    genes: unannot unannot Cytochrome_P460 unannot rlmB* tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C CRCB unannot PseudoU_synth_2 Abhydrolase_1 HAD_2 ATP12 Carboxyl_trans CPSase_L_D2 HATPase_c LplA-B_cat FliMN_C PTA_PTB unannot MgtE LysR_substrate ECH_1 4HBT FA_desaturase TetR_N
+     u u/x|u/N|N N N R R R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x x x|u|x x x x x x/x|x|x/x u x|x|x x|x x 
+     > > > < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > > < > > > > < > > < < 
+     . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1748  Bact_closed  extended run 41 genes (run 37)  std bf 1.00 prec 0.68 -> VERDICT 5  targets 0..39 (window starts at -20)
+    best_beyond_C: DSBA,Ribonuc_L-PSP,Thiolase_N,Acyl-CoA_dh_1,MgtE,LplA-B_cat,CreA,Acylphosphatase,OAD_beta,Biotin_lipoyl,unannot,Carboxyl_trans,ATP12,HAD_2,PseudoU_synth_2 ...
+    genes: rve_3 DSBA Ribonuc_L-PSP Thiolase_N Acyl-CoA_dh_1 MgtE LplA-B_cat CreA Acylphosphatase OAD_beta Biotin_lipoyl unannot Carboxyl_trans ATP12 HAD_2 PseudoU_synth_2 CRCB unannot MgsA_C Trypsin_2 L17* rpoD* S11* S13* ADK* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* Rieske Type_ISP_C Aminotran_1_2 NUDIX
+     x|x x x/x x|x x|x x x u x x x x x u x x R N R R X N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N N|N|x/x/x|x 
+     > < < < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < > 
+     . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . . 
+lut-cluster-DH-1753  Bact_closed  extended run 40 genes (run 37)  std bf 1.00 prec 0.74 -> VERDICT 5  targets 1..39 (window starts at -4)
+    best_beyond_C: rlmB,Trypsin_2,MgsA_C,PseudoU_synth_2,ATP12,Carboxyl_trans,CPSase_L_D2,unannot,Acylphosphatase,LplA-B_cat,MgtE,Thiolase_N,DSBA,HMGL-like,DUF1489
+    genes: TPR_12 unannot DUF1329 Sel1 rlmB* tufA* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C PseudoU_synth_2 ATP12 Carboxyl_trans CPSase_L_D2 unannot Acylphosphatase LplA-B_cat MgtE Thiolase_N DSBA HMGL-like DUF1489 Peptidase_M48
+     x u x x/N|N N R R R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x x x/x/x x u x|x|x/x x x x x 
+     < < < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > 
+     . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1756  Bact_closed  extended run 41 genes (run 37)  std bf 1.00 prec 0.71 -> VERDICT 5  targets 1..40 (window starts at -4)
+    best_beyond_C: rlmB,Trypsin_2,MgsA_C,PseudoU_synth_2,Carboxyl_trans,unannot,Biotin_lipoyl,OAD_beta,Acylphosphatase,LplA-B_cat,FliMN_C,MgtE,Acyl-CoA_dh_1,DSBA,Carboxyl_trans ...
+    genes: Acyltransferase DDE_Tnp_IS1595 SoxG MTHFR rlmB* tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C PseudoU_synth_2 Carboxyl_trans unannot Biotin_lipoyl OAD_beta Acylphosphatase LplA-B_cat FliMN_C MgtE Acyl-CoA_dh_1 DSBA Carboxyl_trans ECH_1 CPSase_L_D2 Na_sulph_symp Guanylate_cyc
+     x|x|x x|N|N N N R R R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x x x x u x x x|x|x/x x x x x x/x x 
+     > < > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > > > > 
+     . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1762  Bact_closed  extended run 42 genes (run 31)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 0..30;32..40 (window starts at -13)
+    junction_txt: glue@30 S12|TPR_16 OPP d=430 grp 0/0 othergrp 0
+    genes: unannot Carboxyl_trans MCPsignal ATP12 AsmA HAD_2 ADH_zinc_N DLH PseudoU_synth_2 unannot MgsA_C Trypsin_2 Glyco_tranf_2_3 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* TPR_16* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* Rieske Pyr_redox_2 SET Methyltransf_25
+     u/x|x|x x x x x x u x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|X|N N R R R R N N N|N|x x|x|x 
+     < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < > < < > < 
+     . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o . . 
+lut-cluster-DH-1770  Bact_multi  extended run 32 genes (run 25)  std bf 1.00 prec 0.71 -> VERDICT 2  targets 0..4;6..31 (window starts at -4)
+    junction_txt: glue@4 adk|unannot same d=454 grp None/None othergrp None
+    genes: MgsA_C Trypsin_2 Porin_O_P unannot L17* rpoD* S11* S13* adk* unannot* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot HTH_Crp_2 Acetyltransf_6 FAD_binding_3 PilZ rpoC rpoB L7/L12 L10 L1 L11 nusG secE unannot
+     x x|x|u/R N R R N/U/N R R R R R R R R R R R R R R R R R R R R R N N R R/u x/x|x|x/n n/r r/r r n n|u 
+     < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < > 
+     . . . . T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1776  Bact_closed  extended run 31 genes (run 31)  std bf 1.00 prec 0.76 -> VERDICT 4  targets 0..30 (window starts at -4)
+    junction_txt: edge@30 S12|unannot OPP d=521 grp None/None othergrp None
+    best_beyond_C: unannot,Acetyltransf_6,FAD_binding_3,ABC_tran,Amino_oxidase,unannot,rpoC,rpoB,L7/L12,L10
+    genes: adh_short TetR_N adh_short_C2 DUF5938 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot Acetyltransf_6 FAD_binding_3 ABC_tran Amino_oxidase unannot rpoC rpoB L7/L12 L10 unannot
+     x/x|x x|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|u|x|x|x x/u/n n r r/u 
+     < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < > < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1787  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.78 -> VERDICT 4  targets 0..30 (window starts at -4)
+    junction_txt: edge@30 S12|Acetyltransf_6 same d=722 grp 7/11 othergrp 1
+    best_beyond_C: Acetyltransf_6,FAD_binding_3,ABC_tran,Amino_oxidase,unannot,rpoC,rpoB,L7/L12,L10
+    genes: Porin_2 MarR Peptidase_S9 adh_short L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* Acetyltransf_6 FAD_binding_3 ABC_tran Amino_oxidase unannot rpoC rpoB L7/L12 L10 unannot
+     x|x|x/x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/x|x|x x/u/n n r r/u 
+     < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-WA-1789  Bact_multi  extended run 37 genes (run 37)  std bf 1.00 prec 0.77 -> VERDICT 2  targets 0..3;4..18;20..36 (window starts at -12)
+    junction_txt: glue@3 rpoC|S12 same d=687 grp 45/114 othergrp 111 ; glue@18 S17|AAA same d=206 grp 3/3 othergrp 0
+    genes: Methyltransf_11 unannot PTS_2-RNA secE nusG L11 L1 Sulf_transp Rhodanese unannot Aminotran_1_2 DUF4070 L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* AAA* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* Lactamase_B* rpoD* L17* HATPase_c HATPase_c CheB_methylest Response_reg
+     x/u/x/n n r r|x x/u|x/x/R R N N/R R N N R R R R R R R R R R R/X/R R R R R R R R R R N N R R X N R|x x x x 
+     > > > > > > > < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < < 
+     . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T . T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1791  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.74 -> VERDICT 2  targets 0..30;33..41 (window starts at -16)
+    junction_txt: glue@30 S12|DUF1428 OPP d=448 grp 1/1 othergrp 0
+    genes: DPRP DUF2059 Rib_5-P_isom_A unannot HAD_2 EamA PAP2 ATP12 HAD_2 DUF3616 unannot PseudoU_synth_2 CRCB unannot MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* DUF1428* MFS_1* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* DNA_pol3_alpha unannot ABC_tran MacB_PCD
+     x/x x/u|x|x x/x x|x/u|x x/u x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|X X|N N R R R R N N N/x u/x x 
+     < < < < > < < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < < < < < < < < < < < 
+     . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1800  Bact_multi  extended run 29 genes (run 28)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 0..11;12..28 (window starts at 0)
+    junction_txt: glue@11 S17|L14 same d=547 grp 65/119 othergrp 166
+    genes: tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* Lactamase_B* rpoD* L17* HATPase_c HATPase_c CheB_methylest Response_reg MCPsignal CheW CheR CheW CMD
+    |N R R R R R R R R R R R/R R R R R R R R R R N N R R X N R|x x x x x x x x|x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < < < < < < > 
+     T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1807  Bact_multi  extended run 31 genes (run 30)  std bf 1.00 prec 0.79 -> VERDICT 2  targets 0..11;14..30 (window starts at 0)
+    junction_txt: glue@11 S17|unannot same d=345 grp None/None othergrp None
+    genes: tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* unannot* unannot* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* Lactamase_B* rpoD* L17* HATPase_c HATPase_c CheB_methylest Response_reg MCPsignal CheW CheR CheW PepSY_2
+    |N R R R R R R R R R R R/U U/R R R R R R R R R R N N R R X N R|x x x x x x x x|x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < < < < < < > 
+     T T T T T T T T T T T T . . T T T T T T T T T T T T T T T T T . . . . . . . . . 
+     B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1808  Bact_multi  extended run 30 genes (run 30)  std bf 1.00 prec 0.75 -> VERDICT 2  targets 0..7;8..29 (window starts at -4)
+    junction_txt: glue@7 L30|L18 same d=732 grp 118/122 othergrp 158
+    genes: unannot DUF1236 DUF1330 GreA_GreB L17* rpoD* S11* S13* adk* secY* L15* L30* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* FAD_binding_3 unannot ABC_tran Amino_oxidase unannot unannot rpoC rpoB L7/L12 L10 unannot
+     u|x x x R N R R N N R R/R R R R R R R R R R R R R R R R R R N N R R|x|u x/x u u/n n r r|u 
+     > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1812  Bact_closed  extended run 31 genes (run 31)  std bf 1.00 prec 0.79 -> VERDICT 4  targets 0..30 (window starts at -9)
+    junction_txt: edge@-1 FAD_binding_3|S12 OPP d=679 grp 7/7 othergrp 0
+    best_beyond_C: L10,L7/L12,rpoB,rpoC,unannot,Amino_oxidase,ABC_tran,FAD_binding_3
+    genes: unannot L10 L7/L12 rpoB rpoC unannot Amino_oxidase ABC_tran FAD_binding_3 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* adh_short DUF1330 DUF1236 unannot
+     u|r r/n n/u/x/x|x|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x x x|u 
+     < > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < 
+     . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o . . . 
+lut-cluster-DH-1813  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.74 -> VERDICT 4  targets 0..30 (window starts at -4)
+    junction_txt: edge@30 S12|unannot OPP d=556 grp None/None othergrp None
+    best_beyond_C: unannot,HemolysinCabind,unannot,rpoC,rpoB,L7/L12,L10,L1,L11,nusG,secE
+    genes: MgsA_C Trypsin_2 Oxidored_molyb Ferric_reduct L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot HemolysinCabind unannot rpoC rpoB L7/L12 L10 L1 L11 nusG secE unannot
+     x x|x x|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|u|x|u|n n r r r r n n/u 
+     < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < > < < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1814  Bact_multi  extended run 29 genes (run 28)  std bf 1.00 prec 0.57 -> VERDICT 2  targets 0..6;8..28 (window starts at -23)
+    junction_txt: glue@6 L15|unannot OPP d=238 grp None/None othergrp None
+    genes: GSCFA HATPase_c L34 Ribonuclease_P YidD ATP_bind_3 EAL 60KD_IMP MOSC MMR_HSR1 AA_kinase His_Phos_1 ABC_tran BPD_transp_1 BPD_transp_1 SBP_bac_3 ATP12 HAD_2 PseudoU_synth_2 CRCB MgsA_C Autoind_synth Autoind_bind L17* rpoD* S11* S13* adk* secY* L15* unannot* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA*
+     x/x|r x x x x x x x x x|x x x x/x x x x x x x/R N R R N N R|U|R R R R R R R R R R R R R R R R R R R R N |
+     < < > > > > > > > > > > < < < < < < < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . . . . . . . . . . . . . . . . T T T T T T T . T T T T T T T T T T T T T T T T T T T T T 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-Z-1821  Bact_multi  extended run 26 genes (run 26)  std bf 1.00 prec 0.68 -> VERDICT 2  targets 0..10;12..25 (window starts at -4)
+    junction_txt: glue@10 L29|2OG-FeII_Oxy_5 same d=759 grp 3/3 othergrp 0
+    genes: SBP_bac_3 BPD_transp_1 BPD_transp_1 ABC_tran L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* 2OG-FeII_Oxy_5* L16* S3* L22* S19* L2* DUF4236* L23* L4* L3* S10* tufA* EF2* S7* S12* Rhamno_transf AraC_binding Cupin_2 rpoC rpoB L7/L12 L10 L1 L11 AlkZ-like nusG secE unannot
+     x/x x x|R R R R R R R R R R R/X/R R R R R X R R R R N N R R|x|x|x|n n r r r r/x n n|u 
+     > > > > < < < < < < < < < < < < < < < < < < < < < < < < < < > < > < < < < < < < < < > 
+     . . . . T T T T T T T T T T T . T T T T T T T T T T T T T T . . . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-WA-1821  Bact_multi  extended run 26 genes (run 26)  std bf 1.00 prec 0.74 -> VERDICT 2  targets 0..10;12..25 (window starts at -4)
+    junction_txt: glue@10 L29|2OG-FeII_Oxy_5 same d=759 grp 3/3 othergrp 0
+    genes: SBP_bac_3 BPD_transp_1 BPD_transp_1 ABC_tran L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* 2OG-FeII_Oxy_5* L16* S3* L22* S19* L2* DUF4236* L23* L4* L3* S10* tufA* EF2* S7* S12* Rhamno_transf AraC_binding Cupin_2 rpoC rpoB L7/L12 L10 L1 L11 AlkZ-like
+     x/x x x|R R R R R R R R R R R/X/R R R R R X R R R R N N R R|x|x|x|n n r r r r/x 
+     > > > > < < < < < < < < < < < < < < < < < < < < < < < < < < > < > < < < < < < < 
+     . . . . T T T T T T T T T T T . T T T T T T T T T T T T T T . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1821  Bact_multi  extended run 26 genes (run 26)  std bf 1.00 prec 0.68 -> VERDICT 2  targets 0..10;12..25 (window starts at -4)
+    junction_txt: glue@10 L29|2OG-FeII_Oxy_5 same d=759 grp 3/3 othergrp 0
+    genes: SBP_bac_3 BPD_transp_1 BPD_transp_1 ABC_tran L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* 2OG-FeII_Oxy_5* L16* S3* L22* S19* L2* DUF4236* L23* L4* L3* S10* tufA* EF2* S7* S12* Rhamno_transf AraC_binding Cupin_2 rpoC rpoB L7/L12 L10 L1 L11 AlkZ-like nusG secE unannot
+     x/x x x|R R R R R R R R R R R/X/R R R R R X R R R R N N R R|x|x|x|n n r r r r/x n n|u 
+     > > > > < < < < < < < < < < < < < < < < < < < < < < < < < < > < > < < < < < < < < < > 
+     . . . . T T T T T T T T T T T . T T T T T T T T T T T T T T . . . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1829  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.72 -> VERDICT 2  targets 0..30;33..41 (window starts at -17)
+    junction_txt: glue@30 S12|DUF1428 OPP d=449 grp 1/1 othergrp 0
+    genes: DPRP DUF2059 Rib_5-P_isom_A unannot HAD_2 EamA PAP2 ATP12 HAD_2 DUF3616 unannot PseudoU_synth_2 CRCB ParE_toxin unannot MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* DUF1428* MFS_1* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* DNA_pol3_alpha unannot ABC_tran MacB_PCD
+     x/x x/u|x|x/x x x|x/u|x x x u x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|X X|N N R R R R N N N/x u/x x 
+     < < < < > < < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > < < < < < < < < < < < < < 
+     . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1856  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.63 -> VERDICT 4  targets 0..30 (window starts at -14)
+    junction_txt: edge@-1 FAD_binding_3|S12 OPP d=660 grp 5/8 othergrp 0 ; edge@30 L17|Acyl_transf_3 same d=64 grp 1/6 othergrp 1
+    best_beyond_C: secE,nusG,L11,L1,2-Hacid_dh_C,unannot,L10,L7/L12,rpoB,rpoC,Amino_oxidase,ABC_tran,FAD_binding_3,Acyl_transf_3,adh_short ...
+    genes: unannot secE nusG L11 L1 2-Hacid_dh_C unannot L10 L7/L12 rpoB rpoC Amino_oxidase ABC_tran FAD_binding_3 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Acyl_transf_3 adh_short ADH_zinc_N_2 Trypsin_2 MgsA_C PseudoU_synth_2
+     u/n n r r x/u/r r n n/x x|x|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x/x|x|x x x 
+     > > > > > > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > 
+     . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1858  Bact_multi  extended run 42 genes (run 37)  std bf 1.00 prec 0.69 -> VERDICT 3  targets 3..41 (window starts at -7)
+    genes: PAS_5 Aminotran_3 unannot Gln-synt_C AlaDh_PNT_C Aminotran_3 Cupin_2 rlmB* tufA* unannot* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C Isochorismatase CRCB PseudoU_synth_2 HAD_2 ATP12 His_Phos_1 unannot Acylphosphatase CHRD HTH_20 ArsP_1 DcsG_N
+     x|x u x/x x|x|N|N|U|N N R R R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x/x/x x/x x|x|u x/x x x x 
+     > < < < < < > < > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > 
+     . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-WA-1888  Bact_multi  extended run 36 genes (run 31)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 0..3;5..35 (window starts at -10)
+    junction_txt: glue@3 rpoC|HemolysinCabind same d=214 grp 0/0 othergrp 0
+    genes: Sugar_tr rlmB tufA secE nusG L11 L1 YCII DUF6596 unannot L10* L7/L12* rpoB* rpoC* HemolysinCabind* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* LysR_substrate YjgF_endoribonc Aminotran_5 Trypsin_2
+     x/n|n n n r r/x x u/R R N N/X/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x x x 
+     < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > 
+     . . . . . . . . . . T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o 
+lut-cluster-Z-1902  Bact_multi  extended run 30 genes (run 30)  std bf 0.57 prec 1.0 -> VERDICT 2  targets 0..16;19..29 (window starts at -4)
+    junction_txt: glue@16 L17|Staph_reg_Sar_Rot same d=289 grp 0/0 othergrp 0
+    genes: GGDEF unannot SNase unannot L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* Lactamase_B* rpoD* L17* Staph_reg_Sar_Rot* NUDIX* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* GTP_EFTU_D3
+     x u|x/u/R R R R R R R R R R N N R R X N R/X/X|R R R R R R R R R R R x |
+     < < > > > > > > > > > > > > > > > > > > > > > < < < < < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T . . T T T T T T T T T T T . 
+     . . . . B B B B B B B B B B B B B B B B B . . o o o o o o o o o o o o 
+lut-cluster-WA-1902  Bact_multi  extended run 30 genes (run 30)  std bf 0.57 prec 1.0 -> VERDICT 2  targets 0..16;19..29 (window starts at -4)
+    junction_txt: glue@16 L17|Staph_reg_Sar_Rot same d=289 grp 0/0 othergrp 0
+    genes: GGDEF unannot SNase unannot L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* Lactamase_B* rpoD* L17* Staph_reg_Sar_Rot* NUDIX* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* GTP_EFTU_D3
+     x u|x/u/R R R R R R R R R R N N R R X N R/X/X|R R R R R R R R R R R x |
+     < < > > > > > > > > > > > > > > > > > > > > > < < < < < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T . . T T T T T T T T T T T . 
+     . . . . B B B B B B B B B B B B B B B B B . . o o o o o o o o o o o o 
+lut-cluster-DH-1902  Bact_multi  extended run 30 genes (run 30)  std bf 0.63 prec 1.0 -> VERDICT 2  targets 0..16;19..29 (window starts at -4)
+    junction_txt: glue@16 L17|Staph_reg_Sar_Rot same d=289 grp 0/0 othergrp 0
+    genes: GGDEF unannot SNase unannot L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* Lactamase_B* rpoD* L17* Staph_reg_Sar_Rot* NUDIX* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* GTP_EFTU_D3
+     x u|x/u/R R R R R R R R R R N N R R X N R/X/X|R R R R R R R R R R R x |
+     < < > > > > > > > > > > > > > > > > > > > > > < < < < < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T . . T T T T T T T T T T T . 
+     . . . . B B B B B B B B B B B B B B B B B B B o o o o o o o o o o o o 
+lut-cluster-DH-1903  Bact_multi  extended run 29 genes (run 27)  std bf 1.00 prec 0.72 -> VERDICT 3  targets 0..27 (window starts at -12)
+    genes: Pantoate_ligase ATP12 HAD_2 Catalase LysR_substrate PseudoU_synth_2 CRCB Aconitase MgsA_C Trypsin_2 LemA Peptidase_M48 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* rlmB* unannot unannot DUF2391 unannot
+     x|x x x|x|x x|x|x x|x x|R N R R N N R R R R R R R R R R R R R R R R R R R R R N|N|u/u|x u 
+     > < < < > < < > < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < > > 
+     . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . o o 
+lut-cluster-DH-1910  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.74 -> VERDICT 4  targets 0..30 (window starts at -4)
+    junction_txt: edge@30 S12|unannot OPP d=466 grp None/None othergrp None
+    best_beyond_C: unannot,Glyoxalase,GerE,rpoC,rpoB,L7/L12,L10,L1,L11,nusG,secE
+    genes: Acetyltransf_3 ILVD_EDD_N Oxidored_molyb Ferric_reduct L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot Glyoxalase GerE rpoC rpoB L7/L12 L10 L1 L11 nusG secE His_Phos_1
+     x|x|x x|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|u x x|n n r r r r n n|x 
+     > < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > > < < < < < < < < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . 
+     . . o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1912  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.69 -> VERDICT 4  targets 0..30 (window starts at -4)
+    junction_txt: edge@30 S12|Acetyltransf_6 same d=620 grp 7/11 othergrp 1
+    best_beyond_C: Acetyltransf_6,FAD_binding_3,ABC_tran,Amino_oxidase,rpoC,rpoB,L7/L12,L10,unannot,2-Hacid_dh_C,L1,L11,nusG,secE
+    genes: HxlR ADH_zinc_N_2 Aminotran_1_2 Aminotran_1_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* Acetyltransf_6 FAD_binding_3 ABC_tran Amino_oxidase rpoC rpoB L7/L12 L10 unannot 2-Hacid_dh_C L1 L11 nusG secE YgaP-like_TM
+     x|x|x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/x|x|x x/n n r r|u|x r r n n|x 
+     < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < > < < < < < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-1914  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.72 -> VERDICT 4  targets 0..30 (window starts at -13)
+    junction_txt: edge@-1 FAD_binding_3|S12 OPP d=601 grp 2/4 othergrp 0
+    best_beyond_C: secE,nusG,L11,L1,2-Hacid_dh_C,L10,L7/L12,rpoB,rpoC,Amino_oxidase,ABC_tran,FAD_binding_3
+    genes: Beta-lactamase secE nusG L11 L1 2-Hacid_dh_C L10 L7/L12 rpoB rpoC Amino_oxidase ABC_tran FAD_binding_3 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* adh_short ADH_zinc_N_2 HxlR Porin_O_P
+     x|n n r r x/r r n n/x x|x|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x|x|x|x 
+     < > > > > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > < 
+     . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1917  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.36 -> VERDICT 2  targets 1..5;6..9;11..41 (window starts at -5)
+    junction_txt: glue@5 L1|L10 same d=805 grp 52/115 othergrp 160 ; glue@9 rpoC|Glycos_transf_1 OPP d=48 grp 1/2 othergrp 0
+    genes: Lactamase_B SpoU_methylase unannot unannot MFS_1 rlmB* tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* Glycos_transf_1* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C CRCB TPR_19 PseudoU_synth_2 unannot Acetyltransf_3 HAD_2 ATP12 unannot Carboxyl_trans unannot CPSase_L_D2 AIG2_2 Acylphosphatase Rhodanese DUF599 DUF3253 GST_C Acetyltransf_1 unannot GST_N_2 DUF1989 DUF2147 ndk Molybdopterin unannot Formyl_trans_N AIRS_C CDP-OH_P_transf AI-2E_transport unannot PP_kinase_C_1 Ppx_C NDPSase_N Acetyltransf_3 DNA_pol_A_exo1 unannot Hydrolase_4 tRNA-synt_2
+     x x|u/u|x/N|N N N R R/R R N N|X|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x x x/x u x x x|u|x/u/x x x|x|x x x x|u|x|x x|n/x u|x x|x x u x x x x|x u x|x 
+     < < > > < < > > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > < > > > > < > < < > > > < < > > > > > > > < < < > 
+     . . . . . . T T T T T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1925  Bact_multi  extended run 32 genes (run 25)  std bf 1.00 prec 0.7 -> VERDICT 4  targets 0..31 (window starts at -15)
+    junction_txt: edge@-1 FAD_binding_3|S12 OPP d=701 grp 1/3 othergrp 0
+    best_beyond_C: secE,nusG,L11,L1,2-Hacid_dh_C,unannot,L10,L7/L12,rpoB,rpoC,unannot,Amino_oxidase,ABC_tran,FAD_binding_3
+    genes: unannot secE nusG L11 L1 2-Hacid_dh_C unannot L10 L7/L12 rpoB rpoC unannot Amino_oxidase ABC_tran FAD_binding_3 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* secY* adk* S13* S11* rpoD* L17* unannot adh_short unannot Amidase
+     u|n n r r x|u|r r n n u/x x|x|R R N N R R R R R R R R R R R R R R R R R R R R R N N N R R N R u x|u/x 
+     < > > > > > < > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < 
+     . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o . . 
+lut-cluster-DH-1930  Bact_closed  extended run 31 genes (run 31)  std bf 1.00 prec 0.79 -> VERDICT 4  targets 0..30 (window starts at -9)
+    junction_txt: edge@-1 Acetyltransf_6|S12 same d=634 grp 7/11 othergrp 1
+    best_beyond_C: L10,L7/L12,rpoB,rpoC,Amino_oxidase,ABC_tran,FAD_binding_3,Acetyltransf_6
+    genes: HTH_18 L10 L7/L12 rpoB rpoC Amino_oxidase ABC_tran FAD_binding_3 Acetyltransf_6 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Amidase TctC unannot ADH_zinc_N_2
+     x/r r/n n/x/x|x|x/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R|x x|u|x 
+     > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > < 
+     . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . o 
+lut-cluster-Z-1933  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.68 -> VERDICT 2  targets 0..30;32..40 (window starts at -21)
+    junction_txt: glue@30 S12|unannot OPP d=478 grp None/None othergrp None
+    genes: SnoaL_2 Thiolase_N PAP2 Kelch_KLHDC2_KLHL20_DRC7 MgtE PAPS_reduct NAD_binding_7 FliMN_C LplA-B_cat unannot CPSase_L_D2 Carboxyl_trans ATP12 AsmA HAD_2 PseudoU_synth_2 CRCB MgsA_C Fer2_BFD Ferritin Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* unannot unannot GST_N_3 Aminotran_3
+     x|x|x|x x/x x x|x|u/x/x x x x x x x|x x|x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|U|N N R R R R N N N|N|u u/x|x 
+     > < > < < < < < > < < < < < < < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < > < < < > 
+     . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . o 
+lut-cluster-DH-1933  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.67 -> VERDICT 2  targets 0..30;32..40 (window starts at -22)
+    junction_txt: glue@30 S12|unannot OPP d=478 grp None/None othergrp None
+    genes: DUF1489 SnoaL_2 Thiolase_N PAP2 Kelch_KLHDC2_KLHL20_DRC7 MgtE PAPS_reduct NAD_binding_7 FliMN_C LplA-B_cat unannot CPSase_L_D2 Carboxyl_trans ATP12 AsmA HAD_2 PseudoU_synth_2 CRCB MgsA_C Fer2_BFD Ferritin Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* unannot unannot GST_N_3 Aminotran_3
+     x|x|x|x|x x/x x x|x|u/x/x x x x x x x|x x|x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R|U|N N R R R R N N N|N|u u/x|x 
+     < > < > < < < < < > < < < < < < < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < > < < < > 
+     . . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T T . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . o 
+lut-cluster-DH-1936  Bact_multi  extended run 28 genes (run 27)  std bf 1.00 prec 0.64 -> VERDICT 5  targets 0..27 (window starts at -17)
+    best_beyond_C: Carboxyl_trans,DUF2750,CNNM,ATP12,HAD_2,DUF1272,DUF6790,PseudoU_synth_2,CRCB,DUF190,VIT1,ParBc_2,MgsA_C,Cadherin_3,Trypsin_2 ...
+    genes: unannot Carboxyl_trans DUF2750 CNNM ATP12 HAD_2 DUF1272 DUF6790 PseudoU_synth_2 CRCB DUF190 VIT1 ParBc_2 MgsA_C Cadherin_3 Trypsin_2 Epimerase L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA*
+     u|x x|x|x x x x x|x x|x x/x x/x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N |
+     > < < > < < < < < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-1940  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.7 -> VERDICT 4  targets 0..30 (window starts at -14)
+    junction_txt: edge@-1 Acetyltransf_6|S12 same d=640 grp 7/11 othergrp 1
+    best_beyond_C: secE,nusG,L11,L1,2-Hacid_dh_C,L10,L7/L12,rpoB,rpoC,Amino_oxidase,ABC_tran,FAD_binding_3,Acetyltransf_6
+    genes: Beta-lactamase secE nusG L11 L1 2-Hacid_dh_C L10 L7/L12 rpoB rpoC Amino_oxidase ABC_tran FAD_binding_3 Acetyltransf_6 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* MCPsignal adh_short Voltage_CLC ADH_zinc_N_2
+     x|n n r r x/r r/n n/x x|x|x/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R|x|x x|x 
+     < > > > > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > < 
+     . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-WA-1946  Bact_multi  extended run 37 genes (run 32)  std bf 1.00 prec 0.79 -> VERDICT 2  targets 0..3;5..19;20..36 (window starts at -11)
+    junction_txt: glue@3 rpoC|DUF805 same d=187 grp 0/0 othergrp 0 ; glue@19 S17|L14 same d=544 grp 65/119 othergrp 166
+    genes: Methyltransf_11 tufA secE nusG L11 L1 Sulf_transp Rhodanese unannot Aminotran_1_2 DUF4070 L10* L7/L12* rpoB* rpoC* DUF805* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* Lactamase_B* rpoD* L17* HATPase_c HATPase_c CheB_methylest Response_reg
+     x/n/n n r r|x x/u|x/x/R R N N/X/R R N N R R R R R R R R R R R/R R R R R R R R R R N N R R X N R|x x x x 
+     > > > > > > < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < < 
+     . . . . . . . . . . . T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-1949  Bact_closed  extended run 31 genes (run 31)  std bf 1.00 prec 0.79 -> VERDICT 4  targets 0..30 (window starts at -4)
+    junction_txt: edge@30 S12|Ribonuc_L-PSP same d=679 grp 0/5 othergrp 0
+    best_beyond_C: Ribonuc_L-PSP,TetR_C_41,ABC_tran,Amino_oxidase,rpoC,rpoB,L7/L12,L10
+    genes: Trypsin_2 ADH_zinc_N_2 Porin_O_P adh_short L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* Ribonuc_L-PSP TetR_C_41 ABC_tran Amino_oxidase rpoC rpoB L7/L12 L10 unannot
+     x|x/x|x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/x|x|x/x/n n r r/u 
+     < > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . 
+     o o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-1995  Bact_multi  extended run 31 genes (run 31)  std bf 1.00 prec 0.79 -> VERDICT 4  targets 0..30 (window starts at -9)
+    junction_txt: edge@-1 FAD_binding_3|S12 OPP d=710 grp 7/7 othergrp 0
+    best_beyond_C: L10,L7/L12,rpoB,rpoC,unannot,Amino_oxidase,ABC_tran,FAD_binding_3
+    genes: unannot L10 L7/L12 rpoB rpoC unannot Amino_oxidase ABC_tran FAD_binding_3 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* GreA_GreB DUF1330 DUF1236 unannot
+     u|r r n n u/x/x|x|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x x/x|u 
+     < > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < 
+     . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . . 
+lut-cluster-DH-1996  Bact_closed  extended run 41 genes (run 37)  std bf 1.00 prec 0.79 -> VERDICT 5  targets 0..39 (window starts at -12)
+    best_beyond_C: FliMN_C,LplA-B_cat,CPSase_L_D2,Carboxyl_trans,ATP12,HAD_2,HMGL-like,PseudoU_synth_2,CRCB,MgsA_C,Trypsin_2,rlmB
+    genes: SnoaL_3 FliMN_C LplA-B_cat CPSase_L_D2 Carboxyl_trans ATP12 HAD_2 HMGL-like PseudoU_synth_2 CRCB MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* B12-binding adh_short adh_short_C2 unannot
+     x|x|x|x x x x x/x x x x R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N N|N/x x x|u 
+     > < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > > > < 
+     . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . o o . 
+lut-cluster-DH-2006  Bact_multi  extended run 44 genes (run 31)  std bf 1.00 prec 0.73 -> VERDICT 2  targets 3..11;13..43 (window starts at -4)
+    junction_txt: glue@12 unannot|S12 same d=722 grp None/None othergrp None
+    genes: unannot unannot YHYH MFS_1 rlmB* 4HBT* MarR_2* tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* unannot* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* MCPsignal Trypsin_2 MgsA_C Guanylate_cyc DUF3376 FA_hydroxylase FA_hydroxylase FA_hydroxylase CRCB PseudoU_synth_2 AAA_33 unannot Tlde1_dom HAD_2 ATP12 MgtE Proteasome
+     u/u/x x|N X X|N N N R R R R N N U/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x x|x|x x x x/x x|x u x|x x|x x 
+     > > > > < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < < < > > < < 
+     . . . . . . . T T T T T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-2015  Bact_closed  extended run 31 genes (run 31)  std bf 1.00 prec 0.72 -> VERDICT 4  targets 0..30 (window starts at -13)
+    junction_txt: edge@-1 CPSase_L_D2|S12 same d=683 grp 0/1 othergrp 0
+    best_beyond_C: secE,nusG,L11,L1,L10,L7/L12,rpoB,rpoC,Amino_oxidase,ABC_tran,Methyltransf_21,CPSase_L_D2
+    genes: Metallophos secE nusG L11 L1 L10 L7/L12 rpoB rpoC Amino_oxidase ABC_tran Methyltransf_21 CPSase_L_D2 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* adh_short ADH_zinc_N_2 HxlR Trypsin_2
+     x/n n r r/r r n n/x x/x x/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x|x|x x 
+     > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > 
+     . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-2026  Bact_multi  extended run 44 genes (run 31)  std bf 1.00 prec 0.77 -> VERDICT 2  targets 4..11;13..43 (window starts at -4)
+    junction_txt: glue@11 rpoC|GerE same d=342 grp 1/1 othergrp 1
+    genes: unannot unannot Sugar_tr unannot rlmB* tufA* unannot* YbjQ_1* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* GerE* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* unannot Trypsin_2 MgsA_C unannot unannot CRCB PseudoU_synth_2 DUF3616 HAD_2 ATP12 unannot
+     u/u/x|u|N|N U X/N N R R R R N N/X/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R|u|x/x u u x x|x|x x u 
+     < < < > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > < > > > 
+     . . . . . . . . T T T T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-WA-2028  Bact_multi  extended run 43 genes (run 25)  std bf 1.00 prec 0.73 -> VERDICT 2  targets 0..31;34..37;39..42 (window starts at -17)
+    junction_txt: glue@31 S12|ABC_membrane same d=961 grp 16/38 othergrp 1 ; glue@37 L10|2-Hacid_dh_C same d=555 grp 3/9 othergrp 0
+    genes: unannot Carboxyl_trans DUF4260 unannot unannot Transpeptidase Bac_export_2 Flg_hook ATP12 unannot PseudoU_synth_2 MgsA_C Trypsin_2 Porin_O_P ADH_zinc_N_2 adh_short TctC L17* rpoD* S11* S13* adk* secY* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* ABC_membrane* Amino_oxidase* rpoC* rpoB* L7/L12* L10* 2-Hacid_dh_C* L1* L11* nusG* secE* Beta-lactamase AI-2E_transport adh_short_C2 His_Phos_1
+     u x|x u|u x x x x|u|x x x|x x|x|x|R N R R N N N R R R R R R R R R R R R R R R R R R R R R N N R R/X X/N N R R/X R R N N|x|x x x 
+     < < > > < < < < < > < < < > > < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < 
+     . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . T T T T . T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . . 
+lut-cluster-DH-2029  Bact_multi  extended run 27 genes (run 27)  std bf 1.00 prec 0.73 -> VERDICT 4  targets 0..26 (window starts at -11)
+    junction_txt: edge@-1 Hemerythrin|S10 same d=202 grp 0/1 othergrp 0
+    best_beyond_C: rpoC,unannot,unannot,S12,S7,EF2,tufA,unannot,GTP_EFTU_D3,Hemerythrin
+    genes: rpoB rpoC unannot unannot S12 S7 EF2 tufA unannot GTP_EFTU_D3 Hemerythrin S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* LysE AraC_binding Cupin_2 Trypsin_2
+     n n|u|u/r r n n/u x/x/R R R R R R R R R R R R R R R R R R R R R N N R R N R|x x|x x 
+     > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > > 
+     . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . o o o 
+lut-cluster-DH-2044  Bact_closed  extended run 31 genes (run 31)  std bf 1.00 prec 0.79 -> VERDICT 4  targets 0..30 (window starts at -9)
+    junction_txt: edge@-1 FAD_binding_3|S12 OPP d=682 grp 1/1 othergrp 0
+    best_beyond_C: L10,L7/L12,rpoB,rpoC,unannot,Amino_oxidase,ABC_tran,FAD_binding_3
+    genes: unannot L10 L7/L12 rpoB rpoC unannot Amino_oxidase ABC_tran FAD_binding_3 S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* GreA_GreB DUF1330 DUF1236 unannot
+     u|r r n n/u/x/x|x|R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R x x x|u 
+     < > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < 
+     . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . . 
+lut-cluster-DH-2045  Bact_closed  extended run 30 genes (run 30)  std bf 1.00 prec 0.79 -> VERDICT 4  targets 0..29 (window starts at -4)
+    junction_txt: edge@29 S12|MOSC same d=963 grp 0/1 othergrp 0
+    best_beyond_C: MOSC,ABC_tran,Amino_oxidase,unannot,rpoC,rpoB,L7/L12,L10
+    genes: unannot DUF1236 DUF1330 GreA_GreB L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* MOSC ABC_tran Amino_oxidase unannot rpoC rpoB L7/L12 L10 unannot
+     u|x x x R N R R N N R R R R R R R R R R R R R R R R R R R R N N R R/x x/x/u n n r r|u 
+     > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-Z-2046  Bact_multi  extended run 32 genes (run 25)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 0..4;6..31 (window starts at -10)
+    junction_txt: glue@4 adk|unannot same d=239 grp None/None othergrp None
+    genes: CMD Carboxyl_trans Bac_export_2 Flg_hook ATP12 PseudoU_synth_2 unannot MgsA_C Trypsin_2 adh_short L17* rpoD* S11* S13* adk* unannot* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot unannot HTH_Crp_2 Acetyltransf_6
+     x/x x x x x u x x/x/R N R R N/U N R R R R R R R R R R R R R R R R R R R R R N N R R|u|u x x 
+     < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < 
+     . . . . . . . . . . T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . . . o 
+lut-cluster-WA-2047  Bact_multi  extended run 41 genes (run 31)  std bf 1.00 prec 0.72 -> VERDICT 2  targets 0..8;10..40 (window starts at -4)
+    junction_txt: glue@9 Phytase-like|S12 same d=442 grp 1/1 othergrp 1
+    genes: Sigma54_activat HATPase_c FBPase Tad tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* Phytase-like* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* unannot Orn_Arg_deC_N Trypsin_2 MgsA_C PseudoU_synth_2 HAD_2 ATP12 HPPK FolB Pterin_bind S12 DUF4282 LplA-B_cat FliMN_C Phage_integrase unannot Bro-N
+     x x|x/x N N N R R R R N N X/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R|u x|x x/x x x|x x x r/x x|x/x u x 
+     < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < > > > > > < < < < < < > > > > 
+     . . . . T T T T T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . 
+     o o . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-WA-2062  Bact_multi  extended run 43 genes (run 37)  std bf 1.00 prec 0.39 -> VERDICT 2  targets 4..11;12..42 (window starts at -4)
+    junction_txt: glue@11 rpoC|S12 same d=1043 grp 19/31 othergrp 111
+    genes: unannot unannot Hydrolase Cation_efflux rlmB* Ribonuc_L-PSP* tufA* Tad* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* CRCB MgsA_C Trypsin_2 HigB-like_toxin HTH_3 PseudoU_synth_2 unannot DUF3833 PBP_like_2 BPD_transp_1 BPD_transp_1 ABC_tran unannot HAD_2 ATP12 CesT unannot SBP_bac_3 Carboxyl_trans YARHG YARHG CPSase_L_D2 HAD_2 Response_reg unannot Acylphosphatase LplA-B_cat FliMN_C HD_5 Polysacc_deac_1 Polysacc_deac_1 MgtE RraA-like CLP_protease MCPsignal HAMP DUF218 DUF599 unannot LysR_substrate
+     u u|x|x/N|X/N/X/N N R R R R N N/R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R|x/x x|x x x/u x/x x x x/u/x x x u x/x/x x x x|x u|x|x|x/x|x x|x x/x|x x|x|x u/x 
+     < < > < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < < < > > > > > > > > > > > > > > > > > > > > < < > < > > < < > > > < < > < < < 
+     . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-DH-2063  Bact_multi  extended run 41 genes (run 25)  std bf 1.00 prec 0.79 -> VERDICT 2  targets 0..7;9..35;37..40 (window starts at -4)
+    junction_txt: glue@7 rpoC|unannot OPP d=96 grp None/None othergrp None ; glue@36 unannot|S13 same d=200 grp None/None othergrp None
+    genes: unannot Glyco_trans_1_4 unannot unannot secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* unannot* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* S13* S11* rpoD* L17* GST_N_2 Trypsin_2 MgsA_C PilZ DUF1236 CRCB CRCB DUF190 PseudoU_synth_2 EamA ATP12 unannot
+     u|x u|u/N N R R R R N N|U|R R N N R R R R R R R R R R R R R R R R R R R R R N N U/R R N R x/x x|x|x/x x x x x x|u 
+     > < < > > > > > > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > > < 
+     . . . . T T T T T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T . . . . . . . . . . . . 
+     . . . . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-WA-2066  Bact_multi  extended run 43 genes (run 38)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 3..6;8..42 (window starts at -4)
+    junction_txt: glue@7 unannot|L10 same d=606 grp None/None othergrp None
+    genes: rnc MMR_HSR1 RecO_C unannot rlmB* tufA* YbjQ_1* secE* nusG* L11* L1* unannot* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C Pyridox_ox_2 Aminotran_1_2 GFA GFA YjiS-like HTH_20 unannot PseudoU_synth_2 HAD_2 ATP12
+     n x x u|N|N X/N N R R U/R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x|x|x|x x|x x|u|x x x |
+     > > > > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > < < > > < > > > 
+     . . . . . . . T T T T . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . 
+     o o o . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-WA-2072  Bact_closed  extended run 46 genes (run 35)  std bf 1.00 prec 0.77 -> VERDICT 2  targets 0..5;11..18;20..24;27..37;39..45 (window starts at -7)
+    junction_txt: glue@5 L7/L12|RNA_pol_Rpb2_1 same d=197 grp 0/0 othergrp 0 ; glue@18 L23|Hint_2 OPP d=251 grp 0/2 othergrp 0 ; glue@24 L16|AAA_18 OPP d=86 grp 0/0 othergrp 0 ; glue@38 Globin|L15 same d=225 grp 0/0 othergrp 0
+    genes: unannot tufA DUF374 6PGD unannot unannot Hexapep secE* nusG* L11* L1* L10* L7/L12* RNA_pol_Rpb2_1* rpoB* rpoC* Rhamno_transf* EamA* S12* S7* EF2* tufA* S10* L3* L4* L23* Hint_2* L2* S19* L22* S3* L16* AAA_18* 2OG-FeII_Oxy_5* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* Globin* L15* secY* adk* S13* S11* rpoD* L17* unannot Autoind_bind Autoind_synth MgsA_C CRCB PseudoU_synth_2 HAD_2 ATP12 SBP_bac_3
+     u n|x|x|u u|x/N N R R R R/X N N/X X/R R N N R R R R|X|R R R R R|X|X/R R R R R R R R R R R X/R N N R R N R|u|x x x x x x x/x 
+     > > < > < < > > > > > > > > > > > > > > > > > > > > < > > > > > < > > > > > > > > > > > > > > > > > > > > < > > > > > > > > 
+     . . . . . . . T T T T T T . . . . . T T T T T T T T . T T T T T . . T T T T T T T T T T T . T T T T T T T . . . . . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-2090  Bact_closed  extended run 41 genes (run 37)  std bf 1.00 prec 0.75 -> VERDICT 5  targets 0..39 (window starts at -15)
+    best_beyond_C: Acylphosphatase,PTA_PTB,CPSase_L_D2,PDDEXK_3,Carboxyl_trans,ATP12,AsmA,HAD_2,PseudoU_synth_2,CRCB,MgsA_C,Trypsin_2,DUF2270,MCPsignal,rlmB
+    genes: YoeB_toxin Acylphosphatase PTA_PTB CPSase_L_D2 PDDEXK_3 Carboxyl_trans ATP12 AsmA HAD_2 PseudoU_synth_2 CRCB MgsA_C Trypsin_2 DUF2270 MCPsignal L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* Autoind_bind HTH_3 DUF1206 unannot
+     x|x x/x x x x x x x x x x x|x|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R N N N|N|x|x|x/u 
+     > < < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < > < < 
+     . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o . . 
+lut-cluster-WA-2097  Bact_multi  extended run 27 genes (run 20)  std bf 0.44 prec 1.0 -> VERDICT 2  targets 0..15;16..18;20..22;24..26 (window starts at 0)
+    junction_txt: glue@15 S19|L23 same d=749 grp 13/13 othergrp 164 ; glue@18 L3|unannot OPP d=1150 grp None/None othergrp None ; glue@22 S12|unannot same d=538 grp None/None othergrp None
+    genes: secY* secY* L15* S5* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L23* L4* L3* unannot* EF2* S7* S12* unannot* rpoC* rpoB* L7/L12* unannot
+    |N N R R R R R R R R R R R R R R/R R R|U|N R R/U N N R u |
+     < < < < < < < < < < < < < < < < < < < > < < < < < < < < 
+     T T T T T T T T T T T T T T T T T T T . T T T . T T T . 
+     o o o o B B B B B B B B B B B B o o o o o o o o o o o o 
+lut-cluster-Z-2099  Bact_multi  extended run 28 genes (run 28)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 0..6;8..27 (window starts at -8)
+    junction_txt: glue@6 L15|unannot OPP d=236 grp None/None othergrp None
+    genes: SBP_bac_3 ATP12 HAD_2 PseudoU_synth_2 CRCB MgsA_C Autoind_synth Autoind_bind L17* rpoD* S11* S13* adk* secY* L15* unannot* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* GTP_EFTU_D3
+     x/x x x x x x x/R N R R N N R|U|R R R R R R R R R R R R R R R R R R R R/x |
+     < < < < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . T T T T T T T . T T T T T T T T T T T T T T T T T T T T . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-WA-2099  Bact_multi  extended run 28 genes (run 28)  std bf 1.00 prec 0.78 -> VERDICT 2  targets 0..6;8..27 (window starts at -8)
+    junction_txt: glue@6 L15|unannot OPP d=236 grp None/None othergrp None
+    genes: SBP_bac_3 ATP12 HAD_2 PseudoU_synth_2 CRCB MgsA_C Autoind_synth Autoind_bind L17* rpoD* S11* S13* adk* secY* L15* unannot* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* GTP_EFTU_D3
+     x/x x x x x x x/R N R R N N R|U|R R R R R R R R R R R R R R R R R R R R/x |
+     < < < < < < < < < < < < < < < > < < < < < < < < < < < < < < < < < < < < < 
+     . . . . . . . . T T T T T T T . T T T T T T T T T T T T T T T T T T T T . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+lut-cluster-Z-2102  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.79 -> VERDICT 2  targets 0..30;32..40 (window starts at -9)
+    junction_txt: glue@30 S12|GerE same d=444 grp 1/1 othergrp 0
+    genes: Glycos_transf_2 ATP12 HAD_2 DUF3616 PseudoU_synth_2 CRCB MgsA_C Trypsin_2 unannot L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* GerE* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* GSCFA unannot Sugar_tr Glyco_transf_92
+     x/x x|x|x x x x|u|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/X N N R R R R N N N|N|x/u|x/x 
+     < < < > < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < > > 
+     . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T T . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-2102  Bact_multi  extended run 42 genes (run 31)  std bf 1.00 prec 0.79 -> VERDICT 2  targets 0..30;32..40 (window starts at -9)
+    junction_txt: glue@30 S12|GerE same d=444 grp 1/1 othergrp 0
+    genes: Glycos_transf_2 ATP12 HAD_2 DUF3616 PseudoU_synth_2 CRCB MgsA_C Trypsin_2 unannot L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* GerE* rpoC* rpoB* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* GSCFA unannot Sugar_tr Glyco_transf_92
+     x/x x|x|x x x x|u|R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/X N N R R R R N N N|N|x/u|x/x 
+     < < < > < < < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < > > 
+     . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . T T T T T T T T T . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-Z-2105  Bact_multi  extended run 35 genes (run 26)  std bf 0.54 prec 1.0 -> VERDICT 2  targets 0..14;16..27;30..34 (window starts at -4)
+    junction_txt: glue@14 S12|unannot OPP d=478 grp None/None othergrp None ; glue@28 unannot|VCH_CASS14 OPP d=5 grp None/None othergrp None
+    genes: Lyase_1 Redoxin Carbam_trans_C RecA_N S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* VCH_CASS14* S13* S11* Lactamase_B* rpoD* L17* Response_reg Bac_export_2 Bac_export_1 Bac_export_3
+     x|x x/x|R R R R R R R R R R R N N R R|U/R R R R R R R R R R N N U|X|R R X N R|x x x x 
+     < > > > < < < < < < < < < < < < < < < > > > > > > > > > > > > > > < > > > > > < < < < 
+     . . . . T T T T T T T T T T T T T T T . T T T T T T T T T T T T . . T T T T T . . . . 
+     o o . . o o o o o o o o o o o o o o o . B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-WA-2105  Bact_multi  extended run 35 genes (run 26)  std bf 0.54 prec 1.0 -> VERDICT 2  targets 0..14;16..27;30..34 (window starts at -4)
+    junction_txt: glue@14 S12|unannot OPP d=478 grp None/None othergrp None ; glue@28 unannot|VCH_CASS14 OPP d=5 grp None/None othergrp None
+    genes: Lyase_1 Redoxin Carbam_trans_C RecA_N S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* VCH_CASS14* S13* S11* Lactamase_B* rpoD* L17* Response_reg Bac_export_2 Bac_export_1 Bac_export_3
+     x|x x/x|R R R R R R R R R R R N N R R|U/R R R R R R R R R R N N U|X|R R X N R|x x x x 
+     < > > > < < < < < < < < < < < < < < < > > > > > > > > > > > > > > < > > > > > < < < < 
+     . . . . T T T T T T T T T T T T T T T . T T T T T T T T T T T T . . T T T T T . . . . 
+     o o . . o o o o o o o o o o o o o o o . B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-2105  Bact_multi  extended run 35 genes (run 26)  std bf 0.54 prec 1.0 -> VERDICT 2  targets 0..14;16..27;30..34 (window starts at -4)
+    junction_txt: glue@14 S12|unannot OPP d=478 grp None/None othergrp None ; glue@28 unannot|VCH_CASS14 OPP d=5 grp None/None othergrp None
+    genes: Lyase_1 Redoxin Carbam_trans_C RecA_N S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* unannot* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* unannot* VCH_CASS14* S13* S11* Lactamase_B* rpoD* L17* Response_reg Bac_export_2 Bac_export_1 Bac_export_3
+     x|x x/x|R R R R R R R R R R R N N R R|U/R R R R R R R R R R N N U|X|R R X N R|x x x x 
+     < > > > < < < < < < < < < < < < < < < > > > > > > > > > > > > > > < > > > > > < < < < 
+     . . . . T T T T T T T T T T T T T T T . T T T T T T T T T T T T . . T T T T T . . . . 
+     o o o . o o o o o o o o o o o o o o o . B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-2106  Bact_multi  extended run 32 genes (run 25)  std bf 1.00 prec 0.73 -> VERDICT 4  targets 0..31 (window starts at -4)
+    junction_txt: edge@31 S12|FAD_binding_3 OPP d=688 grp 7/7 othergrp 0
+    best_beyond_C: FAD_binding_3,ABC_tran,Amino_oxidase,rpoC,rpoB,L7/L12,L10,2-Hacid_dh_C,L1,L11,nusG,secE
+    genes: APH unannot DUF1330 adh_short L17* rpoD* S11* S13* unannot* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* FAD_binding_3 ABC_tran Amino_oxidase rpoC rpoB L7/L12 L10 2-Hacid_dh_C L1 L11 nusG secE unannot
+     x u|x x R N R R U N N R R R R R R R R R R R R R R R R R R R R R N N R R|x|x/x/n n r r/x r r n n/u |
+     > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < < < < < < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . 
+     o o . o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+lut-cluster-DH-2118  Bact_multi  extended run 40 genes (run 37)  std bf 1.00 prec 0.73 -> VERDICT 5  targets 0..39 (window starts at -15)
+    best_beyond_C: Carboxyl_trans,DUF2750,CNNM,ATP12,HAD_2,PseudoU_synth_2,CRCB,VIT1,ParBc_2,MgsA_C,AAA_28,Cadherin_3,Trypsin_2,Epimerase,YbjQ_1
+    genes: unannot Carboxyl_trans DUF2750 CNNM ATP12 HAD_2 PseudoU_synth_2 CRCB VIT1 ParBc_2 MgsA_C AAA_28 Cadherin_3 Trypsin_2 Epimerase L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* rpoC* rpoB* L7/L12* L10* L1* L11* unannot* nusG* secE* YbjQ_1 EAL Hydrolase_6 unannot
+     u|x x|x|x x x x x x/x x x x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N N R R R R U N N/x x|x|u 
+     > < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < 
+     . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . o o 
+lut-cluster-WA-2120  Bact_multi  extended run 44 genes (run 31)  std bf 1.00 prec 0.53 -> VERDICT 2  targets 0..30;36..42 (window starts at -40)
+    junction_txt: glue@30 S12|MCPsignal same d=209 grp 2/5 othergrp 0
+    genes: UPF0020 DUF1489 NMT1_3 unannot HMGL-like CPSase_L_D2 ECH_1 Carboxyl_trans DSBA Acyl-CoA_dh_1 Thiolase_N Acyl-CoA_dh_N Sulf_transp Sulf_transp Response_reg 4HBT 4HBT_2 HD_5 HATPase_c MerR_1 MgtE PTA_PTB HATPase_c Cadherin_5 LplA-B_cat OmpA HAD_2 AsmA ATP12 unannot Carboxyl_trans CPSase_L_D2 unannot Acylphosphatase unannot PseudoU_synth_2 CRCB Ion_trans MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* MCPsignal* PAS* rpoC* rpoB* SBP_bac_3* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* ABC_sub_bind PAS_7 Response_reg SiaC
+     x|x x u x x x x x x x x/x x|x|x x x x/x x x|x|x|x|x|x x x u/x x u x u|x x|x|x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/X X/N N|X|R R R R N N N|N/x x x|x 
+     > < < < < < < < < < < < < < > < < < < < < < > < > < > > > > > > > > > < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < > > > > < 
+     . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-DH-2120  Bact_multi  extended run 44 genes (run 31)  std bf 1.00 prec 0.64 -> VERDICT 2  targets 0..30;36..42 (window starts at -26)
+    junction_txt: glue@30 S12|MCPsignal same d=209 grp 2/5 othergrp 0
+    genes: Response_reg 4HBT 4HBT_2 HD_5 HATPase_c MerR_1 MgtE PTA_PTB HATPase_c Cadherin_5 LplA-B_cat OmpA HAD_2 AsmA ATP12 unannot Carboxyl_trans CPSase_L_D2 unannot Acylphosphatase unannot PseudoU_synth_2 CRCB Ion_trans MgsA_C Trypsin_2 L17* rpoD* S11* S13* adk* secY* L15* L30* S5* L18* L6* S8* S14* L5* L24* L14* S17* L29* L16* S3* L22* S19* L2* L23* L4* L3* S10* tufA* EF2* S7* S12* MCPsignal* PAS* rpoC* rpoB* SBP_bac_3* L7/L12* L10* L1* L11* nusG* secE* tufA* rlmB* ABC_sub_bind PAS_7 Response_reg SiaC
+     x|x x x x/x x x|x|x|x|x|x x x u/x x u x u|x x|x|x x/R N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R/X X/N N|X|R R R R N N N|N/x x x|x 
+     > < < < < < < < > < > < > > > > > > > > > < < > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < < < < < < < > > > > < 
+     . . . . . . . . . . . . . . . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . T T T T T T T . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+lut-cluster-WA-2126  Bact_multi  extended run 27 genes (run 20)  std bf 1.00 prec 0.69 -> VERDICT 2  targets 0..4;6..16;19..21;23..26 (window starts at -8)
+    junction_txt: glue@4 L16|2OG-FeII_Oxy_5 OPP d=406 grp 3/3 othergrp 0 ; glue@16 L30|LysE OPP d=209 grp 0/0 othergrp 0 ; glue@22 Sulfotransfer_2|S13 same d=205 grp 0/0 othergrp 0
+    genes: TOD1_MUCI70 S10 L3 L4 L23 unannot OmdA Glyco_transf_61 L2* S19* L22* S3* L16* 2OG-FeII_Oxy_5* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* LysE* EamA* L15* secY* adk* Sulfotransfer_2* S13* S11* rpoD* L17* MgsA_C CRCB PseudoU_synth_2 HAD_2 ATP12 SBP_bac_3
+    |x/r r r r u x|x|R R R R R|X|R R R R R R R R R R R|X|X/R N N X/R R N R x x x x x x 
+     > > > > > > > < > > > > > < > > > > > > > > > > > < > > > > > > > > > > > > > > > 
+     . . . . . . . . T T T T T . T T T T T T T T T T T . . T T T . T T T T . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+lut-cluster-DH-2142  Bact_multi  extended run 41 genes (run 37)  std bf 1.00 prec 0.66 -> VERDICT 5  targets 1..40 (window starts at -6)
+    best_beyond_C: Aminotran_3,Gln-synt_C,AlaDh_PNT_C,Aminotran_3,Cupin_2,rlmB,Trypsin_2,MgsA_C,Isochorismatase,CRCB,PseudoU_synth_2,HAD_2,ATP12,Carboxyl_trans,CPSase_L_D2 ...
+    genes: PAS_5 Aminotran_3 Gln-synt_C AlaDh_PNT_C Aminotran_3 Cupin_2 rlmB* tufA* secE* nusG* L11* L1* L10* L7/L12* rpoB* rpoC* S12* S7* EF2* tufA* S10* L3* L4* L23* L2* S19* L22* S3* L16* L29* S17* L14* L24* L5* S14* S8* L6* L18* S5* L30* L15* secY* adk* S13* S11* rpoD* L17* Trypsin_2 MgsA_C Isochorismatase CRCB PseudoU_synth_2 HAD_2 ATP12 Carboxyl_trans CPSase_L_D2 unannot His_Phos_1 unannot Acylphosphatase CHRD HTH_20 ArsP_1 unannot
+     x|x/x/x/x|x|N|N N N R R R R N N R R N N R R R R R R R R R R R R R R R R R R R R R N N R R N R/x x/x/x x x x/x x/u|x|u x/x x x|u 
+     > < < < < > < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > < 
+     . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 

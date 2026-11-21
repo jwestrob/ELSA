@@ -1,0 +1,63 @@
+{
+ "collection": "lut",
+ "cap": 12,
+ "tiers_in_kofam_scope": [
+  "T2",
+  "T2b",
+  "rest",
+  "T1c",
+  "contradicted",
+  "T1"
+ ],
+ "labeled": {
+  "T2": 22952,
+  "T2b": 13680,
+  "rest": 32597,
+  "T1c": 4578,
+  "contradicted": 4257,
+  "T1": 44357
+ },
+ "in_kofam_scope": {
+  "T2": 22952,
+  "T2b": 13680,
+  "rest": 32597,
+  "T1c": 4578,
+  "contradicted": 4257,
+  "T1": 0
+ },
+ "kofam_rows": 102340,
+ "kofam_proteins": 62218,
+ "with_carrier_ko": {
+  "T2": 12509,
+  "T2b": 5355,
+  "rest": 9794,
+  "T1c": 2123,
+  "contradicted": 2098,
+  "T1": 0
+ },
+ "strong_partner": {
+  "T2": 10109,
+  "T2b": 3701,
+  "rest": 6322,
+  "T1c": 1621,
+  "contradicted": 1473,
+  "T1": 0
+ },
+ "strong_enzyme": {
+  "T2": 3184,
+  "T2b": 1120,
+  "rest": 1481,
+  "T1c": 652,
+  "contradicted": 355,
+  "T1": 0
+ },
+ "len100_600_soluble": {
+  "T2": 1367,
+  "T2b": 475,
+  "rest": 685,
+  "T1c": 310,
+  "contradicted": 175,
+  "T1": 0
+ },
+ "novelty_input_proteins": 3012
+}

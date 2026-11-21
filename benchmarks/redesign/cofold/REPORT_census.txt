@@ -1,0 +1,267 @@
+ws_census - census of conserved unannotated gene blocks (DPANN, ELSA engine v1.5 rescue3) and co-fold screen 3
+12 November 2026. Engine run results_dpann_repair/dpann__mmseqs__seq__e3c50s75_rescue3__w3 (rule P <= 1e-4 and L >= 2,
+162,786 significant token pairs). Sharur DPANN database republished 12 Nov 2026 (dataset_id f652ef47..., seal generated
+16:32 UTC), opened read-only on the Mac with one DuckDB thread (no biotite copy of this seal exists; 14 s of export).
+Folding: Biohub ESMFold2 esmfold2-2026-05, fold_all_atom, single sequence. Names below are observations of similarity
+(UNVERIFIED) unless a curated caller emitted the call; curated callers in the live data: DefenseFinder, TXSScan,
+CRISPRCasTyper.
+Status at writing (11:52 MST / 18:52 UTC): 363 of 435 screen items folded; the 72 complexes above 768 aa (23 cognate
+folds of 13 blocks) had been queued at the Biohub API for 1 h 51 min, and a one-item resubmission probe also stayed
+queued (the API's large-item path, not this batch). Collection continues unattended (see COMPLETION PATH).
+
+HEADLINE
+- Census: 22,531 block types (2-8 adjacent unannotated genes linked by engine-significant token pairs, >= 3 genomes;
+  253,328 instances, 263,825 genes). Within the screens' dark-family universe (9,605 types, every chain family >= 98 %
+  unannotated): 2,286 (23.8 %) have a chain that resembles a characterised family by profile search, 403 (4.2 %) a
+  CDD-only hit, 2,901 (30.2 %) a chain outside the remote-homology tier, 522 (5.4 %) unknown-function hits only, and
+  3,493 (36.4 %) no hit in any chain. The other 12,926 types (57.4 % of all) contain a chain family whose other members
+  carry a curated annotation.
+- 4,015 types have every chain unrecognised (no hit or unknown-function only); 206 pass every foldability filter; 85
+  of those were folded in screens 1-2 (1 was a hit, screen-1 rank 13); the other 121 reduce to 94 non-redundant blocks,
+  all submitted (435 items).
+- Gene share: of 2,563,690 genes in engine conserved loci (default level-2 reading), 68,599 (2.68 %) sit in a block with
+  no recognised chain; 23,494 (0.92 %) in such a block found in >= 5 genomes and >= 2 orders.
+- Screen 3 (81 of 94 blocks with both replicates folded): 4 blocks have an interface that meets the unchanged
+  predeclared bar in both replicates with both margins.
+  Three are variants of known units: the showcase A-B with a B-variant family and its caspase-like C directly downstream
+  (12/13 instances), the showcase A-B-C with a minority C family, and the screen-1 rank-13 PIN/SocA-like operon (recognised
+  by the enriched triage and by Foldseek). The fourth, tokens 205406-263312, meets every predeclared check (margins
+  0.64/0.82, no zipping, no fused homologs, no Foldseek match, weak-only enriched triage), but its two replicates are the
+  same protein sequences found in a Micrarchaeales and a Parvarchaeum MAG, and the only independent sequence variant
+  (41 % / 32 % identical) does not co-fold (ipTM 0.358, interface PAE 18.3 A; post hoc).
+- Result: no block is both unrecognised by every search and co-folding across independent sequences. Counts: 4,015
+  unrecognised types -> 206 foldable -> 94 new + 85 earlier -> 4 new interface hits (+1 earlier) -> 0 that are
+  unrecognised, independent-replicate co-folds, pending the 13 blocks whose large complexes are still queued.
+- The automated tier is less sensitive than the earlier enriched hand triage: of 62 families that triage classed
+  characterised, the tier calls 33 'resembles characterised' and 13 'no_hit'. 'no_hit' here means 'no hit in family-only
+  HHsearch/HHblits (P >= 90 % over >= 30 columns) or CDD (family rule)', and enriched search recognises about 1 in 6 of
+  them (13 of 79 hand-triaged families with tier status no_hit).
+
+==============================================================================================================
+1. CENSUS (s3_census.py on the biotite login node, 634 s, one thread; tables s3_tables/census_*.tsv)
+==============================================================================================================
+Definitions (predeclared_criteria_screen3.json, census_status_rules).
+- Unannotated gene: no curated Sharur annotation (every annotations source except CDD), no system_proteins row, no
+  derived atom, no gold membership. 1,398,957 of 3,585,303 proteins; identical to the October set (all 3,585,303
+  sequences have the same MD5). The dark-family rule of screens 1-2 (>= 98 % unannotated members) is a column
+  (pass_darkfam), so links join unannotated genes whatever their family; the census therefore holds 173,112 links
+  (79,483 with both families dark; screen 1 had 77,928 on the e3c50s75 tokens).
+- Blocks: runs of links (113,004 runs, 286,116 genes), windows of 2-8 genes with distinct tokens (287,244 windows,
+  47,234 types), types in >= 3 genomes: 22,531 (k 2: 12,581; 3: 5,009; 4: 2,392; 5: 1,242; 6: 687; 7: 386; 8: 234).
+  Every instance lies inside an engine conserved locus.
+- Token family = Sharur family of permissive-e3c50s75-rescue3 (one-to-one, checked on all 363,307 tokens). Searched
+  counterpart = the permissive-e3c50s75 family with the same representative (family_annotations_via semantics; the macro
+  is defined in Sharur's prelude.sql and not persisted in the database, so the join was written out). Tier: 33,724
+  searched families (>= 5 genomes, Pfam-dark), family_only alignments, HHsearch Pfam 39 and HHblits PDB100 2021-03;
+  CDD 3.20 best model per region per protein (E <= 0.01).
+- Status per chain family, in order of recognition: annotated (fails the 98 % dark-family rule); resembles
+  characterised (family_resemblance row, P >= 90 % over >= 30 columns, no unknown-function wording); CDD only (a CDD
+  model without unknown-function wording on >= 2 members and >= 10 % of members); unknown-function only; no hit;
+  not_in_tier (no searched counterpart; its own status, placed lowest for least/most-recognised).
+
+Paper table (block types in >= 3 genomes; category from the chain statuses):
+ category                                      types   >=5 genomes   foldable   instances   genes     folded in
+                                                       & >=2 orders  (pass_fold)                       screens 1-2
+ R1 chain family with annotated members       12,926        1,548          0     143,786   171,108        13
+ R2 a chain resembles a characterised family   2,286          278        103      22,363    31,904        51
+ R3 a chain with a CDD-only hit                   403           52         19       2,950     4,484         7
+ U0 unrecognised chains, >=1 outside the tier   2,901          217         65      29,097    37,645        17
+ U1 unrecognised, unknown-function only           522           81         21       5,552     8,270         9
+ U2 unrecognised, no hit in any chain           3,493          557        185      49,580    61,724        77
+ all                                          22,531        2,733        393     253,328   263,825       174
+ (R1-R3 are assigned by the most-recognised chain; genes are unique per row, a gene can sit in several categories.)
+ Within dark-family types in >= 5 genomes and >= 2 orders (1,185): U1 + U2 638 (53.8 %), R2 278, R3 52, U0 217.
+
+Least- and most-recognised chain (types): least: not_in_tier 6,579, no_hit 11,915, unknown_only 512, cdd_only 275,
+resembles 1,330, annotated 1,920; most: not_in_tier 840, no_hit 5,391, unknown_only 685, cdd_only 403, resembles 2,286,
+annotated 12,926 (cross-table census_least_x_most.tsv).
+
+Breakdowns (share of types with every chain unrecognised, U1 + U2; census_by_*.tsv):
+ block size k:        2: 0.208 (2,618/12,581)   3: 0.174   4: 0.140   5-8: 0.074
+ orders spanned:      1: 0.182   2: 0.169   3-4: 0.149   5-9: 0.128   >=10: 0.217 (5/23)
+ phyla spanned:       1: 0.183   2: 0.141   3: 0.143   >=4: 0.144 (14/97)
+ >= 5 genomes, >= 2 orders, by k: 2: 0.229   3: 0.244   4: 0.270   5-8: 0.225
+Unrecognised types and the filters (of 4,015): dark families 4,015, length 3,262, hydrophobic 2,054, low complexity
+2,221, copies 3,724, geometry 3,064, recurrence (>= 5 genomes, >= 2 orders) 638, all filters 206.
+
+Gene level (engine conserved level-2 loci; the union over levels is the same set): 2,563,690 genes, 803,190 unannotated
+(31.3 %); in any census block 263,825 (10.29 %); in a block with no recognised chain 68,599 (2.68 %); the same in
+>= 5 genomes and >= 2 orders 23,494 (0.92 %); in a block whose least-recognised chain is outside the tier 72,798
+(2.84 %); in a block whose most-recognised chain is at least CDD-only 198,326 (7.74 %).
+
+Family level (12,427 chain families): no_hit 5,018, annotated 3,418, not_in_tier 2,015, resembles characterised 1,307,
+unknown_only 376, cdd_only 293. not_in_tier: counterpart in < 5 genomes 1,832 (the rescue added members), counterpart
+not Pfam-dark 183; with a characterised CDD family hit 114, unknown-function CDD 31, none 1,870. Of the 5,018 no_hit
+families, 3,932 have a best tier hit at P 50-90 %, 259 at P >= 90 % over < 30 columns, 1,206 a CDD row on >= 1 member
+(below the family rule); 0 have a member family with a characterised hit.
+
+Tier against the earlier enriched triage (148 families of screen 2 / Part A; s3_tables/triage_vs_tier.tsv):
+ triage class      tier: resembles  cdd_only  unknown_only  no_hit  not_in_tier  annotated  not a census chain
+ characterised (62)          33         2          2          13         7          4          1
+ unknown_fn (12)              0         0          3           3         3          3          0
+ weak (72)                    0         1          0          62         3          3          3
+ none (2)                     0         0          0           1         0          0          1
+ The tier never calls a family characterised that the enriched triage left weak or none. Of the 50 searched families
+ the enriched triage classed characterised, the tier calls 33 resembles, 2 CDD-only, 2 unknown-only and 13 no_hit.
+
+==============================================================================================================
+2. SCREEN 3 (predeclared_criteria_screen3.json, written 17:00:10 UTC before any fold; payload check 17:00:17)
+==============================================================================================================
+Pool (s3_design.py): all-unrecognised, foldable, new types 121 -> 94 non-redundant (k 2: 79, 3: 12, 4: 2, 6: 1;
+all_no_hit 82, with_unknown_only 12); genomes median 9.5 (5-285), orders 2 (2-6), phyla 1 (1-3); 11 blocks carry a
+chain that the earlier enriched triage classed characterised (labelled, kept). Replicates: different phyla for 28,
+different orders for 66. Items: 188 cognate, 94 partner swaps, 93 uncalled windows (genome 50, order 26, contig 14,
+anywhere 3), 60 curated positives (k 2: 50, 3: 8, 4: 1, 6: 1; DefenseFinder 33, CRISPRCasTyper 25, TXSScan 2).
+Replicate identity (s3_replicate_identity.py): median of the per-block minimum 0.30 (0.17-1.00); 12 blocks have
+replicate chains >= 95 % identical (10 identical in every chain: ranks 28, 36, 74, 75, 76, 79, 85, 86, 87, 88; also
+23 and 90). Their breadth comes from one sequence in MAGs of different orders, and their two folds are one test.
+
+Class level (per fold: >= 1 interface meeting the per-replicate rule; swap controls count only interfaces of the replaced
+chain; s3_class.tsv, s3_class_tests.json). PROVISIONAL: 363 of 435 screen items; the 72 complexes > 768 aa (23 cognate
+folds of 13 blocks, 12 swaps, 12 uncalled, 25 positives) were still queued at the Biohub API when this was written.
+ class           shape   folds  >=1 interface passes   max pair ipTM median / q90   folds with max pair ipTM >= .75
+ cognate         pairs     148      8 (5.4 %)                .295 / .749                    14
+ cognate         multi      17      4 (23.5 %)               .759 / .914                    10
+ cognate         all       165     12 (7.3 %)                .333 / .771                    24
+ partner swap    all        82      1 (1.2 %)                .132 / .552                     1
+ uncalled        all        81      1 (1.2 %)                .137 / .567                     4
+ positive        all        35      5 (14.3 %)               .595 / .848                    11
+ cognate all_no_hit 10/141 (7.1 %); with_unknown_only 2/24 (8.3 %).
+ Cognate vs uncalled: Fisher OR 6.3, p 0.066 (pairs 8/148 vs 0/72, p 0.056); max pair ipTM Mann-Whitney p 3e-6.
+ Cognate vs swap: OR 6.4, p 0.066; Mann-Whitney p 6e-6. Cognate vs positive: OR 0.47, p 0.19; Mann-Whitney p 0.11.
+ Without the 11 blocks the earlier triage recognises: cognate 8/155 vs uncalled 1/76 (p 0.28), vs swap 0/77 (p 0.055);
+ multi-chain cognate 0/11 (all 4 multi-chain passes are ranks 3 and 26).
+ Reading: the engine-linked unrecognised blocks score above matched controls in ipTM distribution (p 3e-6), and the
+ binary pass rate is higher (7.3 % vs 1.2 %) without reaching p < 0.05; by the predeclared generic-adjacency rule the
+ engine call is not refuted (cognate higher), and the evidence on the binary rate is weak. The positive rate (14 %) is
+ close to screen 1's (12.7 %); the cognate pair rate (5.4 %) is below screen 1's 9.0 % on dark pairs, the drop expected
+ once blocks that resemble TA-like families are removed before folding.
+
+Interfaces meeting the bar in both replicates (single sequence; margins from the screen's control or the follow-up
+control, s3_followup.py; zipping from monomers of every chain, both replicates):
+ rank 3   164787-351854-221251 BC  pair ipTM .913/.894  PAE 0.9/1.2  contacts 92/95  iface pLDDT 92.6/88.6
+          controls .115/.217 -> margins .80/.68; zipping none; fused homologs 0; another control .72 (B replaced, rep 1)
+ rank 11  81718-247277         AB  .804/.872  PAE 1.2/1.4  contacts 40/41  pLDDT 91.7/90.9; controls .132/.293 ->
+          .67/.58; zipping none (B monomer: 21 % / 8 % of interface residues < 60); fused homologs 1 genome (8 %)
+ rank 26  81718-393054-399854  AB  .908/.915  PAE 1.2/0.9  contacts 52/45  pLDDT 92.6/92.7; controls .045/.131 ->
+          .86/.78; zipping none (B: 47 % / 47 %, below the 50 % rule); BC passes in rep 1 only (.927, PAE 3.5 / .859,
+          PAE 8.4); a class-level control (B replaced by token 247277, a B-homologous family) gives A-B' .831
+ rank 36  205406-263312        AB  .905/.901  PAE 4.4/4.4  contacts 176/182  pLDDT 79.1/79.2; controls .269/.086 ->
+          .64/.82; zipping none; fused homologs 0; replicate sequences identical
+Single-replicate passes (not hits): ranks 3 (AC), 4, 26 (BC), 51, 54, 60. Near misses by minimum pair ipTM over both
+replicates: rank 27 93909-308467 .797, 41 93909-37039-212044 .770, 51 121218-128936 .762, 43 .759, 59 .746, 67 .739,
+16 96948-354137 .738 (the 93909 / 37039 / 212044 families of screen 2).
+
+Recognition and refutation of the four hits (Foldseek 10 vs PDB 2025-01-01 and AFDB Swiss-Prot v6, job 83089; enriched
+triage = HHblits UniRef30_2020_06 -> HHsearch Pfam 39 / PDB100 on enriched and DPANN-only alignments, job 83090;
+split-gene MMseqs2 vs 3,585,303 DPANN proteins, job 83089):
+ rank 3   recognised. Enriched triage: 351854 PIN (Pfam DUF3368 'PIN domain' P 99.9 over 157 columns; PDB 6zxf P 99.0),
+          221251 SocA_Panacea antitoxin (P 97.3, 103 columns), 164787 weak. Foldseek: A TGT / queuine
+          tRNA-ribosyltransferase strong (r1 PDB, both reps AFDB), B RRP44 / VapC4 PIN moderate both, C DarTG moderate
+          both. The screen-1 rank-13 unit with its third gene; PIN-toxin / antitoxin architecture, UNVERIFIED as a system.
+ rank 11  a showcase variant. A = token 81718 (showcase A); B = token 247277, whose chains hit showcase-B instances at
+          E 1e-13 (MMseqs2), and the caspase-like C family (token 130016) is the next gene in 12/13 instances (C fragment
+          190823 in the 13th). A and B: Foldseek none; enriched triage A weak (DUF7713 P 92.9 over 21 columns), B
+          crosses the bar marginally (Pfam dNK P 90.3 over 58 columns, DPANN-only alignment, not in the enriched one).
+ rank 26  a showcase variant: A-B (tokens 81718, 393054) with a minority C token 399854 (Pfam Peptidase_C25 P 95.4 in the
+          enriched triage; Foldseek SAVED-CHAT filament 8tl0 moderate in rep 1). A, B: Foldseek none, triage weak.
+ rank 36  205406-263312, 5 genomes in 3 genera, 2 orders, 2 phyla (Micrarchaeota 4: Micrarchaeales JAJZNA01 x3 and
+          JAJYVH01; Nanobdellota 1: Parvarchaeum). Foldseek: none in either replicate (best E 1.8-3.9). Enriched triage:
+          205406 weak (Pfam Trans_reg_C P 68.7, 54 columns), 263312 weak (PDB 2k9l sigma54 core-binding domain P 75.1,
+          38 columns); UniRef30 at P >= 95: one 'uncharacterized protein' each, from one uncultured-archaeon accession
+          series (A0A0D5ZEE2, A0A0D5ZDP6). CDD: no row on any member. DPANN homologs outside the block: 0 for either
+          chain. See the shortlist entry.
+
+==============================================================================================================
+3. SHORTLIST
+==============================================================================================================
+No block survives as 'unrecognised by every search and co-folding across independent sequences'. The closest:
+
+205406-263312 (rank 36) - status: meets every predeclared criterion; refuted post hoc by the independent variant.
+ Gene order (transcription): 263312 (167-189 aa) -> 205406 (96-98 aa), same strand, abutting (0 nt) or 8 nt apart.
+ Replicates (identical sequences in both chains):
+  r1 GCA_027364095.1 Micrarchaeota / Micrarchaeales / CABMGC01 / JAJYVH01 (94 % complete), DAHXPZ010000008.1 positions 18-19,
+     14943-15751 (-), DAHXPZ010000008.1_19 (98 aa) / _20 (167 aa)
+  r2 GCA_027370655.1 Nanobdellota / Parvarchaeales / Parvarchaeum (89 %), DAICJS010000016.1 positions 4-5, 3899-4707 (+),
+     DAICJS010000016.1_6 / _5
+  Independent variant (post hoc): GCA_021802765.1 Micrarchaeales JAJZNA01 (identical in GCA_027331015.1 and
+     GCA_027362965.1), JAJZRI010000001.1_270 (96 aa) / _269 (189 aa); 41 % / 32 % identical to r1.
+ Folds:  r1 ipTM .905, PAE 4.38 A, 176 contacts, iface pLDDT 79.1; r2 .901, 4.44, 182, 79.2 (identical inputs).
+         swap controls: r1 B replaced .269, r2 A replaced .086; uncalled window (r1, same genome) .088.
+         independent variant: ipTM .358, iface PAE 18.3 A, 177 contacts; its swaps .278 (B replaced), .129 (A replaced).
+         Monomers: chain pLDDT 75 / 78 alone, 83 / 70 in the complex; <= 5 % of interface residues below 60 alone.
+ Context (+-3 genes, s3_context.py): a recognised same-strand gene directly 3' of 205406 in 5/5 instances: a 570-aa
+  protein with a CDD VirB4 hit in the three JAJZNA01 instances (then AlbA_2 Pfam/CDD in 3/3 and a CRISPRCasTyper Cas4
+  member in 2/3), and a DefenseFinder RM_Type_IIG member (Pfam N6_Mtase / MmeI / Eco57I) in the two identical-sequence instances
+  (then a DefenseFinder PD-Lambda-5 pair). Curated system member within +-3 genes: 4/5 windows vs 0/9 same-contig
+  control windows. The gene 5' of 263312 is unannotated in 5/5.
+ Reading: a sequence-identical pair present in two MAGs from different phyla next to a Type IIG RM gene, and a
+  divergent pair next to a VirB4-like gene; the predicted heterodimer forms for one variant only. Would refute the
+  refutation: an MSA-conditioned or Protenix fold of the JAJZNA01 variant reaching the bar. Would still refute any
+  co-fold reading of the r1/r2 variant: a fused homolog outside DPANN; the shared sequence being a binning artefact of
+  one sample. NCBI assembly records (accession lookup only): both MAGs belong to BioProject PRJNA834572 (MAG
+  BioSamples SAMN28406520 and SAMN28406760); the JAJZNA01 variant comes from PRJNA666025 (SAMN20843794). Whether
+  the two PRJNA834572 MAGs derive from one metagenome was not resolved.
+
+Showcase variants (not new): ranks 11 and 26 reproduce the showcase A-B heterodimer (pair ipTM .80-.92 in four
+genomes: Nanohalarchaeota, Aenigmatarchaeota, Micrarchaeota Norongarragalinales, Nanobdellota Woesearchaeales) with a
+B-variant family (247277) and a C-variant family (399854); the C family again sits directly downstream.
+
+==============================================================================================================
+4. EARLIER SCREENS MERGED (s3_tables/screens12_merged.tsv)
+==============================================================================================================
+174 block types folded in screens 1-2 map to census types (150 screen 1, 24 screen 2, mapped through the folded
+replicate genes). Their census categories: most-recognised chain annotated 13, resembles 51, CDD only 7, unknown-only
+12, no hit 90, not_in_tier 1. Hits: 11 of 174; 1 of the 85 in the all-unrecognised foldable set (screen-1 rank 13,
+221251-351854, recognised by the enriched triage: SocA_Panacea / PIN). The showcase pair (screen-1 rank 1,
+81718-393054) is in that set: both chains no_hit in the tier (best DUF7713 P 93.7 over 19 columns; YycF-effector PDB
+P 73.2), screen-1 outcome below the bar in replicate 2 (.708), and a co-fold in 7/12 instances in the deep dive.
+
+==============================================================================================================
+5. DEVIATIONS, CAVEATS, RESOURCES
+==============================================================================================================
+- Census universe: the dark-family rule moved from the link definition to a column (task instruction to keep filters as
+  columns); this adds the R1 category. The screens' universe is the 9,605 dark-family types.
+- The tier searched permissive-e3c50s75 families; 2,015 rescue3 chain families have no searched counterpart (1,832
+  because the counterpart has < 5 genomes). Their blocks (U0, 2,901 types, 65 foldable) were not folded.
+- 'no_hit' rests on family_only alignments (the tier has no UniRef30-enriched search and no hhblits_uniref rows); the
+  enriched triage was run on the hit families only.
+- Replicate selection maximised taxonomic distance without a sequence-identity check; for 12 blocks it picked identical
+  or near-identical sequences. The post-hoc independent-variant fold (3 items) is outside the predeclared design.
+- Control donors are forbidden to share a token, but homologous families split across tokens can still be swapped in
+  (rank 26's class-level control used the B-variant family 247277; A bound it at .83). Promiscuity by the screen-2
+  wording (any control of the interface >= .6): rank 3 BC (.72), rank 26 AB (.83, homologous donor).
+- Engine instances use the rescue3 tokens; screens 1-2 used e3c50s75 tokens (token ids preserved; mapping by genes).
+- Biohub items (ledger work/s3/biohub_ledger.json): 462 = 1 payload check + 435 screen + 22 follow-up (6 margin
+  controls, 16 monomers) + 3 post-hoc (rank-36 independent variant and 2 swaps) + 1 probe (one large item resubmitted to
+  test the queue). Budget 2,500 total / 2,000 per 24 h.
+- Slurm (-A banfield -p standard --qos=standard_expand -c 24, exclude list, no --mem/--time): 83089 Foldseek + MMseqs2
+  split-gene (1:17), 83090 enriched triage of 9 families (8:33). Census (634 s), design (68 s), triage FASTAs and small
+  lookups ran serially on the login node (<= 2 threads). Mac: DuckDB export (14 s, one thread), API submission and
+  polling, second-scale pandas; structures moved to biotite as they arrived (local fold directories hold metrics only).
+- External services: Biohub API (approved); NCBI E-utilities assembly summaries for 3 public accessions (no sequence).
+
+COMPLETION PATH (pending 72 items)
+The collector (biohub_cofold.py collect --out work/s3/folds_main) and the upload loop (s3_sync.sh) keep running on the
+Mac; work/s3/finish_watch.sh waits for the collectors to exit, uploads the last structures to biotite, then runs
+s3_finish.sh: s3_analyze.py over all screen folds -> work/s3/analyze_final.txt, and s3_followup.py fu2 -> margin controls
+and monomers for any new interface passing both replicates (written, not submitted; submit with s3_submit.py, then
+rerun s3_analyze.py, s3_zipping.py, and for new hits s3_post.sbatch + s3_triage.sbatch + s3_split_check.py +
+s3_context.py). Items expire at the API 24 h after submission (17:00 UTC on 13 Nov). Pending blocks: s3 ranks 2, 20, 23,
+33, 39, 44, 45, 46, 47, 48, 70, 90, 91 (rank 2 = 117902-119468, the screen-2 long pair; 23 = a six-gene block with
+identical replicates; 6 of the 13, ranks 2, 23, 33, 39, 44, 46, carry a chain the earlier triage classed characterised).
+
+FILES
+Code (benchmarks/redesign/cofold/): s3_export_sharur.py, s3_census.py, s3_census_tables.py, s3_design.py, s3_submit.py
+(budget ledger), s3_sync.sh, s3_analyze.py, s3_followup.py, s3_zipping.py, s3_split_check.py, s3_context.py,
+s3_replicate_identity.py, s3_triage.py (+ s3_triage.sbatch), s3_triage_parse.py, s3_post.sbatch, s3_finish.sh; biohub_cofold.py
+(per-pair interface pLDDT and residues, batch timestamps added). Criteria: predeclared_criteria_screen3.json.
+Tables (s3_tables/): census_paper_table, census_by_{least_status,most_status,k,orders,phyla,*_ge5g_ge2ord},
+census_least_x_most, census_family_status, census_extra.json, triage_vs_tier, screens12_merged, and copies of the
+screen-3 tables (pool, reps, fold_manifest3, s3_calls, s3_blocks, s3_class(+tests), s3_fold_level, s3_zipping,
+s3_split_check, context_summary/neighbours, replicate_identity_s3, pool_variants, triage_family_s3,
+foldseek_hits_chains, biohub_ledger.json); shortlist_pdb/ (7 PDB, 1 MB: ranks 11, 26, 36 r1/r2, rank 36 variant).
+Work (work/s3/, git-ignored): census/ (census_types, token_status, census_instances, census_summary), pool, reps,
+fold_manifest3*, jobs_s3*, interfaces, s3_calls, s3_blocks, s3_fold_level, s3_class(+tests), s3_zipping, s3_split_check,
+context_neighbours/summary, replicate_identity_s3, pool_variants, triage_family_s3, post1/, biohub_ledger.json, folds_*
+(metrics only). Biotite $RD/cofold/s3/: data/, census/, design/, folds/ (all structures and PAE), post1/, triage/, logs/.

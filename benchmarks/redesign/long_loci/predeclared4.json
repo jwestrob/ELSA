@@ -1,0 +1,40 @@
+{
+ "workstream": "long_loci part 4 (pair distance), CPU only",
+ "written_utc": "2026-11-13T14:57Z",
+ "status_when_written": "No bond, locus or score at any pair distance other than W3 exists in this workstream. Known before writing: every part-1/2/3 number; transfer_spacedust's DEVELOPMENT window-8 result (connected runs of its own window-8 significant pairs, CC7: syn +.230 [+.191, +.269], groups +.233 [+.194, +.272]; by size +.179 / +.273 / +.214 / +.253), chosen after seeing scores, so window 8 has been seen on this collection.",
+ "question": "Is the fixed pair distance (<= 2 intervening genes) what limits the bond tree on long loci, and does a data-driven distance fix it without costing DPANN?",
+ "arms": {
+  "W3": "current: round-0 pairs at distance 1-3 positions (<= 2 intervening genes), E with w = 3; reference rows are part 1's (DPANN dpann_group, Spacedust sd_group; tau 10 from the word-type rule)",
+  "W5": "pairs at distance 1-5 (<= 4 intervening), n over the pooled distances, E with w = 5 (expected_groups 2 w c_X c_Y / m)",
+  "W8": "pairs at distance 1-8 (<= 7 intervening), E with w = 8",
+  "WA": "adaptive: an occurrence at distance d (1-8) is tested at window d: n_d = groups with an occurrence of the pair at distance <= d, E_d with w = d, Lambda_d; the occurrence is a bond if n_d >= 2 and Lambda_d >= tau (a wider pair must earn more because E grows with d); boundary score = largest Lambda of a bond spanning it, as before",
+  "common": "family tokens (rescue3), genome-group counting (DPANN 642, Spacedust 618), labels and background rule of the learner's round 0 (a family in < 2 groups is background), different labels, intervening genes any; L1 = runs of bonded boundaries; L4b(theta) = part-1 L4b (token cohesion orders splits, family closed-form node test at the arm's own bond tau); theta in {.02, .05, .1, .2}",
+  "Z-WA": "conditional: only if vl.py's list kernels can test wider pairs within the compute limit. They hard-code WGAP = 3 in mark, adjacency, the expectation and the ladder; a copy with a per-adjacency window would be needed. If not built, its cost is reported instead."
+ },
+ "tau_rule": "for W5, W8 and WA (and recomputed for W3 as a check): the smallest value of {4, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50} whose bond FDR (mean over the 3 within-genome token shuffles, seeds 1000-1002, of the bonds = significant occurrences, over the observed count) is <= 0.01, computed separately on each dataset for the whole procedure of that arm. W3 reference rows keep part 1's tau 10.",
+ "selection_dpann_odd": "among W3 / W5 / W8 / WA x {L1, L4b theta .02 / .05 / .1 / .2}: maximise [odd conditions met vs DH, odd ribosomal resolved, odd summed] (part-1 rule, amendment_1). Written to predeclared4.json before any even number.",
+ "dpann_even": "selected output: the seven quantities, paired against token DH and against part-1 L4b theta .1 (summed, F1, ribosomal resolved); boundary precision; share of genes in loci; the best output of each other arm on odd also scored on even as labelled secondary rows",
+ "spacedust": "the DPANN-selected arm and output is the primary result; every other arm (W3 L4b, W5, W8, WA; L1 and L4b at the DPANN-selected theta) is a labelled DEVELOPMENT row (window 8 has been seen). Reported: F1, control, excess [95%], paired against part-1 L4b theta .1, part-1 L1, CC2, the engine reference, native Spacedust; union and best-locus coverage of region genes by region size (1-5 / 6-10 / 11-20 / 21+) and for >= 11 genes; excess by region size; share of genes in loci; boundary precision",
+ "bond_distances": "for every arm and dataset, accepted bonds by distance d = 1..8 (counts and shares); for WA also the share of all bonded boundaries supported only by bonds at d >= 4",
+ "expectations": {
+  "tau": "bond rule: W3 8-12, W5 10-15, W8 12-20, WA 10-20",
+  "dpann": "wider windows add bonds across system edges: W8 L4b resolved within -60 / +20 of W3 L4b, summed -.01 to -.05, CRISPR-Cas F1 +.00 to +.03; W5 between; WA within +-30 resolved and +-.02 summed of W3. Selected arm: W3 or WA",
+  "spacedust": "W8 L1 +.21 to +.24 (seen: CC7 +.233); W8 L4b +.16 to +.21; WA L4b +.14 to +.19; W5 L4b +.13 to +.17; union coverage of regions >= 11 genes rises from .57 (W3 L4b) to .70-.80 at W8 / WA",
+  "verdict": "the pair distance is a large part of the Spacedust gap: W8 / WA reach the engine reference's excess at the L1 level and come within .03 of it at the L4b level; one setting (WA) is acceptable on both datasets if DPANN resolved stays above 1,512"
+ },
+ "amendment_1_W3b": {
+  "written_utc": "2026-11-13T14:59Z",
+  "status_when_written": "Only gold-free ladder counts read (W3 under the bond rule). No score of any part-4 output exists.",
+  "observation": "The bond-FDR rule gives tau 6 for W3 on DPANN (FDR .020 / .0042 at 4 / 6) and 8 on Spacedust (.012 / .0028 at 6 / 8), below part 1's word-type tau 10. W5 / W8 / WA under the bond rule would differ from the W3 reference rows in two things at once.",
+  "added": "W3b = W3 rebuilt at its bond-rule tau (L1, L4b at every theta), a candidate in the DPANN selection pool and a reference row on both datasets, so the window comparison is made at one rule; part-1 W3 (tau 10) stays the reference for paired intervals as predeclared",
+  "selection_pool": "W3 (part 1, tau 10) / W3b / W5 / W8 / WA x {L1, L4b theta .02 / .05 / .1 / .2}; rule unchanged"
+ },
+ "amendment_2_selection": {
+  "written_utc": "2026-11-13T15:16Z",
+  "status_when_written": "Odd scores of W3 (part 1), W3b, W5, W8, WA read (selection4.json). Bond taus (bond rule): DPANN 6 for W3/W5/W8/WA, Spacedust 8 for all. No even number and no source207 number of any part-4 output computed or read.",
+  "selected": "WA:L4b_t0.2 odd [3, 806, 0.5223480146357173] (only outputs meeting all three odd conditions are WA L4b theta .05 / .1 / .2; theta .2 has odd resolved 806 vs 805 at .1; its odd CRISPR-Cas F1 .459 meets the condition at the boundary)",
+  "dpann_even": "WA L4b .2 (selected); secondary labelled rows: WA L4b .1, W3b L4b .02, W5 L4b .02, W8 L4b .1 (each arm's best on odd); W3 part-1 L4b .02 even exists from part 2; paired vs DH and vs part-1 L4b theta .1",
+  "spacedust": "PRIMARY: WA L4b theta .2. DEVELOPMENT rows: WA L1; W3b, W5, W8 L1 and L4b theta .2; part-1 family W3 rows as references",
+  "expectation_update": "DPANN even WA L4b .2: resolved 1,580-1,630, summed .50-.55 (below part-1 L4b .584 by .03-.08), CRISPR-Cas F1 .44-.47 (bar at .459 is marginal); Spacedust WA L4b .2: excess +.14 to +.19"
+ }
+}

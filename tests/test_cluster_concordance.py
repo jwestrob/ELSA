@@ -15,14 +15,29 @@ import pandas as pd
 import pytest
 
 from elsa.chain import ChainedBlock
+from elsa.cluster import _pair_tiebreak
 
 
-# ---- Old sparse-matrix implementation (copied from commit 2d667bb) ----
+# Both implementations are exercised at identical settings: this suite checks
+# that the vectorized sweep agrees with the reference, independently of whatever
+# the shipped defaults happen to be.
+REF_TAU = 0.9
+REF_MUTUAL_K = 0
+
+
+# ---- Independent reference implementation ----
 
 def _mutual_top_k_old(edges_by_u, k):
+    """Reference mutual top-k. ``k <= 0`` keeps every edge."""
+    if k <= 0:
+        return {
+            ((u, v) if u < v else (v, u))
+            for u, neigh in edges_by_u.items()
+            for v, _w in neigh
+        }
     topk = {}
     for u, neigh in edges_by_u.items():
-        neigh_sorted = sorted(neigh, key=lambda x: (-x[1], x[0]))[:k]
+        neigh_sorted = sorted(neigh, key=lambda x: (-x[1], _pair_tiebreak(u, x[0])))[:k]
         topk[u] = {v for v, _ in neigh_sorted}
     keep = set()
     for u, neigh in edges_by_u.items():
@@ -33,8 +48,30 @@ def _mutual_top_k_old(edges_by_u, k):
     return keep
 
 
-def cluster_blocks_sparse(blocks, jaccard_tau=0.3, mutual_k=5, min_genome_support=2):
-    """Old O(n²) sparse-matrix clustering implementation."""
+def _sides(block):
+    """Return the two ((genome, contig), start, end) sides of a block."""
+    return (
+        ((block.query_genome, block.query_contig), block.query_start, block.query_end),
+        ((block.target_genome, block.target_contig), block.target_start, block.target_end),
+    )
+
+
+def _shared_side_jaccard(a, b):
+    """Reference shared-side interval Jaccard: best agreement over matching contigs."""
+    best = 0.0
+    for key_a, sa, ea in _sides(a):
+        for key_b, sb, eb in _sides(b):
+            if key_a != key_b:
+                continue
+            overlap = max(0, min(ea, eb) - max(sa, sb) + 1)
+            union = (ea - sa + 1) + (eb - sb + 1) - overlap
+            if union > 0:
+                best = max(best, overlap / union)
+    return best
+
+
+def cluster_blocks_sparse(blocks, jaccard_tau=0.8, mutual_k=0, min_genome_support=2):
+    """Reference O(n²) clustering implementation for concordance checking."""
     if not blocks:
         return {}, pd.DataFrame(columns=["cluster_id", "size", "genome_support",
                                           "mean_chain_length", "genes_json"])
@@ -68,15 +105,10 @@ def cluster_blocks_sparse(blocks, jaccard_tau=0.3, mutual_k=5, min_genome_suppor
             if other_bid <= bid:
                 continue
 
-            other_genes = block_genes[other_bid]
-            intersection = len(genes & other_genes)
-            union_count = len(genes | other_genes)
-
-            if union_count > 0:
-                jaccard = intersection / union_count
-                if jaccard >= jaccard_tau:
-                    edges_by_u[bid].append((other_bid, jaccard))
-                    edges_by_u[other_bid].append((bid, jaccard))
+            jaccard = _shared_side_jaccard(block_map[bid], block_map[other_bid])
+            if jaccard >= jaccard_tau:
+                edges_by_u[bid].append((other_bid, jaccard))
+                edges_by_u[other_bid].append((bid, jaccard))
 
     mutual_edges = _mutual_top_k_old(edges_by_u, mutual_k)
 
@@ -222,8 +254,8 @@ class TestClusterConcordance:
         """Both implementations produce identical partitions on synthetic data."""
         from elsa.cluster import cluster_blocks_by_overlap
 
-        old_btc, old_df = cluster_blocks_sparse(sample_blocks)
-        new_btc, new_df = cluster_blocks_by_overlap(sample_blocks)
+        old_btc, old_df = cluster_blocks_sparse(sample_blocks, jaccard_tau=REF_TAU, mutual_k=REF_MUTUAL_K)
+        new_btc, new_df = cluster_blocks_by_overlap(sample_blocks, jaccard_tau=REF_TAU, mutual_k=REF_MUTUAL_K)
 
         old_parts = _extract_partitions(old_btc)
         new_parts = _extract_partitions(new_btc)
@@ -250,8 +282,8 @@ class TestClusterConcordance:
         print(f"\nRunning concordance test on {len(blocks)} S. pneumoniae blocks...",
               file=sys.stderr)
 
-        old_btc, old_df = cluster_blocks_sparse(blocks)
-        new_btc, new_df = cluster_blocks_by_overlap(blocks)
+        old_btc, old_df = cluster_blocks_sparse(blocks, jaccard_tau=REF_TAU, mutual_k=REF_MUTUAL_K)
+        new_btc, new_df = cluster_blocks_by_overlap(blocks, jaccard_tau=REF_TAU, mutual_k=REF_MUTUAL_K)
 
         old_parts = _extract_partitions(old_btc)
         new_parts = _extract_partitions(new_btc)
@@ -305,8 +337,8 @@ class TestClusterConcordance:
         print(f"\nRunning DataFrame concordance on {len(blocks)} blocks...",
               file=sys.stderr)
 
-        list_btc, _ = cluster_blocks_by_overlap(blocks)
-        df_btc, _ = cluster_blocks_by_overlap(blocks_df)
+        list_btc, _ = cluster_blocks_by_overlap(blocks, jaccard_tau=REF_TAU, mutual_k=REF_MUTUAL_K)
+        df_btc, _ = cluster_blocks_by_overlap(blocks_df, jaccard_tau=REF_TAU, mutual_k=REF_MUTUAL_K)
 
         list_parts = _extract_partitions(list_btc)
         df_parts = _extract_partitions(df_btc)

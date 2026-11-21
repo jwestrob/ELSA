@@ -2,6 +2,8 @@
 ELSA v2 command-line interface.
 """
 
+import json
+import os
 import sys
 import subprocess
 from pathlib import Path
@@ -779,7 +781,7 @@ def stats(config: str):
 @click.option("--min-chain-size", default=2, help="Minimum anchors per chain")
 @click.option("--min-genome-support", default=2, help="Minimum genomes per cluster")
 @click.option("--gap-penalty-scale", default=0.0, help="Concave gap penalty (0=off)")
-@click.option("--jaccard-tau", default=0.3, help="Jaccard threshold for cluster overlap")
+@click.option("--jaccard-tau", default=0.9, help="Jaccard threshold for cluster overlap (matches ChainConfig and cluster_blocks_by_overlap)")
 @click.option("--index-backend", default="auto", help="Index backend (auto/faiss/hnswlib)")
 @click.option("--hnsw-k", default=50, help="k for HNSW neighbor search")
 @click.option("--no-normalize", is_flag=True, help="Skip L2 normalization of embeddings")
@@ -789,6 +791,12 @@ def stats(config: str):
               help="Sharur DuckDB with annotations table (loads PFAM + all sources)")
 @click.option("--genome-browser-db", type=click.Path(), default=None,
               help="Genome browser DB path (disabled by default; pass path to enable)")
+@click.option("--result-db", type=click.Path(), default=None,
+              help="Normalized result sidecar (default: beside --db, else OUTPUT_DIR/synteny.duckdb)")
+@click.option("--no-result-db", is_flag=True,
+              help="Retain legacy CSV output only")
+@click.option("--run-label", default=None,
+              help="Human-readable run label stored with normalized results")
 def synteny(db: Optional[str], proteins: Optional[str],
             embeddings: Optional[str], embeddings_parquet: Optional[str],
             store: Optional[str],
@@ -798,7 +806,9 @@ def synteny(db: Optional[str], proteins: Optional[str],
             gap_penalty_scale: float, jaccard_tau: float,
             index_backend: str, hnsw_k: int, no_normalize: bool,
             jobs: int,
-            annotations_db: Optional[str], genome_browser_db: Optional[str]):
+            annotations_db: Optional[str], genome_browser_db: Optional[str],
+            result_db: Optional[str], no_result_db: bool,
+            run_label: Optional[str]):
     """Discover syntenic blocks from external embeddings.
 
     Accepts protein metadata from a Sharur DuckDB or FASTA files,
@@ -815,6 +825,13 @@ def synteny(db: Optional[str], proteins: Optional[str],
       elsa synteny --store ./my_store --add-db new.duckdb --add-embeddings new.h5 -o results/
     """
     console.print("[bold]ELSA Synteny Discovery[/bold]")
+
+    if not no_result_db and store is None:
+        raise click.ClickException(
+            "Normalized result materialization requires --store so gene "
+            "rank and input identity are reproducible. Supply --store, "
+            "or use --no-result-db for a legacy one-shot run."
+        )
 
     try:
         from .analyze.pipeline import run_chain_pipeline, ChainConfig
@@ -908,6 +925,9 @@ def synteny(db: Optional[str], proteins: Optional[str],
             genes_df=genes_df,
             prebuilt_index=prebuilt_index,
             embeddings=_store_emb,
+            schema_embeddings_path=(
+                Path(store) / "embeddings.npy" if store is not None else None
+            ),
         )
 
         console.print(
@@ -919,6 +939,79 @@ def synteny(db: Optional[str], proteins: Optional[str],
             f"mean_block_size={summary.mean_block_size:.1f}"
         )
         console.print(f"  Output: [green]{output_dir}[/green]")
+
+        if not no_result_db and summary.num_blocks > 0:
+            from .results import (
+                build_run_manifest,
+                infer_result_sources,
+                materialize_result_store,
+                read_dataset_identity,
+            )
+
+            output_root = Path(output_dir).resolve()
+            normalized_path = (
+                Path(result_db).resolve()
+                if result_db is not None
+                else (
+                    Path(db).resolve().parent / "synteny.duckdb"
+                    if db is not None
+                    else output_root / "synteny.duckdb"
+                )
+            )
+            blocks_source, clusters_source = infer_result_sources(output_root)
+            seal_path = (
+                Path(db).resolve().parent / "dataset.seal.json"
+                if db is not None
+                else None
+            )
+            if seal_path is not None and seal_path.is_file():
+                dataset_id, seal_fingerprint = read_dataset_identity(seal_path)
+            else:
+                dataset_id, seal_fingerprint = None, None
+
+            input_artifacts = {"blocks": blocks_source}
+            genes_source = genes_df.sort_values(
+                ["sample_id", "contig_id", "start", "end"],
+                kind="stable",
+            ).reset_index(drop=True)
+            if store is not None:
+                store_root = Path(store).resolve()
+                genes_source = store_root / "metadata.parquet"
+                input_artifacts.update(
+                    {
+                        "gene_metadata": store_root / "metadata.parquet",
+                        "embeddings": store_root / "embeddings.npy",
+                        "store_config": store_root / "config.json",
+                    }
+                )
+            if seal_path is not None and seal_path.is_file():
+                input_artifacts["dataset_seal"] = seal_path
+
+            console.print(
+                f"\n[bold blue]Materializing exact result contract:[/bold blue] "
+                f"[green]{normalized_path}[/green]"
+            )
+            manifest = build_run_manifest(
+                run_label=run_label or output_root.name,
+                parameters=config,
+                input_artifacts=input_artifacts,
+                dataset_id=dataset_id,
+                dataset_seal=seal_fingerprint,
+            )
+            result_summary = materialize_result_store(
+                normalized_path,
+                blocks=blocks_source,
+                clusters=clusters_source,
+                genes=genes_source,
+                manifest=manifest,
+                threads=max(1, jobs),
+            )
+            console.print(
+                f"  run={result_summary.run_id} "
+                f"pairs={result_summary.anchor_pair_count:,} "
+                f"loci={result_summary.locus_count:,} "
+                f"members={result_summary.member_count:,}"
+            )
 
         # Load annotations from Sharur DuckDB if provided
         annotations_all_df = None
@@ -964,6 +1057,116 @@ def synteny(db: Optional[str], proteins: Optional[str],
         import traceback
         traceback.print_exc()
         sys.exit(1)
+
+
+@main.command("materialize-results")
+@click.argument("output_dir", type=click.Path(exists=True, file_okay=False))
+@click.option("--store", type=click.Path(exists=True, file_okay=False), required=True,
+              help="SyntenyStore whose metadata order produced the result")
+@click.option("--result-db", type=click.Path(), default=None,
+              help="Output sidecar (default: DATASET/synteny.duckdb)")
+@click.option("--dataset-seal", type=click.Path(exists=True), default=None,
+              help="Sharur dataset seal (auto-detected from the store path)")
+@click.option("--parameters-file", type=click.Path(exists=True), default=None,
+              help="JSON file containing the original chain parameters")
+@click.option("--run-label", default=None,
+              help="Human-readable run label")
+@click.option("--replace-run", is_flag=True,
+              help="Replace an identical run already present in the sidecar")
+@click.option("--threads", type=int, default=lambda: os.cpu_count() or 1,
+              show_default="all logical CPUs")
+def materialize_results(
+    output_dir: str,
+    store: str,
+    result_db: Optional[str],
+    dataset_seal: Optional[str],
+    parameters_file: Optional[str],
+    run_label: Optional[str],
+    replace_run: bool,
+    threads: int,
+):
+    """Convert existing CSV results into the exact, run-scoped DuckDB contract."""
+    from .results import (
+        build_run_manifest,
+        infer_result_sources,
+        materialize_result_store,
+        read_dataset_identity,
+    )
+
+    output_root = Path(output_dir).resolve()
+    store_root = Path(store).resolve()
+    metadata_path = store_root / "metadata.parquet"
+    embeddings_path = store_root / "embeddings.npy"
+    config_path = store_root / "config.json"
+    for required in (metadata_path, embeddings_path, config_path):
+        if not required.is_file():
+            raise click.ClickException(f"Missing SyntenyStore artifact: {required}")
+
+    inferred_dataset_root = (
+        store_root.parent.parent
+        if store_root.parent.name == "synteny"
+        else store_root.parent
+    )
+    seal_path = (
+        Path(dataset_seal).resolve()
+        if dataset_seal is not None
+        else inferred_dataset_root / "dataset.seal.json"
+    )
+    if seal_path.is_file():
+        dataset_id, seal_fingerprint = read_dataset_identity(seal_path)
+    else:
+        dataset_id, seal_fingerprint = None, None
+
+    parameters = (
+        json.loads(Path(parameters_file).read_text())
+        if parameters_file is not None
+        else {"provenance_state": "parameters_unspecified_for_legacy_run"}
+    )
+    blocks_source, clusters_source = infer_result_sources(output_root)
+    input_artifacts = {
+        "blocks": blocks_source,
+        "gene_metadata": metadata_path,
+        "embeddings": embeddings_path,
+        "store_config": config_path,
+    }
+    if seal_path.is_file():
+        input_artifacts["dataset_seal"] = seal_path
+
+    normalized_path = (
+        Path(result_db).resolve()
+        if result_db is not None
+        else inferred_dataset_root / "synteny.duckdb"
+    )
+    manifest = build_run_manifest(
+        run_label=run_label or output_root.name,
+        parameters=parameters,
+        input_artifacts=input_artifacts,
+        dataset_id=dataset_id,
+        dataset_seal=seal_fingerprint,
+    )
+    console.print(
+        f"[bold blue]Materializing {manifest['run_id']}[/bold blue]\n"
+        f"  blocks: {blocks_source}\n"
+        f"  genes:  {metadata_path}\n"
+        f"  output: {normalized_path}"
+    )
+    summary = materialize_result_store(
+        normalized_path,
+        blocks=blocks_source,
+        clusters=clusters_source,
+        genes=metadata_path,
+        manifest=manifest,
+        replace_run=replace_run,
+        threads=threads,
+    )
+    console.print(
+        "[bold green]Normalized result ready[/bold green]\n"
+        f"  run={summary.run_id}\n"
+        f"  genes={summary.gene_count:,} blocks={summary.block_count:,} "
+        f"clusters={summary.cluster_count:,} singletons={summary.singleton_count:,}\n"
+        f"  anchor_pairs={summary.anchor_pair_count:,} "
+        f"loci={summary.locus_count:,} members={summary.member_count:,}"
+    )
 
 
 @main.command()
@@ -1089,6 +1292,60 @@ def _load_genes_from_sources(
     )
     console.print(f"  Merged: {len(genes_df):,} genes with embeddings")
     return genes_df
+
+
+@main.command()
+@click.option("--result-db", required=True, type=click.Path(exists=True, dir_okay=False),
+              help="Materialized result sidecar to serve")
+@click.option("--annotations", type=click.Path(exists=True, dir_okay=False), default=None,
+              help="Sharur database supplying domain labels, joined on exact protein IDs")
+@click.option("--store", type=click.Path(exists=True, file_okay=False), default=None,
+              help="SyntenyStore directory; enables exact per-anchor cosine so the "
+                   "diagram's similarity threshold filters on real values")
+@click.option("--schema", type=click.Path(exists=True, file_okay=False), default=None,
+              help="Schema artifact directory (cluster_slots.parquet); enables "
+                   "architecture and replacement-hotspot views")
+@click.option("--host", default="127.0.0.1", show_default=True)
+@click.option("--port", default=8600, show_default=True, type=int)
+def serve(result_db, annotations, store, schema, host, port):
+    """Serve a materialized run over HTTP for humans and agents.
+
+    The same routes back the browser page and the machine-readable API, so a
+    figure and an agent's answer come from one producer. Schema at /docs.
+    """
+    import uvicorn
+    from .serve.api import Settings, create_app
+
+    settings = Settings(
+        result_db=Path(result_db),
+        annotations_db=Path(annotations) if annotations else None,
+        store_dir=Path(store) if store else (
+            Path(os.environ["ELSA_STORE_DIR"])
+            if os.environ.get("ELSA_STORE_DIR")
+            and Path(os.environ["ELSA_STORE_DIR"]).is_dir() else None
+        ),
+        schema_dir=Path(schema) if schema else (
+            Path(os.environ["ELSA_SCHEMA_DIR"])
+            if os.environ.get("ELSA_SCHEMA_DIR")
+            and Path(os.environ["ELSA_SCHEMA_DIR"]).is_dir() else None
+        ),
+    )
+    click.echo(f"Serving {settings.result_db}")
+    if settings.annotations_db:
+        click.echo(f"Annotations from {settings.annotations_db}")
+    else:
+        click.echo("No annotation database; diagrams render without domain labels")
+    if settings.schema_dir:
+        click.echo(f"Schema {settings.schema_dir} (architecture + hotspots)")
+    else:
+        click.echo("No schema directory; architecture views are unavailable")
+    if settings.store_dir:
+        click.echo(f"Store {settings.store_dir} (exact per-anchor cosine)")
+    else:
+        click.echo("No store; edge similarity falls back to block mean chain score")
+    click.echo(f"  page  http://{host}:{port}/")
+    click.echo(f"  API   http://{host}:{port}/docs")
+    uvicorn.run(create_app(settings), host=host, port=port, log_level="warning")
 
 
 if __name__ == "__main__":

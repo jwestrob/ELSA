@@ -1,0 +1,199 @@
+context_kernel workstream notebook (append-only; UTC timestamps)
+=====================================================================
+
+2026-11-12 08:07 UTC  Predeclaration
+  predeclared.json written before any computation (edge definitions, null, FDR rule, variant
+  selection on tune edges, arms V0-V3 + V1b, selection rule on tune genomes, P1-P3 on test
+  genomes, refuters, and the engine-null caveat).
+
+2026-11-12 08:10 UTC  Code and toy test
+  context_kernel.py (edges / families / arms), run_edges.sbatch, run_families.sbatch,
+  submit_engine.sh. Remote copies: $RD/context_kernel/code/.
+  Toy test (3 genomes, 90 genes, synthetic 960-d vectors; scratchpad toy_test.py):
+    expand() equals a Python reference partner list for every gene;
+    dense via c_a . c_b vs explicit double sum: max abs 8.3e-17 (float64);
+    kernel (float32) vs numpy: dense 6.6e-9, matched 1.3e-7 on all 221 edges;
+    planted identical neighbourhood gives matched = 2 (1 - 0.14) at w=1;
+    weighted AUROC equals sklearn roc_auc_score (with and without sample weights).
+
+2026-11-12 08:11 UTC  Job 78491 (ctxk_edges, standard_expand_2, 64 CPU) submitted and running.
+  Command: context_kernel.py edges --cap 64 --alpha 0.01 --seed 17
+  Inputs: embed_queue dpann__esmpp_small__20261111 (zca10 recomputed as in embed_tokens.py),
+  $RD/lab/knn/knn__esmpp_small__zca10__k50__hnsw.npz, ws_dpann package universe and gold.
+
+2026-11-12 08:20 UTC  Job 78491 complete (529 s wall, 64 CPU, peak RSS 22 GB). results/edges.json
+  Vectors: all 3,585,303 genes have a vector (2,547,528 unique). zca10 recomputed; rank-1 kNN
+  cosine recomputed from it matches the stored HNSW D to 5.4e-7.
+  Step 1, edges (cap 64 by cosine; copies of one sequence in random order):
+    directed partners 221,826,227; undirected 164,863,660 (mutual 56,962,567); every gene has an edge.
+    available cross-genome candidates per gene q10/q50/q90/q99 = 56/69/125/197 (max 419);
+    the cap binds for 2,238,908 genes (62.4%), dropping 63,533,578 candidates (22% of 285 M);
+    cosine of the 64th kept partner where the cap binds q10/q50/q90 = 0.455/0.719/0.881;
+    identical-sequence partners 2.7% of directed edges; edge cosine q10/q50/q90 0.458/0.712/0.899.
+  Step 2, context pass 62.6 s, null pass 76.8 s (164.9 M edges each, 64 threads).
+    Identity check (5,000 edges x 3 windows, float64): c_a . c_a' vs explicit double sum max abs
+    2.2e-16; kernel dense vs double sum 7.3e-8; kernel matched vs numpy 7.3e-7.
+  Step 3, support at empirical FDR 1% (null: higher-gid endpoint -> random gene of its genome):
+    variant     t*      supported edges   frac    genes with a supported edge (of 3,585,303)
+    dense_w1    0.194    40,981,118       0.249   2,937,565 (81.9%)
+    dense_w3    0.423       148,972       0.0009     33,573 (0.9%)
+    dense_w5    0.871         1,320       8e-6        1,762
+    matched_w1  0.303    53,709,151       0.326   2,994,122 (83.5%)
+    matched_w3  1.311    35,123,027       0.213   2,702,510 (75.4%)
+    matched_w5  3.107    19,122,123       0.116   2,286,403 (63.8%)
+    The dense form at w 3-5 has a heavy null tail (null q99 0.074 / 0.067 against observed q99
+    0.234 / 0.168): averaging over (2w)^2 neighbour pairs dilutes one conserved neighbour below
+    chance matches with multi-copy families. Only matched (best-match) scores reach 1% FDR at w > 1.
+  Step 4, edge-level gold diagnostic (AUROC; test = both genes in even genomes):
+    pooled same-type vs different-type gold pairs, test n = 429,720 (408,369 same-type; 87% of
+    pairs are CRISPRCasTyper): sim 0.841; ctx alone 0.37-0.50; sim x ctx 0.428-0.533.
+    AUROC(sim x ctx) - AUROC(sim), test, 95% genome bootstrap: dense_w1 -0.353 [-0.371,-0.335],
+    dense_w3 -0.394, dense_w5 -0.413, matched_w1 -0.330, matched_w3 -0.317, matched_w5 -0.307
+    [-0.325, -0.290].
+    DefenseFinder pairs (test n 45,676): sim 0.874; ctx alone 0.53-0.68 (matched_w3 0.678);
+    sim x ctx 0.612-0.710; delta matched_w5 -0.163 [-0.191, -0.140].
+    CRISPRCasTyper pairs (test n 374,697): sim 0.831; ctx 0.32-0.46; sim x ctx 0.38-0.49.
+    TXSScan-TXSScan pairs are all same-type (no negatives; AUROC undefined).
+    TXSScan members vs non-gold partners (test n 65,539, 8,828 same-type TXSScan partners):
+    sim 0.608; ctx alone matched_w5 0.759; sim x ctx matched_w5 0.751, delta +0.143
+    [+0.128, +0.156] (matched_w3 +0.118, dense_w5 +0.080, matched_w1 +0.036, dense_w1 +0.025).
+    Support rate of TXSScan member edges, matched_w5: 55% to same-type TXSScan partners vs 21.5% to
+    non-gold partners; DefenseFinder same-type pairs 3.2% vs different-type 0.1%.
+  Variant selection (predeclared: tune pooled AUROC of sim x ctx): primary matched_w5 (0.542),
+  secondary dense_w1 (0.487); sim alone 0.843.
+  Reading: the product sim x ctx is ranked by ctx (ctx spans 0-8, sim 0.45-1), and ctx carries no
+  information on same- versus different-type pairs among CRISPR-Cas genes (Cas genes of different
+  subtypes sit in Cas operons alike). It does carry information on TXSScan partners versus
+  non-gold look-alikes. P3 will fail on test (point -0.307 for matched_w5).
+  Refuter of the reading "context removes composition-driven TXSScan similarity": a TXSScan
+  vs non-gold AUROC of sim x ctx at or below sim; observed +0.143, so not refuted at edge level.
+
+2026-11-12 08:24 UTC  Leiden grid jobs submitted (standard_expand_2, 64 CPU each):
+  78502 EDGE_SET=all VARIANT=primary(matched_w5) WEIGHTS=sim,simctx RES=300..300000 (7) PROCS=14
+  78503 EDGE_SET=sup VARIANT=primary WEIGHTS=sim,simctx RES=10..1e6 (6) PROCS=12
+  78504 EDGE_SET=sup VARIANT=secondary(dense_w1) WEIGHTS=simctx RES=10..1e6 (6) PROCS=6
+  Expected floor for supported-edge arms: genes without a supported edge become singletons:
+  matched_w5 1,298,900 genes, dense_w1 647,738 genes -> both above the 100k-450k token range.
+
+2026-11-12 08:33 UTC  Leiden on supported edges (jobs 78503, 78504; grids in families/grid_sup_*.tsv)
+  matched_w5 supported graph: 19,122,123 edges; Leiden 58-193 s per run.
+    tokens at r10 / r100 / r1000 / r1e4 / r1e5 / r1e6: V1 sim x ctx 1,632,458 / 1,633,702 / 1,639,037 /
+    1,741,071 / 2,162,828 / 2,831,477; V2 sim 1,632,388 / 1,633,483 / 1,638,263 / 1,768,373 /
+    2,191,797 / 2,839,075. Floor = 1,298,900 genes without a supported edge (singletons).
+    Multi-gene communities are small: size q50 / q90 / q99 = 1 / 3 / 16-20.
+  dense_w1 supported graph: 40,981,118 edges; V1b tokens r10 880,124, r100 883,775 (647,738 singletons).
+  Per-caller coverage (member genes keeping >= 1 supported edge), matched_w5 / dense_w1:
+    TXSScan 94.0% / 97.9%; DefenseFinder 42.0% / 85.3%; CRISPRCasTyper 64.2% / 84.3%; non-gold 63.8% / 81.9%.
+    Fraction of member edges supported, matched_w5: TXSScan 26.3%, DefenseFinder 1.8%, CRISPRCasTyper
+    9.2%, non-gold 11.6%.
+  Arms written (lowest achievable token counts, as predeclared): matched_w5_{simctx,sim}_sup_r{10,100},
+  dense_w1_simctx_sup_r{10,100}. Arm writes ran inline on the login node (12 s, 2 threads).
+
+2026-11-12 08:35 UTC  Engine batch 1 (jobs 78513, 78516, 78517, 78520; 84-88 s each; W=3)
+  submit_engine.sh bug fixed: ssh inside `while read` consumed the arm list; now ssh -n.
+  Test (even) genomes, A - B against the MMseqs2 base (95% genome bootstrap):
+  arm                          tokens     DF F1   DF excess d          TXSS excess d          summed d (tune / test)
+  V1 matched_w5 simctx r10     1,632,458  0.060   -0.312 [-.331,-.295]  +0.043 [+.025,+.060]   -0.278 / -0.269 [-.295,-.245]
+  V2 matched_w5 sim    r10     1,632,388  0.060   -0.313               +0.046 [+.028,+.063]   -0.277 / -0.267
+  V1 matched_w5 simctx r100    1,633,702  0.058   -0.313               +0.013 [-.004,+.030]   -0.305 / -0.299
+  V2 matched_w5 sim    r100    1,633,483  0.057   -0.313               +0.017 [-.001,+.035]   -0.304 / -0.296
+  (base DF F1 0.806, DF excess +0.268, TXSS excess +0.179, summed +0.447 on test.)
+  Readings: (1) the context gate erases DefenseFinder systems (58% of their genes lose every
+  supported edge and become singletons); (2) TXSScan localization beats the base (+0.043 to
+  +0.046 at r10) while TXSScan F1 falls 0.758 -> 0.585; (3) V2 = V1 within 0.003, so the TXSScan
+  effect comes from edge selection by context, and the sim x ctx weighting adds nothing.
+
+2026-11-12 08:40 UTC  Engine batch 2: V1b dense_w1 supported edges, sim x ctx (jobs in results/engine_jobs.log)
+  arm                          tokens   DF F1   DF excess d          TXSS excess d           summed d tune / test
+  V1b dense_w1 simctx r10      880,124  0.741   +0.009 [-.006,+.024]  -0.013 [-.024,-.001]   -0.001 [-.022,+.018] / -0.004 [-.022,+.016]
+  V1b dense_w1 simctx r100     883,775  0.758   +0.022 [+.008,+.037]  -0.052 [-.065,-.039]   -0.021 / -0.030 [-.049,-.009]
+  First all-edge Leiden results (job 78502; ~440-630 s per run on 164.9 M edges, 14 in parallel):
+    V0 sim_all tokens: r300 7,099; r1000 13,391; r3000 28,798; r10000 97,174; r30000 709,751.
+    V3 matched_w5 simctx_all: r300 21,550; r1000 32,918; r3000 55,728; r10000 159,587; r30000 507,954.
+    The range 100k-450k lies between r10000 and r30000: second grid job 78628 at
+    r 7500, 11000, 15000, 19000, 23000, 26000 (both weights).
+
+2026-11-12 08:42 UTC  Exploratory controls declared before their results (job 78627; outside the
+  predeclared selection, cannot be chosen for P1/P2):
+  E-V2b: dense_w1-supported edges with sim weight (does the weighting matter for V1b?).
+  E-perm: context recomputed with gene order permuted within genomes (seed 18, contig sizes kept);
+    keep the K = 40,981,118 edges with the highest permuted-order dense_w1 score (K = true support
+    count) and cluster with sim and sim x ctx_perm. If E-perm matches V1b on TXSScan excess, the
+    V1b effect is a sparsification effect independent of true gene order; if E-perm falls to the
+    context-free graph level (-0.07 to -0.10 TXSScan) the effect needs true conserved context.
+
+2026-11-12 08:57 UTC  All-edge grids complete (jobs 78502 1,864 s; 78628 1,116 s; Leiden 440-1,660 s per run on
+  164.9 M edges, graph construction from numpy 188-347 s; peak RSS 96 GB with 14 runs in parallel).
+  tokens by resolution (singletons in parentheses):
+    r       V0 sim_all            V3 matched_w5 simctx_all
+    7500    67,420 (3,606)        117,140 (30,053)
+    10000   97,174 (12,427)       159,587 (52,019)
+    11000   111,780 (18,474)      177,500 (62,185)
+    15000   189,089 (60,901)      251,681 (107,599)
+    19000   297,708 (135,156)     325,207 (156,784)
+    23000   432,675 (238,396)     395,636 (206,772)
+    26000   546,020 (330,004)     445,277 (242,552)
+    30000   709,751 (468,517)     507,954 (289,277)
+  Above r 10000 the extra tokens are mostly singletons: a capped 64-NN gene graph has no natural
+  family boundary between ~100 and ~500 genes, and modularity peels off single genes first.
+  Arms chosen by the predeclared token-count rule: V0 r11000, r15000, r19000, r23000;
+  V3 r7500, r11000, r19000, r26000. Exploratory reference: V0 r30000 (closest to V1b's token count).
+
+2026-11-12 08:58 UTC  Exploratory controls (job 78627, 78642)
+  Permuted-order context (seed 18): score distributions equal the random-gene null
+  (dense_w1 q50/q90/q99 0.0019/0.0374/0.1063 vs null 0.0022/0.039/0.1156; true 0.0256/0.3926/0.5454).
+  permtop graph (top 40,981,118 edges by permuted-order dense_w1 score): only 6,588 genes isolated,
+  so Leiden r10/r100 gives 8,371-11,342 tokens (giant communities); r20000/30000/50000/100000 give
+  238k-258k / 386k-394k / 628k-677k / 1.07M-1.30M tokens. Arms: simctx r50000 (628,003),
+  sim r50000 (677,277), simctx r100000 (1,073,390).
+  E-V2b (dense_w1-supported edges, sim weight), engine jobs 78643/78644, test A - B:
+    r10  879,919 tokens: DF excess +0.009 [-.005,+.024], TXSS -0.023 [-.035,-.012], summed tune -0.014 / test -0.014 [-.032,+.005]
+    r100 883,121 tokens: DF excess +0.026 [+.012,+.040], TXSS -0.032 [-.044,-.020], summed tune -0.006 / test -0.006 [-.024,+.013]
+  versus V1b (same edges, sim x ctx): r10 TXSS -0.013, summed -0.004; r100 TXSS -0.052, summed -0.030.
+  Weighting by context changes TXSScan by +0.010 (r10) and -0.020 (r100): no consistent effect.
+
+2026-11-12 09:15 UTC  Engine batch 4 (jobs 78650-78666) and the predeclared selection
+  Full table: results/engine_results.tsv (collect.py over results/engine/*/compare_vs_base.txt).
+  Test (even) A - B vs MMseqs2 base; F1 of A beside excess differences (base F1: DF 0.806, TXSS 0.758, CCT 0.589):
+  arm                          tokens     tune sum | DF F1 dDFex  TX F1 dTXex  CCT F1 | test sum [95%]
+  V3 matched_w5 simctx_all r7500  117,140  -0.076 | 0.835 +0.030 0.617 -0.119 0.536 | -0.089 [-.107,-.069]
+  V3 r11000                       177,500  -0.049 | 0.841 +0.053 0.608 -0.114 0.513 | -0.061 [-.082,-.041]
+  V3 r19000                       325,207  -0.078 | 0.822 +0.074 0.515 -0.158 0.468 | -0.083 [-.107,-.058]
+  V3 r26000                       445,277  -0.148 | 0.811 +0.083 0.417 -0.211 0.446 | -0.128 [-.150,-.104]
+  V0 sim_all r11000 (control)     111,780  -0.011 | 0.798 +0.044 0.658 -0.056 0.496 | -0.012 [-.030,+.006]
+  V0 r15000                       189,089  +0.012 | 0.788 +0.065 0.652 -0.044 0.472 | +0.020 [+.000,+.041]
+  V0 r19000                       297,708  +0.033 | 0.775 +0.082 0.632 -0.044 0.431 | +0.038 [+.017,+.062]
+  V0 r23000                       432,675  +0.028 | 0.737 +0.078 0.598 -0.047 0.389 | +0.031 [+.004,+.056]
+  V0 r30000 (exploratory ref)     709,751  -0.028 | 0.683 +0.074 0.506 -0.073 0.324 | +0.001 [-.028,+.029]
+  E-perm sim r50000               677,277  -0.110 | 0.438 -0.020 0.346 -0.074 0.173 | -0.094 [-.127,-.060]
+  E-perm simctx r100000         1,073,390  -0.276 | 0.158 -0.177 0.156 -0.118 0.071 | -0.295 [-.326,-.263]
+  E-perm simctx r50000 (job 78664) still in the rule/module stage after 10 min (others 1.5-2 min).
+  Selection (predeclared; context arms V1 x2, V1b x2, V3 x4 by tune summed d):
+    V1b dense_w1 simctx_sup r10 -0.001 (best); V1b r100 -0.021; V3 r11000 -0.049; V3 r7500 -0.076;
+    V3 r19000 -0.078; V3 r26000 -0.148; V1 r10 -0.278; V1 r100 -0.305.
+  Chosen arm: ctx__esmpp_small__dense_w1_simctx_sup_r10 (880,124 tokens).
+  P1 (test TXSS d >= -0.04): -0.013 [-0.024, -0.001]  MET.
+  P2 (test summed d >= -0.01; >= +0.02 beats): -0.004 [-0.022, +0.016]  MET as competitive; does not beat.
+  P3 (test pooled AUROC(sim x ctx) - AUROC(sim) >= 0.05, variant of the chosen arm = dense_w1):
+      -0.353 [-0.371, -0.335]  NOT MET.
+  Attribution (exploratory controls):
+    weighting: V2b (same edges, sim weight) r10 TXSS -0.023, summed -0.014; r100 -0.032 / -0.006.
+      V1b - V2b = +0.010 / +0.010 at r10, -0.020 / -0.024 at r100: no consistent weighting effect.
+      On all edges, weighting hurts: V3 r11000 vs V0 r15000 (177k vs 189k tokens) TXSS -0.114 vs -0.044,
+      summed -0.061 vs +0.020.
+    true order: at 0.68-0.88 M tokens the true-order gate (V1b/V2b) gives TXSS -0.013/-0.023 with
+      TXSS F1 0.69/0.68; no gate (V0 r30000) -0.073 with F1 0.51; permuted-order gate -0.074 with F1
+      0.35. The gate needs true gene order.
+  Exploratory finding outside the predeclared pool: the context-free gene-level graph V0 beats the
+  base on the summed criterion (r19000: tune +0.033, test +0.038 [+0.017, +0.062]), by DefenseFinder
+  localization (+0.082) with lower F1 on every caller (DF 0.775, TXSS 0.632, CCT 0.431).
+  Engine null (trap 3): engine FDR 0.0011-0.0080 for context arms, 0.0061-0.0089 for V0, base 0.0044;
+  significant pairs 109k-255k vs base 160k. No sign of inflation for context-derived tokens.
+  Token purity (purity.py, results/purity.tsv), TXScan members: mean token size / same-type share of
+  token-mates: base 1,869 / 0.17; round-1 graph r3000 79 / 0.31; V0 r23000 33 / 0.31; V3 r26000 17 / 0.43
+  (18% singletons); V1b r10 1,408 / 0.20; V1 matched_w5 r10 347 / 0.35. TXSScan excess tracks keeping
+  the large secretion families whole, not token purity.
+
+2026-11-12 09:22 UTC  Job 78664 (permuted-order gate, sim x ctx, r50000) cancelled after 11:44 elapsed: single
+  core busy after the engine's rule stage (AveCPU = elapsed); its sim-weighted twin 78665 finished in
+  2 min. Not investigated further. REPORT.txt written. No jobs of this workstream remain in the queue.

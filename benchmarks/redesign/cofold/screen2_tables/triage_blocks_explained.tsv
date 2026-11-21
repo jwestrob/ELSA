@@ -1,0 +1,62 @@
+rank	pool	k	ord	phy	gen	lens	max_len	cls	fold	chains
+1	longpair	2	6	1	43	940;346	940	characterised	False	117902:char:pfam:PF07748.21 Glyco_hydro_38C; Glycosyl hydrolases family  | 119468:weak
+2	multi	3	5	3	15	384;184;181	384	characterised	False	164787:weak | 351854:char:pfam:PF11848.15 DUF3368; PIN domain | 221251:char:pfam:PF13274.13 SocA_Panacea; Antitoxin SocA-like, Panacea d
+3	multi	3	5	2	11	736;245;416	736	characterised	False	113230:char:pfam:PF01841.27 Transglut_core; Transglutaminase-like superf | 383280:weak | 384068:char:pfam:PF00092.36 VWA; von Willebrand factor type A domain
+4	longpair	2	5	2	12	736;242	736	characterised	False	113230:char:pfam:PF01841.27 Transglut_core; Transglutaminase-like superf | 383280:weak
+5	longpair	2	4	2	142	763;584	763	characterised	False	34836:char:pdb:4p99_A | 76472:weak
+6	multi	3	3	3	22	172;130;133	172	unknown_function	True	55170:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 399306:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 419953:unkn:pfam:PF23960.4 DUF7289; Family of unknown function (DUF7289)
+7	multi	3	3	2	28	171;136;279	279	unknown_function	True	55170:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 410168:unkn:pfam:PF23959.3 DUF7288; Family of unknown function (DUF7288) | 55171:weak
+8	multi	3	3	2	8	411;395;255	411	characterised	False	381653:weak | 384068:char:pfam:PF00092.36 VWA; von Willebrand factor type A domain | 383280:weak
+9	multi	3	3	2	6	159;141;276	276	unknown_function	True	55170:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 142248:unkn:pfam:PF23959.3 DUF7288; Family of unknown function (DUF7288) | 96948:weak
+10	longpair	2	3	2	6	739;259	739	characterised	False	216015:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o | 286065:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o
+11	multi	3	3	1	15	271;140;158	271	unknown_function	True	96948:weak | 354137:unkn:pfam:PF23959.3 DUF7288; Family of unknown function (DUF7288) | 287285:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287)
+12	multi	3	3	1	10	129;180;135	180	weak	True	198486:weak | 222151:weak | 227675:weak
+13	multi	6	2	2	9	205;328;155;289;127;113	328	characterised	False	249807:weak | 370930:weak | 370929:weak | 370928:char:pfam:PF20720.5 nSTAND3; Novel STAND NTPase 3 | 370927:weak | 370926:weak
+14	multi	4	2	2	36	303;241;131;99	303	characterised	False	205870:char:pfam:PF00069.32 Pkinase; Protein kinase domain | 225304:weak | 11738:weak | 208629:weak
+15	multi	3	2	2	291	167;173;314	314	weak	True	9986:weak | 281361:weak | 93909:weak
+16	multi	3	2	2	11	448;233;473	473	characterised	False	290263:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o | 216667:weak | 296034:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o
+17	multi	3	2	2	8	234;122;121	234	unknown_function	True	131677:weak | 120270:unkn:pfam:PF23959.3 DUF7288; Family of unknown function (DUF7288) | 321912:weak
+18	multi	3	2	2	6	101;167;103	167	characterised	False	91155:char:pfam:PF01844.31 HNH; HNH endonuclease | 124439:char:pfam:PF49581.1 DUF23945; Domain of unknown function (DUF2394 | 250328:char:pfam:PF48837.1 DUF23220; Domain of unknown function (DUF2322
+19	multi	3	2	2	5	385;184;278	385	characterised	False	44192:char:pfam:PF06030.20 WxLIP_PGBD; WxL Interacting Protein, peptido | 216965:char:pfam:PF22073.4 Cep192_D4; Cep192 domain 4 | 385203:char:pfam:PF06030.20 WxLIP_PGBD; WxL Interacting Protein, peptido
+20	multi	3	2	2	5	158;127;134	158	unknown_function	True	55170:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 399306:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 214761:unkn:pfam:PF23960.4 DUF7289; Family of unknown function (DUF7289)
+21	multi	3	2	2	5	70;70;163	163	characterised	False	81718:weak | 393054:weak | 399854:char:pfam:PF52836.1 DUF26930; Domain of unknown function (DUF2693
+22	longpair	2	2	2	154	269;810	810	weak	True	199164:weak | 368384:weak
+23	longpair	2	2	2	103	724;208	724	characterised	False	267211:weak | 368411:char:pfam:PF29648.2 DUF8579; Domain of unknown function (DUF8579)
+24	longpair	2	2	2	46	831;403	831	weak	True	146006:weak | 182395:weak
+25	longpair	2	2	2	27	722;239	722	characterised	False	107147:char:pfam:PF05362.21 Lon_C; Lon protease (S16) C-terminal proteol | 264617:weak
+26	longpair	2	2	2	10	275;822	822	weak	True	225055:none | 368384:weak
+27	longpair	2	2	2	8	474;840	840	characterised	False	35683:char:pfam:PF25106.2 VWA_4; von Willebrand factor A domain | 150877:char:pfam:PF07591.16 PT-HINT; Pretoxin HINT domain
+28	longpair	2	2	2	7	507;1125	1125	characterised	False	367859:char:cdd:NF012200 | NF012200, choice_anch_D, choice-of-anchor D  | 371399:weak
+29	multi	5	2	1	5	588;703;162;315;174	703	characterised	False	76472:weak | 34836:char:pdb:4p99_A | 10639:weak | 93909:weak | 281361:weak
+30	multi	4	2	1	60	596;773;151;314	773	characterised	False	76472:weak | 34836:char:pdb:4p99_A | 175629:weak | 93909:weak
+31	multi	4	2	1	21	187;176;348;163	348	weak	True	212044:weak | 37039:weak | 93909:weak | 388662:weak
+32	multi	4	2	1	19	593;471;224;647	647	characterised	False	19751:char:pdb:5cw3_A Structure of CfBRCC36-CfKIAA0157 complex (Zn Edg | 4106:weak | 271835:weak | 161568:weak
+33	multi	4	2	1	12	126;160;141;276	276	unknown_function	True	15180:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 287285:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 142248:unkn:pfam:PF23959.3 DUF7288; Family of unknown function (DUF7288) | 96948:weak
+34	multi	4	2	1	10	138;162;133;270	270	unknown_function	True	15180:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 287285:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 354137:unkn:pfam:PF23959.3 DUF7288; Family of unknown function (DUF7288) | 96948:weak
+35	multi	4	2	1	5	159;138;323;101	323	characterised	False	142961:weak | 106955:weak | 47335:char:pfam:PF13432.14 TPR_16; Tetratricopeptide repeat | 145385:char:pdb:5wtl_C Crystal structure of the periplasmic portion of 
+36	multi	4	2	1	5	235;177;262;323	323	characterised	False	400000:char:pfam:PF17957.9 Big_7; Bacterial Ig domain | 403190:weak | 119904:weak | 401126:weak
+37	multi	3	2	1	18	327;172;155	327	weak	True	93909:weak | 76736:weak | 212044:weak
+38	multi	3	2	1	18	319;190;179	319	weak	True	93909:weak | 281361:weak | 212044:weak
+39	multi	3	2	1	15	74;236;119	236	weak	True	153956:weak | 153955:weak | 158765:weak
+40	multi	3	2	1	14	309;174;146	309	weak	True	197827:weak | 37039:weak | 212044:weak
+41	multi	3	2	1	13	309;289;315	315	characterised	False	237419:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o | 215996:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o | 242561:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o
+42	multi	3	2	1	12	154;335;172	335	weak	True	37039:weak | 197827:weak | 111195:weak
+43	multi	3	2	1	11	352;169;163	352	weak	True	93909:weak | 37039:weak | 363444:weak
+44	multi	3	2	1	10	133;203;563	563	weak	True	98570:weak | 238910:weak | 410155:weak
+45	multi	3	2	1	9	252;345;946	946	characterised	False	111963:weak | 119468:weak | 117902:char:pfam:PF07748.21 Glyco_hydro_38C; Glycosyl hydrolases family 
+46	multi	3	2	1	7	941;339;267	941	characterised	False	117902:char:pfam:PF07748.21 Glyco_hydro_38C; Glycosyl hydrolases family  | 119468:weak | 117903:weak
+47	multi	3	2	1	7	142;381;230	381	characterised	False	51795:char:pfam:PF06030.20 WxLIP_PGBD; WxL Interacting Protein, peptido | 335690:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o | 65352:weak
+48	multi	3	2	1	6	459;173;142	459	characterised	False	142247:char:pfam:PF16990.12 CBM_35; Carbohydrate binding module (family  | 287285:unkn:pfam:PF23958.3 DUF7287; Family of unknown function (DUF7287) | 142248:unkn:pfam:PF23959.3 DUF7288; Family of unknown function (DUF7288)
+49	multi	3	2	1	6	147;192;223	223	unknown_function	True	143662:unkn:pfam:PF46937.1 DUF21357; Family of unknown function (DUF2135 | 354088:weak | 309726:weak
+50	multi	3	2	1	5	216;179;236	236	characterised	False	119904:weak | 111897:weak | 400000:char:pfam:PF17957.9 Big_7; Bacterial Ig domain
+51	multi	3	2	1	5	348;330;358	358	characterised	False	122723:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o | 401052:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o | 278238:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o
+52	multi	3	2	1	5	237;170;158	237	weak	True	16925:weak | 218516:weak | 197758:weak
+53	multi	3	2	1	5	164;361;168	361	weak	True	76736:weak | 93909:weak | 111195:weak
+54	longpair	2	2	1	147	754;163	754	characterised	False	34836:char:pdb:4p99_A | 175629:weak
+55	longpair	2	2	1	43	689;401	689	characterised	False	38978:char:cdd:COG3401 | COG3401, COG3401, Fibronectin type 3 domain-c | 315781:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o
+56	longpair	2	2	1	22	748;316	748	characterised	False	230979:char:cdd:COG0038 | COG0038, EriC, Chloride channel protein EriC  | 278238:char:pfam:PF10633.17 NPCBM_assoc; NPCBM-associated, NEW3 domain o
+57	longpair	2	2	1	21	166;776	776	characterised	False	10639:weak | 34836:char:pdb:4p99_A
+58	longpair	2	2	1	10	726;348	726	characterised	False	185809:char:pdb:3e8v_A Crystal structure of a possible transglutaminase | 278451:weak
+59	longpair	2	2	1	9	750;797	797	characterised	False	185809:char:pdb:3e8v_A Crystal structure of a possible transglutaminase | 215354:char:cdd:pfam17957 | pfam17957, Big_7, Bacterial Ig domain.  Thi
+60	longpair	2	2	1	7	710;1038	1038	characterised	False	201854:weak | 419985:char:pfam:PF02369.24 Big_1; Bacterial Ig-like domain (group 1)
+61	longpair	2	2	1	6	756;328	756	characterised	False	140674:char:pfam:PF13589.14 HATPase_c_3; Histidine kinase-, DNA gyrase B | 393147:char:pfam:PF09845.16 OapC; Origin-associated protein OapC

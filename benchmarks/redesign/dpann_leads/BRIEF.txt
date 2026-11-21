@@ -1,0 +1,115 @@
+DPANN LEADS CAMPAIGN: SHARED BRIEF FOR EVERY WORKSTREAM (coordinator, 2026-11-21 UTC)
+================================================================================
+Read this whole file before doing anything. Your own prompt names your workstream folder and question.
+
+WHY THIS EXISTS
+A position-based call ("slot call") proposed a family label for 175,729 DPANN genes that standard annotation left
+blank: a gene inside a conserved locus takes the plurality Pfam / KO among its list partners in other genomes that
+sit in the matching position. Verification showed the FAMILIES are real and the NAMES are uneven. Jacob (the PI, an
+expert computational biologist) looked at the first examples and called them "fantastically uninteresting". His two
+criteria for an interesting lead, in his words:
+  A. "things that we can study"
+  B. "have some sort of functional assignment we can actually infer", as opposed to "look at this thing we just gave
+     a label to".
+What fails A: a gene whose function depends on a multi-component assembly with unknown partners and stoichiometry
+(he will reject it on sight; it cannot be folded as a defined unit). What fails B: a family with a label and nothing
+else behind it, and routine housekeeping genes any annotator would name from context.
+What passes: a protein that folds as a defined unit (single soluble chain, or a homo-oligomer / small complex whose
+composition is known from characterized relatives), with a specific molecular function supported by independent
+evidence, where the assignment changes what we believe about the organism. He said this could be "what we have been
+needing for the paper all along". The paper is a statistical method for conserved gene neighborhoods that uses
+protein-embedding neighbor lists; a lead that the embedding lists call and alignment lists miss is worth the most.
+
+EVIDENCE LADDER (report each rung with numbers; a lead is SUPPORTED only with rungs 2-5)
+  1. Slot call: support = votes_for / supporting_genomes; label amplification = labeled genes / annotated carriers.
+  2. The gene's own weak profile hit to the proposed family (tier T1), with model and sequence coverage.
+  3. Catalytic and substrate-binding residues of a characterized relative are present at the aligned positions.
+     Take residue annotations from a curated public record fetched by accession, and cite the accession.
+  4. The predicted structure superposes on an experimental structure of the family, with those residues in place.
+     Positive control: a DPANN protein annotated at the gathering threshold for the family. Negative control: a
+     DPANN protein of similar length from an unrelated family. State both control results.
+  5. Genome context: the function is absent from the genome by every annotation source in the database, including
+     non-homologous enzymes that do the same reaction; the neighboring pathway steps are present; the genome is
+     complete enough for absence to mean something (use bins.completeness; compare against the clade's rate).
+  6. Distribution across clades from bins.taxonomy, with the clade's total genome count as denominator.
+  7. Whether the alignment-list version of the call gives the same label (pass columns alignment_label,
+     alignment_lists_same_label). Report embedding-only versus both.
+  Criterion A check: fraction of ILVFMAWC (about 0.37 soluble, about 0.56 membrane), length, oligomer state of the
+  characterized relative, and where it adds information a co-fold with the substrate or cofactor.
+KILL a lead plainly when a rung fails. A killed lead with the reason is a good result. Do not rescue it.
+
+NAMING RULE (strict)
+Separate OBSERVED (raw hits, residues, superpositions, counts) from NAMED (a function, system, pathway). A slot call
+is a hypothesis from bonded partners: write "consistent with". A structure match is never a name by itself. Before
+naming anything, inspect the live schema to see which curated annotation resources exist and what they emitted; raw
+per-domain tables are observations. Tag every inference that lacks rungs 2-5 as UNVERIFIED.
+
+DATA (all read-only)
+  Repo root R = /Users/jacob/Documents/Sandbox/elsa_test/ELSA
+  R/benchmarks/redesign/slot_rescue/pass/dpann_slot_rescue_pass.parquet   175,729 rows. Columns: protein_id, gid,
+    genome, genome_code, contig, position_index, strand, length, own_ko, proposed_label_positional_homology
+    (accession), proposed_label_name, proposed_label_kind (pfam / ko), votes_for, voters_annotated, vote_share,
+    supporting_genomes, supporting_groups, runner_up_label, runner_up_name, runner_up_votes, tied_keys, locus_id,
+    locus_size, n_bonds, max_bond_lambda, alignment_label, alignment_lists_same_label, confidence_bin,
+    calibration_agreement, own_ko_agrees (no_ko / agree / disagree / unmapped), basis.
+  R/benchmarks/redesign/slot_rescue/verify/verification_per_protein.parquet   tier (T1 own weak hit to the proposed
+    family; T2 no hit, at least 50% support; T2b no hit, 20-50% support; contradicted = weak hits to other label
+    families only, which includes sister families; rest), vfrac (= support), amp, annotated, proposed_evalue,
+    best_other_label, best_other_evalue.
+  R/benchmarks/redesign/slot_rescue/verify/A/checkA_per_protein.parquet   weak-hit summary (Aksha, E <= 10, 1,812
+    label models). Raw Aksha output with domain coordinates: on biotite under
+    /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slot_rescue/verify/A/full
+  R/benchmarks/redesign/slot_rescue/verify/B/   562 ESMFold2 models (folds/), checkB_pairs.tsv (TM-scores).
+  R/benchmarks/redesign/slot_rescue/REPORT_pass.txt, REPORT_verify.txt   how the table was built and verified.
+  R/benchmarks/redesign/slot_rescue/inspect/insp6.py (locus context printer), insp8.py (soluble + gap screen).
+  R/benchmarks/redesign/dpann_leads/triage.py, candidates_all.tsv   first triage of four enzyme families.
+  Sharur DPANN database: /Users/jacob/Documents/Sandbox/Sharur/Sharur/data/dpann/sharur.duckdb  ATTACH ... (READ_ONLY).
+    3,564 genomes. Tables include proteins (protein_id, contig_id, bin_id, gene_index, strand, sequence,
+    sequence_length), annotations (protein_id, source, accession, name, description, evalue, score, start_aa,
+    end_aa), protein_resemblance (CDD best hits with coordinates), bins (bin_id, completeness, contamination,
+    taxonomy), plus system tables; list the tables and sources yourself, more exist than are named here.
+    DuckDB traps met so far: `called`, `off` and a bare `name` alias are parser errors; quote or rename.
+  Local Python: `python` (pyenv; duckdb 1.2.2, pandas). mafft is on the Mac PATH.
+
+TOOLS AND HARD RULES
+  HMM searches: every HMM search goes through Aksha (`aksha search`; Mac ~/.local/bin/aksha with --hmm_in for picked
+    profiles; biotite /home/jwestrob/.local/bin/aksha in sbatch scripts). Never run hmmsearch, hmmscan or pyhmmer
+    directly. If Aksha lacks something, report what is missing.
+  Folding: ESMFold2 through the Biohub API is the only service that may receive DPANN sequences:
+      python3 /Users/jacob/Documents/Sandbox/Sharur/Sharur/scripts/fold_biohub.py OUT_DIR in.faa [--copies N]
+              [--ligand CCD:N] [--smiles 'SMI:N'] [--pae]
+    It writes <name>.pdb (pLDDT x 100 in the B-factor column) and <name>.json per input. It polls with no limit and
+    writes summary.tsv only at the end, and the API sometimes never returns an item: run it in the background, read
+    the per-structure files directly, and stop waiting 20 minutes after the last new file. Budget: at most 120
+    folds per workstream (the daily cap is shared).
+  Structure comparison: /shared/software/bin/USalign on the biotite login node, single-threaded, a few hundred pairs
+    at most (helper: R/benchmarks/redesign/slot_rescue/verify/code/usalign_pairs.py).
+  Public reference data may be DOWNLOADED by accession (experimental structures, curated protein records and their
+    residue annotations, pathway definitions). No service of any kind may receive a DPANN sequence or structure
+    other than Biohub: no web BLAST, no web HMM search, no structure-search server.
+  Mac: at most 4 threads, short jobs, under 200 MB on disk per workstream, no GPU / MPS, no protein language model.
+  Biotite: `ssh jwestrob@biotite.berkeley.edu`. Before any Slurm submission read /home/jwestrob/.claude/CLAUDE.md and
+    /home/jwestrob/jwestrob/obsidian-vault/biotite-cluster-ops.md in that same turn. Header template:
+    R/benchmarks/redesign/ribo_audit/mark7.sbatch (24 CPUs, -A banfield -p standard --qos=standard_expand, the node
+    exclusion list, no --mem, no --time). No timeout commands inside job scripts. No job longer than 2 hours. No GPU
+    partition. No recursive find / du / grep over shared trees. Remote scratch for this campaign:
+    /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/<workstream>/
+  Taxonomy: use bins.taxonomy as given. Do not run any taxonomy classifier.
+  Write only inside your workstream folder R/benchmarks/redesign/dpann_leads/<workstream>/ (and its remote scratch).
+    File types .txt .tsv .json .py .parquet .faa .pdb; you cannot write .md. Do not git add or commit. Do not write
+    into the Sharur database or any Sharur folder.
+  American spelling. Plain affirmative sentences. Numbers with denominators.
+
+WAITING
+  Do not wait on a Slurm queue. If you submit a job, write its ID, the status file it will create and its expected
+  duration into your REPORT.txt and end your turn; the coordinator watches and resumes you. Short inline waits for
+  folding (rule above) and for login-node structure comparison are fine. Send one final report, no interim notices.
+
+DELIVERABLES in your workstream folder
+  REPORT.txt   at most 120 lines. Bottom line first. Then one block per lead: verdict (SUPPORTED / WEAK / KILLED),
+               the evidence ladder with numbers and controls, what stays UNVERIFIED, and criterion A.
+  leads.tsv    one row per lead: lead, family_label, clade, genes, genomes, clade_genomes, median_length,
+               tier_T1, support_median, catalytic_residues_ok, structure_TM_to_reference, function_absent_otherwise,
+               embedding_only_share, verdict, one_line_reason.
+  code/        every script you ran.
+  Your final message to the coordinator: at most 25 lines, verdict per lead, and the paths.

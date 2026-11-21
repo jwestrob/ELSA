@@ -1,0 +1,43 @@
+{
+ "workstream": "ribo_audit part 5: strand-aware cluster-level ribosomal runs on lut, DPANN and SR-VP",
+ "written_utc": "2026-11-19T10:18Z",
+ "status": "DEVELOPMENT. All three datasets have been seen under the standing and part-4 definitions (part 4 results known: DPANN losses from strand-blind chaining across secY | EMC3_TMCO1-Nre_N-cbf5). Nothing below has been computed when this file is written. Aim: one definition that can be declared in advance on a future untouched set.",
+ "background": "ELSA commits e0b3485 (2025-08-20: SRP window tokens made strand-insensitive by zeroing the strand-sign dimension before tokenisation, so forward and reverse copies of a locus collide) and d297985 (2025-08-25: cluster consensus gains per-token forward fraction and, for each adjacent pair of consensus tokens, same_frac = share of member blocks holding both in which the two genes lie on the same strand, with support = blocks holding both). same_frac is relative orientation and does not depend on contig orientation.",
+ "common": {
+  "members": "part-4 PRIMARY reading unchanged: R = package Pfam ribosomal marker or best searched KO named 'ribosomal protein'; N = archaeal list (N_RULES + EF2) + bacterial supplement (16 KOs), for every genome. Annotation: part-3 (SR-VP) and part-4 (lut, DPANN) files, no new search.",
+  "base_chain": "member genes in gid order on one contig with <= 2 other genes between consecutive members (gid difference <= 3); part 4 = base chain.",
+  "runs": "package g2 runs with >= 16 Pfam-marked genes (lut 858, DPANN 1,686, SR-VP 803 = 658 Bacteria + 145 Archaea).",
+  "targets_per_run": "pieces = chains (of the variant) holding >= 1 marked gene of the run. A piece qualifies when it holds >= 16 package-marked genes in total (the minimum run length applied to the piece). Targets = qualifying pieces. Run recovered / resolved / any-fit = every target recovered (best locus covers >= 50%) / resolved (best locus by largest overlap, ties to the shorter, covers >= 80% with precision >= 0.8) / has a fitting locus. A run with no qualifying piece falls BELOW MINIMUM: it leaves the benchmark under that variant (counted and listed; reported resolved counts also given against the original run count with these runs counted unresolved). Part 4 and the standing definition always give one target per run.",
+  "chance": "per target 5 same-contig windows of the target length outside the target, numpy default_rng(17), one generator per dataset x definition, runs in table order and targets in gid order; scored with the resolved rule; chance = resolved windows / windows per output x stratum.",
+  "strata": "lut Bacteria; DPANN Archaea; SR-VP Bacteria and Archaea (package taxonomy domain)."
+ },
+ "variants": {
+  "a_member_strand": "base chain, broken between two consecutive members on opposite strands.",
+  "b_gap_strand": "as (a), and broken where any gene between two consecutive same-strand members lies on the opposite strand.",
+  "c_connector": {
+   "family": "member family = R name normalised as in rearr3.py (KO / Pfam synonyms merged: L4e -> L4, L26 -> L24, L5e / L18p -> L18, L27A -> L15, S29e -> S14, L23e -> L14, _C / _N suffixes dropped) or N name.",
+   "connector": "junction instances = consecutive members of base chains anywhere in the dataset. For a family pair and a lineage group g: f_g = share of g's instances with both genes on the same strand. Connector of a junction in genome q = mean f_g over the OTHER groups of the same domain holding >= 1 instance; n = number of those groups.",
+   "rule": "as (a), except that an opposite-strand member junction is KEPT when its connector <= 1/3 and n >= 5 (opposite orientation conserved across lineages).",
+   "reason_stated_in_advance": "a synteny target is a conserved neighbourhood; when two member families are adjacent and opposite in orientation in most lineages, the divergent / convergent arrangement is itself conserved and a method that reports it as one block reports a real conserved unit (ELSA's own design treats relative orientation as a property of the conserved neighbourhood, not as a boundary). Against: the transcribed cluster, which the audit's accurate reading follows, ends at every strand change. Variant (c) tests whether the cross-lineage quantity adds anything over a plain strand break; if no junction meets the rule, (c) equals (a)."
+  }
+ },
+ "scoring": "outputs Z (embedding-list tree), WA (family-bond adaptive tree), DH (engine reference) of part 4 on each dataset; definitions standing, part4, a, b, c; one table with runs kept / below minimum, targets, recovered, resolved (kept and original denominators), any-fit, chance.",
+ "connector_report": "independent of outputs: distribution of the connector over distinct member-family pairs occurring at junctions inside part-4 targets (pairs with n >= 5), per dataset and domain; the pairs with connector < 0.5 named with n and the number of target junctions they cover; at target junctions in the genome at hand: same-strand, opposite-strand with connector <= 1/3 (conserved), opposite-strand with connector > 1/2 (lineage-specific), other.",
+ "best_variant_rule": "best = the strand-aware variant with the largest sum over the four dataset x domain strata of Z + WA resolved counted against the ORIGINAL run count (below-minimum runs count unresolved), among variants with chance <= 5% for Z and WA in every stratum; ties to the simpler variant (a < b < c).",
+ "verdicts": "for every run unresolved under the best variant, each output: part-2 strict procedure (bio4 cmd_verdict logic) on each unresolved target span; counts per verdict, dataset, domain, output.",
+ "soundness_criteria": {
+  "S1": "per stratum and for Z and WA: resolved against the original run count >= max(standing, part 4) - 2% of runs",
+  "S2": "chance <= 5% for Z and WA in every stratum (DH reported)",
+  "S3": "per stratum and for Z and WA: verdicts 2 + 3 among unresolved <= the count under the standing definition",
+  "S4": "runs below minimum <= 2% of runs per stratum",
+  "reading": "a definition is sound in a domain when S1-S4 hold on every dataset of that domain; sound in both domains when they hold on all four strata"
+ },
+ "accurate_reading_relation": "report how often each variant's target equals the part-2 accurate unit (single-unit runs: the trimmed strand- and spacing-linked component) and the accurate-reading resolved counts with the same annotation; (b) differs from the accurate reading only by the intergenic-distance rule and the trimming to >= 1 R / >= 2 members.",
+ "expectations": {
+  "a": "Bacteria: within 1% of part 4 on lut and SR-VP (the S10-spc-alpha-str-rif cluster is on one strand; a few lut losses across opposite-strand flanks return); 0-10 runs below minimum per bacterial dataset. DPANN: most of the 84 Z / 94 WA part-4 losses return (53 were secY | divergent EMC3_TMCO1-Nre_N-cbf5), resolved within 25 of standing (Z 1,542, WA 1,594); 50-150 DPANN runs hold an internal opposite-strand member junction and 20-80 of them fall below minimum. SR-VP Archaea: 0-10 below minimum.",
+  "b": "cuts more than (a) in Bacteria (single opposite-strand ORFs inside spc seen in part 3): 5-20 runs below minimum per bacterial dataset, resolved <= (a).",
+  "c": "Bacteria: equal to (a) or nearly so (few conserved opposite junctions inside the cluster). DPANN: if secY | cbf5 is opposite in most groups, (c) keeps it and loses about 50 runs against (a).",
+  "best": "(a); sound in both domains with chance <= 3% in Bacteria and <= 5% for Z / WA on DPANN; DH stays above 5% chance on DPANN.",
+  "connector": "Bacteria: nearly all ribosomal-cluster pairs >= 0.95; opposite-in-most pairs rare (<= 5 named pairs). Archaea: a handful of conserved opposite pairs around secY / cbf5 and the divergent S10 / alpha-like blocks. Expected answer: the connector adds little over a plain strand break for building targets; it identifies which strand breaks are conserved."
+ }
+}

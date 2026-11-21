@@ -1,0 +1,62 @@
+annot_gpu/cpu: whole-proteome Pfam annotation of srvp, testset3 and lut through Aksha 0.2.3 on CPUs
+Report 2026-11-21 (UTC). Remote: $A = $RD/annot_gpu, RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/
+ELSA/redesign_20261111. Local: benchmarks/redesign/annot_gpu/cpu/ (scripts, shard tables, smoke comparison, this report).
+Scope: Pfam only (PI decision "do cpu"; KOfam is outside this run).
+
+SUBMITTED (2026-11-21T05:11:34Z; -A banfield -p standard --qos=standard_expand -c 24, mark7 exclude list, no --mem/--time)
+  collection  proteins    residues       shards x proteins     array (%4)    finishing job (afterany)  STATUS
+  srvp        3,211,751     988,758,684   8 x 401,468-401,469   119850 0-7    119851                    $A/srvp/STATUS
+  testset3    2,557,405     821,422,520   8 x 319,675-319,676   119852 0-7    119853                    $A/testset3/STATUS
+  lut         4,507,042   1,361,583,935  12 x 375,586-375,587   119854 0-11   119855                    $A/lut/STATUS
+  FASTA record counts confirmed with grep -c and by shard.py; source SHA-256 = the previous report's values
+  (srvp ecf8a511..., testset3 8ee237ba..., lut 1ca3d673...); headers verified as gid = 0..N-1 in order; the
+  concatenated shards reproduce each source byte for byte (shard.py reads them back and compares SHA-256).
+  All 12 first-wave tasks started at 05:11:35Z with 24 CPUs; first-task logs show the expected shard, "Total
+  sequences loaded" equal to the shard size, and `--threads 24`; sstat: 22.5-23.0 cores busy per task.
+
+EXPECTED FINISH (UTC; from the first tasks' chunk times, 3-4 of 14 Pfam chunks by 05:26Z, and from CPU use)
+  per shard: testset3 44-52 min, srvp 53-61 min, lut 48-58 min (longer than the 45 min target: about
+  0.18-0.21 CPU-s per protein against 0.18 on the 4,000-protein sample).
+  testset3 (2 waves) about 06:40-07:00Z; srvp (2 waves) about 07:00-07:20Z; lut (3 waves) about 07:40-08:10Z,
+  each including the 2-3 min finishing job. Allocated CPU time at these rates: about 510-600 CPU-h.
+
+SHARD SIZE
+  45 min per shard on 24 CPUs at the measured 734 CPU-s per 4,000 proteins (0.18 CPU-s per protein, 0.57 CPU-ms per
+  residue; validation job 119815), rounded to multiples of the 4-task throttle so every wave runs full:
+  testset3 8 shards, srvp 8, lut 12 (28 shards; planned 43-52 min each at 22.8 busy cores, measured times above).
+
+CHAIN
+  shard.py (login node, single process, 55 s for all three in parallel) -> shards/shard_NNN.faa, shards.tsv,
+  SHARDS.json. search_<c>.sbatch: one array task per shard, `aksha search --installed_hmms PFAM --cut_ga --prot_in
+  <shard> --outdir search/shard_NNN --threads $SLURM_CPUS_ON_NODE`; checks shard size and Aksha 0.2.3 before, and
+  output table + "Total sequences loaded" = shard size after; writes search/shard_NNN.done (JSON: rows, wall, CPU,
+  RSS) or .failed. finish_<c>.sbatch -> merge.py (one process per shard + two for the source and concatenation
+  hashes; pyarrow threads over the 24 CPUs): checks every shard file (SHA-256, headers), the partition (gid 0..N-1,
+  no gap or overlap), source unchanged, concatenation = source, every .done marker (Aksha 0.2.3, loaded = shard
+  proteins, rows = table rows), every hit inside its own shard, every model in meta/pfam_meta.tsv; writes
+  PFAM.parquet (protein_id string = FASTA header, gid, accession, name, description, bitscore, evalue,
+  dom_bitscore, c_evalue, i_evalue, hmm/ali/env coordinates; sorted by gid, env_from, accession),
+  PFAM_summary.json, then STATUS last. Under flock on STATUS_ALL.lock, the finishing job that sees all three
+  STATUS files appends the three final lines to $A/STATUS_ALL (lock logic tested on the login node).
+  README_annotation.txt in each collection folder: shard size, Aksha version, Pfam 38.1, date, E-value note.
+
+STATUS_ALL
+  The three old FAILED lines and the old header were replaced by one header line naming the CPU jobs (backup:
+  $A/cpu_smoke/STATUS_ALL.before_cpu_20261121).
+
+SMOKE RUN (full chain on the 4,000-protein validation sample; $A/cpu_smoke/, jobs 119842-119845)
+  smoke1 (1 shard): 6,872 rows, every column identical to the validation table; the raw Aksha table is byte-
+  identical (sha256 6d1b340e...). STATUS "DONE ... rows 6872 proteins_with_hit 3164 shards 1 database PFAM only".
+  smoke3 (3 shards of 1,333-1,334): 6,872 rows identical on every column except evalue, c_evalue, i_evalue.
+  evalue and i_evalue changed by the factor shard size / 4,000 (ratios 0.331-0.336, expected 0.333); c_evalue by
+  0.05-1.00 (median 0.50). So the row set is shard-size independent under --cut_ga; E-values are per shard
+  (about 8x / 8x / 12x smaller than one whole-collection search for srvp / testset3 / lut). smoke_compare.json.
+
+NOT DONE
+  No completion watcher was armed (task instruction: end the turn once the arrays run); the finishing jobs write
+  STATUS and STATUS_ALL. Nothing from the Aksha installation, its databases or manifests was touched; no GPU mode.
+
+FILES (local; remote copies in $A/code/cpu/)
+  shard.py, merge.py, smoke_compare.py, gen_cpu.py (writes the sbatch files), gen_readme.py,
+  search_{srvp,testset3,lut,smoke1,smoke3}.sbatch, finish_{...}.sbatch, shards_{srvp,testset3,lut}.tsv,
+  smoke_compare.json, README_annotation_{srvp,testset3,lut}.txt (copies), REPORT_cpu.txt.

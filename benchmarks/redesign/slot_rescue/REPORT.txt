@@ -1,0 +1,199 @@
+SLOT_RESCUE: DO NEIGHBOR LISTS AND THE BOND TREE RESCUE CORE GENES THAT PFAM / KOFAM MISS? (DPANN development, 2026-11-20)
+===========================================================================================================================
+Truth: the Sharur replacement-in-place screen (30 dark leads) and the study's larger detection-limited sets, each protein
+carrying the study's own call. Method outputs: long_loci part 2 on DPANN (embedding lists Z, MMseqs2 alignment lists A,
+their round-0 bonds, the selected bond-tree loci). Predeclaration predeclared.json (2026-11-20T23:34Z, sha256
+266f2809dfe1434f2fa8aaf66208f06ddb24d6574653c15cdd48b1b7d8fcdf84), written before any list, bond, locus or call was read
+for a truth or control gene; after scoring, three British spellings in it were corrected (neighbour x2, labelled; the
+current file hashes to dfc5b112..., and restoring the three words gives 266f2809... again). Gate passed before scoring: support of all 59,476 stored bonds that touch a query gene,
+recomputed from the rebuilt lists, equals the stored n and ng exactly (0 mismatches), so the lists scored here are the
+lists the bonds were built from. Every number is a development result on DPANN; lut, SR-VP and testset3 untouched.
+
+BOTTOM LINE (right-family call, count (share) [95% genome bootstrap]; controls = matched unannotated ORFs from the same
+genomes outside conserved slots, false rescue = the call names a core gene)
+  set (mapped proteins)          list Z           list A           slot Z           slot A           combined Z       combined A
+  lead_X verified (2,904)        1,505 (51.8%)    1,373 (47.3%)    2,368 (81.5%)    2,134 (73.5%)    1,515 (52.2%)    1,372 (47.2%)
+                                 [50.2, 53.4]     [45.7, 48.8]     [80.1, 83.1]     [71.8, 75.1]     [50.5, 53.8]     [45.7, 48.8]
+    controls (8,474) false       11 (0.13%)       14 (0.17%)       11 (0.13%)       15 (0.18%)       7 (0.08%)        11 (0.13%)
+    of which no Pfam and no      950 (40.7%)      813 (34.9%)      1,799 (77.1%)    1,565 (67.1%)    960 (41.2%)      812 (34.8%)
+    right-family KO (2,332) *
+  lead_X UNVERIFIED (307)        90 (29.3%)       83 (27.0%)       166 (54.1%)      133 (43.3%)      90 (29.3%)       83 (27.0%)
+    controls (896) false         0                1 (0.1%)         0                0                0                0
+  lead_X ambiguous (20)          2                4                13               7                2                4
+  DL_slot eL39 (99)              17 (17.2%)       5 (5.1%)         97 (98.0%)       40 (40.4%)       8 (8.1%)         5 (5.1%)
+  DL_slot uL29 (53)              44 (83.0%)       47 (88.7%)       45 (84.9%)       10 (18.9%)       44 (83.0%)       47 (88.7%)
+  DL_slot uL15 (28)              28 (100%)        28 (100%)        28 (100%)        28 (100%)        28 (100%)        28 (100%)
+  DL_slot total (180)            89 (49.4%)       80 (44.4%)       170 (94.4%)      78 (43.3%)       80 (44.4%)       80 (44.4%)
+    controls (180) false         0                0                0                0                0                0
+  DL_profile total (1,191)       358 (30.1%)      378 (31.7%)      1,098 (92.2%)    1,094 (91.9%)    385 (32.3%)      380 (31.9%)
+    eL39 (482)                   22 (4.6%)        80 (16.6%)       476 (98.8%)      476 (98.8%)      28 (5.8%)        81 (16.8%)
+    eS26 (312)                   120 (38.5%)      59 (18.9%)       258 (82.7%)      272 (87.2%)      144 (46.2%)      67 (21.5%)
+    eL31 (228)                   73 (32.0%)       94 (41.2%)       223 (97.8%)      197 (86.4%)      72 (31.6%)       93 (40.8%)
+    controls (2,295) false       5 (0.2%)         10 (0.4%)        9 (0.4%)         5 (0.2%)         5 (0.2%)         5 (0.2%)
+  negatives (2,174): named the   29 (1.3%)        27 (1.2%)        29 (1.3%)        28 (1.3%)        29 (1.3%)        27 (1.2%)
+    lead's X
+  * stratum of the verified set, defined after scoring (not predeclared); controls matched to it: false 7 / 8 / 7 / 6 / 4 / 3
+    of 6,786. The other 572 verified proteins carry the right-family KO themselves and are rescued in 97-100% by every route.
+  Paired, verified lead_X: slot Z - list Z +29.7 [+28.1, +31.4]; slot A - list A +26.2 [+24.5, +28.0]; combined Z - list Z
+  +0.3 [-0.1, +0.7]; list Z - list A +4.6 [+3.0, +6.1]; slot Z - slot A +8.1 [+7.0, +9.2]; combined Z - combined A +4.9
+  [+3.4, +6.4]. No-Pfam-no-KO stratum: slot Z - slot A +10.0 [+8.7, +11.5] (262 rescued by Z only, 28 by A only).
+
+ANSWER
+1. The slot call rescues 81.5% of the verified dark core genes with embedding lists and 73.5% with alignment lists, at a
+   0.13-0.18% false-rescue rate on 8,474 matched control ORFs. On the 2,332 proteins with neither a Pfam nor the
+   right-family KO the rates are 77.1% and 67.1%; embedding lists add +10.0 [+8.7, +11.5] points there. The predeclared
+   'works' criterion (slot or combined >= 50% at <= 2% control false rescue) is met.
+2. The top-10 list call rescues about half (51.8% Z, 47.3% A). Its failures are mostly empty votes: in 989 of 1,399 Z
+   failures the ten nearest partners carry no Pfam or KO at all: the closest relatives are unannotated in their own
+   genomes too. The combined call as predeclared (top 10 of the slot-restricted list) adds nothing (+0.3 points): the
+   ten nearest partners already sit in the slot.
+3. POST HOC (not predeclared; results/posthoc_table.tsv): a majority vote over the whole list without any positional
+   filter rescues exactly as many verified genes as the slot call (Z 2,368 vs 2,368, 2 differ each way; A 2,183 vs
+   2,134), but names a core gene for 169 of 8,474 controls (1.99%; 92 of them Ribosomal_L40e, then KO K02928, which
+   Sharur maps to ribosomal_protein, Ribosomal_L32e, Ribosomal_L15e) against 11 (0.13%) for the slot call. The rescue power comes from list depth (a
+   right-family partner sits somewhere in the Z list for 2,378 of 2,904); the slot supplies the specificity, a 15-fold
+   cut in false core names. The slot-restricted whole list without bond or locus gating gives 81.6% at 0.22%.
+4. The predicted confusion of short basic proteins is small under these calls: wrong family of the same broad class in
+   4-8 of 2,904 verified genes per route (wrong other family 30-57). It appears in the whole-list vote on controls
+   (above), where short ribosomal-protein families dominate the false names.
+5. Detection-limited sets. eL39 slot ORFs: slot Z 98.0% against 17.2% for the Z list and 40.4% for slot A (45 of 99 have
+   an empty alignment list). uL29 and uL15 slot ORFs: 83-100% by lists and slot Z; slot A reaches 18.9% on uL29 (39 of
+   53 have no alignment bond). DPANN-profile rescues (1,191): slot 92% on both arms against 30-32% for lists; the eL39
+   profile set is 98.8% by slot and 4.6% / 16.6% by lists. For DL_slot sets the slot call is partly circular (the truth
+   was defined by position); their list calls are the independent test.
+6. Negatives: 29 of 2,174 instances are named the lead's X by the slot Z call, 20 of them in L27 (VIT1 slot beside
+   DUF211: 20 of 22 named VIT1 by every route, while the study scored 0 of its sample against the VIT1 profile; UNVERIFIED
+   either way), 5 in L13 (Oxidored_q4) and 4 in L05 (K06875). 389 of the 394 L05 instances that the study also lists under
+   L02 receive the study's eL39 call. The other negatives stay unnamed or receive non-X names (L08: Gins51_C 124,
+   Ribosomal_S13_N 51 by slot Z; L01: PepSY 48), reported here as method calls only, UNVERIFIED.
+
+--------------------------------------------------------------------------------------------------------------------------
+TRUTH SET AND MAPPING (code/truth.py, data/truth.tsv, data/units.tsv)
+- 30 dark leads (52 screen rows) from dark_newcomers.tsv / dark_instances.tsv: every listed dark protein (no Pfam, in X's
+  slot, X-absent species representative). Study evidence per lead (lead level only; per-protein evidence is not
+  recorded): fraction of a 60-protein sample scoring X's Pfam profile under the relaxed rule or carrying X's dominant KO,
+  slot, length ratio; dark_is_X at >= 0.20. Leads with best evidence < 0.40 or length ratio outside 0.8-1.25 are
+  UNVERIFIED: L10 GatC (.30), L11 EMC3_TMCO1 (.267), L22 Ribosomal_L27A (.35), L25 PhoU_div (.20, ratio .70).
+- lead_X: 3,231 unique proteins = 2,904 verified + 307 UNVERIFIED + 20 ambiguous (listed under two is-X leads with
+  different X: L04/L07, L02/L07, L06/L20). lead_negative: 2,174 (395 also lead_X).
+- DL_slot (study code logic and cohort re-run; every stored count reproduced exactly): eL39 single unannotated ORF in the
+  eL31-dsDNA_bind slot, negative orders 78 (= slot_orfs.faa) + flagged Iainarchaeales 21; uL29 unannotated <= 80 aa
+  same-strand ORF after uS3, Parvarchaeales 37 + Pacearchaeales 16; uL15 gene(s) between uL30 and SecY, Parvarchaeales
+  27 + Iainarchaeales 1. The brief's "28 of 45" for uL15 is the pre-deduplication cohort; the stored facts read 27 of 44.
+- DL_profile (found in the study record): proteins rescued by the study's DPANN-specific ribosomal profiles (best hit
+  E <= 1e-5, cohort genome, no stored family Pfam, no Pfam at all): 1,191 in 12 families.
+- Mapping: all 5,836 truth proteins and 11,904 controls map to ELSA gids by protein_id (the ELSA DPANN universe is the
+  Sharur protein table); 0 lack an embedding. Empty lists, verified lead_X: Z 154 (5.3%), A 336 (11.6%); DL_slot A 47
+  of 180. Truth ORFs absent from the gene set: the study's 4 six-frame detection hits (uncalled Ribosomal_S14 in 2
+  genomes, RNase_P-MRP_p29 in 1, NiFeSe_Hases in 1); they sit outside the 30 leads and cannot be scored.
+- Not scored: core_machinery DPANN-profile rescues of non-ribosomal components (paralog rules per component) and the
+  replacement screen's 18 called-protein detection hits (many carry other Pfams).
+
+DEFINITIONS (predeclared.json)
+- Lists: Z = ws_calib z >= 10.6 best gene per genome outside the own group (vl.z_lists); A = MMseqs2 aln__k1000 outside
+  the own group, depth 1,000 (vl.aln_lists). Bonds: nodes/dpann_{Z,A}/bonds_obs.npz (tau 6). Loci: Z L4b+ theta .02,
+  A L4b theta .02 (each arm's selected output).
+- Votes: a partner votes for the right family when it carries any label of the study's X (Pfam members, proxy Pfams,
+  KOs); otherwise one vote per Pfam / KO-proxy key. Call = the plurality key with >= 2 votes; ties -> no call.
+- List call: top 10 of the gene's list. Slot call: gene inside a locus and bonded; vote over the best-ranked supporting
+  partner of every genome (partners of the gene 1-3 positions from a partner of a bonded neighbor). Combined: top 10 of
+  the list restricted to partners lying 1-3 positions from a partner of any gene within 3 positions.
+- Controls: 3 per truth protein, same genome, no Pfam and no KO, length within max(5 aa, 15%), not at a contig end, no
+  gene within 2 positions carrying a member of the screen's 1,812 conserved pairs; seed 20261120. 11,904 drawn (184
+  truth proteins had < 3 eligible, 53 had none). A control is scored with its truth protein's X; false rescue = right
+  family of the match or any CORE label (all lead_X / DL families and every label Sharur maps to ribosomal_protein).
+
+SLOT FACTS (verified lead_X; Z / A)
+  in a primary locus 2,692 / 2,675 (92.7% / 92.1%); a locus holds the gene and all its recorded flanks 2,661 / 2,647;
+  bonded directly to its flank 2,428 / 2,379; median smallest containing locus 2 / 3 genes. Slot-call failures Z: no
+  bond 440, supporting partners unannotated 49, < 2 votes 9, wrong name 38. Controls: bonded 34% / 35%, in a locus 43% (Z).
+  Right-family partner anywhere in the list: Z 2,378, A 2,223; at rank 1: 1,070 / 1,090; within 10: 1,654 / 1,577.
+
+NEGATIVES (2,174 instances; slot Z: named X / study-consistent own call / another core family / non-core family / no call)
+  L01 EXO5 1,255: 0 / 1 / 2 / 109 / 1,143      L05 K06875 516: 4 / 389 / 48 (Ribosomal_L39) / 1 / 74
+  L08 S27e 212: 0 / 0 / 51 / 127 / 34          L13 Oxidored_q4 84: 5 / 0 / 0 / 15 (NADHdh) / 64
+  L26 tfrA 70: 0 / 0 / 0 / 0 / 70              L27 VIT1 22: 20 / 0 / 0 / 0 / 2           L30 acyl-CoA dh 15: 0 / 0 / 0 / 0 / 15
+  Every route gives 27-29 named-X instances in total (results/negatives.tsv).
+
+PER-LEAD ROWS (proteins counted in each of their leads; ev = best evidence fraction; right-family counts; empty = empty
+list; locus = in primary locus Z; +flank = locus holding the gene and its flanks Z)
+  lead call                   flank                              status       ev    ratio  n     listZ listA slotZ slotA combZ combA  emptyZ/A  locus +flank
+  L01  EXO5                   tRNA_SAD+tRNA-synt_2c              negative     0.000 0.51  1255  named X: list Z 0, A 0; slot Z 0, A 0; comb Z 0, A 0
+  L02  RP-L39e+Ribosomal_L39  Ribosomal_L31e                     X            0.433 1.07   926    130   115   789   701   131   116     61  134    904   902
+  L03  SecE                   Spt5-NGN                           X            0.750 1.00   504    429   413   429   410   429   412     21   46    462   451
+  L04  Ribosomal_L39          dsDNA_bind                         X            0.417 1.06   411     34    62   372   288    26    61     14   50    404   403
+  L05  K06875+dsDNA_bind      Ribosomal_S19e                     negative     0.050 0.61   516  named X: list Z 4, A 4; slot Z 4, A 4; comb Z 4, A 4
+  L06  RNA_pol_Rpb4           DUF655+Ribosomal_L21e              X            0.867 0.96   354    312   301   311   313   312   300     10   24    337   333
+  L07  RP-L31e+Ribosomal_L31e eIF-6+dsDNA_bind+Ribosomal_L39     X            0.550 0.85   238     66    65   172   143    66    65      4   12    219   211
+  L08  Ribosomal_S27e         EIF_2_alpha                        negative     0.000 2.62   212  named X: list Z 0, A 0; slot Z 0, A 0; comb Z 0, A 0
+  L09  vATP-synt_E            ATP-synt_C+vATP-synt_AC39+V_ATP... X            0.417 1.00   192    142   115   153   135   143   115      9   18    173   169
+  L10  GatC                   Amidase                            X UNVERIFIED 0.300 0.93   174     11    13    87    61    11    13     26   44    151   149
+  L11  EMC3_TMCO1             Ribosomal_L34e                     X UNVERIFIED 0.267 0.88    87     60    53    60    54    60    53      8   19     81    77
+  L12  Ribosomal_L29          Ribosomal_S3_C+SUI1+Ribosomal_L22  X            0.583 0.93   224    145   106   177    95   146   105     11   38    195   194
+  L13  Oxidored_q4            Complex1_30kDa                     negative     0.017 0.95    84  named X: list Z 5, A 4; slot Z 5, A 4; comb Z 5, A 4
+  L14  Ribosomal_S24e         Ribosomal_S27                      X            0.667 0.94    67     43    46    49    47    48    48      2   10     60    60
+  L15  Ribosomal_L22          Ribosomal_S19+KH_2+Ribosomal_L2... X            0.767 1.07   109     73    39    77    78    73    39     10   19    100   100
+  L16  Ribosomal_L30          Ribosomal_S5_C+Ribosomal_S5+Rib... X            0.788 0.97    56     49    48    49    49    49    48      2    3     53    53
+  L17  Ribosomal_S24e         Spt4                               X            0.792 1.08    53     35    42    38    42    37    42      7    6     47    45
+  L18  Ribosomal_L31e         Ribosomal_L18A                     X            0.542 0.83    59     16    19    42    44    16    19      1    2     46    46
+  L19  Ribosomal_L6           Ribosomal_S8+Ribosomal_S14         X            0.706 0.98    24     20    20    20    20    19    20      1    2     20    20
+  L20  Ribosomal_L22          Ribosomal_L29                      X            0.742 1.08    31     24    16    25    25    24    16      1    4     27    26
+  L21  Ribosomal_L6           Ribosomal_L32e                     X            0.826 0.98    23     18    21    18    21    18    21      1    0     20    20
+  L22  Ribosomal_L27A         Ribosomal_L13+Ribosomal_S9         X UNVERIFIED 0.350 0.89    21     10    10    10    11    10    10      2    5     11    11
+  L23  Ribosomal_L27A         Ribosomal_S5_C+Ribosomal_S5+Rib... X            0.789 1.02    25     19    20    19    20    19    20      1    4     22    22
+  L24  ATP-synt_F             ATP-synt_ab_Xtn+vATP-synt_AC39     X            0.733 0.86    20     13    15    15    15    13    15      2    0     17    17
+  L25  PhoU_div               PHO4                               X UNVERIFIED 0.200 0.70    25      9     7     9     7     9     7      2    3     11    10
+  L26  tfrA                   Fer2_3                             negative     0.000 0.24    70  named X: list Z 0, A 0; slot Z 0, A 0; comb Z 0, A 0
+  L27  VIT1                   DUF211                             negative     0.000 0.82    22  named X: list Z 20, A 19; slot Z 20, A 20; comb Z 20, A 19
+  L28  Ribosomal_S26e         DUF1805                            X            0.826 0.99    46     35    27    42    42    34    27      0    0     46    46
+  L29  Cyt_bd_oxida_II        Cyt_bd_oxida_I                     X            0.643 1.02    28     19    25    22    25    22    25      0    1     23    23
+  L30  Acyl-CoA_dh_1+Acyl-... COXG                               negative     0.000 0.37    15  named X: list Z 0, A 0; slot Z 0, A 0; comb Z 0, A 0
+  The eL39 leads show the gap most: L02 slot Z 789 of 926 against 130 by the Z list; L04 372 of 411 against 34.
+
+EXPECTATIONS (predeclared) AND OUTCOMES
+  mapping 100%; embedding >= 97%                           HELD (100%, 100%)
+  A lists empty 20-50% / Z lists empty 5-20% (lead_X)      A BELOW (11.6%); Z HELD at the edge (5.3%)
+  list Z right 25-50%; same-broad-class 5-20%; ctrl 2-10%  right ABOVE (51.8%); broad REFUTED (0.2%); ctrl REFUTED (0.13%)
+  list A right 15-40%; no call 40-70%; ctrl 0-3%           right ABOVE (47.3%); no call HELD (50.6%); ctrl HELD (0.17%)
+  slot right 35-65%; in locus 70-90%; ctrl <= 2%           right ABOVE (81.5 / 73.5%); in locus ABOVE (92.7 / 92.1%); ctrl HELD
+  combined Z 40-70% and >= list +10 points; ctrl <= 2%     52.2% HELD; +0.3 REFUTED; ctrl HELD
+  embedding above alignment by 5-20 on list / combined     list +4.6, combined +4.9: just BELOW; slot within 10 HELD (+8.1)
+  DL_slot list 10-40%; combined 30-70%                     eL39 list 17.2% HELD, combined 8.1% BELOW; uL29 / uL15 ABOVE
+  DL_profile list 40-75%                                   BELOW (30.1 / 31.7%)
+  negatives named X <= 5%                                  HELD overall (1.3%); L27 20 of 22
+
+DIFFERENCES FROM THE BRIEF / LIMITS
+- Truth rates are against the study's lead-level calls carried to every listed protein; the study records no
+  per-protein evidence, so some listed proteins of a lead may be something else.
+- 'Combined' uses no truth flank (slot consistency against any gene within 3 positions) and votes the top 10, as
+  predeclared; the whole-list version is the POST HOC row. The no-Pfam-no-KO stratum and the whole-list votes were
+  defined after the predeclared numbers were read and are labeled.
+- uL15's family Pfam (Ribosomal_L27A) is shared with eL18, so a partner annotated as eL18 counts as right.
+- The slot call for DL_slot sets is partly circular; DL_profile truth is per-protein profile evidence (independent).
+- Two login-node smoke runs (2 processes, 71 s and 140 s, 3.2 GB) exceeded the 30 s login guideline.
+- No vault capture or CONTEXT.md update (the brief restricts writes to this folder).
+
+STEP 5: A GENERAL SLOT-RESCUE PASS FOR SHARUR (sketch; nothing built)
+  Inputs: per-gene embedding lists (ws_calib table, z >= 10.6, own group excluded), the round-0 list bonds (tau 6), stored
+    Pfam / KO rows, protein_id -> gid. Alignment lists optional (they rescue 10 points fewer on genes without a Pfam or KO).
+  Candidates: every bonded gene without a Pfam row (DPANN: 1,444,991 genes lack a Pfam; 34% of the matched control
+    ORFs here are bonded, 85% of the verified truth genes).
+  Call: vote over the best-ranked list partner of every genome that lies 1-3 genes from a partner of a bonded neighbor;
+    >= 2 votes, plurality; keep the positional filter (the whole-list vote has the same recall at 15x the false core names).
+  Output table: gene, called Pfam / KO, votes for and against, supporting genomes, bonded neighbors, max bond Lambda; label
+    it a positional-homology call, a hypothesis ('consistent with'), never a curated caller result.
+  Cost on DPANN (estimate from this run: 109,737 genes' lists in 6.8 s, 38k row-arms voted in 14 s on 24 CPUs): all
+    3.59 M genes' Z lists ~4 min and ~13 GB int32; votes for ~1.4 M dark genes ~10 min; about 15 min of one 24-CPU job.
+  Expected yield from this test: ~77-81% right on dark core genes, <= 0.2% false core names on matched dark ORFs.
+
+COSTS
+  Job 119461 slot_rescue (score.py) 1 min 02 s, job 119468 slot_rescue_ph (posthoc.py) 47 s; both -A banfield -p standard
+  --qos=standard_expand -c 24, mark7 exclude list: 1 min 49 s of the 2 h 24-CPU budget. Peak RSS 3.6 GB. Mac: truth 13 s,
+  controls 6 s, summaries seconds. No GPU, no model inference, no HMM search.
+
+ARTIFACTS (local benchmarks/redesign/slot_rescue/; remote $RD/slot_rescue/ holds code/, data/, results/, logs/, STATUS)
+  predeclared.json; NOTEBOOK.txt; code/truth.py, controls.py, score.py, score.sbatch, summarize.py, posthoc.py,
+  posthoc.sbatch, summarize_posthoc.py, strata.py; data/truth.tsv, units.tsv, controls.tsv, labels.tsv, ko_proxy.tsv,
+  annot.parquet, truth_meta.json, controls_meta.json; results/calls.parquet (sha256 57ba4cfb...), gate.json, run.json,
+  bottom_line.tsv, per_lead.tsv, controls.tsv, negatives.tsv, ranks.tsv, flanks.tsv, per_gene.tsv.gz, summary.json,
+  posthoc.parquet, posthoc_table.tsv, strata.tsv.

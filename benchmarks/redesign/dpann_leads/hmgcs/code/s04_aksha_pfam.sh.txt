@@ -1,0 +1,5 @@
+#!/bin/bash
+# bash script (saved as .txt because the campaign allows only .txt/.tsv/.json/.py/.parquet/.faa/.pdb); run with: bash FILE
+# Weak-hit architecture scan of the query set against all of Pfam-A through Aksha (E <= 10, Mac, 4 threads).
+cd /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/hmgcs
+~/.local/bin/aksha search --hmm_in ~/.config/Astra/PFAM/Pfam-A.hmm --prot_in query_arch.faa --outdir aksha_pfam_E10 --evalue 10 --threads 4

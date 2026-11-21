@@ -1,0 +1,337 @@
+1. VERDICT PER COMPONENT D1–D7
+
+Scope: literature and public documentation opened during this search, through 13 November 2026. These verdicts cover the language-model, compression, embedding and structural approaches assigned to agent B. Classical gene-cluster statistics and synteny methods require the other review.
+
+D1 — no close precedent found.
+
+The closest ingredients are SEQUITUR’s recursive replacement of repeated adjacent symbols, ADIOS’s hierarchical extraction of statistically supported patterns, and Dunning’s likelihood-ratio treatment of collocations. I found no opened work combining these into gene-order segmentation using lineage-adjusted adjacency enrichment and a shuffle-calibrated merge cost. Applying grammar induction to biological sequences is established; the specific discovery procedure remains distinguishable. [SEQUITUR](https://arxiv.org/pdf/cs/9709102), [ADIOS](https://shimon-edelman.github.io/SolanHornRuppinEdelman-PNAS05.pdf), [Dunning](https://www.cs.columbia.edu/~vh/courses/LexicalSemantics/Association/dunning93accurate.pdf)
+
+The distinction from Dunning should be explicit: the proposed expression is a Poisson log-likelihood gain. Dunning’s paper establishes likelihood-ratio collocation testing, principally through binomial/multinomial formulations; it does not establish this gene-order objective.
+
+D2 — known ingredients, new combination.
+
+gLM represents genes using continuous protein embeddings in genomic context; Gaia retrieves contextually related proteins through embedding similarity; SAFPred combines protein embeddings with conserved neighbourhood information. Their outputs and matching procedures differ from progressively merged, variable-composition neighbourhood alignments represented by supporting spans. I found no close precedent for that span-support representation coupled to per-genome false-match calibration. [gLM](https://www.researchgate.net/publication/379540317_Genomic_language_model_predicts_protein_co-regulation_and_function), [Gaia](https://www.osti.gov/pages/servlets/purl/2571838), [SAFPred](https://pure.tudelft.nl/ws/portalfiles/portal/210065225/btae328.pdf)
+
+D3 — known ingredients, new combination.
+
+The effective-sample-size formula has the standard form obtained from variance inflation under correlated observations. Morcos et al. establish sequence-neighbourhood reweighting in direct coupling analysis; Bartoszek develops phylogenetic effective sample sizes; LDWeaver transfers sequence reweighting to bacterial genome-wide association between sites. The distinctive choice here is estimating redundancy from shared gene adjacencies among the pair’s carriers. I found no opened precedent for that exact estimator. [Morcos et al.](https://personal.utdallas.edu/~faruckm/Evolutionary_Information_Lab/Publications_files/Morcos_PNAS_Published_Version_Final.pdf), [Bartoszek](https://arxiv.org/pdf/1507.07113), [LDWeaver](https://dbc.library.uu.nl/bitstream/handle/1874/453744/lqae061.pdf?isAllowed=y&sequence=1)
+
+D4 — no close precedent found.
+
+Successor-variety segmentation and ADIOS supply close conceptual antecedents: boundaries occur where continuation becomes less predictable or less constrained. The proposed rule instead measures similarity among the facing neighbours of homologous boundary genes, using continuous protein representations. I found no application of this particular statistic to gene-order segmentation. Calling it “inspired by successor variety” is defensible; calling cosine cohesion an entropy estimator would require a derivation. [Çöltekin](https://coltekin.net/cagri/papers/coltekin2010clin.pdf), [ADIOS](https://shimon-edelman.github.io/SolanHornRuppinEdelman-PNAS05.pdf)
+
+D5 — known ingredients, new combination.
+
+The central representation—averaging protein embeddings into one operon vector—is published essentially as is in SAFPred. BiG-SLiCE already provides large-scale cluster mapping and centroid-based assignment using domain vectors; IBIS provides learned whole-BGC embeddings and vector retrieval. The remaining distinction is the combination of whitening, general de novo loci, type/subtype transfer and explicitly evaluated retrieval across sequence-family partitions. “First vector representation of a locus” or “first embedding-based locus search” would be unsafe. [SAFPred](https://pure.tudelft.nl/ws/portalfiles/portal/210065225/btae328.pdf), [BiG-SLiCE](https://scispace.com/pdf/big-slice-a-highly-scalable-tool-maps-the-diversity-of-1-2-1dvk1x14h2.pdf), [IBIS](https://pdfs.semanticscholar.org/86d5/684cb297b968e7e273ee1ca0310ef2d9112b.pdf)
+
+D6 — known ingredients, new combination.
+
+Qi et al. directly select bacterial pairs from predicted operons and conserved colocalisation, then predict their complexes at scale. Humphreys et al. perform large bacterial interaction screens with positive/negative benchmarks. Schmid and Walter use randomized partners matched for protein identity and frequency, plus noncontacting members of known complexes as negatives. I found no inspected study containing the exact combination of length/hydrophobicity-matched swaps, adjacent-but-uncalled pairs and curated mates for evaluating a general locus caller. [Qi et al.](https://www.nature.com/articles/s41467-026-70884-4), [Humphreys et al.](https://www.nature.com/articles/s41564-024-01791-x.pdf), [Predictomes](https://walter.hms.harvard.edu/wp-content/uploads/2025/05/10.1016j.molcel.2025.01.034.pdf)
+
+D7 — no close precedent found.
+
+This verdict applies to the exact empirical finding, particularly the comparison between failed E-value calibration and a transferable standardized threshold. Remote-homology recovery through embeddings is already central to ProtTucker and PLMSearch. ProtEmbed supplies an older counterexample to any blanket claim that embedding significance cannot be calibrated: it estimates length-dependent null distributions and reports p-values and q-values, although its embeddings predate pLMs. None establishes the proposed “mostly split homology” result or the specific cosine-versus-z-score finding. [ProtTucker](https://discovery.ucl.ac.uk/id/eprint/10150829/1/Contrastive%20learning%20on%20protein%20embeddings%20enlightens%20midnight%20zone.pdf), [PLMSearch](https://www.nature.com/articles/s41467-024-46808-5.pdf), [ProtEmbed](https://noble.gs.washington.edu/papers/melvin2011detecting.pdf)
+
+
+2. CLOSEST PRIOR WORK OVERALL
+
+These six deserve explicit positioning in the paper.
+
+1. Urhan et al., SAFPred, 2024. The closest direct precedent for an operon represented by the mean of protein embeddings, combined with synteny and adaptive similarity thresholds. Its annotation query is a protein; its operon database is built using sequence clusters and physical-distance rules. [Paper](https://pure.tudelft.nl/ws/portalfiles/portal/210065225/btae328.pdf)
+
+2. Miller, Stern and Burstein, 2022. Establishes gene-family “words,” neighbourhood-based word embeddings and discovery of candidate functional systems. The paper should distinguish statistical segmentation from this embedding-plus-co-occurrence workflow. [Paper](https://www.nature.com/articles/s41467-022-33397-4.pdf)
+
+3. Jha et al., Gaia, 2025. A particularly important comparison for embedding-based search of microbial proteins and their conserved contexts. It retrieves proteins from a context-aware vector database; it does not produce the proposed exhaustive segmentation into conserved loci. This is also author-overlapping prior work. [Paper](https://www.osti.gov/pages/servlets/purl/2571838)
+
+4. Lai et al., BGC-Prophet, 2025. A direct precedent for finding genomic cluster boundaries using pLM gene representations. Its detector is supervised and BGC-specific, giving a clear comparison against broad, unsupervised conservation-based discovery. [Paper DOI](https://doi.org/10.1093/nar/gkaf305)
+
+5. Spencer et al., IBIS, 2025. The strongest opened precedent for learned whole-cluster vectors used for retrieval and biochemical interpretation. The relevant distinction is general locus discovery and simple pooled representations versus a trained BGC representation tied to biosynthetic chemistry. [Paper](https://pdfs.semanticscholar.org/86d5/684cb297b968e7e273ee1ca0310ef2d9112b.pdf)
+
+6. Qi et al., 2026. The closest structural-validation precedent because its bacterial candidates explicitly originate from operons and conserved colocalisation. The contribution to emphasize is the controlled evaluation of a locus-discovery procedure. [Paper](https://www.nature.com/articles/s41467-026-70884-4)
+
+
+3. ANNOTATED BIBLIOGRAPHY
+
+“Full text” below means the paper or manuscript was opened and relevant methodological passages inspected. Exceptions identify abstract-only or documentation-only assessment.
+
+Theme 1 — Tokenisation, grammar induction, MDL and collocation statistics
+
+• Craig G. Nevill-Manning and Ian H. Witten. 1997. Journal of Artificial Intelligence Research 7:67–82. “Identifying Hierarchical Structure in Sequences: A linear-time algorithm.” Full text.
+SEQUITUR replaces repeated digrams with grammar rules and recursively builds hierarchical structure under digram-uniqueness and rule-utility constraints. This anticipates D1’s nested pair replacement, with a different objective and no lineage-based genomic enrichment model. [Paper](https://arxiv.org/pdf/cs/9709102)
+
+• Zach Solan, David Horn, Eytan Ruppin and Shimon Edelman. 2005. PNAS 102:11629–11634. “Unsupervised learning of natural languages.” DOI: 10.1073/pnas.0409746102. Full text.
+ADIOS extracts statistically significant patterns from paths through a graph and recursively replaces them, incorporating equivalence classes that permit alternatives within patterns. Its biological application concerns protein sequences; the relevant antecedents are hierarchical patterns, variable instances and context-sensitive boundaries, rather than gene-order loci. [Paper](https://shimon-edelman.github.io/SolanHornRuppinEdelman-PNAS05.pdf)
+
+• Ted Dunning. 1993. Computational Linguistics 19(1):61–74. “Accurate Methods for the Statistics of Surprise and Coincidence.” Full text.
+Develops likelihood-ratio statistics for sparse textual events and collocations, addressing settings where simpler approximations behave poorly. This is statistical ancestry for D1, not a genomic application or the exact proposed Poisson model. [Paper](https://www.cs.columbia.edu/~vh/courses/LexicalSemantics/Association/dunning93accurate.pdf)
+
+• Bulgan Galbadrakh, Kyung-Eun Lee and Hyun-Seok Park. 2012. Genomics & Informatics 10(4):266–270. “Developing JSequitur to Study the Hierarchical Structure of Biological Sequences in a Grammatical Inference Framework of String Compression Algorithms.” DOI: 10.5808/GI.2012.10.4.266. Full text.
+Applies SEQUITUR-style compression to nucleotide sequences, including cancer genes, and examines grammar patterns and compression rates. This establishes biological grammar induction, while the units and scientific target differ from conserved gene neighbourhoods. [Paper](https://genominfo.org/upload/pdf/gni-10-266.pdf)
+
+• Lijia Yu, Deepak Kumar Tanwar, Emanuel Diego S. Penha, Yuri I. Wolf, Eugene V. Koonin and Malay K. Basu. 2019. PNAS 116(9):3636–3645. “Grammar of protein domain architectures.” DOI: 10.1073/pnas.1814684116. Full text.
+Uses domain n-grams and information gain relative to randomized domain combinations to quantify protein-architecture grammar. This is a genuine biological collocation/information-theoretic precedent, operating within proteins rather than across neighbouring genes. [Paper](https://www.research-collection.ethz.ch/bitstreams/f85245bb-3685-4fec-a037-3d478fbf2658/download)
+
+Assessment: the opened literature establishes the individual ideas of compression, hierarchical symbolic patterns and biological collocations. It did not yield the specified gene-order merge algorithm.
+
+Theme 2 — Gene-level genomic language models and contextual embeddings
+
+• Danielle Miller, Adi Stern and David Burstein. 2022. Nature Communications 13:5731. “Deciphering microbial gene function using natural language processing.” DOI: 10.1038/s41467-022-33397-4. Full text.
+Trains skip-gram embeddings of gene families from approximately 360 million genes on 11 million contigs, using genomic neighbours as context. It predicts functions and identifies candidate systems through additional co-occurrence analysis and inspection: it does more than embed genes, but does not implement general unsupervised locus-boundary segmentation. [Paper](https://www.nature.com/articles/s41467-022-33397-4.pdf)
+
+• Yunha Hwang, Andre L. Cornman, Elizabeth H. Kellogg, Sergey Ovchinnikov and Peter R. Girguis. 2024. Nature Communications 15:2880. “Genomic language model predicts protein co-regulation and function.” DOI: 10.1038/s41467-024-46947-9. Full text, including the published paper hosted on ResearchGate.
+gLM models ordered windows of up to 30 genes using ESM2 protein embeddings and orientation, predicting masked gene embeddings and learning contextual representations. Attention reflects operon structure; the paper also evaluates mean-pooled contig representations, but provides contextual modelling rather than the proposed conserved-locus segmentation procedure. [Published paper](https://www.researchgate.net/publication/379540317_Genomic_language_model_predicts_protein_co-regulation_and_function)
+
+• Andre Cornman, Jacob West-Roberts, Antonio Pedro Camargo, Simon Roux, Martin Beracochea, Milot Mirdita, Sergey Ovchinnikov and Yunha Hwang. 2025. ICLR. “The OMG dataset: An Open MetaGenomic corpus for mixed-modality genomic language modeling.” Full text.
+Introduces gLM2, trained on mixed coding amino-acid and intergenic nucleotide sequences, with genomic orientation represented in the input. Operon-related and interaction-related evaluations show that it learns context, but it is not an unsupervised segmentation and cataloguing algorithm for conserved loci. [Proceedings paper](https://proceedings.iclr.cc/paper_files/paper/2025/file/dbb40375daa3c39f1c098b12608aed12-Paper-Conference.pdf)
+
+• Maciej Wiatrak et al. 2025. bioRxiv preprint. “A contextualised protein language model reveals the functional syntax of bacterial evolution.” DOI: 10.1101/2025.07.20.665723. Documentation-only assessment: official model card and author’s description.
+Bacformer processes ordered protein embeddings at whole-genome scale and supplies contextual protein and pooled genome representations. The documented model uses protein-family prediction objectives despite continuous inputs; the inspected documentation supports contextual representation learning and downstream prediction, rather than general de novo conserved-locus segmentation. [Official model card](https://huggingface.co/macwiatrak/bacformer-masked-MAG/blob/main/README.md), [author description](https://macwiatrak.github.io/posts/2025/introducing-bacformer/)
+
+• Geoffrey D. Hannigan, David Prihoda et al. 2019. Nucleic Acids Research 47:e110. “A deep learning genome-mining strategy for biosynthetic gene cluster prediction.” DOI: 10.1093/nar/gkz654. Full text.
+DeepBGC learns pfam2vec domain embeddings from genomic context and uses a bidirectional LSTM to detect BGC regions, with additional product/activity classifiers. It discovers candidate boundaries in genomes through a supervised, domain-dependent model; it is a stronger precedent than a generic “genes as words” analogy. [Paper](https://pdfs.semanticscholar.org/2c9d/e7b5543717273c5eb10f4595ab88e089d69f.pdf)
+
+Theme 3 — Protein embeddings for neighbourhood, synteny and cluster search
+
+• Aysun Urhan, Bianca-Maria Cosma, Ashlee M. Earl, Abigail L. Manson and Thomas Abeel. 2024. Bioinformatics 40(6):btae328. “SAFPred: synteny-aware gene function prediction for bacteria using protein embeddings.” DOI: 10.1093/bioinformatics/btae328. Full text.
+Builds a synteny database from CD-HIT clusters and distance/strand rules, averaging representative ESM1b embeddings into operon vectors. Query-protein cosine matches above a query-specific percentile support GO transfer; this differs from locus-to-locus alignment and per-genome z-score calibration. [Paper](https://pure.tudelft.nl/ws/portalfiles/portal/210065225/btae328.pdf)
+
+• Nishant Jha, Joshua Kravitz, Jacob West-Roberts, Cong Lu, Antonio Pedro Camargo, Simon Roux, Andre Cornman and Yunha Hwang. 2025. Science Advances 11:eadv5109. “Gaia: An AI-enabled genomic context–aware platform for protein sequence annotation.” DOI: 10.1126/sciadv.adv5109. Full text.
+Contrastively adapts gLM2 using structural clusters and performs approximate nearest-neighbour retrieval against more than 85 million protein clusters from 131,744 microbial genomes. A protein query retrieves proteins and their neighbourhoods; conserved-context discovery is demonstrated, while explicit multi-gene locus alignment and segmentation are separate tasks. [Paper](https://www.osti.gov/pages/servlets/purl/2571838)
+
+• Qilong Lai, Shuai Yao, Yuguo Zha, Haohong Zhang, Haobo Zhang, Ying Ye, Yonghui Zhang, Hong Bai and Kang Ning. 2025. Nucleic Acids Research 53:gkaf305. “Deciphering the biosynthetic potential of microbial genomes using a BGC language processing neural network model.” DOI: 10.1093/nar/gkaf305. Full publisher PDF inspected.
+BGC-Prophet feeds ESM2 gene representations into a supervised transformer operating over genomic windows to identify BGC genes and classify products. It provides direct pLM-based boundary discovery, specialized to labelled biosynthetic regions. [Paper DOI](https://doi.org/10.1093/nar/gkaf305)
+
+• Jacob West-Roberts. Undated public software documentation, accessed in this session. “ELSA: Embedding Locus Shingle Alignment.” Documentation-only; publication status unverified.
+The public README explicitly describes order-aware discovery of conserved gene neighbourhoods from protein embeddings, using shingles and an alignment gate. This is directly relevant author-owned software prior art; it should be distinguished from independent published precedence and from whichever algorithmic version the paper evaluates. [Public repository](https://github.com/jwestrob/ELSA)
+
+Assessment: SAFPred, Gaia and public ELSA documentation are the clearest opened neighbourhood-related embedding precedents. I found no additional independently published general pLM-based collinearity engine matching the proposed D2 procedure.
+
+Theme 4 — Whole-locus vectors, cluster maps, typing and retrieval
+
+• Satria A. Kautsar, Justin J. J. van der Hooft, Dick de Ridder and Marnix H. Medema. 2021. GigaScience 10:giaa154. “BiG-SLiCE: A highly scalable tool maps the diversity of 1.2 million biosynthetic gene clusters.” DOI: 10.1093/gigascience/giaa154. Full text.
+Encodes already-called BGCs using biosynthetic-domain features and clusters them with BIRCH, supporting assignment to cluster centroids. It strongly anticipates D5’s vector map and retrieval/assignment architecture, using engineered domain features. [Paper](https://scispace.com/pdf/big-slice-a-highly-scalable-tool-maps-the-diversity-of-1-2-1dvk1x14h2.pdf)
+
+• Carolina Rios-Martinez, Nicholas Bhattacharya, Ava P. Amini, Lorin Crawford and Kevin K. Yang. 2023. PLOS Computational Biology 19:e1011162. “Deep self-supervised learning for biosynthetic gene cluster detection and product classification.” DOI: 10.1371/journal.pcbi.1011162. Full text.
+BiGCARP learns masked representations of Pfam-domain sequences from approximately 127,000 BGCs using a convolutional language model. It supports BGC detection and product classification, with discrete domain identities and learned contextual representations. [Paper](https://journals.plos.org/ploscompbiol/article/file?id=10.1371%2Fjournal.pcbi.1011162&type=printable)
+
+• Tatiana Malygina and Olga V. Kalinina. 2024. ICML Workshop on Machine Learning for Life and Material Sciences. “Exploring sequence landscape of biosynthetic gene clusters with protein language models.” Full workshop manuscript.
+Represents BGCs through ESM2 embeddings of individual domains or consecutive domain pairs and examines contrastive fine-tuning, class separation and held-out biosynthetic classes. It is an early direct comparison of pLM-based BGC representations, while relying on domain extraction and supplied BGC boundaries. [Paper](https://openreview.net/pdf/ed545c1c3af1003877fe505eb36ddb7bf58cde7b.pdf)
+
+• Norman R. Spencer, Mathusan Gunabalasingam, Keshav Dial, Xiaxia Di, Tonya Malcolm and Nathan A. Magarvey. 2025. PNAS 122:e2425048122. “An integrated AI knowledge graph framework of bacterial enzymology and metabolism.” DOI: 10.1073/pnas.2425048122. Full text.
+IBIS-BGC uses a Graphormer representation incorporating enzyme/domain information and trains with relationships between biosynthetic products. Whole-BGC vectors enable retrieval of related clusters; this anticipates learned locus-level search, with biosynthetic supervision and richer features than a simple protein mean. [Paper](https://pdfs.semanticscholar.org/86d5/684cb297b968e7e273ee1ca0310ef2d9112b.pdf)
+
+• Vladimir Porokhin, Emily Mevers, Justin J. J. van der Hooft and Soha Hassoun. 2026. Bioinformatics 42:btag559. “Fine-grained structural classification of biosynthetic gene cluster-encoded products.” DOI: 10.1093/bioinformatics/btag559. Abstract-only, supplemented by official repository documentation.
+BGCat uses pLM gene representations and a neural classifier to assign fine-grained NPClassifier product categories and characterize gene-cluster families. The primary full text was inaccessible; the separate BGC-Bench paper below explicitly evaluates pooled ESM-C representations associated with BGCat, so that pooling implementation should not be inferred solely from this abstract. [Institutional abstract](https://research.wur.nl/en/publications/fine-grained-structural-classification-of-biosynthetic-gene-clust-2/), [repository](https://github.com/HassounLab/BGCat)
+
+• Guimei Liu, Yiting Li, Gabriel Ong, Fong Tian Wong, Dillon W. P. Tay, Yee Hwee Lim, Chuan Sheng Foo and Winston Koh. 2026. Scientific Reports. “Unified genomic and chemical representations enable bidirectional biosynthetic gene cluster and natural product retrieval.” DOI: 10.1038/s41598-026-49955-5. Full publisher manuscript.
+BCCoE aligns BiGCARP-derived BGC representations with molecular representations using metric learning, enabling retrieval in both directions. Its regions are supplied and its objective is BGC–product correspondence, establishing another whole-cluster retrieval precedent. [Paper](https://www.nature.com/articles/s41598-026-49955-5_reference.pdf)
+
+• Tomoki Kawano, Taro Shiraishi, Tomohisa Kuzuyama and Maiko Umemura. 2026. PLOS Computational Biology 22:e1013181. “A novel transformer-based platform for the prediction and design of biosynthetic gene clusters for (un)natural products.” DOI: 10.1371/journal.pcbi.1013181. Full text.
+Trains a transformer over domain sequences and averages contextual domain vectors to obtain BGC representations, evaluating class/subclass organization and domain prediction. It anticipates cluster-vector maps and classification through a domain vocabulary, rather than family-independent gene matching. [Paper](https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1013181&type=printable)
+
+• Hanlin Xiao, Eriko Takano, Mauricio A. Álvarez and Rainer Breitling. 2026. arXiv preprint, submitted 1 November. “Data-Scarce, Multi-Granular, Multimodal: Benchmark Design for Biosynthetic Gene Clusters.” arXiv:2611.02275. Full text.
+BGC-Bench compares twelve representations across classification, chemical-property prediction, retrieval and other tasks using genotype- and phenotype-shift splits. It explicitly uses residue-to-gene-to-cluster mean pooling for several pLM representations and finds that pretrained encoders do not consistently outperform compositional baselines; its frozen-backbone comparisons should be distinguished from running every original end-to-end tool. [Paper](https://arxiv.org/html/2611.02275v1)
+
+Theme 5 — Similarity calibration, anisotropy, hubness and remote homology
+
+• Iain Melvin, Jason Weston, William Stafford Noble and Christina Leslie. 2011. PLOS Computational Biology 7:e1001047. “Detecting Remote Evolutionary Relationships among Proteins by Large-Scale Semantic Embedding.” DOI: 10.1371/journal.pcbi.1001047. Full text.
+ProtEmbed learns an embedding from alignment-derived information and calibrates distances against synthetic sequences generated by a third-order Markov model. Length-dependent Weibull tails produce p-values, followed by FDR/q-value estimation: a direct significance-calibration precedent, with a representation and score different from modern pLM cosine. [Paper](https://noble.gs.washington.edu/papers/melvin2011detecting.pdf)
+
+• Michael Heinzinger, Maria Littmann, Ian Sillitoe, Nicola Bordin, Christine Orengo and Burkhard Rost. 2022. NAR Genomics and Bioinformatics 4:lqac043. “Contrastive learning on protein embeddings enlightens midnight zone.” DOI: 10.1093/nargab/lqac043. Full text.
+ProtTucker uses CATH-guided contrastive learning to improve remote evolutionary classification from pLM representations, including relationships at low sequence similarity. It reports empirical error-controlled distance thresholds, providing precedent for useful thresholding while leaving D7’s specific distributional comparison open. [Paper](https://discovery.ucl.ac.uk/id/eprint/10150829/1/Contrastive%20learning%20on%20protein%20embeddings%20enlightens%20midnight%20zone.pdf)
+
+• Wei Liu, Ziye Wang, Ronghui You, Chenghan Xie, Hong Wei, Yi Xiong, Jianyi Yang and Shanfeng Zhu. 2024. Nature Communications 15:2775. “PLMSearch: Protein language model powers accurate and fast sequence search for remote homology.” DOI: 10.1038/s41467-024-46808-5. Full text.
+Learns a similarity predictor from pLM representations using structural similarity targets and supports fast remote-homology retrieval. Its learned score differs from raw cosine, so its successes establish remote-homology capability rather than validating the proposed cosine null model. [Paper](https://www.nature.com/articles/s41467-024-46808-5.pdf)
+
+• Sheikh Azizul Hakim, Kowshic Roy and M. Saifur Rahman. 2025. arXiv preprint. “Isotropy and Geometry of Pretrained Protein LMs.” arXiv:2510.10655. Full rendered manuscript.
+Examines anisotropy and geometric concentration in protein-language-model representations, finding substantial model-dependent differences. It supports checking embedding geometry, while supplying neither the proposed whitening-and-threshold pipeline nor a general calibration guarantee across pLMs. [Manuscript](https://arxiv.org/abs/2510.10655)
+
+• Jianlin Su, Jiarun Cao, Weijie Liu and Yangyiwen Ou. 2021. arXiv preprint. “Whitening Sentence Representations for Better Semantics and Faster Retrieval.” arXiv:2103.15316. Full text.
+Applies covariance whitening and optional dimensionality reduction to sentence embeddings to improve semantic similarity and retrieval. This establishes whitening as an existing representation-processing ingredient; it provides no protein-specific validation. [Paper](https://arxiv.org/pdf/2103.15316)
+
+• Guillaume Lample, Alexis Conneau, Marc’Aurelio Ranzato, Ludovic Denoyer and Hervé Jégou. 2018. ICLR. “Word Translation Without Parallel Data.” Full text.
+Introduces cross-domain similarity local scaling, subtracting neighbourhood-density terms from cosine similarity to mitigate hubness in cross-lingual retrieval. CSLS is a useful normalization baseline for D2/D7, but differs from per-genome z-scoring and is not an E-value procedure. [Paper](https://openreview.net/pdf?id=H196sainb)
+
+• Robert Shaw, Samuel D. Love and Claire D. McWhite. 2025. Journal of Molecular Evolution 93:765–776. “Evaluating Pretrained Protein Language Model Embeddings as Proxies for Functional Similarity.” DOI: 10.1007/s00239-025-10282-4. Abstract-only.
+Evaluates embeddings using cross-species functional-complementation examples and examines their ability to distinguish functional similarity. This is relevant to separating evolutionary relatedness from functional equivalence, but does not establish the fraction of cross-cluster neighbours that are homologous. [Abstract](https://pubmed.ncbi.nlm.nih.gov/41273410/)
+
+Additional relevant calibration precedent: SAFPred’s query-specific similarity percentile is already an adaptive threshold. It should be distinguished from both a calibrated false-match probability and a standardized similarity cutoff.
+
+Theme 6 — Phylogenetic redundancy and effective sample size
+
+• Steven Henikoff and Jorja G. Henikoff. 1994. Journal of Molecular Biology 243:574–578. “Position-based sequence weights.” DOI: 10.1016/0022-2836(94)90032-9. Abstract-only.
+Weights aligned sequences using residue diversity and representation at alignment positions, reducing redundancy bias. This is established sequence weighting, with a different estimator and data structure from D3. [Abstract](https://pubmed.ncbi.nlm.nih.gov/7966282/)
+
+• Faruck Morcos et al. 2011. PNAS 108:E1293–E1301. “Direct-coupling analysis of residue coevolution captures native contacts across many protein families.” DOI: 10.1073/pnas.1111471108. Full text.
+Downweights each sequence by the number of sufficiently similar sequences, then sums weights into an effective count used for frequency estimation. This is close methodological ancestry for redundancy-adjusted support, although D3 substitutes continuous adjacency overlap for sequence-neighbour counts. [Paper](https://personal.utdallas.edu/~faruckm/Evolutionary_Information_Lab/Publications_files/Morcos_PNAS_Published_Version_Final.pdf)
+
+• Krzysztof Bartoszek. 2016. Journal of Theoretical Biology 407:371–386. “Phylogenetic effective sample size.” DOI: 10.1016/j.jtbi.2016.06.026. Full arXiv manuscript inspected.
+Develops effective-sample-size definitions for correlated phylogenetic observations, including regression-based and mutual-information approaches. It supplies a formal comparison for D3, while using evolutionary covariance models rather than adjacency overlap. [Manuscript](https://arxiv.org/pdf/1507.07113)
+
+• Sudaraka Mallaawaarachchi, Gerry Tonkin-Hill et al. 2024. NAR Genomics and Bioinformatics 6:lqae061. “Detecting co-selection through excess linkage disequilibrium in bacterial genomes.” DOI: 10.1093/nargab/lqae061. Full text.
+LDWeaver weights each bacterial sequence by the reciprocal number of nearby sequences under a Hamming-distance threshold and substitutes effective counts in association estimates. This is a verified transplantation of sequence reweighting to genome-wide bacterial data, focused on site associations rather than conserved gene-order segmentation. [Paper](https://dbc.library.uu.nl/bitstream/handle/1874/453744/lqae061.pdf?isAllowed=y&sequence=1)
+
+• John A. Lees, T. Tien Mai, Marco Galardini, Nicole E. Wheeler, Samuel T. Horsfield, Julian Parkhill and Jukka Corander. 2020. mBio 11:e01344-20. “Improved Prediction of Bacterial Genotype-Phenotype Associations Using Interpretable Pangenome-Spanning Regressions.” DOI: 10.1128/mBio.01344-20. Full text.
+Uses sequence reweighting by strain prevalence and leave-one-strain-out validation in pangenome-spanning prediction. It establishes redundancy correction for bacterial presence/absence variation, while neither deriving D3’s formula nor using adjacency overlap. [Paper](https://api.repository.cam.ac.uk/server/api/core/bitstreams/d3d729bd-0db5-4e2b-ac88-763ca08b0e08/content)
+
+A search false positive worth distinguishing: Bernt, Wiesecke and Middendorf’s 2013 “On Weighting Schemes for Gene Order Analysis” concerns weights assigned to rearrangement operations, not effective numbers of sampled genomes. [Opened paper](https://drops.dagstuhl.de/storage/01oasics/oasics-vol034-gcb2013/OASIcs.GCB.2013.14/OASIcs.GCB.2013.14.pdf)
+
+Theme 7 — Successor variety, branching entropy and segmentation
+
+• Çağrı Çöltekin. 2010. Proceedings of the 20th Computational Linguistics in the Netherlands meeting. “Improving Successor Variety for Morphological Segmentation.” Full text.
+Studies and normalizes successor variety: greater diversity of continuations signals candidate morphological boundaries. The experiments concern human-language morphology; the transferable ingredient is continuation diversity, whereas D4 measures geometric similarity among biological neighbours. [Paper](https://coltekin.net/cagri/papers/coltekin2010clin.pdf)
+
+ADIOS, annotated under theme 1, also supplies a relevant precedent through directional transition statistics and hierarchical pattern extraction. The search did not identify an opened application of successor variety or branching entropy to gene-order locus boundaries.
+
+Theme 8 — Complex prediction as evidence for functional associations
+
+• Xianzhi Qi, Cheng Ye, Jianqiang Liang et al. 2026. Nature Communications 17:4397. “Atlas of predicted protein complex structures across kingdoms.” DOI: 10.1038/s41467-026-70884-4. Full main text.
+For 36 bacterial pathogens, the workflow uses predicted operons and conserved colocalisation to select 164,037 candidate pairs and reports 22,216 high-confidence heterodimers after ColabFold prediction. Confidence benchmarking includes negative examples derived from experimentally resolved monomers and consideration of crystal-packing artifacts; I did not find D6’s complete matched-control design in the inspected main text. [Paper](https://www.nature.com/articles/s41467-026-70884-4)
+
+• Ian R. Humphreys, Jing Zhang, Minkyoung Baek, Yaxi Wang et al. 2024. Nature Microbiology 9:2642–2652. “Protein interactions in human pathogens revealed through deep learning.” DOI: 10.1038/s41564-024-01791-x. Full main paper.
+Screens bacterial protein pairs using coevolution, RoseTTAFold2-Lite and AlphaFold, with an initial eligible set of 77.9 million pairs across 19 pathogens. Benchmarks include 1,000 positives and 10,000 negatives, plus prevalence-adjusted analyses; experimental interaction tests include random-bait and bait-omission controls. [Paper](https://www.nature.com/articles/s41564-024-01791-x.pdf)
+
+• K. Ernits, C. K. Saha, T. Brodiazhenko et al. 2023. PNAS 120:e2305393120. “The structural basis of hyperpromiscuity in a core combinatorial network of type II toxin-antitoxin and related phage defense systems.” DOI: 10.1073/pnas.2305393120. Abstract and figure captions inspected.
+Combines predicted toxin–antitoxin complex structures with experiments examining partner compatibility and interfaces. The available figures document toxicity/neutralization and mutational tests; this is an established-system interaction study, rather than a broad validation of newly segmented loci. [Abstract and figures](https://pubmed.ncbi.nlm.nih.gov/37556498/)
+
+• Ernst W. Schmid and Johannes C. Walter. 2025. Molecular Cell 85:1216–1232. “Predictomes, a classifier-curated database of AlphaFold-modeled protein-protein interactions.” DOI: 10.1016/j.molcel.2025.01.034. Full text.
+Builds a classifier using positive interactions, random pairs, noncontacting members of known complexes, and randomized partners matched to an experimental dataset’s protein identities and frequencies. Although focused on eukaryotic proteins, it is a strong control-design precedent and shows substantial false-positive rates from conventional AlphaFold-Multimer confidence metrics alone. [Paper](https://walter.hms.harvard.edu/wp-content/uploads/2025/05/10.1016j.molcel.2025.01.034.pdf)
+
+
+4. EXPECTED BASELINES
+
+For embedding-based neighbourhood retrieval:
+
+• Gaia/gLM2_embed is the clearest published contextual-retrieval comparator. Evaluate anchor-gene retrieval and recovery of conserved neighbourhoods separately from locus-boundary accuracy. [Gaia](https://www.osti.gov/pages/servlets/purl/2571838)
+
+• ELSA is the direct publicly documented embedding-synteny comparator. Identify the exact software version and separate the earlier algorithm from the method under review. [ELSA documentation](https://github.com/jwestrob/ELSA)
+
+• SAFPred provides a relevant mean-operon representation baseline, although its original endpoint is gene-function prediction. A locus-retrieval adaptation should be labelled as an adaptation. [SAFPred](https://pure.tudelft.nl/ws/portalfiles/portal/210065225/btae328.pdf)
+
+For BGC boundary detection:
+
+• BGC-Prophet supplies the direct pLM-based detector; DeepBGC and BiGCARP supply established domain-language-model alternatives. Compare both locus overlap and boundary quality, since all three address detection rather than only representation. [BGC-Prophet](https://doi.org/10.1093/nar/gkaf305), [DeepBGC](https://pdfs.semanticscholar.org/2c9d/e7b5543717273c5eb10f4595ab88e089d69f.pdf), [BiGCARP](https://journals.plos.org/ploscompbiol/article/file?id=10.1371%2Fjournal.pcbi.1011162&type=printable)
+
+For whole-locus typing, mapping and retrieval:
+
+• BiG-SLiCE domain vectors, IBIS-BGC learned vectors and a plain bag-of-Pfam representation are important comparisons. BCCoE is specifically relevant when evaluating links to chemical products. [BiG-SLiCE](https://scispace.com/pdf/big-slice-a-highly-scalable-tool-maps-the-diversity-of-1-2-1dvk1x14h2.pdf), [IBIS](https://pdfs.semanticscholar.org/86d5/684cb297b968e7e273ee1ca0310ef2d9112b.pdf), [BCCoE](https://www.nature.com/articles/s41598-026-49955-5_reference.pdf)
+
+• Include unwhitened pLM means, whitened means, domain-count vectors and random per-domain vectors under the same classifier/retrieval protocol. BGC-Bench makes compositional controls particularly difficult to omit. Use family-held-out and taxonomically separated evaluations alongside ordinary splits. [BGC-Bench](https://arxiv.org/html/2611.02275v1)
+
+For calibration and D7:
+
+• Compare raw cosine, per-query empirical percentiles, the proposed standardized score, and CSLS. Fit any parametric tail model using a training null, then evaluate false-match rates on independent genomes, lengths and composition strata. [CSLS](https://openreview.net/pdf?id=H196sainb)
+
+• Use profile- and structure-supported evolutionary labels to evaluate whether cross-cluster neighbours represent remote homology. ProtTucker and PLMSearch provide relevant homology-retrieval comparators. [ProtTucker](https://discovery.ucl.ac.uk/id/eprint/10150829/1/Contrastive%20learning%20on%20protein%20embeddings%20enlightens%20midnight%20zone.pdf), [PLMSearch](https://www.nature.com/articles/s41467-024-46808-5.pdf)
+
+For D3 and D6:
+
+• Compare raw carrier counts, inverse-neighbour sequence weights, strain/lineage weights and adjacency-overlap weights. This isolates the contribution of the new redundancy proxy.
+
+• Add protein-frequency-matched randomized partners and known-complex noncontacting pairs to the structural benchmark where feasible. Report pass rates and confidence intervals by control class, with model thresholds fixed before scoring the discovery set. These extend controls already used by Predictomes. [Predictomes](https://walter.hms.harvard.edu/wp-content/uploads/2025/05/10.1016j.molcel.2025.01.034.pdf)
+
+
+5. RISKS
+
+Unsafe novelty claims:
+
+• “The first treatment of genomes as language,” “genes as words,” or “functional systems discovered using NLP.” Miller, gLM and DeepBGC already establish these directions.
+
+• “The first whole-operon embedding,” “the first vector map of gene clusters,” or “the first embedding-based cluster retrieval.” SAFPred, BiG-SLiCE and IBIS directly cover these claims.
+
+• “Protein embeddings replace sequence homology.” Embeddings provide a different measurement of relatedness and can recover remote homology. “Avoids a fixed protein-family partition” is more precise.
+
+• “Similarity across sequence clusters demonstrates analogous function or nonhomologous equivalence.” Sequence-clustering boundaries are operational. Cross-cluster retrieval alone establishes neither shared function nor absence of common ancestry.
+
+• “The first co-folding validation of neighbouring genes.” Qi et al. directly anticipate that approach. Novelty would lie in the evaluation design and its connection to the discovery method.
+
+• “Embedding similarity cannot have calibrated significance.” ProtEmbed demonstrates a calibrated embedding-based procedure. D7 should specify the tested models, score, null construction, database sizes and calibration failures.
+
+Methodological claims requiring particular care:
+
+• A Poisson likelihood gain becomes an MDL criterion only after specifying the corresponding model/code costs. The merge search and stopping rule should be included in shuffle calibration, because selection changes the null distribution of accepted merges.
+
+• D3 supplies an effective count under a chosen dependence model. Shared-adjacency fraction is a proxy for dependence, and its adequacy requires validation; the formula alone does not establish a count of independent evolutionary origins.
+
+• A fixed z-score supplies a stable false-match rate only when the relevant null tails transfer. Standardization removes location and scale differences while leaving differences in tail shape.
+
+• Mean pooling is permutation-invariant. Evidence that the discovery algorithm uses gene order should be separated from evidence that the resulting locus vectors capture composition or function.
+
+• Co-folding tests predicted physical association. Functionally coherent loci can encode proteins that act sequentially or interact through other partners, so class-specific pass rates are more interpretable than treating every structural failure as a false locus.
+
+• Structural predictions and genomic-context scores may share evolutionary information through their inputs. Describe co-folding as complementary computational evidence; reserve independent validation for evidence whose dependence has been assessed.
+
+The most defensible contribution is the integrated discovery algorithm: statistically calibrated hierarchical merging over soft gene matches, explicit supporting spans, adjacency-based redundancy correction and the boundary-cohesion rule. D5 and D6 strengthen its utility and evaluation, with substantial prior art.
+
+
+6. UNVERIFIED AND NULL SEARCHES
+
+UNVERIFIED
+
+These were encountered in search results or references, but their primary full text was not successfully opened. They were not used to establish the component verdicts.
+
+• “Quantifying uncertainty in protein representations across models and tasks.” Nature Methods, 2026; DOI 10.1038/s41592-026-03028-7. Search indexing exposed potentially relevant comparisons against synthetic protein sequences; publisher access failed. Its relationship to D7 warrants a full-text check.
+
+• BGC-MAC/BGC-MAP. Encountered through indexed literature and the opened BGC-Bench comparison. The original method’s exact pooling, training objective and retrieval capabilities remain unverified here.
+
+• “A foundation model enables prediction of natural product molecular properties, bioactivity, and structural similarity from biosynthetic gene cluster sequence.” BGC-MLM, 2026 bioRxiv preprint; DOI 10.64898/2026.07.05.736569. Indexed text suggests substantial D5 overlap; primary full text was inaccessible.
+
+• “Deciphering Biosynthetic Gene Clusters with a Context-aware Protein Language Model.” 2025 bioRxiv preprint; DOI 10.1101/2025.04.29.651206. Primary full text was inaccessible.
+
+• Harris’s original 1955 successor-variety work was not opened. The historical attribution is supported here through the opened Çöltekin paper, rather than an independent assessment of Harris.
+
+Null searches
+
+“Null” means no close precedent answering the specified question was identified—not necessarily zero search results.
+
+For BPE/MDL segmentation over gene order:
+
+• `"gene order" "byte-pair encoding"`
+• `"gene order" "BPE" segmentation`
+• `"gene families" "byte pair" OR "byte-pair"`
+• `"gene order" "minimum description length"`
+• `"gene order" "minimum description length" operon`
+• `"gene order" "grammar" compression`
+
+These did not yield the proposed lineage-adjusted, statistically scored gene-pair merge procedure.
+
+For biological grammar induction:
+
+• `"genomes" "Sequitur" OR "ADIOS"`
+
+This found biological-sequence grammar work, including nucleotide/protein applications, but no close gene-order locus caller.
+
+For successor-variety/entropy boundaries:
+
+• `"gene" "successor variety" OR "branching entropy"`
+• `"successor variety" DNA segmentation`
+• `"successor variety" "DNA"`
+• `"successor variety" genome segmentation`
+• `"branching entropy" "gene order"`
+• `"gene order" "branching entropy"`
+
+These did not identify the D4-style homolog-neighbour cohesion rule or a close gene-order segmentation application.
+
+For embedding geometry and significance:
+
+• `"protein embeddings" "whitening"`
+• `"protein" "CSLS" embeddings`
+• `"protein" "cross-domain similarity local scaling"`
+• `"protein language" "E-value" "cosine"`
+• `"protein embedding" "statistical significance" calibration`
+
+These found geometric analyses, general normalization methods and older embedding significance work, but no opened demonstration of the exact D7 contrast.
+
+For adjacency-derived effective sample size:
+
+• `"effective sample size" "phylogenetic" "gene order"`
+
+This did not identify D3’s shared-adjacency estimator. Genome-wide sequence reweighting was found and is documented above.
+
+For additional embedding-synteny engines:
+
+• `"protein embeddings" "synteny" -site:jwestrob.github.io -site:github.com/jwestrob`
+• `"gene neighborhood" "embedding" search tool`
+• `"gene neighborhoods" "embeddings" search -site:jwestrob.github.io -site:github.com/jwestrob`
+
+These recovered SAFPred, Gaia and related context models, but no further independently published general tool matching the proposed soft-match, progressive locus alignment.

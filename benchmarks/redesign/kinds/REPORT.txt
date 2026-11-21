@@ -1,0 +1,361 @@
+ws_kinds: recurrence of kinds for genes that have no homologs (DPANN, 3,564 genomes, zca10 ESM++ small)
+13 November 2026. Predeclared in predeclared.json (02:06:38 UTC, before any job). Post hoc items are labelled.
+
+ANSWER (eight lines)
+1. A training-free statistic carries the critic's signal and exceeds it: kind recurrence kappa = R - R0, R = distinct
+   embedding-family pairs among consecutive gene pairs elsewhere whose members sit in the two genes' top-1,000
+   whitened lists, R0 = the same count with gene order permuted within genomes. No training, taxonomy, annotation or
+   alignment is needed to run it.
+2. Critic benchmark, held-out orders, EVEN genomes, DefenseFinder vs no-gold: never-co-located pairs kappa 0.797
+   [0.759, 0.838] vs critic 0.756 (+0.041 [+0.003, +0.079]); singleton-family pairs 0.843 vs 0.781 (+0.061
+   [-0.042, +0.160]); all 0.837 vs 0.823. PMI 0.563 and 0.500. TXSScan never-seen trails the critic (-0.058).
+3. Co-fold test (predeclared, SUPPORTED): high-kappa pairs the token engine cannot call pass criteria 1-3 in 26/300
+   (8.7% [5.7, 12.4]); length- and genome-matched low-kappa uncalled pairs 2/300 (0.67% [0.08, 2.39]); partner swaps
+   0/150 [0, 2.4]. Ratio 13, Fisher p 9e-7; 21/300 after the split-gene and zipping rules. This operational claim,
+   "kappa finds interacting pairs the token engine cannot call", stands whatever the homology status of the support.
+4. Homology (ws_calib lines, addition): the co-fold signal rides on support that is homologous on at least one side.
+   Passers' support units: 21.7% homologous to the query on both sides, 70.4% on one side, 7.9% on neither; class-a
+   pairs whose support is > 50% homology-free on both sides pass 1/149, those with <= 10% pass 22/93 (post hoc).
+5. Where alignment gives nothing on one side the embedding supplies it: pairs with a chain without any DPANN homolog
+   at >= 50% coverage pass 8/108 vs 0/168 (p 0.0005, post hoc); in all 8, 71-100% of support units are homologous to
+   the query on at least one side, in 7 mostly on exactly one. What co-folds is known binding kinds whose folded
+   genes lack Pfam hits: 17 toxin-antitoxin-like, 2 RNase P subunits (observed domains; UNVERIFIED as systems).
+6. The signal is short complexes: class a passes 18/51 under 200 aa, 7/79 at 200-300, 1/170 at 300-450 (screen-1
+   engine-called 8/20, 6/56, 7/101). Dark architectures (members unannotated everywhere) co-fold at 1/36.
+7. Withheld test REFUTED (predeclared): every family of the curated type withheld drops AUROC below chance (0.432).
+   With the query's own families AND all families homologous to them withheld (addition), pooled AUROC falls from
+   0.788 to 0.595 (DefenseFinder 0.547, T4P 0.518, CRISPR subtypes 0.717): 33% of the above-chance signal survives
+   (DefenseFinder 16%, T4P 5%, CRISPR 83%); it survives for rare defence types (AbiL, Kiwa, Hachiman, Gao_Mza 0.95-0.98).
+8. "Kinds without homology" holds for a minority: the 14,211 family pairs of 390 architectures form 7,445 groups that
+   differ by homology on at least one side but only 1,356 groups that share no homologous member (median 1 per
+   architecture, 18 architectures with >= 10); 55.8% of class-a support units are homology-free on both sides and
+   that part does not predict a co-fold. The embedding adds one-side kind matching anchored by homology.
+
+==============================================================================================================
+METHOD
+==============================================================================================================
+Statistic (kinds.py; kernel checked against a pure-python recount, 0 mismatches over 120 queries x 2 orders x 3
+exclusion modes x 2 reference sets)
+  Lists     N(x) = the 1,000 nearest unique sequences of x by zca10 cosine (stored HNSW top-1,000, recall@1000
+            0.994) plus x's own sequence; a gene's list = every gene carrying one of them, minus genes of the
+            query's genome (median 1,376 genes, max 2,995).
+  Query     every consecutive gene pair (a, b) on a contig (3,353,826).
+  Support   consecutive pairs (a', b') in other genomes with a' in N(a), b' in N(b), any orientation.
+  Units     realisation unit = (f(a'), f(b')), f = Leiden community of the zca10 mutual-kNN graph (k 20, resolution
+            3,000; 153,520 families; vectors only). R = number of distinct units.
+  Null      gene order permuted within each genome, contig sizes kept, seeds 1000-1002; query and lists fixed;
+            R0 = mean R over the three permutations.
+  Score     kappa = R - R0. Selected on odd genomes among 16 predeclared variants (units F / FX, depth 30 / 100 /
+            300 / 1,000, ratio / excess); depth dominates (never-seen AUROC 0.67 / 0.71 / 0.78 / 0.80 for F at
+            30 / 100 / 300 / 1,000; FX at depth 30 is at chance, 0.52).
+  Cost      one pass over all adjacencies 105-230 s on 24 CPUs; observed + 3 nulls about 15 min after the kNN.
+  Equivalent soft view (not run): the expected partner vector of a's list compared with b; the count form keeps
+            multimodal partner kinds, which a mean vector blurs.
+
+Benchmark (bench_eval.py): the grammar critic's split (5 folds by GTDB order); for an adjacency in fold k the
+reference genomes are the training side of split k (train + validation genomes), so kappa and the critic see the
+same genomes. Critic AUROC reproduced exactly first (never_w3 0.767587, singleton 0.786264).
+
+==============================================================================================================
+1. CRITIC BENCHMARK (bench/eval_test.tsv; DefenseFinder / TXSScan / CRISPRCasTyper within-system adjacencies vs
+   no-gold adjacencies; 2,000 genome-bootstrap draws, seed 17)
+==============================================================================================================
+EVEN genomes (test)                       n_pos  kappa                 critic                kappa - critic
+ DefenseFinder  all                        1197  0.837 [0.827, 0.847]  0.823 [0.809, 0.837]  +0.014 [+0.006, +0.023]
+                never co-located (w3)       175  0.797 [0.759, 0.838]  0.756 [0.701, 0.811]  +0.041 [+0.003, +0.079]
+                singleton family             37  0.843 [0.762, 0.920]  0.781 [0.642, 0.908]  +0.061 [-0.042, +0.160]
+                seen in >= 5 genomes        799  0.546                 0.564                 (counts invert here)
+ TXSScan        all                         663  0.842 [0.823, 0.861]  0.852 [0.834, 0.869]  -0.010 [-0.022, +0.003]
+                never co-located            101  0.708 [0.640, 0.778]  0.766 [0.719, 0.818]  -0.058 [-0.124, +0.009]
+ CRISPRCasTyper all                        1561  0.716 [0.697, 0.732]  0.692 [0.676, 0.707]  +0.024 [+0.012, +0.036]
+                never co-located            497  0.658 [0.615, 0.696]  0.652 [0.619, 0.682]  +0.006 [-0.024, +0.034]
+                singleton family             80  0.746 [0.640, 0.812]  0.710 [0.630, 0.773]  +0.035 [-0.059, +0.107]
+ PMI (training orders), DefenseFinder: all 0.784, never 0.563, singleton 0.500; raw cosine 0.704 / 0.646 / 0.643.
+All genomes pooled (contains the tuning half): DefenseFinder never 0.799 vs 0.768 (+0.031 [+0.007, +0.057]),
+singleton 0.869 vs 0.786 (+0.083 [+0.014, +0.146]); CRISPRCasTyper singleton 0.749 vs 0.687 (+0.062 [+0.012, +0.106]).
+Predeclared C1 (>= 0.70 in both strata, lower bounds > 0.60): MET. C2 (never: point >= -0.02, lower >= -0.05): MET.
+
+Ablations at depth 1,000, excess (even genomes; DefenseFinder all / never; TXSScan never):
+  A  support pairs, descent counted          0.831 / 0.797 / 0.803
+  G  distinct genomes                        0.827 / 0.797 / 0.804
+  F  distinct embedding-family pairs (sel.)  0.837 / 0.797 / 0.708
+  FX other embedding families only           0.823 / 0.752 / 0.706
+  M  distinct MMseqs2 family pairs (eval)    0.908 / 0.802 / 0.708
+  X  MMseqs2, other families only (eval)     0.899 / 0.784 / 0.645
+  Reading: on never-seen pairs every collapse gives the same AUROC (sparse support, nothing to collapse). On all
+  pairs the MMseqs2 unit is +0.071 over the embedding unit: the graph families split conserved housekeeping kinds by
+  lineage (as softrec2 found for ribosomal markers), so F still counts descent where M collapses it. The TXSScan
+  never-seen deficit is a collapse effect: descent-counted A reaches 0.803 (paralogous pilins in one locus collapse
+  to few units). Post hoc follow-up on the unit: section 7.
+Screen-1 co-fold benchmark (grammar evaluation 2; 597 folded pairs, 44 ipTM >= 0.75): kappa AUROC 0.735, engine
+-log P 0.748, critic 0.692; within engine-called pairs 0.641 (critic 0.609, engine 0.600); within uncalled 0.655.
+
+==============================================================================================================
+2. CO-FOLD TEST (predeclared test_F; results/cofold/*; Biohub ESMFold2 esmfold2-2026-05, single sequence)
+==============================================================================================================
+Pool: 54,891 consecutive pairs on even genomes: token engine cannot call them (singleton member or engine L < 2),
+not homologous (whitened cosine < 0.32, neither in the other's list), both genes unannotated and in no curated
+instance, not at a contig edge, chains >= 40 aa, sum <= 450 aa, screen-1 composition filters.
+Class a = top 300 by kappa with caps (one per MMseqs2 family pair, <= 2 per family, <= 5 per coarse kind pair, <= 3
+per genome): kappa 44-169 (random same-genome pair q99.9 = 27), median R 75.5, all engine L = 1, 38% with a
+singleton member, 232 genomes, 196 coarse kind pairs, 42 architectures. Class b = per class-a pair, a pool pair
+with kappa <= pool median 0.67, both lengths within 20%, same genome for 224 (genus 33, family 25, order 17, phylum 1).
+Class c = 150 class-a pairs, one chain replaced by a length (+-10%) and hydrophobicity (+-0.05) matched chain of
+another class-a pair from another family and coarse kind (Hungarian, all strict).
+
+class                      folds  pass 1-3   rate [95% exact]       ipTM median / q90   <200 aa  200-300  300-450
+a  high kappa, uncallable    300     26      8.7% [5.7, 12.4]       0.249 / 0.756       18/51    7/79     1/170
+b  low kappa, matched        300      2      0.67% [0.08, 2.39]     0.109 / 0.319        1/50    1/84     0/166
+c  partner swaps of a        150      0      0% [0, 2.4]            0.133 / 0.357        0/26    0/38     0/84
+d  critic candidates           8      0      0% [0, 37]             0.197 / 0.283
+d  their swaps                 5      0
+screen-1 (stored, <= 450 aa)
+   engine-called dark pairs  177     21     11.9%  (standardised to class a's length mix: 13.6%)   8/20   6/56   7/101
+   uncalled dark neighbours  178      4      2.2%  (standardised 2.2%)                            0/28   2/55   2/95
+   curated system mates       38      7     18.4%  (standardised 20.0%)                           1/3    2/10   4/25
+Tests: a vs b one-sided Fisher p 9.3e-7, ratio 13.0, Mantel-Haenszel OR 16.6; matched pairs a-only 26, b-only 2,
+both 0; a vs c p 1.8e-5. Every class-a passer with a swap (11) keeps a cognate - swap ipTM margin >= 0.30.
+PREDECLARED VERDICT: SUPPORTED (rate(a) >= 3 x rate(b); exact intervals separate, upper(b) 2.39% < lower(a) 5.74%;
+p < 0.01; swaps <= 2%). Expectation written before: a 4-6%, b 1-2%, swaps 0-1%.
+Under 300 aa class a equals the engine-called rate (25/130 = 19.2% vs screen-1 14/76 = 18.4%); at 300-450 aa it
+is 1/170 against 7/101.
+
+Post hoc views (decided after the result)
+  - Homolog status (MMseqs2 18 -s 7.5, E <= 1e-3, >= 50% query coverage, identical copies excluded, all 1,184 a/b
+    chains): a chain with 0 DPANN homologs: a 8/108 (7.4% [3.3, 14.1]) vs b 0/168, p 0.0005; minimum 1-10
+    homologs: 7/102 vs 0/87, p 0.012; both chains > 10 homologs: 11/90 vs 2/45, p 0.13.
+  - Dependence: 12 of 26 passes come from one architecture (11: ParE-like toxin kind beside small antitoxin
+    kinds). Without it, 14/274 = 5.1% [2.8, 8.4], p 0.001 vs b. Architecture-cluster bootstrap of class a: [2.2%,
+    20.7%]; passes come from 9 of 42 architectures.
+  - Annotation share of the pair's architecture (fraction of member genes with any Pfam hit): > 0.2: 22/67 =
+    32.8% [21.8, 45.4]; <= 0.2: 4/233 = 1.7%; no member annotated: 1/36. Within length bins the gap holds (<200:
+    16/42 vs 2/9; 200-300: 5/15 vs 2/64; 300-450: 1/10 vs 0/160).
+  - Within class a, kappa ranks passers at AUROC 0.604 (not length-driven: Spearman kappa vs length 0.03); the
+    critic at 0.428. Class a sits at critic percentile median 0.86 (class b 0.47).
+
+Passers (results/cofold/passers.tsv; observations only; no curated caller emitted any call on a folded gene)
+ fold    aa (A/B)  ipTM  homologs A/B  observed domains on support pairs and 10 nearest annotated neighbours
+ kA_002   81/91   0.86  1342/1675    DUF2683 kind / ParE_toxin-YafQ kind (arch 11)
+ kA_006  112/99   0.90  1997/2318    ParE_toxin-YoeB kind / unannotated kind; SPLIT-GENE RULE FIRES (1 fused target, pair in 1 genome)
+ kA_008  120/72   0.88  1020/334     PIN kind / MazE_antitoxin kind (support pairs carry DefenseFinder MazEF calls)
+ kA_010   90/112  0.92   179/1662    unannotated kind / HTH_IclR-like kind (arch 156)
+ kA_014  103/91   0.88  1111/13      HTH_IclR/HTH_24-like kind / unannotated kind (arch 156)
+ kA_041  127/76   0.94     6/1       Asp_protease_2-like kind / DUF5678 kind (arch 84)
+ kA_074   83/113  0.92     0/1587    HTH_24-like kind / HTH_IclR-like kind (arch 156)
+ kA_086  109/89   0.85    95/0       MazE_antitoxin kind / DUF4258 kind (arch 35)
+ kA_089   64/86   0.90     2/110     DUF2683/PIN_2 kinds / ParE_toxin kind (arch 11)
+ kA_091  101/96   0.91     4/1       DUF2283 kind / DUF4258 kind (arch 35)
+ kA_096  110/48   0.78   465/2       ParE_toxin kind / unannotated small kind (arch 11)
+ kA_111  138/73   0.88    14/0       MazE_antitoxin kind / DUF4258 kind (arch 35)
+ kA_118  104/149  0.94    58/28      RNase_P_Rpp14 kind / RNase_P_p30 kind (arch 63)
+ kA_120  113/122  0.80     0/12      DUF4258 kind / DUF2283 kind (arch 35)
+ kA_124  107/181  0.86     9/3       RNase_P_Rpp14 kind / RNase_P_p30 kind (arch 63)
+ kA_136   79/98   0.80     0/237     DUF2683/MazE kinds / ParE_toxin kind (arch 11)
+ kA_148   72/82   0.87     0/212     DUF2683 kind / ParE_toxin kind (arch 11)
+ kA_157   46/100  0.87    99/485     PIN_2/DUF2683 kinds / ParE_toxin kind (arch 11)
+ kA_163   87/85   0.91   456/206     ParE/HigB_toxin kind / ParD_antitoxin kind (arch 11)
+ kA_175   62/86   0.90    31/299     ParD_antitoxin kind / ParE_toxin kind (arch 11)
+ kA_188  203/228  0.87   183/285     AbiEi/HTH kind / AbiEii kind (support pairs carry DefenseFinder AbiE calls)
+ kA_195   88/86   0.92   147/170     ParE_toxin kind / ParD_antitoxin kind (arch 11)
+ kA_242   44/113  0.91     1/491     small unannotated kind / ParE_toxin kind (arch 11)
+ kA_246   60/52   0.93     0/2       Response_reg kind / Response_reg kind (arch 61)
+ kA_259   64/87   0.93     0/2       DUF2683 kind / ParE_toxin kind (arch 11)
+ kA_271   53/93   0.90    39/2       PIN_2 kind / ParE_toxin kind (arch 11)
+ class-b passers: kB_064 (TBP-like kind / no domain; support pairs 1), kB_192 (NUDIX kind / PC4 kind; 3).
+Artefact checks: split gene 1/26 flagged (kA_006); disorder zipping (56 monomer folds; 74 items with 18 resubmitted) flags 4/26 (kA_002 chain A, kA_148 chain A, kA_259
+chain A: DUF2683-like kinds, 55-78% of interface residues below pLDDT 60 alone; kA_008 chain B, MazE-like kind, 74%), the
+fold-on-binding pattern screen 1 also saw in 3 of 19 curated mates; class-b passers 0/2 flagged. Passers clearing both
+refutation rules: 21/300 = 7.0% [4.4, 10.5] against 2/300 (Fisher p 2e-5); composition filters applied
+before folding (hydrophobic fraction <= 0.45, low complexity <= 0.145 per chain).
+
+==============================================================================================================
+3. WITHHELD-FAMILY TEST (predeclared test_W; results/withheld/*)
+==============================================================================================================
+38 curated types with >= 10 within-instance consecutive pairs; 20,000 random no-gold negatives scored under each
+type's withholding (766,580 queries x 4 levels x 4 passes).
+pooled AUROC [95%]       full                  L1 own 2 families       L2 all type families    L2 control
+ all 38 types            0.739 [0.732, 0.746]  0.812 [0.805, 0.819]    0.432 [0.422, 0.442]    0.740
+ DefenseFinder (21)      0.788 [0.778, 0.798]  0.886 [0.877, 0.896]    0.447 [0.437, 0.458]    0.788
+ TXSScan T4P             0.823                 0.828                   0.295                   0.824
+ CRISPRCasTyper (16)     0.666                 0.749                   0.483                   0.668
+Per type (full -> L2; genes withheld): AbiE 0.925 -> 0.295 (6,451); MazEF 0.777 -> 0.440 (3,919); ShosTA 0.630 ->
+0.415; RM_Type_II 0.774 -> 0.381 (11,565); RM_Type_I 0.818 -> 0.567; T4P 0.823 -> 0.295 (44,199). Types with few
+withheld genes keep their score: AbiL 0.783 (85 genes), Hachiman 0.731 (32), Kiwa 0.704 (68), PD-Lambda-5 0.744,
+Gao_Mza 0.731, Hma 0.753, CRISPR III-B 0.832, III-C 0.816.
+PREDECLARED VERDICT: REFUTED (pooled L2 < 0.60). Expectation (TA-like types >= 0.7 at L2) failed for every TA type.
+Reading: L1 rising means a curated pair's support comes mostly from other families of its kind, and those families
+are the curated type's own families: once every family the caller ever touched is withheld, the arrangement does
+not recur at depth 1,000. Kinds as these lists define them are about as wide as a curated system type. The control
+is weak (size-decile matching withholds fewer genes for types with large families, e.g. T4P 13,205 vs 44,199 genes);
+"CRISPRCasTyper:False" (prediction False, 1,287 positives, 1.24 M genes withheld) is in the pooled 'all' row as run;
+DefenseFinder alone gives the same verdict.
+With every family homologous to the withheld ones also withheld: section 8.3 (L1h 0.595, L2h 0.379).
+
+==============================================================================================================
+4. ARCHITECTURES (arch.py; results/arch/*)
+==============================================================================================================
+H = 26,621 uncallable non-homologous pairs with kappa > 27 (random-pair q99.9) and R >= 3, all genomes; edge p - p'
+when p' is in p's support set; Leiden modularity: 1,216 communities, 390 with >= 5 pairs (25,254 pairs); family
+pairs per architecture median 8, max 917. 59 architectures (9,624 pairs) have >= 80% of pairs with both genes
+unannotated.
+Largest by distinct MMseqs2 family pairs (pairs / family pairs / genomes / phyla; median aa short / long; observed
+Pfam on member genes, any side):
+  3   968 / 917 / 257 / 9   139 / 304   phage-tail-like (Phage_tail_APC, Phage_tube_2, SU10_MCP on a few members)
+  1  1051 / 780 / 698 / 9   229 / 341   Methyltransf_11 / Glycos_transf_1 (annotated kinds)
+  0  1195 / 725 / 848 / 8    55 / 270   short dark protein beside a longer one (SLT, Amidase_2, 3D, CARDB on 1-3%)
+  4   940 / 536 / 866 / 7    75 / 357   dark short / Kazal on 1%
+  6   813 / 535 / 626 / 2    43 / 301   dark short / TPM_phosphatase on 1%
+  5   878 / 517 / 623 / 6   160 / 262   SLT, Peptidase_M23, Amidase on the long side
+  8   684 / 493 / 468 / 8    75 / 131   MazE/VAPB antitoxin kinds / PIN kinds
+  2   970 / 352 / 650 / 7    96 / 131   Class_IIIsignal / VWA (pilin-like)
+  11  425 / 310 / 317 / 7    64 /  87   DUF2683, ParD-like / ParE_toxin (12 of 26 co-fold passers)
+  26  221 / 158 / 191 / 7   113 / 174   NTP_transf_2 / HEPN
+The grammar critic's 28-type pattern ("about 50 aa beside a longer protein", 2-5 genomes in one order each in the
+critic's view): 19 of its examples sit in architecture 0 and 6 in architecture 6; 3 fall outside H. As kinds the
+pattern is two architectures realised by 725 and 535 family pairs over 8 and 2 phyla. 11 class-a pairs came from
+architecture 0 (none from 6) and none passed; the critic's six candidates (8 pairs) co-fold 0/8. Other dark
+architectures in class a: 4 (0/11), 13 (0/5), 20 (0/15).
+
+==============================================================================================================
+5. WHAT THIS SAYS ABOUT THE CLAIM "EMBEDDINGS DO WORK ALIGNMENT CANNOT" (read with section 8)
+==============================================================================================================
+Over pairs the token engine cannot call, kappa finds partners that co-fold at 13x the matched-control rate and at
+the engine-called rate under 300 aa. Most of what it counts is homology that MMseqs2 clustering split (section 8):
+the co-folding pairs' support is homologous on at least one side for 92% of units. The embedding's own contribution
+is twofold: it collects split homologs without an alignment step, and it matches an orphan side by kind when the
+partner side is anchored by homology (8 co-folding pairs with an orphan chain). Recurrence carried by family pairs
+homologous on neither side (dark architectures 0, 4, 13, 20 and the critic's pattern: 0/42 class-a pairs plus 0/8
+critic pairs; class-a pairs with > 50% such support: 1/149) co-folds at the base rate. That is either no binary
+interface (envelope, phage-structural or regulatory associations) or ESMFold2 single-sequence blindness above 300
+aa; this screen cannot separate the two.
+
+==============================================================================================================
+6. CAVEATS
+==============================================================================================================
+- The co-fold judge favours short, tight heterodimers; pass rates fall with length in every class and screen.
+- Class a's passes are concentrated (one architecture holds 12/26); the per-pair interval is the predeclared one,
+  the architecture-cluster interval is wider ([2.2%, 20.7%]).
+- "Unannotated" = no row in the package annotation flags for that gene; the passers' kinds carry Pfam domains on
+  other members. "No homologs" = no MMseqs2 -s 7.5 hit at >= 50% coverage in DPANN; profile searches were not run.
+- The split-gene rule fires whenever any fused homolog exists for a pair seen in one genome (kA_006).
+- Lists exclude only the query's own genome; close relatives in other MAGs count, and the unit collapse is the
+  only guard against descent (it is weaker for the embedding families than for MMseqs2 families, section 1).
+- The class-b match fell back beyond the genome for 76 pairs (genus 33, family 25, order 17, phylum 1).
+- The L2 control matches family-size deciles, not gene counts.
+
+==============================================================================================================
+7. POST HOC: REALISATION UNIT RESOLUTION
+==============================================================================================================
+Decided after the even-genome bench results (bench_units_eval.py, job 88464): the same F count with embedding
+families of the zca10 mutual-kNN graph at coarser resolutions (run-time admissible), even genomes, DefenseFinder:
+unit                       all                    never co-located       seen in >= 5 genomes   singleton
+graph r3000 (predeclared)  0.837                  0.797                  0.546                  0.843
+graph r1000                0.848                  0.799                  0.593                  0.845
+graph r100                 0.870 [0.859, 0.881]   0.804 [0.766, 0.848]   0.675 [0.660, 0.691]   0.852
+MMseqs2 families (eval)    0.908 [0.897, 0.919]   0.802                  0.884 [0.875, 0.893]   0.841
+critic                     0.823                  0.756                  0.564                  0.781
+PMI                        0.784                  0.563                  0.396                  0.500
+The unit decides the seen-pair stratum and nothing else. Where a pair recurs in >= 5 genomes, counts and the critic
+rank conserved housekeeping neighbourhoods above defence pairs (PMI 0.396, critic 0.564); counting DISTINCT family
+pairs reverses this (0.884 with MMseqs2 units, a predeclared ablation): defence modules recur through many
+exchangeable family pairs, housekeeping neighbourhoods through one by descent. Coarser embedding families move toward
+that (0.546 -> 0.675 at r100) but still split housekeeping kinds by lineage. CRISPRCasTyper >= 5: MMseqs2 unit 0.776,
+r100 0.514, critic 0.456. TXSScan never-seen stays at 0.70-0.71 for every unit; only the descent-counted A reaches
+0.803 there.
+
+==============================================================================================================
+8. ADDITION (coordinator request after ws_calib; designed after every result above; the co-fold table is unchanged)
+==============================================================================================================
+ws_calib: most similarity beyond an MMseqs2 family is homology that the clustering split, so "different families"
+does not mean "unrelated proteins". Homology evidence between two MMseqs2 families, ws_calib's lines copied (homology.py;
+job 88830, 64 CPUs, 13 min): Smith-Waterman E <= 1e-3 between a representative of one family (<= 2 per family,
+52,859 representatives of 31,305 families) and any member of the other (MMseqs2 18 search, -s 7.5, uniqdb of
+2,547,528 sequences, 14.7 M hits, 932,616 symmetric family links; median 2 homologous families per searched family,
+q90 34); a shared Pfam family or Pfam 39 clan or CDD superfamily on any members (ws_calib ann.npz, 73,091 of 430,471
+families carry a code); the same family. The copied kernel reproduced the stored full / L1 / L2 passes exactly on
+3,000 queries; the homology test agreed with a direct set computation on 1,800 family pairs.
+
+8.1 Homology-independent groups (homology linkage among the distinct MMseqs2 family pairs of a set; "both-side
+    linked" = homologous on both sides to another family pair; groups = connected components under both-side linkage,
+    i.e. groups that differ by homology on at least one side; fully independent = components under linkage on either
+    side, i.e. groups that share no homologous member at all)
+ set                      family pairs  both-side linked  groups (differ on >= 1 side)  fully independent groups
+ 390 architectures (sum)      14,211          7,591                 7,445                       1,356
+ architecture 3 (phage-tail)     917             77                   871                         241
+ architecture 1 (MTase/GT)       780            699                    89                           6
+ architecture 0 (critic)         725            207                   562                         106
+ architecture 4                  536            110                   454                           7
+ architecture 6 (critic)         535             72                   482                          14
+ architecture 5 (SLT/M23)        517            271                   280                          32
+ architecture 8 (MazE/PIN)       493            378                   125                           3
+ architecture 9 (terminase)      483             65                   426                         182
+ architecture 11 (ParE-like)     310            211                   114                           7
+ class a (folded high set)       300             94                   232                          94
+ class-a passers                  26              4                    24                           7
+ class b (controls)              299              0                   299                         166
+ Per architecture: median groups / family pairs 0.33; median fully independent groups 1; 18 architectures have >= 10.
+ Full table: results/homology/arch_homology_groups.tsv.
+
+8.2 Support units of each class-a pair (distinct MMseqs2 family pairs among its depth-1,000 support pairs) by homology
+    to the query's two families
+ set              units    both sides   one side    neither   median per pair (both / one / neither)
+ class a (300)   29,036      11.1%       33.1%       55.8%     2 / 16 / 46     (227 pairs with >= 3 homology-free units)
+ passers (26)     1,362      21.7%       70.4%        7.9%     6.5 / 35.5 / 0.5  (8 pairs with >= 3)
+ Class-a pass rate by the homology-free share of its support (post hoc): <= 10%: 22/93; 10-50%: 3/58; > 50%: 1/149.
+ By the count of homology-free units: 0: 13/51; 1-2: 5/22; 3-10: 5/28; > 10: 3/199.
+
+8.3 Withheld test with homologs withheld (pooled AUROC [95%], 2,000 genome draws; "CRISPRCasTyper:False" excluded)
+ level                                                 all 37 types          DefenseFinder (21)    T4P     CRISPR subtypes (15)
+ full                                                  0.788 [0.782, 0.795]  0.788                 0.823   0.762
+ L1  query's two families withheld                     0.870                 0.886                 0.828   0.880
+ L1h query's families + every homologous family        0.595 [0.585, 0.605]  0.547 [0.538, 0.556]  0.518   0.717 [0.697, 0.734]
+ L2  every family of the curated type                  0.461                 0.447                 0.295   0.612
+ L2h type families + every homologous family           0.379                 0.347                 0.433   0.454
+ L1 - L1h: +0.275 [+0.265, +0.286] (DefenseFinder +0.339). Median positive R: full 38, L1 17, L1h 0. Share of the
+ above-chance signal that survives L1h: 33% pooled, 16% DefenseFinder, 5% T4P, 83% CRISPR subtypes.
+ L1h by type: kept for AbiL 0.979, Kiwa 0.982, Hachiman 0.966, Gao_Mza 0.947, CRISPR III-B 0.964, III-C 0.919, I-E
+ 0.929, III-D 0.879, Lamassu-Cap4 0.873, PD-Lambda-5 0.823, pAgo_S2B 0.798, BREX_I 0.792; gone for AbiE 0.506, MazEF
+ 0.496, PsyrTA 0.496, ShosTA 0.552, RM types I-III 0.51-0.52, T4P 0.518, PrrC 0.553, Hma 0.496, CRISPR V-A 0.514,
+ V-F1 0.481. L2h widens the masks sharply (MazEF 14 -> 2,509 families; RM_Type_II 152 -> 15,708; T4P 164 -> 33,464)
+ because shared Pfam clans and CDD superfamilies link broad superfamilies.
+
+8.4 Claim at the level the evidence supports
+ - Stands, independent of homology: kappa is a training-free statistic that finds interacting pairs among those the
+   token engine cannot call (26/300 vs 2/300; 21/300 after refutation rules), and it beats the critic on never-seen
+   defence pairs.
+ - Supported in part: proteins with no homolog at >= 50% coverage are paired correctly (8/108 vs 0/168) through
+   one-side kind matching: the partner side is homologous to the support, the orphan side is matched by kind.
+ - Not supported as a source of interaction: recurrence carried by family pairs homologous on neither side. It is the
+   majority of class-a support (55.8%) and of the dark architectures, and those pairs co-fold at the base rate (1/149).
+ - Kinds without homology exist as a minority signal: 1,356 fully independent groups among 14,211 family pairs, and
+   L1h keeps AUROC >= 0.8 for a set of rarer defence and CRISPR types; for toxin-antitoxin, RM and T4P pairs the kind
+   signal is homology that the clustering split.
+
+==============================================================================================================
+ARTIFACTS
+==============================================================================================================
+Local benchmarks/redesign/kinds/: predeclared.json, NOTEBOOK.txt, REPORT.txt; code kinds.py (prep, passes, kernel,
+support lists), kinds_check.py, bench_eval.py, main_scores.py, cofold_select.py, withheld_design.py,
+withheld_eval.py, arch.py, passers.py, homologs_all.py, bench_units_eval.py, cofold_analyze.py, zipping.py,
+fold_ledger.py, homology.py + hom_kernel.py + run_homology.sbatch (section 8), biohub_cofold.py (copy of
+cofold/biohub_cofold.py), run_kinds.sbatch; results/ (bench, main, withheld, arch, cofold, homology tables); work/ (fold jobs with sequences, structures, PAE, metrics; keep out of git).
+Biotite $RD/kinds/: prep/ (per-gene arrays, adjacency cosines), bench/ and main/ (pass_{obs,null0-2}.npz: 8 counts x
+4 depths per query), main/scores.parquet, withheld/, arch/, cofold/, passers/, code/. Logs $RD/logs/kinds_<job>.log.
+Jobs (all 24 CPUs, standard_expand, exclude list): 87963 prep + kernel check; 87964 bench + main passes; 88023
+evaluation, co-fold design, withheld, architectures; 88463 passer checks; 88464 post hoc units; 88544 post hoc
+homolog counts; 88830 homology addition (64 CPUs, standard_expand_2). Biohub items: 837 of 900 (763 screen items, batch 770d2224; 56 monomers, batch caf4ddb9, of which 18 failed at the
+API and were resubmitted as batch 56620a83).
+
+==============================================================================================================
+NEXT STEPS
+==============================================================================================================
+1. A run-time realisation unit that does not split housekeeping kinds by lineage (section 7), then kappa as the
+   significance statistic of the token-free engine in place of genus counts (it needs no lineage unit at all). Given
+   section 8, report kappa as "recurrence of split homologs and one-side kinds", and test a homology-free variant
+   (support units homologous on neither side) separately before any claim of kind-only recurrence.
+2. Kind recurrence as the second tier for pairs the count rule cannot see: under 300 aa it co-folds at the
+   engine-called rate.
+3. Dark architectures (0, 4, 6, 13, 16, 20): a judge other than binary co-folding (MSA-paired folding of the whole
+   pair family, or Protenix), since single-sequence ESMFold2 gives 1/36.
+4. The withheld result bounds the "exchangeable parts" story: kinds are as wide as curated system types; test
+   kinds wider than one curated type with a deeper or learned list (head) before building on cross-system transfer.

@@ -1,0 +1,18 @@
+step	T2	T2b	rest	T1c	contradicted	main_T2_T2b_rest	note
+labeled genes	11819.0	7346.0	15210.0	3904.0	2322.0	34375.0	
+label carriers with a KOfam KO	6364.0	2566.0	4800.0	1678.0	1114.0	13730.0	
+STRONG partner-derived function	4904.0	1735.0	3022.0	1158.0	822.0	9661.0	
+STRONG enzyme (KO with EC)	1520.0	243.0	470.0	224.0	186.0	2233.0	
+100-600 aa and ILVFMAWC < 0.45	736.0	121.0	158.0	156.0	129.0	1015.0	
+named by own relaxed Pfam hit (PFSET)	241.0	59.0	81.0	132.0	87.0	381.0	
+named by own relaxed KOfam hit (KOSET)	539.0	104.0	130.0	130.0	65.0	773.0	
+named by CDD (model, COG, name, EC)	289.0	32.0	43.0	54.0	31.0	364.0	
+already named (any source)	604.0	108.0	136.0	151.0	104.0	848.0	
+unannotated profile-invisible	132.0	13.0	22.0	5.0	25.0	167.0	
+fixed assay: function has a curated reference (status ok)						56.0	unannotated 8; 24 functions
+fixed assay: informative family (positives >= 50%)						28.0	unannotated 0; 11 families
+fixed assay: unannotated pass in informative families							0/0
+extended tier: in scope (>= 15 reps at 70%, >= 3 site positions)						441.0	unannotated 62; 98 families
+extended tier: assayed under the fold budget						176.0	unannotated 62; 28 families
+extended tier: kept family (positives >= 80%, no negative passes)						134.0	unannotated 53; 21 families
+extended tier: unannotated pass in kept families (one gene per 90% cluster)							0/52

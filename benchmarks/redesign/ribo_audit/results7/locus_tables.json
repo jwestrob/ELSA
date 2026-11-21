@@ -1,0 +1,48 @@
+{
+ "PRIMARY_Z_L4bp_t0.02": {
+  "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_Z/L4bp_t0.02.parquet",
+  "sha256": "8f55d59e92347c6112911ab05f44adf335e2038b374d9efb6e3e252185cb87af",
+  "rows": 769433,
+  "columns": [
+   "s",
+   "e"
+  ]
+ },
+ "Z_L1": {
+  "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_Z/L1.parquet",
+  "sha256": "9afd74f7e36a4b73ec74d7c94c51cbf892a0b84cb38ec312a8c6570c93b1315c",
+  "rows": 288811,
+  "columns": [
+   "s",
+   "e"
+  ]
+ },
+ "SECONDARY_WA_L4b_t0.2": {
+  "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_WA/L4b_t0.2.parquet",
+  "sha256": "43c8fc452ae9a3f365a68f2b9447e219a25bf27ebfdc2894aac7b12bd3f49219",
+  "rows": 719101,
+  "columns": [
+   "s",
+   "e"
+  ]
+ },
+ "WA_L1": {
+  "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_WA/L1.parquet",
+  "sha256": "db2e33ff3fb150ae8c8f45806fa71625e60d02ae619180c48307125e412a2fa4",
+  "rows": 252708,
+  "columns": [
+   "s",
+   "e"
+  ]
+ },
+ "engine_DH": {
+  "path": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/long_loci/frozen3/loci/gtdb3_engine/DH.parquet",
+  "sha256": "4685c2167af09abb244478fe3e4b936d20073eb6a72c1cbe4a8e5709e771ad4f",
+  "rows": 375644,
+  "columns": [
+   "s",
+   "e"
+  ]
+ },
+ "_written_utc": "2026-11-19T16:48:30Z"
+}

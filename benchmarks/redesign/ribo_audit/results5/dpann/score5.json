@@ -1,0 +1,339 @@
+{
+ "dataset": "dpann",
+ "loci_reading": "stored",
+ "defs": {
+  "standing": {
+   "Z": {
+    "Archaea": {
+     "resolved": 201,
+     "windows": 4415,
+     "chance": 0.04552661381653454
+    }
+   },
+   "WA": {
+    "Archaea": {
+     "resolved": 223,
+     "windows": 4415,
+     "chance": 0.05050962627406568
+    }
+   },
+   "DH": {
+    "Archaea": {
+     "resolved": 275,
+     "windows": 4415,
+     "chance": 0.0622876557191393
+    }
+   }
+  },
+  "part4": {
+   "Z": {
+    "Archaea": {
+     "resolved": 178,
+     "windows": 4040,
+     "chance": 0.04405940594059406
+    }
+   },
+   "WA": {
+    "Archaea": {
+     "resolved": 198,
+     "windows": 4040,
+     "chance": 0.04900990099009901
+    }
+   },
+   "DH": {
+    "Archaea": {
+     "resolved": 283,
+     "windows": 4040,
+     "chance": 0.07004950495049506
+    }
+   }
+  },
+  "a": {
+   "Z": {
+    "Archaea": {
+     "resolved": 189,
+     "windows": 4035,
+     "chance": 0.04684014869888476
+    }
+   },
+   "WA": {
+    "Archaea": {
+     "resolved": 199,
+     "windows": 4035,
+     "chance": 0.0493184634448575
+    }
+   },
+   "DH": {
+    "Archaea": {
+     "resolved": 299,
+     "windows": 4035,
+     "chance": 0.07410161090458488
+    }
+   }
+  },
+  "b": {
+   "Z": {
+    "Archaea": {
+     "resolved": 194,
+     "windows": 4055,
+     "chance": 0.04784217016029593
+    }
+   },
+   "WA": {
+    "Archaea": {
+     "resolved": 234,
+     "windows": 4055,
+     "chance": 0.05770653514180025
+    }
+   },
+   "DH": {
+    "Archaea": {
+     "resolved": 266,
+     "windows": 4055,
+     "chance": 0.0655980271270037
+    }
+   }
+  },
+  "c": {
+   "Z": {
+    "Archaea": {
+     "resolved": 194,
+     "windows": 4080,
+     "chance": 0.047549019607843135
+    }
+   },
+   "WA": {
+    "Archaea": {
+     "resolved": 206,
+     "windows": 4080,
+     "chance": 0.050490196078431374
+    }
+   },
+   "DH": {
+    "Archaea": {
+     "resolved": 273,
+     "windows": 4080,
+     "chance": 0.06691176470588235
+    }
+   }
+  }
+ },
+ "summary": {
+  "a|Archaea": {
+   "runs": 1686,
+   "kept": 1669,
+   "below_min": 17,
+   "targets": 1669,
+   "multi_target_runs": 0,
+   "equals_accurate": 1360,
+   "target_len_median": 25.0,
+   "runs_cut": 40,
+   "Z": {
+    "recovered": 1657,
+    "resolved": 1546,
+    "anyfit": 1592,
+    "chance": 0.04684014869888476,
+    "chance_windows": 4035
+   },
+   "WA": {
+    "recovered": 1669,
+    "resolved": 1569,
+    "anyfit": 1618,
+    "chance": 0.0493184634448575,
+    "chance_windows": 4035
+   },
+   "DH": {
+    "recovered": 1669,
+    "resolved": 1499,
+    "anyfit": 1598,
+    "chance": 0.07410161090458488,
+    "chance_windows": 4035
+   }
+  },
+  "b|Archaea": {
+   "runs": 1686,
+   "kept": 1662,
+   "below_min": 24,
+   "targets": 1662,
+   "multi_target_runs": 0,
+   "equals_accurate": 1472,
+   "target_len_median": 25.0,
+   "runs_cut": 54,
+   "Z": {
+    "recovered": 1650,
+    "resolved": 1548,
+    "anyfit": 1584,
+    "chance": 0.04784217016029593,
+    "chance_windows": 4055
+   },
+   "WA": {
+    "recovered": 1662,
+    "resolved": 1574,
+    "anyfit": 1608,
+    "chance": 0.05770653514180025,
+    "chance_windows": 4055
+   },
+   "DH": {
+    "recovered": 1662,
+    "resolved": 1495,
+    "anyfit": 1589,
+    "chance": 0.0655980271270037,
+    "chance_windows": 4055
+   }
+  },
+  "c|Archaea": {
+   "runs": 1686,
+   "kept": 1682,
+   "below_min": 4,
+   "targets": 1682,
+   "multi_target_runs": 0,
+   "equals_accurate": 1360,
+   "target_len_median": 25.0,
+   "runs_cut": 22,
+   "Z": {
+    "recovered": 1668,
+    "resolved": 1549,
+    "anyfit": 1595,
+    "chance": 0.047549019607843135,
+    "chance_windows": 4080
+   },
+   "WA": {
+    "recovered": 1679,
+    "resolved": 1576,
+    "anyfit": 1625,
+    "chance": 0.050490196078431374,
+    "chance_windows": 4080
+   },
+   "DH": {
+    "recovered": 1680,
+    "resolved": 1500,
+    "anyfit": 1599,
+    "chance": 0.06691176470588235,
+    "chance_windows": 4080
+   }
+  },
+  "part4|Archaea": {
+   "runs": 1686,
+   "kept": 1686,
+   "below_min": 0,
+   "targets": 1686,
+   "multi_target_runs": 0,
+   "equals_accurate": 1286,
+   "target_len_median": 26.0,
+   "Z": {
+    "recovered": 1672,
+    "resolved": 1491,
+    "anyfit": 1537,
+    "chance": 0.04405940594059406,
+    "chance_windows": 4040
+   },
+   "WA": {
+    "recovered": 1683,
+    "resolved": 1522,
+    "anyfit": 1572,
+    "chance": 0.04900990099009901,
+    "chance_windows": 4040
+   },
+   "DH": {
+    "recovered": 1684,
+    "resolved": 1443,
+    "anyfit": 1598,
+    "chance": 0.07004950495049506,
+    "chance_windows": 4040
+   }
+  },
+  "standing|Archaea": {
+   "runs": 1686,
+   "kept": 1686,
+   "below_min": 0,
+   "targets": 1686,
+   "multi_target_runs": 0,
+   "equals_accurate": 358,
+   "target_len_median": 24.0,
+   "Z": {
+    "recovered": 1681,
+    "resolved": 1542,
+    "anyfit": 1575,
+    "chance": 0.04552661381653454,
+    "chance_windows": 4415,
+    "accurate_reading_resolved": 1503
+   },
+   "WA": {
+    "recovered": 1685,
+    "resolved": 1594,
+    "anyfit": 1631,
+    "chance": 0.05050962627406568,
+    "chance_windows": 4415,
+    "accurate_reading_resolved": 1539
+   },
+   "DH": {
+    "recovered": 1686,
+    "resolved": 1512,
+    "anyfit": 1590,
+    "chance": 0.0622876557191393,
+    "chance_windows": 4415,
+    "accurate_reading_resolved": 1444
+   }
+  }
+ },
+ "connector": {
+  "Archaea": {
+   "target_junctions": 40059,
+   "target_pairs": 178,
+   "pairs_with_5_groups": 122,
+   "hist_bins": [
+    0,
+    0.1,
+    0.2,
+    0.3,
+    0.4,
+    0.5,
+    0.6,
+    0.7,
+    0.8,
+    0.9,
+    0.95,
+    1.0
+   ],
+   "hist": [
+    2,
+    1,
+    0,
+    0,
+    0,
+    0,
+    2,
+    2,
+    6,
+    4,
+    105
+   ],
+   "junction_classes": {
+    "same": 39943,
+    "opp_lineage_specific": 65,
+    "opp_other": 32,
+    "opp_conserved": 19
+   },
+   "opposite_in_most": [
+    {
+     "pair": "L37e|S8e",
+     "conn": 0.127,
+     "groups": 207,
+     "target_junctions": 1
+    },
+    {
+     "pair": "L4|S13",
+     "conn": 0.0,
+     "groups": 14,
+     "target_junctions": 10
+    },
+    {
+     "pair": "L3|S8",
+     "conn": 0.0,
+     "groups": 6,
+     "target_junctions": 8
+    }
+   ]
+  }
+ }
+}

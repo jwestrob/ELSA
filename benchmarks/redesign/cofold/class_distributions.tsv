@@ -1,0 +1,5 @@
+cls	n	iptm_q10	iptm_q25	iptm_q50	iptm_q75	iptm_q90	iptm_ge_0p5	iptm_ge_0p75	pass_c123	frac_c123	iface_pae_med	contacts_med
+cognate	300	0.084	0.106	0.197	0.588	0.787	87	39	27	0.09	20.92	91.0
+noncognate	300	0.083	0.099	0.127	0.194	0.353	19	1	0	0.0	23.86	83.0
+positive	150	0.109	0.15	0.476	0.762	0.84	71	43	19	0.1267	15.6	77.5
+uncalled	297	0.078	0.096	0.121	0.231	0.521	34	5	4	0.0135	24.13	102.0

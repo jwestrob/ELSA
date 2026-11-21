@@ -1,0 +1,77 @@
+{
+ "arm": "G05",
+ "query_genes": 18414,
+ "share_input": {
+  "total_share": 0.05473476040866774,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.8595333572952206,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.06929024571543206,
+   0.1028709418661955,
+   0.1681201709843748
+  ],
+  "resid_share_row": 0.11919238106573524,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "seconds": 6.2
+ },
+ "removal": {
+  "alpha": 0.5
+ },
+ "share_pre_whitening": {
+  "total_share": 0.017033002475147482,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.6645935407653772,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.05626243607162462,
+   0.08417220796145455,
+   0.13922096778442042
+  ],
+  "resid_share_row": 0.0456617322976719,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "seconds": 2.4
+ },
+ "zca10": {
+  "global_mean_norm": 0.6645935504769246,
+  "eigenvalue_q0_50_90_100": [
+   8.236478406311206e-18,
+   1.9700631743366107e-05,
+   0.0002507043939267958,
+   0.2641011170807628
+  ],
+  "participation_ratio_before": 4.177401337722523,
+  "seconds": {
+   "mean_cov": 24.6,
+   "apply": 12.2,
+   "f16": 1.9
+  }
+ },
+ "share_final": {
+  "total_share": 0.004927175120067367,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.017671651479780913,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.046032667868866964,
+   0.061496366212989345,
+   0.09286808859782125
+  ],
+  "resid_share_row": 0.008677313967943747,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "seconds": 2.7
+ },
+ "transform_seconds": 53.3,
+ "list_seconds": {
+  "matmul": 203.9,
+  "rows": 236.7,
+  "topk_rows_check": {
+   "idx_equal": true,
+   "max_abs_s": 0.0
+  }
+ },
+ "arm_seconds": 497.5
+}

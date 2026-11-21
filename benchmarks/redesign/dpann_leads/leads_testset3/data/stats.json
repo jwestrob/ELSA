@@ -1,0 +1,60 @@
+{
+ "collection": "testset3",
+ "mode": "pilot",
+ "informative_families": [
+  "K00965",
+  "K04095",
+  "K18639",
+  "K22278",
+  "K23518"
+ ],
+ "uninformative_families": [
+  "K08640"
+ ],
+ "candidates_unannotated_informative": "0/3",
+ "negatives_pooled": "0/6",
+ "fisher_unannotated_vs_negatives_one_sided": 1.0,
+ "fisher_vs_dpann_rate_two_sided": 1.0,
+ "weighted_rate": 0.0,
+ "pass_by_family": {
+  "K18639": "0/1",
+  "K22278": "0/1",
+  "K23518": "0/1"
+ },
+ "pilot_gate": {
+  "counts": {
+   "candidate": [
+    0,
+    5
+   ],
+   "negA": [
+    0,
+    5
+   ],
+   "negB": [
+    0,
+    5
+   ],
+   "positive": [
+    7,
+    12
+   ]
+  },
+  "fisher_pos_vs_negA": 0.04072398190045249,
+  "fisher_pos_vs_negB": 0.04072398190045249,
+  "positive_share": 0.5833333333333334,
+  "positives_per_family": {
+   "K00965": "1/2",
+   "K04095": "1/2",
+   "K08640": "0/2",
+   "K18639": "2/2",
+   "K22278": "2/2",
+   "K23518": "1/2"
+  },
+  "uninformative": [
+   "K08640"
+  ],
+  "gate_pass": false
+ },
+ "absent_site_families": []
+}

@@ -1,0 +1,15 @@
+cls	shape	n	any_pass	frac	max_pair_iptm_med	max_pair_iptm_q90	ge075
+cognate	multi	17	4	0.2353	0.759	0.914	10
+cognate	pair	148	8	0.0541	0.295	0.749	14
+noncognate	multi	8	1	0.125	0.351	0.753	1
+noncognate	pair	74	0	0.0	0.132	0.539	0
+positive	multi	4	1	0.25	0.774	0.823	3
+positive	pair	31	4	0.129	0.442	0.851	8
+uncalled	multi	9	1	0.1111	0.315	0.7	1
+uncalled	pair	72	0	0.0	0.13	0.545	3
+cognate	all	165	12	0.0727	0.333	0.771	24
+noncognate	all	82	1	0.0122	0.132	0.552	1
+positive	all	35	5	0.1429	0.595	0.848	11
+uncalled	all	81	1	0.0123	0.137	0.567	4
+cognate:all_no_hit	all	141	10	0.0709	0.301	0.771	21
+cognate:with_unknown_only	all	24	2	0.0833	0.426	0.761	3

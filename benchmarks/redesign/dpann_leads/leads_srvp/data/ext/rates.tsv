@@ -1,0 +1,18 @@
+group	level	n	PASS	rate	ci95	fold_match	site_ok
+control_kept_families	positive	105	95	0.905	(0.834, 0.947)	105	95
+control_all_families	positive	139	107	0.77	(0.693, 0.832)	138	107
+control_kept_families	negA	113	0	0.0	(0, 0.033)	1	0
+control_all_families	negA	142	0	0.0	(0, 0.026)	1	0
+control_kept_families	negB	113	0	0.0	(0, 0.033)	0	0
+control_all_families	negB	142	0	0.0	(0, 0.026)	0	0
+control_kept_families	negA+negB	226	0	0.0	(0, 0.017)	1	0
+candidates	unannotated, kept families	52	0	0.0	(0, 0.069)	27	0
+candidates	already named, kept families	61	2	0.033	(0.009, 0.112)	26	2
+candidates	unannotated, all in-scope families	61	0	0.0	(0, 0.059)	29	0
+tier (unannotated, kept)	T2	45	0	0.0	(0, 0.079)	21	0
+tier (unannotated, kept)	T2b	6	0	0.0	(0, 0.39)	6	0
+tier (unannotated, kept)	rest	1	0	0.0	(0, 0.793)	0	0
+support (unannotated, kept)	<5%	0	0		(nan, nan)	0	0
+support (unannotated, kept)	5-20%	0	0		(nan, nan)	0	0
+support (unannotated, kept)	20-50%	7	0	0.0	(0, 0.354)	6	0
+support (unannotated, kept)	>=50%	45	0	0.0	(0, 0.079)	21	0

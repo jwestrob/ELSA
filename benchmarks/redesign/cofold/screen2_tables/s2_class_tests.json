@@ -1,0 +1,182 @@
+{
+ "single:pair:cognate_vs_uncalled": {
+  "table": [
+   [
+    0,
+    6
+   ],
+   [
+    0,
+    6
+   ]
+  ],
+  "fisher_or": NaN,
+  "fisher_p": 1.0,
+  "mw_p_max_pair_iptm": 0.17965367965367965
+ },
+ "single:pair:cognate_vs_positive": {
+  "table": [
+   [
+    0,
+    6
+   ],
+   [
+    2,
+    14
+   ]
+  ],
+  "fisher_or": 0.0,
+  "fisher_p": 1.0,
+  "mw_p_max_pair_iptm": 0.021336764370820098
+ },
+ "single:pair:cognate_vs_noncognate": {
+  "table": [
+   [
+    0,
+    6
+   ],
+   [
+    0,
+    6
+   ]
+  ],
+  "fisher_or": NaN,
+  "fisher_p": 1.0,
+  "mw_p_max_pair_iptm": 0.9372294372294373
+ },
+ "single:multi:cognate_vs_uncalled": {
+  "table": [
+   [
+    12,
+    30
+   ],
+   [
+    3,
+    39
+   ]
+  ],
+  "fisher_or": 5.2,
+  "fisher_p": 0.020422666260634867,
+  "mw_p_max_pair_iptm": 4.429048365023145e-05
+ },
+ "single:multi:cognate_vs_positive": {
+  "table": [
+   [
+    12,
+    30
+   ],
+   [
+    17,
+    39
+   ]
+  ],
+  "fisher_or": 0.9176470588235294,
+  "fisher_p": 1.0,
+  "mw_p_max_pair_iptm": 0.0634919758253941
+ },
+ "single:multi:cognate_vs_noncognate": {
+  "table": [
+   [
+    12,
+    30
+   ],
+   [
+    3,
+    87
+   ]
+  ],
+  "fisher_or": 11.6,
+  "fisher_p": 6.528020509287425e-05,
+  "mw_p_max_pair_iptm": 5.0754974778207496e-11
+ },
+ "msa:pair:cognate_vs_uncalled": {
+  "table": [
+   [
+    0,
+    6
+   ],
+   [
+    0,
+    3
+   ]
+  ],
+  "fisher_or": NaN,
+  "fisher_p": 1.0,
+  "mw_p_max_pair_iptm": 0.5476190476190476
+ },
+ "msa:pair:cognate_vs_positive": {
+  "table": [
+   [
+    0,
+    6
+   ],
+   [
+    2,
+    13
+   ]
+  ],
+  "fisher_or": 0.0,
+  "fisher_p": 1.0,
+  "mw_p_max_pair_iptm": 0.5692908742444346
+ },
+ "msa:pair:cognate_vs_noncognate": {
+  "table": [
+   [
+    0,
+    6
+   ],
+   [
+    0,
+    6
+   ]
+  ],
+  "fisher_or": NaN,
+  "fisher_p": 1.0,
+  "mw_p_max_pair_iptm": 0.6991341991341992
+ },
+ "msa:multi:cognate_vs_uncalled": {
+  "table": [
+   [
+    9,
+    26
+   ],
+   [
+    1,
+    8
+   ]
+  ],
+  "fisher_or": 2.769230769230769,
+  "fisher_p": 0.6585240481708823,
+  "mw_p_max_pair_iptm": 0.03884774335820871
+ },
+ "msa:multi:cognate_vs_positive": {
+  "table": [
+   [
+    9,
+    26
+   ],
+   [
+    8,
+    26
+   ]
+  ],
+  "fisher_or": 1.125,
+  "fisher_p": 1.0,
+  "mw_p_max_pair_iptm": 0.22772447441603016
+ },
+ "msa:multi:cognate_vs_noncognate": {
+  "table": [
+   [
+    9,
+    26
+   ],
+   [
+    3,
+    74
+   ]
+  ],
+  "fisher_or": 8.538461538461538,
+  "fisher_p": 0.0012984318806773796,
+  "mw_p_max_pair_iptm": 2.510426353887822e-11
+ }
+}

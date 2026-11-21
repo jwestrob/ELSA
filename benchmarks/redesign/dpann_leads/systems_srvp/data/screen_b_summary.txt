@@ -1,0 +1,58 @@
+small multi-gene models with uncalled hit clusters: 211 of 238; clusters 111701; quorum met but uncalled 557 (strict, no called member: 130); partial 111144 (strict 94163)
+partial clusters with a slot gene in window 22077
+gain events 1157 rows, clusters gaining 1112; complete: clusters 483, slot genes 454; strict uncalled: clusters 440, slot genes 420, genomes 311
+all partial: (cluster, missing component) pairs with family set 361778; observed 1152 (0.0032); random-window expected 75.8; with >= 1 unrelated called system 356603: observed 1147 vs expected 578.2; adjacent observed 913 vs expected 459.4
+strict partial: (cluster, missing component) pairs with family set 266313; observed 1061 (0.0040); random-window expected 68.9; with >= 1 unrelated called system 262330: observed 1056 vs expected 459.1; adjacent observed 858 vs expected 359.5
+
+                                            partial  strict  with_slot  gain  complete  complete_strict
+model_key                                                                                              
+DefenseFinder/AbiE/AbiE                         536     526        242   177       177              177
+RM/RM_Type_II/N6_N4_RM_Type_II_PDDEXK          3152    2595        567    49        49               44
+RM/RM_Type_I/N6_RM_Type_I                       579     490        138    40        40               40
+RM/RM_Type_II/N6_N4_RM_Type_II_HATPase         3240    2569        546    30        30               26
+RM/RM_Type_II/N6_RM_Type_II_PDDEXK             2492     838        423    28        28               24
+RM/RM_Type_III/N6_N4_RM_Type_III                473     383        139    23        23               23
+DefenseFinder/MazEF/MazEF                       633     633        289    17        17               17
+RM/RM_Type_II/DNA_met_RM_Type_II_HATPase        703     523        126    13        13               13
+RM/RM_Type_II/DNA_met_RM_Type_II_PDDEXK        1233     569        200    14        14               12
+RM/RM_Type_II/N6_RM_Type_II_HNH                1868     644        334    13        13               10
+DefenseFinder/Hachiman/Hachiman_II              241     238         63     6         6                6
+DefenseFinder/Hachiman/Hachiman                 238     235         61     6         6                6
+DefenseFinder/PhiR5.1_HipAD/PhiR5.1_HipAD        82      78         25     4         4                4
+DefenseFinder/SanaTA/SanaTA                      56      40         39     4         4                4
+RM/RM_Type_II/N6_RM_Type_II_HATPase            2164     824        371     9         9                3
+DefenseFinder/Gao_Iet/Gao_Iet                   908     908        160     2         2                2
+RM/RM_Type_II/DNA_met_RM_Type_II_HNH            537     350        111     6         6                2
+DefenseFinder/CBASS/CBASS_I_Endonuclease        217     134         63     2         2                2
+DefenseFinder/Paris/PARIS_II                    209     176         55     4         4                2
+DefenseFinder/CBASS/CBASS_I_TM                  171     100         50     2         2                2
+DefenseFinder/DS-6/DS-6                          84      76         21     2         2                2
+TXSScan/bacteria/diderm/T1SS                   7536    7536       1684   100         1                1
+RM/RM_Type_II/N6_N4_RM_Type_II_HNH             3039    2382        547     1         1                1
+DefenseFinder/Pycsar/Pycsar_TM                 2403    2354        438     1         1                1
+DefenseFinder/Gabija/Gabija                    1990    1990        338     1         1                1
+DefenseFinder/CBASS/CBASS_II_Other             1898    1809        533     6         1                1
+DefenseFinder/CBASS/CBASS_II_HNH               1890    1804        531    45         1                1
+DefenseFinder/ShosTA/ShosTA                    1375    1355        244     1         1                1
+RM/RM_Type_II/D12_RM_Type_II_PDDEXK            1225     575        189     5         5                1
+DefenseFinder/PsyrTA/PsyrTA                    1173    1149        163     1         1                1
+DefenseFinder/Hailong/Hailong                   332     332         54     1         1                1
+DefenseFinder/CBASS/CBASS_III_TM                253     147         73     2         1                1
+DefenseFinder/Wadjet/Wadjet_I                   186     179         60    13         1                1
+DefenseFinder/PD-T7-2/PD-T7-2                   166     161         28     1         1                1
+DefenseFinder/CBASS/CBASS_I_HNH                 154      69         53     1         1                1
+DefenseFinder/CBASS/CBASS_I_Other               146      74         47     1         1                1
+DefenseFinder/PfiAT/PfiAT                        51      51          7     1         1                1
+DefenseFinder/Thoeris/Thoeris_V_2                29      19         11     1         1                1
+DefenseFinder/Wadjet/Wadjet_II                   27      27          4     1         1                1
+DefenseFinder/Paris/PARIS_I                       4       3          2     1         1                1
+RM/RM_Type_II/N6_N4_RM_Type_II                 3844    2807        621    81         5                0
+DefenseFinder/Veles/Veles                      3648    3648        492     4         0                0
+RM/RM_Type_II/N6_N4_RM_Type_II_PLD             3003    2367        544     0         0                0
+DefenseFinder/Dodola/Dodola                    2528    2500        354     0         0                0
+DefenseFinder/Pycsar/Pycsar_Phospholipase      2488    2441        451     0         0                0
+DefenseFinder/Pycsar/Pycsar_TIR                2359    2330        425     0         0                0
+DefenseFinder/CBASS/CBASS_II_Phospholipase     2021    1930        553    45         0                0
+DefenseFinder/CBASS/CBASS_II_Endonuclease      1965    1867        548    47         0                0
+DefenseFinder/CBASS/CBASS_II_TM                1947    1837        542    46         0                0
+DefenseFinder/CBASS/CBASS_II_TIR               1915    1818        537    45         0                0

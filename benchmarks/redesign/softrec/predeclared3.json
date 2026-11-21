@@ -1,0 +1,55 @@
+{
+ "written_utc": "2026-11-12T20:52Z",
+ "workstream": "softrec3 (round 3 of softrec): neighbour lists stratified by lineage",
+ "seen_before_writing": "rounds 1-2 (REPORT.txt, REPORT2.txt, NOTEBOOK2.txt), the boundary workstream's DH reference. Round-3 outputs existing at writing: the zca10 float16 vector file and an empty calib/ directory (job 84802 failed on a diagnostic assertion before any calibration number; job 84861 rerunning). No round-3 calibration, list, statistic, family, locus or score existed.",
+ "hypothesis": "A global top-K list fills with a gene's closest relatives while the statistic counts genera. Lists stratified by lineage (best match per genome of every other genus, at most a few genomes per genus counting toward support, above an evidence floor) (a) give supporting pairs that link lineages, so families built from them stop splitting by lineage, and (b) lower chance support per genus, so variable (CRISPR-Cas) pairs keep support.",
+ "lists": {
+  "exact (src ex)": "for every unique sequence (2,547,528) and genome (3,564): the maximum zca10 cosine over the genome's genes and the gene attaining it, by float16 matrix products on one A5000 (exact search; job chained after calibration). Per-genus structure: the entries of a sequence in the genomes of one genus are ranked by cosine (level 0 = the genus's best match).",
+  "cheap (src kn)": "the same per-genome bests restricted to the stored zca10 top-2,000 unique kNN (round 1), identical copies first.",
+  "gene lists": "a gene's list = its sequence's entries in genomes outside the gene's genus (as rounds 1-2).",
+  "floor (deviation from the brief, decided before any calibration number)": "the brief's start value 0.32 is the random-PAIR 99.9th percentile; a per-genome maximum over ~950 genes exceeds a pair quantile by chance far more often, so the floor is calibrated for the maximum: floor_alpha(G) = smallest cosine c with 1 - (1 - p(c))^n_G <= alpha, p(c) = P(cos < -c) over all pairs of 10,000 random queries x all genes (the mirrored lower tail as a label-free chance model). Floors used: alpha 1e-3 and 1e-5. The calibration reports how often the 0.32 pair floor and these floors are passed by decoy maxima (-min) and by maxima in genomes lacking the query's MMseqs2 family (diagnostic only).",
+  "variants": "floor alpha in {1e-3, 1e-5} x per-genus cap m in {1, 3, all}: a supporting pair (a', b') in genome G counts for genus g(G) only if both entries pass the floor and min(level a', level b') < m (the support in a genus comes from one of the top-m genomes of a or of b)."
+ },
+ "statistic": {
+  "instance": "every gene pair within 3 positions on one contig (9,399,310), homologous pairs excluded (identical sequence, or cos(a, b) >= the floor of a's genome at the variant's alpha)",
+  "L": "genera other than the own genus with a supporting pair: a' = a's entry in genome G, b' = b's entry in G, a' != b', within 3 genes on one contig; engine convention Lt = L + 1",
+  "count": "rule Lt >= m (m in 2..50)",
+  "rank-weighted on the cosine tail": "t(entry) = 1 + N_genes x p(cos) (expected number of chance genes at least as close in the whole database); per genus t_g = min over its supporting pairs of max(t_a', t_b'); W_r = sum over genera exp(-(t_g - 1)/r), r in {1, 3}; rule W >= t & Lt >= 2",
+  "null": "within-genome gene-order shuffle, seeds 1000-1002, every order-dependent step after it (as rounds 1-2)",
+  "rule selection": "the engine's procedure at the instance level: rules with instance FDR <= 0.01, top 12 by observed count, the one covering most genes",
+  "pool": "2 sources x 6 variants x 3 statistics = 36 candidates"
+ },
+ "selection_on_odd_genomes (no even number before it is recorded in NOTEBOOK3.txt)": {
+  "odd_conditions": "as round 2: (o1) ribosomal on the 848 odd runs: recovered >= 830, Parvarchaeaceae recovered >= 54 of 55, for DH resolved >= 705; (o2) summed DF + TXSS excess >= token - 0.01; (o3) every caller F1 >= token - 0.02",
+  "score": "lexicographic: odd conditions met, then odd summed excess",
+  "stage1": "R1 (conserved@2) of every candidate against token R1 on odd genomes",
+  "stage2": "the top 4 exact-source candidates and the top 1 cheap-source candidate by stage-1 score: validated edges (every (a, a') and (b, b') of a supporting pair of a significant instance, collapsed to unique sequences, cosine weight); families = Leiden (igraph, modularity, cosine weights, n_iterations -1, seed 17) at the resolution, from {250, 500, 1000, 2000, 4000}, whose count of families with >= 2 genes on genes with a validated edge is closest in |log ratio| to rescue3's count on the same genes (gold-free); connected components also run when the largest component holds < 50% of nodes with an edge; modules Louvain resolution 0.3 seed 17 (readings2.modules); readings R1, C, H, DH; best odd DH score against token DH is THE method",
+  "contingency": "as round 2: if the selected DH fails the odd ribosomal bar while its R1 passes, Louvain resolution in {0.1, 0.2, 0.5, 1, 3} is tuned on odd genomes for the selected configuration only"
+ },
+ "test_even_genomes (thresholds copied unchanged from round 2)": {
+  "reference": "token DH: F1 DefenseFinder 0.744, TXSScan 0.548, CRISPRCasTyper 0.479; summed DF + TXSS excess 0.4270; ribosomal 1,686 recovered, 1,512 resolved, Parvarchaeaceae 113 of 114 resolved",
+  "matches": "summed excess >= DH - 0.01 (point estimate); each caller F1 >= DH - 0.02; ribosomal recovered >= 1,650, Parvarchaeaceae recovered >= 110 of 114, resolved >= 1,400",
+  "beats": "summed excess >= DH + 0.02 with the paired 95% interval (genome bootstrap 2,000, seed 17) excluding 0; no caller F1 more than 0.01 below DH; the same ribosomal bars",
+  "otherwise": "fails; the blocking condition(s) are named",
+  "also_reported": "R1 vs token R1; C, H; covered50; CRISPR-Cas member genes touching support; family and module diagnostics as round 2"
+ },
+ "readings_and_refuters (fixed now)": {
+  "a_families_link_lineages": "SUPPORTED if the selected configuration's validated families (genes with an edge) put a ribosomal Pfam marker into a median <= 50 families with the largest family holding a median >= 0.5 of the marker's genes, and >= 100 of 114 Parvarchaeaceae ribosomal runs carry one module label. REFUTED ('stratified families still split by lineage') if the median families per marker is >= 100 or fewer than 57 of 114 Parvarchaeaceae runs carry one label. Round 2 (rw1000_e50 l2000): 423, 0.183, 2 of 114; rescue3: 5, 0.903, 114.",
+  "b_chance_support_lower": "SUPPORTED if, at the selected variant, null instances with L >= 2 (engine convention) are fewer than half of round 2's depth-1,000 count (7.8 M) and the count rule's FDR-selected threshold is L >= 5 or lower (round 2: 15); and CRISPR-Cas member genes touching support (even) reach >= 0.70 (round 2 .656, token .774). REFUTED if null L >= 2 instances are not lower than at depth 1,000 or CRISPR-Cas support stays <= 0.66.",
+  "c_verdict_attribution_if_fails": "statistic (R1 vs token R1, member support), families (validated vs rescue3 tokens on the same landscape), modules (label diagnostics), reading (DH vs H vs C), as round 2"
+ },
+ "amendment_1": {
+  "written_utc": "2026-11-12T21:01Z",
+  "seen_before_writing": "calibration only (calib/calib.json and the per-genome maximum histogram of 10,000 queries x 3,564 genomes); no list, statistic, family, locus or score",
+  "finding": "the zca10 pair-cosine distribution is strongly asymmetric: different-MMseqs2-family pairs P(cos >= 0.25) = 1.7e-3 vs P(cos <= -0.25) = 3.2e-7, so the mirrored-tail chance model is invalid. Model floors (alpha 1e-3 per genome: median 0.229; 1e-5: 0.329) are exceeded by the maxima of genomes lacking the query's MMseqs2 family in 60% / 33% of cases. The per-genome maximum distribution has no label-free valley (chance mode 0.16-0.20, homolog shoulder 0.64; family-absent exceedance 0.40 at 0.30, 0.20 at 0.40, 0.095 at 0.50, 0.042 at 0.60; family-present 0.95 / 0.87 / 0.73 / 0.54).",
+  "change": "floors become a pool dimension of global cosines {0.32 (the brief's start, also the GPU storage floor), 0.45, 0.60}, selected on odd genomes like every other choice; variants = 3 floors x caps {1, 3, all} = 9; homologous-pair exclusion at the variant's floor; rank weights use t = 1 + N_genes x P(cos >= c over all pairs) (the cosine's expected position in a global ranked list; label-free) with scales r in {100, 1000}; pool = 2 sources x 9 variants x 3 statistics = 54 candidates. Stage 2 (top 4 exact + top 1 cheap by stage-1 score), selection, test thresholds and refuters unchanged."
+ },
+ "amendment_2_task5_search": {
+  "written_utc": "2026-11-12T21:14Z",
+  "seen_before_writing": "no search number of any round-3 stratified list; the round-3 search report (locus_search/REPORT3.txt) and its M1z results",
+  "lists": "for each of the 18,414 benchmark member genes, from the exact per-genome best matches (cosine >= 0.32), every genome except the gene's own: st1 = the best genome per genus, st3 = the best 3 genomes per genus, sta = every genome; s = log(N_db / t), t = 1 + N_db x P(cos >= c over all pairs)",
+  "protocol": "round-3 search machinery unchanged (search3.py imported read-only): scan-only grid (W extra 0/2/4/8 x tau 0-3) on all DefenseFinder queries; configuration per family chosen on odd genomes with round 3's choose(); 200-replicate null runs (seed 17 + qid) on every DefenseFinder query; fast null (Gumbel on 40 replicates) with a calibration curve learned on odd-genome runs; comparison on even genomes against M1z (zca10 top-20,000 ranks) at its frozen configuration (W + 8, tau 3) from the round-3 runs.",
+  "primary_family": "the stratified family with the highest odd-genome AP at its chosen configuration",
+  "serves_search_if": "on even genomes (i) AP >= M1z - 0.01 and (ii) recall at a matched rate of 0.5 wrong-type hits per query (threshold on odd genomes) >= M1z - 0.01 (point estimates; paired genome-bootstrap intervals reported). Also reported: recall at matched rates 0.25 / 1 wrong-type, 1 / 2 / 4 unlabelled and 0.01 / 0.03 / 0.1 unsupported hits per query (round 3's predeclared measure is 0.03 unsupported), and the M1z values recomputed by this code from round 3's hits (they must equal round 3's post hoc table: 0.106 recall at 0.5 wrong-type)."
+ }
+}

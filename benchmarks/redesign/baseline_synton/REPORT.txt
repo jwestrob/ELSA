@@ -1,0 +1,207 @@
+BASELINE_SYNTON: HERVE, CURY & BERNHEIM 2026 SYNTONS AGAINST THE WORD METHOD (Spacedust collection, DPANN; 2026-11-13)
+=======================================================================================================================
+Final (10:30 UTC). Predeclaration predeclared.json (08:20 UTC), written before any score. Gates passed before any
+comparison: Spacedust engine reference .7498 / .5660 / +.1838 [.1537, .2134] and native Spacedust .6765 / .6115 /
++.0649 [.0365, .0927] reproduced exactly (per region F1 equal); DPANN token DH .4270, F1 .744 / .548 / .479, ribosomal
+1,686 / 1,512, Parvarchaeaceae 113 resolved reproduced exactly (per instance), and the word method's adopted DPANN
+output (stage-1 words + cohesion phrases, V-coh0.1, .6082) rescored equal to its stored scores. Spacedust scores are
+reconciled with transfer_spacedust: its per-region F1 and control for both references equal mine to 5e-7.
+
+ANSWER LINES
+1. Spacedust ranking (source207 excess, paired region bootstrap): word method P2 V-coh0.1 (+.049) = synton matched
+   (+.054) > synton faithful (-.002). Faithful is last on every measure: F1 .190 / random .192 / excess -.002 [-.037,
+   +.034], i.e. no signal above random placement; faithful - word P2: dF1 -.291 [-.334, -.250], dExcess -.051 [-.093,
+   -.010]. Matched (same code on the word method's rescue3 tokens): F1 .381 / .327 / +.054 [+.018, +.090]; matched -
+   word P2: excess MATCHES (+.005 [-.026, +.035]), F1 BELOW (-.100 [-.131, -.070]; 50 regions better, 115 worse). The
+   word statistic with their own connected-component assembly (transfer_spacedust CC1 / CC2) ranks above both synton
+   runs: matched - CC1 dExcess -.061 [-.093, -.030], - CC2 -.088 [-.125, -.053].
+2. The faithful-to-matched gap is the family definition: identical statistic, counting and assembly; matched - faithful
+   dF1 +.191 [+.150, +.233], dExcess +.056 [+.017, +.098] (122 regions better, 24 worse). Their linclust cascade at 50%
+   identity on 1,317 phylogenetically spread genomes leaves 53.7% of genes as singleton fam50s (rescue3: 8.8%); only
+   31.8% of gold-region genes sit in a fam50 present in >= 3 genomes (rescue3: 95.2%), so few BGC family pairs can reach
+   the >= 3 independent contexts that score > 80 needs. Faithful syntons cover 17.0% of query genes and 12.7% of gold
+   genes (depleted against the genome), touch 95 of 207 regions; matched syntons cover 33.9% of query genes and touch 169.
+   This run does not separate linclust's sensitivity from the 50% threshold itself (rescue3 changes both).
+3. Against the references on Spacedust: both synton runs are BELOW the engine reference (dExcess -.186 [-.224, -.146]
+   faithful, -.130 [-.168, -.090] matched); against native Spacedust the faithful run is BELOW (dExcess -.067 [-.105,
+   -.029]) and the matched run MATCHES on excess (-.011 [-.053, +.031]) at much lower F1 (-.296).
+4. DPANN: their pipeline returns almost nothing. Faithful: 42 significant family pairs, 260 syntons (593 genes, 0.017%),
+   scorecard summed DF+TXSScan excess -.0003, F1 .000 / .000 / .000, ribosomal runs 0 recovered / 0 resolved,
+   Parvarchaeaceae 0 of 114; vs token DH -.427 [-.450, -.404], vs word method -.609 [-.635, -.583]. Matched (rescue3):
+   15 significant pairs, 218 syntons, the same zero scorecard (summed -.0005; vs word -.609 [-.635, -.583]).
+5. DPANN fairness, with numbers: their contexts and lambda use only replicons of >= 48 genes, which hold 34.4% of DPANN
+   genes (17.9% have the full 24-gene flank window; Spacedust 99.9% / 97.9%); 31.2% / 58.4% / 35.9% of even
+   DefenseFinder / TXSScan / CRISPRCasTyper instances lie wholly on such replicons. The decisive limit is the score
+   threshold: lambda adds 2 nB/L per context representative, and the gene-weighted median usable replicon has 104 genes
+   on DPANN against 3,661 on Spacedust, so expectations are ~35x higher per copy; among pairs with q < 1e-5 the score
+   median / q99 is 38 / 83 on DPANN (faithful) against 67 / 135 on Spacedust, and score > 80 is out of reach.
+6. Run time (biotite, 24 CPUs, their code): Spacedust faithful 30.3 min (families 8.1, cells 22.2), peak RSS 16.5 GB;
+   matched 33.5 min (no family step), 17.5 GB; DPANN faithful 50.2 min (families 4.3, per-replicon neighbour extraction
+   39.2 of 45.8 min of cells), 5.5 GB; DPANN matched 45.3 min, 5.6 GB.
+7. Public dataset (locked, no method run, nothing scored): the Zenodo record has context clusters with fam50 per gene
+   (ST1, 123.1 M rows), family associations (ST2, 3.09 M tested pairs, 1.03 M significant), syntons (ST3, 14.99 M) and
+   synton families (ST4, 778,526), CRE (ST5) and DefenseFinder subtype co-occurrences (ST7), all keyed by RefSeq WP
+   accession or gembase id. It has no genome accession list, coordinates, fam95 table or per-system DefenseFinder table
+   (the deposited ST6 is byte-identical to ST5). A superset universe is built: 34,719 RefSeq Complete Genome assemblies
+   released by 2023-05-31, 131,406,988 protein genes, 47,290,207 distinct proteins, 33.8 GB downloaded, in
+   $RD/ws_refseq_synton/universe; 25,747 gembase genome codes map uniquely to an assembly.
+
+-----------------------------------------------------------------------------------------------------------------------
+THEIR METHOD AS VERIFIED
+Sources: paper full text from Europe PMC (PMC13639185; the OUP page is behind Cloudflare) and the supplementary docx;
+code gitlab.pasteur.fr/mdm-lab/papers/bacterial-genome-syntons, commit 84baf1438f13fb6e03dabb8536e4f4dbfc03caa0
+(2026-05-23, "Fix window size and add warning"); Zenodo 10.5281/zenodo.21099310 (published 2026-07-01).
+  Data        32,791 complete genomes from refseq/bacteria, May 2023, 123 M genes, gembase ids
+              (SPEC###.0523.#####.###C_#####).
+  Families    MMseqs2 linclust "iteratively" at 99 / 95 / 80 / 50% identity; fam50 drives syntons, fam95 only CRE.
+              Coverage, E-value and MMseqs2 version are not stated; no clustering code is published.
+  Context     per gene, the unordered set of fam50s at offsets 13..24 on each side (code: 12 < |offset| <= 24), on
+              replicons with >= 48 genes only. Genes with identical +-24 arrays form a "cid"; Jaccard between cid sets
+              within a fam50; edges at J >= 0.15; single-linkage components = context clusters; representative = the
+              lexicographically smallest gene id.
+  Count       k_obs(A,B) = adjacency rows (representative of a context cluster of A, gene of B at +-1). Only the
+              representative's own neighbours are examined; B on both sides counts 2; A->B and B->A are separate
+              tests; only pairs with k_obs > 1 are tested.
+  Expectation lambda(A,B) = sum over representatives g of A of 2 nB_r(g) / L_r(g) (replicons >= 48 genes).
+  Test        right-tailed Poisson (scipy sf), Benjamini-Hochberg (statsmodels) over tested pairs; score =
+              log2((k + 1e-12)/(lambda + 1e-12)) x -log10(q + 1e-12).
+  Threshold   paper: q < 1e-5 AND score > 80; code: score > 80 only. Removed nothing in any run here or in their ST2.
+  Loci        gene graph, edge between a gene of A and a gene of B within +-2 positions on one replicon (any replicon,
+              including < 48 genes) when (A,B) passed; syntons = networkx connected components (one-gene holes
+              possible). Synton families = identical sorted fam50 multiset.
+  Run time    "a few hours on 40 CPUs" for the 32,791 genomes.
+  Validation  share of DefenseFinder v2.0.2 multi-gene instances wholly inside one synton, per subtype; no random-
+              placement control or false-positive estimate.
+What the second-hand summary got right: Poisson right tail against an abundance expectation with lambda = 2 sum nB/L,
+BH, a combined log2 FE x -log10 q score, Jaccard-clustered contexts as the counting unit, linclust families at several
+identities, connected-component syntons with one intervening gene, 32,791 genomes. What it missed or got loose: the
+context is the far flank (13..24 genes away; the nearest 12 are excluded so that operons up to ~12 genes stay
+detectable); replicons < 48 genes are dropped from contexts and lambda (code only); the counting unit is one
+representative gene per context cluster, and adjacency is checked on that gene alone; only k_obs > 1 pairs enter BH;
+significance is tested on immediate adjacency while links reach +-2; the paper's q < 1e-5 is absent from the code; the
+paper says "12 to 24" where the code uses 13..24.
+
+DEVIATIONS FROM A FAITHFUL RUN (all execution or adapter level; no logic of theirs changed)
+  1. DuckDB pinned to 1.5.3 (python + official CLI), the release current at their commit: conda-forge's 2.0.0 rejects
+     their arrow lambdas (cell 7). Other packages current (requirements are unpinned): pandas 3.1.1, numpy 2.5.4,
+     pyarrow 26.0.1, networkx 3.7, scipy 1.18.1, statsmodels 0.15.0.
+  2. Families: their clustering code is unpublished; linclust cascade 99 -> 95 -> 80 -> 50 with -c 0.8 --cov-mode 0
+     (linclust defaults; the paper states no coverage), MMseqs2 release 18, terminal '*' removed.
+  3. Adapters: gene = 'g' + zero-padded gid (the context representative is the lowest gid where theirs is the
+     alphabetically first gembase id), replicon = contig, position = position_index, orientation from strand.
+  4. Cells run verbatim (extracted by nb2sh.py, sha256 in cells/manifest.json; scripts byte-identical, checked) with
+     bash -e; DuckDB CLI threads 24 / memory 72 GB / temp dir set through ~/.duckdbrc (their notebook relies on
+     defaults; the login-node default is 224 threads / 1.3 TiB); neighbors.py ran with its own 10 workers x 3 threads
+     and /tmp; results/ pre-created.
+  5. Scored loci: each synton -> [min, max position] on its replicon (one-gene holes filled: 6,140 faithful / 40,196
+     matched Spacedust syntons); all syntons scored, no synton-family deduplication.
+  6. Matched variants: representative_50 = representative_95 = rescue3 token (Spacedust: transfer_spacedust's table,
+     copied, sha256 27cc55cd...; DPANN: engine/dpann_tokens rescue3, sha256 560140f2...).
+  7. Paper rule (q < 1e-5 and score > 80) = code rule in all four runs (0 pairs differ), so no V-paperq variant exists.
+
+TABLES
+Spacedust source207 (207 regions on 7 of 9 query genomes; excess = F1 - mean of 200 rigid translations; 95% bootstrap
+over regions, 10,000 draws, seed 17; medians marked * are over regions with an overlapping interval for synton rows)
+  output                                     intervals  F1    random  excess [95%]            localized  bprec* cov*  q-gene cover
+  engine reference (union of 42 readings)       19,741  .750  .566    +.184 [+.154, +.213]    .758       1.00   .83   .773
+  native Spacedust (all blocks)                 63,756  .676  .612    +.065 [+.037, +.093]    .589       1.00   .60   .786
+  word P2 V-coh0.1 (transfer_spacedust)          9,702  .481  .432    +.049 [+.014, +.084]    .319       1.00   .33   .540
+  word P2 CC1 (word statistic + CC rule)         8,409  .552  .437    +.115 [+.079, +.151]    .449       1.00   .44   .561
+  synton faithful                                4,240  .190  .192    -.002 [-.037, +.034]    .097       1.00   .20   .172
+  synton matched (rescue3 tokens)                7,831  .381  .327    +.054 [+.018, +.090]    .222       1.00   .30   .351
+  (word rows: transfer_spacedust's own scores, read-only; their medians are over all regions)
+  F1 / control by gold-region size (regions):  1-5 (46)      6-10 (68)     11-20 (54)    21+ (39)
+    synton faithful                             .242 / .190   .240 / .209   .148 / .199   .100 / .155
+    synton matched                              .436 / .341   .479 / .366   .325 / .328   .222 / .241
+  Paired A - B                          dF1 [95%]                dExcess [95%]            regions A>B / B>A
+    faithful - engine reference         -.560 [-.601, -.517]     -.186 [-.224, -.146]     6 / 192
+    faithful - native Spacedust         -.486 [-.527, -.447]     -.067 [-.105, -.029]     4 / 193
+    faithful - word P2 V-coh0.1         -.291 [-.334, -.250]     -.051 [-.093, -.010]     18 / 158
+    faithful - word P2 CC1              -.362 [-.404, -.321]     -.117 [-.158, -.077]     14 / 171
+    matched  - engine reference         -.369 [-.411, -.324]     -.130 [-.168, -.090]     16 / 176
+    matched  - native Spacedust         -.296 [-.338, -.254]     -.011 [-.053, +.031]     12 / 177
+    matched  - word P2 V-coh0.1         -.100 [-.131, -.070]     +.005 [-.026, +.035]     50 / 115
+    matched  - word P2 CC1              -.171 [-.203, -.141]     -.061 [-.093, -.030]     33 / 141
+    matched  - word P2 CC2              -.206 [-.244, -.170]     -.088 [-.125, -.053]     34 / 147
+    matched  - faithful                 +.191 [+.150, +.233]     +.056 [+.017, +.098]     122 / 24
+Spacedust run statistics                    faithful              matched (rescue3)
+  families (genes 4,257,531)                2,732,673 (53.7% singl.) 523,853 (8.8% singletons)
+  context clusters (of 4,251,358 genes)     4,166,508             3,610,427
+  pairs tested / score > 80                 324,828 / 93,179      524,648 / 88,450
+  syntons (genomes)                         167,053 (1,297)       503,559 (1,317)
+  share of genes / query genes in syntons   9.8% / 17.0%          36.4% / 33.9%
+  synton size q50 / q90 / q99 / max         2 / 4 / 6 / 20        2 / 5 / 12 / 43
+  synton families                           59,235                94,250
+  wall time / peak RSS (24 CPUs)            30.3 min / 16.5 GB    33.5 min / 17.5 GB (Jaccard pairs 177.7 M vs 1.9 M)
+
+DPANN (even genome_code test split for gold; ribosomal check over all 1,686 runs; paired genome bootstrap, 2,000 draws)
+  output                          summed   F1 DF   F1 TXSS  F1 CCT  ribo rec / res  Parv rec / res  loci (genes)
+  token DH (reference)            .4270    .744    .548     .479    1,686 / 1,512   114 / 113       -
+  word method V-coh0.1            .6082    .735    .636     .395    1,684 / 1,420   114 / 109       -
+  synton faithful                 -.0003   .000    .000     .000    0 / 0           0 / 0           260 (602)
+  synton matched (rescue3)        -.0005   .000    .000     .000    0 / 0           0 / 0           218 (487)
+  synton faithful - DH: summed -.427 [-.450, -.404]; - word: -.609 [-.635, -.583]
+  synton matched  - DH: summed -.428 [-.450, -.405]; - word: -.609 [-.635, -.583]
+DPANN run statistics                        faithful              matched (rescue3)
+  families (genes 3,585,303)                1,367,944             363,307
+  context clusters (1,234,248 genes)        746,434               557,905
+  pairs tested / q < 1e-5 / score > 80      58,315 / 3,091 / 42   79,791 / 13,224 / 15
+  syntons (genomes; on replicons < 48)      260 (29; 111)         218 (159; 109)
+  wall time / peak RSS                      50.2 min / 5.5 GB     45.3 min / 5.6 GB
+
+EXPECTATIONS (predeclared) AGAINST OUTCOMES
+  Spacedust faithful: F1 .25-.45 -> .190 (low); excess +.05..+.15 with lower bound > 0 -> -.002 (refuted); vs engine
+    excess -.05..-.13 -> -.186 (lower); vs native F1 -.25..-.45 -> -.486 (lower), excess within +-.06 -> -.067 (just
+    outside); vs word P2 F1 -.10..-.30 -> -.291 (held), excess -.08..+.02 -> -.051 (held); boundary precision >= .8
+    with coverage < .5 -> 1.00 / .20 among overlapping regions (held); gene share 10-30% -> 9.8% all, 17.0% query;
+    synton median 3 -> 2 (refuted); < 2 h and < 120 GB (held); q rule removes < 1% -> 0 (held).
+  Spacedust matched: F1 +.03..+.15 over faithful -> +.191 (above); excess within -.02..+.08 -> +.056 (held).
+  DPANN faithful: summed .10-.30, F1 DF .40-.65, ribosomal 300-1,200 -> all zero (refuted); matched above faithful by
+    +.03..+.12 -> equal at zero (refuted). Neither refuter fired (faithful Spacedust excess < +.184; DPANN < .427).
+
+CAVEATS
+- The score > 80 threshold is an absolute number tuned on 32,791 genomes ("typically >= 3 contexts"). On Spacedust 95%
+  of tested pairs already have q < 1e-5, so the threshold behaves; on DPANN it removes nearly everything (answer 5).
+  It was kept, as predeclared; a q-only reading (3,091 / 13,224 DPANN pairs) was counted, not scored.
+- The faithful family step is my reconstruction of an unpublished step (linclust cascade with default coverage). A
+  more sensitive clustering at the same 50% identity was not run, so the faithful-matched gap mixes the threshold and
+  the algorithm.
+- The engine reference is the union of 42 readings and native Spacedust the union of 1.64 M blocks; each synton run and
+  P2 V-coh0.1 is one reading. The random-placement control absorbs part of that advantage.
+- transfer_spacedust's P1 was not written when this report was finalized; the word comparison uses its P2 primary
+  (V-coh0.1) and, as context, its CC1 / CC2 secondary rows. Their numbers are theirs; I read them, read-only.
+- RefSeq universe: a superset (34,719 assemblies against 32,791), current RefSeq annotations (re-annotated since May
+  2023; 131.4 M protein genes here, while their ST1 lists 123.1 M genes on replicons >= 48 genes), 8 candidates without
+  a feature table. The 25,747 confident code -> assembly calls rest on singleton context clusters; 7,044 of 32,791
+  genomes remain open (4,977 codes without a singleton context, 1,010 whose singleton WPs are all carried by > 20
+  candidates, 1,057 tied or below 95%) and need another key (gene-order fingerprints) before the cohort is exact.
+- Post hoc diagnostics (family coverage of gold genes, score distributions, replicon lengths) explain results; none
+  selected any configuration.
+
+ARTIFACTS
+Local benchmarks/redesign/baseline_synton/: predeclared.json, NOTEBOOK.txt, REPORT.txt; code make_inputs.py (adapters),
+  nb2sh.py (verbatim cell extraction), fam_cascade.sh (linclust cascade), run_pipeline.sbatch, synton_loci.py (syntons ->
+  intervals, run statistics), score_spacedust.py (gate + source207 + paired), score_dpann.py (refcheck + DPANN scorecard),
+  run_final_scores.sbatch, zenodo_inventory.py, build_refseq_universe.py, match_gembase.py, run_refseq_prep.sbatch,
+  run_match.sbatch, tables.py; results/ (spacedust_gate.json, spacedust_final.json, spacedust_sd_*.json,
+  dpann_refcheck.json, dpann_final.json, dpann_dp_*.json, *_stats.json, *_timing.tsv, zenodo_inventory.json,
+  refseq_universe_build.json, gembase_to_assembly.json, transfer_spacedust_copies/pr_P2__*.parquet).
+Biotite $RD/baseline_synton/: src/bacterial-genome-syntons (clone at 84baf14), env/ (conda + duckdb 1.5.3),
+  env_versions.txt, code/, fam/{spacedust,dpann}/ (linclust cascade, clu*.tsv), tokens/ (rescue3 copy + sha256),
+  runs/{sd_faithful, sd_matched, dp_faithful, dp_matched}/ (data/, cells/, scripts/, results/ = their outputs,
+  post/loci.parquet + stats.json, timing/, cell_logs/), results/, scores/, logs/.
+$RD/ws_refseq_synton/: zenodo/ (ST1-5, ST7, record json; md5 verified), meta/ (NCBI assembly summaries,
+  candidates_complete_le_2023-05-31.tsv, gembase_to_assembly.{parquet,json}), genomes/<assembly>/ (protein.faa.gz +
+  feature_table.txt.gz, 69,438 files), universe/ (genes, contigs, genomes parquet; proteins_wp.faa.gz; build.json),
+  zenodo_inventory.json, logs/. Free space on /groups at download time: 96 TB (95% used).
+
+JOBS (all -A banfield -p standard --qos=standard_expand -c 24, mmseqs exclude list)
+  91498 FAILED (gate field check), 91528 CANCELLED at my post step after all cells (cells reused), 91850 Spacedust
+  faithful post + score, 91858 Spacedust matched, 91696 DPANN faithful (with DH refcheck), 92100 DPANN matched, 92108
+  FAILED (DuckDB keyword), 92115 Zenodo inventory + RefSeq universe, 92436 gembase mapping, 92439 joint final scoring.
+  Login node: env creation, Zenodo and NCBI downloads (aria2c; 2 and 8 connections), small checks.
+
+NEXT (one line each)
+- Family sensitivity: rerun the faithful pipeline with mmseqs cluster at 50% identity to split linclust sensitivity
+  from the threshold.
+- RefSeq cohort: key the 7,044 open gembase codes by gene-order fingerprints, then freeze the 32,791-genome list.

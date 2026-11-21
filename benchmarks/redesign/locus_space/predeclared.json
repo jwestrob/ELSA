@@ -1,0 +1,88 @@
+{
+  "workstream": "ws_locusspace",
+  "part_1_gold_typing": {
+    "written_utc": "2026-11-13 02:08",
+    "status": "written before any locus-space number was computed",
+    "data": {
+      "gold": "package gold/instances.parquet, instances with >= 2 resolved members; DefenseFinder label = system_type (66 types; system_subtype equals it); CRISPRCasTyper label = system_subtype (the caller's prediction); TXSScan (one type, Archaeal-T4P) enters only as references and in clustering",
+      "clean_labels": "CRISPRCasTyper predictions containing ',' or 'Hybrid' (multi-subtype calls) are dropped from queries and references",
+      "higher_level": "CRISPRCasTyper type = roman numeral before '-' (I, II, III, IV, V, VI); DefenseFinder family = name prefix for multi-type families present (RM_, Lamassu-, pAgo_, Gao_, CBASS_, BREX_, Thoeris_, PARIS_, Mokosh_, Zorya_, Wadjet_, Druantia_, Retron_, Avs_, Rst_), else the type itself",
+      "vectors": "zca10 ESM++ small gene vectors $RD/locus_search/out3/vec/zca10_f32__row.npy (whitened; the search's vectors)",
+      "families": "MMseqs2 rescue3 tokens $RD/engine/dpann_tokens/mmseqs__seq__e3c50s75_rescue3__dpann.parquet",
+      "modules": "token engine rescue3 token_modules.parquet (Louvain modules of the family-pair graph)",
+      "genome_groups": "data-derived groups $RD/lineagefree/groups/emb_hom_average_t0.75.parquet (642 groups) for hold-out; emb_hom_average_t0.7 (156 groups) as a stringency check"
+    },
+    "representations": {
+      "J": "MMseqs2 family-set Jaccard of the member genes (token baseline)",
+      "MOD": "engine module identity: plurality module of member families (token baseline)",
+      "MODJ": "Jaccard of module sets",
+      "MEAN": "cosine of the mean zca10 vector of member genes",
+      "CH": "symmetric Chamfer set kernel: mean over genes of best-match cosine, averaged over both directions",
+      "CHr": "the same on the search's own evidence s = log(N_db / rank) from the stored top-20,000 zca10 lists (0 outside the list), pairwise mean of both directions",
+      "ALN": "order-aware: local alignment of member gene orders, substitution cosine - 0.14 (random-pair 99th percentile), linear gap 0.3, best of both orientations, normalised by sqrt of self scores",
+      "ALNs": "ALN with strand: an aligned pair whose relative strand disagrees under the chosen orientation pays 0.3",
+      "SK": "fixed-size indexable sketch: sum over genes of sparse soft-codebook features (spherical k-means codebook on 1,000,000 odd-genome genes, seed 17; top-r codewords, weights softmax(20 cos), times codeword idf), cosine; grid K in {4096, 32768} x r in {1, 8}",
+      "RFF": "random Fourier features of a Gaussian kernel exp(-2 gamma (1 - cos)), D = 8192, mean over genes, cosine; gamma in {0.5, 2}"
+    },
+    "protocol": {
+      "nn": "leave-one-group-out 1-NN: references = every instance (DefenseFinder, CRISPRCasTyper, TXSScan) whose genome is in another genome group; prediction = label (caller:label) of the most similar reference; ties at the maximum -> majority label among tied references, then smallest label code; J and MODJ with maximum 0 count as wrong; MOD predicts the majority label of references sharing the query's plurality module, none -> wrong",
+      "metrics": "accuracy (micro), macro accuracy over labels with >= 5 queries, similarity-weighted 5-NN accuracy, higher-level accuracy (CCT type, DF family)",
+      "split": "odd genome_code queries select parameters (SK, RFF grids) and the best representation; even genome_code queries are the test",
+      "bootstrap": "2,000 draws, seed 17, even genomes resampled, paired differences between representations",
+      "clustering": "kNN graph k = 15 (symmetric, weights = similarity clipped at 0) over all gold instances, Leiden RBConfiguration seed 17, resolution in {0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10} chosen by AMI (caller:label) on odd instances; reported on even instances: AMI, homogeneity, completeness, clusters, and cross-group pair precision / recall (pairs of even instances in different genome groups); MOD uses module labels directly",
+      "engine_loci": "for each DefenseFinder / CRISPRCasTyper gold instance the nested-reading (DH) locus with the best member F1 (coverage >= 0.5 required; tie -> smaller span) is represented by all genes of its span; same 1-NN protocol; MOD = the locus's own module_id; CHr not available (no lists for non-member genes)"
+    },
+    "selection_rules": {
+      "best_representation": "highest mean of DefenseFinder type accuracy and CRISPRCasTyper subtype accuracy on odd queries",
+      "indexable_arm": "best of MEAN, SK (selected config), RFF (selected config) by the same odd-query rule; it carries parts 3 and 4"
+    },
+    "hypotheses": {
+      "H1": "the best embedding representation exceeds both J and MOD in even-query 1-NN accuracy on DefenseFinder types and on CRISPRCasTyper subtypes by >= 0.02, intervals excluding 0. Refuted if J or MOD is within 0.02 or above on either caller.",
+      "H2": "the set kernel CH exceeds MEAN by >= 0.02 on both callers. Refuted if MEAN is within 0.01 on both.",
+      "H3": "order (ALN) adds <= 0.01 over CH. Refuted if ALN exceeds CH by > 0.02 on either caller.",
+      "H4": "the best indexable arm is within 0.02 of CH on both callers. Refuted if CH exceeds it by > 0.02 on either.",
+      "H5_disjoint": "among references sharing no MMseqs2 family with the query (other genome groups, >= 1 same-label candidate), the best embedding representation's 1-NN is the right label at >= chance + 0.10 for both callers; J sits at chance by construction",
+      "H6_siblings": "the nearest reference of a different label is a sibling label (same CCT type / same DF family) at >= 2x the chance rate, also when restricted to references sharing no family with the query"
+    },
+    "expectations_written_before_numbers": {
+      "accuracy_DF_even": {"J": 0.80, "MOD": 0.70, "MEAN": 0.85, "CH": 0.88, "CHr": 0.88, "ALN": 0.88, "SK": 0.86, "RFF": 0.80},
+      "accuracy_CCT_subtype_even": {"J": 0.70, "MOD": 0.60, "MEAN": 0.72, "CH": 0.75, "CHr": 0.75, "ALN": 0.76, "SK": 0.74, "RFF": 0.70},
+      "AMI_even": "CH about 0.6, J about 0.5, MOD about 0.5",
+      "disjoint": "embeddings 0.4-0.6 against chance 0.1-0.2; MOD near chance"
+    }
+  },
+  "part_3_map": {
+    "written_utc": "2026-11-13 02:20",
+    "status": "written before any part-1 number was read (the part-1 job was still building codebooks)",
+    "units": "core loci of the nested reading (rows of DH that are rule-H cores, $RD/boundary/loci/rescue3/H_res0.3_f0.5.parquet) with span >= 2 genes; delineation held fixed",
+    "representation": "the part-1 indexable arm (selection rule of part 1); one vector per locus from all genes of its span",
+    "graph": "exact kNN, k = 15, cosine, symmetrised by maximum; Leiden RBConfiguration, seed 17",
+    "resolution": "chosen from {0.5, 1, 2, 5, 10, 20, 50} by AMI between clusters and gold labels (caller:label) on the odd-genome cores that are the best-F1 core (coverage >= 0.5) of a >= 2-member gold instance; reported on even-genome cores, with the engine's own module_id of the same cores scored identically",
+    "hierarchy": "the largest grid resolution <= selected / 10 (else the smallest below it) scored against CRISPRCasTyper type / DefenseFinder family",
+    "census": "each census instance (cofold/s3/census/census_instances.parquet) is assigned the core holding most of its genes; reported: census types per cluster and clusters per census type",
+    "novel_clusters": "uncalled = no gene of any core in the cluster is a member of any curated-caller instance (any caller, any member count); dense = >= 10 cores; ranked by number of genome groups (emb_hom 0.75), then number of distinct MMseqs2 family sets; two lists of 30: all uncalled, and uncalled with >= 50% unannotated genes (annotation_flags.unannotated); observed Pfam / KO / raw DefenseFinder-profile hits only, every functional reading UNVERIFIED",
+    "expectation": "clusters at the selected resolution: 5,000-30,000; even AMI with gold above the module labels' AMI; the top uncalled clusters by support will be housekeeping operons (ribosomal, RNA polymerase, ATP synthase), the dark list will hold short two-gene units"
+  },
+  "part_4_search": {
+    "written_utc": "2026-11-13 02:20",
+    "reference": "M1z (per-gene zca10 rank aggregation, W = span + 8, tau 3): rerun its scan on the 1,247 even DefenseFinder queries with the stored lists; must reproduce AP 0.792 and the stored per-query AP (max |d| = 0) before any comparison",
+    "arms": {
+      "locus_index": "one vector per nested-reading locus (650,438 DH loci, cores and neighbourhoods), query vector from the member genes, cosine, own genome excluded, greedy non-overlapping hits from the top 50,000, at most 10,000 kept",
+      "window": "every window of <= span + 8 genes (cap 60) whose first and last genes have query dot product > 0.1, scored by the cosine of the window's summed vector with the query vector (exact, from per-gene dot products and prefix sums of the local Gram), greedy non-overlapping, at most 10,000 kept"
+    },
+    "metrics": "AP and strict AP with the round-1 labels and relevance (bench.py), paired genome bootstrap against M1z's per-query AP; recall at matched wrong-type rates 0.25 / 0.5 / 1 per query (thresholds on odd queries, recall on even), M1z recomputed from its stored hits by the same procedure (must give 0.069 / 0.106 / 0.166); median query time",
+    "criterion": "one structure serves both tasks for search if an arm's even AP is within 0.02 of M1z (interval lower bound above -0.04) and its matched wrong-type recall at 0.5 per query is not below M1z's",
+    "expectation": "locus index AP 0.55-0.70 (delineation ceiling plus mean pooling), window arm AP 0.65-0.75; both below M1z; matched recall comparable or higher than M1z's 0.106 because mean pooling is less sensitive to single-gene cross-type homology"
+  },
+  "part_5_fit": {
+    "written_utc": "2026-11-13 02:24",
+    "status": "written before any part-1 or part-3 number was read",
+    "arms": {
+      "LZ": "centre + soft whitening (alpha 0.1, as zca10) of mean-pooled locus vectors, fitted on odd-genome core loci",
+      "LW": "LZ then whitening (alpha 0.1) of the within-pair difference covariance of self-supervised positives: odd-genome core pairs in different genome groups, mutual 15-NN in the MEAN map graph, Chamfer >= 0.5, flank cosine (summed vectors of <= 3 genes per side) < 0.2"
+    },
+    "evaluation": "part-1 gold 1-NN typing (even queries, emb_hom 0.75 groups held out) and the part-4 locus-index search; training-free arms stay the main result",
+    "criterion": "the fitted map helps if LW exceeds MEAN by >= 0.02 1-NN accuracy on both DefenseFinder and CRISPRCasTyper with intervals excluding 0, and does not lower locus-index search AP by more than 0.01",
+    "expectation": "LZ +0.00 to +0.02; LW +0.01 to +0.04; search AP within 0.02 of MEAN"
+  }
+}

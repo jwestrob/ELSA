@@ -1,0 +1,139 @@
+ws_repair: error of fragment rescue on ELSA's families, and stricter rules (12 November 2026)
+==========================================================================================
+
+Verdict (predeclared amendment_1_rescue_error, written 2026-11-12T11:43:00Z before any of this was computed)
+- No variant meets both error bounds. The wrong-family rate stays at or above 3% for every rule (lowest: c and d, 3.6%).
+  The false-join bound (< 8%) is met by c and d (4.0%) and missed by rescue3 (13.4%) and a and b (9.0%).
+- Best trade-off by the predeclared rule (lowest wrong-family + false-join rate among variants that keep >= 80% of
+  rescue3's gain and pass the summed-excess bound): variant a, "the rescued gene is the shorter protein".
+  - a keeps 84.4% of rescue3's even-genome gain (+0.219 of +0.260 F1 on rescue3's 101 touched instances).
+  - In the cut test, a has wrong-family 4.5% and false joins 9.0%, against 5.0% and 13.4% for rescue3.
+- The rules that do meet the false-join bound (c, d: terminus anchoring) keep 69-70% of the gain. The edge-only rule
+  (b) keeps 73%: interior singletons that join a family carry part of the gold-instance gain.
+- All four variant arms pass the summed-excess bound and the ribosomal acceptance check (1,686 / 1,686 runs,
+  114 / 114 Parvarchaeaceae).
+
+1. Cut test on ELSA's rule and families
+---------------------------------------
+Design (matches the Sharur session's design, with families of >= 3 members):
+- Complete = gene caller partial flag '00'. The canonical database carries proteins.partial for 1,502,048 of the
+  3,585,303 universe genes ('00' 1,314,509; '10' 92,550; '01' 92,522; '11' 2,467); the other 2,083,255 are NULL.
+- Positives: 300 per stratum of family size {3-4, 5-9, 10-99, 100-999, >= 1000} x protein length {< 150, 150-299,
+  300-599, >= 600 aa}, 6,000 in total (every stratum had >= 300 candidates).
+- Negatives: 500 complete base singletons per length bin, 2,000 in total. Seed 17.
+- Cut: N- or C-terminal piece kept (50/50), kept fraction ~ U(0.15, 0.95), at least 30 aa; proteins < 34 aa skipped.
+  Fragment length q10 / q50 / q90 = 34 / 142 / 522 aa.
+- Search: the genome-wide settings (MMseqs2 18, -s 7.5 --max-seqs 1000, align -e 1e-5 -a).
+- The intact original was removed from the targets. 4,732 hits to a sequence carried by no other gene were dropped;
+  3,254 hits to a sequence shared with other genes were kept with the remaining genes' token. Family sizes were
+  counted without the original.
+- Rule (rescue3's hit rule): best hit at E <= 1e-5 whose alignment covers >= 80% of the shorter protein, in a family
+  of >= 2 members.
+
+| rule                                   | true family | wrong family | unplaced | false join (negatives) |
+|----------------------------------------|-------------|--------------|----------|------------------------|
+| rescue3 rule                           | 89.3%       | 5.0%         | 5.7%     | 13.4%                  |
+| a: fragment is the shorter protein     | 89.0%       | 4.5%         | 6.5%     | 9.0%                   |
+| b: a + truncated (= a in this test)    | 89.0%       | 4.5%         | 6.5%     | 9.0%                   |
+| c: a + anchored on the intact side     | 85.8%       | 3.6%         | 10.6%    | 4.0%                   |
+| d: b + c (= c in this test)            | 85.8%       | 3.6%         | 10.6%    | 4.0%                   |
+| exploratory: a + anchored on either end| 85.9%       | 3.9%         | 10.3%    | 4.2%                   |
+Every cut fragment is a simulated edge truncation with a known intact end, so b equals a and d equals c in this test
+by construction. b and d differ from a and c only in which real genes they move.
+
+Sharur's result on its own families, for scale: its 6,000 positives include 1,000 from 2-member families, which
+cannot return home after the original is removed; they account for 289 of its 568 wrong joins. Its 5,000 positives
+from families >= 3 have 92.4% true-family and 5.6% wrong-family joins; its false-join rate is 22.9%.
+ELSA's rescue3 rule on families >= 3 gives 89.3% true family, 5.0% wrong family and 13.4% false joins.
+
+By fragment length (wrong family among positives / false join among negatives; rescue3 rule, a, c)
+| fragment aa | n pos / neg | wrong: rescue3, a, c | false join: rescue3, a, c | true family: rescue3, c |
+| < 75        | 1,664 / 639 | 3.1%, 3.0%, 2.2%     | 4.7%, 4.4%, 2.5%          | 86.1%, 85.2%           |
+| 75-149      | 1,442 / 400 | 3.8%, 3.5%, 3.0%     | 8.5%, 7.5%, 4.5%          | 90.0%, 88.1%           |
+| 150-299     | 1,439 / 483 | 5.2%, 5.0%, 4.5%     | 16.4%, 12.8%, 5.4%        | 91.7%, 86.9%           |
+| >= 300      | 1,455 / 478 | 8.2%, 6.7%, 5.1%     | 26.2%, 12.6%, 4.0%        | 89.7%, 83.0%           |
+By kept fraction
+| kept        | n pos / neg | wrong: rescue3, a, c | false join: rescue3, a, c | true family: rescue3, c |
+| 0.15-0.35   | 1,340 / 458 | 3.4%, 3.1%, 3.0%     | 13.8%, 12.2%, 6.3%        | 86.4%, 84.0%           |
+| 0.35-0.55   | 1,587 / 482 | 5.7%, 5.2%, 4.4%     | 12.4%, 9.5%, 3.3%         | 88.0%, 85.1%           |
+| 0.55-0.75   | 1,539 / 563 | 4.5%, 4.0%, 3.2%     | 13.7%, 8.7%, 3.7%         | 91.8%, 88.6%           |
+| 0.75-0.95   | 1,534 / 497 | 6.3%, 5.6%, 3.8%     | 13.7%, 5.8%, 2.6%         | 90.5%, 85.1%           |
+By family size (wrong family; rescue3, a, c): 3-4 7.8 / 6.4 / 4.1%; 5-9 6.3 / 6.0 / 4.0%; 10-99 6.3 / 6.0 / 5.7%;
+100-999 2.9 / 2.7 / 2.8%; >= 1000 1.7 / 1.5 / 1.6%.
+By protein length, false joins (rescue3, a, c): < 150 3.8 / 3.4 / 1.6%; 150-299 7.2 / 5.6 / 3.4%; 300-599
+15.2 / 11.4 / 5.2%; >= 600 27.4 / 15.6 / 5.6%.
+Reading: false joins grow with fragment and protein length (4.7% under 75 aa, 26.2% at >= 300 aa). This is the
+pattern expected when a long fragment covers most of a short, single-domain target. Requiring the fragment to be the
+shorter protein halves the long-fragment false joins; terminus anchoring removes most of the rest. Wrong-family joins
+concentrate in small families (3-9 members) and long proteins.
+
+Exploratory diagnostic (after the predeclared rates; does not set the default). Each intact original was aligned to
+the target its fragment joined (676 explicit pairs, align -e 1e-5 -a).
+- Wrong-family joins where the intact original aligns to the joined target over >= 80% of both proteins (a sibling
+  token of the original's own homologs): rescue3 103 / 301, a 111 / 271, c 111 / 218. The rest are partial-domain or
+  no-hit relationships.
+- Wrong joins into a different family, excluding siblings: rescue3 3.3%, a 2.7%, c 1.8% of positives.
+- False joins excluding a full-length match of the intact singleton: rescue3 12.4%, a 7.9%, c 3.5%.
+- Under this reading a passes both bounds (2.7% and 7.9%). The predeclared count includes sibling-token joins,
+  because they still place the fragment in a token other than its family's, so the predeclared verdict stands.
+
+2. Stricter variants genome-wide (rules applied to the existing hits; no new genome-wide search)
+-------------------------------------------------------------------------------------------------
+Truncated = partial flag {10, 01, 11} where present, else within 3 nt of a contig end: 323,732 genes (187,539 by flag,
+136,193 by contig end). Intact side from flag or contig end and strand; '11' genes (and 1,102 genes truncated at both
+contig ends) have no intact side and cannot pass c. Untruncated genes must be anchored on both ends under c.
+The unfiltered rule reproduces the rescue3 arm exactly (replay check passed).
+
+| arm      | genes moved | truncated among moved | tokens  | best-hit identity q50 | best-hit length ratio q50 |
+| rescue3  | 83,466      | -                     | 363,307 | 0.63                  | -                         |
+| rescue3a | 71,410      | 44,485                | 372,671 | 0.72                  | 0.30                      |
+| rescue3b | 44,490      | 44,490                | 394,065 | 0.94                  | 0.25                      |
+| rescue3c | 42,087      | 38,879                | 396,905 | 0.93                  | 0.27                      |
+| rescue3d | 38,881      | 38,881                | 398,772 | 0.97                  | 0.25                      |
+
+Engine (W 3, genome null, deployed wrapper, OUTDIR=results_dpann_repair; base results_dpann_v2; A - B, 95% genome
+bootstrap). The fixed set is rescue3's 101 even-genome touched instances (predeclared basis for "gain retained").
+| arm      | fixed set F1 diff (ratio to rescue3)  | own touched even n: F1 diff; excess diff        | summed DF+TXSS excess, even | odd     | sig. pairs | FDR     | genes covered | ribosomal (runs, resolved, Parv.) |
+| rescue3  | +0.260 [+0.181, +0.340] (1.000)       | 101: +0.260 [+0.181, +0.340]; +0.166 [+0.112, +0.223] | +0.004 [-0.003, +0.010] | +0.002 | 162,786 | 0.00425 | 2,302,705 | 1686, 704, 114/114 |
+| rescue3a | +0.219 [+0.144, +0.300] (0.844)       | 85: +0.258 [+0.170, +0.350]; +0.164 [+0.107, +0.229]  | +0.003 [-0.002, +0.009] | +0.004 | 162,180 | 0.00429 | 2,297,703 | 1686, 704, 114/114 |
+| rescue3b | +0.189 [+0.113, +0.264] (0.726)       | 52: +0.327 [+0.204, +0.445]; +0.179 [+0.107, +0.255]  | +0.003 [-0.001, +0.008] | +0.002 | 161,200 | 0.00432 | 2,284,000 | 1686, 705, 114/114 |
+| rescue3c | +0.182 [+0.108, +0.256] (0.699)       | 49: +0.342 [+0.209, +0.471]; +0.184 [+0.110, +0.262]  | +0.003 [-0.002, +0.007] | +0.001 | 161,225 | 0.00431 | 2,284,413 | 1686, 705, 114/114 |
+| rescue3d | +0.178 [+0.105, +0.253] (0.686)       | 43: +0.381 [+0.230, +0.520]; +0.207 [+0.123, +0.297]  | +0.003 [-0.002, +0.007] | +0.001 | 161,113 | 0.00432 | 2,282,072 | 1686, 705, 114/114 |
+Base: 159,955 significant pairs, FDR 0.00445, 2,256,894 genes covered. Instances touched (all genomes): rescue3 230,
+a 200, b 119, c 110, d 96.
+All instances, even genomes, DefenseFinder F1: rescue3 +0.020 [+0.013, +0.028], a +0.017 [+0.010, +0.024],
+b +0.013, c +0.012, d +0.012 (all intervals above 0). TXSScan excess: -0.002 to -0.003 for every variant.
+CRISPRCasTyper F1: +0.003 to +0.008.
+Reading: stricter rules raise the gain per touched instance (+0.26 to +0.38) and touch fewer instances (101 to 43),
+so the total retained gain falls to 69-73% for b, c and d. b loses 27% against a: interior (untruncated) genes that
+join a family also improve gold loci.
+
+3. Decision table (predeclared)
+| variant  | gain retained >= 0.80 | summed lower bound > -0.005 | wrong family < 3% | false join < 8% | all four |
+| rescue3  | 1.000 yes             | -0.003 yes                  | 5.0% no           | 13.4% no        | no       |
+| a        | 0.844 yes             | -0.002 yes                  | 4.5% no           | 9.0% no         | no       |
+| b        | 0.726 no              | -0.001 yes                  | 4.5% no           | 9.0% no         | no       |
+| c        | 0.699 no              | -0.002 yes                  | 3.6% no           | 4.0% yes        | no       |
+| d        | 0.686 no              | -0.002 yes                  | 3.6% no           | 4.0% yes        | no       |
+No variant meets both error bounds. Best trade-off (lowest wrong-family + false-join among variants meeting the gain and
+summed bounds): a (4.5% + 9.0% = 13.5 points; rescue3 18.4).
+Options for the coordinator:
+- a: about 84% of the gain at 4.5% wrong-family and 9.0% false joins.
+- c: about 70% of the gain at 3.6% and 4.0%. This is the only rule that meets the false-join bound; its wrong-family
+  rate is 0.6 points above the bound, and half of those wrong joins are sibling tokens of the original's homologs.
+
+Jobs and files
+--------------
+Jobs: 80076 (flags, cut test, search, scoring, variants; 64 CPU, about 3 min), 80096-80099 (engine rescue3a-d),
+80141 (rescoring with joined targets; wrong-join diagnostic).
+biotite $RD = /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111:
+- $RD/engine/dpann_tokens/mmseqs__seq__e3c50s75_rescue3{a,b,c,d}__dpann.{parquet,json}
+- $RD/engine/results_dpann_repair/dpann__mmseqs__seq__e3c50s75_rescue3{a,b,c,d}__w3/
+- $RD/repair/partial.parquet (per-gene truncation flags, intact sides, flag source); $RD/repair/cut/ (frag.faa,
+  frag_meta.parquet, hits.parquet, outcomes.parquet, rates.tsv, score.json, wrong_join.tsv); $RD/repair/results/
+  (variants.json, fixed_set.tsv, evaluation_variants.json, touched_instances_variants.tsv, changed_<arm>.parquet)
+Local benchmarks/redesign/repair/: REPORT_rescue_error.txt, predeclared.json (amendment_1_rescue_error), code
+(cut_test_make.py, cut_test_score.py, build_variants.py, wrong_join_check.py, eval_fixed_set.py, rescue_error.sbatch,
+wrong_join.sbatch, tsv2parquet.py with keep_all), results/ (variants.json, fixed_set.tsv, evaluation_variants.json,
+touched_instances_variants.tsv, ribosomal_lines_variants.txt, cut/rates.tsv, cut/score.json, cut/make.json,
+cut/wrong_join.json).

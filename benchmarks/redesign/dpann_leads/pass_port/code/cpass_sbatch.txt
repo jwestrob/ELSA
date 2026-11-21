@@ -1,0 +1,36 @@
+#!/bin/bash
+#SBATCH -A banfield
+#SBATCH -p standard
+#SBATCH --qos=standard_expand
+#SBATCH -c 24
+#SBATCH -J pass_port
+#SBATCH --exclude=node-48-256g-2,node-48-256g-3,node-48-256g-8,node-48-256g-9,node-48-256g-12,node-48-256g-13,node-48-256g-14
+#SBATCH -o /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/pass_port/logs/cpass_%j.log
+
+# pass_port: the slot-rescue pass for collection $COLL (code/collections.json), Pool of $SLURM_CPUS_ON_NODE workers.
+#   COLL=dpann                 regression run against slot_rescue's pass table (exit 1 on any difference)
+#   COLL=lut|srvp|testset3     PREP=gpu builds the label tables from $RD/annot_gpu/$COLL first (needs its STATUS = DONE)
+#   PREP=smoke3 SMOKE=N        testset3 plumbing test on the partial ribosomal-audit annotation (no biology)
+# Writes out/$COLL/[smoke/]{$COLL_slot_rescue_pass.parquet, supporters/, calibration_cells.tsv, run.json, STATUS}.
+set -uo pipefail
+export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111
+PP=$RD/dpann_leads/pass_port
+PY=/home/jwestrob/miniconda3/envs/elsa/bin/python
+COLL=${COLL:?}; SMOKE=${SMOKE:-0}; PREP=${PREP:-none}
+OUT=$PP/out/$COLL; [[ $SMOKE -gt 0 ]] && OUT=$OUT/smoke
+mkdir -p $OUT; rm -f $OUT/STATUS
+cd $PP
+echo "CPUs $SLURM_CPUS_ON_NODE host $(hostname) start $(date -u +%FT%TZ) coll $COLL smoke $SMOKE prep $PREP"
+fail() { echo "FAILED $(date -u +%FT%TZ) job $SLURM_JOB_ID step $1" > $OUT/STATUS; cat $OUT/STATUS; exit 1; }
+EXTRA=""
+if [[ $PREP == gpu ]]; then
+  grep -q '^DONE' $RD/annot_gpu/$COLL/STATUS || fail annot_gpu_not_done
+  $PY -u code/annot_prep.py --collection $COLL --src $RD/annot_gpu/$COLL --out $PP/out/$COLL/annot ${PFAMGA:-} || fail annot_prep
+elif [[ $PREP == smoke3 ]]; then
+  $PY -u code/annot_prep.py --collection testset3 --smoke-testset3 --out $PP/out/testset3/annot_smoke || fail annot_prep_smoke
+  EXTRA="--annot-dir $PP/out/testset3/annot_smoke"
+fi
+/usr/bin/time -v $PY -u code/cpass.py --collection $COLL --threads "$SLURM_CPUS_ON_NODE" --smoke $SMOKE $EXTRA || fail cpass
+echo "DONE $(date -u +%FT%TZ) job $SLURM_JOB_ID coll $COLL smoke $SMOKE ${COLL}_slot_rescue_pass.parquet run.json" > $OUT/STATUS
+cat $OUT/STATUS

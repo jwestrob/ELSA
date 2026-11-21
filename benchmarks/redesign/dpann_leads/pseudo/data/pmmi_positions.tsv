@@ -1,0 +1,10 @@
+family	position	kind	canonical_residue	top_residue_labeled	top_substitute	share_groups_top_substitute	share_groups_canonical_labeled	share_groups_gap	n_groups	n_genes	labeled_residue_counts_groups	shift_rate	n_groups_noncanonical	canonical_share_groups	canonical_n_groups	divergence_control_canonical_share	divergence_control_n_groups	named_canonical_share	named_n_groups	verdict_position
+pmmi	15	invariant	T	H	H	0.4	0.0	0.2	5	9	H:2;G:1;C:1;-:1	0.0	5	0.965	85	1.0	4	0.0	3	True
+pmmi	16	invariant	D	D	A	0.2	0.6	0.2	5	9	D:3;A:1;-:1	0.0	2	0.988	85	1.0	4	1.0	3	True
+pmmi	60	invariant	N	N	D	0.2	0.6	0.0	5	9	N:3;Y:1;D:1	0.0	2	0.941	85	1.0	4	0.667	3	True
+pmmi	65	invariant	S	-	H	0.2	0.0	0.4	5	9	-:2;H:1;P:1;T:1	0.4	5	1.0	85	1.0	4	0.0	3	True
+pmmi	66	invariant	S	S	A	0.2	0.4	0.0	5	9	S:2;A:1;K:1;R:1	0.0	3	0.918	85	1.0	4	0.333	3	True
+pmmi	67	invariant	R	H	H	0.4	0.0	0.0	5	9	H:2;M:1;D:1;N:1	0.2	5	0.976	85	1.0	4	0.0	3	True
+pmmi	68	invariant	E	N	N	0.4	0.2	0.0	5	9	N:2;H:1;A:1;E:1	0.0	4	0.929	85	0.5	4	0.0	3	True
+pmmi	89	invariant	R	F	F	0.4	0.4	0.0	5	9	F:2;R:2;E:1	0.0	3	0.929	85	0.25	4	0.667	3	True
+pmmi	94	invariant	N	A	A	0.4	0.2	0.0	5	9	A:2;K:1;N:1;T:1	0.0	4	0.941	85	1.0	4	0.333	3	True

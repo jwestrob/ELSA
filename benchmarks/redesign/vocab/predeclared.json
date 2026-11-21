@@ -1,0 +1,112 @@
+{
+ "written_utc": "2026-11-13T02:15Z",
+ "written_before": "any computation on DPANN (no run, no score, no timing)",
+ "workstream": "ws_vocab",
+ "stage": 1,
+ "method": {
+  "name": "MDL vocabulary over MMseqs2 tokens (stage 1 control)",
+  "input": "rescue3 MMseqs2 family tokens + gene order (universe gid order); lineage unit emb_hom average theta 0.75 (642 groups)",
+  "adjacency": "two live symbols X != Y on one contig with <= 2 intervening single (terminal) genes; unordered; strand ignored",
+  "gain": "Lambda = n ln(n/E) - n + E nats, n = lineage groups with >= 1 occurrence, E = sum over groups of 1 - prod over its genomes of (1 - min(1, 6 c_X c_Y / m_g)), live counts",
+  "structural_rules": [
+   "n >= 2 (one occurrence cannot be compressed)",
+   "symbols present in < 2 groups are background (cannot reach n >= 2)"
+  ],
+  "update": "rounds; candidates n >= 2 & Lambda >= tau applied in decreasing Lambda; occurrences claim nodes (distance then position); commit only if claimed occurrences keep n >= 2 & Lambda >= tau; until nothing commits",
+  "stop": "tau = smallest value of the ladder [4, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 70, 100] with word-type FDR = mean(null word types over shuffles 1000-1002) / observed word types <= 0.01; null = tokens permuted within each genome (engine genome null, contig sizes kept). Gene-level FDR reported, not used.",
+  "no_other_threshold": true
+ },
+ "readings": {
+  "V-top": "top-level word instances, span first to last gene inclusive (inserted genes included); single level",
+  "V-nest": "V-top plus the spans of the children of each top-level instance that are word instances (one level down)",
+  "V-mob": "V-top plus, within each top-level instance, the maximal sub-instances whose word type also occurs as a top-level instance in >= 2 groups",
+  "primary_selection": "between V-nest and V-mob on ODD genomes by (number of odd conditions met, odd summed DF+TXSS excess) against token DH on odd; recorded in NOTEBOOK.txt before any even score of a vocabulary output",
+  "V-top_role": "single-level reading, reported against token R1 and token DH"
+ },
+ "arms": {
+  "main": "emb_hom 0.75 groups",
+  "reference": "GTDB genus (same procedure, own null-calibrated tau); reference only",
+  "diagnostic": "every genome its own unit (descent correction off), same procedure, own tau; reported if run time allows"
+ },
+ "reference_reproduction": "rescore $RD/boundary/loci/rescue3/DH_coreH_res0.3_f0.5.parquet with blib.score_table and blib ribosomal functions; must give even summed DF+TXSS excess .4270, F1 .744/.548/.479, ribosomal 1,686 recovered / 1,512 resolved, Parvarchaeaceae 113/114 resolved, before any vocabulary comparison",
+ "evaluation": {
+  "split": "even genome_code = test, odd = selection",
+  "bootstrap": "paired genome bootstrap, 2,000 draws, seed 17 (rules.paired / ribo_paired)",
+  "matches": "summed excess >= DH - 0.01; each caller F1 >= DH - 0.02; ribosomal recovered >= 1,650, Parvarchaeaceae recovered >= 110/114, resolved >= 1,400",
+  "beats": "matches and summed-excess difference lower CI bound > 0"
+ },
+ "hypotheses": {
+  "H1": {
+   "claim": "the selected nested vocabulary reading matches token DH on even genomes",
+   "refuted_if": "any matches bar fails on even genomes"
+  },
+  "H2": {
+   "claim": "group-level counting is what makes the objective work: the every-genome-its-own-unit arm loses >= 0.02 summed excess against the main arm (same reading)",
+   "refuted_if": "difference > -0.02 or its interval includes 0"
+  },
+  "H3": {
+   "claim": "word identity types gold systems at least as well as the engine's module labels: AMI(word type, DefenseFinder system_type) >= AMI(engine module, system_type) on the same covered gold instances (even genomes)",
+   "refuted_if": "AMI lower by more than 0.02"
+  },
+  "H4": {
+   "claim": "the null-calibrated tau lies within a factor 2 of the a-priori MDL cost of naming one rule, 2 ln(number of symbols) nats",
+   "refuted_if": "tau* outside [ln(S), 4 ln(S)]"
+  }
+ },
+ "expectations_written_before_numbers": {
+  "tau_star": "15-30 nats",
+  "V-nest_vs_DH": "neither matches nor beats is the more likely outcome (about 65%); likely blockers CRISPR-Cas F1 (rare Cas pairs fall under n >= 2 groups at 642 groups) and ribosomal resolved (words absorb conserved flanks); summed excess within -0.05..+0.05",
+  "V-top": "ribosomal recovered >= 1,650 (runs form one word); summed excess between token R1 (.3375) and DH (.4270)",
+  "typing": "word types finer than gold types: homogeneity above modules, completeness below; AMI similar"
+ },
+ "stage2": "to be predeclared as an amendment after the stage-1 verdict and diagnosis, before any stage-2 computation",
+ "amendment_stage2": {
+  "written_utc": "2026-11-13T02:30Z",
+  "written_after": "stage-1 even verdict (neither; blockers CRISPR-Cas F1, ribosomal) and diagnosis 1 (exact identity fragments units and word types); before any stage-2 computation (no alphabet built, no run)",
+  "alphabet": "vocabulary tree of zca10 ESM++ small vectors of unique sequences (softrec transform), nested spherical k-means: level 1 K = 1,024; each cell split into up to 16 (level 2), each of those into up to 8 (level 3); a cell of n sequences gets min(B, n // 4) children; seed 17. A unit is a cell, its prototype the normalised member mean. Genes without a vector are background at every level. No MMseqs2 family, no taxonomy.",
+  "learner": "vocab2.py: as stage 1 with three labels per live node. Terminal labels = its units at levels 1-3; a unit present in < 2 groups is background at that level. A word node's label at level l = the canonical id of the unordered pair (child labels at level l) (its projection; background if either child is). Keys: for an adjacency of two terminals, all 9 level pairs (each slot picks its own radius); for an adjacency involving a word, the 3 same-level pairs. Keys compete for nodes in decreasing Lambda (same gain, same commit rule); a committed key is a word type.",
+  "reproduction_check": "vocab2.py with one label level (MMseqs2 tokens) must reproduce vocab.py at tau 10 (identical word table up to symbol renumbering and identical instance spans) before any stage-2 run",
+  "stop": "tau ladder [6, 8, 10, 12, 15, 20, 25, 30]; same rule (smallest tau with word-type FDR <= 0.01 over 3 genome shuffles of the label rows)",
+  "unit_of_independence": "emb_hom 0.75 groups (as stage 1)",
+  "readings": {
+   "V-top": "top-level word instances",
+   "V-mob": "V-top + maximal mobile sub-instances (as stage 1)",
+   "V-phr": "V-top + phrases: maximal runs of consecutive top-level words on a contig, each junction (<= 2 genes apart) carrying a flanking-gene unit pair (same level, any level) with n >= 2 groups and Lambda >= tau in the round-0 statistics of the same run. Two levels (phrase, word), the analogue of DH's neighbourhood + core. Designed after the stage-1 even verdict (the ribosomal deficit)."
+  },
+  "selection": "primary between V-mob and V-phr on ODD genomes by (odd conditions met, odd summed excess) against token DH; recorded before any even stage-2 score",
+  "post_hoc_label": "V-phr applied to the stage-1 token vocabulary is computed as an attribution control and labelled post hoc (stage-1 even numbers were already seen)",
+  "criterion": "matches / beats token DH as in stage 1; plus paired difference against the stage-1 vocabulary under the same reading",
+  "hypotheses": {
+   "S2-H1": {
+    "claim": "the stage-2 selected reading matches token DH on even genomes",
+    "refuted_if": "any matches bar fails"
+   },
+   "S2-H2": {
+    "claim": "embedding units relieve unit fragmentation: CRISPR-Cas member genes left free (in no word) fall from 41% to <= 25%, and CRISPR-Cas F1 rises >= +0.03 against stage 1 under the same reading (even)",
+    "refuted_if": "free share > 25% or CCT dF1 < +0.03"
+   },
+   "S2-H3": {
+    "claim": "with V-phr the Parvarchaeaceae ribosomal runs are recovered (>= 110 of 114)",
+    "refuted_if": "< 110"
+   },
+   "S2-H4": {
+    "claim": "the summed-excess gain of stage 1 over token DH survives the change of alphabet: stage-2 summed excess >= token DH + 0.10 under the selected reading (even)",
+    "refuted_if": "< +0.10"
+   }
+  },
+  "expectations": "tau* 10-15 (more keys per adjacency); V-phr selected; ribosomal recovered >= 1,650 and resolved 1,100-1,500; CCT F1 between stage 1 (.406) and token DH (.479); verdict 'neither' more likely than 'matches' (about 60/40), with CRISPR-Cas the most likely blocker"
+ },
+ "amendment_ablation": {
+  "written_utc": "2026-11-13T03:01Z",
+  "written_after": "stage-2 odd scores (V-mob selected; stage 2 below stage 1 on odd summed excess); before any stage-2 even score",
+  "label": "diagnostic (designed after stage-2 odd numbers); not a verdict arm",
+  "arms": {
+   "vt1k@2": "finest vocabulary-tree level alone (125,588 cells): embedding units at one resolution",
+   "vt1k@12": "levels 2+3 (no 1,024-cell kind level)"
+  },
+  "procedure": "same learner and null rule; ladder tau in [8, 10, 12] with 3 shuffles; tau* = smallest with type FDR <= 0.01; reading V-mob; odd then even; paired against stage 1 (tokens) and stage 2 (all levels) under V-mob",
+  "question": "does the coarse (kind-level) resolution cost the summed excess and TXSScan F1 that stage 2 loses against stage 1?",
+  "expectation": "vt1k@2 is within 0.03 summed excess of stage 1 (embedding units at family scale behave like MMseqs2 families); adding the coarse level lowers summed excess by about 0.08",
+  "refuted_if": "vt1k@2 summed excess (even, V-mob) more than 0.05 below stage 1, or vt1k@12 not above full vt1k"
+ }
+}

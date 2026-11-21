@@ -1,0 +1,24 @@
+
+ ********************************************************************
+ * US-align (Version 20231222)                                      *
+ * Universal Structure Alignment of Proteins and Nucleic Acids      *
+ * Reference: C Zhang, M Shine, AM Pyle, Y Zhang. (2022) Nat Methods*
+ * Please email comments and suggestions to zhang@zhanggroup.org    *
+ ********************************************************************
+
+Name of Structure_1: /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/hmgcs/models/single/DAIDNJ010000063.1_6.pdb:A (to be superimposed onto Structure_2)
+Name of Structure_2: /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/hmgcs/models/single/WP_226803576.1.pdb:A
+Length of Structure_1: 580 residues
+Length of Structure_2: 569 residues
+
+Aligned length= 207, RMSD=   7.61, Seq_ID=n_identical/n_aligned= 0.048
+TM-score= 0.22350 (normalized by length of Structure_1: L=580, d0=8.45)
+TM-score= 0.22671 (normalized by length of Structure_2: L=569, d0=8.38)
+(You should use TM-score normalized by length of the reference structure)
+
+(":" denotes residue pairs of d < 5.0 Angstrom, "." denotes other aligned residues)
+MMAYKSTLEQLESESEAMRVRIDPKIGISKLIVEAPQTYFSYVELANALNAKDTKGRKVEPGKIKDGLGIEKARLPTYSQSNVTMAANAIYSFIKNIDSNPYDREKFFSEKPVSIYYATESNPDFSRPEAEIALGLVYSRLLKEDEKRYRPYVEALKNTGLQQNTFACAGA-----------------------------------------------------------------------------------------GLALSSALSEIYSNASFGMGSSAVIISADTAVYDSKRAPDAETTQGSAATLMWITTDPELVSINYK-------------------------GSYGRF-NVPFPDFTKFGVDTPFVHGKFSEKGYVYAVAMALGNMESKLAMQKRMVFEEDYAGMNPDADTYRSMKLNKIM------------------------------------DSSEYRENMKFFISHVPFPKQAIY---FASFLFEHYL-KNYERDTFNAMQQRESLGKSPLGDKSLAELFTGKLTGFRGEHDTDIVAY----------------------------------------------------------------------------------------IESDRDINAYWEWLGKLRKQPEFEKFLDEMH---IRDA-LALPSQVGNSYT-----GSTVVAIASLLKNGKVYPGDTGACAFFGSGMVALA--------------------------------------------YQ-ME-IT--ATQESIARNLVIGM--------EKKEELPLEAQDYEPLHEK---LILGDAKRSMIGEGKSL----IDMDAEMLRGKLPEGFLIRRRNVDGTWEAE---------------FVEDG--QR--SV-IKPR-L--------------------------
+                                                                                                                                                                                                                                                                    ....:..:..:         ........                                                               ....:. .:....:: .      ..  ..  .  :: :: :. ..                                                                      ...:......::::......:..:   ...:...:.  ...                  . ..:::::::::::..:....:..:..                                                                                        .:.::.....:::...:. :.:..::..      ...  ...:::..         ....:: ..:....                                                                 .  .. ..  ::.:.::...::..        ....                  .  .                 .           ..::..                           ..:::  ::  :: :::. .                          
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------MKETHLSGKKSEPMLKERSDALYKGPYKAPNRAYMKAMGLSDSDLSRPMIGVGVAWSEAGPCNLHTMGLGRKAKEGVYYNKGTPRMFATPLVIDGVAMGY---------EGMKYSLV--------------------------------------SREIIANTVEMTINAHAYDAFVGISGCDKTTPAMLMAAGR-L------NI--PS--I--IL-YG-GT-NM----------------------------------NGYLNGKEITMEDVFEAVGQFAGNKLSAEELKELEDNAIPGIGTCAGLFTANTMGTMAETLGMALPGSSAPP-AVEG------------------I-KYDYAYESGKAIMALLENGILPRDIMTYGAFENAITALMSMGGSTNVVMHLIAIAHENGIKLTLDDFDRIGSKVPEIANMRPGGTHTMEDLFRVGGVPLVLKKLLKSKLLDGNVLTVTGKTMAENIASMKIP-EMKNDVISE---VSKPYH-VRGGIRILR----GSLAPEGAVIK-VAAAKIT---------------------KLRGPAVVFDSEEEAFNGVTNGRVKPGDIVVIRFEGPKGGPGMRE-MLSVTAAIIGKDLGEKVAMVTDGRFSGATRGLMI---------------GHVS--P-------------EAYVG-----------GPLAFV------------KNGDYISIDCDRGTLELEVDKKEMDSRRRGWRQPEPKHKSGLLAQYAMLVSSASEGAVLNP
+
+#Total CPU time is  1.10 seconds

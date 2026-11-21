@@ -1,0 +1,37 @@
+{
+ "-1": {
+  "own_hits": 148763,
+  "own_hits_found_in_globdb": 4922,
+  "globdb_rows": 150954,
+  "globdb_rows_found_in_own": 4922
+ },
+ "0": {
+  "own_hits": 148763,
+  "own_hits_found_in_globdb": 5743,
+  "globdb_rows": 150954,
+  "globdb_rows_found_in_own": 5743
+ },
+ "1": {
+  "own_hits": 148763,
+  "own_hits_found_in_globdb": 4936,
+  "globdb_rows": 150954,
+  "globdb_rows_found_in_own": 4936
+ },
+ "2": {
+  "own_hits": 148763,
+  "own_hits_found_in_globdb": 4478,
+  "globdb_rows": 150954,
+  "globdb_rows_found_in_own": 4478
+ },
+ "per_genome_frac_q01_q05_q50": [
+  0.0,
+  0.0,
+  0.024793811792428663
+ ],
+ "genomes_below_0.9": 996,
+ "genomes_checked": 996,
+ "offset_used": 0,
+ "genomes": 5752,
+ "max_gene_idx_matches_gene_count": 56,
+ "genomes_absent_from_globdb_counts": 0
+}

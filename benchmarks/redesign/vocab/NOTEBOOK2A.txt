@@ -1,0 +1,184 @@
+WORKSTREAM ws_vocab, ROUND 2A (tokens): effective context counts and word classes. UTC timestamps.
+Stage-1 / stage-2 files are left unchanged; round-2A files carry the 2a suffix.
+Clock note (03:47): my earlier entries were typed from estimates that ran 20-40 min ahead of the clock. Times below
+are corrected from job submit/end times (sacct, UTC) and file modification times. The same drift affects the later
+entries of the stage-1 NOTEBOOK.txt (its last job, 88528, ended 03:07:37 UTC, so REPORT.txt was written at about 03:10,
+not 03:15); the order of events recorded there is unaffected. From here on times come from `date -u`.
+
+~03:10  Coordinator brief for round 2A read. context_units: no REPORT.txt yet; NOTEBOOK.txt read (definitions of context,
+  pooling, noise floor, Kish N_eff, z = 2 rho; findings: windows truncated by contig ends, ribosomal flanks = the
+  superoperon, context cosine above floor between phyla inside conserved units, shuffled contexts lose ~0.07 F1).
+  locus_search REPORT3.txt and bench.py read (queries, targets, hit labels, AP).
+~03:15  predeclared2a.json written before any round-2A computation (before job 88682 was submitted at 03:20:05).
+03:20-03:23  xgene2a.py (job 88682): zca10 gene vectors, 3,585,303 x 960 float32, memory-mapped by every run (151 s).
+~03:23-03:26  vocab2a.py written; smoke test on genomes 0-299 (login node, 2 threads; gold-free):
+  - group mode reproduces vocab.py exactly (3,381 types); genome mode reproduces vocab.py with genome units (15,094).
+  - vector c_bar kernel equals a direct numpy computation (max |d| 2.5e-16); MinHash Jaccard tracks exact Jaccard.
+  - noise floor (300 genomes, W 25): vector c0 .0089, sd0 .081 (ws_context raw W25: .005 / .079); token c0 .0030,
+    sd0 .016.
+  - types at tau 10: genome 15,094; neff vector 3,460; neff token 5,192; shuffled-context control 15,064 (the control
+    loses the effect, as it should).
+  Clarification of the predeclared description length D before any full-data class run: phases re-cluster the same
+  compositions, so each follower composition (a class member that is not the class leader) is charged tau once,
+  the first time it joins a class (the per-phase sum double-counted persistent compositions).
+03:27  Jobs 88769 (part-1 ladder, 64 runs, 64 CPUs: 32 processes x 2 threads) and 88770 (part-2 class runs, 24 runs at
+  tau 10, 24 CPUs) submitted; account at 280-344 running CPUs before each.
+03:37  Part-1 ladder done (gold-free; results/ladder2a_part1.json). Type FDR (mean of 3 shuffles):
+    arm        tau 6   tau 8   tau 10   tau 12   tau*   types / genes in words at tau*      obs run s / RSS GB
+    vec W25    .070    .0137   .0007    .0001    10     32,604 / 1,670,896 (46.6%)           422 / 14.9 (X page cache)
+    vec W50    .065    .0126   .0006    .0001    10     34,589 / 1,700,204 (47.4%)           493 / 14.8
+    tok W25    .080    .0148   .0010    .0001    10     53,769 / 2,038,164 (56.8%)           201 / 2.1
+    tok W50    .067    .0126   .0008    .0001    10     60,283 / 2,112,187 (58.9%)           210 / 2.1
+  tau* = 10, not 8: at tau 8 the null of the N_eff arms (770-1,260 types) is smaller than the genome arm's (1,428), but
+  the observed vocabulary shrinks more (57-95 k vs 197 k types), so the FDR is 1.3-1.5%. (Stage-1 genome arm, tau 8:
+  196,634 types.) Vector contexts remove more shared-descent evidence than token contexts.
+  Stage-1 vocabulary, parse-search (login node, 151 s, ~03:35): 2,447 queries, 2,065 with a word; MAP .107 (even .110),
+  recall .107, labelled precision .994, 0.15 wrong hits per query, 71 hits per query.
+03:42  Job 88872: odd scores of the four context arms (outputs written 03:43:31-03:45:50).
+~03:40  Coordinator message: ws_context reported (context N_eff confounded by conserved-unit size; label-free cohesion
+  cuts work). context_units/REPORT.txt read in full.
+03:44  predeclared2a.json amendment_1 saved (file mtime) before I read any number of job 88872: synteny-retention N_eff
+  arm, cohesion phrase reading V-coh (theta ladder .02/.05/.1/.2 chosen on odd), stage-1 vocabulary with V-coh, reading
+  pool {V-mob, V-phr, V-coh}, Cas-identity report for vector classes, unit-size diagnostic for the context arm.
+03:45  Odd numbers of 88872 read (the vector arms were scored with the pool {V-mob, V-phr}; all part-1 arms are rescored
+  with the amended pool before selection). V-mob odd summed .603 / .606 (vec W25 / W50), .542 / .538 (tok W25 / W50);
+  CCT F1 .411 / .413 (vec); ribosomal odd recovered 593-694 (V-top), 827-838 with V-phr; Parvarchaeaceae 55/55.
+03:46  vocab2a.py: synteny arm (syn_overlap, syn_neff_keys, synteny_matrix cached per corpus); toy check exact
+  (O counts; N_eff 1.333 and 2.25 as computed by hand). vscore2a.py: V-coh readings, stage-1 b0 fallback.
+  Part-2 class runs (job 88770) so far: D (gold-free) rises with theta in both arms: token .34 / .5 / .67 = 240,354 /
+  262,849 / 402,361; vector .75 / .9 = 282,259 / 428,344 (.6 pending). Class nulls at tau 10: 9-14 types (stage 1: 9-14).
+03:49  Job 88921 submitted (synteny matrices for obs + 3 shuffles, then the synteny ladder tau 6-12, 64 CPUs).
+  Unit-size diagnostic (diag2a.py unitsize; gold-free except the ribosomal-run mask; results/diag2a_unitsize_*.json):
+  committed words of the context arm, N_eff/n (f) by merge round, words with >= 50% of their span in ribosomal runs:
+    vec W50  ribosomal (241 words): f median by round 0..5 = .033 / .120 / .109 / .243 / .435 / .522 (span 3-26 genes)
+             other (34,348):        f median by round 0..5 = .495 / .514 / .599 / .665 / .664 / .701
+    vec W25  ribosomal (267): .011 / .039 / .035 / .221 / .444 / .413; other .480 -> .675
+  Spearman f vs span over all words .07. Answer to point 1: measuring context outside the span as tested removes part
+  of the confound for words that grow past the unit (f rises 15x from round 0 to spans of 23-26 genes), but the seed
+  pairs inside the superoperon are discounted 30-90x (f .01-.03) and only 14-18 of them commit in round 0. N_eff of
+  committed words sits at a median 3.4-3.7 in every stratum: the N_eff >= 2 rule and Lambda_eff >= tau select words just
+  above the bar.
+03:50  Part-2 class runs done (job 88770; gold-free; results/ladder2a_part2.json). tau 10, 3 shuffles each:
+    arm          theta  types   top labels  genes in words   phases  null types  type FDR   D (nats)   obs run s / GB
+    token        .34    28,224  13,905      1,529,807        6       11          .0004      240,354    134 / 1.5
+    token        .50    28,125  15,046      1,528,567        7       11          .0004      262,849    135 / 1.5
+    token        .67    26,084  21,260      1,511,160        5       11          .0004      402,361    112 / 1.5
+    vector       .60    29,627  (pending)   1,550,801        8       11          .0004      128,964    1,315 / 17.3
+    vector       .75    28,581  20,107      1,535,233        6       11          .0004      282,259    941 / 16.5
+    vector       .90    26,244  24,174      1,514,401        6       11          .0004      428,344    793 / 15.6
+  Classes leave the null unchanged (11 types per shuffle, as stage 1), so tau stays 10.
+  SELECTION of theta (predeclared, description length D, gold-free): token .67, vector .90, the highest theta of each
+  ladder. Charging tau per follower composition makes every class merge that does not pay for itself in Lambda a loss,
+  and D falls monotonically as theta loosens: by this criterion classes mostly do not pay.
+03:50  Job submitted: odd scores of the class arms (token .67, vector .9), the four context arms with the amended
+  reading pool (tag pool2), and the stage-1 vocabulary read with V-mob / V-phr / V-coh (tag s1coh).
+03:48-03:50  Synteny job 88921 (64 CPUs): S matrices 17-19 s per corpus; off-diagonal S quantiles q50 / q90 / q99 / max:
+  observed .0285 / .0681 / .2155 / 1.0 (two unrelated genomes share ~3% of adjacent token pairs: the conserved core);
+  shuffles .0004 / .0013 / .0036 / .03. Ladder (gold-free; results/ladder2a_syn.json):
+    tau 6  55,657 types, null 1,680 (FDR .030) | tau 8  43,964, null 318 (FDR .0072) | tau 10  28,769, null 51 (.0018)
+    tau 12 19,553, null 4.7 (.0002).  tau* = 8; 1,885,906 genes in words (52.6%); 50 s per run on 4 threads.
+03:50  Job 88954: odd scores of the synteny arm (tau 8).
+04:02  ODD scores (jobs 88943, 88954; token DH odd .418, F1 .743/.544/.479; odd bars 830/705/54); score = [conditions
+  met, odd summed excess]; best reading per vocabulary (all readings in results/odd2a_*.json):
+    vocabulary                    best reading  score          F1 DF/TXSS/CCT    ribo odd rec/res/Parv   V-mob score / CCT
+    stage 1 (groups)              V-coh0.1      [2, .6122]     .744/.637/.391    846/721/55              [1, .6229] / .402
+    context vec W25               V-coh0.1      [2, .5843]     .749/.611/.398    839/747/55              [1, .6033] / .411
+    context vec W50               V-coh0.05     [2, .5829]     .753/.621/.400    840/733/55              [1, .6056] / .413
+    context tok W25               V-coh0.1      [2, .5208]     .759/.627/.433    840/723/55              [1, .5424] / .454
+    context tok W50               V-mob         [2, .5376]     .774/.697/.470    634/255/55              (F1 condition met)
+    synteny (tau 8)               V-mob         [1, .5737]     .780/.693/.451    610/248/38
+    classes token .67             V-coh0.1      [2, .6099]     .743/.632/.389    846/730/55
+    classes vector .9             V-coh0.1      [2, .5990]     .744/.622/.391    846/719/55
+  V-coh0.1 is the best reading in five of eight vocabularies: cohesion phrases reach the odd ribosomal bars (719-747
+  resolved of 848) that V-phr misses (598-662). No vocabulary meets all three odd conditions; CRISPR-Cas F1 is the
+  remaining condition everywhere except context tok W50, which meets F1 (CCT .470) and fails the ribosomal bars.
+  SELECTIONS (predeclared rules, recorded before any round-2A even number):
+    part 1, context arm for the coordinator's prediction: vec W25, reading V-coh0.1 ([2, .5843] over vec W50 [2, .5829]).
+    part 1, synteny arm: V-mob at tau 8; compared with the stage-1 group arm under the same reading.
+    part 2, class arm: token Jaccard .67, reading V-coh0.1 ([2, .6099] over vector .9 [2, .5990]).
+    stage-1 vocabulary with cohesion phrases: V-coh0.1.
+    part 3 independence arm: context vec W25 (odd [2, .5843] over synteny [1, .5737]); together = neff vec W25 + token
+      classes .67, ladder tau 6-12 with 3 shuffles; control = shuffled contexts (vec W25) at tau 10.
+  ws_context REPORT.txt unchanged since read (mtime 03:40 UTC) at the time of the even runs below.
+04:02  Job 89073 (together ladder + shuffled-context control, 64 CPUs) and the even job for stage-1+V-coh, context vec W25, synteny and token classes submitted.
+04:03  Readings written before the even numbers of job 89076 (from the odd scores, scaled to 1,686 runs):
+  - stage 1 + V-coh0.1: summed ~.60 (+.17 vs DH), ribosomal resolved ~1,400-1,450 (odd 721 of 848), CCT F1 ~.40;
+    neither (CRISPR-Cas). Refuted if resolved < 1,350.
+  - context vec W25 + V-coh0.1: CCT F1 ~.40-.41, summed ~.58: the coordinator's prediction (CCT >= .47, summed > .55)
+    fails on CRISPR-Cas. Refuted if CCT >= .44.
+  - synteny V-mob: CCT ~.45, summed ~.57, ribosomal resolved ~500; vs the group arm (stage-1 V-mob) about -.05 summed and
+    +.04 CCT F1.
+  - token classes .67 + V-coh0.1: ribosomal resolved > 1,000 (so the refuter of "exact identity is the cause" does not
+    fire), but at most +.02 over stage 1 + V-coh0.1 on resolved: classes at theta .67 change little; cohesion does the work.
+04:04  Point 4, CRISPR-Cas identity (diag2a.py casid, login node; even CCT instances with >= 2 members, word = plurality
+  top-level word holding >= 50% of members; results/diag2a_casid_*.json):
+    vocabulary          Cas inst. in a word  labels  labels with >= 2 subtypes (instances)  groups gain  members outside words
+    stage 1             1,237                550     60 (375)                                1.00         .455
+    vector classes .9   1,237                518     59 (407)                                1.00         .453
+    token classes .67   1,237                524     60 (417)                                1.00         .454
+    vector .6 POST HOC  1,262                361     75 (766)                                1.68         .437
+  Class phases (compositions -> classes, compositions in multi-member classes): vector .9 24,007 -> 21,244 (4,479) in
+  phase 0; token .67 24,007 -> 20,531 (5,442); vector .6 24,007 -> 8,266 (19,483), 43,965 -> 12,385 by phase 7.
+  Reading: word classes act only on words that already exist. At the selected theta they relabel Cas words without
+  adding evidence; the loose vector classes (.6, not selected: lowest D) do pool Cas words across subtypes (766 instances
+  in mixed-subtype classes, median group gain 1.68x) and still add only 25 Cas instances and 1.8 points of member
+  coverage. Broader identity has to act on the units (the families), before the first merge, to reach Cas pairs that
+  never form a word.
+04:12  EVEN results (job 89076; vs token DH; paired, 2,000 draws):
+    vocabulary / reading          summed  d vs DH [95%]         F1 DF/TXSS/CCT    dF1 CCT [95%]           ribo rec/res  Parv rec/res  verdict
+    stage 1 + V-coh0.1 (sel.)     .6082   +.181 [+.158,+.204]   .735/.636/.395    -.085 [-.096,-.073]     1,684/1,420   114/109       neither (CCT only)
+    stage 1 V-mob (ref.)          .6243   +.197                 .745/.679/.406    -.073                   1,198/501     11/9
+    context vec25 V-coh0.1 (sel.) .5756   +.149 [+.123,+.175]   .731/.616/.406    -.074 [-.086,-.061]     1,669/1,474   114/110       neither (CCT only)
+    context vec25 V-mob           .5975   +.171                 .741/.666/.418    -.061                   1,179/656     114/53
+    synteny V-mob (sel.)          .5743   +.147 [+.126,+.168]   .769/.702/.452    -.027 [-.038,-.015]     1,184/510     82/68         neither (CCT, ribo)
+    synteny V-coh0.1              .5539   +.127                 .757/.642/.430    -.049                   1,685/1,326   114/108
+    classes tok .67 V-coh0.1 (sel) .6053  +.178 [+.155,+.201]   .735/.628/.392    -.088 [-.099,-.076]     1,684/1,437   114/109       neither (CCT only)
+    classes tok .67 V-mob         .6051   +.178                 .735/.624/.387    -.093                   1,511/964     114/49
+  Paired: context vec25 V-coh0.1 - stage1 V-coh0.1 = -.033 [-.053,-.013]; context vec25 V-mob - genome arm V-mob +.177;
+  synteny V-mob - group arm (stage-1 V-mob) = -.050 [-.066,-.034]; synteny - genome arm +.154 [+.136,+.171];
+  classes tok V-coh0.1 - stage1 V-coh0.1 = -.003 [-.007,+.001].
+  Members outside every word (CCT / DF / TXSS): stage 1 .455/.212/.199; context vec25 .439/.221/.237; synteny
+  .376/.181/.121; classes tok .454/.212/.199.
+  Typing, DefenseFinder system type AMI word vs engine (res 10): stage 1 .464 vs .779; context .457; synteny .445;
+  token classes .473 (engine .779 on the same instances in each case).
+  OUTCOMES:
+  - Coordinator's prediction (context N_eff: CCT >= .47 with summed > .55) REFUTED: CCT .406 (< .44), summed .576.
+  - Synteny arm: no unit-size confound (ribosomal Parv 82 recovered at the word level vs 11 for groups) and the best
+    CRISPR-Cas of any vocabulary (.452, -.027 vs DH), at -.050 summed against the 642-group arm.
+  - Classes: refuter does not fire (selected class reading resolves 1,437 >= 1,000). Classes nearly double word-level
+    ribosomal resolution (V-mob 501 -> 964) but add nothing once cohesion phrases are read (-.003); the cohesion phrase
+    level is the cure that clears the ribosomal bar, with or without classes.
+  - Stage 1 + cohesion phrases (no classes) clears every "matches" bar except CRISPR-Cas F1 (-.085).
+  - My 02:58 readings: all four held in direction (stage 1 + V-coh resolved 1,420 vs ~1,400-1,450; context CCT .406;
+    synteny CCT .452 and -.050; classes +0 over cohesion).
+04:14  Together ladder (job 89073; neff vec W25 + token classes .67; gold-free): type FDR tau 6 / 8 / 10 / 12 = .067 / .0132 /
+  .0007 / .0001; tau* = 10; 33,907 types, 28,271 top labels, 1,680,456 genes in words (46.9%), 5 phases, 34 rounds.
+  Shuffled-context control (vec W25, tau 10): 152,192 types, 71.8% of genes: the genome arm at tau 10 (152,528, 71.8%).
+  The context N_eff effect lives entirely in the real contexts.
+04:15  Job 89213: odd scores of the together vocabulary; even scores of the control (reading V-coh0.1, as the selected
+  context arm).
+04:19  Together ODD (job 89213): V-top/V-mob .5845 [1], V-phr .5804 [1], V-coh .02/.05/.1/.2 = .5782 [1] / .5826 [2] /
+  .5829 [2] / .5847 [1]; CCT F1 .394-.402; V-coh0.1 ribo odd 840/741/55. SELECTION (predeclared): V-coh0.1.
+  Reading before its even number: neither, blocked by CRISPR-Cas F1 (~.40, -.08 vs DH); summed ~.575, about -.03 against
+  stage 1 + V-coh0.1; ribosomal bars met. Refuted if CCT >= .459 or summed below .55.
+04:21  EVEN, together (job 89246; selected V-coh0.1): summed .5717, +.145 [+.119,+.171] vs DH; F1 .730/.610/.405 (dF1 -.014
+  [-.030,+.003] / +.062 [+.037,+.087] / -.075 [-.087,-.062]); ribosomal 1,672 / 1,470; Parvarchaeaceae 114 / 110.
+  NEITHER (CRISPR-Cas F1 only). Paired: - stage1 V-coh0.1 -.037 [-.057,-.017]; - context vec25 V-coh0.1 -.004
+  [-.007,-.001]; - token classes V-coh0.1 -.034 [-.054,-.014]. Members outside words CCT .437. Typing DF AMI .468.
+  The 04:18 reading holds (neither; CCT .405; summed .572 above .55).
+  Control, shuffled contexts (job 89213; vec W25, tau 10): V-coh0.1 summed .3789 (-.197 [-.224,-.169] vs the real-context
+  arm), ribosomal 1,684 / 1,054; V-mob .4463, F1 .767/.662/.497, +.026 [+.014,+.038] vs the genome arm: shuffled contexts
+  reproduce the genome unit (CCT .497 vs .504), so N_eff's effect comes from the real contexts.
+04:32  Search by parsing (search2a.py, login node, 138-582 s each; DefenseFinder queries, 2,447 all / 1,247 even;
+  results/search2a_*.json):
+    vocabulary             queries with a word  MAP all (even)   recall   hits / query  wrong / query  labelled precision
+    stage 1                2,065                .107 (.110)      .107     71            0.15           .994
+    token classes .67      2,065                .108 (.112)      .109     72            0.16           .994
+    context vec W25        2,067                .098 (.099)      .098     68            0.10           .996
+    synteny                2,143                .106 (.109)      .107     64            0.14           .994
+    together               2,067                .100 (.101)      .100     70            0.13           .995
+    vector classes .6 *    2,078                .317 (.312)      .320     458           2.22           .980   (* not selected; POST HOC)
+  References (locus_search REPORT3, 5-fold CV): zca10 ranks .796, MMseqs2 ranks .610, tokens .369. A word class is a
+  high-precision, low-recall retriever: exact compositions retrieve a tenth of the targets at 99% labelled precision;
+  loose vector classes triple recall at 98%.
+04:34  REPORT2A.txt written; results2a/ copied from $RD/vocab/results. No round-2A job queued or running.

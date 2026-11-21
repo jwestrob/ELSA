@@ -1,0 +1,148 @@
+IQ-TREE multicore version 2.4.0 for MacOS ARM 64-bit built Mar  8 2025
+Developed by Bui Quang Minh, Nguyen Lam Tung, Olga Chernomor, Heiko Schmidt,
+Dominik Schrempf, Michael Woodhams, Ly Trong Nhan, Thomas Wong
+
+Host:    Mac (SSE4.2, 48 GB RAM)
+Command: iqtree2 -s tree/atpase.trim.aln -m LG+F+G4 -B 1000 -T 4 --prefix tree/atpase -redo -quiet
+Seed:    590 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Sat Nov 21 06:35:17 2026
+Kernel:  SSE2 - 4 threads (16 CPU cores detected)
+
+Reading alignment file tree/atpase.trim.aln ... Fasta format detected
+Reading fasta file: done in 9.20296e-05 secs using 76.06% CPU
+Alignment most likely contains protein sequences
+Alignment has 37 sequences with 230 columns, 230 distinct patterns
+222 parsimony-informative, 3 singleton sites, 5 constant sites
+                                            Gap/Ambiguity  Composition  p-value
+Analyzing sequences: done in 1.88351e-05 secs using 58.4% CPU
+   1  F17_NYZ75760.1                                2.17%    passed     11.43%
+   2  F17_MEM2963142.1                              4.78%    passed     99.06%
+   3  F17_DAHXHY010000018.1_1                      44.78%    passed     75.56%
+   4  F17_DAIDNH010000003.1_6                      19.57%    passed     62.68%
+   5  F17_DAHWYO010000031.1_24                     43.48%    passed     61.26%
+   6  REF_CedB_Sacidocaldarius_Q4JAQ5               8.70%    passed     17.01%
+   7  REF_CedB_Apernix_Q9YFN0                      24.35%    failed      0.05%
+   8  REF_TedB_Pcalidifontis_A3MU65                20.43%    passed     11.65%
+   9  REF_VirB4_Atumefaciens_P17794                 3.48%    failed      1.23%
+  10  REF_TrwK_R388_O50330                          0.87%    failed      2.10%
+  11  REF_TraC_F_P18004                             1.74%    passed     88.00%
+  12  REF_VirB4_Tpseudethanolicus1_B0K833           1.30%    passed     45.03%
+  13  REF_VirB4_Tpseudethanolicus2_B0KAW2           1.30%    passed     51.61%
+  14  REF_PrgJ_pCF10_Q5G3P5                         0.87%    passed     26.80%
+  15  REF_TrsE_Leifsonia_Q6AG11                     2.61%    passed     68.38%
+  16  REF_TcpF_Cperfringens_Q2L5X8                 34.78%    passed     31.10%
+  17  REF_pXO2-09_Banthracis_Q6F059                 0.87%    failed      2.33%
+  18  REF_VirB4_Saccharimonas_R4PMW4                1.30%    passed     84.45%
+  19  REF_VirB4_Mycosynbacter_A0A857MM64            1.30%    passed     62.85%
+  20  REF_VirB4_Nanogingivalis_A0ABY0FHL7           1.30%    passed     62.39%
+  21  REF_VirB4_Natronorubrum_A0A1N7GTM9            1.74%    passed     67.37%
+  22  REF_VirB4_Nitrosocaldus_A0A2K5ARD6            4.78%    passed     46.48%
+  23  REF_VirB4_Halogranum_A0A1H8W697               1.74%    passed      9.57%
+  24  REF_HerA_Ssolfataricus_Q97WG8                 0.87%    passed     83.64%
+  25  REF_HerA_Stokodaii_Q96YR7                     0.87%    passed     37.54%
+  26  REF_HerA_Sacidocaldarius_F2Z5Z6               0.87%    passed     40.97%
+  27  REF_HerA_Pfuriosus_Q8U1P0                     1.74%    passed     25.32%
+  28  REF_HerA_Mjannaschii_Q58824                   4.78%    passed     40.04%
+  29  REF_HerA_Apernix_Q9YFZ4                       1.30%    passed     25.53%
+  30  REF_TraG-like_Ssolfataricus_plasmid_S6DG77    1.74%    passed     55.12%
+  31  REF_TraG-like_Ahospitalis_B6D922              1.74%    passed      9.63%
+  32  DPANN_Top6Bnear_MEM2915765.1                  2.61%    passed     70.79%
+  33  DPANN_Top6Bnear_PXDW01000065.1_6              2.61%    passed     45.93%
+  34  DPANN_Top6Bnear_MDO8511460.1                  2.61%    passed     25.18%
+  35  DPANN_Top6Bnear_MEM5798435.1                  2.61%    passed      5.42%
+  36  MICR_otherDUF87_DAHWZL010000041.1_15         26.96%    passed      7.76%
+  37  MICR_otherDUF87_DAHWZL010000002.1_1           3.04%    passed     64.30%
+****  TOTAL                                         7.64%  4 sequences failed composition chi2 test (p-value<5%; df=19)
+
+Create initial parsimony tree by phylogenetic likelihood library (PLL)... 0.002 seconds
+Generating 1000 samples for ultrafast bootstrap (seed: 590)...
+
+NOTE: 6 MB RAM (0 GB) is required!
+Estimate model parameters (epsilon = 0.100)
+1. Initial log-likelihood: -14752.266
+2. Current log-likelihood: -14522.152
+3. Current log-likelihood: -14508.994
+4. Current log-likelihood: -14508.717
+Optimal log-likelihood: -14508.700
+Gamma shape alpha: 1.902
+Parameters optimization took 4 rounds (0.091 sec)
+Wrote distance file to... 
+Computing ML distances based on estimated model parameters...
+Calculating distance matrix: done in 0.04106 secs using 386.7% CPU
+Computing ML distances took 0.041130 sec (of wall-clock time) 0.158831 sec (of CPU time)
+Setting up auxiliary I and S matrices: done in 5.4121e-05 secs using 175.5% CPU
+Computing RapidNJ tree took 0.001398 sec (of wall-clock time) 0.000729 sec (of CPU time)
+Log-likelihood of RapidNJ tree: -14485.609
+--------------------------------------------------------------------
+|             INITIALIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Generating 98 parsimony trees... 0.198 second
+Computing log-likelihood of 98 initial trees ... 0.776 seconds
+Current best score: -14485.609
+
+Do NNI search on 20 best initial trees
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 1: -14453.202
+Estimate model parameters (epsilon = 0.100)
+BETTER TREE FOUND at iteration 4: -14450.990
+Iteration 10 / LogL: -14453.172 / Time: 0h:0m:3s
+Iteration 20 / LogL: -14454.212 / Time: 0h:0m:5s
+Finish initializing candidate tree set (9)
+Current best tree score: -14450.990 / CPU time: 5.038
+Number of iterations: 20
+--------------------------------------------------------------------
+|               OPTIMIZING CANDIDATE TREE SET                      |
+--------------------------------------------------------------------
+Iteration 30 / LogL: -14451.000 / Time: 0h:0m:7s (0h:0m:18s left)
+Iteration 40 / LogL: -14451.044 / Time: 0h:0m:9s (0h:0m:14s left)
+Iteration 50 / LogL: -14450.990 / Time: 0h:0m:10s (0h:0m:12s left)
+Log-likelihood cutoff on original alignment: -14484.767
+UPDATE BEST LOG-LIKELIHOOD: -14450.990
+Iteration 60 / LogL: -14450.992 / Time: 0h:0m:13s (0h:0m:9s left)
+Iteration 70 / LogL: -14450.992 / Time: 0h:0m:15s (0h:0m:7s left)
+Iteration 80 / LogL: -14453.002 / Time: 0h:0m:17s (0h:0m:5s left)
+Iteration 90 / LogL: -14450.991 / Time: 0h:0m:19s (0h:0m:3s left)
+UPDATE BEST LOG-LIKELIHOOD: -14450.990
+Iteration 100 / LogL: -14450.992 / Time: 0h:0m:21s (0h:0m:0s left)
+Log-likelihood cutoff on original alignment: -14484.767
+NOTE: Bootstrap correlation coefficient of split occurrence frequencies: 0.996
+TREE SEARCH COMPLETED AFTER 105 ITERATIONS / Time: 0h:0m:22s
+
+--------------------------------------------------------------------
+|                    FINALIZING TREE SEARCH                        |
+--------------------------------------------------------------------
+Performs final model parameters optimization
+Estimate model parameters (epsilon = 0.010)
+1. Initial log-likelihood: -14450.990
+Optimal log-likelihood: -14450.990
+Gamma shape alpha: 1.935
+Parameters optimization took 1 rounds (0.014 sec)
+BEST SCORE FOUND : -14450.990
+Creating bootstrap support values...
+Split supports printed to NEXUS file tree/atpase.splits.nex
+Total tree length: 34.628
+
+Total number of iterations: 105
+CPU time used for tree search: 38.258 sec (0h:0m:38s)
+Wall-clock time used for tree search: 22.662 sec (0h:0m:22s)
+Total CPU time used: 38.850 sec (0h:0m:38s)
+Total wall-clock time used: 22.917 sec (0h:0m:22s)
+
+Computing bootstrap consensus tree...
+Reading input file tree/atpase.splits.nex...
+37 taxa and 309 splits.
+Consensus tree written to tree/atpase.contree
+Reading input trees file tree/atpase.contree
+Log-likelihood of consensus tree: -14450.990
+
+Analysis results written to: 
+  IQ-TREE report:                tree/atpase.iqtree
+  Maximum-likelihood tree:       tree/atpase.treefile
+  Likelihood distances:          tree/atpase.mldist
+
+Ultrafast bootstrap approximation results written to:
+  Split support values:          tree/atpase.splits.nex
+  Consensus tree:                tree/atpase.contree
+  Screen log file:               tree/atpase.log
+
+Date and Time: Sat Nov 21 06:35:39 2026

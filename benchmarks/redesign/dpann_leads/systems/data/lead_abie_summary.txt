@@ -1,0 +1,24 @@
+AbiE completions: loci 2319, slot genes 2314, genomes 1280; labels {'AbiEi_4': 2150, 'AbiEi_1': 159, 'AbiEi_2': 10}
+  tier {'rest': 1771, 'T1': 511, 'contradicted': 29, 'T2b': 5, 'T2': 3}
+  list type {'both': 1982, 'lists_disagree': 188, 'embedding_only': 149}
+  median length 208 aa (IQR 196-228)
+  vote support (vfrac) median 0.124; votes_for median 84
+  slot antitoxin vs toxin: same strand 0.994; antitoxin upstream (5') 0.712 of same-strand; adjacent (1 gene) 0.987
+  called AbiE systems (336): same strand 0.997; antitoxin upstream 0.675; adjacent 0.988
+  called AbiE antitoxins, Pfam: PF13338 AbiEi_4 195; PF09407 AbiEi_1 134; PF09952 AbiEi_2 10; PF13412 HTH_24 2; PF05732 RepL 1
+  caller AbiEi profiles (Aksha, E<=10): hit 1127/2314 (0.487); median bits 18.8; best profiles {'AbiEii__AbiEi_4': 840, 'AbiEii__AbiEi_1': 282, 'AbiEii__AbiEi_2': 3, 'AbiEii__AbiEi_3': 2}; GA passes 0
+  toxins also flagged by cctyper: 0/2373 ({}; status {})
+  toxins within 10 genes of a complete CRISPR-Cas call: 6/2373
+  genomes with AbiE by phylum (denominator = phylum genomes in DB):
+                      genomes  with_called_AbiE  with_called_or_completed
+phylum                                                                   
+p__Nanobdellota          1738                68                       484
+p__Micrarchaeota         1146               150                       675
+p__Aenigmatarchaeota      315                29                        85
+p__Iainarchaeota          185                25                        86
+p__Altiarchaeota           63                 9                        28
+p__Nanohalarchaeota        46                 3                         6
+p__EX4484-52               44                 6                        12
+p__Undinarchaeota          16                 0                         1
+  genomes with >=1 called AbiE 290; with >=1 called or completed 1377 of 3564
+  completion genomes: species 609, orders 33; completeness median 87.8

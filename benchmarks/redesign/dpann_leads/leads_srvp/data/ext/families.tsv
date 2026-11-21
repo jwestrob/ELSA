@@ -1,0 +1,264 @@
+func	label	label_name	genes	unannotated	ecs	fixed_status	n_members	n_reps	in_scope	reason	ref0	ref0_identity	ref0_region	ref1	ref1_identity	ref1_region	curated_record	exp_chain	n_site_ref0	n_curated_ref0
+K00096	PF13685	Fe-ADH_2	1	0	1.1.1.261	no_reviewed_entry_with_EC_active_site_structure	37	12.0	False	fewer than 15 representatives at 70% identity										
+K00163	PF00456	Transketolase_N	1	0	1.2.4.1	no_reviewed_entry_with_EC_active_site_structure	7		False	fewer than 15 annotated members										
+K00170	PF02775	TPP_enzyme_C	4	0	1.2.7.1	no_reviewed_entry_with_EC_active_site_structure	426	114.0	True		2392135.0	0.654	35-222	279597.0	0.651	40-229	P94692	2C42_A (P94692)	24.0	0.0
+K00175	PF02775	TPP_enzyme_C	4	0	1.2.7.11;1.2.7.3	no_reviewed_entry_with_EC_active_site_structure	572	156.0	True		12619.0	0.613	54-222	3084932.0	0.613	42-210	Q96XT4	5B46_B (Q96XT4)	18.0	0.0
+K00179	PF02775	TPP_enzyme_C	1	0	1.2.7.8	no_reviewed_entry_with_EC_active_site_structure	45	15.0	False	no definition member of 100-600 aa										
+K00201	PF00384	Molybdopterin	23	0	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure	99	19.0	True		2348803.0	0.701	210-484	2233369.0	0.699	42-436			21.0	0.0
+K00202	PF01493	GXGXG	4	0	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure	15	12.0	False	fewer than 15 representatives at 70% identity										
+K00283	PF21478	GcvP2_C	8	0	1.4.4.2	no_reviewed_entry_with_EC_active_site_structure	452	111.0	True		1456001.0	0.686	341-473	113519.0	0.684	350-484		6I35_A (P23378)	15.0	0.0
+K00313	PF12831	FAD_oxidored	1	0		no_complete_EC	95	33.0	True		1334431.0	0.582	46-255	2870471.0	0.582	1-173			12.0	0.0
+K00333	PF00346	Complex1_49kDa	7	0	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure	730	166.0	True		3189168.0	0.684	122-402	786245.0	0.677	110-390	Q91WD5	8OM1_D (Q91WD5)	26.0	0.0
+K00376	PF18764	nos_propeller	2	0	1.7.2.4	no_reviewed_entry_with_EC_active_site_structure	37	14.0	False	fewer than 15 representatives at 70% identity										
+K00386	PF09098	Dehyd-heme_bind	22	0	1.8.2.1	no_reviewed_entry_with_EC_active_site_structure	5		False	fewer than 15 annotated members										
+K00394	PF00890	FAD_binding_2	2	0	1.8.99.2	no_reviewed_entry_with_EC_active_site_structure	55	5.0	False	fewer than 15 representatives at 70% identity										
+K00428	PF03150	CCP_MauG	1	0	1.11.1.5	no_entry_in_label_family (1 with EC+structure+active site)	24	15.0	True		2740731.0	0.667	52-221	469545.0	0.664	48-217	P14532	2VHD_A (P14532)	21.0	3.0
+K00451	PF20510	HgmA_N	2	1	1.13.11.5	no_experimental_chain_with_active_site	78	31.0	True		2491165.0	0.648	1-261	242483.0	0.622	22-263	Q88E47	3ZDS_A (Q88E47)	3.0	0.0
+K00457	PF00903	Glyoxalase	4	0	1.13.11.27	no_reviewed_entry_with_EC_active_site_structure	9		False	fewer than 15 annotated members										
+K00548	PF02965	Met_synt_B12	1	0	2.1.1.13	no_reviewed_entry_with_EC_active_site_structure	7		False	fewer than 15 annotated members										
+K00571	PF01555	N6_N4_Mtase	1	0	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure	48	45.0	True		1735058.0	0.499	74-347	3014548.0	0.309	14-370	P0CAW2	6PBD_A (P0CAW2)	11.0	0.0
+K00640	PF00132	Hexapep	1	0	2.3.1.30	no_entry_in_label_family (1 with EC+structure+active site)	24	15.0	True		287038.0	0.661	238-293	45106.0	0.658	239-294		1T3D_A (P0A9D4)	9.0	0.0
+K00641	PF00561	Abhydrolase_1	5	0	2.3.1.31;2.3.1.46	no_reviewed_entry_with_EC_active_site_structure	170	60.0	True		455525.0	0.724	47-374	883855.0	0.711	47-374	A0QSZ0	6IOG_A (A0QSZ0)	33.0	5.0
+K00688	PF00343	Phosphorylase	2	0	2.4.1.1	no_reviewed_entry_with_EC_active_site_structure	5		False	fewer than 15 annotated members										
+K00721	PF00535	Glycos_transf_2	2	0	2.4.1.83	no_reviewed_entry_with_EC_active_site_structure	63	33.0	True		90712.0	0.77	1-180	26704.0	0.757	1-181	Q8U4M3	5MLZ_A (Q8U4M3)	24.0	10.0
+K00762	PF00156	Pribosyltran	1	0	2.4.2.10	no_experimental_chain_with_active_site	17	12.0	False	fewer than 15 representatives at 70% identity										
+K00764	PF13522	GATase_6	2	0	2.4.2.14	no_experimental_chain_with_active_site	381	115.0	True		1211240.0	0.699	53-214	745117.0	0.694	64-228			16.0	0.0
+K00784	PF12706	Lactamase_B_2	1	0	3.1.26.11	no_experimental_chain_with_active_site	17	8.0	False	fewer than 15 representatives at 70% identity										
+K00799	PF00043	GST_C	2	0	2.5.1.18	no_experimental_chain_with_active_site	25	13.0	False	fewer than 15 representatives at 70% identity										
+K00830	PF00266	Aminotran_5	1	0	2.6.1.44;2.6.1.45;2.6.1.51	no_reviewed_entry_with_EC_active_site_structure	8		False	fewer than 15 annotated members										
+K00853	PF02782	FGGY_C	1	0	2.7.1.16	no_reviewed_entry_with_EC_active_site_structure	11		False	fewer than 15 annotated members										
+K00859	PF13238	AAA_18	2	0	2.7.1.24	no_reviewed_entry_with_EC_active_site_structure	18	7.0	False	fewer than 15 representatives at 70% identity										
+K00903	PF13614	AAA_31	8	0	2.7.10.3	no_reviewed_entry_with_EC_active_site_structure	95	73.0	True		2408822.0	0.309	344-532	2154935.0	0.292	208-375			11.0	0.0
+K00963	PF00483	NTP_transferase	1	0	2.7.7.9	no_entry_in_label_family (2 with EC+structure+active site)	35	18.0	True		2687137.0	0.691	1-283	1197623.0	0.687	1-281	Q975F9	2GGO_A (Q975F9)	31.0	0.0
+K00974	PF01743	PolyA_pol	1	0		no_complete_EC	26	12.0	False	fewer than 15 representatives at 70% identity										
+K00978	PF00483	NTP_transferase	6	0	2.7.7.33	no_reviewed_entry_with_EC_active_site_structure	223	135.0	True		1345398.0	0.704	1-245	932829.0	0.696	1-249	Q8Z5I4	1TZF_A (Q8Z5I4)	27.0	13.0
+K00986	PF00078	RVT_1	18	4	2.7.7.49	no_experimental_chain_with_active_site	85	80.0	False	fewer than 3 site positions	584215.0	0.491	71-298	678481.0	0.491	130-363	P03366		0.0	0.0
+K00992	PF00483	NTP_transferase	2	0	2.7.7.99	no_reviewed_entry_with_EC_active_site_structure	12		False	fewer than 15 annotated members										
+K01006	PF00391	PEP-utilizers	2	0	2.7.9.1	no_experimental_chain_with_active_site	7		False	fewer than 15 annotated members										
+K01039	PF01144	CoA_trans	1	0	2.8.3.12	no_experimental_chain_with_active_site	29	16.0	True		113144.0	0.686	1-233	2224145.0	0.667	1-240	Q59112	1POI_B (Q59112)	8.0	0.0
+K01040	PF01144	CoA_trans	2	0	2.8.3.12	no_experimental_chain_with_active_site	217	73.0	True		378307.0	0.688	1-230	1281288.0	0.676	7-237	Q59112	1POI_B (Q59112)	5.0	1.0
+K01153	PF04851	ResIII	3	0	3.1.21.3	no_reviewed_entry_with_EC_active_site_structure	78	47.0	True		1321484.0	0.146	139-332	1176677.0	0.125	1-47	P08956		13.0	0.0
+K01154	PF01420	Methylase_S	58	22	3.1.21.3	no_reviewed_entry_with_EC_active_site_structure	640	629.0	False	fewer than 3 site positions	2872750.0	0.391	226-430	1856038.0	0.377	6-207			0.0	0.0
+K01156	PF04851	ResIII	3	0	3.1.21.5	no_reviewed_entry_with_EC_active_site_structure	142	97.0	True		265364.0	0.14	1-242				Q5ZND2	4ZCF_C (Q5ZND2)	8.0	0.0
+K01265	PF00557	Peptidase_M24	3	0	3.4.11.18	no_reviewed_entry_with_EC_active_site_structure	538	202.0	True		5807.0	0.707	1-249	1175205.0	0.707	3-254	P0AE18	2GG2_A (P0AE18)	24.0	9.0
+K01406	PF00353	HemolysinCabind	1	1	3.4.24.40	no_experimental_chain_with_active_site	4		False	fewer than 15 annotated members										
+K01423	PF01435	Peptidase_M48	3	0		no_complete_EC	28	6.0	False	fewer than 15 representatives at 70% identity										
+K01463	PF02585	PIG-L	1	0		no_complete_EC	6		False	fewer than 15 annotated members										
+K01556	PF00266	Aminotran_5	1	0	3.7.1.3	no_reviewed_entry_with_EC_active_site_structure	6		False	fewer than 15 annotated members										
+K01602	PF00101	RuBisCO_small	3	3	4.1.1.39	no_entry_in_label_family (26 with EC+structure+active site)	10		False	fewer than 15 annotated members										
+K01607	PF02627	CMD	5	3	4.1.1.44	no_reviewed_entry_with_EC_active_site_structure	34	16.0	False	fewer than 3 site positions	302775.0	0.474	31-134	1327838.0	0.468	31-134			1.0	0.0
+K01653	PF10369	ALS_ss_C	2	1	2.2.1.6	no_reviewed_entry_with_EC_active_site_structure	6		False	fewer than 15 annotated members										
+K01709	PF01370	Epimerase	2	0	4.2.1.45	no_reviewed_entry_with_EC_active_site_structure	118	76.0	True		2675010.0	0.692	13-278	681266.0	0.675	4-269			38.0	0.0
+K01793	PF06662	C5-epim_C	6	6	5.1.3.17	no_reviewed_entry_with_EC_active_site_structure	18	14.0	False	fewer than 15 representatives at 70% identity										
+K01804	PF11762	Arabinose_Iso_C	2	0	5.3.1.4	no_reviewed_entry_with_EC_active_site_structure	8		False	fewer than 15 annotated members										
+K01809	PF21621	MPI_cupin_dom	5	0	5.3.1.8	no_experimental_chain_with_active_site	16	6.0	False	fewer than 15 representatives at 70% identity										
+K01810	PF00342	PGI	4	0	5.3.1.9	no_experimental_chain_with_active_site	171	102.0	True		14279.0	0.394	49-330	2722183.0	0.384	50-318	P06744	9FCW_A (P06744)	28.0	0.0
+K01818	PF02952	Fucose_iso_C	1	0	5.3.1.25;5.3.1.3	no_reviewed_entry_with_EC_active_site_structure	15	7.0	False	fewer than 15 representatives at 70% identity										
+K01839	PF01676	Metalloenzyme	1	0	5.4.2.7	no_entry_in_label_family (1 with EC+structure+active site)	18	11.0	False	fewer than 15 representatives at 70% identity										
+K01843	PF04055	Radical_SAM	1	0	5.4.3.2	no_reviewed_entry_with_EC_active_site_structure	58	13.0	False	fewer than 15 representatives at 70% identity										
+K01845	PF00202	Aminotran_3	1	0	5.4.3.8	no_reviewed_entry_with_EC_active_site_structure	4		False	fewer than 15 annotated members										
+K01858	PF01658	Inos-1-P_synth	3	0	5.5.1.4	no_reviewed_entry_with_EC_active_site_structure	146	18.0	True		477319.0	0.73	189-317	351862.0	0.727	196-324	P11986	1P1J_A (P11986)	29.0	0.0
+K01868	PF07973	tRNA_SAD	1	0	6.1.1.3	no_reviewed_entry_with_EC_active_site_structure	8		False	fewer than 15 annotated members										
+K01875	PF00587	tRNA-synt_2b	1	0	6.1.1.11	no_reviewed_entry_with_EC_active_site_structure	7		False	fewer than 15 annotated members										
+K01880	PF03129	HGTP_anticodon	3	0	6.1.1.14	no_reviewed_entry_with_EC_active_site_structure	161	57.0	True		89410.0	0.654	330-440	1761407.0	0.639	335-445	P41250	2ZT5_A (P41250)	12.0	0.0
+K01881	PF00587	tRNA-synt_2b	1	0	6.1.1.15	no_reviewed_entry_with_EC_active_site_structure	15	9.0	False	fewer than 15 representatives at 70% identity										
+K01890	PF03484	B5	2	0	6.1.1.20	no_reviewed_entry_with_EC_active_site_structure	119	58.0	True		2392700.0	0.588	276-362	1908145.0	0.585	276-362	P27002	1B7Y_B (P27002)	4.0	0.0
+K01912	PF00501	AMP-binding	3	0	6.2.1.30	no_reviewed_entry_with_EC_active_site_structure	70	30.0	True		1360498.0	0.683	8-302	424722.0	0.664	76-307	B6HVC6		18.0	0.0
+K01932	PF08245	Mur_ligase_M	2	0		no_complete_EC	8		False	fewer than 15 annotated members										
+K01945	PF01071	GARS_A	1	0	6.3.4.13	no_reviewed_entry_with_EC_active_site_structure	36	6.0	False	fewer than 15 representatives at 70% identity										
+K01953	PF13537	GATase_7	1	0	6.3.5.4	no_reviewed_entry_with_EC_active_site_structure	14		False	fewer than 15 annotated members										
+K02283	PF00437	T2SSE	1	0	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure	12		False	fewer than 15 annotated members										
+K02323	PF04042	DNA_pol_E_B	2	0	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)	65	22.0	True		816031.0	0.717	249-480	799957.0	0.713	270-501		8TLT_F (P46957)	28.0	0.0
+K02338	PF02767	DNA_pol3_beta_2	1	0	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)	5		False	fewer than 15 annotated members										
+K02340	PF06144	DNA_pol3_delta	21	0	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)	260	135.0	False	fewer than 3 site positions	2596819.0	0.458	9-145	2445194.0	0.452	10-147		1JQL_B (P28630)	0.0	0.0
+K02372	PF07977	FabA	5	0	4.2.1.59	no_experimental_chain_with_active_site	69	37.0	False	fewer than 3 site positions	403264.0	0.607	1-145	675405.0	0.607	1-143	O33877	8B72_A (O33877)	2.0	0.0
+K02480	PF02518	HATPase_c	1	1	2.7.13.3	no_experimental_chain_with_active_site	3		False	fewer than 15 annotated members										
+K02482	PF00672	HAMP	5	0	2.7.13.3	no_experimental_chain_with_active_site	75	40.0	False	fewer than 3 site positions	596853.0	0.712	241-313	3095599.0	0.704	217-287	P0AEJ4		1.0	0.0
+K02493	PF05175	MTS	1	0	2.1.1.297	no_reviewed_entry_with_EC_active_site_structure	66	53.0	True		848469.0	0.595	87-215	255507.0	0.591	108-234	Q9WYV8	1NV8_A (Q9WYV8)	12.0	0.0
+K02495	PF04055	Radical_SAM	2	0	1.3.98.3	no_reviewed_entry_with_EC_active_site_structure	14		False	fewer than 15 annotated members										
+K02509	PF01557	FAA_hydrolase	2	0		no_complete_EC	18	5.0	False	fewer than 15 representatives at 70% identity										
+K02527	PF04413	Glycos_transf_N	1	0	2.4.99.12;2.4.99.13;2.4.99.14;2.4.99.15	no_reviewed_entry_with_EC_active_site_structure	33	25.0	True		1748753.0	0.643	22-223	3136057.0	0.627	22-223	O66663	2XCI_A (O66663)	22.0	0.0
+K02636	PF00355	Rieske	2	0	7.1.1.6	no_reviewed_entry_with_EC_active_site_structure	130	74.0	True		235409.0	0.658	39-145	13336.0	0.645	38-147	P83794	1RFS_A (P08980)	7.0	0.0
+K03060	PF01192	RNA_pol_Rpb6	1	0	2.7.7.6	no_entry_in_label_family (3 with EC+structure+active site)	59	35.0	False	fewer than 3 site positions	1781229.0	0.526	1-70	2898591.0	0.526	1-70		8FVW_H (P0A800)	1.0	0.0
+K03106	PF02978	SRP_SPB	1	0	3.6.5.4	no_reviewed_entry_with_EC_active_site_structure	8		False	fewer than 15 annotated members										
+K03150	PF04055	Radical_SAM	1	0	4.1.99.19	no_reviewed_entry_with_EC_active_site_structure	11		False	fewer than 15 annotated members										
+K03269	PF00149	Metallophos	7	0	3.6.1.54	no_reviewed_entry_with_EC_active_site_structure	106	64.0	True		2127577.0	0.542	1-221	837134.0	0.53	34-255	A6T5R0	5B4B_A (Q9I2V0)	13.0	0.0
+K03271	PF13580	SIS_2	3	0	5.3.1.28	no_reviewed_entry_with_EC_active_site_structure	35	23.0	True		88738.0	0.729	15-151	1348547.0	0.709	1-163	Q93UJ2	8V4J_A (Q93UJ2)	12.0	0.0
+K03330	PF02934	GatB_N	1	0	6.3.5.7	no_reviewed_entry_with_EC_active_site_structure	3		False	fewer than 15 annotated members										
+K03388	PF13450	NAD_binding_8	5	0	1.8.7.3;1.8.98.4;1.8.98.5;1.8.98.6	no_reviewed_entry_with_EC_active_site_structure	321	92.0	True		415566.0	0.487	137-205	599875.0	0.482	137-211	Q6LWL2		14.0	11.0
+K03390	PF13534	Fer4_17	3	0	1.8.7.3;1.8.98.4;1.8.98.5;1.8.98.6	no_reviewed_entry_with_EC_active_site_structure	425	172.0	True		1942132.0	0.612	23-103	607521.0	0.585	24-104			10.0	0.0
+K03405	PF00158	Sigma54_activat	19	0	6.6.1.1	no_reviewed_entry_with_EC_active_site_structure	35	18.0	True		2278196.0	0.735	143-253	324239.0	0.712	145-250			30.0	0.0
+K03427	PF02384	N6_Mtase	8	5	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure	249	115.0	True		381351.0	0.423	177-509	173757.0	0.411	160-361	P10484	7BTO_A (P10484)	6.0	0.0
+K03605	PF01750	HycI	17	1		no_complete_EC	448	328.0	True		1939209.0	0.516	13-188	1178794.0	0.503	13-159			4.0	0.0
+K03644	PF04055	Radical_SAM	1	0	2.8.1.8	no_reviewed_entry_with_EC_active_site_structure	121	45.0	True		2115096.0	0.694	85-268	195593.0	0.681	94-277	O43766	8TRW_A (O43766)	32.0	4.0
+K03651	PF00149	Metallophos	2	0	3.1.4.53	no_entry_in_label_family (7 with EC+structure+active site)	136	55.0	True		1496646.0	0.633	58-272	2239043.0	0.62	58-272	D4P095		26.0	0.0
+K03722	PF13307	Helicase_C_2	1	0	5.6.2.3	no_entry_in_label_family (3 with EC+structure+active site)	61	14.0	False	fewer than 15 representatives at 70% identity										
+K03737	PF02775	TPP_enzyme_C	3	0	1.2.7.1;1.2.8.1	no_reviewed_entry_with_EC_active_site_structure	18	11.0	False	fewer than 15 representatives at 70% identity										
+K03769	PF00639	Rotamase	1	0	5.2.1.8	no_reviewed_entry_with_EC_active_site_structure	20	12.0	False	fewer than 15 representatives at 70% identity										
+K03775	PF00254	FKBP_C	4	0	5.2.1.8	no_reviewed_entry_with_EC_active_site_structure	6		False	fewer than 15 annotated members										
+K03809	PF03358	FMN_red	1	0	1.6.5.2	no_reviewed_entry_with_EC_active_site_structure	8		False	fewer than 15 annotated members										
+K03821	PF00561	Abhydrolase_1	1	0	2.3.1.304	no_reviewed_entry_with_EC_active_site_structure	5		False	fewer than 15 annotated members										
+K03886	PF00355	Rieske	1	0	7.1.1.8	no_reviewed_entry_with_EC_active_site_structure	15	14.0	False	fewer than 15 representatives at 70% identity										
+K04066	PF17764	PriA_3primeBD	1	0	5.6.2.4	no_entry_in_label_family (3 with EC+structure+active site)	8		False	fewer than 15 annotated members										
+K04069	PF04055	Radical_SAM	11	1	1.97.1.4	no_reviewed_entry_with_EC_active_site_structure	264	113.0	True		1652583.0	0.66	112-291	88990.0	0.641	114-294	P0A9N4	8FSI_A (P0A9N4)	8.0	0.0
+K04070	PF04055	Radical_SAM	1	0	1.97.1.4	no_reviewed_entry_with_EC_active_site_structure	18	9.0	False	fewer than 15 representatives at 70% identity										
+K04085	PF01206	TusA	2	1		no_complete_EC	16	12.0	False	fewer than 15 representatives at 70% identity										
+K04773	PF01343	Peptidase_S49	1	0		no_complete_EC	10		False	fewer than 15 annotated members										
+K05343	PF00128	Alpha-amylase	1	0	3.2.1.1;5.4.99.16	no_reviewed_entry_with_EC_active_site_structure	0		False	fewer than 15 annotated members										
+K05366	PF00905	Transpeptidase	1	0	2.4.99.28;3.4.16.4	no_reviewed_entry_with_EC_active_site_structure	17	7.0	False	fewer than 15 representatives at 70% identity										
+K05394	PF01979	Amidohydro_1	3	1	3.8.1.8	no_reviewed_entry_with_EC_active_site_structure	55	38.0	False	fewer than 3 site positions	3086.0	0.514	268-414	129960.0	0.504	220-392	P72156	4V1X_A (P72156)	1.0	0.0
+K05518	PF07228	SpoIIE	2	0	3.1.3.3	no_entry_in_label_family (6 with EC+structure+active site)	44	41.0	True		2254203.0	0.693	27-207	549884.0	0.649	31-213		3W42_A (P17906)	9.0	0.0
+K05889	PF01011	PQQ	1	0	1.1.2.6	no_reviewed_entry_with_EC_active_site_structure	5		False	fewer than 15 annotated members										
+K05914	PF00501	AMP-binding	1	0	1.13.12.7	no_reviewed_entry_with_EC_active_site_structure	47	13.0	False	fewer than 15 representatives at 70% identity										
+K05973	PF06850	PHB_depo_C	1	0	3.1.1.75	no_entry_in_label_family (1 with EC+structure+active site)	8		False	fewer than 15 annotated members										
+K06001	PF00291	PALP	1	0	4.2.1.20	no_experimental_chain_with_active_site	8		False	fewer than 15 annotated members										
+K06015	PF07969	Amidohydro_3	1	0	3.5.1.81	no_reviewed_entry_with_EC_active_site_structure	6		False	fewer than 15 annotated members										
+K06034	PF02776	TPP_enzyme_N	2	0	4.1.1.79	no_reviewed_entry_with_EC_active_site_structure	22	15.0	True		223731.0	0.718	1-134	753944.0	0.681	1-128			13.0	0.0
+K06044	PF00128	Alpha-amylase	1	0	5.4.99.15	no_reviewed_entry_with_EC_active_site_structure	24	19.0	False	no definition member of 100-600 aa										
+K06152	PF13618	Gluconate_2-dh3	28	20	1.1.99.3	no_reviewed_entry_with_EC_active_site_structure	92	67.0	True		360589.0	0.517	57-208	304196.0	0.512	51-202			3.0	0.0
+K06162	PF07969	Amidohydro_3	1	0	3.6.1.63	no_reviewed_entry_with_EC_active_site_structure	10		False	fewer than 15 annotated members										
+K06178	PF00849	PseudoU_synth_2	2	2	5.4.99.22	no_experimental_chain_with_active_site	12		False	fewer than 15 annotated members										
+K06381	PF08486	SpoIID	4	0	4.2.2.29	no_reviewed_entry_with_EC_active_site_structure	103	70.0	True		1372565.0	0.496	88-199	2433073.0	0.485	102-212			6.0	0.0
+K06864	PF02540	NAD_synthase	4	0	4.4.1.37;4.4.1.45	no_reviewed_entry_with_EC_active_site_structure	77	45.0	True		563867.0	0.634	1-114	246107.0	0.626	1-106	F9UST4	6B2M_A (F9UST4)	9.0	0.0
+K06936	PF04055	Radical_SAM	2	0		no_complete_EC	7		False	fewer than 15 annotated members										
+K06941	PF04055	Radical_SAM	1	0	2.1.1.192	no_experimental_chain_with_active_site	93	27.0	True		2587792.0	0.711	102-296	2759748.0	0.711	99-293	P36979	3RFA_A (P36979)	42.0	9.0
+K06988	PF03446	NAD_binding_2	3	0	1.5.1.40	no_reviewed_entry_with_EC_active_site_structure	48	10.0	False	fewer than 15 representatives at 70% identity										
+K07012	PF22590	Cas3-like_C_2	1	1		no_complete_EC	36	32.0	True		1520219.0	0.441	279-395	580480.0	0.399	299-417			8.0	0.0
+K07037	PF01966	HD	1	0		no_complete_EC	4		False	fewer than 15 annotated members										
+K07047	PF01979	Amidohydro_1	1	0	3.5.1.91	no_reviewed_entry_with_EC_active_site_structure	42	26.0	True		3086.0	0.654	268-414	2037177.0	0.6	323-434			3.0	0.0
+K07053	PF02811	PHP	4	0	3.1.3.97	no_reviewed_entry_with_EC_active_site_structure	72	20.0	True		1675891.0	0.736	1-183	2976392.0	0.696	1-185	Q7NXD4	2YB1_A (Q7NXD4)	10.0	0.0
+K07056	PF00590	TP_methylase	3	0	2.1.1.198	no_reviewed_entry_with_EC_active_site_structure	23	11.0	False	fewer than 15 representatives at 70% identity										
+K07102	PF01636	APH	1	0	2.7.1.221	no_reviewed_entry_with_EC_active_site_structure	5		False	fewer than 15 annotated members										
+K07154	PF20613	HipA_2	1	1	2.7.11.1	no_entry_in_label_family (324 with EC+structure+active site)	3		False	fewer than 15 annotated members										
+K07171	PF02452	PemK_toxin	1	0		no_complete_EC	139	93.0	False	fewer than 3 site positions	2147968.0	0.549	1-109	560791.0	0.504	2-115			1.0	0.0
+K07263	PF05193	Peptidase_M16_C	3	0		no_complete_EC	339	190.0	False	fewer than 3 site positions	1500116.0	0.516	251-449	284146.0	0.503	223-422			2.0	0.0
+K07316	PF01555	N6_N4_Mtase	8	1	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure	146	126.0	True		1735058.0	0.338	74-347	3126398.0	0.305	174-522	P0CAW2	6PBD_A (P0CAW2)	10.0	0.0
+K07317	PF02384	N6_Mtase	2	1	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure	19	17.0	False	fewer than 3 site positions	3131661.0	0.477	1-213	773988.0	0.45	1-196	P10484	7BTO_A (P10484)	2.0	0.0
+K07451	PF01844	HNH	1	0		no_complete_EC	19	17.0	True		307899.0	0.599	92-166	1518642.0	0.599	248-314			5.0	0.0
+K07755	PF01135	PCMT	1	0	2.1.1.137	no_reviewed_entry_with_EC_active_site_structure	252	130.0	True		2976145.0	0.733	70-207	470922.0	0.726	55-194			19.0	0.0
+K08093	PF00215	OMPdecase	1	0	4.1.2.43	no_reviewed_entry_with_EC_active_site_structure	7		False	fewer than 15 annotated members										
+K08300	PF10150	RNase_E_G	2	1	3.1.26.12	no_reviewed_entry_with_EC_active_site_structure	35	25.0	False	no definition member of 100-600 aa										
+K08301	PF10150	RNase_E_G	3	0		no_complete_EC	113	61.0	True		907536.0	0.423	161-455	2022247.0	0.389	148-437			44.0	0.0
+K08355	PF00355	Rieske	1	0	1.20.2.1;1.20.9.1	no_reviewed_entry_with_EC_active_site_structure	8		False	fewer than 15 annotated members										
+K08602	PF01432	Peptidase_M3	1	0		no_complete_EC	3		False	fewer than 15 annotated members										
+K08679	PF01073	3Beta_HSD	1	0	5.1.3.6	no_reviewed_entry_with_EC_active_site_structure	22	7.0	False	fewer than 15 representatives at 70% identity										
+K09691	PF00005	ABC_tran	3	0	7.5.2.14	no_reviewed_entry_with_EC_active_site_structure	225	196.0	True		2873427.0	0.624	64-217	879512.0	0.605	63-216			24.0	0.0
+K09828	PF01565	FAD_binding_4	1	0		no_complete_EC	18	12.0	False	fewer than 15 representatives at 70% identity										
+K09882	PF07728	AAA_5	1	0	6.6.1.2	no_reviewed_entry_with_EC_active_site_structure	44	1.0	False	fewer than 15 representatives at 70% identity										
+K09952	PF13395	HNH_4	3	0		no_complete_EC	3		False	fewer than 15 annotated members										
+K10026	PF04055	Radical_SAM	3	0	4.3.99.3	no_reviewed_entry_with_EC_active_site_structure	221	88.0	True		112805.0	0.67	16-128	555006.0	0.67	35-147	O31677	5TH5_A (O31677)	10.0	0.0
+K10206	PF00155	Aminotran_1_2	1	0	2.6.1.83	no_reviewed_entry_with_EC_active_site_structure	67	23.0	True		115611.0	0.725	24-393	10603.0	0.712	23-392	Q93ZN9	3EI9_A (Q93ZN9)	27.0	0.0
+K10700	PF00384	Molybdopterin	8	1	1.17.99.2	no_reviewed_entry_with_EC_active_site_structure	195	80.0	False	fewer than 3 site positions	2159957.0	0.302	1-353	197764.0	0.299	106-379			0.0	0.0
+K10794	PF07355	GRDB	18	0	1.21.4.1	no_reviewed_entry_with_EC_active_site_structure	78	40.0	True		2571561.0	0.595	1-160	2069292.0	0.589	4-160	Q9Z4Q7		5.0	0.0
+K11261	PF00994	MoCF_biosynth	1	0	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure	17	12.0	False	fewer than 15 representatives at 70% identity										
+K11779	PF04055	Radical_SAM	1	0	2.5.1.147;4.3.1.32	no_reviewed_entry_with_EC_active_site_structure	19	9.0	False	fewer than 15 representatives at 70% identity										
+K11782	PF02621	VitK2_biosynth	1	0	4.2.1.151	no_reviewed_entry_with_EC_active_site_structure	9		False	fewer than 15 annotated members										
+K12574	PF12706	Lactamase_B_2	1	0		no_complete_EC	4		False	fewer than 15 annotated members										
+K12628	PF01408	GFO_IDH_MocA	2	2		no_complete_EC	169	86.0	True		1494208.0	0.628	40-179	2731651.0	0.614	11-150			4.0	0.0
+K12630	PF01041	DegT_DnrJ_EryC1	1	1		no_complete_EC	13		False	fewer than 15 annotated members										
+K12633	PF13489	Methyltransf_23	4	1		no_complete_EC	13		False	fewer than 15 annotated members										
+K12902	PF04055	Radical_SAM	5	2	2.1.1.308	no_reviewed_entry_with_EC_active_site_structure	93	54.0	True		984718.0	0.662	192-378	56898.0	0.653	198-384	Q56184		4.0	0.0
+K12909	PF00463	ICL	1	0	2.7.8.23	no_reviewed_entry_with_EC_active_site_structure	4		False	fewer than 15 annotated members										
+K12910	PF00682	HMGL-like	1	1	2.3.3.18	no_reviewed_entry_with_EC_active_site_structure	12		False	fewer than 15 annotated members										
+K12914	PF04055	Radical_SAM	1	0	2.1.1.326	no_reviewed_entry_with_EC_active_site_structure	78	42.0	True		56898.0	0.676	198-384	3002302.0	0.676	220-405			6.0	0.0
+K12984	PF00535	Glycos_transf_2	4	0		no_complete_EC	131	95.0	True		2051236.0	0.621	1-169	788253.0	0.609	1-174			14.0	0.0
+K13075	PF00753	Lactamase_B	1	0	3.1.1.81	no_entry_in_label_family (2 with EC+structure+active site)	41	25.0	True		35793.0	0.62	33-265	2840195.0	0.599	33-266	P0CJ63	3DHA_A (P0CJ63)	13.0	0.0
+K13280	PF10502	Peptidase_S26	34	0	3.4.21.89	no_experimental_chain_with_active_site	40	29.0	True		1054199.0	0.609	1-114	2274632.0	0.592	5-127	P00803	1B12_A (P00803)	4.0	0.0
+K13290	PF00266	Aminotran_5	1	0	2.6.1.51	no_reviewed_entry_with_EC_active_site_structure	110	37.0	True		819589.0	0.693	1-358	3120938.0	0.688	1-348	P21549	5F9S_A (P21549)	35.0	0.0
+K13306	PF01073	3Beta_HSD	2	2	1.1.1.266	no_reviewed_entry_with_EC_active_site_structure	178	103.0	True		246613.0	0.449	1-186	2559818.0	0.449	1-210			4.0	0.0
+K13371	PF02975	Me-amine-dh_L	3	3	1.4.9.2	no_experimental_chain_with_active_site	8		False	fewer than 15 annotated members										
+K13552	PF00732	GMC_oxred_N	1	0	1.1.3.43	no_reviewed_entry_with_EC_active_site_structure	148	66.0	True		659546.0	0.538	1-336	1321031.0	0.538	2-338	Q53U15		6.0	0.0
+K13598	PF00672	HAMP	2	0	2.7.13.3	no_experimental_chain_with_active_site	42	22.0	True		1969262.0	0.229	258-331				P0AEJ4		5.0	0.0
+K14126	PF00374	NiFeSe_Hases	1	0		no_complete_EC	135	28.0	True		1330869.0	0.764	282-471	1676367.0	0.754	133-470			31.0	0.0
+K14138	PF18537	CODH_A_N	2	2	2.3.1.169	no_reviewed_entry_with_EC_active_site_structure	15	9.0	False	fewer than 15 representatives at 70% identity										
+K14245	PF00109	ketoacyl-synt	3	1		no_complete_EC	58	42.0	False	fewer than 3 site positions	1858311.0	0.639	1-259	3019954.0	0.631	1-258			0.0	0.0
+K14246	PF00109	ketoacyl-synt	3	3		no_complete_EC	64	43.0	False	fewer than 3 site positions	1858311.0	0.645	1-259	141145.0	0.635	3-267			1.0	0.0
+K14330	PF01488	Shikimate_DH	1	0	1.2.1.80	no_reviewed_entry_with_EC_active_site_structure	4		False	fewer than 15 annotated members										
+K14374	PF08241	Methyltransf_11	3	3		no_complete_EC	362	230.0	False	fewer than 3 site positions	470922.0	0.726	71-190	1959498.0	0.726	73-192			2.0	0.0
+K14375	PF00201	UDPGT	1	1		no_complete_EC	3		False	fewer than 15 annotated members										
+K14645	PF00082	Peptidase_S8	1	1		no_complete_EC	5		False	fewer than 15 annotated members										
+K14747	PF27533	CapK_C	10	1		no_complete_EC	104	92.0	False	fewer than 3 site positions	1293889.0	0.531	357-462	622221.0	0.524	360-465			2.0	0.0
+K15023	PF00809	Pterin_bind	1	0	2.1.1.258	no_reviewed_entry_with_EC_active_site_structure	88	21.0	True		2883945.0	0.701	1-239	2408363.0	0.633	6-242	Q46389	1F6Y_A (Q46389)	25.0	11.0
+K15393	PF00890	FAD_binding_2	5	5	1.21.99.1	no_reviewed_entry_with_EC_active_site_structure	197	66.0	False	fewer than 3 site positions	415566.0	0.481	134-194	1262493.0	0.43	140-199			1.0	0.0
+K15449	PF08608	Wyosine_form	1	0	4.1.3.44	no_reviewed_entry_with_EC_active_site_structure	33	8.0	False	fewer than 15 representatives at 70% identity										
+K15512	PF05138	PaaA_PaaC	9	0	1.14.13.208	no_reviewed_entry_with_EC_active_site_structure	7		False	fewer than 15 annotated members										
+K15513	PF00378	ECH_1	2	0	4.1.2.44	no_reviewed_entry_with_EC_active_site_structure	97	32.0	True		937797.0	0.731	27-249	907610.0	0.725	38-257			48.0	0.0
+K15571	PF02770	Acyl-CoA_dh_M	1	0		no_complete_EC	25	18.0	True		113158.0	0.659	112-227	244344.0	0.651	112-227			4.0	0.0
+K15574	PF01796	OB_ChsH2_C	2	0		no_complete_EC	90	55.0	False	fewer than 3 site positions	1676349.0	0.497	382-464	2661048.0	0.49	378-456			1.0	0.0
+K15575	PF22691	Thiolase_C_1	4	1		no_complete_EC	128	60.0	True		1029880.0	0.591	237-391	1688367.0	0.584	228-384			3.0	0.0
+K15769	PF10418	DHODB_Fe-S_bind	2	2		no_complete_EC	135	55.0	True		1887670.0	0.673	202-259	2111545.0	0.662	214-271			3.0	0.0
+K15857	PF00908	dTDP_sugar_isom	3	1		no_complete_EC	142	75.0	True		984660.0	0.656	1-155	465654.0	0.649	1-162			7.0	0.0
+K15959	PF00891	Methyltransf_2	1	0		no_complete_EC	14		False	fewer than 15 annotated members										
+K16212	PF04041	Glyco_hydro_130	2	0	2.4.1.281	no_reviewed_entry_with_EC_active_site_structure	22	5.0	False	fewer than 15 representatives at 70% identity										
+K16554	PF02706	Wzz	4	0	2.7.10.3	no_reviewed_entry_with_EC_active_site_structure	178	143.0	False	no definition member of 100-600 aa										
+K16842	PF01522	Polysacc_deac_1	1	0	3.5.2.5	no_reviewed_entry_with_EC_active_site_structure	3		False	fewer than 15 annotated members										
+K16870	PF00535	Glycos_transf_2	2	0	2.4.1.289	no_reviewed_entry_with_EC_active_site_structure	64	58.0	True		1469997.0	0.478	1-191	2038959.0	0.475	1-190			9.0	0.0
+K17070	PF00043	GST_C	1	0	4.5.1.3	no_reviewed_entry_with_EC_active_site_structure	32	14.0	False	fewer than 15 representatives at 70% identity										
+K17223	PF00034	Cytochrom_C	4	0	2.8.5.2	no_entry_in_label_family (3 with EC+structure+active site)	32	24.0	True		251958.0	0.628	93-204	2379559.0	0.597	104-206			3.0	0.0
+K17224	PF02872	5_nucleotid_C	1	0	3.1.6.20	no_reviewed_entry_with_EC_active_site_structure	27	13.0	False	fewer than 15 representatives at 70% identity										
+K17733	PF02557	VanY	1	0		no_complete_EC	3		False	fewer than 15 annotated members										
+K17810	PF02786	CPSase_L_D2	3	0	6.3.1.12	no_reviewed_entry_with_EC_active_site_structure	14		False	fewer than 15 annotated members										
+K17830	PF01494	FAD_binding_3	1	0	1.3.1.101;1.3.7.11	no_reviewed_entry_with_EC_active_site_structure	15	10.0	False	fewer than 15 representatives at 70% identity										
+K17992	PF01257	2Fe-2S_thioredx	26	0	1.12.1.3	no_reviewed_entry_with_EC_active_site_structure	29	10.0	False	fewer than 15 representatives at 70% identity										
+K18106	PF01408	GFO_IDH_MocA	1	0		no_complete_EC	8		False	fewer than 15 annotated members										
+K18431	PF02348	CTP_transf_3	1	0	2.7.7.82	no_reviewed_entry_with_EC_active_site_structure	13		False	fewer than 15 annotated members										
+K18682	PF01966	HD	4	0		no_complete_EC	27	16.0	True		352243.0	0.746	184-297	485906.0	0.741	161-274			11.0	0.0
+K18979	PF13484	Fer4_16	4	0	1.17.99.6	no_experimental_chain_with_active_site	45	31.0	True		2736719.0	0.554	170-254	1411649.0	0.537	170-254	P97030	5D08_A (P97030)	8.0	0.0
+K19304	PF01551	Peptidase_M23	1	0		no_complete_EC	45	23.0	True		430062.0	0.71	193-307	407310.0	0.678	192-305			15.0	0.0
+K19313	PF14602	Hexapep_2	1	0		no_complete_EC	41	41.0	False	fewer than 3 site positions	811404.0	0.459	187-242	275035.0	0.436	102-160			0.0	0.0
+K19544	PF01909	NTP_transf_2	1	0		no_complete_EC	27	22.0	True		1811815.0	0.733	1-105	199115.0	0.724	1-105			5.0	0.0
+K19725	PF00291	PALP	3	2	2.5.1.47;2.6.99.3	no_reviewed_entry_with_EC_active_site_structure	41	16.0	True		35217.0	0.743	78-355	337120.0	0.733	92-403	P45040	1Y7L_A (P45040)	29.0	0.0
+K19802	PF02746	MR_MLE_N	1	0	5.1.1.20;5.1.1.25	no_reviewed_entry_with_EC_active_site_structure	22	6.0	False	fewer than 15 representatives at 70% identity										
+K19884	PF00890	FAD_binding_2	1	0	1.4.3.23	no_reviewed_entry_with_EC_active_site_structure	39	22.0	False	fewer than 3 site positions	255196.0	0.607	1-55	2233100.0	0.588	3-65			1.0	0.0
+K19889	PF08241	Methyltransf_11	1	0	2.1.1.164	no_reviewed_entry_with_EC_active_site_structure	391	254.0	False	fewer than 3 site positions	1030333.0	0.725	94-213	839964.0	0.721	72-191	Q8KZ94	3BUS_A (Q8KZ94)	2.0	0.0
+K20074	PF13672	PP2C_2	1	0	3.1.3.16	no_entry_in_label_family (70 with EC+structure+active site)	67	32.0	True		1443208.0	0.629	1-237	1388072.0	0.622	1-228	P9WHW5	1TXO_A (P9WHW5)	20.0	0.0
+K20441	PF05199	GMC_oxred_C	1	0		no_complete_EC	146	69.0	False	fewer than 3 site positions	2955343.0	0.526	413-552	304195.0	0.516	424-564			2.0	0.0
+K20565	PF05199	GMC_oxred_C	2	1	1.1.3.43;1.1.3.44	no_reviewed_entry_with_EC_active_site_structure	151	73.0	False	fewer than 3 site positions	659546.0	0.53	409-548	2955343.0	0.53	413-552	Q53U15		2.0	0.0
+K20566	PF13450	NAD_binding_8	1	1		no_complete_EC	68	46.0	False	fewer than 3 site positions	2955343.0	0.531	15-97	1321031.0	0.523	6-69			1.0	0.0
+K20568	PF00202	Aminotran_3	1	0	2.6.1.93;2.6.1.94	no_reviewed_entry_with_EC_active_site_structure	9		False	fewer than 15 annotated members										
+K20571	PF01408	GFO_IDH_MocA	6	0		no_complete_EC	201	106.0	True		1857239.0	0.609	1-131	2731651.0	0.606	11-150			4.0	0.0
+K20573	PF13692	Glyco_trans_1_4	2	1	2.4.1.301	no_reviewed_entry_with_EC_active_site_structure	63	62.0	False	fewer than 3 site positions	1966538.0	0.373	216-382	1340862.0	0.361	212-378			0.0	0.0
+K20578	PF13439	Glyco_transf_4	1	0		no_complete_EC	46	37.0	False	fewer than 3 site positions	321352.0	0.355	27-224	1340862.0	0.35	5-215			0.0	0.0
+K20583	PF02585	PIG-L	1	0		no_complete_EC	16	9.0	False	fewer than 15 representatives at 70% identity										
+K20591	PF01041	DegT_DnrJ_EryC1	6	4		no_complete_EC	36	27.0	False	fewer than 3 site positions	79420.0	0.487	72-213	115392.0	0.481	58-234			1.0	0.0
+K20615	PF00155	Aminotran_1_2	2	2	4.2.1.145	no_reviewed_entry_with_EC_active_site_structure	307	113.0	True		3099680.0	0.543	20-387	2321570.0	0.53	20-391			8.0	0.0
+K20681	PF00132	Hexapep	1	1	2.3.1.197	no_reviewed_entry_with_EC_active_site_structure	80	77.0	False	fewer than 3 site positions	1173807.0	0.562	114-169	1317956.0	0.516	110-165			0.0	0.0
+K20738	PF00112	Peptidase_C1	2	1	3.4.22.6	no_experimental_chain_with_active_site	22	18.0	True		536999.0	0.776	33-273	2365837.0	0.729	21-255	P14080	1YAL_A (P14080)	16.0	0.0
+K20764	PF19420	DDAH_eukar	1	1	3.5.99.9	no_reviewed_entry_with_EC_active_site_structure	3		False	fewer than 15 annotated members										
+K20809	PF00175	NAD_binding_1	2	0	1.18.1.3	no_reviewed_entry_with_EC_active_site_structure	396	197.0	False	fewer than 3 site positions	1555485.0	0.657	115-239	1578232.0	0.65	115-238	P07771	1KRH_A (P07771)	1.0	0.0
+K20930	PF00694	Aconitase_C	8	5	4.2.1.166	no_reviewed_entry_with_EC_active_site_structure	246	104.0	True		534598.0	0.645	3-117	2479872.0	0.627	15-118	D9XF46		9.0	0.0
+K21038	PF00078	RVT_1	1	0	2.7.7.49	no_experimental_chain_with_active_site	70	65.0	False	fewer than 3 site positions	1379694.0	0.557	49-290	584215.0	0.554	71-298	P03366		1.0	0.0
+K21071	PF00365	PFK	1	0	2.7.1.11;2.7.1.90	no_reviewed_entry_with_EC_active_site_structure	10		False	fewer than 15 annotated members										
+K21216	PF00535	Glycos_transf_2	8	3		no_complete_EC	579	334.0	True		2084735.0	0.54	17-199	286029.0	0.527	4-187			4.0	0.0
+K21271	PF01370	Epimerase	2	1	1.1.1.394	no_reviewed_entry_with_EC_active_site_structure	278	165.0	True		564409.0	0.587	1-240	225157.0	0.581	1-241			5.0	0.0
+K21349	PF21969	MGS_GT	23	0	2.4.1.268	no_reviewed_entry_with_EC_active_site_structure	19	9.0	False	fewer than 15 representatives at 70% identity										
+K21539	PF05711	TylF	1	0	2.1.1.237	no_reviewed_entry_with_EC_active_site_structure	9		False	fewer than 15 annotated members										
+K21612	PF27274	CfbE_C	1	0	6.4.1.9	no_reviewed_entry_with_EC_active_site_structure	3		False	fewer than 15 annotated members										
+K21673	PF20256	MoCoBD_2	4	0	1.17.5.2	no_reviewed_entry_with_EC_active_site_structure	326	150.0	False	fewer than 3 site positions	2735480.0	0.41	21-223	1776659.0	0.372	5-235	D7REY3		0.0	0.0
+K21674	PF00941	FAD_binding_5	2	0	1.17.5.2	no_reviewed_entry_with_EC_active_site_structure	142	70.0	True		2243587.0	0.668	1-184	2562581.0	0.664	1-185	D7REY4		17.0	8.0
+K22227	PF04055	Radical_SAM	1	0	1.3.98.6	no_reviewed_entry_with_EC_active_site_structure	42	28.0	True		13339.0	0.59	4-183	444922.0	0.581	15-193	Q30Y73		20.0	3.0
+K22362	PF00175	NAD_binding_1	5	0	1.18.1.3	no_reviewed_entry_with_EC_active_site_structure	409	203.0	False	fewer than 3 site positions	1355292.0	0.674	117-241	1555485.0	0.674	115-239	P07771	1KRH_A (P07771)	1.0	0.0
+K22373	PF21113	LarA_C	2	0	5.1.2.1	no_experimental_chain_with_active_site	8		False	fewer than 15 annotated members										
+K22451	PF03065	Glyco_hydro_57	4	0	2.4.1.25	no_experimental_chain_with_active_site	9		False	fewer than 15 annotated members										
+K22684	PF00656	Peptidase_C14	1	0		no_complete_EC	3		False	fewer than 15 annotated members										
+K22931	PF13243	SQHop_cyclase_C	9	2	5.5.1.29	no_reviewed_entry_with_EC_active_site_structure	6		False	fewer than 15 annotated members										
+K23103	PF00535	Glycos_transf_2	5	5		no_complete_EC	535	355.0	True		264246.0	0.559	1-185	727206.0	0.556	15-199			3.0	0.0
+K23105	PF00535	Glycos_transf_2	5	3		no_complete_EC	431	320.0	True		788253.0	0.46	1-174	940633.0	0.452	1-177			5.0	0.0
+K23975	PF01837	HcyBio	3	3	2.8.1.16	no_experimental_chain_with_active_site	7		False	fewer than 15 annotated members										
+K23990	PF09176	Mpt_N	1	1	1.1.1.419;5.5.1.34	no_reviewed_entry_with_EC_active_site_structure	9		False	fewer than 15 annotated members										
+K24122	PF01593	Amino_oxidase	8	2	1.17.99.8	no_reviewed_entry_with_EC_active_site_structure	151	60.0	False	fewer than 3 site positions	2276276.0	0.593	6-530	129806.0	0.568	8-528			1.0	0.0
+K24700	PF05995	CDO_I	11	0	1.13.11.91	no_reviewed_entry_with_EC_active_site_structure	4		False	fewer than 15 annotated members										
+K25135	PF01966	HD	1	0		no_complete_EC	17	15.0	True		486711.0	0.544	229-375	242169.0	0.521	224-370			18.0	0.0
+K25510	PF09376	NurA	2	2		no_complete_EC	5		False	fewer than 15 annotated members										
+K25916	PF01208	URO-D	6	0	2.1.1.382	no_reviewed_entry_with_EC_active_site_structure	20	12.0	False	fewer than 15 representatives at 70% identity										
+K26370	PF04998	RNA_pol_Rpb1_5	1	0	2.7.7.6	no_entry_in_label_family (3 with EC+structure+active site)	5		False	fewer than 15 annotated members										
+K27188	PF13183	Fer4_8	1	0	1.8.5.10	no_reviewed_entry_with_EC_active_site_structure	51	7.0	False	fewer than 15 representatives at 70% identity										
+K27875	PF04879	Molybdop_Fe4S4	1	0	1.97.1.14	no_reviewed_entry_with_EC_active_site_structure	44	30.0	False	no definition member of 100-600 aa										
+K27876	PF03916	NrfD	1	1	1.97.1.14	no_reviewed_entry_with_EC_active_site_structure	1077	377.0	True		750347.0	0.554	64-414	113457.0	0.547	43-392			5.0	0.0
+K27979	PF00133	tRNA-synt_1	1	0	2.3.2.39	no_reviewed_entry_with_EC_active_site_structure	4		False	fewer than 15 annotated members										
+K27986	PF00364	Biotin_lipoyl	4	2	2.3.1.328	no_reviewed_entry_with_EC_active_site_structure	68	51.0	True		192109.0	0.509	92-170	20840.0	0.503	100-178			3.0	0.0
+K28214	PF01593	Amino_oxidase	4	0	5.4.99.9	no_reviewed_entry_with_EC_active_site_structure	26	18.0	True		78620.0	0.662	1-442	2046357.0	0.655	1-440			14.0	0.0
+K28275	PF01850	PIN	1	0		no_complete_EC	57	48.0	True		1041328.0	0.538	1-136	2145987.0	0.538	1-141			5.0	0.0
+K28560	PF00583	Acetyltransf_1	34	0		no_complete_EC	36	22.0	True		2401.0	0.661	205-371	1952275.0	0.602	203-367			12.0	0.0
+K28639	PF00171	Aldedh	2	0		no_complete_EC	137	65.0	True		18263.0	0.562	26-474	1545209.0	0.555	13-318			6.0	0.0
+K28743	PF00753	Lactamase_B	3	1	3.1.2.35	no_reviewed_entry_with_EC_active_site_structure	54	13.0	False	fewer than 15 representatives at 70% identity										

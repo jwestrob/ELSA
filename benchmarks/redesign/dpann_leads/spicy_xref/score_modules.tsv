@@ -1,0 +1,81 @@
+module	output	instances	recovered	resolved	chance_recovered	chance_resolved	f1	control_f1	excess	excess_lo	excess_hi	median_best_len_recovered
+M01_pqqdh_cbb3	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	637	624	390	504.7	121.0	0.878	0.527	0.35	0.333	0.366	2.0
+M02_pqqdh_sbp3	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	405	403	358	311.2	61.0	0.847	0.495	0.352	0.337	0.366	3.0
+M03_pqqdh_rieske	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	94	87	84	67.9	17.9	0.91	0.489	0.42	0.368	0.468	2.0
+M04_pqqdh_lactamaseB	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	70	67	5	58.6	14.1	0.661	0.558	0.103	0.049	0.153	3.0
+M05_pqqdh_peptidaseC14	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	11	1	0	7.5	1.7	0.023	0.45	-0.427	-0.468	-0.383	17.0
+M06_pqqdh_ankyrin	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	77	77	68	56.3	12.6	0.972	0.475	0.497	0.471	0.52	2.0
+M07_pqqdh_coxg	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	1	1	0	0.9	0.1	0.5	0.587	-0.087	-0.087	-0.087	2.0
+M08_pqqdh_gfa	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	8	7	0	6.5	1.5	0.426	0.549	-0.123	-0.23	-0.03	11.0
+M09_pqqdh_dctMQP	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	1	1	0	0.7	0.1	0.857	0.546	0.311	0.311	0.311	3.0
+M11_lanm_pqqdh_divergent	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	2	2	0	1.5	0.4	0.5	0.509	-0.009	-0.022	0.004	6.0
+M12_lanm_cnnm	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	2	0	0	1.4	0.3	0.0	0.465	-0.465	-0.465	-0.465	
+M13_sbp5_lanm	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	23	1	0	13.9	2.3	0.035	0.41	-0.376	-0.415	-0.325	4.0
+M15_typeA_core	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	2	2	0	1.4	0.1	0.762	0.571	0.191	0.123	0.259	5.0
+M15w_typeA_core_EF1	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	32	32	8	22.4	3.9	0.612	0.554	0.058	-0.013	0.131	8.0
+M15s_typeA_scaffold	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	63	63	6	47.8	9.1	0.476	0.483	-0.008	-0.052	0.036	8.0
+M16_typeB_core	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	3	3	0	2.4	0.3	0.604	0.617	-0.014	-0.116	0.122	7.0
+M11w_lanmW_pqqdh_divergent	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	3	3	0	2.3	0.5	0.5	0.508	-0.008	-0.071	0.034	6.0
+M12w_lanmW_cnnm	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	2	0	0	1.4	0.4	0.0	0.473	-0.473	-0.476	-0.47	
+M13w_sbp5_lanmW	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	33	3	0	20.1	3.1	0.064	0.407	-0.343	-0.387	-0.293	3.0
+M23_lanm_narL_tcs	SECONDARY_embedding_list_tree_Z_L4bp_t0.02	4	4	2	3.2	0.7	0.829	0.604	0.224	0.147	0.297	4.5
+M01_pqqdh_cbb3	PRIMARY_family_bond_tree_WA_L4b_t0.2	637	618	157	497.1	117.2	0.721	0.51	0.211	0.192	0.23	3.0
+M02_pqqdh_sbp3	PRIMARY_family_bond_tree_WA_L4b_t0.2	405	403	190	305.8	60.1	0.755	0.476	0.279	0.259	0.299	3.0
+M03_pqqdh_rieske	PRIMARY_family_bond_tree_WA_L4b_t0.2	94	84	25	66.3	16.0	0.634	0.461	0.173	0.108	0.236	3.0
+M04_pqqdh_lactamaseB	PRIMARY_family_bond_tree_WA_L4b_t0.2	70	66	0	58.1	13.0	0.354	0.538	-0.184	-0.214	-0.153	15.5
+M05_pqqdh_peptidaseC14	PRIMARY_family_bond_tree_WA_L4b_t0.2	11	5	0	7.6	1.6	0.133	0.432	-0.299	-0.374	-0.22	4.0
+M06_pqqdh_ankyrin	PRIMARY_family_bond_tree_WA_L4b_t0.2	77	29	9	53.3	11.8	0.305	0.443	-0.137	-0.218	-0.053	3.0
+M07_pqqdh_coxg	PRIMARY_family_bond_tree_WA_L4b_t0.2	1	1	0	0.9	0.2	0.5	0.602	-0.102	-0.102	-0.102	7.0
+M08_pqqdh_gfa	PRIMARY_family_bond_tree_WA_L4b_t0.2	8	7	0	6.8	1.6	0.344	0.548	-0.204	-0.299	-0.108	14.0
+M09_pqqdh_dctMQP	PRIMARY_family_bond_tree_WA_L4b_t0.2	1	1	0	0.8	0.2	0.857	0.605	0.252	0.252	0.252	3.0
+M11_lanm_pqqdh_divergent	PRIMARY_family_bond_tree_WA_L4b_t0.2	2	2	0	1.5	0.4	0.4	0.464	-0.064	-0.082	-0.046	23.5
+M12_lanm_cnnm	PRIMARY_family_bond_tree_WA_L4b_t0.2	2	0	0	1.5	0.3	0.0	0.475	-0.475	-0.528	-0.423	
+M13_sbp5_lanm	PRIMARY_family_bond_tree_WA_L4b_t0.2	23	0	0	12.8	2.2	0.035	0.378	-0.343	-0.386	-0.288	
+M15_typeA_core	PRIMARY_family_bond_tree_WA_L4b_t0.2	2	2	0	1.4	0.2	0.667	0.542	0.125	0.102	0.148	6.0
+M15w_typeA_core_EF1	PRIMARY_family_bond_tree_WA_L4b_t0.2	32	15	1	21.9	3.0	0.431	0.505	-0.075	-0.154	0.002	6.0
+M15s_typeA_scaffold	PRIMARY_family_bond_tree_WA_L4b_t0.2	63	48	0	47.7	7.6	0.427	0.457	-0.03	-0.061	0.0	8.0
+M16_typeB_core	PRIMARY_family_bond_tree_WA_L4b_t0.2	3	3	0	2.4	0.3	0.472	0.598	-0.126	-0.194	-0.066	15.0
+M11w_lanmW_pqqdh_divergent	PRIMARY_family_bond_tree_WA_L4b_t0.2	3	3	0	2.2	0.4	0.4	0.456	-0.056	-0.091	-0.025	24.0
+M12w_lanmW_cnnm	PRIMARY_family_bond_tree_WA_L4b_t0.2	2	0	0	1.5	0.4	0.0	0.515	-0.515	-0.549	-0.482	
+M13w_sbp5_lanmW	PRIMARY_family_bond_tree_WA_L4b_t0.2	33	1	0	18.7	3.2	0.048	0.379	-0.331	-0.374	-0.28	3.0
+M23_lanm_narL_tcs	PRIMARY_family_bond_tree_WA_L4b_t0.2	4	4	4	3.1	0.7	0.929	0.569	0.36	0.268	0.48	3.5
+M01_pqqdh_cbb3	engine_DH	637	627	100	531.8	33.5	0.537	0.388	0.149	0.127	0.17	6.0
+M02_pqqdh_sbp3	engine_DH	405	403	54	329.0	18.6	0.42	0.368	0.052	0.029	0.074	11.0
+M03_pqqdh_rieske	engine_DH	94	86	49	72.3	6.2	0.744	0.394	0.35	0.281	0.416	2.0
+M04_pqqdh_lactamaseB	engine_DH	70	69	4	59.7	3.6	0.433	0.394	0.039	-0.015	0.093	9.0
+M05_pqqdh_peptidaseC14	engine_DH	11	11	0	9.6	0.4	0.433	0.372	0.061	-0.012	0.138	7.0
+M06_pqqdh_ankyrin	engine_DH	77	73	1	64.8	3.0	0.344	0.37	-0.026	-0.059	0.01	7.0
+M07_pqqdh_coxg	engine_DH	1	1	0	1.0	0.1	0.5	0.435	0.065	0.065	0.065	18.0
+M08_pqqdh_gfa	engine_DH	8	8	0	6.8	0.5	0.393	0.36	0.033	-0.121	0.208	11.0
+M09_pqqdh_dctMQP	engine_DH	1	1	0	0.8	0.2	0.6	0.571	0.029	0.029	0.029	6.0
+M11_lanm_pqqdh_divergent	engine_DH	2	2	0	1.6	0.1	0.5	0.343	0.157	0.139	0.174	6.0
+M12_lanm_cnnm	engine_DH	2	0	0	1.6	0.1	0.0	0.441	-0.441	-0.534	-0.348	
+M13_sbp5_lanm	engine_DH	23	5	0	17.4	0.9	0.375	0.378	-0.003	-0.04	0.034	4.0
+M15_typeA_core	engine_DH	2	2	0	1.8	0.0	0.427	0.45	-0.023	-0.273	0.226	17.5
+M15w_typeA_core_EF1	engine_DH	32	32	7	27.8	1.9	0.447	0.425	0.023	-0.08	0.133	24.0
+M15s_typeA_scaffold	engine_DH	63	62	7	52.8	2.9	0.327	0.337	-0.009	-0.062	0.047	14.5
+M16_typeB_core	engine_DH	3	3	0	2.5	0.1	0.552	0.445	0.108	-0.2	0.293	6.0
+M11w_lanmW_pqqdh_divergent	engine_DH	3	3	0	2.5	0.1	0.467	0.342	0.125	0.089	0.155	6.0
+M12w_lanmW_cnnm	engine_DH	2	0	0	1.7	0.2	0.0	0.458	-0.458	-0.526	-0.391	
+M13w_sbp5_lanmW	engine_DH	33	7	0	25.4	1.3	0.368	0.389	-0.021	-0.059	0.015	4.0
+M23_lanm_narL_tcs	engine_DH	4	4	2	3.2	0.5	0.684	0.487	0.197	0.052	0.397	5.5
+M01_pqqdh_cbb3	synton_faithful	637	64	46	50.0	11.7	0.094	0.05	0.044	0.024	0.065	2.0
+M02_pqqdh_sbp3	synton_faithful	405	33	21	34.7	6.6	0.069	0.06	0.009	-0.013	0.032	2.0
+M03_pqqdh_rieske	synton_faithful	94	20	18	7.4	1.7	0.206	0.051	0.155	0.083	0.234	2.0
+M04_pqqdh_lactamaseB	synton_faithful	70	2	0	4.9	1.1	0.014	0.045	-0.03	-0.047	-0.008	2.0
+M05_pqqdh_peptidaseC14	synton_faithful	11	0	0	1.2	0.3	0.0	0.071	-0.071	-0.091	-0.048	
+M06_pqqdh_ankyrin	synton_faithful	77	0	0	9.6	2.2	0.0	0.079	-0.079	-0.092	-0.066	
+M07_pqqdh_coxg	synton_faithful	1	0	0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	
+M08_pqqdh_gfa	synton_faithful	8	0	0	0.2	0.0	0.0	0.017	-0.017	-0.031	-0.004	
+M09_pqqdh_dctMQP	synton_faithful	1	0	0	0.0	0.0	0.0	0.0	0.0	0.0	0.0	
+M11_lanm_pqqdh_divergent	synton_faithful	2	0	0	0.3	0.1	0.0	0.09	-0.09	-0.1	-0.08	
+M12_lanm_cnnm	synton_faithful	2	0	0	0.4	0.1	0.0	0.134	-0.134	-0.172	-0.095	
+M13_sbp5_lanm	synton_faithful	23	0	0	2.7	0.4	0.0	0.094	-0.094	-0.107	-0.079	
+M15_typeA_core	synton_faithful	2	0	0	0.2	0.0	0.0	0.109	-0.109	-0.114	-0.104	
+M15w_typeA_core_EF1	synton_faithful	32	0	0	3.5	0.2	0.0	0.108	-0.108	-0.121	-0.093	
+M15s_typeA_scaffold	synton_faithful	63	0	0	5.9	0.8	0.0	0.074	-0.074	-0.083	-0.064	
+M16_typeB_core	synton_faithful	3	3	0	0.3	0.0	0.8	0.099	0.701	0.669	0.729	2.0
+M11w_lanmW_pqqdh_divergent	synton_faithful	3	0	0	0.5	0.1	0.0	0.096	-0.096	-0.123	-0.081	
+M12w_lanmW_cnnm	synton_faithful	2	0	0	0.4	0.1	0.0	0.126	-0.126	-0.175	-0.077	
+M13w_sbp5_lanmW	synton_faithful	33	0	0	3.7	0.5	0.0	0.093	-0.093	-0.108	-0.077	
+M23_lanm_narL_tcs	synton_faithful	4	0	0	0.2	0.0	0.0	0.043	-0.043	-0.066	-0.015	

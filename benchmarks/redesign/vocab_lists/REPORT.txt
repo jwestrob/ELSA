@@ -1,0 +1,264 @@
+WS_VOCAB2B: WORDS WHOSE IDENTITY IS THE SET OF INSTANCES ALIGNED TO THEM (DPANN, 2026-11-13)
+==========================================================================================
+Even genome_code = test, odd = selection; single outputs; paired genome bootstrap (2,000 draws, seed 17) for every
+difference. The method reads gene order and whitened ESM++ small vectors (zca10), plus data-derived genome groups in the
+main unit (the syn arm needs none); no MMseqs2 family, module label or taxonomy at run time. Predeclaration:
+predeclared.json (main 03:24 UTC; amendment_0 03:27, amendment_1 03:33, amendment_2 03:44, amendment_3 04:54; each before
+the numbers it governs). Notebook: NOTEBOOK.txt. References reproduced exactly before any comparison.
+
+ANSWER IN EIGHT LINES
+1. Verdict: NEITHER. The predeclared output (word lists from ws_calib's per-genome matches at z >= 10.6, selected on odd
+   genomes over the zca10 neighbour lists; data-derived genome groups as evidence unit; reading V-nest) gives summed excess
+   .4749, +0.048 [+0.027, +0.069] over token DH; F1 DF .810 (+.066), TXSS .602 (+.054), CCT .470 (-.010 [-.021, +.001]);
+   ribosomal 1,675 recovered and 114/114 Parvarchaeaceae; it fails one bar, ribosomal resolved 1,172 (bar 1,400).
+2. Embeddings alone, one statistic (Lambda) and one null-calibrated cost (tau* 4-8) now clear the summed-excess bar with
+   a positive lower bound and every F1 bar: +0.021 [-0.000, +0.042] over the ws_cas fix (the only earlier output that
+   matched), -0.149 [-0.172, -0.127] under stage-1 words on MMseqs2 tokens (TXSScan F1 -0.077, CRISPR-Cas +0.063).
+3. The part that fails is the merge rule's identity at length. A word's aligned set shrinks as it grows (median 224 spans
+   at 2 genes, 9 at 10, 2 at 20). With depth-1,000 lists this fragments long neighbourhoods (grp: 322 of 598 unresolved
+   ribosomal runs under-covered); with genome-diverse z lists words reach the whole superoperon and run into its conserved
+   flanks (420 of 503 unresolved runs have precision < 0.8). Inside runs, 47% of word junctions have a strongly supported
+   gene pair (median 6 groups, q75 507) while the two words meet in no other group.
+4. CRISPR-Cas, H7 holds: group independence plus lists that reach other-family homologs give grp CCT F1 .483 (stage-1
+   words .406; +.077 [+.066, +.089]) and leave 25.7% of CRISPR-Cas member genes outside words (stage 1 45.5%). Synteny-
+   retention N_eff (no groups, no threshold) reaches .517, +.038 [+.028, +.049] over token DH, the first embedding-only
+   output above the token engine on CRISPR-Cas (H3 holds: +.034 over grp at summed -.004 [-.015, +.009]); its CRISPR-Cas
+   excess (.057) still trails DH (.080) because coverage lifts its control.
+5. Evidence units: uncorrected genome counting collapses (gen -0.216; 88% of genes in words, words up to 842 genes).
+   Context vectors recover +0.184 [+0.162, +0.208] of it over shuffled contexts (H4 holds) and stay 0.035 [0.021, 0.048]
+   under groups; synteny retention equals groups on summed excess and its genome matrix recovers the grouping with no
+   threshold (same-group S .298, other .022).
+6. Lists, and the source of the advantage: MMseqs2 alignment lists in place of embedding neighbour lists (everything
+   else identical) score +0.031 [+0.013, +0.050] HIGHER (TXSS +.020, CCT -.008) and equal the selected calibrated
+   embedding lists (aln - z10.6 -0.007 [-0.026, +0.014]). The gain over families is the absence of a hard partition,
+   which alignment hits supply as well as the embedding does; one-per-genome lists recover every Parvarchaeaceae run.
+7. Typing: classes from mutual listing are pure and fragmented (DefenseFinder AMI .437, homogeneity .975; H5 refuted);
+   classes from mean-pooled word vectors (ws_locusspace recipe) reach AMI .679, and leave-group-out 1-NN accuracy is .954
+   (DefenseFinder type) / .602 (CRISPR-Cas subtype), against engine modules .765 AMI and gold-locus vectors .970 / .720.
+8. Cost: a full run takes 6-9 min on 64 threads (round 0 70-210 s, later rounds 16-30 s, 11-26 rounds); the tau ladder
+   adds three single passes per shuffle; lists 2-5 min from the stored kNN or z table. No families, no gene-level Leiden.
+
+------------------------------------------------------------------------------------------------------------------
+THE ALGORITHM
+Input: gene order (contigs of genes) and one whitened ESM++ small vector per gene (zca10). Main unit: a genome -> group
+array (emb_hom average linkage at cosine 0.75, 642 groups, from embedding best matches; no taxonomy).
+
+State. Each contig is a sequence of live nodes. A node is a terminal gene or a word instance (a contiguous span: two
+child nodes plus 0-2 inserted single genes). A node carries a LIST of aligned instances in other genomes in place of a
+label. A terminal gene's list is either its ranked zca10 neighbour list (unique-sequence kNN k 2,000 expanded to genes,
+identical copies sharing the tail rank, depth K) or its ws_calib list (the best gene of every genome with within-genome
+z >= cut, ranked by z); the gene's own group (or own genome, for the group-free arms) is excluded. A word's list is the
+set S of spans in other genomes that supported its creation; a span's rank is the worse rank of its two parts.
+
+Support. For live nodes x, y on one contig with <= 2 intervening single terminal genes,
+   S(x, y) = {(p, q) : p in list(x), q in list(y), p and q on one contig of another genome, disjoint, <= 2 genes apart,
+              either order, either strand}, keeping for each q the best-ranked p (|S| <= |list(y)|).
+n = 1 + supporting units (groups in the main arm, genomes in syn/ctx/gen), and the expectation under random order within
+each genome
+   E = own term + sum over units u of [1 - prod over genomes G in u of (1 - min(1, 6 c_x(G) c_y(G) / m_G))],
+c = list entries in G, m_G = genes of G (for single genomes this is softrec's E, reproduced exactly).
+
+Objective. Lambda(n, E) = n ln(n/E) - n + E nats (Poisson log-likelihood ratio = code-length saving of naming the merge,
+stage 1's statistic); a merge needs n >= 2 and Lambda >= tau. syn: Lambda_genome x N_eff / n with N_eff = n / (1 + (n - 1)
+s_bar), s_bar the mean pairwise synteny retention S(g, h) over the carriers (own genome + <= 63 sampled supporting genomes),
+S(g, h) = share of g's supported round-0 adjacencies that h supports, symmetrised; N_eff >= 2. ctx (exploratory): the same
+with s_bar from +-50-gene context vectors outside the instance span, noise floor removed (z 2), <= 32 sampled genomes.
+
+Updates (one round). (A) For every live adjacency, mark the positions next to each entry of list(x) (<= 3 away, same
+contig), probe the entries of list(y), count supporting units and accumulate E per genome. (B) syn / ctx: N_eff for the
+adjacencies with Lambda >= tau. (C) Greedy commit in decreasing Lambda (ties: left position, distance): an adjacency
+commits if its two nodes and the genes between them are unclaimed. (D) Each commit becomes a word node whose list is S
+(duplicate spans removed, sorted by rank). Rounds repeat until nothing commits. A word grows by progressive local
+alignment against every genome at once; each of its instances may have a different composition and different inserted
+genes, and identity is never exact.
+
+Stopping rule. tau = smallest value of {4, 6, 8, 10, 12, 15, 20} whose round-0 instance FDR (mean over 3 within-genome
+gene-order shuffles of the passing adjacencies, over the observed count) is <= 0.01; the shuffled runs keep the lists
+(vectors do not depend on order) and recompute positions, contexts and the synteny matrix.
+
+Readings. V-top = top-level word instances; V-nest = V-top plus their direct children that are words (selected on odd
+for every arm). Diagnostic V-phr (amendment_3; never selectable): V-nest plus chains of nodes joined where the junction's
+gene pair passes the arm's own test.
+
+Complexity. Per round O(sum over adjacencies of |list(x)| + |list(y)|) for marks and probes (about 2 x 10^10 at round 0,
+depth 1,000) + O(sum over commits of |S| log |S|) for new lists; memory O(sum |list|) (21.5 GB for depth-1,000 lists,
+26 GB for z10.6) plus live word lists (226 M entries after round 0, 75-110 M at the end). syn adds one 3,564 x 3,564
+matrix per order (one pass, 43-55 s).
+
+Measured run time (biotite, 64 threads; results/job_*.json)
+  lists: zca10 kNN -> genes 158-164 s (770 s when the vector file read was I/O-bound); z table -> genes 101-279 s
+  round-0 pass A 43-70 s (depth 1,000 / z10.6), 8-11 s (depth 200); pass B (N_eff) 75-97 s; synteny matrix 43-55 s
+  full observed run: grp 527 s (25 rounds), syn 484 s (11), z10.6 529 s (16), z13.7 363 s (26), grp200 142 s (22),
+  ctx 512 s, gen 218 s; whole job per list source incl. 3-shuffle ladder: 26 min (grp + grp200), 36 min (z10.6 + z13.7),
+  66 min (syn + ctx + ctxshuf + gen). Scoring ~15 s per reading; word classes 20-190 s; 15-NN on word vectors ~8 min.
+
+------------------------------------------------------------------------------------------------------------------
+1. REPRODUCTIONS
+- Token DH (job 89149): stored loci rescored: even summed .4270, F1 .744/.548/.479, ribosomal 1,686 / 1,512,
+  Parvarchaeaceae 114 / 113; per-instance F1, control F1 and coverage equal the stored scores; R1 .3375 equal too.
+- Softrec stored statistic (job 88891): this kernel's round-0 pass with softrec round 2's genus lists (depth 1,000) gives
+  $RD/softrec/r2/stats/obs.npz exactly: exclusion mask equal on 9,399,310 instances, L and G equal on all 9,235,875
+  non-excluded instances, E equal as float32 (max rel. diff 6e-8).
+- Smoke tests (synthetic universe vs brute force): counts, E, contexts, N_eff, synteny matrix and synteny N_eff equal
+  direct implementations on every row; planted 6-gene blocks become one word in 8 of 8 genomes.
+
+2. NULL CALIBRATION (round-0 instance FDR, mean of 3 shuffles / observed)
+  arm      tau 4    tau 6    tau 8     tau 10     tau*  observed at tau*  full-run word FDR (1 shuffle)
+  grp      .0091    .00084   .000083   .0000088   4     2,528,780         .018 (genes .031)
+  grp200   .081     .0102    .0012     .00013     8     2,213,935         -
+  syn      .0093    .0010    .00012    .000016    4     3,143,602         .020 (genes .034)
+  z10.6    .034     .0086    .0014     .000072    6     2,246,491         .016 (genes .028)
+  z13.7    .029     .0079    .0014     .000060    6     1,843,456         -
+  ctx      .0064    .00066   .000070   .0000084   4     3,087,610         -
+  ctxshuf  .0063    .00070   .000080   .000010    4     4,954,045         -
+  gen      .0064    .00071   .000082   .000011    4     4,957,731         -
+  The FDR falls ~10x per 2 nats; depth-1,000 lists sit at the lowest ladder value because their larger E removes chance
+  pairs with n = 2 (depth 200 and one-per-genome lists need 6-8). In the shuffles the synteny matrix is near zero
+  (off-diagonal mean .00076 vs .026 observed), so N_eff ~ n there: tau controls chance co-location, N_eff controls descent.
+
+3. VERDICT TABLE (even genomes; results/even_<arm>.json; d = arm - token DH [95%])
+  output (reading)          summed  d vs DH                F1 DF/TXSS/CCT    control DF/TXSS/CCT  bprec DF/TXSS  ribo rec/res  Parv rec/res  verdict
+  token DH (reference)      .4270   -                      .744/.548/.479    .439/.426/.399       .75/.44        1,686/1,512   114/113       ref
+  z10.6 V-nest (SELECTED)   .4749   +.048 [+.027, +.069]   .810/.602/.470    .459/.478/.404       1.00/.57       1,675/1,172   114/106       neither
+  grp V-nest (main unit)    .4372   +.010 [-.011, +.031]   .830/.586/.483    .497/.482/.423       1.00/.48       1,605/1,007    64/2         neither
+  syn V-nest                .4334   +.006 [-.014, +.026]   .846/.617/.517    .526/.504/.460       1.00/.50       1,582/926     114/56        neither
+  grp200 V-nest             .5082   +.081 [+.059, +.103]   .833/.619/.475    .461/.483/.412       1.00/.60         742/249       0/0         neither
+  z13.7 V-nest              .5422   +.115 [+.092, +.138]   .726/.642/.423    .393/.433/.350       1.00/.75       1,656/1,152   114/59        neither
+  ctx V-nest (exploratory)  .4021   -.025 [-.046, -.003]   .833/.594/.512    .529/.497/.459       1.00/.50       1,486/1,089    58/47        neither
+  ctxshuf V-nest (control)  .2184   -.209 [-.235, -.182]   .660/.450/.435    .471/.421/.403        .67/.33       1,680/717     114/17        neither
+  gen V-nest (diagnostic)   .2115   -.216 [-.242, -.190]   .657/.445/.436    .470/.420/.402        .67/.33       1,675/721     114/18        neither
+  aln V-nest (control)      .4683   +.041 [+.021, +.062]   .819/.605/.475    .473/.483/.423       1.00/.50       1,622/1,079    78/22        neither
+  z10.6 V-phr (diagnostic)  .4679   +.041 [+.020, +.062]   .813/.604/.479                                        1,686/1,138   114/106       -
+  grp V-phr (diagnostic)    .4288   +.002 [-.019, +.022]   .833/.587/.491                                        1,686/1,131   114/106       -
+  Paired F1 vs DH, z10.6 V-nest: DF +.066 [+.050, +.082], TXSS +.054 [+.037, +.070], CCT -.010 [-.021, +.001]; ribosomal
+  resolved -340 [-381, -300]. V-top readings (rejected on odd) lie .04-.05 lower in every arm (z10.6 .4370, grp .3835,
+  syn .3837). Where the gain sits: DefenseFinder excess .351 vs .305 and boundary precision 1.00 vs .75; TXSScan F1 +.054
+  with its control +.052 (excess .124 vs .122); CRISPR-Cas excess .066 vs .080.
+  Other references (z10.6 V-nest minus): stage-1 words V-mob -.149 [-.172, -.127] (DF +.064, TXSS -.077, CCT +.063);
+  ws_cas fix gate p 1e-8 +.021 [-.000, +.042] (CCT -.003); round-4 post DH -.017 [-.037, +.004].
+  Odd selection (predeclared): reading V-nest in every arm; main list source among {grp, z10.6, z13.7}: z10.6 [2 odd
+  conditions, .4873] > grp [2, .4451] > z13.7 [1, .5419] (results/selection.json; the job's own select step used a stale
+  pool with ctx in place of grp, corrected before any even line was read, same winner).
+
+4. ARMS AGAINST EACH OTHER (even, selected readings; results/pairs_main.json, A - B)
+  grp - syn       summed +.004 [-.009, +.015]   dF1 DF -.016, TXSS -.031, CCT -.034 [-.041, -.026]
+  grp - z10.6     -.038 [-.056, -.020]          DF +.020, TXSS -.016, CCT +.014 [+.004, +.024]
+  grp - grp200    -.071 [-.088, -.054]          TXSS -.033, CCT +.008; ribosomal recovered 1,605 vs 742
+  grp - ctx       +.035 [+.021, +.048]          CCT -.029
+  syn - ctx       +.031 [+.018, +.044]
+  syn - gen       +.222 [+.199, +.245]; ctx - ctxshuf +.184 [+.162, +.208]; ctx - gen +.191 [+.169, +.214]
+  aln - grp       +.031 [+.013, +.050]          DF -.010, TXSS +.020 [+.005, +.035], CCT -.008 [-.017, .000]; resolved +72
+  aln - z10.6     -.007 [-.026, +.014]          DF +.010, TXSS +.004, CCT +.006; resolved -93
+  aln - syn       +.035 [+.018, +.051]          CCT -.042 [-.052, -.032]
+  z10.6 - grp     +.038 [+.020, +.056]          z lists recover every Parvarchaeaceae run (114 vs 64)
+  CRISPR-Cas gold member genes outside every top-level word (even): stage-1 words .455; grp .257; z10.6 .317; syn .202;
+  ctx .188; grp200 .326; z13.7 .418; gen .065.
+
+5. CRISPR-CAS BY ARM (coordinator's expectation 4)
+  CCT F1 (even): token DH .479; stage-1 words .406; grp .483; syn .517; ctx .512; z10.6 .470; grp200 .475; z13.7 .423;
+  gen .436. With strict independence (groups) the lists' reach to homologs of other families in other lineages recovers
+  CRISPR-Cas members that exact family identity left outside words (45.5% -> 25.7%) and lifts CCT F1 +.077 over stage-1
+  words; group counting still costs rare systems against genome-level evidence: syn, which discounts only shared synteny,
+  gains a further +.034 and is the one output above token DH on CRISPR-Cas (+.038 [+.028, +.049]). Coverage drives part
+  of it: syn's CRISPR-Cas control is .460 (DH .399), so its excess is .057 against .080.
+
+6. FAILURE ANALYSIS: WHERE THE RIBOSOMAL BAR IS LOST
+  Ribosomal runs by cause (all 1,686; best locus by the check's rule):
+    output        recovered  resolved  recovered-unresolved: coverage<.8 / precision<.8 / both   not recovered  median precision
+    z10.6 V-nest  1,675      1,172     503: 83 / 373 / 47                                    11             .885
+    grp V-nest    1,605      1,007     598: 322 / 236 / 40                                   81             .920
+    syn V-nest    1,582        926     656: 365 / 247 / 44                                   104            .923
+    z10.6 V-phr   1,686      1,138     548: 23 / 523 / 2                                     0              .867
+    token DH      1,686      1,512                                                                          .960
+  List shrinkage (aligned spans per word, median by span; grp / z10.6): 269 / 224 at 2 genes, 66 / 64 at 4, 19 / 21 at 6,
+  7 / 9 at 10, 2 / 2 at 20; supporting groups (grp) 53 / 17 / 7 / 4 / 2. A word's instance in another genome must lie
+  on one contig (median contig 8 genes) with every part inside the respective list, so long aligned instances are rare.
+  Junctions (z10.6 final parse): 577 word junctions inside ribosomal runs; at the word level the median junction has
+  support from the own group only (Lambda q50 3.7); the two genes meeting there have median 6 supporting groups (q75 507)
+  and 46.6% pass tau as a gene pair. Parvarchaeaceae junctions (127): gene pairs reach 2 groups, none passes.
+  Same diagnosis on grp: 966 word junctions inside ribosomal runs, word-level support from the own group only (median);
+  gene pair at the same junction: median 86.5 groups (q75 145), 72.4% pass tau; word lists at those junctions hold a
+  median 7-8 aligned spans. V-phr on grp: ribosomal 1,686 / 1,131 (V-nest 1,007), summed .4288 (+.002 [-.019, +.022]).
+  Reading: with depth-1,000 lists the parse fragments long conserved neighbourhoods because identity-by-alignment thins
+  with length; with genome-diverse lists the parse reaches the whole superoperon and keeps going into its conserved
+  flanks, because support is the only boundary signal the objective has. Joining words at supported gene junctions
+  (V-phr) recovers every run and resolves fewer. The merge rule, not the lists or the evidence unit, limits the
+  ribosomal check; the unit decides CRISPR-Cas and the list source decides Parvarchaeaceae.
+
+7. TYPING (even gold instances mapped to the word holding >= 50% of their members; results/typing2_*.json, even_*.json)
+                                     DefenseFinder type                       CRISPRCasTyper subtype
+                                     AMI   homog  compl  1-NN  class-major.   AMI   1-NN  class-major.
+  z10.6 list classes (mutual)        .437  .975   .433   -     .733           .159  -     .352
+  z10.6 vector classes (res 10)      .679  .757   .672   -     .830           .222  -     .474
+  z10.6 word vectors, 1-NN           -     -      -      .954  -              -     .602  -
+  grp list / vector classes          .483/.676  .767/.772  .506/.663  .934  .628/.831     .142/.213  .588  .337/.502
+  syn list / vector classes          .563/.674  .705/.771  .590/.661  .932  .676/.832     .185/.206  .568  .386/.474
+  engine modules (vscore protocol)   .765                                     .289
+  ws_locusspace gold-locus vectors   -                   .970                       .720
+  List classes (Leiden on the mutual-listing graph: z10.6 15.3 M mutual edges, 169,796 classes, 20,929 with >= 2 words)
+  are near-components of a sparse graph: types split across many classes (completeness .43). Pooled word vectors type
+  almost as well as gold-locus vectors (.954 vs .970), because words are tight around the systems (DF boundary precision
+  1.00). vscore protocol AMI of list classes, all arms: grp .486, syn .572, ctx .486, z10.6 .441, z13.7 .324, gen .303.
+
+8. HYPOTHESES (predeclared) AND OUTCOMES
+  H1  main output matches token DH                       REFUTED (ribosomal resolved 1,172)
+  H2  ribosomal recovered >= 1,650 and resolved >= 1,400 REFUTED (1,675 / 1,172 for z10.6; grp 1,605 / 1,007)
+  H3  syn CCT >= grp + .02 at summed >= grp - .03        HOLDS (+.034 [+.026, +.041]; -.004)
+  H4  ctx >= ctxshuf + .05 and >= gen + .05              HOLDS (+.184, +.191)
+  H5  word-class AMI >= .60 (list classes)               REFUTED (.437); vector classes .679 (added arm)
+  H6  depth 1,000 >= 200 on summed and ribosomal recall  REFUTED on summed (-.071), holds on recall (1,605 vs 742)
+  H7  CCT >= stage 1 + .03, members outside <= 35%       HOLDS (.483, +.077; 25.7%)
+  X11 aln within .02 of grp                          REFUTED (+.031 for aln; CCT -.008)
+  X12 no z arm ranks first on odd                    REFUTED (z10.6 selected); z10.6 recovers more ribosomal runs than ctx (holds)
+  Expectations written before numbers: tau* 8-12 (X13) wrong (4); odd summed .50-.60 for grp wrong (.445); CRISPR-Cas
+  higher than expected in every unit; the main-output even prediction of 06:01 (summed .47-.50, all F1 bars, recovered
+  holds, resolved 1,150-1,250) held on every quantity; V-phr's resolved gain (amendment_3) wrong (-34).
+
+CONTROLS
+- Shuffled gene order: sets tau (section 2); full-run word FDR .016-.020.
+- Contexts shuffled among instances (ctxshuf) behave like no correction (gen): N_eff/n = 1.0; summed .2184 vs .2115.
+- Genome-group counting (grp) as the reference unit: section 4.
+- Depth 200 vs 1,000: grp200 +.071 summed, ribosomal 742 / 249, Parvarchaeaceae 0 (short lists of clade-rich genes hold
+  no cross-group homologs).
+- Reciprocity (2,000 committed round-0 syn merges, 572,269 supporting pairs): a' lists a in 85.2%, b' lists b in 86.2%,
+  both 76.3%; requiring it would remove 24% of support. Not required.
+- Alignment lists (aln; MMseqs2 18 all-against-all of 2,547,528 unique sequences, -s 7.5, --max-seqs 1000, E <= 1e-3, no
+  coverage rule; 1,209,424,748 hits, 217,475 sequences without a hit; ranked by bit score, expanded outside the own group,
+  depth 1,000; 6.0 h on 64 CPUs): tau* 6; 1,292,456 word instances, 60.9% of genes; odd V-nest .4786; even .4683, +.041
+  [+.021, +.062] vs DH, F1 .819/.605/.475, ribosomal 1,622 / 1,079, Parv 78 / 22. X11 (aln within .02 of grp, CCT >= grp)
+  refuted in aln's favour on summed excess (+.031) and against it on CRISPR-Cas (-.008 [-.017, .000]).
+
+CAVEATS
+- tau* = 4 for depth-1,000 lists is the lowest ladder value; tau 6 is an order of magnitude stricter (FDR .0008-.001).
+- The selected output's list source (ws_calib z table) is a post hoc handover of ws_calib, evaluated here under the
+  predeclared rule; it is embedding-derived (whitened cosine z-scores per genome) and carries no family or taxonomy.
+- The context arm was demoted to exploratory at amendment_2 after ws_context's report, before any number of it existed.
+- The main-arm selection pool in the code was stale (ctx in place of grp); the predeclared pool gives the same winner.
+- Vector classes use igraph's Leiden (same modularity-with-resolution objective as ws_locusspace's leidenalg call); the
+  leidenalg solver needed > 8 min per resolution on 0.5 M words.
+- Word lists keep one supporting p per q, so a word's list is bounded by its right node's list; a symmetric choice
+  would give slightly larger lists.
+- Two jobs read the 9.8 GB vector file I/O-bound (lists 770 s instead of 160 s); results are unaffected.
+
+ARTIFACTS
+Local benchmarks/redesign/vocab_lists/: vl.py (learner: kernels, list sources, ladders, full runs, refsr, diag, smoke),
+  vl_score.py (readings, odd/even scoring, selection, paired differences, word classes, vector-class typing, V-phr),
+  mm_search.sbatch + mm2knn.py (MMseqs2 all-against-all -> kNN-layout arrays), run_big.sbatch,
+  predeclared.json, NOTEBOOK.txt, REPORT.txt, results/ (job_*.json, odd_*.json, even_*.json, pairs_*.json,
+  typing2_*.json, diag_*.json, phr_*.json, refcheck.json, refsr.json, selection.json).
+Biotite $RD/vocab_lists/: code/, runs/<arm>/obs/ (inst.parquet, live.npz, toplists.npz, run.json, classes.npz,
+  vector_classes.npz, junctions.npz), excl/ (round-0 exclusion masks per order), loci/, scores/, results/
+  (incl. syn_S_emb_K1000.npy), mm/ (MMseqs2 result and aln__k1000 arrays), logs/.
+Jobs: 88812 (MMseqs2 all-against-all), 88856 (cancelled after 3.5 min, amendment_2), 88891 (refsr, grp, grp200),
+  89149 (refcheck, odd grp, syn/ctx/ctxshuf/gen, odd), 89810 (z arms, odd, selection, even, pairs; typing step stopped),
+  90640 (cancelled: Leiden solver), 90870 (diag, V-phr, vector typing), 91283 (aln control).
+
+NEXT (one line each)
+- Boundary signal for the parse: stop a word where its aligned instances diverge in flank content (ws_context's
+  cohesion statistic at junctions), the one missing ingredient for ribosomal precision.
+- Keep identity at length: carry gene-level lists for a word's ends (affix lists) so a junction is tested on the genes
+  that meet, which are supported in 47% of failed ribosomal junctions.
+- Combine units: syn's evidence for CRISPR-Cas with z lists' reach (syn x z10.6 was not run).
+- Search on word vectors against the stored 0.792 (not run).
+- Alignment lists with the synteny unit (aln x syn) and z lists with it (z10.6 x syn): the two best ingredients were
+  never combined.

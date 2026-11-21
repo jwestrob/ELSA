@@ -1,0 +1,149 @@
+context_units NOTEBOOK (workstream ws_context; times UTC)
+==========================================================
+2026-11-13 02:01  Read docs/redesign/NOTEBOOK.md from 13:23 UTC, lineagefree/REPORT.txt, recurrence_lf.py, readings_lf.py,
+                  boundary/blib.py and rules.py. Only descriptive facts read before the predeclaration: the contig table
+                  (231,477 contigs; median 8 genes, mean 15.5, max 1,758).
+2026-11-13 02:06  predeclared.json written (statistic, noise floor, rule family, landscape scaling 2 N_eff / t, W ladder
+                  10/25/50/100, variants raw/gc, controls shuf/member, odd selection rule, even criterion, test-3 cuts,
+                  expectations E1-E8, refuters). No computation of this workstream before it.
+2026-11-13 02:11  ctxrec.py written; kernel_test.py (synthetic, login node, 2 threads, seconds): pooled c_bar, floor sampler
+                  and member mode equal a direct numpy computation (|diff| < 1e-5).
+2026-11-13 02:12  Read /home/jwestrob/.claude/CLAUDE.md and biotite-cluster-ops.md. Account running CPUs 204 before
+                  submission. Jobs 87978 (stepA: refcheck, then raw / shuf_raw / member) and 87979 (stepB: gc / shuf_gc),
+                  24 CPUs each, standard_expand. Logs print odd-genome numbers only; even numbers go to results/full/.
+2026-11-13 02:14  Clock correction: entry times above now come from file modification times (predeclared.json mtime
+                  02:06:00 UTC; its 'written_utc' field changed from an estimate of 02:10 to 02:06, content unchanged).
+2026-11-13 02:14  REFERENCE REPRODUCED (job 87978, refcheck): the genus map through ctxrec.py (rule family P <= 1e-e &
+                  L >= 2, engine selection) selects P <= 1e-4 & L >= 2 (FDR 0.0042) and gives significant pairs identical
+                  to the stored rescue3 result (162,786; key, L, G, P equal); DH per-instance F1 and control F1 equal the
+                  stored scores; DH even summed 0.42702, F1 .744/.548/.479, ribosomal 1,686 / 1,512. Odd DH summed 0.4179.
+2026-11-13 02:18  Job 87979 descriptive (before any score): zca10 gene cosine, same genome 0.0148 (sd 0.057), different
+                  genomes 0.0003 (sd 0.045, q99.9 0.316); genome-centred: -0.0010 / 0.0000. Instance windows: n_ctx = 0 for
+                  0.54% of instances; median n_ctx 16 / 27 / 30 / 30 at W = 10 / 25 / 50 / 100 (full windows 38% / 19% /
+                  10% / 5%): contigs truncate most windows (E2 direction). gc noise floor c0 0.0002-0.0003, sd 0.051-0.057.
+                  Vector load + whitening took 299 s (BLAS single-threaded under OMP_NUM_THREADS=1; threadpoolctl limit
+                  added to ctxrec.load_vectors for later jobs).
+2026-11-13 02:19  predeclared.json amendment_1 (before any context-variant score was computed or read): noise-aware
+                  rho_z (z = 2 null standard errors of c_bar) because rho clipped at 0 with t = 2 makes G = 2 pairs a coin
+                  flip on noise; raw_z2 / gc_z2 join the odd-selection pool.
+2026-11-13 02:27  predeclared.json amendment_2_test2 (Test 2 configuration fixed before any Test-2 run). softctx.py written;
+                  softctx_test.py on a toy universe: supporting-genome counts equal a brute-force count, N_eff = 1 + count
+                  when rho = 0 and N_eff = 1 for identical contexts; position contexts equal a direct sum.
+                  Odd Test-1 numbers read so far (9 configs, logs): W10 at t 1.5 / 2 / 3 for gc and raw; W25 t1.5 gc.
+                  Pattern: t1.5 too permissive (summed -0.02 to -0.04); t2 near genus on summed but CCT F1 -0.011/-0.024
+                  and ribosomal resolved 262 / 585 of 848 odd runs; t3 loses every ribosomal run (gc W10: 0 recovered):
+                  inside the ribosomal superoperon every instance's +-10-gene flanks are the superoperon itself.
+2026-11-13 02:44  Job 87979 done (gc + shuf_gc, 1,882 s). Job 88328 submitted (stepC: raw_z2 / gc_z2, amendment_1).
+                  ODD table so far (collect.py odd): no z0 configuration meets all three odd conditions. CRISPR-Cas F1 is
+                  below genus in all 24 raw/gc configurations (-0.011 to -0.074). Best by the predeclared rule so far:
+                  raw_W50_t2 (2 met: summed +0.011 [-0.005, +0.027], dF1 +.014/-.007/-.021, ribosomal odd 848 / 731).
+                  Shuffled-context controls (t 2): ~495k significant pairs (genome unit 548k), DF dF1 -0.08, CCT -0.09:
+                  the real contexts are informative (they recover ~0.07 F1 on both against shuffled).
+2026-11-13 02:48  Job 87978 done (refcheck + raw / shuf_raw / member, 2,125 s for the run step). Member control (family-
+                  centred protein vectors), odd DH: t1.5 -0.053, t2 -0.110, t3 -0.111 summed vs genus; DF dF1 -0.03 to -0.20
+                  (E6 refuted). Job 88358 submitted (stepD: Test 3 cuts on the genus token landscape and on the round-2
+                  embedding landscape).
+2026-11-13 02:48  predeclared.json amendment_3_posthoc (exterior windows; POST HOC, written before any of its numbers).
+2026-11-13 02:55  TEST 3 ODD, genus token landscape (job 88358; vs the same landscape's module-cut DH, odd genomes; odd
+                  ribosomal bars 830 / 54 / 705). Boundary cohesion kappa_var quantiles (all boundaries) .006/.016/.037/
+                  .131/.510 (q05..q95), NaN 2.6%; gene-pair floor 0.0003.
+                    LFvar0.05  +0.0825 [+.068,+.098]  dF1 +.064/+.091/+.007  ribo 848/745/55  3 met, matches
+                    LFvar0.1   +0.0628                dF1 +.007/+.100/-.008  ribo 848/707/55  3 met, matches
+                    LFvar0.2-0.4  +0.015 to +0.027; DF -.012 to -.028, CCT -.024 to -.044, ribo 378-379: fail
+                    LFcont0.1/0.2/0.3/0.5  +0.058/+0.081/+0.086/+0.083; TXSS +.10 to +.18, CCT +.03 to +.06; ribo
+                               702/685/674/388 (fail the 705 bar)
+                  SELECTION (predeclared rule: most odd conditions, then odd summed): LFvar0.05 on the genus landscape.
+                  Written before any even number of a cut reading was read.
+2026-11-13 03:00  Even numbers of the genus-landscape cuts read after the 02:55 selection (results/full/cuts_genus.json).
+                  TEST 3 ODD, round-2 embedding landscape (homologs = top-50 zca10 kNN; kappa q05..q95 .012/.027/.054/
+                  .169/.683; vs stored round-2 DH; round-2 DH odd ribosomal 847 / 638 from softrec/r2/results/
+                  all_selected.json, below the absolute 705 bar itself):
+                    LFvar0.05 +0.008, dF1 +.022/+.031/+.019, ribo 847/659 (2 met)
+                    LFvar0.1  +0.036, dF1 +.014/+.072/+.020, ribo 847/674 (2 met)
+                    LFvar0.2  +0.052, dF1 -.003/+.095/+.009, ribo 847/644 (2 met)
+                    LFvar0.3  +0.065, dF1 -.011/+.104/+.001, ribo 847/584 (1 met)
+                    LFvar0.4  +0.077, dF1 -.014/+.104/-.005, ribo 847/506 (1 met)
+                  SELECTION (predeclared rule): LFvar0.2 on the embedding landscape. Written before its even numbers.
+2026-11-13 03:03  Job 88446 (decay; evaluation only): mean context cosine between two instances of one token pair in
+                  different genomes, by GTDB relation (same species / genus / family / order / class / different phylum;
+                  no 'same phylum, different class' pairs exist in this sample):
+                    raw W25  .762 / .475 / .277 / .172 / .114 / .075     (floor c0 .005, sd .079)
+                    gc  W25  .708 / .373 / .194 / .128 / .105 / .086     (floor c0 .0002, sd .054)
+                    gc  W100 .614 / .301 / .155 / .105 / .081 / .069
+                    member (family-centred) .909 / .490 / .264 / .169 / .067 / -.001
+                  Context similarity stays far above the floor between phyla (13-16 floor sd at W25): the window around a
+                  pair inside a conserved multi-gene unit is filled by the unit's other members, so the cosine mixes
+                  shared descent with the size of the conserved unit. A pair in 50 genomes of one genus has rho ~0.45
+                  and N_eff ~2.2 (passes t 2, genus L = 1). The member_raw_cosine row compared unaligned genes (pairs are
+                  unordered); fixed in evaluate.py (token-aligned) for the taxa job; that row is void.
+2026-11-13 03:19  Job 88328 done (raw_z2 / gc_z2, 2,062 s). TEST 1 SELECTION (predeclared rule, amendment_1 pool raw / gc /
+                  raw_z2 / gc_z2 x W at t 2; results/selection.json, results/odd_table.txt): no configuration meets all
+                  three odd conditions; six meet two (summed and ribosomal; all fail on CRISPR-Cas F1). Selected:
+                  raw_W50_t2 (odd: summed +0.0111 [-0.005, +0.027], dF1 +.014/-.007/-.021, ribosomal 848/731/55).
+                  Secondary t at raw W50: t1.5 1 met, t2 2 met, t3 1 met -> t 2. Test 2 uses variant raw, W 50, z 2
+                  (amendment_2_test2). Written before any even number of a Test-1 context unit was read.
+                  z2 against z0 at t 2 (odd): CRISPR-Cas dF1 -0.008 to -0.024 (z0 -0.011 to -0.036); summed -0.020 to
+                  +0.029; ribosomal resolved 267-751. The noise model did not remove the CRISPR-Cas deficit.
+                  POST HOC exterior run (job 88546) first numbers: raw_z2_ext_W25_t1.5 DF -0.079, CCT -0.084, ribosomal
+                  314 resolved: the amendment_3 reading ('exterior windows restore the ribosomal runs') is refuted so far.
+2026-11-13 03:21  Job 88670 submitted (Test 2, 64 CPUs, raw W50 z2). TEST 1 EVEN VERDICT (after the 03:19 selection):
+                  raw_W50_t2 DH: summed .4237, vs genus -0.0033 [-0.018, +0.012]; F1 .750/.532/.462, dF1 +.006/-.016/-.017;
+                  ribosomal 1,686 / 1,437 resolved, Parvarchaeaceae 114 / 106. DOES NOT REPLACE THE GENUS (TXSScan and
+                  CRISPR-Cas F1 more than 0.01 below); it meets the 'matches token DH' bars (summed, F1 within 0.02, ribosomal).
+                  vs lineagefree emb_hom g0.75 +0.006 [-0.006, +0.018], F1 +.005/-.006/-.015; vs every-genome-own-lineage
+                  +0.017 [-0.006, +0.042], F1 +.100/+.003/+.081. Shuffled contexts (raw W50): vs genus -0.019, F1
+                  -.093/-.000/-.091 (= the genome unit). Member control t2: -0.110.
+2026-11-13 03:24  Short contigs (evaluate.py contigs, login node, even genomes, DH vs genus DH; 'short' = gold instance on a
+                  contig of < 2W + 2 genes): raw_W50_t2 short (5,623 inst.) -0.001 summed, CCT -0.019 / long (1,473)
+                  +0.009, DF +0.034, CCT -0.009; raw_W10_t2 short CCT -0.028 / long CCT -0.002; gc_W25_t2 short -0.019,
+                  CCT -0.018 / long +0.013, CCT -0.001. The CRISPR-Cas deficit sits mostly on truncated windows.
+                  Noise floor by window size (raw W50): c0 0.0004 (n_ctx 1-2) to 0.016 (51-200), sd 0.05 to 0.13 (the
+                  per-genome composition component grows with the window); gc flat (c0 within 0.0012, sd 0.047-0.068).
+2026-11-13 03:25  POST HOC exterior job 88546 done (1,122 s). All 12 configurations (raw/gc x W25/50 x t1.5/2/3, z2): DF dF1
+                  -0.058 to -0.079, CCT dF1 -0.076 to -0.094 against genus (odd) = the genome unit. Windows that start outside
+                  the pass-1 locus carry no relatedness signal (flanks beyond the locus are absent on short contigs or
+                  differ even among relatives). amendment_3 reading refuted. Job 88741 submitted (stepG: Test 3 cuts on the
+                  selected N_eff landscape raw_W50_t2 (predeclared) and, POST HOC, on lineagefree emb_hom g0.75 and genome
+                  landscapes). Test 2 (88670): position-context floor c0 0.0052, sd 0.121 (128-d projection), tau 0.494;
+                  lists full at depth 1,000 for all but 9,144 genes; context exclusion median 2, q90 32, q99 251 genes/list.
+2026-11-13 03:29  TEST 3 ODD on the selected N_eff landscape raw_W50_t2 (job 88741; vs its own module DH):
+                    LFvar0.05 +0.072 [+.057,+.086] dF1 +.044/+.089/+.011 ribo 848/765 (3 met, matches)
+                    LFvar0.1  +0.063               dF1 +.004/+.098/-.004 ribo 848/730 (3 met, matches)
+                    LFvar0.2-0.4 +0.024 to +0.035, CCT -0.019 to -0.034, ribo 456-459 (1 met)
+                    LFcont0.1-0.5 +0.071 to +0.091, TXSS +0.12 to +0.18, ribo 460-649 (2 met)
+                  SELECTION (predeclared rule): LFvar0.05 (same theta as on the genus landscape). Written before its even
+                  numbers. Test 2 (88670) passes 27-42 s each on 64 CPUs; rule W_ctx >= 1 & N_eff >= 2, FDR 0.0044,
+                  1,794,913 significant instances (round 2 genus: 2,547,427), N_eff q10/q50/q90 2.27/4.04/16.6.
+2026-11-13 03:32  TEST 3 EVEN, predeclared combination (after the 03:29 selection): N_eff landscape raw_W50_t2 + LFvar0.05 =
+                  no lineage array, no module labels, no Louvain. Summed .4863; vs token genus DH +0.059 [+0.040, +0.079];
+                  F1 .789/.614/.477, dF1 +.045/+.066/-.002 [-.010, +.005]; ribosomal 1,686 / 1,507, Parvarchaeaceae 114 /
+                  106. Meets every 'matches token DH' bar and the summed 'beats' bar. Like-for-like unit test under the same
+                  reading (vs genus + LFvar0.05): -0.005 [-0.019, +0.009], dF1 -.005/-.015/-.013 (N_eff still does not
+                  replace the genus by the 0.01 F1 rule). Part of each F1 gain of the cuts is control F1 (more, smaller loci:
+                  808k vs 650k loci, mean span 4.6 vs 5.9): genus LF vs genus DH dcontrol +.028/+.039/+.035, dexcess
+                  +.023/+.042/-.025 (CRISPR-Cas F1 gain is entirely control); boundary precision DF .75->1.0, TXSS .44->.67.
+                  POST HOC (step G, labelled; odd numbers read first, even after): every-genome-own-lineage + LFvar0.05 vs token
+                  DH +0.002, dF1 +.025/+.065/-.006, ribosomal 1,297; lineagefree emb_hom g0.75 + LFvar0.05 vs token DH
+                  +0.063, dF1 +.051/+.072/+.006, ribosomal 1,460. N_eff + LF vs genome + LF: +0.057 [+0.038, +0.078],
+                  ribosomal +210. Job 88815 submitted (stepE2: taxa / transferred blocks / gold-pair diagnosis).
+2026-11-13 03:33  TEST 2 done (job 88670, 728 s on 64 CPUs: contexts + lists + 4 passes 265 s, edges + Leiden 274 s, modules
+                  + readings + scoring 89 s). Single predeclared output, even genomes: DH summed .2941, vs round 2 with the
+                  genus -0.173 [-0.203, -0.144], F1 .716/.285/.382 (dF1 -.087/-.215/-.060); ribosomal 0 of 1,686 recovered;
+                  vs lineagefree emb_hom g0.75 round 2 -0.192; vs every-genome-own-lineage round 2 -0.019 [-0.047, +0.009].
+                  FAILS. Likely mechanism (UNVERIFIED; per-instance arrays not stored): W_ctx = W / (1 + (k - 1) rho) with k
+                  in the hundreds for ribosomal instances (lists now include same-genus genes) and rho ~0.3 inside the
+                  superoperon drops every ribosomal instance below W_ctx >= 1. Leiden families 760,097 (43,211 non-trivial).
+2026-11-13 03:34  Check (login node, read-only): genes of the 1,686 ribosomal runs touched by a significant instance: Test 2
+                  landscape 5.4% (all genes 45.2%); round 2 with the genus 97.3% (54.6%). The ribosomal loss is in the
+                  statistic (support removed), not in the reading.
+2026-11-13 03:38  CORRECTION to the 03:03 entry: "13-16 floor sd" is wrong. The cross-phylum mean context cosine (.075 raw /
+                  .086 gc at W25) is about one single-pair floor sd (.079 / .054) and 15-400x the floor mean; pooled over
+                  20 genomes it is 10+ null standard errors. The reading (a systematic offset from conserved units) stands.
+2026-11-13 03:38  Job 88815 done (taxa, 170 s): raw W50 N_eff Spearman with genus count .666 (partial | G .573), families .538,
+                  orders .413, phyla .338. Recently transferred blocks (two orders, both members cos >= .95): 3,096 pairs at
+                  P <= 1e-4, genus count >= 2 for all, N_eff >= 2 for 32%, median N_eff / L .63 (other pairs 1.16). Gold-pair
+                  diagnosis (raw W50 t2): CRISPR-Cas loses 809 of 4,579 genus-significant gold pairs (median G 4, genus 2,
+                  N_eff 1.61; 15% G = 2; 5% recent transfers); DF 141 / 2,993; TXSS 314 / 2,792. REPORT.txt written.
+2026-11-13 03:40  REPORT.txt final; code, report and notebook copied to $RD/context_units/code/. No jobs of this workstream remain.
+2026-11-13 03:41  Clock note: entries from 03:32 to 03:38 had been stamped ahead of the clock (estimates up to 03:50);
+                  restamped from Slurm end times (88670 ended 03:31:46, 88741 03:34:10, 88815 03:37:14 UTC). Order unchanged.

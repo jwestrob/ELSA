@@ -1,0 +1,118 @@
+softrec3 workstream NOTEBOOK (append-only; UTC)
+================================================
+2026-11-12 20:46 UTC  Code: softrec3.py (prep: zca10 float16 vectors, null calibration of per-genome maxima on 10,000
+  random queries x all 3,585,303 genes, per-genome floors; cheap: Task 1a from the stored top-2,000 kNN), exact_gpu.py
+  (exact per-genome best match of every unique sequence, float16 products on one A5000), softrec3s.py (stratified lists,
+  passes, rules, validated edges), readings3.py (readings2 pointed at r3/ + gold-free Leiden resolution pick).
+  Job 84802 (prep) failed at a diagnostic assertion (identical sequences can carry different rescue3 tokens); fixed to
+  a count; resubmitted as 84861 (64 CPU), GPU job 84862 chained afterok.
+2026-11-12 20:52 UTC  predeclared3.json written before any round-3 calibration, list, statistic or score existed.
+  Design decision recorded there: the floor is calibrated for a per-genome MAXIMUM (alpha 1e-3, 1e-5 per genome), since
+  the pair q99.9 (0.32) is passed by chance maxima over ~950 genes in most genomes (to be quantified). A per-genus cap
+  m in {1, 3, all} on min(level a', level b') implements "best match per genus / best few".
+2026-11-12 20:58 UTC  Calibration (job 84861, 3 min; 10,000 random unique queries x 3,585,303 genes, float32 exact; pair
+  histograms from 2,000 queries = 7.17e9 pairs). The zca10 cosine distribution is ASYMMETRIC: all pairs P(cos >= 0.25)
+  1.93e-3 vs P(cos < -0.25) 3.2e-7; different-family pairs 1.72e-3 vs 3.2e-7; same-family share of pairs >= 0.32 is only
+  21%, >= 0.5 57%. The mirrored-tail model is therefore not a chance model: its per-genome floors (alpha 1e-2 / 1e-3 /
+  1e-4 / 1e-5: median 0.189 / 0.229 / 0.272 / 0.329) are exceeded by the decoy (-min) at the nominal rates (0.0074,
+  0.00069, 6.4e-5, 4.5e-6) but by maxima in genomes lacking the query's MMseqs2 family at 0.74 / 0.60 / 0.47 / 0.33.
+  Per (query, genome) maximum: family-absent exceedance at 0.30 / 0.40 / 0.50 / 0.60 = 0.40 / 0.20 / 0.095 / 0.042;
+  family-present 0.95 / 0.87 / 0.73 / 0.54; entries per query 1,841 / 1,224 / 820 / 525 of 3,564 genomes. No valley in
+  the all-pairs maximum histogram. GPU job and downstream held (scontrol hold) before any run.
+  At the brief's pair floor 0.32 a per-genome maximum is passed in ~35% of genomes lacking the family: "best match per
+  genus above 0.32" is mostly not homology for genes from small families.
+2026-11-12 21:01 UTC  predeclared3.json amendment_1 (before any list or statistic): floors = global cosines {0.32, 0.45,
+  0.60} as a pool dimension tuned on odd genomes; rank weights from the all-pairs upper tail (t = 1 + N x P(cos >= c)),
+  r in {100, 1000}; 54 candidates. Code rewritten (softrec3s.py: one level array, 16-bit cosine bins); GPU storage floor
+  0.32. Note: the login-node diagnostic for this entry ran ~2.5 min (over the 30 s guidance); later analyses run in jobs.
+2026-11-12 21:14 UTC  Exact search (job 84862, one RTX A5000): 3,585,303 genes x 2,547,528 sequences, float16 products, per-genome
+  max / argmax / min; load 35.6 s, search 507.2 s, peak GPU 17.0 GB; 4,283,508,730 entries at cosine >= 0.32 (median
+  1,579 genomes per sequence, q90 3,192). Task 1a (cheap, job 84861): round-2 depth-1,000 lists reach a median 311
+  genera per gene and 52.8% of the genera holding a member of the gene's MMseqs2 family (45.5% for families spanning
+  >= 300 genera); best per genus over the whole stored top-2,000 list: 578 genera, 93.7%. kn lists (job 84880):
+  3,625,068,606 unique-level entries, 5,250,182,414 gene-level; passes 21 s observed, 7 s per null (64 CPUs; loading
+  the lists from storage took 446 s); python recount 0 / 300 mismatches. Chance support (null mean L_o per instance)
+  c32: m1 1.36, m3 2.18, mall 3.38; c45: 0.64 / 1.04 / 1.67; c60: 0.22 / 0.37 / 0.62. Null instances with L >= 2:
+  c32_m1 5.78 M, c45_m1 3.08 M, c60_m1 1.24 M (round 2 depth 1,000: 7.8 M). FDR-selected count rules: L >= 10 (c32_m1),
+  15 (c32_m3), 30 (c32_mall), 10 / 15 / 20 (c45), 8 / 10 / 15 (c60) against 15 in round 2.
+  Task 5 predeclared in predeclared3.json amendment_2 (21:14 UTC) before any search run; job 85073 chained.
+2026-11-12 21:33 UTC  STAGE 1, cheap source (job 84882, 18 min; odd genomes, R1 vs token R1 odd: summed .327, F1 .680/.409/.425).
+  All 27 kn candidates meet o1 (ribosomal recovered 831-847, Parvarchaeaceae 55/55) and o2, and ALL FAIL o3 on
+  CRISPRCasTyper F1 (.246-.399 vs bar .405). Summed excess: rank-weighted r=100 .506-.534 (DF F1 .48-.61, CCT .25-.32,
+  Parvarchaeaceae resolved 0/55 at R1), r=1000 .435-.463, count .386-.460 (round 2 rw1000_e50 odd R1 .433). CRISPR-Cas
+  member genes touching support (odd) .371-.660; best kn_c32_m1_cnt .660 (round 2 rw1000_e50 even .656, token even .774).
+  Predeclared stage-2 kn pick (score = conditions, then summed): kn_c45_mall_rw100 (.534, +.207 [+.176, +.240]).
+  Chain 85217 (edges) -> 85218 (Leiden 250-4000) -> 85219 (resolution pick, odd DH).
+2026-11-12 21:54 UTC  Job 84881 (ex lists) cancelled after 29 min single-threaded: the GPU-vs-CPU check read meta["g_start"] from
+  the .npz on every entry (~17 M re-reads); fixed (metadata materialised once); resubmitted as 85292 -> 85293.
+  GPU vs CPU (85292): of 16,841,938 float32 per-genome maxima >= 0.322 for the 10,000 calibration queries, all are
+  present in the GPU output; same best gene 16,836,186 (99.97%); max |d cos| 3.5e-4.
+  kn pick validated edges (85217, 5.4 min): 1,002,946,202 valid list entries, 227,868,005 undirected unique-level
+  edges on 956,226 sequences (966,772 genes); connected components NON-degenerate (largest 176,455 = 18.5% of nodes
+  with an edge; 2,320 non-trivial) against round 2's single component holding 99.8%.
+  TASK 5 first analysis (85073; predeclared amendment_2): configurations chosen on odd genomes W + 8, tau 3 for all
+  (odd AP Mst1 .301, Mst3 .433, Msta .559; M1z .800). Even genomes (1,247 DefenseFinder queries) vs M1z:
+  AP Msta .562 vs .792: -0.230 [-0.241, -0.220]; Mst3 -0.353; Mst1 -0.483.
+  Recall at matched wrong-type rate (threshold on odd): 0.25 / 0.5 / 1 per query: M1z .069 / .106 / .166 (reproduces
+  round 3 exactly); Msta .127 / .163 / .215 (+.058 / +.057 [+.050, +.065] / +.050); realised even wrong rate Msta .30 /
+  .69 / 1.24 vs M1z .25 / .51 / 1.00. Unlabelled 1 / 2 / 4: Msta +.019 / +.013 / +.006. Unsupported 0.03 (round 3's
+  predeclared measure): Msta .090 vs .122: -0.032 [-0.039, -0.024]. Wrong-type hits per query at fast E <= 0.01: Msta
+  .47 vs M1z 1.01. Predeclared: (i) AP fails, (ii) matched wrong-type recall passes -> one structure does not serve both.
+  Control job 85107: M1z's own top-20,000 list thinned to its best gene per genome (Mzpg).
+2026-11-12 22:27 UTC  Exact statistics (85292): lists load 1,082 s from storage, passes 22 s / 11 s per null, python recount
+  0 / 300. Chance support (null mean L_o): c32 m1 / m3 / all 1.75 / 2.84 / 4.49; c45 0.68 / 1.11 / 1.79; c60 0.22 /
+  0.37 / 0.63; null L >= 2 instances c32_m1 6.26 M, c45_m1 3.14 M, c60_m1 1.25 M (round 2 depth 1,000: 7.8 M). Count
+  rules: L >= 15 / 20 / 30 (c32), 10 / 15 / 30 (c45), 8 / 15 / 20 (c60).
+  STAGE 1, exact (85293, 10 min): same picture as kn to three decimals (e.g. ex_c45_mall_rw100 = kn_c45_mall_rw100
+  F1 .489/.558/.256); all 27 fail o3 on CRISPRCasTyper F1 (.246-.388 vs .405); CRISPR-Cas member support (odd) .372-.617.
+  Predeclared exact picks (conditions, then summed): ex_c45_mall_rw100 .534, ex_c45_m3_rw100 .533, ex_c60_mall_rw100
+  .531, ex_c60_m3_rw100 .530. POST HOC (descriptive, outside the selection): ex_c32_m3_rw1000 (.458; highest summed
+  with DefenseFinder F1 >= token - 0.02).
+  kn stage 2 (85219, odd): pick r250 (lowest scanned resolution: 24,793 families >= 2 genes = 1.82x rescue3's 13,602 on
+  the 1,451,674 genes with an edge); DH l250 .542 (+.124 vs token DH .418) F1 .492/.582/.269 resolved 644 (bar 705):
+  nYn; DH cc .565 (+.147) F1 .493/.615/.267 resolved 612: nYn. Family measures (85542): l250 AMI .832 (round 2 .657),
+  families per ribosomal marker 82 (round 2 423; rescue3 5), largest share .238 (.183; .903), singletons .217 (.286);
+  Parvarchaeaceae runs with one module label 2 / 114 (round 2: 2). cc: 27 / .948 / .03, Parv one label 114 / 114, but
+  marker purity .362 (one component of 275,108 sequences).
+  Stage 2 exact: 85615 edges (5 candidates) -> 85616/85617/85618 Leiden -> 85619-85623 odd DH.
+2026-11-12 23:08 UTC  Resumed after an account rate-limit cut-off (no work lost; jobs kept running). State: no even-genome score
+  of any discovery output exists; the only even-genome numbers so far are Task 5 search (predeclared 21:14 UTC, run
+  after it). Exact validated edges (85615, 13 min, 5 candidates): ex_c45_mall_rw100 232.8 M edges (cc largest 35%),
+  ex_c45_m3_rw100 221.1 M (38%), ex_c60_mall_rw100 144.3 M (4.0%), ex_c60_m3_rw100 137.9 M (3.7%), post hoc
+  ex_c32_m3_rw1000 309.0 M (largest cc 97.5%: degenerate). Stage 2 odd DH (vs token DH .418): ex_c60_m3_rw100 cc .541,
+  l250 .540; ex_c60_mall_rw100 l250 .539, cc .536; all nYn (resolved 563-632 < 705; DF/CCT F1). Leiden picks r250
+  (1.46-1.62x rescue3 counts). Search control Mzpg (85107): even AP .593, -0.199 [-0.207, -0.191] vs M1z; recall at
+  matched 0.5 wrong-type .145 (+.040); one-gene-per-genome thinning explains most of Msta's AP loss and wrong-type gain.
+2026-11-12 23:21 UTC  STAGE 2 COMPLETE (odd; DH vs token DH odd .418, F1 .743/.544/.479; conditions o1 o2 o3):
+  kn_c45_mall_rw100 cc .565 (+.147 [+.118, +.177]) F1 .493/.615/.267 resolved 612 nYn | ex_c45_mall_rw100 cc .549,
+  l250 .549 | ex_c45_m3_rw100 l250 .549, cc .548 | kn_c45_mall_rw100 l250 .542 | ex_c60_m3_rw100 cc .541, l250 .540 |
+  ex_c60_mall_rw100 l250 .539, cc .536. Every configuration nYn (resolved 563-644 < 705; DF F1 .49-.56, CCT .27-.31).
+  Leiden picks: r250 everywhere (1.46-1.83x rescue3 counts; the scan floor); cc non-degenerate for every rw100 pick.
+  POST HOC (outside selection) ex_c32_m3_rw1000 l500 (count-matched 1.00x; cc degenerate): DH .500 (+.082) F1
+  .727/.548/.390, resolved 680, Parvarchaeaceae resolved 51/55.
+  SELECTED (predeclared score, before any even-genome discovery score): kn_c45_mall_rw100 (cheap stratified lists,
+  floor 0.45, every genome counts, rank-weighted r = 100, rule W >= 4 & L >= 2, instance FDR .0072), connected-component
+  families, Louvain 0.3, DH. CONTINGENCY fires (DH fails o1 while R1 passes o1): Louvain res {0.1, 0.2, 0.5, 1, 3} on
+  odd for this configuration only. Expectation from odd: fails 'matches' on DF F1, CCT F1 and ribosomal resolved;
+  refuter of that expectation: even DF F1 >= .724, CCT >= .459 and resolved >= 1,400.
+2026-11-12 23:25 UTC  CONTINGENCY RESULT (job 86059, odd): Louvain res 0.1 / 0.2 / 0.3 / 0.5 / 1 / 3 -> DH summed .542 / .542 / .565 /
+  .562 / .559 / .571, resolved 597 / 598 / 612 / 620 / 651 / 646, all nYn. Best score: res 3.
+  FINAL SELECTION (before any even-genome discovery score): kn_c45_mall_rw100 + connected-component families + Louvain
+  res 3 + DH. Odd: summed .571 (+.153 [+.123, +.182]) F1 .493/.628/.271, ribosomal 833 recovered / 646 resolved /
+  Parvarchaeaceae 55/55 recovered, 0/55 resolved. Job next: test (even) of the selected configuration + predeclared
+  attribution control (rescue3 modules on the same landscape); then POST HOC descriptive configurations.
+2026-11-12 23:28 UTC  TEST REVEAL (job 86084, even genomes), selected kn_c45_mall_rw100 + cc families + Louvain 3, DH:
+  summed .5572 vs token DH .4270: +0.1302 [+0.0990, +0.1621]; F1 DF .466 (-0.278 [-0.303, -0.250]), TXSS .618 (+0.070
+  [+0.042, +0.094]), CCT .272 (-0.207 [-0.222, -0.193]); ribosomal 1,648 recovered (bar 1,650), 1,276 resolved (bar
+  1,400), Parvarchaeaceae 114/114 recovered, 1/114 resolved. PREDECLARED OUTCOME: neither matches nor beats; blocking
+  (matches): DF F1, CCT F1, ribosomal recovered, ribosomal resolved. The odd-genome expectation (fails on DF, CCT,
+  resolved) held; its refuter did not fire; ribosomal recovered (1,648) also fails by 2 runs.
+  R1 vs token R1: +0.2197 [+0.1873, +0.2497] (DF -0.222, TXSS +0.209, CCT -0.154). Member genes touching support (even)
+  DF .394 / TXSS .741 / CCT .366 (token .795 / .982 / .774).
+  Attribution control (predeclared; rescue3 modules on the same landscape): DH .5309 (+0.104 [+0.073, +0.134]), F1
+  .466/.574/.272, resolved 1,297: MMseqs2 modules do WORSE than the cc modules here (TXSS +.026 vs +.070); the
+  limiting part is the statistic (DF and CCT already lost at R1), not the families.
+2026-11-12 23:32 UTC  POST HOC (job 86084 step 2, after the verdict): ex_c32_m3_rw1000 + Leiden l500 (count-matched) DH even
+  .4837, +0.0567 [+0.0348, +0.0778], F1 .712/.536/.396, ribosomal 1,681 / 1,341, Parv 106/114 resolved: blocks on DF F1
+  (-0.032), CCT F1 (-0.083), resolved. kn_c45_mall_rw100 + l250 DH +0.0989. Family / label diagnostics for all
+  stage-2 configurations (86063). REPORT3.txt written; results mirrored to results/remote3/.

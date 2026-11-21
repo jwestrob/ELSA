@@ -1,0 +1,78 @@
+{
+ "Bact_closed": {
+  "runs": 260,
+  "pairs": 6122,
+  "pair_share_median": 0.9868995633187773,
+  "pair_share_q10": 0.915929203539823,
+  "pair_share_q25": 0.9567567567567568,
+  "rare_pairs": 55,
+  "runs_with_rare": 52,
+  "run_min_share_median": 0.5178571428571429
+ },
+ "Bact_multi": {
+  "runs": 398,
+  "pairs": 8137,
+  "pair_share_median": 0.9869565217391304,
+  "pair_share_q10": 0.9459459459459459,
+  "pair_share_q25": 0.9824561403508771,
+  "rare_pairs": 69,
+  "runs_with_rare": 64,
+  "run_min_share_median": 0.915929203539823
+ },
+ "Archaea": {
+  "runs": 145,
+  "pairs": 2601,
+  "pair_share_median": 0.975,
+  "pair_share_q10": 0.8604651162790697,
+  "pair_share_q25": 0.9069767441860465,
+  "rare_pairs": 15,
+  "runs_with_rare": 14,
+  "run_min_share_median": 0.7906976744186046
+ },
+ "domain_Bacteria": {
+  "runs": 658,
+  "distinct_orders": 31,
+  "modal_share": 0.6398176291793313,
+  "complete_core_runs": 421,
+  "distinct_complete": 1,
+  "top_complete": {
+   "L15-S5-L18-L6-S8-S14-L5-L24-L14-S17-L29-S3-L22-S19-L2-L23-L4-L3": 421
+  },
+  "n_core_distribution": {
+   "9": 2,
+   "11": 2,
+   "12": 2,
+   "13": 1,
+   "14": 13,
+   "15": 29,
+   "16": 25,
+   "17": 163,
+   "18": 421
+  },
+  "groups": 201,
+  "groups_modal_orders": 18
+ },
+ "domain_Archaea": {
+  "runs": 145,
+  "distinct_orders": 21,
+  "modal_share": 0.36551724137931035,
+  "complete_core_runs": 54,
+  "distinct_complete": 2,
+  "top_complete": {
+   "L15-S5-L18-L6-S8-S14-L5-L24-L14-S17-L29-S3-L22-S19-L2-L23-L4-L3": 53,
+   "L15-S5-L18-L6-S8-L3-L4-L23-L2-S19-L22-S3-L29-S17-L14-L24-L5-S14": 1
+  },
+  "n_core_distribution": {
+   "11": 2,
+   "12": 31,
+   "13": 40,
+   "14": 4,
+   "15": 8,
+   "16": 2,
+   "17": 4,
+   "18": 54
+  },
+  "groups": 34,
+  "groups_modal_orders": 12
+ }
+}

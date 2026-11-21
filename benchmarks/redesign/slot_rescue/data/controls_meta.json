@@ -1,0 +1,21 @@
+{
+ "truth_proteins": 4083,
+ "controls": 11904,
+ "truth_with_fewer_than_3": 184,
+ "truth_with_0": 53,
+ "genomes": 1798,
+ "proteins_in_genomes": 1975642,
+ "eligible": 307235,
+ "conserved_labels": 1142,
+ "near_conserved": 1261136,
+ "controls_by_matched_set": {
+  "DL_profile": 2295,
+  "DL_slot": 180,
+  "lead_X": 9429
+ },
+ "length_ratio_q10_q50_q90": [
+  0.878,
+  1.0,
+  1.121
+ ]
+}

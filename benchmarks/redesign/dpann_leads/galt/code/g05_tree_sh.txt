@@ -1,0 +1,9 @@
+#!/bin/bash
+# galt step 5b: alignment, trimming, ML tree (Mac, 4 threads).
+set -euo pipefail
+cd /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/galt/aln
+mafft --localpair --maxiterate 1000 --thread 4 tree_in.faa > tree_linsi.aln 2> mafft.log
+trimal -in tree_linsi.aln -out tree_trim.aln -gt 0.5
+/Users/jacob/Downloads/iqtree/iqtree-2.4.0-macOS-arm/bin/iqtree2 -s tree_trim.aln -m MFP -mset LG,WAG,Q.pfam,JTT \
+  -B 1000 -alrt 1000 -T 4 -seed 17 -pre galt_tree -redo > iqtree.log 2>&1
+echo DONE > tree.STATUS

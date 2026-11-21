@@ -1,0 +1,1105 @@
+{
+ "fam_jac_average_t0.2": {
+  "groups": 232,
+  "effective_genomes_from_weights": 95.25955579550485,
+  "species": {
+   "n": 1930,
+   "AMI": 0.33861797505915425,
+   "ARI": 0.029070741774892606,
+   "groups_pure": 0.521551724137931,
+   "ranks_split": 0.006735751295336788
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.5866069815949441,
+   "ARI": 0.1464468835377173,
+   "groups_pure": 0.6508620689655172,
+   "ranks_split": 0.03036876355748373
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.8238321935493109,
+   "ARI": 0.6378783986719793,
+   "groups_pure": 0.8706896551724138,
+   "ranks_split": 0.17391304347826086
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 3,
+   "largest_group_share": 0.9894736842105263,
+   "weight_sum": 0.9384702771512834
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.004975124378109453,
+   0.030303030303030304,
+   0.2852350822893838,
+   2.2564313139678966
+  ]
+ },
+ "fam_jac_average_t0.3": {
+  "groups": 886,
+  "effective_genomes_from_weights": 743.4230497300035,
+  "species": {
+   "n": 1930,
+   "AMI": 0.5176192443008987,
+   "ARI": 0.07220491963952179,
+   "groups_pure": 0.6602708803611738,
+   "ranks_split": 0.014507772020725389
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.7548710425822703,
+   "ARI": 0.2893288286343566,
+   "groups_pure": 0.8645598194130926,
+   "ranks_split": 0.113882863340564
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.7191965314068919,
+   "ARI": 0.556688512202592,
+   "groups_pure": 0.9864559819413092,
+   "ranks_split": 0.38768115942028986
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 10,
+   "largest_group_share": 0.9368421052631579,
+   "weight_sum": 1.82744682424634
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.09297576198881463,
+   0.8456057386549378,
+   1.0,
+   26.677777777777777
+  ]
+ },
+ "fam_jac_average_t0.4": {
+  "groups": 1467,
+  "effective_genomes_from_weights": 1362.9157452982486,
+  "species": {
+   "n": 1930,
+   "AMI": 0.7458617572418383,
+   "ARI": 0.44375730454594214,
+   "groups_pure": 0.8220858895705522,
+   "ranks_split": 0.026424870466321245
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.8026976943930145,
+   "ARI": 0.6418058846212072,
+   "groups_pure": 0.9809134287661895,
+   "ranks_split": 0.2472885032537961
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.5099811631328649,
+   "ARI": 0.12108207529749979,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5072463768115942
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 27,
+   "largest_group_share": 0.6631578947368421,
+   "weight_sum": 9.964879990150223
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.9926154103129498,
+   1.0,
+   2.0260918900052696,
+   32.416666666666664
+  ]
+ },
+ "fam_jac_average_t0.5": {
+  "groups": 1898,
+  "effective_genomes_from_weights": 1804.231364083324,
+  "species": {
+   "n": 1930,
+   "AMI": 0.8117749790834901,
+   "ARI": 0.6241673200392747,
+   "groups_pure": 0.9199157007376185,
+   "ranks_split": 0.05699481865284974
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.6744180489798187,
+   "ARI": 0.4146156978038485,
+   "groups_pure": 0.9984193888303478,
+   "ranks_split": 0.3481561822125813
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.39383803408418383,
+   "ARI": 0.058765364486136444,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5543478260869565
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 52,
+   "largest_group_share": 0.37894736842105264,
+   "weight_sum": 28.97168059849563
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   3.647054406299998,
+   34.0
+  ]
+ },
+ "fam_jac_average_t0.6": {
+  "groups": 2238,
+  "effective_genomes_from_weights": 2163.6134333051696,
+  "species": {
+   "n": 1930,
+   "AMI": 0.7915212497461465,
+   "ARI": 0.6597854412498393,
+   "groups_pure": 0.9754244861483468,
+   "ranks_split": 0.09585492227979274
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.546796657052828,
+   "ARI": 0.25433548333001565,
+   "groups_pure": 0.9995531724754245,
+   "ranks_split": 0.40563991323210413
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.3081471008015643,
+   "ARI": 0.033104363307197474,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5797101449275363
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 79,
+   "largest_group_share": 0.22631578947368422,
+   "weight_sum": 61.379735296257074
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   4.457499999999994,
+   61.379735296257074
+  ]
+ },
+ "fam_jac_average_t0.7": {
+  "groups": 2586,
+  "effective_genomes_from_weights": 2540.9993746234845,
+  "species": {
+   "n": 1930,
+   "AMI": 0.6734911470968511,
+   "ARI": 0.5478346518604602,
+   "groups_pure": 0.9934261407579273,
+   "ranks_split": 0.1455958549222798
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.4105535628241924,
+   "ARI": 0.1434048642030657,
+   "groups_pure": 1.0,
+   "ranks_split": 0.44143167028199565
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.22359062225219223,
+   "ARI": 0.017684391321858384,
+   "groups_pure": 1.0,
+   "ranks_split": 0.6159420289855072
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 107,
+   "largest_group_share": 0.05789473684210526,
+   "weight_sum": 100.70065073815074
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   5.0,
+   100.70065073815074
+  ]
+ },
+ "fam_jac_average_t0.8": {
+  "groups": 2967,
+  "effective_genomes_from_weights": 2941.533008658009,
+  "species": {
+   "n": 1930,
+   "AMI": 0.4552777987239943,
+   "ARI": 0.31240361840158193,
+   "groups_pure": 0.9983147960903269,
+   "ranks_split": 0.2
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.2503615486779321,
+   "ARI": 0.06846051842229953,
+   "groups_pure": 1.0,
+   "ranks_split": 0.4772234273318872
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.13120576484415888,
+   "ARI": 0.008153855759982573,
+   "groups_pure": 1.0,
+   "ranks_split": 0.644927536231884
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 143,
+   "largest_group_share": 0.03684210526315789,
+   "weight_sum": 137.09047619047618
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   6.0,
+   137.09047619047618
+  ]
+ },
+ "fam_jac_average_t0.9": {
+  "groups": 3336,
+  "effective_genomes_from_weights": 3329.4666666666667,
+  "species": {
+   "n": 1930,
+   "AMI": 0.19257003516238339,
+   "ARI": 0.11274632859502347,
+   "groups_pure": 1.0,
+   "ranks_split": 0.24300518134715027
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.09684973021824883,
+   "ARI": 0.021896939583931487,
+   "groups_pure": 1.0,
+   "ranks_split": 0.49891540130151846
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.04893225785129634,
+   "ARI": 0.002553760974429623,
+   "groups_pure": 1.0,
+   "ranks_split": 0.6557971014492754
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 176,
+   "largest_group_share": 0.02631578947368421,
+   "weight_sum": 176.76666666666665
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0833333333333333,
+   7.0,
+   176.76666666666668
+  ]
+ },
+ "emb_mean_average_t0.55": {
+  "groups": 562,
+  "effective_genomes_from_weights": 443.1529784849811,
+  "species": {
+   "n": 1930,
+   "AMI": 0.45379260988710707,
+   "ARI": 0.04636173353798026,
+   "groups_pure": 0.5160142348754448,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.732008953077025,
+   "ARI": 0.21489046215235408,
+   "groups_pure": 0.7366548042704626,
+   "ranks_split": 0.0368763557483731
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.7887675637796158,
+   "ARI": 0.5252235267887939,
+   "groups_pure": 0.9555160142348754,
+   "ranks_split": 0.322463768115942
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 1,
+   "largest_group_share": 1.0,
+   "weight_sum": 0.9903044160493011
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.03236559139784947,
+   0.3333333333333333,
+   1.0,
+   8.700393404549414
+  ]
+ },
+ "emb_mean_average_t0.5": {
+  "groups": 172,
+  "effective_genomes_from_weights": 84.68813922614967,
+  "species": {
+   "n": 1930,
+   "AMI": 0.3300767436620981,
+   "ARI": 0.027439640904561358,
+   "groups_pure": 0.43023255813953487,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.5749369016115088,
+   "ARI": 0.138817701056445,
+   "groups_pure": 0.5581395348837209,
+   "ranks_split": 0.014099783080260303
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.8464742300786063,
+   "ARI": 0.6905059419779369,
+   "groups_pure": 0.7616279069767442,
+   "ranks_split": 0.14855072463768115
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 1,
+   "largest_group_share": 1.0,
+   "weight_sum": 0.8890745861337916
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.0046817979528259905,
+   0.02589748805885233,
+   0.24317259500057525,
+   1.0
+  ]
+ },
+ "emb_mean_average_t0.65": {
+  "groups": 1430,
+  "effective_genomes_from_weights": 1363.1505447178504,
+  "species": {
+   "n": 1930,
+   "AMI": 0.8085729563033366,
+   "ARI": 0.6021951847958392,
+   "groups_pure": 0.8083916083916084,
+   "ranks_split": 0.003626943005181347
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.8094759565135402,
+   "ARI": 0.5891629883045726,
+   "groups_pure": 0.9895104895104895,
+   "ranks_split": 0.23969631236442515
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.5015472032572871,
+   "ARI": 0.09340922915767941,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5108695652173914
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 11,
+   "largest_group_share": 0.5210526315789473,
+   "weight_sum": 6.168422720542916
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   2.0,
+   33.0
+  ]
+ },
+ "emb_mean_average_t0.6": {
+  "groups": 1029,
+  "effective_genomes_from_weights": 928.2524187840121,
+  "species": {
+   "n": 1930,
+   "AMI": 0.6752471970443737,
+   "ARI": 0.36405225587030937,
+   "groups_pure": 0.6550048590864918,
+   "ranks_split": 0.0010362694300518134
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.8853733645467892,
+   "ARI": 0.7771813489316814,
+   "groups_pure": 0.9222546161321672,
+   "ranks_split": 0.11713665943600868
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.6169305969828706,
+   "ARI": 0.1745354466677004,
+   "groups_pure": 0.9961127308066083,
+   "ranks_split": 0.43478260869565216
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 6,
+   "largest_group_share": 0.7842105263157895,
+   "weight_sum": 2.0837704572297495
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.25,
+   1.0,
+   1.2586278530550974,
+   29.083333333333332
+  ]
+ },
+ "emb_mean_average_t0.753": {
+  "groups": 1965,
+  "effective_genomes_from_weights": 1893.5885993841637,
+  "species": {
+   "n": 1930,
+   "AMI": 0.9040311551342728,
+   "ARI": 0.8242847604361021,
+   "groups_pure": 0.966412213740458,
+   "ranks_split": 0.04145077720207254
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.6420819244070204,
+   "ARI": 0.32738083813608293,
+   "groups_pure": 1.0,
+   "ranks_split": 0.37310195227765725
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.37208310979540743,
+   "ARI": 0.0442128407899989,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5615942028985508
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 43,
+   "largest_group_share": 0.20526315789473684,
+   "weight_sum": 27.790821721625772
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   4.0,
+   34.0
+  ]
+ },
+ "emb_mean_average_t0.7": {
+  "groups": 1720,
+  "effective_genomes_from_weights": 1665.249817772053,
+  "species": {
+   "n": 1930,
+   "AMI": 0.8792197506593897,
+   "ARI": 0.7185815619919199,
+   "groups_pure": 0.9029069767441861,
+   "ranks_split": 0.015025906735751295
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.73105574383676,
+   "ARI": 0.46880828139966924,
+   "groups_pure": 0.9988372093023256,
+   "ranks_split": 0.3156182212581345
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.43454476134120956,
+   "ARI": 0.06843057811866005,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5434782608695652
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 25,
+   "largest_group_share": 0.37894736842105264,
+   "weight_sum": 14.397235970843553
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   3.0,
+   33.0
+  ]
+ },
+ "emb_mean_average_t0.85": {
+  "groups": 2460,
+  "effective_genomes_from_weights": 2404.187296973752,
+  "species": {
+   "n": 1930,
+   "AMI": 0.7527432260079714,
+   "ARI": 0.6499156434392545,
+   "groups_pure": 0.9963414634146341,
+   "ranks_split": 0.12538860103626942
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.4582376604323077,
+   "ARI": 0.1712975199474301,
+   "groups_pure": 1.0,
+   "ranks_split": 0.43058568329718006
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.2527069026575658,
+   "ARI": 0.021405991692622292,
+   "groups_pure": 1.0,
+   "ranks_split": 0.6086956521739131
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 89,
+   "largest_group_share": 0.06315789473684211,
+   "weight_sum": 80.5210372960373
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   5.0,
+   80.52103729603729
+  ]
+ },
+ "emb_mean_average_t0.8": {
+  "groups": 2166,
+  "effective_genomes_from_weights": 2099.1852529213525,
+  "species": {
+   "n": 1930,
+   "AMI": 0.8661881751860153,
+   "ARI": 0.7905428064793375,
+   "groups_pure": 0.9861495844875346,
+   "ranks_split": 0.07512953367875648
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.564451875296315,
+   "ARI": 0.24270452476488552,
+   "groups_pure": 1.0,
+   "ranks_split": 0.39913232104121477
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.3206512067189212,
+   "ARI": 0.0314022458275722,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5688405797101449
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 64,
+   "largest_group_share": 0.07894736842105263,
+   "weight_sum": 48.191634702289804
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   4.432142857142849,
+   48.1916347022898
+  ]
+ },
+ "emb_mean_average_t0.9": {
+  "groups": 2851,
+  "effective_genomes_from_weights": 2799.308553946054,
+  "species": {
+   "n": 1930,
+   "AMI": 0.5323191930423098,
+   "ARI": 0.3820190480217198,
+   "groups_pure": 0.9996492458786391,
+   "ranks_split": 0.18238341968911917
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.2955896994866374,
+   "ARI": 0.08388914314156216,
+   "groups_pure": 1.0,
+   "ranks_split": 0.46529284164859
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.1568034953785532,
+   "ARI": 0.010062253594254295,
+   "groups_pure": 1.0,
+   "ranks_split": 0.6376811594202898
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 124,
+   "largest_group_share": 0.042105263157894736,
+   "weight_sum": 116.52142857142857
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   6.0,
+   116.52142857142857
+  ]
+ },
+ "emb_hom_average_t0.75": {
+  "groups": 642,
+  "effective_genomes_from_weights": 555.8614473434546,
+  "species": {
+   "n": 1930,
+   "AMI": 0.5182441598052899,
+   "ARI": 0.12636057585425745,
+   "groups_pure": 0.5451713395638629,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.8161728234891988,
+   "ARI": 0.5130904830298124,
+   "groups_pure": 0.8255451713395638,
+   "ranks_split": 0.04229934924078091
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.7833114272906471,
+   "ARI": 0.48137453391578655,
+   "groups_pure": 0.9890965732087228,
+   "ranks_split": 0.37681159420289856
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 1,
+   "largest_group_share": 1.0,
+   "weight_sum": 0.9895774775759977
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.02785714285714286,
+   0.5678652268610087,
+   1.0,
+   7.0
+  ]
+ },
+ "emb_hom_average_t0.85": {
+  "groups": 1701,
+  "effective_genomes_from_weights": 1685.2757436499853,
+  "species": {
+   "n": 1930,
+   "AMI": 0.8970564592040567,
+   "ARI": 0.744354981987174,
+   "groups_pure": 0.9024103468547913,
+   "ranks_split": 0.0005181347150259067
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.7385033498790665,
+   "ARI": 0.4761147798301769,
+   "groups_pure": 1.0,
+   "ranks_split": 0.3210412147505423
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.4391982721028406,
+   "ARI": 0.06965696388595499,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5471014492753623
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 17,
+   "largest_group_share": 0.3631578947368421,
+   "weight_sum": 15.056823574122909
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   3.0,
+   33.0
+  ]
+ },
+ "emb_hom_average_t0.894": {
+  "groups": 1882,
+  "effective_genomes_from_weights": 1873.9037650555272,
+  "species": {
+   "n": 1930,
+   "AMI": 0.9626395427325017,
+   "ARI": 0.9174258777572313,
+   "groups_pure": 0.9771519659936238,
+   "ranks_split": 0.005699481865284974
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.6736753144175635,
+   "ARI": 0.3565251265717017,
+   "groups_pure": 1.0,
+   "ranks_split": 0.3633405639913232
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.3939770553985751,
+   "ARI": 0.04888554508546832,
+   "groups_pure": 1.0,
+   "ranks_split": 0.5579710144927537
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 27,
+   "largest_group_share": 0.10526315789473684,
+   "weight_sum": 24.67525257185199
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   4.0,
+   34.0
+  ]
+ },
+ "emb_hom_average_t0.8": {
+  "groups": 1264,
+  "effective_genomes_from_weights": 1220.601930261683,
+  "species": {
+   "n": 1930,
+   "AMI": 0.7658394266001022,
+   "ARI": 0.5584842330929506,
+   "groups_pure": 0.7436708860759493,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.8505455554156942,
+   "ARI": 0.6320206070607616,
+   "groups_pure": 0.9794303797468354,
+   "ranks_split": 0.18004338394793926
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.5407002102031917,
+   "ARI": 0.10469378105886361,
+   "groups_pure": 1.0,
+   "ranks_split": 0.4963768115942029
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 9,
+   "largest_group_share": 0.5263157894736842,
+   "weight_sum": 8.618587633394032
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.9478161169165668,
+   1.0,
+   2.0,
+   29.5
+  ]
+ },
+ "emb_hom_average_t0.92": {
+  "groups": 1975,
+  "effective_genomes_from_weights": 1957.1604665572681,
+  "species": {
+   "n": 1930,
+   "AMI": 0.9695258515756873,
+   "ARI": 0.962232943549893,
+   "groups_pure": 0.9918987341772152,
+   "ranks_split": 0.029015544041450778
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.6355640335822098,
+   "ARI": 0.3065984750845853,
+   "groups_pure": 1.0,
+   "ranks_split": 0.3893709327548807
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.36814903413881156,
+   "ARI": 0.04096591668860265,
+   "groups_pure": 1.0,
+   "ranks_split": 0.572463768115942
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 32,
+   "largest_group_share": 0.1,
+   "weight_sum": 29.979382923577976
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   4.0,
+   34.0
+  ]
+ },
+ "emb_hom_average_t0.95": {
+  "groups": 2323,
+  "effective_genomes_from_weights": 2250.4186531417013,
+  "species": {
+   "n": 1930,
+   "AMI": 0.8318018855126351,
+   "ARI": 0.7551951149815294,
+   "groups_pure": 1.0,
+   "ranks_split": 0.11036269430051814
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.5071715274447868,
+   "ARI": 0.20210815021470438,
+   "groups_pure": 1.0,
+   "ranks_split": 0.43058568329718006
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.2835330729641833,
+   "ARI": 0.025634127530580184,
+   "groups_pure": 1.0,
+   "ranks_split": 0.6086956521739131
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 71,
+   "largest_group_share": 0.07368421052631578,
+   "weight_sum": 55.44556832056832
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   1.0,
+   1.0,
+   5.0,
+   55.44556832056832
+  ]
+ },
+ "genus_map": {
+  "groups": 922,
+  "effective_genomes_from_weights": null,
+  "species": {
+   "n": 1930,
+   "AMI": 0.6460323351395711,
+   "ARI": 0.3126555381654478,
+   "groups_pure": 0.6247288503253796,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 1.0,
+   "ARI": 1.0,
+   "groups_pure": 1.0,
+   "ranks_split": 0.0
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.6480488272155026,
+   "ARI": 0.20707717758610356,
+   "groups_pure": 1.0,
+   "ranks_split": 0.4528985507246377
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 1,
+   "largest_group_share": 1.0
+  }
+ },
+ "fam_jac_average_t0.15": {
+  "groups": 60,
+  "effective_genomes_from_weights": 13.504930230531237,
+  "species": {
+   "n": 1930,
+   "AMI": 0.2348755119743301,
+   "ARI": 0.013115075268526163,
+   "groups_pure": 0.55,
+   "ranks_split": 0.0010362694300518134
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.4154806043007764,
+   "ARI": 0.06849294844309314,
+   "groups_pure": 0.6333333333333333,
+   "ranks_split": 0.01193058568329718
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.6622063690962567,
+   "ARI": 0.4642001127801911,
+   "groups_pure": 0.7666666666666667,
+   "ranks_split": 0.09057971014492754
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 1,
+   "largest_group_share": 1.0,
+   "weight_sum": 0.4543038843576497
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.0012083157450401014,
+   0.00418036567744425,
+   0.028662892615991507,
+   1.0
+  ]
+ },
+ "fam_jac_average_t0.25": {
+  "groups": 548,
+  "effective_genomes_from_weights": 385.6320447452338,
+  "species": {
+   "n": 1930,
+   "AMI": 0.41733596274198903,
+   "ARI": 0.03551386301487696,
+   "groups_pure": 0.5437956204379562,
+   "ranks_split": 0.011398963730569948
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.6820146744272224,
+   "ARI": 0.1699569437600515,
+   "groups_pure": 0.7463503649635036,
+   "ranks_split": 0.05639913232104121
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.804962434230405,
+   "ARI": 0.593010397904542,
+   "groups_pure": 0.948905109489051,
+   "ranks_split": 0.27898550724637683
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 5,
+   "largest_group_share": 0.9789473684210527,
+   "weight_sum": 1.2322801755476211
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.022949760497324726,
+   0.2116161616161616,
+   1.0,
+   13.504453503889595
+  ]
+ },
+ "emb_mean_average_t0.45": {
+  "groups": 29,
+  "effective_genomes_from_weights": 10.787043463951543,
+  "species": {
+   "n": 1930,
+   "AMI": 0.21533098173094734,
+   "ARI": 0.010355151410454363,
+   "groups_pure": 0.4482758620689655,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.3847610690417429,
+   "ARI": 0.05461374071899577,
+   "groups_pure": 0.4482758620689655,
+   "ranks_split": 0.0032537960954446853
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.6294658563843991,
+   "ARI": 0.39042676524369285,
+   "groups_pure": 0.4827586206896552,
+   "ranks_split": 0.03260869565217391
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 1,
+   "largest_group_share": 1.0,
+   "weight_sum": 0.2837273036956778
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.0010560778334163074,
+   0.003376391026684836,
+   0.02318856107448296,
+   0.5
+  ]
+ },
+ "emb_mean_average_t0.525": {
+  "groups": 352,
+  "effective_genomes_from_weights": 216.18653959271893,
+  "species": {
+   "n": 1930,
+   "AMI": 0.3915322784305088,
+   "ARI": 0.03490849876842918,
+   "groups_pure": 0.4602272727272727,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.6635866507812895,
+   "ARI": 0.1714247773391942,
+   "groups_pure": 0.6136363636363636,
+   "ranks_split": 0.0227765726681128
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.8486711499716644,
+   "ARI": 0.6225936254483478,
+   "groups_pure": 0.8664772727272727,
+   "ranks_split": 0.23550724637681159
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 1,
+   "largest_group_share": 1.0,
+   "weight_sum": 0.92091836920279
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.012534694686756546,
+   0.09090909090909091,
+   0.7276190476190475,
+   2.115228769765124
+  ]
+ },
+ "emb_hom_average_t0.7": {
+  "groups": 156,
+  "effective_genomes_from_weights": 92.52320660939476,
+  "species": {
+   "n": 1930,
+   "AMI": 0.30445713441495786,
+   "ARI": 0.022130730863718216,
+   "groups_pure": 0.36538461538461536,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.5367127377420677,
+   "ARI": 0.11365413156082738,
+   "groups_pure": 0.5576923076923077,
+   "ranks_split": 0.004338394793926247
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.8199767787452972,
+   "ARI": 0.6656042051694686,
+   "groups_pure": 0.7884615384615384,
+   "ranks_split": 0.13043478260869565
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 1,
+   "largest_group_share": 1.0,
+   "weight_sum": 0.9125336995142327
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.002277904328018223,
+   0.015873015873015872,
+   0.3333333333333333,
+   1.0940476190476192
+  ]
+ },
+ "emb_hom_average_t0.775": {
+  "groups": 968,
+  "effective_genomes_from_weights": 883.5088170283962,
+  "species": {
+   "n": 1930,
+   "AMI": 0.6571963311398784,
+   "ARI": 0.33495890790005367,
+   "groups_pure": 0.6466942148760331,
+   "ranks_split": 0.0
+  },
+  "genus": {
+   "n": 922,
+   "AMI": 0.8835127914357385,
+   "ARI": 0.7241084939523231,
+   "groups_pure": 0.9287190082644629,
+   "ranks_split": 0.1019522776572668
+  },
+  "family": {
+   "n": 276,
+   "AMI": 0.6364308620332144,
+   "ARI": 0.19229419901483172,
+   "groups_pure": 0.9989669421487604,
+   "ranks_split": 0.44565217391304346
+  },
+  "parvarchaeum": {
+   "genomes": 190,
+   "groups": 4,
+   "largest_group_share": 0.7315789473684211,
+   "weight_sum": 2.7307336056581866
+  },
+  "weight_sum_per_genus_q10_q50_q90_max": [
+   0.18675213675213684,
+   1.0,
+   1.1649999999999994,
+   16.457575757575757
+  ]
+ }
+}

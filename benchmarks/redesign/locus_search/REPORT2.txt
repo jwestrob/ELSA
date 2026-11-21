@@ -1,0 +1,279 @@
+LOCUS SEARCH ON DPANN, ROUND 2 (workstream ws_locus_search2)
+12 November 2026. Inputs as round 1 (REPORT.md): ESM++ small vectors, MMseqs2 tokens e3c50s75,
+DPANN package of 11 November, round-1 top-K lists (embedding: exact cosine, K 20,000; sequence:
+MMseqs2 -s 7.5 -e 10 --max-seqs 20000). Predeclaration for task 2 and for the evidence rule:
+results/criterion2.json (written 07:58 UTC, before any round-2 number; copy at
+$RD/locus_search/out2/criterion2.json). Every round-2 rerun of a round-1 configuration reproduced
+round 1 exactly (S2, S3, M0, M2: max |dAP| = 0, identical recall and unlabelled counts, 2,447 queries).
+
+BOTTOM LINE
+1. Confirmatory test (task 2): MET. DefenseFinder 5-fold genome cross-validation, 2,447 queries in
+   1,384 genomes: S3 - S2 = +0.077 AP [+0.074, +0.080]; every fold chose the round-1 configs.
+   Sign positive in both fresh callers at the frozen DefenseFinder configs: TXSScan +0.260
+   [+0.250, +0.269], CRISPRCasTyper +0.013 [+0.012, +0.015].
+2. The DefenseFinder gain is gene-specific embedding information: with each slot's embedding list
+   taken from a random other gene (same score distribution), S3 - S2 falls to +0.012 [+0.011, +0.014];
+   true minus shuffled embedding = +0.064 [+0.061, +0.068]. For CRISPRCasTyper the gain is almost
+   all non-specific (true minus shuffled +0.002 [+0.0003, +0.003]). For TXSScan the frozen-config
+   gain mostly reflects tau 0 versus tau 3 on a caller whose primary AP has no negatives (one type):
+   at matched tau 3 it is +0.039.
+3. Unlabelled hits (task 1) are homologous co-localized gene sets carrying the query type's
+   DefenseFinder profile domains where no curated call exists: 92.6-96.5% of unlabelled hits at
+   E <= 0.01 carry a raw hit to a profile that DefenseFinder uses for the query's system type,
+   against 0.9-2.2% of span-matched windows on the same contigs that do not overlap the hit;
+   97.7-100% meet the predeclared "supported" rule (controls 6.5-9.2%). Every one fills >= 2 query
+   slots. Unsupported unlabelled hits per query: M0 0.000, M2 0.002, S2 0.028, S3 0.029, M3 grow
+   round 3 0.064. A second own-type profile gene is present in 10-11% (S methods) to 43% (M0). These
+   are observations of domains present; no system is named for any hit.
+4. Rate-constrained selection (predeclared; calibrated 40-replicate null). Without the exemption the
+   rule picks S2 (w_seq 0.75, tau 3): even-genome AP 0.619, +0.249 [+0.238, +0.258] over M0, at 1.53x
+   M0's unlabelled rate (1.66 vs 1.09 per query). With the predeclared exemption it picks S3 (the
+   unconstrained best): AP 0.698, +0.328 [+0.317, +0.339], 0.018 unsupported unlabelled hits per
+   query. Under the calibrated null S3 makes 2.5x M0's unlabelled hits (6.3x under the round-1
+   200-replicate null, whose ties favour M0's discrete token scores).
+5. Fast null (task 4): a Gumbel fit to 40 per-replicate null maxima plus a per-method calibration
+   curve is calibrated on held-out genomes at E = 0.01 (observed/expected 1.00 [0.96, 1.05]), 0.1
+   (1.00) and 1 (1.02), and 2.0x anti-conservative at E = 0.001; null cost falls 5x (S3: 10.4 to
+   2.1 CPU-s per query). Every uncalibrated small-R tail fit is 1.4-2.2x anti-conservative at
+   E = 0.01, and the 200-replicate empirical E is itself at its resolution limit there.
+6. Interactive path (task 5): the deep per-gene lists carry AP. Truncating embedding ranks to the top
+   2,000 costs S3 -0.034 AP whether the 2,000 come from exact search or from HNSW (any efSearch);
+   MMseqs2 -s 5.7 / 2,000 costs -0.033; together -0.078 to -0.086 (back to S2 level). Indexed
+   MMseqs2 at the benchmark parameters returns identical rank lists. The delivered command uses
+   exact embedding top 20,000 (vectors in RAM) plus indexed MMseqs2 at benchmark parameters and
+   reproduces all 3,186 benchmark windows of 20 queries (3,185 with identical score); median 4.8 s
+   per query in a session on 24 CPUs, 15 s as a one-shot command (46 s on a node's first run).
+7. Pair library (task 6): odd-genome significant token pairs applied to even genomes reach
+   DefenseFinder F1 0.721 (engine 0.806, module library 0.675) at the engine's excess over random
+   (0.267 vs 0.268, d = -0.001 [-0.014, +0.012]); coverage 0.803 (engine 0.906, modules 0.773). It
+   beats the module library on F1 for all three callers and applies to 1.8 M genes in 11.5 s.
+8. Spacedust replication (task 3): stopped. source207 carries no type label (see task 3).
+
+======================================================================================================
+TASK 1. WHAT ARE THE UNLABELLED HITS?
+Scope: DefenseFinder queries on even genomes with >= 1 relevant target (1,247), hits at E <= 0.01
+(200-replicate null), label "unlabelled" = the window overlaps no member of any DefenseFinder gold
+instance (any type, any member count). Evidence per window (code evidence.py):
+  raw profile hits = per-gene `defensefinder` rows of the Sharur DPANN copy (367,830 rows; 145,088
+  proteins, 4.0% of genes; 655 profiles, all proteins map to a gid); a profile "belongs to" a type when
+  it appears in profile_names of >= 1 curated defense_systems row of that type (358 profiles do);
+  engine conserved loci = dpann__mmseqs__seq__e3c50s75__w3, kind conserved, levels 2-80 (70.2% of all
+  genes lie inside one, so "any conserved locus" carries little information; module agreement is the
+  informative part);
+  control = 10 span-matched windows per hit on the same contig, restricted to windows that contain no
+  gold DefenseFinder member (the same condition that defines "unlabelled"), seed 17. On short contigs
+  27-33% of these windows overlap the hit itself; the cleaner baseline is the controls that do not
+  (third number below).
+Refutation written before computing: own-type profile hits and same-module conserved loci at rates
+no higher than the controls would mean the unlabelled hits carry no evidence. Not observed.
+
+Values: fraction of unlabelled hits / all controls / controls not overlapping their hit.
+| Method | Unl. hits (per query) | own-type profile | >= 2 genes with own-type profile | same-module conserved locus | supported (predeclared rule) | unsupported per query |
+| M0 | 897 (0.72) | 0.926 / 0.238 / 0.009 | 0.425 / 0.051 / 0.000 | 0.971 / 0.359 / 0.072 | 1.000 / 0.373 / 0.080 | 0.000 |
+| M2 | 1,143 (0.92) | 0.938 / 0.238 / 0.015 | 0.388 / 0.047 / 0.001 | 0.859 / 0.311 / 0.059 | 0.998 / 0.351 / 0.073 | 0.002 |
+| S1 | 5,579 (4.47) | 0.964 / 0.205 / 0.014 | 0.099 / 0.017 / 0.001 | 0.853 / 0.277 / 0.083 | 0.994 / 0.326 / 0.091 | 0.029 |
+| S2 | 5,532 (4.44) | 0.964 / 0.207 / 0.015 | 0.098 / 0.017 / 0.000 | 0.855 / 0.280 / 0.084 | 0.994 / 0.328 / 0.092 | 0.028 |
+| S3 | 5,627 (4.51) | 0.965 / 0.211 / 0.013 | 0.111 / 0.020 / 0.000 | 0.854 / 0.281 / 0.082 | 0.994 / 0.330 / 0.089 | 0.029 |
+| M3 refine r3 | 1,855 (1.49) | 0.951 / 0.244 / 0.013 | 0.274 / 0.030 / 0.000 | 0.842 / 0.315 / 0.052 | 0.996 / 0.360 / 0.065 | 0.006 |
+| M3 grow r3 | 3,508 (2.81) | 0.948 / 0.245 / 0.022 | 0.289 / 0.043 / 0.001 | 0.846 / 0.303 / 0.048 | 0.977 / 0.349 / 0.067 | 0.064 |
+Any raw DefenseFinder profile in the window: 0.97-1.00 of hits, 0.08-0.14 of non-overlapping controls.
+Supported share with genome-bootstrap interval, S3: 0.994 [0.990, 0.996]; M3 grow: 0.977 [0.963, 0.989].
+Every unlabelled hit at E <= 0.01 fills >= 2 query slots (single-slot windows: 0 for every method).
+Spread: S3 unlabelled hits come from 726 of 1,247 queries (top 10 queries: 8% of hits); M0 from 208
+(top 10: 34%).
+
+- Composition (S3): AbiE queries give 3,066 of 5,627 unlabelled hits (54%; raw profile AbiEii__AbiEii
+  on 3,015 windows), RM_Type_II 1,369, RM_Type_III 444, RM_Type_I 150. For M0 and M2, RM types
+  dominate (RM_Type_III 286 / RM_Type_II 282 of 897 for M0).
+- Member-count completeness (slots filled / query members): unlabelled hits 0.95-0.98 mean, 84-94%
+  complete, the same as correct hits (0.96-0.98, 88-93% complete); median window 2 genes (M3 grow 3).
+  M3 grow round 3 is the exception: mean 1.21 slots per member (added slots).
+- (b) Single-member gold instances of the query's type: an unlabelled hit overlaps no gold instance
+  by construction, so this fraction is 0 for every method. Hits that do overlap a same-type
+  instance without covering >= 50% of a target ("same-type other") are rare: 0.014 (M0) to 0.071
+  (M3 grow) per query at E <= 0.01, and 27-53% of them overlap a single-member same-type instance.
+- Reading: the unlabelled hits are sequence homologs of >= 2 query members, co-localized as in the
+  query, carrying the domains DefenseFinder scores for that type, in loci where DefenseFinder emitted
+  no system. They are consistent with uncalled or partial instances (UNVERIFIED as systems). The
+  own-type profile evidence follows from homology to the query members, so it shows domain identity;
+  in most S-method hits only one gene carries an own-type profile (>= 2 genes: 10-11%; M0 / M2:
+  39-43%), so the multi-component, system-level claim stays unverified.
+
+======================================================================================================
+TASK 2. CONFIRMATORY TEST OF THE EMBEDDING'S ADDED VALUE (predeclared, results/criterion2.json)
+A. DefenseFinder, 5-fold genome cross-validation (genomes permuted with seed 17), S2 grid w_seq
+   {0.5, 0.75, 1} and S3 grid w_emb {0.25, 0.5, 0.75, 1}, both x W extra {0, 2, 4, 8} x tau {0..3}.
+   Every fold chose S2 = w 1, span + 8, tau 3 and S3 = w_emb 0.5, span + 8, tau 0 (the round-1 values).
+   | Stratum | Queries | S2 AP | S3 AP | S3 - S2 AP | S3 - S2 strict AP |
+   | all (held-out) | 2,447 | 0.629 | 0.706 | +0.0768 [+0.0735, +0.0801] | +0.046 [+0.044, +0.048] |
+   | even | 1,247 | 0.620 | 0.698 | +0.079 [+0.074, +0.083] | +0.047 |
+   | odd | 1,200 | 0.639 | 0.714 | +0.075 [+0.070, +0.080] | +0.045 |
+   | >= 3 members | 633 | 0.725 | 0.795 | +0.070 [+0.065, +0.075] | +0.055 |
+   Per-fold S3 - S2: +0.072 to +0.083.
+B. Frozen DefenseFinder configs, even genomes (200-replicate null):
+   | Caller | Queries | S2 AP | S3 AP | S3 - S2 AP | strict | recall E<=0.01 S2 / S3 | unlabelled/query S2 / S3 |
+   | TXSScan | 404 | 0.488 | 0.748 | +0.260 [+0.250, +0.269] | +0.026 | 0.125 / 0.127 | 170.9 / 174.9 |
+   | CRISPRCasTyper | 1,893 | 0.120 | 0.133 | +0.013 [+0.012, +0.015] | +0.006 | 0.054 / 0.056 | 1.00 / 1.00 |
+   CRISPRCasTyper >= 3 members (320): +0.037 [+0.030, +0.044].
+Verdict: all three conditions hold; the embedding counts as adding value.
+What the verdict rests on (post hoc controls, scan only, same configs):
+   | Caller | S3 - S2 | S3(shuffled emb) - S2 | S3 - S3(shuffled) | S3 - S2 at matched tau 3 |
+   | DefenseFinder (2,447) | +0.077 | +0.012 [+0.011, +0.014] | +0.064 [+0.061, +0.068] | +0.057 [+0.054, +0.060] |
+   | TXSScan (404) | +0.260 | +0.068 [+0.056, +0.080] | +0.192 [+0.177, +0.208] | +0.039 [+0.037, +0.042] |
+   | CRISPRCasTyper (1,893) | +0.013 | +0.011 [+0.010, +0.012] | +0.002 [+0.0003, +0.003] | +0.008 [+0.007, +0.009] |
+   Shuffled = each member gene's embedding list replaced by that of a random other member gene
+   (permutation seed 17, own-genome entries removed). S2's AP is identical at tau 0 and tau 3; S3
+   loses part of its gain at tau 3 because 0.5 x embedding evidence then falls under the floor.
+   - DefenseFinder: 84% of the confirmed gain needs the true embedding lists (S3 - S3 shuffled).
+   - TXSScan has one type, so wrong hits cannot occur and primary AP equals recall at any score;
+     its +0.260 measures added coverage at tau 0, and strict AP moves +0.026.
+   - CRISPRCasTyper: the positive sign is met by adding any graded list; the embedding-specific part
+     is +0.002.
+   Recall at E <= 0.01 moves +0.002 in every caller; the embedding reorders and extends the deeper list.
+
+RATE-CONSTRAINED SELECTION (task 2, second part; predeclared in criterion2.json)
+Candidates: M0, M1, M2 (w 0.5/0.75/1), S1, S2 (w 0.5/0.75/1), S3 (w_emb 0.25/0.5/0.75/1), each at
+W = span + 8 and tau 0-3 (52 configs), plus M3 refine / grow rounds 2-3 (round-1 configs). Training =
+odd-genome DefenseFinder queries (1,200), test = even (1,247). Rate = unlabelled hits per query at
+E <= 0.01. E-values: the 40-replicate null of task 4 (Gumbel on replicate maxima + per-method curve; M1
+uses the M2 curve, S1 the S2 curve); M3 candidates carry round-1 200-replicate E-values (their null
+tails were not stored). The predeclaration named a fitted exponential tail; task 4 showed it is 2.2x
+anti-conservative at E = 0.01, so the calibrated model replaced it before selection was run (the rate
+grid stores every null tail, so both are recomputable from the same runs). Under the predeclared
+raw exponential tail the no-exemption choice is the same (S2 w_seq 0.75, tau 3; M0 rate 2.09, bound 3.13).
+| Variant | M0 rate (train) | bound | configs meeting | selected | train AP | test AP | test dAP vs M0 | test rate, selected / M0 |
+| no exemption | 1.12 | 1.68 | 30 / 56 | S2 w_seq 0.75, tau 3 | 0.637 | 0.619 | +0.249 [+0.238, +0.258] | 1.66 / 1.09 (1.53x) |
+| exemption (predeclared rule) | 0.0008 | 0.15 (absolute) | 56 / 56 | S3 w_emb 0.5, tau 0 | 0.714 | 0.698 | +0.328 [+0.317, +0.339] | 0.018 / 0.000 unsupported |
+| exemption, strict (>= 2 own-type genes) | 0.84 | 1.27 | 26 / 56 | S2 w_seq 0.5, tau 0 | 0.633 | 0.616 | +0.246 [+0.236, +0.255] | 1.07 / 0.72 strict-unsupported (1.48x) |
+Test-genome AP and unlabelled rate (calibrated null) of the main configs:
+| Config | AP | unlabelled / query | x M0 | unsupported / query |
+| M0 (tau 3) | 0.370 | 1.09 | 1.00 | 0.000 |
+| M1 | 0.442 | 1.23 | 1.13 | 0.042 |
+| M2 w 0.5 | 0.576 | 1.09 | 1.01 | 0.002 |
+| S1 | 0.602 | 2.85 | 2.62 | 0.015 |
+| S2 w 1 (round-1 S2) | 0.620 | 2.79 | 2.57 | 0.015 |
+| S2 w 0.75 | 0.619 | 1.66 | 1.53 | 0.010 |
+| S3 w_emb 0.5 (round-1 S3) | 0.698 | 2.68 | 2.47 | 0.018 |
+| M3 grow r3 (E_200) | 0.615 | 2.81 | | 0.064 |
+| M3 refine r3 (E_200) | 0.611 | 1.49 | | 0.006 |
+- Down-weighting sequence evidence to 0.75 halves S2's unlabelled rate (2.79 to 1.66) at the same AP.
+- With the evidence exemption the constraint stops binding: every candidate's unsupported rate is
+  below 0.15 per query, because 98-100% of unlabelled hits carry the query type's profile domains.
+
+======================================================================================================
+TASK 3. REPLICATION ON SPACEDUST: STOPPED (no usable relevance label)
+$ROOT/evaluation/deepbgc_s8_207/regions.parquet (207 rows) has region_id, sample_id, contig, coordinates,
+member positions and source_qualifiers_json = {detector: "annotated", source: "DeepBGC Table S8",
+source_row, source_sheet} for all 207. The source workbook sheet S8 (source_tables.xlsx) has four
+columns, label / contig_id / nucl_start / nucl_end, with label "annotated" for every gold row. No BGC
+class or product type exists, so same-type relevance cannot be defined; nothing was run.
+
+======================================================================================================
+TASK 4. A FAST NULL
+Calibration data: the stored null tails (top 32 hits per replicate) of 12,072 round-2 runs with 200
+replicates (4,775 queries: DefenseFinder S2/S3 all genomes and M0/M2 even genomes; TXSScan and
+CRISPRCasTyper S2/S3 even genomes). A small-R model is fitted on replicates 1-R and tested on the
+independent replicates R+1..200: under calibration, null hits with E <= x occur x times per replicate.
+Calibrated variants learn one curve per method (M0, M2, S2, S3) on 3/4 of the genomes and are tested on
+the held-out quarter (genome_code % 4 == 2: 4,808 runs, 1,765 queries).
+| Model (R = replicates fitted) | obs/exp at E=0.001 | E=0.01 | E=0.1 | E=1 |
+| empirical, R 40 | 22.3 | 2.23 | 1.11 | 0.80 |
+| empirical, R 100 | 8.9 | 1.80 | 0.99 | 0.78 |
+| exponential tail, R 40, 40 exceedances | 10.1 | 2.19 | 1.05 | 0.80 |
+| exponential tail, R 40, 10 exceedances | 4.3 | 1.55 | 1.09 | 0.80 |
+| Pareto tail (Hill), R 40, 10 exceedances | 3.7 | 1.43 | 1.11 | 0.80 |
+| Gumbel on 40 replicate maxima | 3.9 | 1.49 | 1.06 | 0.79 |
+| Gumbel 40 + per-method curve (held out) | 1.96 [1.71, 2.20] | 1.00 [0.96, 1.05] | 1.00 [0.98, 1.02] | 1.02 [1.01, 1.04] |
+| exponential 40/10 + curve (held out) | 2.26 | 0.99 | 1.01 | 1.02 |
+| Pareto 40/10 + curve (held out) | 2.07 | 0.98 | 1.01 | 1.02 |
+(A generalized Pareto with free shape was worse: 13x at E = 0.01.) Raw-model ratios at E = 0.01 differ by
+method (Gumbel: M0 1.36, M2 1.75, S2 1.40, S3 1.54), which is why the curve is per method.
+- Quantile-quantile against the 200-replicate E on observed hits (held-out, Gumbel + curve), median
+  log10(E_fast / E_200) per E_200 bin: 0.002-0.01 +0.16, 0.01-0.05 +0.04, 0.05-0.2 -0.02, 0.2-1 -0.07,
+  1-10 -0.09; agreement of the E <= 0.01 decision on 95.4% of 1.20 M held-out hits. E_200 reaches 0 for 174,000
+  held-out hits (no null exceedance in 200 replicates); the fitted tail gives them finite E-values.
+- The fast null is more conservative than E_200 at E <= 0.01 (held-out S3: 89,639 calls against
+  106,997), consistent with E_200 sitting at its resolution limit (2 exceedances); the empirical
+  estimator with 1 exceedance (R 100) is 1.8x anti-conservative. Round-1 recall and unlabelled counts at
+  E <= 0.01 are therefore optimistic in absolute terms; every method shared the same null, so
+  comparisons between methods stand.
+- Cost per query (one CPU; null per replicate x R): S3 0.052 s per replicate (200: 10.4 s; 40: 2.1 s),
+  M2 0.043 (8.6 / 1.7), S2 0.0047 (0.93 / 0.19), M0 0.0005 (0.10 / 0.02); the scan itself 0.001-0.05 s.
+  The null cost is set by tau: tau 0 scans many weak windows (S3, M2), tau 3 few (S2, M0).
+
+======================================================================================================
+TASK 5. INTERACTIVE SEARCH PATH
+HNSW (FAISS IndexHNSWFlat, inner product, M 32) on all 3,585,303 raw ESM++ small vectors: build 151 s
+(efConstruction 40) or 708 s (efConstruction 200) on 64 CPUs, 14.7 GB each, load 58 s. Query: k = 2,200,
+own genome removed, top 2,000 kept, s = log(N_db / position).
+| efSearch | genes/s (64 CPUs) | recall@2000 vs exact | S3 AP (dAP vs exact) | M2 AP (dAP) |
+| 128 | 3,450 | 0.340 (recall@50 0.984) | 0.664 (-0.034 [-0.037, -0.031]) | 0.503 (-0.073) |
+| 512 | 1,221 | 0.691 | 0.672 (-0.027) | 0.526 (-0.049) |
+| 2,200 | 280 | 0.979 | 0.665 (-0.033) | 0.508 (-0.068) |
+| 4,400 | 75 | 0.995 | 0.665 (-0.034) | 0.508 (-0.067) |
+| exact top 2,000 | | 1 | 0.665 (-0.034 [-0.036, -0.031]) | 0.508 (-0.067) |
+| exact top 20,000 (benchmark) | | | 0.698 | 0.576 |
+FAISS does not raise the search beam to k: with efSearch 128 only the head of the 2,000-list is right.
+The AP loss comes from the 2,000 cut-off, so a better HNSW at k = 2,000 buys nothing.
+MMseqs2 (createindex of the 3,585,303-protein database: 28.5 s, 8.4 GB):
+| Sequence ranks | S3 AP (dAP vs exact) | S2 AP (dAP) | search time, 2,921 query genes, 64 CPUs |
+| indexed, -s 7.5 --max-seqs 20000 | identical rank lists for 2,921 / 2,921 genes | | 109.5 s |
+| exact list cut to 2,000 | 0.690 (-0.009) | 0.600 (-0.020) | |
+| indexed, -s 5.7 --max-seqs 2000 | 0.666 (-0.033 [-0.035, -0.030]) | 0.551 (-0.069) | 24.6 s |
+| HNSW 2,000 + MMseqs2 fast | 0.612-0.616 (-0.083 to -0.086) | | |
+| exact 2,000 + MMseqs2 fast | 0.620 (-0.078) | | |
+Exact brute-force embedding top-K for 4 query genes: 0.29-0.35 s on 64 CPUs, 0.44 s median on 24 CPUs
+(vectors held in RAM, 13.8 GB, the same memory an HNSW index needs).
+THE COMMAND (24 CPUs, on biotite):
+  $RD/ws_tokens/env/bin/python $RD/locus_search/code/interactive.py search --gids <gid,gid,...> --threads 24
+    [--method S3|S2|M2|M0] [--emb exact|hnsw40|hnsw200] [--fast] [--top 30]
+  Default: S3, exact embedding top 20,000, indexed MMseqs2 -s 7.5 --max-seqs 20000, scan with
+  W = span + 8 and tau 0, 40-replicate null with the Gumbel tail and the S3 calibration curve. It prints
+  genome, contig, start, end, gids, score, E-value and slots filled for hits with E <= 10.
+  Verification (20 even-genome DefenseFinder queries): all 3,186 benchmark windows (E_200 <= 10)
+  returned, 3,185 with identical score; E <= 0.01: 555 hits against 650 with E_200.
+  Wall time on 24 CPUs:
+  | Mode | one-shot command | per query in a session (median / max) | parts (median) |
+  | default (exact 20,000 + indexed MMseqs2 -s 7.5) | 14.8 s (46 s on the first run of a node: numba compile, curve fit) | 4.75 / 8.0 s | embedding 0.44, MMseqs2 3.22, scan 0.03, null 0.92 s |
+  | --fast (exact 2,000 + MMseqs2 -s 5.7 / 2,000) | | 2.32 / 3.2 s | 0.41, 1.71, 0.005, 0.12 s |
+  | --fast --emb hnsw200 | | 1.83 / 2.4 s | 0.007, 1.70, 0.005, 0.11 s |
+  Session load: 7.6-12 s (genes, tokens, vectors). The fast modes save 2.4-2.9 s per query and cost
+  0.078-0.086 AP.
+
+======================================================================================================
+TASK 6. PAIR LIBRARY
+Library: the 91,522 significant token pairs of the odd-genome engine run (job 78273), with their
+odd-genome lineage count L, odd-genome incidence and odd module. Applied to the 1,782 even genomes
+(1,797,111 genes) with no statistic recomputed: 1,396,409 pair instances (82,866 library pairs occur),
+support landscape with odd L, loci read exactly as the engine reads its all-genome table (conserved
+runs at support 2/5/12/30/80, gap 0 and 2; units at Jaccard >= 0.5 of odd incidence). 1,306,074 loci
+(engine on even genomes 1,466,535), 55.5% of even genes covered, 11.5 s including loading.
+Check: odd-genome incidence reproduces the engine's G for 91,522 / 91,522 pairs.
+Scored with the package scorer (min_members 2, 200 controls), paired on even-genome instances:
+| Caller (instances) | F1 pairs / engine / modules | dF1 vs engine | dF1 vs modules | excess pairs / engine / modules | covered50 pairs / engine / modules |
+| DefenseFinder (1,261) | 0.721 / 0.806 / 0.675 | -0.085 [-0.102, -0.069] | +0.046 [+0.032, +0.059] | 0.267 / 0.268 / 0.330 | 0.803 / 0.906 / 0.773 |
+| TXSScan (404) | 0.752 / 0.758 / 0.531 | -0.006 [-0.011, -0.001] | +0.221 [+0.203, +0.239] | 0.201 / 0.179 / 0.111 | 0.993 / 0.995 / 0.728 |
+| CRISPRCasTyper (1,899) | 0.528 / 0.589 / 0.371 | -0.061 [-0.070, -0.054] | +0.157 [+0.146, +0.169] | 0.061 / 0.069 / 0.033 | 0.812 / 0.887 / 0.637 |
+Excess vs engine: DefenseFinder -0.001 [-0.014, +0.012], TXSScan +0.023 [+0.016, +0.029], CRISPRCasTyper
+-0.008 [-0.015, -0.002]. Conserved runs at gap 0 only (417,022 loci): DefenseFinder F1 0.700, excess
+0.306 (+0.038 [+0.024, +0.052] over the engine), covered50 0.803. The engine's remaining F1 lead is the
+in-sample advantage of pairs whose recurrence includes the even genomes.
+
+======================================================================================================
+JOBS AND FILES
+Jobs (all completed unless noted): 78472 (CV grid + 200-replicate finals, DefenseFinder), 78474 (finals,
+TXSScan / CRISPRCasTyper), 78473 / 78508 (rate grids, odd / even), 78475 (evidence prep + pair library),
+78495 (shuffled-embedding control), 78498 (task-1 analysis, first calibration), 78510 (calibration 2),
+78481 (failed: MMseqs2 key = gid assumption; fixed) / 78493 (interactive prep), 78512 (efSearch sweep),
+78538 (command timing), 78629 (command verification), 78519 (failed: pandas DataFrame.map name clash; fixed),
+78641 (task-1 analysis rerun with stricter evidence + rate selection).
+Local benchmarks/redesign/locus_search/: round2.py (CV grid, finals, rate grid, shuffled control),
+evidence.py (task 1, rate selection), fastnull.py (tail models, calibration, learn_curves),
+interactive.py (HNSW, MMseqs2 index, the search command, timing, verification), pairlib.py (task 6),
+run_ls2.sbatch, results/criterion2.json, results/round2/*.json.
+Biotite $RD/locus_search/out2/: cv_grid.parquet, cv_heldout.parquet, cv_summary.json,
+final_{dfall,xeven}_{metrics,hits}.parquet + _tails.npz + _summary.json, shufctl_{grid.parquet,summary.json},
+unlabelled_hits_E0.01.parquet, unlabelled_controls_E0.01.parquet, unlabelled_summary.json, evidence/,
+rategrid_{odd,even}_{metrics,hits}.parquet + _tails.npz, rate_{odd,even}_table.tsv, rate_selection.json,
+fastnull_calibration{,2}.json, interactive/ (HNSW indexes, tdb.idx, prep.json, hnsw_ef.json,
+bench_cli.json, verify.json, fastnull_curves_gum40.npz), pairlib/.

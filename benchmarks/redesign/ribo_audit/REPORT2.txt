@@ -1,0 +1,226 @@
+WS RIBO_AUDIT PART 2: THE BIOLOGICALLY CORRECT LOCUS OF EVERY UNRESOLVED RIBOSOMAL RUN (DPANN, 1,686 runs; 2026-11-19)
+=====================================================================================================================
+Outputs (development data, reproduced exactly with ribosomal_check.score before any verdict): TOK token engine nested
+reading 1,686 / 1,512; L4b family bonds, fixed distance (long_loci part 1) 1,680 / 1,598; WA L4b family bonds, adaptive
+distance, theta 0.2 (FROZEN PRIMARY) 1,685 / 1,594; Z L4b+ embedding-list bonds (part 2) 1,681 / 1,542. Locked test
+sets not opened. Rules: predeclared2.json (02:20 UTC, before any WA / Z case was opened; prior exposure to part-1 TOK
+diagrams and the L4b gap table disclosed there). POST HOC items are labelled.
+
+Evidence that decides a verdict (none of our method statistics):
+ (a) literature: Wang, Dasgupta & Fox 2009 Archaea 2:241 (spc = L14-L24-S4e-L5-S14-S8-L6-L32e-L19e-L18-S5-L30-L15-secY;
+     alpha = S13-S4-S11-rpoD, often + L18e-L13-S9-rpoN, with eno in one Haloarcula transcription unit; L34e-cmk-L14e;
+     L7ae-S28e-L24e-ndk-infB; L30e/str with rpoH/B/A, nusA, EF-2, EF-1a), Tirumalai et al. 2023 Archaea 5512414 (14-gene
+     S10-spc core + RNase P protein 1, S4e, L32e, L19e, SUI1 homolog; uS10-uL3-uL4-uL23-uL2 often a separate block;
+     S13-S4-S11 beside L34e-L14e-Cbf5; separate L11-L1-L10-L12, S24e, L31e/L39e clusters), Shimmin & Dennis 1989,
+     Coenye & Vandamme 2005, Auer et al. 1989/1991, Waters et al. 2003 (dispersed clusters in Nanoarchaeum);
+     mapped to KOfam / Pfam by rule (R = ribosomal protein, N = listed non-ribosomal member, X = other).
+ (b) operon structure: same strand and intergenic distance <= 150 nt (<= 500 nt between two members) links genes
+     (Salgado et al. 2000 PNAS; Price et al. 2005 NAR); strand change never links; >= 3 consecutive X genes cut.
+ (c) inheritance: the same adjacency (KO / Pfam identity) in other genomes of the lineage group and in other groups
+     (reported beside each junction). (d) gene calls: split ORFs, length outliers, contig ends at the decisive point.
+Accurate description of a run: the linked member components holding its Ribosomal_* genes; one component = one locus
+(C, which may extend past the run), several = several loci.
+POST HOC (labelled everywhere): LOOSE reading = 500 nt for every same-strand pair (the strict 150-nt cut for a gap gene
+proved the weakest rule, see below); rpoD Pfam fallback extended to RNA_pol_A_bac (mapping omission fixed for all cases).
+
+ANSWERS
+A. Under the accurate reading every one of the 1,686 runs has a determinable target (ceiling 1,686: 1,517 single
+   loci and 169 multi-locus runs strict; 1,622 / 64 loose). Runs right: TOK 1,447 (loose 1,485), L4b 1,538 (1,590),
+   WA L4b 1,538 (1,571), Z L4b+ 1,504 (1,547), against standing 1,512 / 1,598 / 1,594 / 1,542. The accurate reading
+   takes credit away where an output reports two separate transcription units as one locus (14-16 opposite-strand runs
+   per output plus 3-5 with member gaps > 500 nt; strict also 43-56 spacer-only runs) and gives it where the output's
+   locus correctly includes secY or other established members (verdict 3: 11-24 runs).
+B. Worth fixing: verdict 1, the co-directional rearranged S10 operon (S17|L22, L22|S17, SUI1|L22, S3|S5_C: same
+   strand, median spacing 1 nt, shared by other genomes of the lineage group in 40/41 (L4b), 21/21 (WA), 40/41 (Z)
+   annotated cut junctions, every one unbonded). On the frozen primary: rule (i) "the two families lie in one locus in
+   >= 3 other groups" repairs 22 of 23 but fires at 11,944 of 59,655 locus junctions genome-wide and at 136 of 233
+   accurate-locus edges; rule (ii) "junction shared within the lineage group" repairs 22 but fires at 43,194 (72%;
+   group genomes share nearly every adjacency, so the rule selects nothing); proposed rule (i) AND same strand with
+   <= 150 nt spacing repairs 21 of 23 (L4b 19 of 30), fires at 4,941 (8.3%), at 34 edges, and merges 0 pairs of
+   different curated systems (joins 11 parts of one system). The remaining L4b splits sit at single unannotated genes
+   between loci (no adjacent locus to bridge).
+C. Scoring corrections backed by (a)-(d): (1) extend the target over contiguous same-strand established members
+   (secY in 60 of 69 verdict-3 cases; also L14e / L34e / Cbf5 and ribosomal proteins called by KO only): alone it
+   gives TOK 1,495, L4b 1,601, WA 1,593, Z 1,554; (2) split the target at strand changes: alone 1,504 / 1,594 / 1,584 /
+   1,540; both, with splits at member gaps > 500 nt (loose): 1,485 / 1,590 / 1,571 / 1,547; strict adds spacer-only
+   splits: 1,447 / 1,538 / 1,538 / 1,504. Chance (random windows of target length): TOK 7.7%, L4b 2.5-2.9%, WA
+   6.3-6.4%, Z 4.1-4.5%, against 8.0 / 2.4 / 6.1 / 4.1% for run-length windows. Verdict 5 (a fitting locus nested in
+   a larger chosen one: 45 / 15 / 23 / 25) has no biological basis for a scoring change and stays as it is.
+D. Frozen primary (WA L4b theta 0.2) on these loci: (1) it splits one co-directional, inherited transcription unit in
+   23 runs at junctions with no bond, including S3|SUI1, an adjacency present in 508 other groups by KO identity while
+   both family tokens are widespread (591 and 158 groups), so the missing bond lies with the token pair; (2) its bonds
+   cross strand changes, so it reports divergent blocks as one locus (S13|L4e bonded at Lambda 1,334; 14-16 runs);
+   (3) its parents extend past the accurate locus into unrelated genes (verdict 4: 12, all into EMC3_TMCO1, primase,
+   Prefoldin, glycosyltransferases or the separate L1-L10-L12 operon) and the accurate locus survives only as a child
+   in 23 runs (verdict 5).
+
+---------------------------------------------------------------------------------------------------------------------
+1. VERDICTS FOR EVERY UNRESOLVED RUN (strict = predeclared + rpoD fix; loose in parentheses)
+  verdict                                              TOK         L4b         WA L4b      Z L4b+
+  1 one locus, the output split it                     0 (0)       30 (31)     23 (24)     29 (30)
+  2 the run glues >= 2 loci                            60 (30)     25 (22)     23 (19)     30 (24)
+      of which opposite strands                        23          19          16          21
+      of which spacer only (> 150 nt beside a gene X)  35          6           7           9
+      of which member gap > 500 nt                     2           0           0           0
+  3 output locus accurate and larger than the run      24 (30)     12 (13)     11 (13)     22 (24)
+  4 output extends past the locus                      43 (60)     6 (8)       12 (14)     37 (40)
+      of which into unrelated genes / other-unit members   35 / 8  6 / 0       12 / 0      27 / 10
+  5 fitting locus exists, the scorer picks a larger    45 (52)     15 (14)     23 (22)     25 (25)
+  6 data problem                                       2 (2)       0 (0)       0 (0)       1 (1)
+  7 cannot tell                                        0           0           0           0
+  unresolved                                           174         88          92          144
+  The spacer-only verdicts 2 are the uncertain ones: same strand, one gap gene 150-560 nt from a member, no strand
+  change. Without transcript data these could be one or two units; the loose reading joins them. Inside runs,
+  member-member spacing has median 1 nt and q99 156 nt; member-X q99 260 nt.
+
+  Verdict 1, what joins the pieces: every cut junction is on one strand, median spacing 1 nt (-29 to +156). Commonest
+  cuts: S17|L22 and L22|S17 (WA 16, L4b 19, Z 19), S3|S5_C and S5_C|S3 (L4b 21, Z 21), SUI1|L22 (WA 3), S3|SUI1 (WA 1),
+  S8|S4e (WA 1), cuts at an unannotated gene inside the unit (L4b 15, Z 14, WA 2). These are the S10 and spc genes in a
+  rearranged but co-directional order (canonical: L22-S3-L29-...-S17; S5 beside L18/L30), shared by other genomes of
+  the same lineage group in nearly every annotated case. A correct output is C: the whole unit from the first to the
+  last member, secY included where it is linked (positions per case: results2/strict/cases2.tsv, columns C_s / C_e).
+  Verdict 2: S13|L4e (alpha block against the S10 small block on the opposite strand, 12 other groups), L7Ae|L3,
+  L3|HIT and S8|HIT (Aenigmatarchaeota superoperon halves on opposite strands), L32e|DUF763 (spacer-only insertion,
+  shared by 9 of 20 group genomes).
+  Verdict 3: C holds secY (TOK 18 of 24, L4b 11 of 12, WA 10 of 11, Z 21 of 22), L14e / L34e / Cbf5, KO-only ribosomal
+  proteins.
+  Verdict 4, where the output should have stopped: at C's edges; the extensions run into EMC3_TMCO1, DNA primase small
+  subunit, Prefoldin, SpoIIM, STT3, glycosyltransferases, AI-2E transporters, and (TOK, Z) into separate literature
+  clusters (L7Ae-S28e-L24e-infB-S6e-eIF2; S24e-S27; L1-L10-L12) across strand changes.
+  Verdict 6: TOK-4662 / Z-4662 (552-nt gap inside the spc order next to a length outlier), TOK-5929 (S10|L3, 523 nt,
+  split ORF).
+
+2. ANSWER A IN FULL (all 1,686 runs)
+  reading          ceiling   TOK     L4b     WA L4b   Z L4b+   (standing 1,512 / 1,598 / 1,594 / 1,542)
+  strict           1,686     1,447   1,538   1,538    1,504
+  loose            1,686     1,485   1,590   1,571    1,547
+  Standing-resolved runs wrong under the accurate reading (strict / loose): TOK 106 / 71, L4b 84 / 33, WA 75 / 43,
+  Z 79 / 34. Loose: 15-16 per output join opposite-strand blocks, 3-5 join units separated by > 500 nt; the rest are
+  single loci larger than the run (secY-EMC3-L34e-L14e; the alpha block S13-S4-S11-rpoD-L18e-L13-S9-rpoN in
+  Micrarchaeota; the S24e-S27 / RNAP block beside Iainarchaeota runs) where the output's locus covers less than 80% of
+  C or its best locus for C over-extends. Unresolved runs right under the accurate reading: TOK 41 / 44, L4b 24 / 25,
+  WA 19 / 20, Z 41 / 39.
+
+3. ANSWER B IN FULL (bridging on paper; each output's own bonds; no method code changed)
+  candidates = junctions where one locus ends and the next starts on the same contig with no bond (WA 59,655; L4b
+  64,539); repair = verdict-1 accurate locus resolved after merging loci across firing junctions; curated = package gold
+  (DefenseFinder / TXSScan / CRISPRCasTyper, >= 2 members) as a check only; edges = firing junctions at the outer edge
+  of an accurate target (would extend a locus past it).
+  WA L4b (23 verdict-1 cases; strict)       repaired  fires (share)     two curated merged  one curated joined  edges (of 233)
+   (i)  co-locus families, >= 3 groups     22        11,944 (20.0%)    2                   35                  136
+   (ii) junction shared in the group       22        43,194 (72.4%)    10                  135                 182
+   (iii) same strand, <= 150 nt            21        23,145 (38.8%)    5                   75                  59
+   (i) AND (iii)  PROPOSED                 21         4,941 (8.3%)     0                   11                  34
+   (ii) AND (iii)                          21        17,138 (28.7%)    1                   52                  53
+  L4b (30 cases): (i) 19 / 5,752; (ii) 19 / 45,405; (iii) 19 / 26,194; (i) AND (iii) 19 / 3,009, 0 curated merges,
+  25 edges of 265. Loose reading: WA 23 of 24 with (i), 22 with (i) AND (iii); L4b 20 of 31.
+  Legitimate evidence for the method: (i) uses only its own family tokens and loci in other lineage groups; (iii) uses
+  gene strand and coordinates, which are inputs. (ii) uses the method's group unit but carries no information.
+
+4. ANSWER C IN FULL (scoring corrections; resolved of 1,686; chance from 5 random windows per run)
+  target                                              TOK     L4b     WA L4b   Z L4b+   chance TOK / L4b / WA / Z
+  standing (run span)                                 1,512   1,598   1,594    1,542    8.0 / 2.4 / 6.1 / 4.1%
+  (1) run extended over linked members (a, b)         1,495   1,601   1,593    1,554
+  (2) run split at strand changes (b)                 1,504   1,594   1,584    1,540
+  (1) + (2) + member gaps > 500 nt  [loose]           1,485   1,590   1,571    1,547    7.7 / 2.5 / 6.3 / 4.1%
+  strict (adds spacer-only splits)                    1,447   1,538   1,538    1,504    7.7 / 2.9 / 6.4 / 4.5%
+  Data (d): 3 runs (TOK 2, Z 1) carry a gene-call anomaly at the decisive junction; excluding them changes no count
+  by more than 2. Corrections (1) and (2) rest on literature membership and strand alone; the spacer-only split
+  rests on distance alone and is the weakest.
+
+5. ANSWER D IN FULL (frozen primary, WA L4b theta 0.2)
+  - Split co-directional units: 23 runs (all Nanobdellota), every cut unbonded; 21 of 21 annotated cut junctions are
+    shared within the lineage group; the rearranged pair S17|L22 sits at distance 1, so the adaptive distance changes
+    nothing there, and at the token level these gap junctions are no commoner across groups than chance (part-1
+    addendum: n' <= 15, Lambda 0 for every L4b gap).
+  - Strand-blind bonds: S13|L4e (divergent alpha / S10-small blocks) bonded at Lambda 1,334 and reported as one locus;
+    14-17 standing-resolved runs and 16 unresolved runs are two transcription units joined.
+  - Over-extension of parents: verdict 4 (12) and verdict 5 (23) together are 35 of WA's 92 failures; the extension
+    genes have no established relation to the cluster (EMC3_TMCO1, primase, Prefoldin, glycosyltransferases) or form
+    the separate L1-L10-L12 operon.
+  - The node test keeps parents built on such bonds; a strand term and an operon-spacing term at the junction (rule
+    (iii)) are the two pieces of genome-intrinsic evidence the configuration does not use.
+
+6. FIVE DIAGRAMS (all 498 cases: results2/strict/diagrams2.txt; gene rows: layouts2.tsv)
+Line 1: R ribosomal protein, N literature member, X other, U no Pfam / KO; UPPER CASE = run span; after each gene
+' ' linked, '/' not linked, '|' strand change. Line 2 strand. Line 3 T = accurate target. Line 4 B = output's best
+locus, o = other loci. grp a/b = other group genomes with the adjacency / holding both genes; othergrp = other groups.
+WA_L4b-8233  Nanobdellota  run 23 genes  std bf 0.74 prec 0.89  -> VERDICT 1  targets -1..22 (window starts at -5)
+    cut@16 S17|L22 same d=1 grp 8/8 othergrp 5 bond 0.0
+     u x|x|x n R R N R R R R R R R R R R R R R R R R R R R R/u|x x|x 
+     < < > < < < < < < < < < < < < < < < < < < < < < < < < < < > > < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o o o B B B B B B B B B B B B B B B B B B B o o o o o o o o o o 
+WA_L4b-4857  Nanobdellota  run 21 genes  std bf 0.67 prec 1.00  -> VERDICT 1  targets 0..20 (window starts at -4)
+    cut@6 S3|sui1 same d=-4 grp 49/51 othergrp 508 bond 0.0
+     x x x|x/R R R R R R R N R R R R R R R R R R R R R |
+     < < < > > > > > > > > > > > > > > > > > > > > > > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T 
+     o o o o o o o o o o o B B B B B B B B B B B B B B 
+WA_L4b-4562  Aenigmatarchaeota  run 21 genes  std bf 1.00 prec 0.75  -> VERDICT 2  targets -2..17;18..20 (window starts at -6)
+    glue@17 S13|L4e OPP d=77 grp 3/5 othergrp 12 bond 1334.4
+     u|x r|u n x R R R R R R R R N N R R R R R R X R|R R R|x u|x|u|u 
+     < > > < < < < < < < < < < < < < < < < < < < < < > > > < < > < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     o o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+WA_L4b-4346  Nanobdellota  run 27 genes  std bf 1.00 prec 0.79  -> VERDICT 3  targets -1..26 (window starts at -5)
+    C beyond run: secY[N]
+     x x|x x n R X R R R R R R U R R R R R R R N R R R R R U R U R R u|x x u|u 
+     > > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > > > < 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . 
+     o o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+WA_L4b-5103  Nanobdellota  run 26 genes  std bf 1.00 prec 0.33  -> VERDICT 4  targets 0..26 (window starts at -11)
+    edge@-1 unannot|L3 same d=105 grp None/None othergrp None bond 49.0 ; edge@26 secY|EMC3_TMCO1 same d=34 grp 2/3 othergrp 369 bond 347.5
+    best beyond C: 51 genes R/N/X 3/0/48: unannot,unannot,L1,L10,L12,unannot,Na_H_Exchanger,PYNP_C,AI-2E_transport,unannot,EMC3_TMCO1,Prefoldin ...
+     x|u u|r r r|u/x x x|u R R X R R R X R R U N R X R R R R R R R R R R R R R n x x|x|x u x x x x x x x|x x x x|x u x|u u|u x|x x x u x x x x|x x|u x|x/u|u x 
+     > < < > > > < < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > > > > > < < < < > > > < < > > < < < < < < < < > > < < > > < < 
+     . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B 
+WA_L4b-5099  Nanobdellota  run 29 genes  std bf 1.00 prec 0.53  -> VERDICT 5  targets 0..29 (window starts at -4)
+     u x x|u/R R U X R R R R R U N R R U R R R R U R R R R U R R R U R n x x|x|x/x x x x|x|x x|x|u x x x|x|x|x x x x|x 
+     < < < > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > > < > > > > > < > > < > > > > < > < < < < > 
+     . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . . . . . . . . . . . . . . . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o 
+TOK-4662  Nanobdellota  run 23 genes  std bf 1.00 prec 0.77  -> VERDICT 6  targets 0..8;9..22 (window starts at -8)
+    glue@8 S14|S4e same d=552 grp 6/6 othergrp 460 bond None
+    gene-call anomaly at the decisive point: 7:len
+     x r r|x|x n n|u|R R R R R R R R R/R R R R N N R R R R R R R R/x|x u x 
+     < < < > < < < > < < < < < < < < < < < < < < < < < < < < < < < < > > > 
+     . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T . . . . 
+     o B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B o o o o 
+WA_L4b-4849  Nanobdellota  run 27 genes  std bf 1.00 prec 0.61  -> VERDICT 4  targets -1..26 (window starts at -13)
+    edge@-2 EMC3_TMCO1|secY same d=0 grp 2/2 othergrp 369 bond 358.9 ; edge@26 L3|Glycos_transf_2 OPP d=194 grp 1/1 othergrp 0 bond 65.2
+    best beyond C: 16 genes R/N/X 1/0/15: DNA_primase_S,unannot,unannot,unannot,unannot,Trypsin_2,unannot,Prefoldin,L14e,unannot,EMC3_TMCO1,Glycos_transf_2 ...
+     x|x u u/u u x u/x r/u x n R R R R R R R R R R R R U R R N N R R U R R U R R R R|x|x|x u|u u 
+     > < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < < > < > > < < 
+     . . . . . . . . . . . . T T T T T T T T T T T T T T T T T T T T T T T T T T T T . . . . . . 
+     . B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B B . 
+
+(WA_L4b-8233 v1: rearranged co-directional S10 unit cut at S17|L22, shared by 8 of 8 group genomes; WA_L4b-4857 v1:
+cut at S3|SUI1, an adjacency in 508 other groups; WA_L4b-4562 v2: two blocks on opposite strands joined by a bond;
+WA_L4b-4346 v3: C includes secY; WA_L4b-5103 v4: the parent runs 51 genes past secY into the separate L1-L10-L12 operon
+and unrelated genes; WA_L4b-5099 v5: a child fits, the scorer picks the parent; TOK-4662 v6: 552-nt gap inside the spc
+order beside a length outlier; WA_L4b-4849 v4: extension into DNA primase, Prefoldin, EMC3_TMCO1.)
+
+7. CAVEATS
+- Operon calls come from strand and spacing; no transcript data exist for these genomes. Spacer-only units (same
+  strand, 150-560 nt) are the uncertain calls and are reported both ways.
+- 40% of DPANN genes carry neither Pfam nor KO; such genes count as non-members (X) and can neither extend nor join a
+  locus by membership (14-15 L4b / Z cut junctions involve one).
+- Conserved divergent arrangements (S13|L4e recurring in 12 other groups) are two transcription units by the rule
+  applied here and a conserved neighbourhood by recurrence; the verdict follows the operon definition the task gave.
+- Literature coverage: two full-text comparative studies (27 and 17+ archaeal genomes, including DPANN representatives
+  in T23) plus abstracts; DPANN-specific cluster studies were not found, so lineage-specific members of the DPANN
+  superoperon beyond the listed genes count as X.
+- Inheritance uses KO / Pfam identity and the lineage-free groups; it is reported, not decisive.
+- Login node, one thread throughout: annot 187 s (3.1 GB), verdict 50-80 s, bridge 70-100 s, chance 40-60 s per
+  variant. No Slurm job.
+
+8. FILES
+Local benchmarks/redesign/ribo_audit/: predeclared2.json, REPORT2.txt, NOTEBOOK.txt (part 2 section), bio.py
+  (annot, repro, verdict, bridge, chance; RIBO_VARIANT=strict|loose), tables2.py, results2/: repro2.json,
+  bridge.json, chance2.json, scoring_components.json, unit_break_types.tsv; strict/ and loose/: cases2.tsv (one row per
+  unresolved run x output: verdict, subtype, targets, C, best locus, junction notes), diagrams2.txt (all 498 cases),
+  layouts2.tsv (gene by gene: strand, coordinates, spacing, class, literature name, KO, Pfam, run / target / locus
+  membership, bonds of each output), junctions2.json, tables2.txt; loose/bridge.json, loose/chance2.json.
+Biotite $RD/ribo_audit/: code/bio.py, work2/ (genes_annot.parquet, std_*.parquet, the same tables, loose/).

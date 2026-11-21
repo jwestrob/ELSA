@@ -1,0 +1,34 @@
+#!/bin/bash
+#SBATCH -A banfield
+#SBATCH -p standard
+#SBATCH --qos=standard_expand
+#SBATCH -c 24
+#SBATCH -J pass_port_wh
+#SBATCH --exclude=node-48-256g-2,node-48-256g-3,node-48-256g-8,node-48-256g-9,node-48-256g-12,node-48-256g-13,node-48-256g-14
+#SBATCH -o /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/pass_port/logs/weakhit_%j.log
+
+# pass_port weak-hit check (slot_rescue check A design) and tiers for collection $COLL after its pass: label models (text copy
+# from Aksha's storage), labeled-gene FASTA, aksha search --evalue 10 --domE 10 (no --cut_*), per-protein table, tiers with
+# Pfam-clan level. Writes out/$COLL/weakhit/* , out/$COLL/tiers.parquet and out/$COLL/weakhit/STATUS.
+set -uo pipefail
+export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111
+PP=$RD/dpann_leads/pass_port
+PY=/home/jwestrob/miniconda3/envs/elsa/bin/python
+AKSHA=/home/jwestrob/.local/bin/aksha
+COLL=${COLL:?}
+W=$PP/out/$COLL/weakhit; mkdir -p $W; rm -f $W/STATUS
+cd $PP
+echo "CPUs $SLURM_CPUS_ON_NODE host $(hostname) start $(date -u +%FT%TZ) coll $COLL"
+fail() { echo "FAILED $(date -u +%FT%TZ) job $SLURM_JOB_ID step $1" > $W/STATUS; cat $W/STATUS; exit 1; }
+grep -q '^DONE' $PP/out/$COLL/STATUS || fail pass_not_done
+$PY -u code/weakhit.py models --collection $COLL || fail models
+$PY -u code/weakhit.py fasta --collection $COLL || fail fasta
+$AKSHA --version
+/usr/bin/time -v $AKSHA search --hmm_in $W/models/labels.hmm --prot_in $W/labeled.faa --outdir $W/aksha --evalue 10 --domE 10 \
+    --threads "$SLURM_CPUS_ON_NODE" || fail aksha
+[[ -s $W/aksha/user_hmms_hits_df.tsv ]] || fail no_hits_file
+$PY -u code/weakhit.py tables --collection $COLL || fail tables
+$PY -u code/tiers.py --collection $COLL || fail tiers
+echo "DONE $(date -u +%FT%TZ) job $SLURM_JOB_ID coll $COLL weakhit_per_protein.parquet tiers.parquet" > $W/STATUS
+cat $W/STATUS

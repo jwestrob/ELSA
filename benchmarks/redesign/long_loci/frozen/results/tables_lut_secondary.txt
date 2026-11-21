@@ -1,0 +1,65 @@
+LUT LOCI (lut_homology_main), all genomes: n, F1 [95%], control F1, excess [95%], mean coverage / precision of the best locus, covered50, loci with no overlapping locus
+SECONDARY_Z_L4bp_t0.02    733  0.906 [0.898, 0.913]  0.627  +0.279 [+0.271, +0.288]  cov 0.905 prec 0.932 c50 1.000 none 0
+Z_L1                      733  0.579 [0.563, 0.594]  0.501  +0.078 [+0.065, +0.091]  cov 0.979 prec 0.454 c50 1.000 none 0
+synton_faithful           733  0.055 [0.042, 0.068]  0.064  -0.009 [-0.022, +0.004]  cov 0.041 prec 0.086 c50 0.031 none 668
+
+LUT LOCI (lut_homology_main), even genomes: n, F1 [95%], control F1, excess [95%], mean coverage / precision of the best locus, covered50, loci with no overlapping locus
+SECONDARY_Z_L4bp_t0.02    370  0.901 [0.890, 0.912]  0.624  +0.277 [+0.265, +0.289]  cov 0.902 prec 0.927 c50 1.000 none 0
+Z_L1                      370  0.571 [0.549, 0.593]  0.497  +0.074 [+0.056, +0.092]  cov 0.977 prec 0.446 c50 1.000 none 0
+synton_faithful           370  0.046 [0.031, 0.064]  0.059  -0.013 [-0.028, +0.004]  cov 0.034 prec 0.074 c50 0.022 none 341
+
+RIBOSOMAL RUNS (g2, >= 16 marked): recovered / resolved (standing) / resolved, any fitting locus counts | even half (431 runs)
+SECONDARY_Z_L4bp_t0.02    857 /  811 /  834 of 858  median precision (recovered) 1.000  | even 431 / 410 / 421
+Z_L1                      857 /  526 /  526 of 858  median precision (recovered) 0.862  | even 431 / 254 / 254
+synton_faithful             0 /    0 /    0 of 858  median precision (recovered) -  | even 0 / 0 / 0
+
+COMPLETE CLUSTERS (80, layer a1): held by one locus >= 80% coverage; precision of that locus median [q10, q90], >= .8; transporter module (A B C E F G) matched by a locus (cov >= .8, prec >= .8); matched by a locus nested in the holding locus
+SECONDARY_Z_L4bp_t0.02   held 80/80  precision 0.615 [0.529, 0.669], >= .8:  6  module matched 75  nested 75
+Z_L1                     held 80/80  precision 0.533 [0.529, 0.645], >= .8:  1  module matched  0  nested  0
+synton_faithful          held  0/80  precision - [-, -], >= .8:  0  module matched  0  nested  0
+
+BY ARCHITECTURE CLASS (main, all genomes): F1 / excess (n)
+1_complete_AtoI                        0.876/+0.284 0.697/+0.141 0.000/-0.148 (58)
+1_complete_AtoI_M                      0.821/+0.198 0.712/+0.140 0.000/-0.149 (22)
+2_receptor_plus_transporter            0.837/+0.255 0.583/+0.112 0.140/+0.062 (92)
+3_transporter_module_without_receptor  0.927/+0.288 0.559/+0.061 0.049/+0.000 (551)
+4_receptor_module_without_transporter  0.732/+0.165 0.656/+0.216 0.000/-0.081 (10)
+columns: SECONDARY_Z_L4bp_t0.02, Z_L1, synton_faithful
+
+BY GENOME LAYER (main, all genomes): F1 / excess (n)
+a1_complete                0.861/+0.260 0.701/+0.141 0.000/-0.148 (80)
+a2_receptor                0.862/+0.267 0.587/+0.114 0.106/+0.030 (126)
+a3_split                   0.968/+0.347 0.588/+0.099 0.095/+0.043 (147)
+a4_transporter_only        0.909/+0.255 0.544/+0.037 0.030/-0.017 (360)
+c2_outside_class_module    0.857/+0.371 0.604/+0.187 0.091/+0.059 (20)
+
+STRICT INSTANCES (121), all genomes: F1 / control / excess [95%]
+SECONDARY_Z_L4bp_t0.02   0.870 / 0.609 / +0.261 [+0.244, +0.278]
+Z_L1                     0.692 / 0.550 / +0.142 [+0.122, +0.162]
+synton_faithful          0.047 / 0.130 / -0.082 [-0.110, -0.050]
+
+PAIRED (bootstrap over truth loci / runs, 10,000 draws): d F1 [95%], d excess [95%] verdict, better/worse loci; d resolved runs [95%]
+SECONDARY_Z_L4bp_t0.02__vs__Z_L1                           dF1 +0.327 [+0.311, +0.343]  dExc +0.201 [+0.187, +0.215] BEATS  629/0  dRes +285 [+258, +312] | even dExc +0.203 [+0.184, +0.223] dRes +156
+SECONDARY_Z_L4bp_t0.02__vs__synton_faithful                dF1 +0.851 [+0.836, +0.866]  dExc +0.288 [+0.273, +0.303] BEATS  721/0  dRes +811 [+797, +824] | even dExc +0.290 [+0.269, +0.309] dRes +410
+
+FALSE-POSITIVE SIDE (b1 + b2 genomes, no lut locus): isolated RB homologs in any locus / in a locus >= 3 genes; background b1/b2 genes; loci holding RB homologs of >= 2 / >= 3 components
+SECONDARY_Z_L4bp_t0.02   isolated (n=72) 0.639 / 0.375  smallest span 2.0  background 0.665 / 0.568  loci >=2 comp 65, >=3 comp 3
+Z_L1                     isolated (n=72) 0.639 / 0.375  smallest span 3.0  background 0.665 / 0.568  loci >=2 comp 31, >=3 comp 2
+synton_faithful          isolated (n=72) 0.014 / 0.000  smallest span 2.0  background 0.049 / 0.017  loci >=2 comp 2, >=3 comp 0
+
+COVERAGE: loci, share of genes in loci, span q50 / q90 / q99 / max
+SECONDARY_Z_L4bp_t0.02   2,010,875  0.660  [3.0, 8.0, 22.0, 138.0]
+Z_L1                       620,574  0.660  [3.0, 9.0, 25.0, 138.0]
+synton_faithful             98,966  0.052  [2.0, 3.0, 6.0, 12.0]
+
+COSTS (per step: wall clock, peak RSS GB)
+  f_groups                  0:03.01     0.3
+  f_zca32                   6:00.92    42.8
+  gpu_knn                  19:56.71    20.2
+  gpu_table                22:48.85     9.3
+  score_prep                0:15.79     1.2
+  score_secondary           1:08.38     1.2
+  tok_cluster              16:24.52     3.3
+  time_tok_prefilter
+  z_arm_prov                7:52.93    54.7
+  z_prep                    6:35.51   126.0

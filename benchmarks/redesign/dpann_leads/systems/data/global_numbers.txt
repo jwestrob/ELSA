@@ -1,0 +1,28 @@
+== DefenseFinder 2.0.2 calls (Sharur colocation engine)
+                     systems  lacking_component  slot_inside_adjacent  slot_in_window  gain_window  gain_adjacent
+cls                                                                                                              
+RM/large                 203                203                     5              30            0              0
+RM/small                2103                654                   170             603            5              2
+other_defense/large       57                 42                     1              11            0              0
+other_defense/small     2132                134                   173             611            0              0
+ALL                     4495               1033                   349            1255            5              2
+slot genes inside/adjacent to a call: 382; tier {'T1': 127, 'rest': 113, 'T2': 76, 'T2b': 36, 'contradicted': 30}; list {'both': 244, 'embedding_only': 118, 'lists_disagree': 20}
+gain genes (window): 5; tier {'T2': 4, 'T1': 1}; list {'both': 4, 'embedding_only': 1}
+slot genes that are DefenseFinder members: 166; mappable 152; slot label in the component family set 135 (0.888)
+
+== Uncalled partial loci completed by a slot gene (screen b)
+                     loci  slot_genes  models
+cls                                          
+RM/small              156         132       4
+other_defense/small  3265        2531      22
+unique loci (cluster ids) complete: 3421; unique slot genes: 2663
+by model (loci complete): {'AbiE': 2346, 'SanaTA': 801, 'RM_Type_II': 98, 'MazEF': 49, 'PrrC': 29, 'RosmerTA': 25, 'RM_Type_I': 25, 'Menshen': 6, 'Retron_III': 4, 'RM_Type_III': 4, 'Mokosh_Type_I_B': 4, 'AbiL': 4, 'Mokosh_Type_I': 4, 'Kiwa': 4, 'Retron_IX': 3}
+completing genes by tier {'rest': 1911, 'T1': 593, 'T2': 64, 'contradicted': 59, 'T2b': 36}
+completing genes by list type {'both': 2188, 'embedding_only': 269, 'lists_disagree': 206}
+small systems only: genes 2663; tier {'rest': 1911, 'T1': 593, 'T2': 64, 'contradicted': 59, 'T2b': 36}; list {'both': 2188, 'embedding_only': 269, 'lists_disagree': 206}
+
+== Caller profiles rerun on completing / gaining genes (Aksha, picked DefenseFinder profiles, E <= 10)
+test genes 2798: sub-threshold hit 1247 (0.446); GA pass 0; full selection pass 0
+  control neg_other: n 2798; any hit 0.000; GA 0.000
+  control neg_same: n 253; any hit 0.123; GA 0.000
+  control pos: n 1875; any hit 0.995; GA 0.995

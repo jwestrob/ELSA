@@ -1,0 +1,84 @@
+LEADS_TESTSET3: STRUCTURE-AND-RESIDUE LEAD SEARCH ON TESTSET3 (842 complete GTDB genomes; 2026-11-21 UTC)
+=========================================================================================================
+BOTTOM LINE
+1. testset3 does NOT reproduce the DPANN result (DPANN: 25/132 unannotated profile-invisible enzyme calls passed, 0/354
+   negatives). No unannotated gene passes either assay, and no lead comes out of testset3.
+   - Fixed assay (assay_rule.json, byte-identical to DPANN, sha256 f41709ef7c50a1bd42a1a2aa632dec1320a409068caf37bccc966fc3fdd9124d):
+     12 of 137 families have the curated record the rule needs; they hold 6 of the 77 unannotated genes. The pilot gate
+     FAILED (positives 7/12; negative A 0/5, negative B 0/5; one-sided Fisher p = 0.041 against each, rule requires < 0.01),
+     so the fixed assay stops at the pilot. Unannotated candidates scored there: 0/5 pass (0/3 in families whose positives work).
+   - Extended tier (assay_rule_extended.json, sha256 54fed579cbf5f26cf94380400f7570bbddb673108a8bb27341a440f8a8e3c5e9; reported
+     apart, never pooled): 48 families in scope, 26 kept after controls (held-out positives 116/124 = 93.5%, negatives
+     0/114). Unannotated candidates pass 0/3 in kept families (95% CI 0-56%) and 0/15 across all assayed families.
+     Already-named candidates pass 12/54 in kept families (22.2%, 13.2-34.9%).
+2. Why the yield is small: testset3 is complete, well-annotated genomes. Of the 437 genes with a strong partner-derived enzyme
+   function, 360 (82%) are already named by a relaxed own KOfam/Pfam hit or CDD; the 77 unannotated genes are mostly subunits
+   of complexes (gluconate 2-dehydrogenase gamma chain 19, type I restriction S subunit 14, M subunit 6), which carry
+   neither curated catalytic residues nor a conserved polar core (both families out of scope for the extended tier too).
+3. Embedding-only versus both lists cannot be reported: the collection has no alignment-based neighbor lists.
+
+FUNNEL (funnel.tsv; code r1_partners.py, L2_population.py)                 T2     T2b    rest   T1c  contradicted
+  labeled genes (pass_port)                                                 6,403  3,682  7,998  1,807  1,443
+  label carriers with a KOfam KO (partner step)                             3,219  1,200  2,153    874    592
+  STRONG partner-derived function (>= 3 carriers with the KO, share >= 0.70) 2,265    750  1,132    531    342
+  STRONG enzyme (KO with EC; local KEGG snapshot)                             524    103    139     83     64
+  100-600 aa and ILVFMAWC < 0.45                                              324     42     71     65     50
+  already named: relaxed own Pfam (E <= 0.01, PFSET) 167; relaxed own KOfam (E <= 0.01, KOSET) 331; CDD (rpsblast E <= 0.01;
+    Pfam model, KEGG-linked COG, enzyme name, EC) 153; any 360 (T2 255, T2b 40, rest 65)
+  unannotated profile-invisible                                                69      2      6      3      1
+  Main population (T2/T2b/rest) 437 genes in 137 functions; unannotated 77 genes in 28 functions. T1c and contradicted are
+  counted and left out of the assays. CDD here ran on the candidate set only; the DPANN family-level sources (HHsearch/HHblits
+  family annotations, family_stats) have no counterpart.
+  Partner KOfam: 90,320 unique label-carrying supporters (26.3 M residues), Aksha 0.2.3 installed KOFAM --cut_ga, Slurm array
+  120056 (5 x 24 CPUs, 15.8-19.5 min each); 66,674 KO rows on 50,052 proteins -> RD/annot_gpu/testset3/KOFAM_partners.parquet.
+  Novelty searches: job 120108 (24 CPUs, merge + Aksha Pfam-A and KOFAM at E <= 0.01 + rpsblast CDD 3.20 on 552 proteins, 1 min).
+
+FIXED ASSAY (rule unchanged; code L3-L7, copies of the DPANN scripts with paths changed)
+  References (data/references.tsv): 12 testable families with 16 population genes; 125 families fail: no reviewed entry with
+  EC + Active-site feature + structure 70 (e.g. serC K00831: PLP Lys is a 'Modified residue', not an Active site), partial EC
+  only 31, no chain resolving an in-region active site 13, no entry in the label family 10, length-incompatible 1.
+  Pilot (6 families, 22 folds; data/readout_pilot.tsv, data/pilot_gate.json):
+    positives 7/12 (GalT 1/2, Fic 1/2, Peptidase_M15_3 0/2, PknE-type kinase 2/2, PgdA 2/2, macro domain 1/2; failures sit
+    mostly in binding share); negative A 0/5 and negative B 0/5 (fold 0/10). Gate: FAILED on the Fisher criterion (p 0.041):
+    with 5 negatives per kind no outcome below 12/12 positives can reach p < 0.01. Per the rule the fixed assay stops here.
+    Unannotated candidates: K08640 (2 genes) fold 0.58 / 0.56, catalytic H 0/1 (family positives also 0/2: uninformative);
+    K22278 1188566 fold 0.75, catalytic D 1/1, binding 1/3 -> fail; K18639 and K23518 fold 0.33 / 0.29 -> fail.
+  families.tsv: the 137 families with reference status and pilot rows. leads.tsv: empty (no passing gene).
+  Fixed positives pass less often here than in DPANN (7/12 against 35/38), mainly on the binding-share criterion.
+
+EXTENDED TIER (assay_rule_extended.json fixed after the fixed pilot and before any extended selection or scoring)
+  Scope (data/ext/families.tsv): 124 families fail the fixed reference rule; members = collection proteins with the KO
+  (partner KOfam, --cut_ga) and the label Pfam at GA, dereplicated at 70% (cd-hit). Out of scope 76: < 15 annotated members 46,
+  < 15 representatives 7, < 3 site positions 22, no member of 100-600 aa 1. In scope 48 (136 population genes, 15 unannotated).
+  Site: definition-set columns >= 90% one residue of D E H K R C S T Y N Q W (median 7.5 positions per family, 3-38) plus
+  reviewed-record active/binding residues (24 positions in 5 families, 8 of them also invariant; counted once).
+  Reference: ESMFold2 model of the definition member closest to the consensus, trimmed to its label envelope +-10; all 48
+  rank-0 models had region pLDDT >= 70. Experimental chains for 24 families, TM reported only (data/ext/readout_ext.tsv TM_exp).
+  Controls (families_extended.tsv): 22 families dropped, all for held-out positives below 80% (e.g. N6_Mtase 3/5, AAA_5 3/5,
+  ACP_syn_III_C 3/5, NTP_transferase 3/5, DHOase 1/5); no family dropped for a negative (negatives 0/230 across all 48).
+  Kept 26: positives 116/124 (93.5%, 87.8-96.7), negative A 0/57, negative B 0/57 (0-3.3% pooled).
+  Rates (data/ext/rates_ext.tsv), unannotated in kept families: 0/3 (T2 0/3; support >= 50% 0/3); all assayed families 0/15.
+  Already named in kept families 12/54 (22.2%); those 12 are listed in leads_extended.tsv as PASS-NAMED (no curated residue in
+  their sites; wording 'conserved-core residues in place').
+  Unannotated observations (all fail): K03427 type I RM M-subunit calls (6 genes) do not take the N6_Mtase fold (TM 0.13-0.19);
+  K07451 HNH (2) fold 0.70 / 0.65, site 5/7 and 4/7 (below 90%); K07452 McrB-type AAA_5 (3) TM 0.33-0.47, site 0-7/9;
+  K27986 (2) TM 0.70 / 0.32, site 0/8 and 1/8; K19884 and K21216 TM 0.29 / 0.32. Out of scope: gluconate 2-DH gamma (19, 27
+  representatives, < 3 polar invariant positions), Methylase_S (14, 711 representatives, 1 position), 9 smaller families.
+
+FOLD KEPT, CATALYTIC RESIDUES ABSENT (fixed rule, table only): none (only the pilot was scored).
+
+VERDICT (testset3): unannotated profile-invisible pass rate, fixed assay 0/5 at the pilot (gate failed); extended tier 0/3 in
+  kept families (0-56%) and 0/15 overall, negatives 0/114 (0-3.3%). The DPANN result (18.9% against 0%) is not reproduced.
+  The testset3 test is weak by construction: 77 unannotated genes, of which 6 fall in fixed-rule families and 3 in kept
+  extended-tier families.
+
+BUDGET AND COMPUTE: folds 422 of 600 (22 fixed pilot, 48 extended reference members, 352 extended candidates and controls);
+  US-align 828 pairs on the biotite login node; Slurm 120056 and 120108 (above); no job pending. Mac disk 117 MB.
+
+CODE (code/; collection argument; collections_leads.json holds testset3, srvp, lut; srvp models go to a folder outside the repo)
+  biotite:  r1_partners.py prep|merge, r1_partners_sbatch.txt, r3_novelty_sbatch.txt (+MERGE=1), r3_novelty.py, r4_pools.py,
+            r5_context.py, r6_members.py, s04_usalign_remote.py (byte copy of the DPANN file)
+  local:    L0_sync, L2_population, L3_references, L4_select, L5_usalign, L6_readout, L6b_pilot_gate, L7_stats [pilot|full],
+            L8_leads, L9_cofold (fixed assay); E1_define, E2_select, E3_usalign, E4_readout, E5_stats, E6_leads (extended tier)
+FILES: REPORT.txt, funnel.tsv, families.tsv, leads.tsv (empty), families_extended.tsv, leads_extended.tsv, assay_rule.json,
+  assay_rule_extended.json, data/ (tables; data/ext/ for the extended tier), ref/ (UniProt records, PDB chains), folds/ (models).

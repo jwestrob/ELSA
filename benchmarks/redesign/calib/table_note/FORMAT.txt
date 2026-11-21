@@ -1,0 +1,33 @@
+ws_calib handover table (POST HOC; job 88624; code calib/code/gpu_table.py)
+=============================================================================
+What: for every unique sequence q (uid 0..2,547,527, same uid as the embedding run, subgenic/uniq.parquet and
+softrec/r3/vec/meta.npz 'uq') and every genome G (genome_code 0..3,563): the best gene of G for q by whitened ESM++
+small cosine (zca10, float16 products on one A5000), its cosine, and the within-genome z-score
+    z = (best cosine - mean of q's cosines to all genes of G) / their standard deviation.
+Stored only where z >= 10.5.
+
+Error rate (POST HOC, softrec3 calibration queries, pair-level clean negatives = best match and query both annotated by
+Pfam or CDD, sharing no Pfam family, clan, CDD superfamily or family-profile link, Smith-Waterman E > 1):
+    z >= 10.57 : FPR 1e-2 per (query, genome) cell; recall of homologous best matches .553 (alignable .756)
+    z >= 13.65 : FPR 1e-3;                          recall .324 (alignable .467); precision vs clean negatives .999
+    z >= 15.96 : FPR 1e-4;                          recall .151 (alignable .220)
+Thresholds are equal on odd and even genome halves (calib/results/q2b_thr.json). Raw cosine equivalents: .504 / .649 /
+.746. "Homologous" = alignable at E <= 1e-3 or sharing Pfam family / clan / CDD superfamily / profile link; roughly 40%
+of cells cannot be labelled either way, so these are rates against clean negatives, not against all non-homologs.
+
+Files (sparse, ordered by uid, then genome_code ascending):
+  counts.npy   int32[2,547,528]  entries per uid; offsets = np.r_[0, np.cumsum(counts)]
+  genome.bin   int16  genome_code
+  local.bin    int16  index of the best gene inside the genome (gid = meta['g_start'][genome] + local)
+  cos.bin      float16 best cosine
+  z.bin        float16 z-score
+  table.json   run provenance, entry counts, timing
+Cells of genomes that hold q's own sequence are included (cosine 1); drop them when a list should exclude self.
+
+Reader:
+  import numpy as np
+  T = "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/calib/table/"
+  cnt = np.load(T + "counts.npy"); off = np.r_[0, np.cumsum(cnt, dtype=np.int64)]
+  G = np.memmap(T + "genome.bin", np.int16, "r"); L = np.memmap(T + "local.bin", np.int16, "r")
+  c = np.memmap(T + "cos.bin", np.float16, "r");  z = np.memmap(T + "z.bin", np.float16, "r")
+  s, e = off[uid], off[uid + 1]       # entries of one uid; keep z[s:e] >= 13.65 for FPR 1e-3

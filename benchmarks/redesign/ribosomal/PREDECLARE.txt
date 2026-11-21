@@ -1,0 +1,23 @@
+Ribosomal-locus check, predeclared 2026-11-12 (before any engine metric was computed)
+
+Gold runs: per genome, maximal runs of genes carrying a Pfam domain whose name matches
+^ribosom(al)?_ (case-insensitive; observed domain used as a positional marker), allowing
+up to 2 unmarked genes inside a run ("g2"; strict "g0" also reported); runs with >= 16
+marked genes (primary) and >= 8. Primary locus set: engine kind "conserved", level 2
+(maximal runs of boundaries spanned by any significant pair), read from
+loci_all_genomes.parquet.
+
+Reading under test: "the redesigned engine resolves the ribosomal locus" (base arm,
+results_dpann_v5/dpann__mmseqs__seq__e3c50s75__w3).
+ Supports it : >= 90% of g2/m16 runs recovered (one locus >= 50% of the run) AND >= 50%
+               resolved (one locus >= 80% of the run with precision >= 0.8) AND recovered
+               fraction exceeds the length-matched random-window control by >= 30 points.
+ Refutes it  : recovered < 80%, or resolved < 30%, or the control within 10 points of
+               the observed recovered fraction.
+ In between  : "partially resolved"; say which component fails.
+Module reading "the ribosomal runs map to one module": top-module purity over recovered
+runs >= 0.8 supports; < 0.5 refutes.
+Diagnosis claims ("breaks are caused by X"): a cause is named only if the break
+boundaries carry it at >= 2x the rate of non-break boundaries inside the same runs.
+Arm ranking: "setting S resolves best" requires S's resolved count to exceed the base
+arm's by more than the genome-bootstrap 95% interval of the difference excludes 0.

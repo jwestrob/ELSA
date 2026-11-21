@@ -1,0 +1,74 @@
+{
+ "collection": "srvp",
+ "informative_families": [
+  "K00874",
+  "K00919",
+  "K00965",
+  "K01053",
+  "K01443",
+  "K01624",
+  "K01805",
+  "K02683",
+  "K07130",
+  "K07407",
+  "K23370"
+ ],
+ "uninformative_families": [
+  "K00573",
+  "K00809",
+  "K01051",
+  "K01159",
+  "K01921",
+  "K01937",
+  "K03432",
+  "K03741",
+  "K04771",
+  "K07012",
+  "K12721",
+  "K16704"
+ ],
+ "candidates_unannotated_informative": "0/0",
+ "negatives_pooled": "0/48",
+ "fisher_unannotated_vs_negatives_one_sided": null,
+ "fisher_vs_dpann_rate_two_sided": null,
+ "weighted_rate": null,
+ "pass_by_family": {},
+ "pilot_gate": {
+  "counts": {
+   "candidate": [
+    9,
+    23
+   ],
+   "negA": [
+    0,
+    23
+   ],
+   "negB": [
+    0,
+    23
+   ],
+   "positive": [
+    6,
+    12
+   ]
+  },
+  "fisher_pos_vs_negA": 0.0005692599620493358,
+  "fisher_pos_vs_negB": 0.0005692599620493358,
+  "positive_share": 0.5,
+  "positives_per_family": {
+   "K00809": "0/2",
+   "K00965": "2/2",
+   "K01443": "2/2",
+   "K01921": "0/2",
+   "K16704": "0/2",
+   "K23370": "2/2"
+  },
+  "uninformative": [
+   "K00809",
+   "K01921",
+   "K16704"
+  ],
+  "gate_pass": true
+ },
+ "absent_site_families": []
+}

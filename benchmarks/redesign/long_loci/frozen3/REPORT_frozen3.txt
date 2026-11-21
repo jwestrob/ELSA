@@ -1,0 +1,99 @@
+LONG_LOCI THIRD FROZEN RUN: COMPLETE GTDB GENOMES (testset3; ribosomal benchmark), REPORT_frozen3.txt
+=================================================================================================
+FINAL, 2026-11-19 16:55 UTC. Configurations, comparators, pipeline, scoring and expectations frozen in
+frozen3/FROZEN3.json (2026-11-19 10:38 UTC, sha256 5f30fb51...68eb, verified local and biotite) before the package
+existed; the audit agent's definition and bars recorded beside it (FROZEN3_audit_reference.json: predeclared6.json
+a6c997f3..., score6.py 6b61eeb8...). Package $RD/testset3/package/: seal verified before any build (all 31 files of
+MANIFEST.json rehashed, 0 mismatches, seal cf920a48...ff3c89 = seal.json): 842 genomes (700 Bacteria, 142 Archaea),
+2,557,405 genes (2,530,648 unique), 1,176 contigs with genes, lut layout, zca10 whitening stored. Every genome scored once
+(the package split is ignored: nothing is tuned here). Ribosomal runs: the audit agent's Aksha-built table
+($RD/ribo_audit/work6/testset3/ribosomal/runs.parquet, sha256 30e56f0a..., verified), g2 runs with >= 16 marked genes:
+801 (688 Bacteria, 113 Archaea). The frozen-definition scoring and the bars belong to the audit agent (score6.py over
+the tables listed below); this report gives the standing-definition counts beside it.
+
+ANSWER
+1. Standing definition, all 801 runs (recovered / resolved / any fitting locus):
+   - PRIMARY (embedding-list tree, Z L4b+ .02): 801 / 692 (86.4%) / 773 (96.5%).
+   - SECONDARY (family-bond tree, WA L4b .2): 801 / 683 (85.3%) / 743 (92.8%).
+   - Engine reference DH (GTDB genera from the package taxonomy): 801 / 298 (37.2%) / 315.
+   - Pair-linking alone: Z L1 294, WA L1 233 resolved.
+2. Paired resolved differences (run bootstrap, 10,000 draws):
+   - PRIMARY - DH +394 [+366, +423]; SECONDARY - DH +385 [+356, +415].
+   - PRIMARY - SECONDARY +9 [-13, +32].
+   - Each tree over its own pair-linking: +398 (list base), +450 (family base).
+3. By domain (resolved / any-fit):
+   - PRIMARY: Archaea 107 / 113 (94.7%), any-fit 109; Bacteria 585 / 688 (85.0%), any-fit 664.
+   - SECONDARY: Archaea 86 / 113 (76.1%), any-fit 88; Bacteria 597 / 688 (86.8%), any-fit 655.
+   - DH: Archaea 77, Bacteria 221.
+   On complete genomes the primary resolves the archaeal superoperon runs (+21 over the secondary); the secondary
+   resolves slightly more bacterial runs (+12).
+4. The gap between the standing rule and any-fit is small on this set: 81 runs for PRIMARY (SR-VP 180) and 60 for
+   SECONDARY (SR-VP 208). Median precision of the best locus over recovered runs is .960 / .946 (DH .750).
+5. Descriptive outputs:
+   - Genome groups at 0.75: 353 (182 singletons, largest 36; cuts .70 / .80: 184 / 580).
+   - List tau 8, 1,356,428 bonds over 911,720 boundaries. Bond tau 8, 1,954,182 bonds over 1,073,707 boundaries
+     (212,001 bonded only by pairs 4-8 apart). The engine chose P <= 1e-4 & L >= 3 (151,372 significant pairs).
+   - Loci and share of genes in loci: PRIMARY 769,433 / .469; SECONDARY 719,101 / .434; DH 375,644 / .539; Z L1
+     288,811 / .469; WA L1 252,708 / .519.
+6. Against the FROZEN3 predictions:
+   - Inside: recovered (>= 97%: 100% everywhere), DH resolved (37.2%; 30-55%), pair-linking (29-37%; 25-45%),
+     PRIMARY - SECONDARY (+9; 0 to +60), groups (353; 250-500), taus (8 / 8; 6-10), genes in loci for PRIMARY,
+     SECONDARY and both L1s, costs.
+   - Above the predicted ranges: PRIMARY and SECONDARY resolved (86.4% / 85.3%; predicted 50-72% / 45-68%), PRIMARY
+     any-fit (96.5%; 80-92%), both configurations' margin over DH (+394 / +385; +100 to +300).
+   - Missed in direction: the domain gap (predicted Archaea 20-40 points above Bacteria for both; observed +9.7 for
+     PRIMARY and -10.7 for SECONDARY), the any-fit margin over standing (10.1 / 7.5 points; 15-35), DH genes in loci
+     (.539; .55-.75).
+7. Locus tables for the audit scorer are final and listed with sha256 in results/locus_tables.json (written 16:48:30
+   UTC, before my own scoring). They are in the frozen2 format (columns s, e: inclusive gids of the package universe).
+8. Deviations from FROZEN3.json: none in settings.
+   - The list preparation ran on 40 CPUs (standard_expand_2) as FROZEN3 specifies for memory; its peak was 71.7 GiB.
+   - The scorer gained a manifest command, and the split subsets were dropped (every genome scored), both before any
+     output existed.
+   - The standing counts use the audit agent's runs table, as FROZEN3 allowed.
+   - No HMM search was run.
+9. Cost: 90 min of CPU job time and 18 min on one A5000.
+   - CPU: 24-CPU jobs 84.4 min (tokens 75.4, main 6.4, list arm 2.4, scoring 0.2); one 40-CPU job 5.8 min.
+   - GPU: table 7.9 min, kNN 10.1 min.
+   - The watchdog cancelled nothing.
+
+-----------------------------------------------------------------------------------------------------------------------
+MAIN TABLE (standing definition; 801 g2 runs with >= 16 marked genes; any-fit = some locus fits >= 80% both ways)
+output                     recovered  resolved      any-fit       resolved Bact / Arch     any-fit Bact / Arch   loci       genes in loci (Bact / Arch)  span q50 / q90 / q99 / max
+PRIMARY Z L4b+ .02         801        692 (86.4%)   773 (96.5%)   585 / 107                664 / 109             769,433    .469 (.487 / .346)           3 / 7 / 23 / 158
+SECONDARY WA L4b .2        801        683 (85.3%)   743 (92.8%)   597 / 86                 655 / 88              719,101    .434 (.446 / .348)           3 / 9 / 29 / 232
+engine DH                  801        298 (37.2%)   315 (39.3%)   221 / 77                 238 / 77              375,644    .539 (.535 / .565)           3 / 9 / 31 / 315
+Z L1 (pair-linking)        801        294 (36.7%)   294           215 / 79                 215 / 79              288,811    .469 (.487 / .346)           3 / 7 / 22 / 158
+WA L1 (pair-linking)       801        233 (29.1%)   233           171 / 62                 171 / 62              252,708    .519 (.528 / .453)           3 / 10 / 32 / 232
+ runs: 688 Bacteria, 113 Archaea. Median precision of the best locus over recovered runs: PRIMARY .960, SECONDARY .946,
+ DH .750, Z L1 .727, WA L1 .700. Paired resolved: PRIMARY - DH +394 [+366, +423]; SECONDARY - DH +385 [+356, +415];
+ PRIMARY - SECONDARY +9 [-13, +32]; PRIMARY - Z L1 +398 [+370, +426]; SECONDARY - WA L1 +450 [+422, +477].
+
+LOCUS TABLES (results/locus_tables.json; $RD/long_loci/frozen3/loci/; columns s, e)
+ PRIMARY    gtdb3_Z/L4bp_t0.02.parquet   769,433 rows  sha256 8f55d59e92347c6112911ab05f44adf335e2038b374d9efb6e3e252185cb87af
+ SECONDARY  gtdb3_WA/L4b_t0.2.parquet    719,101 rows  sha256 43c8fc452ae9a3f365a68f2b9447e219a25bf27ebfdc2894aac7b12bd3f49219
+ engine DH  gtdb3_engine/DH.parquet      375,644 rows  sha256 4685c2167af09abb244478fe3e4b936d20073eb6a72c1cbe4a8e5709e771ad4f
+ Z L1       gtdb3_Z/L1.parquet           288,811 rows  sha256 9afd74f7e36a4b73ec74d7c94c51cbf892a0b84cb38ec312a8c6570c93b1315c
+ WA L1      gtdb3_WA/L1.parquet          252,708 rows  sha256 db2e33ff3fb150ae8c8f45806fa71625e60d02ae619180c48307125e412a2fa4
+
+INPUTS AND BUILDS (gold-free; rules fixed on DPANN)
+ tokens       base cluster 1,338 s: 385,230 families (255,444 singletons); rescue: 344,153 query uids (guard projection 82 min),
+              prefilter 2,438 s, align 684 s; 65,498 genes moved -> 333,290 families (216,873 singletons, largest 9,400)
+ gates        uid_of_row = 06a gid2uid; float32 zca10 from the stored transform (max |f32 - f16| 1.2e-4); adapter smoke OK
+              (842 genomes, 1,176 contigs, 353 groups, 7,665,170 instances)
+ z table      432,019,701 entries at z >= 10.5 (per uid q50 93); kNN k 2,000 exact (rank-1 cosine q50 .856)
+ groups       353 at 0.75; nearest-neighbour emb_hom q10 / q50 / q90 .719 / .800 / .901; AMI with GTDB family .79, genus .42
+              (description only)
+ cohesion     token cohesion q50 .018 (share < .2: .881); kNN cohesion in prep_gtdb3.json
+ PRIMARY      list tau 8 (instance FDR at 4 / 6 / 8: .084 / .031 / .0089); 416,046,497 list entries; 1,356,428 bonds
+ SECONDARY    bond tau 8 (bond FDR at 4 / 6 / 8: .079 / .021 / .0044); 1,954,182 bonds
+ engine       rule P <= 1e-4 & L >= 3 (FDR .0033), 151,372 significant pairs; DH 375,644 loci
+
+COSTS (wall clock, peak memory)
+ tokens 75 min 22 s (cluster 22 min 18 s / 3.6 GB; prefilter 40 min 38 s / 9.1 GB; align 11 min 23 s) | GPU table 7 min 55 s,
+ kNN 10 min 06 s (A5000) | main 6 min 21 s (zca32 1 min 36 s / 26 GB; cohesion 32 s; WA 2 min 23 s; engine 1 min 25 s;
+ DH 20 s) | list prep 5 min 50 s (40 CPUs; 71.7 GiB) | list arm 2 min 22 s (11.4 GB) + manifest | scoring 11 s.
+
+FILES: frozen3/ (FROZEN3.json, FROZEN3_audit_reference.json, REPORT_frozen3.txt, code/, results/: score_gtdb3.json,
+locus_tables.json, wbuild_gtdb3.json, zbuild_gtdb3_Z.json, dh_gtdb3.json, prep_gtdb3.json, groups.json); biotite
+$RD/long_loci/frozen3/ (loci/, results/ribo_*.parquet per-run outcomes, tok/, gtable/, knn/, logs/).

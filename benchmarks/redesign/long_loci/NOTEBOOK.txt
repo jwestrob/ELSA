@@ -1,0 +1,483 @@
+long_loci NOTEBOOK (workstream long_loci; times UTC from `date -u`)
+==================================================================
+2026-11-13 10:35  Brief read. Read (local, read-only): vocab/REPORT.txt, REPORT2A.txt, context_units/REPORT.txt,
+                  transfer_spacedust/NOTEBOOK.txt + REPORT.txt (interim 10:30), baseline_synton/REPORT.txt; code
+                  transfer_spacedust/words.py, wscore.py, s207.py; vocab/vscore.py, vscore2.py (significant_boundaries,
+                  phrases), vscore2a.py; context_units/cuts.py (kappa definition); remote blib.py scoring functions and
+                  rules.paired.
+2026-11-13 10:45  Read /home/jwestrob/.claude/CLAUDE.md and obsidian-vault/biotite-cluster-ops.md on biotite.
+                  Stored inputs located: DPANN stage-1 run $RD/vocab/runs/main/tau10/obs (no b0/sig0 stored: bonds are
+                  recomputed here from the learner's round 0); V-mob loci vocab/loci/main_tau10_V-mob.parquet and scores
+                  vocab/scores/main_tau10_V-mob.parquet (.624); words + cohesion phrases scores
+                  vocab/scores/runs_main_tau10_s1coh_V-coh0.1.parquet (.608); kappa context_units/ctx/kappa_var_tokens.npy.
+                  Spacedust: P2 run transfer_spacedust/runs/syn/tau8/obs (sig0, b0 stored), kappa emb/kappa_var_tokens.npy,
+                  per-region frames results/pr_*.parquet.
+2026-11-13 10:48  transfer_spacedust's CPU genome groups landed (job 91643): 618 groups at 0.75 (query genomes in groups
+                  of 2-6). Used read-only as the Spacedust counting unit.
+2026-11-13 10:54  predeclared.json written (definitions of L1-L4, L4a variant, L4+ interpretation, selection rules,
+                  expectations for every output) before any computation of this workstream.
+2026-11-13 10:58  Coordinator (priority from Jacob): DPANN ribosomal resolved is the primary criterion for every output;
+                  add a label-free failure diagnosis of the ribosomal benchmark. predeclared.json amendment_1 written
+                  10:58: success bar resolved > 1,512 with recovered >= 1,650 and the other bars; odd selection now
+                  [conditions met, odd resolved, odd summed]. No number of this workstream existed at that time (no odd,
+                  no even number of anything computed).
+2026-11-13 11:04  Smoke test (login node, 1 thread, first 150 DPANN genomes, ll.py smoke): 3,163 significant keys, 43,192
+                  bonds, 34,710 positive boundaries; tie-collapsed tree 18,444 nodes, every node's m / e / persistence equal
+                  to a brute-force check, run roots == L1 runs; recurrence counts equal a brute-force window scan for 60
+                  random nodes in the observed and one shuffled corpus (0 mismatches of 120).
+2026-11-13 11:05  Re-read both cluster files; account 332 CPUs running. Submitted 92658 ll_dp1 (24 CPUs: DH refcheck,
+                  DPANN group build, ODD scoring of all outputs, reference ribosomal diagnosis, syn build + odd) and
+                  92659 ll_sd1 (24 CPUs: Spacedust group word ladder 4-20, group build at tau*, syn build; no scoring).
+2026-11-13 11:06  DH reference reproduced exactly (job 92658, dscore.py refcheck): even summed .4270, F1 .744/.548/.479,
+                  ribosomal 1,686 / 1,512, Parvarchaeaceae 114 recovered / 113 resolved; per-instance F1, control F1 and
+                  coverage equal to the stored scores.
+2026-11-13 11:08  DPANN group build (gold-free): 39,137 significant keys, 1,797,062 bonds (Lambda q50 64, q99 1,494),
+                  1,310,777 positive boundaries; nulls 14 / 9 / ? keys (62 / 30 / 36 tree nodes). L1 426,696 loci, 48.5%
+                  of genes (span q50 3, max 108). L2 genes in loci .422 / .326 / .255 / .191 at theta .02 / .05 / .1 / .2.
+                  Node calibration: delta = 0, tau_node = 0 at every theta (FDR 5e-5 to 1.2e-4), so L4 = L4a; the test
+                  removes 31,112 of 848,982 nodes at theta .02 (n < 2). Closed-form E sums to 1.19x the shuffled count.
+                  Recurrence for 1,032,127 unique intervals (204,645 keys) 52 s on 24 threads; build 141 s.
+2026-11-13 11:09  amendment_2 (L4b: cohesion orders the splits instead of cutting; whole tested at the bond tau with the
+                  closed-form E) written before any odd score was read (3 odd log lines existed, unopened).
+2026-11-13 11:13  ODD scores of DPANN group outputs read (job 92658; results/odd_dpann_group.json; odd numbers only).
+                  DH odd: summed .4179, ribosomal 848 / 769, Parv 55. Odd resolved / summed / F1 DF-TXSS-CCT:
+                    L1 531 / .491 / .738 .494 .394;  L2 .02 685 / .510;  L2 .05 735 / .597 / .681 .584 .319;
+                    L2 .1 748 / .416 / .378 .569 .244;  L2 .2 72 / .323;  L3 .02/.05/.1/.2 717/750/760/317, summed
+                    .601/.613/.610/.603;  L4 .02 798 / .647 / .756 .700 .400;  L4 .05 753 / .681;  L4 .1 752 / .454 /
+                    .365 .627 .241;  L4 .2 72 / .316.  L4a = L4 (identical outputs);  L4+ .02 798 / .632.
+                  Predeclared rule (amendment_1: [conditions, odd resolved, odd summed] on L2): theta = 0.1 (L2 .05 and
+                  .1 both meet 2 conditions; odd resolved 748 > 735). CRISPR-Cas F1 fails the F1 condition everywhere.
+                  Not selected by the rule but best on odd resolved and on odd summed among L4 rows: L4 at theta .02.
+                  Cut-only L2 collapses DefenseFinder F1 at theta >= .1 (.378 / .259); joining phrases at the same theta
+                  did not (words V-coh0.1 DF .735), because a cut destroys bonded loci while a phrase only adds.
+2026-11-13 11:14  Reference ribosomal diagnosis read (rdiag_reference.json; reference outputs only, all 1,686 runs):
+                  DH unresolved 174 = 17 under-covered + 157 over-extended (median 18 outside genes per run); no two
+                  benchmark runs share a contig within 10 genes (0 neighbour pairs), so the (3) merge among benchmark
+                  runs is empty; 14.5% of DH's outside genes carry a Ribosomal_* marker outside every run of >= 8 marked
+                  genes. Extending (3) to smaller marked fragments (any size) before any output of mine is diagnosed.
+2026-11-13 11:19  L4b odd (job 92721): theta .02/.05/.1/.2 resolved 810/806/807/807, summed .607/.601/.597/.572, F1 at
+                  .1 = .756/.706/.415 (DH odd .743/.544/.479). Selection: theta 0.1, L4b ([2, 807, .597] over L4
+                  [2, 752, .454]). Written to predeclared.json amendment_3 at 11:20 with even expectations, before any
+                  even number. Spacedust builds (gold-free): group tau* 10 (FDR .005; 87,698 word types); syn L1 equals
+                  the stored CC2 boundaries exactly and S obs equals the stored matrix; closed-form node E sums within
+                  0.2% of the shuffled count on Spacedust (1.19x on DPANN).
+2026-11-13 11:20  Reference ribosomal diagnosis rerun with marked fragments of any size (job 92721, rdiag_reference.json):
+                  0 benchmark-run pairs within 10 genes; 67,473 g2 marked fragments; 376 runs have a smaller marked
+                  fragment 3-5 genes away (extra marked genes q50 2, q90 7); oracle exact span 1,686 / 1,686; oracle
+                  merged neighbourhood 1,507 (179 runs fail precision against their own neighbourhood). DH 174 unresolved
+                  = 17 under-covered + 157 over-extended (median 18 outside genes; 31% of outside genes inside the merged
+                  neighbourhood, 65% beyond it).
+2026-11-13 11:20  Submitted 92765 ll_sd2 (24 CPUs; account 252 running): source207 scores of the selected settings
+                  (groups, syn) and a SENSITIVITY file (other thetas). Expectations: predeclared.json amendment_3.
+2026-11-13 11:21  Submitted 92767 ll_dp2 (24 CPUs; account 252 running): build4b syn, L4b+ tables, EVEN scoring of the
+                  amendment_3 outputs with ribosomal diagnosis; syn secondary rows.
+2026-11-13 11:23  source207 scores read (job 92765; results/s207_sd_group.json, s207_sd_syn.json, s207_sd_group_sens.json):
+                  groups L1 +.153 [+.116, +.189]; L2 .1 -.040; L3 .1 +.073; L4b .1 (selected) +.126 [+.086, +.166], vs P2
+                  +.077 [+.044, +.109], vs CC2 -.016 [-.042, +.008], vs engine ref -.058 [-.093, -.021], vs Spacedust +.061
+                  [+.025, +.097]; brief's L4 .1 -.044. syn: L1 equals CC2 (d .000); L4b +.123. Sensitivity (not selected):
+                  L2 .02 +.071, L4 .02 +.059, L4b +.126-.127 at every theta.
+2026-11-13 11:25  DPANN EVEN read (job 92767; even_dpann_group.json): L4b .1 ribosomal 1,680 / 1,598 (+86 [+60, +115] vs
+                  DH), Parv 114, summed .584 (+.157 vs DH; -.040 [-.056, -.024] vs words V-mob; -.024 [-.041, -.007] vs
+                  words + cohesion phrases), F1 .731/.700/.419 (CRISPR-Cas -.060 vs DH: fails the F1 bar). L1 1,036
+                  resolved; L2 .1 1,473 (DF F1 .376); L3 .1 1,494 (summed .606); brief's L4 .1 1,481 (DF F1 .357);
+                  L4 .02 (not selected) 1,585 / .632. Ribosomal diagnosis: L4b 88 unresolved = 56 under-covered (the
+                  same 56 as L1: bond gaps inside the run) + 32 over-extended.
+2026-11-13 11:26  syn even (even_dpann_syn.json): L4b 1,601 resolved, summed .570, CRISPR-Cas F1 .441 (-.038); L3 .1
+                  1,502 resolved, every F1 bar met (CRISPR-Cas -.007), verdict 'beats' DH on summed.
+2026-11-13 11:28  All five jobs COMPLETED (92658 16 min, 92659 8 min, 92721 4.4 min, 92765 6.2 min, 92767 4.3 min); peak
+                  RSS of every step <= 2.4 GB. Writing REPORT.txt.
+2026-11-13 11:32  REPORT.txt written (final). Copies of REPORT / NOTEBOOK / predeclared.json placed in $RD/long_loci/.
+
+PART 2 (DPANN only): L4b over list-based first-round bonds
+------------------------------------------------------------------
+2026-11-13 11:33  Coordinator: part 2 (list bonds Z / A / Zs / As, F reference, FZ exploratory). Read vocab_lists/REPORT.txt
+                  and vl.py (pass_count, pass_synneff, syn_matrix, Learner.evaluate, z_lists, aln_lists, cmd_job); stored
+                  objects located: $RD/vocab_lists/excl/{group,genome}_order{-1,0,1,2}.npz, mm/aln__k1000__{I,B}.npy,
+                  $RD/calib/table (z), job_z.json / job_aln.json ladders (Z tau* 6: 2,246,491 observed at 6; A tau* 6:
+                  2,522,221). Round-0 statistics are not stored per adjacency: recomputed here with vl.py's own kernels.
+2026-11-13 11:37  predeclared2.json written before any list-based computation of this workstream.
+2026-11-13 11:39  Family-free node filter smoke (login node, 1 thread, synthetic 40-genome universe): lb.count_lists equals a
+                  brute-force window scan on 261 nodes (0 mismatches; -1 padding, partner dedupe and own-group exclusion
+                  included); lb.py imports vl.py read-only (numba cache and bytecode redirected away from vocab_lists).
+2026-11-13 11:40  Re-read both cluster files (unchanged); account 228 CPUs running. Submitted 92909 ll_qZ (Z with FZ, then
+                  Zs) and 92910 ll_qA (A, then As), 64 CPUs each on standard_expand_2 (account 356). Gate inside: Z and A
+                  ladders must equal job_z.json / job_aln.json before any locus is written.
+2026-11-13 11:44  GATE PASSED for A: observed and three shuffled round-0 ladders equal job_aln.json exactly (tau* 6;
+                  2,522,221 bonds at 6). Z observed ladder equal at 11:47 (shuffles following).
+2026-11-13 11:54  Job 92910 done (A 369 s, peak 51 GB; As). Submitted 93014 ll_qodd (24 CPUs; account 268 before it):
+                  odd scores of A, As and F's L4b+ (Z / Zs / FZ after job 92909).
+2026-11-13 12:01  GATE PASSED for Z (all four orders equal job_z.json; tau* 6). Z + FZ built (job 92909); Zs started.
+                  As tau* 6 (FDR .0115 at 4, .0022 at 6). Odd A / As / F-L4b+ read (job 93014): A L4b .02 [3 conditions,
+                  odd resolved 785, summed .614]; As L4b .02 [3, 785, .620]; F L4b+ .02 [2, 810, .593].
+2026-11-13 12:04  Submitted 93124 ll_qodd (Z, FZ odd; 24 CPUs; account 268 before it).
+2026-11-13 12:09  Odd Z / FZ read (job 93124): Z L4b .02 [2, 781, .624] (CCT .448), Z L4b+ .02 [3, 781, .591]; FZ L4b
+                  .02 [3, 784, .623]. Selections (sel2.py, part-1 rule): F L4b .02, Z L4b+ .02, A L4b .02, As L4b .02,
+                  FZ L4b .02; written to predeclared2.json amendment_1 before any even number.
+2026-11-13 12:15  EVEN read (job 93147; even_dpann_{group,Z,A,As,FZ}_p2.json, pairs_p2.json). All seven bars met by A L4b
+                  .02 (1,681 / 1,549, +37 [+7, +69]; summed .613; F1 .823/.751/.475), As L4b .02 (1,686 / 1,547; .624;
+                  CCT .470), Z L4b+ .02 (1,681 / 1,542; .581; CCT .489) and FZ L4b .02 (exploratory). F L4b .02 fails
+                  CRISPR-Cas only. Token cohesion instead of kNN cohesion: +53 to +75 resolved, all bars still met.
+                  Z - A like-for-like L4b: summed +.007 [-.010, +.022], CCT -.022 [-.030, -.015], resolved -7 [-17, +2].
+2026-11-13 12:23  Zs built (tau* 6: FDR .0118 at 4, .0026 at 6) and odd-scored (job 93220): L4b .02 [2, 777, .622] (CCT
+                  .451), L4b+ .02 [3, 777, .586] selected. predeclared2.json amendment_2 written before any Zs even number.
+2026-11-13 12:26  Zs even read (job 93224): L4b+ .02 1,681 / 1,533 (+21 [-10, +51]), summed .585, F1 .807/.757/.504,
+                  all seven bars. Pairs vs part-1 L4b: resolved -49 to -65; summed -.003 to +.040; CCT F1 +.045 to +.084.
+                  Token vs kNN cohesion: A +53 [+37, +70] resolved, As +75 [+55, +94]. REPORT2.txt written.
+
+PART 3 (Spacedust collection): the part-2 selected outputs carried with nothing retuned
+-------------------------------------------------------------------------------------------
+2026-11-13 12:31  Coordinator: part 3. Read vocab_lists mm_search.sbatch / mm2knn.py, calib gpu_table.py / calib_gpu.sbatch
+                  (DPANN z table 720 s on one A5000, Z_STORE 10.5), softrec knn_deep.py (DPANN kNN k 2,000: HNSW, CPU,
+                  2.2 h on 24 threads), softrec.exclusion / Lists._knn (capcos), context_units cuts.py gene_cohesion_knn.
+                  Spacedust assets: transfer_spacedust/fam/uniq.faa (4,231,484 uids; headers = uid), gid2uid.npy = emb
+                  meta uq, zca10_f32 / f16 vectors per uid, token kappa. predeclared3.json written.
+2026-11-13 12:34  Adapter smoke (login node, sdu.py smoke): SDU gene order / contigs / genomes / 618 groups equal ll.load('sd');
+                  12,760,265 round-0 instances; gene -> uid map (fam/gid2uid) equals emb/meta.npz uq (4,231,484 uids).
+2026-11-13 12:34  Re-read both cluster files (unchanged); account 204 CPUs running; my GPU-partition job 92238 (sb_esmpp,
+                  another workstream) RUNNING, so the GPU z-table pass is NOT submitted. Submitted (64 CPUs each,
+                  standard_expand_2; account 332 after):
+                    93320 ll_mmsd  MMseqs2 18 createdb (own copy of fam/uniq.faa, 4,231,484 sequences) + prefilter -s 7.5
+                                   --max-seqs 1000 + align -e 1e-3 + convertalis + mm2knn_sd -> $LL/mm_sd/aln__k1000__{I,B}.npy
+                    93321 ll_knnsd HNSW kNN k 2,000 of the zca10 vectors (knn_sd.py) -> $LL/sd_knn; then sdu.py prep:
+                                   exclusion masks (group / genome, 4 orders) -> $LL/sd_lists/excl, kappa_var_knn50 -> $LL/sd_lists
+                  Prepared, not submitted: q_gpu_sd.sbatch + gpu_table_sd.py (calib gpu_table copy, Z_STORE 10.5, A5000
+                  partition 'gpu' only) and q_sdarm.sbatch (arm builds + source207 with refs part-1 L4b .1 / .02 and L1).
+REMAINING (on resume): (1) after 93320: SD_ARMS="A As" sbatch --export=ALL q_sdarm.sbatch (requires done_sd_prep from 93321);
+                  (2) GPU z table when 'squeue -u jwestrob -p gpu' is empty: cd $RD/long_loci/code && sbatch q_gpu_sd.sbatch,
+                  then SD_ARMS="Z Zs" sbatch --export=ALL q_sdarm.sbatch; (3) REPORT3.txt.
+2026-11-13 13:22  Coordinator (decision by Jacob): job 93320 (MMseqs2 all-against-all) was cancelled after 43 min, is not
+                  resubmitted, and its partial output is not used. predeclared3.json amendment_1: A and As dropped on this
+                  collection for compute cost; arms Z and Zs (L4b+ theta .02) with F as reference; compute limit 2 h on
+                  64 CPUs per job, 1 h per GPU job, without asking. GPU pass approved.
+2026-11-13 13:25  Job 93321 (CPU HNSW kNN): build 1,351 s; search 352 queries/s on 64 threads -> ~3.3 h search, ~4.1 h with
+                  prep: beyond the new 2-h limit. Cancelled at 49:17 (no output used). Preflight (cluster files unchanged; the
+                  'gpu' partition spans the H200 node, so the H200 node is excluded = A5000 only); my GPU queue empty.
+                  Submitted 93592 ll_gpusd (z table, A5000, -c 12): first progress ETA 1,246 s. predeclared3 amendment_2:
+                  exact GPU kNN (gpu_knn_sd.py) replaces HNSW if a timing test projects < ~50 min. Timing test 93607
+                  queued (QOSMaxJobsPerUserLimit: one running gpu job per user).
+2026-11-13 13:44  Z table done (job 93592, A5000): 20 min 34 s wall (search 1,210 s), peak GPU 11.2 GB, host peak RSS 12.0 GiB;
+                  1,232,730,135 entries at z >= 10.5 (per uid q50 166, q90 794, mean 291; DPANN mean 882 over 3,564 genomes).
+                  GPU kNN timing test (job 93607, 32,768 queries): 6.9 s -> projected 891 s for the full exact k 2,000 search
+                  (peak GPU 10.0 GB; 0 queries without self), against ~3.3 h for the CPU HNSW search. Submitted 93760
+                  ll_gknnsd (full exact kNN, A5000) and 93761 ll_sdprep (64 CPUs, afterok:93760: masks + kNN cohesion).
+2026-11-13 14:16  GPU kNN 93760 waited 31 min for the per-user gpu-partition slot (other workstreams' jobs), ran 14:16-14:34:
+                  18 min 22 s wall (search 1,090 s), peak GPU 10.0 GB, host RSS 12.0 GiB; 0 queries without self; cosine at
+                  rank 1 / 50 / 1000 / 2000 median .841 / .618 / .340 / .280 (DPANN HNSW .87 / .658 / .389 / .293).
+2026-11-13 14:34  Prep 93761 started (masks + kNN cohesion). Submitted 94064 ll_sdarm (Z, Zs builds + source207; afterok:93761).
+2026-11-13 14:40  Prep 93761 done: 5 min 32 s, peak RSS 135 GiB (64 CPUs). kappa_var_knn50 (Spacedust): floor .00018; quantiles
+                  q05/q25/q50/q75/q95 .004/.011/.026/.097/.573; share below .02/.05/.1/.2 = .426/.658/.754/.823 (token array
+                  .535/.722/.809/.879); Spearman with the token array .548. Exclusion masks: observed order excludes 387,827
+                  (group lineage) / 379,374 (genome) of 12,760,265 round-0 instances at K1000; shuffles 80-86k.
+                  Arms job 94064 started 14:40.
+2026-11-13 14:54  Arms job 94064 done (12 min 19 s): Z tau 8, Zs tau 6. source207 read: Z L4b+ .02 +.111 [+.072, +.149] (vs part-1
+                  L4b -.015; vs L1 groups -.042; vs CC2 -.031; vs engine -.073; vs Spacedust +.046); Zs +.086. Token cohesion
+                  -.008 / -.003. REPORT3.txt written.
+
+PART 4 (pair distance; CPU only)
+--------------------------------
+2026-11-13 14:57  Coordinator: part 4 (W3 / W5 / W8 / WA family bonds; Z-WA conditional). Read transfer_spacedust's DEVELOPMENT
+                  window-8 notebook entry (CC7 groups +.233, chosen after scores). predeclared4.json written before any
+                  computation at another pair distance.
+2026-11-13 14:58  Smoke (login node, 150 DPANN genomes): lw W3 equals ll.bonds(w=3); WA's d = 1 bonds equal ll.bonds(w=1); WA
+                  bonds by d 31,923 / 21,459 / ... / 5,825 at tau 4. Cluster files unchanged; account 88 CPUs. Submitted
+                  94238 ll_w (DPANN: builds + odd scores) and 94239 ll_w (Spacedust: builds only), 24 CPUs each.
+2026-11-13 14:59  Bond-rule ladder check (gold-free): W3 tau 6 on DPANN, 8 on Spacedust (part 1 used the word-type tau 10).
+                  predeclared4 amendment_1: W3b (W3 at its bond-rule tau) added as a candidate and reference row.
+2026-11-13 15:16  Builds done (DPANN 644 s, Spacedust 782 s; peak 3-5 GB): bond taus DPANN 6 / Spacedust 8 in every arm; WA
+                  bonds at d >= 4: 31% (DPANN) / 38% (Spacedust); boundaries bonded only by d >= 4: 283k / 458k. Odd read:
+                  WA L4b .05/.1/.2 are the only outputs meeting all three odd conditions; selected WA L4b theta .2 [3, 806,
+                  .522] (theta .1 [3, 805, .550]). predeclared4 amendment_2 written before any even or source207 number.
+2026-11-13 15:23  EVEN + source207 read (job 94379). DPANN: WA L4b .2 1,685 / 1,594, summed .513, F1 .762/.672/.461, all seven
+                  bars; W5 / W8 1,631 / 1,626 resolved, CRISPR-Cas -.026 (fail). Spacedust: WA L4b .2 (primary) +.164
+                  [+.125, +.202] (vs engine -.020 [-.054, +.014]); DEVELOPMENT WA L1 +.247 (BEATS engine +.064), W8 L1 +.234,
+                  W5 L1 +.232. Z-WA not built (list kernels fix WGAP = 3; masks only for d <= 3); cost estimated. REPORT4.txt.
+
+PART 5 (Z-WA: embedding-list bonds at the adaptive pair distance; CPU only)
+---------------------------------------------------------------------------
+2026-11-13 15:25  Coordinator: part 5. predeclared5.json written before any Z-WA computation.
+2026-11-13 15:28  zwa_smoke (login node, synthetic universe): adjacency_w + pass_count_w at window 3 equal vl.adjacency +
+                  vl.pass_count exactly (n, n_groups, E, E_groups on 6,233 rows); adaptive support equals a brute-force count
+                  for 300 sampled adjacencies. Submitted Z-WA jobs (64 CPUs each) for DPANN and Spacedust.
+2026-11-13 16:07  Z-WA builds: Spacedust 617 s (masks 161 s, lists 45 s, gate 62 s), peak 106 GiB; DPANN 2,159 s (masks incl.
+                  vl.emb_lists 1,002 s, z lists 416 s, gate 115 s, 4 adaptive passes ~90 s each), peak 110 GiB. Gates passed
+                  (window-3 kernel = vl.pass_count exactly; mask d <= 3 = stored). tau 8 on both (DPANN FDR .0116 at 6).
+                  Odd: L4b+ .02 selected [3, 758, .572] (CCT .495); L4b .02 [2, 758, .615] (CCT .439). Amendment_1 written.
+2026-11-13 16:10  Even + source207 read (job 94715). DPANN Z-WA L4b+ .02: 1,686 / 1,497 (-15 vs DH: fails the ribosomal bar),
+                  summed .560, F1 .806/.748/.491 (CCT +.012): 6/7. Spacedust: +.150, -.034 [-.066, -.002] vs engine (BELOW);
+                  DEV L1 +.206 (MATCHES engine). Success definition not met. REPORT5.txt written.
+
+FROZEN RUN (lut test set, $RD/slice_lut/testset/package_k8; first run on untouched data)
+-------------------------------------------------------------------------------------------
+2026-11-14 05:44  Coordinator: frozen run. Read before writing FROZEN.json: package README.txt, MANIFEST.json/.tsv,
+                  directory listings, code text of package tokens.sbatch / mmseqs_tokens.py; slice_lut REPORT/REPORT2
+                  (module definitions); scorer, ribosomal, engine, boundary and synton code (no data). FROZEN.json written
+                  (sha256 b9d8... before the timestamp fix; final hash below) with both configurations, comparators,
+                  scoring protocol, expectations and failure criteria. No dataset content opened yet.
+2026-11-14 05:50  STEP 2 started. Schemas read (genes / genomes incl. GTDB genus / contigs with first_gid, n_genes / gold
+                  columns; embeddings shapes; zca10.json; package embed/zca10.py and prep_unique.py code). Code in
+                  frozen/code: env_f.sh, tokens_f.sbatch (package recipe + compute guard), gtable_lut.py and
+                  gpu_knn_lut.py (path-only copies, diffs checked), fl.py (paths + ll.DATA['lut']; inputs, WA, DH),
+                  fz.py (sdu.py with paths changed; 14 path edits, diff checked), main_f / z_f / gpu_f wrappers. Package
+                  token scripts copied byte-identical (sha256 = MANIFEST). meta.npz built on the login node: 4,507,042
+                  genes, 1,032 genomes, 4,464,102 uids numbered by first gid. Slurm preflight (both rule files re-read,
+                  md5 unchanged d797b6c9 / 60727ce8); account 24 standard + 128 gpu_h200 CPUs running before.
+                  Submitted J1 99840 llf_tok (64 CPUs) and J2 99841 llf_gpu MODE=table (A5000, queued).
+2026-11-14 05:54  fscore.py written (sha256 17d11c54...) before any output exists; synton wrapper syn_f.sbatch (run_pipeline
+                  copy, gate and scoring removed) and byte-identical baseline_synton adapters (hashes = FROZEN.json).
+                  Scorer prep (login node, 16 s, 1.3 GB): shadow packages main 733 (all >= 2 members, single contig,
+                  positions = gids) / strict 121; complete clusters 80 (all a1); RB lut homologs 4,740 mapped to package
+                  gids, 134 in b1/b2 (72 isolated: B 38 / F 37 / E 33 / A 9 / G 8 / M 6 / C 2 / I 1 over all b1/b2
+                  homologs); ribosomal runs 858 in 855 genomes (431 even). The false-positive side rests on 72 genes.
+                  Code sha256: fl d4889fe3, fz 32222775, gtable_lut 62c9cf85, gpu_knn_lut 66af6510, tokens_f c1492082.
+                  J2 99841 running on the A5000 node since ~05:51; J1 99840 pending (Priority).
+2026-11-14 06:15  J2 99841 done (22 min 49 s, host RSS 9.3 GB, GPU 10.9 GB): z table 2,227,054,481 entries at z >= 10.5
+                  (per uid q50 / q90 / q99 481 / 953 / 1,006; Spacedust 1.20 G) + genome-pair sums. Preflight repeated
+                  (rule files md5 unchanged); account 212 CPUs running. Submitted J3 99963 llf_gpu MODE=knn (queued
+                  behind another session's gpu job: QOSMaxJobsPerUserLimit). J1 99840 still pending (Resources).
+2026-11-14 07:02  J3 99963 done (19 min 58 s; GPU 10.5 GB): exact kNN k 2,000, no query lacked itself; cosine at rank
+                  1 / 50 / 200 / 1,000 / 2,000 (q50) .914 / .760 / .642 / .365 / .284. J1 99840 still pending after 72 min
+                  (Priority; standard partition full). Preflight repeated (md5 unchanged; account 220 CPUs running).
+                  Submitted J6 100137 llf_syn FAMILY=faithful (24 CPUs; independent of the tokens) as the second job.
+2026-11-14 10:25  Coordinator: 99840 (64 CPUs) held the account queue (start estimate 16 Nov 21:46, reason Resources).
+                  Preflight repeated (md5 unchanged; account 388 CPUs running incl. other sessions). tokens_f.sbatch
+                  changed to --qos=standard_expand -c 24 and its compute guard now scales the 64-thread projection by
+                  64 / allocated threads (sha256 9e9f680b...); 99840 cancelled before it started; resubmitted as J1'
+                  100452 llf_tok (24 CPUs), scheduler start estimate 2026-11-16T09:22:09 (Priority). 100137 (synton
+                  faithful, 24 CPUs) kept, estimate 2026-11-15T11:18:27. Watcher moved to 100452 + 100137.
+                  From now on 24-CPU jobs only: main_f.sbatch and z_f.sbatch converted to 24 CPUs. Exception raised
+                  with the coordinator before any submission: the Z prep (kNN cohesion + exclusion masks) peaked at
+                  120 GB on Spacedust (lut ~126-135 GB) against 96 GB at 24 CPUs; zprep_f.sbatch (40 CPUs / 160 GB,
+                  standard_expand_2) written, not submitted.
+2026-11-14 10:28  Coordinator: Z prep approved on standard_expand_2 at 40 CPUs (CPU COUNT CHOSEN FOR MEMORY: 160 GB for an
+                  expected ~126-135 GB peak); no adapter change; everything else 24 CPUs; run the secondary while the
+                  tokens wait and report it as it lands.
+                  Genome groups (login node, single thread, 3 s; gold-free): 179 groups at 0.75 for 1,032 genomes
+                  (largest 131, 95 singletons; .70 / .80 cuts 46 / 460); emb_hom pairs q50 / q90 / q99 .699 / .740 / .823;
+                  description AMI family .84, genus .63. FROZEN expectation was 300-550 groups: MISSED (fewer, coarser
+                  units than on DPANN / Spacedust, one per 5.8 genomes; DPANN one per 5.6, Spacedust one per 2.1).
+                  zca32 running on the login node (single thread).
+                  The copied secondary code reads the token cohesion twice: a descriptive Spearman in prep and an unscored
+                  token-cohesion check tree in the arm. fzrun.py (sha256 1dc08c4b...) runs fz.py unchanged around both:
+                  prep run 1 stops at that read after saving the kNN cohesion, run 2 builds the masks; the arm runs with
+                  the check tree dropped from fz.KAPPA (knn outputs never read the token array). After the tokens exist
+                  the unchanged fz.py arm is rerun and L1 / L4bp_t0.02 must be identical (provisional until then).
+2026-11-14 10:34  zca32 (login node, single thread, 6 min; peak RSS 42.8 GB, mostly the file-backed output memmap): stored
+                  transform applied to the raw means; gate PASSED: max |f32 - stored f16| 1.2e-4, min cosine .99994.
+                  Preflight repeated (md5 unchanged; account 388 CPUs running, other sessions). Submitted J5a 100462
+                  llf_zprep (standard_expand_2, -c 40 FOR MEMORY) and J5b 100463 llf_zarm (24 CPUs, afterok:100462).
+                  Jobs of mine now: 100452 tok, 100137 syn faithful, 100462 zprep, 100463 zarm (the two Z jobs at the
+                  coordinator's request while the tokens wait).
+2026-11-14 12:24  (recorded 11-19) J1' 100452 stopped itself at the guard after the base clustering (985 s at 24 CPUs; base
+                  tokens written): 329,612 rescue query uids (47.4 M residues) against 4,464,102 uids (1.354 G residues),
+                  projected job 144 min. J5a 100462 zprep done 6 min 36 s; J5b 100463 provisional Z arm done 7 min 53 s
+                  (tau 8); J6 100137 synton faithful done 1 h 10 min 53 s. Session cut off (weekly token limit) until 11-19.
+2026-11-19 02:00  Coordinator: remaining CPU computation authorised past 2 h; resume the rescue (24 CPUs); chain the
+                  remaining steps as dependent jobs that write results and tables; cap every heavy command at ~2x its
+                  expected time. DEVIATION FROM THE REQUEST (not from FROZEN.json): the account rules (~/.claude/CLAUDE.md
+                  on biotite: 'NEVER PUT A SUBPROCESS TIMEOUT IN A SLURM JOB SCRIPT', no walltimes) forbid `timeout` in job
+                  scripts, so the caps are enforced from outside by a login-node watchdog (code/watchdog.sh, sha256
+                  9e7d220b...; nohup/setsid, one squeue per job per minute; cancels a job running past its cap or stuck in
+                  DependencyNeverSatisfied; log logs/watchdog.log). tokens_f.sbatch: GUARD_MIN env (240 for this run);
+                  the base step is skipped (its parquet exists). Preflight repeated (md5 unchanged; account 124 CPUs).
+                  Chain submitted (all 24 CPUs): 115327 score_secondary (now; provisional Z outputs + synton faithful, cap
+                  60 min), 115328 tokens rescue (cap 300), 115329 main = uid gate, cohesion, WA, engine, DH (afterok 115328,
+                  cap 90), 115330 Z rerun unchanged + description + identity check (afterok 115329, cap 40), 115331 synton
+                  matched (afterok 115328, cap 150), 115332 final scoring + tables (afterany 115329:115330:115331, cap 60).
+2026-11-19 02:10  Secondary scored (115327, 69 s; provisional build): Z L4b+ .02 lut F1 .906 [.898, .913], control .627,
+                  excess +.279 [+.271, +.288]; ribosomal 857 / 811 (any-fit 834); complete 80 held (precision median .615),
+                  module matched 75; isolated b1/b2 homologs in loci .639 vs background .665; Z L1 F1 .579, excess +.078,
+                  resolved 526; synton faithful F1 .055, excess -.009, ribosomal 0 / 0. Written into REPORT_frozen.txt
+                  (secondary section, marked provisional). z_prep peak 126.0 GB (forecast 126-135 GB).
+2026-11-19 02:56  Tokens done (115328, 54 min 23 s at 24 CPUs; the guard projection of 127 min was 2.3x too high): rescue
+                  prefilter 2,665 s (13.9 GB), align 515 s, 12,275,297 hits for 328,600 queries; rescue3 moved 85,410
+                  genes (1.9%), 69,543 base tokens emptied: 300,720 families (201,138 singletons, largest 13,717); base
+                  370,263 (254,965 singletons). Main job 115329 started: uid gate EQUAL (package uid_of_row = 06a
+                  gid2uid); token cohesion 47 s / 19.4 GB (floor .00014; kappa q50 .031; share < .2 .817). Synton matched
+                  115331 running. Watcher on 115329.
+2026-11-19 02:58  Coordinator queued part 6 (strand-aware splitting / bridging variants of the frozen primary on DPANN +
+                  Spacedust check). Not started: it waits until the frozen run is finished and REPORT_frozen.txt reported.
+2026-11-19 03:06  Main job 115329 done (11 min). PRIMARY WA build (7 min 37 s, 3.5 GB): bond tau 6 (FDR at 4 / 6 / 8:
+                  .034 / .0080 / .0016; DPANN 6); 6,217,723 bonds (distance 1-8: 28 / 19 / 14 / 11 / 9 / 7 / 6 / 5%),
+                  2,687,242 bonded boundaries (408,911 only by pairs 4-8 apart); L1 509,332 loci, 70.9% of genes; L4b
+                  theta .2 2,111,760 loci, 65.4% of genes (span q50 / q90 / q99 / max 3 / 10 / 28 / 254). Engine on the same
+                  tokens (2 min 08 s, 7.4 GB): rule P <= 1e-6 & L >= 2 chosen at the FDR target (FDR 7e-5; DPANN chose
+                  1e-4), 156,443 significant pairs, 1,295 modules; DH 845,580 loci, 71.1% of genes (25 s). Z rerun 115330
+                  running; synton matched 115331 running.
+2026-11-19 03:15  Z rerun 115330 (9 min 37 s): adapter smoke OK (gene order, contigs, 179 groups, 12,584,067 instances);
+                  fz.py arm UNCHANGED (incl. token-cohesion check tree) reproduces the provisional build exactly: L1
+                  620,574 / L4b .02 1,876,739 / L4b+ .02 2,010,875 rows identical, tau and ladder equal. The secondary is
+                  no longer provisional. kNN cohesion description: floor .00014, q50 .060, Spearman with token cohesion
+                  .580 (Spacedust .548). Z arm peak 57.4 GB at 24 CPUs. Watcher on the final scoring 115332.
+2026-11-19 04:15  Chain finished; watchdog exited at 04:05 with no cancellation. Synton matched 115331 1 h 07 min 48 s
+                  (6,005 significant pairs, 113,023 syntons, 5.7% of genes). Final scoring 115332 (2 min 19 s):
+                  results/score_lut.json, tables_lut.txt. PRIMARY lut F1 .768 [.759, .778], control .619, excess +.149
+                  [+.138, +.161] -> FAILS predeclared criterion F2 (lower bound < +.15); passes F1 (858 / 788), F3 (vs DH
+                  +.041 [+.027, +.057], resolved +120 [+97, +143]) and F4 (78 / 80 held). SECONDARY passes all four (F1 .906,
+                  excess +.279 [+.271, +.288], 857 / 811, 80 held; vs DH +.171, +143; vs primary +.130, +23). WA L1 F1 .472
+                  / +.018 / 373 resolved; DH .660 / +.108 / 668; synton faithful .055 / -.009, matched .003 / -.083, 0
+                  ribosomal. All 80 complete-cluster genomes in one genome group. REPORT_frozen.txt written (ANSWER lines
+                  first) and synced.
+
+PART 6 (strand-aware splitting S, bridging B, SB on both frozen bases; DPANN development, Spacedust check)
+------------------------------------------------------------------------------------------------------------
+2026-11-19 04:15  Frozen report delivered; coordinator: part 6 on BOTH bases (P = frozen primary, Z = frozen secondary),
+                  list-partner bridging for Z with a family-token check. Read ribo_audit REPORT2.txt, bio.py, audit.py.
+                  predeclared6.json written before any variant build or score (gates, selection, reporting, justified /
+                  unjustified criteria, expectations). No own variant (reason in predeclared6).
+2026-11-19 04:28  p6.py (sha256 cae10bc6...) written. Bridging gate on the login node (single thread, 7 min 31 s, 6.4 GB):
+                  my implementation on the frozen primary reproduces the audit exactly: 59,655 candidate junctions (same
+                  set), rule (i) 11,944, rule (iii) 23,145, (i) AND (iii) 4,941; co-group counts and spacings equal at
+                  every junction. Preflight repeated (md5 unchanged; account 112 CPUs). Chain (24 CPUs each, login-node
+                  watchdog, caps in logs/watchdog_p6.tsv): 115595 DPANN bridges + builds (P, Z), 115596 Spacedust bridges,
+                  115597 / 115598 DPANN scoring P / Z (afterok 115595), 115599 Spacedust builds + source207 (afterok all).
+2026-11-19 04:34  Bridging gate reproduced in Slurm (115595): DPANN P candidates / rule (i) / co-groups / bridges equal to
+                  the audit table at every junction; 4,941 fires (8.3%), junction-level curated merges 0, joins 11, target
+                  edges 34, verdict-1 repairs 21 of 23 (all audit counts). Spacedust bridges (115596, 5 min 49 s, 30.8
+                  GB): P 4,290 of 75,518 candidates (5.7%); Z list rule 2,130 of 130,473 (1.6%), family rule 5,010; list vs
+                  family agreement Jaccard .257 (both 1,460, list only 670, family only 3,550).
+2026-11-19 04:40  115595 done (11 min; peak 82.5 GB in the DPANN Z list step: 3.27 G list entries). DPANN Z bridges: list
+                  rule 5,354 of 97,162 candidates (5.5%), family rule 5,078; agreement Jaccard .497 (both 3,462, list only
+                  1,892, family only 1,616); junction-level curated merges 0, joins 11, target edges 17; verdict-1 repairs
+                  15 of 29. Builds: base gates pass at every theta for P and Z (row-for-row equal to stored loci). Junctions
+                  changed genome-wide: S forces splits at 457,709 bonded strand changes for P (24.8% of 1,847,718 bonded
+                  boundaries) and 354,209 for Z (22.4% of 1,583,142); B bridges 4,941 (P) / 5,354 (Z). Genes in loci: P
+                  base .552, S / SB .533, B .552; Z .571 in every variant. Scoring jobs 115597 / 115598 running.
+2026-11-19 04:47  DPANN scoring done (115597 4 min, 115598 5.5 min). Audit bio reading of the frozen bases reproduced
+                  (P 1,538 / 1,571; Z 1,504 / 1,547). Odd selection: theta unchanged for every variant (P .2, Z .02).
+                  EVEN / all runs, P base: S summed .522 (+.009 [-.004, +.022]), F1 DF -.015 [-.022, -.007], CCT -.019
+                  [-.025, -.014] (CCT .441 fails the bar), resolved 1,622 (+28 [+15, +42]), bio 1,592 / 1,634 (+54 / +63),
+                  3 new curated pairs; B resolved 1,544 (-50 [-65, -36]), bio 1,487 / 1,520 (-51 / -51), F1 unchanged ->
+                  UNJUSTIFIED (u3); SB summed +.009, same F1 losses, resolved 1,599 (+5), bio 1,567 / 1,610, CCT bar fails.
+                  Z base: S summed .564 (-.017 [-.025, -.010]), F1 DF -.006, TXSS -.010, CCT .000, resolved 1,598 (+56 [+42,
+                  +72]), bio 1,564 / 1,613 (+60 / +66), 0 new pairs, all seven bars; B +9 resolved, bio +2 / +3; SB summed
+                  -.017, resolved 1,624 (+82 [+65, +101]), bio 1,585 / 1,634 (+81 / +87), 0 new pairs, all seven bars;
+                  Bf / SBf (family bridges) equal B / SB within .0002 summed and identical ribosomal counts.
+                  Diagnosis (p6diag.py, login node): P-B loses 53 runs, every one because B's best locus is a bridged union
+                  (best_frac >= .8, precision median .63; the base locus covered < 100% of the run, the union covers more
+                  and wins the largest-overlap rule); verdict-1 runs resolved: P base 0, B 2, S 0, SB 21 of 23; Z base 0,
+                  B 3, S 0, SB 18 of 29. Z-B loses 0 runs. By the predeclared criteria no variant is JUSTIFIED (S / SB
+                  fail j2: Z summed -.017, P DF -.015 / CCT -.019); P-B UNJUSTIFIED; the rest NOT SHOWN.
+2026-11-19 04:55  Spacedust (115599, 5 min 38 s; DEVELOPMENT): P S +.183 (+.019 [+.001, +.037]), SB +.184, B +.165; Z S
+                  +.117 (+.006 [+.001, +.012]), SB +.118, B +.112, Bf +.113, SBf +.119; base rows reproduce +.164 / +.111.
+                  Watchdog exited, no cancellation. REPORT6.txt written (ANSWER lines first, two tables). No variant JUSTIFIED
+                  by the predeclared criteria; Z carries the fixes better (SB: strict 1,585 / loose 1,634 / standing 1,624,
+                  all seven bars, 0 new pairs, CCT unchanged; summed -.017 is the failed condition).
+
+PART 7 (S-add: strand-first pieces added to the unmodified tree; both bases)
+------------------------------------------------------------------------------
+2026-11-19 04:57  Coordinator: part 7, then the second frozen run (SR-VP bins). predeclared7.json written (04:56 UTC,
+                  sha256 8c68108e...) before any part-7 build, score or the mechanism check. p7.py (2c62e555...) imports
+                  part-6 code. Preflight repeated (md5 unchanged; account 126 CPUs). Chain: 115635 mechanism check +
+                  builds (Z, P), 115636 / 115637 scoring P / Z, 115638 Spacedust rows; watchdog caps 40 min each.
+2026-11-19 05:05  Mechanism check (115635, before any part-7 score): of curated instances whose best locus got worse under
+                  S, 67.1% (family base, 648) and 79.1% (list base, 397) have members on both strands, against 28.3% of
+                  all 7,096 instances (24.6-25.2% of unchanged, 22.3-26.7% of better); a strand change inside the member
+                  span: 88.0% / 92.4% of worse vs 39.0% of all. DefenseFinder worse instances 89.9% / 94.4% two-strand.
+                  CONFIRMED. Builds: gates pass; added single-strand nodes Z theta .02: 211,176 (+16.5%), of which 135,429
+                  cross an existing node without nesting; P theta .2: 152,864 (+12.2%), 121,161 crossing.
+                  Scoring (115636 / 115637, 2 min each): Z odd selection theta .05 for S-add and S-add+B (frozen .02).
+                  Z S-add+B theta .05: summed .529 (-.052 [-.060, -.044]), TXSS F1 -.012, CCT +.018, resolved 1,627
+                  (+85), bio 1,596 / 1,642 (+92 / +95), 0 new pairs, all seven bars -> NOT justified (summed, TXSS).
+                  At theta .02: summed -.019 [-.022, -.016], every F1 up (DF +.007, TXSS +.002, CCT +.011), bio +81 / +87.
+                  P S-add theta .2: summed +.001 [-.006, +.009], F1 DF +.010, TXSS +.018, CCT +.009, resolved +36, bio
+                  1,592 / 1,634 (+54 / +63), all seven bars, 3 new curated pairs -> NOT justified (new pairs only).
+                  P S-add+B: bio +29, 3 new pairs -> not justified. Frozen run 2 PRIMARY therefore = unmodified Z.
+
+SECOND FROZEN RUN (SR-VP genome bins, $RD/ws_srvp_bins/package; first ELSA run on it)
+---------------------------------------------------------------------------------------
+2026-11-19T05:11Z  FROZEN2.json written after reading only the package README, MANIFEST.tsv / .json, seal.json summary, listings and
+                  srvp_bins/REPORT.txt. PRIMARY = unmodified embedding-list tree (part 7: S-add+B not justified),
+                  SECONDARY = family-bond tree, adaptive distance; comparators, scoring, failure criteria, expectations.
+2026-11-19 05:15  Schemas read (genes gid-ordered and sorted; genomes with domain / genus / n_contigs; gold with the DPANN
+                  columns incl. resolved / order_trusted / span_genes; ribosomal runs with domain). Code frozen2/code:
+                  path-only copies (fl2 f49b6257, fz2 6d1a3828, gtable_f2 caa93680, gpu_knn_f2 90456a3c, tokens_f2
+                  7db50194, syn_f2 c2884a97), fscore2.py (2f3fac6a) and annot2.py (4a0a1f04) written before any output;
+                  shadow pkg/proteins_gid.faa -> universe/proteins.faa; meta.npz: 3,211,751 genes, 3,170,150 uids
+                  numbered by first gid. Preflight repeated (md5 unchanged; account 126 CPUs). Chain (watchdog pid 1533763,
+                  caps in logs/watchdog_jobs.tsv): 115659 tokens (GUARD_MIN 180), 115660 GPU table, 115661 GPU kNN, 115662
+                  main, 115663 zprep (40 CPUs, memory), 115664 zarm, 115665 synton faithful, 115666 synton matched, 115667
+                  annotation for the accurate reading, 115668 scoring (afterany).
+2026-11-19 05:27  Annotation 115667 done (11 min 30 s; hmmsearch 675 s on 24 processes): 226 KOfam profiles (201
+                  'ribosomal protein' + 25 N_RULES), 20 Pfam models (none missing); KO assigned to 60,185 genes; classes R
+                  56,992 (53,345 marked + 3,647 by KO only), N 16,197, X 3,138,562. The accurate reading can be computed.
+                  GPU table 115660 started; tokens 115659 in base clustering (13 min); synton faithful running.
+2026-11-19 05:30  Coordinator queued part 8 (best-window test on both bases; DPANN + Spacedust rows). Not started: it waits
+                  until the second frozen run is finished and reported.
+2026-11-19 05:40  GPU table 115660 done (11 min 47 s). Tokens: base cluster 1,179 s; 376,933 rescue query uids against
+                  979 M residues, guard projection 106 min (prefilter started 05:35:38). GPU kNN 115661 running.
+2026-11-19 05:50  GPU kNN 115661 done (10 min 38 s). Tokens rescue and synton faithful running.
+2026-11-19 05:53  Synton faithful 115665 done (37 min 28 s): 31,236 significant pairs (score > 80), 100,042 syntons, 8.4% of genes. Rescue prefilter running (18 min so far).
+2026-11-19 06:34  Tokens 115659 done (1 h 17 min at 24 CPUs; base 1,179 s, rescue prefilter 2,687 s, align 687 s): base 421,147 families (284,899 singletons); rescue3 moved 102,540 genes -> 337,684 families (220,296 singletons, largest 9,502). Main 115662 and synton matched 115666 running.
+2026-11-19 06:43  Main 115662 done (9 min): uid gate EQUAL; zca32 gate passed (max diff 1.2e-4); groups 277 at 0.75
+                  (largest 54, 143 singletons; .70 / .80: 153 / 481; FROZEN2 expectation 500-850 MISSED; AMI family .87,
+                  genus .39, description only); token cohesion q50 .022; SECONDARY WA: bond tau 8 (FDR at 6: .0155),
+                  2,180,472 bonds, L1 360,009 loci (50.7% of genes), L4b .2 874,154 loci (42.9%); engine rule P <= 1e-4 &
+                  L >= 2 (FDR .0099), 276,715 significant pairs; DH 528,741 loci (65.5%). zprep 115663 running (40 CPUs).
+2026-11-19 06:48  zprep 115663 done (4 min 40 s, 40 CPUs, peak 90.0 GiB): adapter smoke OK (277 groups, 8,797,285 instances); kNN cohesion q50 .033; exclusion masks built. Z arm 115664 running.
+2026-11-19 06:52  Z arm 115664 done (4 min 53 s, 20.8 GB): list tau 8 (FDR at 6 / 8: .0241 / .0059); 791,717,268 list entries; 1,752,378 bonds over 1,183,285 boundaries; PRIMARY L4b+ .02 1,013,801 loci (49.3% of genes); Z L1 400,338 loci. Waiting on synton matched 115666, then scoring 115668.
+2026-11-19 07:08  Synton matched 115666 done (31 min); scoring 115668 (2 min 53 s); watchdog exited, no cancellation.
+                  PRIMARY (Z L4b+ .02): DF F1 .882, excess +.451 [+.443, +.459]; TXSS .754 / +.302; summed +.753; ribosomal
+                  802 / 528 (any-fit 708; accurate 540 / 574); vs DH summed +.117 [+.104, +.129] BEATS, resolved +215.
+                  SECONDARY (WA L4b .2): DF .824 / +.457; summed +.745; 803 / 498 (any-fit 706); vs DH +.108, +185.
+                  DH: summed +.636, resolved 313. Both configurations FAIL F1 (resolved < 602) and F4 (Bacteria < 70%);
+                  pass F2, F3. Single-contig genomes resolve fewer runs (52% vs 75%). REPORT_frozen2.txt written.
+
+PART 8 (best-window bond test on both bases)
+-----------------------------------------------
+2026-11-19 07:10  predeclared8.json written (sha256 cb7cc5f3...) before any best-window computation: variants P-BW (family
+                  base) and Z-BW (list base), gates, selection, justified test (as part 7), expectations.
+2026-11-19 07:13  p8.py (sha256 9054ffa1...) written. Login-node smoke (150 DPANN genomes): best-window code in own-window
+                  mode equals lw.bonds_adaptive exactly (113,882 bonds at tau 4); best-window mode 133,898 bonds (+18%), 42%
+                  of them with a window above the own distance. Preflight repeated (md5 unchanged; account 126 CPUs). Chain
+                  (watchdog pid 2275616): 115868 P-BW DPANN, 115869 Z-BW DPANN, 115870 P-BW Spacedust, 115871 Z-BW
+                  Spacedust, 115872 / 115873 DPANN scoring P / Z, 115874 Spacedust rows.
+2026-11-19 07:26  P-BW DPANN 115868 (8 min 54 s): gate passed on the full set (own-window bonds = WA, 3,661,195 at tau 4);
+                  bond tau 6 (FDR .0081); 3,505,845 bonds (WA 3,206,318), 39.1% with a window above the own distance (+1:
+                  725,366; +2: 320,629; ...). Scoring P 115872 (1 min 15 s): odd selection theta .1. Even / all runs: summed
+                  .530 (+.017 [+.010, +.024]), F1 DF +.001, TXSS +.023, CCT +.005; resolved 1,624 (+30 [+19, +42]); any-fit
+                  1,662; bio 1,553 / 1,600 (+15 / +29); verdict-1 split runs repaired 23 of 23 (standing and on target C);
+                  case 8233 S17|L22 boundary 0 -> Lambda 764 (covering bonds at windows 5-8); 5 new curated pairs; all seven
+                  bars -> NOT justified (strict +15 < +50; 5 new pairs). P-BW Spacedust tau 8; Z-BW Spacedust tau 10 (gates
+                  passed); Z-BW DPANN gates passed, ladder running.
+2026-11-19 07:40  Z-BW DPANN 115869 (18 min 36 s, 86.1 GB; gates passed): list tau 8; 2,151,645 bonds (75% at window 3;
+                  98,680 only through windows > 3). Scoring Z 115873: theta .02 selected; summed .601 (+.020 [+.014, +.025]),
+                  F1 DF -.011, TXSS -.002, CCT -.015; resolved 1,566 (+24); bio 1,520 / 1,560 (+16 / +13); verdict-1
+                  repaired 8 of 29 (C fit 4); case 8233 Lambda 790; 3 new pairs; seven bars met -> NOT justified.
+                  Spacedust rows 115874 (DEVELOPMENT): P-BW +.159 (-.005 [-.013, +.003]) MATCHES; Z-BW +.122 (+.011
+                  [-.002, +.024]) MATCHES. Watchdog exited, no cancellation. REPORT8.txt written.
+
+THIRD FROZEN RUN (complete GTDB genomes; ribosomal benchmark; package $RD/testset3/package/, not yet sealed)
+-----------------------------------------------------------------------------------------------------------
+2026-11-19T10:38Z  Coordinator: phase 1 = FROZEN3.json before the package exists; phase 2 on the go signal. FROZEN3.json written
+                  (sha256 5f30fb511e172506c7e600168788c908c8f1857af893e088ea9998806e4068eb): both configurations unchanged (parts 6-8: no justified change), engine reference and
+                  pair-linking comparators, the SR-VP pipeline and settings, outputs for the audit scorer, standing
+                  ribosomal scoring beside the audit agent's predeclared6.json (bars are the audit agent's; hash pending),
+                  deviation policy, expectations, projection ~2-2.5 h CPU. Nothing under $RD/testset3/ opened.
+2026-11-19 10:45  frozen3/code prepared as path-only copies of the SR-VP code (env_f3, tokens_f3, gtable_f3, gpu_knn_f3,
+                  gpu_f3, main_f3, zprep_f3, zarm_f3, fl3, fz3; package path testset3/package, output frozen3, data key
+                  gtdb3; lut layout: FASTA at the package root, no shadow link) and fscore3.py (ribosomal standing counts,
+                  any-fit, descriptive statistics, locus-table manifest; runs table path given at submission). Not uploaded
+                  or run; waiting for the coordinator's go.
+2026-11-19 10:59  Coordinator: audit definition and bars frozen. Recorded beside FROZEN3.json (unchanged) in
+                  frozen3/FROZEN3_audit_reference.json: predeclared6.json sha256 a6c997f3... and score6.py sha256 6b61eeb8...,
+                  both verified on local and biotite copies; score6 reads the PRIMARY / SECONDARY / engine tables by path.
+                  Package has no ribosomal runs: standing counts will use runs from the audit agent's annotation output.
+                  Waiting for the go; $RD/testset3/ unopened.
+2026-11-19 15:18  GO for phase 2. FROZEN3.json sha256 5f30fb51...68eb verified (local and biotite). Package seal verified on
+                  the login node: all 31 files of MANIFEST.json rehashed, 0 mismatches, seal sha256 cf920a48...ff3c89 equal
+                  to seal.json. Layout: lut (proteins_gid.faa at the root, universe/, embeddings/ with zca10 fitted on this
+                  set, split.parquet ignored); 842 genomes (700 Bacteria, 142 Archaea), 2,557,405 genes, 1,176 contigs; no
+                  ribosomal tables (runs from the audit agent's RUNS_READY.json). Code uploaded (fscore3.py: manifest
+                  command added; split subsets dropped, before any output). meta.npz built on the login node.
+2026-11-19 15:18  Preflight (cluster CLAUDE.md now md5 17c81248, 693 lines: Aksha section added; Slurm rules unchanged;
+                  ops note unchanged); account 112 CPUs running. Chain under watchdog (caps logs/watchdog_jobs.tsv): 116640
+                  tokens (24 CPUs, guard 115 min), 116641 GPU table, 116642 GPU kNN, 116643 main, 116644 list prep (40 CPUs
+                  for memory, as FROZEN3), 116645 list arm + results/locus_tables.json. Scoring is submitted once the audit
+                  agent's RUNS_READY.json exists. Projection for 2.56 M genes: ~1.5-2 h of CPU job time, GPU passes ~10 min.
+2026-11-19 16:55  Chain done (watchdog exited 16:48, no cancellation): tokens 116640 75 min (344,153 rescue queries; 333,290
+                  families), GPU table 7.9 min, kNN 10.1 min, main 6.4 min (groups 353; WA bond tau 8; engine P <= 1e-4 &
+                  L >= 3), list prep 5.8 min (40 CPUs, 71.7 GiB), list arm 2.4 min (list tau 8). results/locus_tables.json
+                  written 16:48:30 with the five tables' sha256. Audit runs (RUNS_READY.json; runs.parquet sha256 30e56f0a...,
+                  801 g2_m16) used for the standing counts; scoring 116810 (11 s): PRIMARY 801 / 692 / any-fit 773;
+                  SECONDARY 801 / 683 / 743; DH 298; Z L1 294; WA L1 233; PRIMARY - DH +394 [+366, +423]; PRIMARY -
+                  SECONDARY +9 [-13, +32]. REPORT_frozen3.txt written.

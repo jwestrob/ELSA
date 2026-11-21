@@ -1,0 +1,57 @@
+{
+ "comps": [
+  "META1_1778",
+  "META1_1779",
+  "META1_1780",
+  "META1_1781",
+  "META1_1782",
+  "META1_1783",
+  "META1_1784",
+  "META1_1785",
+  "META1_1786",
+  "META1_1787"
+ ],
+ "labels": {
+  "META1_1777": "x1777",
+  "META1_1778": "A",
+  "META1_1779": "B",
+  "META1_1780": "C",
+  "META1_1781": "D",
+  "META1_1782": "E",
+  "META1_1783": "F",
+  "META1_1784": "G",
+  "META1_1785": "H",
+  "META1_1786": "M",
+  "META1_1787": "I",
+  "META1_1788": "x1788"
+ },
+ "tbdr": "META1_1785",
+ "abc": [
+  "META1_1782",
+  "META1_1783"
+ ],
+ "lanm": "META1_1786",
+ "mdh_kos": [
+  "K23995",
+  "K14028",
+  "K14029",
+  "K00114"
+ ],
+ "threads": 24,
+ "null_reps": 200,
+ "seed": 17,
+ "flank": 5,
+ "self": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/scan/refs_self.tsv",
+ "globdb_counts": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/globdb/genome_gene_counts.parquet",
+ "universe": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/package/rhizobiales/universe",
+ "fwd": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/scan/order_fwd.tsv",
+ "rev": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/scan/order_rev.tsv",
+ "globdb_rows": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/globdb/order_rows.parquet",
+ "mdh_rows": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/globdb/order_rows.parquet",
+ "gene_offset": null,
+ "pfam_check": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/scan/family_pfam_check.tsv",
+ "pfam_check_universe": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/package/beijerinckiaceae/universe",
+ "out": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/results/order",
+ "own_annot": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/results/order/own_annot.parquet",
+ "mdh_hits": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/results/order/mdh_hits.parquet"
+}

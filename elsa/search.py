@@ -18,6 +18,46 @@ from .chain import ChainedBlock, chain_anchors_lis, extract_nonoverlapping_chain
 from .seed import ANCHOR_COLS
 
 
+def _apply_indexed_transform(
+    matrix: np.ndarray,
+    plm_config: Any,
+    work_path: Path,
+) -> np.ndarray:
+    """Apply the post-processing transform the index was built with.
+
+    Resolution order is the explicit ``transform_path`` first, then the copy
+    ``elsa embed`` writes beside the index. When the config asks for a transform
+    and neither exists, the index predates the setting and searching it would
+    compare across two spaces, so this raises rather than guessing.
+    """
+    from .transform import EmbeddingTransform
+
+    kind = getattr(plm_config, "embedding_transform", "none") or "none"
+    if kind == "none":
+        return matrix
+
+    configured = getattr(plm_config, "transform_path", None)
+    candidates = [Path(configured)] if configured else []
+    candidates.append(work_path / "ingest" / "embedding_transform.npz")
+
+    for candidate in candidates:
+        if candidate.is_file():
+            transform = EmbeddingTransform.load(candidate)
+            if transform.dim is not None and transform.dim != matrix.shape[1]:
+                raise ValueError(
+                    f"Transform at {candidate} expects {transform.dim}-d vectors, "
+                    f"query embeddings are {matrix.shape[1]}-d"
+                )
+            return transform.apply(matrix)
+
+    raise FileNotFoundError(
+        f"Config requests embedding_transform={kind!r}, and no fitted transform "
+        f"was found at {' or '.join(str(c) for c in candidates)}. The index was "
+        f"built before this setting; re-run 'elsa embed' so the query and the "
+        f"index share one space."
+    )
+
+
 def embed_query_proteins(
     proteins: list,
     plm_config: Any,
@@ -78,6 +118,13 @@ def embed_query_proteins(
     else:
         # No PCA — use raw embeddings directly
         projected = emb_matrix
+
+    # Enter the same space as the index. A query scored in a different space
+    # than the vectors it is compared against returns confident nonsense, and
+    # the failure is silent because cosines remain well-formed. The transform
+    # is loaded rather than refitted: fitting on a handful of query proteins
+    # would estimate a different mean and a different covariance.
+    projected = _apply_indexed_transform(projected, plm_config, work_path)
 
     # L2-normalize to match indexed embeddings
     if getattr(plm_config, 'l2_normalize', True):

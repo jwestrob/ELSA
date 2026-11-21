@@ -1,0 +1,23 @@
+{
+ "codes_with_singletons": 27814,
+ "genome_codes": 26804,
+ "codes_with_any_hit": 26804,
+ "best_frac_quantiles": [
+  0.8571428571428571,
+  0.9857142857142858,
+  1.0,
+  1.0
+ ],
+ "codes_best_frac_ge_0_95": 26193,
+ "codes_best_frac_ge_0_8": 26617,
+ "codes_unique_best": 26272,
+ "codes_tied_best": 532,
+ "codes_unique_and_ge_0_95": 25747,
+ "distinct_best_assemblies": 26498,
+ "spearman_quantiles": [
+  -9.614813431917819e-17,
+  0.31732760656867476,
+  0.9943987233209051
+ ],
+ "seconds": 37.3
+}

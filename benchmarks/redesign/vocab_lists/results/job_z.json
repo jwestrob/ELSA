@@ -1,0 +1,958 @@
+{
+ "arms": [
+  "z10.6",
+  "z13.7"
+ ],
+ "excl": "group",
+ "lists": {
+  "z10.6": {
+   "source": "z10.6",
+   "entries": 3265088204,
+   "uid_entries": 2210144087,
+   "list_len_q01_q10_q50_q90_max": [
+    0.0,
+    2.0,
+    437.0,
+    2879.0,
+    3505.0
+   ],
+   "genes_empty": 256897,
+   "seconds": 278.5
+  },
+  "z13.7": {
+   "source": "z13.7",
+   "entries": 1814779752,
+   "uid_entries": 1204389856,
+   "list_len_q01_q10_q50_q90_max": [
+    0.0,
+    0.0,
+    66.0,
+    1836.0,
+    3306.0
+   ],
+   "genes_empty": 960734,
+   "seconds": 101.0
+  }
+ },
+ "ladder": {
+  "z10.6": {
+   "-1": {
+    "counts": {
+     "4.0": 2455555,
+     "6.0": 2246491,
+     "8.0": 2052965,
+     "10.0": 1905931,
+     "12.0": 1810589,
+     "15.0": 1695023,
+     "20.0": 1550703
+    },
+    "adjacencies": 8015534,
+    "sec_A": 59.8,
+    "sec_B": 0.0
+   },
+   "0": {
+    "counts": {
+     "4.0": 83386,
+     "6.0": 19377,
+     "8.0": 2927,
+     "10.0": 133,
+     "12.0": 13,
+     "15.0": 1,
+     "20.0": 0
+    },
+    "adjacencies": 8095669,
+    "sec_A": 55.1,
+    "sec_B": 0.0
+   },
+   "1": {
+    "counts": {
+     "4.0": 83139,
+     "6.0": 19372,
+     "8.0": 2936,
+     "10.0": 145,
+     "12.0": 18,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 8097151,
+    "sec_A": 65.2,
+    "sec_B": 0.0
+   },
+   "2": {
+    "counts": {
+     "4.0": 83449,
+     "6.0": 19250,
+     "8.0": 2957,
+     "10.0": 132,
+     "12.0": 14,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 8096292,
+    "sec_A": 66.4,
+    "sec_B": 0.0
+   }
+  },
+  "z13.7": {
+   "-1": {
+    "counts": {
+     "4.0": 1985931,
+     "6.0": 1843456,
+     "8.0": 1670272,
+     "10.0": 1520981,
+     "12.0": 1444481,
+     "15.0": 1344032,
+     "20.0": 1219795
+    },
+    "adjacencies": 5282222,
+    "sec_A": 28.8,
+    "sec_B": 0.0
+   },
+   "0": {
+    "counts": {
+     "4.0": 57623,
+     "6.0": 14461,
+     "8.0": 2348,
+     "10.0": 95,
+     "12.0": 16,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 5078451,
+    "sec_A": 31.8,
+    "sec_B": 0.0
+   },
+   "1": {
+    "counts": {
+     "4.0": 57978,
+     "6.0": 14408,
+     "8.0": 2353,
+     "10.0": 85,
+     "12.0": 10,
+     "15.0": 0,
+     "20.0": 0
+    },
+    "adjacencies": 5079181,
+    "sec_A": 33.5,
+    "sec_B": 0.0
+   },
+   "2": {
+    "counts": {
+     "4.0": 57982,
+     "6.0": 14602,
+     "8.0": 2399,
+     "10.0": 96,
+     "12.0": 9,
+     "15.0": 1,
+     "20.0": 0
+    },
+    "adjacencies": 5079946,
+    "sec_A": 33.6,
+    "sec_B": 0.0
+   }
+  }
+ },
+ "floors": {
+  "-1": {
+   "False": {
+    "c0": 0.00559833324869344,
+    "sd0": 0.08672073062851708,
+    "n": 1984994,
+    "q50_q99_q999": [
+     -0.005310249134140747,
+     0.2872406611833883,
+     0.47581298415591766
+    ]
+   }
+  },
+  "0": {
+   "False": {
+    "c0": 0.006774829552660947,
+    "sd0": 0.08897483260793951,
+    "n": 1985056,
+    "q50_q99_q999": [
+     -0.0032856908316463785,
+     0.29151432831403984,
+     0.46492898573381164
+    ]
+   }
+  },
+  "1": {
+   "False": {
+    "c0": 0.006797550351984324,
+    "sd0": 0.08902847790157103,
+    "n": 1984898,
+    "q50_q99_q999": [
+     -0.003272686977261202,
+     0.2908887052894737,
+     0.4658723945575937
+    ]
+   }
+  },
+  "2": {
+   "False": {
+    "c0": 0.006760760474219214,
+    "sd0": 0.08903957697428841,
+    "n": 1985117,
+    "q50_q99_q999": [
+     -0.003371730598239253,
+     0.2912702552530729,
+     0.4614835558115179
+    ]
+   }
+  }
+ },
+ "round0_obs": {
+  "z10.6": {
+   "lamG_ge10": 2520831,
+   "pass_tau10": 1905931,
+   "neff_over_n_q": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "n_q": [
+    13.0,
+    223.0,
+    2341.0
+   ],
+   "neff_q": [
+    13.0,
+    223.0,
+    2341.0
+   ],
+   "kinf_q": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "z13.7": {
+   "lamG_ge10": 1893116,
+   "pass_tau10": 1520981,
+   "neff_over_n_q": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "n_q": [
+    9.0,
+    141.0,
+    1567.0
+   ],
+   "neff_q": [
+    9.0,
+    141.0,
+    1567.0
+   ],
+   "kinf_q": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ },
+ "tau": {
+  "z10.6": {
+   "table": [
+    {
+     "tau": 4.0,
+     "observed": 2455555,
+     "null_mean": 83324.66666666667,
+     "fdr": 0.0339331298491244
+    },
+    {
+     "tau": 6.0,
+     "observed": 2246491,
+     "null_mean": 19333.0,
+     "fdr": 0.008605865770216752
+    },
+    {
+     "tau": 8.0,
+     "observed": 2052965,
+     "null_mean": 2940.0,
+     "fdr": 0.0014320750719081913
+    },
+    {
+     "tau": 10.0,
+     "observed": 1905931,
+     "null_mean": 136.66666666666666,
+     "fdr": 7.170598865681216e-05
+    },
+    {
+     "tau": 12.0,
+     "observed": 1810589,
+     "null_mean": 15.0,
+     "fdr": 8.284596890846017e-06
+    },
+    {
+     "tau": 15.0,
+     "observed": 1695023,
+     "null_mean": 0.3333333333333333,
+     "fdr": 1.9665416536137464e-07
+    },
+    {
+     "tau": 20.0,
+     "observed": 1550703,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    }
+   ],
+   "tau_star": 6.0
+  },
+  "z13.7": {
+   "table": [
+    {
+     "tau": 4.0,
+     "observed": 1985931,
+     "null_mean": 57861.0,
+     "fdr": 0.02913545334656642
+    },
+    {
+     "tau": 6.0,
+     "observed": 1843456,
+     "null_mean": 14490.333333333334,
+     "fdr": 0.007860417245290007
+    },
+    {
+     "tau": 8.0,
+     "observed": 1670272,
+     "null_mean": 2366.6666666666665,
+     "fdr": 0.0014169348864536235
+    },
+    {
+     "tau": 10.0,
+     "observed": 1520981,
+     "null_mean": 92.0,
+     "fdr": 6.048727761885257e-05
+    },
+    {
+     "tau": 12.0,
+     "observed": 1444481,
+     "null_mean": 11.666666666666666,
+     "fdr": 8.076718673812024e-06
+    },
+    {
+     "tau": 15.0,
+     "observed": 1344032,
+     "null_mean": 0.3333333333333333,
+     "fdr": 2.480099680166345e-07
+    },
+    {
+     "tau": 20.0,
+     "observed": 1219795,
+     "null_mean": 0.0,
+     "fdr": 0.0
+    }
+   ],
+   "tau_star": 6.0
+  }
+ },
+ "full": {
+  "z10.6": {
+   "obs": {
+    "arm": "grp",
+    "lists": "z10.6",
+    "K": 0,
+    "order": -1,
+    "tau": 6.0,
+    "instances": 1203235,
+    "top_instances": 516845,
+    "genes_in_top": 2043488,
+    "genes_in_top_frac": 0.5699624271644544,
+    "rounds": 16,
+    "seconds": 528.9,
+    "top_span_q": [
+     3.0,
+     7.0,
+     17.0,
+     77.0
+    ]
+   },
+   "rounds": [
+    {
+     "round": 0,
+     "adjacencies": 8015534,
+     "candidates": 2246491,
+     "committed": 727746,
+     "live": 2654991,
+     "list_entries": 443380502,
+     "empty_lists": 0,
+     "max_lam": 1612.4028026644103,
+     "sec_A": 69.5,
+     "sec_B": 0.0,
+     "seconds": 153.6
+    },
+    {
+     "round": 1,
+     "adjacencies": 4084850,
+     "candidates": 544058,
+     "committed": 297376,
+     "live": 2283958,
+     "list_entries": 228147747,
+     "empty_lists": 0,
+     "max_lam": 1565.6992192528467,
+     "sec_A": 36.3,
+     "sec_B": 0.0,
+     "seconds": 57.1
+    },
+    {
+     "round": 2,
+     "adjacencies": 3398337,
+     "candidates": 184794,
+     "committed": 119977,
+     "live": 2133480,
+     "list_entries": 142842062,
+     "empty_lists": 0,
+     "max_lam": 1479.0719140632566,
+     "sec_A": 25.1,
+     "sec_B": 0.0,
+     "seconds": 32.7
+    },
+    {
+     "round": 3,
+     "adjacencies": 3157153,
+     "candidates": 57244,
+     "committed": 41879,
+     "live": 2079963,
+     "list_entries": 115704302,
+     "empty_lists": 0,
+     "max_lam": 1365.9753710392233,
+     "sec_A": 21.1,
+     "sec_B": 0.0,
+     "seconds": 24.4
+    },
+    {
+     "round": 4,
+     "adjacencies": 3076783,
+     "candidates": 15247,
+     "committed": 11589,
+     "live": 2064852,
+     "list_entries": 110279038,
+     "empty_lists": 0,
+     "max_lam": 1093.3374825948447,
+     "sec_A": 19.7,
+     "sec_B": 0.0,
+     "seconds": 22.0
+    },
+    {
+     "round": 5,
+     "adjacencies": 3052295,
+     "candidates": 4231,
+     "committed": 3446,
+     "live": 2060326,
+     "list_entries": 109185272,
+     "empty_lists": 0,
+     "max_lam": 915.9152953180572,
+     "sec_A": 19.6,
+     "sec_B": 0.0,
+     "seconds": 21.7
+    },
+    {
+     "round": 6,
+     "adjacencies": 3044839,
+     "candidates": 1018,
+     "committed": 831,
+     "live": 2059169,
+     "list_entries": 109031317,
+     "empty_lists": 0,
+     "max_lam": 817.004153603318,
+     "sec_A": 19.3,
+     "sec_B": 0.0,
+     "seconds": 21.3
+    },
+    {
+     "round": 7,
+     "adjacencies": 3042670,
+     "candidates": 318,
+     "committed": 251,
+     "live": 2058837,
+     "list_entries": 108999980,
+     "empty_lists": 0,
+     "max_lam": 131.5275022435437,
+     "sec_A": 19.6,
+     "sec_B": 0.0,
+     "seconds": 21.6
+    },
+    {
+     "round": 8,
+     "adjacencies": 3042057,
+     "candidates": 104,
+     "committed": 80,
+     "live": 2058731,
+     "list_entries": 108992253,
+     "empty_lists": 0,
+     "max_lam": 9.855523184869122,
+     "sec_A": 20.0,
+     "sec_B": 0.0,
+     "seconds": 22.1
+    },
+    {
+     "round": 9,
+     "adjacencies": 3041861,
+     "candidates": 52,
+     "committed": 33,
+     "live": 2058689,
+     "list_entries": 108990340,
+     "empty_lists": 0,
+     "max_lam": 8.858949259289947,
+     "sec_A": 19.5,
+     "sec_B": 0.0,
+     "seconds": 21.5
+    },
+    {
+     "round": 10,
+     "adjacencies": 3041779,
+     "candidates": 23,
+     "committed": 14,
+     "live": 2058673,
+     "list_entries": 108989540,
+     "empty_lists": 0,
+     "max_lam": 8.802276950652553,
+     "sec_A": 20.1,
+     "sec_B": 0.0,
+     "seconds": 22.1
+    },
+    {
+     "round": 11,
+     "adjacencies": 3041739,
+     "candidates": 12,
+     "committed": 9,
+     "live": 2058664,
+     "list_entries": 108988074,
+     "empty_lists": 0,
+     "max_lam": 8.478041476052098,
+     "sec_A": 20.1,
+     "sec_B": 0.0,
+     "seconds": 22.1
+    },
+    {
+     "round": 12,
+     "adjacencies": 3041720,
+     "candidates": 4,
+     "committed": 2,
+     "live": 2058662,
+     "list_entries": 108988074,
+     "empty_lists": 0,
+     "max_lam": 7.507175691492061,
+     "sec_A": 20.1,
+     "sec_B": 0.0,
+     "seconds": 22.1
+    },
+    {
+     "round": 13,
+     "adjacencies": 3041716,
+     "candidates": 2,
+     "committed": 1,
+     "live": 2058661,
+     "list_entries": 108988074,
+     "empty_lists": 0,
+     "max_lam": 7.507175691492061,
+     "sec_A": 20.2,
+     "sec_B": 0.0,
+     "seconds": 22.2
+    },
+    {
+     "round": 14,
+     "adjacencies": 3041713,
+     "candidates": 1,
+     "committed": 1,
+     "live": 2058660,
+     "list_entries": 108988074,
+     "empty_lists": 0,
+     "max_lam": 7.507175691492061,
+     "sec_A": 20.1,
+     "sec_B": 0.0,
+     "seconds": 22.2
+    },
+    {
+     "round": 15,
+     "adjacencies": 3041710,
+     "candidates": 0,
+     "committed": 0,
+     "seconds": 19.9
+    }
+   ],
+   "null0": {
+    "arm": "grp",
+    "lists": "z10.6",
+    "K": 0,
+    "order": 0,
+    "tau": 6.0,
+    "instances": 19246,
+    "top_instances": 19054,
+    "genes_in_top": 56481,
+    "genes_in_top_frac": 0.01575348024978642,
+    "rounds": 4,
+    "seconds": 304.8,
+    "top_span_q": [
+     3.0,
+     4.0,
+     4.0,
+     9.0
+    ]
+   },
+   "word_fdr": 0.015995212905209704
+  },
+  "z13.7": {
+   "obs": {
+    "arm": "grp",
+    "lists": "z13.7",
+    "K": 0,
+    "order": -1,
+    "tau": 6.0,
+    "instances": 974857,
+    "top_instances": 450100,
+    "genes_in_top": 1731441,
+    "genes_in_top_frac": 0.48292738438006494,
+    "rounds": 26,
+    "seconds": 363.0,
+    "top_span_q": [
+     3.0,
+     7.0,
+     15.0,
+     56.0
+    ]
+   },
+   "rounds": [
+    {
+     "round": 0,
+     "adjacencies": 5282222,
+     "candidates": 1843456,
+     "committed": 613113,
+     "live": 2779461,
+     "list_entries": 261818986,
+     "empty_lists": 0,
+     "max_lam": 1665.4270657752215,
+     "sec_A": 36.4,
+     "sec_B": 0.0,
+     "seconds": 70.7
+    },
+    {
+     "round": 1,
+     "adjacencies": 2568730,
+     "candidates": 430890,
+     "committed": 238088,
+     "live": 2466655,
+     "list_entries": 112584043,
+     "empty_lists": 0,
+     "max_lam": 1556.793852368874,
+     "sec_A": 16.7,
+     "sec_B": 0.0,
+     "seconds": 27.4
+    },
+    {
+     "round": 2,
+     "adjacencies": 2101725,
+     "candidates": 133900,
+     "committed": 88680,
+     "live": 2350269,
+     "list_entries": 68339010,
+     "empty_lists": 0,
+     "max_lam": 1419.4559814652266,
+     "sec_A": 11.1,
+     "sec_B": 0.0,
+     "seconds": 15.3
+    },
+    {
+     "round": 3,
+     "adjacencies": 1951858,
+     "candidates": 35819,
+     "committed": 27029,
+     "live": 2314463,
+     "list_entries": 58679269,
+     "empty_lists": 0,
+     "max_lam": 1113.0417642928326,
+     "sec_A": 9.7,
+     "sec_B": 0.0,
+     "seconds": 12.1
+    },
+    {
+     "round": 4,
+     "adjacencies": 1908270,
+     "candidates": 7819,
+     "committed": 6278,
+     "live": 2306136,
+     "list_entries": 57072124,
+     "empty_lists": 0,
+     "max_lam": 745.1023790103251,
+     "sec_A": 9.4,
+     "sec_B": 0.0,
+     "seconds": 11.3
+    },
+    {
+     "round": 5,
+     "adjacencies": 1898148,
+     "candidates": 1546,
+     "committed": 1362,
+     "live": 2304370,
+     "list_entries": 56858055,
+     "empty_lists": 0,
+     "max_lam": 466.173458414658,
+     "sec_A": 9.1,
+     "sec_B": 0.0,
+     "seconds": 11.0
+    },
+    {
+     "round": 6,
+     "adjacencies": 1895993,
+     "candidates": 257,
+     "committed": 217,
+     "live": 2304071,
+     "list_entries": 56837953,
+     "empty_lists": 0,
+     "max_lam": 51.2757383759454,
+     "sec_A": 9.0,
+     "sec_B": 0.0,
+     "seconds": 10.8
+    },
+    {
+     "round": 7,
+     "adjacencies": 1895535,
+     "candidates": 55,
+     "committed": 40,
+     "live": 2304020,
+     "list_entries": 56832112,
+     "empty_lists": 0,
+     "max_lam": 9.137323230687823,
+     "sec_A": 8.9,
+     "sec_B": 0.0,
+     "seconds": 10.7
+    },
+    {
+     "round": 8,
+     "adjacencies": 1895449,
+     "candidates": 23,
+     "committed": 13,
+     "live": 2304004,
+     "list_entries": 56832112,
+     "empty_lists": 0,
+     "max_lam": 8.69070627201729,
+     "sec_A": 9.1,
+     "sec_B": 0.0,
+     "seconds": 11.1
+    },
+    {
+     "round": 9,
+     "adjacencies": 1895421,
+     "candidates": 17,
+     "committed": 8,
+     "live": 2303993,
+     "list_entries": 56831927,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 9.2,
+     "sec_B": 0.0,
+     "seconds": 11.1
+    },
+    {
+     "round": 10,
+     "adjacencies": 1895401,
+     "candidates": 11,
+     "committed": 6,
+     "live": 2303986,
+     "list_entries": 56831927,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 9.2,
+     "sec_B": 0.0,
+     "seconds": 11.0
+    },
+    {
+     "round": 11,
+     "adjacencies": 1895389,
+     "candidates": 5,
+     "committed": 4,
+     "live": 2303982,
+     "list_entries": 56831682,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 9.1,
+     "sec_B": 0.0,
+     "seconds": 10.9
+    },
+    {
+     "round": 12,
+     "adjacencies": 1895383,
+     "candidates": 2,
+     "committed": 2,
+     "live": 2303980,
+     "list_entries": 56831613,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 9.1,
+     "sec_B": 0.0,
+     "seconds": 11.0
+    },
+    {
+     "round": 13,
+     "adjacencies": 1895381,
+     "candidates": 6,
+     "committed": 2,
+     "live": 2303978,
+     "list_entries": 56831613,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 9.1,
+     "sec_B": 0.0,
+     "seconds": 10.9
+    },
+    {
+     "round": 14,
+     "adjacencies": 1895375,
+     "candidates": 6,
+     "committed": 2,
+     "live": 2303976,
+     "list_entries": 56831613,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 8.9,
+     "sec_B": 0.0,
+     "seconds": 10.8
+    },
+    {
+     "round": 15,
+     "adjacencies": 1895369,
+     "candidates": 6,
+     "committed": 2,
+     "live": 2303974,
+     "list_entries": 56831613,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 8.8,
+     "sec_B": 0.0,
+     "seconds": 10.6
+    },
+    {
+     "round": 16,
+     "adjacencies": 1895363,
+     "candidates": 5,
+     "committed": 2,
+     "live": 2303972,
+     "list_entries": 56831613,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 9.2,
+     "sec_B": 0.0,
+     "seconds": 11.0
+    },
+    {
+     "round": 17,
+     "adjacencies": 1895357,
+     "candidates": 4,
+     "committed": 2,
+     "live": 2303970,
+     "list_entries": 56831613,
+     "empty_lists": 0,
+     "max_lam": 8.538749085317544,
+     "sec_A": 9.1,
+     "sec_B": 0.0,
+     "seconds": 10.9
+    },
+    {
+     "round": 18,
+     "adjacencies": 1895352,
+     "candidates": 3,
+     "committed": 1,
+     "live": 2303969,
+     "list_entries": 56831613,
+     "empty_lists": 0,
+     "max_lam": 7.7233689905646505,
+     "sec_A": 9.1,
+     "sec_B": 0.0,
+     "seconds": 11.0
+    },
+    {
+     "round": 19,
+     "adjacencies": 1895349,
+     "candidates": 2,
+     "committed": 1,
+     "live": 2303968,
+     "list_entries": 56831613,
+     "empty_lists": 0,
+     "max_lam": 7.7233689905646505,
+     "sec_A": 9.0,
+     "sec_B": 0.0,
+     "seconds": 10.8
+    },
+    {
+     "round": 20,
+     "adjacencies": 1895347,
+     "candidates": 1,
+     "committed": 1,
+     "live": 2303967,
+     "list_entries": 56831132,
+     "empty_lists": 0,
+     "max_lam": 7.7233689905646505,
+     "sec_A": 8.8,
+     "sec_B": 0.0,
+     "seconds": 10.7
+    },
+    {
+     "round": 21,
+     "adjacencies": 1895346,
+     "candidates": 2,
+     "committed": 1,
+     "live": 2303966,
+     "list_entries": 56831132,
+     "empty_lists": 0,
+     "max_lam": 7.7233689905646505,
+     "sec_A": 8.8,
+     "sec_B": 0.0,
+     "seconds": 10.7
+    },
+    {
+     "round": 22,
+     "adjacencies": 1895344,
+     "candidates": 2,
+     "committed": 1,
+     "live": 2303964,
+     "list_entries": 56831132,
+     "empty_lists": 0,
+     "max_lam": 7.7233689905646505,
+     "sec_A": 9.0,
+     "sec_B": 0.0,
+     "seconds": 10.8
+    },
+    {
+     "round": 23,
+     "adjacencies": 1895342,
+     "candidates": 2,
+     "committed": 1,
+     "live": 2303963,
+     "list_entries": 56831132,
+     "empty_lists": 0,
+     "max_lam": 7.7233689905646505,
+     "sec_A": 8.7,
+     "sec_B": 0.0,
+     "seconds": 10.5
+    },
+    {
+     "round": 24,
+     "adjacencies": 1895340,
+     "candidates": 1,
+     "committed": 1,
+     "live": 2303962,
+     "list_entries": 56831132,
+     "empty_lists": 0,
+     "max_lam": 7.7233689905646505,
+     "sec_A": 8.9,
+     "sec_B": 0.0,
+     "seconds": 10.8
+    },
+    {
+     "round": 25,
+     "adjacencies": 1895339,
+     "candidates": 0,
+     "committed": 0,
+     "seconds": 8.9
+    }
+   ]
+  }
+ },
+ "seconds": 2157.3
+}

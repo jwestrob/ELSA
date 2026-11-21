@@ -1,0 +1,31 @@
+{
+ "m16_pairs_same_contig": 0,
+ "m16_pairs_within5": 0,
+ "runs_d_any_le5": 376,
+ "runs_d_any_le10": 574,
+ "runs_d_ge2_le5": 163,
+ "runs_d_ge2_le10": 291,
+ "runs_d_m8_le5": 4,
+ "runs_d_m8_le10": 4,
+ "runs": 1686,
+ "by_stratum_d_any_le5": {
+  "Nanobdellota": 199,
+  "Iainarchaeota": 75,
+  "Micrarchaeota": 47,
+  "Aenigmatarchaeota": 38,
+  "EX4484-52": 9,
+  "Undinarchaeota": 5,
+  "Nanohalarchaeota": 3
+ },
+ "by_stratum_runs": {
+  "Nanobdellota": 1133,
+  "Micrarchaeota": 137,
+  "Iainarchaeota": 134,
+  "Parvarchaeaceae": 114,
+  "Aenigmatarchaeota": 105,
+  "Nanohalarchaeota": 24,
+  "EX4484-52": 19,
+  "Undinarchaeota": 11,
+  "Altiarchaeota": 9
+ }
+}

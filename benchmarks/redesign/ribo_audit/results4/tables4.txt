@@ -1,0 +1,128 @@
+REPRODUCTION OF THE STANDING COUNTS (bio4.py repro; loci reading that reproduces is used for both definitions)
+  lut   runs 858  reading stored  reproduced {'stored': True, 'filtered': True}  Z 857/811 (any-fit 834, target [857, 811], ribosomal_check equal True)  WA 858/788 (any-fit 841, target [858, 788], ribosomal_check equal True)  DH 858/668 (any-fit 673, target [None, 668], ribosomal_check equal True)
+  dpann runs 1686  reading stored  reproduced {'stored': True, 'filtered': True}  Z 1681/1542 (any-fit 1575, target [1681, 1542], ribosomal_check equal True)  WA 1685/1594 (any-fit 1631, target [1685, 1594], ribosomal_check equal True)  DH 1686/1512 (any-fit 1590, target [1686, 1512], ribosomal_check equal True)
+  srvp  runs 803  reading stored  reproduced {'stored': True, 'filtered': True}  Z 802/528 (any-fit 708, target [802, 528], ribosomal_check equal True)  WA 803/498 (any-fit 706, target [803, 498], ribosomal_check equal True)  DH 803/313 (any-fit 332, target [None, 313], ribosomal_check equal True)
+
+MAIN TABLE: output x dataset x domain (PRIMARY reading = union member list for every genome, as in part 3)
+  standing = package run; cluster = extended run (frozen definition); chance = 5 random same-contig windows per run of the
+  target length (seed 17). lut and DPANN: check of the definition on data it was not developed on; SR-VP: development data.
+  output                           dataset stratum       runs  std res  cl res  cl rec cl anyfit std anyfit cl chance std chance  gain  lost
+  embedding-list tree (Z)          lut     Bacteria       858      811     835     857       843        834     2.09%      1.83%    35    11
+  embedding-list tree (Z)          dpann   Archaea       1686     1542    1491    1672      1537       1575     4.41%      4.55%    33    84
+  embedding-list tree (Z)          srvp    Bacteria       658      390     651     658       654        569     0.18%      0.63%   263     2
+  embedding-list tree (Z)          srvp    Bact_closed    260      108     255     260       258        209     0.15%      0.62%   148     1
+  embedding-list tree (Z)          srvp    Bact_multi     398      282     396     398       396        360     0.22%      0.65%   115     1
+  embedding-list tree (Z)          srvp    Archaea        145      138     140     145       140        139     0.70%      0.67%     5     3
+  family-bond adaptive tree (WA)   lut     Bacteria       858      788     822     857       838        841     2.90%      3.13%    50    16
+  family-bond adaptive tree (WA)   dpann   Archaea       1686     1594    1522    1683      1572       1631     4.90%      5.05%    22    94
+  family-bond adaptive tree (WA)   srvp    Bacteria       658      378     649     657       654        569     0.27%      0.92%   274     3
+  family-bond adaptive tree (WA)   srvp    Bact_closed    260       94     257     259       259        204     0.23%      0.85%   163     0
+  family-bond adaptive tree (WA)   srvp    Bact_multi     398      284     392     398       395        365     0.33%      1.01%   111     3
+  family-bond adaptive tree (WA)   srvp    Archaea        145      120     139     145       139        137     1.05%      0.50%    21     2
+  engine reference (DH)            lut     Bacteria       858      668     768     858       821        673     2.61%      2.66%   127    27
+  engine reference (DH)            dpann   Archaea       1686     1512    1443    1684      1598       1590     7.00%      6.23%    42   111
+  engine reference (DH)            srvp    Bacteria       658      191     580     658       652        208     1.95%      3.40%   400    11
+  engine reference (DH)            srvp    Bact_closed    260       58     210     260       259         70     2.00%      3.62%   160     8
+  engine reference (DH)            srvp    Bact_multi     398      133     370     398       393        138     1.89%      3.13%   240     3
+  engine reference (DH)            srvp    Archaea        145      122     120     145       137        124     1.93%      3.36%    16    18
+
+DOMAIN READING (archaeal genomes: archaeal list only; bacterial genomes: archaeal list + bacterial supplement)
+  dpann Archaea: runs 1686; ext length median 26.0 (union 26.0); Z cluster resolved 1491 (union 1491), any-fit 1537, chance 4.41%; WA cluster resolved 1522 (union 1522), any-fit 1572, chance 4.93%; DH cluster resolved 1444 (union 1443), any-fit 1598, chance 7.00%
+  srvp  Archaea: runs 145; ext length median 24.0 (union 24.0); Z cluster resolved 140 (union 140), any-fit 140, chance 0.70%; WA cluster resolved 139 (union 139), any-fit 139, chance 1.05%; DH cluster resolved 120 (union 120), any-fit 137, chance 1.93%
+
+EXTENSION OF THE TARGET (genes; medians) and runs whose extended run equals the run
+  lut   Bact_closed  runs    73  run  31.0 -> extended  39.0 (left 0.0, right 0.0); unchanged 28
+  lut   Bact_multi   runs   785  run  27.0 -> extended  28.0 (left 0.0, right 0.0); unchanged 392
+  lut   Bacteria     runs   858  run  27.0 -> extended  29.0 (left 0.0, right 0.0); unchanged 420
+  dpann Archaea      runs  1686  run  24.0 -> extended  26.0 (left 0.0, right 0.0); unchanged 358
+  srvp  Archaea      runs   145  run  22.0 -> extended  24.0 (left 0.0, right 0.0); unchanged 28
+  srvp  Bact_closed  runs   260  run  25.0 -> extended  36.0 (left 3.0, right 3.5); unchanged 10
+  srvp  Bact_multi   runs   398  run  21.0 -> extended  31.0 (left 1.0, right 1.0); unchanged 66
+  srvp  Bacteria     runs   658  run  24.0 -> extended  34.0 (left 1.0, right 2.0); unchanged 76
+
+PREDECLARED CRITERIA (lut and DPANN; frozen outputs Z and WA)
+  H1 lut   Z : cluster 835 vs standing 811 - 2% (793.8) -> MET
+  H1 lut   WA: cluster 822 vs standing 788 - 2% (770.8) -> MET
+  H1 dpann Z : cluster 1491 vs standing 1542 - 2% (1508.3) -> NOT MET
+  H1 dpann WA: cluster 1522 vs standing 1594 - 2% (1560.3) -> NOT MET
+  H2 lut  : maximum cluster-level chance 2.90% over 3 output x stratum cells -> MET
+  H2 dpann: maximum cluster-level chance 7.00% over 3 output x stratum cells -> NOT MET
+  H3 lut   Z : verdicts 2 + 3 under cluster 18 vs standing 36 -> MET
+  H3 lut   WA: verdicts 2 + 3 under cluster 29 vs standing 39 -> MET
+  H3 dpann Z : verdicts 2 + 3 under cluster 99 vs standing 51 -> NOT MET
+  H3 dpann WA: verdicts 2 + 3 under cluster 101 vs standing 33 -> NOT MET
+
+VERDICTS (part-2 strict rules; span = extended run under 'cluster', package run under 'standing'; every unresolved run)
+  lut   cluster  Z  Bact_closed unresolved    1: v1 0 v2 1 v3 0 v4 0 v5 0 v6 0 v7 0
+  lut   cluster  Z  Bact_multi  unresolved   22: v1 2 v2 16 v3 1 v4 0 v5 1 v6 2 v7 0
+  lut   cluster  WA Bact_closed unresolved    3: v1 0 v2 2 v3 0 v4 0 v5 0 v6 1 v7 0
+  lut   cluster  WA Bact_multi  unresolved   33: v1 1 v2 25 v3 2 v4 1 v5 1 v6 3 v7 0
+  lut   cluster  DH Bact_closed unresolved   17: v1 0 v2 2 v3 0 v4 7 v5 7 v6 1 v7 0
+  lut   cluster  DH Bact_multi  unresolved   73: v1 0 v2 28 v3 4 v4 22 v5 15 v6 4 v7 0
+  lut   standing Z  Bact_closed unresolved    1: v1 0 v2 1 v3 0 v4 0 v5 0 v6 0 v7 0
+  lut   standing Z  Bact_multi  unresolved   46: v1 2 v2 16 v3 19 v4 2 v5 3 v6 4 v7 0
+  lut   standing WA Bact_closed unresolved    7: v1 0 v2 0 v3 4 v4 0 v5 2 v6 1 v7 0
+  lut   standing WA Bact_multi  unresolved   63: v1 3 v2 17 v3 18 v4 1 v5 22 v6 2 v7 0
+  lut   standing DH Bact_closed unresolved   21: v1 0 v2 1 v3 2 v4 18 v5 0 v6 0 v7 0
+  lut   standing DH Bact_multi  unresolved  169: v1 0 v2 13 v3 35 v4 110 v5 6 v6 5 v7 0
+  lut   cluster verdict-2 subtypes (all outputs): {'spacer': 27, 'strand': 22, 'spacer+strand': 10, 'mem>500': 7, 'mem>500+spacer': 4, 'mem>500+strand': 3, 'mem>500+spacer+strand': 1}; verdict-4 subtypes: {'4b_other_unit_members': 20, '4a_unrelated': 10}
+  dpann cluster  Z  Archaea     unresolved  195: v1 28 v2 45 v3 54 v4 36 v5 30 v6 2 v7 0
+  dpann cluster  WA Archaea     unresolved  164: v1 23 v2 40 v3 61 v4 11 v5 27 v6 2 v7 0
+  dpann cluster  DH Archaea     unresolved  243: v1 0 v2 71 v3 58 v4 45 v5 68 v6 1 v7 0
+  dpann standing Z  Archaea     unresolved  144: v1 29 v2 29 v3 22 v4 36 v5 26 v6 2 v7 0
+  dpann standing WA Archaea     unresolved   92: v1 23 v2 21 v3 12 v4 12 v5 23 v6 1 v7 0
+  dpann standing DH Archaea     unresolved  174: v1 0 v2 59 v3 25 v4 42 v5 45 v6 3 v7 0
+  dpann cluster verdict-2 subtypes (all outputs): {'strand': 71, 'spacer': 68, 'spacer+strand': 15, 'mem>500+spacer+strand': 2}; verdict-4 subtypes: {'4a_unrelated': 76, '4b_other_unit_members': 16}
+  srvp  cluster  Z  Archaea     unresolved    5: v1 0 v2 5 v3 0 v4 0 v5 0 v6 0 v7 0
+  srvp  cluster  Z  Bact_closed unresolved    5: v1 0 v2 3 v3 2 v4 0 v5 0 v6 0 v7 0
+  srvp  cluster  Z  Bact_multi  unresolved    2: v1 1 v2 1 v3 0 v4 0 v5 0 v6 0 v7 0
+  srvp  cluster  WA Archaea     unresolved    6: v1 0 v2 4 v3 0 v4 0 v5 0 v6 2 v7 0
+  srvp  cluster  WA Bact_closed unresolved    3: v1 0 v2 2 v3 1 v4 0 v5 0 v6 0 v7 0
+  srvp  cluster  WA Bact_multi  unresolved    6: v1 1 v2 2 v3 1 v4 0 v5 2 v6 0 v7 0
+  srvp  cluster  DH Archaea     unresolved   25: v1 0 v2 7 v3 0 v4 3 v5 12 v6 3 v7 0
+  srvp  cluster  DH Bact_closed unresolved   50: v1 0 v2 10 v3 0 v4 0 v5 39 v6 1 v7 0
+  srvp  cluster  DH Bact_multi  unresolved   28: v1 0 v2 10 v3 0 v4 3 v5 14 v6 1 v7 0
+  srvp  standing Z  Archaea     unresolved    7: v1 0 v2 4 v3 3 v4 0 v5 0 v6 0 v7 0
+  srvp  standing Z  Bact_closed unresolved  152: v1 0 v2 9 v3 137 v4 2 v5 3 v6 1 v7 0
+  srvp  standing Z  Bact_multi  unresolved  116: v1 0 v2 11 v3 99 v4 2 v5 2 v6 2 v7 0
+  srvp  standing WA Archaea     unresolved   25: v1 0 v2 8 v3 13 v4 2 v5 0 v6 2 v7 0
+  srvp  standing WA Bact_closed unresolved  166: v1 0 v2 7 v3 154 v4 2 v5 2 v6 1 v7 0
+  srvp  standing WA Bact_multi  unresolved  114: v1 0 v2 13 v3 95 v4 0 v5 5 v6 1 v7 0
+  srvp  standing DH Archaea     unresolved   23: v1 0 v2 5 v3 11 v4 5 v5 0 v6 2 v7 0
+  srvp  standing DH Bact_closed unresolved  202: v1 0 v2 11 v3 144 v4 12 v5 34 v6 1 v7 0
+  srvp  standing DH Bact_multi  unresolved  265: v1 0 v2 21 v3 214 v4 13 v5 15 v6 2 v7 0
+  srvp  cluster verdict-2 subtypes (all outputs): {'strand': 16, 'spacer': 10, 'spacer+strand': 6, 'mem>500': 6, 'mem>500+spacer': 3, 'mem>500+strand': 2, 'mem>500+spacer+strand': 1}; verdict-4 subtypes: {'4a_unrelated': 4, '4b_other_unit_members': 2}
+
+STEP 3: L15 -> ALPHA-BLOCK INSERT (unmarked genes between L15 and the first of S13 / S11 / S4 / rpoA / L17; output-independent)
+  lut (Bacteria runs 858):
+    1                                            runs   14 ( 1.6%)  standing resolved Z   14 (100.0%) WA   11 (78.6%)  cluster Z 14 WA 13
+    2                                            runs  644 (75.1%)  standing resolved Z  628 (97.5%) WA  610 (94.7%)  cluster Z 631 WA 622
+    3                                            runs   49 ( 5.7%)  standing resolved Z   36 (73.5%) WA   34 (69.4%)  cluster Z 43 WA 42
+    4                                            runs   12 ( 1.4%)  standing resolved Z    3 (25.0%) WA    5 (41.7%)  cluster Z 10 WA 9
+    >=5                                          runs    8 ( 0.9%)  standing resolved Z    7 (87.5%) WA    8 (100.0%)  cluster Z 7 WA 7
+    alpha not within 15 (contig end within 15)   runs   48 ( 5.6%)  standing resolved Z   48 (100.0%) WA   48 (100.0%)  cluster Z 48 WA 48
+    alpha not within 15 (contig continues)       runs   43 ( 5.0%)  standing resolved Z   41 (95.3%) WA   36 (83.7%)  cluster Z 43 WA 43
+    no L15 in run                                runs   40 ( 4.7%)  standing resolved Z   34 (85.0%) WA   36 (90.0%)  cluster Z 39 WA 38
+    unmarked insert median 2.0, mean 2.13 (runs with alpha found 727)
+    commonest insert contents: {'secY-adk': 620, 'secY-ADK': 23, 'secY-adk-unannot': 15, 'secY-L36': 11, 'secY-secY-adk': 10, 'unannot-secY-adk': 5, 'secY-adk-HSP70': 4, 'secY-adk-CN_hydrolase-PALP': 4, 'secY': 3, 'secY-unannot-adk': 3, 'secY-ADK-ADK': 2, 'secY-adk-unannot-VCH_CASS14': 2}
+    by genome type: {'Bact_closed': {'1': 6, '2': 61, '3': 1, '4': 0, '>=5': 2, 'alpha not within 15 (contig continues)': 3, 'alpha not within 15 (contig end within 15)': 0, 'no L15 in run': 0}, 'Bact_multi': {'1': 8, '2': 583, '3': 48, '4': 12, '>=5': 6, 'alpha not within 15 (contig continues)': 40, 'alpha not within 15 (contig end within 15)': 48, 'no L15 in run': 40}}
+    description by phylum (runs, insert <= 2, insert >= 3, Z standing resolved): {'Pseudomonadota': (857, 658, 69, 810), 'Campylobacterota': (1, 0, 0, 1)}
+    lut by class (runs, insert <= 2, Z standing resolved): {'Alphaproteobacteria': (843, 644, 796), 'Campylobacteria': (1, 0, 1), 'Gammaproteobacteria': (14, 14, 14)}
+  srvp (Bacteria runs 658):
+    1                                            runs   11 ( 1.7%)  standing resolved Z   10 (90.9%) WA   11 (100.0%)  cluster Z 11 WA 11
+    2                                            runs   89 (13.5%)  standing resolved Z   86 (96.6%) WA   85 (95.5%)  cluster Z 89 WA 88
+    3                                            runs  126 (19.1%)  standing resolved Z   66 (52.4%) WA   51 (40.5%)  cluster Z 126 WA 126
+    4                                            runs  289 (43.9%)  standing resolved Z   95 (32.9%) WA   93 (32.2%)  cluster Z 287 WA 287
+    >=5                                          runs   18 ( 2.7%)  standing resolved Z   14 (77.8%) WA   17 (94.4%)  cluster Z 16 WA 17
+    alpha not within 15 (contig end within 15)   runs   36 ( 5.5%)  standing resolved Z   36 (100.0%) WA   34 (94.4%)  cluster Z 36 WA 35
+    alpha not within 15 (contig continues)       runs   36 ( 5.5%)  standing resolved Z   32 (88.9%) WA   34 (94.4%)  cluster Z 34 WA 33
+    no L15 in run                                runs   53 ( 8.1%)  standing resolved Z   51 (96.2%) WA   53 (100.0%)  cluster Z 52 WA 52
+    unmarked insert median 4.0, mean 3.46 (runs with alpha found 533)
+    commonest insert contents: {'secY-adk-map-infA-L36': 175, 'secY-adk-map-infA': 89, 'secY-map-infA': 41, 'secY-infA-L36': 40, 'secY-adk': 37, 'secY-map-infA-L36': 29, 'secY-adk-map-L36': 20, 'secY-adk-map': 14, 'secY-adk-infA-L36': 11, 'secY-L36': 8, 'secY-ADK-map-infA-L36': 8, 'secY-ADK-map-infA': 8}
+    by genome type: {'Bact_closed': {'1': 5, '2': 46, '3': 46, '4': 136, '>=5': 5, 'alpha not within 15 (contig continues)': 19, 'alpha not within 15 (contig end within 15)': 0, 'no L15 in run': 3}, 'Bact_multi': {'1': 6, '2': 43, '3': 80, '4': 153, '>=5': 13, 'alpha not within 15 (contig continues)': 17, 'alpha not within 15 (contig end within 15)': 36, 'no L15 in run': 50}}
+    description by phylum (runs, insert <= 2, insert >= 3, Z standing resolved): {'Acidobacteriota': (152, 2, 135, 65), 'Pseudomonadota': (110, 91, 5, 106), 'Chloroflexota': (79, 1, 67, 29), 'Patescibacteriota': (64, 1, 17, 57), 'Nitrospirota': (45, 0, 39, 28), 'Desulfobacterota': (42, 1, 38, 14), 'Bacteroidota': (38, 0, 34, 14), 'Zixibacteria': (14, 0, 14, 9), 'Planctomycetota': (14, 0, 12, 6), 'Gemmatimonadota': (12, 0, 1, 11)}
+  CRITERION (predeclared): within-class standing resolved rates, and SR-VP rates reweighted to lut's class distribution
+    Z: <=2: lut 97.6% (n 658) vs SR-VP 96.0% (n 100); >=3: lut 66.7% (n 69) vs SR-VP 40.4% (n 433); no L15: lut 85.0% (n 40) vs SR-VP 96.2% (n 53); no alpha within 15: lut 97.8% (n 91) vs SR-VP 94.4% (n 72)
+       lut observed 94.5%; SR-VP observed 59.3%; SR-VP reweighted to lut classes 91.4% (classes covering 100.0% of lut runs); max within-class gap (<= 2, >= 3, no alpha within 15) 26.3% -> accounts for: NO
+    WA: <=2: lut 94.4% (n 658) vs SR-VP 96.0% (n 100); >=3: lut 68.1% (n 69) vs SR-VP 37.2% (n 433); no L15: lut 90.0% (n 40) vs SR-VP 100.0% (n 53); no alpha within 15: lut 92.3% (n 91) vs SR-VP 94.4% (n 72)
+       lut observed 91.8%; SR-VP observed 57.4%; SR-VP reweighted to lut classes 91.3% (classes covering 100.0% of lut runs); max within-class gap (<= 2, >= 3, no alpha within 15) 30.9% -> accounts for: NO

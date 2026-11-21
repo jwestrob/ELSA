@@ -1,0 +1,39 @@
+================================================================
+Program: CD-HIT, V4.8.1 (+OpenMP), Dec 04 2024, 17:03:25
+Command: /Users/jacob/Documents/Software/cdhit/cd-hit -i
+         aln/named_ge250.faa -o aln/named_c60.faa -c 0.6 -n 4
+         -T 4 -M 2000 -d 0
+
+Started: Sat Nov 21 03:17:04 2026
+================================================================
+                            Output                              
+----------------------------------------------------------------
+total seq: 1180
+longest and shortest : 502 and 253
+Total letters: 375018
+Sequences have been sorted
+
+Approximated minimal memory consumption:
+Sequence        : 0M
+Buffer          : 4 X 10M = 42M
+Table           : 2 X 3M = 6M
+Miscellaneous   : 0M
+Total           : 49M
+
+Table limit with the given memory limit:
+Max number of representatives: 4000000
+Max number of word counting entries: 243844110
+
+# comparing sequences from          0  to        196
+---------- new table with       74 representatives
+# comparing sequences from        196  to       1180
+.....................---------- new table with      225 representatives
+
+     1180  finished        299  clusters
+
+Approximated maximum memory consumption: 50M
+writing new database
+writing clustering information
+program completed !
+
+Total CPU time 0.28

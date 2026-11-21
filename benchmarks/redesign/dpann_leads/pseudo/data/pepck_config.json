@@ -1,0 +1,128 @@
+{
+ "fam": "pepck",
+ "title": "PEPCK_GTP relatives (DPANN); ref A5TYT6 PCKG_MYCTA",
+ "aln": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/pepck_aln.faa",
+ "meta": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/pepck_meta.tsv",
+ "ref_id": "A5TYT6",
+ "positions": [
+  [
+   81,
+   "R",
+   "binding:substrate"
+  ],
+  [
+   220,
+   "Y",
+   "binding:substrate"
+  ],
+  [
+   221,
+   "G",
+   "binding:substrate"
+  ],
+  [
+   222,
+   "G",
+   "binding:substrate"
+  ],
+  [
+   229,
+   "K",
+   "binding:Mn(2+)"
+  ],
+  [
+   249,
+   "H",
+   "binding:Mn(2+)"
+  ],
+  [
+   271,
+   "S",
+   "binding:substrate"
+  ],
+  [
+   272,
+   "A",
+   "binding:GTP"
+  ],
+  [
+   273,
+   "C",
+   "active"
+  ],
+  [
+   274,
+   "G",
+   "binding:GTP"
+  ],
+  [
+   275,
+   "K",
+   "binding:GTP"
+  ],
+  [
+   276,
+   "T",
+   "binding:GTP"
+  ],
+  [
+   277,
+   "N",
+   "binding:GTP"
+  ],
+  [
+   296,
+   "D",
+   "binding:Mn(2+)"
+  ],
+  [
+   387,
+   "N",
+   "binding:substrate"
+  ],
+  [
+   388,
+   "S",
+   "binding:substrate"
+  ],
+  [
+   389,
+   "R",
+   "binding:substrate"
+  ],
+  [
+   420,
+   "R",
+   "binding:GTP"
+  ],
+  [
+   515,
+   "F",
+   "binding:GTP"
+  ],
+  [
+   516,
+   "G",
+   "binding:GTP"
+  ],
+  [
+   517,
+   "E",
+   "binding:GTP"
+  ],
+  [
+   518,
+   "N",
+   "binding:GTP"
+  ]
+ ],
+ "roles": {
+  "labeled": "labeled",
+  "canonical": "canonical",
+  "cdd_only": "cdd_only",
+  "extra": []
+ },
+ "genomes_tsv": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/dpann_genomes.tsv",
+ "pdb": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/invisible/ref/4WPT_A_fam.pdb",
+ "out": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data"
+}

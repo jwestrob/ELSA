@@ -2,12 +2,19 @@
 Overlap-based clustering of syntenic blocks.
 
 Groups blocks that share genomic regions (gene overlap) using
-contig-indexed interval sweep, mutual top-k filtering, and union-find.
+contig-indexed interval sweep, shared-side interval Jaccard, optional
+mutual top-k sparsification, and union-find.
 
 The interval sweep exploits the fact that blocks are intervals on specific
 contigs — two blocks can only share genes if they touch the same
 (genome, contig). This gives O(n log n + k) complexity vs O(n²) for
 the naive pairwise approach.
+
+Edge scoring compares the two blocks on the contig they share, rather than
+pooling both sides into a single ratio. Pooling caps the score at 1/3 for
+blocks that share exactly one side — the ordinary case when one locus is
+observed across many genome pairs — so a threshold anywhere near 0.3 rejects
+genuine matches and shatters conserved loci into per-pair fragments.
 """
 
 from __future__ import annotations
@@ -155,8 +162,6 @@ def _blocks_df_to_columnar(df: pd.DataFrame) -> dict:
     q_contig_key = q_genome.astype(np.int64) * n_contigs + q_contig
     t_contig_key = t_genome.astype(np.int64) * n_contigs + t_contig
 
-    block_gene_count = (q_end - q_start + 1) + (t_end - t_start + 1)
-
     return {
         'n': n,
         'block_ids': block_ids,
@@ -166,7 +171,6 @@ def _blocks_df_to_columnar(df: pd.DataFrame) -> dict:
         'q_genome': q_genome, 't_genome': t_genome,
         'q_contig': q_contig, 't_contig': t_contig,
         'n_anchors': n_anchors,
-        'block_gene_count': block_gene_count.astype(np.float64),
         'all_genomes': all_genomes, 'all_contigs': all_contigs,
         'q_genome_strs': q_genome_strs, 't_genome_strs': t_genome_strs,
         'q_contig_strs': q_contig_strs, 't_contig_strs': t_contig_strs,
@@ -219,8 +223,6 @@ def _blocks_list_to_columnar(blocks: List[ChainedBlock]) -> dict:
     q_contig_key = q_genome.astype(np.int64) * n_contigs + q_contig
     t_contig_key = t_genome.astype(np.int64) * n_contigs + t_contig
 
-    block_gene_count = (q_end - q_start + 1) + (t_end - t_start + 1)
-
     return {
         'n': n,
         'block_ids': block_ids,
@@ -230,7 +232,6 @@ def _blocks_list_to_columnar(blocks: List[ChainedBlock]) -> dict:
         'q_genome': q_genome, 't_genome': t_genome,
         'q_contig': q_contig, 't_contig': t_contig,
         'n_anchors': n_anchors_arr,
-        'block_gene_count': block_gene_count.astype(np.float64),
         'all_genomes': all_genomes, 'all_contigs': all_contigs,
         'q_genome_strs': q_genome_strs, 't_genome_strs': t_genome_strs,
         'q_contig_strs': q_contig_strs, 't_contig_strs': t_contig_strs,
@@ -332,11 +333,22 @@ def _sweep_all_contigs(contig_groups, n_workers=None):
 
 
 def _compute_jaccard_vectorized(pairs_i, pairs_j, col):
-    """Compute exact Jaccard for candidate pairs using interval arithmetic.
+    """Shared-side interval Jaccard for candidate block pairs.
 
-    For each candidate pair, checks all 4 contig combinations
-    (query×query, query×target, target×query, target×target) for overlap.
-    The intersection is the sum of gene-level overlaps on matching contigs.
+    Two pairwise blocks describe the same locus when the sides that land on a
+    common contig cover the same interval. For every side combination whose
+    contig keys agree, this computes ``|intersection| / |union|`` over those two
+    intervals alone and keeps the strongest agreement across combinations.
+
+    Scoring each shared side on its own gives the measure a full 0-1 range: two
+    blocks covering an identical interval score 1.0 regardless of how far their
+    opposite sides chained. Pooling both sides into one ratio instead caps the
+    score at 1/3 for blocks that share a single side, which is the common case
+    when one locus is compared across many genomes.
+
+    The measure also rejects containment: a short block falling inside a much
+    longer one scores ``short/long``, so different-scale objects stay apart
+    rather than welding through the longer block.
     """
     if len(pairs_i) == 0:
         return np.empty(0, dtype=np.int32), np.empty(0, dtype=np.int32), np.empty(0, dtype=np.float64)
@@ -347,7 +359,7 @@ def _compute_jaccard_vectorized(pairs_i, pairs_j, col):
         ('q', 'q'), ('q', 't'), ('t', 'q'), ('t', 't'),
     ]
 
-    intersection = np.zeros(len(pairs_i), dtype=np.float64)
+    best = np.zeros(len(pairs_i), dtype=np.float64)
 
     for si, sj in sides:
         ck_i = col[f'{si}_contig_key'][pairs_i]
@@ -366,25 +378,23 @@ def _compute_jaccard_vectorized(pairs_i, pairs_j, col):
             np.minimum(end_i, end_j) - np.maximum(start_i, start_j) + 1
         ).astype(np.float64)
 
-        intersection += overlap * same_contig
+        span_i = (end_i - start_i + 1).astype(np.float64)
+        span_j = (end_j - start_j + 1).astype(np.float64)
+        union = span_i + span_j - overlap
 
-    # Jaccard = intersection / union, union = |A| + |B| - intersection
-    size_i = col['block_gene_count'][pairs_i]
-    size_j = col['block_gene_count'][pairs_j]
-    union = size_i + size_j - intersection
+        valid = same_contig & (union > 0)
+        side_jaccard = np.zeros(len(pairs_i), dtype=np.float64)
+        side_jaccard[valid] = overlap[valid] / union[valid]
 
-    # Avoid division by zero
-    valid = union > 0
-    jaccard = np.zeros(len(pairs_i), dtype=np.float64)
-    jaccard[valid] = intersection[valid] / union[valid]
+        np.maximum(best, side_jaccard, out=best)
 
-    return pairs_i, pairs_j, jaccard
+    return pairs_i, pairs_j, best
 
 
 def cluster_blocks_by_overlap(
     blocks: Union[List[ChainedBlock], pd.DataFrame],
-    jaccard_tau: float = 0.3,
-    mutual_k: int = 5,
+    jaccard_tau: float = 0.9,
+    mutual_k: int = 0,
     min_genome_support: int = 2,
     n_jobs: Optional[int] = None,
 ) -> Tuple[Dict[int, int], pd.DataFrame]:
@@ -392,13 +402,19 @@ def cluster_blocks_by_overlap(
     Cluster blocks based on shared genomic regions (gene overlap).
 
     Uses contig-indexed interval sweep to find candidate overlapping pairs
-    in O(n log n + k) time, then vectorized Jaccard, mutual top-k filtering,
-    and union-find for connected components.
+    in O(n log n + k) time, then vectorized shared-side Jaccard, optional
+    mutual top-k filtering, and union-find for connected components.
 
     Args:
         blocks: List of ChainedBlock objects or DataFrame with block columns
-        jaccard_tau: Minimum Jaccard similarity for overlap edges
-        mutual_k: Mutual top-k parameter for edge filtering
+        jaccard_tau: Minimum shared-side interval Jaccard for an overlap edge.
+            1.0 means the two blocks cover an identical interval on their
+            shared contig; a short block inside a much longer one scores
+            ``short/long``.
+        mutual_k: Mutual top-k edge sparsification. ``0`` disables it, which is
+            the default: the shared-side measure already separates
+            different-scale loci, and capping each block at k neighbours
+            shatters loci that are genuinely conserved across many genomes.
         min_genome_support: Minimum genomes per cluster
 
     Returns:
@@ -455,9 +471,8 @@ def cluster_blocks_by_overlap(
     n_edges = int(mask.sum())
     _log(f"[Cluster] {n_edges:,} overlap edges above Jaccard threshold {jaccard_tau}")
 
-    # --- Phase 5: Build edges dict for mutual top-k ---
+    # --- Phase 5: Resolve surviving edges ---
     block_ids_arr = col['block_ids']
-    edges_by_u: Dict[int, List[Tuple[int, float]]] = defaultdict(list)
 
     valid_i = pairs_i[mask]
     valid_j = pairs_j[mask]
@@ -465,46 +480,63 @@ def cluster_blocks_by_overlap(
     del pairs_i, pairs_j, jaccard, mask
 
     t0 = time.time()
-    _log(f"[Cluster] Building edge dict from {n_edges:,} edges...")
 
     # Vectorized edge building: map row indices → block_ids once
     edge_bids_i = block_ids_arr[valid_i].astype(int)
     edge_bids_j = block_ids_arr[valid_j].astype(int)
-    edge_jacs = valid_jac.astype(float)
-    del valid_i, valid_j, valid_jac
+    del valid_i, valid_j
 
-    for idx in range(n_edges):
-        bi = int(edge_bids_i[idx])
-        bj = int(edge_bids_j[idx])
-        jac = edge_jacs[idx]
-        edges_by_u[bi].append((bj, jac))
-        edges_by_u[bj].append((bi, jac))
-    del edge_bids_i, edge_bids_j, edge_jacs
+    if mutual_k > 0:
+        _log(f"[Cluster] Building edge dict from {n_edges:,} edges...")
+        edges_by_u: Dict[int, List[Tuple[int, float]]] = defaultdict(list)
+        edge_jacs = valid_jac.astype(float)
+        del valid_jac
+        for idx in range(n_edges):
+            bi = int(edge_bids_i[idx])
+            bj = int(edge_bids_j[idx])
+            jac = edge_jacs[idx]
+            edges_by_u[bi].append((bj, jac))
+            edges_by_u[bj].append((bi, jac))
+        del edge_jacs
+        _log(f"[Cluster] Edge dict built in {time.time() - t0:.1f}s ({len(edges_by_u):,} nodes)")
 
-    _log(f"[Cluster] Edge dict built in {time.time() - t0:.1f}s ({len(edges_by_u):,} nodes)")
-
-    # Apply mutual top-k filter
-    t0 = time.time()
-    mutual_edges = _mutual_top_k(edges_by_u, mutual_k)
-    _log(f"[Cluster] {len(mutual_edges):,} mutual top-{mutual_k} edges ({time.time() - t0:.1f}s)")
+        t0 = time.time()
+        mutual_edges = _mutual_top_k(edges_by_u, mutual_k)
+        del edges_by_u
+        _log(f"[Cluster] {len(mutual_edges):,} mutual top-{mutual_k} edges "
+             f"({time.time() - t0:.1f}s)")
+        edge_source = mutual_edges
+    else:
+        # Unsparsified: union directly over the surviving pair arrays. The
+        # adjacency dict and edge set are skipped entirely, which matters at
+        # multi-million-block scale where they dominate peak memory.
+        del valid_jac
+        _log(f"[Cluster] {n_edges:,} unsparsified edges (no adjacency materialization)")
+        edge_source = zip(edge_bids_i.tolist(), edge_bids_j.tolist())
 
     # --- Phase 6: Connected components via union-find ---
     block_ids_list = [int(bid) for bid in block_ids_arr]
     parent: Dict[int, int] = {}
 
     def find(x: int) -> int:
+        # Iterative with path compression: recursion depth is unbounded when
+        # edges are unsparsified and components grow long.
         parent.setdefault(x, x)
-        if parent[x] != x:
-            parent[x] = find(parent[x])
-        return parent[x]
+        root = x
+        while parent[root] != root:
+            root = parent[root]
+        while parent[x] != root:
+            parent[x], x = root, parent[x]
+        return root
 
     def union(a: int, b: int):
         ra, rb = find(a), find(b)
         if ra != rb:
             parent[rb] = ra
 
-    for a, b in mutual_edges:
+    for a, b in edge_source:
         union(a, b)
+    del edge_bids_i, edge_bids_j
 
     for bid in block_ids_list:
         find(bid)
@@ -872,11 +904,37 @@ def merge_contained_clusters(
     return new_mapping, dict(merge_map)
 
 
+def _pair_tiebreak(u: int, v: int) -> int:
+    """Deterministic, order-independent ranking key for one undirected edge.
+
+    Both endpoints derive the same value for a given edge, so tied weights are
+    ordered consistently from either side. Ranking ties by raw node id instead
+    makes every node prefer its lowest-id neighbours, which collapses a set of
+    equally-similar blocks into "the k lowest ids" and strands the rest.
+    """
+    a, b = (u, v) if u < v else (v, u)
+    x = (a * 0x9E3779B97F4A7C15 + b * 0xBF58476D1CE4E5B9) & 0xFFFFFFFFFFFFFFFF
+    x ^= x >> 31
+    return x
+
+
 def _mutual_top_k(edges_by_u: Dict[int, List[Tuple[int, float]]], k: int) -> Set[Tuple[int, int]]:
-    """Return set of undirected edges that are mutual top-k by weight."""
+    """Return set of undirected edges that are mutual top-k by weight.
+
+    ``k <= 0`` disables the filter and returns every edge. Sparsification is
+    optional because the shared-side Jaccard measure already rejects the
+    containment relationships that would otherwise bridge unrelated loci.
+    """
+    if k <= 0:
+        return {
+            ((u, v) if u < v else (v, u))
+            for u, neigh in edges_by_u.items()
+            for v, _w in neigh
+        }
+
     topk: Dict[int, Set[int]] = {}
     for u, neigh in edges_by_u.items():
-        neigh_sorted = sorted(neigh, key=lambda x: (-x[1], x[0]))[:k]
+        neigh_sorted = sorted(neigh, key=lambda x: (-x[1], _pair_tiebreak(u, x[0])))[:k]
         topk[u] = {v for v, _ in neigh_sorted}
     keep: Set[Tuple[int, int]] = set()
     for u, neigh in edges_by_u.items():

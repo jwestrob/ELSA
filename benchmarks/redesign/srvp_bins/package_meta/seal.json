@@ -1,0 +1,25 @@
+{
+ "package": "package",
+ "sealed_utc": "2026-11-14T06:04:32Z",
+ "files": {
+  "README.txt": "46056d1ea2b30e78ba0ed009bfe51cf0db659288e36536e297da25671511cca9",
+  "code/02_select.py": "e207dd56090f342870d100e6b75e43557faff577f1dcb4d4b0cc25e3da021c4a",
+  "code/03_build_package.py": "42caefb9ecf2f78d055ccc2c6e34fcb0a3ed3914c55c3ae1af343ec6a5e00a67",
+  "code/04_callers.py": "f62eca834b51e23424c3147b11a5776dcabf180659d1b856a12f5f0db9945cdc",
+  "code/05_readme.py": "ee825074cefe21960c7ff0b278beeae427c8247eb7543c720e70b63e6016bb12",
+  "code/build_pkg.sbatch": "1c4d6dc812638c25f5ef5c40d5c02a33adb0e6a51c5357bbb82ac51a2b139431",
+  "code/callers.sbatch": "50a31d90418cf93e71730ea9ec23a18b0a689680f0b3b0c6fab7cee6abddd4c7",
+  "ribosomal/marked.parquet": "4b979639935c276e6da7e042e974b6b7a4afaf1f324475529520421efa3e5a82",
+  "ribosomal/runs.parquet": "8e9e2acb37010adbd697ac0001b3bd6b0c7e97b49e0c693e3052ca6f78ecc1c1",
+  "selection.tsv": "3dffe53b381c978a06466c9a2fcdddb2416e524a9f7e74dd0f29f3c9c89a8b91",
+  "split/genome_halves.parquet": "873a902f2e0f5ce0574b8698747fc5c11f8a672c21b278239206387a563ba984",
+  "universe/contigs.parquet": "92e9d9967a9a3417c1488db30fd28e6c40fe715e09053e9bf17a09ea7b06a226",
+  "universe/contigs_all.parquet": "9bf850d6593fb836a49389ef523ab997f09279c2183116a174f3ff18aa4b737d",
+  "universe/gene_flags.parquet": "caeff90b75b34adaf297facb4536eed12f17decce75388bd6dc703642b79c57a",
+  "universe/genes.parquet": "5f9894190f57f8383d7d5bfa23de18f6d961571e245d69a03fe236e6b2c79d07",
+  "universe/genomes.parquet": "3358bdbe0338b59a20d6cc4183ffc511eebb5c937f01bf56abcfa1d40ccbadb4",
+  "universe/proteins.faa": "ecf8a5111cd56d37aca36d1d4cb932fb5d5e4c35f4174295cd93306dbd02503e"
+ },
+ "seal_sha256": "5ab7ba791c271dfa2fa58bfda07b2cf4a2c683c0ba288994a433b5ef367681bf",
+ "rule": "sha256 over the sorted lines '<path>\\t<sha256>\\n' of every package file except receipts and seal files"
+}

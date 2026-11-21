@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional, Tuple, Any, List
 
@@ -52,6 +53,7 @@ class SyntenyStore:
         store_dir: Path,
         genes_df: pd.DataFrame,
         nprobe: int = 32,
+        embedding_transform: Optional[str] = None,
     ) -> "SyntenyStore":
         """Build a new store from a genes DataFrame with emb_* columns.
 
@@ -72,7 +74,8 @@ class SyntenyStore:
 
         # Canonical sort order (same as pipeline)
         genes_df = genes_df.sort_values(
-            ["sample_id", "contig_id", "start", "end"]
+            ["sample_id", "contig_id", "start", "end"],
+            kind="stable",
         ).reset_index(drop=True)
 
         embeddings = genes_df[emb_cols].values.astype(np.float32)
@@ -87,13 +90,25 @@ class SyntenyStore:
         metadata.to_parquet(store.metadata_path, index=False)
         np.save(store.embeddings_path, embeddings)
 
+        # Record the embedding space this store lives in. Two stores can share a
+        # dimension while holding incomparable vectors — raw versus centred
+        # versus whitened — and querying one with the other's vectors returns
+        # confident nonsense. ``mean_norm`` is a cheap fingerprint of the space:
+        # ~0.92 for raw ESM2, near 0 once the mean is removed.
+        unit = embeddings / np.maximum(
+            np.linalg.norm(embeddings, axis=1, keepdims=True), 1e-12)
         config = {
+            "schema_version": 2,
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "dim": int(embeddings.shape[1]),
             "n_vectors": int(embeddings.shape[0]),
             "nprobe": nprobe,
             "genomes": sorted(metadata["sample_id"].unique().tolist()),
             "emb_cols": emb_cols,
+            "embedding_transform": embedding_transform,
+            "embedding_mean_norm": round(float(np.linalg.norm(unit.mean(axis=0))), 4),
         }
+        del unit
         store.config_path.write_text(json.dumps(config, indent=2))
 
         store._index = index
@@ -133,7 +148,7 @@ class SyntenyStore:
             store._index.nprobe = store._config.get("nprobe", 32)
 
         store._metadata = pd.read_parquet(store.metadata_path)
-        store._embeddings = np.load(store.embeddings_path)
+        store._embeddings = np.load(store.embeddings_path, mmap_mode="r")
 
         print(
             f"[Store] Loaded {store.store_dir}: "
@@ -189,7 +204,8 @@ class SyntenyStore:
 
         # Re-sort to canonical order
         sort_idx = combined_meta.sort_values(
-            ["sample_id", "contig_id", "start", "end"]
+            ["sample_id", "contig_id", "start", "end"],
+            kind="stable",
         ).index.values
         combined_meta = combined_meta.iloc[sort_idx].reset_index(drop=True)
         combined_emb = combined_emb[sort_idx]
@@ -239,6 +255,10 @@ class SyntenyStore:
         emb_cols = self._config["emb_cols"]
         emb_df = pd.DataFrame(self._embeddings, columns=emb_cols)
         return pd.concat([self._metadata.reset_index(drop=True), emb_df], axis=1)
+
+    def get_metadata_df(self, *, copy: bool = True) -> pd.DataFrame:
+        """Return gene metadata in the exact coordinate-rank order used by ELSA."""
+        return self._metadata.copy() if copy else self._metadata
 
     @property
     def genomes(self) -> List[str]:

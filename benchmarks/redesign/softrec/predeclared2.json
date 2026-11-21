@@ -1,0 +1,57 @@
+{
+ "written_utc": "2026-11-12T16:45Z",
+ "workstream": "softrec2 (round 2 of softrec)",
+ "seen_before_writing": "round-1 softrec results (REPORT.txt), boundary workstream R1 / DH reference numbers, round-1 full-table and single-reading numbers of the round-1 arms. No round-2 number of any kind: job 82614 (round-2 statistics, candidates, validated edges) and job 82615 (token reference reproduction) were submitted at 16:42 UTC and had produced no output; no round-2 statistic, family, module, locus or score existed.",
+ "question": "Close the two gaps of round 1 on single outputs: (1) token-free modules so the adopted nested reading DH applies to softrec; (2) a statistic that keeps variable (CRISPR-Cas) pairs. Plus (3) the lineage-aware expectation on the token engine as its own test, and (4) cost.",
+ "references_even_genomes": {
+  "source": "token engine, rescue3 families (engine/results_dpann_repair/dpann__mmseqs__seq__e3c50s75_rescue3__w3), boundary workstream loci and per-instance scores; reproduced by job 82615 (recomputed with the boundary code; per-instance F1 and control must equal the stored scores) before any comparison",
+  "R1": "conserved@2: F1 DefenseFinder 0.688, TXSScan 0.409, CRISPRCasTyper 0.426; summed DF + TXSS excess 0.337; ribosomal 704 resolved",
+  "DH": "level-2 locus + rule H core (module cuts at Louvain resolution 0.3 seed 17, end trimming f 0.5): F1 0.744 / 0.548 / 0.479; summed excess 0.427; ribosomal 1,686 recovered, 1,512 resolved, Parvarchaeaceae 113 of 114 resolved"
+ },
+ "task1_token_free_modules": {
+  "validated_edges": "for every significant instance (a, b) of a softrec statistic, every supporting pair (a', b') (a' in N(a), b' in N(b), a' != b', within 3 genes on one contig, at the list depth the statistic used for that instance) contributes the edges (a, a') and (b, b'); edges collapsed to unique sequences (identical sequences are one node), undirected, weight = zca10 cosine",
+  "families": "(i) connected components of the edge graph; (ii) Leiden (igraph, modularity objective, weight cosine, n_iterations -1, seed 17) at resolutions chosen ONLY by community count (no gold) on the cnt1000 graph, targeting about 0.5x, 1x and 2x the rescue3 non-singleton family count (136,009); the same resolutions applied to every candidate graph; unique nodes without an edge are singleton families; a gene's token = its unique sequence's family",
+  "modules": "the engine's procedure on the validated tokens: significant token pairs = token pairs (ta != tb) of significant instances; J and L of each pair from the engine's own pair_statistics on the validated tokens (w 3); networkx Louvain, resolution 0.3, seed 17, weight J x log2 max(L, 2), edges inserted in key order; pair module of an instance = module of both tokens or -1 (a self pair ta == tb takes its token's module); boundary label = pair module of the instance setting the boundary's support (engine tie order (d, left))",
+  "readings_frozen": "R1 conserved@2; C = module-consistent segmentation of R1 (blib.label_segments); H = C then end trimming f 0.5 (blib.trim_ends); DH = R1 loci plus H loci. No retuning. If the module scale breaks the res-0.3 reading (defined: odd DH fails the odd ribosomal bar while odd R1 passes it), a Louvain resolution in {0.1, 0.2, 0.5, 1, 3} is tuned on odd genomes for the selected configuration only, and reported as such",
+  "family_comparison": "against rescue3: family counts (all, >= 2 genes), size distribution, AMI (arithmetic normalisation, expected MI from 3 label permutations), NMI and ARI on genes with a validated edge, ribosomal-Pfam purity (share of ribosomal-marked genes whose family's plurality marker is their own; families per marker; share of a marker's genes in its largest family)",
+  "validation": "the module and reading code run on the token engine's own landscape and tokens must reproduce the boundary workstream's token modules and DH loci exactly"
+ },
+ "task2_statistics": {
+  "null": "within-genome gene-order shuffle (seeds 1000-1002, contig sizes kept), every order-dependent step recomputed (as round 1); instance-level FDR = mean null instances passing / observed",
+  "lists": "zca10 ranked lists of genes outside the gene's genus, depths 50 / 200 / 500 / 1000, no cosine floor",
+  "pool": {
+   "cnt<K>": "count rule L >= m (m in 2..50), FDR 0.01, K in 200, 500, 1000 (cnt1000 replicates round 1)",
+   "tt<K>": "two-tier: count rule at depth K selected at FDR 0.005 OR lineage-aware Poisson rule at depth 50 (P <= 1e-e & L >= 2|3) selected at FDR 0.005; union FDR reported",
+   "rw<K>_<w>": "rank-weighted: W = sum over other genera of w(m_g), m_g = min over the genus's supporting pairs of max(tail rank of a' in N(a), tail rank of b' in N(b)); w in exp(-(t-1)/r0) r0 50, 100, 200, 400 and r0 / (r0 + t - 1) r0 20, 100; rule W >= t & L >= 2, FDR 0.01",
+   "pois<K>": "(c) the round-1 lineage-aware expectation (G and E over genomes outside the genus), Poisson rule, FDR 0.01, K in 50, 200"
+  },
+  "rule_selection": "the engine's procedure at the instance level for every rule family: rules with FDR <= budget and > 0 observed, top 12 by observed count, the one covering most genes"
+ },
+ "selection_on_odd_genomes": {
+  "odd_conditions": "for a reading X against the token reading X on odd genomes: (o1) ribosomal on the 848 odd runs: recovered >= 830, Parvarchaeaceae recovered >= 54 of 55, and for DH resolved >= 705 (1,400 / 1,686 scaled); (o2) summed DF + TXSS excess >= token - 0.01; (o3) every caller's F1 >= token - 0.02",
+  "score": "lexicographic: number of odd conditions met, then odd summed excess",
+  "stage1": "rank-weighted weight function chosen per depth by the R1 reading against token R1 (score above), because every weight needs its own families otherwise; count, two-tier and Poisson need no stage 1",
+  "stage2": "full pipeline (validated edges, families cc + Leiden grid, modules, DH) for cnt1000, tt1000, rw1000_<stage-1 weight>, pois50, pois200; the configuration (statistic x family construction) with the best odd DH score against token DH (odd) is THE embedding-only nested method tested on even genomes",
+  "no_even_number": "no even-genome score of any softrec2 output is computed before the selection is recorded in NOTEBOOK.txt"
+ },
+ "test_even_genomes": {
+  "comparison": "selected configuration's DH against token DH (rescue3), paired genome bootstrap (2,000 draws, seed 17), ribosomal on all 1,686 runs",
+  "matches": "summed DF + TXSS excess >= DH - 0.01 (point estimate); F1 of each of DefenseFinder, TXSScan, CRISPRCasTyper >= DH - 0.02; ribosomal recovered >= 1,650, Parvarchaeaceae recovered >= 110 of 114, resolved >= 1,400",
+  "beats": "summed excess >= DH + 0.02 with the paired 95% interval excluding 0; no caller F1 more than 0.01 below DH; the same ribosomal bars",
+  "otherwise": "fails; the report names the blocking condition(s)",
+  "also_reported": "R1 vs token R1; C and H alone; F1, control, excess, covered50, genes in loci, median boundary precision at the best locus, ribosomal check, CRISPR-Cas member genes touching support; after the verdict, every other stage-2 configuration and every statistic of the pool on even genomes, labelled as not selected"
+ },
+ "readings_and_refuters": {
+  "if_matches_or_beats": "Reading: the module graph needs only context-validated homology, which the soft statistic supplies; MMseqs2 families are unnecessary for the nested reading. Refuted if (i) DH's gain over softrec R1 is smaller than the token engine's DH gain over its R1 by more than the paired interval (the modules would be doing less), or (ii) replacing validated families by rescue3 families on the same softrec landscape (control configuration cand:rescue3) raises DH by more than 0.02 summed excess (the families would still be the limiting part).",
+  "if_fails": "Attribution: statistic (R1 against token R1 and member support), families (validated vs rescue3 tokens on the same softrec landscape), modules (module counts, share of boundaries labelled, ribosomal runs with one label), reading (DH vs H vs C)."
+ },
+ "task3_lineage_aware_token_engine": {
+  "arm": "lin_rescue3 = round-1 fam_rescue3_genus (rescue3 family lists outside the own genus, G and E over other genera, Poisson rule chosen by instance-level FDR: P <= 1e-3 & L >= 2, FDR 0.0080, 3,198,446 significant instances), rebuilt from its saved observed statistics; modules from its own significant token pairs on rescue3 tokens (procedure above)",
+  "matched_control": "gen_rescue3 = the same machinery with G and E over genomes other than the own genome (softrec fam lists, skip genome, Poisson, instance-level FDR selection); separates the lineage-aware expectation from the instance-level rule selection",
+  "primary": "lin_rescue3 DH against token DH, even genomes",
+  "confirmed_if": "summed DF + TXSS excess difference > 0 with the paired 95% interval excluding 0; no caller F1 more than 0.01 below token DH; ribosomal recovered >= 1,650, Parvarchaeaceae recovered >= 110, resolved >= 1,400",
+  "secondary": "lin_rescue3 R1 vs token R1 (same rule); lin_rescue3 vs gen_rescue3 on R1 and DH (attribution)",
+  "refuter_of_the_round1_reading": "'the lineage-aware expectation helps the token engine' is refuted if the DH difference interval lies at or below 0, or if gen_rescue3 matches lin_rescue3 (the gain would be the machinery)"
+ },
+ "task4_cost": "for the selected statistic form, the same configuration at depths 500 and 200 (statistics from the same passes; families and modules rebuilt from their own evidence) scored like the selected one; 'keeps the result' = meets the same matches / beats verdict as at depth 1,000. End-to-end wall time on one 64-CPU node: vectors -> kNN at the needed depth -> lists -> passes -> rules -> edges -> families -> modules -> loci, measured where possible and otherwise summed from measured stages (each stage's measurement stated)."
+}

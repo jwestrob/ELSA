@@ -1,0 +1,56 @@
+{
+ "collection": "testset3",
+ "threads": 24,
+ "smoke": 3000,
+ "timing": {
+  "z_pass": 0.8,
+  "calibration": 0.9,
+  "total": 6.0
+ },
+ "config": {
+  "genes": "RD/testset3/package/universe/genes.parquet",
+  "annot_id": "gid",
+  "groups": "RD/long_loci/frozen3/groups/emb_hom_average_t0.75.parquet",
+  "uq": "RD/long_loci/frozen3/emb/meta.npz:uq",
+  "ztable": "RD/long_loci/frozen3/gtable",
+  "bonds_Z": "RD/long_loci/frozen3/nodes/gtdb3_Z/bonds_obs.npz",
+  "loci_Z": "RD/long_loci/frozen3/loci/gtdb3_Z/L4bp_t0.02.parquet",
+  "aln_I": null,
+  "bonds_A": null,
+  "loci_A": null,
+  "annot": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/pass_port/out/testset3/annot_smoke/annot.parquet",
+  "ko_proxy": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/pass_port/out/testset3/annot_smoke/ko_proxy.tsv",
+  "label_names": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/pass_port/out/testset3/annot_smoke/label_names.tsv",
+  "pfam_nameonly": null,
+  "annot_gpu": "RD/annot_gpu/testset3",
+  "fasta": "RD/testset3/package/proteins_gid.faa",
+  "out": "RD/dpann_leads/pass_port/out/testset3"
+ },
+ "bond_gate": {
+  "bonds_checked": 17260,
+  "mismatches": 0,
+  "mode": "Lambda recomputed"
+ },
+ "calibration": {
+  "pool": 70758,
+  "sample": 3000,
+  "called": 2425,
+  "agree": 0.9929896907216494
+ },
+ "counts": {
+  "genes": 2557405,
+  "candidates": 2462171,
+  "candidates_with_own_ko": 14436,
+  "z_bonded": 1040465,
+  "in_z_locus": 1128073,
+  "eligible": 1040465,
+  "eligible_none_unannotated": 1780,
+  "eligible_other": 807,
+  "eligible_none_lt2": 413,
+  "called": 807,
+  "partner_function_strong": 70,
+  "list_type": {
+   "no alignment lists": 807
+  }
+ }
+}

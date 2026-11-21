@@ -1,0 +1,216 @@
+WORKSTREAM ws_vocab -- genomes as unsegmented text, loci as words, learned by description length
+Notebook, UTC timestamps. Local benchmarks/redesign/vocab/, biotite $RD/vocab/.
+
+2026-11-13 02:01  Read NOTEBOOK.md from 2026-11-12 13:23 to the end, lineagefree/REPORT.txt, softrec REPORT2,
+  engine/recurrence.py, boundary/rules.py + blib.py. Inputs confirmed on biotite:
+  - universe $RD/ws_dpann/package/universe (genes 3,585,303; gid = universe order)
+  - tokens $RD/engine/dpann_tokens/mmseqs__seq__e3c50s75_rescue3__dpann.parquet (363,307 tokens; 227,298 with one gene)
+  - lineage unit recommended by lineagefree for one unit serving both routes: emb_hom average linkage theta 0.75
+    ($RD/lineagefree/groups/emb_hom_average_t0.75.parquet; 642 groups); GTDB genus = reference arm only.
+  - token DH loci/scores: $RD/boundary/loci/rescue3/DH_coreH_res0.3_f0.5.parquet, scores/rescue3/ same name.
+
+2026-11-13 02:10  Design (written before any computation).
+  Objective. A word is a node of a merge tree over symbols (terminal = family token). The corpus that is compressed is
+  the group-level occurrence record: one group (lineage unit) contributes at most one occurrence of an adjacency, so
+  shared descent is not paid for twice. For two live symbols X, Y adjacent (<= 2 intervening single genes, unordered,
+  X != Y), n = groups with an occurrence, E = expected groups under random order within each genome:
+     E = sum_groups [1 - prod_{g in group} (1 - min(1, 2 w c_X(g) c_Y(g) / m_g))],  w = 3, c = live copies, m = live nodes.
+  Gain Lambda = n ln(n/E) - n + E (nats): the code-length saving when the n group occurrences are described as instances of
+  one word (rate fitted) instead of chance co-placements (rate E). This is the Poisson log-likelihood ratio, so the MDL
+  merge criterion and the engine's significance test are one quantity; the cost of naming a rule (~2 ln S nats) is what
+  the null calibrates.
+  Updates. Rounds. Each round: enumerate adjacencies among live nodes; Lambda per symbol pair; candidates n >= 2 and
+  Lambda >= tau, applied in decreasing Lambda; an occurrence claims its two nodes plus the single genes between them (order:
+  distance, then position); a pair is committed only if its claimed occurrences still give n >= 2 and Lambda >= tau; each
+  committed pair becomes a new symbol and its occurrences become one node. Repeat until nothing commits.
+  Output: every gene is a slot of one top-level word instance, an inserted gene inside one, or background.
+  Stop: the identical procedure on genome-shuffled tokens (engine null); tau = smallest ladder value whose word-type FDR
+  (null types / observed types, mean of 3 shuffles) <= 0.01. No other threshold.
+  Readings: V-top = top-level instances (single); V-nest = V-top + children that are words; V-mob = V-top + maximal
+  sub-instances whose type is also top-level in >= 2 groups (mobile units: unit identity from context).
+
+2026-11-13 02:15  predeclared.json written (stage 1), before any computation.
+2026-11-13 02:20  vocab.py written. Smoke test on genomes 0-199 (login node, 2 threads, 5 s; gold-free): 7 rounds,
+  2,219 word types; invariants hold (live nodes tile every contig, no node crosses a contig, every instance = its two
+  children + 0-2 inserted genes, every instance's children carry its type's two symbols, every word n >= 2).
+2026-11-13 02:07  (biotite clock 18:07 PST) job 87920: ladder, arms main + genus + genome, tau ladder as predeclared,
+  obs + 3 nulls each = 156 runs on 64 processes (standard_expand_2 -c 64). Each run takes 25-80 s on one core
+  (9-12 rounds observed; nulls stop after 1-2 rounds).
+  First lines read (gold-free): at tau 10 the main arm has 25,018 observed types against 9-14 per null shuffle; at
+  tau 12, 18,778 against 0-2. The group-level null is nearly empty above tau 10.
+2026-11-13 02:10  job 87960: refcheck (rescore token DH and R1 loci; must reproduce the stored reference).
+2026-11-13 02:11  Reference reproduced exactly (job 87960, 40 s): token DH even summed .4270, F1 .744/.548/.479,
+  ribosomal 1,686 recovered / 1,512 resolved, Parvarchaeaceae 114/114 recovered, 113/114 resolved; R1 .3375,
+  .688/.409/.426, 704 resolved. Per-instance F1, control F1 and coverage equal the stored scores for every instance.
+2026-11-13 02:13  Ladder done (job 87920, 4 min 17 s wall for 156 runs on 64 processes; gold-free). Predeclared rule:
+  main tau* = 10 (type FDR .00044; tau 8 gives .0113, just above .01). genus tau* = 10 (.00042; 8 -> .0102).
+  genome-as-unit tau* = 8 (.0073). At tau* : main 25,018 word types, 1,505,723 genes (42.0%) in top-level instances,
+  9 rounds, 64 s on one core; genus 31,512 types, 46.9%; genome 196,634 types, 75.3%.
+  The FDR falls about 25x per 2 nats between tau 8 and 12 in every arm: the null is near empty once n >= 2 groups and
+  Lambda >= 10, because a chance adjacency must coincide in two independent groups.
+  H4 (tau* within [ln S, 4 ln S], S = symbols = 363,307 tokens + 25,018 words, ln S = 12.87): tau* = 10 is below ln S,
+  so H4 is REFUTED as stated: the null-calibrated cost of a word is lower than the a-priori MDL rule cost.
+  The genome-as-unit arm makes 7.9x more word types at its tau*: descent supplies them, and the shuffle null cannot see
+  descent (as lineagefree found for the engine).
+  Expectations before any odd score (main, tau 10): V-top covers 42% of genes against 71% for DH loci, so covered50
+  falls and F1 sits between R1 and DH (DF .70-.74, TXSS .40-.50, CCT .40-.46); ribosomal recovered >= 1,650 if runs form
+  one word, resolved 900-1,400; V-nest and V-mob add 0.01-0.03 summed excess over V-top.
+2026-11-13 02:15  ODD scores (job 87977; token DH odd: summed .418, F1 .743/.544/.479; odd ribosomal bars 830/705/54).
+  main tau 10        summed   dvsDH odd [95%]          F1 DF/TXSS/CCT    ribo odd rec/res/Parv rec   cond (sum,F1,ribo)
+    V-top            .6129    +.195 [+.170,+.219]      .744/.633/.387    617/250/5                   Y n n
+    V-nest           .6209    +.203 [+.178,+.227]      .754/.675/.402    617/253/5                   Y n n
+    V-mob            .6229    +.205 [+.180,+.229]      .754/.677/.402    617/253/5                   Y n n
+  genus tau 10: V-mob .5872 (+.169), F1 .759/.668/.421, ribo 611/204/26.
+  genome tau 8: V-mob .4269 (+.009), F1 .782/.639/.503, ribo 724/319/54 (cond Y Y n).
+  SELECTION (predeclared rule, odd): primary nested reading = V-mob (score [1, .6229] vs V-nest [1, .6209]).
+  Readings before even (written now): main V-mob will fail the ribosomal bars by a wide margin (odd 617/253/5 against
+  830/705/54) and CRISPR-Cas F1 (odd -.077), so the even verdict will be "neither"; the summed-excess gain (+0.2) and
+  the TXSScan F1 gain (+0.13) will hold on even. Refuted if even summed gain < +0.1 or even TXSScan dF1 < +0.05.
+  Mechanism suspected (to test after the verdict): (a) group counting makes every family confined to one group
+  background: Parvarchaeum (190 genomes) is one emb_hom group, so its lineage-specific ribosomal families cannot form
+  words (genus arm 26/55, genome arm 54/55); (b) words are exact derivation types, so composition variants across
+  lineages split the counts of the large merges and the ribosomal run ends up in several words.
+2026-11-13 02:18  EVEN verdict, main arm, tau 10, primary V-mob (job 88067; typing crashed afterwards on a string column,
+  fixed, rerun as job 88088; the reading numbers are deterministic):
+    reading  summed    d vs DH [95%]            dF1 DF / TXSS / CCT [95%]                                 ribo rec/res  Parv rec/res  verdict
+    V-top    .6082     +.181 [+.158,+.204]      -.009 [-.026,+.009] / +.084 [+.063,+.104] / -.090         1,198/497     11/9          neither
+    V-nest   .6217     +.195 [+.171,+.219]      +.001 / +.130 / -.073                                     1,198/501     11/9          neither
+    V-mob    .6243     +.197 [+.174,+.221]      +.001 [-.017,+.019] / +.131 [+.108,+.153] / -.073 [-.086,-.061]  1,198/501  11/9  neither
+  V-mob vs token R1: +.287 [+.259, +.314].
+  H1 (matches token DH) REFUTED: blocking conditions CRISPR-Cas F1 (-.073 against -.02), ribosomal recovered 1,198 <
+  1,650, resolved 501 < 1,400, Parvarchaeaceae 11 < 110. Summed excess clears the "beats" bar by a wide margin and
+  TXSScan F1 rises by .131. The reading written at 02:15 holds (gain >= +0.1, TXSS dF1 >= +0.05, ribosomal and CCT fail).
+2026-11-13 02:20  Diagnosis 1 (diag1.py, login node 14 s; ribosomal runs and gold members used for evaluation only):
+  - Mechanism (a) "lineage-confined families are background" REFUTED: Parvarchaeaceae ribosomal genes are 99.6% in words
+    (background .09%, free .28%, slot 91.6%, inserted 8.0%); other runs 99.1% in words.
+  - Mechanism (b) "exact word types fragment" SUPPORTED: Parvarchaeaceae runs are cut into a median 4 top-level words
+    (best word covers 45% of the run; 11 of 114 runs >= 50%); other runs into 2 (67%). Junctions between adjacent
+    top-level words inside ribosomal runs: the family pair across the junction is co-located in a median 240 groups
+    (q25 32, q75 523), the word-type pair in a median 1 group. 1,274 of 2,773 such junctions have a family pair in >= 10
+    groups and a type pair in < 2. Genome-wide: 27,450 of 208,493 junctions.
+  - Not derivation order: composition-canonical types (multiset of slot families) number 24,282 against 24,314 types and
+    give the same junction counts (median 1 group). Each lineage carries its own composition of a large conserved
+    neighbourhood, so an exact composition stops recurring as the word grows.
+  - CRISPR-Cas: of 9,459 member genes (instances >= 2 members), 41.3% are free terminals (family in >= 2 groups, in no
+    word) against 18.8% (DF) and 18.5% (TXSS); slots 49.8% (DF 76.4%, TXSS 70.7%). Member families are not rare
+    (median 85 groups): the PAIRS split across family variants (unit fragmentation, the same failure one level down).
+  Diagnosis: the objective is right for compact recurrent units (defense, secretion) and wrong in its notion of identity:
+  exact symbols at both levels (families and word types) cannot pool lineage variants of one unit. Large conserved
+  neighbourhoods and variable systems need identity that tolerates variation. That is what stage 2's prototype units
+  address at the unit level; word level needs the same (types as classes).
+2026-11-13 02:30  Stage-2 amendment written in predeclared.json (amendment_stage2) before any stage-2 computation:
+  vocabulary-tree alphabet (1,024 / x16 / x8 cells of zca10 vectors), three labels per node, terminal pairs at all 9
+  level pairs (each slot chooses its radius), word labels as projections, same gain / commit rule / null-calibrated
+  tau; readings V-top, V-mob, V-phr (phrases of words joined through significant flanking-unit junctions; designed
+  after the stage-1 verdict). Hypotheses S2-H1..H4.
+2026-11-13 02:27  vocab2.py written (multi-label learner). Reproduction (login node, 1 thread, 63 s, 1.3 GB): with one label
+  level (rescue3 tokens, main arm, tau 10) it reproduces the stored vocab.py run exactly: 25,018 types; symbols, pairs,
+  n, occurrences, rounds equal; max |dLambda| 0.0; instance spans, children and symbols equal (results/repro_vocab2.json).
+  Projection reuse (a pair committed again in a later round keeps its symbol) is off for this check, on for stage 2.
+2026-11-13 02:23  job 88114 (even, typing fixed) and job 88115 (vocabulary tree vt1k, 64 CPUs) submitted.
+2026-11-13 02:26  Even results, all arms (V-mob unless noted), and typing:
+  genus tau 10: summed .5879 (+.161 [+.137,+.186] vs DH), dF1 +.006/+.124/-.057, ribo 1,199/417, Parv 53/42. neither.
+  genome tau 8: summed .4204 (-.007 [-.029,+.015]), dF1 +.032/+.101/+.024 [+.014,+.035], ribo 1,444/632, Parv 113/28.
+    neither (ribosomal only). Every-genome units keep CRISPR-Cas (+.024 vs DH) and lose 0.20 summed excess.
+  H2 (descent correction): main - genome = .6243 - .4204 = +.204 (paired interval in collect step). Holds on the point.
+  Typing (even, DefenseFinder, 1,050 instances covered by a word and an engine module, 35 system types):
+    word type: 231 labels, homogeneity .993, completeness .420, AMI .464
+    engine module (Louvain res 10): 42 labels, homogeneity .850, completeness .755, AMI .779; res 0.3: 16 labels, AMI .537
+    H3 REFUTED (AMI lower by .315). Words almost never mix system types (homogeneity .993) and split each type into
+    ~6.6 compositional variants: the same fragmentation as diagnosis 1. TXSScan has one type among covered even
+    instances (AMI 0 for both). CRISPRCasTyper subtype AMI .226 (word) vs .306 (res 10).
+  Vocabulary (main, tau 10): 25,018 types (13,465 with 2 slots, 5,429 with 3, 2,932 with 4, max 28), depth 1-7
+    (13,465 / 7,300 / 3,141 / 894 / 185 / 31 / 2); 479,370 top-level instances, span median 2, q90 5, q99 10, max 36;
+    1,505,723 genes in top-level words (42.0%; 1,303,222 slots, 202,501 inserted). Lambda of committed words median
+    14.6, q99 242; groups per word median 5, q99 102. Ribosomal: 527 of 1,686 runs have >= 80% in one word (68 types;
+    the most common, 20 slots / depth 5, covers 89 runs); Parvarchaeaceae 9 of 114.
+2026-11-13 02:34  POST HOC (stage 1 already scored on even): phrase reading V-phr on the stage-1 token vocabulary (job 88209).
+  Round-0 statistic on tokens at tau 10: 39,137 significant pairs, 1,797,062 instances, 1,310,777 boundaries covered.
+  403,197 phrases, 53,651 joining >= 2 words (span median 8, q99 35, max 105; 497,476 genes).
+  odd : summed .6086 (+.191 vs DH), F1 .745/.638/.393, ribo odd 845/598/55.
+  even: summed .6051, +.178 [+.155, +.202] vs DH; dF1 DF -.008 [-.025,+.010], TXSS +.089 [+.069,+.109], CCT -.084
+        [-.096,-.073]; ribosomal 1,679 recovered / 1,168 resolved; Parvarchaeaceae 114/114 recovered, 106 resolved.
+  The phrase level restores ribosomal recovery (1,198 -> 1,679) and most resolution (501 -> 1,168); the bar 1,400 and
+  CRISPR-Cas F1 remain. So the ribosomal deficit is the missing neighbourhood level, and CRISPR-Cas is the remaining
+  unit-level deficit.
+2026-11-13 02:37  vocab2.py: parallel E kernel (prange; identical values) and int8 distances; L=1 equivalence with vocab.py
+  re-verified on genomes 0-399 (4,484 types; all equal). Login-node numba needs NUMBA_THREADING_LAYER=workqueue.
+  Units job 88115: level-1 k-means runs on single-threaded BLAS (the wrapper sets OPENBLAS/MKL threads = 1 for the
+  process pools), about 10 min instead of 1; levels 2-3 use the 64-process pool. Not worth a restart.
+2026-11-13 02:41  H2 (collect.py, even, V-mob): main - genome-as-unit = +.204 [+.183, +.224] summed; dF1 DF -.031, TXSS
+  +.030, CCT -.097 [-.109, -.086]. H2 HOLDS: group counting is worth +0.20 summed excess. Its price is CRISPR-Cas.
+  main - genus = +.036 [+.026, +.048]; CCT -.016. The coarser the unit, the higher the excess and the lower CRISPR-Cas
+  F1 (genome .503 > genus .421 > main .406 even CCT F1): the same trade-off lineagefree reported for the engine.
+2026-11-13 02:41  Alphabet vt1k built (job 88115, 17.5 min; 16.4 min of it level-1 k-means on single-threaded BLAS,
+  levels 2-3 in 30 s on 64 processes). 2,547,528 unique sequences; all 3,585,303 genes carry a vector.
+    level  units    cell size q10/q50/q90/max (sequences)   member cosine to prototype q05/q25/q50/q75
+    1      1,024    1,199 / 2,273 / 3,957 / 8,378           .310 / .453 / .569 / .693
+    2      16,384      34 /   129 /   302 / 1,670           .441 / .619 / .764 / .860
+    3      125,588      2 /    13 /    47 /   565           .525 / .709 / .838 / .908
+  Against rescue3 families (descriptive): homogeneity / completeness .641/.933 (l1), .808/.853 (l2), .885/.784 (l3).
+2026-11-13 02:43  job 88305: stage-2 ladder (main arm, taus 6-30, 3 nulls; 24 processes x 2 numba threads on 64 CPUs,
+  memory-bound: about 9 label pairs per terminal adjacency).
+2026-11-13 02:56  Stage-2 ladder done (job 88305, 15 min wall, 32 runs on 24 processes x 2 threads; gold-free).
+    tau   obs types  null types (mean)  type FDR   genes in top words (obs)   obs run s / peak GB
+    6     66,009     39,296             .595       1,917,443                  433 / 6.0
+    8     32,653      4,295             .132       1,731,967                  403 / 6.0
+    10    20,696        152             .0073      1,628,954 (45.4%)          414 / 6.1
+    12    15,331         13             .0008      1,552,696
+    15    11,176          0.3           .00003     1,466,394
+    20-30 7,510-4,533     0             0
+  tau* = 10 (predeclared rule), the same value as stage 1; below it the 9 level pairs per terminal adjacency raise the
+  null 10x relative to stage 1 (tau 8: .132 vs .011).
+  Committed types by level pair at tau 10 (0 = coarsest, 1,024 cells; 2 = finest, 125,588 cells): 00 7,681; 11 5,017;
+  22 1,280; 12/21 1,546/1,505; 01/10 1,171/1,197; 02/20 651/648. Most words are written at the coarsest resolution.
+2026-11-13 02:58  job 88436: stage-2 odd scores. Expectation before reading: V-phr selected (ribosomal odd >= 830 recovered);
+  CCT F1 odd .41-.45 (stage 1 .393-.402); summed odd .55-.62; ribosomal resolved odd 600-700 (bar 705).
+2026-11-13 02:59  Stage-2 ODD (job 88436; vt1k, tau 10; token DH odd .418, F1 .743/.544/.479):
+    reading  summed  d vs DH odd [95%]       F1 DF/TXSS/CCT    ribo odd rec/res/Parv   cond
+    V-top    .4860   +.068 [+.043,+.092]     .734/.553/.391    782/489/29              Y n n
+    V-nest   .5297   +.112 [+.087,+.137]     .765/.636/.412    782/494/29              Y n n
+    V-mob    .5297   +.112 [+.087,+.137]     .765/.636/.412    782/494/29              Y n n
+    V-phr    .4879   +.070 [+.045,+.094]     .737/.562/.398    840/615/55              Y n n (resolved 615 < 705)
+  SELECTION (predeclared, odd): V-mob ([1, .5297] vs V-phr [1, .4879]).
+  Expectation at 02:58 partly wrong: V-phr was not selected; summed (.53) below the expected .55-.62.
+  Readings before even: stage 2 fails the ribosomal bars and CRISPR-Cas F1 on even (verdict neither); against stage 1
+  under V-mob it loses summed excess (about -0.09) and TXSScan F1, gains DefenseFinder F1 (+0.01) and ribosomal
+  recovery; CCT dF1 vs stage 1 below +0.03 (S2-H2 refuted on the F1 part). Refuted if even CCT dF1 vs stage 1 >= +0.03.
+2026-11-13 03:01  amendment_ablation (predeclared.json): diagnostic arms vt1k@2 (finest level alone) and vt1k@12 (levels
+  2+3), ladder tau 8/10/12 x 3 shuffles, V-mob, designed after the stage-2 odd numbers and before any stage-2 even number.
+2026-11-13 03:02  Stage-2 EVEN verdict (job 88451; vt1k, tau 10, primary V-mob):
+    reading  summed  d vs DH [95%]          dF1 DF / TXSS / CCT vs DH            ribo rec/res  Parv rec/res  vs stage 1 (same reading) summed; dF1 DF/TXSS/CCT
+    V-top    .4797   +.053 [+.030,+.076]    -.016 / +.005 / -.092                1,541/967     60/0          -.129 [-.152,-.104]; -.007/-.079/-.002
+    V-nest   .5228   +.096 [+.073,+.120]    +.017 / +.082 / -.070                1,541/978     60/0          -.099; +.016/-.047/+.003
+    V-mob    .5234   +.096 [+.074,+.121]    +.017 [-.001,+.036] / +.082 [+.063,+.101] / -.071 [-.083,-.058]  1,541/978  60/0  -.101 [-.125,-.076]; +.016/-.049/+.002 [-.008,+.012]
+    V-phr    .4784   +.051 [+.028,+.075]    -.013 / +.010 / -.085                1,673/1,206   114/108       -.127; -.005/-.080/-.001
+  S2-H1 REFUTED (neither: CCT F1 -.071, ribosomal 1,541/978, Parv 60). S2-H2 REFUTED: CRISPR-Cas members outside every
+  word 44.7% (stage 1 45.5%; bar 25%), CCT dF1 vs stage 1 +.002 [-.008,+.012] (bar +.03). S2-H3 HOLDS for V-phr (114/114
+  Parv recovered; the stage-1 phrase reading also gives 114). S2-H4 REFUTED narrowly (+.096 < +.10).
+  The 02:59 reading holds (stage 2 below stage 1 by -.10 summed, TXSS -.049, DF +.016, CCT +.002).
+  Slot resolution chosen by the objective (first-level instances; level 0 = 1,024-cell kind level): ribosomal slot
+  pairs 90.6% at (0,0); TXSScan 82.8%; DefenseFinder 59.7%; CRISPR-Cas 39.8% (0,0) and 31.0% (0,1); other genes 46.5%.
+  The prediction that ribosomal slots stay tight is wrong: the coarsest cell pools lineage variants, n (groups) grows
+  faster than E, so description length prefers kind-level identity for conserved genes too.
+  Typing (DF, 1,112 instances): word AMI .432 (homogeneity .789, completeness .404, 148 labels) vs engine .755: coarse
+  identity mixes system types (homogeneity .993 -> .789) without making types complete.
+  Vocabulary: 20,696 types (10,781 with 2 slots; max 36), depth <= 7, 45.4% of genes in top-level words, top-level span
+  median 3, q90 6, q99 11, max 42.
+2026-11-13 03:03  Ablation ladders (job 88471, gold-free): tau* = 10 for both.
+    vt1k@2  (finest only)  27,290 types, null 24 (FDR .0009), 593,687 genes in top words (16.6%), 33 s / 1.6 GB per run
+    vt1k@12 (levels 2+3)   30,220 types, null 121 (FDR .0040), 1,321,309 genes (36.9%), 73 s / 3.4 GB
+  (stage 1 MMseqs2 tokens 1,505,723 genes; stage 2 all levels 1,628,954.) The finest embedding cells recur in far fewer
+  groups than MMseqs2 families: 125,588 k-means cells split families (median 13 sequences per cell).
+2026-11-13 03:08  Ablation scores (job 88528; diagnostic; V-mob selected on odd for both):
+    arm      even summed  vs DH            vs stage 1 (V-mob)       dF1 vs DH DF/TXSS/CCT     ribo rec/res   members outside words CCT/DF/TXSS
+    vt1k@2   .5461        +.119            -.078 [-.109,-.047]      -.158/-.127/-.239         5/0            .69/.38/.55
+    vt1k@12  .5788        +.152            -.046 [-.071,-.020]      -.034/+.089/-.109         187/10         .51/.23/.20
+    vt1k     .5234        +.096            -.101 [-.125,-.076]      +.017/+.082/-.071         1,541/978      .45/.14/.10
+    tokens   .6243        +.197            0                        +.001/+.131/-.073         1,198/501      .45/.21/.20
+  Expectation "vt1k@2 within .03 of stage 1" REFUTED (-.078 and an F1 collapse); "vt1k@12 above vt1k" holds for summed
+  excess only. Reading: hard cells of the whitened space at family scale recur in far fewer groups than MMseqs2 families
+  (k-means boundaries cut families); recurrence appears only when the kind-level cells are added, and kind-level
+  identity extends words past system edges (control F1 rises, summed excess falls). The quantized embedding alphabet is
+  the weak part of stage 2, not the objective.
+2026-11-13 03:15  REPORT.txt written; results/ copied from $RD/vocab/results (table_even.txt from table.py). No job of this
+  workstream is queued or running. Final verdicts: stage 1 neither (+.197 summed, TXSS +.131, CCT -.073, ribosomal
+  1,198/501); stage 2 neither (+.096; -.101 vs stage 1). H2 and S2-H3 hold; H1, H3, H4, S2-H1, S2-H2, S2-H4 refuted.

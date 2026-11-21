@@ -1,0 +1,50 @@
+{
+ "threads": 24,
+ "smoke": 0,
+ "timing": {
+  "regression": 10.7,
+  "z_pass": 87.6,
+  "calibration": 16.7,
+  "a_support": 32.4,
+  "total": 182.1
+ },
+ "bonds_Z": 2246491,
+ "loci_Z_L4bp_t0.02": 1282888,
+ "bonds_A": 2522221,
+ "loci_A_L4b_t0.02": 1219964,
+ "calibration_pool": 1337396,
+ "counts": {
+  "candidates": 1444991,
+  "candidates_with_own_ko": 20042,
+  "candidates_with_embedding": 1444991,
+  "z_bonded": 502275,
+  "in_z_locus": 637627,
+  "eligible_bonded_and_in_locus": 502275,
+  "eligible_none_unannotated": 290498,
+  "eligible_other": 175729,
+  "eligible_none_lt2": 36048,
+  "called": 175729,
+  "called_with_own_ko": 12831,
+  "called_alignment_yes": 125548,
+  "called_alignment_no_call": 34535,
+  "called_alignment_no": 13225,
+  "called_alignment_no_list": 2421
+ },
+ "calibration": {
+  "sample": 50000,
+  "called": 48418,
+  "classes": {
+   "other": 48418,
+   "none_lt2": 1374,
+   "none_unannotated": 208
+  },
+  "agree": 0.9885166673551159,
+  "agree_pfam": 0.980379197818993
+ },
+ "ko_agreement": {
+  "no_ko": 162898,
+  "agree": 12537,
+  "unmapped": 212,
+  "disagree": 82
+ }
+}

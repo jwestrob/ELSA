@@ -1,0 +1,289 @@
+WS_CALIB: WHAT THE SIMILARITY BEYOND THE MMSEQS2 FAMILY IS, AND WHETHER WHITENED ESM++ SMALL SIMILARITY CARRIES
+STATISTICS (DPANN, 3,564 genomes, 2026-11-13)
+=====================================================================================================================
+Whitened ESM++ small vectors (zca10). Families = rescue3 MMseqs2 tokens. Odd genome_code = fitting, even = scoring;
+2,000-draw query bootstrap (seed 17). Predeclared in predeclared.json (02:12 UTC) after one reproduction; items marked
+POST HOC were designed after the numbers they follow. Stored line reproduced exactly first (repro.json): per-genome
+maximum in genomes lacking the family >= 0.30 / 0.32 / 0.40 / 0.45 / 0.50 / 0.60 = .399 / .352 / .202 / .139 / .095 /
+.042 (stored .40 / 35% / .20 / 14% / .095 / 4.2%).
+
+ANSWER IN EIGHT LINES
+1. The similarity beyond the family is mostly homology that MMseqs2 families split. Share of pairs with positive homology
+   evidence (Smith-Waterman E <= 1e-3, shared Pfam family or clan, CDD superfamily, or family-profile link), random
+   queries: non-family neighbours at rank 1-10 .676 [.668,.685], 11-100 .587, 101-1,000 .427; per-genome best matches in
+   genomes LACKING the family at cosine [.20,.32) .326, [.32,.45) .518, [.45,.60) .608, >= .60 .764; length-matched
+   random pairs .015-.018. Where both proteins carry annotation: .953 / .883 / .712 and .577 / .859 / .938 / .975.
+2. The split is mechanical. 59% of rank 1-10 non-family neighbours align at E <= 1e-3 (median identity .42; 87% of
+   these alignments cover >= 50% of both proteins: full-length homologs that set-cover clustering placed under different
+   representatives); at [.32,.45) 28% align and 48% of those fail the 50% bidirectional coverage rule (length ratio .70).
+   Over all query x genome cells of random queries, 28% of best matches align to the query; 21% hold its family.
+3. Same kind, different origin is a small second component: among pairs with no homology evidence, same physical kind
+   (TM class, length, composition) is 2.0-2.4x the length-matched rate and both-TM 3-4x; same kind with contradicting
+   annotation is .012-.083 of a band. Unexplained is .23-.59 of a band and almost all of it has an unannotated side
+   ([.32,.45): unexplained .452, of which .400 unannotated side, .052 different domains and different kind).
+4. The Cas pattern is the general rule. Every curated role with >= 30 queries (28; 23 non-Cas) has >= 54x more same-role
+   genes of other families in its top-1,000 non-family neighbours than matched controls (per list: CRISPRCasTyper 233
+   vs 0.69, DefenseFinder 103 vs 0.012, TXSScan 55 vs 0.076); the 20 largest Pfam clans 22-4,300x. H1, H2, H4 supported;
+   H3 not supported by its predeclared letter (kind excess unconditional .000-.032).
+5. Predeclared Q2: as detectors of "this genome holds a member of the query's MMseqs2 family" no score is clearly
+   better than raw cosine and none works at low FPR: recall at FPR 1e-3 raw .026, z .021, extreme-value p .025-.027,
+   CSLS .014, reciprocal-first .026, genome-centred .025, logistic .028, boosted trees .071 (+.046 [+.036,+.055]; bar
+   .05). The negatives' top tail is homologs of other families (line 1). Singletons' nearest relatives: .001-.004.
+6. POST HOC, cells labelled by their best match (homolog by alignment or annotation vs annotated, unrelated, unalignable):
+   raw .259, within-genome z .324 (+.065 [+.046,+.084]) and best-minus-second gap .319 are the label-free gains;
+   extreme-value p loses .09, CSLS hub correction loses .16 (hubs are dense real families), reciprocity and genome
+   centring add <= .012; learned combinations add .10 (logistic) and .15 (boosted trees). Alignable homologs: raw .377,
+   z .467.
+7. Whitened ESM++ small similarity does NOT carry an E-value: per-query x per-genome extreme-value p-values run 8x / 42x
+   over nominal at 1e-3 / 1e-4 on genome-level clean negatives (predeclared refuter fires) and 3x / 11x on the cleanest
+   pair-level negatives; the empirical tail is 8-70x conservative. A fixed threshold works instead: z >= 10.6 / 13.7 /
+   16.0 (cosine >= .504 / .649 / .746) gives FPR 1e-2 / 1e-3 / 1e-4 against clean non-homologs, equal on odd and even
+   genomes, and z keeps 11 of 12 query strata within 10x of 1e-3 (raw cosine 9-10 of 12; long TM proteins worst).
+8. For the method: treat beyond-family similarity as coarser homology evidence, never as the null; estimate chance by
+   shuffling gene order (as the engine does), never by family absence; use z (or cosine) at a fixed threshold, skip hub
+   correction and per-query tail fits. Handover (POST HOC): z-score table for every sequence x genome at z >= 10.5,
+   $RD/calib/table (2.25 billion cells, 15.7 GB), 12.0 min on one A5000 for all sequences.
+
+=====================================================================================================================
+METHOD
+Sample (predeclared; work/prep/queries.npz): R = the 10,000 softrec3 calibration queries (uniform over unique
+  sequences, seed 17; every overall estimate uses R), S = 3,000 more of length < 100 aa, N = 3,000 rescue3 singletons with
+  a Pfam hit, Y = 1,000 curated member sequences per caller, Yc = one control per Y query (no curated membership, same
+  family-size bin and length tertile). 22,000 queries.
+GPU (job 88065, RTX A5000, 86 s): for every query x genome the top-8 cosines and best gene, mean and sd over the genome,
+  best genome-centred cosine, max_t [2 cos - r_k(t)] for k = 10 / 50 (r_k from the stored HNSW top-300), reciprocal best
+  match in the query's genome; per query the histograms of raw cosines and within-genome z over all 3,585,303 genes and
+  the exact top-2,001 unique sequences. Check: the per-genome maximum equals softrec3's CPU omax within 1e-3 in 100% of
+  the 35.6 M cells of the 10,000 shared queries (max |d| 5.2e-4), same best gene in 99.90%.
+Evidence lines (evaluation only; Sharur DPANN seal 78c68b6b exported read-only): MMseqs2 align (Smith-Waterman, mode 3)
+  of explicit pairs against the 2,547,528-sequence uniqdb, E-values at that database size; Pfam families and Pfam 39
+  clans (from Pfam-A.seed); CDD hits (E <= 0.01) mapped to cl superfamilies; family-level HHsearch-Pfam / HHblits-PDB100
+  hits (prob >= 90, >= 30 columns; 5,090 / 5,344 Pfam-dark families) linked through Pfam family, clan or PDB entry;
+  curated roles from system_proteins; physical kind from sequence (Kyte-Doolittle 19-residue TM heuristic, length,
+  amino-acid composition). Partition: HOM = any homology line; ROLE; KIND = same TM class AND length ratio >= .67 AND
+  composition L1 <= .404 (uniform-pair p25); each split by annotation status.
+Q1 sets: rank bands among non-family neighbours (10 per band per query) and family-absent per-genome best matches by
+  cosine band (5 per band per query); baselines: 20 uniform random genes per query and one length-matched (+-10%) random
+  gene per neighbour. 1,038,728 neighbour pairs, 2,453,555 unique aligned pairs (15 s).
+Q2 detectors D1-D12 as predeclared; tail windows chosen on odd ((1e-2, 1e-3) for both extreme-value scores);
+  combinations fitted on 2 M odd cells of R. Labels: FAM (genome holds the family), CLAN (genome holds a protein sharing
+  a Pfam family or clan), genome-level clean negatives (no shared family, clan or CDD superfamily anywhere in the genome).
+Q2b (POST HOC): every R cell labelled by its best raw match (30.6 M explicit alignments, 3.7 min): HOM = alignable at
+  E <= 1e-3 or shared Pfam / clan / CDD / profile link (41.5% of cells; alignable 28.2%); NEGC = both annotated, nothing
+  shared, E > 1 (17.8%); unknown 40.7%.
+
+=====================================================================================================================
+Q1. WHAT THE SIMILARITY BEYOND THE FAMILY IS
+Table 1. Class probabilities by band, R queries (point [95%]). all = every pair; eval = both proteins annotated (Pfam or
+CDD; .55-.68 of neighbour pairs, .44-.51 of baseline pairs).
+ band (non-family)      n       HOM all              align E<=1e-3       Pfam fam  clan only  CDD sf  profile  | HOM eval  align eval  contradicted eval
+ rank 1-10            99,790   .676 [.668,.685]     .594 [.586,.603]    .515      .010       .469    .017     | .953      .832        .067
+ rank 11-100          99,381   .587 [.578,.596]     .445 [.436,.453]    .450      .026       .379    .015     | .883      .660        .134
+ rank 101-1,000       95,913   .427 [.418,.436]     .234 [.227,.241]    .317      .047       .245    .011     | .712      .383        .300
+ best match, family absent:
+ cos [.20,.32)        49,845   .326 [.319,.334]     .085 [.081,.089]    .213      .074       .140    .010     | .577      .151        .430
+ cos [.32,.45)        49,325   .518 [.509,.527]     .281 [.274,.288]    .413      .034       .314    .014     | .859      .465        .152
+ cos [.45,.60)        46,142   .608 [.598,.617]     .462 [.453,.471]    .495      .010       .416    .015     | .938      .712        .078
+ cos >= .60           32,696   .764 [.755,.774]     .705 [.694,.715]    .600      .004       .549    .015     | .975      .897        .045
+ baselines:
+ uniform random      200,000   .008 [.007,.009]     .000                .001      .007       .001    .000     | .018      .000        .983
+ length-matched       per band  .015-.018            .001-.003           .003-.004 .010-.012  .002    .001     | .032-.034 .002-.005   .967-.969
+ Profile links occur in .010-.017 of pairs: family-level profile hits exist for 82,514 sequences only.
+
+Table 2. Fine cosine bins, family-absent best matches (R; all pairs; length-matched HOM .013-.037 in every bin)
+ cosine     .20-.25  .25-.32  .32-.40  .40-.45  .45-.50  .50-.60  .60-.70  .70-.80  .80-1
+ HOM        .283     .369     .476     .619     .515     .709     .709     .918     .976
+ align      .048     .121     .228     .408     .346     .590     .635     .898     .973
+ annotated  .610     .492     .554     .642     .526     .677     .636     .802     .868   (share of pairs annotated on both sides)
+ (The dip at .45-.50 follows the annotated share: bins mix queries, and each query contributes 5 cells per band.)
+
+Table 3. Three-way headline per band (R; all pairs) and physical kind without homology evidence (POST HOC, q1_extra)
+ band            remote homology   same kind, annotation contradicts   unexplained (unannotated side / diff. domains)   K | no HOM vs length-matched   both TM | no HOM vs lm
+ rank 1-10       .676              .012                                .312 (.295 / .017)                                .394 vs .164                  .286 vs .089
+ rank 11-100     .587              .027                                .386 (.343 / .043)                                .325 vs .149                  .291 vs .089
+ rank 101-1,000  .427              .054                                .519 (.410 / .109)                                .262 vs .133                  .281 vs .092
+ cos [.20,.32)   .326              .083                                .591 (.441 / .151)                                .216 vs .115                  .273 vs .086
+ cos [.32,.45)   .518              .030                                .452 (.400 / .052)                                .238 vs .116                  .326 vs .089
+ cos [.45,.60)   .608              .014                                .379 (.355 / .024)                                .308 vs .132                  .341 vs .091
+ cos >= .60      .764              .007                                .229 (.219 / .010)                                .374 vs .181                  .379 vs .098
+ Composition within the uniform p25, no homology evidence: .50-.65 vs .29-.32. Length ratio is not enriched.
+
+Table 4. Homology evidence by annotation side (R; share of band; HOM; aligned)
+ band            both annotated        query only          target only         neither
+ rank 1-10       .612 .953 .832        .043 .311 .273      .047 .309 .268      .298 .218 .204
+ rank 101-1,000  .564 .712 .383        .078 .069 .039      .072 .085 .050      .286 .050 .040
+ cos [.20,.32)   .551 .577 .151        .104 .039 .004      .084 .032 .007      .261 .007 .003
+ cos [.32,.45)   .580 .859 .465        .073 .073 .031      .069 .071 .035      .279 .035 .024
+ cos >= .60      .681 .975 .897        .038 .399 .361      .039 .401 .367      .242 .287 .271
+ Where neither side is annotated, alignment finds few homologs below cosine .60: the dark part of the beyond-family
+ similarity is either homology beyond Smith-Waterman or kind-level resemblance; these data cannot separate the two.
+
+Table 5. Geometry of the alignable pairs (all strata)
+ band            n        identity q50  coverage of shorter q50  both sides >= 50% covered  length ratio q50  E q50
+ rank 1-10       59,284   .415          .959                     .867                       .950              1.5e-31
+ rank 101-1,000  22,454   .331          .905                     .724                       .885              6.3e-17
+ cos [.20,.32)   4,229    .313          .799                     .395                       .653              5.5e-10
+ cos [.32,.45)   13,860   .334          .878                     .523                       .700              2.9e-13
+ cos >= .60      23,041   .396          .953                     .898                       .947              3.9e-30
+
+Table 6. HOM by query stratum (all strata pooled, descriptive; rank 1-10 / cos [.32,.45))
+ rescue3 family genes 1: .342 / .220; 2-4: .148 / .086; 5-19: .359 / .215; 20-99: .613 / .385; 100-499: .822 / .580;
+ >= 500: .946 / .797. Query unannotated: .234 / .043 (Pfam and CDD: .862 / .726). Query TM classes 0 / 1 / 2-4 / >= 5:
+ .676 / .569 / .552 / .816. Short (< 100 aa) .432 / .312, 100-199 .647 / .475, 200-399 .778 / .614, >= 400 .807 / .583.
+
+Table 7. H4, the Cas pattern (top-1,000 non-family neighbours per query; Y queries vs matched Yc controls)
+ caller           queries  same role (other families)  controls  same caller  controls
+ CRISPRCasTyper   999      233.1                        0.69      264.7        9.0
+ DefenseFinder    975      102.7                        0.012     254.5        3.0
+ TXSScan          998      54.8                         0.076     85.5         1.7
+ Roles with >= 30 queries: 28; all 23 non-Cas roles >= 10x (lowest: TXSScan arCOG04148 54x; DefenseFinder SoFic 40x
+ at n 22 below the cut). Examples: TXSScan arCOG01808 73.7 vs 0.05; DefenseFinder RM type I S 246 vs 0; cctyper htpX
+ 677 vs 0; Csa3 366 vs 2.4. Clans (R queries vs family-size-matched R controls): P-loop CL0023 552 vs 14 (39x),
+ Rossmann CL0063 589 vs 11 (52x), HTH CL0123 439 vs 10 (43x), ... CL0280 651 vs 0.15 (4,300x); 20 of 20 >= 3x.
+ Curated roles and clans are homology classes coarser than MMseqs2 families; the whitened neighbourhood follows them.
+
+Predeclared verdicts: H1 SUPPORTED (.676 >= .50). H2 SUPPORTED (excess .503 at [.32,.45) against a bar of .05; .59-.75
+at >= .45 against .20); my written expectation (.15 at [.32,.45)) was far too low. H3 NOT SUPPORTED by its letter
+(unconditional KIND excess .000 at [.32,.45), .020 at 101-1,000, .032 at [.20,.32); refuted only if < .02 everywhere):
+homology absorbs most pairs; conditional on no homology evidence kind is enriched 2x (POST HOC). H4 SUPPORTED.
+
+=====================================================================================================================
+Q2. CAN THE SIMILARITY CARRY STATISTICS? (even target genomes; recall at FPR; point [95%])
+Table 8. Predeclared detector comparison, recall at FPR 1e-3 (AUROC for overall FAM in brackets)
+ score              overall FAM      FAM vs clean   CLAN    CLAN, fam absent  short FAM  singletons CLAN  curated FAM
+                    (10,000 q)       (6,562 q)      (5,851) vs clean          (4,844)    (3,030)          (3,200)
+ D1 raw cosine      .026 [.908]      .223           .062    .039              .049       .001             .017
+ D2 z (genome)      .021 [.921]      .223           .060    .042              .031       .001             .018
+ D3 EV raw          .027 [.877]      .121           .034    .022              .055       .004             .012
+ D4 EV z            .025 [.870]      .117           .034    .021              .042       .004             .008
+ D5 EV empirical    .008 [.789]      .020           .013    .006              .007       .003             .014
+ D5b EV emp. z      .005 [.762]      .012           .009    .005              .005       .002             .010
+ D6 EV local        .014 [.807]      .081           .019    .018              .022       .002             .007
+ D7 gap             .029 [.887]      .254           .053    .042              .053       .001             .020
+ D8 CSLS k 10       .014 [.774]      .074           .036    .016              .011       .003             .020
+ D8 CSLS k 50       .012 [.765]      .044           .024    .012              .013       .003             .015
+ D9 RBM then raw    .026 [.904]      .230           .062    .041              .051       .001             .017
+ D9b EV z, RBM      .025 [.882]      .120           .033    .020              .042       .004             .009
+ D10 centred        .025 [.913]      .233           .065    .042              .050       .001             .017
+ D11 logistic       .028 [.930]      .339           .083    .051              .060       .001             .019
+ D12 boosted trees  .071 [.948]      .390           .075    .050              .075       .001             .031
+ Overall FAM at FPR 1e-2 / 1e-4: raw .217 / .0048, z .191 / .0024, EV z .144 / .0025, gap .200 / .0054, GBM .336 /
+ .0089. FAM vs clean at 1e-2 / 1e-4: raw .600 / .064, z .681 / .022, gap .623 / .059, LR .720 / .092, GBM .756 / .064.
+ Paired differences vs raw at 1e-3, overall FAM: GBM +.046 [+.036,+.055], LR +.002 [-.005,+.007], gap +.003 [-.003,
+ +.009], z -.005 [-.009,-.001]; FAM vs clean: GBM +.168 [+.122,+.210], LR +.117 [+.076,+.155], gap +.031 [-.010,+.078],
+ centred +.011 [+.007,+.017], z +.001 [-.071,+.077], EV z -.106, CSLS10 -.149.
+ Reciprocal best match as a binary detector: FPR .30 (FAM negatives) / .17 (clean), recall .87-.88.
+ Transfer (threshold from odd negatives at 1e-3): realised even FPR .89-1.09e-3 for every score.
+ Predeclared CLEARLY_BETTER: NOT MET by any score.
+
+Table 9. Nominal calibration of p-valued scores (realised FPR at p <= alpha)
+                       genome-level clean negatives (predeclared)     pair-level clean negatives NEGC (POST HOC)
+ score                 1e-2      1e-3      1e-4                        1e-2      1e-3      1e-4
+ D3 EV raw (w2_3)      .0161     .0081     .0042                       .0064     .0026     .0011
+ D4 EV z (w2_3)        .0176     .0084     .0042                       .0073     .0029     .0011
+ D4 EV z (w3_4)        .0015     .00023    .000082                     -
+ D5 EV empirical       .0012     .000045   0                           .00055    .000015   0
+ D6 EV local           .026      .0071     .0018                       .0146     .0029     .00059
+ FAM-absent negatives (contain homologs): EV z .095 / .058 / .034.
+ Predeclared E_VALUE: REFUTED (no score within [alpha/3, 3 alpha] at 1e-3 on genome-level clean negatives). On the
+ cleanest negatives the fitted tails hold to 3x at 1e-2 and 1e-3 and fail at 1e-4 (11x): tails are heavier than an
+ exponential fitted between the query's 1e-2 and 1e-3 quantiles; the window (1e-3, 1e-4) is conservative instead and
+ ranks worse (odd recall .009-.015).
+
+Table 10. POST HOC Q2b, cells labelled by their best match (10,000 R queries; even: 7.38 M HOM, 3.18 M NEGC)
+ score              HOM vs NEGC: AUROC  1e-2   1e-3 [95%]          1e-4   d vs raw at 1e-3     | ALN vs NEGC 1e-3  HOM vs not-HOM 1e-3  short HOM vs NEGC 1e-3
+ D1 raw             .914                .484   .259 [.241,.279]    .120                         | .377              .129                 .236
+ D2 z               .922                .553   .324 [.304,.347]    .151   +.065 [+.046,+.084]   | .467              .118                 .262
+ D3 EV raw          .859                .415   .172                .071   -.087                 | .238              .105                 .203
+ D4 EV z            .857                .406   .166                .063   -.093                 | .228              .102                 .198
+ D5 EV empirical    .817                .124   .025                .005   -.234                 | .035              .005                 .023
+ D6 EV local        .781                .320   .112                .020   -.147                 | .154              .066                 .101
+ D7 gap             .879                .531   .319 [.303,.336]    .176   +.060 [+.039,+.079]   | .454              .183                 .299
+ D8 CSLS k 10       .811                .273   .095                .018   -.164                 | .138              .012                 .064
+ D8 CSLS k 50       .807                .245   .068                .009   -.191                 | .098              .009                 .046
+ D9 RBM then raw    .898                .503   .271                .126   +.012 [+.004,+.021]   | .394              .140                 .233
+ D10 centred        .919                .497   .270                .127   +.011 [+.008,+.014]   | .393              .141                 .233
+ D11 logistic       .926                .576   .357                .196   +.099 [+.078,+.117]   | .514              .177                 .289
+ D12 boosted trees  .939                .635   .412 [.393,.430]    .227   +.153 [+.134,+.171]   | .589              .221                 .383
+ z at 1e-2 / 1e-4 vs raw: +.070 [+.059,+.081] / +.031 [-.016,+.066]. Logistic weights (standardised): centred +6.97,
+ raw -5.76, z +2.11, gap +.50, CSLS -.33, r10(q) -.20: the learned score is mostly "centred minus raw" (how much of
+ the similarity survives removing the genome-of-origin component) plus z.
+
+Table 11. Thresholds at stated FPR against NEGC (POST HOC; R queries; odd / even)
+ FPR     z threshold      recall HOM  recall aligned  cosine threshold  recall HOM  recall aligned  precision HOM vs NEGC (z)
+ 1e-2    10.58 / 10.57    .553        .756            .504 / .504       .485        .679            .992
+ 1e-3    13.70 / 13.65    .324        .467            .649 / .649       .259        .377            .999
+ 1e-4    16.16 / 15.96    .151        .220            .749 / .746       .120        .176            .9997
+ Per-stratum FPR at the pooled 1e-3 threshold (12 strata: length tertile x TM x Pfam): z 8e-6 to 4.2e-3 (11 of 12
+ within 10x); raw cosine 1.2e-5 to 1.1e-2 (9 of 12; long TM proteins without Pfam 1.1e-2); genome-level clean
+ negatives (Q2): raw 2.1e-5 to 4.5e-3 (10 of 12), z 4.6e-5 to 5.2e-3 (11 of 12), CSLS 12 of 12 (with a third of the
+ recall). Predeclared ABSOLUTE_THRESHOLD: met by raw cosine (.736 at genome-level clean FPR 1e-3; transfer 1.03e-3;
+ 10 of 12 strata) and by z; met by no p-valued score.
+
+The direct statement: whitened ESM++ small similarity does not support an extreme-value E-value of the BLAST kind.
+Per-query tails are not exponential beyond the 1e-3 quantile, homolog contamination of each query's own distribution
+is large (families of up to 7,712 genes), and every per-query normalisation tried (EV fits, empirical tail, CSLS) ranks
+worse than the raw score because cross-query differences in scale are mostly real (dense families). A global threshold
+on the within-genome z-score behaves like a calibrated cut: the same value gives the same FPR on independent genome
+halves and across most query strata.
+
+=====================================================================================================================
+WHAT A METHOD SHOULD DO WITH THE BEYOND-FAMILY SIMILARITY
+- Count it as evidence. Above cosine .32 a per-genome best match outside the query's MMseqs2 family is a
+  homolog in most cases where annotation can decide (.86-.98); .47-.90 of those pairs align outright. Suppressing it as
+  noise throws away the coarser homology classes (curated roles, Pfam clans) that the whitened space recovers and that
+  the Cas lists already showed.
+- Never build the null from family absence. "Genome lacks the family" is a poor negative set (FAM negatives hold
+  homologs in their top tail; every detector scores <= .07 recall at FPR 1e-3 against them). The engine's gene-order
+  shuffle remains the right null for recurrence; for pairwise thresholds use NEGC-type clean negatives.
+- Use a fixed z (or cosine) threshold per stated error rate: z 10.6 / 13.7 / 16.0 for 1e-2 / 1e-3 / 1e-4 per cell. Skip
+  hub correction (CSLS), per-query extreme-value p-values and reciprocity filters; a genome-centred term and the gap
+  carry the remaining label-free gain.
+- Expect a coarse tier: below z ~10 the matches mix homology, same-kind resemblance (TM with TM) and dark proteins with
+  no evidence either way; a two-grain statistic (family-level and clan-level support counted separately) fits these
+  data better than one floor.
+
+=====================================================================================================================
+CAVEATS
+- "Homology evidence" is a lower bound: 40% of pairs have an unannotated side, and alignment misses distant homologs.
+  The evaluable-pair rates (both annotated) are an upper-side view biased toward well-annotated families.
+- The physical-kind lines are heuristics (Kyte-Doolittle TM, composition); no TM or signal-peptide caller output is
+  stored in Sharur. Curated roles name nothing beyond what the callers emitted; no system names are assigned here.
+- Q2 labels FAM / CLAN are genome-level; detectors score the best match of the genome. CLAN positives include genomes
+  whose same-clan protein is not the best match.
+- Q2b, the per-stratum views, the conditional kind analysis and all thresholds are POST HOC. The combination models use
+  annotation-derived labels for training; applying them needs no annotation, but they are fitted models.
+- The boosted-tree score uses query length and hubness; part of its gain is query-level prior, not cell evidence.
+- Q1 fine bins mix queries (5 cells per band per query), hence the non-monotone .45-.50 bin.
+- Process: Q2 job 88119 lost to repeated npz reads, 88152 to an index bug (no number read either time except the odd
+  window choice, which is a fitting step); 88202 cancelled seconds after start (submitted at exactly 400 account CPUs);
+  GPU job 88450 cancelled while pending (another workstream held the gpu slot). q1_extra ran 16 min single-threaded on
+  the login node (bootstrap weights redrawn per call).
+
+ARTIFACTS
+ Local benchmarks/redesign/calib/: predeclared.json, NOTEBOOK.txt, REPORT.txt, repro.py, prep.py, gpu_feat.py, q1.py,
+   q1_extra.py, q2.py, q2b.py, q2b_thr.py, gpu_table.py, summarize.py, calib_cpu.sbatch, calib_gpu.sbatch,
+   q1_align.sbatch, q2b.sbatch, table_check.py, table_note/FORMAT.txt, results/ (repro.json, gpu.json, pairs.json, q1_classes.json, q1_extra.json, q1_h4.json,
+   q1_role_enrichment.tsv, q1_role_counts.tsv, q1_clan_enrichment.tsv, q2_detectors.json, q2_table.tsv, q2_strata.tsv,
+   q2b.json, q2b_table.tsv, q2b_strata.tsv, q2b_thr.json, table.json, table_check.json).
+ Biotite $RD/calib/: inputs/ (Sharur exports, Pfam clan map), work/prep (uidfeat, ann CSR sets, queries, hubness),
+   work/gpu (per query x genome features, histograms, top-2,001 lists; ~4 GB), work/q1 (pairs, alignments, classified
+   pairs), work/q2b (30.6 M alignments), results/, code/, table/ (handover, below).
+ HANDOVER (POST HOC) $RD/calib/table/ (format in FORMAT.txt there; copy in table_note/FORMAT.txt): for every uid
+   (2,547,528) x genome (3,564) with within-genome z >= 10.5: genome_code (int16), best gene's local index (int16; gid =
+   g_start + local), cosine (float16), z (float16), in uid order with counts.npy (int32) as the index. 2,246,194,130
+   entries (24.7% of cells; per uid median 395, mean 882), 15.7 GB. Error rate per cell against clean non-homologs:
+   z >= 10.57 FPR 1e-2, >= 13.65 FPR 1e-3, >= 15.96 FPR 1e-4 (POST HOC calibration, Table 11). Check: for 200 sample
+   queries every cell with z >= 10.52 in the feature run is present, same best gene 99.98%, |dz| q99 .012 (float16).
+   Cost: 718 s of search on one RTX A5000 (max, mean and sd per cell; peak GPU 7.3 GB). The full predeclared feature set
+   (per-query histograms for the tail fits, centring, CSLS, reciprocity) costs ~2.85 ms per sequence, ~2.0 h for all.
+ Jobs: 88064 (prep), 88065 (GPU features), 88118 (Q1), 88119 / 88152 / 88202 (lost or cancelled), 88208 (Q2), 88345
+   (Q2b), 88440 (thresholds), 88450 (cancelled), 88624 (table, 12.0 min). Logs $RD/logs/calib_*_<job>.log.
+
+NEXT (not started; one line each)
+- A two-grain recurrence: count family-level support (z >= 13.7 or same token) and clan-level support (z 10-13.7)
+  separately in the engine statistic, scored on the nested reading; Cas and RM systems are the natural test.
+- Label the 40% "unknown" cells with the family-level HHsearch tier extended to all families (spec exists) to split
+  dark beyond-family similarity into homology and kind.
+- A z-score floor in place of softrec's cosine floor (0.32 / 0.45): z 10.6 is a per-cell FPR of 1e-2 against clean
+  non-homologs, where cosine .32 passes 35% of family-absent genomes.

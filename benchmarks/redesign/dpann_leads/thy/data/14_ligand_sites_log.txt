@@ -1,0 +1,103 @@
+         set                model   ligand  n_contact_res chains_halves                                                                                                              core_contacts  n_core  composite
+        1O26                 1O26 UMP_A603             12           A+D                                                                      A:R147=R147 D:R174=R174 D:R78=R78 A:R90=R90 A:S88=S88       5      False
+        1O26                 1O26 FAD_A615             25         A+C+D                                                  A:H79=H79 C:R165=R165 A:R174=R174 A:R78=R78 A:R80=R80 D:R90=R90 D:S88=S88       7      False
+        1O26                 1O26 UMP_B608             13           B+C                                                                      B:R147=R147 C:R174=R174 C:R78=R78 B:R90=R90 B:S88=S88       5      False
+        1O26                 1O26 FAD_B610             25         B+C+D                                                  B:H79=H79 D:R165=R165 B:R174=R174 B:R78=R78 B:R80=R80 C:R90=R90 C:S88=S88       7      False
+        1O26                 1O26 FAD_C605             25         A+B+C                                                  C:H79=H79 A:R165=R165 C:R174=R174 C:R78=R78 C:R80=R80 B:R90=R90 B:S88=S88       7      False
+        1O26                 1O26 UMP_C613             13           B+C                                                                      C:R147=R147 B:R174=R174 B:R78=R78 C:R90=R90 C:S88=S88       5      False
+        1O26                 1O26 FAD_D600             25         A+B+D                                                  D:H79=H79 B:R165=R165 D:R174=R174 D:R78=R78 D:R80=R80 A:R90=R90 A:S88=S88       7      False
+        1O26                 1O26 UMP_D618             13           A+D                                                                      D:R147=R147 A:R174=R174 A:R78=R78 D:R90=R90 D:S88=S88       5      False
+   dimer_lig DAHVAY010000002.1_53   FAD_C1             29           A+B                                                                                                                                  0      False
+   dimer_lig DAHVAY010000002.1_53   FAD_D1             27             A                                                                                                                                  0      False
+   dimer_lig DAHVAY010000002.1_53   FAD_E1             29           A+B                                                                                                                                  0      False
+   dimer_lig DAHVAY010000002.1_53   FAD_F1             27             B                                                                                                                                  0      False
+   dimer_lig DAHVAY010000002.1_53   UMP_G1             11           A+B                                                                                                                                  0      False
+   dimer_lig DAHVAY010000002.1_53   UMP_H1             13           A+B                                                                                                                                  0      False
+   dimer_lig DAHVAY010000002.1_53   UMP_I1             12           A+B                                                                                                                                  0      False
+   dimer_lig DAHVAY010000002.1_53   UMP_J1             12           A+B                                                                                                                                  0      False
+   dimer_lig           HJO15200.1   FAD_C1             27      AC+AN+BN                AC:Q339=H79 BN:R201=R165 AC:R424=R174 AC:R338=R78 AN:P95=R80 AC:R340=R80 BN:P95=R80 AN:R105=R90 AN:S103=S88       9       True
+   dimer_lig           HJO15200.1   FAD_D1             19      AC+AN+BN                                                                                                                 BN:H65=H53       1      False
+   dimer_lig           HJO15200.1   FAD_E1             27      AN+BC+BN                BC:Q339=H79 AN:R201=R165 BC:R424=R174 BC:R338=R78 AN:P95=R80 BN:P95=R80 BC:R340=R80 BN:R105=R90 BN:S103=S88       9       True
+   dimer_lig           HJO15200.1   FAD_F1             13         AC+BN                                                                                                                                  0      False
+   dimer_lig           HJO15200.1   UMP_G1             13         AC+AN                                                              AN:R183=R147 AC:R424=R174 AC:R338=R78 AN:R105=R90 AN:S103=S88       5       True
+   dimer_lig           HJO15200.1   UMP_H1             13         AN+BC                                                                                                               AN:R201=R165       1      False
+   dimer_lig           HJO15200.1   UMP_I1             13         BC+BN                                                              BN:R183=R147 BC:R424=R174 BC:R338=R78 BN:R105=R90 BN:S103=S88       5       True
+   dimer_lig           HJO15200.1   UMP_J1             10         AN+BC                                                                                                                                  0      False
+   dimer_lig JAGVGF010000004.1_10   FAD_C1             30      AC+AN+BN AN:H103=H53 AC:H428=H79 AN:R247=R165 AC:K528=R165 AC:R537=R174 AC:R427=R78 AN:V132=R80 AC:R429=R80 BN:R142=R90 BN:S140=S88      10       True
+   dimer_lig JAGVGF010000004.1_10   FAD_D1             19      AC+AN+BN                                                                                                                AN:H103=H53       1      False
+   dimer_lig JAGVGF010000004.1_10   FAD_E1             30      AN+BC+BN BN:H103=H53 BC:H428=H79 BN:R247=R165 BC:K528=R165 BC:R537=R174 BC:R427=R78 BN:V132=R80 BC:R429=R80 AN:R142=R90 AN:S140=S88      10       True
+   dimer_lig JAGVGF010000004.1_10   FAD_F1             18      AN+BC+BN                                                                                                                BN:H103=H53       1      False
+   dimer_lig JAGVGF010000004.1_10   UMP_G1             13         AC+BN                                                              BN:R229=R147 AC:R537=R174 AC:R427=R78 BN:R142=R90 BN:S140=S88       5       True
+   dimer_lig JAGVGF010000004.1_10   UMP_H1              7            AN                                                                                                                                  0      False
+   dimer_lig JAGVGF010000004.1_10   UMP_I1             13         AN+BC                                                              AN:R229=R147 BC:R537=R174 BC:R427=R78 AN:R142=R90 AN:S140=S88       5       True
+   dimer_lig JAGVGF010000004.1_10   UMP_J1              8            BN                                                                                                                                  0      False
+   dimer_lig         MBU2497176.1   FAD_C1             25      AC+AN+BC                                                                                                                BC:H339=H53       1      False
+   dimer_lig         MBU2497176.1   FAD_D1             26      AC+AN+BC                                                              AC:H365=H79 BC:K448=R165 AC:R457=R174 AC:R364=R78 AC:R366=R80       5      False
+   dimer_lig         MBU2497176.1   FAD_E1             26      AC+BC+BN                                                                                                                AC:H339=H53       1      False
+   dimer_lig         MBU2497176.1   FAD_F1             27      AC+BC+BN                                                  AC:H339=H53 BC:H365=H79 AC:K448=R165 BC:R457=R174 BC:R364=R78 BC:R366=R80       6      False
+   dimer_lig         MBU2497176.1   UMP_G1             12         AC+AN                                                                                                   AC:R457=R174 AC:R364=R78       2      False
+   dimer_lig         MBU2497176.1   UMP_H1             13            AC                                                                                                                                  0      False
+   dimer_lig         MBU2497176.1   UMP_I1             13         BC+BN                                                                                                   BC:R457=R174 BC:R364=R78       2      False
+   dimer_lig         MBU2497176.1   UMP_J1              9            BC                                                                                                                                  0      False
+   dimer_lig         MEM4152697.1   FAD_C1             21      AC+AN+BN                                                                                                                 BN:H87=H53       1      False
+   dimer_lig         MEM4152697.1   FAD_D1             22      AC+AN+BN                          BN:H87=H53 AC:H354=H79 AC:Y466=R165 BN:S194=R165 AC:R476=R174 AC:R353=R78 AC:A355=R80 BN:V113=R80       8       True
+   dimer_lig         MEM4152697.1   FAD_E1             20      AN+BC+BN                                                                                                                 AN:H87=H53       1      False
+   dimer_lig         MEM4152697.1   FAD_F1             22      AN+BC+BN                          AN:H87=H53 BC:H354=H79 AN:S194=R165 BC:Y466=R165 BC:R476=R174 BC:R353=R78 AN:V113=R80 BC:A355=R80       8       True
+   dimer_lig         MEM4152697.1   UMP_G1             11         AC+AN                                                                                       AC:R476=R174 AC:R353=R78 AN:R123=R90       3       True
+   dimer_lig         MEM4152697.1   UMP_H1             10         AC+AN                                                                                                                AC:Y365=R90       1      False
+   dimer_lig         MEM4152697.1   UMP_I1             11         BC+BN                                                                                       BC:R476=R174 BC:R353=R78 BN:R123=R90       3       True
+   dimer_lig         MEM4152697.1   UMP_J1             10         BC+BN                                                                                                                BC:Y365=R90       1      False
+   dimer_lig           NMB66601.1   FAD_C1             17      AN+BC+BN                                                                                                                 AN:H87=H53       1      False
+   dimer_lig           NMB66601.1   FAD_D1             30      AN+BC+BN                         BC:H340=H79 AN:E195=R165 BC:F441=R165 BC:R451=R174 BC:R339=R78 BC:R341=R80 BN:R126=R90 BN:S124=S88       8       True
+   dimer_lig           NMB66601.1   FAD_E1             16      AC+AN+BN                                                                                                                 BN:H87=H53       1      False
+   dimer_lig           NMB66601.1   FAD_F1             30      AC+AN+BN                         AC:H340=H79 AC:F441=R165 BN:E195=R165 AC:R451=R174 AC:R339=R78 AC:R341=R80 AN:R126=R90 AN:S124=S88       8       True
+   dimer_lig           NMB66601.1   UMP_G1              8         AC+BN                                                                                                                 BN:H87=H53       1      False
+   dimer_lig           NMB66601.1   UMP_H1             18         AC+AN                                                                           AC:R451=R174 AC:R339=R78 AN:R126=R90 AN:S124=S88       4       True
+   dimer_lig           NMB66601.1   UMP_I1             11         AN+BN                                                                                                                                  0      False
+   dimer_lig           NMB66601.1   UMP_J1             18         BC+BN                                                                           BC:R451=R174 BC:R339=R78 BN:R126=R90 BN:S124=S88       4       True
+   dimer_lig           NYZ74576.1   FAD_C1             29      AC+AN+BN                           BN:D98=H53 AC:H407=H79 BN:R234=R165 AC:R488=R174 AC:R406=R78 AC:R408=R80 AN:R137=R90 AN:S135=S88       8       True
+   dimer_lig           NYZ74576.1   FAD_D1             21      AC+AN+BC                                                               AN:S125=H79 BC:R479=R165 AN:D124=R78 AN:R126=R80 AC:R414=S88       5       True
+   dimer_lig           NYZ74576.1   FAD_E1             28      AN+BC+BN                           AN:D98=H53 BC:H407=H79 AN:R234=R165 BC:R488=R174 BC:R406=R78 BC:R408=R80 BN:R137=R90 BN:S135=S88       8       True
+   dimer_lig           NYZ74576.1   FAD_F1             21      AC+BC+BN                                                               BN:S125=H79 AC:R479=R165 BN:D124=R78 BN:R126=R80 BC:R414=S88       5       True
+   dimer_lig           NYZ74576.1   UMP_G1             14         AC+AN                                                              AN:R216=R147 AC:R488=R174 AC:R406=R78 AN:R137=R90 AN:S135=S88       5       True
+   dimer_lig           NYZ74576.1   UMP_H1              6         AC+BN                                                                                                                                  0      False
+   dimer_lig           NYZ74576.1   UMP_I1             14         BC+BN                                                              BN:R216=R147 BC:R488=R174 BC:R406=R78 BN:R137=R90 BN:S135=S88       5       True
+   dimer_lig           NYZ74576.1   UMP_J1              6         AN+BC                                                                                                                                  0      False
+ monomer_lig         MEM4152697.1   FAD_B1             15         AC+AN                                                              AC:H354=H79 AC:Y466=R165 AC:R476=R174 AC:R353=R78 AC:A355=R80       5      False
+ monomer_lig         MEM4152697.1   FAD_C1             10         AC+AN                                                                            AN:H87=H53 AN:S194=R165 AN:V113=R80 AC:A355=R80       4       True
+ monomer_lig         MEM4152697.1   UMP_D1             17         AC+AN                                                                           AC:R476=R174 AC:R353=R78 AN:R123=R90 AN:S121=S88       4       True
+ monomer_lig         MEM4152697.1   UMP_E1              0                                                                                                                                                0      False
+ monomer_lig           NMB66601.1   FAD_B1             16         AC+AN                                      AC:H340=H79 AC:F441=R165 AC:R451=R174 AC:R339=R78 AC:R341=R80 AN:R126=R90 AN:S124=S88       7       True
+ monomer_lig           NMB66601.1   FAD_C1             13            AN                                                                                                               AN:E195=R165       1      False
+ monomer_lig           NMB66601.1   UMP_D1             15         AC+AN                                                                           AC:R451=R174 AC:R339=R78 AN:R126=R90 AN:S124=S88       4       True
+ monomer_lig           NMB66601.1   UMP_E1              0                                                                                                                                                0      False
+tetramer_lig         MBN2880691.1   FAD_E1             25         A+B+C                                        B:H57=H53 A:H84=H79 B:R162=R165 A:R171=R174 A:R83=R78 A:R85=R80 C:R95=R90 C:S93=S88       8      False
+tetramer_lig         MBN2880691.1   FAD_F1             25         A+B+D                                        A:H57=H53 B:H84=H79 A:R162=R165 B:R171=R174 B:R83=R78 B:R85=R80 D:R95=R90 D:S93=S88       8      False
+tetramer_lig         MBN2880691.1   FAD_G1             25         A+C+D                                        D:H57=H53 C:H84=H79 D:R162=R165 C:R171=R174 C:R83=R78 C:R85=R80 A:R95=R90 A:S93=S88       8      False
+tetramer_lig         MBN2880691.1   FAD_H1             25         B+C+D                                        C:H57=H53 D:H84=H79 C:R162=R165 D:R171=R174 D:R83=R78 D:R85=R80 B:R95=R90 B:S93=S88       8      False
+tetramer_lig         MBN2880691.1   UMP_I1             12           A+C                                                                      A:R144=R147 C:R171=R174 C:R83=R78 A:R95=R90 A:S93=S88       5      False
+tetramer_lig         MBN2880691.1   UMP_J1             12           B+D                                                                      B:R144=R147 D:R171=R174 D:R83=R78 B:R95=R90 B:S93=S88       5      False
+tetramer_lig         MBN2880691.1   UMP_K1             12           A+C                                                                      C:R144=R147 A:R171=R174 A:R83=R78 C:R95=R90 C:S93=S88       5      False
+tetramer_lig         MBN2880691.1   UMP_L1             12           B+D                                                                      D:R144=R147 B:R171=R174 B:R83=R78 D:R95=R90 D:S93=S88       5      False
+tetramer_lig    THYX_THEMA_Q9WYT0   FAD_E1             25         A+C+D                                                  A:H79=H79 C:R165=R165 A:R174=R174 A:R78=R78 A:R80=R80 D:R90=R90 D:S88=S88       7      False
+tetramer_lig    THYX_THEMA_Q9WYT0   FAD_F1             25         B+C+D                                                  B:H79=H79 D:R165=R165 B:R174=R174 B:R78=R78 B:R80=R80 C:R90=R90 C:S88=S88       7      False
+tetramer_lig    THYX_THEMA_Q9WYT0   FAD_G1             25         A+B+C                                                  C:H79=H79 A:R165=R165 C:R174=R174 C:R78=R78 C:R80=R80 B:R90=R90 B:S88=S88       7      False
+tetramer_lig    THYX_THEMA_Q9WYT0   FAD_H1             25         A+B+D                                                  D:H79=H79 B:R165=R165 D:R174=R174 D:R78=R78 D:R80=R80 A:R90=R90 A:S88=S88       7      False
+tetramer_lig    THYX_THEMA_Q9WYT0   UMP_I1             11           A+D                                                                      A:R147=R147 D:R174=R174 D:R78=R78 A:R90=R90 A:S88=S88       5      False
+tetramer_lig    THYX_THEMA_Q9WYT0   UMP_J1             12           B+C                                                                      B:R147=R147 C:R174=R174 C:R78=R78 B:R90=R90 B:S88=S88       5      False
+tetramer_lig    THYX_THEMA_Q9WYT0   UMP_K1             12           B+C                                                                      C:R147=R147 B:R174=R174 B:R78=R78 C:R90=R90 C:S88=S88       5      False
+tetramer_lig    THYX_THEMA_Q9WYT0   UMP_L1             12           A+D                                                                      D:R147=R147 A:R174=R174 A:R78=R78 D:R90=R90 D:S88=S88       5      False
+                                   ligands  with_core  composite
+set          model                                              
+1O26         1O26                        8          8          0
+dimer_lig    DAHVAY010000002.1_53        8          0          0
+             HJO15200.1                  8          4          4
+             JAGVGF010000004.1_10        8          4          4
+             MBU2497176.1                8          4          0
+             MEM4152697.1                8          4          4
+             NMB66601.1                  8          4          4
+             NYZ74576.1                  8          6          6
+monomer_lig  MEM4152697.1                4          3          2
+             NMB66601.1                  4          2          2
+tetramer_lig MBN2880691.1                8          8          0
+             THYX_THEMA_Q9WYT0           8          8          0

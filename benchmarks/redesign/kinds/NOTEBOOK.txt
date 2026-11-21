@@ -1,0 +1,158 @@
+ws_kinds NOTEBOOK (UTC). Recurrence of kinds for genes that have no homologs.
+Local benchmarks/redesign/kinds/; biotite $RD/kinds/ (RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111).
+
+2026-11-13 02:01  Start. Read NOTEBOOK.md from 13:23 UTC on, grammar/REPORT.txt, cofold REPORT.md (screen 1),
+  REPORT_screen2, REPORT_census, REPORT_deepdive, softrec REPORT/REPORT2 headers and code (knn_deep, embed_tokens,
+  softrec.py kernel).
+  Inputs located: zca10 unique-sequence kNN $RD/softrec/knn/zca10__k{300,1000,2000}__{I,D}.npy (U = 2,547,528,
+  960-d, HNSW recall@1000 0.994); vectors $EMB/final/mean_raw_f32__uid.npy + uid_of_row.npy; embedding-only
+  families (Leiden of the zca10 mutual-kNN graph) $RD/engine/dpann_tokens/graph__esmpp_small_zca10__mknn20r{100,300,1000,3000}
+  (113,638-153,520 tokens; usable at run time, no alignment); grammar prep $RD/grammar/prep (adj1.parquet,
+  base_<split>.npz, splits.json), critic scores $RD/grammar/runs/<split>/scores_adj1.npz.
+  Stored screen-1 per-fold pass rates on criteria 1-3 (folds.tsv), by combined length (aa):
+    cognate  <200 8/20, 200-300 6/56, 300-450 7/100, >=450 6/124 (all 27/300 = 9.0%; <=450: 21/177 = 11.9%)
+    uncalled <200 0/28, 200-300 2/55, 300-450 2/95, >=450 0/119 (all 4/297 = 1.35%; <=450: 4/178 = 2.2%)
+    positive <200 1/3, 200-300 2/10, 300-450 4/24, >=450 12/113 (all 19/150 = 12.7%; <=450: 7/38 = 18.4%)
+    noncognate 0/300.
+  Fold client: Sharur fold_biohub.py folds one protein (+copies/ligands) only; hetero-complex folds of screens 1-3
+  used cofold/biohub_cofold.py (adapted from it: same endpoint fold_all_atom, model esmfold2-2026-05, same key,
+  strips '*') and its metrics define criteria 1-3. I copy that client into kinds/ (Mac, HTTP only) so the criteria
+  are computed identically.
+
+2026-11-13 02:06  predeclared.json written (mtime 02:06:38; the first job was submitted 02:09) (statistic, variant grid, selection rule on odd genomes, critic-benchmark
+  test C, withheld test W, co-fold test F with sizes, selection rules, criteria and expectations). No statistic had
+  been computed.
+2026-11-13 02:10-02:13 (job 87963, 24 CPUs)  prep: 3,585,303 genes, 2,547,528 unique sequences, 3,353,826
+  adjacencies (= adj1 rows, asserted), 300,000 random same-genome pairs (different contig or >= 50 genes apart,
+  seed 17); genes per depth-1000 list: median 1,376, q99 2,029, max 2,995. kinds_check.py: kernel against a
+  pure-python recount on 120 random adjacencies x {observed, null permutation 0} x {plain, own-family withheld,
+  random family mask} x 2 reference sets: 0 mismatches (all 8 counts, 4 depths, both homology ranks).
+  Jobs: 87964 bench + main passes (observed + 3 nulls each); 88023 (afterok 87964): bench_eval -> main_scores ->
+  cofold_select -> withheld_design -> withheld passes -> withheld_eval -> arch.
+2026-11-13 02:15  predeclared.json: only the written_utc field was corrected (02:40 estimate -> file mtime 02:06:38); content otherwise unchanged. Copied cofold/biohub_cofold.py -> kinds/biohub_cofold.py (unchanged).
+2026-11-13 02:26  job 87964: four bench passes (3,353,826 queries each; reference = training side of each order
+  split) 155-210 s each on 24 CPUs, no buffer overflow. The first pass read the kNN as a memmap on the shared FS
+  (CPU half idle); kinds.py now loads it into RAM (10 GB) for every later step. Main passes running.
+  Expectations before any AUROC is read (also in predeclared.json): kappa never_w3 ~0.70-0.75 and singleton ~0.70-0.78
+  vs critic 0.768 / 0.786; withheld L2 keeps TA-like types >= 0.7; co-fold a ~4-6 %, b ~1-2 %, swaps 0-1 %.
+  Screen-1 reference reproduced locally: criteria 1-3 recomputed from folds.tsv metrics equal pass_c123 on all
+  1,047 class folds; cognate 27/300, uncalled 4/297, positive 19/150, non-cognate 0/300.
+2026-11-13 02:40  job 87964 COMPLETED (26 min): main passes 3,653,826 queries (adjacencies + 300,000 random pairs),
+  204-228 s each, no overflow, MaxRSS 15.6 GB. Job 88023 started.
+  Critic reproduced exactly (bench_eval): never_w3 0.767587, singleton_either 0.786264 (stored 0.767587 / 0.786264).
+  SELECTION (odd genomes, predeclared rule; criterion = mean of DefenseFinder no-gold AUROC in never_w3 and
+  singleton_either): F_D1000_excess (0.8016 / 0.9056, mean 0.8536; n_pos 160 / 26). Depth ordering monotone
+  (D1000 > D300 > D100 > D30 for F and FX); FX at D30 is at chance (0.52): with the query's own embedding families
+  removed, shallow lists hold nothing; the signal sits at depth.
+  First even-genome lines from the log (intervals pending): DefenseFinder all kappa 0.837 vs critic 0.823; never_w3
+  0.797 vs 0.756 (n_pos 175); singleton 0.843 vs 0.781 (n_pos 37); >=5_w3 0.546 vs 0.564; PMI never 0.563.
+2026-11-13 02:46  main_scores + cofold_select (job 88023). Random same-genome pairs: kappa (F_D1000_excess) q50 -1,
+  q99 4.33, q99.9 27.0; R > 0 for 33% of random pairs. Above the random q99: engine-called 71.2%, uncallable 8.8%
+  (singleton member 9.3%, L<2 8.6%), uncallable both-unannotated no-gold 13.9% (q99.9: 3.0%).
+  Screen-1 co-fold benchmark (597 folded pairs, 44 with ipTM >= 0.75): kappa AUROC 0.735, engine -log P 0.748, critic
+  0.692 (grammar); within cognate 0.641 (critic 0.609, engine 0.600), within uncalled 0.655 (5 hits).
+  Co-fold design as predeclared: pool 54,891 pairs (even, uncallable, non-homologous, both unannotated, no gold, not
+  at a contig edge, 40-aa chains, sum <= 450, composition filters); class a 300 (kappa 44-169, median R 75.5 distinct
+  realisation units; all engine L = 1; 38% with a singleton member; 232 genomes; 196 coarse kind pairs); class b 300
+  (kappa <= pool median 0.667; matched in genome 224, genus 33, family 25, order 17, phylum 1); class c 150 swaps (all
+  within the strict length/hydrophobicity bounds); class d 8 critic pairs + 5 swaps (3 critic swaps found no donor
+  under the family/kind constraints; deviation from 16 planned). 763 items. Length bins (<200 / 200-300 / 300-450):
+  a 51/79/170, b 50/84/166, c 26/38/84.
+2026-11-13 02:47  submitted 763 items to Biohub (batch 770d2224-d00b-465e-9418-fb91c78e793d), collector running in work/folds_main.
+2026-11-13 02:58  all 763 folds collected (batch 770d2224). cofold_analyze.py (criteria 1-3 per fold, as screen 1):
+  a_high 26/300 = 8.7% [5.7, 12.4]; b_low 2/300 = 0.67% [0.08, 2.39]; c_swap 0/150 [0, 2.4]; d critic 0/8, swaps 0/5.
+  a vs b: ratio 13.0, one-sided Fisher p 9.3e-7, Mantel-Haenszel OR over length bins 16.6; matched pairs a-only 26,
+  b-only 2, both 0. Every class-a passer with a swap (11/11) also passes criterion 4 (margin >= 0.3); median margin
+  over all 150 swapped pairs 0.10. PREDECLARED VERDICT: SUPPORTED (ratio >= 3, intervals separate, p < 0.01,
+  swaps <= 2%).
+  By combined length (<200 / 200-300 / 300-450): a 18/51, 7/79, 1/170; b 1/50, 1/84, 0/166; swaps 0/26, 0/38, 0/84;
+  screen-1 engine-called 8/20, 6/56, 7/101; screen-1 uncalled 0/28, 2/55, 2/95. Standardised to class a's length mix:
+  screen-1 engine-called 13.6%, uncalled 2.2%, positive 20.0%. The class-a signal sits in short complexes: under
+  300 aa it equals the engine-called rate (25/130 vs 14/76), at 300-450 aa it is 1/170 against 7/101.
+  Next: monomer folds of the passers (zipping), split-gene search, observed domains, architecture membership.
+2026-11-13 02:59  job 88023 COMPLETED (19 min, MaxRSS 19.3 GB).
+  WITHHELD TEST (38 types with >= 10 within-instance adjacencies; 20,000 random no-gold negatives per type; 766,580
+  queries). Pooled AUROC (all types / DefenseFinder 21 types / TXSScan T4P / CRISPRCasTyper 16 groups):
+    full   0.739 / 0.788 / 0.823 / 0.666
+    L1     0.812 / 0.886 / 0.828 / 0.749   (query's own two MMseqs2 families withheld: AUROC RISES; positives keep
+                                             support from other families, negatives lose descent support)
+    L2     0.432 / 0.447 / 0.295 / 0.483   (every family of the curated type withheld: below chance)
+    L2ctl  0.740 / 0.788 / 0.824 / 0.668   (random size-decile-matched families: unchanged; the control withholds
+                                             fewer genes for types with large families, e.g. T4P 13,205 vs 44,199)
+  PREDECLARED VERDICT: REFUTED (pooled L2 < 0.60). Toxin-antitoxin-like types fall at L2: AbiE 0.925 -> 0.295, MazEF
+  0.777 -> 0.440, ShosTA 0.630 -> 0.415, PsyrTA 0.571 -> 0.395. Types with few withheld genes hold: AbiL 0.783,
+  Hachiman 0.731, Hma 0.753, PD-Lambda-5 0.744, Kiwa 0.704, Gao_Mza 0.731, CRISPR III-B 0.832, III-C 0.816.
+  Reading: kind-level support of a curated pair comes from other families of the same curated type; with every
+  family the caller ever touched removed, the arrangement does not recur elsewhere at depth 1,000.
+  "CRISPRCasTyper:False" (prediction False, 1,287 positives, 5,104 families, 1.24 M genes withheld) is not a subtype;
+  it is in the pooled 'all' figure as run; DefenseFinder alone gives the same verdict.
+  ARCHITECTURES (arch.py): H = 26,621 uncallable non-homologous pairs with kappa > random q99.9 (27) and R >= 3;
+  1,065,187 support edges inside H; Leiden: 1,216 communities, 390 with >= 5 pairs (25,254 pairs); family pairs per
+  architecture median 8, max 917. 59 architectures (9,624 pairs) have >= 80% pairs with both genes unannotated.
+  The grammar critic's 28-type pattern: 19 of its examples in architecture 0, 6 in architecture 6, 3 not in H.
+  Architecture 0 = 1,195 pairs, 725 MMseqs2 family pairs, 848 genomes, 26 orders, 8 phyla, short 55 aa / long
+  270 aa, 96.7% both unannotated; architecture 6 = 813 pairs, 535 family pairs, 2 phyla, 43 / 301 aa.
+  Jobs 88463 (passers.py: split-gene MMseqs2, support-pair domains, critic scores) and 88464 (POST HOC: realisation
+  unit at graph r100 / r1000 vs r3000 and MMseqs2) submitted. 56 monomer items submitted (batch caf4ddb9; ledger 819).
+2026-11-13 03:04  job 88463 (passers.py, 2.4 min). Class-a passers (26): split-gene rule flags 1 (kA_006: one fused
+  target in one genome against a pair present in 1 genome; the rule's 25% threshold makes any fused homolog fire
+  when G = 1); 25 clean. Observed domains on each pair's support pairs (other genomes' realisations) and on the 10
+  nearest Pfam-annotated genes of each chain: 18/26 toxin-antitoxin-like (ParE/YafQ/RelE-like toxin with DUF2683,
+  ParD or MazE-like small partner; PIN with MazE-like; DUF2283 with DUF4258; MazE-like with DUF4258; AbiEi-like with
+  AbiEii-like, whose support pairs carry curated DefenseFinder AbiE calls); 2 RNase P Rpp14 with RNase P p30
+  (kA_118, kA_124); 3 HTH_IclR-like with an unannotated-kind partner (kA_010, kA_014, kA_074); 1 Asp_protease_2-like
+  with DUF5678 (kA_041); 1 Response_reg-like pair (kA_246). Observations only; no curated call on any folded gene
+  (class pool = no gold member); UNVERIFIED. Critic percentile of the 26 passers: 0.63-0.96 (median 0.83).
+  Sequence homologs (MMseqs2 -s 7.5, E <= 1e-3, >= 50% coverage, self included): one chain has <= 5 DPANN hits in
+  15 of 26 passers; others have hundreds to thousands (split across MMseqs2 families by the 50%/75% clustering).
+  POST HOC job 88544: homolog counts for all 600 class-a/b chains (stratify the co-fold rate by homolog status).
+  Within class a: kappa vs combined length Spearman 0.03 (p 0.64); kappa AUROC for passing 0.604, critic 0.428.
+  Class a sits at critic percentile median 0.86 (class b 0.47); critic AUROC for passing over a+b 0.683.
+2026-11-13 03:07  POST HOC stratifications of the co-fold result (decided after reading it):
+  (1) Architecture annotation share (mean fraction of member genes with any Pfam hit, both sides; arch.py): class a
+  in architectures with share > 0.2: 22/67 = 32.8% [21.8, 45.4]; share <= 0.2: 4/233 = 1.7%. Within length bins
+  (share > 0.2 vs <= 0.2): <200 16/42 vs 2/9; 200-300 5/15 vs 2/64; 300-450 1/10 vs 0/160. Architectures with no
+  annotated member at all: 1/36. The co-folding pairs are pairs of kinds that carry Pfam domains elsewhere
+  (toxin-antitoxin-like, RNase P subunits); kinds dark everywhere fold at the base rate.
+  (2) Dependence: architecture 11 (ParE-like toxin + small antitoxin kinds; 425 pairs, 310 family pairs) holds 12
+  of 26 passes; without it class a is 14/274 = 5.1% [2.8, 8.4], Fisher vs b p 0.001. Passes come from 9 of the 42
+  architectures in class a; architecture-cluster bootstrap of the class-a rate (2,000, seed 17): [2.2%, 20.7%].
+  (3) Homolog status (job 88544; MMseqs2 -s 7.5, E <= 1e-3, >= 50% query coverage, identical copies excluded):
+  pairs with a chain that has 0 DPANN homologs: a 8/108 = 7.4% [3.3, 14.1] vs b 0/168, Fisher p 0.0005; min
+  homologs 1-10: a 7/102 vs b 0/87 (p 0.012); both > 10: a 11/90 vs b 2/45 (p 0.13). 30.6% of the 1,184 class a/b
+  chains have no homolog.
+2026-11-13 03:08  timestamps of the four entries above corrected (Mac clock is MST, biotite PST; entries had been
+  written with a +1 h error). Order of events unchanged.
+2026-11-13 03:17  POST HOC job 88464 (15 min): realisation unit resolution, even genomes, DefenseFinder all / never /
+  >=5 / singleton: graph r3000 0.837 / 0.797 / 0.546 / 0.843; r1000 0.848 / 0.799 / 0.593 / 0.845; r100 0.870 /
+  0.804 / 0.675 / 0.852; MMseqs2 (eval, predeclared ablation) 0.908 / 0.802 / 0.884 / 0.841; critic 0.823 / 0.756 /
+  0.564 / 0.781. Distinct-family-pair counting separates defence pairs from conserved housekeeping neighbours in the
+  seen stratum, where PMI (0.396) and the critic (0.564) invert; the embedding families split housekeeping kinds by
+  lineage and lose most of that. TXSScan never-seen: 0.70-0.71 for every unit, A (descent counted) 0.803.
+2026-11-13 03:32  18 of 56 monomer items failed at the API (worker died, not retried); resubmitted as batch in work/folds_mono2 (ledger 837). Partial zipping (16 complete pairs): 2 flags (kA_002 chain A 55% of interface residues < 60 alone; kA_008 chain B, MazE-like kind, 74%).
+2026-11-13 03:36  COORDINATOR REQUEST (after ws_calib: most beyond-family similarity is homology split by MMseqs2
+  clustering). Addition, labelled, decided after all results above; the co-fold table stays as predeclared.
+  Homology evidence between MMseqs2 families (ws_calib's lines, copied, not edited): MMseqs2 18 search of <= 2
+  representatives per family (this workstream's genes first, seed-17 random members otherwise) against the 2,547,528-
+  sequence uniqdb (-s 7.5, E <= 1e-3, --max-seqs 4000); shared Pfam family or Pfam 39 clan, or shared CDD superfamily,
+  on any member (calib/work/prep/ann.npz grp and cdd codes, unioned over each family's members); same family.
+  Family sets searched: both families of every H pair, of every withheld-test query, and every family of the curated
+  types except CRISPRCasTyper "False". homology.py + hom_kernel.py (copy of the kind kernel; reproduction checks
+  against the stored full / L1 / L2 passes on 3,000 queries built into the job). Job 88830 (64 CPUs,
+  standard_expand_2): reps -> search -> post -> arch (1A groups per architecture and for class a / passers; 1B
+  support units of every class-a pair by homology to the query) -> withheld L1h / L2h passes -> weval.
+2026-11-13 03:38  monomer resubmission complete (18/18). Zipping (all 28 passers): 4/26 class-a flags (kA_002, kA_008, kA_148, kA_259; antitoxin-like small kinds disordered alone), class b 0/2. Class-a passers clearing split-gene and zipping: 21/300 = 7.0% [4.4, 10.5]; Fisher vs b 2/300 p 2e-5. Ledger 837/900.
+2026-11-13 03:51  job 88830 COMPLETED (13 min, 64 CPUs). Homology addition results:
+  Search: 52,859 representatives of 31,305 families, 14.7 M hits at E <= 1e-3, 932,616 symmetric family links.
+  Kernel copy reproduced stored full / L1 / L2 on 3,000 queries exactly; hom() = set computation on 1,800 pairs.
+  1A groups: 390 architectures, 14,211 family pairs, 7,591 homologous on both sides to another pair, 7,445 groups
+  differing on >= 1 side, 1,356 fully independent groups (median 1 per architecture; 18 with >= 10). Class a: 300 fp,
+  94 linked, 232 groups, 94 fully independent; passers 26 / 4 / 24 / 7; class b 299 / 0 / 299 / 166.
+  1B class-a support units (29,036): both sides homologous to the query 11.1%, one side 33.1%, neither 55.8%;
+  passers (1,362 units): 21.7% / 70.4% / 7.9%. Class-a pass by homology-free share (post hoc): <= 10% 22/93,
+  10-50% 3/58, > 50% 1/149.
+  2 Withheld with homologs (no 'False'): full 0.788, L1 0.870, L1h 0.595 [0.585, 0.605], L2 0.461, L2h 0.379;
+  DefenseFinder L1h 0.547, T4P 0.518, CRISPR subtypes 0.717. Surviving share of above-chance signal 33% / 16% / 5% /
+  83%. L1h >= 0.8 for AbiL, Kiwa, Hachiman, Gao_Mza, CRISPR III-B, III-C, I-E, III-D, Lamassu-Cap4, PD-Lambda-5.
+  REPORT answer lines 3-8 and section 5 restated at this level; section 8 added; co-fold table unchanged.
+2026-11-13 03:53  REPORT.txt finalised (answer lines restated after the homology addition). Fold items used: 837 of 900. No processes left running.

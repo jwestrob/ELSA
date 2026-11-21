@@ -1,0 +1,71 @@
+func	function	label	label_name	status	novel_genes	novel_genomes	novel_embedding_only	novel_partner_function	top_orders	ref_acc	ref_entry	ref_chain	ref_region	ref_family_len	n_catalytic	n_binding	novel_genes_first_pass	candidates_folded_named_by_amendment	candidates_folded	cand_fold_match	cand_cat_all	cand_PASS	cand_TM_ref_median	positives	negA	negB	fold_match_cat_all_share
+K01174	micrococcal nuclease [EC:3.1.31.1]	PF00932	LTD	informative	36	36	1	0	Woesearchaeales,Pacearchaeales,SCGC-AAA011-G17	P00644	NUC_STAAU	4EQP_A	105-231	113.0	3.0	2.0	36	0	29	0	0	0	0.277	3/3	0/29	0/29	
+K01448	N-acetylmuramoyl-L-alanine amidase [EC:3.5.1.28]	PF01520	Amidase_3	informative	33	33	11	17	Woesearchaeales	I6Y4D2	PEPAM_MYCTU	9CUN_A	19-240	212.0	1.0	3.0	39	4	21	20	14	2	0.666	3/3	0/25	0/25	0.7
+K07816	GTP pyrophosphokinase [EC:2.7.6.5]	PF04607	RelA_SpoT	informative	26	26	13	0	Woesearchaeales,Anstonellales	O31611	YJBM_BACSU	5DEC_A	35-173	134.0	1.0	28.0	31	2	21	21	16	0	0.697	3/3	0/23	0/23	0.762
+K00948	ribose-phosphate pyrophosphokinase [EC:2.7.6.1]	PF24390	PRTase-CE	informative	18	18	0	1	Anstonellales,Woesearchaeales	Q97Z86	KPRS_SACS2	4TWB_A	1-256	243.0	1.0	14.0	18	0	9	1	1	1	0.452	2/2	0/9	0/9	1.0
+K00965	UDPglucose--hexose-1-phosphate uridylyltransferase [EC:2.7.7.12]	PF01087	GalP_UDP_transf	informative	17	17	17	16	Woesearchaeales,QMZS01	P07902	GALT_HUMAN	6GQD_A	13-206	182.0	1.0	8.0	64	25	15	15	15	15	0.636	4/4	0/40	0/40	1.0
+K01624	fructose-bisphosphate aldolase, class II [EC:4.1.2.13]	PF08013	GatZ_KbaZ-like	informative	11	11	0	0	SCGC-AAA011-G17,Anstonellales	P9WQA3	ALF_MYCTU	3ELF_A	1-344	330.0	1.0	14.0	11	0	2	2	2	0	0.718	2/2	0/2	0/2	1.0
+K00942	guanylate kinase [EC:2.7.4.8]	PF00625	Guanylate_kin	informative	10	10	9	0	Micrarchaeales	Q16774	KGUA_HUMAN	9JAC_A	1-197	193.0	3.0	24.0	10	0	3	0	0	0	0.225	1/2	0/3	0/3	
+K02683	DNA primase small subunit [EC:2.7.7.102]	PF01896	DNA_primase_S	informative	9	9	1	2	Pacearchaeales,Huberarchaeales,UBA10117	P49642	PRI1_HUMAN	6RB4_A	98-345	248.0	2.0	29.0	9	0	7	2	5	2	0.355	2/2	0/7	0/7	1.0
+K03465	thymidylate synthase (FAD) [EC:2.1.1.148]	PF02511	Thy1	informative	9	9	4	1	Pacearchaeales,Woesearchaeales,SCGC-AAA011-G17	Q5SJB8	THYX_THET8	6J61_A	14-219	187.0	1.0	20.0	9	0	9	9	2	0	0.786	1/2	0/9	0/9	0.222
+K00772	5'-methylthioadenosine phosphorylase [EC:2.4.2.28]	PF01048	PNP_UDP_1	informative	6	6	1	0	Woesearchaeales,Anstonellales,GW2011-AR5	Q13126	MTAP_HUMAN	5TC6_A	1-265	257.0	1.0	8.0	7	1	4	4	3	0	0.661	2/2	0/5	0/5	0.75
+K00560	thymidylate synthase [EC:2.1.1.45]	PF00303	Thymidylat_synt	informative	5	5	1	4	Pacearchaeales,Micrarchaeales	P67046	TYSY_STAAM	4DQ1_A	1-318	312.0	1.0	13.0	7	2	5	4	5	4	0.598	2/2	0/7	0/7	1.0
+K03167	DNA topoisomerase VI subunit B [EC:5.6.2.2]	PF13589	HATPase_c_3	informative	4	4	2	0	Woesearchaeales,Pacearchaeales,IMC4	P0AES6	GYRB_ECOLI	7P2M_A	22-183	144.0	1.0	18.0	4	0	4	0	0	0	0.335	2/2	0/4	0/4	
+K22278	peptidoglycan-N-acetylglucosamine deacetylase [EC:3.5.1.104]	PF01522	Polysacc_deac_1	informative	2	2	2	2	Undinarchaeales	Q81EK9	PGDA1_BACCR	4L1G_A	67-205	138.0	1.0	3.0	2	0	1	1	1	0	0.71	2/2	0/1	0/1	1.0
+K00800	3-phosphoshikimate 1-carboxyvinyltransferase [EC:2.5.1.19]	PF00275	EPSP_synthase	informative	1	1	1	1	Anstonellales	Q9KRB0	AROA_VIBCH	3NVS_A	1-426	426.0	1.0	16.0	1	0	1	1	0	0	0.671	2/2	0/1	0/1	0.0
+K01299	carboxypeptidase Taq [EC:3.4.17.19]	PF02074	Peptidase_M32	informative	1	1	0	0	Woesearchaeales	Q8U3L0	CBP1_PYRFU	1KA2_A	5-499	495.0	1.0	3.0	1	0	1	1	1	1	0.72	2/2	0/1	0/1	1.0
+K01596	phosphoenolpyruvate carboxykinase (GTP) [EC:4.1.1.32]	PF00821	PEPCK_GTP	informative	0	0	0	0		A5TYT6	PCKG_MYCTA	4WPT_A	235-606	364.0	1.0	18.0	15	11	0	0	0	0		2/3	0/11	0/11	
+K06048	glutamate---cysteine ligase / carboxylate-amine ligase [EC:6.3.2.2 6.3	PF04107	GCS2	no_complete_EC	8	8	7	8	Micrarchaeales,Woesearchaeales								8	0	0	0	0	0					
+K22934	alpha,alpha-trehalase [EC:3.2.1.28]	PF00723	Glyco_hydro_15	no_entry_in_label_family	7	7	7	0	Woesearchaeales								7	0	0	0	0	0					
+K05873	adenylate cyclase, class 2 [EC:4.6.1.1]	PF01928	CYTH	no_entry_in_label_family	6	6	4	2	Woesearchaeales,Pacearchaeales,SCGC-AAA011-G17								6	0	0	0	0	0					
+K23264	phosphoribosylformylglycinamidine synthase subunit PurS [EC:6.3.5.3]	PF02700	PurS	no_entry_in_label_family	5	5	0	5	Woesearchaeales								5	0	0	0	0	0					
+K02316	DNA primase [EC:2.7.7.101]	PF01807	Zn_ribbon_DnaG	no_entry_in_label_family	4	4	4	0	Pacearchaeales,SCGC-AAA011-G17								4	0	0	0	0	0					
+K03051	DNA-directed RNA polymerase subunit F [EC:2.7.7.6]	PF03874	RNA_pol_Rpb4	no_entry_in_label_family	3	3	0	3	Pacearchaeales								3	0	0	0	0	0					
+K07405	alpha-amylase [EC:3.2.1.1]	PF03065	Glyco_hydro_57	no_entry_in_label_family	2	2	1	0	Woesearchaeales,Pacearchaeales								2	0	0	0	0	0					
+K10726	replicative DNA helicase Mcm [EC:5.6.2.3]	PF21120	MCM_WH_arc	no_entry_in_label_family	2	2	1	0	Woesearchaeales,UBA10117								2	0	0	0	0	0					
+K01155	type II restriction enzyme [EC:3.1.21.4]	PF04556	DpnII	no_entry_in_label_family	1	1	0	0	QMZP01								1	0	0	0	0	0					
+K02338	DNA polymerase III subunit beta [EC:2.7.7.7]	PF00712	DNA_pol3_beta	no_entry_in_label_family	1	1	0	0	Woesearchaeales								1	0	0	0	0	0					
+K03053	DNA-directed RNA polymerase subunit H [EC:2.7.7.6]	PF01191	RNA_pol_Rpb5_C	no_entry_in_label_family	1	1	0	0	Woesearchaeales								1	0	0	0	0	0					
+K07097	3',5'-cyclic-nucleotide phosphodiesterase [EC:3.1.4.17]	PF01368	DHH	no_entry_in_label_family	1	1	0	1	Woesearchaeales								1	0	0	0	0	0					
+K01971	bifunctional non-homologous end joining protein LigD [EC:6.5.1.1]	PF21686	LigD_Prim-Pol	no_experimental_chain_with_active_site	5	5	2	0	Pacearchaeales,SCGC-AAA011-G17,JAFCFF01								5	0	0	0	0	0					
+K00928	aspartate kinase [EC:2.7.2.4]	PF22468	ACT_9	no_experimental_chain_with_active_site	3	3	3	0	Fermentimicrarchaeales								3	0	0	0	0	0					
+K01975	RNA 2',3'-cyclic 3'-phosphodiesterase [EC:3.1.4.58]	PF13563	2_5_RNA_ligase2	no_experimental_chain_with_active_site	2	2	1	0	SCGC-AAA011-G17,CG10238-14								2	0	0	0	0	0					
+K01933	phosphoribosylformylglycinamidine cyclo-ligase [EC:6.3.3.1]	PF00586	AIRS	no_experimental_chain_with_active_site	1	1	0	1	Woesearchaeales								1	0	0	0	0	0					
+K08315	hydrogenase 3 maturation protease [EC:3.4.23.51]	PF01750	HycI	no_reviewed_entry_with_EC_active_site_structure	149	149	0	0	Woesearchaeales,Iainarchaeales,Micrarchaeales								149	0	0	0	0	0					
+K21947	tRNA-5-methyluridine54 2-sulfurtransferase [EC:2.8.1.15]	PF22082	TtuA_LIM_N	no_reviewed_entry_with_EC_active_site_structure	135	135	20	0	Woesearchaeales								135	0	0	0	0	0					
+K03537	ribonuclease P/MRP protein subunit POP5 [EC:3.1.26.5]	PF01900	RNase_P_Rpp14	no_reviewed_entry_with_EC_active_site_structure	117	117	101	114	Parvarchaeales,Pacearchaeales								117	0	0	0	0	0					
+K01151	deoxyribonuclease IV [EC:3.1.21.2]	PF01261	AP_endonuc_2	no_reviewed_entry_with_EC_active_site_structure	42	41	10	0	Woesearchaeales,CG10238-14,Pacearchaeales								42	0	0	0	0	0					
+K03539	ribonuclease P/MRP protein subunit RPP1 [EC:3.1.26.5]	PF01876	RNase_P_p30	no_reviewed_entry_with_EC_active_site_structure	42	42	10	8	Woesearchaeales,Anstonellales,Iainarchaeales								55	0	0	0	0	0					
+K20885	beta-1,2-mannobiose phosphorylase / 1,2-beta-oligomannan phosphorylase	PF04041	Glyco_hydro_130	no_reviewed_entry_with_EC_active_site_structure	28	28	28	27	Pacearchaeales								28	0	0	0	0	0					
+K18845	16S rRNA (guanine(1405)-N(7))-methyltransferase [EC:2.1.1.179]	PF07091	FmrO	no_reviewed_entry_with_EC_active_site_structure	12	12	0	0	Pacearchaeales,Anstonellales								12	0	0	0	0	0					
+K21306	dolichyl-phosphooligosaccharide-protein glycotransferase [EC:2.4.99.21	PF02516	STT3	no_reviewed_entry_with_EC_active_site_structure	11	11	0	4	QMZS01,GW2011-AR5,CSSed11-243R1								11	0	0	0	0	0					
+K01154	type I restriction enzyme, S subunit [EC:3.1.21.3]	PF01420	Methylase_S	no_reviewed_entry_with_EC_active_site_structure	7	7	2	7	Woesearchaeales,Altiarchaeales,EX4484-52								7	0	0	0	0	0					
+K01622	fructose 1,6-bisphosphate aldolase/phosphatase [EC:4.1.2.13 3.1.3.11]	PF01950	FBPase_3	no_reviewed_entry_with_EC_active_site_structure	5	5	5	2	Woesearchaeales,IMC4								5	0	0	0	0	0					
+K01923	phosphoribosylaminoimidazole-succinocarboxamide synthase [EC:6.3.2.6]	PF01259	SAICAR_synt	no_reviewed_entry_with_EC_active_site_structure	5	5	0	0	Micrarchaeales								5	0	0	0	0	0					
+K02435	aspartyl-tRNA(Asn)/glutamyl-tRNA(Gln) amidotransferase subunit C [EC:6	PF02686	GatC	no_reviewed_entry_with_EC_active_site_structure	5	5	3	3	Pacearchaeales								5	0	0	0	0	0					
+K17832	geranial dehydrogenase [EC:1.2.1.86]	PF00171	Aldedh	no_reviewed_entry_with_EC_active_site_structure	5	5	0	0	SCGC-AAA011-G17,Woesearchaeales								5	0	0	0	0	0					
+K01919	glutamate---cysteine ligase [EC:6.3.2.2]	PF04107	GCS2	no_reviewed_entry_with_EC_active_site_structure	4	4	2	4	Woesearchaeales								4	0	0	0	0	0					
+K17830	digeranylgeranylglycerophospholipid reductase [EC:1.3.1.101 1.3.7.11]	PF08491	SE	no_reviewed_entry_with_EC_active_site_structure	4	4	0	0	Woesearchaeales,Micrarchaeales								4	0	0	0	0	0					
+K00767	nicotinate-nucleotide pyrophosphorylase (carboxylating) [EC:2.4.2.19]	PF02749	QRPTase_N	no_reviewed_entry_with_EC_active_site_structure	3	3	0	0	Woesearchaeales								3	0	0	0	0	0					
+K03540	ribonuclease P protein subunit RPR2 [EC:3.1.26.5]	PF04032	Rpr2	no_reviewed_entry_with_EC_active_site_structure	3	3	1	2	Pacearchaeales								3	0	0	0	0	0					
+K00202	formylmethanofuran dehydrogenase subunit C [EC:1.2.7.12]	PF01493	GXGXG	no_reviewed_entry_with_EC_active_site_structure	2	2	2	0	Parvarchaeales,Woesearchaeales								2	0	0	0	0	0					
+K03427	type I restriction enzyme M protein [EC:2.1.1.72]	PF02384	N6_Mtase	no_reviewed_entry_with_EC_active_site_structure	2	2	2	2	Woesearchaeales,Pacearchaeales								2	0	0	0	0	0					
+K03768	peptidyl-prolyl cis-trans isomerase B (cyclophilin B) [EC:5.2.1.8]	PF00160	Pro_isomerase	no_reviewed_entry_with_EC_active_site_structure	2	2	0	0	Woesearchaeales								2	0	0	0	0	0					
+K07317	adenine-specific DNA-methyltransferase [EC:2.1.1.72]	PF12950	TaqI_C	no_reviewed_entry_with_EC_active_site_structure	2	2	1	2	IMC4,Pacearchaeales								2	0	0	0	0	0					
+K12902	phosphonoacetaldehyde methylase [EC:2.1.1.308]	PF02310	B12-binding	no_reviewed_entry_with_EC_active_site_structure	2	2	1	1	Woesearchaeales,Iainarchaeales								2	0	0	0	0	0					
+K00334	NADH-quinone oxidoreductase subunit E [EC:7.1.1.2]	PF01257	2Fe-2S_thioredx	no_reviewed_entry_with_EC_active_site_structure	1	1	0	0	SCGC-AAA011-G17								1	0	0	0	0	0					
+K00873	pyruvate kinase [EC:2.7.1.40]	PF00224	PK	no_reviewed_entry_with_EC_active_site_structure	1	1	1	0	Woesearchaeales								1	0	0	0	0	0					
+K00952	nicotinamide-nucleotide adenylyltransferase [EC:2.7.7.1]	PF04343	DUF488	no_reviewed_entry_with_EC_active_site_structure	1	1	0	0	Parvarchaeales								1	0	0	0	0	0					
+K01869	leucyl-tRNA synthetase [EC:6.1.1.4]	PF10706	Aminoglyc_resit	no_reviewed_entry_with_EC_active_site_structure	1	1	1	0	Iainarchaeales								1	0	0	0	0	0					
+K03389	heterodisulfide reductase subunit B2 [EC:1.8.7.3 1.8.98.4 1.8.98.5 1.8	PF02754	CCG	no_reviewed_entry_with_EC_active_site_structure	1	1	0	0	Woesearchaeales								1	0	0	0	0	0					
+K03724	ATP-dependent helicase Lhr and Lhr-like helicase [EC:5.6.2.6 5.6.2.4]	PF08494	DEAD_assoc	no_reviewed_entry_with_EC_active_site_structure	1	1	0	0	Micrarchaeales								1	0	0	0	0	0					
+K03769	peptidyl-prolyl cis-trans isomerase C [EC:5.2.1.8]	PF13624	SurA_N_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	1	Woesearchaeales								1	0	0	0	0	0					
+K04069	pyruvate formate lyase activating enzyme [EC:1.97.1.4]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	1	Woesearchaeales								1	0	0	0	0	0					
+K07533	foldase protein PrsA [EC:5.2.1.8]	PF13623	SurA_N_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	0	Pacearchaeales								1	0	0	0	0	0					
+K14940	gamma-F420-2:alpha-L-glutamate ligase [EC:6.3.2.32]	PF18030	Rimk_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	0	Iainarchaeales								1	0	0	0	0	0					
+K15633	2,3-bisphosphoglycerate-independent phosphoglycerate mutase [EC:5.4.2.	PF00884	Sulfatase	ok_but_length_incompatible	7	7	3	0	IMC4,CG10238-14,Woesearchaeales	Q5HHP2	GPMI_STAAC	7TL8_A	1-502	485.0	1.0	17.0	7	0	0	0	0	0					
+K01007	pyruvate, water dikinase [EC:2.7.9.2]	PF23477	zf_Tbcl_2	ok_but_length_incompatible	4	4	1	0	Woesearchaeales,Micrarchaeales,QMZS01	Q9K0I2	PPSA_NEIMB	2OLS_A	8-794	721.0	2.0	9.0	4	0	0	0	0	0					
+K01194	alpha,alpha-trehalase [EC:3.2.1.28]	PF01204	Trehalase	ok_but_length_incompatible	1	1	1	0	Parvarchaeales	P13482	TREA_ECOLI	2JG0_A	45-542	494.0	2.0	12.0	1	0	0	0	0	0					
+K01808	ribose 5-phosphate isomerase B [EC:5.3.1.6]	PF02502	LacAB_rpiB	uninformative_positive_control_failed	148	148	15	0	Micrarchaeales	P9WKD7	RPIB_MYCTU	2VVP_A	1-153	151.0	2.0	22.0	148	0	6	6	0	0	0.646	0/4	0/6	0/6	0.0
+K11175	phosphoribosylglycinamide formyltransferase 1 [EC:2.1.2.2]	PF00551	Formyl_trans_N	uninformative_positive_control_failed	2	2	0	0	Woesearchaeales	P08179	PUR3_ECOLI	1JKX_A	1-191	191.0	1.0	18.0	2	0	2	2	2	0	0.737	0/2	0/2	0/2	1.0
+K03741	arsenate reductase (thioredoxin) [EC:1.20.4.4]	PF01451	LMWPc	uninformative_positive_control_failed	1	1	0	0	Woesearchaeales	P0A006	ARSC_STAAU	2CD7_A	1-131	131.0	3.0	4.0	1	0	1	1	0	0	0.828	0/2	0/1	0/1	0.0

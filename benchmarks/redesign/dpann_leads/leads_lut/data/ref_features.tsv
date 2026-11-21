@@ -1,0 +1,713 @@
+func	ref_acc	ref_chain	feature	uniprot_pos	residue	ligand	chain_index	chain_residue
+K00035	Q53TZ2	6JNJ_A_fam	Active site	91	K	Proton donor	87	K
+K00035	Q53TZ2	6JNJ_A_fam	Binding site	15	I	NADP(+)	11	I
+K00035	Q53TZ2	6JNJ_A_fam	Binding site	37	S	NADP(+)	33	S
+K00035	Q53TZ2	6JNJ_A_fam	Binding site	38	R	NADP(+)	34	R
+K00114	Q9Z4J7	1FLG_A_fam	Active site	350	D	Proton acceptor	306	D
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	45	D	Ca(2+)	1	D
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	48	T	Ca(2+)	4	T
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	51	D	Ca(2+)	7	D
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	95	E	pyrroloquinoline quinone	51	E
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	145	R	pyrroloquinoline quinone	101	R
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	189	T	pyrroloquinoline quinone	145	T
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	207	H	pyrroloquinoline quinone	163	H
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	208	G	pyrroloquinoline quinone	164	G
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	209	S	pyrroloquinoline quinone	165	S
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	213	E	Ca(2+)	169	E
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	300	N	Ca(2+)	256	N
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	350	D	Ca(2+)	306	D
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	378	R	pyrroloquinoline quinone	334	R
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	523	W	pyrroloquinoline quinone	479	W
+K00114	Q9Z4J7	1FLG_A_fam	Binding site	587	A	pyrroloquinoline quinone	543	A
+K00226	A2RJT9	1JUB_A_fam	Active site	130	C	Nucleophile	129	C
+K00226	A2RJT9	1JUB_A_fam	Binding site	19	S	FMN	18	S
+K00226	A2RJT9	1JUB_A_fam	Binding site	43	K	FMN	42	K
+K00226	A2RJT9	1JUB_A_fam	Binding site	44	S	FMN	43	S
+K00226	A2RJT9	1JUB_A_fam	Binding site	43	K	substrate	42	K
+K00226	A2RJT9	1JUB_A_fam	Binding site	67	N	substrate	66	N
+K00226	A2RJT9	1JUB_A_fam	Binding site	68	S	substrate	67	S
+K00226	A2RJT9	1JUB_A_fam	Binding site	69	M	substrate	68	M
+K00226	A2RJT9	1JUB_A_fam	Binding site	70	G	substrate	69	G
+K00226	A2RJT9	1JUB_A_fam	Binding site	71	L	substrate	70	L
+K00226	A2RJT9	1JUB_A_fam	Binding site	127	N	FMN	126	N
+K00226	A2RJT9	1JUB_A_fam	Binding site	127	N	substrate	126	N
+K00226	A2RJT9	1JUB_A_fam	Binding site	164	K	FMN	163	K
+K00226	A2RJT9	1JUB_A_fam	Binding site	192	V	FMN	191	V
+K00226	A2RJT9	1JUB_A_fam	Binding site	193	N	substrate	192	N
+K00226	A2RJT9	1JUB_A_fam	Binding site	194	S	substrate	193	S
+K00226	A2RJT9	1JUB_A_fam	Binding site	221	G	FMN	220	G
+K00226	A2RJT9	1JUB_A_fam	Binding site	249	G	FMN	248	G
+K00226	A2RJT9	1JUB_A_fam	Binding site	250	G	FMN	249	G
+K00226	A2RJT9	1JUB_A_fam	Binding site	271	G	FMN	270	G
+K00226	A2RJT9	1JUB_A_fam	Binding site	272	T	FMN	271	T
+K00549	Q9X112	1T7L_A_fam	Active site	672	H	Proton donor	278	H
+K00549	Q9X112	1T7L_A_fam	Binding site	409	I	L-homocysteine	15	I
+K00549	Q9X112	1T7L_A_fam	Binding site	410	G	L-homocysteine	16	G
+K00549	Q9X112	1T7L_A_fam	Binding site	411	S	L-homocysteine	17	S
+K00549	Q9X112	1T7L_A_fam	Binding site	409	I	L-methionine	15	I
+K00549	Q9X112	1T7L_A_fam	Binding site	410	G	L-methionine	16	G
+K00549	Q9X112	1T7L_A_fam	Binding site	411	S	L-methionine	17	S
+K00549	Q9X112	1T7L_A_fam	Binding site	462	E	L-homocysteine	68	E
+K00549	Q9X112	1T7L_A_fam	Binding site	462	E	L-methionine	68	E
+K00549	Q9X112	1T7L_A_fam	Binding site	493	R	5-methyltetrahydropteroyltri-L-glutamate	99	R
+K00549	Q9X112	1T7L_A_fam	Binding site	494	C	5-methyltetrahydropteroyltri-L-glutamate	100	C
+K00549	Q9X112	1T7L_A_fam	Binding site	539	W	5-methyltetrahydropteroyltri-L-glutamate	145	W
+K00549	Q9X112	1T7L_A_fam	Binding site	577	D	L-homocysteine	183	D
+K00549	Q9X112	1T7L_A_fam	Binding site	577	D	L-methionine	183	D
+K00549	Q9X112	1T7L_A_fam	Binding site	583	E	5-methyltetrahydropteroyltri-L-glutamate	189	E
+K00549	Q9X112	1T7L_A_fam	Binding site	618	H	Zn(2+)	224	H
+K00549	Q9X112	1T7L_A_fam	Binding site	620	C	Zn(2+)	226	C
+K00549	Q9X112	1T7L_A_fam	Binding site	642	E	Zn(2+)	248	E
+K00549	Q9X112	1T7L_A_fam	Binding site	704	C	Zn(2+)	310	C
+K00558	P20589	1DCT_A_fam	Active site	71	C		70	C
+K00558	P20589	1DCT_A_fam	Binding site	29	E	ATP	28	E
+K00558	P20589	1DCT_A_fam	Binding site	50	D	ATP	49	D
+K00558	P20589	1DCT_A_fam	Binding site	51	I	ATP	50	I
+K00558	P20589	1DCT_A_fam	Binding site	260	N	ATP	259	N
+K00690	A0ZZH6	6FME_A_fam	Active site	192	D	Nucleophile	167	D
+K00690	A0ZZH6	6FME_A_fam	Binding site	50	D	substrate	25	D
+K00690	A0ZZH6	6FME_A_fam	Binding site	88	H	sucrose	63	H
+K00690	A0ZZH6	6FME_A_fam	Binding site	190	R	sucrose	165	R
+K00690	A0ZZH6	6FME_A_fam	Binding site	191	L	sucrose	166	L
+K00690	A0ZZH6	6FME_A_fam	Binding site	192	D	sucrose	167	D
+K00799	Q65XA0	5D9T_A_fam	Active site	20	C	Nucleophile	11	C
+K00799	Q65XA0	5D9T_A_fam	Binding site	19	D	glutathione	10	D
+K00799	Q65XA0	5D9T_A_fam	Binding site	19	D	L-ascorbate	10	D
+K00799	Q65XA0	5D9T_A_fam	Binding site	47	K	glutathione	38	K
+K00799	Q65XA0	5D9T_A_fam	Binding site	60	V	glutathione	51	V
+K00799	Q65XA0	5D9T_A_fam	Binding site	74	S	glutathione	65	S
+K00799	Q65XA0	5D9T_A_fam	Binding site	160	H	glutathione	151	H
+K00868	P39610	2I5B_A_fam	Active site	216	C	Proton acceptor	213	C
+K00868	P39610	2I5B_A_fam	Binding site	141	N	ATP	138	N
+K00868	P39610	2I5B_A_fam	Binding site	144	E	Mg(2+)	141	E
+K00868	P39610	2I5B_A_fam	Binding site	178	T	ATP	175	T
+K00868	P39610	2I5B_A_fam	Binding site	179	G	ATP	176	G
+K00868	P39610	2I5B_A_fam	Binding site	180	G	ATP	177	G
+K00868	P39610	2I5B_A_fam	Binding site	181	G	ATP	178	G
+K00868	P39610	2I5B_A_fam	Binding site	182	K	ATP	179	K
+K00868	P39610	2I5B_A_fam	Binding site	190	D	ATP	187	D
+K00868	P39610	2I5B_A_fam	Binding site	206	I	ATP	203	I
+K00868	P39610	2I5B_A_fam	Binding site	215	G	ATP	212	G
+K00868	P39610	2I5B_A_fam	Binding site	240	K	ATP	237	K
+K01079	Q58989	1L7M_A_fam	Active site	11	D	Nucleophile	8	D
+K01079	Q58989	1L7M_A_fam	Active site	13	D	Proton donor	10	D
+K01079	Q58989	1L7M_A_fam	Binding site	11	D	Mg(2+)	8	D
+K01079	Q58989	1L7M_A_fam	Binding site	13	D	Mg(2+)	10	D
+K01079	Q58989	1L7M_A_fam	Binding site	20	E	substrate	17	E
+K01079	Q58989	1L7M_A_fam	Binding site	56	R	substrate	53	R
+K01079	Q58989	1L7M_A_fam	Binding site	99	S	substrate	96	S
+K01079	Q58989	1L7M_A_fam	Binding site	100	G	substrate	97	G
+K01079	Q58989	1L7M_A_fam	Binding site	144	K	substrate	141	K
+K01079	Q58989	1L7M_A_fam	Binding site	167	D	Mg(2+)	164	D
+K01079	Q58989	1L7M_A_fam	Binding site	170	N	substrate	167	N
+K01142	O26314	3G91_A_fam	Active site	151	D	Proton donor/acceptor	149	D
+K01142	O26314	3G91_A_fam	Binding site	12	N	Mg(2+)	10	N
+K01142	O26314	3G91_A_fam	Binding site	38	E	Mg(2+)	36	E
+K01142	O26314	3G91_A_fam	Binding site	151	D	Mg(2+)	149	D
+K01142	O26314	3G91_A_fam	Binding site	153	N	Mg(2+)	151	N
+K01142	O26314	3G91_A_fam	Binding site	248	H	Mg(2+)	246	H
+K01174	Q8NXI6	3QOJ_A_fam	Active site	114	R		12	R
+K01174	Q8NXI6	3QOJ_A_fam	Active site	122	E		20	E
+K01174	Q8NXI6	3QOJ_A_fam	Active site	166	R		58	R
+K01174	Q8NXI6	3QOJ_A_fam	Binding site	119	D	Ca(2+)	17	D
+K01174	Q8NXI6	3QOJ_A_fam	Binding site	120	T	Ca(2+)	18	T
+K01185	P00720	5JDT_A_fam	Active site	11	E	Proton donor/acceptor	10	E
+K01185	P00720	5JDT_A_fam	Active site	20	D	Proton donor/acceptor	19	D
+K01185	P00720	5JDT_A_fam	Binding site	32	L	substrate	31	L
+K01185	P00720	5JDT_A_fam	Binding site	104	F	substrate	103	F
+K01185	P00720	5JDT_A_fam	Binding site	117	S	substrate	116	S
+K01185	P00720	5JDT_A_fam	Binding site	132	N	substrate	131	N
+K01236	Q55088	3VGB_A_fam	Active site	253	D	Nucleophile	147	D
+K01236	Q55088	3VGB_A_fam	Active site	284	E	Proton donor	178	E
+K01236	Q55088	3VGB_A_fam	Binding site	251	R	substrate	145	R
+K01236	Q55088	3VGB_A_fam	Binding site	252	L	substrate	146	L
+K01236	Q55088	3VGB_A_fam	Binding site	253	D	substrate	147	D
+K01236	Q55088	3VGB_A_fam	Binding site	254	A	substrate	148	A
+K01236	Q55088	3VGB_A_fam	Binding site	255	V	substrate	149	V
+K01236	Q55088	3VGB_A_fam	Binding site	256	H	substrate	150	H
+K01236	Q55088	3VGB_A_fam	Binding site	309	D	substrate	203	D
+K01236	Q55088	3VGB_A_fam	Binding site	310	D	substrate	204	D
+K01236	Q55088	3VGB_A_fam	Binding site	311	F	substrate	205	F
+K01236	Q55088	3VGB_A_fam	Binding site	312	H	substrate	206	H
+K01236	Q55088	3VGB_A_fam	Binding site	313	H	substrate	207	H
+K01236	Q55088	3VGB_A_fam	Binding site	377	H	substrate	271	H
+K01236	Q55088	3VGB_A_fam	Binding site	378	D	substrate	272	D
+K01236	Q55088	3VGB_A_fam	Binding site	379	Q	substrate	273	Q
+K01236	Q55088	3VGB_A_fam	Binding site	380	V	substrate	274	V
+K01236	Q55088	3VGB_A_fam	Binding site	381	G	substrate	275	G
+K01236	Q55088	3VGB_A_fam	Binding site	382	N	substrate	276	N
+K01443	O32445	3IV8_A_fam	Active site	270	D	Proton donor/acceptor	229	D
+K01443	O32445	3IV8_A_fam	Binding site	128	E	a divalent metal cation	87	E
+K01443	O32445	3IV8_A_fam	Binding site	139	I	substrate	98	I
+K01443	O32445	3IV8_A_fam	Binding site	140	H	substrate	99	H
+K01443	O32445	3IV8_A_fam	Binding site	192	H	a divalent metal cation	151	H
+K01443	O32445	3IV8_A_fam	Binding site	213	H	a divalent metal cation	172	H
+K01443	O32445	3IV8_A_fam	Binding site	216	N	substrate	175	N
+K01443	O32445	3IV8_A_fam	Binding site	217	A	substrate	176	A
+K01443	O32445	3IV8_A_fam	Binding site	224	R	substrate	183	R
+K01443	O32445	3IV8_A_fam	Binding site	245	D	substrate	204	D
+K01443	O32445	3IV8_A_fam	Binding site	246	G	substrate	205	G
+K01443	O32445	3IV8_A_fam	Binding site	247	F	substrate	206	F
+K01443	O32445	3IV8_A_fam	Binding site	248	H	substrate	207	H
+K01443	O32445	3IV8_A_fam	Binding site	303	L	substrate	262	L
+K01443	O32445	3IV8_A_fam	Binding site	304	G	substrate	263	G
+K01443	O32445	3IV8_A_fam	Binding site	305	G	substrate	264	G
+K01465	Q58885	9YD7_A_fam	Active site	302	D		264	D
+K01465	Q58885	9YD7_A_fam	Binding site	56	H	Zn(2+)	19	H
+K01465	Q58885	9YD7_A_fam	Binding site	58	H	substrate	21	H
+K01465	Q58885	9YD7_A_fam	Binding site	59	F	substrate	22	F
+K01465	Q58885	9YD7_A_fam	Binding site	60	R	substrate	23	R
+K01465	Q58885	9YD7_A_fam	Binding site	58	H	Zn(2+)	21	H
+K01465	Q58885	9YD7_A_fam	Binding site	89	N	substrate	52	N
+K01465	Q58885	9YD7_A_fam	Binding site	137	K	Zn(2+)	unresolved	
+K01465	Q58885	9YD7_A_fam	Binding site	137	K	Zn(2+)	unresolved	
+K01465	Q58885	9YD7_A_fam	Binding site	168	H	Zn(2+)	130	H
+K01465	Q58885	9YD7_A_fam	Binding site	227	H	Zn(2+)	189	H
+K01465	Q58885	9YD7_A_fam	Binding site	302	D	Zn(2+)	264	D
+K01465	Q58885	9YD7_A_fam	Binding site	306	H	substrate	268	H
+K01493	P16006	1VQ2_A_fam	Active site	106	E	Proton donor	85	E
+K01493	P16006	1VQ2_A_fam	Binding site	19	C	Zn(2+)	18	C
+K01493	P16006	1VQ2_A_fam	Binding site	49	C	Zn(2+)	48	C
+K01493	P16006	1VQ2_A_fam	Binding site	94	H	Zn(2+)	73	H
+K01493	P16006	1VQ2_A_fam	Binding site	102	E	Zn(2+)	81	E
+K01493	P16006	1VQ2_A_fam	Binding site	104	H	Zn(2+)	83	H
+K01493	P16006	1VQ2_A_fam	Binding site	132	C	Zn(2+)	111	C
+K01493	P16006	1VQ2_A_fam	Binding site	135	C	Zn(2+)	114	C
+K01493	P16006	1VQ2_A_fam	Binding site	153	Y	substrate	132	Y
+K01555	P16930	9SX4_A_fam	Active site	133	H	Proton acceptor	18	H
+K01555	P16930	9SX4_A_fam	Binding site	126	D	Ca(2+)	11	D
+K01555	P16930	9SX4_A_fam	Binding site	128	Y	fumarate	13	Y
+K01555	P16930	9SX4_A_fam	Binding site	142	R	fumarate	27	R
+K01555	P16930	9SX4_A_fam	Binding site	199	E	Ca(2+)	84	E
+K01555	P16930	9SX4_A_fam	Binding site	201	E	Ca(2+)	86	E
+K01555	P16930	9SX4_A_fam	Binding site	233	D	Ca(2+)	118	D
+K01555	P16930	9SX4_A_fam	Binding site	233	D	Mg(2+)	118	D
+K01555	P16930	9SX4_A_fam	Binding site	240	Q	fumarate	125	Q
+K01555	P16930	9SX4_A_fam	Binding site	244	Y	fumarate	129	Y
+K01555	P16930	9SX4_A_fam	Binding site	253	K	Mg(2+)	138	K
+K01555	P16930	9SX4_A_fam	Binding site	257	T	Mg(2+)	142	T
+K01555	P16930	9SX4_A_fam	Binding site	350	T	acetoacetate	235	T
+K01560	Q51645	2NO4_A_fam	Active site	11	D	Nucleophile	10	D
+K01560	Q51645	2NO4_A_fam	Binding site	12	A	an (S)-2-haloacid	11	A
+K01560	Q51645	2NO4_A_fam	Binding site	13	Y	an (S)-2-haloacid	12	Y
+K01560	Q51645	2NO4_A_fam	Binding site	42	R	an (S)-2-haloacid	41	R
+K01560	Q51645	2NO4_A_fam	Binding site	119	S	an (S)-2-haloacid	118	S
+K01560	Q51645	2NO4_A_fam	Binding site	120	N	an (S)-2-haloacid	119	N
+K01561	Q1JU72	1Y37_A_fam	Active site	104	D	Nucleophile	88	D
+K01561	Q1JU72	1Y37_A_fam	Active site	271	H	Proton acceptor	255	H
+K01561	Q1JU72	1Y37_A_fam	Binding site	105	R	fluoroacetate	89	R
+K01561	Q1JU72	1Y37_A_fam	Binding site	108	R	fluoroacetate	92	R
+K01561	Q1JU72	1Y37_A_fam	Binding site	149	H	fluoroacetate	133	H
+K01561	Q1JU72	1Y37_A_fam	Binding site	150	W	fluoroacetate	134	W
+K01561	Q1JU72	1Y37_A_fam	Binding site	212	Y	fluoroacetate	196	Y
+K01623	Q8SSM8	3MBD_A_fam	Active site	179	E	Proton acceptor	177	E
+K01623	Q8SSM8	3MBD_A_fam	Active site	221	K	Schiff-base intermediate with dihydroxyacetone-P	219	K
+K01623	Q8SSM8	3MBD_A_fam	Binding site	50	R	substrate	48	R
+K01623	Q8SSM8	3MBD_A_fam	Binding site	138	K	substrate	136	K
+K01755	P04424	1K62_A_fam	Active site	160	H	Proton acceptor	145	H
+K01755	P04424	1K62_A_fam	Active site	281	S	Proton donor	266	S
+K01755	P04424	1K62_A_fam	Binding site	27	S	2-(N(omega)-L-arginino)succinate	12	S
+K01755	P04424	1K62_A_fam	Binding site	114	N	2-(N(omega)-L-arginino)succinate	99	N
+K01755	P04424	1K62_A_fam	Binding site	159	T	2-(N(omega)-L-arginino)succinate	144	T
+K01755	P04424	1K62_A_fam	Binding site	289	N	2-(N(omega)-L-arginino)succinate	274	N
+K01785	P39840	3MWX_A_fam	Active site	177	H	Proton donor	172	H
+K01785	P39840	3MWX_A_fam	Active site	283	E	Proton acceptor	278	E
+K01785	P39840	3MWX_A_fam	Binding site	73	N	substrate	68	N
+K01785	P39840	3MWX_A_fam	Binding site	74	R	substrate	69	R
+K01785	P39840	3MWX_A_fam	Binding site	230	D	substrate	225	D
+K01790	O27818	1EP0_A_fam	Active site	64	H	Proton acceptor	61	H
+K01790	O27818	1EP0_A_fam	Active site	133	Y	Proton donor	130	Y
+K01790	O27818	1EP0_A_fam	Binding site	26	R	substrate	23	R
+K01790	O27818	1EP0_A_fam	Binding site	31	E	substrate	28	E
+K01790	O27818	1EP0_A_fam	Binding site	49	Q	substrate	46	Q
+K01790	O27818	1EP0_A_fam	Binding site	50	D	substrate	47	D
+K01790	O27818	1EP0_A_fam	Binding site	51	N	substrate	48	N
+K01790	O27818	1EP0_A_fam	Binding site	61	R	substrate	58	R
+K01790	O27818	1EP0_A_fam	Binding site	73	K	substrate	70	K
+K01790	O27818	1EP0_A_fam	Binding site	120	H	substrate	117	H
+K01790	O27818	1EP0_A_fam	Binding site	144	D	substrate	141	D
+K01790	O27818	1EP0_A_fam	Binding site	171	K	substrate	168	K
+K01805	P15587	1MUW_A_fam	Active site	54	H		24	H
+K01805	P15587	1MUW_A_fam	Active site	57	D		27	D
+K01805	P15587	1MUW_A_fam	Binding site	181	E	Mg(2+)	151	E
+K01805	P15587	1MUW_A_fam	Binding site	217	E	Mg(2+)	187	E
+K01805	P15587	1MUW_A_fam	Binding site	217	E	Mg(2+)	187	E
+K01805	P15587	1MUW_A_fam	Binding site	220	H	Mg(2+)	190	H
+K01805	P15587	1MUW_A_fam	Binding site	245	D	Mg(2+)	215	D
+K01805	P15587	1MUW_A_fam	Binding site	255	D	Mg(2+)	225	D
+K01805	P15587	1MUW_A_fam	Binding site	257	D	Mg(2+)	227	D
+K01805	P15587	1MUW_A_fam	Binding site	287	D	Mg(2+)	257	D
+K01821	P70994	2OPA_A_fam	Active site	2	P	Proton acceptor; via imino nitrogen	0	P
+K01821	P70994	2OPA_A_fam	Binding site	9	L	substrate	7	L
+K01821	P70994	2OPA_A_fam	Binding site	10	E	substrate	8	E
+K01821	P70994	2OPA_A_fam	Binding site	11	G	substrate	9	G
+K01821	P70994	2OPA_A_fam	Binding site	12	R	substrate	10	R
+K01921	P07862	4C5C_A_fam	Active site	150	S		57	S
+K01921	P07862	4C5C_A_fam	Active site	281	S		188	S
+K01921	P07862	4C5C_A_fam	Binding site	134	I	ATP	41	I
+K01921	P07862	4C5C_A_fam	Binding site	135	S	ATP	42	S
+K01921	P07862	4C5C_A_fam	Binding site	136	A	ATP	43	A
+K01921	P07862	4C5C_A_fam	Binding site	137	L	ATP	44	L
+K01921	P07862	4C5C_A_fam	Binding site	138	G	ATP	45	G
+K01921	P07862	4C5C_A_fam	Binding site	139	L	ATP	46	L
+K01921	P07862	4C5C_A_fam	Binding site	140	P	ATP	47	P
+K01921	P07862	4C5C_A_fam	Binding site	141	V	ATP	48	V
+K01921	P07862	4C5C_A_fam	Binding site	142	I	ATP	49	I
+K01921	P07862	4C5C_A_fam	Binding site	143	V	ATP	50	V
+K01921	P07862	4C5C_A_fam	Binding site	144	K	ATP	51	K
+K01921	P07862	4C5C_A_fam	Binding site	145	P	ATP	52	P
+K01921	P07862	4C5C_A_fam	Binding site	146	S	ATP	53	S
+K01921	P07862	4C5C_A_fam	Binding site	147	R	ATP	54	R
+K01921	P07862	4C5C_A_fam	Binding site	148	E	ATP	55	E
+K01921	P07862	4C5C_A_fam	Binding site	149	G	ATP	56	G
+K01921	P07862	4C5C_A_fam	Binding site	150	S	ATP	57	S
+K01921	P07862	4C5C_A_fam	Binding site	151	S	ATP	58	S
+K01921	P07862	4C5C_A_fam	Binding site	152	V	ATP	59	V
+K01921	P07862	4C5C_A_fam	Binding site	153	G	ATP	60	G
+K01921	P07862	4C5C_A_fam	Binding site	154	M	ATP	61	M
+K01921	P07862	4C5C_A_fam	Binding site	155	S	ATP	62	S
+K01921	P07862	4C5C_A_fam	Binding site	156	K	ATP	63	K
+K01921	P07862	4C5C_A_fam	Binding site	157	V	ATP	64	V
+K01921	P07862	4C5C_A_fam	Binding site	158	V	ATP	65	V
+K01921	P07862	4C5C_A_fam	Binding site	159	A	ATP	66	A
+K01921	P07862	4C5C_A_fam	Binding site	160	E	ATP	67	E
+K01921	P07862	4C5C_A_fam	Binding site	161	N	ATP	68	N
+K01921	P07862	4C5C_A_fam	Binding site	162	A	ATP	69	A
+K01921	P07862	4C5C_A_fam	Binding site	163	L	ATP	70	L
+K01921	P07862	4C5C_A_fam	Binding site	164	Q	ATP	71	Q
+K01921	P07862	4C5C_A_fam	Binding site	165	D	ATP	72	D
+K01921	P07862	4C5C_A_fam	Binding site	166	A	ATP	73	A
+K01921	P07862	4C5C_A_fam	Binding site	167	L	ATP	74	L
+K01921	P07862	4C5C_A_fam	Binding site	168	R	ATP	75	R
+K01921	P07862	4C5C_A_fam	Binding site	169	L	ATP	76	L
+K01921	P07862	4C5C_A_fam	Binding site	170	A	ATP	77	A
+K01921	P07862	4C5C_A_fam	Binding site	171	F	ATP	78	F
+K01921	P07862	4C5C_A_fam	Binding site	172	Q	ATP	79	Q
+K01921	P07862	4C5C_A_fam	Binding site	173	H	ATP	80	H
+K01921	P07862	4C5C_A_fam	Binding site	174	D	ATP	81	D
+K01921	P07862	4C5C_A_fam	Binding site	175	E	ATP	82	E
+K01921	P07862	4C5C_A_fam	Binding site	176	E	ATP	83	E
+K01921	P07862	4C5C_A_fam	Binding site	177	V	ATP	84	V
+K01921	P07862	4C5C_A_fam	Binding site	178	L	ATP	85	L
+K01921	P07862	4C5C_A_fam	Binding site	179	I	ATP	86	I
+K01921	P07862	4C5C_A_fam	Binding site	180	E	ATP	87	E
+K01921	P07862	4C5C_A_fam	Binding site	181	K	ATP	88	K
+K01921	P07862	4C5C_A_fam	Binding site	182	W	ATP	89	W
+K01921	P07862	4C5C_A_fam	Binding site	183	L	ATP	90	L
+K01921	P07862	4C5C_A_fam	Binding site	184	S	ATP	91	S
+K01921	P07862	4C5C_A_fam	Binding site	185	G	ATP	92	G
+K01921	P07862	4C5C_A_fam	Binding site	186	P	ATP	93	P
+K01921	P07862	4C5C_A_fam	Binding site	187	E	ATP	94	E
+K01921	P07862	4C5C_A_fam	Binding site	188	F	ATP	95	F
+K01921	P07862	4C5C_A_fam	Binding site	189	T	ATP	96	T
+K01921	P07862	4C5C_A_fam	Binding site	257	D	Mg(2+)	164	D
+K01921	P07862	4C5C_A_fam	Binding site	270	E	Mg(2+)	177	E
+K01921	P07862	4C5C_A_fam	Binding site	270	E	Mg(2+)	177	E
+K01921	P07862	4C5C_A_fam	Binding site	272	N	Mg(2+)	179	N
+K02342	P03007	2GUI_A_fam	Active site	162	H	Proton acceptor	157	H
+K02342	P03007	2GUI_A_fam	Binding site	12	D	a divalent metal cation	7	D
+K02342	P03007	2GUI_A_fam	Binding site	12	D	a divalent metal cation	7	D
+K02342	P03007	2GUI_A_fam	Binding site	12	D	substrate	7	D
+K02342	P03007	2GUI_A_fam	Binding site	14	E	a divalent metal cation	9	E
+K02342	P03007	2GUI_A_fam	Binding site	14	E	substrate	9	E
+K02342	P03007	2GUI_A_fam	Binding site	61	E	substrate	56	E
+K02342	P03007	2GUI_A_fam	Binding site	66	H	substrate	61	H
+K02342	P03007	2GUI_A_fam	Binding site	167	D	a divalent metal cation	162	D
+K02342	P03007	2GUI_A_fam	Binding site	167	D	substrate	162	D
+K02501	P33734	1OX6_A_fam	Active site	83	C	For GATase activity	82	C
+K02501	P33734	1OX6_A_fam	Active site	193	H	For GATase activity	192	H
+K02501	P33734	1OX6_A_fam	Active site	195	E	For GATase activity	194	E
+K02501	P33734	1OX6_A_fam	Binding site	83	C	L-glutamine	82	C
+K03215	P55135	1UWV_A_fam	Active site	389	C	Nucleophile	284	C
+K03215	P55135	1UWV_A_fam	Binding site	162	C	[4Fe-4S] cluster	57	C
+K03215	P55135	1UWV_A_fam	Binding site	265	Q	S-adenosyl-L-methionine	160	Q
+K03215	P55135	1UWV_A_fam	Binding site	294	F	S-adenosyl-L-methionine	189	F
+K03215	P55135	1UWV_A_fam	Binding site	299	N	S-adenosyl-L-methionine	194	N
+K03215	P55135	1UWV_A_fam	Binding site	315	E	S-adenosyl-L-methionine	210	E
+K03215	P55135	1UWV_A_fam	Binding site	342	N	S-adenosyl-L-methionine	237	N
+K03215	P55135	1UWV_A_fam	Binding site	363	D	S-adenosyl-L-methionine	258	D
+K03500	P36929	1SQG_A_fam	Active site	375	C	Nucleophile	146	C
+K03500	P36929	1SQG_A_fam	Binding site	254	C	S-adenosyl-L-methionine	25	C
+K03500	P36929	1SQG_A_fam	Binding site	255	A	S-adenosyl-L-methionine	26	A
+K03500	P36929	1SQG_A_fam	Binding site	256	A	S-adenosyl-L-methionine	27	A
+K03500	P36929	1SQG_A_fam	Binding site	257	P	S-adenosyl-L-methionine	28	P
+K03500	P36929	1SQG_A_fam	Binding site	258	G	S-adenosyl-L-methionine	29	G
+K03500	P36929	1SQG_A_fam	Binding site	259	G	S-adenosyl-L-methionine	30	G
+K03500	P36929	1SQG_A_fam	Binding site	260	K	S-adenosyl-L-methionine	31	K
+K03500	P36929	1SQG_A_fam	Binding site	277	D	S-adenosyl-L-methionine	48	D
+K03500	P36929	1SQG_A_fam	Binding site	303	D	S-adenosyl-L-methionine	74	D
+K03500	P36929	1SQG_A_fam	Binding site	304	G	S-adenosyl-L-methionine	75	G
+K03500	P36929	1SQG_A_fam	Binding site	322	D	S-adenosyl-L-methionine	93	D
+K03655	P46063	2V1X_A_fam	Active site	119	K		36	K
+K03655	P46063	2V1X_A_fam	Binding site	91	K	ATP	8	K
+K03655	P46063	2V1X_A_fam	Binding site	93	R	ATP	10	R
+K03655	P46063	2V1X_A_fam	Binding site	96	Q	ATP	13	Q
+K03655	P46063	2V1X_A_fam	Binding site	116	G	ATP	33	G
+K03655	P46063	2V1X_A_fam	Binding site	118	G	ATP	35	G
+K03655	P46063	2V1X_A_fam	Binding site	119	K	ATP	36	K
+K03655	P46063	2V1X_A_fam	Binding site	120	S	ATP	37	S
+K03741	P0A006	2CD7_A_fam	Active site	10	C	Nucleophile	9	C
+K03741	P0A006	2CD7_A_fam	Active site	82	C	Nucleophile	81	C
+K03741	P0A006	2CD7_A_fam	Active site	89	C	Nucleophile	88	C
+K03741	P0A006	2CD7_A_fam	Binding site	13	N	K(+)	12	N
+K03741	P0A006	2CD7_A_fam	Binding site	36	S	K(+)	35	S
+K03741	P0A006	2CD7_A_fam	Binding site	63	T	K(+)	62	T
+K03741	P0A006	2CD7_A_fam	Binding site	65	D	K(+)	64	D
+K03781	O52762	4E37_A_fam	Active site	55	H		51	H
+K03781	O52762	4E37_A_fam	Active site	128	N		124	N
+K03781	O52762	4E37_A_fam	Binding site	52	R	heme b	49	R
+K03781	O52762	4E37_A_fam	Binding site	92	R	heme b	88	R
+K03781	O52762	4E37_A_fam	Binding site	141	F	heme b	137	F
+K03781	O52762	4E37_A_fam	Binding site	174	H	NADPH	170	H
+K03781	O52762	4E37_A_fam	Binding site	181	S	NADPH	177	S
+K03781	O52762	4E37_A_fam	Binding site	183	R	NADPH	179	R
+K03781	O52762	4E37_A_fam	Binding site	193	H	NADPH	189	H
+K03781	O52762	4E37_A_fam	Binding site	283	W	NADPH	279	W
+K03781	O52762	4E37_A_fam	Binding site	285	H	NADPH	281	H
+K03781	O52762	4E37_A_fam	Binding site	338	Y	heme b	334	Y
+K03781	O52762	4E37_A_fam	Binding site	342	H	heme b	338	H
+K03781	O52762	4E37_A_fam	Binding site	345	R	heme b	341	R
+K03782	O59651	3VLI_A_fam	Active site	96	H	Proton acceptor	28	H
+K03782	O59651	3VLI_A_fam	Binding site	259	H	heme b	191	H
+K04066	P46063	2V1X_A_fam	Active site	119	K		36	K
+K04066	P46063	2V1X_A_fam	Binding site	91	K	ATP	8	K
+K04066	P46063	2V1X_A_fam	Binding site	93	R	ATP	10	R
+K04066	P46063	2V1X_A_fam	Binding site	96	Q	ATP	13	Q
+K04066	P46063	2V1X_A_fam	Binding site	116	G	ATP	33	G
+K04066	P46063	2V1X_A_fam	Binding site	118	G	ATP	35	G
+K04066	P46063	2V1X_A_fam	Binding site	119	K	ATP	36	K
+K04066	P46063	2V1X_A_fam	Binding site	120	S	ATP	37	S
+K04077	Q6LX38	3RUV_A_fam	Active site	60	D		39	D
+K04077	Q6LX38	3RUV_A_fam	Active site	386	D		365	D
+K04077	Q6LX38	3RUV_A_fam	Binding site	40	G	ATP	19	G
+K04077	Q6LX38	3RUV_A_fam	Binding site	91	D	Mg(2+)	70	D
+K04077	Q6LX38	3RUV_A_fam	Binding site	93	T	ATP	72	T
+K04077	Q6LX38	3RUV_A_fam	Binding site	94	T	ATP	73	T
+K04077	Q6LX38	3RUV_A_fam	Binding site	95	T	ATP	74	T
+K04077	Q6LX38	3RUV_A_fam	Binding site	157	S	Mg(2+)	136	S
+K04077	Q6LX38	3RUV_A_fam	Binding site	160	G	ATP	139	G
+K04077	Q6LX38	3RUV_A_fam	Binding site	161	K	ATP	140	K
+K04077	Q6LX38	3RUV_A_fam	Binding site	404	G	ATP	383	G
+K04077	Q6LX38	3RUV_A_fam	Binding site	490	E	ATP	469	E
+K04095	Q9BVA6	6I7H_A_fam	Active site	363	H		88	H
+K04095	Q9BVA6	6I7H_A_fam	Binding site	316	V	ATP	41	V
+K04095	Q9BVA6	6I7H_A_fam	Binding site	317	G	ATP	42	G
+K04095	Q9BVA6	6I7H_A_fam	Binding site	318	H	ATP	43	H
+K04095	Q9BVA6	6I7H_A_fam	Binding site	319	H	ATP	44	H
+K04095	Q9BVA6	6I7H_A_fam	Binding site	367	D	ATP	92	D
+K04095	Q9BVA6	6I7H_A_fam	Binding site	368	G	ATP	93	G
+K04095	Q9BVA6	6I7H_A_fam	Binding site	369	N	ATP	94	N
+K04095	Q9BVA6	6I7H_A_fam	Binding site	370	G	ATP	95	G
+K04095	Q9BVA6	6I7H_A_fam	Binding site	371	R	ATP	96	R
+K04095	Q9BVA6	6I7H_A_fam	Binding site	372	T	ATP	97	T
+K04095	Q9BVA6	6I7H_A_fam	Binding site	373	S	ATP	98	S
+K04095	Q9BVA6	6I7H_A_fam	Binding site	374	R	ATP	99	R
+K04771	P0AEE3	3LGI_A_fam	Active site	96	H	Charge relay system	26	H
+K04771	P0AEE3	3LGI_A_fam	Active site	126	D	Charge relay system	56	D
+K04771	P0AEE3	3LGI_A_fam	Active site	201	S	Charge relay system	131	S
+K04771	P0AEE3	3LGI_A_fam	Binding site	184	T	substrate	114	T
+K04771	P0AEE3	3LGI_A_fam	Binding site	259	I	substrate	unresolved	
+K04771	P0AEE3	3LGI_A_fam	Binding site	260	G	substrate	unresolved	
+K04771	P0AEE3	3LGI_A_fam	Binding site	261	I	substrate	unresolved	
+K04771	P0AEE3	3LGI_A_fam	Binding site	262	G	substrate	unresolved	
+K04771	P0AEE3	3LGI_A_fam	Binding site	263	G	substrate	unresolved	
+K04771	P0AEE3	3LGI_A_fam	Binding site	264	R	substrate	unresolved	
+K04771	P0AEE3	3LGI_A_fam	Binding site	351	Y	substrate	unresolved	
+K05992	P19531	1QHO_A_fam	Active site	261	D	Nucleophile	225	D
+K05992	P19531	1QHO_A_fam	Active site	289	E	Proton donor	253	E
+K05992	P19531	1QHO_A_fam	Binding site	54	D	Ca(2+)	18	D
+K05992	P19531	1QHO_A_fam	Binding site	56	D	Ca(2+)	20	D
+K05992	P19531	1QHO_A_fam	Binding site	59	N	Ca(2+)	23	N
+K05992	P19531	1QHO_A_fam	Binding site	60	N	Ca(2+)	24	N
+K05992	P19531	1QHO_A_fam	Binding site	81	G	Ca(2+)	45	G
+K05992	P19531	1QHO_A_fam	Binding site	83	D	Ca(2+)	47	D
+K05992	P19531	1QHO_A_fam	Binding site	109	D	Ca(2+)	73	D
+K05992	P19531	1QHO_A_fam	Binding site	110	N	Ca(2+)	74	N
+K05992	P19531	1QHO_A_fam	Binding site	112	D	Ca(2+)	76	D
+K05992	P19531	1QHO_A_fam	Binding site	126	W	substrate	90	W
+K05992	P19531	1QHO_A_fam	Binding site	134	E	Ca(2+)	98	E
+K05992	P19531	1QHO_A_fam	Binding site	135	E	Ca(2+)	99	E
+K05992	P19531	1QHO_A_fam	Binding site	164	N	Ca(2+)	128	N
+K05992	P19531	1QHO_A_fam	Binding site	165	H	substrate	129	H
+K05992	P19531	1QHO_A_fam	Binding site	217	Q	Ca(2+)	181	Q
+K05992	P19531	1QHO_A_fam	Binding site	231	D	Ca(2+)	195	D
+K05992	P19531	1QHO_A_fam	Binding site	259	R	substrate	223	R
+K05992	P19531	1QHO_A_fam	Binding site	264	K	substrate	228	K
+K05992	P19531	1QHO_A_fam	Binding site	265	H	substrate	229	H
+K05992	P19531	1QHO_A_fam	Binding site	265	H	Ca(2+)	229	H
+K05992	P19531	1QHO_A_fam	Binding site	292	G	substrate	256	G
+K05992	P19531	1QHO_A_fam	Binding site	362	D	substrate	326	D
+K05992	P19531	1QHO_A_fam	Binding site	409	R	substrate	373	R
+K06118	O48917	1I24_A_fam	Active site	228	T		144	T
+K06118	O48917	1I24_A_fam	Active site	265	Y	Proton acceptor	181	Y
+K06118	O48917	1I24_A_fam	Active site	269	K		185	K
+K06118	O48917	1I24_A_fam	Binding site	95	Y	NAD(+)	11	Y
+K06118	O48917	1I24_A_fam	Binding site	96	C	NAD(+)	12	C
+K06118	O48917	1I24_A_fam	Binding site	115	D	NAD(+)	31	D
+K06118	O48917	1I24_A_fam	Binding site	116	N	NAD(+)	32	N
+K06118	O48917	1I24_A_fam	Binding site	117	L	NAD(+)	33	L
+K06118	O48917	1I24_A_fam	Binding site	118	V	NAD(+)	34	V
+K06118	O48917	1I24_A_fam	Binding site	119	R	NAD(+)	35	R
+K06118	O48917	1I24_A_fam	Binding site	158	D	NAD(+)	74	D
+K06118	O48917	1I24_A_fam	Binding site	159	I	NAD(+)	75	I
+K06118	O48917	1I24_A_fam	Binding site	184	R	NAD(+)	100	R
+K06118	O48917	1I24_A_fam	Binding site	184	R	substrate	100	R
+K06118	O48917	1I24_A_fam	Binding site	202	N	NAD(+)	118	N
+K06118	O48917	1I24_A_fam	Binding site	228	T	substrate	144	T
+K06118	O48917	1I24_A_fam	Binding site	265	Y	NAD(+)	181	Y
+K06118	O48917	1I24_A_fam	Binding site	265	Y	substrate	181	Y
+K06118	O48917	1I24_A_fam	Binding site	269	K	NAD(+)	185	K
+K06118	O48917	1I24_A_fam	Binding site	292	Q	substrate	208	Q
+K06118	O48917	1I24_A_fam	Binding site	295	V	NAD(+)	211	V
+K06118	O48917	1I24_A_fam	Binding site	322	A	substrate	238	A
+K06118	O48917	1I24_A_fam	Binding site	323	L	substrate	239	L
+K06118	O48917	1I24_A_fam	Binding site	324	N	substrate	240	N
+K06118	O48917	1I24_A_fam	Binding site	325	R	substrate	241	R
+K06118	O48917	1I24_A_fam	Binding site	337	T	substrate	253	T
+K06118	O48917	1I24_A_fam	Binding site	338	V	substrate	254	V
+K06118	O48917	1I24_A_fam	Binding site	339	Y	substrate	255	Y
+K06969	Q5SIT4	1WXX_A_fam	Active site	326	C	Nucleophile	171	C
+K06969	Q5SIT4	1WXX_A_fam	Binding site	202	R	S-adenosyl-L-homocysteine	47	R
+K06969	Q5SIT4	1WXX_A_fam	Binding site	217	F	S-adenosyl-L-homocysteine	62	F
+K06969	Q5SIT4	1WXX_A_fam	Binding site	238	D	S-adenosyl-L-homocysteine	83	D
+K06969	Q5SIT4	1WXX_A_fam	Binding site	239	S	S-adenosyl-L-homocysteine	84	S
+K06969	Q5SIT4	1WXX_A_fam	Binding site	265	N	S-adenosyl-L-homocysteine	110	N
+K06969	Q5SIT4	1WXX_A_fam	Binding site	266	A	S-adenosyl-L-homocysteine	111	A
+K06969	Q5SIT4	1WXX_A_fam	Binding site	286	D	S-adenosyl-L-homocysteine	131	D
+K07130	Q81PP9	4CO9_A_fam	Active site	60	H	Proton donor/acceptor	57	H
+K07130	Q81PP9	4CO9_A_fam	Binding site	20	W	substrate	17	W
+K07130	Q81PP9	4CO9_A_fam	Binding site	50	H	Zn(2+)	47	H
+K07130	Q81PP9	4CO9_A_fam	Binding site	54	H	Zn(2+)	51	H
+K07130	Q81PP9	4CO9_A_fam	Binding site	56	D	Zn(2+)	53	D
+K07130	Q81PP9	4CO9_A_fam	Binding site	56	D	Zn(2+)	53	D
+K07130	Q81PP9	4CO9_A_fam	Binding site	161	H	Zn(2+)	158	H
+K07154	Q8EIX3	4PU5_A_fam	Active site	306	D	Proton acceptor	170	D
+K07154	Q8EIX3	4PU5_A_fam	Binding site	151	V	ATP	15	V
+K07154	Q8EIX3	4PU5_A_fam	Binding site	152	Q	ATP	16	Q
+K07154	Q8EIX3	4PU5_A_fam	Binding site	153	P	ATP	17	P
+K07154	Q8EIX3	4PU5_A_fam	Binding site	154	K	ATP	18	K
+K07154	Q8EIX3	4PU5_A_fam	Binding site	178	K	ATP	42	K
+K07154	Q8EIX3	4PU5_A_fam	Binding site	220	E	ATP	84	E
+K07154	Q8EIX3	4PU5_A_fam	Binding site	221	R	ATP	85	R
+K07154	Q8EIX3	4PU5_A_fam	Binding site	222	F	ATP	86	F
+K07154	Q8EIX3	4PU5_A_fam	Binding site	308	H	ATP	172	H
+K07154	Q8EIX3	4PU5_A_fam	Binding site	309	G	ATP	173	G
+K07154	Q8EIX3	4PU5_A_fam	Binding site	310	K	ATP	174	K
+K07154	Q8EIX3	4PU5_A_fam	Binding site	311	N	ATP	175	N
+K07154	Q8EIX3	4PU5_A_fam	Binding site	327	Y	ATP	191	Y
+K07154	Q8EIX3	4PU5_A_fam	Binding site	328	D	ATP	192	D
+K07258	P39042	1ES5_A_fam	Active site	64	S	Acyl-ester intermediate	32	S
+K07258	P39042	1ES5_A_fam	Active site	67	K	Proton acceptor	35	K
+K07258	P39042	1ES5_A_fam	Active site	125	S		93	S
+K07258	P39042	1ES5_A_fam	Binding site	242	K	substrate	210	K
+K07638	P0AE82	4BIX_A_fam	Active site	248	H	Nucleophile	19	H
+K07638	P0AE82	4BIX_A_fam	Binding site	248	H	ATP	19	H
+K07638	P0AE82	4BIX_A_fam	Binding site	249	E	ATP	20	E
+K07638	P0AE82	4BIX_A_fam	Binding site	250	L	ATP	21	L
+K07638	P0AE82	4BIX_A_fam	Binding site	251	R	ATP	22	R
+K07638	P0AE82	4BIX_A_fam	Binding site	248	H	ATP	19	H
+K08640	P00733	1LBU_A_fam	Active site	234	H	Proton donor	117	H
+K08640	P00733	1LBU_A_fam	Binding site	180	R	substrate	63	R
+K08640	P00733	1LBU_A_fam	Binding site	196	H	Zn(2+)	79	H
+K08640	P00733	1LBU_A_fam	Binding site	237	H	Zn(2+)	120	H
+K08640	P00733	1LBU_A_fam	Binding site	239	H	Zn(2+)	122	H
+K08678	Q9ZUY6	6H0N_A_fam	Active site	185	Y	Proton acceptor	175	Y
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	28	F	NAD(+)	18	F
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	29	I	NAD(+)	19	I
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	49	D	NAD(+)	39	D
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	76	N	NAD(+)	66	N
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	77	I	NAD(+)	67	I
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	96	L	NAD(+)	86	L
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	105	Y	UDP-alpha-D-glucuronate	95	Y
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	139	T	UDP-alpha-D-glucuronate	129	T
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	141	E	UDP-alpha-D-glucuronate	131	E
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	182	R	UDP-alpha-D-glucuronate	172	R
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	185	Y	NAD(+)	175	Y
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	185	Y	UDP-alpha-D-glucuronate	175	Y
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	189	K	NAD(+)	179	K
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	214	N	UDP-alpha-D-glucuronate	204	N
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	215	W	NAD(+)	205	W
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	235	R	NAD(+)	225	R
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	251	K	UDP-alpha-D-glucuronate	241	K
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	253	V	UDP-alpha-D-glucuronate	243	V
+K08678	Q9ZUY6	6H0N_A_fam	Binding site	260	R	UDP-alpha-D-glucuronate	250	R
+K11066	P82974	2Y28_A_fam	Active site	116	E	Proton acceptor	99	E
+K11066	P82974	2Y28_A_fam	Binding site	34	H	Zn(2+)	17	H
+K11066	P82974	2Y28_A_fam	Binding site	154	H	Zn(2+)	137	H
+K11066	P82974	2Y28_A_fam	Binding site	164	D	Zn(2+)	147	D
+K13590	P31129	3TVK_A_fam	Active site	208	E	Proton acceptor	82	E
+K13590	P31129	3TVK_A_fam	Binding site	165	D	Mg(2+)	39	D
+K13590	P31129	3TVK_A_fam	Binding site	166	I	Mg(2+)	40	I
+K13590	P31129	3TVK_A_fam	Binding site	173	N	substrate	47	N
+K13590	P31129	3TVK_A_fam	Binding site	178	H	substrate	52	H
+K13590	P31129	3TVK_A_fam	Binding site	182	D	substrate	56	D
+K13590	P31129	3TVK_A_fam	Binding site	195	W	substrate	69	W
+K13590	P31129	3TVK_A_fam	Binding site	196	T	substrate	70	T
+K13590	P31129	3TVK_A_fam	Binding site	197	R	substrate	71	R
+K13590	P31129	3TVK_A_fam	Binding site	198	D	substrate	72	D
+K13590	P31129	3TVK_A_fam	Binding site	199	Y	substrate	73	Y
+K13590	P31129	3TVK_A_fam	Binding site	200	E	substrate	74	E
+K13590	P31129	3TVK_A_fam	Binding site	208	E	Mg(2+)	82	E
+K13590	P31129	3TVK_A_fam	Binding site	215	K	substrate	89	K
+K13590	P31129	3TVK_A_fam	Binding site	224	R	substrate	98	R
+K13590	P31129	3TVK_A_fam	Binding site	228	R	substrate	102	R
+K13598	P0AE82	4BIX_A_fam	Active site	248	H	Nucleophile	28	H
+K13598	P0AE82	4BIX_A_fam	Binding site	248	H	ATP	28	H
+K13598	P0AE82	4BIX_A_fam	Binding site	249	E	ATP	29	E
+K13598	P0AE82	4BIX_A_fam	Binding site	250	L	ATP	30	L
+K13598	P0AE82	4BIX_A_fam	Binding site	251	R	ATP	31	R
+K13598	P0AE82	4BIX_A_fam	Binding site	248	H	ATP	28	H
+K13598	P0AE82	4BIX_A_fam	Binding site	359	R	ATP	139	R
+K13598	P0AE82	4BIX_A_fam	Binding site	360	N	ATP	140	N
+K13598	P0AE82	4BIX_A_fam	Binding site	361	A	ATP	141	A
+K13598	P0AE82	4BIX_A_fam	Binding site	362	L	ATP	142	L
+K13598	P0AE82	4BIX_A_fam	Binding site	363	R	ATP	143	R
+K13598	P0AE82	4BIX_A_fam	Binding site	364	Y	ATP	144	Y
+K13598	P0AE82	4BIX_A_fam	Binding site	386	D	ATP	166	D
+K13598	P0AE82	4BIX_A_fam	Binding site	405	R	ATP	185	R
+K13598	P0AE82	4BIX_A_fam	Binding site	406	T	ATP	186	T
+K13598	P0AE82	4BIX_A_fam	Binding site	416	G	ATP	188	G
+K13598	P0AE82	4BIX_A_fam	Binding site	417	T	ATP	189	T
+K13598	P0AE82	4BIX_A_fam	Binding site	418	G	ATP	190	G
+K13598	P0AE82	4BIX_A_fam	Binding site	419	L	ATP	191	L
+K13598	P0AE82	4BIX_A_fam	Binding site	420	G	ATP	192	G
+K13598	P0AE82	4BIX_A_fam	Binding site	421	L	ATP	193	L
+K13877	Q1JUP4	5X5T_A_fam	Active site	253	E	Proton acceptor	246	E
+K13877	Q1JUP4	5X5T_A_fam	Active site	287	C	Nucleophile	280	C
+K13877	Q1JUP4	5X5T_A_fam	Binding site	154	W	NADP(+)	147	W
+K13877	Q1JUP4	5X5T_A_fam	Binding site	155	N	NADP(+)	148	N
+K13877	Q1JUP4	5X5T_A_fam	Binding site	178	K	NADP(+)	171	K
+K13877	Q1JUP4	5X5T_A_fam	Binding site	179	A	NADP(+)	172	A
+K13877	Q1JUP4	5X5T_A_fam	Binding site	180	P	NADP(+)	173	P
+K13877	Q1JUP4	5X5T_A_fam	Binding site	181	E	NADP(+)	174	E
+K13877	Q1JUP4	5X5T_A_fam	Binding site	231	G	NADP(+)	224	G
+K13877	Q1JUP4	5X5T_A_fam	Binding site	232	S	NADP(+)	225	S
+K13877	Q1JUP4	5X5T_A_fam	Binding site	254	L	NADP(+)	247	L
+K13877	Q1JUP4	5X5T_A_fam	Binding site	384	E	NADP(+)	377	E
+K14418	A5JTM5	1NZY_A_fam	Active site	90	H	Proton acceptor	89	H
+K14418	A5JTM5	1NZY_A_fam	Active site	145	D	Nucleophile	144	D
+K14418	A5JTM5	1NZY_A_fam	Binding site	24	R	substrate	23	R
+K14418	A5JTM5	1NZY_A_fam	Binding site	62	A	substrate	61	A
+K14418	A5JTM5	1NZY_A_fam	Binding site	63	G	substrate	62	G
+K14418	A5JTM5	1NZY_A_fam	Binding site	64	F	substrate	63	F
+K14418	A5JTM5	1NZY_A_fam	Binding site	65	Y	substrate	64	Y
+K14418	A5JTM5	1NZY_A_fam	Binding site	66	L	substrate	65	L
+K14418	A5JTM5	1NZY_A_fam	Binding site	67	R	substrate	66	R
+K14418	A5JTM5	1NZY_A_fam	Binding site	114	G	substrate	113	G
+K14418	A5JTM5	1NZY_A_fam	Binding site	257	R	substrate	256	R
+K15510	Q0RVH7	5LXE_A_fam	Active site	39	H	Proton donor	38	H
+K15510	Q0RVH7	5LXE_A_fam	Active site	108	E	Proton acceptor	107	E
+K15510	Q0RVH7	5LXE_A_fam	Binding site	38	D	coenzyme F420-(gamma-Glu)n	37	D
+K15510	Q0RVH7	5LXE_A_fam	Binding site	75	T	coenzyme F420-(gamma-Glu)n	74	T
+K15510	Q0RVH7	5LXE_A_fam	Binding site	106	T	coenzyme F420-(gamma-Glu)n	105	T
+K15510	Q0RVH7	5LXE_A_fam	Binding site	107	G	coenzyme F420-(gamma-Glu)n	106	G
+K15510	Q0RVH7	5LXE_A_fam	Binding site	111	N	coenzyme F420-(gamma-Glu)n	110	N
+K15510	Q0RVH7	5LXE_A_fam	Binding site	176	G	coenzyme F420-(gamma-Glu)n	175	G
+K15510	Q0RVH7	5LXE_A_fam	Binding site	177	G	coenzyme F420-(gamma-Glu)n	176	G
+K15510	Q0RVH7	5LXE_A_fam	Binding site	179	V	coenzyme F420-(gamma-Glu)n	178	V
+K15510	Q0RVH7	5LXE_A_fam	Binding site	180	V	coenzyme F420-(gamma-Glu)n	179	V
+K15510	Q0RVH7	5LXE_A_fam	Binding site	194	T	substrate	193	T
+K15510	Q0RVH7	5LXE_A_fam	Binding site	197	K	substrate	196	K
+K15510	Q0RVH7	5LXE_A_fam	Binding site	258	K	substrate	unresolved	
+K15510	Q0RVH7	5LXE_A_fam	Binding site	282	R	substrate	271	R
+K17218	Q7ZAG8	3H8L_A_fam	Active site	178	C	Cysteine persulfide intermediate	176	C
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	8	G	FAD	6	G
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	9	G	FAD	7	G
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	10	R	FAD	8	R
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	11	F	FAD	9	F
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	12	G	FAD	10	G
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	34	N	FAD	32	N
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	35	K	FAD	33	K
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	129	C	FAD	127	C
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	271	N	FAD	269	N
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	307	D	FAD	305	D
+K17218	Q7ZAG8	3H8L_A_fam	Binding site	317	G	FAD	315	G
+K17680	Q9X4C9	2R6A_A_fam	Active site	241	E	Nucleophile	66	E
+K17680	Q9X4C9	2R6A_A_fam	Binding site	213	S	ATP	38	S
+K17680	Q9X4C9	2R6A_A_fam	Binding site	215	G	ATP	40	G
+K17680	Q9X4C9	2R6A_A_fam	Binding site	216	K	ATP	41	K
+K17680	Q9X4C9	2R6A_A_fam	Binding site	217	T	ATP	42	T
+K17680	Q9X4C9	2R6A_A_fam	Binding site	218	A	ATP	43	A
+K17680	Q9X4C9	2R6A_A_fam	Binding site	250	R	ATP	75	R
+K17680	Q9X4C9	2R6A_A_fam	Binding site	362	Q	ATP	183	Q
+K17680	Q9X4C9	2R6A_A_fam	Binding site	381	R	ssDNA	199	R
+K17680	Q9X4C9	2R6A_A_fam	Binding site	382	E	ssDNA	200	E
+K17680	Q9X4C9	2R6A_A_fam	Binding site	384	G	ssDNA	202	G
+K17680	Q9X4C9	2R6A_A_fam	Binding site	418	K	ATP	229	K
+K17680	Q9X4C9	2R6A_A_fam	Binding site	419	Q	ATP	230	Q
+K17680	Q9X4C9	2R6A_A_fam	Binding site	420	R	ATP	231	R
+K18639	P37562	6G4J_A_fam	Active site	148	D	Proton acceptor	130	D
+K18639	P37562	6G4J_A_fam	Binding site	34	L	ATP	16	L
+K18639	P37562	6G4J_A_fam	Binding site	35	G	ATP	17	G
+K18639	P37562	6G4J_A_fam	Binding site	36	K	ATP	18	K
+K18639	P37562	6G4J_A_fam	Binding site	37	G	ATP	19	G
+K18639	P37562	6G4J_A_fam	Binding site	38	A	ATP	20	A
+K18639	P37562	6G4J_A_fam	Binding site	39	N	ATP	21	N
+K18639	P37562	6G4J_A_fam	Binding site	40	G	ATP	22	G
+K18639	P37562	6G4J_A_fam	Binding site	41	I	ATP	23	I
+K18639	P37562	6G4J_A_fam	Binding site	42	V	ATP	24	V
+K18639	P37562	6G4J_A_fam	Binding site	55	K	ATP	37	K
+K18679	P37562	6G4J_A_fam	Active site	148	D	Proton acceptor	130	D
+K18679	P37562	6G4J_A_fam	Binding site	34	L	ATP	16	L
+K18679	P37562	6G4J_A_fam	Binding site	35	G	ATP	17	G
+K18679	P37562	6G4J_A_fam	Binding site	36	K	ATP	18	K
+K18679	P37562	6G4J_A_fam	Binding site	37	G	ATP	19	G
+K18679	P37562	6G4J_A_fam	Binding site	38	A	ATP	20	A
+K18679	P37562	6G4J_A_fam	Binding site	39	N	ATP	21	N
+K18679	P37562	6G4J_A_fam	Binding site	40	G	ATP	22	G
+K18679	P37562	6G4J_A_fam	Binding site	41	I	ATP	23	I
+K18679	P37562	6G4J_A_fam	Binding site	42	V	ATP	24	V
+K18679	P37562	6G4J_A_fam	Binding site	55	K	ATP	37	K
+K18680	P9WI77	2H34_A_fam	Active site	139	D	Proton acceptor	125	D
+K18680	P9WI77	2H34_A_fam	Binding site	22	V	ATP	8	V
+K18680	P9WI77	2H34_A_fam	Binding site	23	G	ATP	9	G
+K18680	P9WI77	2H34_A_fam	Binding site	24	R	ATP	10	R
+K18680	P9WI77	2H34_A_fam	Binding site	25	G	ATP	11	G
+K18680	P9WI77	2H34_A_fam	Binding site	26	G	ATP	12	G
+K18680	P9WI77	2H34_A_fam	Binding site	27	M	ATP	13	M
+K18680	P9WI77	2H34_A_fam	Binding site	28	G	ATP	14	G
+K18680	P9WI77	2H34_A_fam	Binding site	29	D	ATP	15	D
+K18680	P9WI77	2H34_A_fam	Binding site	30	V	ATP	16	V
+K18680	P9WI77	2H34_A_fam	Binding site	45	K	ATP	31	K
+K18981	Q7CRQ0	3RFT_A_fam	Active site	134	Y	Proton acceptor	133	Y
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	12	Q	NAD(+)	11	Q
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	13	L	NAD(+)	12	L
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	32	D	NAD(+)	31	D
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	33	L	NAD(+)	32	L
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	34	S	NAD(+)	33	S
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	49	D	NAD(+)	48	D
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	50	L	NAD(+)	49	L
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	69	L	NAD(+)	68	L
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	70	G	NAD(+)	69	G
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	71	G	NAD(+)	70	G
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	72	I	NAD(+)	71	I
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	73	S	NAD(+)	72	S
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	73	S	substrate	72	S
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	109	S	substrate	108	S
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	110	N	substrate	109	N
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	111	H	substrate	110	H
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	138	K	NAD(+)	137	K
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	163	S	substrate	162	S
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	164	C	NAD(+)	163	C
+K18981	Q7CRQ0	3RFT_A_fam	Binding site	172	R	substrate	171	R
+K21158	P37562	6G4J_A_fam	Active site	148	D	Proton acceptor	130	D
+K21158	P37562	6G4J_A_fam	Binding site	34	L	ATP	16	L
+K21158	P37562	6G4J_A_fam	Binding site	35	G	ATP	17	G
+K21158	P37562	6G4J_A_fam	Binding site	36	K	ATP	18	K
+K21158	P37562	6G4J_A_fam	Binding site	37	G	ATP	19	G
+K21158	P37562	6G4J_A_fam	Binding site	38	A	ATP	20	A
+K21158	P37562	6G4J_A_fam	Binding site	39	N	ATP	21	N
+K21158	P37562	6G4J_A_fam	Binding site	40	G	ATP	22	G
+K21158	P37562	6G4J_A_fam	Binding site	41	I	ATP	23	I
+K21158	P37562	6G4J_A_fam	Binding site	42	V	ATP	24	V
+K21158	P37562	6G4J_A_fam	Binding site	55	K	ATP	37	K
+K22278	Q81EJ6	5N1P_A_fam	Active site	76	D	Proton acceptor	8	D
+K22278	Q81EJ6	5N1P_A_fam	Binding site	77	D	Zn(2+)	9	D
+K22278	Q81EJ6	5N1P_A_fam	Binding site	126	H	Zn(2+)	58	H
+K22278	Q81EJ6	5N1P_A_fam	Binding site	130	H	Zn(2+)	62	H
+K22342	A4XXY9	5LTE_A_fam	Active site	224	R	Proton donor	180	R
+K22342	A4XXY9	5LTE_A_fam	Binding site	194	H	heme b	150	H
+K22342	A4XXY9	5LTE_A_fam	Binding site	226	N	heme b	182	N
+K22342	A4XXY9	5LTE_A_fam	Binding site	266	E	dimethylamine	222	E
+K22342	A4XXY9	5LTE_A_fam	Binding site	317	Y	heme b	273	Y
+K22342	A4XXY9	5LTE_A_fam	Binding site	318	K	heme b	274	K

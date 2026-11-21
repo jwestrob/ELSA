@@ -1,0 +1,20 @@
+{
+ "package": "testset/package_k8",
+ "sealed_utc": "2026-11-13T13:47:39Z",
+ "files": {
+  "selection.tsv": "1bcb342c7640ddef379d13984e717b425d080f75e0099d88768f82829c1e5cef",
+  "split.parquet": "5869e416580a8232d076a0f597ea846bc6ba1f9a0b5a267d09da5979f72e9f2d",
+  "proteins_gid.faa": "1ca3d673d2df8450b2b5e813cf1e0e97dba093a1d80991073b41ec4e4b6e2571",
+  "universe/contig_extra.parquet": "d4aa7b25a9ad1d9795271fdec0b78a7131688c72ceea212e9cf13e3d606eb61e",
+  "universe/contigs.parquet": "2e5eff2fb9653742d7d2ba4d501ada34a8d847b7bc91d5d161c5f79a6941c77e",
+  "universe/gene_flags.parquet": "332dd7338f055024953d9f9d302e39ba7af5807b1c94136eb3d296b485a4819a",
+  "universe/genes.parquet": "2b3f374c814ba9e45141552e5089bc73cc9bc6a5ed4f877e6e23178124281b69",
+  "universe/genomes.parquet": "bc85715b37767ef206d1b98e861e89cbe02bcf3e92dfd77df9b0279e32060899",
+  "gold/lut_instances.parquet": "f1bbd13589a9e42504bde9f1b4f31a97324fef89bac50a3fe278620dd44151a8",
+  "gold/lut_members.parquet": "b6c344f211ba1c45f0f8c7f9e2d6a1e71d4536c07836ceedceacbf5d85c1ff38",
+  "gold/ribosomal_marked.parquet": "6e634d3252f9665411409dbc76e66405819f25bd3170595731c2558d82a38760",
+  "gold/ribosomal_runs.parquet": "f413f2bb33833fc8f34534eb16fa0391cf2ec7e79d674ff2a1e569ed5a3fed73"
+ },
+ "seal_sha256": "261ce23413a3708d98ddbc055ee8101a9ea60c65e2e43cd82202c17a2d533475",
+ "rule": "sha256 over the sorted lines '<path>\\t<sha256>\\n' of the files listed"
+}

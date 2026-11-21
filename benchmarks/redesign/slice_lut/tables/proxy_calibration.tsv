@@ -1,0 +1,9 @@
+scope	proxy	level	genomes	seq_pos	proxy_pos	tp	fp	fn	sens	ppv
+order	best_gap3	ABEF	5752	1621	1754	1532	222	89	0.945	0.873
+order	best_gap3	ABEFH	5752	219	215	195	20	24	0.89	0.907
+order	best_gap5	ABEF	5752	1621	1808	1536	272	85	0.948	0.85
+order	best_gap5	ABEFH	5752	219	455	199	256	20	0.909	0.437
+alpha_wide	best_gap3	ABEF	15721	796	1245	696	549	100	0.874	0.559
+alpha_wide	best_gap3	ABEFH	15721	6	28	6	22	0	1.0	0.214
+alpha_wide	best_gap5	ABEF	15721	796	1300	703	597	93	0.883	0.541
+alpha_wide	best_gap5	ABEFH	15721	6	36	6	30	0	1.0	0.167

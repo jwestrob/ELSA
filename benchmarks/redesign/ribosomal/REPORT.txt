@@ -1,0 +1,214 @@
+RIBOSOMAL-LOCUS CHECK FOR THE RECURRENCE ENGINE (DPANN) - workstream ws_ribosomal, 2026-11-12
+
+VERDICT
+The redesigned engine finds the ribosomal-protein locus in every genome that carries one, as a
+single locus, and its default reading overshoots the locus ends.
+ - Base arm (MMseqs2 e3c50s75 families, w3), default reading conserved@2: 1,686/1,686 runs recovered,
+   1,640 inside exactly one locus, median coverage 1.000. Resolved (one locus >= 80% of the run at
+   precision >= 0.8): 711/1,686 (42.2%). Of the 975 unresolved runs, 958 fail on precision alone:
+   the locus continues a median 3 genes past each run end into supported conserved neighbours.
+   Predeclared verdict: PARTIALLY RESOLVED (recovered 100% >= 90%, control gap +48.4 points >= 30,
+   resolved 42.2% falls between the 30% refutation line and the 50% support line).
+ - The same support landscape read at level 80 (boundaries spanned by pairs in >= 80 genera) resolves
+   1,317/1,686 (78.1%) at median precision 0.923, with 1,677 recovered.
+ - Best setting: genome-centred ESM++ small merge of the e3c50 families (hybrid ...e3c50cpmr0p05),
+   read as profile units (unit@0.5): 1,565/1,686 resolved (92.8%), 1,682 recovered, median precision
+   0.96, random windows 0.01% resolved. Against the base arm's best fixed reading (conserved@80):
+   +248 runs [218, 278] (paired genome bootstrap, 2,000 draws). All ten hybrid arms resolve
+   1,471-1,565 by the unit reading. This meets every predeclared support criterion.
+ - Larger windows (w5, w8, adaptive) and over-split token arms (embedding-only graph families at high
+   resolution; context "all"/"permtop" families) resolve fewer runs; the most over-split arms lose
+   the locus entirely (6-928 of 1,686 recovered).
+
+GOLD RUNS (cached at $RD/ribosomal/gold/)
+Marker: Pfam name matching ^ribosom(al)?_ (case-insensitive) in the read-only Sharur DPANN copy
+($RD/ws_dpann/input/sharur.duckdb, annotations, source = 'pfam'): 96 names, 199,596 hits on 177,848
+genes, 0 unmapped to gids. Observed domains used only as positional markers.
+| set | runs | genomes with run | genes per run (median, q10-q90, max) | contig-edge runs |
+| g2 (<= 2 unmarked genes inside), >= 16 marked (PRIMARY) | 1,686 | 1,686 (none with 2) | 24 (19-28, 45) | 289 |
+| g2, >= 8 marked | 4,120 | 3,275 | 14 (9-27, 45) | 914 |
+| g0 (strict), >= 16 marked | 10 | 10 (all Nanobdellota) | 20 (17-20) | 0 |
+| g0, >= 8 marked | 4,312 | 2,899 | 10 (8-14, 20) | 492 |
+Primary set by phylum (genomes with a run / genomes): Nanobdellota 1,247/1,738, Iainarchaeota 134/185,
+Micrarchaeota 137/1,146, Aenigmatarchaeota 105/315, Nanohalarchaeota 24/46, EX4484-52 19/44,
+Undinarchaeota 11/16, Altiarchaeota 9/63, Huberarchaeota 0/11. Micrarchaeota reach >= 8 marked genes
+in 1,054/1,146 genomes but >= 16 in 137. By completeness: <70% 54/288, 70-80 173/616, 80-90 728/1,478,
+>=90 731/1,182. Parvarchaeaceae: 114 of 216 genomes have a primary run (median 17 genes).
+Strict runs are rare because unmarked genes sit inside the cluster: of 5,594 unmarked genes inside
+primary runs, 1,540 carry SUI1, 1,141 RNase_P-MRP_p29, 382 SecY, 365 EMC3_TMCO1 (observed Pfam
+domains), 1,600 carry no Pfam hit. The July test (>= 16 strict, 143-148 genomes, 94/94
+Parvarchaeaceae) ran on the March database and gene universe; its run counts are not reproducible on
+this universe (10 strict runs, 0 Parvarchaeaceae), so July and November numbers are not comparable.
+
+1. BASE ARM (results_dpann_v5/dpann__mmseqs__seq__e3c50s75__w3; engine v1.5, rule P<=1e-4&L>=2,
+   159,955 significant pairs, Louvain modules res 10). Primary runs (1,686):
+| reading | recovered | resolved | median precision (recovered) | median ext L/R | mean fragments | top-module purity | Parv. rec / resolved |
+| conserved@2 (default) | 1,686 | 711 | 0.743 | 3/3 | 1.031 | 0.849 | 114/114, 13/114 |
+| conserved_g2@2 | 1,686 | 466 | 0.622 | 5/6 | 1.001 | 0.837 | 114, 2 |
+| conserved@5 | 1,681 | 831 | 0.812 | 2/2 | 1.146 | 0.834 | 114, 46 |
+| conserved@12 | 1,681 | 939 | 0.827 | 1/2 | 1.158 | 0.841 | 114, 106 |
+| conserved@30 | 1,679 | 1,112 | 0.880 | 1/1 | 1.176 | 0.850 | 114, 106 |
+| conserved@80 | 1,677 | 1,317 | 0.923 | 0/0 | 1.243 | 0.855 | 114, 106 |
+| conserved_g2@80 | 1,682 | 1,194 | 0.889 | 1/1 | 1.024 | 0.870 | 114, 58 |
+| unit@0.5 | 1,480 | 149 | 0.938 | 0/0 | 4.091 | 0.916 | 114, 106 |
+| best level per run (oracle, not a setting) | - | 1,441 | - | - | - | - | - |
+Recovered runs at conserved@2 span 1,686 genomes, 627 genera (all genera with a run), 8 phyla.
+Resolved at conserved@2 by phylum: Nanobdellota 484/1,247, Micrarchaeota 64/137, Iainarchaeota 56/134,
+Aenigmatarchaeota 72/105, Nanohalarchaeota 15/24, EX4484-52 11/19, Altiarchaeota 6/9, Undinarchaeota
+3/11; recovered 100% in every phylum and completeness bin. Contig-edge runs resolve more often
+(205/289) than internal runs (506/1,397): the contig end caps the overshoot.
+Controls (same metrics, conserved@2): length-matched random windows on the same contigs (20 per run,
+33,300 windows; 21 runs had no room in their genome): recovered 51.6%, resolved 6.7%, median coverage
+0.857, module purity 0.149. Genome-label shuffle (each run's length and contig offset placed in
+another genome, 5 permutations, 7,767 placements): recovered 46.4%, resolved 8.2%; it tracks the
+random-window control and adds no separate signal. At conserved@80: random 5.0% / 0.3%, transplant
+1.4% / 0.0%. Unit@0.5: random 0.8% / 0.02%.
+The July rule (best locus >= 50% of the run) is weak at level 2: half of arbitrary windows pass it.
+Resolution is the informative measure.
+
+2. ALL ARMS (primary runs; d_res@2 = resolved minus base at conserved@2, paired bootstrap 95%;
+   res@80 = conserved@80; unit = unit@0.5; oracle = best ladder level per run). Full table with
+   more columns: results/arms_table.tsv.
+arm                                                   tokens rec@2 res@2      d_res@2 [95%] prec@2 res@80  unit oracle  Parv@2
+v5 mmseqs__seq__e3c50s75 w3 (BASE)                    430471  1686   711          +0 [0, 0]  0.743   1317   149   1441 114/114
+v4 mmseqs__seq__e3c50s75 w3                           430471  1686   711          +0 [0, 0]  0.743   1317   149   1441 114/114
+v2 mmseqs__seq__e3c30s75 w3                           380979  1685   724       +13 [-7, 34]  0.750   1311   871   1536 114/114
+v2 mmseqs__seq__e3c50s75 w3                           430471  1686   711          +0 [0, 0]  0.743   1317   149   1441 114/114
+v2 mmseqs__seq__e3c50s75 w5                           430471  1686   501  -210 [-237, -185]  0.639   1197  1355   1233 114/114
+v2 mmseqs__seq__e3c50s75 wa3                          430471  1605   684       -27 [-56, 1]  0.793   1119   116   1405 114/114
+v2 mmseqs__seq__e3c50s75 wa8                          430471  1686   453  -258 [-289, -230]  0.574   1067  1234   1087 114/114
+v2 mmseqs__seq__id30c80 w3                            674172  1686   743       +32 [11, 53]  0.767    929     0   1458 114/114
+v2 mmseqs__seq__id30c80 w5                            674172  1686   527  -184 [-212, -156]  0.649   1092   721   1308 114/114
+v2 mmseqs__seq__id30c80 w8                            674172  1686   469  -242 [-273, -211]  0.586    939    13   1036 114/114
+emb1 hybrid__esmpp__gc__e3c50cpmq0p5 w3               301015  1686   711       +0 [-18, 17]  0.750   1283  1509   1385 114/114
+emb1 hybrid__esmpp__gc__e3c50cpmq0p9 w3               319490  1686   696      -15 [-30, -2]  0.742   1301  1513   1412 114/114
+emb1 hybrid__esmpp__gc__e3c50cpmq0p99 w3              347364  1686   705        -6 [-15, 2]  0.742   1311  1506   1422 114/114
+emb1 hybrid__esmpp__gc__e3c50cpmq0p999 w3             375007  1686   705        -6 [-15, 3]  0.742   1310  1471   1423 114/114
+emb1 hybrid__esmpp__gc__e3c50cpmr0p05 w3              204494  1686   770       +59 [34, 84]  0.774   1266  1565   1299 114/114
+emb1 hybrid__esmpp__gc__e3c50cpmr0p1 w3               218913  1686   720       +9 [-12, 31]  0.759   1290  1530   1329 114/114
+emb1 hybrid__esmpp__gc_zca10__e3c50cpmq0p5 w3          94450  1685   730       +19 [-8, 45]  0.767   1135  1546   1199 114/114
+emb1 hybrid__esmpp__gc_zca10__e3c50cpmq0p9 w3         166703  1686   677     -34 [-54, -14]  0.739   1167  1538   1265 114/114
+emb1 hybrid__esmpp__gc_zca10__e3c50cpmq0p99 w3        226258  1686   694       -17 [-35, 0]  0.736   1228  1525   1328 114/114
+emb1 hybrid__esmpp__gc_zca10__e3c50cpmq0p999 w3       263018  1686   684     -27 [-44, -11]  0.739   1262  1525   1373 114/114
+emb1 graph__esmpp_zca10__mknn20r100 w3                113638  1681   792      +81 [51, 111]  0.781    557   534   1422 114/114
+emb1 graph__esmpp_zca10__mknn20r1000 w3               132627  1664   788      +77 [43, 112]  0.800      0   381   1422 114/114
+emb1 graph__esmpp_zca10__mknn20r300 w3                120083  1674   784      +73 [40, 106]  0.787    410   167   1401 114/114
+emb1 graph__esmpp_zca10__mknn20r3000 w3               153520  1646   811     +100 [65, 136]  0.824      0   343   1289 114/114
+ctx dense_w1_sim_permtop_r50000 w3                    677277   137    30  -681 [-723, -640]  1.000      0     0     85   0/114
+ctx dense_w1_sim_sup_r10 w3                           879919  1675   795      +84 [55, 113]  0.793   1235  1057   1484 114/114
+ctx dense_w1_sim_sup_r100 w3                          883121  1671   813     +102 [70, 132]  0.800   1184   281   1473 114/114
+ctx dense_w1_simctx_permtop_r100000 w3               1073390     6     0  -711 [-751, -672]  1.000      0     0      3   0/114
+ctx dense_w1_simctx_sup_r10 w3                        880124  1673   816     +105 [75, 135]  0.800   1246  1035   1416 114/114
+ctx dense_w1_simctx_sup_r100 w3                       883775  1671   810      +99 [67, 130]  0.800   1158   355   1472 114/114
+ctx matched_w5_sim_sup_r10 w3                        1632388  1679   838     +127 [96, 158]  0.810   1333   171   1456 114/114
+ctx matched_w5_sim_sup_r100 w3                       1633483  1686   832     +121 [93, 150]  0.794    956   960   1456 114/114
+ctx matched_w5_simctx_all_r11000 w3                   177500   631   222  -489 [-530, -448]  0.846      0    96    280   0/114
+ctx matched_w5_simctx_all_r19000 w3                   325207   207    64  -647 [-687, -609]  0.862      0    38     75   0/114
+ctx matched_w5_simctx_all_r26000 w3                   445277    59    14  -697 [-737, -658]  0.882      0     3     22   0/114
+ctx matched_w5_simctx_all_r7500 w3                    117140   928   310  -401 [-441, -360]  0.794      0   136    412   0/114
+ctx matched_w5_simctx_sup_r10 w3                     1632458  1685   860    +149 [119, 180]  0.810   1347   827   1458 114/114
+ctx matched_w5_simctx_sup_r100 w3                    1633702  1686   832     +121 [93, 150]  0.794    990   984   1457 114/114
+ctx sim_all_r11000 w3                                 111780  1580   724      +13 [-22, 50]  0.833      0   196   1041  53/114
+ctx sim_all_r15000 w3                                 189089  1406   578   -133 [-176, -92]  0.870      0   161    912  27/114
+ctx sim_all_r19000 w3                                 297708  1155   466  -245 [-291, -199]  0.889      0    98    738   6/114
+ctx sim_all_r23000 w3                                 432675   880   419  -292 [-337, -247]  0.907      0   110    590   0/114
+ctx sim_all_r30000 w3                                 709751   643   310  -401 [-449, -356]  0.957      0    56    390   0/114
+Notes. Levels count genera, so finer token arms reach fewer genera per pair and level 80 can be empty
+(res@80 = 0 in graph r1000/r3000 and the ctx "all"/"permtop" arms); compare those arms at @2 and
+by oracle. Key paired tests: hybrid r0p05 unit@0.5 vs base conserved@80 +248 [218, 278]; vs base
+conserved@2 +854 [810, 898]; ctx matched_w5_simctx_sup_r10 conserved@80 vs base conserved@80 +30
+[-10, 67] (no arm beats the base at level 80). At @2 the context-gated families gain +84 to +149 by
+producing shorter loci (precision 0.79-0.81); they do not reach the unit-reading result. v4 and v5
+loci are identical to v2 for the base arm; module purity differs because v2 (engine v1.1) used
+union-find modules with one 26,832-token component, so v2 purity (1.000) carries no information.
+results_dpann_repair/ is empty, results_dpann_hier/ does not exist, and
+results_dpann_ctx/dpann__ctx__esmpp_small__dense_w1_simctx_permtop_r50000__w3 has no outputs.
+
+3. DIAGNOSIS (base arm; statistics recomputed with the engine's own functions: 159,955 significant
+   pairs and boundary_support.npy reproduced exactly)
+What would refute each reading is stated with it.
+a) Fragmentation is not the failure. 1,640/1,686 runs lie inside one conserved@2 locus (40 in 2,
+   6 in 3). 87 of 39,659 boundaries inside runs carry no significant pair (52 runs). Break rate:
+   0.08% between two marked genes, 0.65% where a flank gene is unmarked. Features at breaks against
+   non-breaks (predeclared bar: >= 2x): unmarked flank gene 71% vs 24% (3.0x), flank gene that is an
+   endpoint of no significant pair 60% vs 4.8% (12x), flank token present in <= 1 genome 13.8% vs
+   2.6% (5.4x; 12 breaks). Best spanning pair at breaks has L >= 2 in 79/87 (the P <= 1e-4 cut
+   fails), L = 1 in 8. Families bordering breaks: Ribosomal_L3 22 of 1,590 flank boundaries,
+   Ribosomal_S10 13/27, Ribosomal_S13 8/203, Ribosomal_S8 8/3,347. Run genes that are endpoints of a
+   significant pair: 99.9% of marked, 82.7% of unmarked (genome-wide 63%).
+b) The failure is overshoot at the run ends. 958/975 unresolved runs have one locus covering >= 80%
+   of the run. Genes added past the run ends at conserved@2: median 8 per run (q90 36.5, max 245;
+   24,668 genes in 1,542 runs). Observed Pfam domains on the gene adjacent to the run end: SecY
+   427/1,192 (left) and 419/1,166 (right), Plug_translocon, PK/PK_C, DNA_primase_lrg/_S, KOW, TrmB,
+   CBFD_NFYB_HMF, TAF, Histone; about 36% carry no Pfam hit. The most frequent adjacent neighbour is
+   token 68605 (3,316 of its 3,318 genes carry SecY; present in 3,280 genomes), joined to the run by
+   pairs in up to 667 genera. The level-2 locus is therefore the conserved neighbourhood around the
+   Pfam-marked run; the gold run boundary (last marked gene) is narrower than it, and "resolved"
+   measures agreement with the marked run. Raising the level trims the overshoot (ext 3/3 -> 0/0,
+   precision 0.743 -> 0.923) at a cost of 9 recovered runs. Refutation for "supported neighbourhood,
+   not noise": random windows would match the observed precision; they resolve 6.7% (@2) and 0.3%
+   (@80) against 42.2% and 78.1%.
+c) Window size: w5, w8 and adaptive a8 bridge further past the run ends (precision 0.57-0.65,
+   resolved@2 -184 to -258, every interval excludes 0); adaptive a3 gives -27 [-56, 1] and recovers
+   only 1,605. w3 is the best window for conserved readings. The unit reading responds to the window
+   unevenly: e3c50s75 w3 149, w5 1,355; id30c80 w3 0, w5 721, w8 13.
+d) Family granularity: base tokens keep ribosomal families nearly whole (median 2 tokens per Pfam
+   family, top-token share 0.995, tokens in a median 3,097 genomes), so granularity does not limit
+   the base. It limits split arms: id30c80 (5.5 tokens per family, share 0.69) loses 388 at @80;
+   graph arms (13.5-26 tokens, share 0.18-0.47) recover 1,646-1,681 but lose the high levels;
+   ctx "all" arms (37-150 tokens per family) and "permtop" arms (130-164, share 0.02-0.04) lose the
+   locus (recovered 6-1,580; Parvarchaeaceae 0-53/114). Hybrid arms merge each family to one token
+   (share 1.0) and are the ones whose unit reading resolves the run. Table: results/diag/granularity.tsv.
+e) Locus-reading rule: in the base arm unit@0.5 cuts runs into a median 3 units (4,660 internal cuts in
+   1,665 runs; most frequent cuts after Ribosomal_S17 before an unmarked gene 681, Ribosomal_S17 |
+   Ribosomal_L14 589, Ribosomal_L3 | Ribosomal_L4 435). In hybrid r0p05 the cuts fall to 1,796 in 817
+   runs and the best unit covers the run in 1,565. The reading rule (level, unit) moves resolved counts
+   from 149 to 1,317 on one arm; the token arm moves the unit reading from 149 to 1,565.
+f) Modules: the run's marked genes fall in two Louvain modules in every genome: 329 (57.3% of marked
+   genes; Pfam names Ribosomal_L3, L4, L23, L2_C, S19, L22, S3_C, L29, S17, L14, L26, S4e, L5, L5_C)
+   and 85 (40.4%; Ribosomal_S14, S8, L6, L5e, L32e, L19e, S5, S5_C, L30, L27A, L34e); module 155
+   (Ribosomal_L13, S9, S11, S13, S4, L18) holds 451 genes. Median 2 gene modules per run. Top-module
+   purity of the best locus over recovered runs is 0.849 (329 in 1,432, 85 in 251; random windows
+   0.149), which meets the predeclared 0.8 bar; the per-gene view shows a consistent two-module
+   split of one locus at Louvain resolution 10.
+g) Examples (gene-by-gene tables with tokens, token genome counts, modules, boundary support and
+   loci: results/diag/examples.txt). Typical failures (one locus, overshoot):
+   - GCA_030704765.1 (Nanobdellota, ARS1285) JAUYDD010000088.1 pos 8-30 (23 genes): locus 1-36,
+     precision 0.64, ext 7/6; pos 7 is the SecY-domain token 68605 with boundary support 667.
+   - GCA_038895395.1 (Iainarchaeota, DTGL01) JAWANJ010000004.1 pos 9-46 (38 genes): locus 2-55,
+     precision 0.70, ext 7/9; run genes span modules 329, 85, 155, 145.
+   - GCA_013331805.1 (Micrarchaeota, UBA10161) DUFS01000003.1 pos 9-32 (24 genes): locus 2-32,
+     precision 0.77, ext 7/0; pos 7 again token 68605 (support 667).
+   Successes: GCA_016181245.1 (Nanobdellota) JACOZR010000020.1 pos 1-28, precision 0.93, ext 1/1;
+   GCA_018304565.1 (Aenigmatarchaeota) JAGVVX010000018.1 pos 11-37, precision 0.93, ext 0/2;
+   GCA_035291125.1 (Micrarchaeota) DATDSY010000087.1 pos 0-19 at the contig start, precision 0.87.
+
+4. STANDING CHECK
+$RD/ribosomal/code/ribosomal_check.py (local copy benchmarks/redesign/ribosomal/ribosomal_check.py)
+  "$PY" -u "$RD/ribosomal/code/ribosomal_check.py" check "$O" --threads "$T" [--out DIR] [--per-run]
+Reads $O/loci_all_genomes.parquet (required), boundary_support.npy (level ladder, if present) and
+summary.json; writes ribosomal_check.json and ribosomal_check.txt (the one line, also printed) to
+--out (default $O). Gold runs and controls are cached in $RD/ribosomal/gold/ and rebuilt by
+"ribosomal_check.py gold" (54 s) when absent. Wall time 11.9-13.4 s on 24 CPUs for the base arm
+(1.2 GB RSS), at most 14.4 s on 4 threads for any arm. It needs a writable NUMBA_CACHE_DIR (the
+engine wrapper sets one). Base line:
+RIBOSOMAL dpann__mmseqs__seq__e3c50s75 w=3: runs=1686 recovered=1686 resolved=711 (random windows 0.516/0.067) median_coverage=1.000 median_fragments=1 median_precision=0.743 top_module_purity=0.849 Parvarchaeaceae=114/114 | resolved conserved@80=1317 unit@0.5=149 [13.4s]
+JSON keys: results / controls [g2_m16 | g2_m8 | g0_m16 | g0_m8][locus set], primary, by_phylum,
+by_completeness, contig_edge, consistency (ladder level 2 equals the table: true for all 43 arms).
+
+ARTIFACTS
+Remote ($RD = .../ELSA/redesign_20261111): ribosomal/code/ (ribosomal_check.py, diagnose_base.py,
+aggregate.py, unit_cmp.py, run_ribosomal.sbatch, PREDECLARE.txt); ribosomal/gold/; ribosomal/arms/<arm>/
+(ribosomal_check.json, .txt, ribosomal_runs.parquet); ribosomal/arms_table.tsv|json; ribosomal/diag/
+(diagnosis.json, examples.txt, family_table.tsv, granularity.tsv, boundaries.parquet).
+Jobs: 78851 (gold + base), 78863 (all arms, first code version), 78864 (diagnosis), 78928 (all 43 arms
+with the final code; 69 s). Logs: $RD/logs/ribosomal_<job>.log.
+Local: benchmarks/redesign/ribosomal/ (code, PREDECLARE.txt, REPORT.txt, results/).
+
+OPEN
+- The precision criterion counts the SecY-domain and other supported neighbours as error. A gold
+  definition that includes neighbours present in most genomes would change the resolved counts;
+  none was tried here.
+- The unit reading wins only with merged (hybrid) tokens; whether a unit reading with Jaccard tau
+  other than 0.5 or a wider window fixes the MMseqs base without the merge is untested (the engine
+  wrote only tau 0.5 to the all-genome table).

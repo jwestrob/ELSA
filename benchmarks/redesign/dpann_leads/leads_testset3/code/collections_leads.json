@@ -1,0 +1,39 @@
+{
+ "_note": "Collection configurations for the leads pipeline (code in dpann_leads/leads_testset3/code). RD = remote root, R = local repo root. local_out = the collection's workstream folder; fold_dir = where ESMFold2 models and fold-input FASTA are kept locally (null -> <local_out>/folds). SR-VP sequences are unpublished: its fold_dir sits outside the git repository and its candidate FASTA stays there too.",
+ "testset3": {
+  "pass_dir": "RD/dpann_leads/pass_port/out/testset3",
+  "genes": "RD/testset3/package/universe/genes.parquet",
+  "genomes": "RD/testset3/package/universe/genomes.parquet",
+  "fasta": "RD/testset3/package/proteins_gid.faa",
+  "pfam": "RD/annot_gpu/testset3/PFAM.parquet",
+  "kofam_partners": "RD/annot_gpu/testset3/KOFAM_partners.parquet",
+  "remote": "RD/dpann_leads/leads_testset3",
+  "local_out": "R/benchmarks/redesign/dpann_leads/leads_testset3",
+  "fold_dir": null,
+  "private": false
+ },
+ "srvp": {
+  "pass_dir": "RD/dpann_leads/pass_port/out/srvp",
+  "genes": "RD/ws_srvp_bins/package/universe/genes.parquet",
+  "genomes": "RD/ws_srvp_bins/package/universe/genomes.parquet",
+  "fasta": "RD/ws_srvp_bins/package/universe/proteins.faa",
+  "pfam": "RD/annot_gpu/srvp/PFAM.parquet",
+  "kofam_partners": "RD/annot_gpu/srvp/KOFAM_partners.parquet",
+  "remote": "RD/dpann_leads/leads_srvp",
+  "local_out": "R/benchmarks/redesign/dpann_leads/leads_srvp",
+  "fold_dir": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA_private/leads_srvp",
+  "private": true
+ },
+ "lut": {
+  "pass_dir": "RD/dpann_leads/pass_port/out/lut",
+  "genes": "RD/slice_lut/testset/package_k8/universe/genes.parquet",
+  "genomes": "RD/slice_lut/testset/package_k8/universe/genomes.parquet",
+  "fasta": "RD/slice_lut/testset/package_k8/proteins_gid.faa",
+  "pfam": "RD/annot_gpu/lut/PFAM.parquet",
+  "kofam_partners": "RD/annot_gpu/lut/KOFAM_partners.parquet",
+  "remote": "RD/dpann_leads/leads_lut",
+  "local_out": "R/benchmarks/redesign/dpann_leads/leads_lut",
+  "fold_dir": null,
+  "private": false
+ }
+}

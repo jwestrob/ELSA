@@ -1,0 +1,116 @@
+{
+ "workstream": "ws_vocab2b (vocab_lists): words whose identity is the set of instances aligned to them",
+ "written_utc": "2026-11-13T03:24Z",
+ "written_before": "any computation of this workstream. Read beforehand: vocab/REPORT.txt + vocab.py + vscore.py, softrec REPORT2/REPORT4/REPORT_cas + softrec.py/softrec4.py, lineagefree/REPORT.txt, calib/REPORT.txt, docs/redesign/NOTEBOOK.md from 2026-11-12 23:53 UTC, context_units/NOTEBOOK.txt (odd numbers up to 03:03 UTC) and predeclared.json. No REPORT.txt of ws_context exists yet.",
+ "method": {
+  "input": "gene order (contigs of genes, DPANN universe) + zca10 whitened ESM++ small vectors. No MMseqs2 family, no taxonomy, no module label at run time.",
+  "lists": "gene lists from the stored zca10 unique-sequence kNN (k 2,000; softrec Lists, identical copies first, tail rank), excluding genes of the gene's own genome (context arms) or of its own data-derived genome group (group arm). Depth K = 1,000 (main), 200 (control).",
+  "state": "contigs as sequences of live nodes; a node is a terminal gene or a word instance (contiguous span: two child nodes plus 0-2 inserted single genes). Every node carries a list of aligned instances in other genomes: a terminal its gene list (each entry a one-gene span with its tail rank), a word the supporting set S that created it (each entry a span in another genome, rank = the worse rank of its two parts).",
+  "support": "for live nodes x, y on one contig with <= 2 intervening single terminal genes, S(x, y) = pairs (p, q), p in list(x), q in list(y), p and q on one contig of another genome, non-overlapping, with <= 2 genes between them, either order, either strand. Per q the best-ranked p is kept (|S| <= |list(y)|). Round 0 only: instances whose two genes are homologs by softrec's exclusion rule (identical sequence or cosine >= max(0.32, min list cutoffs)) are not candidates (the analogue of stage 1's X != Y).",
+  "counts": "n = 1 + distinct supporting genomes (the own genome counts once as the instance itself); E = own term min(1, 6 / m_own) + sum over genomes G of min(1, 6 c_x(G) c_y(G) / m_G), c = list entries in G, m_G = genes of G (softrec's E; exact for terminals, the same random-placement approximation for spans).",
+  "objective": "Lambda(n, E) = n ln(n/E) - n + E nats (0 if n <= E), as stage 1.",
+  "evidence_units": {
+   "ctx (main)": "Lambda_eff = Lambda(N_eff, E N_eff / n) (= Lambda_genome x N_eff / n). Context of an instance span [s, e]: B = unit(sum of zca10 vectors of the genes at positions [s-50, s-1] and [e+1, e+50] on its contig), raw (no genome centring), the span's own genes excluded; uninformative if the window is empty. Per supporting genome B_G = unit(sum of B over its spans); at most 64 supporting genomes, chosen by a fixed random genome priority (seed 17), plus the instance's own context. c_bar = mean pairwise cosine over the k informative vectors; rho = clip((c_bar - c0 - 2 sd0 sqrt(2 / (k (k - 1)))) / (1 - c0), 0, 1) with c0, sd0 = mean and sd of B.B' over 2,000,000 random pairs of round-0 instance contexts in different genomes (measured on each run's own gene order); k < 2 -> rho = 0. N_eff = n / (1 + (n - 1) rho). Structural minimum N_eff >= 2 (the analogue of stage 1's n >= 2).",
+   "grp (reference)": "lists exclude the own group; n = distinct groups among supporting genomes plus the own group; E = sum over other groups of [1 - prod over the group's genomes of (1 - p_G)] + own term; Lambda(n, E); n >= 2. Groups: $RD/lineagefree/groups/emb_hom_average_t0.75.parquet (642 groups, homolog-level cosine 0.75).",
+   "gen (diagnostic)": "genome lists, Lambda(n, E) with no correction, n >= 2.",
+   "ctxshuf (control)": "as ctx, but the context of a span is the one-gene context of a random slot (global permutation of slots, seed 17): real context marginals, no link to the instance.",
+   "ctx200 (control)": "as ctx with list depth 200."
+  },
+  "updates": "per round: (A) n, E (and group counts) for every live adjacency; (B) N_eff for adjacencies with Lambda(n, E) >= tau (ctx arms; Lambda_eff <= Lambda since N_eff <= n); (C) greedy commit in decreasing Lambda_eff (ties: left position, distance): an adjacency commits if its two nodes and the genes between them are unclaimed; (D) committed adjacencies become word nodes whose list is S (deduplicated spans, sorted by rank). Rounds repeat until nothing commits. Output = the parse.",
+  "tau": "ladder {4, 6, 8, 10, 12, 15, 20}; tau* = smallest value whose round-0 instance FDR (mean over 3 gene-order shuffles of the adjacencies passing Lambda_eff >= tau and the structural minimum, divided by the observed count) is <= 0.01. Shuffle = genes permuted within each genome, contig sizes kept, seeds 1000 + r (softrec / engine null); the whole procedure (lists fixed, positions and contexts from the shuffled order) runs on it. The full-run word FDR at tau* (null word instances / observed word instances, 1 shuffle) is reported, not used for selection.",
+  "readings": "V-top = top-level word instances; V-nest = V-top + their direct children that are words. No other reading rule.",
+  "classes": "word classes for typing: graph on top-level word instances, edge w-v when a span of S_w covers >= 50% of its genes inside v and a span of S_v covers >= 50% inside w (mutual listing); Leiden modularity, resolution 1, seed 17; connected components reported too. Class id = module_id of the locus table."
+ },
+ "reproduction_first": [
+  "token DH even summed DF+TXSS excess .4270 (F1 .744/.548/.479, ribosomal 1,686/1,512, Parv 114/113) by rescoring the stored DH loci; per-instance F1 and control equal the stored scores",
+  "softrec stored statistic: the round-0 pass of this kernel with softrec round 2's genus lists (depth 1,000) and genus counting gives L, G, E equal to $RD/softrec/r2/stats/obs.npz (variant K1000_fnone) on every instance (E within float32 rounding)"
+ ],
+ "odd_selection": "per arm: reading among {V-top, V-nest} by (number of odd conditions met, odd summed excess); odd conditions = summed >= token DH odd - 0.01 (.4179), each caller F1 >= DH odd - 0.02, odd ribosomal recovered >= 830, Parvarchaeaceae recovered >= 54, resolved >= 705. Written to NOTEBOOK.txt before any even number of a word reading is read. The verdict output is ctx (K 1,000, W 50) at its tau* and selected reading; nothing else is tuned.",
+ "even_criterion": "vs token DH (even, paired genome bootstrap 2,000 draws, seed 17): MATCHES if summed excess difference >= -0.01, each caller's F1 difference >= -0.02 (DF .744, TXSS .548, CCT .479), ribosomal recovered >= 1,650, Parvarchaeaceae recovered >= 110 of 114, resolved >= 1,400; BEATS if in addition the lower 95% bound of the summed-excess difference > 0. Also paired against stage-1 words (V-mob .6243) and the best softrec configurations (ws_cas fix gate_p1e-8 DH .4543, the one that matches; round-4 post DH .4920).",
+ "hypotheses": {
+  "H1": "ctx matches token DH on even genomes",
+  "H2": "relational identity removes the ribosomal failure of exact words: ribosomal recovered >= 1,650 and resolved >= 1,400 (stage 1: 1,198 / 501)",
+  "H3": "context evidence keeps mobile systems: ctx CCT F1 >= grp CCT F1 + 0.02, with summed excess >= grp - 0.03",
+  "H4": "the contexts carry the independence information: ctx summed excess >= ctxshuf + 0.05 and >= gen + 0.05",
+  "H5": "word classes type loci better than exact words: DefenseFinder system_type AMI >= 0.60 (stage-1 words .464, engine modules .779)",
+  "H6": "list depth: ctx (1,000) summed excess >= ctx200 and ribosomal recovered >= ctx200"
+ },
+ "refuters": {
+  "H1": "any matches bar failed on even",
+  "H2": "recovered < 1,650 or resolved < 1,400",
+  "H3": "CCT dF1 (ctx - grp) < +0.02 or summed (ctx - grp) < -0.03",
+  "H4": "either difference < +0.05",
+  "H5": "AMI < 0.60",
+  "H6": "either quantity lower at 1,000"
+ },
+ "expectations_before_numbers": {
+  "X1": "tau* = 8 or 10 for ctx; the null passes more easily than the observed relative to Lambda_genome because shuffled contexts are unrelated (N_eff ~ n in the null)",
+  "X2": "ctx puts 45-65% of genes in top-level words (stage 1 42%, DH loci 71%)",
+  "X3": "ribosomal recovered >= 1,600 (H2 recovery part holds); resolved 900-1,400 because words extend past run edges into conserved flanks (H2 likely refuted on resolved)",
+  "X4": "CCT F1 .42-.47: below DH .479 and above stage 1 .406",
+  "X5": "summed excess .50-.62: above DH, below stage 1",
+  "X6": "ctxshuf and gen: more words, lower summed excess (by 0.05-0.20), higher CCT F1; ctx between them and grp",
+  "X7": "grp summed excess above ctx by 0.02-0.08; ctx CCT F1 above grp by 0.02-0.05",
+  "X8": "depth 200: lower ribosomal recovery and summed excess (lists of clade-rich genes filled by close relatives)",
+  "X9": "DefenseFinder AMI of word classes .50-.70",
+  "X10": "overall verdict: neither (CRISPR-Cas F1 and/or ribosomal resolved); the most likely single failing part is the evidence unit at small n (N_eff of rare pairs near 2)"
+ },
+ "amendment_0": {
+  "written_utc": "2026-11-13T03:27Z (between NOTEBOOK.txt mtime 03:24:53 and vl.py mtime 03:31:09)",
+  "written_before": "any computation (code design only)",
+  "change": "N_eff sample: at most 32 supporting genomes (not 64), and per sampled genome the context of its best-ranked supporting span only (ties: lowest start), in place of pooling all its spans. Reason: cost of 960-d window sums for every candidate; the null standard error of c_bar at k = 33 is about 0.08 x sqrt(2 / (33 x 32)) = 0.0035, small next to the context cosines that separate relatives (0.08-0.76)."
+ },
+ "amendment_1": {
+  "written_utc": "2026-11-13T03:33Z (file mtime 03:33:12)",
+  "written_before": "any computation of this workstream (code written, nothing run); after the coordinator's message adding two list sources",
+  "existing_tables_checked": "$RD/ws_seqanchors (67,148 queries), $RD/locus_search/out/seqsearch (query subset), $RD/subgenic/hits (sample S), $RD/repair/hits (1,093,510 query uids, E <= 1e-5): none covers all 2,547,528 unique sequences at E <= 1e-3, so one all-against-all search is run",
+  "arm_aln (control; never the method)": "lists from MMseqs2 18 all-against-all of the 2,547,528 unique sequences ($RD/subgenic/db/uniqdb): prefilter -s 7.5 --max-seqs 1000, align -e 1e-3, no coverage rule; per query uid hits ranked by bit score (ties: target uid), the query's own uid first; expanded to genes outside the own genome exactly as the embedding lists (identical copies share the tail rank), depth 1,000. Everything else identical to ctx: contexts and N_eff from zca10 vectors, the round-0 homolog exclusion mask of the embedding K1000 lists, tau rule, readings, scoring. Purpose: is the advantage of lists over families the embedding or the absence of a hard partition. Reported against ctx with paired even differences on every criterion.",
+  "arms_z (candidate list sources)": "z10.6 and z13.7: per gene, the best gene of every other genome whose ws_calib within-genome z >= 10.6 (FPR 1e-2 per cell against clean non-homologs) or >= 13.7 (FPR 1e-3), from $RD/calib/table; own genome excluded; ranked by z (ties: genome code); no depth cap (<= 3,563 entries, one per genome). ctx evidence unit, everything else identical.",
+  "main_arm_rule": "the method's list source is chosen on odd genomes among {ctx (embedding K1000), z10.6, z13.7} by the predeclared odd rule (number of odd conditions met, then odd summed excess), each at its own tau* and selected reading; ctx stays the main arm unless a z arm ranks first. aln does not compete. The selection is written to NOTEBOOK.txt before any even number of these arms is read.",
+  "expectations": {
+   "X11": "aln within 0.02 of ctx on even summed excess and on DF / TXSS F1; CCT F1 aln >= ctx (alignment lists rank the own Cas family first, embedding lists rank ~200 other-family Cas genes above it). Reading if it holds: the lists' advantage is the soft, unpartitioned homology, not the embedding.",
+   "X12": "z10.6 (genome-diverse lists) recovers at least as many ribosomal runs as ctx; z13.7 forms fewer words (lower recall); no z arm ranks first on odd"
+  }
+ },
+ "deviations_from_brief_stated_in_advance": [
+  "Rank weights do not enter the count (n and E are counts at a fixed depth, so that Lambda is a Poisson log-likelihood ratio in matched units; ws_cas found the Poisson G-vs-E tail at depth 1,000 separates rare true pairs from null far better than rank weights, AUC .935-1.00 vs .60-.76). Ranks order and prune lists and pick one supporting p per q.",
+  "Lists of the context arms exclude only the own genome (no genome groups at run time); the group arm excludes the own group, as lineagefree's token-free run of the same unit.",
+  "Reciprocity is not required; its share among the supports of committed round-0 merges is measured on a sample.",
+  "tau is set from round-0 instance FDR (one pass per shuffle) because full runs per ladder value are too costly at the instance level; the full-run word FDR at tau* is reported."
+ ],
+ "clock_note": "times corrected 03:35 UTC from file modification times; the first hand-written times (03:40, 03:55, 04:20) were estimates ahead of the clock; content unchanged",
+ "amendment_2": {
+  "written_utc": "2026-11-13T03:44Z",
+  "written_before": "any number of any arm (job 88856 was cancelled after 3.5 min, having produced only list statistics and the context noise floor c0 .0056, sd0 .087); after the coordinator relayed ws_context's REPORT (committed 154da55), which was read (sections 1-5, Test 2 in full)",
+  "reason": "ws_context: context-vector N_eff is confounded by the size of the conserved unit (window filled by the unit itself; ribosomal superoperon N_eff 1-3; Test 2 embedding-only kernel with context N_eff: 0 of 1,686 ribosomal runs). The context arm is demoted to exploratory.",
+  "arms": {
+   "grp (MAIN evidence unit)": "as declared for grp: emb lists outside the own group (emb_hom_average_t0.75, 642 groups), Lambda over group counts, n >= 2, depth 1,000",
+   "grp200 (depth control of the main arm)": "grp with depth 200 (replaces ctx200)",
+   "syn (second arm; no groups, no threshold)": "genome-excluded emb lists (depth 1,000); synteny-retention matrix S(g, h) = share of genome g's supported round-0 adjacencies (non-excluded adjacencies with >= 1 supporting genome, depth-1,000 genome lists) that genome h supports, symmetrised (S + S^T) / 2, S(g, g) = 1, computed on each run's own gene order. For an adjacency with carriers C = own genome + supporting genomes (n = |C|, uniform weights), N_eff = n^2 / sum_{g,h in C} S(g, h), computed as n / (1 + (n - 1) s_bar) with s_bar = mean off-diagonal S over the own genome plus at most 63 supporting genomes chosen by the fixed random genome priority (seed 17) (an unbiased estimate of the mean pairwise S; used in place of a low-rank factor). Lambda_eff = Lambda_genome x N_eff / n; structural N_eff >= 2; tau by the same rule.",
+   "ctx (third, exploratory)": "unchanged (context outside the word instance's span, W 50, raw, z 2); ctxshuf its control; gen (no correction) diagnostic",
+   "aln (control)": "alignment lists with the MAIN unit: expanded outside the own group, group counts; homolog exclusion mask from the group-excluded embedding lists; everything else identical to grp",
+   "z10.6, z13.7": "ws_calib lists with the MAIN unit: own-group genomes excluded, group counts; everything else identical to grp"
+  },
+  "main_arm_rule": "odd rule (conditions met, then odd summed) among {grp, z10.6, z13.7}; grp stays main unless a z arm ranks first. Verdict output = the selected arm at its tau* and selected reading.",
+  "hypotheses_replaced": {
+   "H1": "the main output (grp or a selected z arm) matches token DH on even genomes",
+   "H3": "synteny-retention evidence keeps mobile systems: syn CCT F1 >= grp CCT F1 + 0.02 with summed excess >= grp - 0.03",
+   "H4": "(exploratory) contexts carry independence information: ctx summed >= ctxshuf + 0.05 and >= gen + 0.05",
+   "H6": "depth: grp (1,000) summed excess >= grp200 and ribosomal recovered >= grp200",
+   "H7 (coordinator)": "with strict independence (groups), CRISPR-Cas is recovered through the lists' reach to homologous systems of other families in other lineages: grp CCT F1 >= stage-1 words + 0.03 (.436) and the share of even CRISPR-Cas gold members outside every word <= 35% (stage 1: 45.5%)"
+  },
+  "expectations": {
+   "X13": "grp: tau* 8-12; summed excess .50-.62 (above DH .427, below stage 1 .624); CCT F1 .42-.46 (H1 fails on CCT); ribosomal recovered >= 1,600 and resolved 900-1,400",
+   "X14": "syn: more words than grp; CCT F1 above grp by 0.01-0.03 and summed excess below grp by 0.01-0.05 (H3 borderline on CCT)",
+   "X15": "H7 holds on the member-share part (<= 35% outside words), CCT F1 gain over stage 1 +0.02 to +0.05",
+   "X16": "ctx exploratory: fails ribosomal resolution like ws_context's context units (resolved < 1,200)"
+  }
+ },
+ "amendment_3": {
+  "written_utc": "2026-11-13T04:54Z",
+  "written_before": "any even number of any arm; after the odd scores of grp / grp200 (ribosomal bars failed on odd) and the gold-free parse statistic that word lists shrink with span (median |S| 269 at span 2, 7 at span 10, 2 at span 20)",
+  "diagnostic_reading": "V-phr (diagnostic only; never selectable, never the verdict): V-nest loci plus phrases = maximal chains of consecutive live nodes of the final parse joined at junctions (<= 2 intervening single genes) where the two genes meeting at the junction, taken as terminals, pass the arm's own test (n >= 2 and Lambda >= tau*). A phrase enters the reading if it joins >= 2 nodes and contains a word. Analogue of stage 1's V-phr.",
+  "junction_diagnosis": "vl.py diag on grp: for junctions inside ribosomal runs and overall, word-level n / Lambda vs gene-pair n / Lambda at the same junction",
+  "expectation": "V-phr raises grp's ribosomal recovered above 1,650 and resolved by 200-400, and lowers summed excess by 0.01-0.05 (phrases extend loci past system edges)"
+ }
+}

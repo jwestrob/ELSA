@@ -1,0 +1,55 @@
+#!/bin/bash
+#SBATCH -A banfield
+#SBATCH -p standard
+#SBATCH --qos=standard_expand_2
+#SBATCH -c 64
+#SBATCH -J sa_cmpz
+#SBATCH --exclude=node-48-256g-2,node-48-256g-3,node-48-256g-8,node-48-256g-9,node-48-256g-12,node-48-256g-13,node-48-256g-14
+#SBATCH -o /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/ws_seqanchors/logs/cmpz_%j.log
+
+# Whitened-arm comparison: tables, decisive counts, structure sample (<= 20,000 pairs; scores
+# reused where present, foldseek TM-align on the rest), confirmation and verdict, paired F1.
+set -euo pipefail
+ROOT=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/spacedust
+N=$ROOT/native_run_20260910
+W=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/ws_seqanchors
+PY=/home/jwestrob/miniconda3/envs/elsa/bin/python
+MM=/groups/banfield/users/jwestrob/bin/mmseqs_18/mmseqs/bin/mmseqs
+FS=/shared/software/foldseek/10-941cd33/bin/foldseek
+T="${SLURM_CPUS_ON_NODE:?}"
+QFS=$N/query/querydb_foldseek
+TFS=$N/reference/keggclusterdb_foldseek
+K=$W/work/tmz
+D=$K/db
+export PYTHONDONTWRITEBYTECODE=1
+stamp() { printf '%s %s\n' "$(date -u +%FT%TZ)" "$*"; }
+stamp "host=$(hostname) threads=$T"
+stamp "START prep"
+"$PY" -u "$W/code/compare_z.py" prep --threads "$T"
+stamp "DONE prep"
+n=$(wc -l < "$K/pref.tsv")
+stamp "pairs to align: $n"
+if [ "$n" -gt 0 ]; then
+    rm -rf "$D"; mkdir -p "$D/q" "$D/t"
+    for pair in "q:$QFS" "t:$TFS"; do
+        s=${pair%%:*}; src=${pair#*:}
+        ln -s "$src" "$D/$s/$s"; ln -s "$src.index" "$D/$s/$s.index"; cp "$src.dbtype" "$D/$s/$s.dbtype"
+        for x in ca ss; do
+            ln -s "${src}_$x" "$D/$s/${s}_$x"; ln -s "${src}_$x.index" "$D/$s/${s}_$x.index"; cp "${src}_$x.dbtype" "$D/$s/${s}_$x.dbtype"
+        done
+        "$MM" tsv2db "$W/work/tm/${s}_h.tsv" "$D/$s/${s}_h" --output-dbtype 12 -v 2
+    done
+    "$MM" tsv2db "$K/pref.tsv" "$D/pref" --output-dbtype 7 -v 2
+    stamp "START foldseek_tmalign"
+    "$FS" tmalign "$D/q/q" "$D/t/t" "$D/pref" "$D/aln_tm" --tmscore-threshold 0.0 -a 1 --threads "$T" -v 2
+    stamp "DONE foldseek_tmalign"
+    "$FS" convertalis "$D/q/q" "$D/t/t" "$D/aln_tm" "$K/aln_tm.tsv" \
+        --format-output query,target,qtmscore,ttmscore,alntmscore,lddt,fident,qcov,tcov,alnlen,qlen,tlen,evalue,bits \
+        --exact-tmscore 1 --threads "$T" -v 2
+    stamp "DONE tm_convertalis"
+    wc -l "$K/aln_tm.tsv"
+fi
+"$PY" -u "$W/code/compare_z.py" summarize --threads "$T"
+stamp "DONE summarize"
+"$PY" -u "$W/code/compare_z.py" paired --threads "$T"
+stamp "DONE paired"

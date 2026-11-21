@@ -1,0 +1,13 @@
+db	query	n	best_E	best_tm	best	n_strong	n_moderate	top_strong	top_mod
+pdb	sc2c_004_r1_A	713	0.1039	0.309	3s26-assembly1_A Crystal Structure of Murine Siderocalin (Li	0	0		
+pdb	sc2c_004_r1_B	193	0.03003	0.583	7vd7-assembly1_A Toxin - Antitoxin complex from Salmonella e	0	1		7vd7-assembly1_A Toxin - Antitoxin complex from Sa E3.0e-02 TM0.58
+pdb	sc2c_004_r2_A	444	0.06982	0.3326	4emv-assembly1_A Crystal structure of a topoisomerase ATP in	0	0		
+pdb	sc2c_004_r2_B	373	0.004559	0.7789	3u97-assembly1_A 1.1 Angstrom-resolution crystal structure o	0	2		3u97-assembly1_A 1.1 Angstrom-resolution crystal s E4.6e-03 TM0.78
+pdb	sc2c_020_r1_A	135	0.0004089	0.8064	3dd7-assembly2_C Structure of DocH66Y in complex with the C-	4	1	3dd7-assembly2_C Structure of DocH66Y in complex w E4.1e-04 TM0.81	5cgl-assembly1_B Fic protein from Neisseria mening E7.2e-02 TM0.64
+pdb	sc2c_020_r2_A	118	2.09e-06	0.8406	3k33-assembly1_A-2 Crystal structure of the Phd-Doc complex	4	36	3k33-assembly1_A-2 Crystal structure of the Phd-Do E2.1e-06 TM0.84	5eu0-assembly1_A FIC domain of Bep1 from Bartonell E3.3e-03 TM0.73
+alphafold_swissprot	sc2c_004_r1_A	711	3.608e-06	0.7684	AF-Q58199-F1-model_v6 Uncharacterized protein MJ0789	2	0	AF-Q58199-F1-model_v6 Uncharacterized protein MJ07 E3.6e-06 TM0.77	
+alphafold_swissprot	sc2c_004_r1_B	120	0.01572	0.617	AF-P44190-F1-model_v6 Uncharacterized protein HI_1419	0	1		AF-P44190-F1-model_v6 Uncharacterized protein HI_1 E1.6e-02 TM0.62
+alphafold_swissprot	sc2c_004_r2_A	353	8.172e-10	0.7534	AF-Q8Q0D6-F1-model_v6 Putative hypoxanthine phosphoribosyltr	2	0	AF-Q8Q0D6-F1-model_v6 Putative hypoxanthine phosph E8.2e-10 TM0.75	
+alphafold_swissprot	sc2c_004_r2_B	410	0.01362	0.499	AF-O53468-F1-model_v6 Putative toxin HigB2	0	0		
+alphafold_swissprot	sc2c_020_r1_A	74	0.000522	0.7938	AF-A0QRY0-F1-model_v6 Toxin Doc	1	0	AF-A0QRY0-F1-model_v6 Toxin Doc E5.2e-04 TM0.79	
+alphafold_swissprot	sc2c_020_r2_A	75	2.083e-05	0.8697	AF-A0QRY0-F1-model_v6 Toxin Doc	1	20	AF-A0QRY0-F1-model_v6 Toxin Doc E2.1e-05 TM0.87	AF-Q17A75-F1-model_v6 Protein adenylyltransferase  E1.0e-02 TM0.72

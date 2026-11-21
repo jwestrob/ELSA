@@ -1,0 +1,167 @@
+{
+ "rows": {
+  "x_candidate": 82351355,
+  "x_pairable": 33978148,
+  "y_candidate": 61366311,
+  "y_pairable": 22801630
+ },
+ "groups": {
+  "x": 14325718,
+  "y": 9647476
+ },
+ "adjacent": {
+  "x_genes_sample": 88799,
+  "y_genes_sample": 27443,
+  "involved_genes_sample": 104891,
+  "x_frac": {
+   "est": 0.25088644717622427,
+   "ci95": [
+    0.24613548544403244,
+    0.25566887868013327
+   ]
+  },
+  "y_frac": {
+   "est": 0.07753552145696599,
+   "ci95": [
+    0.0752347959758625,
+    0.08006053230047123
+   ]
+  },
+  "involved_frac": {
+   "est": 0.29635165182897716,
+   "ci95": [
+    0.29099058252040755,
+    0.30165829543485834
+   ]
+  }
+ },
+ "nonadjacent_incl": {
+  "x_genes_sample": 109698,
+  "y_genes_sample": 59409,
+  "involved_genes_sample": 138987,
+  "x_frac": {
+   "est": 0.30993301143410906,
+   "ci95": [
+    0.3033600073574431,
+    0.316606831431976
+   ]
+  },
+  "y_frac": {
+   "est": 0.16785000889978838,
+   "ci95": [
+    0.1632038042153744,
+    0.17228611077679828
+   ]
+  },
+  "involved_frac": {
+   "est": 0.392684091416366,
+   "ci95": [
+    0.3857437125532669,
+    0.39967282661180564
+   ]
+  }
+ },
+ "nonadjacent_only": {
+  "x_genes_sample": 109094,
+  "y_genes_sample": 55628,
+  "involved_genes_sample": 136845,
+  "x_frac": {
+   "est": 0.30822651232832593,
+   "ci95": [
+    0.30155671338406387,
+    0.3149121363425301
+   ]
+  },
+  "y_frac": {
+   "est": 0.15716743751077156,
+   "ci95": [
+    0.15288414602356876,
+    0.16129170012465766
+   ]
+  },
+  "involved_frac": {
+   "est": 0.3866322353160555,
+   "ci95": [
+    0.3796511266789983,
+    0.39363975115361827
+   ]
+  }
+ },
+ "sample_genes": 353941,
+ "sample_genomes": 356,
+ "excess_vs_nonadjacent_incl": {
+  "est": -0.09633243958738885,
+  "ci95": [
+   -0.10018440459837034,
+   -0.09262902496713137
+  ]
+ },
+ "excess_vs_nonadjacent_only": {
+  "est": -0.09028058348707836,
+  "ci95": [
+   -0.09419265925377139,
+   -0.08648846747457152
+  ]
+ },
+ "shuffle": [
+  {
+   "seed": 17,
+   "x_genes_sample": 13500,
+   "y_genes_sample": 1033,
+   "involved_genes_sample": 14444,
+   "involved_frac": 0.04080906139723852,
+   "groups_adjacent_x": 26494,
+   "groups_adjacent_y": 23611,
+   "collinear_frac_x": 0.3659319091114969
+  },
+  {
+   "seed": 18,
+   "x_genes_sample": 15385,
+   "y_genes_sample": 1095,
+   "involved_genes_sample": 16354,
+   "involved_frac": 0.04620544101983099,
+   "groups_adjacent_x": 29037,
+   "groups_adjacent_y": 21570,
+   "collinear_frac_x": 0.33402210972207874
+  },
+  {
+   "seed": 19,
+   "x_genes_sample": 14586,
+   "y_genes_sample": 992,
+   "involved_genes_sample": 15481,
+   "involved_frac": 0.043738928239452336,
+   "groups_adjacent_x": 27145,
+   "groups_adjacent_y": 23471,
+   "collinear_frac_x": 0.3115859274267821
+  }
+ ],
+ "excess_vs_shuffle": {
+  "est": 0.2527671749434699,
+  "ci95": [
+   0.2482471474346967,
+   0.25728677817368417
+  ]
+ },
+ "groups_adjacent_x": 1370343,
+ "groups_adjacent_y": 1048348,
+ "groups_nonadjacent_x": 2646516,
+ "adjacent_over_shuffle_groups_x": 49.724575451158735,
+ "adjacent_best_pair_x_side": {
+  "groups": 1226070,
+  "collinear_frac": 0.9133018506284307,
+  "dpos_counts": {
+   "1": 1125204,
+   "2": 76221,
+   "3": 24645
+  },
+  "y1_y2_same_token_frac": 0.07008327420130987
+ },
+ "x_side_events_sample": 1285095,
+ "x_side_events_per_composite_gene_median": 4.0,
+ "truncation": {
+  "query_uids_hits_ge_0.8_maxseqs": 3998,
+  "sample_genes_affected": 3416,
+  "x_adj_rate_trunc": 0.8726580796252927,
+  "x_adj_rate_not_trunc": 0.24482704514656586
+ }
+}

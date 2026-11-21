@@ -1,0 +1,29 @@
+{
+ "threads": 24,
+ "timing": {
+  "lists": 25.4,
+  "edges": 111.5,
+  "louvain": 18.0,
+  "null": 39.4
+ },
+ "directed_pairs": 297232028,
+ "reciprocal_pairs": 140051230,
+ "edges_v2": 6371715,
+ "edges_sparsified": 519788,
+ "selected": "g0.5",
+ "selection": "FAILURE: no gamma met all bars on odd loci; most bars met",
+ "gene_links_selected": 48697451,
+ "null_directed_pairs": 74660112,
+ "null_reciprocal_pairs": 32205676,
+ "null_edges_v2": 0,
+ "null_stats_comp": {
+  "families": 0,
+  "loci_in_families": 0,
+  "families_ge3_groups": 0,
+  "families_ge5_groups": 0,
+  "families_ge10_groups": 0,
+  "max_groups": 0,
+  "max_loci": 0
+ },
+ "seconds": 209.5
+}

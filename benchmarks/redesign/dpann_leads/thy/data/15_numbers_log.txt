@@ -1,0 +1,12 @@
+Thy1 genes 32 with any weak hit 30 | T1 22 full E range 1.15e-14 3.92e-06 bits range 13.19 46.91 | model cov median (T1) 0.78 range 0.5 0.94 | seq cov median 0.53 | hits in both halves (len>=420) 23 of 26 | hyd median 0.3645 range 0.328 0.405
+Thymidylat_synt genes 48 with any weak hit 32 | T1 19 full E range 1.03e-07 5.49e-06 bits range 11.99 24.66 | model cov median (T1) 0.36 range 0.12 0.55 | seq cov median 0.33 | hits in both halves (len>=420) 0 of 1 | hyd median 0.341 range 0.314 0.406
+long lead genes with N-half S88+R90 and C-half R78+R174: 26 / 26
+{'N_S88': 26, 'N_R90': 26, 'N_H53': 25, 'N_R147': 13, 'C_R78': 26, 'C_R174': 26, 'C_H79': 20, 'composite_core': 26}
+annotated two-domain DPANN members with the same composite set: 59 / 60
+annotated two-domain: N half lacks both R78 and R174: 55 / 60 ; C half lacks both S88 and R90: 43 / 60
+annotated one-domain with all of S88 R90 R78 R174: 49 / 60
+Thy1 genomes by order (lead genomes / order total): {'o__Pacearchaeales': '19/487', 'o__Woesearchaeales': '6/704', 'o__SCGC-AAA011-G17': '3/206', 'o__JAADDC01': '1/13', 'o__CG10238-14': '1/116', 'o__Micrarchaeales': '1/826'}
+Thy1 by phylum: {'p__Nanobdellota': '28/1738', 'p__Iainarchaeota': '1/185', 'p__Aenigmatarchaeota': '1/315', 'p__Micrarchaeota': '1/1146'}
+Thymidylat_synt genomes by order (lead genomes / order total): {'o__Pacearchaeales': '37/487', 'o__SCGC-AAA011-G17': '8/206', 'o__Woesearchaeales': '1/704', 'o__QMZP01': '1/62', 'o__Micrarchaeales': '1/826'}
+Thymidylat_synt by phylum: {'p__Nanobdellota': '46/1738', 'p__Aenigmatarchaeota': '1/315', 'p__Micrarchaeota': '1/1146'}
+unlabeled, unannotated members of lead-1 permissive families outside the lead set: 14 | in genomes with no other TS: 8 | orders {'o__Pacearchaeales': 8, 'o__Woesearchaeales': 4, 'o__Micrarchaeales': 2} | lengths [559, 563, 467, 234, 562, 560, 187, 568, 454, 560, 217, 467, 567, 467]

@@ -1,0 +1,54 @@
+{
+ "dataset": "dpann",
+ "reading": "union",
+ "loci_reading": "stored",
+ "strata": {
+  "Archaea": {
+   "runs": 1686,
+   "run_len_median": 24.0,
+   "ext_len_median": 26.0,
+   "added_left_median": 0.0,
+   "added_right_median": 0.0,
+   "ext_equals_run": 358,
+   "Z": {
+    "std_resolved": 1542,
+    "std_anyfit": 1575,
+    "cl_recovered": 1672,
+    "cl_resolved": 1491,
+    "cl_anyfit": 1537,
+    "cl_chance": 0.04405940594059406,
+    "cl_chance_windows": 4040,
+    "std_chance": 0.04552661381653454,
+    "std_chance_windows": 4415,
+    "gained": 33,
+    "lost": 84
+   },
+   "WA": {
+    "std_resolved": 1594,
+    "std_anyfit": 1631,
+    "cl_recovered": 1683,
+    "cl_resolved": 1522,
+    "cl_anyfit": 1572,
+    "cl_chance": 0.04900990099009901,
+    "cl_chance_windows": 4040,
+    "std_chance": 0.05050962627406568,
+    "std_chance_windows": 4415,
+    "gained": 22,
+    "lost": 94
+   },
+   "DH": {
+    "std_resolved": 1512,
+    "std_anyfit": 1590,
+    "cl_recovered": 1684,
+    "cl_resolved": 1443,
+    "cl_anyfit": 1598,
+    "cl_chance": 0.07004950495049506,
+    "cl_chance_windows": 4040,
+    "std_chance": 0.0622876557191393,
+    "std_chance_windows": 4415,
+    "gained": 42,
+    "lost": 111
+   }
+  }
+ }
+}

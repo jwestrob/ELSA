@@ -1,0 +1,19 @@
+{"name": "r2sel", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "none", "f": 0.5, "keep_per": true, "diag": true, "save_per": true, "check_against": {"R1": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__R1.parquet", "C": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__C.parquet", "H": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__H.parquet", "DH": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/softrec/r2/scores/all/selected__rw1000_e50__l2000__0.3__DH.parquet"}}
+{"name": "tokDH_repro", "land": "tok", "lab": "tokmod:0.3", "f": 0.5, "diag": true, "check_against": {"R1": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/boundary/scores/rescue3/R1_conserved2.parquet", "C": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/boundary/scores/rescue3/C_res0.3.parquet", "H": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/boundary/scores/rescue3/H_res0.3_f0.5.parquet", "DH": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/boundary/scores/rescue3/DH_coreH_res0.3_f0.5.parquet"}}
+{"name": "tokor", "land": "tokor", "lab": "tokmod:0.3", "f": 0.5, "diag": true, "save_per": true}
+{"name": "L3_q0.99m1x", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.99m1x", "f": 0.5}
+{"name": "L3_q0.99m1b", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.99m1b", "f": 0.5}
+{"name": "L3_q0.99m2x", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.99m2x", "f": 0.5}
+{"name": "L3_q0.99m2b", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.99m2b", "f": 0.5}
+{"name": "L3_q0.995m1x", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.995m1x", "f": 0.5}
+{"name": "L3_q0.995m1b", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.995m1b", "f": 0.5}
+{"name": "L3_q0.995m2x", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.995m2x", "f": 0.5}
+{"name": "L3_q0.995m2b", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.995m2b", "f": 0.5}
+{"name": "L3_q0.999m1x", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.999m1x", "f": 0.5}
+{"name": "L3_q0.999m1b", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.999m1b", "f": 0.5}
+{"name": "L3_q0.999m2x", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.999m2x", "f": 0.5}
+{"name": "L3_q0.999m2b", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.999m2b", "f": 0.5}
+{"name": "L3_q0.9999m1x", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.9999m1x", "f": 0.5}
+{"name": "L3_q0.9999m1b", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.9999m1b", "f": 0.5}
+{"name": "L3_q0.9999m2x", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.9999m2x", "f": 0.5}
+{"name": "L3_q0.9999m2b", "land": "rw1000_e50", "lab": "vf:rw1000_e50:l2000:0.3", "crit": "q0.9999m2b", "f": 0.5}

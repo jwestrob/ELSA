@@ -1,0 +1,180 @@
+GENOME_CENTER: REMOVING THE GENOME COMPONENT BEFORE zca10 WHITENING (DPANN development collection, 2026-11-21)
+=====================================================================================================================
+Outside-review proposal 1, tested on REPORT3's search benchmark (5-fold genome CV, 2,447 DefenseFinder queries in 1,384
+genomes; same stored ESM++ small vectors, folds, queries and relevance as REPORT3's M1z). Predeclaration predeclared.json,
+sha256 8aa2763cb7e1d359b6e3ff08a9e9a508f5ea86c8a34f68825ae71f7e655d088a, written 2026-11-20 23:29 UTC before any arm was
+computed. Paired genome bootstrap (2,000 draws, seed 17) as REPORT3. Every arm is fitted on all 3,585,303 genes, as
+REPORT3 fits zca10.
+
+BOTTOM LINE
+| Arm | Transform before zca10                                | Held-out AP | AP - Z [95%]               | Criterion met |
+| Z   | none (zca10, recomputed; REPORT3 0.79611)             | 0.7961      | reference                  |               |
+| G1  | subtract own genome mean (alpha 1)                    | 0.7960      | -0.0001 [-0.0011, +0.0011] | no            |
+| G05 | subtract half the own genome mean (alpha 0.5)         | 0.7964      | +0.0003 [-0.0000, +0.0007] | no            |
+| B8  | project out top 8 PCs of the genome-mean matrix       | 0.8065      | +0.0104 [+0.0093, +0.0116] | yes           |
+| B32 | project out top 32 PCs of the genome-mean matrix      | 0.8079      | +0.0118 [+0.0104, +0.0134] | yes           |
+Criterion (predeclared): interval above 0 AND mean >= +0.010. Gate passed: Z reproduces REPORT3 (0.796109 vs 0.796108;
+every query within 0.0009; 66.7% identical).
+
+1. The proposal as stated (subtract each genome's own mean, then whiten) is a NEGATIVE result. G1 removes the genome
+   means almost completely (0.034% of total variance on genome means afterwards; 0.099% expected by chance) and AP
+   stays at Z's value (-0.0001). G05: +0.0003. Removing per-genome offsets buys nothing on this benchmark.
+2. Projecting out the leading principal directions of the genome-mean matrix MEETS the criterion: B8 +0.0104, B32
+   +0.0118. The gain holds in every fold; the mean gain is 9.5x (B8) and 6.6x (B32) the fold-to-fold SD: per-fold B8 +0.0115 /
+   +0.0089 / +0.0101 / +0.0103 / +0.0113 (SD 0.0011, range 0.0026); B32 +0.0129 / +0.0100 / +0.0103 / +0.0118 / +0.0142
+   (SD 0.0018, range 0.0042). Every per-fold interval lies above 0. B32 reaches +0.0100 or more in all five folds; B8
+   falls to +0.0089 [+0.0074, +0.0106] in fold 1. Every arm chose W + 8, tau 3 in every fold, so the fold values differ
+   only by query set. Queries gaining / losing: B8 73% / 21%, B32 66% / 28%. Even and odd halves agree (B8 +0.0100 /
+   +0.0108; B32 +0.0113 / +0.0123); >= 3-member queries: B8 +0.0086, B32 +0.0170.
+3. The gain generalizes to TXSScan (+0.025 / +0.030 AP) and leaves CRISPR-Cas where it was: CRISPRCasTyper AP +0.003 /
+   +0.004, recall at E <= 0.01 unchanged (0.066 -> 0.067), wrong-subtype hits per query 17.38 -> 17.61 / 17.83
+   (+0.23 [-0.12, +0.54] / +0.46 [+0.09, +0.82]). The review's CRISPR-Cas argument finds no support here.
+4. Reading (interpretation, UNVERIFIED): the gain comes from deleting a few global directions shared by all genes, and
+   per-genome offsets are a different thing. The top 8 genome-mean directions carry 94.2% of the between-genome
+   variance (top 32: 99.3%) and coincide with the dominant directions of gene-level variance: projecting them out
+   lowers the leading covariance eigenvalue from 0.128 to 0.026 (B32: 0.0087) and raises the participation ratio
+   from 3.9 to 16.8 (B32: 81.0). G1 widens top-1,000 genome-group breadth more than B8 (+5.1 vs +3.1 groups) with no AP
+   gain, so list breadth is not what drives AP.
+5. What the top between-genome directions track (protein length, composition, genome GC, completeness) is outside my
+   tables; only the spectrum is known (PC1-5: 42.8%, 18.5%, 15.4%, 7.6%, 5.4% of between-genome variance).
+6. Cost of one arm through the bond tree and the seven DPANN bars: about 19 A5000 GPU-minutes (z table 12 min measured,
+   exact kNN ~7 min scaled) plus about 27 min on one 64-CPU node, about 1 h wall; details in section 6. B8 and B32 are
+   global linear maps, so the existing unique-sequence pipeline takes them unchanged.
+
+=====================================================================================================================
+1. PRIMARY READOUT (results/cv.json, results/cv_heldout.parquet)
+| Arm | AP     | strict AP | AP - Z all                 | even                       | odd                        | >= 3 members (633)         |
+| Z   | 0.7961 | 0.5053    |                            |                            |                            | Z 0.8168                   |
+| G1  | 0.7960 | 0.5047    | -0.0001 [-0.0011, +0.0011] | -0.0003 [-0.0014, +0.0008] | +0.0001 [-0.0016, +0.0021] | +0.0038 [+0.0030, +0.0047] |
+| G05 | 0.7964 | 0.5059    | +0.0003 [-0.0000, +0.0007] | +0.0002 [-0.0003, +0.0006] | +0.0005 [-0.0001, +0.0011] | +0.0017 [+0.0012, +0.0021] |
+| B8  | 0.8065 | 0.5126    | +0.0104 [+0.0093, +0.0116] | +0.0100 [+0.0089, +0.0111] | +0.0108 [+0.0091, +0.0129] | +0.0086 [+0.0076, +0.0096] |
+| B32 | 0.8079 | 0.5123    | +0.0118 [+0.0104, +0.0134] | +0.0113 [+0.0095, +0.0132] | +0.0123 [+0.0101, +0.0148] | +0.0170 [+0.0154, +0.0187] |
+Per fold (AP - Z; folds of 478 / 485 / 547 / 455 / 482 queries; Z AP 0.784 / 0.810 / 0.791 / 0.804 / 0.792):
+  G1  +0.0002 / -0.0013 / -0.0008 / -0.0000 / +0.0015 (SD 0.0011)
+  G05 +0.0005 / -0.0004 / +0.0002 / +0.0005 / +0.0008 (SD 0.0005)
+  B8  +0.0115 [+0.0095, +0.0137] / +0.0089 [+0.0074, +0.0106] / +0.0101 [+0.0082, +0.0120] / +0.0103 [+0.0084, +0.0123] /
+      +0.0113 [+0.0081, +0.0160] (SD 0.0011)
+  B32 +0.0129 [+0.0098, +0.0164] / +0.0100 [+0.0078, +0.0123] / +0.0103 [+0.0075, +0.0132] / +0.0118 [+0.0091, +0.0148] /
+      +0.0142 [+0.0102, +0.0193] (SD 0.0018)
+Strict AP: B8 +0.007, B32 +0.007 over Z (0.5126 / 0.5123 vs 0.5053).
+POST HOC (not predeclared): B32 - B8 = +0.0014 [+0.0007, +0.0021] overall; +0.0084 [+0.0076, +0.0093] on >= 3-member
+queries, which implies about -0.001 on the 1,814 two-member queries (no interval computed).
+
+=====================================================================================================================
+2. S1: OTHER CALLERS AND HIT RATES (frozen configuration = odd-genome DefenseFinder choice, W + 8 / tau 3 for every arm;
+even genomes, queries with n_rel > 0)
+| Readout                                   | Z      | G1     | G05    | B8     | B32    | B8 - Z                 | B32 - Z                |
+| DefenseFinder AP (1,247; scan)            | 0.792  | 0.792  | 0.792  | 0.802  | 0.803  | +0.010 [+0.009, +0.011]| +0.011 [+0.010, +0.013]|
+| TXSScan AP (404; scan)                    | 0.868  | 0.863  | 0.871  | 0.893  | 0.898  | +0.025 [+0.022, +0.029]| +0.030 [+0.026, +0.035]|
+| TXSScan strict AP                         | 0.187  | 0.189  | 0.188  | 0.192  | 0.195  | +0.006 [+0.005, +0.007]| +0.009 [+0.008, +0.010]|
+| CRISPRCasTyper AP (1,893; 200-rep null)   | 0.135  | 0.136  | 0.136  | 0.139  | 0.139  | +0.003 [+0.003, +0.004]| +0.004 [+0.003, +0.004]|
+| CRISPRCasTyper strict AP                  | 0.079  | 0.080  | 0.080  | 0.081  | 0.081  | +0.001 [+0.001, +0.002]| +0.001 [+0.001, +0.002]|
+| CRISPRCasTyper recall E <= 0.01           | 0.066  | 0.066  | 0.066  | 0.067  | 0.067  | +0.000 [-0.000, +0.001]| +0.000 [-0.001, +0.001]|
+| CRISPRCasTyper wrong-subtype / query E<=.01| 17.38 | 16.77  | 16.86  | 17.61  | 17.83  | +0.23 [-0.12, +0.54]   | +0.46 [+0.09, +0.82]   |
+| CRISPRCasTyper unlabeled / query E<=.01  | 1.78   | 1.08   | 1.06   | 1.08   | 1.02   | -0.70 [-1.62, -0.07]   | -0.76 [-1.71, -0.12]   |
+G1 / G05 on TXSScan: -0.005 [-0.008, -0.001] / +0.003 [+0.002, +0.005]; on CRISPRCasTyper wrong-subtype hits -0.61
+[-0.89, -0.36] / -0.52 [-0.82, -0.28] per query (both lower the wrong-subtype rate slightly with no AP change).
+Z's CRISPRCasTyper null runs equal REPORT3's M1z runs: recall, wrong-subtype and unlabeled counts identical on all
+1,893 queries; mean AP 0.135252 vs 0.135252 (largest per-query difference 0.0005).
+
+=====================================================================================================================
+3. S2: SHARE OF VARIANCE ON GENOME MEANS (all 3,585,303 genes; residual = family-centered leave-one-out residual,
+rescue3 families with >= 3 distinct sequences, 3,181,891 genes in 75,890 families)
+| Stage                                  | Total share | Residual share | Expected (total / residual) |
+| unit-L2 input (all arms)               | 5.473%      | 11.919%        | 0.099% / 0.112%             |
+| Z final                                | 1.540%      | 2.179%         |                             |
+| G1 after removal / final               | 0.092% / 0.034% | 1.927% / 0.375% |                         |
+| G05 after removal / final              | 1.703% / 0.493% | 4.566% / 0.868% |                         |
+| B8 after removal / final               | 0.896% / 0.584% | 2.167% / 0.917% |                         |
+| B32 after removal / final              | 0.278% / 0.257% | 0.648% / 0.409% |                         |
+signals' own definition (family sums over distinct sequences) on Z: 2.180%, reproducing signals/REPORT.txt's 2.18%; on
+the input vectors: 12.003%. zca10 itself already cuts the residual share from 11.9% to 2.2%. The arm with the
+smallest final genome share (G1) gains nothing; B8 keeps a larger genome share than G1 and gains +0.0104. The share
+of variance on genome means does not predict search AP across these arms.
+Genome-mean spectrum (centered, genomes weighted equally): PC1-10 hold 42.8, 18.5, 15.4, 7.6, 5.4, 2.1, 1.3, 0.9, 0.8,
+0.6% of between-genome variance. Gene-level covariance before whitening: leading eigenvalue 0.128 (Z), 0.026 (B8),
+0.0087 (B32); participation ratio 3.9, 16.8, 81.0.
+
+=====================================================================================================================
+4. S3: NEIGHBOR COMPOSITION FOR CURATED-LOCUS GENES (18,414 member genes; 16,022 with same-component genes elsewhere)
+List definitions (predeclared): S3a = the frozen PRIMARY list itself, recomputed per arm (z >= 10.6, one best match
+per genome, own genome group excluded); S3b = top 1,000 genes outside the own genome group (the configuration's K1000).
+Same-component genes = genes outside the own group in an instance of the same caller and label carrying the gene's
+rescue3 family. Means over genes; differences paired by gene, genome bootstrap.
+| Readout (all genes)                 | Z     | G1    | G05   | B8    | B32   | B8 - Z                 | B32 - Z                |
+| S3a list length (genomes)           | 797.8 | 822.9 | 807.0 | 937.6 | 971.8 | +139.8 [+135.5, +144.2]| +174.0 [+168.7, +179.5]|
+| S3a distinct genome groups          | 207.2 | 211.8 | 208.9 | 237.3 | 244.2 | +30.1 [+29.5, +30.8]   | +37.0 [+36.2, +37.9]   |
+| S3a same-component recall (genomes) | 0.730 | 0.751 | 0.738 | 0.796 | 0.816 | +0.065 [+0.063, +0.068]| +0.086 [+0.083, +0.089]|
+| S3b distinct genome groups          | 231.9 | 237.0 | 234.8 | 235.0 | 236.5 | +3.1 [+2.8, +3.3]      | +4.6 [+4.2, +4.9]      |
+| S3b same-component recall           | 0.768 | 0.769 | 0.769 | 0.775 | 0.778 | +0.007 [+0.006, +0.008]| +0.010 [+0.009, +0.011]|
+By caller (S3a recall / S3b recall, Z -> B8 -> B32): DefenseFinder 0.760 -> 0.822 -> 0.840 / 0.890 -> 0.902 -> 0.906;
+TXSScan 0.652 -> 0.726 -> 0.751 / 0.600 -> 0.607 -> 0.611; CRISPRCasTyper 0.740 -> 0.805 -> 0.826 / 0.751 -> 0.753 ->
+0.755. G1: S3a recall +0.021, S3b recall +0.001, S3b breadth +5.1 groups.
+At fixed depth (S3b) the B arms add little: +0.007 / +0.010 recall and +3 / +5 of ~232 groups. The S3a gains are
+larger because the same z cut admits 18-22% more genomes once the shared directions are gone; the cut 10.6 was set
+on zca10 vectors, so part of the S3a recall gain is a looser effective cut. List precision was not a readout.
+
+=====================================================================================================================
+5. S4: CAS GENES (9,032 CRISPRCasTyper member genes whose rescue3 family has a gene outside the own group; S3b lists)
+| Readout                                      | Z     | G1    | G05   | B8    | B32   | B8 - Z               | B32 - Z              |
+| own-family best rank, median (1-based)       | 1     | 1     | 1     | 1     | 1     |                      |                      |
+| own-family best rank, mean (1,001 = absent)  | 17.5  | 17.8  | 17.8  | 15.8  | 15.6  | -1.7 [-2.3, -1.2]    | -1.9 [-2.7, -1.3]    |
+| q90 / share > 10 / share absent              | 3 / 0.060 / 0.010 | 3 / 0.060 / 0.011 | 3 / 0.061 / 0.010 | 3 / 0.058 / 0.010 | 3 / 0.056 / 0.010 | | |
+| capped family share in top 1,000             | 0.861 | 0.863 | 0.862 | 0.870 | 0.873 | +0.009 [+0.008, +0.010] | +0.013 [+0.011, +0.014] |
+| other-family Cas genes in top 1,000 (mean)   | 264.7 | 264.3 | 264.8 | 275.0 | 277.7 | +10.3 [+9.3, +11.4]  | +13.0 [+11.6, +14.4] |
+At the gene level a Cas gene's own family is already its first neighbor at the median in every arm. The brief's
+reference (median 107) is the pair-level statistic of softrec/REPORT_cas.txt (best family-consistent supporting pair,
+lost pairs only, genus-excluded lists); its gene-level analog there was also position 0. The B arms raise the count
+of other-family Cas genes in Cas lists, the opposite of the review's expectation.
+
+=====================================================================================================================
+6. COST OF THE LIST REBUILD AND THE SEVEN DPANN BARS FOR ONE ARM (estimate; nothing was run)
+B8 and B32 are one global linear projection plus renormalization, applied before zca10, so they act per unique
+sequence: the stored-vector pipeline (2,547,528 unique sequences) takes the new vectors as a drop-in replacement of
+head/data/zca10_f16__uid.npy. (G1 / G05 would have needed gene-level vectors.)
+| Step                                                  | Resource                   | Time            | Source                           |
+| new zca10 vectors (projection, refit, float16)        | 24 CPUs                    | ~2 min          | this run: 50-76 s at gene level  |
+| per-genome z table (calib gpu_table.py)               | 1 RTX A5000                | 12 min          | calib/REPORT.txt (DPANN, measured)|
+| kNN k 2,000 (masks K1000, kappa_var_knn50)            | 1 RTX A5000, exact         | ~7 min          | 18 min 22 s for 4.23 M sequences (long_loci/REPORT3), scaled by (2.55 / 4.23)^2 |
+|   or the frozen route (CPU HNSW, as stored)           | 24 CPUs                    | 2 h 14 min      | softrec/REPORT.txt round 1       |
+| exclusion masks + kNN cohesion                        | 64 CPUs                    | ~4-6 min        | 5 min 32 s on 4.23 M sequences   |
+| Z-arm lists, 4 round-0 passes, tau ladder, L4b+ tree, node test | 64 CPUs          | ~21 min         | long_loci/REPORT2.txt (DPANN Z arm, incl. FZ) |
+| even scoring against token DH (seven bars)            | 24 CPUs                    | ~1 min          | long_loci/REPORT2.txt            |
+Total: about 19 GPU-minutes on one A5000 plus about 27 min on one 64-CPU node (about 75 min in 24-CPU units), roughly
+1 h of wall time plus the queue for the GPU slot; without a GPU, add 2 h 14 min of 24-CPU HNSW instead of the exact
+kNN. Two choices sit inside the rebuild: the frozen z cut 10.6 (set on zca10 vectors; at that cut the B lists are 18-22%
+longer, section 4) and exact against HNSW kNN (the frozen DPANN run used the stored HNSW lists). The standing rule in
+docs/redesign/NOTEBOOK.md applies: a method change from this workstream needs a fourth untouched set before any claim.
+
+=====================================================================================================================
+7. WHAT DIFFERS FROM THE BRIEF
+- List depth k: the frozen PRIMARY bond tree has no fixed depth (z >= 10.6, one best match per genome, own group
+  excluded; mean ~800 genomes per curated gene on Z). S3a recomputes that list exactly per arm; S3b uses the
+  configuration's fixed depth 1,000.
+- Same-component genes: the gold tables carry no per-gene component names, so (caller, label, rescue3 family) stands
+  in for the component.
+- Cas reference 107 is a pair-level statistic; the gene-level best rank asked for sits at 1 in every arm (section 5).
+- TXSScan numbers come from the scan (AP needs no null; wrong hits are 0 by construction), as predeclared.
+- Z lists against the stored head lists: 0 of 18,414 rows identical, overlap of differing rows >= 0.99935 (median 1.0),
+  largest s difference 1.10 (= log 3, near-ties at the top of some rows), from float16 flips after recomputation; the
+  predeclared AP gate passed (above), and Z's CRISPRCasTyper null runs equal REPORT3's.
+- The first smoke job (119447) stalled for 12 min on one core in kernel page reclaim (node: 9 GB free, 660 GB page
+  cache) and was cancelled at 17 min 37 s; the code was rewritten with preallocated buffers, in-place quickselect and
+  numba kernels, each checked against its reference (float16 rounding bit-identical to numpy; list kernel identical to
+  locus_search.topk_rows, also asserted on 4 rows inside every list job). No predeclared definition changed.
+- B8 / B32 directions are fitted on all DPANN genomes, like zca10 (REPORT3's odd-genome zca10 fit changed AP by
+  +0.0002); an odd-genome fit of the B directions was not run.
+- One adjacent control was not run: projecting out the top k principal directions of the gene-level covariance
+  (genome-free) would separate "genome-mean directions" from "dominant variance directions".
+
+=====================================================================================================================
+JOBS AND FILES
+Jobs (24 CPUs each, all COMPLETED except the cancelled first smoke): 119447 smoke (cancelled, 17:37), 119484 smoke
+(2:52), 119494 lists Z+G1 (13:51), 119495 lists G05+B8 (15:00), 119496 lists B32 (9:14), 119497 grid + CV + gate +
+frozen scans (7:11), 119498-119500 CRISPRCasTyper null runs (20:37, 22:13, 20:34), 119501 final (0:13). Total 129 min
+of 24-CPU job time of the 3 h budget; no GPU. Logs $RD/genome_center/logs/gc_<jobid>.log.
+Local benchmarks/redesign/genome_center/: predeclared.json, NOTEBOOK.txt, REPORT.txt, gc.py (all stages), run_gc.sbatch,
+submit_chain.sh, results/ (summary.json, tables.txt, cv.json, gate.json, selection.json, cv_heldout.parquet,
+frozen_scan.parquet, nullx_{0,1,2}.parquet, smoke.json, STATUS, lists/info_<arm>.json).
+Biotite $RD/genome_center/: code/, out/, results/, STATUS, aux_den.npz, lists/<arm>/{gids,idx,s}.npy + readouts.npz +
+info.json (14 GB; the idx / s arrays are 2.9 GB per arm and deletable once the decision is made).

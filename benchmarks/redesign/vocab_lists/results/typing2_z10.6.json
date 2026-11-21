@@ -1,0 +1,121 @@
+{
+ "arm": "z10.6",
+ "top_words": 516845,
+ "list_classes": {
+  "top_words": 516845,
+  "directed_edges": 109022556,
+  "mutual_edges": 15285909,
+  "words_with_mutual_edge": 367978,
+  "classes": 169796,
+  "classes_ge2": 20929,
+  "class_size_q50_q90_q99_max": [
+   1.0,
+   2.0,
+   23.0,
+   2785.0
+  ],
+  "components": 169590,
+  "seconds": 190.6
+ },
+ "graph_edges": 5684014,
+ "gold_on_words": {
+  "DefenseFinder|odd": 1129,
+  "DefenseFinder|even": 1176,
+  "TXSScan|odd": 375,
+  "TXSScan|even": 378,
+  "CRISPRCasTyper|odd": 1506,
+  "CRISPRCasTyper|even": 1472
+ },
+ "grid": {
+  "0.5": {
+   "clusters": 263,
+   "odd_DF_ami": 0.47757814364536777
+  },
+  "1.0": {
+   "clusters": 371,
+   "odd_DF_ami": 0.5044280476233509
+  },
+  "2.0": {
+   "clusters": 503,
+   "odd_DF_ami": 0.6551399007219181
+  },
+  "5.0": {
+   "clusters": 771,
+   "odd_DF_ami": 0.6845247614193162
+  },
+  "10.0": {
+   "clusters": 1109,
+   "odd_DF_ami": 0.6874352079084605
+  },
+  "20.0": {
+   "clusters": 1578,
+   "odd_DF_ami": 0.681046105260603
+  },
+  "50.0": {
+   "clusters": 2566,
+   "odd_DF_ami": 0.6518730824846353
+  }
+ },
+ "vector_resolution_odd": 10.0,
+ "DefenseFinder": {
+  "list_classes": {
+   "n": 1176,
+   "n_true": 40,
+   "n_pred": 428,
+   "ami": 0.4374901231181915,
+   "homogeneity": 0.9747651382879077,
+   "completeness": 0.43315727606652255
+  },
+  "vector_classes": {
+   "n": 1176,
+   "n_true": 40,
+   "n_pred": 57,
+   "ami": 0.678719264844776,
+   "homogeneity": 0.7565861222551893,
+   "completeness": 0.6724684743183191
+  },
+  "nn_word_vector": {
+   "n": 1176,
+   "accuracy": 0.9540816326530612
+  },
+  "majority_list_classes": {
+   "n": 1176,
+   "accuracy": 0.7329931972789115
+  },
+  "majority_vector_classes": {
+   "n": 1176,
+   "accuracy": 0.8299319727891157
+  }
+ },
+ "CRISPRCasTyper": {
+  "list_classes": {
+   "n": 1472,
+   "n_true": 31,
+   "n_pred": 773,
+   "ami": 0.15949719884930375,
+   "homogeneity": 0.8445567091494753,
+   "completeness": 0.287917203878096
+  },
+  "vector_classes": {
+   "n": 1472,
+   "n_true": 31,
+   "n_pred": 284,
+   "ami": 0.22227907963798313,
+   "homogeneity": 0.6285136323326196,
+   "completeness": 0.27607652670096705
+  },
+  "nn_word_vector": {
+   "n": 1472,
+   "accuracy": 0.6019021739130435
+  },
+  "majority_list_classes": {
+   "n": 1472,
+   "accuracy": 0.35190217391304346
+  },
+  "majority_vector_classes": {
+   "n": 1472,
+   "accuracy": 0.4735054347826087
+  }
+ },
+ "seconds": 599.4
+}

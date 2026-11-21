@@ -1,0 +1,65 @@
+test genes (unique) 2798: any profile hit (E<=10, Z=search) 1247 (0.446); full GA 0 (0.000); GA + i-Evalue + coverage 0 (0.000)
+  neg_other: n 2798; any 0.000; GA 0.000; all 0.000
+  neg_same: n 253; any 0.123; GA 0.000; all 0.000
+  pos: n 1875; any 0.995; GA 0.995; all 0.890
+
+per (model, component, label) for test events; controls matched by label:
+               model                              component    label      label_name     n  any_hit   ga  all  med_bits    GA1  med_len  ns_n  ns_any  ns_ga  no_n  no_any  no_ga
+2               AbiE                        AbiEii__AbiEi_1  PF13338         AbiEi_4  2192    0.493  0.0  0.0    18.780   25.0    209.0  14.0   0.000    0.0  2214     0.0    0.0
+137           SanaTA                          SanaTA__SanaA  PF13338         AbiEi_4   840    0.036  0.0  0.0    17.965   20.0    210.0  14.0   0.000    0.0  2214     0.0    0.0
+0               AbiE                        AbiEii__AbiEi_1  PF09407         AbiEi_1   161    0.410  0.0  0.0    18.780   25.0    175.0   3.0   0.333    0.0   161     0.0    0.0
+94             MazEF                            MazEF__MazE  PF04014  MazE_antitoxin    50    0.100  0.0  0.0    16.820   20.0     85.0  50.0   0.100    0.0    50     0.0    0.0
+40           BREX_IV                             BREX__brxP  PF00037            Fer4    32    0.062  0.0  0.0    15.560   20.0    118.0  32.0   0.094    0.0    32     0.0    0.0
+3               AbiE                         AbiEii__AbiEii  PF08843          AbiEii    28    0.714  0.0  0.0    19.595   22.5    243.0  28.0   0.643    0.0    28     0.0    0.0
+119       RM_Type_II            RM_Type_II__Type_II_REase01  PF11463        R-HINP1I    26    0.000  0.0  0.0       NaN    NaN    287.0   NaN     NaN    NaN    26     0.0    0.0
+122       RM_Type_II            RM_Type_II__Type_II_REase01  PF15514            ThaI    26    0.000  0.0  0.0       NaN    NaN    188.5   NaN     NaN    NaN    26     0.0    0.0
+52             CBASS                   CBASS__Cyclase_SMODS  PF01909    NTP_transf_2    24    0.000  0.0  0.0       NaN    NaN    298.0  24.0   0.000    0.0    24     0.0    0.0
+104             PrrC                        RM__Type_I_S_01  PF01420     Methylase_S    24    0.875  0.0  0.0    29.230   60.0    104.0   1.0   1.000    0.0    28     0.0    0.0
+54          CBASS_II                   CBASS__Cyclase_SMODS  PF01909    NTP_transf_2    24    0.000  0.0  0.0       NaN    NaN    298.0  24.0   0.000    0.0    24     0.0    0.0
+11              BREX                             BREX__brxP  PF00037            Fer4    24    0.000  0.0  0.0       NaN    NaN    118.0  32.0   0.094    0.0    32     0.0    0.0
+108        RM_Type_I                        RM__Type_I_S_01  PF01420     Methylase_S    21    0.857  0.0  0.0    29.165   60.0     97.0   1.0   1.000    0.0    28     0.0    0.0
+43           BREX_IV                            BREX__pglZB  PF01663    Phosphodiest    19    0.105  0.0  0.0    15.000   20.0    233.0   4.0   0.000    0.0    19     0.0    0.0
+51           BREX_VI                            BREX__pglZB  PF01663    Phosphodiest    19    0.105  0.0  0.0    15.000   20.0    233.0   4.0   0.000    0.0    19     0.0    0.0
+18              BREX                            BREX__pglZB  PF01663    Phosphodiest    19    0.000  0.0  0.0       NaN    NaN    233.0   4.0   0.000    0.0    19     0.0    0.0
+39          BREX_III                            BREX__pglZB  PF01663    Phosphodiest    19    0.105  0.0  0.0    15.000   20.0    233.0   4.0   0.000    0.0    19     0.0    0.0
+27           BREX_II                            BREX__pglZB  PF01663    Phosphodiest    19    0.105  0.0  0.0    15.000   20.0    233.0   4.0   0.000    0.0    19     0.0    0.0
+21            BREX_I                            BREX__pglZB  PF01663    Phosphodiest    19    0.105  0.0  0.0    15.000   20.0    233.0   4.0   0.000    0.0    19     0.0    0.0
+46            BREX_V                            BREX__pglZB  PF01663    Phosphodiest    19    0.105  0.0  0.0    15.000   20.0    233.0   4.0   0.000    0.0    19     0.0    0.0
+136         RosmerTA              RosmerTA__RmrT_2585209417  PF17963           Big_9    15    0.000  0.0  0.0       NaN    NaN    694.0  14.0   0.000    0.0    15     0.0    0.0
+1               AbiE                        AbiEii__AbiEi_1  PF09952         AbiEi_2    13    0.231  0.0  0.0    16.410   20.1    197.0   8.0   0.250    0.0    13     0.0    0.0
+117       RM_Type_II            RM_Type_II__Type_II_REase01  PF09556       RE_HaeIII    11    0.545  0.0  0.0    14.460   20.0    320.0   NaN     NaN    NaN    11     0.0    0.0
+110       RM_Type_II            RM_Type_II__Type_II_REase01  PF01844             HNH    11    0.000  0.0  0.0       NaN    NaN    151.0   7.0   0.000    0.0    11     0.0    0.0
+121       RM_Type_II            RM_Type_II__Type_II_REase01  PF13589     HATPase_c_3    10    0.000  0.0  0.0       NaN    NaN    698.0   3.0   0.000    0.0    10     0.0    0.0
+93              MADS                             MADS__mad5  PF01420     Methylase_S     8    0.375  0.0  0.0    47.050   50.0    442.0   1.0   1.000    0.0    28     0.0    0.0
+135         RosmerTA              RosmerTA__RmrT_2585209417  PF05345          He_PIG     8    0.000  0.0  0.0       NaN    NaN    621.0   8.0   0.000    0.0     8     0.0    0.0
+13              BREX                             BREX__brxP  PF13237         Fer4_10     7    0.143  0.0  0.0    13.400   20.0    119.0   3.0   0.000    0.0     7     0.0    0.0
+42           BREX_IV                             BREX__brxP  PF13237         Fer4_10     7    0.143  0.0  0.0    13.400   20.0    119.0   3.0   0.000    0.0     7     0.0    0.0
+66        ISG15-like                       ISG15-like__BilC  PF01398             JAB     6    0.000  0.0  0.0       NaN    NaN    145.0   NaN     NaN    NaN     6     0.0    0.0
+129       Retron_III                  Retron_III__PRTase_WH  PF13412          HTH_24     5    0.000  0.0  0.0       NaN    NaN    163.0   5.0   0.000    0.0     5     0.0    0.0
+99   Mokosh_Type_I_B                  Mokosh_type_I__MkoB_B  PF01022           HTH_5     4    0.000  0.0  0.0       NaN    NaN    120.0   6.0   0.000    0.0     6     0.0    0.0
+98     Mokosh_Type_I                  Mokosh_type_I__MkoB_A  PF01022           HTH_5     4    0.000  0.0  0.0       NaN    NaN    120.0   6.0   0.000    0.0     6     0.0    0.0
+65        ISG15-like                       ISG15-like__BilA  PF02597            ThiS     4    0.000  0.0  0.0       NaN    NaN     64.5   4.0   0.000    0.0     4     0.0    0.0
+101             PrrC                          PrrC__EcoprrI  PF02384        N6_Mtase     4    0.500  0.0  0.0    20.910  150.0     55.5   NaN     NaN    NaN     8     0.0    0.0
+34          BREX_III                            BREX__pglX1  PF02384        N6_Mtase     4    0.250  0.0  0.0    19.590  300.0    267.5   NaN     NaN    NaN     8     0.0    0.0
+105        RM_Type_I                RM__Type_I_MTases_FAM_0  PF02384        N6_Mtase     4    0.500  0.0  0.0    20.910  150.0     55.5   NaN     NaN    NaN     8     0.0    0.0
+128       Retron_III                  Retron_III__PRTase_WH  PF09339        HTH_IclR     4    0.000  0.0  0.0       NaN    NaN    142.0   4.0   0.000    0.0     4     0.0    0.0
+4               AbiL                           AbiL__AbiLii  PF13707            RloB     4    0.000  0.0  0.0       NaN    NaN    172.0   NaN     NaN    NaN     4     0.0    0.0
+107        RM_Type_I  RM__Type_I_REases_FAM_0.einsi_trimmed  PF04313          HSDR_N     4    0.000  0.0  0.0       NaN    NaN     53.5   1.0   0.000    0.0     4     0.0    0.0
+
+positive controls (called members rescored):                                                                 n   ga    all
+test_label                                                                   
+AbiE:AbiEii__AbiEi_1                                          150  1.0  1.000
+AbiE:AbiEii__AbiEii                                           150  1.0  0.967
+RM_Type_III:RM_Type_III__Type_III_REases_FAM_0.einsi_trimmed  150  1.0  0.907
+RM_Type_III:RM_Type_III__Type_III_MTases_FAM_0                150  1.0  0.820
+RM_Type_II:RM_Type_II__Type_II_REase01                        150  1.0  0.907
+RM_Type_II:RM_Type_II__Type_II_MTases_FAM_0                   150  1.0  0.953
+RM_Type_I:RM__Type_I_S_01                                     150  1.0  0.933
+RM_Type_I:RM__Type_I_REases_FAM_0.einsi_trimmed               150  1.0  0.927
+RM_Type_I:RM__Type_I_MTases_FAM_0                             150  1.0  0.973
+ShosTA:ShosTA__ShosA                                          102  1.0  0.892
+ShosTA:ShosTA__ShosT                                          100  1.0  0.910
+MazEF:MazEF__MazF                                              33  1.0  0.970
+MazEF:MazEF__MazE                                              33  1.0  0.970
+AbiL:AbiL__AbiLii                                              29  1.0  0.172
+Kiwa:Kiwa__KwaB                                                24  1.0  1.000

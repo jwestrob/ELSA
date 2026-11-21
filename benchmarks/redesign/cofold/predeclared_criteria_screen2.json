@@ -1,0 +1,58 @@
+{
+ "written_utc": "2026-11-12 06:02 UTC, before any screen-2 fold (including payload verification) and before any triage result was read (triage job 78254 pending)",
+ "scope": "screen 2: dark conserved blocks of 3-6 genes folded as full complexes (pool 'multi') and two-gene blocks with one protein of 700-1,200 aa (pool 'longpair'); work/s2/pool.tsv",
+ "fold_engine": {"api": "Biohub batch", "endpoint": "fold_all_atom", "model": "esmfold2-2026-05", "msa": "none in the screen",
+                 "include_pae": true, "include_pair_chains_iptm": true, "chains": "k chains in gene order A, B, C, ..."},
+ "budget": {"max_items_this_task": 2000, "plan": "screen (cognate + controls + positives) <= 1,100; monomers, MSA step and repeats for hits <= 600; reserve >= 300"},
+
+ "triage_before_folding": {
+  "searches_per_family": [
+   "HHblits (HH-suite 3.1) of the DPANN family alignment (mafft --auto, <= 250 unique members, query = replicate-1 chain, -M first) against UniRef30_2020_06, 2 iterations, E <= 1e-3 inclusion -> enriched A3M",
+   "HHsearch of the enriched A3M and of the DPANN-only alignment against Pfam 39.0 (HH database built with hhmake from the Pfam-A.seed alignments of release 39.0) and PDB100 2021-03-03 (HH-suite)",
+   "hmmsearch Pfam 39.0 (HMMER3 models) against every family member in the triage FASTA: --cut_ga, and -E 0.01 --domE 0.01",
+   "RPS-BLAST against CDD v3.20 (/shared/db/cdd/latest/blast/Cdd), -evalue 1, query plus up to 9 random members (>= 2 instances whenever the family has >= 2 unique sequences); orchestrator's 20 chains merged from cofold/cdd_check",
+   "HHblits UniRef30 hit descriptions: recorded as observations only"
+  ],
+  "unknown_function_entry": "a Pfam, CDD or PDB title matching DUF, UPF, 'unknown function', 'uncharacteri', 'hypothetical', 'conserved in archaea [Function unknown]'",
+  "characterised_hit": "HHsearch probability >= 90% with >= 30 aligned query columns against Pfam or PDB (either query mode); or Pfam GA-threshold hit in >= 2 members (>= 10% of members when the family has > 20); or the same CDD model or the same CDD superfamily (family_superfamily_links) at E <= 0.01 in >= 2 instances; in each case to an entry that is not an unknown-function entry",
+  "unknown_function_hit": "the same thresholds met only by unknown-function entries",
+  "weak": "HHsearch probability 50-90%; a CDD model at E <= 0.01 in one instance only, or at 0.01 < E <= 1 in >= 2 instances; hmmsearch E <= 0.01 below GA; recorded, not removed",
+  "family_class": "characterised > unknown_function > weak > none (highest applicable)",
+  "block_rule": "a block is folded only if no chain is 'characterised'; shortlist order puts all-chains 'none' first, then 'weak', then 'unknown_function'"
+ },
+
+ "replicates": "two block instances per candidate chosen as in screen 1 (maximal taxonomic distance, then instance quality), s2_select.py",
+
+ "pair_blocks_longpair": "screen-1 rules unchanged (predeclared_criteria.json): ipTM >= 0.75, interface PAE <= 5 A, >= 10 contacts, interface pLDDT >= 70 in both replicates; cognate minus non-cognate ipTM >= 0.30 (rep 1 swaps chain B, rep 2 swaps chain A); same refutations",
+
+ "multi_chain": {
+  "interface_metrics": {
+   "pair_iptm": "max(M[i][j], M[j][i]) of pair_chains_iptm (for two chains this equals the response ipTM exactly; checked on 1,047 screen-1 folds)",
+   "contacts": "residue pairs between chains i and j with CB-CB <= 8 A (CA for Gly), recomputed from the returned structure",
+   "iface_pae": "mean of (PAE(a,b)+PAE(b,a))/2 over the i-j contact pairs",
+   "iface_plddt": "mean pLDDT of residues of i and j that take part in an i-j contact"
+  },
+  "interface_pass_in_a_replicate": "pair_iptm >= 0.75, contacts >= 10, iface_pae <= 5 A, iface_plddt >= 70",
+  "noncognate_controls": "replicate 1: one control complex per chain except the first, that chain replaced by a length-matched chain of another candidate (relative length + hydrophobic difference, Hungarian assignment within chain slot pools as in screen 1), all other chains kept; replicate 2: one control per chain except the last",
+  "interface_control_rule": "for interface (i, j), i < j: rep-1 delta = cognate pair_iptm(i,j) - pair_iptm(i, j') in the control swapping j; rep-2 delta = cognate pair_iptm(i,j) - pair_iptm(i', j) in the control swapping i; both >= 0.30",
+  "interface_hit": "interface passes in both replicates and both deltas >= 0.30",
+  "block_outcomes": {
+   "interface_hit_block": ">= 1 interface hit",
+   "full_block_cofold": "the interface hits connect all k chains (spanning graph) - the bar for 'obviously co-folds' as a block",
+   "complex_iptm": "response ipTM reported, not used for the call"
+  },
+  "uncalled_controls": "per replicate, a window of k adjacent same-strand dark genes whose consecutive token pairs are all non-significant and none of which lies in a dark-link run; lengths within 25% per position and hydrophobic fraction within 0.05 (relaxed to 40% / 0.08 when nothing matches, level recorded); searched on the same contig, then genome, then order, then anywhere",
+  "positive_controls": "contiguous curated gold instances (DefenseFinder, TXSScan, CRISPRCasTyper) with k adjacent member genes satisfying the same length, hydrophobicity and X filters, k matched to the candidates (3, 4, 5-6) plus two-gene instances with one protein > 700 aa; up to 4 per (caller, system type)"
+ },
+
+ "refutations": {
+  "promiscuity": "a kept chain reaches pair_iptm >= 0.6 with >= 10 contacts against a non-cognate replacement in any control of its interface",
+  "disorder_zipping": "for an interface hit, >= 50% of a chain's interface residues have pLDDT < 60 in that chain's single-chain fold, or the chain's mean pLDDT in the complex is < 60 (monomer folds of every chain of every interface hit, both replicates)",
+  "split_gene": "MMseqs2 (release 18, -s 7.5, E <= 1e-3) of the hit chains against all 3,585,303 DPANN proteins: a target hit by both chains of an interface in collinear non-overlapping segments (each >= 50% query coverage) is a fused homolog; artefact if fused homologs occur in >= 25% as many genomes as the block or in the genus of a replicate",
+  "single_lineage": "an interface passing in one replicate only is not a hit",
+  "generic_adjacency": "class level: uncalled windows with >= 1 interface meeting the per-replicate pass rule as often as cognate replicates (Fisher) means the engine call adds nothing",
+  "msa_step": "for the shortlist, genome-paired MSAs from the block instances (mafft): an interface hit is supported if pair_iptm stays >= 0.75 in both replicates; < 0.5 marks a single-sequence artefact",
+  "structure_recognition_after_folding": "Foldseek 10 of hit chains vs PDB and AFDB Swiss-Prot (prob >= 0.5 or E <= 1e-3 with alignment TM-score >= 0.5) and multimer search of hit complexes vs PDB: a match moves the block to 'resembles a known fold' in the shortlist (an observation, not a co-fold refutation)"
+ },
+ "post_hoc_labelling": "any relaxed bar or new rule after the folds are read is labelled post hoc"
+}

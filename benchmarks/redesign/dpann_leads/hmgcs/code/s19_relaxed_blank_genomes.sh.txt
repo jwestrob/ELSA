@@ -1,0 +1,33 @@
+#!/bin/bash
+# bash script (saved as .txt because the campaign allows only .txt/.tsv/.json/.py/.parquet/.faa/.pdb); run with: bash FILE
+# Relaxed (E <= 10) Aksha search with the picked HMGS/HMGCR profiles (Pfam HMG_CoA_synt_N/C, HMG-CoA_red; KOfam
+# K01641, K00021, K00054) over every protein of DPANN genomes (completeness >= 70) that carry a lipid-specific step and
+# lack the HMGS step (canonical and ~560-aa family) or the HMGCR step by all database annotations. FASTA in scratchpad.
+set -e
+W=/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/hmgcs
+SP=$1
+cd $W
+python - "$SP" <<'PY'
+import sys, duckdb, pandas as pd
+sp = sys.argv[1]
+G = pd.read_parquet("genome_steps.parquet")
+G["HMGS_any"] = G["2_HMGCS_canonical"] | G["2b_HMGS_like_560fam"]
+sel = G[(G.completeness >= 70) & G.lipid_specific_any & (~G.HMGS_any | ~G["3_HMGCR"])]
+sel[["phylum", "fam", "genus", "completeness", "HMGS_any", "3_HMGCR"]].to_csv("relaxed_blank_genomes.tsv", sep="\t")
+con = duckdb.connect()
+con.execute("ATTACH '/Users/jacob/Documents/Sandbox/Sharur/Sharur/data/dpann/sharur.duckdb' AS d (READ_ONLY)")
+con.execute("CREATE TEMP TABLE s AS SELECT unnest(?) bin_id", [sel.index.tolist()])
+n = 0
+with open(f"{sp}/blank_genomes.faa", "w") as fh:
+    for pid, sq in con.execute("SELECT protein_id, sequence FROM d.proteins JOIN s USING (bin_id)").fetchall():
+        fh.write(f">{pid}\n{sq.rstrip('*')}\n"); n += 1
+print(len(sel), "genomes,", n, "proteins")
+PY
+python - <<'PY'
+src = open("picked_hmm/picked.hmm").read().split("//\n")
+keep = [b for b in src if any(f"NAME  {k}\n" in b for k in ["HMG_CoA_synt_N", "HMG_CoA_synt_C", "HMG-CoA_red", "K01641", "K00021", "K00054"])]
+open("picked_hmm/hmgs_hmgcr.hmm", "w").write("//\n".join(keep) + "//\n")
+print(len(keep), "profiles")
+PY
+~/.local/bin/aksha search --hmm_in picked_hmm/hmgs_hmgcr.hmm --prot_in $SP/blank_genomes.faa --outdir aksha_relaxed_blank --evalue 10 --threads 4
+rm -f $SP/blank_genomes.faa

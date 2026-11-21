@@ -1,0 +1,222 @@
+SPICY_XREF: THE SPICY LANMS NOTES AGAINST THE LUT COLLECTION, AND A SYNTON-RECOVERY BENCHMARK FROM THEM (2026-11-21)
+=====================================================================================================================
+BOTTOM LINE
+1. The earlier work saw the lut cluster without naming it. Its commonest LanM partner (ABC transporter, 174/475 loci),
+   its TonB receptors (47/475) and its 'HisKA_3 + GerE flank the cassette' match lut components and the lut-flank NarL-type
+   pair (kinase K07675 beside 51.3% of lutH loci, GerE 52.8%). Its Methylobacterium J-078 locus (TonB/Plug-LanM-
+   ABC2_membrane-ABC_tran-Lactonase) carries the lutH/lanM/lutF/lutE/lutB domain set (inference from domains).
+2. The notes' modules are reproducible from Pfam, gene order, strand and spacing alone. Rules fixed here give, on the
+   earlier database (2,547 assemblies): xoxF+Rieske 184 (notes 184), DUF2158-LanM 86 (86), +Peptidase_C14 78 (78),
+   +Ankyrin 67 (67), +COXG 58 (58), +Cytochrome_CBB3 442 (450), +Lactamase_B 85 (86), LanM|xoxF head-to-head 137
+   (150/151), LanM+CNNM 21 (18), SBP_bac_5+LanM 40 (29-33), Type B 267 loci (288 genomes), YcaO/TfuA near LanM 11 (14).
+   Not reproduced: mmsB beside xoxF (0 vs 90 genomes), Metal_resist-LanM-CcmE (0 vs 10), Metallophos-LanM (0 vs 5).
+   Most earlier modules are single-genus there (LanM|xoxF 132/137 Bradyrhizobium, DUF2158-LanM 86/86 Mesorhizobium,
+   LanM+CNNM 20/21 and SBP_bac_5+LanM 34/40 Methylobacterium; xoxF+C14, +COXG, +GFA, +DctMQP Bradyrhizobium only).
+3. The lut collection hosts the xoxF modules and few LanM modules. lut: xoxF+CBB3 637 (212 genera), +SBP_bac_3 405
+   (163), +Rieske 94 (42), +Lactamase_B 70 (30), +Ankyrin 77 (13); chance 0.9-8.3 each. Of 347 lanmodulin-like proteins
+   in 272 lut genomes, 7 (2.0%) lie within 5 genes of a PQQ dehydrogenase (earlier set 152/475, 32%); LanM|xoxF 2,
+   LanM+CNNM 2, SBP_bac_5+LanM 23, DUF2158-LanM 0.
+4. FIRST SCORING, POST HOC (lut already served as the untouched test). The embedding-list tree resolves the 2-gene xoxF
+   units at 3.2-5.9x chance: xoxF+CBB3 390/637 resolved (chance 121), +SBP_bac_3 358/405 (61), +Rieske 84/94 (18),
+   +Ankyrin 68/77 (13); excess +.35 to +.50. The family-bond tree resolves 157 (117), 190 (60), 25 (16), 9 (12).
+   Both trees miss SBP_bac_5+LanM (recovered 1/23 and 0/23, chance 14): 21/23 instances share one genome group, so
+   the module recurs in 2 groups and never bonds. Modules confined to 1-2 genome groups are unrecoverable by design,
+   which also limits the earlier database as a second test to its multi-genus modules.
+5. This week's killed candidates do not appear in the earlier candidate lists, except LutI, which matches the earlier
+   CKDD cluster by slot and motif (15/86 LutI members carry CKDD); both are negative for a metal site. The 32 loop-less
+   EF-hand relatives sit beside OmpR-type pairs (Trans_reg_C 32/32, HisKA 31/32; HisKA_3 0/32, GerE 0/32), a class
+   absent from the notes' LanM-adjacent pairs. Overlap: 213/1,032 lut genomes are earlier assemblies (66/80 a1).
+
+1. INVENTORY (inventory_modules.tsv 31 rows, inventory_candidates.tsv 24 rows; status as the notes left it)
+ Sources: the ten named captures, DFT and ISME notes, and biotite reports (exploration/elsa_cluster_validation.md,
+ xoxf_cluster_validation.md, reports/orphan_lanm_modules_report.md: 30 unreviewed 'synteny_v2' findings). Database:
+ 2,547 assemblies, 13.2 M prodigal proteins (the notes' '2,054 genomes' is the NCBI-proteome build; Type A/B: 785).
+ Co-orientation protocol (same contig, same strand, every gap < 500 bp):
+   PASS  CNNM/CorC+LanM 18/18 (110-200 bp); SBP_bac_5+LanM 33/34 co-oriented, 29/33 chain-operonic; xoxF + CBB3 450,
+         Rieske 184, Lactamase_B 86, Peptidase_C14 78, Ankyrin 67, COXG 58, GFA 54, DctM 43, SBP_bac_3 288;
+         Metallophos at -1 of LanM 5/5; DUF6163 at offset 5, 5/5.
+   FAIL  xoxF-LanM 'operon' (co-oriented 1/151; REVISED to a head-to-head pair, ~340 bp); YcaO/TfuA+LanM (2/14);
+         transglycosylase beside SBP_bac_5-LanM (3/36); xoxF+Acyl-CoA_dh (>= 571 bp).
+   never applied: ABC/TonB/Response_reg partner classes, Type A, Type B, DUF2158-LanM-Sigma70, Metal_resist-CcmE.
+ Corrections that count: same-contig table supersedes the six locus types; SoxYZ carrier 0/475 at +-5 (113/475 at +-10);
+ NRPS loci 2-3 retracted; metallophosphoesterase lanthanide reading retracted (di-Mn); 'Mokosh' = cross-reacting kinase
+ (MacSyFinder 0/242); average map superseded by Type A/B; BVS 'Ca-only' readings retracted (LanM scores Ca-best);
+ cluster 980466 = peptidoglycan cassette (68 hosts); cluster 560112 = LanM + 290 aa partner; DUF2950 downgraded (8/524).
+ Candidates: 3 strong leads (tannase cassette, A0A1Q7R3F2, A0A9E3VGV4), the beta-roll family, 9 open single-locus
+ candidates, 3 false positives. Every 'binds La' label rests on Protenix co-folds, which the lanthanide project
+ (2026-11-09) and lut_loci found blind to La versus Ca; these stay UNVERIFIED.
+
+2. CROSS-REFERENCE
+ Agree: regulators (above); transport (lut census: ABC within 5 genes of 72/347 lanmodulin-like proteins, TonB 48/347);
+ SoxYZ 6-10 genes from LanM in the notes, upstream of lutA on the other strand in lut_loci (84 genera), within 5 genes
+ of a lut lanmodulin-like protein 0/347 and within 10 4/347; the notes' xoxF+CBB3 and +SBP_bac_3 modules = lut_loci's
+ XoxG-like (396) and XoxJ-like (426) neighbors; CKDD ~ LutI (identity UNVERIFIED).
+ LanM partners: the notes' operonic partners are CNNM and SBP_bac_5, xoxF is head-to-head. In lut, lanM members of lut
+ loci pass the same protocol with their nearest lut component in 41/49 (lutH 29, lutI 10; 45/49 adjacent). The frozen
+ lut definition counts lanM by homology within <= 3 intervening genes with no strand rule (49 of 733 loci, 22 of 80
+ complete); CNNM and SBP_bac_5 lie outside it and nearly outside lut (2 and 23 instances).
+ LanM beside xoxF: 32% of earlier loci against 2.0% in lut; the same rule gives 191/961 (19.9%) lanmodulin-like proteins
+ within 5 genes of a PQQ dehydrogenase in the earlier database (SoxYZ within 10: 144/961), so the gap is composition
+ (assay-selected LanM sources, Bradyrhizobium-heavy, against lut-selected representatives; lut: Methylobacterium 112/347).
+ 32 loop-less EF-hand relatives: OmpR-type Trans_reg_C + Response_reg 32/32, HisKA 31/32, HAMP 26/32, MASE/PAS 0/32. The
+ notes' LanM pairs are NarL-type (HisKA_3 + GerE) or the Type A MASE4/PAS hybrid kinase: no match, consistent with the kill.
+ Candidates: orf6-like, orf7-like, DUF3280, LutC, LutG, the 32 genes and MazF are absent from the notes; the notes'
+ candidates never met this week's conserved-site assay. The beta-roll family is in lut (29 proteins of 100-140 aa with
+ RLWNL/LWNLT, 13 Bradyrhizobium; 12 in lut windows = lut_loci family 52, token 275376; 11 within 10 genes of a PQQ
+ dehydrogenase; 0 beside TonB) and went unnamed and untested this week.
+ Notes only: protocol-tested modules, Rhizobiaceae depth (1,138 assemblies vs 23 lut genomes), tannase cassette (both
+ genomes absent from lut), DUF4394 cassette. lut only: the lut name and components, LutD = LanD (absent from the notes),
+ split arrangements, chance controls, frozen method output.
+ Genome overlap (overlap*.tsv/json): lut genomes that are earlier assemblies by layer a1 66/80, a2 37/96, a3 20/141,
+ a4 20/341, b1 54/166, b2 16/134, c1/c2 0/74. Families shared 11 (505 lut genomes). Genera shared 78/490 (391 lut
+ genomes): Methylobacterium 76/93, Bradyrhizobium 15/23, Microvirga 8/12, Afipia 7/9, Terripilifer 7/9.
+
+3. BENCHMARK DESIGN (code/x05_modules.py; each module is OBSERVED domain content plus arrangement, never a system call)
+ Elements: lanmodulin-like = 100-200 aa, >= 2 EF-hand loops (overlapping EF-hand Pfam rows merged), every loop-start gap
+ within 4.5 aa of 24.5 x k (k 1-3), no other Pfam row (captures 37/49 lut lanM homologs); wide anchor = any 100-200 aa
+ EF-hand protein; PQQ dehydrogenase = PQQ or PQQ_2 row, 500-700 aa (the notes' 'xoxF'). Rules: pair = neighbors, same
+ strand (head-to-head for LanM|xoxF), gap <= 500 bp (<= 200 for CNNM, Metallophos); chain = <= 1 gene between, one
+ strand, every gap <= 500 bp; window = within k genes, used only where the notes never tested strand.
+ Tiers (instances lut / earlier database):
+   T1 usable on lut now: xoxF+CBB3 637/442, +SBP_bac_3 405/314, +Rieske 94/184, +Lactamase_B 70/85, +Ankyrin 77/67.
+   T2 earlier database, multi-genus: Type B 3/267 (18 genera), Type A scaffold S58+R3P 63/310 (43), Type A with any
+      EF-hand anchor 32/258 (9), LanM+NarL pair 4/18 (4). Earlier T1 genera: xoxF+CBB3 31, +SBP_bac_3 31, +Lactamase_B
+      14, +Ankyrin 10, +Rieske 8.
+   T2w within-lineage (one genus on the earlier database): xoxF+Peptidase_C14 11/78, +COXG 1/58, +GFA 8/50, +DctMQP
+      1/39, LanM|xoxF 2/137, LanM+CNNM 2/21, SBP_bac_5+LanM 23/40, DUF2158-LanM 0/86 (with Sigma70 0/82).
+   T3 too rare or too loose: tannase 0/2, DUF6163 0/2, DUF4394 0/1, Metallophos 0/0, Metal_resist-CcmE 0/0, the
+      Hyphomicrobium locus and 571 aa fusion (n 2), beta-roll and small secreted families (no Pfam), mmsB (0/0), the
+      ABC/TonB/Response_reg partner classes (domain classes too broad).
+ Recovered / resolved (frozen definitions, ribosomal_check on the instance span): recovered = one locus covers >= 50% of
+ the span; resolved = it covers >= 80% and >= 80% of the locus lies inside the span (for a neighbor pair, a 2-gene node).
+ F1 and excess on the member genes with the frozen lut scorer (best locus by F1, 200 rigid translations).
+ Negative controls: (a) truth level: element classes shifted independently within genomes (slice_lut control; lut 100
+ replicates, xoxF+CBB3 637 vs 6.7; earlier database 20, 442 vs 5.4, LanM|xoxF 137 vs 0.25); (b) score level: the
+ frozen 200 translations applied to recovered and resolved as well as F1 (a random 2-gene interval is 'resolved' 19% of
+ the time by the embedding-list tree, which keeps every node); (c) boundary negatives from the failed claims: LanM|xoxF
+ head-to-head, transglycosylase beside SBP_bac_5-LanM, YcaO-TfuA-AAA_16 facing LanM, Acyl-CoA_dh >= 571 bp from xoxF.
+ Stratify by genome groups: lists exclude a gene's own 0.75 group and recurrence counts groups, so 1-2-group modules
+ form a within-lineage stratum (SBP_bac_5+LanM 2 groups, xoxF+Peptidase_C14 2, Type A any-EF 1 in lut).
+ Limits: lut was the frozen run's untouched test (FROZEN.json, 2026-11-14): every score here is post hoc. Rules were
+ fixed on the earlier database before the scorer read any locus, with the frozen headlines known. lut xoxF modules sit in
+ lut-carrying genomes (xoxF+CBB3 611/637 in a1-a4); instances are phylogenetically dependent (the bootstrap ignores it).
+ Cost on the earlier database (scaled from slice_lut REPORT2 and REPORT_frozen; not run): 13.2 M proteins, 12.4 M unique,
+ 3.97 G residues, 2,543 genomes. ESM++ small: lut's 1.35 G residues were estimated at 7.2-7.7 h on one A5000 -> ~20 h.
+ GPU z table and kNN (23 + 20 min at 4.5 M genes) scale with genes squared -> ~3.3 h + ~2.9 h. Z prep peaked at 126 GB;
+ list volume grows 7.2x -> ~0.9 TB, beyond the 250 GB default (1.5 TB node or a chunked prep, a code change). Tokens
+ 72 min -> ~3-4 h on 24 CPUs. Total ~30 h. The 371 LanM-source assemblies (2.31 M proteins, 0.68 G residues) need
+ ~3.5-4 h of embedding and < 1 h downstream, the size of package_k2; that subset uses genome metadata only.
+
+4. FIRST SCORING ON EXISTING OUTPUT: POST HOC (first_scoring_posthoc.tsv; per instance: score_per_instance.parquet)
+ recovered / resolved (chance in brackets). SEC = embedding-list tree Z L4b+ .02; PRI = family-bond tree WA L4b .2;
+ DH = recurrence engine nested reading; SYN = synton faithful. groups = frozen genome groups holding the module.
+ module (instances, genera, groups)  SEC rec / res        PRI rec / res        DH rec / res       SYN rec/res  SEC excess
+ xoxF+CBB3          (637, 212, 86)   624 (505) / 390 (121) 618 (497) / 157 (117) 627 (532) / 100 (34)  64 / 46   +.350
+ xoxF+SBP_bac_3     (405, 163, 74)   403 (311) / 358 (61)  403 (306) / 190 (60)  403 (329) /  54 (19)  33 / 21   +.352
+ xoxF+Rieske        ( 94,  42, 30)    87 (68)  /  84 (18)   84 (66)  /  25 (16)   86 (72)  /  49 (6)   20 / 18   +.420
+ xoxF+Lactamase_B   ( 70,  30, 18)    67 (59)  /   5 (14)   66 (58)  /   0 (13)   69 (60)  /   4 (4)    2 /  0   +.103
+ xoxF+Ankyrin       ( 77,  13,  6)    77 (56)  /  68 (13)   29 (53)  /   9 (12)   73 (65)  /   1 (3)    0 /  0   +.497
+ Type A any-EF      ( 32,   6,  1)    32 (22)  /   8 (4)    15 (22)  /   1 (3)    32 (28)  /   7 (2)    0 /  0   +.058
+ SBP_bac_5+LanM     ( 23,   3,  2)     1 (14)  /   0 (2)     0 (13)  /   0 (2)     5 (17)  /   0 (1)    0 /  0   -.376
+ xoxF+Peptidase_C14 ( 11,   2,  2)     1 (8)   /   0 (2)     5 (8)   /   0 (2)    11 (10)  /   0 (0)    0 /  0   -.427
+ Excess SEC / PRI [95%]: xoxF+CBB3 +.350 [+.333,+.366] / +.211 [+.192,+.230]; +SBP_bac_3 +.352 / +.279; +Rieske +.420 /
+ +.173; +Lactamase_B +.103 [+.049,+.153] / -.184; +Ankyrin +.497 / -.137. Modules with <= 8 instances: tsv only.
+ Readings: the family-bond tree's best loci run to 3 genes (median; embedding-list tree 2), so it resolves xoxF+CBB3
+ near chance; xoxF+Lactamase_B sits inside larger xoxF loci; SBP_bac_5+LanM genes fall outside loci (1 vs 14 recovered).
+
+5. IDEAS (benchmark first)
+ 1. Freeze x05's rules and run the frozen method once on the earlier database (or its 371 LanM-source assemblies, ~4-5 h):
+    a second untouched test; the multi-genus modules test it, the single-genus LanM modules need a finer counting unit.
+ 2. Score boundaries with the failed claims as negatives (head-to-head LanM|xoxF, transglycosylase, YcaO-TfuA,
+    Acyl-CoA_dh); the frozen test lacks a strand-break measure (holding-locus precision median .53-.62).
+ 3. Report recovery by genome-group stratum (1, 2, >= 3 groups); a within-lineage test needs a finer counting unit.
+ 4. Nested xoxF unit: xoxF+CBB3 inside xoxF+CBB3+SBP_bac_3 (+DctMQP, orf6/orf7), scored like the lut transporter module
+    inside the complete cluster (embedding-list tree nested 75/80).
+ 5. Pfam-invisible members as an embedding-only test: the beta-roll family (29 in lut) and the 290 aa + 70 aa pair at
+    xoxF-LanM loci; ask whether embedding-list loci join them to their neighbors.
+ 6. Slot-call positive control: the notes' 20 Type A orphan loci (7 Pfam-missed LanMs, 4 truncated, 2 novel); the lut call
+    handed EF-hand_5 to 32 loop-less relatives, so a known-answer set would calibrate it.
+ 7. Lut-flank regulator module (HisKA_3 kinase + GerE within 5 genes of lutH; 51-53% of lutH loci), the notes' cassette TCS.
+ 8. SoxYZ upstream of lutA (84 genera) as a flank module with the shift null, placing the notes' SoxYZ in lut coordinates.
+ 9. Biology: LanM beside xoxF (earlier set) and LanM inside lut (Methylobacterium) look like alternative deployments;
+    count per genome whether both occur, from the existing tables.
+ 10. Biology: put the beta-roll family through the lut_loci conserved-site assay (6 apo ESMFold2 models); its La label
+    rests only on Protenix co-folds.
+
+FILES inventory_*.tsv; lut module_*.tsv, element_counts.tsv, lanm_context_census.tsv, lut_lanM_coorientation.tsv; earlier
+ database spicy_module_* (null from the first run, before 5 wide-anchor rules were added); overlap*; motif_*;
+ score_modules.tsv, first_scoring_posthoc.tsv, groups_by_module.tsv, recovery_by_group_spread.tsv; code/x00-x12.
+ Login-node Python only; no Slurm, HMM search, folding or method run; no workbook, protein map or outcome table opened.
+
+6. LARGER MODULES (follow-up, 2026-11-21). EVERYTHING HERE IS POST HOC. Rules: modules_large_rule.json, written after
+   the discovery tallies (code/x13, log_x13.txt) and before any scoring; code x14 (instances, null), x15 (scores, nesting,
+   boundaries), x16 (strata), x17 (PI table). No method output was read to choose a rule.
+ Bottom line
+ - In families held by >= 3 genome groups, the embedding-list tree resolves 1,972 of 2,481 instances of >= 3-gene modules
+   (chance 357); the family-bond tree 1,343 (358), DH 668 (202), synton 3 (5). In 1-group families both trees sit at chance
+   (8/90 and 8/90 vs 8.4 and 8.0; 80 of the 90 are the complete lut clusters, all in one genome group).
+ - Best resolved by the embedding-list tree: mxa cluster (10 genes) 95/102 (chance 9), pqqBCDE 533/559 (88), pqq + orf7 +
+   orf6 94/97 (11), H4MPT-type cluster (7 genes) 189/234 (29), Type A ABC importer + Peptidase_S58 130/172 (22), lut
+   transporter module 477/551 (101). Recovered but rarely resolved: complete lut cluster 6/80 (7; its holding loci run past
+   the cluster, as in the frozen test), receptor + transporter 18/92 (10), xoxF + ABC transporter 15/41 (5).
+ - Nesting (inner unit held as a node inside the locus holding the outer one; chance from 50 translations): embedding-list
+   tree lut transporter in complete 75/80 (3.3; reproduces the frozen 75), pqqBCDE in pqq+orf 97/97 (7.0), xoxF-G-J in
+   +Rhodanese 58/59 (4.0), xoxF+CBB3 in xoxF-G-J 105/184 (22), mxaFJGI in mxa cluster 31/94 (2.3). Family-bond tree 0/80,
+   20/97, 1/59, 24/184 and 94/94: it nests the mxa unit and little else (large_nested.tsv).
+ - orf6/orf7 do not extend the xoxF unit under the protocol: near an xoxF-G-J unit (within 10 genes) orf6-like sits in its
+   chain in 5/92 (opposite strand 55, same strand in another chain 32), orf7-like 3/57. Both chain with pqqA-E instead
+   (97 instances, 9 genera, 6 groups, 86% in one group). The xoxF unit's supported extensions are Rhodanese (64) and the
+   NMT1-BPD_transp_1-ABC_tran importer (41).
+ - The notes' failed claims cannot be tested on lut: LanM|xoxF head-to-head 3 instances and SBP_bac_5-LanM | trans-
+   glycosylase 27, each in 1 genome group and outside every locus; YcaO-TfuA|LanM 0; xoxF-Acyl-CoA_dh gap 0 (all 137 LanM|
+   xoxF pairs are in the earlier database, which has no method output). Strand breaks with power (added): lut | divergent
+   DUF3280 flank chain 212: embedding-list tree joins 162 (chance 27), separates 8 (1.4); xoxF-G-J | orf6-orf7 55: joins 21
+   (7.0), separates 27 (1.2); Rieske-xoxF | MoCoBD 12: joins 10 (1.2). The trees join conserved divergent flanks that the
+   co-orientation protocol splits (boundary_scores.tsv; family-bond tree joins 76, 13, 5).
+ Modules (large_counts.tsv; instances / genera / genome groups / members min-median-max / shift-null mean)
+   xoxF family  X0 +CBB3 637/212/86/2-2-3/6.9; X1 +SBP_bac_3 286/140/66/2-3-3/0.02; X2r +Rhodanese 64/44/25/3-4-4/0;
+                X2t +NMT1-BPD_transp_1-ABC_tran 41/23/16/5-6-7/0; X3 orf6/orf7 extension fails the protocol (above)
+   mxa          MX0 mxaF-J-G-I 100/21/11/4-4-4/0; MX1 cluster (MDH, bpMoxR, DUF58, VWA, Polyketide_cyc2, MoxZ) 102/22/10/7-10-10/0
+   pqq          PQ0 pqqA-E 559/236/95/3-4-6/0.06; PQ1 + orf7 + orf6 97/9/6/5-6-8/0
+   H4MPT        H4 MCH + Fae + >= 2 of GHMP/Mpt_N/ATP-grasp_3/CitG/RimK 234/87/43/4-7-8/0
+   lut flank    LF DUF3280-4HFCP_synth-AA_kinase-DUF6513-DUF447_N-Polyketide_cyc2 194/67/29/4-5-8/0
+   Type A/B     TA Peripla_BP_6 + >= 2 ABC_tran + BPD_transp_2 upstream of Peptidase_S58 172/64/16/5-6-8/0.02, one co-oriented
+                chain in 22.7% (fails the protocol as one unit; EF-hand gene absent from the rule); TB 14/11/3/5-5-7/0, 0% one
+                chain (fails; too rare)
+   lut          LUT_T 551/281/107/3-4-8; LUT_RT 92/36/16/3-5-9; LUT_C 80/1/1/9-9-10; null 0.16 for the main rule (50 shifts of
+                the reverse-best genes; the reimplemented rule reproduces 733 loci and 80 complete on the real genes)
+ PI TABLE (pi_summary_posthoc.tsv; recovered (chance) / resolved (chance); sorted by median genes)
+   module (genes, instances, groups)   embedding-list tree   family-bond tree      engine DH             synton
+   mxa cluster        (10, 102, 10)    102 (42) / 95 (9)     102 (49) / 97 (11)    102 (57) / 73 (10)     0 / 0
+   lut complete       ( 9,  80,  1)     80 (41) / 6 (7)       79 (44) / 6 (7)       80 (58) / 1 (6)       0 / 0
+   H4MPT-type cluster ( 7, 234, 43)    234 (158) / 189 (29)  234 (168) / 130 (30)  234 (181) / 17 (16)    0 / 0
+   Type A ABC + S58   ( 6, 172, 16)    166 (108) / 130 (22)  172 (121) / 69 (23)   166 (132) / 24 (13)    0 / 0
+   pqq + orf7 + orf6  ( 6,  97,  6)     97 (67) / 94 (11)     97 (67) / 16 (9)      97 (78) / 4 (6)       0 / 0
+   xoxF + ABC         ( 6,  41, 16)     41 (30) / 15 (5)      41 (30) / 14 (5)      41 (32) / 4 (3)       1 / 0
+   lutA flank chain   ( 5, 194, 29)    194 (142) / 96 (29)   194 (146) / 91 (26)   194 (159) / 16 (15)    7 / 0
+   lut receptor+trans ( 5,  92, 16)     90 (60) / 18 (10)     92 (63) / 26 (11)     92 (70) / 7 (7)       8 / 0
+   Type B core        ( 5,  14,  3)     14 (8) / 4 (1)        14 (10) / 1 (2)       14 (9) / 4 (1)        0 / 0
+   pqqBCDE            ( 4, 559, 95)    559 (439) / 533 (88)  558 (439) / 452 (89)  559 (469) / 279 (47)  35 / 0
+   lut transporter    ( 4, 551, 107)   551 (432) / 477 (101) 551 (444) / 193 (100) 551 (449) / 182 (62)  17 / 0
+   mxaF-J-G-I         ( 4, 100, 11)    100 (79) / 37 (11)    100 (74) / 100 (12)   100 (84) / 2 (6)      17 / 0
+   xoxF-G-J + Rhod    ( 4,  64, 25)     64 (53) / 63 (8)      64 (52) / 61 (8)      64 (54) / 2 (3)       2 / 0
+   xoxF-G-J           ( 3, 286, 66)    285 (209) / 231 (34)  286 (210) / 100 (34)  286 (223) / 56 (14)   15 / 3
+   xoxF + CBB3        ( 2, 637, 86)    624 (505) / 390 (121) 618 (497) / 157 (117) 627 (532) / 100 (34)  64 / 46
+   (two-gene references xoxF+Rieske, +Ankyrin, +Lactamase_B in the tsv; excess with 95% intervals in large_scores.tsv)
+ STRATA (strata_by_family_groups.tsv; family = same module with Jaccard >= .5 on member rescue3 tokens; resolved (chance))
+   genes   groups  n      embedding-list   family-bond   DH          synton
+   2       1       154    62 (24)          2 (22)        4 (7)       4 (3)
+   2       2        53    12 (8)           10 (7)        12 (3)      6 (1)
+   2       >= 3   1178    833 (209)        367 (202)     197 (58)    75 (21)
+   >= 3    1        90    8 (8)            8 (8)         1 (7)       0 (0)
+   >= 3    2        13    5 (2)            1 (1)         1 (1)       0 (0)
+   >= 3    >= 3   2481    1972 (357)       1343 (358)    668 (202)   3 (5)
+ What a benchmark built from these would and would not test. It would test whether a method recovers and resolves
+ conserved multi-gene units of 4-10 genes (mxa, pqq, H4MPT-type, Type A importer, lut, xoxF) and their nested sub-units
+ across many lineages, against shift and translation chance. It would not test recovery inside one lineage (1-group
+ families such as the complete lut cluster resolve at chance by construction), nor the notes' rejected LanM claims, which
+ lut does not contain in numbers. It also treats co-orientation as the unit boundary, whereas the trees join conserved
+ divergent flanks, so its resolved counts depend on that choice and should be reported beside the joined and separated rates.
+ Files added: modules_large_rule.json, large_counts.tsv, large_instances.tsv, large_scores.tsv, large_nested.tsv,
+ boundary_scores.tsv, boundary_instances.parquet, strata_by_family_groups.tsv (supersedes the x15 version), pi_summary_
+ posthoc.tsv, large_score_per_instance.parquet, x3_extension.json, large_misc.json, log_x13.txt; code/x13-x17.

@@ -1,0 +1,67 @@
+{
+ "zca10_rows_seconds": 39.6,
+ "zca10_check": {
+  "max_abs_diff_vs_stored_f16": 0.00011369585990905762,
+  "global_mean_norm": 0.8595333574697247,
+  "eigenvalue_q": [
+   2.7682910918001248e-18,
+   8.638023132012454e-06,
+   0.00011106528953715754,
+   0.1278499474759924
+  ],
+  "participation_ratio_before": 3.9415655509678227
+ },
+ "gc": {
+  "transform": "gc",
+  "global_mean_norm": 0.8595333574697247,
+  "topk_seconds": 140.7,
+  "dim": 960
+ },
+ "wo": {
+  "eigenvalue_q": [
+   1.587402900287884e-18,
+   8.63983632427217e-06,
+   0.00011219845687113581,
+   0.7447511360310857
+  ],
+  "participation_ratio_before": 1.74870422599167,
+  "topk_seconds": 126.8,
+  "dim": 960
+ },
+ "zodd": {
+  "odd_rows": 1788192,
+  "uids_with_odd_rows": 1423058,
+  "mean_norm": 0.8594049415599697,
+  "eigenvalue_q": [
+   2.943212914094174e-18,
+   8.632570360418503e-06,
+   0.00011103879708699247,
+   0.12818297387468874
+  ],
+  "topk_seconds": 126.9,
+  "dim": 960
+ },
+ "genc": {
+  "genome_mean_norm_q": [
+   0.8198960423469543,
+   0.8693727254867554,
+   0.9111676216125488
+  ],
+  "topk_seconds": 117.0,
+  "dim": 960
+ },
+ "lc": {
+  "features": "20 standard amino-acid frequencies + log10(standard residues); z-scored; ZCA (pseudo-inverse: null eigen-directions dropped)",
+  "eigen_kept": 20,
+  "nonstandard_residue_share": 0.00023152824151951356,
+  "length_q": [
+   73.0,
+   206.0,
+   497.0
+  ],
+  "feature_seconds": 30.3,
+  "topk_seconds": 68.7,
+  "check_first_neighbour": true
+ },
+ "seconds": 1045.6
+}

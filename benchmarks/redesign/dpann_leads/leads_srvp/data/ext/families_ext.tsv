@@ -1,0 +1,29 @@
+func	kept	drop_reason	positives	negA	negB	positives_fold	positives_site	unannotated_folded	unannotated_fold_match	unannotated_site_ok	unannotated_PASS	unannotated_TM_ref_median	unannotated_TM_exp_median	named_folded	named_PASS	fold_match_site_ok_share	label_name	ref_member	trimmed_len	n_site	n_curated	negA_func	curated_record	exp_chain	n_members	n_reps
+K00283	True		4/5	0/5	0/5	5/5	4/5	0	0	0	0			5	0		GcvP2_C	1456001	133	15	0	K20571		6I35_A (P23378)	452	111.0
+K00333	True		5/5	0/5	0/5	5/5	5/5	0	0	0	0			5	0		Complex1_49kDa	3189168	281	26	0	K07316	Q91WD5	8OM1_D (Q91WD5)	730	166.0
+K00451	False	positives < 80%	3/5	0/2	0/2	5/5	3/5	1	0	0	0	0.421	0.395	1	0		HgmA_N	2491165	261	3	0	K07316	Q88E47	3ZDS_A (Q88E47)	78	31.0
+K00903	True		5/5	0/5	0/5	5/5	5/5	0	0	0	0			5	2		AAA_31	2408822	189	11	0	K12902			95	73.0
+K00978	True		5/5	0/5	0/5	5/5	5/5	0	0	0	0			5	0		NTP_transferase	1345398	245	27	13	K20738	Q8Z5I4	1TZF_A (Q8Z5I4)	223	135.0
+K03269	False	positives < 80%	0/5	0/5	0/5	5/5	0/5	0	0	0	0			5	0		Metallophos	2127577	221	13	0	K21271	A6T5R0	5B4B_A (Q9I2V0)	106	64.0
+K03388	False	positives < 80%	2/5	0/5	0/5	5/5	2/5	0	0	0	0			5	0		NAD_binding_8	415566	69	14	11	K27986	Q6LWL2		321	92.0
+K03427	False	positives < 80%	0/5	0/8	0/8	5/5	0/5	5	0	0	0	0.213	0.219	3	0		N6_Mtase	381351	333	6	0	K27876	P10484	7BTO_A (P10484)	249	115.0
+K03605	False	positives < 80%	1/5	0/6	0/6	5/5	1/5	1	1	0	0	0.52		5	2	0.0	HycI	1939209	176	4	0	K04069			448	328.0
+K04069	True		4/5	0/6	0/6	5/5	4/5	1	0	0	0	0.205	0.197	5	0		Radical_SAM	1652583	180	8	0	K21216	P0A9N4	8FSI_A (P0A9N4)	264	113.0
+K06152	True		5/5	0/24	0/24	5/5	5/5	19	19	0	0	0.668		5	0	0.0	Gluconate_2-dh3	360589	152	3	0	K15575			92	67.0
+K07316	True		4/5	0/6	0/6	5/5	4/5	1	0	0	0	0.239	0.268	5	0		N6_N4_Mtase	1735058	274	10	0	K00333	P0CAW2	6PBD_A (P0CAW2)	146	126.0
+K12628	True		5/5	0/2	0/2	5/5	5/5	2	0	0	0	0.267		0	0		GFO_IDH_MocA	1494208	140	4	0	K00283			169	86.0
+K12902	True		5/5	0/5	0/5	5/5	5/5	2	1	0	0	0.487		3	0	0.0	Radical_SAM	984718	187	4	0	K13306	Q56184		93	54.0
+K13306	True		5/5	0/2	0/2	5/5	5/5	2	0	0	0	0.221		0	0		3Beta_HSD	246613	186	4	0	K12902			178	103.0
+K15575	True		4/5	0/4	0/4	5/5	4/5	1	1	0	0	0.569		3	0	0.0	Thiolase_C_1	1029880	155	3	0	K06152			128	60.0
+K15769	True		5/5	0/2	0/2	5/5	5/5	2	0	0	0	0.387		0	0		DHODB_Fe-S_bind	1887670	58	3	0	K03388			135	55.0
+K15857	True		4/5	0/3	0/3	5/5	4/5	1	1	0	0	0.817		2	0	0.0	dTDP_sugar_isom	984660	155	7	0	K06152			142	75.0
+K20571	True		4/5	0/5	0/5	5/5	4/5	0	0	0	0			5	0		GFO_IDH_MocA	1857239	131	4	0	K00283			201	106.0
+K20615	True		5/5	0/2	0/2	5/5	5/5	2	0	0	0	0.199		0	0		Aminotran_1_2	3099680	368	8	0	K27876			307	113.0
+K20738	False	positives < 80%	3/4	0/2	0/2	3/4	3/4	1	1	0	0	0.72	0.65	1	0	0.0	Peptidase_C1	536999	241	16	0	K21271	P14080	1YAL_A (P14080)	22	18.0
+K20930	True		5/5	0/8	0/8	5/5	5/5	5	4	0	0	0.88		3	0	0.0	Aconitase_C	534598	115	9	0	K20571	D9XF46		246	104.0
+K21216	True		4/5	0/8	0/8	5/5	4/5	3	0	0	0	0.24		5	0		Glycos_transf_2	2084735	183	4	0	K04069			579	334.0
+K21271	True		4/5	0/2	0/2	5/5	4/5	1	0	0	0	0.188		1	0		Epimerase	564409	240	5	0	K20738			278	165.0
+K23103	True		4/5	0/5	0/5	5/5	4/5	5	0	0	0	0.292		0	0		Glycos_transf_2	264246	185	3	0	K13306			535	355.0
+K23105	True		4/5	0/5	0/5	5/5	4/5	3	1	0	0	0.292		2	0	0.0	Glycos_transf_2	788253	174	5	0	K04069			431	320.0
+K27876	False	positives < 80%	3/5	0/1	0/1	5/5	3/5	1	0	0	0	0.211		0	0		NrfD	750347	351	5	0	K20615			1077	377.0
+K27986	True		5/5	0/4	0/4	5/5	5/5	2	0	0	0	0.291		2	0		Biotin_lipoyl	192109	79	3	0	K03388			68	51.0

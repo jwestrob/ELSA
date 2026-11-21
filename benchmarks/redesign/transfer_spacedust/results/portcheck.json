@@ -1,0 +1,27 @@
+{
+ "stage1_group_tau10": {
+  "equal": {
+   "types": true,
+   "words": true,
+   "inst": true
+  },
+  "all_equal": true,
+  "stored_types": 25018,
+  "new_types": 25018,
+  "seconds": 24.7
+ },
+ "synteny_tau8": {
+  "equal": {
+   "types": true,
+   "words": true,
+   "inst": true,
+   "b0": true
+  },
+  "all_equal": true,
+  "stored_types": 43964,
+  "new_types": 43964,
+  "seconds": 38.0
+ },
+ "reproduced": true,
+ "seconds": 63.5
+}

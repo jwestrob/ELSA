@@ -1,0 +1,116 @@
+THY WORKSTREAM: SLOT-CALL LABELS Thy1 (LEAD 1) AND Thymidylat_synt (LEAD 2) IN DPANN (2026-11-21 UTC)
+=====================================================================================================
+BOTTOM LINE
+1. Lead 1 (Thy1, PF02511): SUPPORTED, rungs 2-5 all pass. The ~550-aa genes are consistent with a flavin-dependent
+   thymidylate synthase (ThyX) built as a TANDEM DUPLICATION of the ThyX domain. The two halves keep COMPLEMENTARY halves
+   of the active site: the N half keeps S88/R90 (26/26 genes), the C half keeps R78/R174 (26/26). In the experimental
+   tetramer (PDB 1O26) these two residue sets come from two different chains. A homodimer of the long chain folds as
+   the ThyX tetramer (TM 0.80-0.84) and puts FAD + dUMP into 2 complete composite pockets; the other 2 hold at most
+   1 core residue. In 17/19 Pacearchaeales genomes it is the only dTMP-forming enzyme: 3.9 expected, Fisher p = 2.5e-9.
+   Caveats for criterion B: this is a housekeeping enzyme, and only 5/32 genes are embedding-only (rung 7). The
+   distinctive part is the half-active-site tandem architecture. The 1,138 two-domain annotated DPANN ThyX share it
+   (59/60 sampled show the split), and it gives a testable prediction: 2 active sites per dimer.
+2. Lead 2 (Thymidylat_synt, PF00303): KILLED as a lead (criterion B). It is a routine near-threshold miss. CDD's best hit
+   is already in the thymidylate synthase family for 41/48 genes (E down to 2.4e-29). The Pfam scores sit just under the
+   gathering threshold (12.0-24.7 bits against GA 24.3), and the alignment lists give the same label for 45/48.
+Budget: 34 of 120 folds (ESMFold2, Biohub); 95 US-align pairs on the biotite login node; no Slurm job; Mac disk 46 MB.
+
+LEAD 1: Thy1 (PF02511)   verdict SUPPORTED
+Set: 32 genes, 31 genomes. Nanobdellota: 28 genomes (o__Pacearchaeales 19/487, o__Woesearchaeales 6/704,
+o__SCGC-AAA011-G17 3/206). Single genomes: Micrarchaeales 1/826, Iainarchaeota JAADDC01 1/13, Aenigmatarchaeota
+CG10238-14 1/116. Lengths 184-601 aa, median 551; 26 genes are 463 aa or longer.
+Typical length: the 78 Swiss-Prot reviewed ThyX are 204-325 aa (median 250); the Pfam Thy1 model is 191 positions. The
+long form is therefore 2.2x a characterized member.
+Rung 1: support median 0.954 (0.375-1.0; 3-112 votes). Label amplification 32 labeled / 1,806 annotated Pfam-Thy1
+  carriers = 0.018.
+Rung 2: tier T1 22/32 (T2 9, T2b 1). The Thy1 profile hits 30/32 genes (Aksha, E <= 10 per sequence and per domain).
+  T1 full-sequence E ranges 1.2e-14 to 3.9e-6. Per-gene model coverage median 0.78 (0.50-0.94); sequence coverage 0.53.
+  Both halves hit separately in 23/26 long genes.
+Q2 architecture, coordinates: the N-half Thy1 hit spans residues 16-327 (model 3-191) and the C-half hit spans 280-562
+  (model 7-191). The CDD best hit is in the family for 13/32 genes (cd20175 ThyX, COG1351 THY1, pfam02511): N half 8,
+  C half 4, both halves 1 (JAUWXZ010000042.1_5: COG1351 1-179, cd20175 220-337). Against all of Pfam at E <= 10, the
+  non-Thy1 hits are sporadic (each family in 3 genes or fewer) and fall inside the halves. This is a tandem duplication
+  with no fused second family and no insertion. Within each chain, the N half superposes on the C half with TM
+  0.49-0.68 (median 0.59).
+  The long form recurs across independent genomes. All 26 long genes start with Met; the 12 Prodigal calls are complete
+  at both ends (00). The mmseqs 30% family of 11 lead genes holds 19 proteins from 19 genomes, all >= 450 aa.
+  Annotated DPANN members carry the same long form: 1,138/1,806 Pfam-Thy1 proteins (63%) carry two Thy1 domains
+  (median length 537; domain 1 at ~77-266, domain 2 at ~320-500). The permissive family containing 9 lead genes
+  (fam:4472b6ad41:MBS3133581.1) holds 972 proteins in 965 genomes: 920 are >= 450 aa and 852 have two Pfam Thy1 hits.
+  GCA_018303025.1 carries the long form split into two adjacent ORFs that overlap by 19 nt: MBS3141614.1 (368 aa)
+  holds the N part with H53/S88/R90, and MBS3141613.1 (184 aa) holds the C part with R78/H79/R80/R174.
+Rung 3 (residues from Swiss-Prot Q9WYT0, T. maritima ThyX, experimental evidence). Annotated sites: FAD 55, 78-81, 86,
+  163-165, 169; dUMP 75-78, 86-90 (other chain), 147 (other chain), 174. Active site R174 (PubMed 27214228); ThyX motif
+  78-88; the H53 mutant keeps 1.39% activity (PubMed 23019356); Q9WYT0 and P9WG57 are homotetramers.
+  Core set (identical in at least 85% of the 78 reviewed ThyX; mafft L-INS-i halves alignment): H53 R78 H79 R80 S88 R90
+  R147 R174. In 1O26 every pocket takes R78/H79/R80/R174 from one chain and S88/R90/R147 from its partner chain, with
+  R165 from a third chain (code/06).
+  Lead halves: the N half keeps S88 26/26, R90 26/26, H53 25/26 and R147 13/26, and carries R78 in 1/26 and R174 in
+  3/26. The C half keeps R78 26/26, R174 26/26 and H79 20/26, and carries R90 in 0/26 and R147 in 3/26. All 26/26 long
+  genes have the full core set split across the two halves.
+  Annotated controls: 59/60 two-domain DPANN members show the same split, and 49/60 one-domain members keep all four
+  residues in one domain. Structure-based mapping onto 1O26 gives the same pattern (N: S88 12/13, R90 12/13;
+  C: R78 13/13, R174 13/13) and agrees with the alignment-based residue in 133/167 positions.
+  Answer to Q2: neither half carries the catalytic set alone. Each half carries the residues one subunit contributes
+  to the pocket.
+Rung 4: single chains for 15 representatives (every family and clade): pLDDT 73-92, pTM 0.76-0.95.
+  Halves on 1O26 chain A (TM normalized by 1O26): N median 0.76 (0.69-0.79), C median 0.71 (0.59-0.77).
+  Positive controls: MBN2880691.1 (one-domain, Pfam at GA) 0.83; halves of the two-domain NYZ74576.1 and MBU2497176.1
+  0.67-0.84. Negative controls: Aldedh DAHVAY010000002.1_53 (538 aa) 0.32; TatD MBS3126271.1 (248 aa) 0.26.
+  Method control: ESMFold2 T. maritima ThyX scores 0.99, and its tetramer scores 0.999 on the 1O26 complex.
+  The intra-chain N/C pair superposes on the 1O26 A-D subunit pair (TM 0.73-0.79) in 7/8 models, against 0.40-0.43 for
+  A-B and 0.43-0.50 for A-C. A-D is the pair that shares two pockets.
+Oligomer implied: 2 chains x 2 domains = the ThyX tetramer. The homodimer with FAD x4 + dUMP x4 gives ipTM 0.69-0.78 for
+  4 leads (positive controls NYZ74576.1 0.82, MBU2497176.1 0.56). It superposes on the 1O26 tetramer with TM 0.80-0.84.
+  A homotetramer of the long chain gives ipTM 0.37-0.38 (2/2 tested), so the dimer is the unit.
+  In each lead dimer (NMB66601.1, MEM4152697.1, HJO15200.1, JAGVGF010000004.1_10), 2 FAD and 2 dUMP sit in composite
+  pockets: 8-10 core residues line each FAD and 3-5 line each dUMP, all from a C half plus an N half. The remaining
+  2 + 2 ligands sit in pockets with at most 1 core residue. The positive control NYZ74576.1 behaves the same way.
+  The T. maritima and MBN2880691.1 tetramers place all 8/8 ligands in complete pockets, matching 1O26.
+  A single chain with one FAD and one dUMP already forms one composite pocket (NMB66601.1: 7 and 4 core residues).
+  The negative-control dimer also takes ligands (27-29 contact residues), so the residue pattern carries the evidence;
+  placement by itself carries none.
+Rung 5 (code/04, code/10): the lead gene's own rows are excluded. 23/31 lead genomes then have no dTMP-forming enzyme
+  by any source. Sources checked: pfam Thy1, Thymidylat_synt and DUF166; kofam and kegg K03465, K00560, K13998 and
+  K22882; CDD ThyX, ThyA, methanogen-type, TS_Pyrimidine_HMase and pfam02593 (DUF166, a dTMP-forming family).
+  Pacearchaeales: 17/19 lead genomes lack one, against 96/432 for the rest of the order (54/321 at >= 80%
+  completeness). The completeness-matched expectation is 3.9/19; Fisher OR 29.8, p = 2.5e-9. Across all lead genomes,
+  23/31 are observed against 5.3 expected from order x completeness rates. All 6/6 Woesearchaeales lead genomes also
+  carry a ThyA-family gene.
+  Neighboring steps: ribonucleotide reductase 30/31; a dUMP source (dUTPase, dCTP deaminase or dCMP deaminase) 28/31;
+  tmk 18/31 (rest of Pacearchaeales 264/432). DHFR is present in 3/31, as expected for ThyX, which releases THF.
+  Completeness median 87.5 (lead genomes) against 84.8 (rest).
+Rung 6: see Set above. Rung 7: the alignment lists give the same label for 27/32 genes. The other 5/32 are
+  embedding-only (alignment no call; 0 conflicting): MBN1175995.1, HYD03630.1, MBS3141614.1, JAUWXZ010000042.1_5,
+  JAFCCD010000008.1_6.
+Q4, ortholog: 26/32 lead genes share at least 2 neighbor families (+-4 genes) with annotated Pfam-Thy1 genes in other
+  genomes (373 such genes). Only 3/31 lead genomes carry another Pfam-Thy1 gene, so the lead is the ortholog in 28/31.
+  Conserved neighbors within +-3 genes: tmk 13/32 (at +1 in 8), RNR/NrdR 14/32, a dUMP-forming enzyme 14/32; 29/32
+  have at least one. Annotated two-domain ThyX share the arrangement (tmk at +1: 59/211 Woesearchaeales, 18/61
+  Pacearchaeales).
+  Outside the slot calls, 14 unannotated members of the lead families exist; 8 of them sit in genomes with no other
+  dTMP synthase.
+Criterion A: ILVFMAWC fraction 0.33-0.41 (median 0.36, soluble range); ~550 aa; folds as a defined homodimer (the
+  pseudo-tetramer of the characterized homotetramer). Co-folds with FAD and dUMP are above.
+UNVERIFIED: enzymatic activity; the 2-sites-per-dimer stoichiometry (model prediction; testable by FAD titration and by
+  single mutants S88A in the N half or R174A in the C half). Also the methylene donor: SHMT (glyA) is present in 2/31
+  lead genomes and 31/432 other Pacearchaeales.
+  The single-domain ThyX, the tandem form and the shared active site are characterized or observed. Anything about
+  regulation or a second function is unsupported.
+
+LEAD 2: Thymidylat_synt (PF00303)   verdict KILLED (criterion B: routine near-threshold annotation miss)
+48 genes in 48 genomes: Nanobdellota 46 (Pacearchaeales 37/487, SCGC-AAA011-G17 8/206); lengths 62-446 aa, median 331
+(DPANN annotated members median 296). Tiers T2 28, T1 19, contradicted 1; support median 0.717.
+CDD's best hit is in the family for 41/48: PRK00956 thyA 24, TIGR03283 methanogen-type 11, COG0207 ThyA 3,
+TS_Pyrimidine_HMase 3; E down to 2.4e-29. Weak Pfam hits on 32/48 score 12.0-24.7 bits against GA 24.3; MDD5133683.1
+scores 24.66 for the full sequence. Rung 7: same label from the alignment lists for 45/48; embedding-only 3/48.
+It fills the same gap: 37/48 genomes have no other dTMP synthase, against 9.6 expected (Pacearchaeales 28/37 against
+96/432 in the rest; p = 8e-11). Any annotator would name it from CDD alone, so rungs 3-4 were left unrun.
+
+FILES (folder R/benchmarks/redesign/dpann_leads/thy/)
+  leads.tsv; code/01-17 (03 and 08 are the bash scripts as run, saved as .txt).
+  Data: lead_genes.tsv, lead1.faa, lead2.faa, genome_functions.tsv, context_rates.tsv, residues_by_half.tsv,
+  core_positions.tsv, ref_sites.tsv, ligand_sites.tsv, struct_residues.tsv, positional_matches.tsv, lead1_families.tsv,
+  rung2_per_gene.tsv; data/fold/ (34 models + logs); data/struct/usalign.tsv and usalign_raw.txt; data/ref/ (1O26,
+  UniProt Q9WYT0/P9WG57 JSON, 78 reviewed ThyX, KEGG M00938 and KO definitions).
+  Remote scratch: /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/thy/struct

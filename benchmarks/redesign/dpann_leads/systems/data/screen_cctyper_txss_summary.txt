@@ -1,0 +1,11 @@
+cctyper complete calls: slot genes that are members 166; with mappable profile 92; slot label in the profile family set 72 (0.783)
+cctyper cas_putative: slot genes that are members 2967; with mappable profile 2061; slot label in the profile family set 583 (0.283)
+txsscan members that are slot genes: 566 ({'Archaeal-T4P': 567}); top labels {'archaeal type IV pilus assembly protein PilA': 308, 'T2SSF': 194, 'DUF7266': 23, 'Class_IIIsignal': 10, 'Arch_flagellin': 9}
+complete CRISPR-Cas calls 448; lacking >= 1 interference/adaptation gene 271; with slot gene within +/-3 genes 57; inside/adjacent 47; gain events 3 in 3 calls
+gain events by gene: {'Csm4': 2, 'Cas5': 1}
+labels in CRISPR windows (top 15): {'Cas_TM1802': 20, 'AbiEi_4': 6, 'Laminin_G_3': 6, 'Cas_Cas4': 5, 'CARDB': 5, 'ASH': 4, 'HEPN': 4, 'CBFD_NFYB_HMF': 3, 'Big_9': 3, 'ParE_toxin': 2, 'Csm4_C': 2, 'STIV_B116-like': 1, 'ECF_trnsprt': 1, 'HTH_27': 1, 'AAA_15': 1}
+                                                system_id   type    protein_id label_name gains  dist tier       list_type  length
+4      cctyper:GCA_003568775.1:MWMI01000002.1:36715-52668    I-B    RIB35412.1  Cas_Cas5d  Cas5     0   T2            both     218
+41  cctyper:GCA_025057985.1:JANXEV010000005.1:33765-47545  III-A  MCS7093944.1     Csm4_C  Csm4     0   T2  embedding_only     309
+47  cctyper:GCA_033579515.1:JAVQVO010000005.1:33765-47545  III-A  MDW8160179.1     Csm4_C  Csm4     0   T2  embedding_only     309
+Archaeal-T4P calls 804 (many-subunit machine; counts only)

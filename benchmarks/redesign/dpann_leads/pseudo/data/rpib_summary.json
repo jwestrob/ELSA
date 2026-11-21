@@ -1,0 +1,59 @@
+{
+ "family": "rpib",
+ "title": "RpiB-fold LF family, Micrarchaeales (DPANN); ref P37351 RPIB_ECOLI",
+ "verdict": "ARTIFACT",
+ "n_labeled_genes": 287,
+ "n_labeled_groups": 11,
+ "n_canonical_genes": 246,
+ "n_canonical_groups": 29,
+ "positions_total": 14,
+ "verdict_positions": 9,
+ "verdict_position_list": "D9;H10;C66;G67;G69;G71;H99;R133;R137",
+ "positions_top_sub_ge70": 0,
+ "positions_top_sub_lt50": 8,
+ "labeled_replaced_rate": 0.909,
+ "control_replaced_rate": 0.944,
+ "control_kind": "fallback: GA canonical, identity-matched",
+ "control_genes": 2,
+ "control_groups": 2,
+ "identity_window": [
+  0.147,
+  0.214
+ ],
+ "labeled_identity_median": 0.179,
+ "control_identity_median": 0.187,
+ "canonical_identity_median": 0.385,
+ "shift_rate_pooled": 0.145,
+ "control_keeps_canonical": false,
+ "paralog": {
+  "labeled_genomes": 287,
+  "labeled_genomes_with_intact": 31,
+  "clade_genomes_without_labeled": 539,
+  "without_labeled_with_intact": 45,
+  "labeled_groups": 11,
+  "labeled_groups_with_intact": 3,
+  "nonlabeled_groups": 12,
+  "nonlabeled_groups_with_intact": 0,
+  "clade": "o__Micrarchaeales",
+  "canonical_members": 246,
+  "canonical_intact": 95,
+  "labeled_genomes_with_any_canonical": 58,
+  "without_labeled_with_any_canonical": 122,
+  "labeled_genomes_with_active_site_canonical": 37,
+  "without_labeled_with_active_site_canonical": 75
+ },
+ "own_invariant_n": 7,
+ "own_invariant_residues": "ACDGGKM",
+ "own_invariant_same_pocket": 2,
+ "own_invariant_elsewhere": 3,
+ "own_invariant_unmapped": 2,
+ "structure": "1NN4_A.pdb: 9/9 verdict positions mapped",
+ "extra_roles": {
+  "lf_annotated": {
+   "genes": 165,
+   "groups": 10,
+   "replaced_rate": 0.867,
+   "identity_median": 0.206
+  }
+ }
+}

@@ -1,0 +1,92 @@
+BOUNDARY WORKSTREAM: FOLLOW-UP REPORT (coordinator requests of 2026-11-12), REPORT_followup.txt
+=============================================================================================
+
+VERDICT
+1. The nested output DH (level-2 locus as the neighbourhood + rule H's locus as the core) meets every predeclared
+   replacement condition and REPLACES D AS THE ADOPTED RULE: conditions (i), (ii), (iii) against R1; covered50 equal
+   to R1 for every caller; 1,512 ribosomal runs resolved (D 1,377); Parvarchaeaceae resolved 113 of 114 (D 13).
+2. Reading inventory: unit@0.5 alone supplies most of the full table's F1 (it attains the full-table best F1 for
+   81% / 77% / 74% of DefenseFinder / TXSScan / CRISPR-Cas instances on rescue3, and is the only reading that does
+   for 12% / 39% / 33%); it resolves 149 ribosomal runs. Conserved@2 attains the best for 50% / 11% / 34%. The
+   conserved_g2 readings are almost never the sole best (<= 0.5% per caller). Base and rescue3 agree.
+
+PREDECLARED (predeclared.json followup_1, 13:56:52 UTC, before any number): DH replaces D if it meets (i), (ii),
+(iii) against R1, keeps covered50 within 0.01 of R1 for every caller, resolves more ribosomal runs than D (1,377) and
+resolves >= 100 of 114 Parvarchaeaceae runs. Parameters fixed at the task-1 H selection (Louvain res 0.3, seed 17;
+trimming f 0.5); no tuning. Job 81296.
+
+1. DH, rescue3 arm, even genomes (paired genome bootstrap 2,000, seed 17)
+ caller          F1 DH   F1 R1   dF1 vs R1 [95%]        dExcess vs R1 [95%]    dControl   dF1 vs R2   dExcess vs R2         covered50 DH / R1
+ DefenseFinder   .744    .688    +.056 [+.048, +.065]   +.019 [+.012, +.026]   +.037      -.082       +.030 [+.021, +.039]  .924 / .924
+ TXSScan         .548    .409    +.139 [+.125, +.154]   +.071 [+.060, +.082]   +.069      -.209       -.053 [-.066, -.040]  .990 / .990
+ CRISPRCasTyper  .479    .426    +.053 [+.048, +.059]   +.008 [+.004, +.012]   +.045      -.118       +.010 [+.003, +.016]  .890 / .890
+ Summed DF+TXSS excess: DH .427, R1 .337: +.090 [+.077, +.102]; against R2 (.451): -.023 [-.039, -.007].
+ Ribosomal (all 1,686 runs): 1,686 recovered, 1,512 resolved (R1 704, D 1,377, H alone 1,554, R2 1,370), median
+ precision .96, Parvarchaeaceae 114/114 recovered and 113/114 resolved; even-run subset 743 of 838; resolved vs R1
+ +808 [+767, +848].
+ Coverage: genes in loci 2,563,690 (= R1), 650,438 loci (R1 419,861), median span 4; median boundary precision of the
+ best locus over covered instances DF .750 / TXSS .444 / CCT .400 (R1 .667 / .273 / .333).
+ Conditions: (i) met, (ii) met, (iii) met; covered50 within 0.01 (equal); ribosomal 1,512 > 1,377; Parv 113 >= 100.
+ Against R2: (i) met (R2 resolves 1,370), (ii) fails (summed -.023 [-.039, -.007]), (iii) fails (F1 -.08 to -.21,
+ the best-of-11 effect shown below).
+ DH resolves 42 fewer ribosomal runs than H alone: where H's core covers less than the whole run, the level-2 locus
+ has the larger overlap and the ribosomal rule picks it.
+
+2. READING INVENTORY, even genomes (jobs 81297 rescue3, 81298 base; descriptive, predeclared as followup_2)
+ Each reading scored alone (conserved / conserved_g2 at levels 2-80 recomputed in full from boundary_support.npy,
+ since the table stores a locus once per kind; unit@0.5 from the table), and the full table. ctl = mean control
+ (random placement) F1; exc = F1 - ctl. att = share of instances where the reading attains the full-table best F1;
+ sole = the only reading that does; asg = assigned to the first attaining reading in table order (conserved 2..80,
+ conserved_g2 2..80, unit); in the full_table row asg = share with no overlapping locus (F1 0). ribo = ribosomal
+ resolved of 1,686. Checks: the full-table F1 equals the maximum over the 11 readings for every instance (max abs
+ difference 0, both arms); level-2 recomputed sets equal the table rows; higher-level table rows are subsets.
+ n even instances: DefenseFinder 1,261, TXSScan 404, CRISPRCasTyper 1,899.
+
+arm     reading         |    DF F1   ctl    exc  att sole  asg |  TXSS F1   ctl    exc  att sole  asg |   CCT F1   ctl    exc  att sole  asg |  ribo      loci     genes span
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+rescue3 conserved@2     |    0.688 0.402 +0.286  .50  .01  .50 |    0.409 0.357 +0.051  .11  .00  .11 |    0.426 0.354 +0.072  .34  .01  .34 |   704   419,861 2,563,690    4
+rescue3 conserved@5     |    0.675 0.347 +0.329  .56  .01  .18 |    0.458 0.365 +0.093  .15  .01  .06 |    0.397 0.324 +0.073  .29  .00  .07 |   824   413,117 2,092,265    3
+rescue3 conserved@12    |    0.564 0.286 +0.279  .52  .00  .09 |    0.504 0.354 +0.150  .18  .01  .07 |    0.349 0.288 +0.061  .26  .00  .06 |   935   380,272 1,741,813    3
+rescue3 conserved@30    |    0.342 0.207 +0.136  .33  .00  .04 |    0.550 0.313 +0.236  .23  .01  .12 |    0.261 0.221 +0.040  .19  .00  .05 |  1109   330,185 1,310,563    3
+rescue3 conserved@80    |    0.122 0.103 +0.019  .09  .00  .01 |    0.561 0.242 +0.319  .40  .01  .25 |    0.139 0.140 -0.001  .11  .00  .03 |  1316   217,213   788,373    3
+rescue3 conserved_g2@2  |    0.482 0.311 +0.171  .25  .00  .00 |    0.327 0.285 +0.042  .06  .00  .00 |    0.307 0.274 +0.033  .18  .01  .02 |   454   273,385 2,616,576    6
+rescue3 conserved_g2@5  |    0.519 0.285 +0.235  .32  .00  .00 |    0.375 0.308 +0.067  .08  .00  .00 |    0.320 0.269 +0.051  .18  .00  .00 |   616   286,884 2,142,631    5
+rescue3 conserved_g2@12 |    0.470 0.244 +0.225  .34  .00  .00 |    0.437 0.314 +0.123  .12  .00  .00 |    0.292 0.248 +0.044  .16  .00  .00 |   715   279,078 1,784,141    4
+rescue3 conserved_g2@30 |    0.301 0.184 +0.117  .24  .00  .00 |    0.496 0.289 +0.207  .16  .00  .00 |    0.221 0.195 +0.026  .12  .00  .00 |   852   254,903 1,343,673    4
+rescue3 conserved_g2@80 |    0.116 0.096 +0.020  .08  .00  .00 |    0.536 0.230 +0.306  .35  .00  .00 |    0.130 0.130 +0.000  .09  .00  .00 |  1194   188,383   801,753    3
+rescue3 unit@0.5        |    0.809 0.539 +0.271  .81  .12  .12 |    0.721 0.556 +0.165  .76  .39  .39 |    0.568 0.505 +0.063  .74  .33  .33 |   149 1,295,391 2,563,690    2
+rescue3 full_table      |    0.826 0.551 +0.275   -    -   .07 |    0.757 0.582 +0.175   -    -   .00 |    0.597 0.527 +0.070   -    -   .09 |  1370 2,990,356 2,616,576    3
+
+base    conserved@2     |    0.673 0.393 +0.280  .50  .00  .50 |    0.412 0.358 +0.054  .11  .00  .11 |    0.422 0.350 +0.071  .34  .01  .34 |   711   413,181 2,518,213    4
+base    conserved@5     |    0.659 0.335 +0.324  .56  .01  .17 |    0.460 0.364 +0.096  .15  .01  .06 |    0.389 0.318 +0.071  .29  .00  .07 |   831   405,871 2,055,545    3
+base    conserved@12    |    0.534 0.276 +0.258  .49  .00  .08 |    0.503 0.350 +0.153  .18  .01  .07 |    0.341 0.281 +0.060  .24  .00  .06 |   939   374,640 1,715,152    3
+base    conserved@30    |    0.321 0.199 +0.122  .31  .00  .04 |    0.555 0.314 +0.242  .23  .01  .12 |    0.261 0.220 +0.041  .19  .00  .05 |  1112   325,794 1,292,610    3
+base    conserved@80    |    0.121 0.100 +0.020  .09  .00  .01 |    0.561 0.241 +0.320  .40  .01  .24 |    0.139 0.139 +0.000  .11  .00  .03 |  1317   214,467   777,748    3
+base    conserved_g2@2  |    0.475 0.305 +0.169  .25  .00  .00 |    0.331 0.287 +0.044  .06  .00  .00 |    0.305 0.272 +0.033  .18  .00  .01 |   466   270,655 2,570,098    6
+base    conserved_g2@5  |    0.508 0.275 +0.233  .32  .00  .00 |    0.380 0.308 +0.071  .09  .00  .00 |    0.315 0.264 +0.050  .17  .00  .00 |   632   283,172 2,104,687    5
+base    conserved_g2@12 |    0.445 0.236 +0.209  .33  .00  .00 |    0.440 0.310 +0.129  .13  .00  .00 |    0.285 0.242 +0.043  .15  .00  .00 |   722   275,745 1,756,703    4
+base    conserved_g2@30 |    0.282 0.176 +0.106  .23  .00  .00 |    0.500 0.289 +0.210  .17  .00  .00 |    0.221 0.194 +0.027  .11  .00  .00 |   855   251,823 1,325,112    4
+base    conserved_g2@80 |    0.115 0.094 +0.021  .08  .00  .00 |    0.537 0.230 +0.307  .35  .00  .00 |    0.130 0.129 +0.002  .09  .00  .00 |  1194   186,079   790,959    3
+base    unit@0.5        |    0.791 0.526 +0.265  .80  .12  .12 |    0.722 0.554 +0.168  .77  .40  .40 |    0.560 0.499 +0.061  .73  .33  .33 |   149 1,273,333 2,518,213    2
+base    full_table      |    0.806 0.537 +0.268   -    -   .09 |    0.758 0.580 +0.179   -    -   .00 |    0.589 0.520 +0.069   -    -   .10 |  1370 2,939,492 2,570,098    3
+
+ Reading of the inventory:
+ - The full table's F1 is unit@0.5 plus conserved@2 to @5 in practice: unit@0.5 is within .02-.04 F1 of the full
+   table on every caller, and conserved@2/@5 supply most of the remaining DefenseFinder and CRISPR-Cas best loci.
+ - TXSScan's best loci come from unit@0.5 (39% sole) and high conserved levels (conserved@80 attains 40%).
+ - unit@0.5 alone, against R1 (point estimates, no interval computed): summed excess +.098, F1 +.121 / +.312 / +.142,
+   ribosomal 149 resolved; it would fail condition (i). It also exceeds DH on F1 for every caller (.809 / .721 / .568
+   against .744 / .548 / .479) at a similar summed excess (.435 against .427).
+
+ONE-LINE NEXT STEP (untested): a three-reading output (level-2 neighbourhood + H core + unit@0.5 units) would carry
+unit's gold F1 and DH's ribosomal resolution; the ribosomal rule picks the largest overlap, so units do not displace
+the H core there.
+
+FILES
+Local benchmarks/redesign/boundary/: REPORT_followup.txt, predeclared.json (followup_1, followup_2,
+timestamp_correction), NOTEBOOK.txt, inventory.py, results/followup_dh.json, results/test_rescue3_followup.json,
+results/inventory_{rescue3,base}.{json,tsv}. Remote $RD/boundary/: the same, plus loci/rescue3/DH_coreH_res0.3_f0.5.parquet
+and scores/rescue3/DH_coreH_res0.3_f0.5.parquet. Logs $RD/logs/boundary_{81296,81297,81298}.log.
+NOTE: in NOTEBOOK.txt and predeclared.json, hand-typed times from the task-1 tuning entry onward ran ahead of the
+clock; a correction entry lists the true times from sacct (order of events unchanged: every predeclaration precedes
+the numbers it governs).

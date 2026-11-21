@@ -1,0 +1,101 @@
+{
+ "PRIMARY": {
+  "equal_rc": true,
+  "all": {
+   "runs": 803,
+   "recovered": 802,
+   "resolved": 528,
+   "any_fit": 708
+  },
+  "Archaea": {
+   "runs": 145,
+   "recovered": 144,
+   "resolved": 138,
+   "any_fit": 139
+  },
+  "Bacteria": {
+   "runs": 658,
+   "recovered": 658,
+   "resolved": 390,
+   "any_fit": 569
+  },
+  "Bact_closed": {
+   "runs": 260,
+   "recovered": 260,
+   "resolved": 108,
+   "any_fit": 209
+  },
+  "Bact_multi": {
+   "runs": 398,
+   "recovered": 398,
+   "resolved": 282,
+   "any_fit": 360
+  }
+ },
+ "SECONDARY": {
+  "equal_rc": true,
+  "all": {
+   "runs": 803,
+   "recovered": 803,
+   "resolved": 498,
+   "any_fit": 706
+  },
+  "Archaea": {
+   "runs": 145,
+   "recovered": 145,
+   "resolved": 120,
+   "any_fit": 137
+  },
+  "Bacteria": {
+   "runs": 658,
+   "recovered": 658,
+   "resolved": 378,
+   "any_fit": 569
+  },
+  "Bact_closed": {
+   "runs": 260,
+   "recovered": 260,
+   "resolved": 94,
+   "any_fit": 204
+  },
+  "Bact_multi": {
+   "runs": 398,
+   "recovered": 398,
+   "resolved": 284,
+   "any_fit": 365
+  }
+ },
+ "ENGINE": {
+  "equal_rc": true,
+  "all": {
+   "runs": 803,
+   "recovered": 803,
+   "resolved": 313,
+   "any_fit": 332
+  },
+  "Archaea": {
+   "runs": 145,
+   "recovered": 145,
+   "resolved": 122,
+   "any_fit": 124
+  },
+  "Bacteria": {
+   "runs": 658,
+   "recovered": 658,
+   "resolved": 191,
+   "any_fit": 208
+  },
+  "Bact_closed": {
+   "runs": 260,
+   "recovered": 260,
+   "resolved": 58,
+   "any_fit": 70
+  },
+  "Bact_multi": {
+   "runs": 398,
+   "recovered": 398,
+   "resolved": 133,
+   "any_fit": 138
+  }
+ }
+}

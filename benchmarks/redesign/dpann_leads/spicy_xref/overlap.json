@@ -1,0 +1,90 @@
+{
+ "spicy_bins": 2547,
+ "spicy_unique_accession_numbers": 2543,
+ "spicy_bins_with_proteins": 2547,
+ "spicy_source_counts": {
+  "gtdb_core": 2172,
+  "lanm": 194,
+  "both": 177
+ },
+ "spicy_in_r232_cluster": 2482,
+ "spicy_assemblies_that_are_lut_genomes": 213,
+ "spicy_assemblies_in_a_lut_species_cluster": 257,
+ "lut_genomes_that_are_spicy_assemblies": 213,
+ "lut_genomes_whose_species_cluster_holds_a_spicy_assembly": 222,
+ "lut_by_layer": [
+  {
+   "layer": "a1_complete",
+   "n": 80,
+   "same_assembly": 66,
+   "species_cluster": 69
+  },
+  {
+   "layer": "a2_receptor",
+   "n": 96,
+   "same_assembly": 37,
+   "species_cluster": 39
+  },
+  {
+   "layer": "a3_split",
+   "n": 141,
+   "same_assembly": 20,
+   "species_cluster": 20
+  },
+  {
+   "layer": "a4_transporter_only",
+   "n": 341,
+   "same_assembly": 20,
+   "species_cluster": 22
+  },
+  {
+   "layer": "b1_same_genus_negative",
+   "n": 166,
+   "same_assembly": 54,
+   "species_cluster": 56
+  },
+  {
+   "layer": "b2_same_family_negative",
+   "n": 134,
+   "same_assembly": 16,
+   "species_cluster": 16
+  },
+  {
+   "layer": "c1_class_background",
+   "n": 56,
+   "same_assembly": 0,
+   "species_cluster": 0
+  },
+  {
+   "layer": "c2_outside_class_module",
+   "n": 18,
+   "same_assembly": 0,
+   "species_cluster": 0
+  }
+ ],
+ "genera": {
+  "spicy": 247,
+  "lut": 490,
+  "shared": 78,
+  "lut_genomes_in_shared_genera": 391
+ },
+ "families": {
+  "spicy": 12,
+  "lut": 164,
+  "shared": 11,
+  "shared_list": [
+   "Acetobacteraceae",
+   "Beijerinckiaceae",
+   "Hyphomicrobiaceae",
+   "Methyloligellaceae",
+   "Methylopilaceae",
+   "Pleomorphomonadaceae",
+   "RS24",
+   "Rhizobiaceae",
+   "Rhodobacteraceae",
+   "Segnochrobactraceae",
+   "Xanthobacteraceae"
+  ],
+  "lut_genomes_in_shared_families": 505
+ }
+}

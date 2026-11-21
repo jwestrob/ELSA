@@ -1,0 +1,64 @@
+{
+ "TOK": {
+  "loci": 650438,
+  "recovered": 1686,
+  "resolved": 1512,
+  "rc_recovered": 1686,
+  "rc_resolved": 1512,
+  "per_run_equal_rc": {
+   "recovered": true,
+   "resolved": true,
+   "best_frac": true,
+   "precision": true
+  },
+  "parv_recovered": 114,
+  "parv_resolved": 113,
+  "target": [
+   1686,
+   1512
+  ],
+  "reproduced": true
+ },
+ "WCP": {
+  "loci": 501794,
+  "recovered": 1684,
+  "resolved": 1420,
+  "rc_recovered": 1684,
+  "rc_resolved": 1420,
+  "per_run_equal_rc": {
+   "recovered": true,
+   "resolved": true,
+   "best_frac": true,
+   "precision": true
+  },
+  "parv_recovered": 114,
+  "parv_resolved": 109,
+  "target": [
+   1684,
+   1420
+  ],
+  "reproduced": true
+ },
+ "EMB": {
+  "loci": 852269,
+  "recovered": 1675,
+  "resolved": 1172,
+  "rc_recovered": 1675,
+  "rc_resolved": 1172,
+  "per_run_equal_rc": {
+   "recovered": true,
+   "resolved": true,
+   "best_frac": true,
+   "precision": true
+  },
+  "parv_recovered": 114,
+  "parv_resolved": 106,
+  "target": [
+   1675,
+   1172
+  ],
+  "reproduced": true
+ },
+ "all_reproduced": true,
+ "written": "2026-11-13T11:16:37Z"
+}

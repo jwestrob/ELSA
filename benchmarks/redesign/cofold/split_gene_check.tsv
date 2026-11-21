@@ -1,0 +1,151 @@
+cand_rank	type_key	block_genomes	transcription_order	fused_targets	fused_genomes	fused_order	fused_same_genus_as_replicate	fused_genome_ratio	split_gene_artefact	fused_lengths	homologs_A_outside_block	homologs_A_annotated	homologs_B_outside_block	homologs_B_annotated	pfam_on_homologs_A	pfam_on_homologs_B
+1.0	81718-393054	249	a_first;a_first	3	3	a_first	False	0.012	False	139;133;138	63	0	80	3		
+2.0	76261-290220	78	a_first;a_first	0	0		False	0.0	False		37	0	11	1		DUF2226:1
+3.0	163474-319984	47	a_first;a_first	0	0		False	0.0	False		12	0	24	0		
+4.0	216518-398390	21	b_first;b_first	0	0		False	0.0	False		7	0	5	0		
+5.0	44723-293223	253	b_first;b_first	0	0		False	0.0	False		39	0	91	3		
+6.0	322564-326340	54	b_first;b_first	1	1	b_first	False	0.0185	False	218	1977	147	2689	73	ParE_toxin:132;YoeB_toxin:10;ParE_like:2	NTP_transf_2:14;Polbeta:14;Mis14:12;tRNA-synt_2d:4;TBPIP:3
+7.0	287285-399306	27	b_first;b_first	0	0		False	0.0	False		1158	25	390	8	DUF7287:16;CTP_transf_like:3;Laminin_G_3:2;VWA:1	DUF7266:3;Cohesin:2;Class_IIIsignal:1;Dockerin_1:1
+8.0	238168-287202	17	b_first;b_first	0	0		False	0.0	False		8	0	15	9		DUF3368:8
+9.0	114055-318532	18	b_first;b_first	0	0		False	0.0	False		3	0	2	0		
+10.0	91155-124439	22	b_first;b_first	0	0		False	0.0	False		2	0	27	0		
+11.0	85135-388429	76	a_first;a_first	0	0		False	0.0	False		194	1	209	3	RHH_1:1	NTP_transf_2:2;Polbeta:2
+12.0	191419-315801	10	b_first;b_first	0	0		False	0.0	False		0	0	21	0		
+13.0	221251-351854	22	a_first;a_first	0	0		False	0.0	False		38	19	3	0	UPF0175:16	
+14.0	48264-404027	67	a_first;a_first	18	18	a_first	False	0.2687	True	423;424;425;424;408;415;419;424;409;424	1356	47	1388	26	UPF0175:1	
+15.0	84543-251674	12	a_first;a_first	4	4	a_first	False	0.3333	True	535;547;545;546	7	3	9	0	LAGLIDADG_3:3	
+16.0	195345-195346	11	b_first;b_first	0	0		False	0.0	False		9	0	17	0		
+17.0	213300-351088	12	b_first;b_first	0	0		False	0.0	False		3	0	3	0		
+18.0	278840-315781	19	a_first;b_first	2	2	a_first	False	0.1053	False	827;827	343	20	288	4	Laminin_G_3:10;Beta_helix:5;DUF2341:4;Big_7:3;DUF285:2	Big_7:2;CARDB:1;DUF7504:1
+19.0	55170-187984	12	a_first;a_first	0	0		False	0.0	False		412	19	102	1	VWA:6;VWA_2:6;CTP_transf_like:3;DUF7287:3;Laminin_G_3:3	Laminin_G_3:1
+20.0	290861-320684	11	a_first;a_first	0	0		False	0.0	False		3	0	24	0		
+21.0	383280-384068	16	a_first;a_first	0	0		False	0.0	False		38	4	47	9	VWA:4;VWA_2:3;VWA_3:1	PKD:5;PKD_4:5;Beta_helix:4;K319L-like_PKD:3;Big_9:1
+22.0	117903-119468	12	a_first;a_first	0	0		False	0.0	False		9	0	34	0		
+23.0	228511-398427	595	b_first;b_first	0	0		False	0.0	False		718	23	327	73		
+24.0	65352-161965	77	a_first;a_first	1	1	a_first	False	0.013	False	543	474	28	963	33	Laminin_G_3:11;Kelch_KLHDC2_KLHL20_DRC7:9;Beta-prop_ATRN-LZTR1:5;Beta_helix:5;Kelch_4:4	CARDB:23;Cu-binding_MopE:2;CarboxypepD_reg:1;WxLIP_HBD:1
+25.0	81783-244572	52	b_first;b_first	0	0		False	0.0	False		871	26	289	123	Laminin_G_3:12;InhA-like_MAM:5;Big_7:5;Reelin_subrepeat-B:1;TSP_3:1	VWA_2:90;VWA:73;Laminin_G_3:7;CARDB:5;GH115_C:3
+26.0	93909-281361	358	a_first;a_first	0	0		False	0.0	False		770	7	574	2		
+27.0	100239-199393	15	a_first;a_first	0	0		False	0.0	False		44	0	28	0		
+28.0	165356-366643	656	b_first;b_first	0	0		False	0.0	False		296	8	1216	1106		DUF87:1062;P-loop_TraG:319;AAA_10:221;TrwB_AAD_bind:13;Intein_splicing:5
+29.0	113415-419953	12	b_first;b_first	0	0		False	0.0	False		309	51	422	23	Laminin_G_3:36;CARDB:6;Class_IIIsignal:5;Laminin_G_2:3;Toxin_R_bind_N:2	VWA:5;VWA_2:3;Laminin_G_3:3;Class_IIIsignal:3;PQQ_2:2
+30.0	208383-305370	7	b_first;b_first	0	0		False	0.0	False		3	0	0	0		
+31.0	384144-399332	5	a_first;a_first	0	0		False	0.0	False		43	1	18	0		
+32.0	164153-346056	7	b_first;b_first	0	0		False	0.0	False		5	0	1	0		
+33.0	73204-121399	7	a_first;a_first	0	0		False	0.0	False		4	0	1	0		
+34.0	78236-89372	7	a_first;a_first	0	0		False	0.0	False		1	0	2	1		SMC_ScpB:1
+35.0	37039-212044	314	a_first;a_first	1	1	a_first	False	0.0032	False	333	467	0	304	7		
+36.0	96948-142248	36	b_first;b_first	0	0		False	0.0	False		15	0	91	2		DUF2341:1;Laminin_G_3:1;VWA:1;VWA_2:1;VWA_3:1
+37.0	18076-409341	58	b_first;a_first	0	0		False	0.0	False		1833	13	1259	11		
+38.0	23083-68571	18	a_first;a_first	0	0		False	0.0	False		1	0	393	232		MazE_antitoxin:180;DUF7479:2
+39.0	4106-100107	20	b_first;b_first	0	0		False	0.0	False		50	0	4	0		
+40.0	295422-333565	18	b_first;b_first	0	0		False	0.0	False		103	2	2	0	DUF4190:2	
+41.0	135862-355287	15	b_first;b_first	0	0		False	0.0	False		4	0	10	0		
+42.0	54986-138205	33	a_first;a_first	0	0		False	0.0	False		1705	3	528	136	VWA:2;VWA_2:1	SLT:85;Peptidase_M23:14;Amidase_3:8;Glucosaminidase:6;Lipase_GDSL_2:6
+43.0	131232-304347	14	b_first;b_first	0	0		False	0.0	False		159	4	179	10	Big_7:3;Big_13:2;Big_3_3:1;CarboxypepD_reg:1;NosD:1	PQQ_2:4;PQQ_3:4;Big_7:2;PKD:1;PKD_4:1
+44.0	309726-354088	19	b_first;b_first	0	0		False	0.0	False		618	4	541	5		
+45.0	312953-417601	12	a_first;a_first	0	0		False	0.0	False		1	0	2	0		
+46.0	55171-410168	37	b_first;b_first	0	0		False	0.0	False		45	0	88	2		
+47.0	237960-383683	30	b_first;b_first	0	0		False	0.0	False		47	1	84	0		
+48.0	199788-222030	13	a_first;a_first	0	0		False	0.0	False		40	0	62	0		
+49.0	290860-420993	10	b_first;b_first	0	0		False	0.0	False		17	0	7	0		
+50.0	51795-335690	10	b_first;b_first	0	0		False	0.0	False		478	20	1070	32	HYDIN_VesB_CFA65-like_Ig:8;ASH:7;CARDB:1;DUF87:1;TrwB_AAD_bind:1	CARDB:23;Cu-binding_MopE:2;CarboxypepD_reg:1
+51.0	141052-414485	9	b_first;b_first	0	0		False	0.0	False		5	0	2	0		
+52.0	107259-414349	7	a_first;a_first	0	0		False	0.0	False		8	0	11	0		
+53.0	209924-429690	7	b_first;b_first	0	0		False	0.0	False		1	0	1	0		
+54.0	46075-224789	7	b_first;b_first	0	0		False	0.0	False		0	0	8	1		
+55.0	326992-412156	12	a_first;a_first	0	0		False	0.0	False		264	2	47	0		
+56.0	198486-222151	11	a_first;a_first	0	0		False	0.0	False		4	0	140	0		
+57.0	66259-214268	8	a_first;a_first	0	0		False	0.0	False		388	6	62	9	AAA_14:5;ATPase_2:5;DUF234:5;Zn_Ribbon_1:1	Beta_helix:7;DUF285:5;NosD:3;Cu-binding_MopE:2;DUF87:1
+58.0	226423-261039	7	a_first;a_first	0	0		False	0.0	False		33	0	5	5		HAD_2:5;Hydrolase:5;HAD:2
+59.0	330592-407535	6	a_first;a_first	0	0		False	0.0	False		20	2	0	0	DUF4352:2	
+60.0	349796-371015	5	b_first;b_first	0	0		False	0.0	False		4	0	10	0		
+61.0	278238-401052	18	a_first;a_first	0	0		False	0.0	False		187	1	28	1	Defensin_beta:1	NPCBM_assoc:1
+62.0	199164-199178	16	b_first;b_first	0	0		False	0.0	False		161	0	2	0		
+63.0	362624-381653	9	b_first;b_first	0	0		False	0.0	False		145	1	34	0	LRR_14:1;LRR_4:1	
+64.0	11796-209006	8	b_first;b_first	0	0		False	0.0	False		0	0	0	0		
+65.0	93436-320017	8	b_first;b_first	0	0		False	0.0	False		134	111	25	0	Hydrolase:111;HAD_2:108;Hydrolase_like:38;NIF:1	
+66.0	382195-413045	7	b_first;b_first	0	0		False	0.0	False		61	0	183	27		Laminin_G_3:16;Beta_helix:8;NosD:6;Peptidase_S8:4;Glug:2
+67.0	229034-423021	7	a_first;a_first	0	0		False	0.0	False		182	5	201	7	ParD_antitoxin:5	HigB_toxin:3;ParE_toxin:2
+68.0	231129-369761	6	a_first;a_first	0	0		False	0.0	False		0	0	0	0		
+69.0	249813-261872	6	a_first;a_first	0	0		False	0.0	False		8	0	17	0		
+70.0	384206-384207	6	b_first;b_first	0	0		False	0.0	False		8	0	1	0		
+71.0	171614-322104	5	b_first;b_first	0	0		False	0.0	False		0	0	0	0		
+72.0	274080-274081	5	b_first;b_first	0	0		False	0.0	False		0	0	0	0		
+73.0	429144-429145	5	a_first;a_first	0	0		False	0.0	False		192	192	1	0	tRNA-synt_1:192;tRNA-synt_1g:192;Anticodon_1:180;tRNA-synt_1_2:178;tRNA-synt_1e:98	
+74.0	43244-80396	5	b_first;b_first	0	0		False	0.0	False		3	0	11	2		Fervidolysin_NPro-like:2
+75.0	6374-95786	5	a_first;a_first	0	0		False	0.0	False		275	21	91	0	DUF7287:9;VWA:6;VWA_2:6;Laminin_G_3:3	
+76.0	68227-121578	5	a_first;a_first	0	0		False	0.0	False		3	0	1	0		
+77.0	47979-332115	5	a_first;a_first	0	0		False	0.0	False		106	78	10	9	tRNA-synt_2c:78;tRNA_SAD:67;DHHA1:7	Glyco_trans_1_4:5;Glycos_transf_1:5;Phage_integrase:4;Glyco_transf_4:3;GT4-conflict:1
+78.0	70186-356767	76	b_first;b_first	0	0		False	0.0	False		76	0	99	4		NTP_transf_2:4;Polbeta:1
+79.0	84104-288586	85	a_first;b_first	0	0		False	0.0	False		1080	5	834	6		
+80.0	16017-197952	57	b_first;b_first	0	0		False	0.0	False		238	5	57	0	PBP:2	
+81.0	112279-129478	46	b_first;b_first	0	0		False	0.0	False		143	0	47	1		
+82.0	238910-410155	159	a_first;a_first	0	0		False	0.0	False		34	1	92	7		Laminin_G_3:6
+83.0	3240-224134	62	a_first;a_first	0	0		False	0.0	False		85	0	114	1		
+84.0	92043-198461	57	a_first;a_first	0	0		False	0.0	False		120	2	105	7	DUF7287:1	3keto-disac_hyd:4;Laminin_G_3:2
+85.0	54849-166079	27	b_first;b_first	0	0		False	0.0	False		606	1	167	0	Cys_rich_CPXG:1	
+86.0	215996-242561	22	b_first;b_first	0	0		False	0.0	False		66	0	67	1		CARDB:1
+87.0	23693-178799	19	b_first;b_first	0	0		False	0.0	False		1	0	22	1		DUF7557:1
+88.0	181392-202909	15	b_first;b_first	0	0		False	0.0	False		18	0	39	2		VWA:2
+89.0	135269-157864	14	b_first;b_first	2	2	b_first	False	0.1429	False	759;1016	164	8	40	9	Peptidase_M64:2;Beta_helix:2;NosD:2;CARDB:2;PQQ:1	NosD:5;Beta_helix:4;PKD:3;PKD_4:3;K319L-like_PKD:2
+90.0	155913-171353	250	b_first;b_first	0	0		False	0.0	False		152	4	432	4		
+91.0	16888-379415	59	a_first;a_first	1	1	a_first	False	0.0169	False	487	296	2	1654	8	SLT:2	LPAM_1:3;SLT:3;DUF2272:1;Peptidase_M23:1
+92.0	19583-144012	9	a_first;a_first	0	0		False	0.0	False		1	0	15	0		
+93.0	30490-202503	6	b_first;b_first	0	0		False	0.0	False		0	0	0	0		
+94.0	97421-362587	5	a_first;a_first	0	0		False	0.0	False		22	0	3	1		K319L-like_PKD:1;PKD:1;PKD_4:1
+95.0	111195-197827	28	a_first;a_first	0	0		False	0.0	False		438	13	712	5	PKD:8;PKD_4:8;Laminin_G_3:6;K319L-like_PKD:1;DUF4215:1	
+96.0	103771-386111	22	a_first;a_first	0	0		False	0.0	False		91	0	40	0		
+97.0	161568-271835	19	a_first;a_first	0	0		False	0.0	False		2	0	4	0		
+98.0	156479-189455	15	b_first;b_first	0	0		False	0.0	False		18	0	23	0		
+99.0	97908-312190	14	a_first;a_first	0	0		False	0.0	False		29	0	14	0		
+100.0	216667-296034	14	b_first;b_first	0	0		False	0.0	False		4	0	8	0		
+101.0	23495-161192	11	a_first;a_first	0	0		False	0.0	False		10	0	44	1		
+102.0	70629-427842	10	b_first;b_first	0	0		False	0.0	False		1723	9	1556	14	PMT_2:4;3D:1;LPAM_1:1;Peptidase_M23:1;SLT:1	SLT:4;PMT_2:4;LPAM_1:3;DUF2272:1;Peptidase_M23:1
+103.0	72359-421523	8	a_first;a_first	0	0		False	0.0	False		5	0	16	0		
+104.0	106955-142961	7	a_first;a_first	0	0		False	0.0	False		116	6	188	0	VWA_2:5;VWA_3:5;VWA:3;Amidase_3:1	
+105.0	223069-398650	7	b_first;b_first	2	2	b_first	False	0.2857	True	889;969	2	0	10	0		
+106.0	27009-27010	7	a_first;a_first	0	0		False	0.0	False		1	0	0	0		
+107.0	65143-330835	6	b_first;b_first	0	0		False	0.0	False		1	0	4	0		
+108.0	70199-339558	5	a_first;a_first	0	0		False	0.0	False		14	0	51	0		
+109.0	225416-262075	588	b_first;b_first	0	0		False	0.0	False		57	0	399	1		Big_9:1;PKD:1;PKD_4:1
+110.0	116270-241835	68	a_first;a_first	0	0		False	0.0	False		1014	4	303	0		
+111.0	204995-369384	26	b_first;b_first	0	0		False	0.0	False		292	4	3	0	HepT-like:2;DsrE:1;NAD_kinase_C:1	
+112.0	255451-259035	16	a_first;a_first	0	0		False	0.0	False		0	0	0	0		
+113.0	120270-321912	14	a_first;a_first	0	0		False	0.0	False		89	0	20	0		
+114.0	245393-300937	14	a_first;a_first	0	0		False	0.0	False		2	0	14	0		
+115.0	47335-145385	13	b_first;b_first	0	0		False	0.0	False		27	0	16	0		
+116.0	172885-264735	11	b_first;b_first	0	0		False	0.0	False		16	0	3	1		Peptidase_C39_2:1
+117.0	194086-239880	11	b_first;b_first	1	1	b_first	False	0.0909	False	254	733	85	1031	65	Laminin_G_3:53;DUF7266:9;Cohesin:7;Laminin_G_2:5;Class_IIIsignal:4	Class_IIIsignal:23;Cu-binding_MopE:7;DUF1554:4;Laminin_G_3:4;PKD_4:3
+118.0	39072-402489	11	a_first;b_first	1	1	b_first	True	0.0909	True	253	394	25	119	1	Maf:9;CYTH:4;UDG:4;Ppx-GppA:2;DUF1653:2	NUDIX:1
+119.0	249807-370930	9	a_first;a_first	0	0		False	0.0	False		1	0	0	0		
+120.0	370926-370927	9	b_first;b_first	0	0		False	0.0	False		1	0	0	0		
+121.0	370928-370929	9	b_first;b_first	0	0		False	0.0	False		10	0	0	0		
+122.0	93665-222738	8	b_first;b_first	0	0		False	0.0	False		6	4	2	0	Pur_DNA_glyco:4	
+123.0	196929-400432	8	a_first;a_first	0	0		False	0.0	False		338	49	397	12	Laminin_G_3:40;DUF4215:9;DUF7266:3;Cohesin:3;Class_IIIsignal:2	DUF7287:12
+124.0	208596-208597	7	b_first;b_first	0	0		False	0.0	False		0	0	2	0		
+125.0	326352-419239	7	a_first;a_first	0	0		False	0.0	False		25	1	22	0	SLT:1	
+126.0	164905-177164	7	b_first;b_first	181	181	b_first	True	25.8571	True	474;490;472;496;467;465;474;477;479;446	1601	26	612	2	DUF11:18;CARDB:4;Top6b_C:1;NPCBM_assoc:1;NosD:1	DUF11:1
+127.0	199102-199124	6	a_first;a_first	0	0		False	0.0	False		169	0	13	0		
+128.0	216157-375328	6	b_first;b_first	0	0		False	0.0	False		9	0	5	0		
+129.0	41558-192799	5	a_first;a_first	0	0		False	0.0	False		7	0	5	0		
+130.0	76548-139157	5	a_first;a_first	0	0		False	0.0	False		3	0	0	0		
+131.0	90235-92292	5	a_first;a_first	0	0		False	0.0	False		0	0	0	0		
+132.0	260500-407615	5	a_first;a_first	0	0		False	0.0	False		11	0	0	0		
+133.0	295841-302710	5	a_first;a_first	0	0		False	0.0	False		24	0	14	1		TruB_N:1
+134.0	338629-347981	194	b_first;b_first	0	0		False	0.0	False		122	11	149	2	Amidase_2:6;SLT:5	SLT:2;SLT_3:1
+135.0	291427-334115	104	a_first;a_first	0	0		False	0.0	False		94	0	355	6		PBP:2;Beta_helix:1
+136.0	267112-288447	97	a_first;a_first	0	0		False	0.0	False		10	0	50	0		
+137.0	11738-208629	49	a_first;a_first	0	0		False	0.0	False		15	0	17	0		
+138.0	226573-264234	44	b_first;b_first	0	0		False	0.0	False		20	0	29	0		
+139.0	58884-389517	43	b_first;b_first	0	0		False	0.0	False		122	0	219	4		
+140.0	205870-225304	39	a_first;a_first	0	0		False	0.0	False		35	0	1	0		
+141.0	97873-213001	22	b_first;b_first	0	0		False	0.0	False		14	0	0	0		
+142.0	102117-158370	22	b_first;b_first	0	0		False	0.0	False		1223	7	892	8		
+143.0	151469-399815	19	a_first;a_first	0	0		False	0.0	False		146	2	76	5		RIO1:3;Kdo:2;PK_Tyr_Ser-Thr:2;MTS:1;Methyltransf_11:1
+144.0	207143-260709	18	b_first;b_first	0	0		False	0.0	False		628	54	2	0	bPH_3:48;Rhodanese:6	
+145.0	153955-153956	15	b_first;b_first	0	0		False	0.0	False		7	0	0	0		
+146.0	22209-119464	15	a_first;a_first	0	0		False	0.0	False		424	24	4	0		
+147.0	249058-256064	14	b_first;b_first	0	0		False	0.0	False		10	0	6	0		
+148.0	11855-245842	13	a_first;a_first	0	0		False	0.0	False		11	0	48	1		DUF2226:1
+149.0	384005-384006	13	a_first;a_first	0	0		False	0.0	False		3	0	8	0		
+150.0	12533-116610	12	a_first;a_first	0	0		False	0.0	False		49	1	11	0	Laminin_G_2:1;Laminin_G_3:1	

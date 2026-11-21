@@ -1,0 +1,134 @@
+LONG_LOCI PART 4: PAIR DISTANCE OF THE BONDS (W3 / W5 / W8 / ADAPTIVE), DPANN AND SPACEDUST (2026-11-13)
+=========================================================================================================
+Family bonds (rescue3), genome-group counting, part-1 tree (L1; L4b with token cohesion ordering the splits and the
+closed-form family node test at the arm's own bond tau). DPANN: odd = selection, even = verdict, ribosomal over all
+1,686 runs, paired genome bootstrap (2,000 draws). Spacedust: source207 matched protocol (10,000 region draws); the
+DPANN-selected output is the primary result, every other row is DEVELOPMENT (window 8 had been seen there). CPU only.
+Predeclaration predeclared4.json: main 14:57 UTC (before any computation at another distance), amendment_1 14:59 (W3b:
+window 3 at the bond-rule tau, added after the gold-free ladder showed the rule gives 6 / 8 instead of part 1's 10),
+amendment_2 15:16 (selection, before any even or source207 number). Development results throughout.
+
+ANSWER
+1. Yes on the Spacedust collection, at the L1 level; nearly at the L4b level. Testing every pair within 8 positions at
+   its own distance (WA) lifts the DPANN-selected output (WA L4b theta .2) to F1 .667, excess +.164 [+.125, +.202]:
+   +.038 [+.015, +.061] over part-1 L4b, level with family pair-linking (+.011 vs part-1 L1; +.021 vs CC2), -.020
+   [-.054, +.014] against the engine reference (BELOW by the -.02 rule by .00004; the interval holds 0). Region
+   coverage for regions of 11+ genes rises from .57 / .31 (union / best locus, W3 L4b) to .75 / .55 (engine .89 / .73).
+2. The connected runs at the wider distance close the gap entirely (DEVELOPMENT rows): WA L1 +.247 [+.213, +.281]
+   BEATS the engine reference (+.064 [+.033, +.094]) with region coverage .91 / .73 for 11+ genes (engine .89 / .73);
+   W8 L1 +.234 (transfer_spacedust's seen +.233) and W5 L1 +.232 do the same. The fixed pair distance of 3 positions is
+   what held the bond outputs below the engine on this collection.
+3. On DPANN the selected WA L4b theta .2 meets all seven bars: ribosomal 1,685 / 1,594 (+82 [+54, +111] over DH; -4
+   [-15, +8] against part-1 L4b), Parvarchaeaceae 114, summed .513 (+.086 [+.063, +.110] over DH), F1 .762 / .672 /
+   .461 (CRISPR-Cas -.019 [-.029, -.008], just inside the -.02 bar). Its cost is summed excess: -.071 [-.086, -.056]
+   against part-1 L4b (theta .1 of the same arm: -.045, also 7/7). The fixed wide windows resolve more runs (W5 1,631,
+   W8 1,626: +33 / +28 over part-1 L4b) but miss the CRISPR-Cas bar (-.026).
+4. One setting good on both datasets: WA L4b. DPANN all seven bars (resolved 1,594); Spacedust +.164, level with
+   pair-linking and within .02 of the engine. The best Spacedust output (WA L1, +.247) fails DPANN (odd resolved 381 of
+   848, summed .33): DPANN needs the tree's boundaries, Spacedust rewards whole long runs.
+5. Where the adaptive distance places its bonds: DPANN 34 / 21 / 14 / 10 / 7 / 6 / 5 / 4% at distances 1-8, Spacedust
+   29 / 19 / 14 / 11 / 9 / 7 / 6 / 5%; boundaries bonded only by pairs 4-8 apart: 15% of bonded boundaries on DPANN
+   (283,444), 20% on Spacedust (457,890). Spacedust uses the far pairs more, as expected for BGCs whose order varies.
+6. Part of the change is the significance rule, not the distance: the bond-FDR rule gives tau 6 on DPANN and 8 on
+   Spacedust for every window (part 1: 10 by the word-type rule). At window 3 with that rule (W3b): DPANN 1,600
+   resolved, CRISPR-Cas -.023 (fails), summed .580; Spacedust L4b +.134 (+.008 over part 1), L1 +.165. The distance
+   adds the rest on Spacedust: WA over W3b +.030 (L4b), +.082 (L1).
+7. On DPANN the adaptive bonds close 19 of the 56 ribosomal runs part-1 L4b left under-covered (family W3 bonds: 0) and
+   resolve 15 of them; CRISPR-Cas member genes outside every locus .324 (part-1 L4b .419).
+8. Z-WA (embedding lists, adaptive) was not built: vl.py's list kernels fix the window (WGAP = 3 in mark, adjacency, the
+   expectation and the ladder) and the stored exclusion masks cover distances 1-3 only. Cost of adding it: a copied
+   kernel with a per-adjacency window and minimum-distance marks, exclusion masks for distances 4-8 (DPANN needs its
+   vectors and kNN reloaded, ~10 min; Spacedust ~3 min), then ~35 min on 64 CPUs for DPANN (z lists 6 min, four
+   round-0 passes at about 2.7x the window-3 time ~13 min, tree + node test ~5 min) and ~15 min for Spacedust; within
+   the compute limit, plus about 2-3 hours of development and testing.
+
+--------------------------------------------------------------------------------------------------------------------------
+TABLE 1. DPANN EVEN (results/table4.txt; d = paired difference [95%]; p1 = part-1 L4b theta .1; bars = of seven)
+  arm  output              rec/res    d res vs DH     d res vs p1     Parv summed d vs DH              d vs p1 L4b          F1 DF/TXSS/CCT  dF1 CCT vs DH        bars bprec          genes
+  DH   token DH            1686/1512  -               -               114  .427   -                    -                    .744/.548/.479  -                    ref  .75/.44/.40    .715
+  p1   L4b theta .1 (W3)   1680/1598  +86 [+60,+115]  -               114  .584   +.157 [+.134,+.182]  -                    .731/.700/.419  -.060 [-.072,-.048]  6/7  1.00/1.00/.50  .460
+  WA   L4b theta .2 (SEL)  1685/1594  +82 [+54,+111]  -4 [-15,+8]     114  .513   +.086 [+.063,+.110]  -.071 [-.086,-.056]  .762/.672/.461  -.019 [-.029,-.008]  7/7  1.00/1.00/.50  .552
+  WA   L4b theta .1        1685/1594  +82 [+55,+111]  -4 [-15,+8]     114  .540   +.113 [+.089,+.136]  -.045 [-.060,-.031]  .762/.694/.461  -.018 [-.029,-.007]  7/7  1.00/1.00/.50  .552
+  W3b  L4b theta .02       1680/1600  +88 [+62,+116]  +2 [-6,+10]     114  .580   +.153 [+.132,+.174]  -.004 [-.018,+.008]  .779/.703/.456  -.023 [-.034,-.013]  6/7  1.00/1.00/.50  .515
+  W5   L4b theta .02       1685/1631  +119 [+93,+146] +33 [+19,+47]   114  .568   +.141 [+.120,+.162]  -.016 [-.031,-.002]  .765/.697/.454  -.026 [-.036,-.015]  6/7  1.00/.75/.50   .528
+  W8   L4b theta .1        1685/1626  +114 [+89,+141] +28 [+14,+43]   114  .548   +.121 [+.097,+.145]  -.037 [-.050,-.023]  .759/.691/.453  -.026 [-.037,-.015]  6/7  1.00/1.00/.50  .522
+  WA L4b .2 vs part-1 L4b dF1: DF +.031 [+.017, +.045], TXSS -.028 [-.035, -.020], CCT +.041 [+.035, +.048]; vs DH DF
+  +.018, TXSS +.124. WA - W3b (both bond rule): summed -.067 [-.078, -.055], resolved -6 [-19, +8]. Parvarchaeaceae
+  resolved WA 107 / 114. Secondary rows are each arm's best on odd (labelled, not selected).
+
+SELECTION (odd; results/selection4.json; [conditions met, odd resolved, odd summed]; DH odd 769)
+  WA L4b .2 [3, 806, .522]  .1 [3, 805, .550]  .05 [3, 801, .558]  (the only outputs meeting all three odd conditions)
+  W5 L4b .02 [2, 823, .580]; W8 L4b .1 [2, 821, .563]; W3 L4b .02 [2, 810, .607]; W3b L4b .02 [2, 809, .593];
+  L1 at every distance [0-1, 360-531]. W5 / W8 resolve the most runs on odd and miss the CRISPR-Cas condition.
+
+TABLE 2. SPACEDUST source207 (primary = DPANN selection; DEV = development rows; d = paired excess difference [95%];
+coverage = median share of region genes in the union of loci / in the best locus, by region size; 46 / 68 / 54 / 39 regions)
+  output                 F1    ctrl  excess [95%]          d vs p1 L4b           d vs p1 L1            d vs CC2              d vs engine           d vs Spacedust        coverage 1-5 | 6-10 | 11-20 | 21+   (11+)     genes
+  engine reference       .750  .566  +.184 [+.154,+.213]   -                     -                     -                     -                     -                     1.00/.90 | 1.00/.89 | .91/.76 | .89/.73   (.89/.73)  -
+  native Spacedust       .676  .612  +.065 [+.037,+.093]   -                     -                     -                     -                     -                     1.00/1.00 | 1.00/.70 | .92/.43 | .89/.31  (.91/.36)  -
+  CC2 (syn, W3)          .587  .445  +.142 [+.106,+.178]   -                     -                     -                     -                     -                     .80/.78 | .82/.67 | .65/.42 | .66/.24    (.66/.36)  -
+  W3 part-1 L4b .2 (ref) .574  .448  +.126 [+.086,+.166]   .000                  -.027 [-.046,-.009]   -.017 [-.042,+.007]   -.058 [-.093,-.022]   +.061 [+.025,+.096]   .75/.60 | .78/.59 | .58/.39 | .57/.24    (.57/.31)  .484
+  WA L4b .2 (PRIMARY)    .667  .504  +.164 [+.125,+.202]   +.038 [+.015,+.061]   +.011 [-.015,+.037]   +.021 [-.007,+.049]   -.020 [-.054,+.014]   +.099 [+.062,+.134]   .80/.75 | .89/.67 | .72/.58 | .76/.55    (.75/.55)  .554
+  WA L1 (DEV)            .679  .432  +.247 [+.213,+.281]   +.121 [+.081,+.161]   +.095 [+.060,+.128]   +.105 [+.072,+.138]   +.064 [+.033,+.094]   +.182 [+.145,+.221]   1.00/1.00 | .89/.83 | .92/.80 | .89/.68 (.91/.73)  .635
+  W3b L4b .2 (DEV)       .602  .468  +.134 [+.095,+.173]   +.008 [-.004,+.021]   -.019 [-.035,-.002]   -.008 [-.033,+.015]   -.050 [-.083,-.015]   +.069 [+.035,+.103]   .75/.60 | .79/.63 | .64/.42 | .68/.29    (.64/.36)  .506
+  W3b L1 (DEV)           .611  .446  +.165 [+.129,+.200]   +.038 [+.014,+.065]   +.012 [-.004,+.031]   +.022 [+.003,+.042]   -.019 [-.052,+.015]   +.100 [+.066,+.134]   .80/.75 | .82/.67 | .72/.47 | .72/.29    (.72/.38)  .543
+  W5 L4b .2 (DEV)        .643  .489  +.154 [+.113,+.194]   +.028 [+.010,+.047]   +.001 [-.022,+.024]   +.012 [-.015,+.038]   -.030 [-.066,+.007]   +.089 [+.052,+.125]   .75/.63 | .88/.68 | .66/.48 | .71/.43    (.68/.44)  .532
+  W5 L1 (DEV)            .670  .438  +.232 [+.197,+.267]   +.106 [+.072,+.140]   +.079 [+.052,+.107]   +.090 [+.061,+.119]   +.048 [+.014,+.082]   +.167 [+.131,+.203]   1.00/.80 | .88/.82 | .85/.58 | .79/.46   (.82/.53)  .575
+  W8 L4b .2 (DEV)        .659  .498  +.161 [+.121,+.201]   +.035 [+.013,+.058]   +.008 [-.018,+.035]   +.019 [-.010,+.046]   -.023 [-.058,+.014]   +.096 [+.059,+.133]   .75/.63 | .88/.67 | .75/.58 | .76/.55    (.76/.55)  .548
+  W8 L1 (DEV)            .650  .416  +.234 [+.196,+.272]   +.108 [+.071,+.144]   +.081 [+.051,+.112]   +.092 [+.062,+.122]   +.050 [+.020,+.080]   +.169 [+.128,+.209]   1.00/1.00 | .89/.83 | .92/.80 | .85/.67 (.88/.74)  .606
+  Excess by region size (1-5 / 6-10 / 11-20 / 21+): WA L4b .2 +.172 / +.193 / +.112 / +.175; WA L1 +.191 / +.274 / +.249 /
+  +.266; part-1 L4b +.146 / +.186 / +.075 / +.068; engine +.159 / +.207 / +.182 / +.175. Median boundary precision 1.00
+  in every row. F1 vs engine: WA L4b -.083 [-.118, -.046], WA L1 -.071 [-.101, -.040] (the engine is a union of 42
+  readings; its control is .566).
+
+--------------------------------------------------------------------------------------------------------------------------
+METHOD (code/lw.py; smoke test: W3 equals part 1's bond code; WA's distance-1 bonds equal a window-1 run)
+  W5 / W8   the learner's round 0 with occurrences at distance 1..w (n pooled over them) and E with that w
+  WA        for d = 1..8: n_d = groups holding the pair at distance <= d, E_d with w = d, Lambda_d; an occurrence at
+            distance d is a bond if n_d >= 2 and Lambda_d >= tau; boundary score = strongest bond spanning it
+  tau       bond FDR (significant occurrences in 3 token shuffles / observed) <= .01 on {4, 6, 8, 10, 12, 15, 20, ...}:
+            DPANN W3 / W5 / W8 / WA FDR at 4 .020 / .018 / .015 / .028, at 6 .0041 / .0029 / .0017 / .0058 -> tau 6;
+            Spacedust at 6 .012 / .013 / .013 / .018, at 8 .0027 / .0023 / .0019 / .0039 -> tau 8
+  bonds     DPANN W3 2.15 M, W5 2.63 M, W8 2.92 M, WA 3.21 M; Spacedust 2.89 / 3.80 / 4.65 / 4.66 M
+  cost      builds (4 corpora x 4 windows, trees at 4 thetas, node tests) 644 s on DPANN, 782 s on Spacedust (24 CPUs,
+            peak < 5 GB); W3b 2-3 min each; odd scoring ~70 s per arm; even + source207 scoring 5 min (job 94379)
+
+HYPOTHESES (predeclared) AND OUTCOMES
+  tau: W3 8-12, W5 10-15, W8 12-20, WA 10-20            REFUTED (6 on DPANN, 8 on Spacedust for every window)
+  DPANN W8 resolved within -60 / +20 of W3, summed -.01
+    to -.05, CCT +.00 to +.03                           resolved REFUTED upward (+28 vs part-1 L4b; +26 vs W3b);
+                                                        summed HELD (-.037); CCT vs W3b -.003 (HELD as ~0)
+  WA within +-30 resolved and +-.02 summed of W3        resolved HELD (-4 vs part-1, -6 vs W3b); summed REFUTED
+                                                        (-.071 / -.067)
+  selected arm W3 or WA                                 HELD (WA)
+  Spacedust W8 L1 +.21 to +.24                          HELD (+.234)
+  W8 L4b +.16 to +.21; WA L4b +.14 to +.19; W5 +.13-.17 HELD (+.161; +.164; +.154)
+  union coverage 11+ genes .70-.80 at W8 / WA           HELD (.76 / .75)
+  verdict 'WA acceptable on both if resolved > 1,512'   HELD (1,594; all seven DPANN bars)
+
+FAILURE ANALYSIS
+- The L4b tree costs excess on Spacedust at every window (WA L4b +.164 against WA L1 +.247): nested sub-nodes raise the
+  random-placement control (.504 against .432) more than F1 (.667 against .679). On DPANN the same nesting is what
+  resolves ribosomal runs. The two benchmarks reward opposite readings of the same tree: whole runs (Spacedust) and
+  the run-sized child (DPANN).
+- Wider fixed windows link more across system edges on DPANN: CRISPR-Cas F1 stays .453-.456 for W5 / W8 / W3b, below
+  the bar; the adaptive test at distance 1 (smaller E) adds adjacent pairs of rare systems and lifts CRISPR-Cas to .461.
+- The summed DPANN excess falls with distance (W3b .580, W5 .568, W8 .548, WA .513 at the selected theta .2; .540 at
+  .1): longer loci raise the control for DefenseFinder and TXSScan.
+
+CAVEATS
+- The selected theta (.2) beat theta .1 by one odd resolved run (806 vs 805); theta .1 gives the same resolved count on
+  all runs (1,594) with summed .540 and is also 7/7.
+- WA's CRISPR-Cas bar holds by .001 (point estimate -.019 against -.02; interval -.029 to -.008).
+- WA L4b vs the engine: -.020 is BELOW by the predeclared rule by 4e-5; the interval includes 0.
+- The bond-FDR rule is new in this part (part 1 used the word-type rule); W3b separates its effect from the window's.
+- Spacedust rows other than the primary are development rows; window 8 had been seen there.
+
+ARTIFACTS
+Local benchmarks/redesign/long_loci/: predeclared4.json, REPORT4.txt, NOTEBOOK.txt (part 4); code/lw.py, sel4.py,
+  table4.py, q_w.sbatch, q_w3b.sbatch, q_w4.sbatch, sscore.py (coverage by region size); results/wbuild_{dpann,sd}.json,
+  wbuild_{dpann,sd}_W3b.json, odd_dpann_{W3b,W5,W8,WA}.json, selection4.json, even_dpann_{WA,W3b,W5,W8}_p4.json,
+  pairs_p4.json, s207_sd_{WA,W3b,W5,W8}.json, s207_sd_group_p4.json, table4.txt.
+Biotite $RD/long_loci/: loci/{dpann,sd}_{W3b,W5,W8,WA}/, nodes/ (bonds_obs.npz per arm), scores/, results/, logs/.
+JOBS (24 CPUs each, standard_expand): 94238 (DPANN builds + odd, 14.4 min), 94239 (Spacedust builds, 13.3 min),
+  94328 (W3b both datasets + odd), 94379 (DPANN even + source207, 5 min). Login node: lw.py smoke.

@@ -1,0 +1,96 @@
+{
+ "threads": 24,
+ "method_config": [
+  false,
+  0.0,
+  1.0,
+  8,
+  3.0
+ ],
+ "hnsw_chosen": {
+  "k": 20000,
+  "efSearch": 20200
+ },
+ "oneshot_0_wall_seconds": 45.7,
+ "oneshot_1_wall_seconds": 10.5,
+ "session_exact20000_load_seconds": {
+  "database_and_vectors": 7.1,
+  "hnsw_index_and_curves": 0.0
+ },
+ "per_query_session_exact20000": {
+  "median_wall": 1.3301048278808594,
+  "mean_wall": 1.4439560890197753,
+  "first_wall": 1.880995273590088,
+  "max_wall": 2.596226453781128,
+  "bench_hits": 7348,
+  "found": 7348,
+  "same_score": 7341,
+  "hits_E001": 598,
+  "bench_E001": 654,
+  "median_parts": {
+   "embedding_ranks": 0.373,
+   "scan": 0.037,
+   "null": 0.9015
+  }
+ },
+ "session_exact20000_nullthreads_load_seconds": {
+  "database_and_vectors": 7.0,
+  "hnsw_index_and_curves": 0.0
+ },
+ "per_query_session_exact20000_nullthreads": {
+  "median_wall": 0.5436625480651855,
+  "mean_wall": 0.552364957332611,
+  "first_wall": 0.5632627010345459,
+  "max_wall": 0.6883060932159424,
+  "bench_hits": 7348,
+  "found": 7348,
+  "same_score": 7341,
+  "hits_E001": 643,
+  "bench_E001": 654,
+  "median_parts": {
+   "embedding_ranks": 0.37,
+   "scan": 0.0375,
+   "null": 0.1175
+  }
+ },
+ "session_hnsw_chosen_load_seconds": {
+  "database_and_vectors": 0.9,
+  "hnsw_index_and_curves": 25.8
+ },
+ "per_query_session_hnsw_chosen": {
+  "median_wall": 1.676215648651123,
+  "mean_wall": 1.8334105372428895,
+  "first_wall": 1.6238372325897217,
+  "max_wall": 3.528956413269043,
+  "bench_hits": 7348,
+  "found": 6980,
+  "same_score": 314,
+  "hits_E001": 569,
+  "bench_E001": 654,
+  "median_parts": {
+   "embedding_ranks": 0.6895,
+   "scan": 0.027,
+   "null": 0.933
+  }
+ },
+ "session_hnsw_chosen_nullthreads_load_seconds": {
+  "database_and_vectors": 0.9,
+  "hnsw_index_and_curves": 13.9
+ },
+ "per_query_session_hnsw_chosen_nullthreads": {
+  "median_wall": 0.7895305156707764,
+  "mean_wall": 0.8718840122222901,
+  "first_wall": 0.8458168506622314,
+  "max_wall": 1.628918170928955,
+  "bench_hits": 7348,
+  "found": 6980,
+  "same_score": 314,
+  "hits_E001": 606,
+  "bench_E001": 654,
+  "median_parts": {
+   "embedding_ranks": 0.667,
+   "scan": 0.027,
+   "null": 0.08
+  }
+ }
+}

@@ -1,0 +1,115 @@
+annot_gpu: whole-proteome Pfam + KOfam for testset3, SR-VP bins and the lut set through Aksha GPU mode
+Report 2026-11-21 05:00 UTC. Remote: $A = $RD/annot_gpu (RD=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/
+ELSA/redesign_20261111). Local: benchmarks/redesign/annot_gpu/ (scripts, this report).
+
+RESULT IN ONE LINE
+The validation gate failed: Aksha 0.2.3 GPU mode aborts on the H200 in the current node environment, so no annotation
+job was submitted. Root cause, confirmed on the allocated H200: the H200 node was upgraded to Ubuntu 24.04.5
+(glibc 2.39, kernel 6.8.0-146, NVIDIA driver 580.178.04; rebooted 2026-11-17), and the installed plan7_gpu runtime
+attests its GPU bias math only for glibc 2.35 with libm GNU build ID b2b4cd0f... (the environment of the September
+qualification runs). Per the task rules I stopped here, started no CPU fallback, and changed no Aksha code or setting.
+
+DECISION NEEDED: how to get the three annotation sets
+  re-attest GPU      Developer task in jwestrob/aksha (native/cuda/bias_cuda.cu): admit glibc 2.39 + libm build ID
+                     d53fcbff9f855463606b25cfbe2a2e10856ea3a7 for the H200 target, fix the crash below, rebuild
+                     aksha-cuda12, rerun the mandatory H200 first-1000 audit (H200_ATTESTATION.md: no whole-dataset GPU
+                     run before it passes), regenerate manifests, rerun this gate. Then GPU time: testset3 6.4-9.4 h,
+                     SR-VP 8.1-11.3 h, lut 11.3-15.5 h (all three 26-36 GPU-h, above the 3 GPU-h budget, so testset3
+                     alone would go first).
+  CPU, one job each  Aksha CPU, --cut_ga, whole collection per job on standard_expand_2 (-c 64): testset3 13-15 h,
+                     SR-VP 16-19 h, lut 23-27 h; 3,350-3,950 CPU-h for all three; same E-value search space as a
+                     whole-collection search. Ready to run: the staged scripts need only the GPU flag removed and the
+                     CPU header.
+  CPU, sharded       The same over many 24-CPU jobs (<= 500 CPUs): about 7-8 h wall for all three. GA-thresholded rows
+                     (every Pfam row, every KOfam row of a KO with a ko_list threshold) are identical to a whole-
+                     collection search because the cutoffs are bit scores; E-values and the rows of the 1,318
+                     threshold-less KOs (reported at E <= 0.01) depend on shard size, and Aksha exposes no -Z.
+Recommendation: CPU, one job each, testset3 first (it unblocks the downstream analysis in about 14 h with whole-
+collection semantics); file the re-attestation and the crash as Aksha work if GPU mode is wanted again. The CPU route
+exceeds the 2 h x 64 CPU line, so it waits for your call.
+
+AKSHA BUG (separate from the attestation)
+On an unattested GPU environment the runtime should route candidates to the exact CPU path; instead it aborts.
+sequence_batch_postfilter_candidates_many_impl (native/cuda/ssv_cuda.cu ~4619-4642) returns early with every candidate
+marked CPU_REQUIRED before it creates batch->postfilter_workspace (~4791), and plan7_ssv_sequence_batch_compact_
+postfilter_f2 (~4939) then fails: "RuntimeError: post-filter workspace is unavailable" (raised from _native.pyx
+_forward_profile_selection_raw, line 8347). Every GPU search on this cluster hits it until the environment is attested.
+
+ENVIRONMENT EVIDENCE (job 119821, diagnostic only: no search, no kernel)
+  plan7_gpu.bias_environment_provenance(): attested false, reason "bias math is not attested for this glibc version";
+  target sm90_h200; H200 identity passes (CC 9.0, 132 SMs, 150 GB); host CPU 6/143/8 (Xeon Platinum 8480+) passes;
+  bias_host_environment_attested True; libm build ID d53fcbff..., attested_for_target false.
+  /etc/os-release Ubuntu 24.04.5 LTS; ldd GLIBC 2.39-0ubuntu8.9. The September production qualification (full-gpu-PFAM-r2)
+  ran on Linux-6.8.0-94 with glibc 2.35; PERFORMANCE.md records driver 570.86.15. Login node: glibc 2.39 as well.
+
+THE THREE COLLECTIONS (FASTA SHA-256 re-hashed today; every header is the gid, the 0-based row index of the package
+universe/genes.parquet, gid = 0..N-1 verified; no '*', no header text after the gid)
+  collection  FASTA                                              proteins   residues        genomes  FASTA sha256
+  testset3    $RD/testset3/package/proteins_gid.faa              2,557,405    821,422,520     842    8ee237ba... = MANIFEST.tsv
+  srvp_bins   $RD/ws_srvp_bins/package/universe/proteins.faa     3,211,751    988,758,684     994    ecf8a511... = seal
+  lut         $RD/slice_lut/testset/package_k8/proteins_gid.faa  4,507,042  1,361,583,935   1,032    1ca3d673... = seal.json
+  testset3: record count and byte size equal the MANIFEST.tsv row and byte entries, so it is the full sealed set.
+  lut: the frozen long_loci run (FROZEN.json "path": $RD/slice_lut/testset/package_k8) used exactly this 1,032-genome
+  package_k8 set; its loci are inclusive gid intervals and fl.py asserts gid == arange(N), so annotation keyed by gid
+  joins without remapping. The same gid scheme holds for testset3 and srvp_bins (genes.parquet also carries the source
+  protein_id '<genome>|<Prodigal ID>').
+
+EXISTING ANNOTATION (none is a whole-proteome Pfam + KOfam table)
+  testset3   ribosomal marking only over all proteins (121 Pfam 38.1 ^ribosom(al)?_ models, Aksha --cut_ga, ribo_audit
+             job 116646, work6/testset3/ribosomal); ribo_audit member annotation (226 + 16 KOs, 20 Pfam on selected
+             genes; Pfam-A on 84,394 window proteins; work6/testset3/annot).
+  srvp_bins  package ribosomal/marked.parquet (53,345 genes, same 121 models, whole proteome); package gold/ =
+             DefenseFinder 3.1.0 + TXSScan 1.1.1 curated MacSyFinder calls (whole proteome); window Pfam/KO tables from
+             ribo_audit work3 and long_loci frozen2; Aksha KOFAM validation samples (16,000 and 4,000 proteins, aksha_check).
+  lut        package_k8 gold/ribosomal_marked.parquet (53,031 genes); gold/lut_* (homology + co-location calls,
+             function UNVERIFIED); slice_lut part-1 own_annot.parquet (Pfam + KOfam on main-locus genes +-5 flanks, part-1
+             numbering) and mdh_hits.parquet (K23995, K14028, K14029, K00114 over whole slices); GlobDB Pfam rows (not
+             joinable at gene level, REPORT.txt answer 7).
+
+MANIFESTS (documented procedure, release/INSTALL.md: create_pressed_manifest from the installed runtime's python -I)
+  $A/manifests/PFAM.manifest.json   27,481 models, verification passed, 35 s on the login node (single process)
+  $A/manifests/KOFAM.manifest.json  27,816 models (live re-stamped KOFAM of 2026-11-20), verification passed, 1 min 43 s
+  Both record private ABI a01d5d4b... (installed aksha-runtime 0.1.1). The August manifests in hmmer_gpu carry ABI
+  169ae774... and the legacy KOFAM hashes, so new manifests were required for both databases. Manifests are valid; the
+  failure is downstream of them.
+
+VALIDATION GATE (4,000 testset3 proteins, uniform random, seed 20261120, 1,297,670 residues; $A/validation/)
+  GPU arm  job 119814, -p gpu_h200 --qos=gpu_h200_4 --gres=gpu:1 -c 28 (28 threads: the gpu_h200_4 per-job cap; the PI
+           said 32), node-224-2t-8gpu-1: PFAM aborted after 13 s in the first profile chunk with the error above;
+           0 hit rows (gpu_pfam/tmp_results holds only the header); KOFAM not reached.
+  CPU arm  job 119815, -p standard --qos=standard_expand -c 24 with the mark7.sbatch exclude list, node-64-768g-8:
+           PFAM  6,872 domain rows, 6,218 protein-model pairs, 3,164 proteins, 2,427 models; 39.6 s, 734 CPU-s
+           KOFAM 6,360 rows, 4,849 pairs, 2,020 proteins, 1,877 KOs; 4 min 07 s, 4,791 CPU-s, 8.0 GB RSS
+  Comparison: impossible (no GPU rows); compare.py is ready for the rerun. Gate verdict: FAIL, full run withheld.
+
+TIME ESTIMATES
+  GPU (after re-attestation; 28 threads). Reference: PLM2_5, 300,186 proteins / 69.45 M residues. Pfam: production
+  wheels 311-315 s at 64 workers (qualification full-gpu-PFAM-r2), taken as 313-450 s at 28. KOfam: 1,394 s at 64
+  workers with 64,445 CPU-s of continuation (kofam-production-auto, E = 1e-15 shape; --cut_ga KOfam has no GPU
+  measurement), so about 2,400 s at 27 continuation workers. Scaled by proteins (low end) and residues (high end):
+  testset3 6.4-9.4 h, srvp_bins 8.1-11.3 h, lut 11.3-15.5 h, all three 25.8-36.2 GPU-h.
+  CPU (Aksha, --cut_ga). Pfam 0.18 CPU-s/protein (this gate) or 0.43 CPU-ms/residue (CPU64 benchmark); KOfam 1.04-1.20
+  CPU-s/protein (16,000- and 4,000-protein runs) or 3.49 CPU-ms/residue. testset3 840-980 CPU-h, srvp_bins 1,050-1,240,
+  lut 1,470-1,730.
+
+FILES
+  $A/manifests/          PFAM and KOFAM manifests + creation logs
+  $A/meta/               pfam_meta.tsv (NAME, ACC, DESC from Pfam-A.hmm sha256 a78a42d6...), kofam_meta.tsv (ko_list
+                         sha256 f7cf94b5...), meta_info.json
+  $A/validation/         sample4000.faa/.ids, cpu_pfam/, cpu_kofam/, gpu_pfam/ (empty result), val_*_<job>.log,
+                         diag_gpu_119821.log
+  $A/code/               make_sample.py, compare.py, build_meta.py, to_parquet.py, val_gpu.sbatch, val_cpu.sbatch,
+                         diag_gpu.sbatch, gen_annot.py and the staged, unsubmitted annot_{testset3,srvp_bins,lut}.sbatch
+                         (one H200, 28 threads, PFAM then KOFAM, Parquet with protein_id, gid, accession, name, scores,
+                         hmm/ali/env coordinates, STATUS written last, STATUS_ALL rewritten at the end of each job)
+  $A/STATUS_ALL          one FAILED line per collection: not submitted, GPU validation gate failed (reason above)
+  No per-collection directory or STATUS exists yet. To submit a staged script after the gate passes: mkdir
+  $A/<collection>, copy annot_<collection>.sbatch there (its -o log path lives in that directory), sbatch it from there.
+
+JOBS
+  119814 annot_val_gpu   gpu_h200 / gpu_h200_4, 28 CPUs, 1 H200   FAILED after 17 s (exit 1, error above)
+  119815 annot_val_cpu   standard / standard_expand, 24 CPUs       COMPLETED 4 min 50 s
+  119821 annot_diag_gpu  gpu_h200 / gpu_h200_4, 28 CPUs, 1 H200   COMPLETED < 1 s (attestation record)
+  Node check before submission: node-224-2t-8gpu-1 MIXED, GresUsed gpu:3 of 7 configured; both GPU jobs started at once.
+  Login node: manifest creation (2 single processes), sample draw (9 s), metadata tables (10 s), hashes.
+  Slurm preflight: both remote instruction files read in full and re-checked unchanged before each submission.

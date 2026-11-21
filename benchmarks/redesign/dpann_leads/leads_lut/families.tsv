@@ -1,0 +1,445 @@
+func	function	label	label_name	status	genes	genomes	unannotated_genes	top_orders	ref_acc	ref_entry	ref_chain	ref_family_len	n_catalytic	n_binding	unannotated_folded	unannotated_fold_match	unannotated_cat_all	unannotated_PASS	unannotated_TM_ref_median	named_folded	named_PASS	positives	negA	negB	fold_match_cat_all_share
+K02342	DNA polymerase III subunit epsilon [EC:2.7.7.7]	PF00929	RNase_T	informative	12	12	0	Azospirillales	P03007	DPO3E_ECOLI	2GUI_A	176.0	1.0	9.0	0	0	0	0		10	0	2/3	0/10	0/10	
+K22342	dimethylamine monooxygenase subunit A [EC:1.14.13.238]	PF11927	HODM_asu-like	informative	10	9	10	Rhizobiales,Dongiales,Thalassobaculales	A4XXY9	HODMA_ECTM1	5LTE_A	294.0	1.0	5.0	10	0	0	0	0.229	0	0	3/3	0/10	0/10	
+K03215	23S rRNA (uracil1939-C5)-methyltransferase [EC:2.1.1.190]	PF05958	tRNA_U5-meth_tr	informative	8	8	0	Rhizobiales,Acetobacterales,ATCC43930	P55135	RLMD_ECOLI	1UWV_A	328.0	1.0	7.0	0	0	0	0		8	0	2/2	0/8	0/8	
+K22278	peptidoglycan-N-acetylglucosamine deacetylase [EC:3.5.1.104]	PF01522	Polysacc_deac_1	informative	6	6	6	Kiloniellales,CACIAM-22H2,Reyranellales	Q81EJ6	PGDA2_BACCR	5N1P_A	123.0	1.0	3.0	6	1	0	0	0.424	0	0	2/2	0/6	0/6	0.0
+K01443	N-acetylglucosamine-6-phosphate deacetylase [EC:3.5.1.25]	PF01979	Amidohydro_1	informative	3	3	0	Geminicoccales,Rhizobiales,Kiloniellales	O32445	NAGA_VIBCH	3IV8_A	338.0	1.0	15.0	0	0	0	0		3	3	2/2	0/3	0/3	
+K03500	16S rRNA (cytosine967-C5)-methyltransferase [EC:2.1.1.176]	PF01189	Methyltr_RsmB-F	informative	3	3	0	Rhizobiales,Kiloniellales	P36929	RSMB_ECOLI	1SQG_A	200.0	1.0	11.0	0	0	0	0		3	0	2/2	0/3	0/3	
+K00035	D-galactose 1-dehydrogenase [EC:1.1.1.48]	PF01408	GFO_IDH_MocA	informative	2	2	0	Rhizobiales	Q53TZ2	ARAA_AZOBR	6JNJ_A	122.0	1.0	3.0	0	0	0	0		2	0	2/2	0/2	0/2	
+K01785	aldose 1-epimerase [EC:5.1.3.3]	PF01263	Aldose_epim	informative	2	2	0	Rhizobiales,Rhodobacterales	P39840	GALM_BACSU	3MWX_A	319.0	2.0	3.0	0	0	0	0		2	0	2/2	0/2	0/2	
+K07258	serine-type D-Ala-D-Ala carboxypeptidase (penicillin-binding protein 5	PF00768	Peptidase_S11	informative	2	2	2	Rhodospirillales,UBA7887	P39042	DACX_STRSK	1ES5_A	249.0	3.0	1.0	2	0	0	0	0.201	0	0	2/2	0/2	0/2	
+K18981	uronate dehydrogenase [EC:1.1.1.203]	PF01073	3Beta_HSD	informative	2	2	0	Rhizobiales	Q7CRQ0	URODH_AGRFC	3RFT_A	172.0	1.0	20.0	0	0	0	0		2	0	2/2	0/2	0/2	
+K00690	sucrose phosphorylase [EC:2.4.1.7]	PF00128	Alpha-amylase	informative	1	1	0	Methylaequorales	A0ZZH6	SUCP_BIFAA	6FME_A	187.0	1.0	5.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K01079	phosphoserine phosphatase [EC:3.1.3.3]	PF00702	Hydrolase	informative	1	1	0	Kiloniellales	Q58989	SERB_METJA	1L7M_A	187.0	2.0	9.0	0	0	0	0		1	0	1/2	0/1	0/1	
+K01493	dCMP deaminase [EC:3.5.4.12]	PF00383	dCMP_cyt_deam_1	informative	1	1	1	Rhizobiales	P16006	DCTD_BPT4	1VQ2_A	140.0	1.0	8.0	1	0	0	0	0.432	0	0	2/2	0/1	0/1	
+K01555	fumarylacetoacetase [EC:3.7.1.2]	PF01557	FAA_hydrolase	informative	1	1	0	UBA7887	P16930	FAAA_HUMAN	9SX4_A	305.0	1.0	12.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K01561	haloacetate dehalogenase [EC:3.8.1.3]	PF00561	Abhydrolase_1	informative	1	1	0	Rhizobiales	Q1JU72	DEHA_BURSP	1Y37_A	268.0	2.0	5.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K01790	dTDP-4-dehydrorhamnose 3,5-epimerase [EC:5.1.3.13]	PF00908	dTDP_sugar_isom	informative	1	1	0	Acetobacterales	O27818	RMLC_METTH	1EP0_A	183.0	2.0	10.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K03655	ATP-dependent DNA helicase RecG [EC:5.6.2.4]	PF00270	DEAD	informative	1	1	0	UBA7985	P46063	RECQ1_HUMAN	2V1X_A	188.0	1.0	7.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K04095	cell filamentation protein, protein adenylyltransferase [EC:2.7.7.108]	PF02661	Fic	informative	1	1	0	Rhizobiales	Q9BVA6	FICD_HUMAN	6I7H_A	117.0	1.0	12.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K07130	arylformamidase [EC:3.5.1.9]	PF04199	Cyclase	informative	1	1	0	Rhizobiales	Q81PP9	KYNB_BACAN	4CO9_A	160.0	1.0	6.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K07154	serine/threonine-protein kinase HipA [EC:2.7.11.1]	PF07804	HipA_C	informative	1	1	0	Rhizobiales	Q8EIX3	HIPA_SHEON	4PU5_A	263.0	1.0	14.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K11066	N-acetylmuramoyl-L-alanine amidase [EC:3.5.1.28]	PF01510	Amidase_2	informative	1	1	0	ATCC43930	P82974	AMPD_CITFR	2Y28_A	161.0	1.0	3.0	0	0	0	0		1	0	2/2	0/1	0/1	
+K07171	mRNA interferase MazF [EC:3.1.-.-]	PF02452	PemK_toxin	no_complete_EC	120	93	73	Rhizobiales,Acetobacterales,Zavarziniales							0	0	0	0		0	0				
+K02509	2-oxo-hept-3-ene-1,7-dioate hydratase [EC:4.2.1.-]	PF01557	FAA_hydrolase	no_complete_EC	47	46	0	Rhizobiales,UBA7985,Rhodobacterales							0	0	0	0		0	0				
+K07451	5-methylcytosine-specific restriction enzyme A [EC:3.1.21.-]	PF01844	HNH	no_complete_EC	27	26	2	Rhizobiales,Acetobacterales,Azospirillales							0	0	0	0		0	0				
+K15575	naphthyl-2-oxomethyl-succinyl-CoA thiolase subunit [EC:2.3.1.-]	PF22691	Thiolase_C_1	no_complete_EC	19	17	10	Acetobacterales,Rhizobiales,ATCC43930							0	0	0	0		0	0				
+K16899	ATP-dependent helicase/nuclease subunit B [EC:5.6.2.4 3.1.-.-]	PF12705	PDDEXK_1	no_complete_EC	16	14	2	Rhizobiales,UBA8366,UBA7887							0	0	0	0		0	0				
+K14375	dTDP-L-oleandrosyltransferase [EC:2.4.1.-]	PF04101	Glyco_tran_28_C	no_complete_EC	11	11	11	DSM-16000,Dongiales,Kiloniellales							0	0	0	0		0	0				
+K08296	phosphohistidine phosphatase [EC:3.1.3.-]	PF00300	His_Phos_1	no_complete_EC	10	10	0	Rhizobiales,Azospirillales,Rhodospirillales							0	0	0	0		0	0				
+K20569	NAD+-dependent dehydrogenase [EC:1.1.1.-]	PF01262	AlaDh_PNT_C	no_complete_EC	10	10	2	Rhizobiales,Elsterales,CACIAM-22H2							0	0	0	0		0	0				
+K21262	calicheamicin aminopentosyltransferase [EC:2.4.2.-]	PF04101	Glyco_tran_28_C	no_complete_EC	10	10	10	Rhizobiales,Dongiales,GCA-2731375							0	0	0	0		0	0				
+K18162	NADH dehydrogenase [ubiquinone] 1 alpha subcomplex assembly factor 5 [	PF08241	Methyltransf_11	no_complete_EC	9	9	0	Rhizobiales,ATCC43930,Sphingomonadales							0	0	0	0		0	0				
+K19304	murein DD-endopeptidase [EC:3.4.24.-]	PF01551	Peptidase_M23	no_complete_EC	9	9	7	Rhizobiales,BOG-932							0	0	0	0		0	0				
+K23103	O18-antigen biosynthesis glycosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	9	9	5	Rhizobiales,Acetobacterales,UBA8558							0	0	0	0		0	0				
+K28919	peptidoglycan meso-diaminopimelic acid protein amidase A [EC:3.4.-.-]	PF03734	YkuD	no_complete_EC	8	7	1	Rhizobiales							0	0	0	0		0	0				
+K12976	lipid A 3-O-deacylase [EC:3.1.1.-]	PF09411	PagL	no_complete_EC	7	7	0	Azospirillales,Rhizobiales							0	0	0	0		0	0				
+K21216	glycosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	7	7	5	Rhizobiales,Acetobacterales,Rhodospirillales							0	0	0	0		0	0				
+K14374	avermectin B 5-O-methyltransferase [EC:2.1.1.-]	PF08241	Methyltransf_11	no_complete_EC	6	6	3	Rhizobiales,CACIAM-22H2,ATCC43930							0	0	0	0		0	0				
+K03605	hydrogenase maturation protease [EC:3.4.23.-]	PF01750	HycI	no_complete_EC	5	5	0	Rhizobiales,Reyranellales,Rhodospirillales							0	0	0	0		0	0				
+K12632	puromycin N-acetyltransferase [EC:2.3.-.-]	PF00583	Acetyltransf_1	no_complete_EC	5	5	2	Rhodospirillales,Rhizobiales,Rhodobacterales							0	0	0	0		0	0				
+K13004	galacturonosyltransferase WbtD [EC:2.4.1.-]	PF13692	Glyco_trans_1_4	no_complete_EC	5	5	4	Rhizobiales,GCA-2746255,Acetobacterales							0	0	0	0		0	0				
+K14604	2-hydroxy-6-oxo-6-(2'-carboxyphenyl)-hexa-2,4-dienoate hydrolase [EC:3	PF00561	Abhydrolase_1	no_complete_EC	5	5	2	Acetobacterales,Rhizobiales							0	0	0	0		0	0				
+K16558	succinoglycan biosynthesis protein ExoL [EC:2.-.-.-]	PF13579	Glyco_trans_4_4	no_complete_EC	5	5	0	Rhizobiales,Azospirillales							0	0	0	0		0	0				
+K22677	2,6-dioxo-6-phenylhexa-3-enoate/TCOA hydrolase [EC:3.7.1.-]	PF00561	Abhydrolase_1	no_complete_EC	5	5	2	Rhizobiales,BOG-932,CACIAM-22H2							0	0	0	0		0	0				
+K02533	tRNA/rRNA methyltransferase [EC:2.1.1.-]	PF00588	SpoU_methylase	no_complete_EC	4	4	0	Rhizobiales,ATCC43930,Ferrovibrionales							0	0	0	0		0	0				
+K12685	subtilase-type serine protease [EC:3.4.21.-]	PF12951	PATR	no_complete_EC	4	4	4	Reyranellales,BOG-932,Azospirillales							0	0	0	0		0	0				
+K17733	peptidoglycan LD-endopeptidase CwlK [EC:3.4.-.-]	PF13539	Peptidase_M15_4	no_complete_EC	4	1	0	UBA6615							0	0	0	0		0	0				
+K19313	aminocyclitol acetyltransferase [EC:2.3.-.-]	PF00132	Hexapep	no_complete_EC	4	4	0	Rhizobiales,Geminicoccales							0	0	0	0		0	0				
+K23105	O111-antigen biosynthesis colitosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	4	4	3	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K01423	beta-barrel assembly-enhancing protease [EC:3.4.-.-]	PF01435	Peptidase_M48	no_complete_EC	3	3	2	Rhizobiales							0	0	0	0		0	0				
+K07263	zinc protease [EC:3.4.24.-]	PF05193	Peptidase_M16_C	no_complete_EC	3	3	0	Rhizobiales,JAPYRI01							0	0	0	0		0	0				
+K09952	CRISPR-associated endonuclease Csn1 [EC:3.1.-.-]	PF13395	HNH_4	no_complete_EC	3	3	0	Rhizobiales,Bin95							0	0	0	0		0	0				
+K10215	monooxygenase [EC:1.14.13.-]	PF00743	FMO-like	no_complete_EC	3	3	0	BOG-932,Rhizobiales,Zavarziniales							0	0	0	0		0	0				
+K20571	dehydrogenase [EC:1.1.1.-]	PF01408	GFO_IDH_MocA	no_complete_EC	3	3	0	Rhizobiales,Rhodobacterales							0	0	0	0		0	0				
+K05555	cyclase [EC:4.-.-.-]	PF00753	Lactamase_B	no_complete_EC	2	2	0	Elsterales,Rhizobiales							0	0	0	0		0	0				
+K07062	toxin FitB [EC:3.1.-.-]	PF01850	PIN	no_complete_EC	2	2	0	BOG-932,Bin95							0	0	0	0		0	0				
+K11148	dehydrogenase/reductase SDR family member 4-like protein 2 [EC:1.1.-.-	PF00106	adh_short	no_complete_EC	2	2	2	Acetobacterales,Zavarziniales							0	0	0	0		0	0				
+K12628	puromycin biosynthesis protein Pur10 [EC:1.-.-.-]	PF01408	GFO_IDH_MocA	no_complete_EC	2	2	2	CACIAM-22H2,Rhizobiales							0	0	0	0		0	0				
+K14245	PKS ketosynthase (KS/KS alpha) [EC:2.3.1.-]	PF00109	ketoacyl-synt	no_complete_EC	2	2	1	Rhizobiales							0	0	0	0		0	0				
+K14747	benzoylacetate-CoA ligase [EC:6.2.1.-]	PF00501	AMP-binding	no_complete_EC	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K15574	naphthyl-2-oxomethyl-succinyl-CoA thiolase subunit [EC:2.3.1.-]	PF12172	zf-ChsH2	no_complete_EC	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K15857	CDP-3, 6-dideoxy-D-glycero-D-glycero-4-hexulose-5-epimerase [EC:5.1.-.	PF00908	dTDP_sugar_isom	no_complete_EC	2	2	2	Acetobacterales,Rhizobiales							0	0	0	0		0	0				
+K20534	polyisoprenyl-phosphate glycosyltransferase [EC:2.4.-.-]	PF00535	Glycos_transf_2	no_complete_EC	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K20578	glycosyltransferase [EC:2.4.1.-]	PF00534	Glycos_transf_1	no_complete_EC	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K02352	lactonase [EC:3.1.1.-]	PF08450	SGL	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K03799	heat shock protein HtpX [EC:3.4.24.-]	PF01435	Peptidase_M48	no_complete_EC	1	1	0	Rhodospirillales							0	0	0	0		0	0				
+K03824	putative acetyltransferase [EC:2.3.1.-]	PF00583	Acetyltransf_1	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K04036	divinyl protochlorophyllide a 8-vinyl-reductase [EC:1.-.-.-]	PF02830	V4R	no_complete_EC	1	1	0	Kiloniellales							0	0	0	0		0	0				
+K04773	protease IV [EC:3.4.21.-]	PF01343	Peptidase_S49	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K05303	O-methyltransferase [EC:2.1.1.-]	PF13578	Methyltransf_24	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K06133	4'-phosphopantetheinyl transferase [EC:2.7.8.-]	PF01648	ACPS	no_complete_EC	1	1	0	Rhodospirillales							0	0	0	0		0	0				
+K07147	methionine sulfoxide reductase catalytic subunit [EC:1.8.-.-]	PF00174	Oxidored_molyb	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K07452	5-methylcytosine-specific restriction enzyme B [EC:3.1.21.-]	PF00004	AAA	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K08602	oligoendopeptidase F [EC:3.4.24.-]	PF08439	Peptidase_M3_N	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K10773	endonuclease III [EC:3.2.2.- 4.2.99.18]	PF00730	HhH-GPD	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K10857	exodeoxyribonuclease X [EC:3.1.11.-]	PF00929	RNase_T	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K12574	ribonuclease J [EC:3.1.-.-]	PF12706	Lactamase_B_2	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K12629	puromycin biosynthesis protein Pur7 [EC:3.-.-.-]	PF00293	NUDIX	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K12633	N-methyl-transferase [EC:2.1.1.-]	PF06325	PrmA	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K12984	(heptosyl)LPS beta-1,4-glucosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K12989	mannosyltransferase [EC:2.4.1.-]	PF00534	Glycos_transf_1	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K12990	rhamnosyltransferase [EC:2.4.1.-]	PF00535	Glycos_transf_2	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K15257	tRNA (mo5U34)-methyltransferase [EC:2.1.1.-]	PF08003	Methyltransf_9	no_complete_EC	1	1	0	DSM-16000							0	0	0	0		0	0				
+K15754	2'-aminobiphenyl-2,3-diol 1,2-dioxygenase, small subunit [EC:1.13.11.-	PF07746	LigA	no_complete_EC	1	1	0	Sphingomonadales							0	0	0	0		0	0				
+K20581	phosphatase [EC:3.1.3.-]	PF00300	His_Phos_1	no_complete_EC	1	1	0	ATCC43930							0	0	0	0		0	0				
+K20583	deacetylase [EC:3.5.1.-]	PF02585	PIG-L	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K20592	SAM-dependent 3''-N-methyltransferase [EC:2.1.1.-]	PF05401	NodS	no_complete_EC	1	1	0	BOG-932							0	0	0	0		0	0				
+K23464	flavin-dependent trigonelline monooxygenase, oxygenase component [EC:1	PF00296	Bac_luciferase	no_complete_EC	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K24217	L-amino acid N-acyltransferase [EC:2.3.1.-]	PF00583	Acetyltransf_1	no_complete_EC	1	1	0	Zavarziniales							0	0	0	0		0	0				
+K28279	ribonuclease VapC22 [EC:3.1.-.-]	PF01850	PIN	no_complete_EC	1	1	0	TMED109							0	0	0	0		0	0				
+K28641	3-sulfopropionyl-CoA ligase subunit HpfZ [EC:6.2.1.-]	PF13607	Succ_CoA_lig	no_complete_EC	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K02340	DNA polymerase III subunit delta [EC:2.7.7.7]	PF06144	DNA_pol3_delta	no_entry_in_label_family	223	222	0	Rhizobiales,Rhodospirillales,Methylaequorales							0	0	0	0		0	0				
+K17223	L-cysteine S-thiosulfotransferase [EC:2.8.5.2]	PF00034	Cytochrom_C	no_entry_in_label_family	67	66	0	Rhizobiales,Acetobacterales,Azospirillales							0	0	0	0		0	0				
+K03651	3',5'-cyclic-AMP phosphodiesterase [EC:3.1.4.53]	PF00149	Metallophos	no_entry_in_label_family	12	12	0	Rhizobiales,ATCC43930,Chromatiales							0	0	0	0		0	0				
+K02316	DNA primase [EC:2.7.7.101]	PF13155	Toprim_2	no_entry_in_label_family	10	10	5	Rhizobiales,Acetobacterales,JACZXZ01							0	0	0	0		0	0				
+K05973	poly(3-hydroxybutyrate) depolymerase [EC:3.1.1.75]	PF06850	PHB_depo_C	no_entry_in_label_family	7	7	0	Rhizobiales,SMXS01							0	0	0	0		0	0				
+K13075	N-acyl homoserine lactone hydrolase [EC:3.1.1.81]	PF00753	Lactamase_B	no_entry_in_label_family	5	5	0	Rhizobiales,ATCC43930,Dongiales							0	0	0	0		0	0				
+K20845	endo-1,3-beta-xylanase [EC:3.2.1.32]	PF02156	Glyco_hydro_26	no_entry_in_label_family	5	4	1	Rhizobiales,Dongiales							0	0	0	0		0	0				
+K00867	type I pantothenate kinase [EC:2.7.1.33]	PF00485	PRK	no_entry_in_label_family	3	3	0	Rhizobiales,ATCC43930							0	0	0	0		0	0				
+K01160	crossover junction endodeoxyribonuclease RusA [EC:3.1.21.10]	PF05866	RusA	no_entry_in_label_family	3	3	1	Rhizobiales,Rhodobacterales,Acetobacterales							0	0	0	0		0	0				
+K01602	ribulose-bisphosphate carboxylase small chain [EC:4.1.1.39]	PF00101	RuBisCO_small	no_entry_in_label_family	3	3	3	Rhizobiales,RF32							0	0	0	0		0	0				
+K23274	fructose 5-dehydrogenase small subunit [EC:1.1.5.14]	PF12318	FAD-SLDH	no_entry_in_label_family	3	3	2	Azospirillales,Kiloniellales							0	0	0	0		0	0				
+K02170	pimeloyl-[acyl-carrier protein] methyl ester esterase [EC:3.1.1.85]	PF12697	Abhydrolase_6	no_entry_in_label_family	2	2	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K02337	DNA polymerase III subunit alpha [EC:2.7.7.7]	PF02811	PHP	no_entry_in_label_family	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K03060	DNA-directed RNA polymerase subunit omega [EC:2.7.7.6]	PF01192	RNA_pol_Rpb6	no_entry_in_label_family	2	2	2	Acetobacterales,ATCC43930							0	0	0	0		0	0				
+K03722	ATP-dependent DNA helicase DinG [EC:5.6.2.3]	PF13307	Helicase_C_2	no_entry_in_label_family	2	2	0	Sphingomonadales,Reyranellales							0	0	0	0		0	0				
+K12573	ribonuclease R [EC:3.1.13.1]	PF00773	RNB	no_entry_in_label_family	2	2	0	Acetobacterales,UBA7887							0	0	0	0		0	0				
+K20074	PPM family protein phosphatase [EC:3.1.3.16]	PF00481	PP2C	no_entry_in_label_family	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K00428	cytochrome c peroxidase [EC:1.11.1.5]	PF03150	CCP_MauG	no_entry_in_label_family	1	1	0	BOG-932							0	0	0	0		0	0				
+K01768	adenylate cyclase [EC:4.6.1.1]	PF00211	Guanylate_cyc	no_entry_in_label_family	1	1	1	CACIAM-22H2							0	0	0	0		0	0				
+K05518	phosphoserine phosphatase RsbX [EC:3.1.3.3]	PF07228	SpoIIE	no_entry_in_label_family	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K14162	error-prone DNA polymerase [EC:2.7.7.7]	PF17657	DNA_pol3_finger	no_entry_in_label_family	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K20144	(S)-8-oxocitronellyl enol synthase [EC:1.3.1.122]	PF01370	Epimerase	no_entry_in_label_family	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K20542	endoglucanase [EC:3.2.1.4]	PF01270	Glyco_hydro_8	no_experimental_chain_with_active_site	25	24	23	Rhizobiales,Kiloniellales							0	0	0	0		0	0				
+K06178	23S rRNA pseudouridine2605 synthase [EC:5.4.99.22]	PF00849	PseudoU_synth_2	no_experimental_chain_with_active_site	20	19	13	Rhizobiales,Sphingomonadales,Dongiales							0	0	0	0		0	0				
+K01040	glutaconate CoA-transferase, subunit B [EC:2.8.3.12]	PF01144	CoA_trans	no_experimental_chain_with_active_site	19	19	0	Rhizobiales,BOG-932,Zavarziniales							0	0	0	0		0	0				
+K00986	RNA-directed DNA polymerase [EC:2.7.7.49]	PF00078	RVT_1	no_experimental_chain_with_active_site	17	16	0	Rhizobiales,Acetobacterales,Thalassobaculales							0	0	0	0		0	0				
+K01358	ATP-dependent Clp protease, protease subunit [EC:3.4.21.92]	PF00574	CLP_protease	no_experimental_chain_with_active_site	16	15	16	Rhizobiales,Azospirillales,Rhodospirillales							0	0	0	0		0	0				
+K01810	glucose-6-phosphate isomerase [EC:5.3.1.9]	PF00342	PGI	no_experimental_chain_with_active_site	9	9	0	Rhizobiales,Methylaequorales,GM7ARS4							0	0	0	0		0	0				
+K00764	amidophosphoribosyltransferase [EC:2.4.2.14]	PF00156	Pribosyltran	no_experimental_chain_with_active_site	8	8	0	Rhizobiales,Rhodospirillales,GCA-2746255							0	0	0	0		0	0				
+K00762	orotate phosphoribosyltransferase [EC:2.4.2.10]	PF00156	Pribosyltran	no_experimental_chain_with_active_site	7	7	0	Rhodospirillales,Azospirillales,CACIAM-22H2							0	0	0	0		0	0				
+K01406	serralysin [EC:3.4.24.40]	PF00353	HemolysinCabind	no_experimental_chain_with_active_site	4	4	2	Rhizobiales							0	0	0	0		0	0				
+K06941	23S rRNA (adenine2503-C2)-methyltransferase [EC:2.1.1.192]	PF04055	Radical_SAM	no_experimental_chain_with_active_site	4	4	0	Rhizobiales,Acetobacterales,DATDPM01							0	0	0	0		0	0				
+K00700	1,4-alpha-glucan branching enzyme [EC:2.4.1.18]	PF02806	Alpha-amylase_C	no_experimental_chain_with_active_site	3	3	0	Reyranellales,Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K01799	maleate isomerase [EC:5.2.1.1]	PF17645	Amdase	no_experimental_chain_with_active_site	3	3	0	Rhizobiales,Elsterales							0	0	0	0		0	0				
+K16147	starch synthase (maltosyl-transferring) [EC:2.4.99.16]	PF21702	GLGE_C	no_experimental_chain_with_active_site	3	3	0	Rhizobiales							0	0	0	0		0	0				
+K21929	uracil-DNA glycosylase [EC:3.2.2.27]	PF03167	UDG	no_experimental_chain_with_active_site	3	3	2	Rhodospirillales,Rhizobiales,Ferrovibrionales							0	0	0	0		0	0				
+K00451	homogentisate 1,2-dioxygenase [EC:1.13.11.5]	PF20510	HgmA_N	no_experimental_chain_with_active_site	2	2	0	UBA7887,BOG-932							0	0	0	0		0	0				
+K01547	potassium-transporting ATPase ATP-binding subunit [EC:7.2.2.6]	PF00122	E1-E2_ATPase	no_experimental_chain_with_active_site	2	2	0	Rhizobiales,BOG-932							0	0	0	0		0	0				
+K01696	tryptophan synthase beta chain [EC:4.2.1.20]	PF00291	PALP	no_experimental_chain_with_active_site	2	2	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K02482	two-component system, NtrC family, sensor kinase [EC:2.7.13.3]	PF00672	HAMP	no_experimental_chain_with_active_site	2	2	2	Rhizobiales							0	0	0	0		0	0				
+K07637	two-component system, OmpR family, sensor histidine kinase PhoQ [EC:2.	PF26769	HAMP_PhoQ	no_experimental_chain_with_active_site	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K13371	aralkylamine dehydrogenase light chain [EC:1.4.9.2]	PF02975	Me-amine-dh_L	no_experimental_chain_with_active_site	2	2	2	Kiloniellales,Rhizobiales							0	0	0	0		0	0				
+K00164	2-oxoglutarate dehydrogenase E1 component [EC:1.2.4.2]	PF00676	E1_dh	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K00537	arsenate reductase (glutaredoxin) [EC:1.20.4.1]	PF03960	ArsC	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K00766	anthranilate phosphoribosyltransferase [EC:2.4.2.18]	PF02885	Glycos_trans_3N	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01039	glutaconate CoA-transferase, subunit A [EC:2.8.3.12]	PF01144	CoA_trans	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01130	arylsulfatase [EC:3.1.6.1]	PF00884	Sulfatase	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01214	isoamylase [EC:3.2.1.68]	PF02922	CBM_48	no_experimental_chain_with_active_site	1	1	0	Reyranellales							0	0	0	0		0	0				
+K01247	DNA-3-methyladenine glycosylase II [EC:3.2.2.21]	PF00730	HhH-GPD	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01338	ATP-dependent Lon protease [EC:3.4.21.53]	PF02190	LON_substr_bdg	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01953	asparagine synthase (glutamine-hydrolysing) [EC:6.3.5.4]	PF00733	Asn_synthase	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K02621	topoisomerase IV subunit A [EC:5.6.2.2]	PF00521	DNA_topoisoIV	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K03797	carboxyl-terminal processing protease [EC:3.4.21.102]	PF03572	Peptidase_S41	no_experimental_chain_with_active_site	1	1	0	DATDPM01							0	0	0	0		0	0				
+K05367	penicillin-binding protein 1C [EC:2.4.99.28]	PF00905	Transpeptidase	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K07106	N-acetylmuramic acid 6-phosphate etherase [EC:4.2.1.126]	PF22645	GKRP_SIS_N	no_experimental_chain_with_active_site	1	1	0	ATCC43930							0	0	0	0		0	0				
+K07516	3-hydroxyacyl-CoA dehydrogenase [EC:1.1.1.35]	PF00378	ECH_1	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K12721	L-prolyl-[peptidyl-carrier protein] dehydrogenase [EC:1.3.8.14]	PF02770	Acyl-CoA_dh_M	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K20831	gellan tetrasaccharide unsaturated glucuronyl hydrolase [EC:3.2.1.179]	PF07470	Glyco_hydro_88	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K21018	fumonisin B1 esterase [EC:3.1.1.87]	PF00135	COesterase	no_experimental_chain_with_active_site	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K22004	trans-aconitate decarboxylase [EC:4.1.1.113]	PF00206	Lyase_1	no_experimental_chain_with_active_site	1	1	0	Rhodobacterales							0	0	0	0		0	0				
+K00831	phosphoserine aminotransferase [EC:2.6.1.52]	PF00266	Aminotran_5	no_reviewed_entry_with_EC_active_site_structure	254	253	0	Rhizobiales,Rhodospirillales,ATCC43930							0	0	0	0		0	0				
+K00386	sulfite dehydrogenase (cytochrome) subunit B [EC:1.8.2.1]	PF09098	Dehyd-heme_bind	no_reviewed_entry_with_EC_active_site_structure	51	50	0	Rhizobiales,Kiloniellales,BOG-932							0	0	0	0		0	0				
+K01154	type I restriction enzyme, S subunit [EC:3.1.21.3]	PF01420	Methylase_S	no_reviewed_entry_with_EC_active_site_structure	47	45	13	Rhizobiales,Kiloniellales,Acetobacterales							0	0	0	0		0	0				
+K06864	cysteine-dependent pyridinium-3,5-bisthiocarboxylic acid mononucleotid	PF00733	Asn_synthase	no_reviewed_entry_with_EC_active_site_structure	42	42	0	Rhizobiales,UBA7887,TMED109							0	0	0	0		0	0				
+K17675	ATP-dependent RNA helicase SUPV3L1/SUV3 [EC:5.6.2.6]	PF00271	Helicase_C	no_reviewed_entry_with_EC_active_site_structure	40	40	39	Rhizobiales,Rhodospirillales,Acetobacterales							0	0	0	0		0	0				
+K00202	formylmethanofuran dehydrogenase subunit C [EC:1.2.7.12]	PF01493	GXGXG	no_reviewed_entry_with_EC_active_site_structure	39	39	0	Rhizobiales,ATCC43930,Azospirillales							0	0	0	0		0	0				
+K04102	4,5-dihydroxyphthalate decarboxylase [EC:4.1.1.55]	PF09084	NMT1	no_reviewed_entry_with_EC_active_site_structure	37	30	0	Rhizobiales,CACIAM-22H2,Kiloniellales							0	0	0	0		0	0				
+K20573	2'-deamino-2'-hydroxyneamine 1-alpha-D-kanosaminyltransferase [EC:2.4.	PF00534	Glycos_transf_1	no_reviewed_entry_with_EC_active_site_structure	35	34	35	Rhizobiales,Azospirillales,Dongiales							0	0	0	0		0	0				
+K08300	ribonuclease E [EC:3.1.26.12]	PF20833	RNase_E_G_Thio	no_reviewed_entry_with_EC_active_site_structure	32	32	21	Rhizobiales,ATCC43930,Rhodospirillales							0	0	0	0		0	0				
+K10794	D-proline reductase (dithiol) PrdB [EC:1.21.4.1]	PF07355	GRDB	no_reviewed_entry_with_EC_active_site_structure	31	31	0	Rhizobiales,Acetobacterales,Reyranellales							0	0	0	0		0	0				
+K22619	calcium-regulated photoprotein [EC:1.13.12.24]	PF13202	EF-hand_5	no_reviewed_entry_with_EC_active_site_structure	31	31	31	Rhizobiales							0	0	0	0		0	0				
+K08309	peptidoglycan lytic transglycosylase [EC:4.2.2.29]	PF01464	SLT	no_reviewed_entry_with_EC_active_site_structure	26	26	4	Rhizobiales,BOG-932,Kiloniellales							0	0	0	0		0	0				
+K01607	4-carboxymuconolactone decarboxylase [EC:4.1.1.44]	PF02627	CMD	no_reviewed_entry_with_EC_active_site_structure	22	21	6	Rhizobiales,Acetobacterales,UBA7887							0	0	0	0		0	0				
+K20930	phosphinomethylmalate isomerase [EC:4.2.1.166]	PF00694	Aconitase_C	no_reviewed_entry_with_EC_active_site_structure	21	21	9	Rhizobiales,Azospirillales,Acetobacterales							0	0	0	0		0	0				
+K24700	3-mercaptopropionate dioxygenase [EC:1.13.11.91]	PF05995	CDO_I	no_reviewed_entry_with_EC_active_site_structure	19	19	0	Acetobacterales,Reyranellales,Rhodospirillales							0	0	0	0		0	0				
+K00641	homoserine O-acetyltransferase/O-succinyltransferase [EC:2.3.1.31 2.3.	PF00561	Abhydrolase_1	no_reviewed_entry_with_EC_active_site_structure	18	16	0	Rhodospirillales,Rhizobiales,ATCC43930							0	0	0	0		0	0				
+K06042	precorrin-8X/cobalt-precorrin-8 methylmutase [EC:5.4.99.61 5.4.99.60]	PF02570	CbiC	no_reviewed_entry_with_EC_active_site_structure	18	18	18	ATCC43930,Rhizobiales,UBA8366							0	0	0	0		0	0				
+K01719	uroporphyrinogen-III synthase [EC:4.2.1.75]	PF09731	Mitofilin	no_reviewed_entry_with_EC_active_site_structure	17	17	16	Rhizobiales							0	0	0	0		0	0				
+K03821	poly[(R)-3-hydroxyalkanoate] polymerase subunit PhaC [EC:2.3.1.304]	PF00561	Abhydrolase_1	no_reviewed_entry_with_EC_active_site_structure	16	15	0	Rhizobiales,Acetobacterales,Kiloniellales							0	0	0	0		0	0				
+K09882	cobaltochelatase CobS [EC:6.6.1.2]	PF07728	AAA_5	no_reviewed_entry_with_EC_active_site_structure	15	15	0	Rhizobiales,Rhodospirillales,Acetobacterales							0	0	0	0		0	0				
+K16967	dimethyl-sulfide monooxygenase [EC:1.14.13.131]	PF00296	Bac_luciferase	no_reviewed_entry_with_EC_active_site_structure	14	12	0	Acetobacterales,Rhizobiales,Azospirillales							0	0	0	0		0	0				
+K15512	benzoyl-CoA 2,3-epoxidase subunit B [EC:1.14.13.208]	PF05138	PaaA_PaaC	no_reviewed_entry_with_EC_active_site_structure	13	13	0	Rhizobiales,Ferrovibrionales,UBA7887							0	0	0	0		0	0				
+K06044	(1->4)-alpha-D-glucan 1-alpha-D-glucosylmutase [EC:5.4.99.15]	PF00128	Alpha-amylase	no_reviewed_entry_with_EC_active_site_structure	12	12	0	Rhizobiales,ATCC43930,Rhodospirillales							0	0	0	0		0	0				
+K22087	methylglutamate dehydrogenase subunit D [EC:1.5.99.5]	PF04268	SoxG	no_reviewed_entry_with_EC_active_site_structure	11	11	0	Rhizobiales,Rhodobacterales,HIMB59							0	0	0	0		0	0				
+K16845	(2R)-sulfolactate sulfo-lyase subunit alpha [EC:4.4.1.24]	PF08666	SAF	no_reviewed_entry_with_EC_active_site_structure	10	10	0	Rhizobiales,Rhodobacterales,SHVZ01							0	0	0	0		0	0				
+K04090	indolepyruvate ferredoxin oxidoreductase [EC:1.2.7.8]	PF01558	POR	no_reviewed_entry_with_EC_active_site_structure	9	9	0	BOG-932,Acetobacterales,Elsterales							0	0	0	0		0	0				
+K00179	indolepyruvate ferredoxin oxidoreductase, alpha subunit [EC:1.2.7.8]	PF02775	TPP_enzyme_C	no_reviewed_entry_with_EC_active_site_structure	8	8	0	Rhizobiales,CACIAM-22H2,GCA-2731375							0	0	0	0		0	0				
+K00283	glycine cleavage system P protein (glycine dehydrogenase) subunit 2 [E	PF21478	GcvP2_C	no_reviewed_entry_with_EC_active_site_structure	8	8	0	Rhizobiales,ATCC43930,Elsterales							0	0	0	0		0	0				
+K03427	type I restriction enzyme M protein [EC:2.1.1.72]	PF02384	N6_Mtase	no_reviewed_entry_with_EC_active_site_structure	8	8	5	Rhizobiales,Methylaequorales,Methylococcales							0	0	0	0		0	0				
+K03770	peptidyl-prolyl cis-trans isomerase D [EC:5.2.1.8]	PF13145	Rotamase_2	no_reviewed_entry_with_EC_active_site_structure	8	8	0	Rhizobiales,UBA7887,SP197							0	0	0	0		0	0				
+K06952	5'-nucleotidase [EC:3.1.3.89]	PF12917	YfbR-like	no_reviewed_entry_with_EC_active_site_structure	8	8	0	Rhizobiales,Azospirillales							0	0	0	0		0	0				
+K19291	mannuronan synthase [EC:2.4.1.33]	PF07238	PilZ	no_reviewed_entry_with_EC_active_site_structure	8	8	0	Rhizobiales,Rhodobacterales,Kiloniellales							0	0	0	0		0	0				
+K20678	dTDP-fucopyranose mutase [EC:5.4.99.59]	PF01593	Amino_oxidase	no_reviewed_entry_with_EC_active_site_structure	8	8	6	Rhizobiales,Sphingomonadales,JACZXZ01							0	0	0	0		0	0				
+K00763	nicotinate phosphoribosyltransferase [EC:6.3.4.21]	PF02749	QRPTase_N	no_reviewed_entry_with_EC_active_site_structure	7	7	0	TMED109,Acetobacterales,UBA828							0	0	0	0		0	0				
+K02283	pilus assembly protein CpaF [EC:7.4.2.8]	PF00437	T2SSE	no_reviewed_entry_with_EC_active_site_structure	7	7	0	Rhizobiales,Ferrovibrionales							0	0	0	0		0	0				
+K06162	alpha-D-ribose 1-methylphosphonate 5-triphosphate diphosphatase [EC:3.	PF01979	Amidohydro_1	no_reviewed_entry_with_EC_active_site_structure	7	7	0	Rhizobiales,Zavarziniales,Bin95							0	0	0	0		0	0				
+K07215	heme oxygenase (biliverdin-IX-beta and delta-forming) [EC:1.14.99.58]	PF01126	Heme_oxygenase	no_reviewed_entry_with_EC_active_site_structure	7	7	0	Rhizobiales,Sphingomonadales,Rhodobacterales							0	0	0	0		0	0				
+K16842	allantoinase [EC:3.5.2.5]	PF01522	Polysacc_deac_1	no_reviewed_entry_with_EC_active_site_structure	7	7	0	Rhizobiales,Reyranellales,Elsterales							0	0	0	0		0	0				
+K24122	limonene dehydrogenase [EC:1.17.99.8]	PF01593	Amino_oxidase	no_reviewed_entry_with_EC_active_site_structure	7	7	1	Rhizobiales,UBA7985,CACIAM-22H2							0	0	0	0		0	0				
+K00147	glutamate-5-semialdehyde dehydrogenase [EC:1.2.1.41]	PF00171	Aldedh	no_reviewed_entry_with_EC_active_site_structure	6	6	0	Rhizobiales,UBA2966							0	0	0	0		0	0				
+K00333	NADH-quinone oxidoreductase subunit D [EC:7.1.1.2]	PF00346	Complex1_49kDa	no_reviewed_entry_with_EC_active_site_structure	6	6	0	ATCC43930,Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K01875	seryl-tRNA synthetase [EC:6.1.1.11]	PF02403	Seryl_tRNA_N	no_reviewed_entry_with_EC_active_site_structure	6	6	0	Rhizobiales							0	0	0	0		0	0				
+K11717	cysteine desulfurase / selenocysteine lyase [EC:2.8.1.7 4.4.1.16]	PF00155	Aminotran_1_2	no_reviewed_entry_with_EC_active_site_structure	6	5	5	Rhizobiales,Rhodospirillales							0	0	0	0		0	0				
+K11927	ATP-dependent RNA helicase RhlE [EC:5.6.2.7]	PF00271	Helicase_C	no_reviewed_entry_with_EC_active_site_structure	6	6	4	Elsterales,Azospirillales,Rhodospirillales							0	0	0	0		0	0				
+K16554	polysaccharide biosynthesis transport protein [EC:2.7.10.3]	PF02706	Wzz	no_reviewed_entry_with_EC_active_site_structure	6	6	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K17224	S-sulfosulfanyl-L-cysteine sulfohydrolase [EC:3.1.6.20]	PF02872	5_nucleotid_C	no_reviewed_entry_with_EC_active_site_structure	6	6	0	Rhizobiales							0	0	0	0		0	0				
+K22082	methylamine---glutamate N-methyltransferase subunit B [EC:2.1.1.21]	PF01493	GXGXG	no_reviewed_entry_with_EC_active_site_structure	6	5	0	Rhizobiales,Kiloniellales							0	0	0	0		0	0				
+K00570	phosphatidylethanolamine/phosphatidyl-N-methylethanolamine N-methyltra	PF13649	Methyltransf_25	no_reviewed_entry_with_EC_active_site_structure	5	5	0	Rhizobiales,Acetobacterales,ATCC43930							0	0	0	0		0	0				
+K00992	N-acetyl-alpha-D-muramate 1-phosphate uridylyltransferase [EC:2.7.7.99	PF00483	NTP_transferase	no_reviewed_entry_with_EC_active_site_structure	5	5	0	Rhizobiales,UBA11136,DATDPM01							0	0	0	0		0	0				
+K01026	propionate CoA-transferase [EC:2.8.3.1]	PF01144	CoA_trans	no_reviewed_entry_with_EC_active_site_structure	5	5	0	Rhizobiales,Geminicoccales,Kiloniellales							0	0	0	0		0	0				
+K03737	pyruvate-ferredoxin/flavodoxin oxidoreductase [EC:1.2.7.1 1.2.8.1]	PF02775	TPP_enzyme_C	no_reviewed_entry_with_EC_active_site_structure	5	4	0	BOG-932,Acetobacterales,Rhizobiales							0	0	0	0		0	0				
+K03769	peptidyl-prolyl cis-trans isomerase C [EC:5.2.1.8]	PF00639	Rotamase	no_reviewed_entry_with_EC_active_site_structure	5	5	0	Rhizobiales,Kiloniellales,Acetobacterales							0	0	0	0		0	0				
+K05914	photinus-luciferin 4-monooxygenase (ATP-hydrolysing) [EC:1.13.12.7]	PF00501	AMP-binding	no_reviewed_entry_with_EC_active_site_structure	5	5	2	Rhizobiales,Azospirillales,ATCC43930							0	0	0	0		0	0				
+K07316	adenine-specific DNA-methyltransferase [EC:2.1.1.72]	PF01555	N6_N4_Mtase	no_reviewed_entry_with_EC_active_site_structure	5	5	1	Rhizobiales,Acetobacterales,Azospirillales							0	0	0	0		0	0				
+K10026	7-carboxy-7-deazaguanine synthase [EC:4.3.99.3]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	5	5	0	Rhizobiales,UBA11136,Sphingomonadales							0	0	0	0		0	0				
+K15969	tetracenomycin F1 monooxygenase [EC:1.13.12.21]	PF03992	ABM	no_reviewed_entry_with_EC_active_site_structure	5	5	0	Rhizobiales							0	0	0	0		0	0				
+K00174	2-oxoglutarate/2-oxoacid ferredoxin oxidoreductase subunit alpha [EC:1	PF01855	POR_N	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K00175	2-oxoglutarate/2-oxoacid ferredoxin oxidoreductase subunit beta [EC:1.	PF02775	TPP_enzyme_C	no_reviewed_entry_with_EC_active_site_structure	4	3	0	Acetobacterales,Rhizobiales,Ferrovibrionales							0	0	0	0		0	0				
+K00334	NADH-quinone oxidoreductase subunit E [EC:7.1.1.2]	PF01257	2Fe-2S_thioredx	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Rhizobiales,Rhodobacterales							0	0	0	0		0	0				
+K01963	acetyl-CoA carboxylase carboxyl transferase subunit beta [EC:6.4.1.2 2	PF01039	Carboxyl_trans	no_reviewed_entry_with_EC_active_site_structure	4	4	0	Rhizobiales,UBA2966,Geminicoccales							0	0	0	0		0	0				
+K10700	ethylbenzene hydroxylase subunit alpha [EC:1.17.99.2]	PF00384	Molybdopterin	no_reviewed_entry_with_EC_active_site_structure	4	4	2	Rhizobiales,ATCC43930,Acetobacterales							0	0	0	0		0	0				
+K19889	demethylrebeccamycin-D-glucose O-methyltransferase [EC:2.1.1.164]	PF08241	Methyltransf_11	no_reviewed_entry_with_EC_active_site_structure	4	4	3	Rhizobiales,JACZXZ01,Dongiales							0	0	0	0		0	0				
+K22348	manganese oxidase [EC:1.16.3.3]	PF07731	Cu-oxidase_2	no_reviewed_entry_with_EC_active_site_structure	4	4	2	Rhizobiales,Rhodospirillales,Geminicoccales							0	0	0	0		0	0				
+K28367	(3R)-beta-phenylalanine---CoA ligase [EC:6.2.1.78]	PF13193	AMP-binding_C	no_reviewed_entry_with_EC_active_site_structure	4	4	4	Rhizobiales							0	0	0	0		0	0				
+K00163	pyruvate dehydrogenase E1 component [EC:1.2.4.1]	PF00456	Transketolase_N	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Acetobacterales,Reyranellales,Rhizobiales							0	0	0	0		0	0				
+K00305	sarcosine oxidase, subunit gamma [EC:1.5.3.24 1.5.3.1]	PF04268	SoxG	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Kiloniellales,Enterobacterales,Rhodospirillales							0	0	0	0		0	0				
+K00450	gentisate 1,2-dioxygenase [EC:1.13.11.4]	PF07883	Cupin_2	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,Acetobacterales,MPNO01							0	0	0	0		0	0				
+K00830	alanine-glyoxylate transaminase / serine-glyoxylate transaminase / ser	PF00266	Aminotran_5	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,UBA7887							0	0	0	0		0	0				
+K00978	glucose-1-phosphate cytidylyltransferase [EC:2.7.7.33]	PF00483	NTP_transferase	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K01045	arylesterase / paraoxonase [EC:3.1.1.2 3.1.8.1]	PF01731	Arylesterase	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Minwuiales,Rhizobiales,Caulobacterales							0	0	0	0		0	0				
+K01156	type III restriction enzyme [EC:3.1.21.5]	PF04851	ResIII	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,ATCC43930,Rhodobacterales							0	0	0	0		0	0				
+K01843	lysine 2,3-aminomutase [EC:5.4.3.2]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,Rhodospirillales							0	0	0	0		0	0				
+K01881	prolyl-tRNA synthetase [EC:6.1.1.15]	PF00587	tRNA-synt_2b	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,Kiloniellales							0	0	0	0		0	0				
+K01912	phenylacetate-CoA ligase [EC:6.2.1.30]	PF00501	AMP-binding	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,BOG-932							0	0	0	0		0	0				
+K02229	precorrin-3B synthase [EC:1.14.13.83]	PF03460	NIR_SIR_ferr	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,BOG-932							0	0	0	0		0	0				
+K03106	signal recognition particle subunit SRP54 [EC:3.6.5.4]	PF02978	SRP_SPB	no_reviewed_entry_with_EC_active_site_structure	3	3	2	Rhizobiales							0	0	0	0		0	0				
+K03644	lipoyl synthase [EC:2.8.1.8]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,UBA8366							0	0	0	0		0	0				
+K03809	NAD(P)H dehydrogenase (quinone) [EC:1.6.5.2]	PF03358	FMN_red	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,Kiloniellales,Acetobacterales							0	0	0	0		0	0				
+K04069	pyruvate formate lyase activating enzyme [EC:1.97.1.4]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Chromatiales,Rhizobiales,UBA8366							0	0	0	0		0	0				
+K04075	tRNA(Ile)-lysidine synthase [EC:6.3.4.19]	PF01171	ATP_bind_3	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales							0	0	0	0		0	0				
+K05343	maltose alpha-D-glucosyltransferase / alpha-amylase [EC:5.4.99.16 3.2.	PF16657	Malt_amylase_C	no_reviewed_entry_with_EC_active_site_structure	3	3	0	ATCC43930,Reyranellales,Geminicoccales							0	0	0	0		0	0				
+K05394	atrazine chlorohydrolase [EC:3.8.1.8]	PF01979	Amidohydro_1	no_reviewed_entry_with_EC_active_site_structure	3	3	2	Rhizobiales,Elsterales,Acetobacterales							0	0	0	0		0	0				
+K06152	gluconate 2-dehydrogenase gamma chain [EC:1.1.99.3]	PF13618	Gluconate_2-dh3	no_reviewed_entry_with_EC_active_site_structure	3	3	1	DSM-16000,Rhizobiales							0	0	0	0		0	0				
+K08356	arsenite oxidase large subunit [EC:1.20.2.1 1.20.9.1]	PF00384	Molybdopterin	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhodospirillales,Rhizobiales,ATCC43930							0	0	0	0		0	0				
+K10027	phytoene desaturase [EC:1.3.99.26 1.3.99.28 1.3.99.29 1.3.99.31]	PF01593	Amino_oxidase	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales							0	0	0	0		0	0				
+K12914	P-methyltransferase [EC:2.1.1.326]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	3	3	1	ATCC43930,Rhizobiales,BOG-932							0	0	0	0		0	0				
+K14449	2-methylfumaryl-CoA hydratase [EC:4.2.1.148]	PF19315	MC_hydratase	no_reviewed_entry_with_EC_active_site_structure	3	3	0	GCA-2746255,JACZXZ01,Rhizobiales							0	0	0	0		0	0				
+K15240	hydroquinone 1,2-dioxygenase [EC:1.13.11.66]	PF00903	Glyoxalase	no_reviewed_entry_with_EC_active_site_structure	3	2	0	Rhizobiales,Geminicoccales							0	0	0	0		0	0				
+K19884	7-chloro-L-tryptophan oxidase [EC:1.4.3.23]	PF01593	Amino_oxidase	no_reviewed_entry_with_EC_active_site_structure	3	2	3	Rhizobiales							0	0	0	0		0	0				
+K20530	type IV secretion system protein TrbE [EC:7.4.2.8]	PF19044	P-loop_TraG	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Kiloniellales,ATCC43930,Rhizobiales							0	0	0	0		0	0				
+K20615	capreomycidine synthase [EC:4.2.1.145]	PF00155	Aminotran_1_2	no_reviewed_entry_with_EC_active_site_structure	3	3	3	Rhizobiales,Dongiales							0	0	0	0		0	0				
+K21673	caffeine dehydrogenase subunit alpha [EC:1.17.5.2]	PF20256	MoCoBD_2	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,CACIAM-22H2,Acetobacterales							0	0	0	0		0	0				
+K21836	D-lactate dehydrogenase (acceptor) [EC:1.1.99.6]	PF01565	FAD_binding_4	no_reviewed_entry_with_EC_active_site_structure	3	3	1	Ferrovibrionales,CACIAM-22H2,Rhizobiales							0	0	0	0		0	0				
+K22081	methylamine---glutamate N-methyltransferase subunit A [EC:2.1.1.21]	PF13522	GATase_6	no_reviewed_entry_with_EC_active_site_structure	3	3	0	Rhizobiales,UBA828,Zavarziniales							0	0	0	0		0	0				
+K27979	altemicidin L-isoleucyltransferase [EC:2.3.2.39]	PF08264	Anticodon_1	no_reviewed_entry_with_EC_active_site_structure	3	3	1	Rhizobiales							0	0	0	0		0	0				
+K00368	nitrite reductase (NO-forming) [EC:1.7.2.1]	PF07732	Cu-oxidase_3	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K00571	site-specific DNA-methyltransferase (adenine-specific) [EC:2.1.1.72]	PF01555	N6_N4_Mtase	no_reviewed_entry_with_EC_active_site_structure	2	2	1	Rhizobiales,Sphingomonadales							0	0	0	0		0	0				
+K00851	gluconokinase [EC:2.7.1.12]	PF01202	SKI	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Rhodospirillales							0	0	0	0		0	0				
+K00969	nicotinate-nucleotide adenylyltransferase [EC:2.7.7.18]	PF01467	CTP_transf_like	no_reviewed_entry_with_EC_active_site_structure	2	2	0	ATCC43930,Rhizobiales							0	0	0	0		0	0				
+K01129	dGTPase [EC:3.1.5.1]	PF13286	HD_assoc	no_reviewed_entry_with_EC_active_site_structure	2	2	0	ATCC43930,Reyranellales							0	0	0	0		0	0				
+K01861	(+)-cis,cis-nepetalactol synthase [EC:5.5.1.35]	PF00106	adh_short	no_reviewed_entry_with_EC_active_site_structure	2	2	2	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K02297	cytochrome o ubiquinol oxidase subunit II [EC:7.1.1.3]	PF06481	COX_ARM	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Rhodospirillales							0	0	0	0		0	0				
+K02527	3-deoxy-D-manno-octulosonic-acid transferase [EC:2.4.99.12 2.4.99.13 2	PF04413	Glycos_transf_N	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K03269	UDP-2,3-diacylglucosamine hydrolase [EC:3.6.1.54]	PF00149	Metallophos	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Elsterales							0	0	0	0		0	0				
+K03391	pentachlorophenol monooxygenase [EC:1.14.13.50]	PF01494	FAD_binding_3	no_reviewed_entry_with_EC_active_site_structure	2	2	2	CACIAM-22H2,Rhizobiales							0	0	0	0		0	0				
+K03412	two-component system, chemotaxis family, protein-glutamate methylester	PF01339	CheB_methylest	no_reviewed_entry_with_EC_active_site_structure	2	2	2	Acetobacterales,Rhizobiales							0	0	0	0		0	0				
+K03430	2-aminoethylphosphonate-pyruvate transaminase [EC:2.6.1.37]	PF00266	Aminotran_5	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,ATCC43930							0	0	0	0		0	0				
+K04564	superoxide dismutase, Fe-Mn family [EC:1.15.1.1]	PF02777	Sod_Fe_C	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Acetobacterales,Rhizobiales							0	0	0	0		0	0				
+K04566	lysyl-tRNA synthetase, class I [EC:6.1.1.6]	PF01921	tRNA-synt_1f	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K05366	penicillin-binding protein 1A [EC:2.4.99.28 3.4.16.4]	PF00905	Transpeptidase	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K05774	ribose 1,5-bisphosphokinase [EC:2.7.4.23]	PF13238	AAA_18	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K05915	(hydroxymethyl)phosphonate/2-amino-1-hydroxyethylphosphonate dioxygena	PF01966	HD	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Kiloniellales,Rhizobiales							0	0	0	0		0	0				
+K06163	alpha-D-ribose 1-methylphosphonate 5-phosphate C-P lyase [EC:4.7.1.1]	PF06007	PhnJ	no_reviewed_entry_with_EC_active_site_structure	2	2	2	Rhizobiales,Kiloniellales							0	0	0	0		0	0				
+K06223	DNA adenine methylase [EC:2.1.1.72]	PF02086	MethyltransfD12	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K06897	7,8-dihydropterin-6-yl-methyl-4-(beta-D-ribofuranosyl)aminobenzene 5'-	PF00753	Lactamase_B	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K07102	N-acetylmuramate 1-kinase [EC:2.7.1.221]	PF01636	APH	no_reviewed_entry_with_EC_active_site_structure	2	1	0	Zavarziniales							0	0	0	0		0	0				
+K07281	1L-myo-inositol 1-phosphate cytidylyltransferase [EC:2.7.7.74]	PF12804	NTP_transf_3	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Acetobacterales,Elsterales							0	0	0	0		0	0				
+K09691	homopolymeric O-antigen transport system ATP-binding protein [EC:7.5.2	PF00005	ABC_tran	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,ATCC43930							0	0	0	0		0	0				
+K11754	dihydrofolate synthase / folylpolyglutamate synthase [EC:6.3.2.12 6.3.	PF08245	Mur_ligase_M	no_reviewed_entry_with_EC_active_site_structure	2	2	0	ATCC43930,Dongiales							0	0	0	0		0	0				
+K15515	sulfoacetaldehyde dehydrogenase [EC:1.2.1.81]	PF00171	Aldedh	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K15865	threonylcarbamoyladenosine tRNA methylthiotransferase [EC:2.8.4.5]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Kiloniellales							0	0	0	0		0	0				
+K16515	4-oxalomesaconate hydratase [EC:4.2.1.83]	PF02585	PIG-L	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K16649	rhamnopyranosyl-N-acetylglucosaminyl-diphospho-decaprenol beta-1,3/1,4	PF00535	Glycos_transf_2	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K17723	dihydropyrimidine dehydrogenase (NAD+) subunit PreA [EC:1.3.1.1]	PF01207	Dus	no_reviewed_entry_with_EC_active_site_structure	2	2	0	CACIAM-22H2,Kiloniellales							0	0	0	0		0	0				
+K20527	type IV secretion system protein TrbB [EC:7.4.2.8]	PF00437	T2SSE	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Kiloniellales,Rhizobiales							0	0	0	0		0	0				
+K20681	dTDP-3-amino-3,6-dideoxy-alpha-D-galactopyranose 3-N-acetyltransferase	PF00132	Hexapep	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Reyranellales,Rhizobiales							0	0	0	0		0	0				
+K20809	2-halobenzoate 1,2-dioxygenase electron transfer component [EC:1.18.1.	PF00111	Fer2	no_reviewed_entry_with_EC_active_site_structure	2	2	2	Campylobacterales,Rhizobiales							0	0	0	0		0	0				
+K21677	hydroxysqualene dehydroxylase [EC:1.17.8.1]	PF01593	Amino_oxidase	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K22844	glucosyl-dolichyl phosphate glucuronosyltransferase [EC:2.4.1.356]	PF00535	Glycos_transf_2	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales,Acetobacterales							0	0	0	0		0	0				
+K23019	5-aminosalicylate 1,2-dioxygenase [EC:1.13.11.86]	PF07883	Cupin_2	no_reviewed_entry_with_EC_active_site_structure	2	2	1	Kiloniellales,Rhizobiales							0	0	0	0		0	0				
+K27188	[DsrC]-trisulfide reductase subunit K [EC:1.8.5.10]	PF13183	Fer4_8	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Rhizobiales							0	0	0	0		0	0				
+K28721	6-deoxy-6-sulfo-D-galactonolactonase [EC:3.1.1.125]	PF08450	SGL	no_reviewed_entry_with_EC_active_site_structure	2	2	0	Acetobacterales,Dongiales							0	0	0	0		0	0				
+K00096	glycerol-1-phosphate dehydrogenase [NAD(P)+] [EC:1.1.1.261]	PF13685	Fe-ADH_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Geminicoccales							0	0	0	0		0	0				
+K00170	pyruvate ferredoxin oxidoreductase beta subunit [EC:1.2.7.1]	PF02775	TPP_enzyme_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K00200	formylmethanofuran dehydrogenase subunit A [EC:1.2.7.12]	PF07969	Amidohydro_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	DATDPM01							0	0	0	0		0	0				
+K00331	NADH-quinone oxidoreductase subunit B [EC:7.1.1.2]	PF01058	Oxidored_q6	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhodospirillales							0	0	0	0		0	0				
+K00341	NADH-quinone oxidoreductase subunit L [EC:7.1.1.2]	PF00361	Proton_antipo_M	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K00376	nitrous-oxide reductase [EC:1.7.2.4]	PF00116	COX2	no_reviewed_entry_with_EC_active_site_structure	1	1	1	UBA7887							0	0	0	0		0	0				
+K00448	protocatechuate 3,4-dioxygenase, alpha subunit [EC:1.13.11.3]	PF00775	Dioxygenase_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Sneathiellales							0	0	0	0		0	0				
+K00507	stearoyl-CoA desaturase (Delta-9 desaturase) [EC:1.14.19.1]	PF00487	FA_desaturase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K00595	precorrin-6B C5,15-methyltransferase / cobalt-precorrin-6B C5,C15-meth	PF00590	TP_methylase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA7985							0	0	0	0		0	0				
+K00655	1-acyl-sn-glycerol-3-phosphate acyltransferase [EC:2.3.1.51]	PF01553	Acyltransferase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K00759	adenine phosphoribosyltransferase [EC:2.4.2.7]	PF00156	Pribosyltran	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K00929	butyrate kinase [EC:2.7.2.7]	PF00871	Acetate_kinase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Acetobacterales							0	0	0	0		0	0				
+K00939	adenylate kinase [EC:2.7.4.3]	PF00406	ADK	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01011	thiosulfate/3-mercaptopyruvate sulfurtransferase [EC:2.8.1.1 2.8.1.2]	PF00581	Rhodanese	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01485	cytosine/creatinine deaminase [EC:3.5.4.1 3.5.4.21]	PF07969	Amidohydro_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Acetobacterales							0	0	0	0		0	0				
+K01556	kynureninase [EC:3.7.1.3]	PF00266	Aminotran_5	no_reviewed_entry_with_EC_active_site_structure	1	1	0	CACIAM-22H2							0	0	0	0		0	0				
+K01644	citrate lyase subunit beta / citryl-CoA lyase [EC:4.1.3.34]	PF03328	HpcH_HpaI	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01709	CDP-glucose 4,6-dehydratase [EC:4.2.1.45]	PF01370	Epimerase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0	0	0	0		0	0				
+K01733	threonine synthase [EC:4.2.3.1]	PF24857	THR4_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01800	maleylacetoacetate isomerase [EC:5.2.1.2]	PF02798	GST_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Kiloniellales							0	0	0	0		0	0				
+K01815	4-deoxy-L-threo-5-hexosulose-uronate ketol-isomerase [EC:5.3.1.17]	PF04962	KduI	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01858	myo-inositol-1-phosphate synthase [EC:5.5.1.4]	PF01658	Inos-1-P_synth	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Azospirillales							0	0	0	0		0	0				
+K01866	tyrosyl-tRNA synthetase [EC:6.1.1.1]	PF22421	SYY_C-terminal	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01867	tryptophanyl-tRNA synthetase [EC:6.1.1.2]	PF00579	tRNA-synt_1b	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA8558							0	0	0	0		0	0				
+K01870	isoleucyl-tRNA synthetase [EC:6.1.1.5]	PF00133	tRNA-synt_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01885	glutamyl-tRNA synthetase [EC:6.1.1.17]	PF19269	Anticodon_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K01887	arginyl-tRNA synthetase [EC:6.1.1.19]	PF00750	tRNA-synt_1d	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K02045	sulfate/thiosulfate transport system ATP-binding protein [EC:7.3.2.3]	PF00005	ABC_tran	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K02275	cytochrome c oxidase subunit II [EC:7.1.1.9]	PF00116	COX2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K02276	cytochrome c oxidase subunit III [EC:7.1.1.9]	PF00510	COX3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Acetobacterales							0	0	0	0		0	0				
+K02493	release factor glutamine methyltransferase [EC:2.1.1.297]	PF05175	MTS	no_reviewed_entry_with_EC_active_site_structure	1	1	0	TMED109							0	0	0	0		0	0				
+K02495	oxygen-independent coproporphyrinogen III oxidase [EC:1.3.98.3]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K03196	type IV secretion system protein VirB11 [EC:7.4.2.8]	PF00437	T2SSE	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K03199	type IV secretion system protein VirB4 [EC:7.4.2.8]	PF03135	CagE_TrbE_VirB	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhodospirillales							0	0	0	0		0	0				
+K03218	23S rRNA (guanosine2251-2'-O)-methyltransferase [EC:2.1.1.185]	PF00588	SpoU_methylase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	JACZXZ01							0	0	0	0		0	0				
+K03270	3-deoxy-D-manno-octulosonate 8-phosphate phosphatase (KDO 8-P phosphat	PF08282	Hydrolase_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhodospirillales							0	0	0	0		0	0				
+K03273	D-glycero-D-manno-heptose 1,7-bisphosphate phosphatase [EC:3.1.3.82 3.	PF00702	Hydrolase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	CACIAM-22H2							0	0	0	0		0	0				
+K03335	inosose dehydratase [EC:4.2.1.44]	PF01261	AP_endonuc_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Dongiales							0	0	0	0		0	0				
+K03379	cyclohexanone monooxygenase [EC:1.14.13.22]	PF00743	FMO-like	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Acetobacterales							0	0	0	0		0	0				
+K03396	S-(hydroxymethyl)glutathione synthase [EC:4.4.1.22]	PF04828	GFA	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K03642	peptidoglycan lytic transglycosylase [EC:4.2.2.29]	PF03330	DPBB_1	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K03734	FAD:protein FMN transferase [EC:2.7.1.180]	PF02424	ApbE	no_reviewed_entry_with_EC_active_site_structure	1	1	0	TMED109							0	0	0	0		0	0				
+K03771	peptidyl-prolyl cis-trans isomerase SurA [EC:5.2.1.8]	PF13624	SurA_N_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Azospirillales							0	0	0	0		0	0				
+K04034	anaerobic magnesium-protoporphyrin IX monomethyl ester cyclase [EC:1.2	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K04094	methylenetetrahydrofolate--tRNA-(uracil-5-)-methyltransferase [EC:2.1.	PF01134	GIDA	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K04518	prephenate dehydratase [EC:4.2.1.51]	PF00800	PDT	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhodospirillales							0	0	0	0		0	0				
+K05301	sulfite dehydrogenase (cytochrome) subunit A [EC:1.8.2.1]	PF00174	Oxidored_molyb	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K06015	N-acyl-D-amino-acid deacylase [EC:3.5.1.81]	PF07969	Amidohydro_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K06016	beta-ureidopropionase / N-carbamoyl-L-amino-acid hydrolase [EC:3.5.1.6	PF01546	Peptidase_M20	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0	0	0	0		0	0				
+K06139	PqqA peptide cyclase [EC:1.21.98.4]	PF13186	SPASM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	GM7ARS4							0	0	0	0		0	0				
+K06151	gluconate 2-dehydrogenase alpha chain [EC:1.1.99.3]	PF00732	GMC_oxred_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K06876	(6-4)DNA photolyase [EC:4.1.99.13]	PF04244	DPRP	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K06898	pyridinium-3,5-biscarboxylic acid mononucleotide synthase [EC:2.5.1.14	PF00731	AIRC	no_reviewed_entry_with_EC_active_site_structure	1	1	0	TMED109							0	0	0	0		0	0				
+K06920	7-cyano-7-deazaguanine synthase [EC:6.3.4.20]	PF06508	QueC	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K06937	tetraether lipid synthase [EC:1.21.98.5]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	0	CACIAM-22H2							0	0	0	0		0	0				
+K06984	beta-ribofuranosylaminobenzene 5'-phosphate synthase [EC:2.4.2.54]	PF00288	GHMP_kinases_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K06988	8-hydroxy-5-deazaflavin:NADPH oxidoreductase [EC:1.5.1.40]	PF03807	F420_oxidored	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K07072	(4-(4-[2-(gamma-L-glutamylamino)ethyl]phenoxymethyl)furan-2-yl)methana	PF01968	Hydantoinase_A	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Methylaequorales							0	0	0	0		0	0				
+K08355	arsenite oxidase small subunit [EC:1.20.2.1 1.20.9.1]	PF00355	Rieske	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K08590	2-oxoglutaramate amidase [EC:3.5.1.111]	PF00795	CN_hydrolase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0	0	0	0		0	0				
+K08686	2-halobenzoate 1,2-dioxygenase large subunit [EC:1.14.12.13]	PF00848	Ring_hydroxyl_A	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K09709	3-methylfumaryl-CoA hydratase [EC:4.2.1.153]	PF13452	FAS1_DH_region	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Acetobacterales							0	0	0	0		0	0				
+K10210	diapolycopene oxygenase [EC:1.14.99.44]	PF01593	Amino_oxidase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K10960	geranylgeranyl diphosphate/geranylgeranyl-bacteriochlorophyllide a red	PF13450	NAD_binding_8	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Acetobacterales							0	0	0	0		0	0				
+K11261	formylmethanofuran dehydrogenase subunit E [EC:1.2.7.12]	PF00994	MoCF_biosynth	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA2966							0	0	0	0		0	0				
+K11472	glycolate dehydrogenase FAD-binding subunit [EC:1.1.99.14]	PF01565	FAD_binding_4	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K12902	phosphonoacetaldehyde methylase [EC:2.1.1.308]	PF04055	Radical_SAM	no_reviewed_entry_with_EC_active_site_structure	1	1	1	BOG-932							0	0	0	0		0	0				
+K12922	taxane 13alpha-hydroxylase [EC:1.14.14.106]	PF00067	p450	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K13270	flavonol 3-sulfotransferase [EC:2.8.2.25]	PF00685	Sulfotransfer_1	no_reviewed_entry_with_EC_active_site_structure	1	1	1	ATCC43930							0	0	0	0		0	0				
+K13306	dTDP-4-dehydro-6-deoxyglucose reductase [EC:1.1.1.266]	PF01073	3Beta_HSD	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K13320	L-olivosyl-oleandolide 3-O-methyltransferase [EC:2.1.1.239]	PF04989	RMNT_CmcI	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0	0	0	0		0	0				
+K13552	paromamine 6'-oxidase [EC:1.1.3.43]	PF00732	GMC_oxred_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K13658	beta-1,4-mannosyltransferase [EC:2.4.1.251]	PF13692	Glyco_trans_1_4	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Burkholderiales							0	0	0	0		0	0				
+K13747	carboxynorspermidine decarboxylase [EC:4.1.1.96]	PF00278	Orn_DAP_Arg_deC	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Enterobacterales							0	0	0	0		0	0				
+K13932	malonate decarboxylase beta subunit [EC:4.1.1.87]	PF01039	Carboxyl_trans	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K13995	maleamate amidohydrolase [EC:3.5.1.107]	PF00857	Isochorismatase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K14577	aliphatic (R)-hydroxynitrile lyase [EC:4.1.2.46]	PF00107	ADH_zinc_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K15393	beta-cyclopiazonate dehydrogenase [EC:1.21.99.1]	PF00890	FAD_binding_2	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K15513	benzoyl-CoA-dihydrodiol lyase [EC:4.1.2.44]	PF00378	ECH_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Elsterales							0	0	0	0		0	0				
+K15740	tetrahydromethanopterin:alpha-L-glutamate ligase [EC:6.3.2.33]	PF08443	RimK	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K15899	pseudaminic acid cytidylyltransferase [EC:2.7.7.81]	PF02348	CTP_transf_3	no_reviewed_entry_with_EC_active_site_structure	1	1	0	DATDPM01							0	0	0	0		0	0				
+K16427	(3,5-dihydroxyphenyl)acetyl-CoA 1,2-dioxygenase [EC:1.13.11.80]	PF00378	ECH_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K16653	decaprenylphospho-beta-D-ribofuranose 2-oxidase [EC:1.1.98.3]	PF01565	FAD_binding_4	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0	0	0	0		0	0				
+K16870	N-acetylglucosaminyl-diphospho-decaprenol L-rhamnosyltransferase [EC:2	PF00535	Glycos_transf_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K17068	formaldehyde dismutase [EC:1.2.98.1]	PF00107	ADH_zinc_N	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Acetobacterales							0	0	0	0		0	0				
+K17810	D-aspartate ligase [EC:6.3.1.12]	PF15632	ATPgrasp_Ter	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K18014	3-aminobutyryl-CoA ammonia-lyase [EC:4.3.1.14]	PF03061	4HBT	no_reviewed_entry_with_EC_active_site_structure	1	1	0	CADEGL01							0	0	0	0		0	0				
+K18199	cyclohexyl-isocyanide hydratase [EC:4.2.1.103]	PF01965	DJ-1_PfpI	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0	0	0	0		0	0				
+K18223	propane 2-monooxygenase large subunit [EC:1.14.13.227]	PF02332	Phenol_Hydrox	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Ferrovibrionales							0	0	0	0		0	0				
+K18247	Delta11-fatty-acid desaturase [EC:1.14.19.5]	PF00487	FA_desaturase	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K18372	methyl acetate hydrolase [EC:3.1.1.114]	PF00144	Beta-lactamase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K19180	dTDP-6-deoxy-L-talose 4-dehydrogenase (NAD+) [EC:1.1.1.339]	PF01370	Epimerase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Acetobacterales							0	0	0	0		0	0				
+K19191	4-methylaminobutanoate oxidase (formaldehyde-forming) [EC:1.5.3.19]	PF01571	GCV_T	no_reviewed_entry_with_EC_active_site_structure	1	1	1	UBA7985							0	0	0	0		0	0				
+K19653	geraniol dehydrogenase (NAD+) [EC:1.1.1.347]	PF00107	ADH_zinc_N	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K19670	phosphonoacetate hydrolase [EC:3.11.1.2]	PF01663	Phosphodiest	no_reviewed_entry_with_EC_active_site_structure	1	1	0	JACZXZ01							0	0	0	0		0	0				
+K20137	venombin A [EC:3.4.21.74]	PF00089	Trypsin	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K20565	paromamine 6'-oxidase / 6'''-hydroxyneomycin C oxidase [EC:1.1.3.43 1.	PF00732	GMC_oxred_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Reyranellales							0	0	0	0		0	0				
+K20610	gellan lyase [EC:4.2.2.25]	PF01522	Polysacc_deac_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K20761	thiocyanate hydrolase subunit beta [EC:3.5.5.8]	PF21006	NHase_beta_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K21062	1-pyrroline-4-hydroxy-2-carboxylate deaminase [EC:3.5.4.22]	PF00701	DHDPS	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K21271	aurachin B dehydrogenase [EC:1.1.1.394]	PF01370	Epimerase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	UBA8558							0	0	0	0		0	0				
+K21272	aurachin C monooxygenase/isomerase [EC:1.14.13.222]	PF01494	FAD_binding_3	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K21281	isobutylamine N-monooxygenase [EC:1.14.14.30]	PF02771	Acyl-CoA_dh_N	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K21298	1,2-beta-oligoglucan phosphorylase [EC:2.4.1.333]	PF21250	SOGP_2nd	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K21593	melamine deaminase [EC:3.5.4.45]	PF01979	Amidohydro_1	no_reviewed_entry_with_EC_active_site_structure	1	1	0	ATCC43930							0	0	0	0		0	0				
+K21934	2-phosphonomethylmalate synthase [EC:2.3.3.19]	PF02436	PYC_OADA	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K22079	limulus clotting factor C [EC:3.4.21.84]	PF03815	LCCL	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K22083	methylamine---glutamate N-methyltransferase subunit C [EC:2.1.1.21]	PF01645	Glu_synthase	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Kiloniellales							0	0	0	0		0	0				
+K22310	L-ornithine Nalpha-acyltransferase [EC:2.3.2.30]	PF13444	Acetyltransf_5	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhodospirillales							0	0	0	0		0	0				
+K22578	sesamin methylene transferase [EC:2.1.5.1]	PF01571	GCV_T	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K22622	S-disulfanyl-L-cysteine oxidoreductase SoxD [EC:1.8.2.6]	PF00034	Cytochrom_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K22879	FAD-dependent urate hydroxylase [EC:1.14.13.113]	PF07992	Pyr_redox_2	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K22996	hapalindole-type alkaloid chlorinase [EC:1.14.20.14]	PF13640	2OG-FeII_Oxy_3	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Elsterales							0	0	0	0		0	0				
+K27684	carboxyaminopropylagmatine decarboxylase [EC:4.1.1.127]	PF00278	Orn_DAP_Arg_deC	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K27844	ajmaline N-methyltransferase [EC:2.1.1.393]	PF08241	Methyltransf_11	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhodobacterales							0	0	0	0		0	0				
+K27875	selenate reductase (quinol) subunit B [EC:1.97.1.14]	PF00037	Fer4	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K27986	branched-chain 2-oxoacid:malonyl-[acyl-carrier protein] acyltransferas	PF08545	ACP_syn_III	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Rhizobiales							0	0	0	0		0	0				
+K28386	sulfur-oxidizing heterodisulfide reductase-like enzyme system (type I)	PF02754	CCG	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Ferrovibrionales							0	0	0	0		0	0				
+K28732	6-deoxy-6-sulfo-D-galactonate dehydratase [EC:4.2.1.185]	PF13378	MR_MLE_C	no_reviewed_entry_with_EC_active_site_structure	1	1	0	DSM-16000							0	0	0	0		0	0				
+K28743	6-hydroxymusizin-2-carbonyl-[acyl-carrier protein] thioesterase [EC:3.	PF00753	Lactamase_B	no_reviewed_entry_with_EC_active_site_structure	1	1	1	Rhizobiales							0	0	0	0		0	0				
+K28885	[acyl-carrier-protein] phosphodiesterase [EC:3.1.4.14]	PF00149	Metallophos	no_reviewed_entry_with_EC_active_site_structure	1	1	0	Geminicoccales							0	0	0	0		0	0				
+K17218	sulfide:quinone oxidoreductase [EC:1.8.5.4]	PF07992	Pyr_redox_2	ok_but_length_incompatible	8	8	0	Rhizobiales,Acetobacterales,Azospirillales	Q7ZAG8	SQRD_ACIAM	3H8L_A	333.0	1.0	11.0	0	0	0	0		0	0				
+K00549	5-methyltetrahydropteroyltriglutamate--homocysteine methyltransferase 	PF01717	Meth_synt_2	ok_but_length_incompatible	4	4	1	CACIAM-22H2,Rhizobiales,Acetobacterales	Q9X112	METE_THEMA	1T7L_A	340.0	1.0	18.0	0	0	0	0		0	0				
+K03782	catalase-peroxidase [EC:1.11.1.21]	PF00141	peroxidase	ok_but_length_incompatible	4	4	0	Rhizobiales,Reyranellales,Kiloniellales	O59651	KATG2_HALMA	3VLI_A	643.0	1.0	1.0	0	0	0	0		0	0				
+K06969	23S rRNA (cytosine1962-C5)-methyltransferase [EC:2.1.1.191]	PF10672	Methyltrans_SAM	ok_but_length_incompatible	4	3	0	Rhizobiales,Reyranellales	Q5SIT4	RLM_THET8	1WXX_A	219.0	1.0	7.0	0	0	0	0		0	0				
+K00868	pyridoxine kinase [EC:2.7.1.35]	PF08543	Phos_pyr_kin	ok_but_length_incompatible	2	2	0	Dongiales,Rhizobiales	P39610	PDXK_BACSU	2I5B_A	268.0	1.0	11.0	0	0	0	0		0	0				
+K01236	maltooligosyltrehalose trehalohydrolase [EC:3.2.1.141]	PF00128	Alpha-amylase	ok_but_length_incompatible	2	2	0	Rhizobiales	Q55088	TREZ_SACSO	3VGB_A	392.0	2.0	17.0	0	0	0	0		0	0				
+K15510	coenzyme F420-dependent glucose-6-phosphate dehydrogenase [EC:1.1.98.2	PF00296	Bac_luciferase	ok_but_length_incompatible	2	2	0	ATCC43930	Q0RVH7	FGD1_RHOJR	5LXE_A	305.0	2.0	13.0	0	0	0	0		0	0				
+K00114	alcohol dehydrogenase (cytochrome c) [EC:1.1.2.8]	PF01011	PQQ	ok_but_length_incompatible	1	1	0	UBA2966	Q9Z4J7	QEDH_PSEAE	1FLG_A	544.0	1.0	15.0	0	0	0	0		0	0				
+K00226	dihydroorotate dehydrogenase (fumarate) [EC:1.3.98.1]	PF01180	DHO_dh	ok_but_length_incompatible	1	1	0	Rhodospirillales	A2RJT9	PYRDA_LACLM	1JUB_A	303.0	1.0	20.0	0	0	0	0		0	0				
+K00558	DNA (cytosine-5)-methyltransferase 1 [EC:2.1.1.37]	PF00145	DNA_methylase	ok_but_length_incompatible	1	1	0	Rhizobiales	P20589	MTH3_HAEAE	1DCT_A	324.0	1.0	4.0	0	0	0	0		0	0				
+K01142	exodeoxyribonuclease III [EC:3.1.11.2]	PF03372	Exo_endo_phos	ok_but_length_incompatible	1	1	0	Acetobacterales	O26314	UREND_METTH	3G91_A	256.0	1.0	5.0	0	0	0	0		0	0				
+K01465	dihydroorotase [EC:3.5.2.3]	PF01979	Amidohydro_1	ok_but_length_incompatible	1	1	0	Rhizobiales	Q58885	PYRC_METJA	9YD7_A	386.0	1.0	12.0	0	0	0	0		0	0				
+K01560	2-haloacid dehalogenase [EC:3.8.1.2]	PF00702	Hydrolase	ok_but_length_incompatible	1	1	0	Rhizobiales	Q51645	HAD4_BURCE	2NO4_A	199.0	1.0	5.0	0	0	0	0		0	0				
+K01623	fructose-bisphosphate aldolase, class I [EC:4.1.2.13]	PF00274	Glycolytic	ok_but_length_incompatible	1	1	0	Sphingomonadales	Q8SSM8	ALF_ENCCU	3MBD_A	336.0	2.0	2.0	0	0	0	0		0	0				
+K01755	argininosuccinate lyase [EC:4.3.2.1]	PF00206	Lyase_1	ok_but_length_incompatible	1	1	0	Rhizobiales	P04424	ARLY_HUMAN	1K62_A	301.0	2.0	4.0	0	0	0	0		0	0				
+K01805	xylose isomerase [EC:5.3.1.5]	PF01261	AP_endonuc_2	ok_but_length_incompatible	1	1	1	UBA8366	P15587	XYLA_STROL	1MUW_A	287.0	2.0	8.0	0	0	0	0		0	0				
+K01921	D-alanine-D-alanine ligase [EC:6.3.2.4]	PF07478	Dala_Dala_lig_C	ok_but_length_incompatible	1	1	0	Kiloniellales	P07862	DDLB_ECOLI	4C5C_A	214.0	2.0	60.0	0	0	0	0		0	0				
+K02501	imidazole glycerol-phosphate synthase subunit HisH [EC:4.3.2.10]	PF00117	GATase	ok_but_length_incompatible	1	1	0	Rhizobiales	P33734	HIS5_YEAST	1OX6_A	220.0	3.0	1.0	0	0	0	0		0	0				
+K04077	chaperonin GroEL [EC:5.6.1.7]	PF00118	Cpn60_TCP1	ok_but_length_incompatible	1	1	0	Rhizobiales	Q6LX38	THS_METMP	3RUV_A	499.0	2.0	10.0	0	0	0	0		0	0				
+K06118	UDP-sulfoquinovose synthase [EC:3.13.1.1]	PF01370	Epimerase	ok_but_length_incompatible	1	1	0	Rhizobiales	O48917	SQD1_ARATH	1I24_A	302.0	3.0	25.0	0	0	0	0		0	0				
+K08678	UDP-glucuronate decarboxylase [EC:4.1.1.35]	PF01370	Epimerase	ok_but_length_incompatible	1	1	0	Rhizobiales	Q9ZUY6	AXS1_ARATH	6H0N_A	291.0	1.0	19.0	0	0	0	0		0	0				
+K13877	2,5-dioxopentanoate dehydrogenase [EC:1.2.1.26]	PF00171	Aldedh	ok_but_length_incompatible	1	1	0	Rhizobiales	Q1JUP4	KGSD1_AZOBR	5X5T_A	474.0	2.0	10.0	0	0	0	0		0	0				
+K17680	twinkle mtDNA helicase [EC:5.6.2.3]	PF03796	DnaB_C	ok_but_length_incompatible	1	1	0	CACIAM-22H2	Q9X4C9	DNAB_GEOSE	2R6A_A	253.0	1.0	13.0	0	0	0	0		0	0				
+K01821	4-oxalocrotonate tautomerase [EC:5.3.2.6]	PF01361	Tautomerase	uninformative_positive_control_failed	15	14	1	Rhizobiales,Acetobacterales,Azospirillales	P70994	4OT_BACSU	2OPA_A	61.0	1.0	4.0	1	1	0	0	0.767	10	0	1/3	0/11	0/11	0.0
+K03781	catalase [EC:1.11.1.6]	PF00199	Catalase	uninformative_positive_control_failed	11	11	2	Rhizobiales,Acetobacterales,Dongiales	O52762	CATA_PSEAE	4E37_A	397.0	2.0	12.0	2	2	0	0	0.619	4	0	0/2	0/6	0/6	0.0
+K14418	4-chlorobenzoyl-CoA dehalogenase [EC:3.8.1.7]	PF00378	ECH_1	uninformative_positive_control_failed	10	10	8	Rhizobiales,JACZXZ01,TMED109	A5JTM5	CBADH_PSEUC	1NZY_A	263.0	2.0	9.0	6	5	0	0	0.633	0	0	0/3	0/6	0/6	0.0
+K05992	maltogenic alpha-amylase [EC:3.2.1.133]	PF00128	Alpha-amylase	uninformative_positive_control_failed	7	7	7	Rhizobiales,Acetobacterales,DSM-16000	P19531	AMYM_GEOSE	1QHO_A	379.0	2.0	23.0	6	0	1	0	0.231	0	0	0/2	0/6	0/6	
+K01185	lysozyme [EC:3.2.1.17]	PF00959	Phage_lysozyme	uninformative_positive_control_failed	4	4	0	Rhizobiales	P00720	ENLYS_BPT4	5JDT_A	148.0	2.0	4.0	0	0	0	0		4	0	0/2	0/4	0/4	
+K01174	micrococcal nuclease [EC:3.1.31.1]	PF00565	SNase	uninformative_positive_control_failed	3	3	1	Rhodospirillales,Kiloniellales	Q8NXI6	NUC_STAAW	3QOJ_A	113.0	3.0	2.0	1	0	0	0	0.302	2	0	0/2	0/3	0/3	
+K04771	serine protease Do [EC:3.4.21.107]	PF00089	Trypsin	uninformative_positive_control_failed	3	3	0	Rhizobiales,Acetobacterales	P0AEE3	DEGS_ECOLI	3LGI_A	187.0	3.0	8.0	0	0	0	0		3	0	0/2	0/3	0/3	
+K00799	glutathione S-transferase [EC:2.5.1.18]	PF02798	GST_N	uninformative_positive_control_failed	2	2	0	DATDPM01,Rhizobiales	Q65XA0	DHAR1_ORYSJ	5D9T_A	188.0	1.0	6.0	0	0	0	0		2	0	0/2	0/2	0/2	
+K13590	diguanylate cyclase [EC:2.7.7.65]	PF00990	GGDEF	uninformative_positive_control_failed	2	2	0	Rhizobiales	P31129	DGCZ_ECOLI	3TVK_A	168.0	1.0	15.0	0	0	0	0		2	0	0/2	0/2	0/2	
+K18639	serine/threonine-protein kinase KCC4 [EC:2.7.11.1]	PF00069	Pkinase	uninformative_positive_control_failed	2	2	1	Rhizobiales	P37562	PKN1_BACSU	6G4J_A	232.0	1.0	10.0	1	0	0	0	0.301	1	0	0/1	0/2	0/2	
+K03741	arsenate reductase (thioredoxin) [EC:1.20.4.4]	PF01451	LMWPc	uninformative_positive_control_failed	1	1	0	Acetobacterales	P0A006	ARSC_STAAU	2CD7_A	131.0	3.0	4.0	0	0	0	0		1	0	0/2	0/1	0/1	
+K04066	primosomal protein N' (replication factor Y) (superfamily II helicase)	PF00270	DEAD	uninformative_positive_control_failed	1	1	0	Acetobacterales	P46063	RECQ1_HUMAN	2V1X_A	188.0	1.0	7.0	0	0	0	0		1	0	0/1	0/1	0/1	
+K07638	two-component system, OmpR family, osmolarity sensor histidine kinase 	PF00512	HisKA	uninformative_positive_control_failed	1	1	0	UBA8366	P0AE82	CPXA_ECOLI	4BIX_A	81.0	1.0	5.0	0	0	0	0		1	0	0/2	0/1	0/1	
+K08640	zinc D-Ala-D-Ala carboxypeptidase [EC:3.4.17.14]	PF08291	Peptidase_M15_3	uninformative_positive_control_failed	1	1	0	M2410	P00733	CBPM_STRAL	1LBU_A	135.0	1.0	4.0	0	0	0	0		1	0	0/2	0/1	0/1	
+K13598	two-component system, NtrC family, nitrogen regulation sensor histidin	PF00072	Response_reg	uninformative_positive_control_failed	1	1	1	Rhizobiales	P0AE82	CPXA_ECOLI	4BIX_A	229.0	1.0	20.0	1	0	0	0	0.306	0	0	0/1	0/1	0/1	
+K18679	mitosis inducer protein kinase Cdr2 [EC:2.7.11.1]	PF00069	Pkinase	uninformative_positive_control_failed	1	1	0	Pseudomonadales	P37562	PKN1_BACSU	6G4J_A	232.0	1.0	10.0	0	0	0	0		1	0	0/2	0/1	0/1	
+K18680	mitosis inducer protein kinase Cdr1 [EC:2.7.11.1]	PF00069	Pkinase	uninformative_positive_control_failed	1	1	1	Kiloniellales	P9WI77	PKNE_MYCTU	2H34_A	206.0	1.0	10.0	1	0	0	0	0.311	0	0	0/2	0/1	0/1	
+K21158	serine/threonine-protein kinase TOS3 [EC:2.7.11.1]	PF00069	Pkinase	uninformative_positive_control_failed	1	1	1	Rhizobiales	P37562	PKN1_BACSU	6G4J_A	232.0	1.0	10.0	1	0	0	0	0.274	0	0	0/1	0/1	0/1	

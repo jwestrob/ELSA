@@ -1,0 +1,22 @@
+K00549 Meth_synt_2 Q9X112 1T7L_A_fam 340 1 18
+K00869 GHMP_kinases_N Q58487 1KKH_A_fam 109 1 11
+K00965 GalP_UDP_transf P07902 6GQD_A_fam 182 1 8
+K01178 Glyco_hydro_15 P08017 2FBA_A_fam 475 2 1
+K01443 Amidohydro_1 O32445 3IV8_A_fam 338 1 15
+K01805 AP_endonuc_2 P15587 1MUW_A_fam 287 2 8
+K03741 LMWPc P0A006 2CD7_A_fam 131 3 4
+K04095 Fic Q9BVA6 6I7H_A_fam 117 1 12
+K08640 Peptidase_M15_3 P00733 1LBU_A_fam 135 1 4
+K18639 Pkinase P9WI77 2H34_A_fam 206 1 10
+K22278 Polysacc_deac_1 Q81EK9 4L1G_A_fam 138 1 3
+K23518 Macro P0A8D6 5CB3_A_fam 137 1 11
+K27545 DDAH_eukar Q8YMD9 6LRF_A_fam 257 2 12
+status
+no_reviewed_entry_with_EC_active_site_structure    70
+no_complete_EC                                     31
+no_experimental_chain_with_active_site             13
+ok                                                 12
+no_entry_in_label_family                           10
+ok_but_length_incompatible                          1
+Name: count, dtype: int64
+16 genes in 12 families with a reference

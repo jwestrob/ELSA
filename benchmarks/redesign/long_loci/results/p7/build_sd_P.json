@@ -1,0 +1,40 @@
+{
+ "data": "sd",
+ "base": "P",
+ "thetas": [
+  0.2
+ ],
+ "outputs": {
+  "Sadd_t0.2": {
+   "loci": 1809841,
+   "genes_in_loci_frac": 0.559972434728015,
+   "span_q50_q90_q99_max": [
+    3.0,
+    10.0,
+    32.0,
+    319.0
+   ],
+   "unmodified_nodes": 1613594,
+   "added_nodes": 196247,
+   "added_crossing": 158880
+  },
+  "SaddB_t0.2": {
+   "loci": 1815283,
+   "genes_in_loci_frac": 0.5600382005439303,
+   "span_q50_q90_q99_max": [
+    3.0,
+    10.0,
+    33.0,
+    319.0
+   ],
+   "unmodified_nodes": 1616829,
+   "added_nodes": 198454,
+   "added_crossing": 161039
+  }
+ },
+ "gate": {
+  "t0.2": true
+ },
+ "seconds": 116.6,
+ "peak_rss_gb": 2.8
+}

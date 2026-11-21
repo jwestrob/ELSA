@@ -1,0 +1,307 @@
+RIBO_AUDIT NOTEBOOK (times from `date -u`)
+==========================================
+
+2026-11-13T11:10Z  Read ribosomal_check.py, vscore.py (Ctx, score), vscore2a.py, vl_score.py, blib.py ribo helpers,
+  the three REPORTs. Output loci located:
+    TOK  $RD/boundary/loci/rescue3/DH_coreH_res0.3_f0.5.parquet          (target 1,686 / 1,512)
+    WCP  $RD/vocab/loci/runs_main_tau10_s1coh_V-coh0.1.parquet           (target 1,684 / 1,420)
+    EMB  $RD/vocab_lists/loci/z10.6_V-nest.parquet                       (target 1,675 / 1,172)
+  Definition as implemented (differs from the brief's paragraph in three places):
+    - ">= 16 genes" is >= 16 MARKED genes; the span also counts up to 2 consecutive unmarked gap genes (span 17-45).
+    - "one locus covers >= 80% ... and >= 80% of that locus inside" is evaluated on the BEST locus only (largest
+      overlap, ties -> shorter); a smaller resolving locus does not count when a larger-overlap locus exists.
+    - the 114 Parvarchaeaceae count is genomes; it equals runs because no genome holds two g2_m16 runs.
+  Gap genes count as inside the run for both coverage and precision.
+  Aggregate facts (no case seen): 1,686 runs in 1,686 genomes; 436 of 642 groups carry a run; 289 runs touch a contig
+  end; all 3,564 genomes order_trusted with empty flags; Parvarchaeaceae all Nanobdellota.
+2026-11-13T11:12Z  predeclared.json written (rubric, thresholds, sampling, seeds) before any case was inspected.
+2026-11-13T11:16Z  audit.py repro (login node, one thread, 24 s, 0.7 GB): own scorer and ribosomal_check.score agree
+  run by run; TOK 1,686 / 1,512 (Parv 114 / 113), WCP 1,684 / 1,420 (114 / 109), EMB 1,675 / 1,172 (114 / 106).
+  Exact. ribosomal/code/__pycache__ untouched (bytecode off; numba cache in $RD/ribo_audit/numba_cache).
+2026-11-13T11:16Z  audit.py sample (predeclared seeds). Unresolved per stratum:
+    TOK 174: Iainarchaeota 64 (of 134 runs), Nanobdellota 75, Aenigmatarchaeota 22, Micrarchaeota 8, Altiarch. 3, EX 1, Parv 1
+    WCP 266: Nanobdellota 176, Iainarchaeota 46, Aenigm. 19, Micrarch. 15, Parv 5, Nanohal. 3, Altiarch. 2
+    EMB 514: Nanobdellota 354, Micrarch. 48, Iainarch. 46, Aenigm. 33, Nanohal. 14, Parv 8, EX 7, Altiarch. 2, Undin. 2
+    unresolved in all three: 53 (Iainarchaeota 24, Nanobdellota 15, Aenigmatarchaeota 12, Altiarchaeota 2)
+  Samples: 40 / 40 / 40 unresolved, 20 all-three, 20 / 20 / 20 controls (allocations in work/sample.json).
+  Iainarchaeota carry 37% of TOK failures from 8% of runs: noted, not interpreted yet.
+2026-11-13T11:17Z  audit.py stats (8 s): 5,718 families occur in a run flank, 54 run-associated with all groups counted;
+  5,749 junction family pairs inside runs, 761 recurrent; anomalies: 76,060 adjacent same-family/marker genes, 73,022 short.
+2026-11-13T11:18Z  audit.py classify (census, 21 s). Predeclared labels, unresolved runs:
+    TOK 174: SCORING 78, NEARBY_RIBO 43, OTHER_KIND 39, JUNCTION 8, ASSOC_FLANK 3, METHOD_EXT 2, EDGE 1
+    WCP 266: ASSOC_FLANK 111, NEARBY_RIBO 66, OTHER_KIND 39, JUNCTION 13, SCORING 13, SPLIT 11, EXT 8, EDGE 4, GENE_CALL 1
+    EMB 514: ASSOC_FLANK 135, SCORING 126, SPLIT 98, NEARBY_RIBO 86, EXT 26, OTHER_KIND 22, JUNCTION 15, EDGE 4, GENE_CALL 2
+  Strong result; treated as suspect until the cases are read.
+2026-11-13T11:19Z  audit.py cases: 240 case evaluations, 10,298 layout rows, diagrams. Read every diagram.
+2026-11-13T11:25Z  MANUAL REVIEW FINDINGS (before any post hoc change):
+  (1) OTHER-KIND rule (a) misfires. Of 293 flagged members in the sampled runs, 287 carry the canonical single
+      Ribosomal_* domain at typical length: S13, S11, L13, S9, S2, L27A(=L18e), L34e (alpha / L13-S9 block in
+      Iainarchaeota: families inside runs in 6-9% of groups), S12, S7, S10 (str), L7Ae / S28e / L24e / S6e, L11, L37ae.
+      They are real ribosomal operons whose adjacency to the superoperon is lineage-specific, not proteins of another
+      kind. Only 6 trip the length rule (four 200-aa L23, one L5+L5_C+S8 fusion). The S2 step then re-scores against
+      the superoperon alone and switches to a smaller locus: the label claims a definition artefact on a wrong premise.
+      Iainarchaeota runs (37-44 genes) = S10-spc + SecY-EMC3-L34e-AdkA(Cytidylate_kin2) + alpha + L13-S9; break tests
+      find no non-recurring junction there, so the merged block counts as recurrent.
+  (2) JUNCTION breaks are genuine: Aenigmatarchaeota runs 8062, 7411, 4721 join the two halves of the superoperon on
+      OPPOSITE strands with 1-2 genes between (L3 ... | HIT/RadSAM | S8 ...); Parvarchaeaceae 7098 has a Laminin_G_3
+      insertion after L3-L4-L23 with L2-S19-L22-S3-L29 elsewhere. All three outputs cut exactly there.
+  (3) Associated flank genes are SecY (274 other groups, Lambda 537), DNA_primase_lrg (126), unannotated family
+      90081 (165), EMC3_TMCO1 (two families, 55 / 94), DEAD helicase (65), L34e (68, marked), TruB/PUA (77),
+      Peptidase_M48 (51), Toprim (40). WCP / EMB failures in Nanobdellota are mostly the locus covering the run plus
+      5-9 of these genes (precision .60-.79); controls carry 1-3 of the same genes (precision .80-.96).
+  (4) TOK failures are mostly a parent locus extending 10-80 genes into non-associated flank (o) while a child
+      locus fits the run (SCORING); several Iainarchaeota TOK loci also span a second ribosomal cluster 3 genes away
+      (S6e / IF-2 / dUTPase / NDK / L24e / S28e / L7Ae; families not run-associated across groups, Lambda 0).
+  (5) Method labels checked: EMB cuts L29|S3 (universal junction), WCP leaves a rearranged L22 block uncovered;
+      gene-call cases sit next to split ORFs where L32e is expected (two fragments of one family). Contig-edge rule
+      fires on splits whose remainder lies toward the edge; causation by the edge is not shown (1-4 per output).
+  Decision: keep the predeclared labels as the primary table; add ONE post hoc correction, labelled as such:
+  OTHER-KIND = the member's family carries Ribosomal_* domains on < 50% of its members, or length > 2x the marker
+  median (the brief's "protein of another kind"). Also add: random-window check of any-locus scoring and of the
+  relaxed definition (chance level), S1 split by association of the nearby marked genes, full-set nearby-run counts.
+2026-11-13T11:30Z  POST HOC (labelled as such everywhere): census rerun with (C) corrected OTHER-KIND rule and (X) strict
+  variant = C + nearby Ribosomal_* genes admissible only when their family is run-associated (S1 off; S3 admits
+  associated genes only). Census, unresolved runs, definition / method:
+    predeclared  TOK 98.3 / 1.1%   WCP 91.0 / 7.1%   EMB 74.7 / 24.1%
+    corrected    TOK 82.8 / 16.7%  WCP 79.3 / 18.0%  EMB 72.4 / 26.5%
+    strict       TOK 62.6 / 36.8%  WCP 76.3 / 21.1%  EMB 67.1 / 31.7%
+  Predeclared OTHER_KIND cases go to METHOD_EXTENSION (TOK 25), METHOD_SPLIT (WCP 29, EMB 11), JUNCTION (6-8).
+  Random windows (5 per run, 8,325): resolved TOK .0796 standing / .1016 any-locus / .0814 strict chain / .1154
+  corrected chain; EMB .0139 / .0142 / .0141 / .0160; WCP .0004 throughout. The strict chain leaves chance unchanged.
+2026-11-13T11:31Z  audit.py full: no two g2_m16 runs share a contig (0 pairs); 376 / 1,686 runs (22.3%) have another
+  Ribosomal_* gene <= 5 genes outside, 163 (9.7%) a cluster of >= 2, 4 a run of 8-15 marked genes.
+2026-11-13T11:33Z  Junction check at Iainarchaeota split points (corrected METHOD_SPLIT): WCP cuts between L34e and its
+  neighbour, pair adjacent in 239 other groups (Lambda 619); EMB cuts L5|S14 (564 groups, Lambda 1,472) and next to
+  S17 (109 groups). These splits break recurrent junctions: method errors.
+  U-EMB-01 is the brief's "protein of another kind": a 320-aa Ribosomal_L32e + Lactamase_B_2/3 protein; EMB splits there.
+2026-11-13T11:36Z  tables.py -> results/tables.txt; illustrative.txt (10 per major category); results copied locally.
+2026-11-13T11:40Z  REPORT.txt written (ANSWER lines first; predeclared, corrected and strict tables; controls; families;
+  nearby runs; sensitivity; ten diagrams per major category; low-confidence cases; caveats). Copied with NOTEBOOK.txt to
+  $RD/ribo_audit/. No Slurm job used; nothing committed.
+
+ADDENDUM (coordinator follow-up: long-locus bond tree outputs L4b, L4b+, L1; independence of the flank criterion)
+2026-11-13T11:44Z  Outputs: $RD/long_loci/loci/dpann_group/{L4b_t0.1, L4bp_t0.1, L1}.parquet (columns s, e = gene ids,
+  inclusive); bonds: $RD/long_loci/nodes/dpann_group/bonds_obs.npz (k, d, lam: a bond = gene pair at distance d <= 3
+  whose family pair is significant at group level; s_k = max Lambda of bonds spanning boundary k; L1 = runs of s_k > 0).
+  Read ll.py header and bonds() only; the long_loci ribosomal diagnosis section is left unread to keep this audit
+  independent (its one-line summary was visible in a grep: 88 failures, 56 under-covered).
+  Plan, fixed before any number for these outputs: same rules (predeclared, corrected, strict) on all failures; same
+  sensitivity chains and random windows; under-covered L4b runs: every boundary inside the run with s_k = 0, its
+  recurrence (n' other groups, Lambda) by statistic C, adjacent pair and best crossing pair, classed as
+  lineage-unique (n' < 3), partial (3-99), universal (n' >= 100).
+  Independence (point 5), annotation-only criteria, defined now: KO-derived role terms from Sharur semantic_terms
+  (facet 'role', source_db kofam or kegg; no gene order involved):
+    T (narrow, the marker's own function): role in {ribosomal_protein, translation, translation_factor}
+    I (broad information processing; KNOWLEDGE-INFORMED, chosen after seeing that SecY / primase sit in the flanks):
+      T + {trna_synthetase, trna_modification, rna_processing, transcription, rna_polymerase, replication,
+      sec_pathway, signal_recognition}
+  Admissible-flank variants of the strict chain: assoc (as reported), assoc AND T, assoc AND I, T alone, I alone.
+  Gain share = (resolved under variant - standing) / (resolved under assoc - standing). Random windows for every variant.
+2026-11-13T11:46Z  audit.py annot: KO-role flags, tier T 227,373 genes, tier I 354,300.
+2026-11-13T11:48Z  audit.py addendum (100 s, 0.9 GB): L4b / L4b+ 1,680 / 1,598 (identical run by run), L1 1,680 / 1,036,
+  equal to ribosomal_check.score. Corrected census: L4b 88 = JUNCTION 54, SCORING 22, NEARBY 4, ASSOC 3, EXT 3, data 2;
+  L1 650 = ASSOC 252, EXT 186, NEARBY 156, JUNCTION 54, data 2. sens states consistent with the census (assoc_ok =
+  x_s3_ok on every run). Gaps: 159 no-bond junctions in the 56 under-covered L4b runs, none recurrent (Lambda 0,
+  n' <= 15), 31 strand flips; L4b cuts at S3_C|S5_C 23, S17|L22 20.
+2026-11-13T11:50Z  Independence: flank gain backed by tier T 9-13% (L4b 0%), by tier I 26-51%; strand flip at the break
+  in 12/12 TOK, 12/21 WCP, 10/20 EMB, 18/54 L4b junction runs. Independent-evidence method share: TOK 40.2, WCP 59.8,
+  EMB 56.0, L4b 50.0, L1 79.5%. Family 90081 (KOW, no Ribosomal_* Pfam hit) is 81% KO ribosomal/translation.
+2026-11-13T11:53Z  REPORT_addendum.txt written; claims checked against the tables (four corrections before saving).
+
+PART 2 (Jacob: resolve recovered-but-unresolved runs only where biologically accurate)
+2026-11-19T02:00Z  Outputs located from REPORT4 / REPORT2 / frozen/FROZEN.json headers and artifact sections only:
+  WA L4b = $RD/long_loci/loci/dpann_WA/L4b_t0.2 (frozen primary), Z L4b+ = dpann_Z/L4bp_t0.02, L4b = dpann_group/L4b_t0.1,
+  TOK as before. Locked test sets not opened.
+2026-11-19T02:02-02:18Z  Literature, opened before any case: Wang, Dasgupta & Fox 2009 Archaea 2:241 (full text via PMC
+  page), Tirumalai et al. 2023 Archaea 5512414 (full text), Salgado et al. 2000 PNAS, Price et al. 2005 NAR, Waters et al.
+  2003 PNAS (full texts); Shimmin & Dennis 1989, Coenye & Vandamme 2005, Auer et al. 1989/1991 (abstracts only).
+  Europe PMC returned 500/503 and Wiley / Hindawi blocked; PMC pages fetched with curl. Aggregate check only: 2,059 of
+  4,152 KOfam KOs carry a KEGG name in the DB (95% of KOfam-annotated proteins); literature genes map by KO or Pfam.
+2026-11-19T02:20Z  predeclared2.json written (literature catalogue, mapping rules, evidence rules b/c/d, verdict procedure,
+  answers plan). Disclosed prior exposure: part-1 TOK diagrams and the L4b gap table.
+2026-11-19T02:27Z  bio.py annot (187 s, 3.1 GB, one thread): R 181,811 genes (177,848 marked + KO-only ribosomal proteins),
+  N 68,230 literature members, X 3,335,262; 1,424,949 genes (40%) carry neither Pfam nor KO.
+  bio.py repro: TOK 1,686 / 1,512, L4b 1,680 / 1,598, WA L4b 1,685 / 1,594, Z L4b+ 1,681 / 1,542; ribosomal_check equal.
+2026-11-19T02:35Z  First verdict pass (strict, predeclared) and POST HOC loose variant (500 nt for every same-strand pair):
+  bio-right TOK 1,444 / 1,485, L4b 1,532 / 1,590, WA 1,532 / 1,571, Z 1,500 / 1,547 (strict / loose).
+  Of 175 multi-unit runs (strict), 114 rest only on one gap gene > 150 nt from a member on the same strand, 54 on strand
+  changes, 7 on member-member > 500 nt; inside runs member-member spacing median 1 nt, q99 156; member-X q99 260.
+  The spacer-only breaks are weak evidence for separate transcription units: both variants reported throughout.
+  Review of all 92 WA L4b diagrams: v1 = rearranged S10 operon (L22|S17, S17|L22, sui1|L22; same strand, -11..+2 nt,
+  in 5/6-14/17 group genomes, 5-8 other groups, no WA bond); one universal cut S3|SUI1 (508 other groups by KO; tokens in
+  591 / 158 groups, so token granularity, not confinement). v2 = opposite-strand blocks (S10-small vs alpha S13|L4e, bonded
+  1,334 by WA: conserved divergent pair; L7Ae|L3) and spacer cases. v4 = extension into EMC3_TMCO1 / glycosyltransferases /
+  other units (L1-L10-L12; secY-L34e-cmk across a strand change).
+  CORRECTION (mapping omission, fixed for all cases): archaeal RpoD often carries only RNA_pol_A_bac; added to the rpoD
+  Pfam set (predeclared rule listed RNA_pol_L only). Subtypes recorded: v2 break type; v4a unrelated / v4b members of
+  another unit. Rerun of annot, verdict, bridge, chance for both variants follows.
+2026-11-19T02:39-02:50Z  Rerun after the rpoD fix (annot, verdict, bridge, chance; strict and loose). Verdicts strict
+  TOK 0/60/24/43/45/2/0, L4b 30/25/12/6/15/0/0, WA 23/23/11/12/23/0/0, Z 29/30/22/37/25/1/0 (v1..v7); bio-right strict
+  1,447 / 1,538 / 1,538 / 1,504, loose 1,485 / 1,590 / 1,571 / 1,547 (ceiling 1,686). v1 cut junctions: all same strand,
+  median 1 nt, shared in the lineage group 40/41, 21/21, 40/41 (annotated), unbonded. Bridging on WA (59,655 locus
+  junctions): (i) 22/23 repaired, 11,944 fires, 136 edge fires, 2 curated merges; (ii) 22/23, 43,194 fires (72%);
+  (iii) strand + <= 150 nt 21/23, 23,145; (i) AND (iii) 21/23, 4,941 fires, 34 edges, 0 curated merges. Chance with
+  target-length windows: TOK 7.7, L4b 2.5-2.9, WA 6.3-6.4, Z 4.1-4.5% (run-length windows 8.0 / 2.4 / 6.1 / 4.1%).
+  Scoring components: extension only 1,495 / 1,601 / 1,593 / 1,554; strand split only 1,504 / 1,594 / 1,584 / 1,540.
+  Bridge job of the first pass stopped (stale annotation); one pkill matched its own shell, orphans killed by PID.
+2026-11-19T02:53Z  REPORT2.txt written; claims re-checked against the tables (secY count, two causal phrasings in D,
+  strand-run range corrected before saving). Files synced to $RD/ribo_audit/. Nothing committed.
+
+PART 3 (SR-VP genome bins: is the bacterial ribosomal shortfall rearrangement or something else?)
+2026-11-19T07:00-07:20Z  Read REPORT_frozen2.txt, FROZEN2.json keys, frozen2 code/annot2.py, results/annot.json, package
+  README and table schemas (no case). Bacterial literature opened: Brandis 2021 GBE (full text; secE-rpoBC-str-S10-spc-alpha
+  cluster, 57 genes, 163 rearrangement events / 204 genomes), Boylan et al. 1989 J Bacteriol (full text), Tsurumaki et al.
+  2022 RNA (full text; CPR ribosomal protein losses); Suh et al. 1996 and Coenye & Vandamme 2005 (abstracts).
+2026-11-19T07:21Z  predeclared3.json written: outputs, closed = n_contigs 1, annotation base (frozen2 genes_annot.parquet)
+  and what it lacks, two supplementary annotation searches, bacterial member list, rearrangement measures (pair share
+  across groups, core-marker orders), conserved stretch, mapping of verdicts to the five shares.
+2026-11-19T07:24Z  Slurm preflight read (remote CLAUDE.md, biotite-cluster-ops.md). Job 115893 (ribo3_annot, 24 CPUs,
+  standard_expand, exclude list, no --mem/--time/timeout): 16 bacterial-member KOfam profiles over all 3,211,751 proteins +
+  Pfam-A 38.1 (GA) over genes within 40 of every run. DEVIATION from predeclared3: full KOfam on the windows dropped (15 GB of
+  profiles, beyond the 2-hour bound); Pfam describes the windows. Account had 198 CPUs running before submission.
+2026-11-19T07:27Z  bio3.py repro (login node): PRIMARY Bacteria 658 / 390 (any-fit 569; closed 108 / 260, multi 282 / 398),
+  Archaea 144 / 138; SECONDARY Bacteria 658 / 378 (closed 94 / 260, multi 284 / 398), Archaea 145 / 120; ENGINE Bacteria 191,
+  Archaea 122. Equal to ribosomal_check.score and to REPORT_frozen2. Closed = n_contigs 1 (260 bacterial runs).
+2026-11-19T07:36Z  Job 115893 COMPLETED in 12 min 13 s (1.9 GB peak): bacterial-member KO hits 11,540 (fusA 1,401, map 1,030,
+  cysS 1,007, tufA 921, infA 901, adk 882, rpoC 811, nusG 773, rpoB 772, secE 740, rnc 720, truA 681, rlmB 551, ecfT 296,
+  ecfA1 48, ecfA2 6); Pfam on 54,011 of 63,010 window genes. Outputs $RD/ribo_audit/work3/annot/{extra_ko, window_pfam,
+  window_pfam_domains}.parquet, window_gids.npy. Verdict (strict, loose), chance and rearrangement passes launched on the
+  login node (one thread).
+2026-11-19T07:58Z  Verdict pass, STRICT (bio3.py verdict; 1,353 s). Components 9,422; N genes 25,633, R 56,992; window
+  unannotated 8,961 / 63,010; anomalies 5,608. PRIMARY Bact_closed v2 9 / v3 137 / v4 2 / v5 3 / v6 1 (152); Bact_multi
+  11 / 99 / 2 / 2 / 2 (116); Archaea v2 4 / v3 3. SECONDARY closed 7 / 154 / 2 / 2 / 1 (166); multi 13 / 95 / 0 / 5 / 1
+  (114); Archaea 8 / 13 / 2 / 0 / 2. No verdict 1 or 7 anywhere. Accurate scoring Bacteria PRIMARY 626, SECONDARY 623,
+  DH 530 of 658. Chance (strict, target-length windows): PRIMARY 1.07 / 0.90 / 1.97%.
+2026-11-19T08:22Z  Verdict pass, LOOSE (1,387 s): PRIMARY Bacteria v2 14 / v3 244 / v4 4 / v5 3 / v6 3; SECONDARY 14 / 256
+  / 2 / 6 / 2. Accurate scoring 631 / 626 / 548.
+2026-11-19T08:30Z  POST HOC cluster-level run (bio3.py extdef, run as copy code/bio3_ext.py so the chain was untouched):
+  markers = R + literature members, same <= 2-gene rule. Bacteria PRIMARY 651, SECONDARY 649, DH 580 of 658; Archaea
+  140 / 139 / 120 of 145; chance 0.15-0.70% / 0.23-1.05% / 1.9-2.0%. Extension medians closed 25 -> 36, multi 21 -> 31,
+  Archaea 22 -> 24.
+2026-11-19T08:41Z  Rearrangement pass (predeclared names): Bacteria pair share median 0.987, Archaea 0.953; core orders
+  Bacteria 33 / 658, Archaea 46 / 145 with 0 complete archaeal runs. Archaeal Pfam synonyms (L4e, S29e, L5e, L23e, L26,
+  L27A) were left unmerged by the predeclared naming, which inflates archaeal order counts.
+2026-11-19T08:44Z  rearr3.py (POST HOC naming fix, merged synonyms; first run's JSON had a key collision between the
+  per-type and per-domain "Archaea" entries, fixed and rerun 08:44Z): Archaea pair share median 0.975, q10 0.860; 21
+  orders, 54 complete runs in 2 orders, 4 runs non-collinear. Bacteria 31 orders, 421 complete runs in 1 order, 658 / 658
+  collinear. Bacterial rare pairs are L15|L36 / L15|S13 (51 / 55 closed, 49 / 69 multi): the spc-alpha junction where the
+  secY-adk-map-infA insert is <= 2 genes; rare-pair runs are 109 / 390 resolved vs 7 / 268 unresolved.
+2026-11-19T08:46Z  alpha3.py (POST HOC, output-independent): alpha block inside run 101 runs (97 resolved PRIMARY), <= 12
+  genes past the run 438 (179 resolved), contig end with no alpha 81 (81), absent nearby 38 (33). 259 / 268 unresolved
+  PRIMARY runs are in the "past the run" class. Multi-contig runs <= 12 genes from a contig end 277 (227 resolved);
+  > 12 genes 121 (55); closed 258 (107).
+2026-11-19T08:50Z  tables3.py, tables3b.py (shares by the predeclared mapping: PRIMARY strict run definition 256 / 268,
+  scorer 5, over-extension into members 3, unrelated 1, data 3, rearrangement 0; SECONDARY 269 / 7 / 1 / 1 / 2 / 0).
+  Three diagram cases opened in full: PRIMARY-1063 (v3), -1116 (v2), -1090 (v5); PRIMARY-1822 opened for the one
+  rare decisive junction (L2|S3 740 nt, S3|S17 658 nt; lengths match missing S19-L22 and L16-L29 calls).
+2026-11-19T08:55Z  REPORT3.txt written; claims re-checked against tables (verdict-2 break types, verdict-4 targets, diagram
+  A strand marks and the secE-L33 283 nt member spacer corrected before saving). Results copied to results3/ and
+  $RD/ribo_audit/. Nothing committed.
+
+PART 4 (cluster-level definition frozen; lut and DPANN as a check on data the definition was not developed on)
+2026-11-19T08:58-09:05Z  Read bio3.py cmd_extdef / Bio3 merge, frozen2 annot2.py, annot3.py, audit.Data, fscore.py (lut ribosomal
+  scorer: loci with e > s, duplicates dropped), lut and DPANN package schemas and genomes value counts (lut 1,032 genomes, all
+  d__Bacteria, 1,014 Alphaproteobacteria; DPANN 3,564, all d__Archaea). No lut or DPANN run, locus, annotation or gene opened.
+  Finding while freezing: part 3 applied the union of the archaeal list and the bacterial supplement to EVERY genome; domain only
+  stratified results. predeclared4 keeps that as the PRIMARY reading and adds the requested domain-specific reading beside it.
+2026-11-19T09:06Z  predeclared4.json written (definition, member lists with KOs / Pfam, chain rule, scoring, chance, annotation
+  procedure, step-3 insert measure and criterion, step-4 verdict procedure, expectations, holds-up criteria H1-H3).
+2026-11-19T09:07Z  Slurm preflight read (remote CLAUDE.md, biotite-cluster-ops.md). Job 116195 (ribo4_annot, 24 CPUs,
+  standard_expand, exclude list, no --mem / --time / timeout; one pool of 24 single-CPU hmmsearch processes): part-3 base
+  (226 KOs + 20 Pfam), supplement 1 (16 KOs) over all lut (4,507,042) and DPANN (3,585,303) proteins; Pfam-A on run windows
+  (lut 62,504, DPANN 103,305 genes). Account had 126 CPUs running before submission.
+2026-11-19T09:10-09:14Z  bio4.py code-equivalence control on SR-VP (login node, one thread): standing counts reproduce (Z 802 /
+  528, WA 803 / 498, DH 313); cluster-level resolved and chance equal part-3 extdef.json in every cell (Z 255 / 396 / 140, WA
+  257 / 392 / 139, DH 210 / 370 / 120; chance 0.15 / 0.22 / 0.70% etc.); standing verdicts for Z and WA equal part-3 cases3
+  in every cell. Bio4 initialises in 15 s (Bio3 took 23 min; the cost was fixed-width unicode identity arrays).
+  SR-VP domain reading: identical counts to the union reading.
+2026-11-19T10:00Z  Job 116195 COMPLETED (51 min 17 s, 2,280% CPU, 3.6 GB peak; 192 hmmsearch jobs in 3,009 s). lut: KO assigned
+  62,925, R 58,264 (5,233 by KO only), N 14,294, supplement hits 13,399; window Pfam 56,107 / 62,504. DPANN: KO 140,573,
+  R 181,614 (3,766 by KO only), N 66,553, supplement hits 7,004 (cysS 3,158, map 2,490, adk 1,132, ecfT 154, others <= 13).
+2026-11-19T10:02Z  Coordinator: standing rule from Jacob, every HMM search goes through Aksha (/home/jwestrob/.local/bin/aksha).
+  Job 116195 stays as run (direct hmmsearch, HMMER 3.3, /shared/software/bin/hmmsearch); REPORT4 states it. No further search
+  is planned in part 4; any later one goes through Aksha.
+2026-11-19T10:01-10:03Z  run4.sh (login node, one thread): lut standing reproduced exactly with the stored loci (Z 857 / 811,
+  WA 858 / 788, DH 668; ribosomal_check equal); lut cluster-level, both readings, verdicts cluster and standing. DPANN standing
+  reproduced (Z 1681 / 1542, WA 1685 / 1594, DH 1686 / 1512); the filtered-loci reading crashed on the token-DH column names
+  (gid_s / gid_e); LociF fixed to read either name pair, DPANN chain rerun (lut results untouched).
+2026-11-19T10:05Z  DPANN chain done. Cluster-level resolved Z 1,491, WA 1,522, DH 1,443 (standing 1,542 / 1,594 / 1,512); chance
+  4.41 / 4.90 / 7.00%; domain reading Z 1,491, WA 1,522, DH 1,444. lut: Z 835, WA 822, DH 768 (standing 811 / 788 / 668), chance
+  2.09 / 2.90 / 2.61%. Criteria: lut H1, H2, H3 met; DPANN H1, H2 (DH), H3 not met. lut insert: secY-adk in 620 runs, median 2;
+  SR-VP median 4. Predeclared insert criterion: NO (>= 3 class 66.7% vs 40.4%); reweighting 91.4% vs lut 94.5%.
+2026-11-19T10:06-10:10Z  Lost DPANN runs opened via diagrams (Z 84): 66 add opposite-strand genes; 53 add secY + divergent
+  EMC3_TMCO1-Nre_N-cbf5 (cbf5 on the archaeal list, two X genes inside the <= 2 gap); 54 are verdict 3 with the target 3 genes
+  longer than the accurate locus. lut lost runs (Z 11): 10 verdict 2. POST HOC fine-class reweighting: Z 92.7%, WA 91.6%.
+2026-11-19T10:15Z  REPORT4.txt written; claims re-checked against tables (verdict totals, standing verdict columns, subtype
+  totals 74 / 44, engine-gap numbers, the "every output" claim restricted to DPANN, chance mechanism claim removed before
+  saving). Results copied to results4/ and $RD/ribo_audit/. Nothing committed.
+
+PART 5 (strand-aware cluster-level runs; DEVELOPMENT on all three datasets)
+2026-11-19T10:12-10:17Z  Read ELSA commits e0b3485 (SRP tokens strand-insensitive) and d297985 (same_frac connector between
+  adjacent consensus tokens). No new data opened.
+2026-11-19T10:18Z  predeclared5.json written (variants a / b / c, connector rule with the reason stated in advance, target
+  assembly with the 16-marked minimum per piece, best-variant rule, S1-S4, expectations).
+2026-11-19T10:18-10:23Z  bio5.py score (login node, one thread) on SR-VP, lut, DPANN; part-4 and standing numbers and chance
+  reproduced in every cell. Verdicts for a / b / c. tables5.py. Best by rule: (a) (only variant with Z / WA chance <= 5%
+  everywhere; (c) has DPANN WA 5.05%). No definition meets S1-S4 on all four strata: (a) misses S3 for DPANN WA (38 vs 33)
+  and S4 on SR-VP Archaea (5 of 145 below minimum).
+2026-11-19T10:23-10:26Z  Below-minimum runs, (a) vs (c) differences and lut remaining failures opened from tables / case files.
+  secY|cbf5 connector on DPANN 0.90 over 20 groups (the part-4 divergent copies are lineage-specific). REPORT5.txt written;
+  claims re-checked (verdict-2 total 204, two wording fixes for inferred statements). Results copied to results5/ and
+  $RD/ribo_audit/. Nothing committed.
+
+PART 6 (freeze for testset3; external operon check; scorer)
+2026-11-19T10:30-10:37Z  Read aksha search --help (biotite); Aksha output = per-domain rows (bitscore = sequence score,
+  dom_bitscore, env coordinates, E-values). Shallow listings of benchmarks/ on the Mac: RegulonDB snapshot under
+  evaluation/ecoli_authoritative_tu_2026-09-09*/sources (source URLs, sha256); operons/ecoli/OperonSet.txt is an HTML page (failed
+  download); operons/bsubtilis/operons.tsv is a hand list of 56 operons without provenance (ribosomal: S10, str, rpmI-rplT,
+  rpsA, rpsB-tsf only). MG1655 and B. subtilis 168 genomes are absent from data/ecoli and data/bacillus.
+2026-11-19T10:37-10:43Z  annot6.py (Aksha route) on an SR-VP sample (20 genomes, rng 17; 72,657 genes; login node, 8 threads,
+  202 s). First comparison: base KO 4 differences (K02916 gained; class unchanged), supplement 224 / 224, window Pfam 2,442 /
+  2,442 + 1 extra domain. Cause of the 4: the developed hmmsearch -E 1e-3 at chunk size (about 133,822 sequences); Aksha's
+  E-values satisfy E = Z exp(-lambda (s - tau)) with Z = 72,658 (median implied), so the cut is emulated from STATS LOCAL
+  FORWARD with Z = N_total / 24.
+2026-11-19T10:45Z  Re-threshold with the emulation: base KO / class / name 0 differences of 72,657; supplement identical; window
+  Pfam +1 domain (Rubrerythrin 22.80 vs GA 22.8 tie at 2-decimal output; window description only).
+2026-11-19T10:47Z  predeclared6.json FROZEN. sha256 a6c997f337368830679752018e8050d0505c2d51136f1509d1a66a6aecde9c3c (its written_utc field reads 10:48Z, one minute ahead of the clock; left unchanged to keep the hash)
+2026-11-19T10:47-10:52Z  External check data: RefSeq GCF_000005845.2 and GCF_000009045.1 genomic.gff.gz / protein.faa.gz from the
+  NCBI FTP into ext6/dl_* (sha256: ecoli gff afdf03dc...f495e, faa 283c91ff...4896; bsub gff a3e6d29c...0a881, faa
+  07dd3f74...8225). ext6.py prep / markers (121 ribosomal Pfam models extracted in Python; Aksha, 8 threads): 116 marked genes,
+  one >= 16-marker run per genome (E. coli rplQ..rpsJ, 26; B. subtilis rpsJ..rplO, 21). annot6.py on the two genomes
+  (N_total 8,543), ext6.py targets: E. coli target = run (28 genes); B. subtilis target cysS..rpsI (58 genes, 35 marked).
+2026-11-19T10:52-10:55Z  E. coli: RegulonDB snapshot TUs (repo, regulondb-docs 4e425fe): target = S10 (11) + spc (12) + alpha (5)
+  TUs exactly. B. subtilis: repo operons.tsv lacks provenance / spc / alpha; literature: Li et al. 1997 (PMC179646, read),
+  Sojka et al. 2007 (PMC1913448, read), Suh 1996 / Boylan 1989 (part 3); SubtiWiki returned HTTP 403. No mapped unit split; no
+  strand crossing; no fault.
+2026-11-19T10:55-10:57Z  score6.py end-to-end on SR-VP (stored annotation via work6/srvp_annot links, frozen2 loci, --verdicts):
+  126 / 126 cells and all per-run values equal part 5. sha256 score6.py 6b61eeb8cac4f960696e2f70b27240b6d12ad1e44a3b2fa066ee2066c9d32f80,
+  annot6.py 7eb20f2bb4e062fdc8328ade0f9bee79a090506e28eb074be5da5510554068ad, bio5.py 63d51004...e41, bio4.py 9be92586...a282.
+  annot6.sbatch template written (not submitted).
+2026-11-19T10:57Z  REPORT6.txt written; two wording fixes (str distance 17 genes, diagram legend) before saving. Synced. Nothing
+  committed. testset3 not opened.
+
+PART 7 (frozen run on testset3; coordinator GO 2026-11-19, set sealed)
+2026-11-19T15:16-15:18Z  Seal verified: all 31 files of $RD/testset3/package re-hashed (verify_seal.py), every sha256 equal to
+  seal.json, combined seal recomputed cf920a483f2714e5be34de17b2c4285d69277681dc5822c71abbc9ef77ff3c89 = seal_sha256 field
+  (work6/testset3/seal_check.json). Frozen inputs verified: predeclared6.json a6c997f3...9c3c, score6.py 6b61eeb8...2f80;
+  annot6.py 7eb20f2b...68ad, bio4.py 9be92586...a282, bio5.py 63d51004...6e41, bio.py 3eb95d54...f2af, audit.py ab60d576...b59b.
+  Package: 842 genomes, 2,557,405 genes, lut layout, no ribosomal tables.
+2026-11-19T15:17Z  Marking rule read: ws_srvp_bins/package/code/03_build_package.py st_ribosomal (= slice_lut package_k8
+  15_ribosomal_truth.py): hmmsearch --cut_ga --domtblout of ribo.hmm (121 models, sha256 b2ce8369...6e49), marked = any domain
+  row, marker = best full score, runs g0 / g2 (<= gap unmarked inside, per contig), >= 8 kept, m16 >= 16. mark7.py reproduces
+  it through Aksha (--hmm_in ribo.hmm --cut_ga, GA1 / GA2 re-applied). Validation on the 20-genome SR-VP sample (8 threads,
+  login): marked 1,085 / 1,085 identical, marker and markers identical, runs 45 / 45 identical.
+2026-11-19T15:18Z  Slurm preflight read (remote CLAUDE.md, biotite-cluster-ops.md). Jobs: 116646 ribo7_mark (mark7.sbatch;
+  writes work6/testset3/ribosomal/{marked,runs}.parquet and RUNS_READY.json) and 116647 ribo7_annot (annot7.sbatch, annot6.py
+  unchanged, afterok:116646). 24 CPUs, standard_expand, exclude list, no --mem / --time / timeout. Shadow package
+  work6/testset3/pkg (links to the sealed universe and FASTA plus the built ribosomal tables) for score6.py, which reads
+  ribosomal tables from the package path. Account had 148 CPUs running before submission.
+2026-11-19T15:20-15:54Z  Job 116646 COMPLETED (1 min 17 s): 45,292 marked genes, g2_m16 801 runs (Bacteria 688, Archaea 113) in
+  801 genomes; RUNS_READY.json 15:20:02Z. Job 116647 COMPLETED (33 min 31 s): annot6.py through Aksha, 2,557,405 proteins,
+  84,394 window proteins; R 48,544, N 13,509, supplement 10,839. Job time total 34 min 48 s.
+2026-11-19T16:48-16:50Z  locus_tables.json (16:48:30Z) read; PRIMARY / SECONDARY / ENGINE sha256 verified against the files;
+  frozen code hashes verified again.
+2026-11-19T16:50-16:51Z  score6.py (login node, one thread, 72 s, --verdicts) on work6/testset3/pkg: primary PASS (R1 801 / 801,
+  R2 666 / 688, R3 110 / 113, R4 +106 [+86, +126], R5 0.29% / 0.00%); secondary PASS (801 / 801, 659 / 688, 102 / 113, +91
+  [+66, +114], 1.08% / 0.71%); engine R2 586 / 688 and R3 84 / 113 below the bars. report7.py tables (R4 recomputed, equal).
+2026-11-19T16:52Z  REPORT7.txt written (one invented window-count line removed before saving); results7/ copied. Synced.

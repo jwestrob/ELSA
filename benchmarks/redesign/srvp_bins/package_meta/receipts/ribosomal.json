@@ -1,0 +1,35 @@
+{
+ "stage": "ribosomal",
+ "written_utc": "2026-11-14T06:03:50Z",
+ "code_sha256": "42caefb9ecf2f78d055ccc2c6e34fcb0a3ed3914c55c3ae1af343ec6a5e00a67",
+ "hmm": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/slice_lut/testset/work/ribo.hmm",
+ "hmm_sha256": "b2ce8369acd81894f9b437a64ecacc59c7ac35175f69b1454624dd4bdc6e1e49",
+ "hmmsearch_seconds": 127.3,
+ "threads": 8,
+ "hits": 61868,
+ "marked_genes": 53345,
+ "models_hit": 101,
+ "runs": {
+  "g0_m8": 1060,
+  "g0_m16": 606,
+  "g2_m8": 1051,
+  "g2_m16": 803
+ },
+ "g2_m16_genomes": 803,
+ "genomes": 994,
+ "g2_m16_at_contig_edge": 113,
+ "g2_m16_by_domain": {
+  "Bacteria": 658,
+  "Archaea": 145
+ },
+ "g2_m16_by_platform": {
+  "PacBio": 404,
+  "Illumina": 399
+ },
+ "g2_m16_n_marked_quantiles": [
+  16.0,
+  22.0,
+  33.0
+ ],
+ "genomes_with_ge16_marked_anywhere": 994
+}

@@ -171,7 +171,17 @@ Validated on a 30-genome Enterobacteriaceae dataset (21 *E. coli*, 5 *Salmonella
 | Ortholog precision | 97.1% | -- |
 | Search recall @50 | 99.9% | -- |
 
-**Model concordance**: ESM2 and ProtT5 produce nearly identical results (within 1% recall, 5% block count), confirming the chaining algorithm dominates performance and the approach is PLM-agnostic.
+**Model concordance**: ESM2 and ProtT5 produce nearly identical results on this
+cohort (within 1% recall, 5% block count), so chaining dominates and the choice
+of PLM is secondary here.
+
+The scope is worth stating, because a neighbouring claim generalised past it and
+was wrong. These are 30 closely related enterobacterial genomes, where raw
+retrieval already reaches AUC 0.997 and precision@1 0.998 — anything upstream of
+chaining is saturated, so concordance is what a comparison at the ceiling looks
+like. On divergent cohorts the upstream representation matters a great deal:
+embedding post-processing alone moves retrieval AUC from 0.880 to 0.971 on
+archaeal MAGs. See `benchmarks/evaluation/TRANSFORM_ABLATION.md`.
 
 ## Python API
 

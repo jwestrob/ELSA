@@ -1,0 +1,40 @@
+{
+ "written_utc": "2026-11-12 13:05 UTC, before any code was run, any critic trained or any score computed",
+ "workstream": "grammar (neighbourhood-grammar critic), DPANN package, ESM++ small vectors",
+ "hypothesis": "A small critic s(a,b) = u(x_a) . v(x_b), trained to tell adjacent gene pairs from far pairs of the same genome, learns gene-neighbourhood PMI; on GTDB orders it never saw, its score separates functionally coupled neighbours better than token-pair PMI estimated from the same training orders, most of all for rare families.",
+ "design": {
+  "input": "per-gene L2-normalised ESM++ small residue-mean vectors (l2_f32__row.npy); each genome's mean subtracted (primary) or the global mean subtracted (ablation 'accent left in'); soft-ZCA alpha 0.1 fitted on training-side genes only; renormalised to unit length.",
+  "critic": "two MLP towers u, v; s(a,b) = u(x_a).v(x_b) + bias; logistic loss with class-balanced positives and negatives, so the optimal logit is log p(a,b | adjacent) / p(a) p(b) (PMI).",
+  "orientation": "same-strand pair: a = the upstream gene in transcription; opposite-strand pair: both orders seen in training (random swap per epoch) and scored as the mean of s(i,j) and s(j,i). The critic never sees strand or coordinates as features.",
+  "positives": "offset-1 critic: gene pairs at offset 1 on one contig; offsets 1-3 critic: offsets 1, 2, 3 pooled.",
+  "negatives": "in-chunk pairs (a_i, b_j) where both pairs come from the same genome and a_i, b_j are > 50 genes apart or on different contigs (chunks of 128 positive pairs from one genome).",
+  "design_search": "at most 6 configurations: c1 960-512-128 dropout 0.1; c2 960-1024-256; c3 960-256-64; c4 linear 960-128 (bilinear low rank); c5 960-512-128 dropout 0.3 + weight decay 1e-3; c6 960-512-512-128. AdamW lr 1e-3, batch 32 chunks x 128 pairs, up to 8 epochs with early stopping (patience 2). Selection per fold by validation AUROC of adjacent vs in-chunk far pairs on validation orders carved from the training side (order-grouped, about 20% of training genes). No gold label, fold outcome or test genome enters selection. The offsets 1-3 critic, the shuffled-order control and the accent ablation reuse each fold's selected configuration.",
+  "holdout": "5-fold cross-validation grouped by GTDB order (orders assigned greedily to balance gene counts, deterministic); every genome is scored by the critic of the fold that held out its order. Harder split: train on Nanobdellota, score the other 8 phyla.",
+  "primary_critic": "offset-1 critic, genome-centred zca10 input, selected configuration."
+ },
+ "baselines": {
+  "i_training_pmi": "token-pair PMI from training-side orders only (all four training folds, the critic's validation orders included): unordered token pair (rescue3 families), offset-1 instance count obs in training genomes, expectation under a within-genome shuffle E = sum_g A_g * 2 c_g(ta) c_g(tb) / (n_g (n_g - 1)) (c_g(t)(c_g(t)-1) for ta = tb), score log((obs + 1) / (E + 1)); a pair absent from training gets the prior 0 (or a negative value when E > 0 and obs = 0). Sensitivity variants reported beside it: pseudocount 0.1 and 10; training genome count within window 3; training-only Poisson -log P at window 3.",
+  "ii_engine_all_genomes": "the engine's all-genome -log P (v1.5 statistics, window 3, genome null, rescue3 tokens) for the token pair; an upper reference that uses the test lineages. Pairs of identical tokens get 0 (the engine does not score them).",
+  "iii_raw_cosine": "cosine of the two genes' L2-normalised raw ESM++ small vectors.",
+  "iv_shuffled_critic": "the primary configuration trained on gene order permuted within each genome (contig sizes kept)."
+ },
+ "evaluation_1_definitions": {
+  "pairs": "offset-1 adjacencies in held-out orders.",
+  "positive": "both genes are members of one gold instance of the caller.",
+  "negatives_A": "neither gene is a member of any gold instance (any caller).",
+  "negatives_B_straddle": "exactly one gene is a member of an instance of the caller; the other is a member of no instance of that caller.",
+  "strata": "token pair co-located within 3 genes in 0, 1-4 or >= 5 training-side genomes (primary definition; offset-1 counts reported as secondary); either gene in a singleton family (rescue3 token with one member) or not.",
+  "statistics": "AUROC and average precision; AUROC differences with 95% intervals from a genome-level bootstrap (1,000 draws, seed 17)."
+ },
+ "criteria": {
+  "G1": "On held-out orders, DefenseFinder within-system adjacencies against no-gold adjacencies: primary-critic AUROC minus baseline (i) AUROC >= 0.05 overall AND >= 0.10 on adjacencies whose token pair never occurs (window 3) in the training orders. Met = point estimate at or above the bar and the lower 95% bound above 0, for both parts.",
+  "G2": "Among the folded unannotated adjacent pairs of screen 1 (classes cognate and uncalled), each scored by the critic that held out its order: primary-critic AUROC for ipTM >= 0.75 is >= 0.70 AND above the AUROC of the engine's significance (-log P) on the same pairs.",
+  "G3": "Baseline (iv), the shuffled-order critic, scores at chance on evaluation 1 (DefenseFinder vs no-gold, held-out orders): AUROC within 0.45-0.55. If not, the critic is reading an artefact and G1 and G2 are void."
+ },
+ "refutation_readings": {
+  "G1_met": "would be refuted by (a) the accent ablation or the shuffled control reproducing the gain (artefact), (b) the gain vanishing when tandem pairs of one family are removed (the critic reading self-similarity rather than coupling), or (c) raw cosine matching the critic (same reading).",
+  "G1_not_met": "reading 'the embedding critic adds nothing over discrete PMI on unseen lineages' would be refuted by a clear critic advantage in the never-seen stratum with a deficit only in the frequent stratum (then the critic complements, not replaces, the counts).",
+  "G2": "a critic AUROC carried by protein length (short pairs co-fold more) would be shown by an AUROC of the summed length alone at or above the critic's; reported beside it."
+ },
+ "fixed_before_results": "No configuration, threshold, stratum boundary or metric will be changed after a result is seen. Additional analyses after results are labelled exploratory."
+}

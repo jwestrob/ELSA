@@ -1,0 +1,2260 @@
+model	component	presence	profiles	n_fam	families
+OrbA	orba	mandatory	orba	0	
+acb1	acb1	mandatory	acb1	1	PF13563
+acb2	acb2	mandatory	acb2	0	
+ntase	ntase	mandatory	ntase	0	
+Aca_alone	aca1	mandatory	aca1	0	
+Aca_alone	aca10	mandatory	aca10	0	
+Aca_alone	aca11	mandatory	aca11	0	
+Aca_alone	aca12	mandatory	aca12	0	
+Aca_alone	aca13	mandatory	aca13	0	
+Aca_alone	aca2	mandatory	aca2	0	
+Aca_alone	aca3	mandatory	aca3	0	
+Aca_alone	aca4	mandatory	aca4	0	
+Aca_alone	aca5	mandatory	aca5	0	
+Aca_alone	aca6	mandatory	aca6	0	
+Aca_alone	aca7	mandatory	aca7	0	
+Aca_alone	aca8	mandatory	aca8	0	
+Aca_alone	aca9	mandatory	aca9	0	
+acria1	acria1	mandatory	acria1	0	
+acria1	aca1	accessory	aca1	0	
+acria1	aca10	accessory	aca10	0	
+acria1	aca11	accessory	aca11	0	
+acria1	aca12	accessory	aca12	0	
+acria1	aca13	accessory	aca13	0	
+acria1	aca2	accessory	aca2	0	
+acria1	aca3	accessory	aca3	0	
+acria1	aca4	accessory	aca4	0	
+acria1	aca5	accessory	aca5	0	
+acria1	aca6	accessory	aca6	0	
+acria1	aca7	accessory	aca7	0	
+acria1	aca8	accessory	aca8	0	
+acria1	aca9	accessory	aca9	0	
+acric1	acric1	mandatory	acric1	0	
+acric1	aca1	accessory	aca1	0	
+acric1	aca10	accessory	aca10	0	
+acric1	aca11	accessory	aca11	0	
+acric1	aca12	accessory	aca12	0	
+acric1	aca13	accessory	aca13	0	
+acric1	aca2	accessory	aca2	0	
+acric1	aca3	accessory	aca3	0	
+acric1	aca4	accessory	aca4	0	
+acric1	aca5	accessory	aca5	0	
+acric1	aca6	accessory	aca6	0	
+acric1	aca7	accessory	aca7	0	
+acric1	aca8	accessory	aca8	0	
+acric1	aca9	accessory	aca9	0	
+acric10	acric10	mandatory	acric10	0	
+acric10	aca1	accessory	aca1	0	
+acric10	aca10	accessory	aca10	0	
+acric10	aca11	accessory	aca11	0	
+acric10	aca12	accessory	aca12	0	
+acric10	aca13	accessory	aca13	0	
+acric10	aca2	accessory	aca2	0	
+acric10	aca3	accessory	aca3	0	
+acric10	aca4	accessory	aca4	0	
+acric10	aca5	accessory	aca5	0	
+acric10	aca6	accessory	aca6	0	
+acric10	aca7	accessory	aca7	0	
+acric10	aca8	accessory	aca8	0	
+acric10	aca9	accessory	aca9	0	
+acric3	acric3	mandatory	acric3	0	
+acric3	aca1	accessory	aca1	0	
+acric3	aca10	accessory	aca10	0	
+acric3	aca11	accessory	aca11	0	
+acric3	aca12	accessory	aca12	0	
+acric3	aca13	accessory	aca13	0	
+acric3	aca2	accessory	aca2	0	
+acric3	aca3	accessory	aca3	0	
+acric3	aca4	accessory	aca4	0	
+acric3	aca5	accessory	aca5	0	
+acric3	aca6	accessory	aca6	0	
+acric3	aca7	accessory	aca7	0	
+acric3	aca8	accessory	aca8	0	
+acric3	aca9	accessory	aca9	0	
+acric4	acric4	mandatory	acric4	0	
+acric4	aca1	accessory	aca1	0	
+acric4	aca10	accessory	aca10	0	
+acric4	aca11	accessory	aca11	0	
+acric4	aca12	accessory	aca12	0	
+acric4	aca13	accessory	aca13	0	
+acric4	aca2	accessory	aca2	0	
+acric4	aca3	accessory	aca3	0	
+acric4	aca4	accessory	aca4	0	
+acric4	aca5	accessory	aca5	0	
+acric4	aca6	accessory	aca6	0	
+acric4	aca7	accessory	aca7	0	
+acric4	aca8	accessory	aca8	0	
+acric4	aca9	accessory	aca9	0	
+acric5	acric5	mandatory	acric5	0	
+acric5	aca1	accessory	aca1	0	
+acric5	aca10	accessory	aca10	0	
+acric5	aca11	accessory	aca11	0	
+acric5	aca12	accessory	aca12	0	
+acric5	aca13	accessory	aca13	0	
+acric5	aca2	accessory	aca2	0	
+acric5	aca3	accessory	aca3	0	
+acric5	aca4	accessory	aca4	0	
+acric5	aca5	accessory	aca5	0	
+acric5	aca6	accessory	aca6	0	
+acric5	aca7	accessory	aca7	0	
+acric5	aca8	accessory	aca8	0	
+acric5	aca9	accessory	aca9	0	
+acric6	acric6	mandatory	acric6	0	
+acric6	aca1	accessory	aca1	0	
+acric6	aca10	accessory	aca10	0	
+acric6	aca11	accessory	aca11	0	
+acric6	aca12	accessory	aca12	0	
+acric6	aca13	accessory	aca13	0	
+acric6	aca2	accessory	aca2	0	
+acric6	aca3	accessory	aca3	0	
+acric6	aca4	accessory	aca4	0	
+acric6	aca5	accessory	aca5	0	
+acric6	aca6	accessory	aca6	0	
+acric6	aca7	accessory	aca7	0	
+acric6	aca8	accessory	aca8	0	
+acric6	aca9	accessory	aca9	0	
+acric7	acric7	mandatory	acric7	0	
+acric7	aca1	accessory	aca1	0	
+acric7	aca10	accessory	aca10	0	
+acric7	aca11	accessory	aca11	0	
+acric7	aca12	accessory	aca12	0	
+acric7	aca13	accessory	aca13	0	
+acric7	aca2	accessory	aca2	0	
+acric7	aca3	accessory	aca3	0	
+acric7	aca4	accessory	aca4	0	
+acric7	aca5	accessory	aca5	0	
+acric7	aca6	accessory	aca6	0	
+acric7	aca7	accessory	aca7	0	
+acric7	aca8	accessory	aca8	0	
+acric7	aca9	accessory	aca9	0	
+acric8	acric8	mandatory	acric8	0	
+acric8	aca1	accessory	aca1	0	
+acric8	aca10	accessory	aca10	0	
+acric8	aca11	accessory	aca11	0	
+acric8	aca12	accessory	aca12	0	
+acric8	aca13	accessory	aca13	0	
+acric8	aca2	accessory	aca2	0	
+acric8	aca3	accessory	aca3	0	
+acric8	aca4	accessory	aca4	0	
+acric8	aca5	accessory	aca5	0	
+acric8	aca6	accessory	aca6	0	
+acric8	aca7	accessory	aca7	0	
+acric8	aca8	accessory	aca8	0	
+acric8	aca9	accessory	aca9	0	
+acric9	acric9	mandatory	acric9	0	
+acric9	aca1	accessory	aca1	0	
+acric9	aca10	accessory	aca10	0	
+acric9	aca11	accessory	aca11	0	
+acric9	aca12	accessory	aca12	0	
+acric9	aca13	accessory	aca13	0	
+acric9	aca2	accessory	aca2	0	
+acric9	aca3	accessory	aca3	0	
+acric9	aca4	accessory	aca4	0	
+acric9	aca5	accessory	aca5	0	
+acric9	aca6	accessory	aca6	0	
+acric9	aca7	accessory	aca7	0	
+acric9	aca8	accessory	aca8	0	
+acric9	aca9	accessory	aca9	0	
+acrid1	acrid1	mandatory	acrid1	0	
+acrid1	aca1	accessory	aca1	0	
+acrid1	aca10	accessory	aca10	0	
+acrid1	aca11	accessory	aca11	0	
+acrid1	aca12	accessory	aca12	0	
+acrid1	aca13	accessory	aca13	0	
+acrid1	aca2	accessory	aca2	0	
+acrid1	aca3	accessory	aca3	0	
+acrid1	aca4	accessory	aca4	0	
+acrid1	aca5	accessory	aca5	0	
+acrid1	aca6	accessory	aca6	0	
+acrid1	aca7	accessory	aca7	0	
+acrid1	aca8	accessory	aca8	0	
+acrid1	aca9	accessory	aca9	0	
+acrie1	acrie1	mandatory	acrie1	0	
+acrie1	aca1	accessory	aca1	0	
+acrie1	aca10	accessory	aca10	0	
+acrie1	aca11	accessory	aca11	0	
+acrie1	aca12	accessory	aca12	0	
+acrie1	aca13	accessory	aca13	0	
+acrie1	aca2	accessory	aca2	0	
+acrie1	aca3	accessory	aca3	0	
+acrie1	aca4	accessory	aca4	0	
+acrie1	aca5	accessory	aca5	0	
+acrie1	aca6	accessory	aca6	0	
+acrie1	aca7	accessory	aca7	0	
+acrie1	aca8	accessory	aca8	0	
+acrie1	aca9	accessory	aca9	0	
+acrie2	acrie2	mandatory	acrie2	0	
+acrie2	aca1	accessory	aca1	0	
+acrie2	aca10	accessory	aca10	0	
+acrie2	aca11	accessory	aca11	0	
+acrie2	aca12	accessory	aca12	0	
+acrie2	aca13	accessory	aca13	0	
+acrie2	aca2	accessory	aca2	0	
+acrie2	aca3	accessory	aca3	0	
+acrie2	aca4	accessory	aca4	0	
+acrie2	aca5	accessory	aca5	0	
+acrie2	aca6	accessory	aca6	0	
+acrie2	aca7	accessory	aca7	0	
+acrie2	aca8	accessory	aca8	0	
+acrie2	aca9	accessory	aca9	0	
+acrie3	acrie3	mandatory	acrie3	0	
+acrie3	aca1	accessory	aca1	0	
+acrie3	aca10	accessory	aca10	0	
+acrie3	aca11	accessory	aca11	0	
+acrie3	aca12	accessory	aca12	0	
+acrie3	aca13	accessory	aca13	0	
+acrie3	aca2	accessory	aca2	0	
+acrie3	aca3	accessory	aca3	0	
+acrie3	aca4	accessory	aca4	0	
+acrie3	aca5	accessory	aca5	0	
+acrie3	aca6	accessory	aca6	0	
+acrie3	aca7	accessory	aca7	0	
+acrie3	aca8	accessory	aca8	0	
+acrie3	aca9	accessory	aca9	0	
+acrie4-if7	acrie4-if7	mandatory	acrie4-if7	0	
+acrie4-if7	aca1	accessory	aca1	0	
+acrie4-if7	aca10	accessory	aca10	0	
+acrie4-if7	aca11	accessory	aca11	0	
+acrie4-if7	aca12	accessory	aca12	0	
+acrie4-if7	aca13	accessory	aca13	0	
+acrie4-if7	aca2	accessory	aca2	0	
+acrie4-if7	aca3	accessory	aca3	0	
+acrie4-if7	aca4	accessory	aca4	0	
+acrie4-if7	aca5	accessory	aca5	0	
+acrie4-if7	aca6	accessory	aca6	0	
+acrie4-if7	aca7	accessory	aca7	0	
+acrie4-if7	aca8	accessory	aca8	0	
+acrie4-if7	aca9	accessory	aca9	0	
+acrie4	acrie4	mandatory	acrie4	0	
+acrie4	aca1	accessory	aca1	0	
+acrie4	aca10	accessory	aca10	0	
+acrie4	aca11	accessory	aca11	0	
+acrie4	aca12	accessory	aca12	0	
+acrie4	aca13	accessory	aca13	0	
+acrie4	aca2	accessory	aca2	0	
+acrie4	aca3	accessory	aca3	0	
+acrie4	aca4	accessory	aca4	0	
+acrie4	aca5	accessory	aca5	0	
+acrie4	aca6	accessory	aca6	0	
+acrie4	aca7	accessory	aca7	0	
+acrie4	aca8	accessory	aca8	0	
+acrie4	aca9	accessory	aca9	0	
+acrie5	acrie5	mandatory	acrie5	0	
+acrie5	aca1	accessory	aca1	0	
+acrie5	aca10	accessory	aca10	0	
+acrie5	aca11	accessory	aca11	0	
+acrie5	aca12	accessory	aca12	0	
+acrie5	aca13	accessory	aca13	0	
+acrie5	aca2	accessory	aca2	0	
+acrie5	aca3	accessory	aca3	0	
+acrie5	aca4	accessory	aca4	0	
+acrie5	aca5	accessory	aca5	0	
+acrie5	aca6	accessory	aca6	0	
+acrie5	aca7	accessory	aca7	0	
+acrie5	aca8	accessory	aca8	0	
+acrie5	aca9	accessory	aca9	0	
+acrie6	acrie6	mandatory	acrie6	0	
+acrie6	aca1	accessory	aca1	0	
+acrie6	aca10	accessory	aca10	0	
+acrie6	aca11	accessory	aca11	0	
+acrie6	aca12	accessory	aca12	0	
+acrie6	aca13	accessory	aca13	0	
+acrie6	aca2	accessory	aca2	0	
+acrie6	aca3	accessory	aca3	0	
+acrie6	aca4	accessory	aca4	0	
+acrie6	aca5	accessory	aca5	0	
+acrie6	aca6	accessory	aca6	0	
+acrie6	aca7	accessory	aca7	0	
+acrie6	aca8	accessory	aca8	0	
+acrie6	aca9	accessory	aca9	0	
+acrie7	acrie7	mandatory	acrie7	0	
+acrie7	aca1	accessory	aca1	0	
+acrie7	aca10	accessory	aca10	0	
+acrie7	aca11	accessory	aca11	0	
+acrie7	aca12	accessory	aca12	0	
+acrie7	aca13	accessory	aca13	0	
+acrie7	aca2	accessory	aca2	0	
+acrie7	aca3	accessory	aca3	0	
+acrie7	aca4	accessory	aca4	0	
+acrie7	aca5	accessory	aca5	0	
+acrie7	aca6	accessory	aca6	0	
+acrie7	aca7	accessory	aca7	0	
+acrie7	aca8	accessory	aca8	0	
+acrie7	aca9	accessory	aca9	0	
+acrie8	acrie8	mandatory	acrie8	0	
+acrie8	aca1	accessory	aca1	0	
+acrie8	aca10	accessory	aca10	0	
+acrie8	aca11	accessory	aca11	0	
+acrie8	aca12	accessory	aca12	0	
+acrie8	aca13	accessory	aca13	0	
+acrie8	aca2	accessory	aca2	0	
+acrie8	aca3	accessory	aca3	0	
+acrie8	aca4	accessory	aca4	0	
+acrie8	aca5	accessory	aca5	0	
+acrie8	aca6	accessory	aca6	0	
+acrie8	aca7	accessory	aca7	0	
+acrie8	aca8	accessory	aca8	0	
+acrie8	aca9	accessory	aca9	0	
+acrie9	acrie9	mandatory	acrie9	0	
+acrie9	aca1	accessory	aca1	0	
+acrie9	aca10	accessory	aca10	0	
+acrie9	aca11	accessory	aca11	0	
+acrie9	aca12	accessory	aca12	0	
+acrie9	aca13	accessory	aca13	0	
+acrie9	aca2	accessory	aca2	0	
+acrie9	aca3	accessory	aca3	0	
+acrie9	aca4	accessory	aca4	0	
+acrie9	aca5	accessory	aca5	0	
+acrie9	aca6	accessory	aca6	0	
+acrie9	aca7	accessory	aca7	0	
+acrie9	aca8	accessory	aca8	0	
+acrie9	aca9	accessory	aca9	0	
+acrif1	acrif1	mandatory	acrif1	0	
+acrif1	aca1	accessory	aca1	0	
+acrif1	aca10	accessory	aca10	0	
+acrif1	aca11	accessory	aca11	0	
+acrif1	aca12	accessory	aca12	0	
+acrif1	aca13	accessory	aca13	0	
+acrif1	aca2	accessory	aca2	0	
+acrif1	aca3	accessory	aca3	0	
+acrif1	aca4	accessory	aca4	0	
+acrif1	aca5	accessory	aca5	0	
+acrif1	aca6	accessory	aca6	0	
+acrif1	aca7	accessory	aca7	0	
+acrif1	aca8	accessory	aca8	0	
+acrif1	aca9	accessory	aca9	0	
+acrif10	acrif10	mandatory	acrif10	0	
+acrif10	aca1	accessory	aca1	0	
+acrif10	aca10	accessory	aca10	0	
+acrif10	aca11	accessory	aca11	0	
+acrif10	aca12	accessory	aca12	0	
+acrif10	aca13	accessory	aca13	0	
+acrif10	aca2	accessory	aca2	0	
+acrif10	aca3	accessory	aca3	0	
+acrif10	aca4	accessory	aca4	0	
+acrif10	aca5	accessory	aca5	0	
+acrif10	aca6	accessory	aca6	0	
+acrif10	aca7	accessory	aca7	0	
+acrif10	aca8	accessory	aca8	0	
+acrif10	aca9	accessory	aca9	0	
+acrif11	acrif11	mandatory	acrif11	0	
+acrif11	aca1	accessory	aca1	0	
+acrif11	aca10	accessory	aca10	0	
+acrif11	aca11	accessory	aca11	0	
+acrif11	aca12	accessory	aca12	0	
+acrif11	aca13	accessory	aca13	0	
+acrif11	aca2	accessory	aca2	0	
+acrif11	aca3	accessory	aca3	0	
+acrif11	aca4	accessory	aca4	0	
+acrif11	aca5	accessory	aca5	0	
+acrif11	aca6	accessory	aca6	0	
+acrif11	aca7	accessory	aca7	0	
+acrif11	aca8	accessory	aca8	0	
+acrif11	aca9	accessory	aca9	0	
+acrif12	acrif12	mandatory	acrif12	0	
+acrif12	aca1	accessory	aca1	0	
+acrif12	aca10	accessory	aca10	0	
+acrif12	aca11	accessory	aca11	0	
+acrif12	aca12	accessory	aca12	0	
+acrif12	aca13	accessory	aca13	0	
+acrif12	aca2	accessory	aca2	0	
+acrif12	aca3	accessory	aca3	0	
+acrif12	aca4	accessory	aca4	0	
+acrif12	aca5	accessory	aca5	0	
+acrif12	aca6	accessory	aca6	0	
+acrif12	aca7	accessory	aca7	0	
+acrif12	aca8	accessory	aca8	0	
+acrif12	aca9	accessory	aca9	0	
+acrif13	acrif13	mandatory	acrif13	0	
+acrif13	aca1	accessory	aca1	0	
+acrif13	aca10	accessory	aca10	0	
+acrif13	aca11	accessory	aca11	0	
+acrif13	aca12	accessory	aca12	0	
+acrif13	aca13	accessory	aca13	0	
+acrif13	aca2	accessory	aca2	0	
+acrif13	aca3	accessory	aca3	0	
+acrif13	aca4	accessory	aca4	0	
+acrif13	aca5	accessory	aca5	0	
+acrif13	aca6	accessory	aca6	0	
+acrif13	aca7	accessory	aca7	0	
+acrif13	aca8	accessory	aca8	0	
+acrif13	aca9	accessory	aca9	0	
+acrif14	acrif14	mandatory	acrif14	0	
+acrif14	aca1	accessory	aca1	0	
+acrif14	aca10	accessory	aca10	0	
+acrif14	aca11	accessory	aca11	0	
+acrif14	aca12	accessory	aca12	0	
+acrif14	aca13	accessory	aca13	0	
+acrif14	aca2	accessory	aca2	0	
+acrif14	aca3	accessory	aca3	0	
+acrif14	aca4	accessory	aca4	0	
+acrif14	aca5	accessory	aca5	0	
+acrif14	aca6	accessory	aca6	0	
+acrif14	aca7	accessory	aca7	0	
+acrif14	aca8	accessory	aca8	0	
+acrif14	aca9	accessory	aca9	0	
+acrif15	acrif15	mandatory	acrif15	0	
+acrif15	aca1	accessory	aca1	0	
+acrif15	aca10	accessory	aca10	0	
+acrif15	aca11	accessory	aca11	0	
+acrif15	aca12	accessory	aca12	0	
+acrif15	aca13	accessory	aca13	0	
+acrif15	aca2	accessory	aca2	0	
+acrif15	aca3	accessory	aca3	0	
+acrif15	aca4	accessory	aca4	0	
+acrif15	aca5	accessory	aca5	0	
+acrif15	aca6	accessory	aca6	0	
+acrif15	aca7	accessory	aca7	0	
+acrif15	aca8	accessory	aca8	0	
+acrif15	aca9	accessory	aca9	0	
+acrif16	acrif16	mandatory	acrif16	0	
+acrif16	aca1	accessory	aca1	0	
+acrif16	aca10	accessory	aca10	0	
+acrif16	aca11	accessory	aca11	0	
+acrif16	aca12	accessory	aca12	0	
+acrif16	aca13	accessory	aca13	0	
+acrif16	aca2	accessory	aca2	0	
+acrif16	aca3	accessory	aca3	0	
+acrif16	aca4	accessory	aca4	0	
+acrif16	aca5	accessory	aca5	0	
+acrif16	aca6	accessory	aca6	0	
+acrif16	aca7	accessory	aca7	0	
+acrif16	aca8	accessory	aca8	0	
+acrif16	aca9	accessory	aca9	0	
+acrif17	acrif17	mandatory	acrif17	0	
+acrif17	aca1	accessory	aca1	0	
+acrif17	aca10	accessory	aca10	0	
+acrif17	aca11	accessory	aca11	0	
+acrif17	aca12	accessory	aca12	0	
+acrif17	aca13	accessory	aca13	0	
+acrif17	aca2	accessory	aca2	0	
+acrif17	aca3	accessory	aca3	0	
+acrif17	aca4	accessory	aca4	0	
+acrif17	aca5	accessory	aca5	0	
+acrif17	aca6	accessory	aca6	0	
+acrif17	aca7	accessory	aca7	0	
+acrif17	aca8	accessory	aca8	0	
+acrif17	aca9	accessory	aca9	0	
+acrif18	acrif18	mandatory	acrif18	0	
+acrif18	aca1	accessory	aca1	0	
+acrif18	aca10	accessory	aca10	0	
+acrif18	aca11	accessory	aca11	0	
+acrif18	aca12	accessory	aca12	0	
+acrif18	aca13	accessory	aca13	0	
+acrif18	aca2	accessory	aca2	0	
+acrif18	aca3	accessory	aca3	0	
+acrif18	aca4	accessory	aca4	0	
+acrif18	aca5	accessory	aca5	0	
+acrif18	aca6	accessory	aca6	0	
+acrif18	aca7	accessory	aca7	0	
+acrif18	aca8	accessory	aca8	0	
+acrif18	aca9	accessory	aca9	0	
+acrif19	acrif19	mandatory	acrif19	0	
+acrif19	aca1	accessory	aca1	0	
+acrif19	aca10	accessory	aca10	0	
+acrif19	aca11	accessory	aca11	0	
+acrif19	aca12	accessory	aca12	0	
+acrif19	aca13	accessory	aca13	0	
+acrif19	aca2	accessory	aca2	0	
+acrif19	aca3	accessory	aca3	0	
+acrif19	aca4	accessory	aca4	0	
+acrif19	aca5	accessory	aca5	0	
+acrif19	aca6	accessory	aca6	0	
+acrif19	aca7	accessory	aca7	0	
+acrif19	aca8	accessory	aca8	0	
+acrif19	aca9	accessory	aca9	0	
+acrif2	acrif2	mandatory	acrif2	0	
+acrif2	aca1	accessory	aca1	0	
+acrif2	aca10	accessory	aca10	0	
+acrif2	aca11	accessory	aca11	0	
+acrif2	aca12	accessory	aca12	0	
+acrif2	aca13	accessory	aca13	0	
+acrif2	aca2	accessory	aca2	0	
+acrif2	aca3	accessory	aca3	0	
+acrif2	aca4	accessory	aca4	0	
+acrif2	aca5	accessory	aca5	0	
+acrif2	aca6	accessory	aca6	0	
+acrif2	aca7	accessory	aca7	0	
+acrif2	aca8	accessory	aca8	0	
+acrif2	aca9	accessory	aca9	0	
+acrif20	acrif20	mandatory	acrif20	0	
+acrif20	aca1	accessory	aca1	0	
+acrif20	aca10	accessory	aca10	0	
+acrif20	aca11	accessory	aca11	0	
+acrif20	aca12	accessory	aca12	0	
+acrif20	aca13	accessory	aca13	0	
+acrif20	aca2	accessory	aca2	0	
+acrif20	aca3	accessory	aca3	0	
+acrif20	aca4	accessory	aca4	0	
+acrif20	aca5	accessory	aca5	0	
+acrif20	aca6	accessory	aca6	0	
+acrif20	aca7	accessory	aca7	0	
+acrif20	aca8	accessory	aca8	0	
+acrif20	aca9	accessory	aca9	0	
+acrif21	acrif21	mandatory	acrif21	0	
+acrif21	aca1	accessory	aca1	0	
+acrif21	aca10	accessory	aca10	0	
+acrif21	aca11	accessory	aca11	0	
+acrif21	aca12	accessory	aca12	0	
+acrif21	aca13	accessory	aca13	0	
+acrif21	aca2	accessory	aca2	0	
+acrif21	aca3	accessory	aca3	0	
+acrif21	aca4	accessory	aca4	0	
+acrif21	aca5	accessory	aca5	0	
+acrif21	aca6	accessory	aca6	0	
+acrif21	aca7	accessory	aca7	0	
+acrif21	aca8	accessory	aca8	0	
+acrif21	aca9	accessory	aca9	0	
+acrif22	acrif22	mandatory	acrif22	0	
+acrif22	aca1	accessory	aca1	0	
+acrif22	aca10	accessory	aca10	0	
+acrif22	aca11	accessory	aca11	0	
+acrif22	aca12	accessory	aca12	0	
+acrif22	aca13	accessory	aca13	0	
+acrif22	aca2	accessory	aca2	0	
+acrif22	aca3	accessory	aca3	0	
+acrif22	aca4	accessory	aca4	0	
+acrif22	aca5	accessory	aca5	0	
+acrif22	aca6	accessory	aca6	0	
+acrif22	aca7	accessory	aca7	0	
+acrif22	aca8	accessory	aca8	0	
+acrif22	aca9	accessory	aca9	0	
+acrif23	acrif23	mandatory	acrif23	0	
+acrif23	aca1	accessory	aca1	0	
+acrif23	aca10	accessory	aca10	0	
+acrif23	aca11	accessory	aca11	0	
+acrif23	aca12	accessory	aca12	0	
+acrif23	aca13	accessory	aca13	0	
+acrif23	aca2	accessory	aca2	0	
+acrif23	aca3	accessory	aca3	0	
+acrif23	aca4	accessory	aca4	0	
+acrif23	aca5	accessory	aca5	0	
+acrif23	aca6	accessory	aca6	0	
+acrif23	aca7	accessory	aca7	0	
+acrif23	aca8	accessory	aca8	0	
+acrif23	aca9	accessory	aca9	0	
+acrif24	acrif24	mandatory	acrif24	0	
+acrif24	aca1	accessory	aca1	0	
+acrif24	aca10	accessory	aca10	0	
+acrif24	aca11	accessory	aca11	0	
+acrif24	aca12	accessory	aca12	0	
+acrif24	aca13	accessory	aca13	0	
+acrif24	aca2	accessory	aca2	0	
+acrif24	aca3	accessory	aca3	0	
+acrif24	aca4	accessory	aca4	0	
+acrif24	aca5	accessory	aca5	0	
+acrif24	aca6	accessory	aca6	0	
+acrif24	aca7	accessory	aca7	0	
+acrif24	aca8	accessory	aca8	0	
+acrif24	aca9	accessory	aca9	0	
+acrif2_c2	acrif2_c2	mandatory	acrif2_c2	0	
+acrif2_c2	aca1	accessory	aca1	0	
+acrif2_c2	aca10	accessory	aca10	0	
+acrif2_c2	aca11	accessory	aca11	0	
+acrif2_c2	aca12	accessory	aca12	0	
+acrif2_c2	aca13	accessory	aca13	0	
+acrif2_c2	aca2	accessory	aca2	0	
+acrif2_c2	aca3	accessory	aca3	0	
+acrif2_c2	aca4	accessory	aca4	0	
+acrif2_c2	aca5	accessory	aca5	0	
+acrif2_c2	aca6	accessory	aca6	0	
+acrif2_c2	aca7	accessory	aca7	0	
+acrif2_c2	aca8	accessory	aca8	0	
+acrif2_c2	aca9	accessory	aca9	0	
+acrif3	acrif3	mandatory	acrif3	0	
+acrif3	aca1	accessory	aca1	0	
+acrif3	aca10	accessory	aca10	0	
+acrif3	aca11	accessory	aca11	0	
+acrif3	aca12	accessory	aca12	0	
+acrif3	aca13	accessory	aca13	0	
+acrif3	aca2	accessory	aca2	0	
+acrif3	aca3	accessory	aca3	0	
+acrif3	aca4	accessory	aca4	0	
+acrif3	aca5	accessory	aca5	0	
+acrif3	aca6	accessory	aca6	0	
+acrif3	aca7	accessory	aca7	0	
+acrif3	aca8	accessory	aca8	0	
+acrif3	aca9	accessory	aca9	0	
+acrif4	acrif4	mandatory	acrif4	0	
+acrif4	aca1	accessory	aca1	0	
+acrif4	aca10	accessory	aca10	0	
+acrif4	aca11	accessory	aca11	0	
+acrif4	aca12	accessory	aca12	0	
+acrif4	aca13	accessory	aca13	0	
+acrif4	aca2	accessory	aca2	0	
+acrif4	aca3	accessory	aca3	0	
+acrif4	aca4	accessory	aca4	0	
+acrif4	aca5	accessory	aca5	0	
+acrif4	aca6	accessory	aca6	0	
+acrif4	aca7	accessory	aca7	0	
+acrif4	aca8	accessory	aca8	0	
+acrif4	aca9	accessory	aca9	0	
+acrif5	acrif5	mandatory	acrif5	0	
+acrif5	aca1	accessory	aca1	0	
+acrif5	aca10	accessory	aca10	0	
+acrif5	aca11	accessory	aca11	0	
+acrif5	aca12	accessory	aca12	0	
+acrif5	aca13	accessory	aca13	0	
+acrif5	aca2	accessory	aca2	0	
+acrif5	aca3	accessory	aca3	0	
+acrif5	aca4	accessory	aca4	0	
+acrif5	aca5	accessory	aca5	0	
+acrif5	aca6	accessory	aca6	0	
+acrif5	aca7	accessory	aca7	0	
+acrif5	aca8	accessory	aca8	0	
+acrif5	aca9	accessory	aca9	0	
+acrif6	acrif6	mandatory	acrif6	0	
+acrif6	aca1	accessory	aca1	0	
+acrif6	aca10	accessory	aca10	0	
+acrif6	aca11	accessory	aca11	0	
+acrif6	aca12	accessory	aca12	0	
+acrif6	aca13	accessory	aca13	0	
+acrif6	aca2	accessory	aca2	0	
+acrif6	aca3	accessory	aca3	0	
+acrif6	aca4	accessory	aca4	0	
+acrif6	aca5	accessory	aca5	0	
+acrif6	aca6	accessory	aca6	0	
+acrif6	aca7	accessory	aca7	0	
+acrif6	aca8	accessory	aca8	0	
+acrif6	aca9	accessory	aca9	0	
+acrif7	acrif7	mandatory	acrif7	0	
+acrif7	aca1	accessory	aca1	0	
+acrif7	aca10	accessory	aca10	0	
+acrif7	aca11	accessory	aca11	0	
+acrif7	aca12	accessory	aca12	0	
+acrif7	aca13	accessory	aca13	0	
+acrif7	aca2	accessory	aca2	0	
+acrif7	aca3	accessory	aca3	0	
+acrif7	aca4	accessory	aca4	0	
+acrif7	aca5	accessory	aca5	0	
+acrif7	aca6	accessory	aca6	0	
+acrif7	aca7	accessory	aca7	0	
+acrif7	aca8	accessory	aca8	0	
+acrif7	aca9	accessory	aca9	0	
+acrif8	acrif8	mandatory	acrif8	0	
+acrif8	aca1	accessory	aca1	0	
+acrif8	aca10	accessory	aca10	0	
+acrif8	aca11	accessory	aca11	0	
+acrif8	aca12	accessory	aca12	0	
+acrif8	aca13	accessory	aca13	0	
+acrif8	aca2	accessory	aca2	0	
+acrif8	aca3	accessory	aca3	0	
+acrif8	aca4	accessory	aca4	0	
+acrif8	aca5	accessory	aca5	0	
+acrif8	aca6	accessory	aca6	0	
+acrif8	aca7	accessory	aca7	0	
+acrif8	aca8	accessory	aca8	0	
+acrif8	aca9	accessory	aca9	0	
+acrif9	acrif9	mandatory	acrif9	0	
+acrif9	aca1	accessory	aca1	0	
+acrif9	aca10	accessory	aca10	0	
+acrif9	aca11	accessory	aca11	0	
+acrif9	aca12	accessory	aca12	0	
+acrif9	aca13	accessory	aca13	0	
+acrif9	aca2	accessory	aca2	0	
+acrif9	aca3	accessory	aca3	0	
+acrif9	aca4	accessory	aca4	0	
+acrif9	aca5	accessory	aca5	0	
+acrif9	aca6	accessory	aca6	0	
+acrif9	aca7	accessory	aca7	0	
+acrif9	aca8	accessory	aca8	0	
+acrif9	aca9	accessory	aca9	0	
+acriia1	acriia1	mandatory	acriia1	0	
+acriia1	aca1	accessory	aca1	0	
+acriia1	aca10	accessory	aca10	0	
+acriia1	aca11	accessory	aca11	0	
+acriia1	aca12	accessory	aca12	0	
+acriia1	aca13	accessory	aca13	0	
+acriia1	aca2	accessory	aca2	0	
+acriia1	aca3	accessory	aca3	0	
+acriia1	aca4	accessory	aca4	0	
+acriia1	aca5	accessory	aca5	0	
+acriia1	aca6	accessory	aca6	0	
+acriia1	aca7	accessory	aca7	0	
+acriia1	aca8	accessory	aca8	0	
+acriia1	aca9	accessory	aca9	0	
+acriia10	acriia10	mandatory	acriia10	0	
+acriia10	aca1	accessory	aca1	0	
+acriia10	aca10	accessory	aca10	0	
+acriia10	aca11	accessory	aca11	0	
+acriia10	aca12	accessory	aca12	0	
+acriia10	aca13	accessory	aca13	0	
+acriia10	aca2	accessory	aca2	0	
+acriia10	aca3	accessory	aca3	0	
+acriia10	aca4	accessory	aca4	0	
+acriia10	aca5	accessory	aca5	0	
+acriia10	aca6	accessory	aca6	0	
+acriia10	aca7	accessory	aca7	0	
+acriia10	aca8	accessory	aca8	0	
+acriia10	aca9	accessory	aca9	0	
+acriia11	acriia11	mandatory	acriia11	0	
+acriia11	aca1	accessory	aca1	0	
+acriia11	aca10	accessory	aca10	0	
+acriia11	aca11	accessory	aca11	0	
+acriia11	aca12	accessory	aca12	0	
+acriia11	aca13	accessory	aca13	0	
+acriia11	aca2	accessory	aca2	0	
+acriia11	aca3	accessory	aca3	0	
+acriia11	aca4	accessory	aca4	0	
+acriia11	aca5	accessory	aca5	0	
+acriia11	aca6	accessory	aca6	0	
+acriia11	aca7	accessory	aca7	0	
+acriia11	aca8	accessory	aca8	0	
+acriia11	aca9	accessory	aca9	0	
+acriia12	acriia12	mandatory	acriia12	0	
+acriia12	aca1	accessory	aca1	0	
+acriia12	aca10	accessory	aca10	0	
+acriia12	aca11	accessory	aca11	0	
+acriia12	aca12	accessory	aca12	0	
+acriia12	aca13	accessory	aca13	0	
+acriia12	aca2	accessory	aca2	0	
+acriia12	aca3	accessory	aca3	0	
+acriia12	aca4	accessory	aca4	0	
+acriia12	aca5	accessory	aca5	0	
+acriia12	aca6	accessory	aca6	0	
+acriia12	aca7	accessory	aca7	0	
+acriia12	aca8	accessory	aca8	0	
+acriia12	aca9	accessory	aca9	0	
+acriia13	acriia13	mandatory	acriia13	0	
+acriia13	aca1	accessory	aca1	0	
+acriia13	aca10	accessory	aca10	0	
+acriia13	aca11	accessory	aca11	0	
+acriia13	aca12	accessory	aca12	0	
+acriia13	aca13	accessory	aca13	0	
+acriia13	aca2	accessory	aca2	0	
+acriia13	aca3	accessory	aca3	0	
+acriia13	aca4	accessory	aca4	0	
+acriia13	aca5	accessory	aca5	0	
+acriia13	aca6	accessory	aca6	0	
+acriia13	aca7	accessory	aca7	0	
+acriia13	aca8	accessory	aca8	0	
+acriia13	aca9	accessory	aca9	0	
+acriia14	acriia14	mandatory	acriia14	0	
+acriia14	aca1	accessory	aca1	0	
+acriia14	aca10	accessory	aca10	0	
+acriia14	aca11	accessory	aca11	0	
+acriia14	aca12	accessory	aca12	0	
+acriia14	aca13	accessory	aca13	0	
+acriia14	aca2	accessory	aca2	0	
+acriia14	aca3	accessory	aca3	0	
+acriia14	aca4	accessory	aca4	0	
+acriia14	aca5	accessory	aca5	0	
+acriia14	aca6	accessory	aca6	0	
+acriia14	aca7	accessory	aca7	0	
+acriia14	aca8	accessory	aca8	0	
+acriia14	aca9	accessory	aca9	0	
+acriia15	acriia15	mandatory	acriia15	0	
+acriia15	aca1	accessory	aca1	0	
+acriia15	aca10	accessory	aca10	0	
+acriia15	aca11	accessory	aca11	0	
+acriia15	aca12	accessory	aca12	0	
+acriia15	aca13	accessory	aca13	0	
+acriia15	aca2	accessory	aca2	0	
+acriia15	aca3	accessory	aca3	0	
+acriia15	aca4	accessory	aca4	0	
+acriia15	aca5	accessory	aca5	0	
+acriia15	aca6	accessory	aca6	0	
+acriia15	aca7	accessory	aca7	0	
+acriia15	aca8	accessory	aca8	0	
+acriia15	aca9	accessory	aca9	0	
+acriia16	acriia16	mandatory	acriia16	0	
+acriia16	aca1	accessory	aca1	0	
+acriia16	aca10	accessory	aca10	0	
+acriia16	aca11	accessory	aca11	0	
+acriia16	aca12	accessory	aca12	0	
+acriia16	aca13	accessory	aca13	0	
+acriia16	aca2	accessory	aca2	0	
+acriia16	aca3	accessory	aca3	0	
+acriia16	aca4	accessory	aca4	0	
+acriia16	aca5	accessory	aca5	0	
+acriia16	aca6	accessory	aca6	0	
+acriia16	aca7	accessory	aca7	0	
+acriia16	aca8	accessory	aca8	0	
+acriia16	aca9	accessory	aca9	0	
+acriia17	acriia17	mandatory	acriia17	0	
+acriia17	aca1	accessory	aca1	0	
+acriia17	aca10	accessory	aca10	0	
+acriia17	aca11	accessory	aca11	0	
+acriia17	aca12	accessory	aca12	0	
+acriia17	aca13	accessory	aca13	0	
+acriia17	aca2	accessory	aca2	0	
+acriia17	aca3	accessory	aca3	0	
+acriia17	aca4	accessory	aca4	0	
+acriia17	aca5	accessory	aca5	0	
+acriia17	aca6	accessory	aca6	0	
+acriia17	aca7	accessory	aca7	0	
+acriia17	aca8	accessory	aca8	0	
+acriia17	aca9	accessory	aca9	0	
+acriia18	acriia18	mandatory	acriia18	0	
+acriia18	aca1	accessory	aca1	0	
+acriia18	aca10	accessory	aca10	0	
+acriia18	aca11	accessory	aca11	0	
+acriia18	aca12	accessory	aca12	0	
+acriia18	aca13	accessory	aca13	0	
+acriia18	aca2	accessory	aca2	0	
+acriia18	aca3	accessory	aca3	0	
+acriia18	aca4	accessory	aca4	0	
+acriia18	aca5	accessory	aca5	0	
+acriia18	aca6	accessory	aca6	0	
+acriia18	aca7	accessory	aca7	0	
+acriia18	aca8	accessory	aca8	0	
+acriia18	aca9	accessory	aca9	0	
+acriia19	acriia19	mandatory	acriia19	0	
+acriia19	aca1	accessory	aca1	0	
+acriia19	aca10	accessory	aca10	0	
+acriia19	aca11	accessory	aca11	0	
+acriia19	aca12	accessory	aca12	0	
+acriia19	aca13	accessory	aca13	0	
+acriia19	aca2	accessory	aca2	0	
+acriia19	aca3	accessory	aca3	0	
+acriia19	aca4	accessory	aca4	0	
+acriia19	aca5	accessory	aca5	0	
+acriia19	aca6	accessory	aca6	0	
+acriia19	aca7	accessory	aca7	0	
+acriia19	aca8	accessory	aca8	0	
+acriia19	aca9	accessory	aca9	0	
+acriia2	acriia2	mandatory	acriia2	0	
+acriia2	aca1	accessory	aca1	0	
+acriia2	aca10	accessory	aca10	0	
+acriia2	aca11	accessory	aca11	0	
+acriia2	aca12	accessory	aca12	0	
+acriia2	aca13	accessory	aca13	0	
+acriia2	aca2	accessory	aca2	0	
+acriia2	aca3	accessory	aca3	0	
+acriia2	aca4	accessory	aca4	0	
+acriia2	aca5	accessory	aca5	0	
+acriia2	aca6	accessory	aca6	0	
+acriia2	aca7	accessory	aca7	0	
+acriia2	aca8	accessory	aca8	0	
+acriia2	aca9	accessory	aca9	0	
+acriia20	acriia20	mandatory	acriia20	0	
+acriia20	aca1	accessory	aca1	0	
+acriia20	aca10	accessory	aca10	0	
+acriia20	aca11	accessory	aca11	0	
+acriia20	aca12	accessory	aca12	0	
+acriia20	aca13	accessory	aca13	0	
+acriia20	aca2	accessory	aca2	0	
+acriia20	aca3	accessory	aca3	0	
+acriia20	aca4	accessory	aca4	0	
+acriia20	aca5	accessory	aca5	0	
+acriia20	aca6	accessory	aca6	0	
+acriia20	aca7	accessory	aca7	0	
+acriia20	aca8	accessory	aca8	0	
+acriia20	aca9	accessory	aca9	0	
+acriia21	acriia21	mandatory	acriia21	0	
+acriia21	aca1	accessory	aca1	0	
+acriia21	aca10	accessory	aca10	0	
+acriia21	aca11	accessory	aca11	0	
+acriia21	aca12	accessory	aca12	0	
+acriia21	aca13	accessory	aca13	0	
+acriia21	aca2	accessory	aca2	0	
+acriia21	aca3	accessory	aca3	0	
+acriia21	aca4	accessory	aca4	0	
+acriia21	aca5	accessory	aca5	0	
+acriia21	aca6	accessory	aca6	0	
+acriia21	aca7	accessory	aca7	0	
+acriia21	aca8	accessory	aca8	0	
+acriia21	aca9	accessory	aca9	0	
+acriia22	acriia22	mandatory	acriia22	0	
+acriia22	aca1	accessory	aca1	0	
+acriia22	aca10	accessory	aca10	0	
+acriia22	aca11	accessory	aca11	0	
+acriia22	aca12	accessory	aca12	0	
+acriia22	aca13	accessory	aca13	0	
+acriia22	aca2	accessory	aca2	0	
+acriia22	aca3	accessory	aca3	0	
+acriia22	aca4	accessory	aca4	0	
+acriia22	aca5	accessory	aca5	0	
+acriia22	aca6	accessory	aca6	0	
+acriia22	aca7	accessory	aca7	0	
+acriia22	aca8	accessory	aca8	0	
+acriia22	aca9	accessory	aca9	0	
+acriia23	acriia23	mandatory	acriia23	0	
+acriia23	aca1	accessory	aca1	0	
+acriia23	aca10	accessory	aca10	0	
+acriia23	aca11	accessory	aca11	0	
+acriia23	aca12	accessory	aca12	0	
+acriia23	aca13	accessory	aca13	0	
+acriia23	aca2	accessory	aca2	0	
+acriia23	aca3	accessory	aca3	0	
+acriia23	aca4	accessory	aca4	0	
+acriia23	aca5	accessory	aca5	0	
+acriia23	aca6	accessory	aca6	0	
+acriia23	aca7	accessory	aca7	0	
+acriia23	aca8	accessory	aca8	0	
+acriia23	aca9	accessory	aca9	0	
+acriia24	acriia24	mandatory	acriia24	0	
+acriia24	aca1	accessory	aca1	0	
+acriia24	aca10	accessory	aca10	0	
+acriia24	aca11	accessory	aca11	0	
+acriia24	aca12	accessory	aca12	0	
+acriia24	aca13	accessory	aca13	0	
+acriia24	aca2	accessory	aca2	0	
+acriia24	aca3	accessory	aca3	0	
+acriia24	aca4	accessory	aca4	0	
+acriia24	aca5	accessory	aca5	0	
+acriia24	aca6	accessory	aca6	0	
+acriia24	aca7	accessory	aca7	0	
+acriia24	aca8	accessory	aca8	0	
+acriia24	aca9	accessory	aca9	0	
+acriia25	acriia25	mandatory	acriia25	0	
+acriia25	aca1	accessory	aca1	0	
+acriia25	aca10	accessory	aca10	0	
+acriia25	aca11	accessory	aca11	0	
+acriia25	aca12	accessory	aca12	0	
+acriia25	aca13	accessory	aca13	0	
+acriia25	aca2	accessory	aca2	0	
+acriia25	aca3	accessory	aca3	0	
+acriia25	aca4	accessory	aca4	0	
+acriia25	aca5	accessory	aca5	0	
+acriia25	aca6	accessory	aca6	0	
+acriia25	aca7	accessory	aca7	0	
+acriia25	aca8	accessory	aca8	0	
+acriia25	aca9	accessory	aca9	0	
+acriia26	acriia26	mandatory	acriia26	0	
+acriia26	aca1	accessory	aca1	0	
+acriia26	aca10	accessory	aca10	0	
+acriia26	aca11	accessory	aca11	0	
+acriia26	aca12	accessory	aca12	0	
+acriia26	aca13	accessory	aca13	0	
+acriia26	aca2	accessory	aca2	0	
+acriia26	aca3	accessory	aca3	0	
+acriia26	aca4	accessory	aca4	0	
+acriia26	aca5	accessory	aca5	0	
+acriia26	aca6	accessory	aca6	0	
+acriia26	aca7	accessory	aca7	0	
+acriia26	aca8	accessory	aca8	0	
+acriia26	aca9	accessory	aca9	0	
+acriia27	acriia27	mandatory	acriia27	0	
+acriia27	aca1	accessory	aca1	0	
+acriia27	aca10	accessory	aca10	0	
+acriia27	aca11	accessory	aca11	0	
+acriia27	aca12	accessory	aca12	0	
+acriia27	aca13	accessory	aca13	0	
+acriia27	aca2	accessory	aca2	0	
+acriia27	aca3	accessory	aca3	0	
+acriia27	aca4	accessory	aca4	0	
+acriia27	aca5	accessory	aca5	0	
+acriia27	aca6	accessory	aca6	0	
+acriia27	aca7	accessory	aca7	0	
+acriia27	aca8	accessory	aca8	0	
+acriia27	aca9	accessory	aca9	0	
+acriia28	acriia28	mandatory	acriia28	0	
+acriia28	aca1	accessory	aca1	0	
+acriia28	aca10	accessory	aca10	0	
+acriia28	aca11	accessory	aca11	0	
+acriia28	aca12	accessory	aca12	0	
+acriia28	aca13	accessory	aca13	0	
+acriia28	aca2	accessory	aca2	0	
+acriia28	aca3	accessory	aca3	0	
+acriia28	aca4	accessory	aca4	0	
+acriia28	aca5	accessory	aca5	0	
+acriia28	aca6	accessory	aca6	0	
+acriia28	aca7	accessory	aca7	0	
+acriia28	aca8	accessory	aca8	0	
+acriia28	aca9	accessory	aca9	0	
+acriia29	acriia29	mandatory	acriia29	0	
+acriia29	aca1	accessory	aca1	0	
+acriia29	aca10	accessory	aca10	0	
+acriia29	aca11	accessory	aca11	0	
+acriia29	aca12	accessory	aca12	0	
+acriia29	aca13	accessory	aca13	0	
+acriia29	aca2	accessory	aca2	0	
+acriia29	aca3	accessory	aca3	0	
+acriia29	aca4	accessory	aca4	0	
+acriia29	aca5	accessory	aca5	0	
+acriia29	aca6	accessory	aca6	0	
+acriia29	aca7	accessory	aca7	0	
+acriia29	aca8	accessory	aca8	0	
+acriia29	aca9	accessory	aca9	0	
+acriia3	acriia3	mandatory	acriia3	0	
+acriia3	aca1	accessory	aca1	0	
+acriia3	aca10	accessory	aca10	0	
+acriia3	aca11	accessory	aca11	0	
+acriia3	aca12	accessory	aca12	0	
+acriia3	aca13	accessory	aca13	0	
+acriia3	aca2	accessory	aca2	0	
+acriia3	aca3	accessory	aca3	0	
+acriia3	aca4	accessory	aca4	0	
+acriia3	aca5	accessory	aca5	0	
+acriia3	aca6	accessory	aca6	0	
+acriia3	aca7	accessory	aca7	0	
+acriia3	aca8	accessory	aca8	0	
+acriia3	aca9	accessory	aca9	0	
+acriia30	acriia30	mandatory	acriia30	0	
+acriia30	aca1	accessory	aca1	0	
+acriia30	aca10	accessory	aca10	0	
+acriia30	aca11	accessory	aca11	0	
+acriia30	aca12	accessory	aca12	0	
+acriia30	aca13	accessory	aca13	0	
+acriia30	aca2	accessory	aca2	0	
+acriia30	aca3	accessory	aca3	0	
+acriia30	aca4	accessory	aca4	0	
+acriia30	aca5	accessory	aca5	0	
+acriia30	aca6	accessory	aca6	0	
+acriia30	aca7	accessory	aca7	0	
+acriia30	aca8	accessory	aca8	0	
+acriia30	aca9	accessory	aca9	0	
+acriia31	acriia31	mandatory	acriia31	0	
+acriia31	aca1	accessory	aca1	0	
+acriia31	aca10	accessory	aca10	0	
+acriia31	aca11	accessory	aca11	0	
+acriia31	aca12	accessory	aca12	0	
+acriia31	aca13	accessory	aca13	0	
+acriia31	aca2	accessory	aca2	0	
+acriia31	aca3	accessory	aca3	0	
+acriia31	aca4	accessory	aca4	0	
+acriia31	aca5	accessory	aca5	0	
+acriia31	aca6	accessory	aca6	0	
+acriia31	aca7	accessory	aca7	0	
+acriia31	aca8	accessory	aca8	0	
+acriia31	aca9	accessory	aca9	0	
+acriia32	acriia32	mandatory	acriia32	0	
+acriia32	aca1	accessory	aca1	0	
+acriia32	aca10	accessory	aca10	0	
+acriia32	aca11	accessory	aca11	0	
+acriia32	aca12	accessory	aca12	0	
+acriia32	aca13	accessory	aca13	0	
+acriia32	aca2	accessory	aca2	0	
+acriia32	aca3	accessory	aca3	0	
+acriia32	aca4	accessory	aca4	0	
+acriia32	aca5	accessory	aca5	0	
+acriia32	aca6	accessory	aca6	0	
+acriia32	aca7	accessory	aca7	0	
+acriia32	aca8	accessory	aca8	0	
+acriia32	aca9	accessory	aca9	0	
+acriia4	acriia4	mandatory	acriia4	0	
+acriia4	aca1	accessory	aca1	0	
+acriia4	aca10	accessory	aca10	0	
+acriia4	aca11	accessory	aca11	0	
+acriia4	aca12	accessory	aca12	0	
+acriia4	aca13	accessory	aca13	0	
+acriia4	aca2	accessory	aca2	0	
+acriia4	aca3	accessory	aca3	0	
+acriia4	aca4	accessory	aca4	0	
+acriia4	aca5	accessory	aca5	0	
+acriia4	aca6	accessory	aca6	0	
+acriia4	aca7	accessory	aca7	0	
+acriia4	aca8	accessory	aca8	0	
+acriia4	aca9	accessory	aca9	0	
+acriia5	acriia5	mandatory	acriia5	0	
+acriia5	aca1	accessory	aca1	0	
+acriia5	aca10	accessory	aca10	0	
+acriia5	aca11	accessory	aca11	0	
+acriia5	aca12	accessory	aca12	0	
+acriia5	aca13	accessory	aca13	0	
+acriia5	aca2	accessory	aca2	0	
+acriia5	aca3	accessory	aca3	0	
+acriia5	aca4	accessory	aca4	0	
+acriia5	aca5	accessory	aca5	0	
+acriia5	aca6	accessory	aca6	0	
+acriia5	aca7	accessory	aca7	0	
+acriia5	aca8	accessory	aca8	0	
+acriia5	aca9	accessory	aca9	0	
+acriia6	acriia6	mandatory	acriia6	0	
+acriia6	aca1	accessory	aca1	0	
+acriia6	aca10	accessory	aca10	0	
+acriia6	aca11	accessory	aca11	0	
+acriia6	aca12	accessory	aca12	0	
+acriia6	aca13	accessory	aca13	0	
+acriia6	aca2	accessory	aca2	0	
+acriia6	aca3	accessory	aca3	0	
+acriia6	aca4	accessory	aca4	0	
+acriia6	aca5	accessory	aca5	0	
+acriia6	aca6	accessory	aca6	0	
+acriia6	aca7	accessory	aca7	0	
+acriia6	aca8	accessory	aca8	0	
+acriia6	aca9	accessory	aca9	0	
+acriia8	acriia8	mandatory	acriia8	0	
+acriia8	aca1	accessory	aca1	0	
+acriia8	aca10	accessory	aca10	0	
+acriia8	aca11	accessory	aca11	0	
+acriia8	aca12	accessory	aca12	0	
+acriia8	aca13	accessory	aca13	0	
+acriia8	aca2	accessory	aca2	0	
+acriia8	aca3	accessory	aca3	0	
+acriia8	aca4	accessory	aca4	0	
+acriia8	aca5	accessory	aca5	0	
+acriia8	aca6	accessory	aca6	0	
+acriia8	aca7	accessory	aca7	0	
+acriia8	aca8	accessory	aca8	0	
+acriia8	aca9	accessory	aca9	0	
+acriia9	acriia9	mandatory	acriia9	0	
+acriia9	aca1	accessory	aca1	0	
+acriia9	aca10	accessory	aca10	0	
+acriia9	aca11	accessory	aca11	0	
+acriia9	aca12	accessory	aca12	0	
+acriia9	aca13	accessory	aca13	0	
+acriia9	aca2	accessory	aca2	0	
+acriia9	aca3	accessory	aca3	0	
+acriia9	aca4	accessory	aca4	0	
+acriia9	aca5	accessory	aca5	0	
+acriia9	aca6	accessory	aca6	0	
+acriia9	aca7	accessory	aca7	0	
+acriia9	aca8	accessory	aca8	0	
+acriia9	aca9	accessory	aca9	0	
+acriic1	acriic1	mandatory	acriic1	0	
+acriic1	aca1	accessory	aca1	0	
+acriic1	aca10	accessory	aca10	0	
+acriic1	aca11	accessory	aca11	0	
+acriic1	aca12	accessory	aca12	0	
+acriic1	aca13	accessory	aca13	0	
+acriic1	aca2	accessory	aca2	0	
+acriic1	aca3	accessory	aca3	0	
+acriic1	aca4	accessory	aca4	0	
+acriic1	aca5	accessory	aca5	0	
+acriic1	aca6	accessory	aca6	0	
+acriic1	aca7	accessory	aca7	0	
+acriic1	aca8	accessory	aca8	0	
+acriic1	aca9	accessory	aca9	0	
+acriic2	acriic2	mandatory	acriic2	0	
+acriic2	aca1	accessory	aca1	0	
+acriic2	aca10	accessory	aca10	0	
+acriic2	aca11	accessory	aca11	0	
+acriic2	aca12	accessory	aca12	0	
+acriic2	aca13	accessory	aca13	0	
+acriic2	aca2	accessory	aca2	0	
+acriic2	aca3	accessory	aca3	0	
+acriic2	aca4	accessory	aca4	0	
+acriic2	aca5	accessory	aca5	0	
+acriic2	aca6	accessory	aca6	0	
+acriic2	aca7	accessory	aca7	0	
+acriic2	aca8	accessory	aca8	0	
+acriic2	aca9	accessory	aca9	0	
+acriic3	acriic3	mandatory	acriic3	0	
+acriic3	aca1	accessory	aca1	0	
+acriic3	aca10	accessory	aca10	0	
+acriic3	aca11	accessory	aca11	0	
+acriic3	aca12	accessory	aca12	0	
+acriic3	aca13	accessory	aca13	0	
+acriic3	aca2	accessory	aca2	0	
+acriic3	aca3	accessory	aca3	0	
+acriic3	aca4	accessory	aca4	0	
+acriic3	aca5	accessory	aca5	0	
+acriic3	aca6	accessory	aca6	0	
+acriic3	aca7	accessory	aca7	0	
+acriic3	aca8	accessory	aca8	0	
+acriic3	aca9	accessory	aca9	0	
+acriic4	acriic4	mandatory	acriic4	0	
+acriic4	aca1	accessory	aca1	0	
+acriic4	aca10	accessory	aca10	0	
+acriic4	aca11	accessory	aca11	0	
+acriic4	aca12	accessory	aca12	0	
+acriic4	aca13	accessory	aca13	0	
+acriic4	aca2	accessory	aca2	0	
+acriic4	aca3	accessory	aca3	0	
+acriic4	aca4	accessory	aca4	0	
+acriic4	aca5	accessory	aca5	0	
+acriic4	aca6	accessory	aca6	0	
+acriic4	aca7	accessory	aca7	0	
+acriic4	aca8	accessory	aca8	0	
+acriic4	aca9	accessory	aca9	0	
+acriic5	acriic5	mandatory	acriic5	0	
+acriic5	aca1	accessory	aca1	0	
+acriic5	aca10	accessory	aca10	0	
+acriic5	aca11	accessory	aca11	0	
+acriic5	aca12	accessory	aca12	0	
+acriic5	aca13	accessory	aca13	0	
+acriic5	aca2	accessory	aca2	0	
+acriic5	aca3	accessory	aca3	0	
+acriic5	aca4	accessory	aca4	0	
+acriic5	aca5	accessory	aca5	0	
+acriic5	aca6	accessory	aca6	0	
+acriic5	aca7	accessory	aca7	0	
+acriic5	aca8	accessory	aca8	0	
+acriic5	aca9	accessory	aca9	0	
+acriic6	acriic6	mandatory	acriic6	0	
+acriic6	aca1	accessory	aca1	0	
+acriic6	aca10	accessory	aca10	0	
+acriic6	aca11	accessory	aca11	0	
+acriic6	aca12	accessory	aca12	0	
+acriic6	aca13	accessory	aca13	0	
+acriic6	aca2	accessory	aca2	0	
+acriic6	aca3	accessory	aca3	0	
+acriic6	aca4	accessory	aca4	0	
+acriic6	aca5	accessory	aca5	0	
+acriic6	aca6	accessory	aca6	0	
+acriic6	aca7	accessory	aca7	0	
+acriic6	aca8	accessory	aca8	0	
+acriic6	aca9	accessory	aca9	0	
+acriii1	acriii1	mandatory	acriii1	1	PF08960
+acriii1	aca1	accessory	aca1	0	
+acriii1	aca10	accessory	aca10	0	
+acriii1	aca11	accessory	aca11	0	
+acriii1	aca12	accessory	aca12	0	
+acriii1	aca13	accessory	aca13	0	
+acriii1	aca2	accessory	aca2	0	
+acriii1	aca3	accessory	aca3	0	
+acriii1	aca4	accessory	aca4	0	
+acriii1	aca5	accessory	aca5	0	
+acriii1	aca6	accessory	aca6	0	
+acriii1	aca7	accessory	aca7	0	
+acriii1	aca8	accessory	aca8	0	
+acriii1	aca9	accessory	aca9	0	
+acriiib1	acriiib1	mandatory	acriiib1	0	
+acriiib1	aca1	accessory	aca1	0	
+acriiib1	aca10	accessory	aca10	0	
+acriiib1	aca11	accessory	aca11	0	
+acriiib1	aca12	accessory	aca12	0	
+acriiib1	aca13	accessory	aca13	0	
+acriiib1	aca2	accessory	aca2	0	
+acriiib1	aca3	accessory	aca3	0	
+acriiib1	aca4	accessory	aca4	0	
+acriiib1	aca5	accessory	aca5	0	
+acriiib1	aca6	accessory	aca6	0	
+acriiib1	aca7	accessory	aca7	0	
+acriiib1	aca8	accessory	aca8	0	
+acriiib1	aca9	accessory	aca9	0	
+acriiib2	acriiib2	mandatory	acriiib2	0	
+acriiib2	aca1	accessory	aca1	0	
+acriiib2	aca10	accessory	aca10	0	
+acriiib2	aca11	accessory	aca11	0	
+acriiib2	aca12	accessory	aca12	0	
+acriiib2	aca13	accessory	aca13	0	
+acriiib2	aca2	accessory	aca2	0	
+acriiib2	aca3	accessory	aca3	0	
+acriiib2	aca4	accessory	aca4	0	
+acriiib2	aca5	accessory	aca5	0	
+acriiib2	aca6	accessory	aca6	0	
+acriiib2	aca7	accessory	aca7	0	
+acriiib2	aca8	accessory	aca8	0	
+acriiib2	aca9	accessory	aca9	0	
+acrva1	acrva1	mandatory	acrva1	0	
+acrva1	aca1	accessory	aca1	0	
+acrva1	aca10	accessory	aca10	0	
+acrva1	aca11	accessory	aca11	0	
+acrva1	aca12	accessory	aca12	0	
+acrva1	aca13	accessory	aca13	0	
+acrva1	aca2	accessory	aca2	0	
+acrva1	aca3	accessory	aca3	0	
+acrva1	aca4	accessory	aca4	0	
+acrva1	aca5	accessory	aca5	0	
+acrva1	aca6	accessory	aca6	0	
+acrva1	aca7	accessory	aca7	0	
+acrva1	aca8	accessory	aca8	0	
+acrva1	aca9	accessory	aca9	0	
+acrva2	acrva2	mandatory	acrva2	0	
+acrva2	aca1	accessory	aca1	0	
+acrva2	aca10	accessory	aca10	0	
+acrva2	aca11	accessory	aca11	0	
+acrva2	aca12	accessory	aca12	0	
+acrva2	aca13	accessory	aca13	0	
+acrva2	aca2	accessory	aca2	0	
+acrva2	aca3	accessory	aca3	0	
+acrva2	aca4	accessory	aca4	0	
+acrva2	aca5	accessory	aca5	0	
+acrva2	aca6	accessory	aca6	0	
+acrva2	aca7	accessory	aca7	0	
+acrva2	aca8	accessory	aca8	0	
+acrva2	aca9	accessory	aca9	0	
+acrva3	acrva3	mandatory	acrva3	0	
+acrva3	aca1	accessory	aca1	0	
+acrva3	aca10	accessory	aca10	0	
+acrva3	aca11	accessory	aca11	0	
+acrva3	aca12	accessory	aca12	0	
+acrva3	aca13	accessory	aca13	0	
+acrva3	aca2	accessory	aca2	0	
+acrva3	aca3	accessory	aca3	0	
+acrva3	aca4	accessory	aca4	0	
+acrva3	aca5	accessory	aca5	0	
+acrva3	aca6	accessory	aca6	0	
+acrva3	aca7	accessory	aca7	0	
+acrva3	aca8	accessory	aca8	0	
+acrva3	aca9	accessory	aca9	0	
+acrva4	acrva4	mandatory	acrva4	0	
+acrva4	aca1	accessory	aca1	0	
+acrva4	aca10	accessory	aca10	0	
+acrva4	aca11	accessory	aca11	0	
+acrva4	aca12	accessory	aca12	0	
+acrva4	aca13	accessory	aca13	0	
+acrva4	aca2	accessory	aca2	0	
+acrva4	aca3	accessory	aca3	0	
+acrva4	aca4	accessory	aca4	0	
+acrva4	aca5	accessory	aca5	0	
+acrva4	aca6	accessory	aca6	0	
+acrva4	aca7	accessory	aca7	0	
+acrva4	aca8	accessory	aca8	0	
+acrva4	aca9	accessory	aca9	0	
+acrva5	acrva5	mandatory	acrva5	0	
+acrva5	aca1	accessory	aca1	0	
+acrva5	aca10	accessory	aca10	0	
+acrva5	aca11	accessory	aca11	0	
+acrva5	aca12	accessory	aca12	0	
+acrva5	aca13	accessory	aca13	0	
+acrva5	aca2	accessory	aca2	0	
+acrva5	aca3	accessory	aca3	0	
+acrva5	aca4	accessory	aca4	0	
+acrva5	aca5	accessory	aca5	0	
+acrva5	aca6	accessory	aca6	0	
+acrva5	aca7	accessory	aca7	0	
+acrva5	aca8	accessory	aca8	0	
+acrva5	aca9	accessory	aca9	0	
+acrvia1lse	acrvia1lse	mandatory	acrvia1lse	0	
+acrvia1lse	aca1	accessory	aca1	0	
+acrvia1lse	aca10	accessory	aca10	0	
+acrvia1lse	aca11	accessory	aca11	0	
+acrvia1lse	aca12	accessory	aca12	0	
+acrvia1lse	aca13	accessory	aca13	0	
+acrvia1lse	aca2	accessory	aca2	0	
+acrvia1lse	aca3	accessory	aca3	0	
+acrvia1lse	aca4	accessory	aca4	0	
+acrvia1lse	aca5	accessory	aca5	0	
+acrvia1lse	aca6	accessory	aca6	0	
+acrvia1lse	aca7	accessory	aca7	0	
+acrvia1lse	aca8	accessory	aca8	0	
+acrvia1lse	aca9	accessory	aca9	0	
+acrvib1	acrvib1	mandatory	acrvib1	0	
+acrvib1	aca1	accessory	aca1	0	
+acrvib1	aca10	accessory	aca10	0	
+acrvib1	aca11	accessory	aca11	0	
+acrvib1	aca12	accessory	aca12	0	
+acrvib1	aca13	accessory	aca13	0	
+acrvib1	aca2	accessory	aca2	0	
+acrvib1	aca3	accessory	aca3	0	
+acrvib1	aca4	accessory	aca4	0	
+acrvib1	aca5	accessory	aca5	0	
+acrvib1	aca6	accessory	aca6	0	
+acrvib1	aca7	accessory	aca7	0	
+acrvib1	aca8	accessory	aca8	0	
+acrvib1	aca9	accessory	aca9	0	
+acrx	acrx	mandatory	acrx	0	
+vcrx091_093	vcrx091	mandatory	vcrx091	2	K03111;PF00436
+vcrx091_093	vcrx092	mandatory	vcrx092	0	
+vcrx091_093	vcrx093	mandatory	vcrx093	1	PF09588
+dsad1	dsad1	mandatory	dsad1	0	
+adfa	adfa	mandatory	adfa	0	
+Adnd_p0020_p0021	adnd_p0020	mandatory	adnd_p0020	0	
+Adnd_p0020_p0021	adnd_p0021	accessory	adnd_p0021	0	
+gad1	gad1	mandatory	gad1	0	
+gad2	gad2	mandatory	gad2	0	
+had1	had1	mandatory	had1	0	
+apyc1	apyc1	mandatory	apyc1	3	PF00753;PF12706;PF23023
+arda_ardu	arda	mandatory	arda;ardu	1	PF07275
+ardb_klca_acric11	ardb	mandatory	ardb;klca;acric11	0	
+ardc	ardc	mandatory	ardc	3	K06919;PF08401;PF18818
+ardk	ardk	mandatory	ardk	0	
+ardr	ardr	mandatory	ardr	0	
+arn	arn	mandatory	arn	0	
+dam	dam	mandatory	dam	3	K06223;K07318;PF02086
+dar_ddr_hdf_ulx	dara	mandatory	dara	0	
+dar_ddr_hdf_ulx	darb	mandatory	darb	0	
+dar_ddr_hdf_ulx	ddra	mandatory	ddra	0	
+dar_ddr_hdf_ulx	ddrb	mandatory	ddrb	0	
+dar_ddr_hdf_ulx	hdf	mandatory	hdf	0	
+dar_ddr_hdf_ulx	ulx	mandatory	ulx	0	
+dara	dara	mandatory	dara	0	
+darab	dara	mandatory	dara	0	
+darab	darb	mandatory	darb	0	
+darb	darb	mandatory	darb	0	
+ddra	ddra	mandatory	ddra	0	
+ddrab	ddra	mandatory	ddra	0	
+ddrab	ddrb	mandatory	ddrb	0	
+ddrb	ddrb	mandatory	ddrb	0	
+hdf	hdf	mandatory	hdf	0	
+hia5_hin1523_nma1821	hia5	mandatory	hia5;nma1821;hin1523	0	
+ipi	ipi	mandatory	ipi	0	
+ipii	ipii	mandatory	ipii	0	
+lar	lar	mandatory	lar	0	
+mom	mom	mandatory	mom	0	
+ocr	ocr	mandatory	ocr	0	
+ral	ral	mandatory	ral	0	
+samase	samase	mandatory	samase	0	
+stp	stp	mandatory	stp	0	
+ulx	ulx	mandatory	ulx	0	
+vcrx089_090	vcrx089	mandatory	vcrx089	2	K09882;PF07728
+vcrx089_090	vcrx090	mandatory	vcrx090	0	
+abc1	abc1	mandatory	abc1	0	
+abc2	abc2	mandatory	abc2	0	
+gam	gam	mandatory	gam	0	
+gp5.9	gp5.9	mandatory	gp5.9	0	
+racc	racc	mandatory	racc	0	
+rad	rad	mandatory	rad	0	
+alt	alt	mandatory	alt	0	
+dmd	dmd	mandatory	dmd	0	
+gp4.5	gp4.5	mandatory	gp4.5	0	
+rexb	rexb	mandatory	rexb	0	
+tifa	tifa	mandatory	tifa	0	
+atd1	atd1	mandatory	atd1	0	
+tad1	tad1	mandatory	tad1	0	
+tad2_acriia7	tad2	mandatory	tad2;acriia7	0	
+NARP1	narp1_namat	mandatory	narp1_namat	0	
+NARP1	narp1_adps	mandatory	narp1_adps	4	K00948;PF00156;PF13793;PF14572
+NARP2	narp2_nampt	mandatory	narp2_nampt	3	K03462;PF04095;PF18127
+NARP2	narp2_nmnat	mandatory	narp2_nmnat	0	
+gnarl1	gnarl1	mandatory	gnarl1	0	
+gnarl2	gnarl2	mandatory	gnarl2	0	
+gnarl3	gnarl3	mandatory	gnarl3	0	
+orf126	orf126	mandatory	orf126	0	
+orf148	orf148	mandatory	orf148	0	
+psiab	psia	mandatory	psia	0	
+psiab	psib	mandatory	psib	0	
+ugi	ugi	mandatory	ugi	0	
+6A_MBL	6A_MBL__MblB	mandatory	6A_MBL__MblB	0	
+6A_MBL	6A_MBL__cap2_3	mandatory	6A_MBL__cap2_3	0	
+Abi2	Abi2__Abi_2	mandatory	Abi2__Abi_2	0	
+AbiA_large	AbiA_large__AbiA_large	mandatory	AbiA_large__AbiA_large	0	
+AbiA_small	AbiA_small__AbiA_small	mandatory	AbiA_small__AbiA_small	0	
+AbiA_small	AbiA_small__SLATT	accessory	AbiA_small__SLATT;AbiA_small__AbiA_SLATT	0	
+AbiA_small	DRT9__SLATT	accessory	DRT9__SLATT	0	
+AbiAlpha	AbiAlpha__AbiAlpha	mandatory	AbiAlpha__AbiAlpha	0	
+AbiB	AbiB__AbiB	mandatory	AbiB__AbiB	0	
+AbiC	AbiC__AbiC	mandatory	AbiC__AbiC	0	
+AbiD	AbiD__AbiD	mandatory	AbiD__AbiD	0	
+AbiE	AbiEii__AbiEii	mandatory	AbiEii__AbiEii	1	PF08843
+AbiE	AbiEii__AbiEi_1	mandatory	AbiEii__AbiEi_1;AbiEii__AbiEi_2;AbiEii__AbiEi_3;AbiEii__AbiEi_4	3	PF09407;PF09952;PF13338
+AbiG	AbiG__AbiGi	mandatory	AbiG__AbiGi	0	
+AbiG	AbiG__AbiGii	mandatory	AbiG__AbiGii	0	
+AbiH	AbiH__AbiH	mandatory	AbiH__AbiH	0	
+AbiI	AbiI__AbiI	mandatory	AbiI__AbiI	0	
+AbiJ	AbiJ__AbiJ	mandatory	AbiJ__AbiJ	1	PF14355
+AbiK	AbiK__AbiK	mandatory	AbiK__AbiK	0	
+AbiL	AbiL__AbiLi	mandatory	AbiL__AbiLi;AbiL__AbiLi2	3	K06926;PF13175;PF13304
+AbiL	AbiL__AbiLii	mandatory	AbiL__AbiLii;AbiL__AbiLii2	1	PF13707
+AbiN	AbiN__AbiN	mandatory	AbiN__AbiN	0	
+AbiO	AbiO__AbiO	mandatory	AbiO__AbiO	0	
+AbiP2	AbiP2__AbiP2	mandatory	AbiP2__AbiP2	0	
+AbiQ	AbiQ__AbiQ	mandatory	AbiQ__AbiQ	0	
+AbiR	AbiR__AbiRa	mandatory	AbiR__AbiRa	1	PF04545
+AbiR	AbiR__AbiRb	mandatory	AbiR__AbiRb	0	
+AbiR	AbiR__AbiRc	mandatory	AbiR__AbiRc	1	PF00271
+AbiT	AbiT__AbiTi	mandatory	AbiT__AbiTi	0	
+AbiT	AbiT__AbiTii	mandatory	AbiT__AbiTii	1	PF18864
+AbiU	AbiU__AbiU	mandatory	AbiU__AbiU	1	PF10592
+AbiV	AbiV__AbiV	mandatory	AbiV__AbiV	1	PF18728
+AbiZ	AbiZ__AbiZ	mandatory	AbiZ__AbiZ	0	
+Aditi	Aditi__DitA	mandatory	Aditi__DitA	0	
+Aditi	Aditi__DitB	mandatory	Aditi__DitB	0	
+UG1	DRT_1__drt1a	mandatory	DRT_1__drt1a	0	
+UG10_small	UG10_small__UG10_small	mandatory	UG10_small__UG10_small	0	
+UG13a	UG13a__UG13a	mandatory	UG13a__UG13a	0	
+UG13b	UG13b__UG13b	mandatory	UG13b__UG13b	0	
+UG14	UG14__UG14	mandatory	UG14__UG14	0	
+UG17	UG17__UG17	mandatory	UG17__UG17	0	
+UG17	DRT9__SLATT	accessory	DRT9__SLATT	0	
+UG17	AbiA_small__SLATT	accessory	AbiA_small__SLATT	0	
+UG18	UG18__UG18	mandatory	UG18__UG18	0	
+UG19_large	UG19_large__UG19_large	mandatory	UG19_large__UG19_large	0	
+UG19_small	UG19_small__UG19_small	mandatory	UG19_small__UG19_small	0	
+UG19_small	UG19_small__HP	accessory	UG19_small__HP	0	
+UG20	UG20__UG20	mandatory	UG20__UG20	0	
+UG21	UG21__UG21	mandatory	UG21__UG21	0	
+UG22	UG22__UG22	mandatory	UG22__UG22	0	
+UG23	UG23__UG23	mandatory	UG23__UG23	0	
+UG23	UG23__TM	accessory	UG23__TM	0	
+UG23	UG23__NUDIX	accessory	UG23__NUDIX	0	
+UG24	UG24__UG24	mandatory	UG24__UG24	0	
+UG24	UG24__DnaG	accessory	UG24__DnaG	0	
+UG24	UG24__HP3	accessory	UG24__HP3	0	
+UG25	UG25__UG25	mandatory	UG25__UG25	0	
+UG25	UG25__DUF1848	accessory	UG25__DUF1848	0	
+UG26	UG26__UG26	mandatory	UG26__UG26	0	
+UG26	UG26__COG2852	accessory	UG26__COG2852	0	
+UG27	UG27__UG27	mandatory	UG27__UG27	0	
+UG29	UG29__UG29	mandatory	UG29__UG29	0	
+UG3	DRT_3__drt3a	mandatory	DRT_3__drt3a	0	
+UG30	UG30__UG30	mandatory	UG30__UG30	0	
+UG31	UG31__UG31	mandatory	UG31__UG31	0	
+UG32	UG32__UG32	mandatory	UG32__UG32	0	
+UG33	UG33__UG33	mandatory	UG33__UG33	0	
+UG34	UG34__UG34	mandatory	UG34__UG34	0	
+UG34	UG34__NERD_Helicase	accessory	UG34__NERD_Helicase	0	
+UG35	UG35__UG35	mandatory	UG35__UG35	0	
+UG35	UG35__UvrD	accessory	UG35__UvrD	0	
+UG36	UG36__UG36	mandatory	UG36__UG36	0	
+UG36	UG36__Metyhlase	accessory	UG36__Metyhlase	0	
+UG37	UG37__UG37	mandatory	UG37__UG37	0	
+UG38	UG38__UG38	mandatory	UG38__UG38	0	
+UG39	UG39__UG39	mandatory	UG39__UG39	0	
+UG39	UG39__VirEPriCT2	accessory	UG39__VirEPriCT2	0	
+UG4	UG4__UG4	mandatory	UG4__UG4	0	
+UG4	UG4__Fimbrae_114	accessory	UG4__Fimbrae_114	0	
+UG4	UG4__Fimbrae_231	accessory	UG4__Fimbrae_231	0	
+UG4	UG4__Fimbrae_573	accessory	UG4__Fimbrae_573	0	
+UG4	UG4__Fimbrae_972	accessory	UG4__Fimbrae_972	0	
+UG4	UG4__Fimbrae_999	accessory	UG4__Fimbrae_999	0	
+UG4	UG4__Fimbriae_107	accessory	UG4__Fimbriae_107	0	
+UG5_small	UG5_small__UG5_small	mandatory	UG5_small__UG5_small	0	
+UG5_small	UG5_small__Nitrilase	accessory	UG5_small__Nitrilase;UG6__Nitrilase	0	
+UG6	UG6__UG6	mandatory	UG6__UG6	0	
+UG6	UG6__DnaG	accessory	UG6__DnaG	0	
+UG6	UG6__Nitrilase	accessory	UG6__Nitrilase	0	
+UG7	DRT8__DRT8a	mandatory	DRT8__DRT8a	0	
+UG8	DRT_3__drt3b	mandatory	DRT_3__drt3b	0	
+UG9_large	UG9_large__UG9_large	mandatory	UG9_large__UG9_large	0	
+UG9_large	UG9__DNA_pol	accessory	UG9__DNA_pol	0	
+UG9_small	UG9_small__UG9_small	mandatory	UG9_small__UG9_small	0	
+UG9_small	UG9__DNA_pol	accessory	UG9__DNA_pol	0	
+AspAB	AspAB__AspA	mandatory	AspAB__AspA	0	
+AspAB	AspAB__AspB	mandatory	AspAB__AspB	0	
+Avs_I	Avs_I__Avs1A	mandatory	Avs_I__Avs1A	3	K02238;PF00753;PF12706
+Avs_I	Avs_I__Avs1B	mandatory	Avs_I__Avs1B	0	
+Avs_I	Avs_I__Avs1C	mandatory	Avs_I__Avs1C	0	
+Avs_II	Avs_II__Avs2A	mandatory	Avs_II__Avs2A	0	
+Avs_III	Avs_III__Avs3A	mandatory	Avs_III__Avs3A	0	
+Avs_III	Avs_III__Avs3B	mandatory	Avs_III__Avs3B	0	
+Avs_IV	Avs_IV__Avs4A	mandatory	Avs_IV__Avs4A	0	
+Avs_V	Avs_V__Avs5A	mandatory	Avs_V__Avs5A	0	
+Azaca	Azaca__ZacA	mandatory	Azaca__ZacA	1	PF10543
+Azaca	Azaca__ZacB	mandatory	Azaca__ZacB	1	PF13091
+Azaca	Azaca__ZacC	mandatory	Azaca__ZacC	1	PF00271
+BREX	BREX__pglZB	mandatory	BREX__pglZB;BREX__pglZA;BREX__pglZ2;BREX__pglZ3	2	PF01663;PF08665
+BREX	BREX__brxC	accessory	BREX__brxC;BREX__pglY;BREX__brxC4	1	PF19557
+BREX	BREX__pglX1	accessory	BREX__pglX1;BREX__pglX2;BREX__pglX3	6	K03427;K07317;PF01170;PF02384;PF07669;PF20473
+BREX	BREX__brxA_DUF1819	accessory	BREX__brxA_DUF1819	1	PF08849
+BREX	BREX__brxB_DUF1788	accessory	BREX__brxB_DUF1788	1	PF08747
+BREX	BREX__brxD	accessory	BREX__brxD	0	
+BREX	BREX__brxE	accessory	BREX__brxE	0	
+BREX	BREX__brxF	accessory	BREX__brxF	6	K04800;K18532;PF00004;PF03215;PF13207;PF13238
+BREX	BREX__brxHI	accessory	BREX__brxHI	5	K03724;PF00270;PF00271;PF04851;PF19306
+BREX	BREX__brxHII	accessory	BREX__brxHII	5	K03724;PF00176;PF00270;PF00271;PF04851
+BREX	BREX__brxL	accessory	BREX__brxL	2	PF13337;PF20442
+BREX	BREX__brxP	accessory	BREX__brxP	8	K00957;PF00037;PF01507;PF12800;PF12837;PF12838;PF13187;PF13237
+BREX	BREX__pglW	accessory	BREX__pglW	2	PF00069;PF07714
+BREX	BREX__pglXI	accessory	BREX__pglXI	1	PF01555
+BREX_I	BREX__brxC	accessory	BREX__brxC;BREX__brxC4	1	PF19557
+BREX_I	BREX__pglZB	mandatory	BREX__pglZB;BREX__pglZA;BREX__pglZ2;BREX__pglZ3;BREX__pglZ4	3	PF01663;PF01676;PF08665
+BREX_I	BREX__pglX1	mandatory	BREX__pglX1;BREX__pglX2;BREX__pglX3	6	K03427;K07317;PF01170;PF02384;PF07669;PF20473
+BREX_I	BREX__brxA_DUF1819	mandatory	BREX__brxA_DUF1819	1	PF08849
+BREX_I	BREX__brxB_DUF1788	mandatory	BREX__brxB_DUF1788	1	PF08747
+BREX_I	BREX__brxL	mandatory	BREX__brxL	2	PF13337;PF20442
+BREX_II	BREX__pglY	mandatory	BREX__pglY	0	
+BREX_II	BREX__brxD	mandatory	BREX__brxD	0	
+BREX_II	BREX__pglW	mandatory	BREX__pglW	2	PF00069;PF07714
+BREX_II	BREX__brxHI	mandatory	BREX__brxHI	5	K03724;PF00270;PF00271;PF04851;PF19306
+BREX_II	BREX__pglZB	mandatory	BREX__pglZB;BREX__pglZA;BREX__pglZ2;BREX__pglZ3;BREX__pglZ4	3	PF01663;PF01676;PF08665
+BREX_II	BREX__pglX1	mandatory	BREX__pglX1;BREX__pglX2;BREX__pglX3	6	K03427;K07317;PF01170;PF02384;PF07669;PF20473
+BREX_III	BREX__brxA_DUF1819	accessory	BREX__brxA_DUF1819	1	PF08849
+BREX_III	BREX__brxF	mandatory	BREX__brxF	6	K04800;K18532;PF00004;PF03215;PF13207;PF13238
+BREX_III	BREX__brxHII	mandatory	BREX__brxHII	5	K03724;PF00176;PF00270;PF00271;PF04851
+BREX_III	BREX__pglXI	mandatory	BREX__pglXI	1	PF01555
+BREX_III	BREX__pglZB	mandatory	BREX__pglZB;BREX__pglZA;BREX__pglZ2;BREX__pglZ3;BREX__pglZ4	3	PF01663;PF01676;PF08665
+BREX_III	BREX__brxC	accessory	BREX__brxC;BREX__pglY;BREX__brxC4	1	PF19557
+BREX_III	BREX__brxHI	accessory	BREX__brxHI	5	K03724;PF00270;PF00271;PF04851;PF19306
+BREX_III	BREX__pglX1	accessory	BREX__pglX1	3	PF02384;PF07669;PF20473
+BREX_III	BREX__pglX2	accessory	BREX__pglX2	6	K03427;K07317;PF01170;PF02384;PF07669;PF20473
+BREX_III	BREX__brxD	accessory	BREX__brxD	0	
+BREX_IV	BREX__brxC	accessory	BREX__brxC;BREX__pglY;BREX__brxC4	1	PF19557
+BREX_IV	BREX__brxL	mandatory	BREX__brxL	2	PF13337;PF20442
+BREX_IV	BREX__brxP	mandatory	BREX__brxP	8	K00957;PF00037;PF01507;PF12800;PF12837;PF12838;PF13187;PF13237
+BREX_IV	BREX__pglZB	accessory	BREX__pglZB;BREX__pglZA;BREX__pglZ2;BREX__pglZ3;BREX__pglZ4	3	PF01663;PF01676;PF08665
+BREX_V	BREX__pglZB	mandatory	BREX__pglZB;BREX__pglZA;BREX__pglZ2;BREX__pglZ3;BREX__pglZ4	3	PF01663;PF01676;PF08665
+BREX_V	BREX__pglX1	accessory	BREX__pglX1;BREX__pglX2;BREX__pglX3	6	K03427;K07317;PF01170;PF02384;PF07669;PF20473
+BREX_V	BREX__brxC	accessory	BREX__brxC;BREX__pglY;BREX__brxC4	1	PF19557
+BREX_V	BREX__brxA_DUF1819	accessory	BREX__brxA_DUF1819	1	PF08849
+BREX_V	BREX__brxB_DUF1788	accessory	BREX__brxB_DUF1788	1	PF08747
+BREX_V	BREX__brxHII_1	mandatory	BREX__brxHII_1;BREX__brxHII_2	5	K03580;PF00176;PF00270;PF00271;PF04851
+BREX_VI	BREX__pglZB	mandatory	BREX__pglZB;BREX__pglZA;BREX__pglZ2;BREX__pglZ3;BREX__pglZ4	3	PF01663;PF01676;PF08665
+BREX_VI	BREX__pglX1	accessory	BREX__pglX1;BREX__pglX2;BREX__pglX3	6	K03427;K07317;PF01170;PF02384;PF07669;PF20473
+BREX_VI	BREX__brxC	accessory	BREX__brxC;BREX__pglY;BREX__brxC4	1	PF19557
+BREX_VI	BREX__brxA_DUF1819	accessory	BREX__brxA_DUF1819	1	PF08849
+BREX_VI	BREX__brxB_DUF1788	accessory	BREX__brxB_DUF1788	1	PF08747
+BREX_VI	BREX__brxD	accessory	BREX__brxD	0	
+BREX_VI	BREX__brxE	mandatory	BREX__brxE	0	
+BREX_VI	BREX__brxHI	accessory	BREX__brxHI	5	K03724;PF00270;PF00271;PF04851;PF19306
+Belenos	Belenos__VCA0457	mandatory	Belenos__VCA0457	0	
+Belisama	Belisama__VCA0458	mandatory	Belisama__VCA0458	0	
+Borvo	Borvo__BovA	mandatory	Borvo__BovA;Borvo__BovA_addition	0	
+Brig1	Brig1__Brig1	mandatory	Brig1__Brig1	0	
+Brig1	Brig1__ADP_ribosyl	mandatory	Brig1__ADP_ribosyl	3	PF00782;PF03747;PF22784
+Brigantia	Brigantia__VCA0419	mandatory	Brigantia__VCA0419	0	
+BstA	BstA__BstA	mandatory	BstA__BstA	0	
+Bunzi	Bunzi__BnzA	mandatory	Bunzi__BnzA	0	
+Bunzi	Bunzi__BnzB	mandatory	Bunzi__BnzB	0	
+Butters_gp30_gp31	Butters_gp30_gp31__Butters_gp30	mandatory	Butters_gp30_gp31__Butters_gp30;Butters_gp30_gp31__Sbash_gp30;Butters_gp30_gp31__CarolAnn_gp44	0	
+Butters_gp30_gp31	Butters_gp30_gp31__Butters_gp31	mandatory	Butters_gp30_gp31__Butters_gp31;Butters_gp30_gp31__Sbash_gp31;Butters_gp30_gp31__CarolAnn_gp43	0	
+Butters_gp57r	Butters_gp57r__gp57r	mandatory	Butters_gp57r__gp57r	0	
+CARD_NLR_Endonuclease	CARD_NLR__CARD_Protease	accessory	CARD_NLR__CARD_Protease;CARD_NLR__CARD_Protease_supposed;CARD_NLR__CARD_Protease_new	0	
+CARD_NLR_Endonuclease	CARD_NLR__Trypsin	accessory	CARD_NLR__Trypsin;CARD_NLR__Trypsin_new	0	
+CARD_NLR_Endonuclease	CARD_NLR__NLR_new	accessory	CARD_NLR__NLR_new;CARD_NLR__NLR_IMG	0	
+CARD_NLR_Endonuclease	CARD_NLR__Endonuclease	mandatory	CARD_NLR__Endonuclease;CARD_NLR__Endonuclease_new;CARD_NLR__Trypsine_Endonuclease_new	0	
+CARD_NLR_GasderMIN	CARD_NLR__CARD_Protease	accessory	CARD_NLR__CARD_Protease;CARD_NLR__CARD_Protease_supposed;CARD_NLR__CARD_Protease_new	0	
+CARD_NLR_GasderMIN	CARD_NLR__Trypsin	accessory	CARD_NLR__Trypsin;CARD_NLR__Trypsin_new	0	
+CARD_NLR_GasderMIN	CARD_NLR__NLR_new	accessory	CARD_NLR__NLR_new;CARD_NLR__NLR_IMG	0	
+CARD_NLR_GasderMIN	GasderMIN__bGSDM	mandatory	GasderMIN__bGSDM	0	
+CARD_NLR_Phospho	CARD_NLR__CARD_Protease	accessory	CARD_NLR__CARD_Protease;CARD_NLR__CARD_Protease_supposed;CARD_NLR__CARD_Protease_new	0	
+CARD_NLR_Phospho	CARD_NLR__Trypsin	accessory	CARD_NLR__Trypsin;CARD_NLR__Trypsin_new	0	
+CARD_NLR_Phospho	CARD_NLR__NLR_new	accessory	CARD_NLR__NLR_new;CARD_NLR__NLR_IMG	0	
+CARD_NLR_Phospho	CARD_NLR__Trypsin_Phospho	mandatory	CARD_NLR__Trypsin_Phospho;CARD_NLR__Phospho;CARD_NLR__Phospho_Trypsin	0	
+CARD_NLR_Subtilase	CARD_NLR__CARD_Protease	accessory	CARD_NLR__CARD_Protease;CARD_NLR__CARD_Protease_supposed;CARD_NLR__CARD_Protease_new	0	
+CARD_NLR_Subtilase	CARD_NLR__Trypsin	accessory	CARD_NLR__Trypsin;CARD_NLR__Trypsin_new	0	
+CARD_NLR_Subtilase	CARD_NLR__NLR_new	accessory	CARD_NLR__NLR_new;CARD_NLR__NLR_IMG	0	
+CARD_NLR_Subtilase	CARD_NLR__Subtilase_small_new	mandatory	CARD_NLR__Subtilase_small_new;CARD_NLR__Subtilase	0	
+CARD_NLR_like	CARD_NLR__CARD_Protease	accessory	CARD_NLR__CARD_Protease;CARD_NLR__CARD_Protease_supposed;CARD_NLR__CARD_Protease_new	0	
+CARD_NLR_like	CARD_NLR__Trypsin	accessory	CARD_NLR__Trypsin;CARD_NLR__Trypsin_new	0	
+CARD_NLR_like	CARD_NLR__NLR_new	accessory	CARD_NLR__NLR_new;CARD_NLR__NLR_IMG	0	
+CARD_NLR_like	CARD_NLR__Phospho_Trypsin	mandatory	CARD_NLR__Phospho_Trypsin;CARD_NLR__Phospho	0	
+CARD_NLR_like	CARD_NLR__Endonuclease	mandatory	CARD_NLR__Endonuclease;CARD_NLR__Endonuclease_new;CARD_NLR__Trypsine_Endonuclease_new	0	
+CARD_NLR_like	CARD_NLR__Subtilase_small_new	mandatory	CARD_NLR__Subtilase_small_new;CARD_NLR__Subtilase	0	
+CARD_NLR_like	CARD_NLR__Trypsin_Phospho	mandatory	CARD_NLR__Trypsin_Phospho;GasderMIN__bGSDM	0	
+CBASS	CBASS__Cyclase_SMODS	mandatory	CBASS__Cyclase_SMODS;CBASS__A_Cyclase_AGS_C;CBASS__Cyclase_II;CBASS__Cyclase_new	2	K07558;PF01909
+CBASS	CBASS__Effector_2TM_S_2TMBeta	accessory	CBASS__Effector_2TM_S_2TMBeta;CBASS__Effector_2TM_Sa_NUDIX;CBASS__Effector_2TM_Saf_2TM;CBASS__2TM_new;CBASS__2TM_5;CBASS__1TM_new;CBASS__4TM_new;CBASS__2TM_Gros;CBASS__2TM_type_IV;CBASS__Effector_2TM_SUa-2TM;CBASS__Effector_4TM_S_4TM;CBASS__Endonuc_small;CBASS__Endonuc_big;CBASS__Effector_TIR;CBASS__Phospholipase;CBASS__Sensing_TPALS;CBASS__Sensing_SAVED	6	K07001;PF01734;PF18153;PF18167;PF18967;PF20247
+CBASS_I	CBASS__Cyclase_SMODS	mandatory	CBASS__Cyclase_SMODS;CBASS__A_Cyclase_AGS_C;CBASS__Cyclase_II;CBASS__Cyclase_new	2	K07558;PF01909
+CBASS_I	CBASS__Effector_2TM_S_2TMBeta	mandatory	CBASS__Effector_2TM_S_2TMBeta;CBASS__Effector_2TM_Sa_NUDIX;CBASS__Effector_2TM_Saf_2TM;CBASS__2TM_new;CBASS__2TM_5;CBASS__1TM_new;CBASS__4TM_new;CBASS__2TM_Gros;CBASS__2TM_type_IV;CBASS__Effector_2TM_SUa-2TM;CBASS__Effector_4TM_S_4TM;CBASS__Endonuc_small;CBASS__Endonuc_big;CBASS__Effector_TIR;CBASS__Phospholipase;CBASS__Sensing_TPALS;CBASS__Sensing_SAVED	6	K07001;PF01734;PF18153;PF18167;PF18967;PF20247
+CBASS_II	CBASS__Cyclase_SMODS	mandatory	CBASS__Cyclase_SMODS;CBASS__A_Cyclase_AGS_C;CBASS__Cyclase_II;CBASS__Cyclase_new	2	K07558;PF01909
+CBASS_II	CBASS__Effector_2TM_S_2TMBeta	mandatory	CBASS__Effector_2TM_S_2TMBeta;CBASS__Effector_2TM_Sa_NUDIX;CBASS__Effector_2TM_Saf_2TM;CBASS__2TM_new;CBASS__2TM_5;CBASS__1TM_new;CBASS__4TM_new;CBASS__2TM_Gros;CBASS__2TM_type_IV;CBASS__Effector_2TM_SUa-2TM;CBASS__Effector_4TM_S_4TM;CBASS__Endonuc_small;CBASS__Endonuc_big;CBASS__Effector_TIR;CBASS__Phospholipase;CBASS__Sensing_TPALS;CBASS__Sensing_SAVED	6	K07001;PF01734;PF18153;PF18167;PF18967;PF20247
+CBASS_II	CBASS__E2	mandatory	CBASS__E2;CBASS__AG_E1_ThiF;CBASS__AG_E2_Prok-E2_B;CBASS__E2_II;CBASS__Jab	4	PF00899;PF01398;PF02810;PF14464
+CBASS_III	CBASS__Cyclase_SMODS	mandatory	CBASS__Cyclase_SMODS;CBASS__A_Cyclase_AGS_C;CBASS__Cyclase_II;CBASS__Cyclase_new	2	K07558;PF01909
+CBASS_III	CBASS__Effector_2TM_S_2TMBeta	mandatory	CBASS__Effector_2TM_S_2TMBeta;CBASS__Effector_2TM_Sa_NUDIX;CBASS__Effector_2TM_Saf_2TM;CBASS__2TM_new;CBASS__2TM_5;CBASS__1TM_new;CBASS__4TM_new;CBASS__2TM_Gros;CBASS__2TM_type_IV;CBASS__Effector_2TM_SUa-2TM;CBASS__Effector_4TM_S_4TM;CBASS__Endonuc_small;CBASS__Endonuc_big;CBASS__Effector_TIR;CBASS__Phospholipase;CBASS__Sensing_TPALS;CBASS__Sensing_SAVED	6	K07001;PF01734;PF18153;PF18167;PF18967;PF20247
+CBASS_III	CBASS__HORMA	mandatory	CBASS__HORMA;CBASS__TRIP13;CBASS__bacHORMA_2;CBASS__bacHORMA_1	4	K13525;PF00004;PF07728;PF17862
+CBASS_IV	CBASS__Cyclase_SMODS	mandatory	CBASS__Cyclase_SMODS;CBASS__A_Cyclase_AGS_C;CBASS__Cyclase_II;CBASS__Cyclase_new	2	K07558;PF01909
+CBASS_IV	CBASS__Effector_2TM_S_2TMBeta	mandatory	CBASS__Effector_2TM_S_2TMBeta;CBASS__Effector_2TM_Sa_NUDIX;CBASS__Effector_2TM_Saf_2TM;CBASS__2TM_new;CBASS__2TM_5;CBASS__1TM_new;CBASS__4TM_new;CBASS__2TM_Gros;CBASS__2TM_type_IV;CBASS__Effector_2TM_SUa-2TM;CBASS__Effector_4TM_S_4TM;CBASS__Endonuc_small;CBASS__Endonuc_big;CBASS__Effector_TIR;CBASS__Phospholipase;CBASS__Sensing_TPALS;CBASS__Sensing_SAVED	6	K07001;PF01734;PF18153;PF18167;PF18967;PF20247
+CBASS_IV	CBASS__TGT	mandatory	CBASS__TGT;CBASS__QueC;CBASS__OGG	2	K06920;PF06508
+CapRel	CapRel__CapRel	mandatory	CapRel__CapRel	2	K07816;PF04607
+Ceres	Ceres__CrsA1	mandatory	Ceres__CrsA1;Ceres__CrsA2	0	
+Cernunnos	Cernunnos__VCA0410	mandatory	Cernunnos__VCA0410	0	
+Charlie_gp32	Charlie_gp32__gp32	mandatory	Charlie_gp32__gp32	0	
+CoCoNut_I-A	CoCoNut-I-A__I-A_CnuB	mandatory	CoCoNut-I-A__I-A_CnuB	0	
+CoCoNut_I-A	CoCoNut-I-A__I-A_CnuC	mandatory	CoCoNut-I-A__I-A_CnuC	0	
+CoCoNut_I-B	CoCoNut-I-B__I-B_CnuB	mandatory	CoCoNut-I-B__I-B_CnuB	0	
+CoCoNut_I-B	CoCoNut-I-B__I-B_CnuC	mandatory	CoCoNut-I-B__I-B_CnuC	0	
+CoCoNut_I-B	CoCoNut-I-B__I-B_CnuA	mandatory	CoCoNut-I-B__I-B_CnuA	0	
+CoCoNut_I-C	CoCoNut-I-C__I-C_CnuB	mandatory	CoCoNut-I-C__I-C_CnuB	0	
+CoCoNut_I-C	CoCoNut-I-C__I-C_CnuC	mandatory	CoCoNut-I-C__I-C_CnuC	0	
+CoCoNut_II	CoCoNut-II__II_TerY	accessory	CoCoNut-II__II_TerY;CoCoNut-III-A__III-A_TerY	0	
+CoCoNut_II	CoCoNut-II__II_PP2C	accessory	CoCoNut-II__II_PP2C;CoCoNut-III-A__III-A_PP2C	0	
+CoCoNut_II	CoCoNut-II__II_STK	accessory	CoCoNut-II__II_STK;CoCoNut-III-A__III-A_STK	0	
+CoCoNut_II	CoCoNut-II__II_CnuE	accessory	CoCoNut-II__II_CnuE;CoCoNut-III-A__III-A_CnuE	0	
+CoCoNut_II	CoCoNut-II__II_CnuH	accessory	CoCoNut-II__II_CnuH;CoCoNut-III-A__III-A_CnuH	0	
+CoCoNut_II	CoCoNut-II__II_CnuB	mandatory	CoCoNut-II__II_CnuB	0	
+CoCoNut_II	CoCoNut-II__II_CnuC	mandatory	CoCoNut-II__II_CnuC	0	
+CoCoNut_III-A	CoCoNut-III-A__III-A_TerY	accessory	CoCoNut-III-A__III-A_TerY;CoCoNut-II__II_TerY	0	
+CoCoNut_III-A	CoCoNut-III-A__III-A_PP2C	accessory	CoCoNut-III-A__III-A_PP2C;CoCoNut-II__II_PP2C	0	
+CoCoNut_III-A	CoCoNut-III-A__III-A_STK	accessory	CoCoNut-III-A__III-A_STK;CoCoNut-II__II_STK	0	
+CoCoNut_III-A	CoCoNut-III-A__III-A_CnuE	accessory	CoCoNut-III-A__III-A_CnuE;CoCoNut-II__II_CnuE	0	
+CoCoNut_III-A	CoCoNut-III-A__III-A_CnuH	accessory	CoCoNut-III-A__III-A_CnuH;CoCoNut-II__II_CnuH	0	
+CoCoNut_III-A	CoCoNut-III-A__III-A_CnuB	mandatory	CoCoNut-III-A__III-A_CnuB	0	
+CoCoNut_III-A	CoCoNut-III-A__III-A_CnuCD	mandatory	CoCoNut-III-A__III-A_CnuCD	0	
+CoCoNut_III-B	CoCoNut-III-B__III-B_CnuA	accessory	CoCoNut-III-B__III-B_CnuA	0	
+CoCoNut_III-B	CoCoNut-III-B__III-B_CnuB	mandatory	CoCoNut-III-B__III-B_CnuB	0	
+CoCoNut_III-B	CoCoNut-III-B__III-B_CnuC	mandatory	CoCoNut-III-B__III-B_CnuC	0	
+CoCoNut_III-B	CoCoNut-III-B__III-B_CnuD	accessory	CoCoNut-III-B__III-B_CnuD	0	
+CoCoNut_III-B	CoCoNut-III-B__III-B_CnuHE	accessory	CoCoNut-III-B__III-B_CnuHE	0	
+CoCoNut_III-C	CoCoNut-III-C__III-C_CnuB	mandatory	CoCoNut-III-C__III-C_CnuB	0	
+CoCoNut_III-C	CoCoNut-III-C__III-C_CnuC	mandatory	CoCoNut-III-C__III-C_CnuC	0	
+CoCoNut_III-C	CoCoNut-III-C__III-C_CnuD	accessory	CoCoNut-III-C__III-C_CnuD	0	
+CoCoNut_III-C	CoCoNut-III-C__III-C_CnuE	accessory	CoCoNut-III-C__III-C_CnuE	0	
+CoCoNut_III-C	CoCoNut-III-C__III-C_CnuH	accessory	CoCoNut-III-C__III-C_CnuH	0	
+Pseudo-CoCoNut	CoCoNut-Pseudo-CoCoNut__Pseudo_CnuB	mandatory	CoCoNut-Pseudo-CoCoNut__Pseudo_CnuB	0	
+Pseudo-CoCoNut	CoCoNut-Pseudo-CoCoNut__Pseudo_CnuC	mandatory	CoCoNut-Pseudo-CoCoNut__Pseudo_CnuC	0	
+DISARM_1	DISARM__drmA	mandatory	DISARM__drmA	1	PF00271
+DISARM_1	DISARM__drmB	mandatory	DISARM__drmB	0	
+DISARM_1	DISARM__drmC	mandatory	DISARM__drmC	2	PF00614;PF13091
+DISARM_1	DISARM_1__drmD	mandatory	DISARM_1__drmD	4	K03580;PF00176;PF00271;PF04851
+DISARM_1	DISARM_1__drmMI	mandatory	DISARM_1__drmMI	7	K03427;K07317;PF01170;PF02384;PF07669;PF12950;PF20473
+DISARM_2	DISARM__drmA	mandatory	DISARM__drmA	1	PF00271
+DISARM_2	DISARM__drmB	mandatory	DISARM__drmB	0	
+DISARM_2	DISARM__drmC	mandatory	DISARM__drmC	2	PF00614;PF13091
+DISARM_2	DISARM_2__drmE	mandatory	DISARM_2__drmE	0	
+DISARM_2	DISARM_2__drmMII	mandatory	DISARM_2__drmMII	2	K00558;PF00145
+DRT6	DRT6__DRT6	mandatory	DRT6__DRT6	0	
+DRT7	DRT7__DRT7	mandatory	DRT7__DRT7	0	
+DRT7	DRT7__DRT7_small	mandatory	DRT7__DRT7_small	0	
+DRT8	DRT8__DRT8	mandatory	DRT8__DRT8;DRT8__DRT8a	0	
+DRT8	DRT8__DRT8b	accessory	DRT8__DRT8b	0	
+DRT9	DRT9__DRT9	mandatory	DRT9__DRT9	0	
+DRT9	DRT9__SLATT	accessory	DRT9__SLATT	0	
+DRT_1	DRT_1__drt1a	mandatory	DRT_1__drt1a	0	
+DRT_1	DRT_1__drt1b	mandatory	DRT_1__drt1b	0	
+DRT_1	UG6__Nitrilase	accessory	UG6__Nitrilase	0	
+DRT_2	DRT2__DRT2	mandatory	DRT2__DRT2;DRT_2__drt2	0	
+DRT_2	DRT2__YodC_WYL	accessory	DRT2__YodC_WYL	0	
+DRT_2	DRT2__RmuC	accessory	DRT2__RmuC	0	
+DRT_2	DRT2__YodC	accessory	DRT2__YodC	0	
+DRT_3	DRT_3__drt3a	mandatory	DRT_3__drt3a	0	
+DRT_3	DRT_3__drt3b	mandatory	DRT_3__drt3b	0	
+DRT_3	DRT_3__SLATT	accessory	DRT_3__SLATT	0	
+DRT_4	DRT_4__drt4	mandatory	DRT_4__drt4	0	
+DRT_5	DRT_5__drt5	mandatory	DRT_5__drt5	0	
+DS-1	DS-1__DS-1A	mandatory	DS-1__DS-1A	0	
+DS-1	DS-1__DS-1B	mandatory	DS-1__DS-1B	0	
+DS-10	DS-10__DS-10	mandatory	DS-10__DS-10	0	
+DS-11	DS-11__DS-11	mandatory	DS-11__DS-11	0	
+DS-12B	DS-12__DS-12B	mandatory	DS-12__DS-12B	1	PF20720
+DS-13	DS-13__DS-13A	mandatory	DS-13__DS-13A	0	
+DS-13	DS-13__DS-13B	mandatory	DS-13__DS-13B	0	
+DS-14	DS-14__DS-14	mandatory	DS-14__DS-14	0	
+DS-15	DS-15__DS-15A	mandatory	DS-15__DS-15A	0	
+DS-15	DS-15__DS-15B	mandatory	DS-15__DS-15B	0	
+DS-15	DS-15__DS-15C	mandatory	DS-15__DS-15C	0	
+DS-16	DS-16__DS-16A	mandatory	DS-16__DS-16A	0	
+DS-16	DS-16__DS-16B	mandatory	DS-16__DS-16B	0	
+DS-17	DS-17__DS-17	mandatory	DS-17__DS-17	0	
+DS-18	DS-18__DS-18	mandatory	DS-18__DS-18	0	
+DS-19	DS-19__DS-19	mandatory	DS-19__DS-19	0	
+DS-2	DS-2__DS-2C	mandatory	DS-2__DS-2C	0	
+DS-2	CBASS__Cyclase_SMODS	mandatory	CBASS__Cyclase_SMODS;CBASS__A_Cyclase_AGS_C;CBASS__Cyclase_II;CBASS__Cyclase_new	2	K07558;PF01909
+DS-2	CBASS__Effector_2TM_S_2TMBeta	mandatory	CBASS__Effector_2TM_S_2TMBeta;CBASS__Effector_2TM_Sa_NUDIX;CBASS__Effector_2TM_Saf_2TM;CBASS__2TM_new;CBASS__2TM_5;CBASS__1TM_new;CBASS__4TM_new;CBASS__2TM_Gros;CBASS__2TM_type_IV;CBASS__Effector_2TM_SUa-2TM;CBASS__Effector_4TM_S_4TM;CBASS__Endonuc_small;CBASS__Endonuc_big;CBASS__Effector_TIR;CBASS__Phospholipase;CBASS__Sensing_TPALS;CBASS__Sensing_SAVED	6	K07001;PF01734;PF18153;PF18167;PF18967;PF20247
+DS-20	DS-20__DS-20	mandatory	DS-20__DS-20	0	
+DS-21	DS-21__DS-21A	mandatory	DS-21__DS-21A	0	
+DS-21	DS-21__DS-21B	mandatory	DS-21__DS-21B	3	PF04851;PF10544;PF13455
+DS-21	DS-21__DS-21C	mandatory	DS-21__DS-21C	0	
+DS-22	DS-22__DS-22	mandatory	DS-22__DS-22	0	
+DS-23	DS-23__DS-23	mandatory	DS-23__DS-23	0	
+DS-24	DS-24__DS-24	mandatory	DS-24__DS-24	0	
+DS-25	DS-25__DS-25A	mandatory	DS-25__DS-25A	0	
+DS-25	DS-25__DS-25B	mandatory	DS-25__DS-25B	0	
+DS-27	DS-27__DS-27	mandatory	DS-27__DS-27	0	
+DS-28	DS-28__DS-28A	mandatory	DS-28__DS-28A	0	
+DS-28	DS-28__DS-28B	mandatory	DS-28__DS-28B	0	
+DS-29	DS-29__DS-29	mandatory	DS-29__DS-29	0	
+DS-3	DS-3__DS-3	mandatory	DS-3__DS-3	0	
+DS-31	DS-31__DS-31	mandatory	DS-31__DS-31	0	
+DS-32	DS-32__DS-32A	mandatory	DS-32__DS-32A	0	
+DS-32	DS-32__DS-32B	mandatory	DS-32__DS-32B	0	
+DS-33	DS-33__DS-33	mandatory	DS-33__DS-33	0	
+DS-34	DS-34__DS-34A	mandatory	DS-34__DS-34A	0	
+DS-34	DS-34__DS-34B	mandatory	DS-34__DS-34B	0	
+DS-35	DS-35__DS-35	mandatory	DS-35__DS-35	0	
+DS-36	DS-36__DS-36	mandatory	DS-36__DS-36	0	
+DS-37	DS-37__DS-37	mandatory	DS-37__DS-37	0	
+DS-38	DS-38__DS-38	mandatory	DS-38__DS-38	0	
+DS-39	DS-39__DS-39	mandatory	DS-39__DS-39	0	
+DS-4	DS-4__DS-4A	mandatory	DS-4__DS-4A	2	K00560;PF00303
+DS-4	DS-4__DS-4B	mandatory	DS-4__DS-4B	0	
+DS-4	DS-4__DS-4C	mandatory	DS-4__DS-4C	1	PF18723
+DS-4	DS-4__DS-4D	mandatory	DS-4__DS-4D	0	
+DS-4	DS-4__DS-4E	mandatory	DS-4__DS-4E	1	PF18753
+DS-40	DS-40__DS-40	mandatory	DS-40__DS-40	0	
+DS-41	DS-41__DS-41	mandatory	DS-41__DS-41	0	
+DS-42	DS-42__DS-42A	mandatory	DS-42__DS-42A	0	
+DS-42	DS-42__DS-42B	mandatory	DS-42__DS-42B	0	
+DS-42	DS-42__DS-42C	mandatory	DS-42__DS-42C	0	
+DS-43	DS-43__DS-43	mandatory	DS-43__DS-43	0	
+DS-44	DS-44__DS-44	mandatory	DS-44__DS-44	0	
+DS-45	DS-45__DS-45	mandatory	DS-45__DS-45	0	
+DS-5	DS-5__DS-5A	mandatory	DS-5__DS-5A	0	
+DS-5	DS-5__DS-5B	mandatory	DS-5__DS-5B	0	
+DS-6	DS-6__DS-6A	mandatory	DS-6__DS-6A	1	PF20613
+DS-6	DS-6__DS-6B	mandatory	DS-6__DS-6B	0	
+DS-7	DS-7__DS-7	mandatory	DS-7__DS-7	0	
+DS-8	DS-8__DS-8	mandatory	DS-8__DS-8	1	PF24406
+DS-9	DS-9__DS-9A	mandatory	DS-9__DS-9A	0	
+DS-9	DS-9__DS-9B	mandatory	DS-9__DS-9B	0	
+Damona	Damona__VCA0399	mandatory	Damona__VCA0399	0	
+DarTG	DarTG__DarT	mandatory	DarTG__DarT	1	PF14487
+DarTG	DarTG__DarG	mandatory	DarTG__DarG	2	K23518;PF01661
+Dazbog	Dazbog__DzbA	mandatory	Dazbog__DzbA	0	
+Dazbog	Dazbog__DzbB	mandatory	Dazbog__DzbB	0	
+DdmDE	DdmDE__DdmE	mandatory	DdmDE__DdmE	0	
+DdmDE	DdmDE__DdmD	mandatory	DdmDE__DdmD	3	K10844;PF00270;PF04851
+Detocs	Detocs__dtcA	mandatory	Detocs__dtcA	0	
+Detocs	Detocs__dtcB	mandatory	Detocs__dtcB	0	
+Detocs	Detocs__dtcC	accessory	Detocs__dtcC	4	K01243;K18284;PF00072;PF01048
+Detocs_REase	Detocs__dtcA	mandatory	Detocs__dtcA	0	
+Detocs_REase	Detocs__dtcB	mandatory	Detocs__dtcB	0	
+Detocs_REase	Detocs__dtcC_REase	accessory	Detocs__dtcC_REase	0	
+Detocs_TOPRIM	Detocs__dtcA	mandatory	Detocs__dtcA	0	
+Detocs_TOPRIM	Detocs__dtcB	mandatory	Detocs__dtcB	0	
+Detocs_TOPRIM	Detocs__dtcC_TOPRIM	accessory	Detocs__dtcC_TOPRIM	1	PF00072
+Detocs_hydrolase	Detocs__dtcA	mandatory	Detocs__dtcA	0	
+Detocs_hydrolase	Detocs__dtcB	mandatory	Detocs__dtcB	0	
+Detocs_hydrolase	Detocs__dtcC_hydrolase	accessory	Detocs__dtcC_hydrolase	0	
+Divona	Divona__VCA0374	mandatory	Divona__VCA0374	0	
+Dnd_ABCDE	Dnd__DndB	mandatory	Dnd__DndB	2	K19169;PF14072
+Dnd_ABCDE	Dnd__DndC	mandatory	Dnd__DndC	3	K19170;PF01507;PF20306
+Dnd_ABCDE	Dnd__DndE	mandatory	Dnd__DndE	2	K19172;PF08870
+Dnd_ABCDE	Dnd__DndD	mandatory	Dnd__DndD	3	K19171;PF13476;PF13514
+Dnd_ABCDE	Dnd__DndA	accessory	Dnd__DndA	7	K04487;K11717;K21330;PF00155;PF00266;PF01041;PF01212
+Dnd_ABCDEFGH	Dnd__DndB	mandatory	Dnd__DndB	2	K19169;PF14072
+Dnd_ABCDEFGH	Dnd__DndE	mandatory	Dnd__DndE	2	K19172;PF08870
+Dnd_ABCDEFGH	Dnd__DndC	mandatory	Dnd__DndC	3	K19170;PF01507;PF20306
+Dnd_ABCDEFGH	Dnd__DndD	mandatory	Dnd__DndD	3	K19171;PF13476;PF13514
+Dnd_ABCDEFGH	Dnd__DndA	accessory	Dnd__DndA	7	K04487;K11717;K21330;PF00155;PF00266;PF01041;PF01212
+Dnd_ABCDEFGH	Dnd_ABCDEFGH__DptF	mandatory	Dnd_ABCDEFGH__DptF	0	
+Dnd_ABCDEFGH	Dnd_ABCDEFGH__DptG	mandatory	Dnd_ABCDEFGH__DptG	0	
+Dnd_ABCDEFGH	Dnd_ABCDEFGH__DptH	mandatory	Dnd_ABCDEFGH__DptH	1	PF01935
+Dodola	Dodola__DolA	mandatory	Dodola__DolA	0	
+Dodola	Dodola__DolB	mandatory	Dodola__DolB	3	PF00004;PF05496;PF07728
+Dpd	Dpd__DpdA	mandatory	Dpd__DpdA	2	K00773;PF01702
+Dpd	Dpd__DpdB	mandatory	Dpd__DpdB	2	K19169;PF14072
+Dpd	Dpd__DpdC	mandatory	Dpd__DpdC	1	PF21818
+Dpd	Dpd__DpdD	mandatory	Dpd__DpdD	0	
+Dpd	Dpd__DpdE	mandatory	Dpd__DpdE	0	
+Dpd	Dpd__DpdF	mandatory	Dpd__DpdF	0	
+Dpd	Dpd__DpdG	mandatory	Dpd__DpdG	0	
+Dpd	Dpd__DpdH	mandatory	Dpd__DpdH	0	
+Dpd	Dpd__DpdI	mandatory	Dpd__DpdI	0	
+Dpd	Dpd__DpdJ	mandatory	Dpd__DpdJ	0	
+Dpd	Dpd__DpdK	mandatory	Dpd__DpdK	2	PF09565;PF13091
+Dpd	Dpd__QueC	accessory	Dpd__QueC	5	K06920;PF01171;PF02540;PF03054;PF06508
+Dpd	Dpd__QueD	accessory	Dpd__QueD	2	K01737;PF01242
+Dpd	Dpd__QueE	accessory	Dpd__QueE	4	K04069;K10026;PF04055;PF13353
+Dpd	Dpd__FolE	accessory	Dpd__FolE	2	K01495;PF01227
+Druantia_I	Druantia_I__DruA	accessory	Druantia_I__DruA	1	PF14236
+Druantia_I	Druantia_I__DruB	accessory	Druantia_I__DruB	1	CoiA
+Druantia_I	Druantia_I__DruC	accessory	Druantia_I__DruC	0	
+Druantia_I	Druantia_I__DruD	accessory	Druantia_I__DruD	0	
+Druantia_I	Druantia__DruE_1	mandatory	Druantia__DruE_1;Druantia__DruE_2;Druantia__DruE_3;Druantia_IV__DruE4	5	K03724;K06877;PF00270;PF00271;PF04851
+Druantia_II	Druantia_II__DruM	accessory	Druantia_II__DruM	2	K00558;PF00145
+Druantia_II	Druantia_II__DruF	accessory	Druantia_II__DruF;Druantia_IV__DruF4	0	
+Druantia_II	Druantia_II__DruG	accessory	Druantia_II__DruG	0	
+Druantia_II	Druantia__DruE_1	mandatory	Druantia__DruE_1;Druantia__DruE_2;Druantia__DruE_3;Druantia_IV__DruE4	5	K03724;K06877;PF00270;PF00271;PF04851
+Druantia_III	Druantia_III__DruH	mandatory	Druantia_III__DruH	0	
+Druantia_III	Druantia__DruE_1	mandatory	Druantia__DruE_1;Druantia__DruE_2;Druantia__DruE_3;Druantia_IV__DruE4	5	K03724;K06877;PF00270;PF00271;PF04851
+Druantia_IV	Druantia_IV__DruL	mandatory	Druantia_IV__DruL	0	
+Druantia_IV	Druantia__DruE_1	mandatory	Druantia__DruE_1;Druantia__DruE_2;Druantia__DruE_3;Druantia_IV__DruE4	5	K03724;K06877;PF00270;PF00271;PF04851
+Druantia_IV	Druantia_II__DruF	mandatory	Druantia_II__DruF;Druantia_IV__DruF4	0	
+Dsr_I	Dsr_I__Dsr1	mandatory	Dsr_I__Dsr1	0	
+Dsr_II	Dsr_II__Dsr2	mandatory	Dsr_II__Dsr2	0	
+Eleos	Eleos__LeoA	mandatory	Eleos__LeoA;Eleos__LeoA2	2	PF01926;PF02421
+Eleos	Eleos__LeoBC	mandatory	Eleos__LeoBC	2	PF01926;PF02421
+Eleos	Eleos__LeoB	mandatory	Eleos__LeoB	0	
+Eleos	Eleos__LeoC	mandatory	Eleos__LeoC	0	
+Epona	Epona__VCA0366	mandatory	Epona__VCA0366	0	
+Erebus	Erebus__EruA	mandatory	Erebus__EruA	0	
+Esos	Esos__VCA0450	mandatory	Esos__VCA0450	0	
+FS_GIY_YIG	FS_GIY_YIG__GIY_YIG	mandatory	FS_GIY_YIG__GIY_YIG	0	
+FS_HEPN_TM	FS_HEPN_TM__TM	mandatory	FS_HEPN_TM__TM	0	
+FS_HEPN_TM	FS_HEPN_TM__HEPN	mandatory	FS_HEPN_TM__HEPN	0	
+FS_HP	FS_HP__HP	mandatory	FS_HP__HP	0	
+FS_HP_SDH_sah	FS_HP_SDH_sah__HP	mandatory	FS_HP_SDH_sah__HP	0	
+FS_HP_SDH_sah	FS_HP_SDH_sah__SDH_sah	mandatory	FS_HP_SDH_sah__SDH_sah	4	K04773;PF00574;PF01343;PF01972
+FS_HsdR_like	FS_HsdR_like__HdrR	mandatory	FS_HsdR_like__HdrR	2	K07580;PF07754
+FS_HsdR_like	FS_HsdR_like__DUF6731	mandatory	FS_HsdR_like__DUF6731	0	
+FS_HsdR_like	FS_HsdR_like__HP	mandatory	FS_HsdR_like__HP	0	
+FS_Sma	FS_Sma__Sma	mandatory	FS_Sma__Sma	0	
+GAPS1	GAPS1__GAPS1	mandatory	GAPS1__GAPS1	0	
+GAPS2	GAPS2__GAPS2	mandatory	GAPS2__GAPS2	0	
+GAPS4	GAPS4__GAPS4a	mandatory	GAPS4__GAPS4a	0	
+GAPS4	GAPS4__GAPS4b	mandatory	GAPS4__GAPS4b	0	
+GAPS6	GAPS6__GAPS6a	mandatory	GAPS6__GAPS6a	0	
+GAPS6	GAPS6__GAPS6b	mandatory	GAPS6__GAPS6b	10	PF00515;PF07719;PF13174;PF13176;PF13181;PF13414;PF13428;PF13431;PF13432;PF14559
+Gabija	Gabija__GajA	mandatory	Gabija__GajA	6	K07459;PF11398;PF13175;PF13304;PF13476;PF20469
+Gabija	Gabija__GajB_1	mandatory	Gabija__GajB_1;Gabija__GajB_2;Gabija__GajB_3	7	K03657;K03658;PF00580;PF13086;PF13245;PF13361;PF13538
+Gao_Ape	Gao_Ape__ApeA	mandatory	Gao_Ape__ApeA	0	
+Gao_Her_DUF	Gao_Her_DUF__HerA_DUF	mandatory	Gao_Her_DUF__HerA_DUF	0	
+Gao_Her_DUF	Gao_Her_DUF__DUF4297	mandatory	Gao_Her_DUF__DUF4297	0	
+Gao_Her_SIR	Gao_Her_SIR__HerA_SIR2	mandatory	Gao_Her_SIR__HerA_SIR2	1	K06915
+Gao_Her_SIR	Gao_Her_SIR__SIR2	mandatory	Gao_Her_SIR__SIR2	0	
+Gao_Hhe	Gao_Hhe__HheA	mandatory	Gao_Hhe__HheA	0	
+Gao_Iet	Gao_Iet__IetA	mandatory	Gao_Iet__IetA	5	K13525;PF00004;PF05496;PF07728;PF17862
+Gao_Iet	Gao_Iet__IetS	mandatory	Gao_Iet__IetS	1	PF00082
+Gao_Mza	Gao_Mza__MzaA	mandatory	Gao_Mza__MzaA	3	PF04539;PF04542;PF04545
+Gao_Mza	Gao_Mza__MzaB	mandatory	Gao_Mza__MzaB	2	PF02518;PF13589
+Gao_Mza	Gao_Mza__MzaC	mandatory	Gao_Mza__MzaC	1	PF10593
+Gao_Mza	Gao_Mza__MzaD	mandatory	Gao_Mza__MzaD	1	PF14390
+Gao_Mza	Gao_Mza__MzaE	mandatory	Gao_Mza__MzaE	1	PF10592
+Gao_Ppl	Gao_Ppl__PplA	mandatory	Gao_Ppl__PplA	0	
+Gao_Qat	Gao_Qat__QatA	mandatory	Gao_Qat__QatA	1	PF07693
+Gao_Qat	Gao_Qat__QatB	mandatory	Gao_Qat__QatB	0	
+Gao_Qat	Gao_Qat__QatC	mandatory	Gao_Qat__QatC	0	
+Gao_Qat	Gao_Qat__QatD	mandatory	Gao_Qat__QatD	2	K03424;PF01026
+Gao_RL	Gao_RL__RL_A	mandatory	Gao_RL__RL_A	1	PF04465
+Gao_RL	Gao_RL__RL_B	mandatory	Gao_RL__RL_B	0	
+Gao_RL	Gao_RL__RL_C	mandatory	Gao_RL__RL_C	2	K07445;PF01555
+Gao_RL	Gao_RL__RL_D	mandatory	Gao_RL__RL_D	0	
+Gao_TerY	Gao_TerY__TerYA	mandatory	Gao_TerY__TerYA	0	
+Gao_TerY	Gao_TerY__TerYB	mandatory	Gao_TerY__TerYB	0	
+Gao_TerY	Gao_TerY__TerYC	mandatory	Gao_TerY__TerYC	0	
+Gao_Tmn	Gao_Tmn__TmnA	mandatory	Gao_Tmn__TmnA	0	
+Gao_Upx	Gao_Upx__UpxA	mandatory	Gao_Upx__UpxA	0	
+GasderMIN	GasderMIN__bGSDM	mandatory	GasderMIN__bGSDM	0	
+Geb	Geb__GebA1	mandatory	Geb__GebA1;Geb__GebA2	0	
+HEC-01	HEC-01__HEC-01A	mandatory	HEC-01__HEC-01A	0	
+HEC-01	HEC-01__HEC-01B	mandatory	HEC-01__HEC-01B	0	
+HEC-02	HEC-02__HEC-02A	mandatory	HEC-02__HEC-02A	0	
+HEC-02	HEC-02__HEC-02B	mandatory	HEC-02__HEC-02B	0	
+HEC-03	HEC-03__HEC-03A	mandatory	HEC-03__HEC-03A	0	
+HEC-03	HEC-03__HEC-03B	mandatory	HEC-03__HEC-03B	0	
+HEC-04	HEC-04__HEC-04	mandatory	HEC-04__HEC-04	0	
+HEC-05	HEC-05__HEC-05	mandatory	HEC-05__HEC-05	0	
+HEC-06	HEC-06__HEC-06	mandatory	HEC-06__HEC-06	0	
+HEC-07	HEC-07__HEC-07	mandatory	HEC-07__HEC-07	0	
+HEC-08	HEC-08__HEC-08	mandatory	HEC-08__HEC-08	0	
+HEC-09	HEC-09__HEC-09	mandatory	HEC-09__HEC-09	0	
+Hachiman	Hachiman__HamA_1	mandatory	Hachiman__HamA_1;Hachiman__HamA_2	1	PF08878
+Hachiman	Hachiman__HamB	mandatory	Hachiman__HamB	5	K03724;K03726;PF00270;PF00271;PF04851
+Hachiman_II	Hachiman__HamA_1	mandatory	Hachiman__HamA_1;Hachiman__HamA_2	1	PF08878
+Hachiman_II	Hachiman__HamB	mandatory	Hachiman__HamB	5	K03724;K03726;PF00270;PF00271;PF04851
+Hachiman_II	Hachiman_II__HamC	mandatory	Hachiman_II__HamC	0	
+Hma	Hma__HmaA	mandatory	Hma__HmaA	0	
+Hma	Hma__HmaB	mandatory	Hma__HmaB	0	
+Hma	Hma__HmaC	mandatory	Hma__HmaC	0	
+Hna	Hna__Hna	mandatory	Hna__Hna	0	
+Hypnos	Hypnos__HyoA	mandatory	Hypnos__HyoA	0	
+ISG15-like	ISG15-like__BilA	mandatory	ISG15-like__BilA	1	PF02597
+ISG15-like	ISG15-like__BilB	mandatory	ISG15-like__BilB	1	PF09376
+ISG15-like	ISG15-like__BilC	mandatory	ISG15-like__BilC	2	PF01398;PF14464
+ISG15-like	ISG15-like__BilD	mandatory	ISG15-like__BilD	1	PF00899
+JukAB	JukAB__JukA	mandatory	JukAB__JukA	0	
+JukAB	JukAB__JukB	mandatory	JukAB__JukB	2	K03744;PF04011
+Kiwa	Kiwa__KwaA	mandatory	Kiwa__KwaA	0	
+Kiwa	Kiwa__KwaB	mandatory	Kiwa__KwaB;Kiwa__KwaB_2	1	PF16162
+Lamassu-Amidase	Lamassu-Fam__LmuA_effector_Amidase	mandatory	Lamassu-Fam__LmuA_effector_Amidase	0	
+Lamassu-Amidase	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Amidase	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-Cap4_nuclease	Lamassu-Fam__LmuA_effector_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuA_effector_Cap4_nuclease_II;Lamassu-Fam__LmuA_effector_Cap4_nuclease	1	PF14130
+Lamassu-Cap4_nuclease	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Cap4_nuclease	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-DS-30	Lamassu-Fam__LmuA_DS-30B	mandatory	Lamassu-Fam__LmuA_DS-30B	0	
+Lamassu-DS-30	Lamassu-Fam__Lmu_DS-30A	mandatory	Lamassu-Fam__Lmu_DS-30A	0	
+Lamassu-DS-30	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-DS-30	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-FMO	Lamassu-Fam__LmuA_effector_FMO	mandatory	Lamassu-Fam__LmuA_effector_FMO	6	K00266;PF00890;PF01266;PF01494;PF07992;PF13450
+Lamassu-FMO	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-FMO	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_Cap4_nuclease_II	accessory	Lamassu-Fam__LmuA_effector_Cap4_nuclease_II	1	PF14130
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_Cap4_nuclease	accessory	Lamassu-Fam__LmuA_effector_Cap4_nuclease	1	PF14130
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_Amidase	accessory	Lamassu-Fam__LmuA_effector_Amidase	0	
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_Lipase	accessory	Lamassu-Fam__LmuA_effector_Lipase	9	K01046;PF00561;PF01674;PF02089;PF02450;PF05057;PF05990;PF06028;PF07819
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_Mrr	accessory	Lamassu-Fam__LmuA_effector_Mrr	3	K07448;PF04471;PF22722
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_PDDEXK	accessory	Lamassu-Fam__LmuA_effector_PDDEXK	0	
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_Hydrolase	accessory	Lamassu-Fam__LmuA_effector_Hydrolase	2	PF00753;PF12706
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_Protease	accessory	Lamassu-Fam__LmuA_effector_Protease	2	PF00089;PF13365
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_Sir2	accessory	Lamassu-Fam__LmuA_effector_Sir2	1	PF13289
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_hypothetical	accessory	Lamassu-Fam__LmuA_effector_hypothetical	1	PF20282
+Lamassu-Fam	Lamassu-Fam__LmuA_effector_FMO	accessory	Lamassu-Fam__LmuA_effector_FMO	6	K00266;PF00890;PF01266;PF01494;PF07992;PF13450
+Lamassu-Fam	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Hydrolase	Lamassu-Fam__LmuA_effector_Hydrolase	mandatory	Lamassu-Fam__LmuA_effector_Hydrolase	2	PF00753;PF12706
+Lamassu-Hydrolase	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Hydrolase	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-Hydrolase_Protease	Lamassu-Fam__LmuA_effector_Protease	mandatory	Lamassu-Fam__LmuA_effector_Protease	2	PF00089;PF13365
+Lamassu-Hydrolase_Protease	Lamassu-Fam__LmuA_effector_Hydrolase	mandatory	Lamassu-Fam__LmuA_effector_Hydrolase	2	PF00753;PF12706
+Lamassu-Hydrolase_Protease	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Hydrolase_Protease	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-Hypothetical	Lamassu-Fam__LmuA_effector_hypothetical	mandatory	Lamassu-Fam__LmuA_effector_hypothetical	1	PF20282
+Lamassu-Hypothetical	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Hypothetical	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-Lipase	Lamassu-Fam__LmuA_effector_Lipase	mandatory	Lamassu-Fam__LmuA_effector_Lipase	9	K01046;PF00561;PF01674;PF02089;PF02450;PF05057;PF05990;PF06028;PF07819
+Lamassu-Lipase	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Lipase	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-Mrr	Lamassu-Fam__LmuA_effector_Mrr	mandatory	Lamassu-Fam__LmuA_effector_Mrr	3	K07448;PF04471;PF22722
+Lamassu-Mrr	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Mrr	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-PDDEXK	Lamassu-Fam__LmuA_effector_PDDEXK	mandatory	Lamassu-Fam__LmuA_effector_PDDEXK	0	
+Lamassu-PDDEXK	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-PDDEXK	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-Protease	Lamassu-Fam__LmuA_effector_Protease	mandatory	Lamassu-Fam__LmuA_effector_Protease	2	PF00089;PF13365
+Lamassu-Protease	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Protease	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lamassu-Sir2	Lamassu-Fam__LmuA_effector_Sir2	mandatory	Lamassu-Fam__LmuA_effector_Sir2	1	PF13289
+Lamassu-Sir2	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II	mandatory	Lamassu-Fam__LmuB_SMC_Cap4_nuclease_II;Lamassu-Fam__LmuB_SMC_Cap4_nuclease;Lamassu-Fam__LmuB_SMC_Amidase;Lamassu-Fam__LmuB_SMC_Lipase;Lamassu-Fam__LmuB_SMC_Mrr;Lamassu-Fam__LmuB_SMC_PDDEXK;Lamassu-Fam__LmuB_SMC_Hydrolase_protease;Lamassu-Fam__LmuB_SMC_Sir2;Lamassu-Fam__LmuB_SMC_hypothetical;Lamassu-Fam__LmuB_SMC_FMO;Lamassu-Fam__LmuB_DS-30D	9	K03529;K03546;PF02463;PF04423;PF06470;PF13175;PF13304;PF13476;PF13555
+Lamassu-Sir2	Lamassu-Fam__LmuC_acc_Lipase	accessory	Lamassu-Fam__LmuC_acc_Lipase;Lamassu-Fam__LmuC_acc_Cap4_nuclease;Lamassu-Fam__LmuC_acc_Mrr;Lamassu-Fam__LmuC_acc_PDDEXK;Lamassu-Fam__LmuC_acc_hydrolase_protease;Lamassu-Fam__LmuC_acc_Sir2;Lamassu-Fam__LmuC_acc_hypothetical;Lamassu-Fam__LmuC_acc_FMO;Lamassu-Fam__LmuC_DS-30C	3	K10947;PF03551;PF14947
+Lanthiphage	Lanthiphage__LphB1	mandatory	Lanthiphage__LphB1;Lanthiphage__LphB2;Lanthiphage__LphB3;Lanthiphage__LphB4	0	
+Lanthiphage	Lanthiphage__LphC	mandatory	Lanthiphage__LphC	0	
+Lanthiphage	Lanthiphage__LphD	mandatory	Lanthiphage__LphD	0	
+Lanthiphage	Lanthiphage__LphE	mandatory	Lanthiphage__LphE	0	
+Lanthiphage	Lanthiphage__LphDE	mandatory	Lanthiphage__LphDE	0	
+Lanthiphage	Lanthiphage__LphF	mandatory	Lanthiphage__LphF	0	
+Lanthiphage	Lanthiphage__LphA	mandatory	Lanthiphage__LphA;Lanthiphage__LphA_variant_1;Lanthiphage__LphA_variant_2;Lanthiphage__LphA_variant_3;Lanthiphage__LphA_variant_4;Lanthiphage__LphA_variant_5;Lanthiphage__LphA_variant_6;Lanthiphage__LphA_variant_7;Lanthiphage__LphA_variant_8;Lanthiphage__LphA_variant_9	0	
+Lit	Lit__Lit	mandatory	Lit__Lit	0	
+Lugos	Lugos__VCA0409	mandatory	Lugos__VCA0409	0	
+MADS	MADS__mad1	mandatory	MADS__mad1	1	PF12728
+MADS	MADS__mad2	mandatory	MADS__mad2	6	K03427;PF01170;PF02384;PF07669;PF13588;PF20473
+MADS	MADS__mad5	mandatory	MADS__mad5	2	K01154;PF01420
+MADS	MADS__mad6	mandatory	MADS__mad6	0	
+MADS	MADS__mad7	mandatory	MADS__mad7	0	
+MADS	MADS__mad8	mandatory	MADS__mad8	0	
+MADS3-4	MADS__mad3	mandatory	MADS__mad3	0	
+MADS3-4	MADS__mad4	mandatory	MADS__mad4	0	
+MMB_gp29_gp30	MMB_gp29_gp30__gp29	mandatory	MMB_gp29_gp30__gp29	0	
+MMB_gp29_gp30	MMB_gp29_gp30__gp30	mandatory	MMB_gp29_gp30__gp30	0	
+MazEF	MazEF__MazE	mandatory	MazEF__MazE	1	PF04014
+MazEF	MazEF__MazF	mandatory	MazEF__MazF	2	K07171;PF02452
+Menshen	Menshen__NsnA	mandatory	Menshen__NsnA	1	PF03235
+Menshen	Menshen__NsnB	mandatory	Menshen__NsnB	3	PF13175;PF13304;PF13476
+Menshen	Menshen__NsnC_2507451963	mandatory	Menshen__NsnC_2507451963;Menshen__NsnC_2512525018;Menshen__NsnC_2512642389;Menshen__NsnC_2515675032;Menshen__NsnC_2518623264;Menshen__NsnC_2524775996;Menshen__NsnC_2525400098;Menshen__NsnC_2525488910;Menshen__NsnC_2583135648;Menshen__NsnC_2596897843;Menshen__NsnC_2597471359;Menshen__NsnC_2598643479;Menshen__NsnC_2601090942;Menshen__NsnC_2602479687;Menshen__NsnC_2602512313;Menshen__NsnC_2617187710;Menshen__NsnC_2619923329;Menshen__NsnC_2623244837;Menshen__NsnC_2631934571;Menshen__NsnC_2632405575;Menshen__NsnC_2635923458;Menshen__NsnC_2637376592;Menshen__NsnC_2639140027;Menshen__NsnC_2641324761;Menshen__NsnC_2646843772;Menshen__NsnC_2656189766;Menshen__NsnC_2656976156;Menshen__NsnC_2660358384;Menshen__NsnC_2661990395;Menshen__NsnC_2670026569;Menshen__NsnC_2676918070;Menshen__NsnC_2696122707;Menshen__NsnC_2701621510;Menshen__NsnC_2705968471;Menshen__NsnC_2710200711;Menshen__NsnC_2723509649;Menshen__NsnC_2726213746;Menshen__NsnC_2726216653;Menshen__NsnC_2729199380;Menshen__NsnC_2730555401;Menshen__NsnC_2745856126	27	K00031;K01142;K02626;K06218;K07097;K09014;K10726;K13525;PF00004;PF00180;PF00198;PF00696;PF01015;PF01048;PF01458;PF01569;PF01862;PF01883;PF03372;PF04900;PF05016;PF05496;PF05973;PF07728;PF14378;PF17855;PF18477
+Mok_Hok_Sok	Mok_Hok_Sok__Mok	mandatory	Mok_Hok_Sok__Mok	0	
+Mok_Hok_Sok	Mok_Hok_Sok__Hok	mandatory	Mok_Hok_Sok__Hok	0	
+Mokosh_TypeII	Mokosh_TypeII__MkoC	mandatory	Mokosh_TypeII__MkoC	0	
+Mokosh_Type_I	Mokosh_type_I__MkoA_A	accessory	Mokosh_type_I__MkoA_A;Mokosh_type_I__MkoA_B;Mokosh_type_I__MkoA_C;Mokosh_type_I__MkoA_D;Mokosh_type_I__MkoA_E	10	K10742;PF00069;PF01163;PF03109;PF06293;PF07714;PF13086;PF13087;PF13245;PF13604
+Mokosh_Type_I	Mokosh_type_I__MkoB_A	mandatory	Mokosh_type_I__MkoB_A;Mokosh_type_I__MkoB_B;Mokosh_type_I__MkoB_C;Mokosh_type_I__MkoB_D;Mokosh_type_I__MkoB_E	3	PF01022;PF11495;PF13091
+Mokosh_Type_I_A	Mokosh_type_I__MkoA_A	mandatory	Mokosh_type_I__MkoA_A	2	K10742;PF13087
+Mokosh_Type_I_A	Mokosh_type_I__MkoB_A	mandatory	Mokosh_type_I__MkoB_A	0	
+Mokosh_Type_I_B	Mokosh_type_I__MkoA_B	mandatory	Mokosh_type_I__MkoA_B	5	PF00069;PF01163;PF03109;PF06293;PF07714
+Mokosh_Type_I_B	Mokosh_type_I__MkoB_B	mandatory	Mokosh_type_I__MkoB_B	2	PF01022;PF13091
+Mokosh_Type_I_C	Mokosh_type_I__MkoA_C	mandatory	Mokosh_type_I__MkoA_C	6	PF00069;PF07714;PF13086;PF13087;PF13245;PF13604
+Mokosh_Type_I_C	Mokosh_type_I__MkoB_C	mandatory	Mokosh_type_I__MkoB_C	2	PF11495;PF13091
+Mokosh_Type_I_D	Mokosh_type_I__MkoA_D	mandatory	Mokosh_type_I__MkoA_D	3	PF13086;PF13087;PF13245
+Mokosh_Type_I_D	Mokosh_type_I__MkoB_D	mandatory	Mokosh_type_I__MkoB_D	0	
+Mokosh_Type_I_E	Mokosh_type_I__MkoA_E	mandatory	Mokosh_type_I__MkoA_E	0	
+Mokosh_Type_I_E	Mokosh_type_I__MkoB_E	mandatory	Mokosh_type_I__MkoB_E	0	
+MqsRAC	MqsRAC__mqsC	mandatory	MqsRAC__mqsC	0	
+MqsRAC	MqsRAC__mqsR	mandatory	MqsRAC__mqsR	0	
+NLR_like_bNACHT01	NLR_like_bNACHT01__NLR_like_bNACHT01	mandatory	NLR_like_bNACHT01__NLR_like_bNACHT01	0	
+NLR_like_bNACHT09	NLR_like_bNACHT09__NLR_like_bNACHT09	mandatory	NLR_like_bNACHT09__NLR_like_bNACHT09	0	
+Nantosuelta	Nantosuelta__VCA0322	mandatory	Nantosuelta__VCA0322	0	
+Nemetona	Nemetona__VCA0441	mandatory	Nemetona__VCA0441	0	
+Nhi	Nhi__Nhi	mandatory	Nhi__Nhi;Nhi__Nhi	0	
+NixI	NixI__NixI	mandatory	NixI__NixI	0	
+NixI	NixI__Stix	accessory	NixI__Stix	0	
+Ogmios	Ogmios__VCA0308	mandatory	Ogmios__VCA0308	0	
+Old_exonuclease	Old_exonuclease__Old_exonuclease	mandatory	Old_exonuclease__Old_exonuclease	0	
+Olokun	Olokun__OloA	mandatory	Olokun__OloA	2	PF03130;PF13646
+Olokun	Olokun__OloB	mandatory	Olokun__OloB	2	K03120;PF00352
+Oshun	Oshun__OsnA2	mandatory	Oshun__OsnA2	0	
+PD-Lambda-1	PD-Lambda-1__PD-Lambda-1	mandatory	PD-Lambda-1__PD-Lambda-1	0	
+PD-Lambda-2	PD-Lambda-2__PD-Lambda-2_A	mandatory	PD-Lambda-2__PD-Lambda-2_A	0	
+PD-Lambda-2	PD-Lambda-2__PD-Lambda-2_B	mandatory	PD-Lambda-2__PD-Lambda-2_B	0	
+PD-Lambda-2	PD-Lambda-2__PD-Lambda-2_C	accessory	PD-Lambda-2__PD-Lambda-2_C	0	
+PD-Lambda-3	PD-Lambda-3__PD-Lambda-3_A	mandatory	PD-Lambda-3__PD-Lambda-3_A	0	
+PD-Lambda-3	PD-Lambda-3__PD-Lambda-3_B	mandatory	PD-Lambda-3__PD-Lambda-3_B	1	PF09509
+PD-Lambda-4	PD-Lambda-4__PD-Lambda-4_A	mandatory	PD-Lambda-4__PD-Lambda-4_A	0	
+PD-Lambda-4	PD-Lambda-4__PD-Lambda-4_B	mandatory	PD-Lambda-4__PD-Lambda-4_B	0	
+PD-Lambda-6	PD-Lambda-6__PD-Lambda-6	mandatory	PD-Lambda-6__PD-Lambda-6	0	
+PD-T4-1	PD-T4-1__PD-T4-1	mandatory	PD-T4-1__PD-T4-1	0	
+PD-T4-10	PD-T4-10__PD-T4-10_A	mandatory	PD-T4-10__PD-T4-10_A	0	
+PD-T4-10	PD-T4-10__PD-T4-10_B	mandatory	PD-T4-10__PD-T4-10_B	0	
+PD-T4-2	PD-T4-2__PD-T4-2_A	mandatory	PD-T4-2__PD-T4-2_A	1	PF03235
+PD-T4-2	PD-T4-2__PD-T4-2_B	mandatory	PD-T4-2__PD-T4-2_B	1	PF18735
+PD-T4-3	PD-T4-3__PD-T4-3	mandatory	PD-T4-3__PD-T4-3	0	
+PD-T4-4	PD-T4-4__PD-T4-4_A	mandatory	PD-T4-4__PD-T4-4_A	2	PF13175;PF13304
+PD-T4-4	PD-T4-4__PD-T4-4_B	mandatory	PD-T4-4__PD-T4-4_B	0	
+PD-T4-5	PD-T4-5__PD-T4-5	mandatory	PD-T4-5__PD-T4-5	0	
+PD-T4-6	PD-T4-6__PD-T4-6	mandatory	PD-T4-6__PD-T4-6	0	
+PD-T4-7	PD-T4-7__PD-T4-7	mandatory	PD-T4-7__PD-T4-7	0	
+PD-T4-8	PD-T4-8__PD-T4-8	mandatory	PD-T4-8__PD-T4-8	1	PF14082
+PD-T4-9	PD-T4-9__PD-T4-9_A	mandatory	PD-T4-9__PD-T4-9_A	0	
+PD-T4-9	PD-T4-9__PD-T4-9_B	accessory	PD-T4-9__PD-T4-9_B	0	
+PD-T4-9	PD-T4-9__PD-T4-9_C	mandatory	PD-T4-9__PD-T4-9_C	1	K03071
+PD-T7-1	PD-T7-1__PD-T7-1	mandatory	PD-T7-1__PD-T7-1	0	
+PD-T7-2	PD-T7-2__PD-T7-2_A	mandatory	PD-T7-2__PD-T7-2_A	1	PF13289
+PD-T7-2	PD-T7-2__PD-T7-2_B	mandatory	PD-T7-2__PD-T7-2_B	1	K06915
+PD-T7-3	PD-T7-3__PD-T7-3	mandatory	PD-T7-3__PD-T7-3	0	
+PD-T7-4	PD-T7-4__PD-T7-4	mandatory	PD-T7-4__PD-T7-4	1	PF13643
+PD-T7-5	PD-T7-5__PD-T7-5	mandatory	PD-T7-5__PD-T7-5	0	
+Panchino_gp28	Panchino_gp28__gp28	mandatory	Panchino_gp28__gp28	0	
+PARIS_I	Paris_I__AriA_AAA15	mandatory	Paris_I__AriA_AAA15	0	
+PARIS_I	Paris_I__AriB_DUF4435_I	mandatory	Paris_I__AriB_DUF4435_I	0	
+PARIS_II	Paris_II__AriA_AAA21	mandatory	Paris_II__AriA_AAA21	0	
+PARIS_II	Paris_II__AriB_DUF4435_II	mandatory	Paris_II__AriB_DUF4435_II	0	
+PARIS_II_merge	Paris_II_merge__AAA_21_DUF4435	mandatory	Paris_II_merge__AAA_21_DUF4435	0	
+PARIS_I_merge	Paris_I_merge__AAA_15_DUF4435	mandatory	Paris_I_merge__AAA_15_DUF4435	0	
+PfiAT	PfiAT__PfiA	mandatory	PfiAT__PfiA	1	PF02604
+PfiAT	PfiAT__PfiT	mandatory	PfiAT__PfiT	2	K19092;PF05016
+Phrann_gp29_gp30	Phrann_gp29_gp30__gp29	mandatory	Phrann_gp29_gp30__gp29	0	
+Phrann_gp29_gp30	Phrann_gp29_gp30__gp30	mandatory	Phrann_gp29_gp30__gp30	0	
+Pif	Pif__PifA	mandatory	Pif__PifA	2	PF07693;PF20720
+Pif	Pif__PifC	mandatory	Pif__PifC	0	
+Prithvi	Prithvi__PtvA	mandatory	Prithvi__PtvA	0	
+Prometheus	Prometheus__ProA	mandatory	Prometheus__ProA	6	PF04480;PF11784;PF13086;PF13087;PF13195;PF18741
+PsyrTA	PsyrTA__PsyrA	mandatory	PsyrTA__PsyrA	2	PF01022;PF13412
+PsyrTA	PsyrTA__PsyrT	mandatory	PsyrTA__PsyrT	4	K03654;PF00270;PF00271;PF04851
+Pycsar	Pycsar__AG_cyclase	mandatory	Pycsar__AG_cyclase	2	K01768;PF00211
+Pycsar	CBASS__Effector_2TM_S_2TMBeta	accessory	CBASS__Effector_2TM_S_2TMBeta;CBASS__Effector_2TM_Sa_NUDIX;CBASS__Effector_2TM_Saf_2TM;CBASS__2TM_new;CBASS__2TM_5;CBASS__1TM_new;CBASS__4TM_new;CBASS__2TM_Gros;CBASS__2TM_type_IV;CBASS__Effector_2TM_SUa-2TM;CBASS__Effector_4TM_S_4TM;CBASS__Endonuc_small;CBASS__Endonuc_big;CBASS__Effector_TIR;CBASS__Phospholipase;CBASS__Sensing_TPALS;CBASS__Sensing_SAVED	6	K07001;PF01734;PF18153;PF18167;PF18967;PF20247
+radar_I	radar_I__rdrA_I	mandatory	radar_I__rdrA_I	0	
+radar_I	radar_I__rdrB_I	mandatory	radar_I__rdrB_I	0	
+radar_II	radar_II__rdrA_II	mandatory	radar_II__rdrA_II	0	
+radar_II	radar_II__rdrB_II	mandatory	radar_II__rdrB_II	0	
+radar_II	radar_II__rdrD_II	mandatory	radar_II__rdrD_II	0	
+Retron_II	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_II	Retron_II__NDT	mandatory	Retron_II__NDT;Retron_II__NDT2	0	
+Retron_III	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_III	Retron_III__PRTase	mandatory	Retron_III__PRTase	5	K00948;PF00156;PF14572;PF14681;PF24390
+Retron_III	Retron_III__PRTase_WH	mandatory	Retron_III__PRTase_WH	7	PF01022;PF01047;PF09339;PF12840;PF13412;PF13463;PF14947
+Retron_III	Retron_III__WH	accessory	Retron_III__WH	1	PF14947
+Retron_IV	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_IV	Retron_IV__2TM	mandatory	Retron_IV__2TM	0	
+Retron_IX	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_IX	Retron_IX__HEPN	accessory	Retron_IX__HEPN	1	PF05168
+Retron_IX	Retron_IX__WHDNAB_E2F_TDP	accessory	Retron_IX__WHDNAB_E2F_TDP	0	
+Retron_I_A	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_I_A	Retron_I_A__HNH_TIGR02646	accessory	Retron_I_A__HNH_TIGR02646;Septu__PtuB	3	PF01844;PF13395;PF14279
+Retron_I_A	Retron_I_A__ATPase_TypeIA	accessory	Retron_I_A__ATPase_TypeIA;Septu__PtuA	8	K03546;K07459;PF02463;PF11398;PF13175;PF13304;PF13476;PF13555
+Retron_I_B	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_I_B	Retron_I_B__ATPase_TOPRIM	accessory	Retron_I_B__ATPase_TOPRIM	0	
+Retron_I_C	Retron_I_C__RT_1_C1	mandatory	Retron_I_C__RT_1_C1;Retron_I_C__RT_1_C2;Retron_I_C__RT_1_C3	2	K00986;PF00078
+Retron_V	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_V	Retron_V__CSD	mandatory	Retron_V__CSD	2	K03704;PF00313
+Retron_VI	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_VI	Retron_VI__HTH	mandatory	Retron_VI__HTH	2	PF01381;PF13443
+Retron_VIII	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_VIII	Retron_VIII__DUF626	mandatory	Retron_VIII__DUF626	0	
+Retron_VII_1	Retron_VII_1__RT_7_A1	mandatory	Retron_VII_1__RT_7_A1	0	
+Retron_VII_2	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_VII_2	Retron_VII_2__DUF3800	mandatory	Retron_VII_2__DUF3800	1	PF12686
+Retron_X	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_X	Retron_X__VHL	mandatory	Retron_X__VHL	0	
+Retron_XI	Retron_XI__RT_11	mandatory	Retron_XI__RT_11	0	
+Retron_XII	Retron_XII__RT_12	mandatory	Retron_XII__RT_12	0	
+Retron_XIII	Retron__RT_Tot_1	mandatory	Retron__RT_Tot_1;Retron__RT_Tot_2;Retron__RT_Tot_3;Retron__RT_Tot_4;Retron__RT_Tot_5;Retron__RT_Tot_6;Retron__RT_Tot_7;Retron__RT_Tot_8;Retron__RT_Tot_9;Retron__RT_Tot_10;Retron__RT_Tot_11;Retron__RT_Tot_12;Retron__RT_Tot_13;Retron__RT_Tot_14;Retron__RT_Tot_15	2	K00986;PF00078
+Retron_XIII	Retron_XIII__ARM	accessory	Retron_XIII__ARM	0	
+Retron_XIII	Retron_XIII__WHSWIM	accessory	Retron_XIII__WHSWIM	0	
+RexAB	RexAB__RexA	mandatory	RexAB__RexA	0	
+RexAB	RexAB__RexB	mandatory	RexAB__RexB	0	
+RloC	RloC__RloC	mandatory	RloC__RloC	1	PF13166
+RnlAB	RnlAB__RnlA	mandatory	RnlAB__RnlA	0	
+RnlAB	RnlAB__RnlB	mandatory	RnlAB__RnlB	0	
+RosmerTA	RosmerTA__RmrT_2585209417	mandatory	RosmerTA__RmrT_2585209417;RosmerTA__RmrT_2600853143;RosmerTA__RmrT_2603008502;RosmerTA__RmrT_2617826694;RosmerTA__RmrT_2623274509;RosmerTA__RmrT_2634882613;RosmerTA__RmrT_2634932349;RosmerTA__RmrT_2641389401;RosmerTA__RmrT_2662548665;RosmerTA__RmrT_2664250653;RosmerTA__RmrT_2676476075;RosmerTA__RmrT_2677172838;RosmerTA__RmrT_2734955840;RosmerTA__RmrT_2753529055	8	PF00467;PF00814;PF02036;PF02272;PF05345;PF16906;PF17963;PF22521
+RosmerTA	RosmerTA__RmrA_2585209417	mandatory	RosmerTA__RmrA_2585209417;RosmerTA__RmrA_2600853143;RosmerTA__RmrA_2603008502;RosmerTA__RmrA_2617826694;RosmerTA__RmrA_2623274509;RosmerTA__RmrA_2634882613;RosmerTA__RmrA_2634932349;RosmerTA__RmrA_2641389401;RosmerTA__RmrA_2662548665;RosmerTA__RmrA_2664250653;RosmerTA__RmrA_2676476075;RosmerTA__RmrA_2677172838;RosmerTA__RmrA_2734955840;RosmerTA__RmrA_2753529055	8	K03627;K07108;K07729;K07731;PF01381;PF12844;PF13443;PF13560
+Rst_2TM_1TM_TIR	Rst_2TM_1TM_TIR__Rst_2TM_TIR	mandatory	Rst_2TM_1TM_TIR__Rst_2TM_TIR	0	
+Rst_2TM_1TM_TIR	Rst_2TM_1TM_TIR__Rst_TIR_tm	mandatory	Rst_2TM_1TM_TIR__Rst_TIR_tm	2	PF01582;PF13676
+Rst_2TM_1TM_TIR	Rst_2TM_1TM_TIR__Rst_1TM_TIR	mandatory	Rst_2TM_1TM_TIR__Rst_1TM_TIR	1	PF01956
+Rst_3HP	Rst_3HP__Hp1	mandatory	Rst_3HP__Hp1	0	
+Rst_3HP	Rst_3HP__Hp2	mandatory	Rst_3HP__Hp2	0	
+Rst_3HP	Rst_3HP__Hp3	mandatory	Rst_3HP__Hp3	0	
+Rst_DUF4238	Rst_DUF4238__DUF4238_Pers	mandatory	Rst_DUF4238__DUF4238_Pers	0	
+Rst_HelicaseDUF2290	Rst_HelicaseDUF2290__Helicase	mandatory	Rst_HelicaseDUF2290__Helicase	0	
+Rst_HelicaseDUF2290	Rst_HelicaseDUF2290__DUF2290	mandatory	Rst_HelicaseDUF2290__DUF2290;Rst_HelicaseDUF2290__DUF2290_Pers	0	
+Rst_Hydrolase-Tm	Rst_Hydrolase-Tm__Hydrolase	mandatory	Rst_Hydrolase-Tm__Hydrolase	6	K01091;K07025;PF00702;PF12710;PF13242;PF13419
+Rst_Hydrolase-Tm	Rst_Hydrolase-Tm__Hydrolase-Tm	mandatory	Rst_Hydrolase-Tm__Hydrolase-Tm	0	
+Rst_RT-Tm	Rst_RT-Tm__RT	mandatory	Rst_RT-Tm__RT;Rst_RT-Tm__RT2	0	
+Rst_RT-Tm	Rst_RT-Tm__RT-Tm	mandatory	Rst_RT-Tm__RT-Tm	0	
+Rst_TIR-NLR	Rst_TIR-NLR__TIR	mandatory	Rst_TIR-NLR__TIR	0	
+Rst_gop_beta_cll	Rst_gop_beta_cll__beta	mandatory	Rst_gop_beta_cll__beta	0	
+Rst_gop_beta_cll	Rst_gop_beta_cll__cll	mandatory	Rst_gop_beta_cll__cll	0	
+Rst_gop_beta_cll	Rst_gop_beta_cll__gop	mandatory	Rst_gop_beta_cll__gop	0	
+SDIC1	SDIC1__SDIC1A	mandatory	SDIC1__SDIC1A	0	
+SDIC1	SDIC1__SDIC1B	mandatory	SDIC1__SDIC1B	0	
+SDIC3	SDIC3__SDIC3B	mandatory	SDIC3__SDIC3B	0	
+SDIC3	SDIC3__SDIC3C	mandatory	SDIC3__SDIC3C	0	
+SDIC3	SDIC3__SDIC3D	mandatory	SDIC3__SDIC3D	0	
+SDIC3	SDIC3__SDIC3E	mandatory	SDIC3__SDIC3E	0	
+SDIC3	SDIC3__SDIC3F	mandatory	SDIC3__SDIC3F	0	
+SDIC4	SDIC4__SDIC4A	mandatory	SDIC4__SDIC4A	0	
+SDIC4	SDIC4__SDIC4B	mandatory	SDIC4__SDIC4B	0	
+SEFIR	SEFIR__bSEFIR	mandatory	SEFIR__bSEFIR	0	
+SanaTA	SanaTA__SanaA	mandatory	SanaTA__SanaA	1	PF13338
+SanaTA	SanaTA__SanaT_1	mandatory	SanaTA__SanaT_1;SanaTA__SanaT	1	PF08843
+Septu	Septu__PtuA	mandatory	Septu__PtuA;Septu__PtuA_2;Retron_I_A__ATPase_TypeIA	8	K03546;K07459;PF02463;PF11398;PF13175;PF13304;PF13476;PF13555
+Septu	Septu__PtuB	mandatory	Septu__PtuB;Retron_I_A__HNH_TIGR02646;Septu__PtuB_2	3	PF01844;PF13395;PF14279
+Shango	Shango__SngA	mandatory	Shango__SngA	0	
+Shango	Shango__SngB	accessory	Shango__SngB	0	
+Shango	Shango__SngC	accessory	Shango__SngC	5	K03724;PF00270;PF00271;PF04851;PF19306
+Shedu	Shedu__SduA	mandatory	Shedu__SduA	1	PF14082
+ShosTA	ShosTA__ShosA	mandatory	ShosTA__ShosA	3	K04096;PF02481;PF18306
+ShosTA	ShosTA__ShosT	mandatory	ShosTA__ShosT	3	K00948;PF00156;PF14572
+Sirona	Sirona__VCA0356	mandatory	Sirona__VCA0356	0	
+SoFic	SoFic__SoFic	mandatory	SoFic__SoFic	3	K04095;PF02661;PF13784
+SpbK	SpbK__SpbK	mandatory	SpbK__SpbK	0	
+SspBCDE	SspBCDE__SspB	mandatory	SspBCDE__SspB	1	PF13182
+SspBCDE	SspBCDE__SspC	mandatory	SspBCDE__SspC	0	
+SspBCDE	SspBCDE__SspD	mandatory	SspBCDE__SspD;SspBCDE__SspD_2	3	K00390;K19170;PF01507
+SspBCDE	SspBCDE__SspE	accessory	SspBCDE__SspE	2	PF03235;PF07510
+SspBCDE	SspBCDE__SspF	accessory	SspBCDE__SspF	0	
+SspBCDE	SspBCDE__SspG	accessory	SspBCDE__SspG	0	
+SspBCDE	SspBCDE__SspH	accessory	SspBCDE__SspH	4	K03466;PF01580;PF01935;PF17854
+Stk2	Stk2__Stk2	mandatory	Stk2__Stk2	0	
+Sucellos	Sucellos__SclA_VCA0367	mandatory	Sucellos__SclA_VCA0367	0	
+Sucellos	Sucellos__SclB_VCA0368	mandatory	Sucellos__SclB_VCA0368	0	
+TIR-I	TIR-I__TIR-I_A	mandatory	TIR-I__TIR-I_A	0	
+TIR-I	TIR-I__TIR-I_B	mandatory	TIR-I__TIR-I_B	0	
+TIR-III	TIR-III__TIR-III_A	mandatory	TIR-III__TIR-III_A	0	
+TIR-III	TIR-III__TIR-III_B	mandatory	TIR-III__TIR-III_B	0	
+TIR-IV	TIR-IV__TIR-IV_A	mandatory	TIR-IV__TIR-IV_A	0	
+TIR-IV	TIR-IV__TIR-IV_B	mandatory	TIR-IV__TIR-IV_B	0	
+TIR-VII	TIR-VII__TIR-VII_A	mandatory	TIR-VII__TIR-VII_A	0	
+TIR-VII	TIR-VII__TIR-VII_B	mandatory	TIR-VII__TIR-VII_B	1	PF24406
+TIR-VIII	TIR-VIII__TIR-VIII_A	mandatory	TIR-VIII__TIR-VIII_A	0	
+TIR-VIII	TIR-VIII__TIR-VIII_B	mandatory	TIR-VIII__TIR-VIII_B	0	
+Taranis	Taranis__VCA0396	mandatory	Taranis__VCA0396	0	
+TgvAB	TgvAB__TgvA	mandatory	TgvAB__TgvA	0	
+TgvAB	TgvAB__TgvB	mandatory	TgvAB__TgvB	0	
+Tha	Tha__Tha	mandatory	Tha__Tha	0	
+Thoeris_I	Thoeris_I__ThsA_new_grand	mandatory	Thoeris_I__ThsA_new_grand	1	PF13289
+Thoeris_I	Thoeris__ThsB_Global	mandatory	Thoeris__ThsB_Global	3	PF01582;PF08937;PF13676
+Thoeris_II	Thoeris_II__ThsA_new_petit	mandatory	Thoeris_II__ThsA_new_petit	0	
+Thoeris_II	Thoeris__ThsB_Global	mandatory	Thoeris__ThsB_Global	3	PF01582;PF08937;PF13676
+Thoeris_III	Thoeris_III__ThcA	mandatory	Thoeris_III__ThcA	0	
+Thoeris_III	Thoeris__ThsB_Global	mandatory	Thoeris__ThsB_Global	3	PF01582;PF08937;PF13676
+Thoeris_IV	Thoeris_IV__ThsA_Casp4	mandatory	Thoeris_IV__ThsA_Casp4	0	
+Thoeris_IV	Thoeris__ThsB_Global	mandatory	Thoeris__ThsB_Global	3	PF01582;PF08937;PF13676
+Tiamat	Tiamat__TmtA	mandatory	Tiamat__TmtA;Tiamat__TmtA_2505168307;Tiamat__TmtA_2599863134;Tiamat__TmtA_2639564464;Tiamat__TmtA_2660206627;Tiamat__TmtA_2731770353;Tiamat__TmtA_2731874159;Tiamat__TmtA_2734769103;Tiamat__TmtA_2752664533	0	
+Toutatis	Toutatis__TutA_VCA0446	mandatory	Toutatis__TutA_VCA0446	0	
+Toutatis	Toutatis__TutB_VCA0447	mandatory	Toutatis__TutB_VCA0447	0	
+Ukko	Ukko__UkkA1	mandatory	Ukko__UkkA1;Ukko__UkkA2	0	
+Ukko	Ukko__UkkB1	mandatory	Ukko__UkkB1;Ukko__UkkB2	0	
+Ukko	Ukko__UkkC1	mandatory	Ukko__UkkC1;Ukko__UkkC2	0	
+Ukko	Ukko__UkkD1	mandatory	Ukko__UkkD1;Ukko__UkkD2	0	
+Uzume	Uzume__UzuA	mandatory	Uzume__UzuA;Uzume__UzuA_2660320622;Uzume__UzuA_2712538620	0	
+VP1796	VP1796__VP1796	mandatory	VP1796__VP1796	0	
+VP1817	VP1817__VP1817	mandatory	VP1817__VP1817	0	
+VP1823	VP1823__VP1823	mandatory	VP1823__VP1823	0	
+VP1826	VP1826__VP1826	mandatory	VP1826__VP1826	1	PF13091
+VP1839	VP1839__VP1839	mandatory	VP1839__VP1839	0	
+VP1840	VP1840__VP1840	mandatory	VP1840__VP1840	0	
+VP1848	VP1848__VP1848	mandatory	VP1848__VP1848	0	
+VP1851	VP1851__VP1851	mandatory	VP1851__VP1851	0	
+VP1853	VP1853__VP1853	mandatory	VP1853__VP1853	1	PF09509
+Veles	Veles__VlsA1	mandatory	Veles__VlsA1;Veles__VlsA2	0	
+Veles	Veles__VlsB1	mandatory	Veles__VlsB1;Veles__VlsB2	0	
+Veles	Veles__VlsC1	mandatory	Veles__VlsC1;Veles__VlsC2	0	
+Viperin	Viperin__pVip	mandatory	Viperin__pVip	3	K15045;PF04055;PF13353
+Wadjet	Wadjet__JetA_I	mandatory	Wadjet__JetA_I;Wadjet__JetA_II;Wadjet__JetA_III	0	
+Wadjet	Wadjet__JetB_I	accessory	Wadjet__JetB_I;Wadjet__JetB_II;Wadjet__JetB_III	0	
+Wadjet	Wadjet__JetC_I	accessory	Wadjet__JetC_I;Wadjet__JetC_II;Wadjet__JetC_III	6	K03529;PF02463;PF06470;PF13175;PF13476;PF13555
+Wadjet	Wadjet__JetD_I	accessory	Wadjet__JetD_I;Wadjet__JetD_II;Wadjet__JetD_III	3	K03166;PF04406;PF21180
+Wadjet_I	Wadjet__JetA_I	mandatory	Wadjet__JetA_I	0	
+Wadjet_I	Wadjet__JetB_I	mandatory	Wadjet__JetB_I	0	
+Wadjet_I	Wadjet__JetC_I	mandatory	Wadjet__JetC_I	6	K03529;PF02463;PF06470;PF13175;PF13476;PF13555
+Wadjet_I	Wadjet__JetD_I	mandatory	Wadjet__JetD_I	2	K03166;PF21180
+Wadjet_II	Wadjet__JetA_II	mandatory	Wadjet__JetA_II	0	
+Wadjet_II	Wadjet__JetB_II	mandatory	Wadjet__JetB_II	0	
+Wadjet_II	Wadjet__JetC_II	mandatory	Wadjet__JetC_II	2	K03529;PF02463
+Wadjet_II	Wadjet__JetD_II	mandatory	Wadjet__JetD_II	2	K03166;PF21180
+Wadjet_III	Wadjet__JetA_III	mandatory	Wadjet__JetA_III	0	
+Wadjet_III	Wadjet__JetB_III	mandatory	Wadjet__JetB_III	0	
+Wadjet_III	Wadjet__JetC_III	mandatory	Wadjet__JetC_III	2	K03529;PF02463
+Wadjet_III	Wadjet__JetD_III	mandatory	Wadjet__JetD_III	3	K03166;PF04406;PF21180
+Zorya_TypeI	Zorya__ZorA	mandatory	Zorya__ZorA;Zorya__ZorA2	0	
+Zorya_TypeI	Zorya__ZorB	mandatory	Zorya__ZorB	2	K03286;PF00691
+Zorya_TypeI	Zorya_TypeI__ZorC	mandatory	Zorya_TypeI__ZorC	0	
+Zorya_TypeI	Zorya_TypeI__ZorD	mandatory	Zorya_TypeI__ZorD	4	PF00176;PF00270;PF00271;PF04851
+Zorya_TypeII	Zorya__ZorA2	mandatory	Zorya__ZorA2;Zorya__ZorA	0	
+Zorya_TypeII	Zorya__ZorB	mandatory	Zorya__ZorB	2	K03286;PF00691
+Zorya_TypeII	Zorya_TypeII__ZorE	mandatory	Zorya_TypeII__ZorE	2	K07451;PF01844
+Zorya_TypeIII	Zorya__ZorA2	mandatory	Zorya__ZorA2;Zorya__ZorA	0	
+Zorya_TypeIII	Zorya__ZorB	mandatory	Zorya__ZorB	2	K03286;PF00691
+Zorya_TypeIII	Zorya_III__ZorG3	mandatory	Zorya_III__ZorG3	0	
+Zorya_TypeIII	Zorya_III__ZorF3	mandatory	Zorya_III__ZorF3	0	
+dCTPdeaminase	dCTPdeaminase__dCTPdeaminase	mandatory	dCTPdeaminase__dCTPdeaminase	4	K01493;PF13207;PF13238;PF13671
+dGTPase	dGTPase__Sp_dGTPase	mandatory	dGTPase__Sp_dGTPase	0	
+gcu142	gcu142__gcu142	mandatory	gcu142__gcu142	1	PF04545
+gcu167	gcu167__gcu167A	mandatory	gcu167__gcu167A	0	
+gcu167	gcu167__gcu167B	mandatory	gcu167__gcu167B	0	
+gcu233	gcu233__gcu233	mandatory	gcu233__gcu233	0	
+gcu24	gcu24__gcu24	mandatory	gcu24__gcu24	0	
+gcu76	gcu76__gcu76	mandatory	gcu76__gcu76	0	
+gcuWGS21	gcuWGS21__gcuWGS21	mandatory	gcuWGS21__gcuWGS21	0	
+pAgo	pAgo__pAgo_LongA	mandatory	pAgo__pAgo_LongA	1	PF02171
+pAgo	pAgo__pAgo_LongB	mandatory	pAgo__pAgo_LongB	1	PF02171
+pAgo	pAgo__pAgo_SPARTA	mandatory	pAgo__pAgo_SPARTA	0	
+pAgo	pAgo__pAgo_S1A	mandatory	pAgo__pAgo_S1A	0	
+pAgo	pAgo__pAgo_S2B	mandatory	pAgo__pAgo_S2B	1	PF02171
+pAgo	pAgo__SIR2APAZ	accessory	pAgo__SIR2APAZ	1	PF13289
+pAgo	pAgo__TIRAPAZ	accessory	pAgo__TIRAPAZ	2	PF01582;PF13676
+pAgo	pAgo__XAPAZ	accessory	pAgo__XAPAZ	1	PF14280
+pAgo	pAgo__EabAgaM	accessory	pAgo__EabAgaM	1	PF00733
+pAgo	pAgo__GbbAgaS	accessory	pAgo__GbbAgaS	1	PF13289
+pAgo	pAgo__EcAgaN	accessory	pAgo__EcAgaN	1	PF18742
+pAgo_LongA	pAgo__pAgo_LongA	mandatory	pAgo__pAgo_LongA	1	PF02171
+pAgo_LongB	pAgo__pAgo_LongB	mandatory	pAgo__pAgo_LongB	1	PF02171
+pAgo_LongB	pAgo__EabAgaM	accessory	pAgo__EabAgaM;pAgo__EabAgaM;pAgo__GbbAgaS;pAgo__EcAgaN	3	PF00733;PF13289;PF18742
+pAgo_S1A	pAgo__pAgo_S1A	mandatory	pAgo__pAgo_S1A	0	
+pAgo_S1B	pAgo__pAgo_S1B	mandatory	pAgo__pAgo_S1B	1	PF02171
+pAgo_S1B	pAgo__SIR2APAZ	accessory	pAgo__SIR2APAZ	1	PF13289
+pAgo_S2B	pAgo__pAgo_S2B	mandatory	pAgo__pAgo_S2B	1	PF02171
+pAgo_S2B	pAgo__XAPAZ	accessory	pAgo__XAPAZ	1	PF14280
+pAgo_SPARTA	pAgo__pAgo_SPARTA	mandatory	pAgo__pAgo_SPARTA	0	
+pAgo_SPARTA	pAgo__TIRAPAZ	accessory	pAgo__TIRAPAZ	2	PF01582;PF13676
+PD-Lambda-5	PD-Lambda-5__PD-Lambda-5_A	mandatory	PD-Lambda-5__PD-Lambda-5_A	0	
+PD-Lambda-5	PD-Lambda-5__PD-Lambda-5_B	mandatory	PD-Lambda-5__PD-Lambda-5_B	2	K06223;PF02086
+PrrC	PrrC__PrrC	mandatory	PrrC__PrrC	0	
+PrrC	PrrC__EcoprrI	mandatory	PrrC__EcoprrI;RM__Type_I_MTases_FAM_0;RM__Type_I_MTases_FAM_1;RM__Type_I_MTases_FAM_2;RM__Type_I_MTases_FAM_3	5	K03427;PF01170;PF02384;PF07669;PF12161
+PrrC	RM__Type_I_REases_FAM_0.einsi_trimmed	mandatory	RM__Type_I_REases_FAM_0.einsi_trimmed;RM__Type_I_REases_FAM_1.einsi_trimmed;RM__Type_I_REases_FAM_2.einsi_trimmed	7	K01153;PF00270;PF04313;PF04851;PF11867;PF18766;PF22679
+PrrC	RM__Type_I_S_01	mandatory	RM__Type_I_S_01;RM__Type_I_S_02;RM__Type_I_S_03;RM__Type_I_S_04;RM__Type_I_S_06;RM__Type_I_S_51;RM__Type_I_S_52	2	K01154;PF01420
+RM_Type_I	RM__Type_I_MTases_FAM_0	mandatory	RM__Type_I_MTases_FAM_0;RM__Type_I_MTases_FAM_1;RM__Type_I_MTases_FAM_2;RM__Type_I_MTases_FAM_3	5	K03427;PF01170;PF02384;PF07669;PF12161
+RM_Type_I	RM__Type_I_REases_FAM_0.einsi_trimmed	mandatory	RM__Type_I_REases_FAM_0.einsi_trimmed;RM__Type_I_REases_FAM_1.einsi_trimmed;RM__Type_I_REases_FAM_2.einsi_trimmed	7	K01153;PF00270;PF04313;PF04851;PF11867;PF18766;PF22679
+RM_Type_I	RM__Type_I_S_01	mandatory	RM__Type_I_S_01;RM__Type_I_S_02;RM__Type_I_S_03;RM__Type_I_S_04;RM__Type_I_S_06;RM__Type_I_S_51;RM__Type_I_S_52	2	K01154;PF01420
+RM_Type_II	RM_Type_II__Type_II_MTases_FAM_0	mandatory	RM_Type_II__Type_II_MTases_FAM_0;RM_Type_II__Type_II_MTases_FAM_1;RM_Type_II__Type_II_MTases_FAM_10;RM_Type_II__Type_II_MTases_FAM_11;RM_Type_II__Type_II_MTases_FAM_12;RM_Type_II__Type_II_MTases_FAM_13;RM_Type_II__Type_II_MTases_FAM_14;RM_Type_II__Type_II_MTases_FAM_15;RM_Type_II__Type_II_MTases_FAM_16;RM_Type_II__Type_II_MTases_FAM_17;RM_Type_II__Type_II_MTases_FAM_18;RM_Type_II__Type_II_MTases_FAM_19;RM_Type_II__Type_II_MTases_FAM_2;RM_Type_II__Type_II_MTases_FAM_20;RM_Type_II__Type_II_MTases_FAM_21;RM_Type_II__Type_II_MTases_FAM_22;RM_Type_II__Type_II_MTases_FAM_23;RM_Type_II__Type_II_MTases_FAM_24;RM_Type_II__Type_II_MTases_FAM_25;RM_Type_II__Type_II_MTases_FAM_26;RM_Type_II__Type_II_MTases_FAM_27;RM_Type_II__Type_II_MTases_FAM_28;RM_Type_II__Type_II_MTases_FAM_29;RM_Type_II__Type_II_MTases_FAM_3;RM_Type_II__Type_II_MTases_FAM_30;RM_Type_II__Type_II_MTases_FAM_31;RM_Type_II__Type_II_MTases_FAM_32;RM_Type_II__Type_II_MTases_FAM_33;RM_Type_II__Type_II_MTases_FAM_34;RM_Type_II__Type_II_MTases_FAM_35;RM_Type_II__Type_II_MTases_FAM_36;RM_Type_II__Type_II_MTases_FAM_37;RM_Type_II__Type_II_MTases_FAM_38;RM_Type_II__Type_II_MTases_FAM_39;RM_Type_II__Type_II_MTases_FAM_4;RM_Type_II__Type_II_MTases_FAM_40;RM_Type_II__Type_II_MTases_FAM_41;RM_Type_II__Type_II_MTases_FAM_42;RM_Type_II__Type_II_MTases_FAM_5;RM_Type_II__Type_II_MTases_FAM_6;RM_Type_II__Type_II_MTases_FAM_7;RM_Type_II__Type_II_MTases_FAM_8;RM_Type_II__Type_II_MTases_FAM_9	25	K00558;K00571;K03427;K06223;K07317;K07318;PF00145;PF01170;PF01209;PF01555;PF02086;PF02384;PF03602;PF05063;PF05175;PF06325;PF07669;PF08241;PF08242;PF12950;PF13489;PF13649;PF13651;PF13847;PF20473
+RM_Type_II	RM_Type_II__Type_II_REase01	mandatory	RM_Type_II__Type_II_REase01;RM_Type_II__Type_II_REase02;RM_Type_II__Type_II_REase03;RM_Type_II__Type_II_REase04;RM_Type_II__Type_II_REase05;RM_Type_II__Type_II_REase06;RM_Type_II__Type_II_REase07;RM_Type_II__Type_II_REase08;RM_Type_II__Type_II_REase09;RM_Type_II__Type_II_REase10;RM_Type_II__Type_II_REase11;RM_Type_II__Type_II_REase20;RM_Type_II__Type_II_REase21;RM_Type_II__Type_II_REase22;RM_Type_II__Type_II_REase23;RM_Type_II__Type_II_REase24;RM_Type_II__Type_II_REase25;RM_Type_II__Type_II_REase26;RM_Type_II__Type_II_REase27;RM_Type_II__Type_II_REase28;RM_Type_II__Type_II_REase29;RM_Type_II__Type_II_REase12;RM_Type_II__Type_II_REase30;RM_Type_II__Type_II_REase31;RM_Type_II__Type_II_REase32;RM_Type_II__Type_II_REase13;RM_Type_II__Type_II_REase14;RM_Type_II__Type_II_REase15;RM_Type_II__Type_II_REase16;RM_Type_II__Type_II_REase17;RM_Type_II__Type_II_REase18;RM_Type_II__Type_II_REase19;RM_Type_II__Type_II_REase33;RM_Type_II__Type_II_REase34;RM_Type_II__Type_II_REase35;RM_Type_II__Type_II_REase36;RM_Type_II__Type_II_REase37;RM_Type_II__Type_II_REase38	37	K01155;K03167;K03573;K07317;K07454;K22447;PF00118;PF01844;PF02518;PF02976;PF03235;PF04556;PF05315;PF06044;PF06300;PF06616;PF07669;PF09195;PF09233;PF09491;PF09520;PF09521;PF09553;PF09556;PF09568;PF09665;PF10593;PF11463;PF13391;PF13589;PF15514;PF15515;PF17726;PF17728;PF20731;PF22515;PF22518
+RM_Type_IIG	RM_Type_IIG__Type_IIG_1	mandatory	RM_Type_IIG__Type_IIG_1	3	K03427;PF01420;PF02384
+RM_Type_IIG	RM_Type_IIG__Type_IIG_2	mandatory	RM_Type_IIG__Type_IIG_2	3	PF04851;PF10544;PF13455
+RM_Type_IIG	RM_Type_IIG__Type_IIG_3	mandatory	RM_Type_IIG__Type_IIG_3	4	K07317;PF02384;PF07669;PF20473
+RM_Type_IIG	RM_Type_IIG__Type_IIG_FAM_0.einsi_trimmed	mandatory	RM_Type_IIG__Type_IIG_FAM_0.einsi_trimmed	7	K03427;K07317;PF01170;PF02384;PF07669;PF12950;PF20473
+RM_Type_IIG	RM_Type_IIG__Type_IIG_FAM_1.einsi_trimmed	mandatory	RM_Type_IIG__Type_IIG_FAM_1.einsi_trimmed	6	PF02384;PF20464;PF20465;PF20466;PF20467;PF20473
+RM_Type_IIG	RM_Type_IIG__Type_IIG_FAM_2.einsi_trimmed	mandatory	RM_Type_IIG__Type_IIG_FAM_2.einsi_trimmed	3	PF02384;PF07669;PF18135
+RM_Type_IIG_2	RM_Type_IIG__Type_IIG_4	mandatory	RM_Type_IIG__Type_IIG_4	7	K03427;K07317;PF01170;PF02384;PF07669;PF12950;PF20473
+RM_Type_IIG_2	RM_Type_IIG__Type_IIG_5	mandatory	RM_Type_IIG__Type_IIG_5	4	K07317;PF02384;PF07669;PF20473
+RM_Type_IIG_2	RM_Type_IIG__Type_IIG_FAM_0.einsi_trimmed	mandatory	RM_Type_IIG__Type_IIG_FAM_0.einsi_trimmed	7	K03427;K07317;PF01170;PF02384;PF07669;PF12950;PF20473
+RM_Type_III	RM_Type_III__Type_III_MTases_FAM_0	mandatory	RM_Type_III__Type_III_MTases_FAM_0;RM_Type_III__Type_III_MTases_FAM_1	3	K00571;K07316;PF01555
+RM_Type_III	RM_Type_III__Type_III_REases_FAM_0.einsi_trimmed	mandatory	RM_Type_III__Type_III_REases_FAM_0.einsi_trimmed;RM_Type_III__Type_III_REases_FAM_1.einsi_trimmed	7	K01153;K01156;PF00270;PF00271;PF04851;PF18766;PF19778
+RM_Type_IV	RM_Type_IV__Type_IV_01	mandatory	RM_Type_IV__Type_IV_01	2	K19147;PF10117
+RM_Type_IV	RM_Type_IV__Type_IV_03	mandatory	RM_Type_IV__Type_IV_03	4	K07448;PF04471;PF13156;PF22722
+RM_Type_IV	RM_Type_IV__Type_IV_05	mandatory	RM_Type_IV__Type_IV_05	0	
+RM_Type_IV	RM_Type_IV__FAM_0	mandatory	RM_Type_IV__FAM_0	4	K07448;PF04471;PF13156;PF22722
+RM_Type_IV	RM_Type_IV__FAM_1	mandatory	RM_Type_IV__FAM_1	3	K07452;PF00004;PF07728
+RM_Type_IV	RM_Type_IV__FAM_2	mandatory	RM_Type_IV__FAM_2	2	K19147;PF10117
+RM_Type_IV_1	RM_Type_IV__Type_IV_21	mandatory	RM_Type_IV__Type_IV_21	0	
+RM_Type_IV_1	RM_Type_IV__Type_IV_22	mandatory	RM_Type_IV__Type_IV_22	3	K07452;PF00004;PF07728

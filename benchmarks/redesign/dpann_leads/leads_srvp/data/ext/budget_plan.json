@@ -1,0 +1,1137 @@
+{
+ "written_utc": "before any extended-tier fold or comparison",
+ "folds_used_before": 109,
+ "reserve": 12,
+ "budget": 479,
+ "planned_cost": 479,
+ "left": 0,
+ "in_scope_families": 98,
+ "in_scope_with_unannotated": 21,
+ "unannotated_genes_in_scope": 62,
+ "plan": [
+  {
+   "func": "K06152",
+   "tier": "P1",
+   "cost": 55,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K23103",
+   "tier": "P1",
+   "cost": 17,
+   "strata": "unannotated"
+  },
+  {
+   "func": "K03427",
+   "tier": "P1",
+   "cost": 23,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K20930",
+   "tier": "P1",
+   "cost": 23,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K21216",
+   "tier": "P1",
+   "cost": 23,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K23105",
+   "tier": "P1",
+   "cost": 17,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K20615",
+   "tier": "P1",
+   "cost": 11,
+   "strata": "unannotated"
+  },
+  {
+   "func": "K13306",
+   "tier": "P1",
+   "cost": 11,
+   "strata": "unannotated"
+  },
+  {
+   "func": "K12628",
+   "tier": "P1",
+   "cost": 11,
+   "strata": "unannotated"
+  },
+  {
+   "func": "K15769",
+   "tier": "P1",
+   "cost": 11,
+   "strata": "unannotated"
+  },
+  {
+   "func": "K12902",
+   "tier": "P1",
+   "cost": 17,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K27986",
+   "tier": "P1",
+   "cost": 15,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K27876",
+   "tier": "P1",
+   "cost": 9,
+   "strata": "unannotated"
+  },
+  {
+   "func": "K03605",
+   "tier": "P1",
+   "cost": 19,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K21271",
+   "tier": "P1",
+   "cost": 11,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K07316",
+   "tier": "P1",
+   "cost": 19,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K04069",
+   "tier": "P1",
+   "cost": 19,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K15857",
+   "tier": "P1",
+   "cost": 13,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K15575",
+   "tier": "P1",
+   "cost": 15,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K00451",
+   "tier": "P1",
+   "cost": 11,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K20738",
+   "tier": "P1",
+   "cost": 10,
+   "strata": "unannotated,named"
+  },
+  {
+   "func": "K00333",
+   "tier": "P3",
+   "cost": 17,
+   "strata": "named"
+  },
+  {
+   "func": "K00978",
+   "tier": "P3",
+   "cost": 17,
+   "strata": "named"
+  },
+  {
+   "func": "K00283",
+   "tier": "P3",
+   "cost": 17,
+   "strata": "named"
+  },
+  {
+   "func": "K20571",
+   "tier": "P3",
+   "cost": 17,
+   "strata": "named"
+  },
+  {
+   "func": "K03388",
+   "tier": "P3",
+   "cost": 17,
+   "strata": "named"
+  },
+  {
+   "func": "K00903",
+   "tier": "P3",
+   "cost": 17,
+   "strata": "named"
+  },
+  {
+   "func": "K03269",
+   "tier": "P3",
+   "cost": 17,
+   "strata": "named"
+  }
+ ],
+ "not_planned": [
+  "K00170",
+  "K00175",
+  "K00201",
+  "K00313",
+  "K00428",
+  "K00571",
+  "K00640",
+  "K00721",
+  "K00764",
+  "K00963",
+  "K01039",
+  "K01040",
+  "K01153",
+  "K01156",
+  "K01265",
+  "K01709",
+  "K01810",
+  "K01858",
+  "K01880",
+  "K01890",
+  "K01912",
+  "K02323",
+  "K02493",
+  "K02527",
+  "K02636",
+  "K03271",
+  "K03390",
+  "K03405",
+  "K03644",
+  "K03651",
+  "K05518",
+  "K06034",
+  "K06381",
+  "K06864",
+  "K06941",
+  "K07047",
+  "K07053",
+  "K07451",
+  "K07755",
+  "K08301",
+  "K09691",
+  "K10026",
+  "K10206",
+  "K10794",
+  "K12914",
+  "K12984",
+  "K13075",
+  "K13280",
+  "K13290",
+  "K13552",
+  "K13598",
+  "K14126",
+  "K15023",
+  "K15513",
+  "K15571",
+  "K16870",
+  "K17223",
+  "K18682",
+  "K18979",
+  "K19304",
+  "K19544",
+  "K19725",
+  "K20074",
+  "K21674",
+  "K22227",
+  "K25135",
+  "K28214",
+  "K28275",
+  "K28560",
+  "K28639"
+ ],
+ "family_costs": [
+  {
+   "func": "K00170",
+   "label_name": "TPP_enzyme_C",
+   "n_reps": 114.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K00175",
+   "label_name": "TPP_enzyme_C",
+   "n_reps": 156.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K00201",
+   "label_name": "Molybdopterin",
+   "n_reps": 19.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K00283",
+   "label_name": "GcvP2_C",
+   "n_reps": 111.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K00313",
+   "label_name": "FAD_oxidored",
+   "n_reps": 33.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K00333",
+   "label_name": "Complex1_49kDa",
+   "n_reps": 166.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K00428",
+   "label_name": "CCP_MauG",
+   "n_reps": 15.0,
+   "heldout": 3,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K00451",
+   "label_name": "HgmA_N",
+   "n_reps": 31.0,
+   "heldout": 5,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 1
+  },
+  {
+   "func": "K00571",
+   "label_name": "N6_N4_Mtase",
+   "n_reps": 45.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K00640",
+   "label_name": "Hexapep",
+   "n_reps": 15.0,
+   "heldout": 3,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K00721",
+   "label_name": "Glycos_transf_2",
+   "n_reps": 33.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K00764",
+   "label_name": "GATase_6",
+   "n_reps": 115.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K00903",
+   "label_name": "AAA_31",
+   "n_reps": 73.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K00963",
+   "label_name": "NTP_transferase",
+   "n_reps": 18.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K00978",
+   "label_name": "NTP_transferase",
+   "n_reps": 135.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K01039",
+   "label_name": "CoA_trans",
+   "n_reps": 16.0,
+   "heldout": 3,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K01040",
+   "label_name": "CoA_trans",
+   "n_reps": 73.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K01153",
+   "label_name": "ResIII",
+   "n_reps": 47.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K01156",
+   "label_name": "ResIII",
+   "n_reps": 97.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K01265",
+   "label_name": "Peptidase_M24",
+   "n_reps": 202.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K01709",
+   "label_name": "Epimerase",
+   "n_reps": 76.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K01810",
+   "label_name": "PGI",
+   "n_reps": 102.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K01858",
+   "label_name": "Inos-1-P_synth",
+   "n_reps": 18.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K01880",
+   "label_name": "HGTP_anticodon",
+   "n_reps": 57.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K01890",
+   "label_name": "B5",
+   "n_reps": 58.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K01912",
+   "label_name": "AMP-binding",
+   "n_reps": 30.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K02323",
+   "label_name": "DNA_pol_E_B",
+   "n_reps": 22.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K02493",
+   "label_name": "MTS",
+   "n_reps": 53.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K02527",
+   "label_name": "Glycos_transf_N",
+   "n_reps": 25.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K02636",
+   "label_name": "Rieske",
+   "n_reps": 74.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K03269",
+   "label_name": "Metallophos",
+   "n_reps": 64.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K03271",
+   "label_name": "SIS_2",
+   "n_reps": 23.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K03388",
+   "label_name": "NAD_binding_8",
+   "n_reps": 92.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K03390",
+   "label_name": "Fer4_17",
+   "n_reps": 172.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K03405",
+   "label_name": "Sigma54_activat",
+   "n_reps": 18.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K03427",
+   "label_name": "N6_Mtase",
+   "n_reps": 115.0,
+   "heldout": 5,
+   "unannot_genes": 5,
+   "unannot_clusters": 5,
+   "named_clusters": 3
+  },
+  {
+   "func": "K03605",
+   "label_name": "HycI",
+   "n_reps": 328.0,
+   "heldout": 5,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 5
+  },
+  {
+   "func": "K03644",
+   "label_name": "Radical_SAM",
+   "n_reps": 45.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K03651",
+   "label_name": "Metallophos",
+   "n_reps": 55.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K04069",
+   "label_name": "Radical_SAM",
+   "n_reps": 113.0,
+   "heldout": 5,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 5
+  },
+  {
+   "func": "K05518",
+   "label_name": "SpoIIE",
+   "n_reps": 41.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K06034",
+   "label_name": "TPP_enzyme_N",
+   "n_reps": 15.0,
+   "heldout": 3,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K06152",
+   "label_name": "Gluconate_2-dh3",
+   "n_reps": 67.0,
+   "heldout": 5,
+   "unannot_genes": 20,
+   "unannot_clusters": 19,
+   "named_clusters": 5
+  },
+  {
+   "func": "K06381",
+   "label_name": "SpoIID",
+   "n_reps": 70.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K06864",
+   "label_name": "NAD_synthase",
+   "n_reps": 45.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K06941",
+   "label_name": "Radical_SAM",
+   "n_reps": 27.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K07047",
+   "label_name": "Amidohydro_1",
+   "n_reps": 26.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K07053",
+   "label_name": "PHP",
+   "n_reps": 20.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K07316",
+   "label_name": "N6_N4_Mtase",
+   "n_reps": 126.0,
+   "heldout": 5,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 5
+  },
+  {
+   "func": "K07451",
+   "label_name": "HNH",
+   "n_reps": 17.0,
+   "heldout": 3,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K07755",
+   "label_name": "PCMT",
+   "n_reps": 130.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K08301",
+   "label_name": "RNase_E_G",
+   "n_reps": 61.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K09691",
+   "label_name": "ABC_tran",
+   "n_reps": 196.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K10026",
+   "label_name": "Radical_SAM",
+   "n_reps": 88.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K10206",
+   "label_name": "Aminotran_1_2",
+   "n_reps": 23.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K10794",
+   "label_name": "GRDB",
+   "n_reps": 40.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K12628",
+   "label_name": "GFO_IDH_MocA",
+   "n_reps": 86.0,
+   "heldout": 5,
+   "unannot_genes": 2,
+   "unannot_clusters": 2,
+   "named_clusters": 0
+  },
+  {
+   "func": "K12902",
+   "label_name": "Radical_SAM",
+   "n_reps": 54.0,
+   "heldout": 5,
+   "unannot_genes": 2,
+   "unannot_clusters": 2,
+   "named_clusters": 3
+  },
+  {
+   "func": "K12914",
+   "label_name": "Radical_SAM",
+   "n_reps": 42.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K12984",
+   "label_name": "Glycos_transf_2",
+   "n_reps": 95.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K13075",
+   "label_name": "Lactamase_B",
+   "n_reps": 25.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K13280",
+   "label_name": "Peptidase_S26",
+   "n_reps": 29.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K13290",
+   "label_name": "Aminotran_5",
+   "n_reps": 37.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K13306",
+   "label_name": "3Beta_HSD",
+   "n_reps": 103.0,
+   "heldout": 5,
+   "unannot_genes": 2,
+   "unannot_clusters": 2,
+   "named_clusters": 0
+  },
+  {
+   "func": "K13552",
+   "label_name": "GMC_oxred_N",
+   "n_reps": 66.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K13598",
+   "label_name": "HAMP",
+   "n_reps": 22.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K14126",
+   "label_name": "NiFeSe_Hases",
+   "n_reps": 28.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K15023",
+   "label_name": "Pterin_bind",
+   "n_reps": 21.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K15513",
+   "label_name": "ECH_1",
+   "n_reps": 32.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K15571",
+   "label_name": "Acyl-CoA_dh_M",
+   "n_reps": 18.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K15575",
+   "label_name": "Thiolase_C_1",
+   "n_reps": 60.0,
+   "heldout": 5,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 3
+  },
+  {
+   "func": "K15769",
+   "label_name": "DHODB_Fe-S_bind",
+   "n_reps": 55.0,
+   "heldout": 5,
+   "unannot_genes": 2,
+   "unannot_clusters": 2,
+   "named_clusters": 0
+  },
+  {
+   "func": "K15857",
+   "label_name": "dTDP_sugar_isom",
+   "n_reps": 75.0,
+   "heldout": 5,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 2
+  },
+  {
+   "func": "K16870",
+   "label_name": "Glycos_transf_2",
+   "n_reps": 58.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K17223",
+   "label_name": "Cytochrom_C",
+   "n_reps": 24.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K18682",
+   "label_name": "HD",
+   "n_reps": 16.0,
+   "heldout": 3,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K18979",
+   "label_name": "Fer4_16",
+   "n_reps": 31.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K19304",
+   "label_name": "Peptidase_M23",
+   "n_reps": 23.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K19544",
+   "label_name": "NTP_transf_2",
+   "n_reps": 22.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K19725",
+   "label_name": "PALP",
+   "n_reps": 16.0,
+   "heldout": 3,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 3
+  },
+  {
+   "func": "K20074",
+   "label_name": "PP2C_2",
+   "n_reps": 32.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K20571",
+   "label_name": "GFO_IDH_MocA",
+   "n_reps": 106.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K20615",
+   "label_name": "Aminotran_1_2",
+   "n_reps": 113.0,
+   "heldout": 5,
+   "unannot_genes": 2,
+   "unannot_clusters": 2,
+   "named_clusters": 0
+  },
+  {
+   "func": "K20738",
+   "label_name": "Peptidase_C1",
+   "n_reps": 18.0,
+   "heldout": 4,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 1
+  },
+  {
+   "func": "K20930",
+   "label_name": "Aconitase_C",
+   "n_reps": 104.0,
+   "heldout": 5,
+   "unannot_genes": 5,
+   "unannot_clusters": 5,
+   "named_clusters": 3
+  },
+  {
+   "func": "K21216",
+   "label_name": "Glycos_transf_2",
+   "n_reps": 334.0,
+   "heldout": 5,
+   "unannot_genes": 3,
+   "unannot_clusters": 3,
+   "named_clusters": 5
+  },
+  {
+   "func": "K21271",
+   "label_name": "Epimerase",
+   "n_reps": 165.0,
+   "heldout": 5,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 1
+  },
+  {
+   "func": "K21674",
+   "label_name": "FAD_binding_5",
+   "n_reps": 70.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  },
+  {
+   "func": "K22227",
+   "label_name": "Radical_SAM",
+   "n_reps": 28.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K23103",
+   "label_name": "Glycos_transf_2",
+   "n_reps": 355.0,
+   "heldout": 5,
+   "unannot_genes": 5,
+   "unannot_clusters": 5,
+   "named_clusters": 0
+  },
+  {
+   "func": "K23105",
+   "label_name": "Glycos_transf_2",
+   "n_reps": 320.0,
+   "heldout": 5,
+   "unannot_genes": 3,
+   "unannot_clusters": 3,
+   "named_clusters": 2
+  },
+  {
+   "func": "K25135",
+   "label_name": "HD",
+   "n_reps": 15.0,
+   "heldout": 3,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K27876",
+   "label_name": "NrfD",
+   "n_reps": 377.0,
+   "heldout": 5,
+   "unannot_genes": 1,
+   "unannot_clusters": 1,
+   "named_clusters": 0
+  },
+  {
+   "func": "K27986",
+   "label_name": "Biotin_lipoyl",
+   "n_reps": 51.0,
+   "heldout": 5,
+   "unannot_genes": 2,
+   "unannot_clusters": 2,
+   "named_clusters": 2
+  },
+  {
+   "func": "K28214",
+   "label_name": "Amino_oxidase",
+   "n_reps": 18.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 4
+  },
+  {
+   "func": "K28275",
+   "label_name": "PIN",
+   "n_reps": 48.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 1
+  },
+  {
+   "func": "K28560",
+   "label_name": "Acetyltransf_1",
+   "n_reps": 22.0,
+   "heldout": 4,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 5
+  },
+  {
+   "func": "K28639",
+   "label_name": "Aldedh",
+   "n_reps": 65.0,
+   "heldout": 5,
+   "unannot_genes": 0,
+   "unannot_clusters": 0,
+   "named_clusters": 2
+  }
+ ]
+}

@@ -99,13 +99,21 @@ nun = RC[RC.stratum == "unannotated"].groupby("func").size().rename("n_clusters_
 REFS = REFS.merge(nun, left_on="func", right_index=True, how="left").fillna({"n_clusters_unannotated": 0})
 REFS = REFS.sort_values(["n_clusters_unannotated", "genes", "func"], ascending=[False, False, True])
 if MODE == "pilot":
+    # srvp adaptation (recorded in REPORT.txt): only 7 unannotated genes sit in testable families, so the pilot's 6 families
+    # are those with the most candidate clusters of both novelty strata, and each contributes up to 6 candidates,
+    # unannotated first (by rank), then already named (by rank). The gate itself (positives vs negatives) is unchanged.
+    ncl = RC.groupby("func").size().rename("n_clusters_all")
+    REFS = REFS.merge(ncl, left_on="func", right_index=True, how="left").fillna({"n_clusters_all": 0})
+    REFS = REFS.sort_values(["n_clusters_all", "n_clusters_unannotated", "genes", "func"], ascending=[False, False, False, True])
     fams = list(REFS.func[:6])
-    sel = RC[RC.func.isin(fams) & (RC.stratum == "unannotated") & (RC["rank"] < 6)].copy()
+    sel = (RC[RC.func.isin(fams)].assign(_s=lambda d: (d.stratum == "named").astype(int))
+           .sort_values(["func", "_s", "rank"]).groupby("func").head(6).drop(columns="_s").copy())
 else:
     fams = list(REFS.func)
     sel = RC[RC.func.isin(fams) & (((RC.stratum == "unannotated") & (RC["rank"] < 40)) | ((RC.stratum == "named") & (RC["rank"] < 10)))].copy()
     unin = json.load(open(H / "data/pilot_gate.json"))["uninformative"]
-    sel = sel[~sel.func.isin(unin) | ((sel.stratum == "unannotated") & (sel["rank"] < 6))]
+    pil_ids = set(pd.read_csv(H / "data/selection_pilot.tsv", sep="\t", dtype={"protein_id": str}).query("role == 'candidate'").protein_id)
+    sel = sel[~sel.func.isin(unin) | sel.protein_id.isin(pil_ids)]      # uninformative families keep their pilot genes only
 sel["role"] = "candidate"
 
 # negative-A reference

@@ -1,0 +1,995 @@
+genome	genome_code	n_genes	n_contigs	completeness	contamination	domain	phylum	class	ord	family	genus	species	tax_source	platform
+G00171665f59c9850	0	5012	1013	90.6	2.2	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	VFZS01		gtdbtk_2.7.2_r232_own	Illumina
+G0043df7a393798a3	1	3928	1	99.78	1.44	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JALNZF01		gtdbtk_2.7.2_r232_own	PacBio
+G006e9a60d99b42a9	2	6355	1	99.6	3.26	Bacteria	Methylomirabilota	Methylomirabilia	Methylomirabilales	2-02-FULL-66-22	2-02-FULL-66-22		gtdbtk_2.7.2_r232_own	PacBio
+G007e8de7e66f4015	3	4163	236	90.53	2.15	Bacteria	Planctomycetota	Phycisphaerae	UBA1845	Fen-1342	JAAYXS01		gtdbtk_2.7.2_r232_own	Illumina
+G015ce2916f4d2c80	4	2598	1	99.73	3.02	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae	DATETJ01		gtdbtk_2.7.2_r232_own	PacBio
+G01cb5e280f835c89	5	3177	206	92.12	3.85	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	Bathycorpusculum		gtdbtk_2.7.2_r232_own	Illumina
+G01cbddcf5f0b5ca0	6	3497	1	98.46	1.93	Bacteria	Bacteroidota	Ignavibacteria	CAWHAG01	CAWHAG01	CAWHAG01		gtdbtk_2.7.2_r232_own	PacBio
+G01dc1eab7a40c0b9	7	1002	1	97.72	0.33	Bacteria	Patescibacteriota	Minisyncoccia	Portnoybacterales	GWB1-42-6			gtdbtk_2.7.2_r232_own	PacBio
+G02a2271f6639352b	8	675	62	95.63	0.29	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	GWB1-50-10			gtdbtk_2.7.2_r232_own	Illumina
+G02aee60c3f37c7d6	9	1193	10	100.0	1.04	Archaea	Micrarchaeota	Micrarchaeia	Anstonellales	Bilamarchaeaceae	JAHJBR01		gtdbtk_2.7.2_r232_own	Illumina
+G02c314a7d89e5cf2	10	964	104	95.73	0.35	Bacteria	Patescibacteriota	Microgenomatia	Woykebacterales	RBG-16-39-9b	DATBWR01		gtdbtk_2.7.2_r232_own	Illumina
+G02da3eee6067914f	11	1825	199	90.43	4.46	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	Illumina
+G02edc469ff9608c2	12	3731	459	98.94	3.63	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	SZUA-254	VBOC01		gtdbtk_2.7.2_r232_own	Illumina
+G032c731ee0c2898a	13	2479	169	95.18	2.01	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	Methanospirillaceae	JAJRBP01		gtdbtk_2.7.2_r232_own	Illumina
+G035ca3c91c17cc35	14	6912	441	97.87	3.91	Bacteria	Acidobacteriota	UBA6911	UBA6911	UBA6911			gtdbtk_2.7.2_r232_own	Illumina
+G03bea0eb8446f223	15	4062	451	94.25	4.81	Bacteria	Pseudomonadota	Alphaproteobacteria	SMXQ01	SMXQ01	DATJIG01		gtdbtk_2.7.2_r232_own	Illumina
+G03c0648c1142fdb6	16	2856	1	99.8	0.95	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens	Methanoperedens sp027460525	gtdbtk_2.7.2_r232_own	PacBio
+G03c08f50ba11988e	17	1961	1	96.7	0.36	Bacteria	Omnitrophota	Gorgyraeia	Gygaellales	Profunditerraquicolaceae			gtdbtk_2.7.2_r232_own	PacBio
+G03f9509411c94cee	18	2344	1	94.52	2.95	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	PacBio
+G0481f91de431528e	19	871	9	98.5	0.01	Bacteria	Patescibacteriota	Microgenomatia	UBA8517	UBA8517	CAZCNT01		gtdbtk_2.7.2_r232_own	Illumina
+G04a7a5d9b18b4836	20	2031	205	95.11	3.14	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	JACTUA01	JACTUA01		gtdbtk_2.7.2_r232_own	Illumina
+G04b8274638d9daf5	21	2277	337	93.16	4.77	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	Illumina
+G04c67e44c04dee2f	22	3195	37	99.92	0.97	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens	Methanoperedens sp027460535	gtdbtk_2.7.2_r232_own	Illumina
+G05112ea278d2f8f8	23	4299	1	100.0	0.64	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030	UBA9647		gtdbtk_2.7.2_r232_own	PacBio
+G05648498a0e8b184	24	3060	1	99.88	0.4	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+G05d89101bb88c8ff	25	4106	1	97.7	0.26	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	PacBio
+G05d95a42d42931bc	26	3532	195	94.98	0.54	Bacteria	Nitrospirota	Nitrospiria	Nitrospirales	Nitrospiraceae	DASPUC01		gtdbtk_2.7.2_r232_own	Illumina
+G05e9cf7215451c02	27	1839	1	98.77	1.13	Bacteria	Chlamydiota	Chlamydiia	Chlamydiales	Rhabdochlamydiaceae			gtdbtk_2.7.2_r232_own	PacBio
+G06d121f867afd70b	28	4767	1	98.01	0.19	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01			gtdbtk_2.7.2_r232_own	PacBio
+G06d8e2c5318fac4a	29	2435	50	96.02	0.73	Bacteria	Zixibacteria	MSB-5A5	MSB-5A5	RBG-16-43-9	RBG-16-43-9		gtdbtk_2.7.2_r232_own	Illumina
+G0738f4781b3af6b7	30	4781	1	90.51	1.68	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JAIQGA01	JAIQGA01 sp020072925	gtdbtk_2.7.2_r232_own	PacBio
+G074d501e30792345	31	1522	1	96.18	0.72	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	PacBio
+G077351275a36fbfb	32	1994	1	99.97	0.23	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Nitrosopumilaceae	Nitrosotalea		gtdbtk_2.7.2_r232_own	PacBio
+G07b1ae085fd6c3e7	33	4862	201	94.62	2.32	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae	Anaeromyxobacter		gtdbtk_2.7.2_r232_own	Illumina
+G085d6c0d907faf0c	34	3169	225	95.14	1.98	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	Methanospirillaceae			gtdbtk_r220_own	Illumina
+G0891699a27bc709c	35	4427	1	97.78	0.0	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	Gp7-AA6	JBKPDV01		gtdbtk_2.7.2_r232_own	PacBio
+G08dccc6eb774e5ec	36	711	80	96.88	1.06	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	UBA9933			gtdbtk_2.7.2_r232_own	Illumina
+G09d2497df376ccc9	37	3166	85	97.59	0.13	Bacteria	Methylomirabilota	Methylomirabilia	Methylomirabilales	Methylomirabilaceae	Methylomirabilis		gtdbtk_2.7.2_r232_own	Illumina
+G09d42cadbd54d693	38	1183	1	99.39	1.09	Bacteria	Patescibacteriota	Patescibacteriia	Buchananbacterales	SURF-54			gtdbtk_2.7.2_r232_own	PacBio
+G09e2f8e9e285e0f7	39	2625	67	100.0	1.15	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	CAITJF01		gtdbtk_2.7.2_r232_own	Illumina
+G09fde1a4ab4fe09f	40	7013	825	97.84	0.33	Bacteria	Myxococcota	Myxococcia	Myxococcales	Myxococcaceae	JBBIOE01		gtdbtk_2.7.2_r232_own	Illumina
+G0a0174ee880a581c	41	2350	1	97.16	2.57	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	PacBio
+G0a0f16c00c403dd1	42	3210	41	96.45	0.22	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	GWC2-71-9	13-1-40CM-70-15		gtdbtk_2.7.2_r232_own	Illumina
+G0a3575238ef6349f	43	2150	147	98.7	2.26	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	Illumina
+G0a4731ca8be70a34	44	2417	39	91.88	0.75	Bacteria	Bipolaricaulota	Bipolaricaulia	RBG-16-55-9	DRJF01	DRJF01		gtdbtk_2.7.2_r232_own	Illumina
+G0ab5c1ce00d8b9eb	45	4267	142	99.77	2.61	Bacteria	Pseudomonadota	Alphaproteobacteria	Caulobacterales	Caulobacteraceae	Acaudatibacter		gtdbtk_2.7.2_r232_own	Illumina
+G0af473fee80192ec	46	3636	38	92.98	2.11	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	UBA4085	JAPKZH01		gtdbtk_2.7.2_r232_own	Illumina
+G0b0a36741ca23dbc	47	1511	83	95.81	2.54	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	E44-bin46	E44-bin46		gtdbtk_2.7.2_r232_own	Illumina
+G0b0ea8b3669fd8d3	48	2559	1	98.12	3.98	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	CAVPLU01		gtdbtk_2.7.2_r232_own	PacBio
+G0b254dd1bf560ea1	49	3997	1	98.89	0.0	Bacteria	Pseudomonadota	Alphaproteobacteria	Caulobacterales	Caulobacteraceae	Acaudatibacter		gtdbtk_2.7.2_r232_own	PacBio
+G0bcda4b5842f1dc3	50	2563	1	93.67	0.76	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae			gtdbtk_2.7.2_r232_own	PacBio
+G0c0d85a25aa0da33	51	4126	574	98.43	0.44	Bacteria	Bacteroidota	Ignavibacteria	Ignavibacteriales	Ignavibacteriaceae	FEN-1297		gtdbtk_2.7.2_r232_own	Illumina
+G0c2288f1f0906c5c	52	1320	14	93.67	0.25	Archaea	Nanobdellota	Nanobdellia	Woesearchaeales	UBA9642	UBA9642		gtdbtk_2.7.2_r232_own	Illumina
+G0c328b9fec9c8999	53	929	25	99.26	0.53	Bacteria	Patescibacteriota	Microgenomatia	Levybacterales	UBA12049	DATKGX01		gtdbtk_2.7.2_r232_own	Illumina
+G0c47512869883c58	54	5041	463	94.32	3.03	Bacteria	Pseudomonadota	Alphaproteobacteria	Caulobacterales	Caulobacteraceae	Phenylobacterium		gtdbtk_2.7.2_r232_own	Illumina
+G0c5febc469dc5144	55	2268	111	90.37	1.77	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	Illumina
+G0c7607ded1b0c12c	56	1546	1	97.99	0.8	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	PacBio
+G0ca2cd8c6e4e5d9a	57	5167	34	95.42	2.83	Bacteria	Acidobacteriota	Terriglobia	JAIQFV01	JAIQFV01	JAIQFV01	JAIQFV01 sp020072965	gtdbtk_2.7.2_r232_own	PacBio
+G0cae605d37b1bf18	58	8236	361	96.94	2.94	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	BOG-234		gtdbtk_2.7.2_r232_own	Illumina
+G0cc520024a6e3fa6	59	3650	187	93.33	4.24	Bacteria	SAR324	SAR324	SAR324	JACQKK01	JBGPEV01		gtdbtk_2.7.2_r232_own	Illumina
+G0ce69a107da863ae	60	5789	1	99.97	2.82	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae	Anaeromyxobacter		gtdbtk_2.7.2_r232_own	PacBio
+G0d131488209c18ac	61	912	27	95.65	0.01	Bacteria	Patescibacteriota	Saccharimonadia	Saccharimonadales	UBA4665			gtdbtk_2.7.2_r232_own	Illumina
+G0d1e6f8efe4a514e	62	3392	1	99.08	1.12	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	JACORV01	Fen-1245		gtdbtk_2.7.2_r232_own	PacBio
+G0d4b373bf296bce6	63	4068	325	99.57	3.26	Bacteria	Acidobacteriota	Terriglobia	UBA7540				gtdbtk_2.7.2_r232_own	Illumina
+G0d90b02c5f2669ac	64	3231	209	95.33	2.04	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	JACORV01	Fen-1245		gtdbtk_2.7.2_r232_own	Illumina
+G0dd4da184babff94	65	4060	1	100.0	2.03	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	CAWBNQ01		gtdbtk_2.7.2_r232_own	PacBio
+G0dd586fd98d792a8	66	2264	173	99.26	3.42	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPTR01		gtdbtk_2.7.2_r232_own	Illumina
+G0de3f8f0247daa4b	67	3637	760	91.4	4.61	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	JBEKUY01		gtdbtk_2.7.2_r232_own	Illumina
+G0debdb81ccf7c314	68	4906	7	98.68	0.85	Bacteria	Pseudomonadota	Alphaproteobacteria	ATCC43930	CGMCC-115725	CAIKMD01		gtdbtk_2.7.2_r232_own	PacBio
+G0e18acad1b93eb9e	69	2790	31	96.12	4.46	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	UBA233	JAOZHU01		gtdbtk_r220_own	Illumina
+G0e5abfb030f64ccf	70	2075	1	99.19	2.72	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	PacBio
+G0e801c33320db095	71	4920	1	95.68	0.56	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae	JASHZA01		gtdbtk_2.7.2_r232_own	PacBio
+G0e933db724ed1a00	72	3111	99	99.46	2.68	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	Illumina
+G0f2e46acce51622a	73	994	3	90.49	0.37	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	CG10238-14	SCSR01	DATEAB01		gtdbtk_2.7.2_r232_own	Illumina
+G0f4841ec94330a98	74	749	11	100.0	0.04	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	UBA9973	UBA9973		gtdbtk_2.7.2_r232_own	Illumina
+G0f510176ce98f1f1	75	4208	205	98.8	0.43	Bacteria	Bacteroidota	Ignavibacteria	Kryptoniales	JAKASW01	JAKASW01		gtdbtk_2.7.2_r232_own	Illumina
+G0fc7f1a164c367b6	76	1251	155	92.57	0.61	Bacteria	Patescibacteriota	Doudnabacteria	UBA920	UBA920	CAZLQG01		gtdbtk_2.7.2_r232_own	Illumina
+G106c478c2822cf16	77	3137	1	97.12	0.11	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	Gemmatimonadaceae	DASRAP01		gtdbtk_2.7.2_r232_own	PacBio
+G1097684f3f3a5dff	78	2598	1	97.93	0.44	Bacteria	Nitrospirota	Nitrospiria	JACQBZ01	JACQBZ01	JACQBZ01		gtdbtk_2.7.2_r232_own	PacBio
+G10eaf38795d5153c	79	2064	28	99.99	0.1	Bacteria	Zixibacteria	MSB-5A5	DSPP01	RBG-1			gtdbtk_2.7.2_r232_own	Illumina
+G10f05d954daf9889	80	4319	169	99.52	1.56	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-41	JAQGMV01		gtdbtk_2.7.2_r232_own	Illumina
+G113b567180f76740	81	3672	1	100.0	0.13	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	CAWBNQ01		gtdbtk_2.7.2_r232_own	PacBio
+G1140cca109db7c5b	82	4581	2	98.78	0.64	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQET01		gtdbtk_2.7.2_r232_own	PacBio
+G1182bed09788a311	83	4396	218	99.71	0.69	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae			gtdbtk_2.7.2_r232_own	Illumina
+G118a86a1d4c8b83d	84	3566	298	94.07	0.27	Bacteria	Bacteroidota	Ignavibacteria	Kapaibacteriales	UBA2268	DAHXMP01		gtdbtk_2.7.2_r232_own	Illumina
+G11a093434047c1cb	85	2144	1	98.19	1.32	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae			gtdbtk_2.7.2_r232_own	PacBio
+G120ad94b3b0559a5	86	2331	100	98.62	4.09	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	FEN-987		gtdbtk_2.7.2_r232_own	Illumina
+G124255ab113fe704	87	2805	1	91.9	0.81	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	JAFGAV01	MFD04408-113		gtdbtk_2.7.2_r232_own	PacBio
+G124295d152154a24	88	3184	546	92.29	3.43	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	Illumina
+G1260c09311e89b49	89	1790	291	91.83	3.31	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	UBA2162	CAVSBN01		gtdbtk_2.7.2_r232_own	Illumina
+G1297b19fffc09031	90	830	167	90.31	1.1	Bacteria	Patescibacteriota	Minisyncoccia	2-02-FULL-40-12	IGHO2-01-FULL-4-A	CAIUCV01		gtdbtk_2.7.2_r232_own	Illumina
+G1384c20b349cdab5	91	1000	5	91.08	0.71	Bacteria	Patescibacteriota	Minisyncoccia	JAHISW01	CAZVBU01			gtdbtk_2.7.2_r232_own	PacBio
+G13aeec15b13ef13c	92	5751	222	94.27	2.83	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae	PLanc-01		gtdbtk_2.7.2_r232_own	Illumina
+G140f667c013ac59b	93	8391	912	100.0	2.14	Bacteria	Acidobacteriota	Terriglobia	Versatilivoradales	Versatilivoraceae			gtdbtk_2.7.2_r232_own	Illumina
+G1439e4c9d2308ebb	94	958	1	90.38	0.3	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	Aenigmatarchaeales	Aenigmatarchaeaceae			gtdbtk_2.7.2_r232_own	PacBio
+G144e061acb179c19	95	1559	10	98.9	0.28	Bacteria	Margulisbacteria	WOR-1	O2-12-FULL-45-9	XYB2-FULL-48-7			gtdbtk_2.7.2_r232_own	Illumina
+G1561ed1aadf06b6b	96	4890	83	97.35	3.59	Bacteria	Desulfobacterota	BSN033	BSN033	UBA1163	UBA1163	UBA1163 sp049684675	gtdbtk_2.7.2_r232_own	Illumina
+G15a7e5de389d898f	97	4304	424	93.88	4.55	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Palsa-189		gtdbtk_2.7.2_r232_own	Illumina
+G15c646230a13c2a0	98	3505	382	96.73	1.73	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQFD01		gtdbtk_2.7.2_r232_own	Illumina
+G15cc5a744d070198	99	2319	1	99.57	0.21	Bacteria	Pseudomonadota	Gammaproteobacteria	JABCZS01	JABCZS01	JABCZS01		gtdbtk_2.7.2_r232_own	PacBio
+G15cd8503880c1da9	100	1617	1	95.75	0.52	Archaea	Hadarchaeota	Hadarchaeia	Hadarchaeales	Hadarchaeaceae			gtdbtk_2.7.2_r232_own	PacBio
+G16461f9c429d352c	101	4128	672	91.73	2.84	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA9159	JAMCWJ01		gtdbtk_2.7.2_r232_own	Illumina
+G165058693320840a	102	1269	3	96.2	4.23	Bacteria	Patescibacteriota	UBA1384	UBA12157	JAENIV01	JAENIV01		gtdbtk_2.7.2_r232_own	PacBio
+G16a948e9fe6106c8	103	5807	1	100.0	2.66	Bacteria	Methylomirabilota	Methylomirabilia	Rokubacteriales	CSP1-6	CAMLFJ01		gtdbtk_2.7.2_r232_own	PacBio
+G16c20fde2cfc4f1c	104	8029	788	97.1	4.21	Bacteria	Myxococcota_A	Polyangia	Polyangiales	Polyangiaceae	Palsa-1150		gtdbtk_2.7.2_r232_own	Illumina
+G16e73f412c9eeab4	105	4415	123	91.85	2.49	Bacteria	Planctomycetota	Phycisphaerae	UBA1845	Fen-1342			gtdbtk_2.7.2_r232_own	Illumina
+G17022e821436bcec	106	4506	154	97.27	2.81	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae	Binatus		gtdbtk_2.7.2_r232_own	Illumina
+G170496874be7f62d	107	2092	1	96.44	1.14	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834			gtdbtk_2.7.2_r232_own	PacBio
+G1732bf787e63a0b1	108	3317	1	98.44	1.41	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	JAHEZR01	JBAWAH01		gtdbtk_2.7.2_r232_own	PacBio
+G175d9670b312f781	109	3667	30	93.96	1.43	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA6898	JAOUFP01		gtdbtk_2.7.2_r232_own	PacBio
+G17721a4aec487881	110	1699	1	100.0	0.29	Archaea	Thermoproteota	Methanomethylicia	Methanomethylicales	Methanomethylicaceae	VGLU01	VGLU01 sp964576015	gtdbtk_2.7.2_r232_own	Illumina
+G17931eee41279508	111	2481	667	92.99	3.66	Bacteria	Desulfobacterota	B13-G15	B13-G15	RBG-16-54-18	RBG-16-54-11		gtdbtk_2.7.2_r232_own	Illumina
+G180fd0f56961a297	112	4124	15	92.17	1.04	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Palsa-360	Palsa-360 sp020073485	gtdbtk_2.7.2_r232_own	PacBio
+G18e4dd4da2617a88	113	4662	387	93.75	2.04	Bacteria	Chloroflexota	Anaerolineae	VGOG01	VGOG01	JBAWAP01	JBAWAP01 sp049589355	gtdbtk_2.7.2_r232_own	Illumina
+G190a31154746ed01	114	2201	1	94.17	2.19	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	Fen-1064	JAURWL01		gtdbtk_2.7.2_r232_own	PacBio
+G192dbe819beb90d3	115	2426	15	99.87	4.44	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+G19a27f3303420ad0	116	3523	293	93.72	0.81	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	VadinHA17	LD21		gtdbtk_2.7.2_r232_own	Illumina
+G19d2d2e66a54adfd	117	4747	168	98.36	3.38	Bacteria	Chloroflexota	Anaerolineae	UBA4142	UBA4142			gtdbtk_2.7.2_r232_own	Illumina
+G1a46a013bcb5db6b	118	4558	3	91.44	0.47	Bacteria	Chloroflexota	Chloroflexia	QHBQ01	JADMIH01	JADMIH01		gtdbtk_2.7.2_r232_own	PacBio
+G1a6533f78261753f	119	3314	299	99.99	0.22	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Gallionella		gtdbtk_2.7.2_r232_own	Illumina
+G1aa467c2fd2c5be7	120	3330	1	99.0	0.49	Bacteria	Bacteroidota	Ignavibacteria	Palsa-1295	Palsa-1295	PALSA-1295		gtdbtk_2.7.2_r232_own	PacBio
+G1ad669edda603207	121	6048	757	99.11	3.29	Bacteria	Actinomycetota	Actinomycetes	Mycobacteriales	CADCTP01			gtdbtk_2.7.2_r232_own	Illumina
+G1b33078b6eb70eae	122	4836	778	92.87	1.85	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Limisphaerales	UBA11358	UBA11358		gtdbtk_2.7.2_r232_own	Illumina
+G1b7a7560c9053d67	123	3191	353	92.57	1.2	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	UBA4085	JALHTW01	JALHTW01 sp022866045	gtdbtk_2.7.2_r232_own	Illumina
+G1bee5758fcd637cf	124	2409	9	95.71	0.66	Bacteria	Oederibacteriota	JAJYGY01	JAJYGY01	JAJYGY01			gtdbtk_2.7.2_r232_own	PacBio
+G1c06fe3e85ff1757	125	6060	857	97.73	3.6	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SHXO01	SHXO01		gtdbtk_2.7.2_r232_own	Illumina
+G1cc007634a243be3	126	3826	200	99.51	2.08	Bacteria	Acidobacteriota	Polarisedimenticolia	Gp22-AA2	AA152	DASYRE01		gtdbtk_2.7.2_r232_own	Illumina
+G1cfb427d84b7b2b4	127	2813	86	97.03	0.25	Bacteria	Eisenbacteria	RBG-16-71-46	SZUA-252	SZUA-252			gtdbtk_2.7.2_r232_own	Illumina
+G1d6a10f33cee73e9	128	3799	1	100.0	1.49	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	40CM-3-55-5		gtdbtk_2.7.2_r232_own	PacBio
+G1d7e9d7acfe7532a	129	683	67	97.26	0.35	Bacteria	Patescibacteriota	Kazan-3B-28	Kazan-3B-28	Kazan-3B-28	JAKLDB01		gtdbtk_2.7.2_r232_own	Illumina
+G1db0c02827936f9e	130	3919	1	95.31	1.14	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Limisphaerales	DTLC01	DTLC01		gtdbtk_2.7.2_r232_own	PacBio
+G1deee384b4815cf6	131	4812	1	99.17	3.81	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	JACQTO01		gtdbtk_2.7.2_r232_own	PacBio
+G1e8c82c79466c396	132	4267	1290	90.61	3.1	Bacteria	Desulfobacterota	Desulfuromonadia	Geobacterales	Geobacteraceae	CAIWTU01		gtdbtk_2.7.2_r232_own	Illumina
+G1ed715bdae9f9c23	133	3455	1	100.0	0.62	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JALNZF01		gtdbtk_2.7.2_r232_own	PacBio
+G1f9cfe8c5cd62b3a	134	4255	262	93.11	3.2	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae	GCA-020343675		gtdbtk_2.7.2_r232_own	Illumina
+G201852871ac03968	135	3680	13	90.53	3.22	Bacteria	Desulfobacterota	Syntrophia	Syntrophales	JACQWR01	JACQWR01		gtdbtk_2.7.2_r232_own	PacBio
+G207648944cccef98	136	4069	3	99.01	0.6	Bacteria	Bacteroidota	Bacteroidia	2-12-FULL-35-15	2-12-FULL-35-15	2-12-FULL-35-15		gtdbtk_2.7.2_r232_own	PacBio
+G20ad308ee9656d7a	137	918	1	100.0	0.07	Bacteria	Patescibacteriota	Patescibacteriia	XYB2-FULL-38-15	XYB2-FULL-38-15			gtdbtk_2.7.2_r232_own	PacBio
+G211ee2883dac780a	138	747	70	96.1	0.1	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	UBA9933			gtdbtk_2.7.2_r232_own	Illumina
+G215e9355a933f236	139	3450	1	100.0	1.74	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JALNZF01		gtdbtk_2.7.2_r232_own	PacBio
+G21b9eb2a938fae3b	140	6047	622	97.54	1.99	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	DATLHW01			gtdbtk_2.7.2_r232_own	Illumina
+G21c3228c2a729b7a	141	2662	144	96.61	2.09	Bacteria	Hydrothermota	Tepidihabitantia	SM23-42	CAYGYG01	CAYGYG01		gtdbtk_2.7.2_r232_own	Illumina
+G21e02f1f6e10622f	142	1102	58	99.06	2.37	Bacteria	Patescibacteriota	Microgenomatia	Levybacterales	UBA12049	GWB1-37-8		gtdbtk_2.7.2_r232_own	Illumina
+G2250734c73381cb8	143	2848	50	99.56	0.1	Bacteria	Zixibacteria	MSB-5A5	UBA10806	UBA10806	CAWFQL01		gtdbtk_2.7.2_r232_own	Illumina
+G2289455bf299002d	144	2632	30	99.48	0.84	Bacteria	Desulfobacterota	B13-G15	B13-G15	RBG-16-54-18	RBG-16-54-11		gtdbtk_2.7.2_r232_own	Illumina
+G22b39491aceb4576	145	2254	81	96.88	1.09	Archaea	Thermoplasmatota	E2	DHVEG-1	DHVEG-1	SM1-50		gtdbtk_2.7.2_r232_own	Illumina
+G22bc271098ec92e3	146	2743	7	99.81	1.37	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35			gtdbtk_2.7.2_r232_own	PacBio
+G22e4e208ed129bfc	147	886	84	92.61	3.5	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	SBAW01	GWA1-54-10		gtdbtk_2.7.2_r232_own	Illumina
+G23272b761341c8fb	148	2664	1	99.99	0.05	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	CAIQPV01		gtdbtk_2.7.2_r232_own	PacBio
+G23c1bfeb06c80caf	149	2200	584	93.27	1.01	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	Illumina
+G23c288bbd1256c16	150	2500	156	98.27	2.57	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DRUK01		gtdbtk_2.7.2_r232_own	Illumina
+G242d0866c9f09a47	151	2452	853	90.19	3.9	Bacteria	Zixibacteria	MSB-5A5	DSPP01	RBG-1			gtdbtk_2.7.2_r232_own	Illumina
+G24e5584a8407c4b5	152	2644	1	100.0	0.07	Bacteria	Pseudomonadota	Alphaproteobacteria	DATDPM01	DATDPM01	DATDPM01		gtdbtk_2.7.2_r232_own	PacBio
+G24ebb7e681f9aa9b	153	7144	1656	90.96	1.9	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SHXO01	SHXO01		gtdbtk_2.7.2_r232_own	Illumina
+G26730da25ed89b12	154	3758	234	99.84	1.86	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	Illumina
+G269e1c5047094f82	155	2843	16	91.26	0.41	Bacteria	Nitrospinota_A	UBA7883	JACRGQ01	JACRGQ01	JACQEX01		gtdbtk_2.7.2_r232_own	PacBio
+G26a76e9a54976e92	156	1608	65	90.43	0.81	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	Illumina
+G27cac47a0d03343c	157	1609	61	96.34	0.41	Archaea	Hadarchaeota	Hadarchaeia	Hadarchaeales	Hadarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+G28ffd547151a92a2	158	3752	1	94.28	0.83	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	Villigracilaceae	Fen-1038		gtdbtk_2.7.2_r232_own	PacBio
+G2946b41f667d1263	159	4727	1	100.0	1.36	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQFW01	JAIQFW01 sp020073105	gtdbtk_2.7.2_r232_own	PacBio
+G29b09617ce60d851	160	7230	495	100.0	1.29	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Sulfotelmatobacter	Sulfotelmatobacter sp020073385	gtdbtk_2.7.2_r232_own	Illumina
+G2a84330d6654788b	161	3419	1	99.35	0.26	Bacteria	Bacteroidota	Bacteroidia	AKYH767-A	2013-40CM-41-45	JAPLDB01		gtdbtk_2.7.2_r232_own	PacBio
+G2af1403b1cd42df7	162	4289	359	97.74	2.2	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	VBDM01		gtdbtk_2.7.2_r232_own	Illumina
+G2b3ddbdf590c24e1	163	2010	1	98.27	0.13	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	JACTUA01	JACTUA01		gtdbtk_2.7.2_r232_own	PacBio
+G2b77ecc4579ffc19	164	3346	104	91.31	3.95	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	Saccharicenantaceae	DATKJS01		gtdbtk_2.7.2_r232_own	Illumina
+G2ba8eac4678a3844	165	6535	11	95.79	2.88	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	CAVROP01		gtdbtk_2.7.2_r232_own	PacBio
+G2bdd909409816548	166	776	1	93.71	0.01	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	SBAW01	GWA1-54-10		gtdbtk_2.7.2_r232_own	PacBio
+G2c06ea8624a877f2	167	2041	132	91.43	4.32	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+G2c41d4dd6a50a46f	168	3764	792	98.38	3.86	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	Illumina
+G2c6dc8b12f3fb13b	169	4347	125	97.85	2.0	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JAIQGB01		gtdbtk_2.7.2_r232_own	Illumina
+G2c8b704fc0f73d8d	170	3642	1	100.0	0.81	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Rhodocyclaceae	CAIYYX01		gtdbtk_2.7.2_r232_own	PacBio
+G2ccf61068d87e8d0	171	4714	492	95.81	1.33	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JAIQGB01	JAIQGB01 sp020072905	gtdbtk_2.7.2_r232_own	Illumina
+G2d7034ed9dd3ee4e	172	3324	225	100.0	0.79	Bacteria	Desulfobacterota	Deferrimicrobia	Deferrimicrobiales	Deferrimicrobiaceae	Deferrimicrobium	Deferrimicrobium sp036382995	gtdbtk_2.7.2_r232_own	Illumina
+G2e1eb69420be0774	173	3902	274	92.48	4.64	Bacteria	Chloroflexota	Dehalococcoidia	Tepidiformales	Tepidiformaceae			gtdbtk_2.7.2_r232_own	Illumina
+G2e3f22ccbdc4dc00	174	1240	54	99.55	0.57	Bacteria	Patescibacteriota	Patescibacteriia	SBBC01	CAIJZX01	CAIJZX01		gtdbtk_2.7.2_r232_own	Illumina
+G2e615758a09e121b	175	1336	201	90.44	2.65	Bacteria	Patescibacteriota	Minisyncoccia	Moranbacterales	JAPLXC01			gtdbtk_2.7.2_r232_own	Illumina
+G2e7b9079066502d0	176	2503	548	95.66	3.08	Bacteria	Desulfobacterota	Deferrimicrobia	Deferrimicrobiales	Deferrimicrobiaceae			gtdbtk_2.7.2_r232_own	Illumina
+G2f5251ab0f5cadf2	177	901	1	94.87	2.05	Archaea	Nanobdellota	Nanobdellia	Pacearchaeales	JAHJTO01			gtdbtk_2.7.2_r232_own	PacBio
+G302f89302bbf6ffb	178	2338	1	100.0	0.19	Bacteria	Oederibacteriota	Muellerivitia	Muellerivitales	Muellerivitaceae	CAYXYA01		gtdbtk_2.7.2_r232_own	PacBio
+G3037baccc7ddef27	179	5456	1	98.95	1.53	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01	JAPKYU01		gtdbtk_2.7.2_r232_own	PacBio
+G3082a68c594692c7	180	938	54	95.32	1.86	Bacteria	Patescibacteriota	Patescibacteriia	DYHP01	DYHP01	DYHP01		gtdbtk_2.7.2_r232_own	Illumina
+G308d1338d3bb41d2	181	1870	85	100.0	2.36	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	20-14-0-80-47-9		gtdbtk_2.7.2_r232_own	Illumina
+G3096b763e8cc59f6	182	9731	1325	91.67	3.26	Bacteria	Planctomycetota	Planctomycetia	Gemmatales	Gemmataceae	JACOUH01		gtdbtk_2.7.2_r232_own	Illumina
+G30fc2aed27ead279	183	890	1	92.68	0.06	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	CG10238-14	SCSR01	DATEAB01		gtdbtk_2.7.2_r232_own	PacBio
+G316bc7de384da3e6	184	3756	1	100.0	0.05	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQGF01	JAIQGF01 sp020072845	gtdbtk_2.7.2_r232_own	PacBio
+G31955ae13d62bf5c	185	3673	121	93.07	2.68	Bacteria	Planctomycetota	Brocadiia	SM23-32	SM23-32	JAUVVP01		gtdbtk_2.7.2_r232_own	Illumina
+G31e9c689894fc812	186	4168	591	90.83	2.36	Bacteria	UBP4	UBA4092	JAOAEQ01	JAOAEQ01	JBHGBB01		gtdbtk_2.7.2_r232_own	Illumina
+G32894af988335a64	187	1959	10	99.84	1.06	Archaea	Thermoplasmatota	Thermoplasmata	Methanomassiliicoccales	JACIVX01	JAJRAG01	JAJRAG01 sp028682925	gtdbtk_2.7.2_r232_own	Illumina
+G32c32eef58f20e9d	188	3829	327	95.47	3.7	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JAIQGB01		gtdbtk_2.7.2_r232_own	Illumina
+G32d7412f884cade8	189	2281	1	97.9	3.34	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	PacBio
+G33de5ac607e1e6e2	190	5270	1170	90.36	4.89	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	VFZS01	VFZS01 sp964353255	gtdbtk_2.7.2_r232_own	Illumina
+G33f4fb65f058986d	191	3147	12	95.78	2.31	Bacteria	Zixibacteria	MSB-5A5	GN15	FEB-12			gtdbtk_r220_own	PacBio
+G3476ea71d0e5bf56	192	2206	1	100.0	4.05	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Gagatemarchaeaceae	UBA183		gtdbtk_2.7.2_r232_own	PacBio
+G34f6a05aca934160	193	1986	104	93.41	2.39	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	Illumina
+G35475932d1b50aa8	194	2976	63	96.34	1.06	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae			gtdbtk_2.7.2_r232_own	Illumina
+G356c3906350f7348	195	2830	219	93.81	4.61	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	CAYWRT01		gtdbtk_2.7.2_r232_own	Illumina
+G35762740d64d064c	196	4188	701	92.44	0.92	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JALHUF01		gtdbtk_2.7.2_r232_own	Illumina
+G3595469741502776	197	3945	60	99.61	2.02	Bacteria	Pseudomonadota	Alphaproteobacteria	Caulobacterales	Caulobacteraceae	Acaudatibacter		gtdbtk_2.7.2_r232_own	Illumina
+G35a60f5cfe265f61	198	2958	1	100.0	0.05	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	PacBio
+G35bed29577db8d64	199	1027	1	92.1	0.44	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	CG10238-14	SCSR01			gtdbtk_2.7.2_r232_own	PacBio
+G35d4aa94cee86f2e	200	4622	280	98.64	0.99	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030	JADGQA01		gtdbtk_2.7.2_r232_own	Illumina
+G362d0fe8517ac927	201	4032	252	90.25	4.38	Bacteria	Chloroflexota	Limnocylindria	P2-11E	P2-11E	CF-39		gtdbtk_2.7.2_r232_own	Illumina
+G367e36d0674ed421	202	2641	1	100.0	0.34	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	CAITJF01		gtdbtk_2.7.2_r232_own	PacBio
+G36991d5044a54900	203	899	28	96.14	0.33	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	Phycocordibacteraceae	C7867-001		gtdbtk_2.7.2_r232_own	Illumina
+G36c8843c28f4520e	204	4785	10	99.67	1.74	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	PacBio
+G36d3f305544811cf	205	989	1	93.66	0.1	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	Aenigmatarchaeales	Aenigmatarchaeaceae	CS1-C013		gtdbtk_2.7.2_r232_own	PacBio
+G36f486fcdd29febe	206	2385	194	100.0	2.01	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35	DASPRG01		gtdbtk_2.7.2_r232_own	Illumina
+G37337792f903b2a1	207	2182	1	100.0	3.91	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	20-14-0-80-47-9		gtdbtk_2.7.2_r232_own	PacBio
+G380cacd21c923a86	208	4669	1	100.0	0.83	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQET01		gtdbtk_2.7.2_r232_own	PacBio
+G383e6ff6e6884c73	209	3246	60	100.0	0.13	Bacteria	Acidobacteriota	UBA4820	UBA4820	DSQY01			gtdbtk_2.7.2_r232_own	Illumina
+G38bfa39c0718f954	210	4121	1	100.0	1.91	Bacteria	Acidobacteriota	Vicinamibacteria	Vicinamibacterales	CAVVIG01			gtdbtk_2.7.2_r232_own	PacBio
+G38c2d9be87803a16	211	3964	1	97.59	0.44	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JALHUF01		gtdbtk_2.7.2_r232_own	PacBio
+G38df07326da2e45d	212	7006	1	97.78	0.96	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae			gtdbtk_2.7.2_r232_own	PacBio
+G3912d9d5d054a2cb	213	4421	1	100.0	0.71	Bacteria	Acidobacteriota	Vicinamibacteria	Vicinamibacterales	CAVVIG01			gtdbtk_2.7.2_r232_own	PacBio
+G39951ca2d2c4c618	214	2983	37	93.62	0.96	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Chthoniobacterales	UBA10450	Udaeobacter	Udaeobacter sp003218615	gtdbtk_2.7.2_r232_own	Illumina
+G39a82bdaed25c63b	215	1399	54	94.39	0.19	Archaea	Nanobdellota	Nanobdellia	Woesearchaeales	UBA12501	WJJV01		gtdbtk_2.7.2_r232_own	Illumina
+G3a08c1a2edae6cc0	216	4449	28	91.29	0.34	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	UBA5066			gtdbtk_2.7.2_r232_own	PacBio
+G3a4c6cdf9c770e7f	217	5770	1	99.85	2.24	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Angelobacter		gtdbtk_2.7.2_r232_own	PacBio
+G3a515176fe28e75d	218	3429	178	99.63	1.98	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	DATDRO01		gtdbtk_2.7.2_r232_own	Illumina
+G3a56b0ad6d1ada35	219	2802	1	99.66	0.5	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+G3a789f8cd3998ee4	220	2391	195	94.76	4.18	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	FEN-987		gtdbtk_2.7.2_r232_own	Illumina
+G3a799c00a9f65ba6	221	1176	63	96.06	3.41	Bacteria	Patescibacteriota	Microgenomatia	UBA10105	UBA927	XYB1-FULL-47-11		gtdbtk_2.7.2_r232_own	Illumina
+G3aa6129cdfb5eab0	222	2260	150	100.0	0.94	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae	DATETJ01		gtdbtk_2.7.2_r232_own	Illumina
+G3aca0ef30b423ae9	223	808	81	92.04	0.77	Bacteria	Patescibacteriota	Minisyncoccia	GWC2-36-17	CAYHJU01	CAYHJU01		gtdbtk_2.7.2_r232_own	Illumina
+G3b081e3240edfc2c	224	4967	117	96.62	0.23	Bacteria	Acidobacteriota	Blastocatellia	Pyrinomonadales	Pyrinomonadaceae	UBA11740		gtdbtk_2.7.2_r232_own	Illumina
+G3b1bc8f3c3612228	225	5624	4	94.21	0.21	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	Palsa-187	Palsa-187 sp020073445	gtdbtk_2.7.2_r232_own	PacBio
+G3b293088c90deac6	226	3308	142	94.71	1.52	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	JACORV01	Fen-1245		gtdbtk_2.7.2_r232_own	Illumina
+G3bec9670e1990afb	227	1866	1	98.05	2.88	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Gagatemarchaeaceae	Gagatemarchaeum		gtdbtk_2.7.2_r232_own	PacBio
+G3becdb07d8071d6a	228	2294	8	96.92	2.47	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBGQME01		gtdbtk_2.7.2_r232_own	Illumina
+G3bf425d8e92a545f	229	7660	1	98.19	4.34	Bacteria	Desulfobacterota	Binatia	UBA9968	UBA9968	JACPFE01		gtdbtk_2.7.2_r232_own	PacBio
+G3c8b49a5894e5d75	230	3555	95	97.26	2.32	Bacteria	Acidobacteriota	Polarisedimenticolia	J045	J045			gtdbtk_2.7.2_r232_own	Illumina
+G3d0b32c2841b06b8	231	2107	1	96.58	2.01	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	PacBio
+G3d667eb62906cb78	232	3496	81	99.92	0.06	Bacteria	Desulfobacterota	Desulfobaccia	Desulfobaccales	0-14-0-80-60-11			gtdbtk_2.7.2_r232_own	Illumina
+G3dba7e97525a4f75	233	2885	1	92.07	0.26	Bacteria	Chloroflexota	Limnocylindria	QHBO01	QHBO01			gtdbtk_2.7.2_r232_own	PacBio
+G3df745224a929a48	234	3900	1	95.62	1.83	Bacteria	SAR324	SAR324	SAR324	JACQKK01	JBGPEV01		gtdbtk_2.7.2_r232_own	PacBio
+G3e0c4834d8815ac1	235	5484	1	97.97	4.46	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	UBA4823			gtdbtk_2.7.2_r232_own	PacBio
+G3e4d516a04ef7dc0	236	4169	1	97.94	0.71	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JAHEKS01		gtdbtk_2.7.2_r232_own	PacBio
+G3e756d9eca5f2ef7	237	3929	347	95.59	3.51	Bacteria	RBG-13-61-14	RBG-13-61-14					gtdbtk_2.7.2_r232_own	Illumina
+G3ee7e04b261fbb5f	238	4697	1	100.0	1.23	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae	Anaeromyxobacter		gtdbtk_2.7.2_r232_own	PacBio
+G3f1c00081f30e88a	239	4639	1	100.0	3.5	Bacteria	Desulfobacterota	SM23-61	SM23-61	SM23-61	CAVXFA01		gtdbtk_2.7.2_r232_own	PacBio
+G3f36daeb45f17f46	240	2691	1	99.11	0.0	Bacteria	Pseudomonadota	Alphaproteobacteria	DATDPM01	DATDPM01	DATDPM01		gtdbtk_2.7.2_r232_own	PacBio
+G3f486d07512ba55b	241	6709	1224	93.78	2.75	Bacteria	Acidobacteriota	Terriglobia	Versatilivoradales	Versatilivoraceae	DATKMG01		gtdbtk_2.7.2_r232_own	Illumina
+G3f917da428657586	242	2960	1	99.36	4.41	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	PacBio
+G3facf8a54a5ff5f4	243	1637	1	95.64	0.96	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	PacBio
+G3fdce2e9fe12350d	244	4669	1	100.0	0.2	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Angelobacter	Angelobacter sp020072815	gtdbtk_2.7.2_r232_own	PacBio
+G401e391626f28faf	245	2906	131	92.71	2.33	Archaea	Thermoproteota	Bathyarchaeia	TCS64	PIYN01			gtdbtk_2.7.2_r232_own	Illumina
+G40345689bc015595	246	4287	210	97.82	0.59	Bacteria	Auribacterota	JABMQX01	JABMQX01	JABMQX01	CAYZXL01		gtdbtk_2.7.2_r232_own	Illumina
+G409e4ea0cbdb43d4	247	2468	36	96.84	2.23	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01	DASPPK01 sp964537045	gtdbtk_2.7.2_r232_own	Illumina
+G40e6a7c6a985feec	248	5362	1	94.6	1.64	Bacteria	Desulfobacterota	BSN033	BSN033	UBA1163	UBA1163		gtdbtk_2.7.2_r232_own	PacBio
+G419a828c5df61fdd	249	4791	1	98.79	0.88	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Angelobacter		gtdbtk_2.7.2_r232_own	PacBio
+G419cd351ace792f9	250	3315	1	100.0	0.48	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Gallionella		gtdbtk_2.7.2_r232_own	PacBio
+G422689e8e960f5fd	251	1560	1	98.44	0.73	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	PacBio
+G423502dcdb40aaf7	252	1958	11	96.79	0.7	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DRUK01		gtdbtk_2.7.2_r232_own	Illumina
+G4264bf9631111b11	253	3393	116	100.0	0.0	Bacteria	Pseudomonadota	Alphaproteobacteria	Micropepsales	Micropepsaceae	Rhizomicrobium		gtdbtk_2.7.2_r232_own	Illumina
+G4304d3d0875db741	254	2450	24	95.0	2.85	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	UBA11855		gtdbtk_2.7.2_r232_own	Illumina
+G433a846736be960a	255	4462	6	94.53	1.68	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	VAZQ01		gtdbtk_2.7.2_r232_own	PacBio
+G435d13d037c2ec97	256	1406	59	93.45	0.03	Bacteria	Omnitrophota	Gorgyraeia	Gygaellales	Profunditerraquicolaceae	UBA6249		gtdbtk_2.7.2_r232_own	Illumina
+G43688f7ecaf678f9	257	3900	174	100.0	0.07	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JAJYKN01	JAJYKN01 sp021783455	gtdbtk_2.7.2_r232_own	Illumina
+G4419b61f059103cd	258	920	28	98.57	0.12	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	UBA2100	UBA10103		gtdbtk_2.7.2_r232_own	Illumina
+G442a76cf4777bebe	259	3006	1	99.99	0.15	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	DATDDB01		gtdbtk_2.7.2_r232_own	PacBio
+G4447ca2093453e1c	260	1913	6	97.96	0.48	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	Illumina
+G4456dc7f6d3b5b66	261	4529	1	100.0	0.47	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	JACQAP01	JACQAP01		gtdbtk_2.7.2_r232_own	PacBio
+G44995b9c4e26a2ca	262	6629	1	95.22	3.31	Bacteria	Desulfobacterota	Binatia	UBA9968	UBA9968	JACPFE01		gtdbtk_2.7.2_r232_own	PacBio
+G44dd1b62319e84bf	263	4354	1028	91.99	3.9	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	GWC2-71-9	DASTHG01		gtdbtk_2.7.2_r232_own	Illumina
+G45934c70cc9bd21b	264	3827	363	91.61	4.74	Bacteria	Actinomycetota	UBA4738	UBA4738	UBA4738			gtdbtk_2.7.2_r232_own	Illumina
+G45be1d2d1c8041a8	265	3463	472	99.89	0.26	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	CAIQPV01		gtdbtk_2.7.2_r232_own	Illumina
+G45ccda7e05ca38ba	266	4913	1	99.3	2.91	Bacteria	Desulfobacterota	Binatia	UBA9968	UBA9968	JAJPJQ01		gtdbtk_2.7.2_r232_own	PacBio
+G45d559d9f096513d	267	1987	1	94.09	0.52	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	JBFYTX01		gtdbtk_2.7.2_r232_own	PacBio
+G460f75610b671424	268	1907	162	100.0	1.61	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	CAVZKK01		gtdbtk_2.7.2_r232_own	Illumina
+G4626ad0c407cd19b	269	2922	672	91.2	4.89	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	Illumina
+G468ea7d9922f5ef8	270	3339	129	97.08	1.97	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae			gtdbtk_2.7.2_r232_own	Illumina
+G46942179c2c44676	271	3322	567	99.42	3.37	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	DATDDB01	DATDDB01 sp041490205	gtdbtk_2.7.2_r232_own	Illumina
+G47067264c6c78275	272	3665	324	93.32	0.32	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	Gp7-AA6	Gp7-AA6		gtdbtk_2.7.2_r232_own	Illumina
+G47508faeaedc3bdd	273	3184	297	95.78	2.4	Bacteria	Desulfobacterota	Desulfobaccia	Desulfobaccales	0-14-0-80-60-11	0-14-0-80-60-11		gtdbtk_2.7.2_r232_own	Illumina
+G480fb780a5f2de58	274	4826	26	94.19	1.04	Bacteria	Acidobacteriota	Vicinamibacteria	Vicinamibacterales	2-12-FULL-66-21			gtdbtk_2.7.2_r232_own	PacBio
+G4872acb04551a471	275	3695	1	100.0	0.12	Bacteria	Bacteroidota	Bacteroidia	Palsa-948	Palsa-948	Palsa-948		gtdbtk_2.7.2_r232_own	PacBio
+G48f5770f66018f3b	276	2707	1	96.89	3.27	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	RBG-16-68-12	RBG-16-68-12		gtdbtk_2.7.2_r232_own	PacBio
+G48f87ba843d16fd4	277	739	1	98.62	0.08	Bacteria	Patescibacteriota	Minisyncoccia	GCA-002779875	GCA-002779875			gtdbtk_2.7.2_r232_own	PacBio
+G493e53042b9ef1a4	278	2808	256	96.29	0.15	Bacteria	Eisenbacteria	RBG-16-71-46	SZUA-252				gtdbtk_2.7.2_r232_own	Illumina
+G4940b36bad544c07	279	5747	5	99.38	3.0	Bacteria	Pseudomonadota	Alphaproteobacteria	ATCC43930	CGMCC-115725	DASZHJ01		gtdbtk_2.7.2_r232_own	PacBio
+G495a134a952ce6ee	280	5487	7	91.05	1.63	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae			gtdbtk_2.7.2_r232_own	PacBio
+G49a751e05ce97998	281	3415	334	95.18	1.26	Bacteria	Chloroflexota	Limnocylindria	Limnocylindrales	CSP1-4			gtdbtk_2.7.2_r232_own	Illumina
+G49be26022c0fd7d7	282	5321	4	92.93	0.32	Bacteria	Pseudomonadota	Alphaproteobacteria	ATCC43930	CGMCC-115725	DAHUYF01		gtdbtk_2.7.2_r232_own	PacBio
+G4a77ee7337ee53a2	283	6445	1049	90.47	2.84	Bacteria	Methylomirabilota	Methylomirabilia	Methylomirabilales	2-02-FULL-66-22	2-02-FULL-66-22		gtdbtk_2.7.2_r232_own	Illumina
+G4a7e863a0e8114c2	284	4941	4	96.55	2.94	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae	Anaeromyxobacter		gtdbtk_2.7.2_r232_own	PacBio
+G4b9779e9d959a155	285	4178	101	97.65	0.06	Bacteria	Bacteroidota	Bacteroidia	Chitinophagales	Chitinophagaceae	VBAU01		gtdbtk_2.7.2_r232_own	Illumina
+G4c332d839f8ff4e5	286	995	38	97.21	0.06	Bacteria	Patescibacteriota	Doudnabacteria	UBA920	O2-02-FULL-48-8			gtdbtk_2.7.2_r232_own	Illumina
+G4c5817f9ef39713f	287	3456	106	94.71	1.14	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	UBA4085	JAPKZH01		gtdbtk_2.7.2_r232_own	Illumina
+G4d3578d84da998c8	288	4106	1	100.0	1.32	Bacteria	Pseudomonadota	Alphaproteobacteria	Micropepsales	Micropepsaceae	Rhizomicrobium		gtdbtk_2.7.2_r232_own	PacBio
+G4d452b45333b1c64	289	4096	1	99.24	0.03	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	PacBio
+G4de89cb1f76d004e	290	675	12	98.28	0.08	Bacteria	Patescibacteriota	Minisyncoccia	Minisyncoccales	2-12-FULL-40-12			gtdbtk_2.7.2_r232_own	Illumina
+G4e26b032dec98e5b	291	1543	1	94.17	2.58	Bacteria	Omnitrophota	Gorgyraeia	Gygaellales				gtdbtk_2.7.2_r232_own	PacBio
+G4e8eea867be15747	292	1858	25	96.69	0.49	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	CAZUHG01		gtdbtk_2.7.2_r232_own	Illumina
+G4ed809a9c4da1cc5	293	1195	1	90.22	3.76	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	CG10238-14	SCSR01			gtdbtk_2.7.2_r232_own	PacBio
+G4f46865e989c0d6d	294	867	21	100.0	0.28	Bacteria	Patescibacteriota	Patescibacteriia	UBA2591	UBA4787			gtdbtk_2.7.2_r232_own	Illumina
+G4f6ef002eb4f1c16	295	3376	445	99.67	0.9	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	Illumina
+G4fede446cdc895ca	296	3281	1	100.0	0.32	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Palsa-295		gtdbtk_2.7.2_r232_own	PacBio
+G5016363277391569	297	3127	298	96.74	4.72	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	RBG-16-64-43	FEN-1073		gtdbtk_2.7.2_r232_own	Illumina
+G509d2fe60ef40199	298	885	1	99.7	0.15	Bacteria	Patescibacteriota	Microgenomatia	UBA8517	UBA8517			gtdbtk_2.7.2_r232_own	PacBio
+G50ee9f23a05f3776	299	1254	1	96.6	0.06	Archaea	Hadarchaeota	Hadarchaeia	Hadarchaeales	Hadarchaeaceae	B75-G9		gtdbtk_2.7.2_r232_own	PacBio
+G50eead800d493bf4	300	7240	1	96.51	4.53	Bacteria	Chloroflexota	Anaerolineae	Aggregatilineales	UBA2796			gtdbtk_2.7.2_r232_own	PacBio
+G510d666ed53d1700	301	1214	35	94.75	0.87	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	BS750m-G39			gtdbtk_2.7.2_r232_own	Illumina
+G513ae7dae3faf37b	302	2422	170	97.84	2.65	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPTR01		gtdbtk_2.7.2_r232_own	Illumina
+G515a8fe33a52a38f	303	2999	521	90.91	0.75	Bacteria	RBG-13-66-14	B26-G2	WVWN01	WVWN01			gtdbtk_2.7.2_r232_own	Illumina
+G519c82b2ffef0f93	304	4167	1	97.75	0.0	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	Gp7-AA6	JAWOLE01		gtdbtk_2.7.2_r232_own	PacBio
+G51e7650769ce4a88	305	1920	1	99.4	0.02	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Nitrosopumilaceae	Nitrosotalea		gtdbtk_2.7.2_r232_own	PacBio
+G523c6b60e7132081	306	6629	950	93.33	1.52	Bacteria	Acidobacteriota	UBA6911	UBA6911	UBA6911	DASQID01		gtdbtk_2.7.2_r232_own	Illumina
+G523d7d4589eef2dc	307	4943	755	91.29	3.71	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	Bog-366	Bog-366 sp020073545	gtdbtk_2.7.2_r232_own	Illumina
+G528e47673c6a2faa	308	3893	1	100.0	0.13	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Telmatobacter		gtdbtk_2.7.2_r232_own	PacBio
+G52e5143e0a48de9e	309	4655	1218	90.98	4.87	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae	DASTPH01		gtdbtk_2.7.2_r232_own	Illumina
+G52f57c13e998256b	310	4006	439	98.71	2.26	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	JAOUFA01		gtdbtk_2.7.2_r232_own	Illumina
+G531ea7330b045de2	311	2463	1	95.66	3.5	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	UBA2162	JACPPR01		gtdbtk_2.7.2_r232_own	PacBio
+G534ad1645139ede9	312	2966	165	96.36	1.56	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	Saccharicenantaceae	RBG-16-66-30		gtdbtk_2.7.2_r232_own	Illumina
+G537954708fcd26d5	313	3058	36	97.49	1.61	Bacteria	Electryoneota	B3-LCP	B3-LCP	B3-LCP			gtdbtk_2.7.2_r232_own	Illumina
+G5395789d2d5d97d0	314	6631	1	97.67	0.85	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01	JAPKYU01		gtdbtk_2.7.2_r232_own	PacBio
+G53b765b96d10d887	315	2984	380	94.55	2.33	Bacteria	Eisenbacteria	RBG-16-71-46	SZUA-252	SZUA-252			gtdbtk_2.7.2_r232_own	Illumina
+G541f780867b199d8	316	2655	216	97.93	3.54	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	JAFNFQ01	JAFNFQ01		gtdbtk_2.7.2_r232_own	Illumina
+G548a5be9daba0e98	317	3291	2	98.09	2.71	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	Bathycorpusculum		gtdbtk_2.7.2_r232_own	PacBio
+G54a09616a1da1964	318	2129	24	99.99	1.79	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	SOJC01	CAYGVX01		gtdbtk_2.7.2_r232_own	Illumina
+G55061a2d67cf2fc4	319	3598	6	96.05	0.12	Bacteria	Bacteroidota	Ignavibacteria	Ignavibacteriales	Ignavibacteriaceae	DATFVA01		gtdbtk_2.7.2_r232_own	PacBio
+G55075dd89d163e42	320	3648	240	96.08	2.92	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	CAWBNQ01		gtdbtk_2.7.2_r232_own	Illumina
+G55264ab4bde643f3	321	2441	1	95.79	1.84	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	RBG-13-51-18		gtdbtk_2.7.2_r232_own	PacBio
+G556a000a4d8d01f3	322	2235	56	92.34	1.76	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	RBG-16-68-12	RBG-16-68-12		gtdbtk_2.7.2_r232_own	Illumina
+G55832018d29116be	323	2905	1	96.42	4.98	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	CAVPLU01		gtdbtk_2.7.2_r232_own	PacBio
+G55c4e41439cedb03	324	3210	1	100.0	0.01	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	DATDDB01		gtdbtk_2.7.2_r232_own	PacBio
+G55d0541a84a30c5f	325	2456	1	99.45	3.96	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JAGTQT01		gtdbtk_2.7.2_r232_own	PacBio
+G55d1fa4895161150	326	3193	125	95.36	2.17	Bacteria	Zixibacteria	MSB-5A5	UBA10806	UBA10806	UBA10806		gtdbtk_2.7.2_r232_own	Illumina
+G563537b6392666af	327	1291	157	96.41	2.69	Bacteria	Patescibacteriota	Doudnabacteria	UBA920	UBA920	JAMDAY01		gtdbtk_2.7.2_r232_own	Illumina
+G568cfdacb25d8e81	328	4310	568	97.81	2.87	Bacteria	Pseudomonadota	Gammaproteobacteria	Methylococcales	Methylomonadaceae	Methylobacter_A	Methylobacter_A sp028714995	gtdbtk_2.7.2_r232_own	Illumina
+G56e2007251ed8dce	329	3071	1	100.0	0.07	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Gallionella		gtdbtk_2.7.2_r232_own	PacBio
+G571f3de2d9865efd	330	2269	1	97.14	1.67	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	PacBio
+G5747997ebce8779a	331	1987	98	93.99	2.31	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBGQMW01		gtdbtk_2.7.2_r232_own	Illumina
+G5780d96eaa17d4d4	332	2108	1	100.0	4.83	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	CAVZKK01	CAVZKK01 sp964573475	gtdbtk_2.7.2_r232_own	PacBio
+G57f3024d45853692	333	1659	1	96.95	0.73	Archaea	Nanobdellota	Nanobdellia	Woesearchaeales	ARS49	JAGVZE01		gtdbtk_2.7.2_r232_own	PacBio
+G586af0015361b98e	334	2730	72	98.4	0.65	Bacteria	Edwardsbacteria	CAYGWX01	CAYGWX01	CAYGWX01			gtdbtk_2.7.2_r232_own	Illumina
+G5885a84698d1b1e6	335	1939	82	99.44	1.79	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	Illumina
+G58af705f671ce972	336	2334	323	91.58	1.95	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	UBA12454	JAPLMW01		gtdbtk_2.7.2_r232_own	Illumina
+G58ec1c3b8c4d51b5	337	1797	1	99.12	0.58	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	PacBio
+G590c1a75739bcd42	338	740	1	95.64	0.05	Bacteria	Patescibacteriota	Minisyncoccia	RBG-13-40-8-A	RBG-13-40-8-A	JBMORO01		gtdbtk_2.7.2_r232_own	PacBio
+G591059443091d1d8	339	5479	238	95.96	1.4	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JAIQGA01		gtdbtk_2.7.2_r232_own	Illumina
+G5926fd5f8a31776a	340	2194	44	98.96	3.07	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+G5955d6927b514e15	341	1766	1	94.48	0.32	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	DTMW01			gtdbtk_2.7.2_r232_own	PacBio
+G5967874dc306eea4	342	3730	1	97.51	0.85	Bacteria	Nitrospirota	Nitrospiria	Nitrospirales	Nitrospiraceae	Palsa-1315		gtdbtk_2.7.2_r232_own	PacBio
+G5a037dc039df461f	343	2267	158	100.0	2.49	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	Illumina
+G5a6ac8c1a400bda1	344	2408	104	99.4	4.54	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	UBA2162	JAUSGV01		gtdbtk_r220_own	Illumina
+G5a7c101cb5dad6cc	345	2495	421	96.89	0.53	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35	VGWZ01	VGWZ01 sp041489235	gtdbtk_2.7.2_r232_own	Illumina
+G5a881a305f5dd02c	346	3421	1	98.09	0.07	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Palsa-360	Palsa-360 sp020073705	gtdbtk_2.7.2_r232_own	PacBio
+G5aa8e57499f05bfa	347	2047	129	94.18	0.72	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+G5ad5a5d426fbea27	348	6168	1	97.55	0.62	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01			gtdbtk_2.7.2_r232_own	PacBio
+G5af2f68759bd8aaa	349	2990	1	94.25	2.94	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	Fen-1077		gtdbtk_2.7.2_r232_own	PacBio
+G5b1292a2de535a79	350	5429	1	98.94	0.96	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Acidiflorens		gtdbtk_2.7.2_r232_own	PacBio
+G5b2c6e9d945e9237	351	1913	1	97.94	0.58	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	PacBio
+G5b3e9b6f7cb8a67e	352	3372	1	100.0	0.04	Bacteria	Bacteroidota	Ignavibacteria	Tepidaquicellales	OLB5			gtdbtk_2.7.2_r232_own	PacBio
+G5b83b0c8dcb935c6	353	4865	1	99.29	1.4	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01	JAPKYU01		gtdbtk_2.7.2_r232_own	PacBio
+G5bc008a19a1887ed	354	1146	44	100.0	0.9	Bacteria	Patescibacteriota	Microgenomatia	Levybacterales	GWA1-39-11	CG2-30-37-29		gtdbtk_2.7.2_r232_own	Illumina
+G5c60b437a0d1a61e	355	2242	36	94.63	3.01	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	JAFNFQ01	JAFNFQ01		gtdbtk_2.7.2_r232_own	Illumina
+G5c6ab351ca83f935	356	2438	86	93.45	0.36	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	JACPRH01	JACPRH01		gtdbtk_2.7.2_r232_own	Illumina
+G5c8ebed73cc6addd	357	2336	1	95.43	4.11	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_r220_own	PacBio
+G5d3fce98bc967c21	358	1637	128	94.2	2.01	Bacteria	Omnitrophota	Gorgyraeia	2-01-FULL-45-10	2-01-FULL-45-10	FEN-1322		gtdbtk_2.7.2_r232_own	Illumina
+G5d7af43612f83076	359	2085	1	99.14	0.13	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Nitrosopumilaceae	Nitrosotalea		gtdbtk_2.7.2_r232_own	PacBio
+G5d99ad4f76245bae	360	2820	134	94.48	0.48	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	JAFGAV01	JAFGAV01		gtdbtk_2.7.2_r232_own	Illumina
+G5ddc94af7819a0d4	361	2747	1	98.83	4.0	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	PacBio
+G5e8594e7b1e2e4eb	362	2932	143	98.08	3.3	Bacteria	Nitrospirota	Nitrospiria	Nitrospirales	NS-4	SCTG01		gtdbtk_2.7.2_r232_own	Illumina
+G5f26183b5f8335e3	363	3266	10	93.94	0.1	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	GWC2-71-9	Palsa-1233		gtdbtk_2.7.2_r232_own	PacBio
+G602ad3dc083f50c9	364	3328	5	100.0	0.06	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQFD01	JAIQFD01 sp020073495	gtdbtk_2.7.2_r232_own	PacBio
+G603a635e3c92cce7	365	1722	49	91.26	0.23	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	DTMW01			gtdbtk_2.7.2_r232_own	Illumina
+G605affb47f854c4c	366	2661	108	96.15	0.47	Bacteria	Spirochaetota	Leptospiria	Turneriellales	JAOUFE01	JAOUFE01		gtdbtk_2.7.2_r232_own	Illumina
+G6089b5c6e0dbd46f	367	2788	1	95.79	3.13	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	Fen-1064	JAURWL01		gtdbtk_2.7.2_r232_own	PacBio
+G60c1ee9847be2490	368	2275	395	90.42	3.41	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	Illumina
+G60d9c727c329f583	369	4541	180	98.69	2.04	Bacteria	Pseudomonadota	Alphaproteobacteria	Micropepsales	Micropepsaceae	CAIYRG01		gtdbtk_2.7.2_r232_own	Illumina
+G60db45834d43627c	370	3378	1	99.99	0.11	Bacteria	Pseudomonadota	Gammaproteobacteria	Acidiferrobacterales	Sulfurifustaceae	Sulfuricaulis		gtdbtk_2.7.2_r232_own	PacBio
+G60e53c572206652a	371	3391	4	93.22	0.0	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae	JADMIL01		gtdbtk_2.7.2_r232_own	PacBio
+G6163b607081ac6f6	372	2020	1	94.46	0.32	Archaea	Thermoplasmatota	E2	DHVEG-1	DHVEG-1	CAIRCU01		gtdbtk_2.7.2_r232_own	PacBio
+G61fce55024ea436e	373	4765	6	96.16	1.57	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	CAZTHM01		gtdbtk_2.7.2_r232_own	PacBio
+G630cf96c9fd83fbd	374	2645	54	98.72	1.62	Bacteria	Methylomirabilota	Methylomirabilia					gtdbtk_2.7.2_r232_own	Illumina
+G6324ddd62a0c1126	375	2658	1	99.99	0.26	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Methylophilaceae	Novimethylophilus		gtdbtk_2.7.2_r232_own	PacBio
+G63c332371f813fbb	376	4985	483	90.44	4.89	Bacteria	Chloroflexota	Ktedonobacteria	Ktedonobacterales	Ktedonobacteraceae			gtdbtk_2.7.2_r232_own	Illumina
+G63ce5db8daa762c9	377	3486	298	90.03	0.31	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	UBA4823	FEB-25		gtdbtk_2.7.2_r232_own	Illumina
+G63dada488dd2e879	378	4733	1	97.24	0.16	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	PacBio
+G647b30977757a5e4	379	1049	1	100.0	0.37	Bacteria	Patescibacteriota	Patescibacteriia	Veblenbacterales	UBA10138	CAYVOI01		gtdbtk_2.7.2_r232_own	PacBio
+G649d604cd146f5c2	380	5574	1	92.59	0.92	Bacteria	Actinomycetota	CALGFH01	CALGFH01	CALGFH01	DASVXQ01		gtdbtk_2.7.2_r232_own	PacBio
+G64a73497b5d8a926	381	1944	137	94.99	0.5	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	DTMW01			gtdbtk_2.7.2_r232_own	Illumina
+G64f581d5d45c5d19	382	5229	713	93.18	2.17	Bacteria	Pseudomonadota	Gammaproteobacteria	CAWCPV01	CAWCPV01	CAWCPV01		gtdbtk_2.7.2_r232_own	Illumina
+G65d80524ebba3feb	383	4817	915	96.11	4.79	Bacteria	Zhuqueibacterota	QNDG01	QNDG01	DTFT01			gtdbtk_2.7.2_r232_own	Illumina
+G6604ef8291beae9f	384	2832	166	99.44	4.71	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	Illumina
+G6622baa5d5df6350	385	2756	243	94.38	4.72	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	FEN-987		gtdbtk_2.7.2_r232_own	Illumina
+G66bf6bcff37e8f66	386	2404	30	95.02	2.1	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae	CAIYOL01		gtdbtk_2.7.2_r232_own	Illumina
+G66e95b9399472831	387	7453	329	94.97	2.06	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Limisphaerales	UBA8199			gtdbtk_2.7.2_r232_own	Illumina
+G673b0f8062d54df0	388	2745	1	100.0	0.01	Bacteria	Pseudomonadota	Alphaproteobacteria	Micropepsales	Micropepsaceae	Rhizomicrobium		gtdbtk_2.7.2_r232_own	PacBio
+G67738c7f85ee2aca	389	2071	16	95.68	0.44	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_2.7.2_r232_own	Illumina
+G681ba062827fc6ae	390	2855	1	93.75	4.51	Archaea	Thermoproteota	Bathyarchaeia	TCS64	PIYN01			gtdbtk_2.7.2_r232_own	PacBio
+G688618c9a4d165f0	391	4000	1	100.0	0.02	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	PacBio
+G6889d0f4e7ddb877	392	865	46	99.74	3.97	Bacteria	Patescibacteriota	Minisyncoccia	Portnoybacterales	GWB1-42-6			gtdbtk_2.7.2_r232_own	Illumina
+G68c5d74ef98f287a	393	2375	60	93.49	1.52	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	Fen-1077		gtdbtk_2.7.2_r232_own	Illumina
+G692c0c716a29d468	394	2036	1	98.71	0.24	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	Methanospirillaceae	UBA9949		gtdbtk_2.7.2_r232_own	PacBio
+G6991956676f9570c	395	3380	74	100.0	2.95	Archaea	Asgardarchaeota	Jordiarchaeia	Jordiarchaeales	Jordiarchaeaceae	Jordiarchaeum	Jordiarchaeum deiterrae	gtdbtk_2.7.2_r232_own	Illumina
+G69a39f71a70ae503	396	3035	167	100.0	2.06	Bacteria	Electryoneota	RPQS01	RPQS01	RPQS01			gtdbtk_2.7.2_r232_own	Illumina
+G69b051a7a159e145	397	3115	467	94.28	4.78	Bacteria	Nitrospirota	Nitrospiria	JACQBZ01	JACQBZ01	JACQBZ01		gtdbtk_2.7.2_r232_own	Illumina
+G69bd31ac0843d16a	398	4206	328	92.58	4.43	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Palsa-1439	Palsa-1439	Palsa-1439		gtdbtk_2.7.2_r232_own	Illumina
+G69f36a3fab711edf	399	5262	4	96.73	4.37	Bacteria	Abyssobacteria	SURF-5	SURF-5	SURF-5			gtdbtk_2.7.2_r232_own	PacBio
+G6a089f0acf1f75ba	400	5053	1	91.4	0.27	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SHXO01	SHXO01		gtdbtk_2.7.2_r232_own	PacBio
+G6a4bfc13933f998b	401	2125	36	95.17	0.89	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_2.7.2_r232_own	Illumina
+G6a4c19fbf3329663	402	4510	114	95.94	3.31	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	Villigracilaceae	Villigracilis		gtdbtk_2.7.2_r232_own	Illumina
+G6a4e0e0d2ae5750f	403	3501	1	100.0	1.53	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA6898	JAOUFP01		gtdbtk_2.7.2_r232_own	PacBio
+G6a75e17afce01e4f	404	3472	4	98.8	1.53	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	JACORV01	Fen-1245		gtdbtk_2.7.2_r232_own	PacBio
+G6aafa2dbed749a65	405	695	1	100.0	0.1	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	2-01-FULL-56-20			gtdbtk_2.7.2_r232_own	PacBio
+G6abb1603873efbd0	406	2379	28	100.0	0.06	Bacteria							gtdbtk_2.7.2_r232_own	Illumina
+G6b0deda5c0b45566	407	3776	14	91.27	3.02	Bacteria	Pseudomonadota	Gammaproteobacteria	Steroidobacterales	Steroidobacteraceae	13-2-20CM-66-19		gtdbtk_2.7.2_r232_own	PacBio
+G6b11631f0f188759	408	3704	1	99.33	0.29	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39			gtdbtk_2.7.2_r232_own	PacBio
+G6b29eb24f04be76c	409	1848	75	96.41	3.91	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	Illumina
+G6bb7bb96bf595c26	410	2491	93	96.67	3.05	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	UBA2162	CAVSBN01		gtdbtk_2.7.2_r232_own	Illumina
+G6bbcbaa200351f58	411	1897	149	91.52	4.08	Bacteria	Chloroflexota	Dehalococcoidia	SM23-28-2	SM23-28-2	JAUYDU01	JAUYDU01 sp964354065	gtdbtk_2.7.2_r232_own	Illumina
+G6bbf1684f6c126bb	412	2863	1	92.86	1.37	Bacteria	Chloroflexota	Dehalococcoidia	UBA2247	RBG-13-53-26	JAFGCL01		gtdbtk_2.7.2_r232_own	PacBio
+G6bf09d98d68361cf	413	3304	1	99.48	0.13	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Palsa-295	Palsa-295 sp020072765	gtdbtk_2.7.2_r232_own	PacBio
+G6c5bab5027b20260	414	4225	7	95.88	0.19	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae	JASHZA01		gtdbtk_2.7.2_r232_own	PacBio
+G6c5be7b8592e984a	415	3512	1	100.0	1.59	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA6898	Sulfobium		gtdbtk_2.7.2_r232_own	PacBio
+G6c954babcbd397cd	416	1871	67	95.4	2.79	Archaea	Thermoplasmatota	E2	DHVEG-1	DHVEG-1	PFL35		gtdbtk_2.7.2_r232_own	Illumina
+G6caea3e5cd9939ab	417	3419	4	98.47	0.82	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+G6cf1507e64396b08	418	1967	1	99.17	0.91	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	PacBio
+G6d7b21d936855f4c	419	3785	454	97.69	1.39	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030			gtdbtk_2.7.2_r232_own	Illumina
+G6defa3f8bf0b9a17	420	2821	79	94.84	0.46	Bacteria	Armatimonadota	Hebobacteria	Hebobacterales	Hebobacteraceae	MFD04408-11	MFD04408-11 sp963716175	gtdbtk_2.7.2_r232_own	Illumina
+G6df887b857a06cb8	421	3202	56	95.32	2.73	Bacteria	Armatimonadota	Hebobacteria	Hebobacterales	Hebobacteraceae	MFD04408-11		gtdbtk_2.7.2_r232_own	Illumina
+G6e1c9e7af6af4b44	422	4429	5	92.09	1.44	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Acidiflorens		gtdbtk_2.7.2_r232_own	PacBio
+G6e2556449b33781b	423	2585	133	92.82	2.89	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	RBG-16-68-12	RBG-16-68-12		gtdbtk_2.7.2_r232_own	Illumina
+G6e779098aa353c7b	424	4537	426	100.0	3.07	Bacteria	Desulfobacterota	Desulfuromonadia	Geobacterales	Geobacteraceae	CAIWTU01		gtdbtk_2.7.2_r232_own	Illumina
+G6f0c0452cd8d5156	425	3161	639	92.94	4.37	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	RBG-16-68-12	RBG-16-68-12		gtdbtk_r220_own	Illumina
+G6f1a9b7e3d1bc011	426	769	13	98.5	0.44	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	GWB1-50-10	JBBTQX01		gtdbtk_2.7.2_r232_own	Illumina
+G6f44a3c107dd16a2	427	3555	63	93.38	1.0	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae			gtdbtk_2.7.2_r232_own	Illumina
+G6f63d589fe340936	428	4343	121	99.48	2.45	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	2-12-FULL-64-23		gtdbtk_2.7.2_r232_own	Illumina
+G6f9c799252158152	429	824	105	93.1	0.9	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	UBA9933	DAHWFZ01		gtdbtk_2.7.2_r232_own	Illumina
+G6faa423789b368e3	430	4898	1	98.91	0.38	Bacteria	Acidobacteriota	Terriglobia	JAIQFV01	JAIQFV01	JAIQFV01		gtdbtk_2.7.2_r232_own	PacBio
+G6fdeac0209ec3f6b	431	3121	1	97.38	2.58	Bacteria	Chloroflexota	Dehalococcoidia	DSTF01	JACRBR01	DASQHL01		gtdbtk_2.7.2_r232_own	PacBio
+G6fe58828c88682cf	432	3738	274	93.54	3.13	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030	Fen-1298		gtdbtk_2.7.2_r232_own	Illumina
+G701260077dfa632b	433	2629	64	97.13	1.86	Bacteria	Zixibacteria	MSB-5A5	MSB-5A5	SM1-73	CAIVRH01		gtdbtk_2.7.2_r232_own	Illumina
+G7032af954522c4d4	434	3192	1	99.57	0.52	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JALHUF01		gtdbtk_2.7.2_r232_own	PacBio
+G707c63bcce232fd6	435	4866	12	98.47	2.28	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Usitatibacteraceae	Usitatibacter		gtdbtk_2.7.2_r232_own	PacBio
+G709031d014fa2dfa	436	3232	162	98.18	0.75	Bacteria	Eisenbacteria	RBG-16-71-46	RBG-16-71-46	RBG-16-71-46			gtdbtk_2.7.2_r232_own	Illumina
+G70aecf36e038b95d	437	3052	86	100.0	1.54	Bacteria	Desulfobacterota	B13-G15	B13-G15	RBG-16-54-18	RBG-16-54-11		gtdbtk_2.7.2_r232_own	Illumina
+G70f5caf7bd62c110	438	1987	94	94.01	1.96	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+G7158d7d86aa0653f	439	3050	1	98.87	0.22	Bacteria	Desulfobacterota	Desulfobaccia	Desulfobaccales	0-14-0-80-60-11	JAPLJC01		gtdbtk_2.7.2_r232_own	PacBio
+G716131ed505a51be	440	5165	409	95.61	2.82	Bacteria	Armatimonadota	Hebobacteria	Hebobacterales	Hebobacteraceae	CAZUGW01		gtdbtk_2.7.2_r232_own	Illumina
+G716392c0d9c2b078	441	3006	1	91.54	0.57	Archaea	Thermoplasmatota	DTKX01	DTKX01	GCA-020343715	CAYGVT01		gtdbtk_2.7.2_r232_own	PacBio
+G7204c67fc18c6c7c	442	3527	570	92.4	0.22	Bacteria	Acidobacteriota	Thermoanaerobaculia	Thermoanaerobaculales	Thermoanaerobaculaceae	RBG-13-68-16		gtdbtk_2.7.2_r232_own	Illumina
+G720f180d80067652	443	4899	1	99.6	4.17	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	2-12-FULL-64-23		gtdbtk_2.7.2_r232_own	PacBio
+G722a9b945e20d854	444	946	51	90.53	0.97	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	Aenigmatarchaeales	Aenigmatarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+G7237fb318fc3e17f	445	3814	1	100.0	1.78	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SMCO01	Sulfurirhabdus		gtdbtk_2.7.2_r232_own	PacBio
+G730f205bd9453c9c	446	4577	1036	91.8	3.87	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030	UBA9647		gtdbtk_2.7.2_r232_own	Illumina
+G73afcb7ec108febd	447	3377	358	93.8	1.46	Bacteria	Bacteroidota	Ignavibacteria	Tepidaquicellales	OLB5	CAVUOA01		gtdbtk_2.7.2_r232_own	Illumina
+G73b2a86fc6d14696	448	3233	1	99.99	0.06	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Rhodocyclaceae	AWTP1-18		gtdbtk_2.7.2_r232_own	PacBio
+G73c870a4341cbae9	449	3450	55	98.96	1.0	Bacteria	Sysuimicrobiota	Sysuimicrobiia	Sysuimicrobiales	Kaftiobacteriaceae	Kaftiobacterium		gtdbtk_2.7.2_r232_own	Illumina
+G73e514affc0d905c	450	3572	1	98.33	0.11	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Acidiferrum		gtdbtk_2.7.2_r232_own	PacBio
+G743d934babcc4f6c	451	3008	534	91.18	2.57	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	Aminicenantaceae	CAZGMN01		gtdbtk_r232_cluster_representative	Illumina
+G7514f5fbf7a68e4a	452	907	1	92.31	1.51	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	Aenigmatarchaeales	JAHLMS01			gtdbtk_2.7.2_r232_own	PacBio
+G753d74d57003367d	453	985	13	91.25	1.02	Bacteria	Patescibacteriota	UBA1384	2-12-FULL-50-11	2-12-FULL-50-11	JBGOUP01		gtdbtk_2.7.2_r232_own	PacBio
+G7562203f5657af39	454	3361	194	99.32	0.01	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA6906			gtdbtk_2.7.2_r232_own	Illumina
+G75833209afd70812	455	3507	411	95.66	2.15	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	Illumina
+G758d1f9380a71409	456	2604	142	99.87	2.75	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	Illumina
+G759ac0a95273629a	457	2107	128	99.44	1.3	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	JAFNFQ01	JAFNFQ01		gtdbtk_2.7.2_r232_own	Illumina
+G75d16aa811a79385	458	4212	898	93.71	3.61	Bacteria	Desulfobacterota	Desulfarculia	Adiutricales				gtdbtk_2.7.2_r232_own	Illumina
+G75da5b712f555f3d	459	4665	70	93.7	2.16	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae			gtdbtk_2.7.2_r232_own	Illumina
+G75f6e2cd36d10624	460	3193	1	100.0	0.8	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	JBBRTU01	JBBRTU01		gtdbtk_2.7.2_r232_own	PacBio
+G767ec9d7f9b8d81f	461	3953	1	100.0	0.14	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQGF01		gtdbtk_2.7.2_r232_own	PacBio
+G76b8d85fe274db8a	462	5176	1	100.0	0.66	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Gp1-AA122		gtdbtk_2.7.2_r232_own	PacBio
+G76bd25c383b0afa2	463	4233	1	100.0	0.84	Bacteria	Nitrospirota	Nitrospiria	Nitrospirales	Nitrospiraceae	Palsa-1315		gtdbtk_2.7.2_r232_own	PacBio
+G770bc68d4e1071f5	464	4956	1	95.41	1.15	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae	DATGKG01		gtdbtk_2.7.2_r232_own	PacBio
+G772ad3d99f68833e	465	1036	75	91.35	0.91	Bacteria	Patescibacteria	Microgenomatia	GWA2-44-7	UBA8517			gtdbtk_r220_own	Illumina
+G778552ca59b1b521	466	3691	1	100.0	0.04	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Acidiferrum		gtdbtk_2.7.2_r232_own	PacBio
+G77ee754ad68de035	467	3821	400	99.21	2.61	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	CAVYOD01	CAVYOD01		gtdbtk_2.7.2_r232_own	Illumina
+G7876e478778abf4f	468	3730	4	100.0	1.72	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA6898			gtdbtk_2.7.2_r232_own	PacBio
+G78a33d26a60f7642	469	3426	192	97.14	4.74	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Palsa-295	Palsa-295 sp020073605	gtdbtk_2.7.2_r232_own	Illumina
+G7935066a883d66c7	470	2754	1	98.15	3.02	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DRUK01		gtdbtk_2.7.2_r232_own	PacBio
+G799e654bd11c780a	471	5494	167	94.73	1.69	Bacteria	Acidobacteriota	Blastocatellia	UBA7656	UBA7656	Onstottus_A		gtdbtk_2.7.2_r232_own	Illumina
+G79a75aea18ac8ab2	472	2170	112	95.32	0.55	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_2.7.2_r232_own	Illumina
+G79bd41e3dda6fa3c	473	3699	1	100.0	0.83	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	CAWBNQ01		gtdbtk_2.7.2_r232_own	PacBio
+G7a25fb4bb2400256	474	1271	38	91.52	1.32	Archaea	Micrarchaeota	Micrarchaeia	Anstonellales	Bilamarchaeaceae	Bilamarchaeum		gtdbtk_2.7.2_r232_own	Illumina
+G7a91760ea9431e8f	475	1637	49	95.31	2.5	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	Illumina
+G7aa2a77445f42bbf	476	4526	355	93.56	3.25	Bacteria	Chloroflexota	Anaerolineae	JACRMK01	JACRMK01	JACRMK01		gtdbtk_2.7.2_r232_own	Illumina
+G7ac32deda8fe9429	477	2112	1	98.52	0.3	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Nitrosopumilaceae	Nitrosotalea		gtdbtk_2.7.2_r232_own	PacBio
+G7af3138ace4864a5	478	4273	1	99.05	0.45	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	PacBio
+G7b08b44e85b1ef8c	479	3446	1	100.0	1.98	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	SZUA-254			gtdbtk_2.7.2_r232_own	PacBio
+G7b5938304b3cff10	480	2002	84	93.52	0.51	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+G7b61199d8b2554b7	481	2871	1	95.59	0.86	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	Saccharicenantaceae	DATKJS01		gtdbtk_2.7.2_r232_own	PacBio
+G7b8e463b6ffed9f1	482	3739	1	99.21	1.83	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA6898	JAOUFP01		gtdbtk_2.7.2_r232_own	PacBio
+G7bb7ab030eb9ac83	483	2459	65	98.38	0.33	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	Methanospirillaceae	MFD10007-c6		gtdbtk_2.7.2_r232_own	Illumina
+G7bf81e21565689de	484	2369	86	94.42	3.66	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	UBA11855	UBA11855 sp964632825	gtdbtk_2.7.2_r232_own	Illumina
+G7c0c895498863b93	485	6043	10	98.11	4.7	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-41	PALSA-1004		gtdbtk_2.7.2_r232_own	PacBio
+G7c103785929302f8	486	2993	4	98.77	0.02	Bacteria	Zixibacteria	MSB-5A5	GN15	FEB-12	FEB-12		gtdbtk_2.7.2_r232_own	PacBio
+G7c5b13d3c9fb6ebb	487	1967	155	100.0	1.07	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	Illumina
+G7cb39b14bbe61cef	488	1400	48	93.07	2.1	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	BS750m-G39	CAZHLO01		gtdbtk_2.7.2_r232_own	Illumina
+G7cd32f9b05181ee8	489	7909	2710	91.76	3.84	Bacteria	Myxococcota	Myxococcia	Myxococcales	Myxococcaceae	JBBIOE01		gtdbtk_2.7.2_r232_own	Illumina
+G7cd983f99905ae8c	490	3408	85	100.0	0.14	Bacteria	Pseudomonadota	Gammaproteobacteria	Steroidobacterales	Steroidobacteraceae	Bog-1198		gtdbtk_2.7.2_r232_own	Illumina
+G7dcb08d7f8eceb94	491	1827	21	90.35	2.63	Archaea	Hadarchaeota	Hadarchaeia	Hadarchaeales	Hadarchaeaceae	Hadarchaeum		gtdbtk_2.7.2_r232_own	Illumina
+G7df786d41f6a502c	492	2445	35	90.07	1.26	Archaea	Thermoplasmatota	E2	DHVEG-1	DHVEG-1	SM1-50		gtdbtk_2.7.2_r232_own	Illumina
+G7e6197b09dc4f2f4	493	2531	1	97.26	1.3	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JADGNF01		gtdbtk_2.7.2_r232_own	PacBio
+G7e7c50c44872b2b3	494	2427	32	98.03	2.17	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	FEN-987		gtdbtk_2.7.2_r232_own	Illumina
+G7e8bc0ffd8fe00f3	495	5457	1	97.84	0.78	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	PacBio
+G7f1bb8dca944234c	496	1236	3	93.74	1.52	Bacteria	Patescibacteriota	Microgenomatia	UBA8517	UBA8517	WO2-FULL-39-9		gtdbtk_2.7.2_r232_own	PacBio
+G7f1d7538c4acbd38	497	3722	57	100.0	1.87	Bacteria	Acidobacteriota	Polarisedimenticolia	Polarisedimenticolales	JAIQFR01	JAIQFR01	JAIQFR01 sp020073205	gtdbtk_2.7.2_r232_own	Illumina
+G7f4f9f7c4024a761	498	4420	7	92.11	3.09	Bacteria	Pseudomonadota	Alphaproteobacteria	MPNO01	VGEU01			gtdbtk_2.7.2_r232_own	PacBio
+G7fedeb55971c5e8a	499	1094	135	93.33	1.81	Bacteria	Patescibacteriota	Patescibacteriia	2-12-FULL-60-25	2-12-FULL-60-25	MWCR01		gtdbtk_2.7.2_r232_own	Illumina
+G8027a0183ad0e682	500	4045	4	98.24	0.8	Bacteria	Pseudomonadota	Alphaproteobacteria	Micropepsales	Micropepsaceae	CAIYRG01		gtdbtk_2.7.2_r232_own	PacBio
+G805fcbd95fc1f057	501	4556	623	91.12	3.37	Bacteria	Myxococcota_A	UBA9160	UBA9160	UBA9160	JAWOLJ01		gtdbtk_2.7.2_r232_own	Illumina
+G80cc8f8a5c8164fc	502	2451	1	100.0	0.03	Bacteria	Desulfobacterota	GWC2-55-46	GWC2-55-46	GWC2-55-46	JAKAIQ01		gtdbtk_2.7.2_r232_own	PacBio
+G816406b198c5f449	503	6247	1084	93.91	4.72	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae	PLanc-01		gtdbtk_r232_cluster_representative	Illumina
+G8180f0bf695afb1a	504	2084	63	96.49	0.4	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	JACTUA01	JACTUA01		gtdbtk_2.7.2_r232_own	Illumina
+G822ed60f72ec137a	505	7622	14	95.26	2.02	Bacteria	Myxococcota_A	Polyangia	Polyangiales	Polyangiaceae	Palsa-1150		gtdbtk_2.7.2_r232_own	PacBio
+G825dc9c2ed714aaa	506	2760	1	95.18	2.85	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	CAVPLU01		gtdbtk_2.7.2_r232_own	PacBio
+G829c38a60b8c55cb	507	3137	53	96.18	1.04	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Palsa-1439	Palsa-1439	Palsa-1439		gtdbtk_2.7.2_r232_own	Illumina
+G82a452dcc55afe77	508	2883	120	97.48	0.68	Bacteria	Edwardsbacteria	CAYGWX01					gtdbtk_2.7.2_r232_own	Illumina
+G83a032c927d00eef	509	2979	1	99.13	0.49	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+G83b468b2beb65d25	510	2246	258	97.19	4.31	Bacteria	Margulisbacteria	WOR-1	O2-12-FULL-45-9	XYB2-FULL-48-7			gtdbtk_2.7.2_r232_own	Illumina
+G83be03fe08d2f5c1	511	1060	1	96.01	0.12	Bacteria	Patescibacteriota	Microgenomatia	Woykebacterales	RBG-16-39-9b	JAUYID01		gtdbtk_2.7.2_r232_own	PacBio
+G83cd825c21e0ed3b	512	3285	8	92.79	1.5	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	FEN-979	CAIYUC01		gtdbtk_2.7.2_r232_own	PacBio
+G8456659679ddb301	513	3359	1	99.99	0.13	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	DATDDB01		gtdbtk_2.7.2_r232_own	PacBio
+G8486f9ea94af7dc7	514	4962	3	98.71	1.02	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Acidiflorens	Acidiflorens sp020073215	gtdbtk_2.7.2_r232_own	PacBio
+G84a12d8bc300a4bb	515	3259	42	99.18	0.48	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA9159	CAZNTS01		gtdbtk_2.7.2_r232_own	Illumina
+G84ece36f2978ae86	516	1399	84	100.0	4.73	Bacteria	Chloroflexota	Dehalococcoidia	SZUA-161	JAUWZY01			gtdbtk_2.7.2_r232_own	Illumina
+G84f8c297b71bd12d	517	3571	1	100.0	0.13	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Acidiferrum		gtdbtk_2.7.2_r232_own	PacBio
+G8501b40901d25c12	518	2811	107	97.63	4.31	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	RBG-16-68-12	EA-19		gtdbtk_2.7.2_r232_own	Illumina
+G85214649900bd214	519	1987	1	98.93	0.24	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	JACTUA01	JACTUA01		gtdbtk_2.7.2_r232_own	PacBio
+G8596536449ec1b6a	520	5614	23	92.56	3.27	Bacteria	Desulfobacterota	Binatia	HRBIN30	HRBIN30			gtdbtk_2.7.2_r232_own	PacBio
+G86518bfaed0f392d	521	4485	189	92.0	1.57	Bacteria	Desulfobacterota	BSN033	BSN033	UBA1163	UBA1163	UBA1163 sp049684675	gtdbtk_2.7.2_r232_own	Illumina
+G86623ed7da1a46a2	522	1072	7	91.6	3.46	Bacteria	Patescibacteriota	Patescibacteriia	2-12-FULL-57-11	2-12-FULL-57-11	CALRHY01		gtdbtk_2.7.2_r232_own	PacBio
+G874580d5c67e6721	523	4205	1	98.47	0.22	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	PacBio
+G8748b29f84a608c3	524	1099	94	92.3	2.62	Bacteria	Patescibacteriota	Microgenomatia	Levybacterales	UBA12049	GWB1-37-8		gtdbtk_2.7.2_r232_own	Illumina
+G8770672cee0d0023	525	4839	71	100.0	2.73	Bacteria	Acidobacteriota	Vicinamibacteria	Vicinamibacterales	CAVVIG01	DATNBT01		gtdbtk_2.7.2_r232_own	Illumina
+G87f194809e4028aa	526	3020	1	100.0	0.24	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	CAITJF01		gtdbtk_2.7.2_r232_own	PacBio
+G88171a916757a8bd	527	2187	528	93.57	4.28	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	Illumina
+G886332fcb6793179	528	3552	16	92.21	3.88	Bacteria	Eisenbacteria	RBG-16-71-46	RBG-16-71-46	RBG-16-71-46	DASTBI01		gtdbtk_2.7.2_r232_own	PacBio
+G88715cb3fd89482e	529	1284	8	93.61	2.5	Bacteria	Babelota	Babeliae	Babelales	Vermiphilaceae	SOIL31		gtdbtk_2.7.2_r232_own	PacBio
+G88a6313f27d21e08	530	3190	1	100.0	2.07	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35	CAVSHJ01		gtdbtk_2.7.2_r232_own	PacBio
+G890f46999c5a932e	531	738	1	99.66	0.07	Bacteria	Patescibacteriota	Minisyncoccia	Sungbacterales	SURF-37			gtdbtk_2.7.2_r232_own	PacBio
+G893cdf73a6417691	532	2332	172	94.98	2.12	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	Illumina
+G89e4441bb9569538	533	3736	316	100.0	1.72	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA6898	JAWOKY01		gtdbtk_2.7.2_r232_own	Illumina
+G8a0aa425e6dbb3e9	534	3552	64	99.63	2.21	Bacteria	UBP4	UBA4092	JAOAEQ01	JAOAEQ01			gtdbtk_2.7.2_r232_own	Illumina
+G8a975c46f4ebc1d1	535	741	31	97.96	0.21	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	GWB1-50-10			gtdbtk_2.7.2_r232_own	Illumina
+G8ae947cb0d80ccb3	536	2900	387	91.27	2.59	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_r220_own	Illumina
+G8af29d5e1534be91	537	3511	496	94.88	2.42	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA9159	JAMCQB01		gtdbtk_2.7.2_r232_own	Illumina
+G8b9f6b2794fe0eae	538	2938	124	97.65	0.86	Bacteria	Pseudomonadota	Alphaproteobacteria	DATDPM01	DATDPM01	DATDPM01		gtdbtk_2.7.2_r232_own	Illumina
+G8ba014f6be085f4f	539	2101	146	92.82	1.96	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_2.7.2_r232_own	Illumina
+G8bbf2e3f14936a49	540	2806	82	97.46	0.41	Bacteria	Sysuimicrobiota	Sysuimicrobiia	Sysuimicrobiales	Kaftiobacteriaceae			gtdbtk_2.7.2_r232_own	Illumina
+G8c04bfe4b634faf1	541	3681	1	100.0	0.2	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQGF01		gtdbtk_2.7.2_r232_own	PacBio
+G8c319c8b0a449f0d	542	3824	338	93.57	3.85	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	CAWBNQ01		gtdbtk_2.7.2_r232_own	Illumina
+G8c7eb30c4b227c87	543	2288	1	99.03	1.87	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DRUK01		gtdbtk_2.7.2_r232_own	PacBio
+G8c902d7be3a2bb31	544	3030	107	95.34	0.23	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	Saccharicenantaceae	DATKJS01		gtdbtk_2.7.2_r232_own	Illumina
+G8da4f00d85a1b8aa	545	4573	580	91.14	3.39	Bacteria	Desulfobacterota	Binatia	UTPRO1	UTPRO1	DP-19		gtdbtk_2.7.2_r232_own	Illumina
+G8e05147563e24591	546	3639	182	98.35	2.24	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	Illumina
+G8e3339bf730405d2	547	1016	1	92.72	0.06	Archaea	Micrarchaeota	Micrarchaeia	Micrarchaeales	CABMGC01	JAGWGW01		gtdbtk_2.7.2_r232_own	PacBio
+G8e58b50de31a93d1	548	4561	68	99.47	3.41	Bacteria	Pseudomonadota	Alphaproteobacteria	Dongiales	Dongiaceae	DASXQK01		gtdbtk_2.7.2_r232_own	Illumina
+G8e803fdfd7c7f9c3	549	2115	258	91.33	2.74	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	Illumina
+G8ed88386330d0487	550	616	1	100.0	0.74	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	Phycocordibacteraceae	C7867-001		gtdbtk_2.7.2_r232_own	PacBio
+G8ee4c55a3040fa71	551	4480	915	91.43	2.54	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	VadinHA17	LD21		gtdbtk_2.7.2_r232_own	Illumina
+G8f3fb01d887c7b1f	552	4753	1	99.72	2.17	Bacteria	Pseudomonadota	Alphaproteobacteria	MPNO01	VGEU01			gtdbtk_2.7.2_r232_own	PacBio
+G8f6fa8dbe3d5a9fe	553	2013	166	92.26	3.08	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Gagatemarchaeaceae	Gagatemarchaeum		gtdbtk_r232_cluster_representative	Illumina
+G8f887b3e973009ad	554	3878	1	97.34	0.49	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	PacBio
+G8f9d7c4968c50378	555	2516	133	92.91	1.87	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	Fen-1064	JAURWL01		gtdbtk_2.7.2_r232_own	Illumina
+G8fa48a7a42943cba	556	2237	315	95.26	2.21	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DATKKK01		gtdbtk_2.7.2_r232_own	Illumina
+G9007e01ed39feb0b	557	3946	620	91.52	1.61	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	Illumina
+G9036f67a5fdb8353	558	3006	1	98.22	2.11	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35	CAVSHB01		gtdbtk_2.7.2_r232_own	PacBio
+G9039b0cf06fdcf53	559	779	1	96.61	0.49	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	GWB1-50-10	GWA1-48-11		gtdbtk_2.7.2_r232_own	PacBio
+G90425c01e201650d	560	1382	25	98.05	1.69	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	Illumina
+G90b51a57ee0e748f	561	3289	381	94.46	4.11	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	Saccharicenantaceae	RBG-16-66-30		gtdbtk_2.7.2_r232_own	Illumina
+G90e3dfaa34ae68a1	562	2873	13	94.11	0.99	Bacteria	Bacteroidota	Ignavibacteria	Tepidaquicellales	OLB5	JBEKSX01		gtdbtk_2.7.2_r232_own	PacBio
+G910aa1bc3112c652	563	5313	853	90.91	3.7	Bacteria	Planctomycetota	Phycisphaerae	UBA1845	Fen-1342	JBFMAI01		gtdbtk_2.7.2_r232_own	Illumina
+G914345462e2bdd5d	564	1740	235	91.05	4.7	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_r220_own	Illumina
+G91cac5247c316c68	565	3255	1	96.95	1.78	Bacteria	Chloroflexota	Dehalococcoidia	DSTF01	JACRBR01	DASQHL01		gtdbtk_2.7.2_r232_own	PacBio
+G9201cae5777ae7e2	566	2040	124	91.29	4.15	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	JAZDNC01	JAZDNC01		gtdbtk_2.7.2_r232_own	Illumina
+G924186dfd0da7003	567	3496	117	97.17	4.02	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	UBA3254			gtdbtk_2.7.2_r232_own	Illumina
+G925469b7c439f7fd	568	5125	1	100.0	0.54	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Sulfotelmatobacter	Sulfotelmatobacter sp020073465	gtdbtk_2.7.2_r232_own	PacBio
+G927e1ead168541f4	569	4291	278	97.54	2.54	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	VBDM01		gtdbtk_2.7.2_r232_own	Illumina
+G928a12fdc3d32846	570	5374	1	97.93	1.32	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01	JAPKYU01		gtdbtk_2.7.2_r232_own	PacBio
+G92a0105712ab7853	571	4411	597	94.62	3.13	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030	JADGQA01		gtdbtk_2.7.2_r232_own	Illumina
+G930f799f07d4076a	572	5294	1	96.17	4.03	Bacteria	Methylomirabilota	Methylomirabilia	Rokubacteriales	CSP1-6	CAMLFJ01		gtdbtk_2.7.2_r232_own	PacBio
+G936bbd876e3ab969	573	3586	86	98.73	0.3	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	JACORV01	Fen-1245		gtdbtk_2.7.2_r232_own	Illumina
+G941f13bb3f495d5c	574	1459	60	97.54	1.02	Archaea	Nanobdellota	Nanobdellia	Woesearchaeales	ARS49	JAWABT01		gtdbtk_2.7.2_r232_own	Illumina
+G9420d30d2e458cbb	575	3303	331	93.35	0.59	Bacteria	Nitrospirota	Nitrospiria	DATECO01	DATECO01	DATECO01		gtdbtk_2.7.2_r232_own	Illumina
+G94523cf8e36c6af8	576	4054	360	92.93	1.26	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Chthoniobacterales	UBA10450	Udaeobacter		gtdbtk_2.7.2_r232_own	Illumina
+G945ad5305b664c3d	577	4713	28	91.51	0.78	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	Palsa-187		gtdbtk_2.7.2_r232_own	PacBio
+G947f9f135a92302e	578	806	19	98.14	0.5	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	2-01-FULL-56-20	CAYLWL01		gtdbtk_2.7.2_r232_own	Illumina
+G951e8ad817a8b8de	579	3352	453	100.0	4.96	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	Illumina
+G95bb84d7ab850ff7	580	2355	2	90.5	2.54	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JADGNF01		gtdbtk_2.7.2_r232_own	PacBio
+G95e87fed70768b0f	581	2543	1	96.07	2.79	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	CAVPLU01		gtdbtk_2.7.2_r232_own	PacBio
+G95e8e7d9c3645c66	582	4382	1	97.62	2.56	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540			gtdbtk_2.7.2_r232_own	PacBio
+G9616324532dc126a	583	838	1	93.48	0.18	Archaea	B1Sed10-29	B1Sed10-29	B1Sed10-29				gtdbtk_2.7.2_r232_own	PacBio
+G962cf83e39653ac1	584	823	1	94.72	0.05	Bacteria	Patescibacteriota	Minisyncoccia	Minisyncoccales	JAHCRE01	CAYHAF01		gtdbtk_2.7.2_r232_own	PacBio
+G96b2a16cee3984ac	585	2798	1	99.99	0.02	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Gallionella		gtdbtk_2.7.2_r232_own	PacBio
+G9703231b40dcf659	586	3405	38	99.84	0.75	Bacteria	Bacteroidota	Ignavibacteria	Tepidaquicellales	OLB5	DASXTZ01		gtdbtk_2.7.2_r232_own	Illumina
+G971e961afd049841	587	2455	1	100.0	0.08	Bacteria	Desulfobacterota	JAENJC01	JAENJC01	JAENJC01			gtdbtk_2.7.2_r232_own	PacBio
+G97544e8a80951fdc	588	2112	1	99.77	0.2	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Nitrosopumilaceae	Nitrosotalea	Nitrosotalea sp963722115	gtdbtk_2.7.2_r232_own	PacBio
+G97c1889f1874a7bb	589	3536	2	95.16	0.0	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae	Binatus		gtdbtk_2.7.2_r232_own	PacBio
+G97ef183aa2648da3	590	3672	404	99.39	2.99	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030	VGWB01		gtdbtk_2.7.2_r232_own	Illumina
+G97f526acd07977ee	591	2858	269	91.49	4.08	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	FEN-987		gtdbtk_r232_cluster_representative	Illumina
+G982a3a02757d3d44	592	3529	1	100.0	0.0	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Acidiferrum	Acidiferrum sp020073585	gtdbtk_2.7.2_r232_own	PacBio
+G987f9ece4e1fe0c7	593	2024	31	99.58	2.26	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	DTEX01	JAGTRI01		gtdbtk_2.7.2_r232_own	Illumina
+G9895dbedbcdccb68	594	2619	36	96.25	2.82	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	Illumina
+G99231adde6a768e5	595	1013	2	98.69	0.72	Bacteria	Patescibacteriota	JACPGU01	JACPGU01	JACPGU01	JAKLDG01		gtdbtk_2.7.2_r232_own	PacBio
+G996e8ac9fddde005	596	6779	228	100.0	4.5	Bacteria	Desulfobacterota	SM23-61	SM23-61	SM23-61	JAHJQK01		gtdbtk_2.7.2_r232_own	Illumina
+G9975fc3943d974fa	597	4046	1	97.64	0.28	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	PacBio
+G999a197c773cc6f9	598	4052	1	91.45	0.19	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Acidiflorens		gtdbtk_2.7.2_r232_own	PacBio
+G99dde1e867b1a528	599	669	4	94.34	0.05	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	2-01-FULL-56-20			gtdbtk_2.7.2_r232_own	PacBio
+G9a06fa2b25292b37	600	1416	27	99.22	0.72	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	CG2-30-46-19	CG2-30-46-19 sp001872925	gtdbtk_2.7.2_r232_own	Illumina
+G9bba841b3e3c3dd4	601	2155	1	97.61	1.77	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DATKKK01		gtdbtk_2.7.2_r232_own	PacBio
+G9c6e02e9ca5eab25	602	3221	1	95.22	2.97	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	Fen-1077		gtdbtk_2.7.2_r232_own	PacBio
+G9cfe3d6ffcbb82e4	603	3047	5	90.93	0.37	Bacteria	Desulfobacterota	Desulfobaccia	Desulfobaccales	0-14-0-80-60-11	0-14-0-80-60-11		gtdbtk_2.7.2_r232_own	PacBio
+G9d966d934257b856	604	854	1	96.92	0.26	Bacteria	Patescibacteriota	Microgenomatia	Levybacterales	UBA12049			gtdbtk_2.7.2_r232_own	PacBio
+G9e0708f170df652a	605	6650	1245	96.99	3.26	Bacteria	Chloroflexota	Anaerolineae	4572-78	NAK82			gtdbtk_2.7.2_r232_own	Illumina
+G9e13ea748a93ba94	606	5098	57	92.48	4.0	Bacteria	Chloroflexota	Anaerolineae	UBA4142	UBA4142	VGOB01		gtdbtk_2.7.2_r232_own	Illumina
+G9e3c275de6f24e01	607	4023	74	100.0	0.62	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030			gtdbtk_2.7.2_r232_own	Illumina
+G9e6bdc7b01613247	608	1672	1	91.89	1.19	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	CAVPLU01		gtdbtk_2.7.2_r232_own	PacBio
+G9ea426503f0832f8	609	800	51	96.56	1.89	Bacteria	Patescibacteriota	Microgenomatia	Levybacterales	UBA12049			gtdbtk_2.7.2_r232_own	Illumina
+G9ea7d5a7ddf01532	610	3670	243	93.35	4.72	Bacteria	Hydrothermota	Tepidihabitantia	Tepidihabitantales	Tepidihabitantaceae	UBA2258		gtdbtk_2.7.2_r232_own	Illumina
+G9eb213c9bfc8e02d	611	3346	349	98.59	0.63	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	UBA6898			gtdbtk_2.7.2_r232_own	Illumina
+G9f783891aa21aa30	612	4205	298	94.86	2.24	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae			gtdbtk_2.7.2_r232_own	Illumina
+G9fb01e6cd677817e	613	2942	1	94.43	1.57	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35	CAVZMO01		gtdbtk_2.7.2_r232_own	PacBio
+G9fe0817b51722b6b	614	5501	24	93.77	2.36	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae	PLanc-01		gtdbtk_2.7.2_r232_own	PacBio
+Ga01e2f10bece5061	615	3588	1	94.19	1.7	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	UBA4085	JAPKZH01		gtdbtk_2.7.2_r232_own	PacBio
+Ga04ca64e2501d584	616	3209	84	100.0	0.19	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	Gemmatimonadaceae	JAGWRI01	JAGWRI01 sp035533755	gtdbtk_2.7.2_r232_own	Illumina
+Ga054a8ac121bfc40	617	7035	6	94.95	3.22	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-41	PALSA-1004		gtdbtk_2.7.2_r232_own	PacBio
+Ga0607fd33e1fba4b	618	2356	267	92.49	0.66	Bacteria							gtdbtk_2.7.2_r232_own	Illumina
+Ga06e9e52c297f25e	619	3843	671	91.81	1.29	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	Villigracilaceae	Fen-1038		gtdbtk_2.7.2_r232_own	Illumina
+Ga0d62e47b49f3653	620	1182	11	91.05	0.01	Archaea	Hadarchaeota	Hadarchaeia	Hadarchaeales	Hadarchaeaceae	DYFS01		gtdbtk_2.7.2_r232_own	Illumina
+Ga0df80545cfba7fd	621	2125	1	98.58	1.98	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Gagatemarchaeaceae	UBA183		gtdbtk_2.7.2_r232_own	PacBio
+Ga0eb3fd5fe5cdd83	622	4247	498	93.67	2.28	Bacteria	SAR324	SAR324	SAR324	JACQKK01	JACQKK01		gtdbtk_2.7.2_r232_own	Illumina
+Ga0f67941ad2b164d	623	2958	1	99.59	0.02	Bacteria	Desulfobacterota	Deferrimicrobia	Deferrimicrobiales	Deferrimicrobiaceae	Deferrimicrobium		gtdbtk_2.7.2_r232_own	PacBio
+Ga12b52b51f939928	624	2861	29	100.0	0.03	Bacteria	Bacteroidota	Ignavibacteria	Tepidaquicellales	OLB5	CAVUOA01		gtdbtk_2.7.2_r232_own	Illumina
+Ga15e099b1aae286b	625	1978	1	93.96	2.34	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	PacBio
+Ga15ea6784d6464bb	626	2601	60	94.5	1.29	Bacteria	Hydrothermota	Tepidihabitantia	CAYHGV01	CAYHGV01	CAYHGV01		gtdbtk_2.7.2_r232_own	Illumina
+Ga18b7adaceff915a	627	5604	116	98.37	4.14	Bacteria	Methylomirabilota	Methylomirabilia	Rokubacteriales	CSP1-6	AR37		gtdbtk_2.7.2_r232_own	Illumina
+Ga1a572ce38f4e426	628	2011	76	94.55	3.41	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	UBA1222	SURF-27		gtdbtk_2.7.2_r232_own	Illumina
+Ga1dadf9917e72aed	629	4810	299	91.66	3.09	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	UBA5066			gtdbtk_2.7.2_r232_own	Illumina
+Ga22c569592ff1105	630	4435	345	97.7	3.22	Bacteria	Pseudomonadota	Alphaproteobacteria	Micropepsales	Micropepsaceae	Rhizomicrobium		gtdbtk_2.7.2_r232_own	Illumina
+Ga26f1ea9bbdcb3d1	631	2542	270	100.0	1.93	Archaea	Methanobacteriota_B	Thermococci	Methanofastidiosales	SZ-28-30			gtdbtk_2.7.2_r232_own	Illumina
+Ga27d32287c36c860	632	6706	11	93.88	3.27	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	Palsa-89		gtdbtk_2.7.2_r232_own	PacBio
+Ga2b4cbcfbf5ba4b7	633	2424	1	99.97	0.0	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	DATDDB01		gtdbtk_2.7.2_r232_own	PacBio
+Ga3092c9d44a8ed7d	634	3248	11	98.57	1.53	Bacteria	Nitrospirota	Nitrospiria	Nitrospirales	Nitrospiraceae	SYGV01	SYGV01 sp028876065	gtdbtk_2.7.2_r232_own	PacBio
+Ga3385eaec5f9ce1e	635	4281	89	100.0	0.21	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA6906	UBA11986		gtdbtk_2.7.2_r232_own	Illumina
+Ga3be7da0fd8a14e6	636	3199	47	98.28	0.64	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	SZUA-254			gtdbtk_2.7.2_r232_own	Illumina
+Ga3d6c97110f43123	637	5042	1	99.93	0.74	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Acidiflorens	Acidiflorens sp020073015	gtdbtk_2.7.2_r232_own	PacBio
+Ga3db8c18a97497c6	638	2964	1	99.92	4.06	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+Ga42467e094891ff8	639	1126	150	97.93	0.2	Bacteria	Patescibacteriota	Patescibacteriia	Buchananbacterales	SURF-54			gtdbtk_2.7.2_r232_own	Illumina
+Ga4d65dfa0cc0d7f1	640	4222	1	100.0	0.21	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	PacBio
+Ga52b19a5cc77cd71	641	4596	499	92.32	3.2	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae	Anaeromyxobacter		gtdbtk_2.7.2_r232_own	Illumina
+Ga587ec9683273130	642	3109	106	98.26	2.54	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens	Methanoperedens sp027460615	gtdbtk_2.7.2_r232_own	Illumina
+Ga62b01084470565b	643	3682	538	92.55	4.39	Bacteria	Bacteroidota	Ignavibacteria	Tepidaquicellales	OLB5	JBEKSX01		gtdbtk_2.7.2_r232_own	Illumina
+Ga630001855ff65da	644	1515	1	97.62	0.57	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	PacBio
+Ga6aa52059a0292aa	645	2354	1	97.23	1.84	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DATDQZ01		gtdbtk_2.7.2_r232_own	PacBio
+Ga79f3c21ca489164	646	3556	59	97.71	3.93	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	E44-bin32	JBGOYQ01		gtdbtk_2.7.2_r232_own	Illumina
+Ga7c46db5bbc88755	647	4755	590	92.28	4.92	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Angelobacter		gtdbtk_2.7.2_r232_own	Illumina
+Ga833c34669cc3333	648	2299	1	99.14	3.03	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPTR01		gtdbtk_2.7.2_r232_own	PacBio
+Ga89972f6015adb3b	649	5230	1	97.67	0.44	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01	JAPKYU01		gtdbtk_2.7.2_r232_own	PacBio
+Ga8c493cddb11332a	650	4622	75	97.83	2.98	Bacteria	Desulfobacterota	BSN033	BSN033	UBA1163	CAVTZZ01		gtdbtk_2.7.2_r232_own	Illumina
+Ga8faf10277bd54ab	651	6820	2047	91.65	3.47	Bacteria	Planctomycetota	Phycisphaerae	Sedimentisphaerales	Anaerobacaceae	PLanc-01		gtdbtk_2.7.2_r232_own	Illumina
+Ga9199268c4aa58ac	652	4011	240	96.12	2.23	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA6906	Fen-1273		gtdbtk_2.7.2_r232_own	Illumina
+Ga923e858f4cb8682	653	3289	9	92.59	0.0	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	GWC2-71-9	40CM-2-70-7		gtdbtk_2.7.2_r232_own	PacBio
+Ga9c2a5c38697ed69	654	2231	1	94.81	2.86	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	PacBio
+Gaa39b36f4266e98b	655	2952	1	99.55	1.11	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35	DASPRG01	DASPRG01 sp041488675	gtdbtk_2.7.2_r232_own	PacBio
+Gaa8049e6da35e53e	656	1936	1	97.44	0.8	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	PacBio
+Gaab66025bb917e09	657	4070	1	98.76	0.3	Bacteria	Pseudomonadota	Alphaproteobacteria	Caulobacterales	Caulobacteraceae	JANWHQ01		gtdbtk_2.7.2_r232_own	PacBio
+Gaac567173052555b	658	4545	1191	91.86	4.76	Bacteria	SAR324	SAR324	SAR324	JACQKK01	JBGPEV01		gtdbtk_2.7.2_r232_own	Illumina
+Gaad880e0b1bc0982	659	4203	220	94.94	0.45	Bacteria	Sysuimicrobiota	Sysuimicrobiia	Sysuimicrobiales	Humicultoraceae	JBGPLF01		gtdbtk_2.7.2_r232_own	Illumina
+Gab93bf238b33b974	660	2931	191	93.03	3.38	Bacteria	Chloroflexota	Limnocylindria	Limnocylindrales	CSP1-4	DASPUH01		gtdbtk_2.7.2_r232_own	Illumina
+Gabc2e90ce54ee428	661	4496	1	99.88	0.42	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQEU01	JAIQEU01 sp020073665	gtdbtk_2.7.2_r232_own	PacBio
+Gac393941641f07c5	662	4589	1	97.2	0.0	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	Gp7-AA6	JAWOLE01		gtdbtk_2.7.2_r232_own	PacBio
+Gad195a714d90b361	663	3553	1	98.78	0.72	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JALHUF01	JALHUF01 sp022866195	gtdbtk_2.7.2_r232_own	PacBio
+Gad2b4a27ee49d8b9	664	7092	596	97.87	4.03	Bacteria	Acidobacteriota	Blastocatellia	UBA7656	UBA7656	Onstottus_A		gtdbtk_2.7.2_r232_own	Illumina
+Gad31b3d739a181d9	665	3093	1	98.19	0.77	Bacteria	Desulfobacterota	Desulfobaccia	Desulfobaccales	0-14-0-80-60-11	CAVTZS01		gtdbtk_2.7.2_r232_own	PacBio
+Gad501131a24fd59d	666	1531	13	90.36	2.73	Archaea	Asgardarchaeota	Jordiarchaeia	Jordiarchaeales	Jordiarchaeaceae	Jordiarchaeum	Jordiarchaeum deiterrae	gtdbtk_2.7.2_r232_own	Illumina
+Gad9df50ddf5f0c32	667	3040	194	94.32	1.58	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	Illumina
+Gae00efaf54b128fd	668	5423	475	92.79	3.83	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	VAZQ01		gtdbtk_2.7.2_r232_own	Illumina
+Gae0fe9406729b8f1	669	779	1	98.08	0.35	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	2-01-FULL-56-20	CAJAQL01		gtdbtk_2.7.2_r232_own	PacBio
+Gae22d108ffb80eb3	670	3896	194	95.68	2.64	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	UBA4823	FEB-25		gtdbtk_2.7.2_r232_own	Illumina
+Gae865a9d3b5fe9f1	671	3029	3	94.47	0.09	Bacteria	Acidobacteriota	UBA4820	UBA4820	DSQY01	JAKAJA01		gtdbtk_2.7.2_r232_own	PacBio
+Gaf8f28a0f81f3016	672	3661	1	100.0	0.16	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA6906			gtdbtk_2.7.2_r232_own	PacBio
+Gb03b06ad24f313e1	673	3762	1	100.0	0.33	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	Gemmatimonadaceae	Fen-1231		gtdbtk_2.7.2_r232_own	PacBio
+Gb04303f8b4c70cb3	674	2723	245	98.17	3.12	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBGPAV01		gtdbtk_2.7.2_r232_own	Illumina
+Gb044a0bfab22a3a9	675	4214	172	100.0	2.53	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JALHUF01		gtdbtk_2.7.2_r232_own	Illumina
+Gb089e957c694591c	676	2467	2	95.91	3.03	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	RBG-16-68-12	RBG-16-68-12		gtdbtk_2.7.2_r232_own	PacBio
+Gb0b48b37c520490e	677	3422	1	100.0	0.05	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Acidiferrum	Acidiferrum sp020072785	gtdbtk_2.7.2_r232_own	PacBio
+Gb0e015bbd4979c8a	678	3932	151	96.18	1.57	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-41	CAKKQX01		gtdbtk_2.7.2_r232_own	Illumina
+Gb11673c043da0ba8	679	3427	13	95.52	3.74	Bacteria	Pseudomonadota	Gammaproteobacteria	Acidiferrobacterales	Sulfurifustaceae	Sulfuricaulis		gtdbtk_2.7.2_r232_own	PacBio
+Gb138931e6ee5121e	680	4245	1	100.0	0.54	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQET01	JAIQET01 sp020073645	gtdbtk_2.7.2_r232_own	PacBio
+Gb13d93766a11502d	681	2418	1	99.99	0.39	Bacteria	Campylobacterota	Campylobacteria	Campylobacterales	Sulfurimonadaceae	Sulfuricurvum		gtdbtk_2.7.2_r232_own	PacBio
+Gb1b11e8a8feaae54	682	3675	360	99.09	0.88	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Rhodocyclaceae	CAIYYX01	CAIYYX01 sp035530135	gtdbtk_2.7.2_r232_own	Illumina
+Gb202254661a0157e	683	3466	1117	91.23	3.59	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Gallionella		gtdbtk_2.7.2_r232_own	Illumina
+Gb215a96e10318bcc	684	2993	1	100.0	0.18	Bacteria	Acidobacteriota	Terriglobia					gtdbtk_2.7.2_r232_own	PacBio
+Gb272595f34024169	685	1874	174	90.79	3.47	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JAOZHU01		gtdbtk_2.7.2_r232_own	Illumina
+Gb295c40d33fd10d5	686	689	1	100.0	0.02	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	Phycocordibacteraceae	C7867-001		gtdbtk_2.7.2_r232_own	PacBio
+Gb29ac66ed213efb2	687	1802	86	94.37	0.65	Bacteria	Omnitrophota	Gorgyraeia	Gygaellales	Profunditerraquicolaceae	JAQTNM01		gtdbtk_2.7.2_r232_own	Illumina
+Gb34b1dddcacf2ded	688	4036	409	94.94	0.48	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JAHEKS01		gtdbtk_2.7.2_r232_own	Illumina
+Gb3915bf6202456cb	689	2660	269	96.64	3.72	Archaea	Asgardarchaeota	Atabeyarchaeia	Atabeyarchaeales	Atabeyarchaeaceae	Atabeyarchaeum	Atabeyarchaeum deiterrae	gtdbtk_2.7.2_r232_own	Illumina
+Gb3f92211a222d8aa	690	4234	81	100.0	3.41	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA6906	DATJPR01		gtdbtk_2.7.2_r232_own	Illumina
+Gb43d29dcaea8889e	691	4830	1	100.0	0.77	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	PacBio
+Gb49f2f4396d4e5bd	692	2846	210	95.02	2.39	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JBAZLV01		gtdbtk_2.7.2_r232_own	Illumina
+Gb4a7febed428a532	693	728	6	99.97	1.26	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	GWB1-50-10	JBBTQX01		gtdbtk_2.7.2_r232_own	Illumina
+Gb4bd0cf38c6eb932	694	3048	1	100.0	0.02	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	JBEKUY01		gtdbtk_2.7.2_r232_own	PacBio
+Gb532f7b11091342d	695	1949	264	100.0	3.9	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	UBA1222	SURF-27		gtdbtk_2.7.2_r232_own	Illumina
+Gb575a85aa477c0a5	696	3127	362	91.81	4.81	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	GWC2-71-9	QHVC01		gtdbtk_2.7.2_r232_own	Illumina
+Gb594cf207df106fb	697	5317	913	96.29	3.87	Bacteria	Gemmatimonadota	Gemmatimonadetes	Longimicrobiales	RSA9	JADGQX01		gtdbtk_2.7.2_r232_own	Illumina
+Gb5e2479408a8488d	698	5374	436	92.95	2.14	Bacteria	Pseudomonadota	Alphaproteobacteria	ATCC43930	CGMCC-115725	CAIKMD01		gtdbtk_2.7.2_r232_own	Illumina
+Gb699c812bc7de12d	699	1988	7	99.46	0.42	Archaea	Halobacteriota	Methanomicrobia	Methanomicrobiales	Methanospirillaceae	UBA9949		gtdbtk_2.7.2_r232_own	Illumina
+Gb7235d338d953dd5	700	3325	543	100.0	1.15	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	BY39	CAZOQB01		gtdbtk_2.7.2_r232_own	Illumina
+Gb746b79430dd28be	701	2085	11	96.3	0.31	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	SOJC01	DATHCB01		gtdbtk_2.7.2_r232_own	Illumina
+Gb77a5764da6124fb	702	4685	17	90.42	2.95	Bacteria	Desulfobacterota	Binatia	UBA9968	UBA9968	JAJPJQ01		gtdbtk_2.7.2_r232_own	PacBio
+Gb7cdc55ffa4c4d6a	703	4007	232	99.58	1.62	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030	JADGQA01		gtdbtk_2.7.2_r232_own	Illumina
+Gb85bb2653b966212	704	4397	1	99.55	2.25	Bacteria	Methylomirabilota	Methylomirabilia	Rokubacteriales	CSP1-6	DASSSH01		gtdbtk_2.7.2_r232_own	PacBio
+Gb885d151d72d83a7	705	4904	160	98.71	0.48	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217			gtdbtk_2.7.2_r232_own	Illumina
+Gb887e8a153c186d0	706	3505	425	94.97	2.39	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	DASPSR01		gtdbtk_2.7.2_r232_own	Illumina
+Gb94998bcb3b4a884	707	4673	200	93.96	3.06	Bacteria	Pseudomonadota	Alphaproteobacteria	MPNO01	VGEU01			gtdbtk_2.7.2_r232_own	Illumina
+Gb959b4e0afc627e8	708	892	25	93.91	0.19	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	2-01-FULL-56-20	JACQKT01		gtdbtk_2.7.2_r232_own	Illumina
+Gb96364ca1f72cae9	709	2172	1	94.89	1.8	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	PacBio
+Gba03aaf5a8e03f0c	710	1249	19	99.58	0.47	Bacteria	Patescibacteriota	Microgenomatia	CAZETR01	Amesbacteraceae			gtdbtk_2.7.2_r232_own	Illumina
+Gba090440be2e2650	711	2029	11	93.37	0.44	Bacteria	Chlamydiota	Chlamydiia	Chlamydiales	SM23-39	CAVQKJ01		gtdbtk_2.7.2_r232_own	PacBio
+Gbb1350ebc7807ed4	712	8037	754	93.18	3.05	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Limisphaerales				gtdbtk_2.7.2_r232_own	Illumina
+Gbc114a4715d89db9	713	2724	1	99.97	0.0	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	CAIQPV01		gtdbtk_2.7.2_r232_own	PacBio
+Gbc782600b009ee10	714	2848	32	99.77	0.67	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	JAHEZR01	JBAWAH01		gtdbtk_2.7.2_r232_own	Illumina
+Gbc7c4d7f3792e8e0	715	2694	112	99.05	2.26	Bacteria	Chloroflexota	Dehalococcoidia	JACQTR01				gtdbtk_2.7.2_r232_own	Illumina
+Gbce9579af61448be	716	3969	225	94.94	0.54	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	Villigracilaceae	Fen-1038		gtdbtk_2.7.2_r232_own	Illumina
+Gbd09d312c68d36df	717	2777	55	100.0	0.0	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	DATDDB01		gtdbtk_2.7.2_r232_own	Illumina
+Gbd370eb7b21f5104	718	1043	15	94.82	0.03	Bacteria	Patescibacteriota	Microgenomatia	UBA8517	UBA8517	DASVCV01		gtdbtk_2.7.2_r232_own	Illumina
+Gbdf3ced4f84268b0	719	1450	6	93.05	0.56	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	CG10238-14	CG10238-14	JASEGC01		gtdbtk_2.7.2_r232_own	Illumina
+Gbe31598ca643022a	720	4948	269	99.43	2.52	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030	UBA9647		gtdbtk_2.7.2_r232_own	Illumina
+Gbe5ba8e5ae258dbe	721	1878	6	95.67	0.89	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gbe5db8c81c2d3bde	722	3328	1	100.0	0.06	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	PacBio
+Gbe6b601f20047b62	723	2578	1	96.75	0.61	Bacteria	Edwardsbacteria	CAYGWX01	CAYGWX01	CAYGWX01			gtdbtk_2.7.2_r232_own	PacBio
+Gbe6c48eafd564fcd	724	2087	66	93.94	1.57	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834			gtdbtk_2.7.2_r232_own	Illumina
+Gbe7b21f0f2a8e05f	725	2024	43	98.3	2.51	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	SOJC01	DATHCB01		gtdbtk_2.7.2_r232_own	Illumina
+Gbe81d5dd44b811ea	726	2643	31	100.0	0.54	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35	VGWZ01	VGWZ01 sp041489235	gtdbtk_2.7.2_r232_own	Illumina
+Gbec2cbb9b157bf08	727	8514	1033	93.81	4.79	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae			gtdbtk_r232_cluster_representative	Illumina
+Gbf0b2f36ae9d9a2f	728	5616	299	98.82	0.39	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	BOG-234		gtdbtk_2.7.2_r232_own	Illumina
+Gbf9fbbc2223367fc	729	4209	708	91.87	4.41	Bacteria	Desulfobacterota	BSN033	BSN033	UBA1163			gtdbtk_r220_own	Illumina
+Gbfa2f924c5827e51	730	3091	1	93.74	0.6	Bacteria	Planctomycetota	DG-23	CBDVDV01	CBDVDV01	CBDVDV01		gtdbtk_2.7.2_r232_own	PacBio
+Gbfe3ab0463ada1c9	731	5595	1	96.03	0.25	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae	JAFAHS01		gtdbtk_2.7.2_r232_own	PacBio
+Gc04a0282f8789731	732	5791	1	100.0	0.89	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Z2-YC6860		gtdbtk_2.7.2_r232_own	PacBio
+Gc0628bac9d296dce	733	816	33	94.99	0.0	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	2-01-FULL-56-20	JACQKT01		gtdbtk_2.7.2_r232_own	Illumina
+Gc06588202ddb1f9d	734	2643	125	94.68	3.96	Archaea	Asgardarchaeota	Atabeyarchaeia	Atabeyarchaeales	Atabeyarchaeaceae	JAHPYV01	JAHPYV01 sp037308085	gtdbtk_2.7.2_r232_own	Illumina
+Gc0c237be3e7151a4	735	2733	1	95.34	0.0	Bacteria	Desulfobacterota	Deferrimicrobia	Deferrimicrobiales	Deferrimicrobiaceae			gtdbtk_2.7.2_r232_own	PacBio
+Gc2c9076baeb16d96	736	1558	75	93.79	3.01	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae	CAZZLD01		gtdbtk_2.7.2_r232_own	Illumina
+Gc315cfc2f47fd569	737	2841	3	96.94	0.74	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+Gc36e85e5498fc54a	738	2863	1	99.87	0.41	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+Gc39210b902775863	739	1191	1	91.93	0.57	Archaea	Micrarchaeota	Micrarchaeia	Anstonellales	Bilamarchaeaceae	CAIXOA01		gtdbtk_2.7.2_r232_own	PacBio
+Gc3d6c1198acf0088	740	1199	1	100.0	0.01	Archaea	Nanobdellota	Nanobdellia	Woesearchaeales	SKIA01	JAYVHA01		gtdbtk_2.7.2_r232_own	PacBio
+Gc40ba5ae25d00e4e	741	2854	35	95.21	0.43	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	JAFGAV01	JAFGAV01		gtdbtk_2.7.2_r232_own	Illumina
+Gc430ac8a47b1fbfa	742	633	10	92.6	0.48	Bacteria	Patescibacteriota	WWE3	9FT-COMBO-53-11	9FT-COMBO-53-11	CAZEID01		gtdbtk_2.7.2_r232_own	Illumina
+Gc43351b2494703b4	743	3427	251	92.36	4.25	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	UBA11579	JAMCZK01		gtdbtk_2.7.2_r232_own	Illumina
+Gc4cd259187f481f2	744	1761	114	94.67	0.7	Bacteria	Omnitrophota	Gorgyraeia	Gygaellales	Profunditerraquicolaceae	UBA6249		gtdbtk_2.7.2_r232_own	Illumina
+Gc4e6e87915f59484	745	2736	166	95.88	0.87	Bacteria	Zixibacteria	MSB-5A5	MSB-5A5	SM1-73	CAIVRH01		gtdbtk_2.7.2_r232_own	Illumina
+Gc52fe9646b54ff27	746	2653	510	92.72	3.29	Bacteria	Zixibacteria	MSB-5A5	MSB-5A5	RBG-16-43-9			gtdbtk_2.7.2_r232_own	Illumina
+Gc53b97d98ee0075e	747	4999	270	94.55	2.11	Bacteria	Chloroflexota	Anaerolineae	UBA4142	UBA4142			gtdbtk_2.7.2_r232_own	Illumina
+Gc64cfadae3c36e2c	748	2989	211	99.82	1.9	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Sulfuricellaceae	Sulfuricella		gtdbtk_2.7.2_r232_own	Illumina
+Gc68758bd1d12ff12	749	3593	260	93.81	1.77	Bacteria	Chloroflexota	Limnocylindria	Limnocylindrales	CSP1-4	JAJYNJ01		gtdbtk_2.7.2_r232_own	Illumina
+Gc6b7d75b003e8b0a	750	928	11	98.69	0.69	Bacteria	Patescibacteriota	Microgenomatia	Levybacterales	UBA12049	DATKGX01		gtdbtk_2.7.2_r232_own	Illumina
+Gc6faa21eb3db6af0	751	3579	316	93.49	4.88	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	E44-bin32	DAIRVC01		gtdbtk_2.7.2_r232_own	Illumina
+Gc725392e4132edb6	752	4726	1	96.49	0.01	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae	JACRMN01		gtdbtk_2.7.2_r232_own	PacBio
+Gc76204696bc71a89	753	5537	4	95.82	0.0	Bacteria	Acidobacteriota	Thermoanaerobaculia	Gp7-AA8	Gp7-AA8			gtdbtk_2.7.2_r232_own	PacBio
+Gc7654f3ce6d72368	754	2575	255	94.67	3.93	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	Illumina
+Gc7b2c2784bfd0ec4	755	4603	207	98.87	0.55	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JAJYKN01		gtdbtk_2.7.2_r232_own	Illumina
+Gc7f55b35b84ed73f	756	6134	1	100.0	1.01	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQGF01		gtdbtk_2.7.2_r232_own	PacBio
+Gc8b16c6cdee343fc	757	1749	134	93.33	2.13	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01	DASPPK01 sp963775895	gtdbtk_2.7.2_r232_own	Illumina
+Gc8cdd4a44c51a697	758	2740	124	96.94	1.94	Bacteria	Eisenbacteria	RBG-16-71-46	JAFGJU01	JAFGJU01	JAPLKG01		gtdbtk_2.7.2_r232_own	Illumina
+Gc8ebd709581b71c7	759	3517	112	98.56	0.01	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	UBA5066	DAOMFB01		gtdbtk_2.7.2_r232_own	Illumina
+Gc937c3598c6ae0b2	760	1996	239	92.73	1.7	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_2.7.2_r232_own	Illumina
+Gc9b2ab42c25b34af	761	2854	50	100.0	0.18	Bacteria	Bacteroidota	Ignavibacteria	Tepidaquicellales	OLB5	JBEKSX01		gtdbtk_2.7.2_r232_own	Illumina
+Gc9b8227600f007c5	762	2606	1	100.0	2.44	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	PacBio
+Gc9d42d2407682b6f	763	3317	1	97.08	1.27	Bacteria	Chloroflexota	Dehalococcoidia	DSTF01	JACRBR01	CAYJMJ01		gtdbtk_2.7.2_r232_own	PacBio
+Gca6dca909caf2780	764	2205	311	90.34	1.93	Bacteria	Actinomycetota	UBA4738	UBA4738	HRBIN12	AC-69		gtdbtk_r220_own	Illumina
+Gca91b0ad66641cff	765	2313	41	100.0	0.18	Bacteria	Hydrothermota	Tepidihabitantia	SM23-42	JAOAFX01	CBFGIH01		gtdbtk_2.7.2_r232_own	Illumina
+Gcaf272a71555ac43	766	2876	531	92.79	3.87	Bacteria	Desulfobacterota	JAZDOA01	JAZDOA01	JAZDOA01			gtdbtk_2.7.2_r232_own	Illumina
+Gcb418e20ea06dfa1	767	2657	1	97.61	0.01	Bacteria	Eisenbacteria	RBG-16-71-46	SZUA-252	SZUA-252	WS-7		gtdbtk_2.7.2_r232_own	PacBio
+Gcb4b60b1de049546	768	4952	17	96.13	0.29	Bacteria	Armatimonadota	Fimbriimonadia	Fimbriimonadales	Fimbriimonadaceae	JAEVZK01		gtdbtk_2.7.2_r232_own	PacBio
+Gcbd6a3ac39ac316b	769	5599	1	96.73	2.08	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01			gtdbtk_2.7.2_r232_own	PacBio
+Gccafd99de4b026be	770	3480	1	99.95	0.34	Bacteria	Desulfobacterota	Desulfobaccia	Desulfobaccales	0-14-0-80-60-11	JAPLJC01		gtdbtk_2.7.2_r232_own	PacBio
+Gcd0414acb8649cf3	771	4301	3	100.0	0.13	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQGF01	JAIQGF01 sp020073185	gtdbtk_2.7.2_r232_own	PacBio
+Gcd1dfcbcd47dfd02	772	2844	250	94.08	1.26	Bacteria	Zixibacteria	MSB-5A5	GN15	PGXB01			gtdbtk_2.7.2_r232_own	Illumina
+Gcd436c68c2bcd676	773	4416	155	98.44	2.09	Bacteria	Acidobacteriota	UBA6911	UBA6911	UBA6911	JAFNAG01		gtdbtk_2.7.2_r232_own	Illumina
+Gcd711ee269be950d	774	3623	670	91.17	3.68	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	DASPSR01	DASPSR01 sp963705595	gtdbtk_2.7.2_r232_own	Illumina
+Gcd78dfd555203cf4	775	6353	120	100.0	0.94	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SHXO01	SHXO01		gtdbtk_2.7.2_r232_own	Illumina
+Gcddcbfab545c2dba	776	3286	1	99.96	0.29	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQFD01		gtdbtk_2.7.2_r232_own	PacBio
+Gcdec8226436c0b10	777	703	93	90.9	2.43	Bacteria	Patescibacteriota	Microgenomatia	UBA8517	UBA8517	RBG-13-46-13		gtdbtk_2.7.2_r232_own	Illumina
+Gce5b268952ea635e	778	995	35	91.99	0.09	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	CG10238-14	SCSR01	JAGVVV01		gtdbtk_2.7.2_r232_own	Illumina
+Gce765cc6bf324517	779	3488	302	97.54	0.31	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541			gtdbtk_2.7.2_r232_own	Illumina
+Gced25bf33c095bc4	780	965	1	98.81	0.29	Bacteria	Patescibacteriota	Patescibacteriia	XYB2-FULL-38-15	XYB2-FULL-38-15			gtdbtk_2.7.2_r232_own	PacBio
+Gceeb65cb86b1c263	781	3043	1	99.99	0.09	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Sulfuricellaceae	Sulfuricella		gtdbtk_2.7.2_r232_own	PacBio
+Gcf3757dd0ffe2702	782	4416	1	96.76	0.36	Bacteria	Myxococcota	Myxococcia	Myxococcales	Anaeromyxobacteraceae	DASTPH01		gtdbtk_2.7.2_r232_own	PacBio
+Gcf63a879186cac61	783	3270	84	96.63	1.06	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	Villigracilaceae	CG2-30-58-95		gtdbtk_2.7.2_r232_own	Illumina
+Gcf92aa94edb1f3ee	784	5450	208	97.23	3.93	Bacteria	Chloroflexota	Anaerolineae	Aggregatilineales	UBA2796			gtdbtk_2.7.2_r232_own	Illumina
+Gd07500ddd595d8c6	785	5273	1	100.0	0.82	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	WHTM01		gtdbtk_2.7.2_r232_own	PacBio
+Gd0d5163f31fc34a8	786	1302	1	97.39	0.04	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	UBA2100	UBA10103		gtdbtk_2.7.2_r232_own	PacBio
+Gd0e1df999dee2cba	787	3467	1	100.0	0.32	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Acidiferrum		gtdbtk_2.7.2_r232_own	PacBio
+Gd196c6ef32139053	788	4599	508	94.23	1.53	Bacteria	Sumerlaeota	Sumerlaeia	MWCT01	MWCT01			gtdbtk_2.7.2_r232_own	Illumina
+Gd1c4942556fdf788	789	5176	1	97.15	0.08	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAJPHL01	CAYPHP01		gtdbtk_2.7.2_r232_own	PacBio
+Gd21ddba1092364d3	790	1316	8	92.96	1.11	Bacteria	Patescibacteriota	Gracilibacteria	UM-FILTER-43-11	UM-FILTER-43-11	FEN-1329		gtdbtk_2.7.2_r232_own	PacBio
+Gd28af369787cd583	791	5761	1	100.0	0.25	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Angelobacter		gtdbtk_2.7.2_r232_own	PacBio
+Gd2e4fca105f426ca	792	2074	238	91.24	2.53	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	Illumina
+Gd31860a571173728	793	3121	1	100.0	0.0	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Gallionella		gtdbtk_2.7.2_r232_own	PacBio
+Gd31db2a7ad57d3d4	794	6107	1271	91.53	4.11	Bacteria	Acidobacteriota	Thermoanaerobaculia	Gp7-AA8	Gp7-AA8			gtdbtk_2.7.2_r232_own	Illumina
+Gd350db49d6c85260	795	3773	664	93.43	1.78	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	GWC2-71-9	DASQPE01	DASQPE01 sp036391215	gtdbtk_2.7.2_r232_own	Illumina
+Gd3be8d8ff7cebc1d	796	2986	1	99.88	0.46	Bacteria	Pseudomonadota	Gammaproteobacteria	Acidiferrobacterales	UBA6901	UBA6901		gtdbtk_2.7.2_r232_own	PacBio
+Gd3dc4202fb822153	797	2832	74	98.95	2.49	Bacteria	Zixibacteria	MSB-5A5	UBA10806	UBA10806			gtdbtk_2.7.2_r232_own	Illumina
+Gd3ea41db1b25456f	798	901	4	96.62	0.76	Bacteria	Patescibacteriota	Patescibacteriia	Patescibacteriales	UBA12465	UBA12465		gtdbtk_2.7.2_r232_own	Illumina
+Gd3fc7fb24203233b	799	7625	36	91.49	3.46	Bacteria	Myxococcota	JACPTQ01					gtdbtk_2.7.2_r232_own	PacBio
+Gd402ac53d31c61b4	800	3518	104	97.99	0.18	Bacteria	Acidobacteriota	UBA4820	UBA4820	DSQY01			gtdbtk_2.7.2_r232_own	Illumina
+Gd416a4c76a9e39b1	801	4327	1	100.0	0.68	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Acidiflorens		gtdbtk_2.7.2_r232_own	PacBio
+Gd4545de4fde6291b	802	4200	248	91.93	4.22	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	Illumina
+Gd51156a39710f6fb	803	3078	272	93.31	0.51	Bacteria	Electryoneota	B3-LCP	B3-LCP	B3-LCP			gtdbtk_2.7.2_r232_own	Illumina
+Gd52bd8b623524120	804	2015	69	92.65	1.82	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gd5678ab39d84bde5	805	3072	3	96.69	1.55	Bacteria	Chloroflexota	Dehalococcoidia	Tepidiformales	Tepidiformaceae	JBGPOS01		gtdbtk_2.7.2_r232_own	PacBio
+Gd5b36ec307f549a8	806	2793	1	100.0	0.27	Bacteria	Desulfobacterota	Deferrimicrobia	Deferrimicrobiales	Deferrimicrobiaceae	Deferrimicrobium		gtdbtk_2.7.2_r232_own	PacBio
+Gd5f0b800243d2e13	807	3013	360	100.0	3.91	Bacteria	Bacteroidota	Bacteroidia	2-12-FULL-35-15	2-12-FULL-35-15	2-12-FULL-35-15		gtdbtk_2.7.2_r232_own	Illumina
+Gd628de90dba6d59d	808	905	7	97.5	0.99	Bacteria	Patescibacteriota	UBA1384	UBA12157	JAENIV01	G963698075		gtdbtk_2.7.2_r232_own	Illumina
+Gd62b3dd6ee7d7017	809	7540	413	97.25	3.36	Bacteria	Pseudomonadota	Alphaproteobacteria	Acetobacterales	Acetobacteraceae	Rhodopila		gtdbtk_2.7.2_r232_own	Illumina
+Gd64d6502c4a8aa1f	810	3556	1	100.0	0.0	Bacteria	Pseudomonadota	Alphaproteobacteria	Micropepsales	Micropepsaceae	Rhizomicrobium		gtdbtk_2.7.2_r232_own	PacBio
+Gd661f6189dfe09b3	811	4035	646	94.07	3.0	Bacteria	Myxococcota_A	Polyangia	Polyangiales	JAFGIB01			gtdbtk_2.7.2_r232_own	Illumina
+Gd66c04ac25cfd5ca	812	2573	34	99.87	0.0	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Methylophilaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gd67610855356bf82	813	3969	1	100.0	0.45	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JALNZF01		gtdbtk_2.7.2_r232_own	PacBio
+Gd7550eb5b4065b79	814	3482	280	97.04	0.85	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gd755d51fe228a130	815	3433	230	93.63	0.26	Bacteria	Electryoneota	B3-LCP	B3-LCP				gtdbtk_2.7.2_r232_own	Illumina
+Gd790bfc309fcb350	816	3217	114	96.7	0.38	Bacteria	Desulfobacterota	Desulfobaccia	Desulfobaccales	0-14-0-80-60-11	SURF-52		gtdbtk_2.7.2_r232_own	Illumina
+Gd79e958b671a37db	817	789	82	96.38	0.15	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	VMEP01	JBAZYZ01		gtdbtk_2.7.2_r232_own	Illumina
+Gd7ca1d50537e5e55	818	1892	1	100.0	4.75	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	CAVZKK01		gtdbtk_2.7.2_r232_own	PacBio
+Gd7f7c2ec8b1af333	819	5290	1	98.79	2.78	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	JACQTO01		gtdbtk_2.7.2_r232_own	PacBio
+Gd823513dd170ada0	820	2743	1	99.62	0.0	Bacteria	Nitrospinota_A	UBA7883	JACRGQ01	JACRGQ01	JACQEX01		gtdbtk_2.7.2_r232_own	PacBio
+Gd82640c70a095069	821	4387	97	99.22	0.94	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae			gtdbtk_2.7.2_r232_own	Illumina
+Gd828509ccf997e2c	822	2824	1	100.0	0.01	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	PacBio
+Gd84b60010d999131	823	854	100	90.82	4.72	Bacteria	Patescibacteria	Microgenomatia	GWA2-44-7	UBA8517	JALHYA01		gtdbtk_r220_own	Illumina
+Gd8596f0c078dd934	824	6231	381	96.39	1.77	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	CAVRZY01		gtdbtk_2.7.2_r232_own	Illumina
+Gd8f6bd1e3c2cab54	825	4675	15	93.24	1.73	Bacteria	Pseudomonadota	Alphaproteobacteria	ATCC43930	CGMCC-115725	DATARH01		gtdbtk_2.7.2_r232_own	PacBio
+Gd909d6ae7e534c81	826	2539	245	97.05	3.14	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	Illumina
+Gd934b0dde7755c6e	827	2150	378	91.36	4.3	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	JALHTG01	JALHTG01	JALHTG01 sp022865705	gtdbtk_2.7.2_r232_own	Illumina
+Gd966cb439ecaff00	828	6328	1	96.16	2.25	Bacteria	Methylomirabilota	Methylomirabilia	Rokubacteriales	CSP1-6	CAWIZN01		gtdbtk_2.7.2_r232_own	PacBio
+Gd9d2f2a879837c0c	829	2493	162	92.2	4.14	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	DAOULX01		gtdbtk_2.7.2_r232_own	Illumina
+Gd9ea043bb41ebbc1	830	2722	543	96.63	0.76	Bacteria	Desulfobacterota	Desulfobaccia	Desulfobaccales	0-14-0-80-60-11	JAUXZG01	JAUXZG01 sp030694005	gtdbtk_2.7.2_r232_own	Illumina
+Gda09396df4221145	831	2280	436	91.79	1.78	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gda31df9233c310b7	832	1981	16	95.21	1.58	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_2.7.2_r232_own	Illumina
+Gda4216a4144ab6ea	833	1009	86	93.97	1.32	Bacteria	Patescibacteriota	Patescibacteriia	Veblenbacterales	UBA10138	JACRFN01		gtdbtk_2.7.2_r232_own	Illumina
+Gda559199111995fc	834	2076	1	99.76	0.33	Bacteria	Actinomycetota	Actinomycetes	Nanopelagicales	Nanopelagicaceae	QYPT01		gtdbtk_2.7.2_r232_own	PacBio
+Gda738c0b77d92267	835	1451	67	95.15	1.06	Archaea	Micrarchaeota	Micrarchaeia	Anstonellales	Bilamarchaeaceae	JAHJBR01		gtdbtk_2.7.2_r232_own	Illumina
+Gdb21bf3ca4499092	836	3133	1	100.0	0.28	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	PacBio
+Gdb595208a1acc490	837	4973	1	100.0	0.7	Bacteria	Pseudomonadota	Alphaproteobacteria	ATCC43930	CGMCC-115725	DATJLY01		gtdbtk_2.7.2_r232_own	PacBio
+Gdb5c9e2e74eb34ad	838	3636	406	92.46	1.47	Bacteria	Acidobacteriota	UBA4820	UBA4820	DSQY01	JAKAJA01		gtdbtk_2.7.2_r232_own	Illumina
+Gdb781a6fcd1a73ae	839	2141	252	93.72	1.25	Bacteria	Nitrospirota	Thermodesulfovibrionia	UBA6902	BMS3Bbin08			gtdbtk_2.7.2_r232_own	Illumina
+Gdbd51122ee32d8de	840	2975	114	98.53	0.5	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	RBG-16-64-43	FEN-1073		gtdbtk_2.7.2_r232_own	Illumina
+Gdc13ff9d185315ca	841	3493	258	97.56	0.02	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Acidiferrum	Acidiferrum sp020072805	gtdbtk_2.7.2_r232_own	Illumina
+Gdc6ce9b2e09fc8fa	842	4148	326	93.38	1.57	Bacteria	Acidobacteriota	Thermoanaerobaculia	Thermoanaerobaculales	Thermoanaerobaculaceae	RBG-13-68-16	RBG-13-68-16 sp020073245	gtdbtk_2.7.2_r232_own	Illumina
+Gdcad52ccd8d20345	843	3465	431	93.27	0.55	Bacteria	Acidobacteriota	Aminicenantia	Aminicenantales	JAFGBC01	JAFGBC01	JAFGBC01 sp963702005	gtdbtk_2.7.2_r232_own	Illumina
+Gdcbf7a8cd0401c9a	844	3810	1	98.26	0.8	Bacteria	Desulfobacterota	Binatia	Binatales	Binataceae	DATJOQ01		gtdbtk_2.7.2_r232_own	PacBio
+Gdcea002873b3d8ab	845	1806	102	96.17	1.75	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	Illumina
+Gdcf7a240c6877bf7	846	1697	27	96.07	0.28	Bacteria	Omnitrophota	Gorgyraeia	2-01-FULL-45-10	2-01-FULL-45-10	CAZHPY01		gtdbtk_2.7.2_r232_own	Illumina
+Gdd5e0e83c5720f8e	847	6130	1280	95.89	1.06	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01			gtdbtk_2.7.2_r232_own	Illumina
+Gdd6d0d2d1a6cc00d	848	2088	14	96.49	1.05	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_2.7.2_r232_own	Illumina
+Gde20a16e595b0bae	849	2957	1	99.98	0.15	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Gallionella		gtdbtk_2.7.2_r232_own	PacBio
+Gde25e11bca8880b2	850	3888	677	96.36	1.25	Bacteria	JAGRBM01	JAGRBM01	JAGRBM01	JAGRBM01			gtdbtk_2.7.2_r232_own	Illumina
+Gde6a7675464c7256	851	3997	1	100.0	0.36	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA6906	UBA6906		gtdbtk_2.7.2_r232_own	PacBio
+Gde9af35250ce3f69	852	1177	1	99.55	0.0	Bacteria	Patescibacteriota	Microgenomatia	Curtissbacterales	GWA2-41-24	JAKAJD01		gtdbtk_2.7.2_r232_own	PacBio
+Gdeab5760fd0e30c3	853	2259	38	96.99	0.7	Bacteria	RBG-13-66-14	B26-G2	B26-G2	JAUVZD01			gtdbtk_2.7.2_r232_own	Illumina
+Gdeb08b7d80311fe2	854	5028	1	100.0	0.34	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Acidiflorens		gtdbtk_2.7.2_r232_own	PacBio
+Gded44517d71a831e	855	3679	76	94.0	1.52	Bacteria	Armatimonadota	Hebobacteria	Hebobacterales	Hebobacteraceae			gtdbtk_2.7.2_r232_own	Illumina
+Gdf88879a36f718fd	856	3950	12	98.66	1.42	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	PacBio
+Gdf93425d5539af43	857	2015	192	94.6	3.66	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	UBA5629	9FT-COMBO-48-23		gtdbtk_2.7.2_r232_own	Illumina
+Gdfb11ab748644b32	858	1799	90	97.99	1.81	Bacteria	Chlamydiota	Chlamydiia	Chlamydiales	Rhabdochlamydiaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gdfbff06513d59377	859	1267	158	90.7	2.96	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	BS750m-G39	CAVTZP01	CAVTZP01 sp963739245	gtdbtk_2.7.2_r232_own	Illumina
+Gdfc1e99a4d12825e	860	3213	330	100.0	2.57	Bacteria	Pseudomonadota	Gammaproteobacteria	UBA9214	UBA9214	CAVQCA01		gtdbtk_2.7.2_r232_own	Illumina
+Ge0500c5b3c9cb0da	861	4399	1	100.0	0.97	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQET01	JAIQET01 sp020073165	gtdbtk_2.7.2_r232_own	PacBio
+Ge077cfc2c7dc172f	862	1068	41	98.36	1.41	Bacteria	Patescibacteriota	Minisyncoccia	Moranbacterales	UBA11712			gtdbtk_2.7.2_r232_own	Illumina
+Ge0bc3149ba479e20	863	3324	1	99.22	0.41	Bacteria	Gemmatimonadota	Gemmatimonadetes	Gemmatimonadales	JACORV01	JADGQW01		gtdbtk_2.7.2_r232_own	PacBio
+Ge0bf7d3b15a3d2dd	864	2014	79	98.26	1.23	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	Illumina
+Ge0d2878f148bc620	865	3400	1	100.0	0.21	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhodospirillales	Magnetospirillaceae	CAIYCT01		gtdbtk_2.7.2_r232_own	PacBio
+Ge0fff0ac11ecd2cf	866	1103	1	99.84	0.07	Bacteria	Patescibacteriota	Patescibacteriia	2-12-FULL-60-25	2-12-FULL-60-25			gtdbtk_2.7.2_r232_own	PacBio
+Ge11a7bf5c482bd78	867	4371	276	99.51	4.05	Bacteria	RBG-13-61-14	RBG-13-61-14	RBG-13-61-14	RBG-13-61-14	RBG-13-61-14		gtdbtk_2.7.2_r232_own	Illumina
+Ge11ed938afd94664	868	5450	1	95.86	4.51	Bacteria	Desulfobacterota	BSN033	BSN033	UBA1163			gtdbtk_2.7.2_r232_own	PacBio
+Ge19fa98d240a7de7	869	5153	709	95.87	3.89	Bacteria	Acidobacteriota	Terriglobia	JAJPHL01	JAPKYU01	JAPKYU01		gtdbtk_2.7.2_r232_own	Illumina
+Ge1b583fe8d1577bb	870	1079	1	95.27	0.22	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	CG10238-14	SCSR01	JASEGQ01		gtdbtk_2.7.2_r232_own	PacBio
+Ge219ca8f152b9cea	871	1722	97	90.18	0.07	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	JBFYTX01		gtdbtk_2.7.2_r232_own	Illumina
+Ge22b2da5a3697bb7	872	3862	2	92.7	2.33	Bacteria	Verrucomicrobiota	Verrucomicrobiia	Chthoniobacterales	UBA10450	Udaeobacter		gtdbtk_2.7.2_r232_own	PacBio
+Ge24536c81d5bb215	873	1812	74	95.87	0.96	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	DTMW01			gtdbtk_2.7.2_r232_own	Illumina
+Ge30063137cf41877	874	3801	339	94.52	3.94	Bacteria	Chloroflexota	Limnocylindria	Limnocylindrales	CSP1-4	CAIXZV01		gtdbtk_2.7.2_r232_own	Illumina
+Ge31f653dcae7c591	875	2875	1	98.81	0.41	Bacteria	Pseudomonadota	Gammaproteobacteria	DRLM01	DRLM01	JARRQJ01		gtdbtk_2.7.2_r232_own	PacBio
+Ge33b84149aab8656	876	2344	41	95.02	0.03	Bacteria	Bacteroidota	Ignavibacteria	UBA10030				gtdbtk_2.7.2_r232_own	Illumina
+Ge362eb68ebb8ab95	877	2001	126	99.09	0.3	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+Ge386f2ffb3e2abed	878	3961	1	96.57	1.52	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	UBA4823	FEB-25		gtdbtk_2.7.2_r232_own	PacBio
+Ge3bb7c2eb9f87bc5	879	1672	22	97.85	1.89	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	UBA1222			gtdbtk_2.7.2_r232_own	Illumina
+Ge3f13065e40065e5	880	2413	1	96.56	2.76	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae	DATETJ01		gtdbtk_2.7.2_r232_own	PacBio
+Ge40762587244adf0	881	6960	588	99.72	0.86	Bacteria	Acidobacteriota	Terriglobia	Versatilivoradales	Versatilivoraceae	DATKMG01		gtdbtk_2.7.2_r232_own	Illumina
+Ge40e0312ff9227db	882	4103	519	97.76	0.28	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030			gtdbtk_2.7.2_r232_own	Illumina
+Ge4212a1bdfa7e2a3	883	2543	1	98.4	1.95	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	PacBio
+Ge447455500049802	884	4922	7	97.1	1.86	Bacteria	J088	JAWLBW01	JAWLBW01				gtdbtk_2.7.2_r232_own	PacBio
+Ge462c52e4921fd8b	885	684	14	96.7	0.04	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	SBAW01	GWA1-54-10		gtdbtk_2.7.2_r232_own	Illumina
+Ge496f4f51c6c14dd	886	3249	115	97.25	3.3	Bacteria	Armatimonadota	CAIYQO01	GCA-020354555				gtdbtk_r220_own	Illumina
+Ge4a563e7de492593	887	2346	297	95.57	0.39	Bacteria	Zixibacteria	MSB-5A5	DSPP01	RBG-1			gtdbtk_2.7.2_r232_own	Illumina
+Ge51f10c1bd22e022	888	2410	152	92.13	4.09	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	Illumina
+Ge53207034d25862f	889	4136	777	90.22	2.4	Bacteria	Chloroflexota	Anaerolineae	Anaerolineales	UBA4823	FEB-25		gtdbtk_2.7.2_r232_own	Illumina
+Ge537191c6bef80d6	890	1824	56	97.1	2.07	Bacteria	UBA6262	WVXT01	WVXT01	WVXT01	WVXT01	WVXT01 sp964403285	gtdbtk_2.7.2_r232_own	Illumina
+Ge57435d292052702	891	4195	1	99.88	0.29	Bacteria	Nitrospirota	Nitrospiria	Nitrospirales	Nitrospiraceae	Palsa-1315	Palsa-1315 sp005887945	gtdbtk_2.7.2_r232_own	PacBio
+Ge5e30ea232f3fe48	892	3639	251	94.39	2.21	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	SCGC-AG-212-J23		gtdbtk_2.7.2_r232_own	Illumina
+Ge62315a062b6f280	893	3240	207	98.46	0.12	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	UBA10030			gtdbtk_2.7.2_r232_own	Illumina
+Ge62b8032b8d3b552	894	5305	843	92.97	1.37	Bacteria	Pseudomonadota	Alphaproteobacteria	ATCC43930	CGMCC-115725	AP-15		gtdbtk_2.7.2_r232_own	Illumina
+Ge6758f5d558e05e9	895	4275	1	100.0	0.24	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAIQGF01		gtdbtk_2.7.2_r232_own	PacBio
+Ge68887a8a57dc520	896	2523	78	95.84	3.82	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBEKCD01		gtdbtk_2.7.2_r232_own	Illumina
+Ge6aaf20d5ec8ba05	897	5270	143	98.09	0.42	Bacteria	Acidobacteriota	HRBIN11	JAKEFK01	JAKEFK01			gtdbtk_2.7.2_r232_own	Illumina
+Ge6c8cd19baf44a39	898	2508	1	100.0	0.1	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Gallionella		gtdbtk_2.7.2_r232_own	PacBio
+Ge6f02a969bf1a6ab	899	3198	6	96.74	0.06	Bacteria	Zixibacteria	MSB-5A5	GN15	FEB-12	FEB-12		gtdbtk_2.7.2_r232_own	PacBio
+Ge782ddc56972bbbb	900	2352	23	99.94	3.13	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	Illumina
+Ge7b71f0137fe1f5b	901	1947	1	96.25	0.54	Bacteria	Chloroflexota	Dehalococcoidia	Dehalococcoidales	RBG-16-60-22	JBFYTX01	JBFYTX01 sp963727315	gtdbtk_2.7.2_r232_own	PacBio
+Ge7bb4a052f7a87eb	902	2961	75	99.36	0.1	Bacteria	Zixibacteria	MSB-5A5	GN15	FEB-12	JAGGTI01		gtdbtk_2.7.2_r232_own	Illumina
+Ge7e38fe6762ef0d3	903	1879	247	92.98	1.64	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_r232_cluster_representative	Illumina
+Ge825381ba0576512	904	5987	5	95.04	2.42	Bacteria	Acidobacteriota	UBA6911	UBA6911	UBA6911	JAFNAG01	JAFNAG01 sp020072565	gtdbtk_2.7.2_r232_own	PacBio
+Ge895277ec8a3c220	905	3518	1	96.53	0.88	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	JAHEZR01	JBAWAH01		gtdbtk_2.7.2_r232_own	PacBio
+Ge8ce64b12721bc8e	906	1205	38	100.0	0.45	Bacteria	Patescibacteriota	Microgenomatia	UBA1400	UBA1400			gtdbtk_2.7.2_r232_own	Illumina
+Ge8d8b6bde1422aed	907	4865	1	100.0	0.24	Bacteria	Acidobacteriota	Terriglobia	JAIQFV01	JAIQFV01	JAIQFV01		gtdbtk_2.7.2_r232_own	PacBio
+Ge935a0a2556afacf	908	3834	1	96.23	0.95	Bacteria	SAR324	SAR324	SAR324	JACQKK01	JBGPEV01		gtdbtk_2.7.2_r232_own	PacBio
+Ge939b994063a5c16	909	4648	4	97.27	1.78	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+Ge962432465ccb192	910	3112	8	93.4	2.21	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35	DASPRG01		gtdbtk_2.7.2_r232_own	PacBio
+Ge99571176ba94975	911	3515	1	99.2	0.0	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	JACQDE01		gtdbtk_2.7.2_r232_own	PacBio
+Ge9a6d9c92357e8c0	912	5695	539	96.41	4.07	Bacteria	Pseudomonadota	Alphaproteobacteria	Reyranellales	Reyranellaceae	Reyranella		gtdbtk_2.7.2_r232_own	Illumina
+Ge9a7379b2a125fd2	913	4340	1	99.54	0.04	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Angelobacter		gtdbtk_2.7.2_r232_own	PacBio
+Ge9fbc2282ae18d57	914	760	1	96.02	0.0	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	SBAW01	GWA1-54-10		gtdbtk_2.7.2_r232_own	PacBio
+Ge9fcee33c4ff759f	915	3710	442	99.9	3.83	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Palsa-189		gtdbtk_2.7.2_r232_own	Illumina
+Gea746dc4ebf6c9d7	916	2400	185	92.56	3.53	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	SOJC01	DATHCB01		gtdbtk_2.7.2_r232_own	Illumina
+Geacaf447cc5bda7c	917	2572	1	97.06	2.36	Bacteria	Chloroflexota	Dehalococcoidia	SZUA-161	SZUA-161	JACWAE01		gtdbtk_2.7.2_r232_own	PacBio
+Geb421858ca35a768	918	5936	1	100.0	0.99	Bacteria	Acidobacteriota	Terriglobia	Bryobacterales	Bryobacteraceae	JADGNR01		gtdbtk_2.7.2_r232_own	PacBio
+Geb4e9897a6f782c6	919	3165	1	99.75	1.52	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	PacBio
+Gec72b3643da1fb3f	920	2170	145	99.05	0.76	Archaea	Thermoproteota	Nitrososphaeria	Nitrososphaerales	Nitrosopumilaceae	Nitrosotalea		gtdbtk_2.7.2_r232_own	Illumina
+Gec750916004455fd	921	2544	255	90.75	0.89	Bacteria	Nitrospirota	Nitrospiria	JACQBW01	JACQBW01	JACOTA01		gtdbtk_2.7.2_r232_own	Illumina
+Gecc1b5f0aa174c59	922	3396	42	95.91	0.0	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39			gtdbtk_2.7.2_r232_own	Illumina
+Gecd24c73af075890	923	4183	1	99.45	0.76	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	Acidiflorens	Acidiflorens sp049696815	gtdbtk_2.7.2_r232_own	PacBio
+Gedc053d402b9765f	924	807	71	91.36	0.0	Bacteria	Patescibacteriota	Minisyncoccia	Phycocordibacterales	Phycocordibacteraceae	C7867-001		gtdbtk_2.7.2_r232_own	Illumina
+Gedd186112ddf9d16	925	722	1	92.77	0.95	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	CG10238-14	SCSR01	JAUWXZ01		gtdbtk_2.7.2_r232_own	PacBio
+Gede19c8493a6aa82	926	2315	83	100.0	4.36	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gee0865b00fd960b4	927	7202	12	93.26	1.21	Bacteria	Pseudomonadota	Alphaproteobacteria	Acetobacterales	Acetobacteraceae	Rhodopila		gtdbtk_2.7.2_r232_own	PacBio
+Geea973fd68794d45	928	2187	151	99.3	2.25	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPTR01	DASPTR01 sp964475545	gtdbtk_2.7.2_r232_own	Illumina
+Geebe3b87aa179496	929	3801	1	100.0	0.24	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae			gtdbtk_2.7.2_r232_own	PacBio
+Gef7ded148fc93761	930	2270	1	95.29	4.49	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	FEN-987		gtdbtk_2.7.2_r232_own	PacBio
+Gf0285c29f6ce066b	931	6252	13	95.47	1.64	Bacteria	Myxococcota_A	Polyangia	Haliangiales	SHYZ01			gtdbtk_2.7.2_r232_own	PacBio
+Gf0a460563a77471d	932	798	36	96.42	0.02	Bacteria	Patescibacteriota	Minisyncoccia	Minisyncoccales	CAYHBF01			gtdbtk_2.7.2_r232_own	Illumina
+Gf0f8df4a975d4368	933	3447	1	98.51	0.0	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	DATFVB01	CAWEYG01		gtdbtk_2.7.2_r232_own	PacBio
+Gf126596cebfadf3d	934	5697	686	92.15	2.6	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Bradyrhizobium		gtdbtk_r220_own	Illumina
+Gf155205faf3a9a98	935	4602	432	100.0	2.62	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	Illumina
+Gf1d3cd0cb175bae5	936	4061	229	95.88	0.99	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JAIQGB01	JAIQGB01 sp020072655	gtdbtk_2.7.2_r232_own	Illumina
+Gf1f669ba38796cf2	937	2288	213	92.31	1.3	Bacteria	Actinomycetota	Acidimicrobiia	Acidimicrobiales	RAAP-2	RAAP-2		gtdbtk_2.7.2_r232_own	Illumina
+Gf20f44d9e389c1f2	938	3391	195	99.94	1.43	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Gallionellaceae	Sideroxyarcus		gtdbtk_2.7.2_r232_own	Illumina
+Gf21c652dcc9f1f33	939	884	162	94.62	1.69	Bacteria	Patescibacteriota	Minisyncoccia	Minisyncoccales	UBA10102	JACQLT01		gtdbtk_2.7.2_r232_own	Illumina
+Gf21d18b71575a40d	940	1900	96	92.68	0.97	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	JBGPAV01		gtdbtk_2.7.2_r232_own	Illumina
+Gf23940924e59c816	941	3972	1028	93.1	3.09	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Burkholderiaceae_C	Hylemonella		gtdbtk_r232_cluster_representative	Illumina
+Gf27408bb56eec5e4	942	2323	1	92.58	3.89	Archaea	Thermoproteota	Bathyarchaeia	40CM-2-53-6	40CM-2-53-6	FEN-987		gtdbtk_2.7.2_r232_own	PacBio
+Gf3188462292afcff	943	3021	4	97.09	0.01	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	Acidiferrum		gtdbtk_2.7.2_r232_own	PacBio
+Gf32ab6051b751724	944	2818	202	91.14	0.04	Bacteria	Chloroflexota	Limnocylindria	Limnocylindrales	CSP1-4	Fen-1039		gtdbtk_2.7.2_r232_own	Illumina
+Gf33cc61d7f4624bb	945	3829	356	98.97	4.2	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	Burkholderiaceae_C	Hylemonella		gtdbtk_2.7.2_r232_own	Illumina
+Gf3c8a83ceb6671bd	946	3960	1	99.77	0.39	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JALNZF01		gtdbtk_2.7.2_r232_own	PacBio
+Gf46c920b38295084	947	3418	388	92.33	1.36	Bacteria	Methylomirabilota	Methylomirabilia	Methylomirabilales	Methylomirabilaceae	Methylomirabilis		gtdbtk_2.7.2_r232_own	Illumina
+Gf46fa5b79132b7b2	948	3013	1	100.0	0.19	Bacteria	Bacteroidota	Ignavibacteria	Tepidaquicellales	OLB5	JBEKSX01		gtdbtk_2.7.2_r232_own	PacBio
+Gf47c5628c84c252b	949	2009	41	97.16	0.81	Archaea	Thermoplasmatota	Thermoplasmata	UBA10834	UBA10834	COMBO-56-21		gtdbtk_2.7.2_r232_own	Illumina
+Gf4ef44778383c038	950	1095	10	92.75	1.08	Bacteria	Patescibacteriota	Minisyncoccia	Moranbacterales	UBA2206			gtdbtk_2.7.2_r232_own	PacBio
+Gf4f20cce499ec1eb	951	7319	1	99.03	1.81	Bacteria	Acidobacteriota	UBA6911	UBA6911	UBA6911	DASQID01		gtdbtk_2.7.2_r232_own	PacBio
+Gf527569ef99cc7cd	952	3520	1	100.0	1.07	Bacteria	Nitrospirota	UBA9217	UBA9217	UBA9217	JALNZF01		gtdbtk_2.7.2_r232_own	PacBio
+Gf5b5276468e8f6b9	953	4165	6	99.52	0.79	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	JAHFUA01		gtdbtk_2.7.2_r232_own	PacBio
+Gf61ac9414d22f6a8	954	1959	23	99.01	1.44	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gf634b6db3a904658	955	2228	181	92.34	0.85	Bacteria	Chloroflexota	Dehalococcoidia	SM23-28-2	RBG-16-64-32			gtdbtk_2.7.2_r232_own	Illumina
+Gf680d8cc54d73eda	956	3368	1	97.1	1.69	Bacteria	Zixibacteria	MSB-5A5	UBA10806	UBA10806	UBA10806		gtdbtk_2.7.2_r232_own	PacBio
+Gf68f337debdf8abd	957	3293	62	97.81	0.14	Bacteria	Bacteroidota	Bacteroidia	Bacteroidales	VadinHA17	LD21		gtdbtk_2.7.2_r232_own	Illumina
+Gf717db5d99ec573f	958	2258	1	97.65	2.39	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathyarchaeaceae	DATETJ01		gtdbtk_2.7.2_r232_own	PacBio
+Gf72865ee7e7ce7f6	959	3656	61	95.48	2.41	Bacteria	Actinomycetota	Thermoleophilia	Gaiellales	Gaiellaceae	3-1-20CM-4-69-9		gtdbtk_2.7.2_r232_own	Illumina
+Gf72c16ad57d6dd2a	960	2797	279	93.31	2.57	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	RBG-16-68-12	RBG-16-68-12		gtdbtk_2.7.2_r232_own	Illumina
+Gf76eadaeb03d837f	961	3841	159	98.42	0.11	Bacteria	Eisenbacteria	RBG-16-71-46	RBG-16-71-46	RBG-16-71-46			gtdbtk_2.7.2_r232_own	Illumina
+Gf789c6a29a18ef81	962	2393	6	92.6	0.11	Bacteria	Nitrospirota	JACRHJ01	JACRHJ01	JACRHJ01			gtdbtk_2.7.2_r232_own	PacBio
+Gf78a5118dc0da43e	963	3331	1	98.28	0.09	Bacteria	Bacteroidota	Ignavibacteria	UBA10030	JAHEZR01	JBAWAH01		gtdbtk_2.7.2_r232_own	PacBio
+Gf7b4f18d0dc3c3ef	964	5942	1	100.0	3.12	Bacteria	Desulfobacterota	Binatia	HRBIN30	HRBIN30	CAZCGA01		gtdbtk_2.7.2_r232_own	PacBio
+Gf7c6911a60d889fa	965	3442	230	91.97	1.29	Bacteria	Acidobacteriota	Terriglobia	Acidiferrales	UBA7541	JBGQGH01		gtdbtk_2.7.2_r232_own	Illumina
+Gf7f0e85db8a9dbb0	966	2673	1	100.0	0.08	Bacteria	Acidobacteriota	Terriglobia	Terriglobales	Acidobacteriaceae	DASYVL01		gtdbtk_2.7.2_r232_own	PacBio
+Gf835da4944dd8d2b	967	5177	1	99.5	0.91	Bacteria	Pseudomonadota	Alphaproteobacteria	Acetobacterales	Acetobacteraceae	JAMXLO01		gtdbtk_2.7.2_r232_own	PacBio
+Gf8c1c8c9936da147	968	2228	1	97.53	3.2	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DATDQZ01		gtdbtk_2.7.2_r232_own	PacBio
+Gf96d784c9a66a617	969	3745	134	94.09	1.38	Archaea	Halobacteriota	Methanosarcinia	Methanosarcinales	Methanoperedenaceae	Methanoperedens		gtdbtk_2.7.2_r232_own	Illumina
+Gf97a867acd0d34f6	970	1114	106	96.7	3.15	Bacteria	Patescibacteriota	Microgenomatia	Woykebacterales	RBG-16-39-9b	CAYIWY01		gtdbtk_2.7.2_r232_own	Illumina
+Gf9b967cd1ad90a27	971	1592	1	97.75	0.17	Bacteria	Margulisbacteria	WOR-1	CAVSGV01	CAVSGV01			gtdbtk_2.7.2_r232_own	PacBio
+Gf9ebc9dd4875d0da	972	4494	1	95.7	0.28	Bacteria	Acidobacteriota	Thermoanaerobaculia	UBA5066	Gp7-AA6	CAVUAN01		gtdbtk_2.7.2_r232_own	PacBio
+Gfa048897f8d9c442	973	1435	62	97.63	1.93	Bacteria	Patescibacteriota	Microgenomatia	UBA10105	UBA927	XYB1-FULL-47-11		gtdbtk_2.7.2_r232_own	Illumina
+Gfa3073cb8d22d94d	974	2469	1	96.56	1.88	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	DASPPK01		gtdbtk_2.7.2_r232_own	PacBio
+Gfa4f97741aa21218	975	3147	17	98.27	0.17	Bacteria	Acidobacteriota	Terriglobia	UBA7540	UBA7540	JALHUF01		gtdbtk_2.7.2_r232_own	Illumina
+Gfa663b4d30f68879	976	2759	175	99.56	1.85	Bacteria	Nitrospirota	Thermodesulfovibrionia	Thermodesulfovibrionales	SM23-35			gtdbtk_2.7.2_r232_own	Illumina
+Gfa981a79e508e627	977	679	1	100.0	0.22	Bacteria	Patescibacteriota	Minisyncoccia	UBA6257	GWB1-50-10			gtdbtk_2.7.2_r232_own	PacBio
+Gfad5cbc1bca18ee6	978	5899	574	92.57	4.52	Bacteria	Pseudomonadota	Alphaproteobacteria	Reyranellales	Reyranellaceae	Reyranella		gtdbtk_2.7.2_r232_own	Illumina
+Gfaf0d8084f84a6dd	979	2458	32	90.77	2.47	Archaea	Thermoplasmatota	Thermoplasmata	RBG-16-68-12	RBG-16-68-12	EA-19		gtdbtk_2.7.2_r232_own	Illumina
+Gfb7234543568df29	980	1868	1	98.37	1.18	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	PacBio
+Gfb79b6cc6cd10a2b	981	2315	636	95.42	4.6	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	CAVZKK01	CAVZKK01 sp963775925	gtdbtk_2.7.2_r232_own	Illumina
+Gfbd2ad6f5cc48edd	982	3402	130	98.57	1.3	Bacteria	Hydrothermota	Tepidihabitantia	Tepidihabitantales	Tepidihabitantaceae	UBA2258		gtdbtk_2.7.2_r232_own	Illumina
+Gfc02128752881ecd	983	4213	1	100.0	0.37	Bacteria	Pseudomonadota	Alphaproteobacteria	Acetobacterales	Acetobacteraceae	SHWF01		gtdbtk_2.7.2_r232_own	PacBio
+Gfc36f84d28ff32fe	984	3043	233	95.69	0.45	Bacteria	Zixibacteria	MSB-5A5	MSB-5A5	SM1-73	SM1-73		gtdbtk_2.7.2_r232_own	Illumina
+Gfc39fa23a74b0065	985	1118	17	100.0	1.33	Bacteria	Patescibacteriota	Patescibacteriia	UBA10025	JAHIVO01	CAZQBL01		gtdbtk_2.7.2_r232_own	Illumina
+Gfcab862c3a7a4ff6	986	2024	1	96.21	2.67	Bacteria	Chloroflexota	Dehalococcoidia	GIF9	AB-539-J10	RBG-13-51-36		gtdbtk_2.7.2_r232_own	PacBio
+Gfcda9aa0d20906f9	987	2321	217	95.02	1.9	Archaea	Thermoproteota	Bathyarchaeia	Bathyarchaeales	Bathycorpusculaceae	UBA11855		gtdbtk_2.7.2_r232_own	Illumina
+Gfd6f7970137dcae3	988	876	51	94.94	0.5	Archaea	Aenigmatarchaeota	Aenigmatarchaeia	Aenigmatarchaeales	Aenigmatarchaeaceae			gtdbtk_2.7.2_r232_own	Illumina
+Gfe068fd63aa0a576	989	3348	125	93.74	2.72	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Pseudolabrys		gtdbtk_2.7.2_r232_own	Illumina
+Gfeb36c1bafaff815	990	3486	3	100.0	0.08	Bacteria	Pseudomonadota	Gammaproteobacteria	Burkholderiales	SG8-39	JAOUFA01		gtdbtk_2.7.2_r232_own	PacBio
+Gfee149d6aabf1cc0	991	3326	86	99.54	1.86	Bacteria	Pseudomonadota	Alphaproteobacteria	Rhizobiales	Xanthobacteraceae	Palsa-892		gtdbtk_2.7.2_r232_own	Illumina
+Gff2edd7a0ec05487	992	954	78	93.09	0.27	Bacteria	Patescibacteriota	Saccharimonadia	Saccharimonadales	UBA10212			gtdbtk_2.7.2_r232_own	Illumina
+Gffdbcc1571f6141d	993	4988	1	99.15	0.52	Bacteria	Acidobacteriota	Terriglobia	JAIQFV01	JAIQFV01	JAIQFV01	JAIQFV01 sp020073085	gtdbtk_2.7.2_r232_own	PacBio

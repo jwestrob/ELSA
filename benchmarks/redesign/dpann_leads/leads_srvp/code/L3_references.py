@@ -102,15 +102,18 @@ def residues(lines):
     return res
 
 
+ONLY = set(sys.argv[2].split(",")) if len(sys.argv) > 2 else None   # srvp: rerun a subset, merged into the tables
 FIELDS = "accession,id,protein_name,organism_name,length,ec,xref_pfam,xref_pdb,ft_act_site,ft_binding,lineage"
 cand_rows, ref_rows, feat_rows = [], [], []
 fams = nv.groupby("func").agg(genes=("protein_id", "size"), L=("length", "median"),
                               label=("proposed_label_positional_homology", lambda s: s.value_counts().index[0]),
                               label_name=("proposed_label_name", lambda s: s.value_counts().index[0]),
                               kind=("proposed_label_kind", "first")).reset_index()
+if ONLY is not None:
+    fams = fams[fams.func.isin(ONLY)]
 for fr in fams.itertuples():
     srow = S[(S.func == fr.func) & (S.label == fr.label)].iloc[0]
-    ecs = srow.ecset.split()
+    ecs = [x for e in srow.ecset.split() for x in e.split(";") if x]     # srvp fix: individual ECs
     pfset = set(srow.pfset.split())
     out = dict(func=fr.func, label=fr.label, label_name=fr.label_name, genes=fr.genes, median_len=fr.L, ecs=" ".join(ecs))
     if not ecs:
@@ -218,12 +221,17 @@ for fr in fams.itertuples():
                      "resolution": b.get("resolution"), "method": b.get("experimental_method"), "chain_uniprot_identity": round(ident, 3),
                      "n_active_residues": na, "n_binding_residues": nb, "notes": ";".join(why)})
     print(fr.func, fr.label_name, r.Entry, name, len(newidx), na, nb, flush=True)
-pd.DataFrame(cand_rows).to_csv(H / "data/reference_candidates.tsv", sep="\t", index=False)
-R = pd.DataFrame(ref_rows)
+CR, R, FR = pd.DataFrame(cand_rows), pd.DataFrame(ref_rows), pd.DataFrame(feat_rows)
+if ONLY is not None:      # merge: keep the earlier rows of every function outside the subset
+    keep = lambda f, new: pd.concat([pd.read_csv(H / f, sep="\t")[lambda d: ~d.func.isin(ONLY)], new], ignore_index=True)
+    CR, FR = keep("data/reference_candidates.tsv", CR), keep("data/ref_features.tsv", FR)
+    R = pd.concat([pd.read_csv(H / "data/references.tsv", sep="\t")[lambda d: ~d.func.isin(ONLY)].drop(columns=["length_compatible"]), R],
+                  ignore_index=True)
+CR.to_csv(H / "data/reference_candidates.tsv", sep="\t", index=False)
 # a gene shorter than ~0.5x the reference family region cannot reach TM 0.5 normalized by the reference
 R["length_compatible"] = R.median_len >= 0.6 * R.ref_fam_len
 R.loc[(R.status == "ok") & ~R.length_compatible, "status"] = "ok_but_length_incompatible"
 R.to_csv(H / "data/references.tsv", sep="\t", index=False)
-pd.DataFrame(feat_rows).to_csv(H / "data/ref_features.tsv", sep="\t", index=False)
+FR.to_csv(H / "data/ref_features.tsv", sep="\t", index=False)
 print(R.status.str.split(" ").str[0].value_counts())
 print(R[R.status == "ok"].genes.sum(), "genes in", (R.status == "ok").sum(), "families with a reference")

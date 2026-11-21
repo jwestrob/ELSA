@@ -1,34 +1,110 @@
-LEADS_SRVP: LEAD SEARCH ON THE SR-VP GENOME BINS (994 genomes, unpublished)  -- STATUS 2026-11-21 07:20 UTC
-==========================================================================================================
-STATE: step 1 (partner KOfam) submitted and waiting on the Slurm queue. No result yet.
+LEADS_SRVP: STRUCTURE-AND-RESIDUE LEAD SEARCH ON THE SR-VP GENOME BINS (994 genomes, unpublished)   2026-11-21 09:45 UTC
+======================================================================================================================
+BOTTOM LINE
+1. NO LEAD. Neither assay passes a single profile-invisible, unannotated gene. The DPANN result (18.9% vs 0%) does not
+   reproduce here: the fixed assay cannot test it (0 unannotated genes sit in an informative family), and the extended
+   tier passes 0/52 (Wilson 95% 0-6.9%), below DPANN's 25/132 (two-sided Fisher p = 1.8e-4; the two assays differ).
+2. FIXED ASSAY (assay_rule.json unchanged, sha256 f41709ef...9124d). Pilot gate passed (positives 6/12, negative A 0/23,
+   negative B 0/23, Fisher p = 5.7e-4 each). Full run: 24 testable families, 11 informative; positives 20/21 in
+   informative families (20/45 overall), negatives 0/48 (0/100 overall). Unannotated candidates in informative families
+   0/0; the 7 unannotated genes with a curated reference all fall in families whose positives fail (deoxyhypusine
+   synthase 4, pectinesterase 2, Cas3 1). Already-named candidates pass 11/24.
+3. EXTENDED TIER (assay_rule_extended.json, byte copy of testset3's, sha256 54fed579...c5e9; reported apart, never
+   pooled). 98 families in scope; the fold budget covered all 21 that hold unannotated genes plus 7 named-only. 21
+   families kept (held-out positives 95/105 = 90.5%, Wilson 83.4-94.7%; negatives 0/226, 0-1.7%). Unannotated
+   candidates 0/52: 27/52 keep the family fold (TM >= 0.50), 0/52 carry >= 90% of its invariant residues. Named 2/61.
+4. What the null says, stated once: the extended site criterion is calibrated on near-identical annotated members, and
+   genes that existing tools already place in the family pass only 2/61 (vs held-out 95/105, p = 1e-31). So the tier
+   detects family-level cores, and the 0/52 means these genes lack the annotated family's invariant core; it leaves
+   their own function open.
+5. Lineage: the 167 unannotated genes come from 137 genomes in 29 phyla (Bacteria 149, Archaea 18 against a collection
+   of 780 / 214 genomes; Acidobacteriota 38, Pseudomonadota 31, Desulfobacterota 11, Chloroflexota 11). No assignment
+   in this run changes what a lineage is believed able to do.
 
-JOBS (biotite; remote folder RS = $RD/dpann_leads/leads_srvp, RD = .../srvp2020/Jacob/ELSA/redesign_20261111)
-  120090_[0-5]  leads_kofam    Aksha 0.2.3 KOFAM --cut_ga on 6 shards of the label-carrying supporters, 24 CPUs each,
-                               standard_expand. Status files: RS/partners/out_NN.done (or out_NN.failed), NN = 00..05.
-                               Expected: about 20 min per shard once running (7.8 CPU-h per shard); at submission the
-                               account's 20 standard_expand slots were full, 6 tasks of other workstreams ahead.
-  120091        leads_novelty  afterok:120090. r1_partners.py merge (partner function per labeled gene, KO table
-                               $RD/annot_gpu/srvp/KOFAM_partners.parquet, population FASTA), then Aksha relaxed Pfam-A and
-                               KOfam (E <= 0.01) and rpsblast CDD (E <= 0.01) on the candidate set. Status file:
-                               RS/novelty/STATUS (DONE / FAILED <step>). Expected: about 15 min after 120090 ends.
-  Logs: $RD/dpann_leads/logs/leads_kofam_120090_<task>.log, leads_novelty_120091.log
+FUNNEL (funnel.tsv; tiers T2 / T2b / rest unless stated)
+  labeled 34,375 -> label carriers with a KOfam KO 13,730 -> STRONG partner function (>= 3 carriers, share >= 0.70) 9,661
+  -> enzyme (KO with EC) 2,233 -> 100-600 aa, ILVFMAWC < 0.45: 1,015 (T2 736, T2b 121, rest 158; 298 functions)
+  -> novelty filter: already named 848 (own relaxed KOfam in KOSET 773, own relaxed Pfam in PFSET 381, CDD by model /
+     KEGG-linked COG / enzyme name / EC 364; rpsblast 2.16.0+, CDD 04_03_2023, the Sharur stage-10 recipe)
+  -> UNANNOTATED PROFILE-INVISIBLE 167 genes, 67 functions (T2 132, T2b 13, rest 22).
+  Side populations, counted and left out of the assays: T1c 5 and contradicted 25 unannotated genes.
+  Largest unannotated functions: type I RM S subunit K01154 22, gluconate 2-dehydrogenase gamma chain K06152 20,
+  C5-epimerase K01793 6, then 1-5 genes each. None of the 167 is a member of a curated DefenseFinder / TXSScan system
+  (package gold tables); 7 of the 27 type I RM S/M-labeled genes have a curated RM system within +-5 genes.
+  Alignment-based neighbor lists do not exist for this collection, so embedding-only versus both is not reported.
 
-KOFAM SCOPE (step 1; code/r1_partners.py prep, RS/partners/prep.json)
-  Unique label-carrying supporters by tier scope (1.1 CPU-s per protein):
-    T2 + T2b + rest                         34,375 labeled genes   133,331 proteins   40.7 CPU-h
-    + T1c                                   38,279                 144,498            44.2 CPU-h
-    + contradicted  (CHOSEN)                40,601                 152,832            46.7 CPU-h
-    all labeled genes (T1 included)         69,701                 230,287            70.4 CPU-h (over the ceiling)
-  Novelty searches add about 2-5 CPU-h; total stays under 60 CPU-h.
+STEP 1, PARTNER KOFAM: Aksha 0.2.3 KOFAM --cut_ga on the 152,832 unique label carriers of the T2, T2b, rest, T1c and
+  contradicted genes (all labeled genes would need 230,287 proteins, 70 CPU-h). Array 120090 (6 x 24 CPUs, 22-25 min
+  each) = 56.6 CPU-h allocated; novelty job 120091 0.6 CPU-h; total 57.2 of 60. 146,196 KO rows on 90,559 proteins
+  ($RD/annot_gpu/srvp/KOFAM_partners.parquet); merge checked: 6 shard directories, each read once (protein counts sum).
 
-SETUP
-  assay_rule.json copied unchanged from dpann_leads/invisible: sha256 f41709ef7c50a1bd42a1a2aa632dec1320a409068caf37bccc966fc3fdd9124d
-  code/: copied from dpann_leads/leads_testset3/code (generalized from invisible/code) and adapted: tier-scoped KOfam
-    prep, merge restricted to the scope, merge chained in front of the novelty job, fold folder = leads_srvp/folds/
-    (git-ignored by leads_srvp/.gitignore; SR-VP sequences and models stay there or on biotite).
-  CDD check: rpsblast + /shared/db/cdd/04_03_2023 matches Sharur src/ingest/10_remote_homology_cdd.py / remote_homology
-    runner (rpsblast -evalue 0.01, best model per region at 0.5 overlap); used for novelty source (ii).
-  Negative-B pool built: RS/data/negpool.tsv (4,000 proteins, 435,457 eligible: no Pfam row, unlabeled, 100-600 aa,
-    ILVFMAWC < 0.45, seed 17).
-  Curated callers available for step 5: $RD/ws_srvp_bins/package/gold/instances.parquet (8,698 DefenseFinder / TXSScan
-    systems) and members.parquet (28,716 member genes).
+FIXED ASSAY DETAIL (data/rates.tsv, families.tsv rows assay = fixed)
+  References (curated UniProt record with EC, active + binding sites, X-ray/EM chain): ok 24 functions (56 genes),
+  length-incompatible 16, no reviewed entry with EC + active site + structure 155, no complete EC 53, no experimental
+  chain resolving the active site 31, no entry in the label family 19.
+  Positive controls fail in 12 of 24 families (a 13th, K05343, has no positive protein), mostly on the binding share (deoxyhypusine synthase positives keep the
+  catalytic Lys, fold TM 0.87, binding < 50%). Fold criterion alone: positives 44/45, negatives 0/100.
+  Passing genes (all already named; leads.tsv, verdict PASS-NAMED): NagA K01443 4, L-serine kinase (ADP) K23370 4
+  (Thermoproteota: 40CM-2-53-6 3, Bathyarchaeales 1; KOfam names them; each genome carries the function by another
+  source), GalT-branch HIT K00965 1 (Hadarchaeota B75-G9, 96.6% complete; named by KOfam K00965 E 5e-21, COG1085 and
+  DUF4921; no other source in the genome; neighbors GT4 x2, alpha-amylase x2, the glucan-locus pattern of the DPANN
+  lead), class II FBA K01624 1, PriS K02683 1 (Aenigmatarchaeota).
+  Fold kept, catalytic residues absent (fixed rule's family-level test): no informative family qualifies.
+
+EXTENDED TIER DETAIL (data/ext/; families.tsv rows assay = extended)
+  Scope: population families outside the fixed reference rule with >= 15 representatives at 70% identity among
+  collection proteins carrying the family KO (partner KOfam) and the label Pfam at GA, and >= 3 site positions:
+  98 of 263 (E1: 79 < 15 members, 46 < 15 representatives, 33 < 3 site positions, 5 without a 100-600 aa member;
+  2 of the remaining 100 moved to the fixed rule after the EC fix below). Site: definition-set columns >= 90% one residue of DEHKRCSTYNQW, plus curated
+  features (13 positions in NTP_transferase, 11 in NAD_binding_8; 0 elsewhere among assayed families).
+  Budget plan (data/ext/budget_plan.json, fixed before any extended fold): P1 every in-scope family with unannotated
+  genes (21), P2 their named stratum, P3 named-only families (7); 70 named-only families stay unassayed.
+  Dropped for positives < 80%: HgmA_N 3/5, Metallophos 0/5, NAD_binding_8 2/5, type I RM M subunit 0/5, HycI 1/5,
+  Peptidase_C1 3/4, NrfD 3/5. No family was dropped for a negative pass.
+  Rates, unannotated in kept families: overall 0/52; T2 0/45, T2b 0/6, rest 0/1; support 20-50% 0/7, >= 50% 0/45.
+  Fold kept, site residues absent (observation only; data/absent_site_all.tsv; family kept, >= 3 fold-matching
+  candidates, <= 20% with the site in place):
+    family (KO)                     fold-match / candidates  site in place  positions (in place / fold-matching; residues seen)
+    Gluconate_2-dh3 (K06152)        24/24 (19 unannotated)   0              D100 12/24; N185 0/24 (D,H,Q,R,S,T,M,P,-); W191 8/24
+    Aconitase_C (K20930)            7/8 (4 unannotated)      0              T15 0/7; S65 0/7; R67 0/7 (H,K,N); E68 0/7
+    dTDP_sugar_isom (K15857)        3/3                      0              D15 0/3; R17 0/3; D73 3/3
+    Thiolase_C_1 (K15575)           3/4                      0              Q355 0/3; Q364 0/3
+    Glycos_transf_2 (K23105)        3/5                      0              D34 0/3; D82 3/3
+    NTP_transferase (K00978)        4/5 (named only)         0              23/27 each (85%, under the 90% bar)
+  Held-out positives of these families pass 4-5/5. Passing genes: 2 named protein-tyrosine kinase K00903 genes
+  (Acidobacteriota; PASS-NAMED-ext). Unannotated K06152 genes also fail criterion A: the gamma chain is one subunit of
+  the membrane-bound three-subunit gluconate dehydrogenase.
+
+COLLECTION VERDICT
+  Fixed assay: pass rate among unannotated profile-invisible calls in informative families not estimable (0/0); in all
+  families 0/7. Extended tier: 0/52 (0-6.9%) against negatives 0/226 (0-1.7%); positives 95/105. The SR-VP result
+  does not reproduce DPANN's 18.9%.
+
+ANOMALY AUDIT (two null checkpoints; no expansion was made; the next tests are listed, not run)
+  - Fold-matching candidates carry other residues at the family's invariant positions (gluconate 2-DH gamma Asn
+    replaced in 24/24, mostly by D, H, Q, R, S or T), so the labels track the structural family and diverge at the core.
+  - The partner-derived KO is shared by >= 70% of label-carrying partners, yet the genes' own relaxed hits name it in
+    773/1,015 cases and the 167 remaining genes fail the core: the partner KO may describe the locus more than the gene.
+  - Orthogonal tests, each < 1 h on existing files: (a) align each candidate cluster with the annotated members and
+    ask whether the candidates share their own invariant set (a sister subfamily); (b) compare each gene's partner KO
+    with the KO of its own best relaxed hit at the same locus position in partner genomes; (c) recalibrate the extended
+    positives on annotated members at 30-50% identity to the definition set to measure sensitivity on divergent members.
+
+ADAPTATIONS AND FIXES (recorded before scoring)
+  - EC parsing bug inherited from the DPANN template (gapscreen / invisible s01: KEGG's 'a;b' EC field kept as one
+    token): fixed in L2 / L3 for 26 multi-EC functions. Effect: 2 unannotated O-ureido-L-serine synthase-labeled genes
+    move to 'named' (own relaxed KOfam hit to cysteine synthase K01738, shared EC 2.5.1.47); 2 functions gain a
+    reference (K05343, K07012), 3 become length-incompatible. DPANN carried the same bug.
+  - Pilot candidates drawn from both novelty strata (unannotated first): only 7 unannotated genes are testable; gate
+    unchanged.
+  - Positive pools and extended annotated members come from the partner KOfam table (label carriers only).
+  - Negative B reuses pool proteins across families (shared code): fixed 50 comparisons / 14 proteins; extended 142 / 36.
+  - US-align output holds aligned SR-VP sequence, so it lives under folds/usalign/ (git-ignored); data/ keeps scores.
+
+NOTES  Folds: 467 ESMFold2 models of 600 (pilot 46, full 63, extended references 55, extended 303); no co-fold (no
+  lead). US-align: 195 fixed + 653 extended pairs, biotite login node, serial. Mac disk 144 MB. Taxonomy and quality
+  from package universe/genomes.parquet. SR-VP sequences went to Biohub only; models and sequences stay in folds/
+  (git-ignored by leads_srvp/.gitignore) and on biotite ($RD/dpann_leads/leads_srvp/).
+FILES  REPORT.txt, leads.tsv (13 passing genes, all already named), families.tsv (fixed 298 + extended 263 rows),
+  funnel.tsv, assay_rule.json, assay_rule_extended.json, code/ (r1/r3/r4/r5/r6/r7 remote; L0, L2-L7, E1-E5, F1, fold_run
+  local; L8/L9 copied, L9 unused), data/ (funnel, population, references, selections, readouts, residues, rates, ext/).

@@ -12,7 +12,9 @@ import json
 C, MODE = sys.argv[1], sys.argv[2]
 H = Path(json.load(open(Path(__file__).resolve().parent / "collections_leads.json"))[C]["local_out"].replace(
     "R/", "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/"))
-U = pd.read_csv(H / f"data/usalign_{MODE}.tsv", sep="\t", keep_default_na=False)
+_C = json.load(open(Path(__file__).resolve().parent / "collections_leads.json"))[C]
+UA = (Path(_C["fold_dir"]) if _C["fold_dir"] else H / "folds") / "usalign"     # srvp: alignments live under the fold folder
+U = pd.read_csv(UA / f"usalign_{MODE}.tsv", sep="\t", keep_default_na=False)
 S = pd.read_csv(H / f"data/selection_{MODE}.tsv", sep="\t")
 F = pd.read_csv(H / "data/ref_features.tsv", sep="\t", keep_default_na=False)
 REFS = pd.read_csv(H / "data/references_testable.tsv", sep="\t").set_index("func")

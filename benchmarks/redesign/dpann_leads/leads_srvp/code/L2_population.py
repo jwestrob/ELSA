@@ -54,7 +54,9 @@ step("STRONG enzyme (KO with EC)", F[F.strong_partner & F.enzyme])
 pop = F[F.strong_partner & F.enzyme & F.seq_len.between(100, 600) & (F.ilvfmawc < 0.45) & F.tier.isin(tiers)].copy()
 step("100-600 aa and ILVFMAWC < 0.45", pop)
 pop["func"] = pop.ko_top
-ec_of = {k: [e for e in str(r.ec).split() if e and "-" not in e] for k, r in K.iterrows()}
+# srvp fix: KEGG lists several ECs of a KO joined by ";" in one token; split them (the DPANN template kept the joined token,
+# so multi-EC KOs matched no other KO and their UniProt reference query was malformed)
+ec_of = {k: [x for e in str(r.ec).split() for x in e.split(";") if x and "-" not in x] for k, r in K.iterrows()}
 ko_of_ec = {}
 for k, es in ec_of.items():
     for e in es:

@@ -1,0 +1,566 @@
+pair_id	protein_id	func	role	pair	ref_func	status	TM_model	TM_ref	RMSD	mean_plddt	site	site_share	site_plddt	fold_match	site_ok	PASS	TM_exp	set	stratum
+567686|K00283|candidate|own	567686	K00283	candidate	own	K00283	ok	0.20931	0.29074	5.16	89.9	0/15	0.0	94.6	False	False	False	0.28991	candidate	named
+567686|K00283|candidate|negA	567686	K00283	candidate	negA	K20571	ok	0.20026	0.29018	3.74	89.9	0/4	0.0	95.2	False	False	False	0.28991	negA	
+2761100|K00283|candidate|own	2761100	K00283	candidate	own	K00283	ok	0.20539	0.25945	5.26	82.5	0/15	0.0	92.7	False	False	False	0.2427	candidate	named
+2761100|K00283|candidate|negA	2761100	K00283	candidate	negA	K20571	ok	0.18521	0.23686	5.29	82.5	0/4	0.0	0.0	False	False	False	0.2427	negA	
+2323663|K00283|candidate|own	2323663	K00283	candidate	own	K00283	ok	0.2232	0.23294	5.0	89.7	0/15	0.0	93.1	False	False	False	0.26496	candidate	named
+2323663|K00283|candidate|negA	2323663	K00283	candidate	negA	K20571	ok	0.22124	0.23312	4.52	89.7	0/4	0.0	0.0	False	False	False	0.26496	negA	
+1939351|K00283|candidate|own	1939351	K00283	candidate	own	K00283	ok	0.22683	0.22683	5.2	89.7	0/15	0.0	71.1	False	False	False	0.24454	candidate	named
+1939351|K00283|candidate|negA	1939351	K00283	candidate	negA	K20571	ok	0.21909	0.22145	5.24	89.7	0/4	0.0	91.0	False	False	False	0.24454	negA	
+1101164|K00283|candidate|own	1101164	K00283	candidate	own	K00283	ok	0.22811	0.20684	4.97	69.8	0/15	0.0	51.4	False	False	False	0.23058	candidate	named
+1101164|K00283|candidate|negA	1101164	K00283	candidate	negA	K20571	ok	0.20195	0.18687	5.01	69.8	0/4	0.0	75.0	False	False	False	0.23058	negA	
+2479467|K00333|candidate|own	2479467	K00333	candidate	own	K00333	ok	0.36178	0.22718	5.75	88.0	1/26	0.038	85.4	False	False	False	0.1999	candidate	named
+2479467|K00333|candidate|negA	2479467	K00333	candidate	negA	K07316	ok	0.33304	0.21024	5.01	88.0	0/10	0.0	89.5	False	False	False	0.1999	negA	
+2111693|K00333|candidate|own	2111693	K00333	candidate	own	K00333	ok	0.37186	0.20623	4.7	71.3	0/26	0.0	68.5	False	False	False	0.1817	candidate	named
+2111693|K00333|candidate|negA	2111693	K00333	candidate	negA	K07316	ok	0.28667	0.15999	4.94	71.3	0/10	0.0	58.7	False	False	False	0.1817	negA	
+1862587|K00333|candidate|own	1862587	K00333	candidate	own	K00333	ok	0.43448	0.20453	3.42	57.8	0/26	0.0	58.4	False	False	False	0.17945	candidate	named
+1862587|K00333|candidate|negA	1862587	K00333	candidate	negA	K07316	ok	0.28924	0.16102	5.33	57.8	0/10	0.0	53.2	False	False	False	0.17945	negA	
+1688935|K00333|candidate|own	1688935	K00333	candidate	own	K00333	ok	0.31437	0.15078	4.16	47.3	0/26	0.0	47.7	False	False	False	0.13661	candidate	named
+1688935|K00333|candidate|negA	1688935	K00333	candidate	negA	K07316	ok	0.27012	0.14579	4.94	47.3	1/10	0.1	49.1	False	False	False	0.13661	negA	
+1105400|K00333|candidate|own	1105400	K00333	candidate	own	K00333	ok	0.34346	0.16802	4.27	47.2	0/26	0.0	54.6	False	False	False	0.16319	candidate	named
+1105400|K00333|candidate|negA	1105400	K00333	candidate	negA	K07316	ok	0.27513	0.14646	4.99	47.2	0/10	0.0	0.0	False	False	False	0.16319	negA	
+327539|K00451|candidate|own	327539	K00451	candidate	own	K00451	ok	0.43236	0.39795	3.73	86.9	0/3	0.0	0.0	False	False	False	0.37017	candidate	named
+327539|K00451|candidate|negA	327539	K00451	candidate	negA	K07316	ok	0.2588	0.23264	5.94	86.9	0/10	0.0	94.0	False	False	False	0.37017	negA	
+327540|K00451|candidate|own	327540	K00451	candidate	own	K00451	ok	0.66264	0.42052	2.99	75.4	1/3	0.333	81.4	False	False	False	0.39499	candidate	unannotated
+327540|K00451|candidate|negA	327540	K00451	candidate	negA	K07316	ok	0.29402	0.20407	6.35	75.4	0/10	0.0	87.6	False	False	False	0.39499	negA	
+529242|K00903|candidate|own	529242	K00903	candidate	own	K00903	ok	0.5547	0.88207	2.19	86.7	6/11	0.545	96.7	True	False	False		candidate	named
+529242|K00903|candidate|negA	529242	K00903	candidate	negA	K12902	ok	0.2794	0.40077	5.3	86.7	0/4	0.0	90.6	False	False	False		negA	
+1866600|K00903|candidate|own	1866600	K00903	candidate	own	K00903	ok	0.57255	0.92107	1.64	88.9	10/11	0.909	96.6	True	True	True		candidate	named
+1866600|K00903|candidate|negA	1866600	K00903	candidate	negA	K12902	ok	0.28412	0.41427	5.28	88.9	0/4	0.0	95.4	False	False	False		negA	
+3093899|K00903|candidate|own	3093899	K00903	candidate	own	K00903	ok	0.67588	0.90327	1.81	85.1	10/11	0.909	94.6	True	True	True		candidate	named
+3093899|K00903|candidate|negA	3093899	K00903	candidate	negA	K12902	ok	0.33252	0.42075	5.0	85.1	0/4	0.0	90.5	False	False	False		negA	
+364688|K00903|candidate|own	364688	K00903	candidate	own	K00903	ok	0.6771	0.72843	1.24	90.7	6/11	0.545	97.7	True	False	False		candidate	named
+364688|K00903|candidate|negA	364688	K00903	candidate	negA	K12902	ok	0.38622	0.4118	5.31	90.7	0/4	0.0	94.9	False	False	False		negA	
+1012089|K00903|candidate|own	1012089	K00903	candidate	own	K00903	ok	0.69963	0.55833	0.82	90.5	3/11	0.273	96.0	True	False	False		candidate	named
+1012089|K00903|candidate|negA	1012089	K00903	candidate	negA	K12902	ok	0.428	0.36183	4.01	90.5	0/4	0.0	96.0	False	False	False		negA	
+2089874|K00978|candidate|own	2089874	K00978	candidate	own	K00978	ok	0.7576	0.86415	2.58	90.8	23/27	0.852	96.5	True	False	False	0.82549	candidate	named
+2089874|K00978|candidate|negA	2089874	K00978	candidate	negA	K20738	ok	0.25359	0.28436	5.52	90.8	0/16	0.0	97.8	False	False	False	0.82549	negA	
+2965711|K00978|candidate|own	2965711	K00978	candidate	own	K00978	ok	0.76887	0.86273	2.57	91.1	23/27	0.852	96.4	True	False	False	0.82179	candidate	named
+2965711|K00978|candidate|negA	2965711	K00978	candidate	negA	K20738	ok	0.25115	0.27679	6.02	91.1	0/16	0.0	97.2	False	False	False	0.82179	negA	
+824394|K00978|candidate|own	824394	K00978	candidate	own	K00978	ok	0.78508	0.87409	2.36	92.5	23/27	0.852	96.9	True	False	False	0.83405	candidate	named
+824394|K00978|candidate|negA	824394	K00978	candidate	negA	K20738	ok	0.25647	0.28132	5.94	92.5	0/16	0.0	98.1	False	False	False	0.83405	negA	
+2244655|K00978|candidate|own	2244655	K00978	candidate	own	K00978	ok	0.7977	0.85845	2.56	94.8	23/27	0.852	96.6	True	False	False	0.83172	candidate	named
+2244655|K00978|candidate|negA	2244655	K00978	candidate	negA	K20738	ok	0.27183	0.29135	5.62	94.8	0/16	0.0	98.0	False	False	False	0.83172	negA	
+213908|K00978|candidate|own	213908	K00978	candidate	own	K00978	ok	0.65359	0.47299	2.31	92.3	6/27	0.222	96.2	False	False	False	0.41149	candidate	named
+213908|K00978|candidate|negA	213908	K00978	candidate	negA	K20738	ok	0.28257	0.22683	5.91	92.3	0/16	0.0	95.8	False	False	False	0.41149	negA	
+2459841|K03269|candidate|own	2459841	K03269	candidate	own	K03269	ok	0.51505	0.59398	3.6	90.5	9/13	0.692	94.1	True	False	False	0.86645	candidate	named
+2459841|K03269|candidate|negA	2459841	K03269	candidate	negA	K21271	ok	0.29843	0.31628	5.55	90.5	0/5	0.0	90.1	False	False	False	0.86645	negA	
+2801540|K03269|candidate|own	2801540	K03269	candidate	own	K03269	ok	0.53735	0.61047	3.23	93.1	9/13	0.692	96.2	True	False	False	0.83812	candidate	named
+2801540|K03269|candidate|negA	2801540	K03269	candidate	negA	K21271	ok	0.3258	0.3401	5.69	93.1	1/5	0.2	96.4	False	False	False	0.83812	negA	
+2040744|K03269|candidate|own	2040744	K03269	candidate	own	K03269	ok	0.56279	0.61036	3.27	97.5	10/13	0.769	98.5	True	False	False	0.97229	candidate	named
+2040744|K03269|candidate|negA	2040744	K03269	candidate	negA	K21271	ok	0.34727	0.34923	5.93	97.5	0/5	0.0	97.7	False	False	False	0.97229	negA	
+187057|K03269|candidate|own	187057	K03269	candidate	own	K03269	ok	0.48234	0.36199	1.49	89.7	4/13	0.308	90.0	False	False	False	0.2814	candidate	named
+187057|K03269|candidate|negA	187057	K03269	candidate	negA	K21271	ok	0.38634	0.29017	4.5	89.7	0/5	0.0	94.1	False	False	False	0.2814	negA	
+1809501|K03269|candidate|own	1809501	K03269	candidate	own	K03269	ok	0.42906	0.23926	3.83	51.3	3/13	0.231	44.0	False	False	False	0.27824	candidate	named
+1809501|K03269|candidate|negA	1809501	K03269	candidate	negA	K21271	ok	0.30448	0.18462	5.35	51.3	0/5	0.0	45.7	False	False	False	0.27824	negA	
+57879|K03388|candidate|own	57879	K03388	candidate	own	K03388	ok	0.17068	0.51045	2.71	91.1	1/14	0.071	97.5	True	False	False		candidate	named
+57879|K03388|candidate|negA	57879	K03388	candidate	negA	K27986	ok	0.13498	0.32442	4.2	91.1	0/3	0.0	90.7	False	False	False		negA	
+1419699|K03388|candidate|own	1419699	K03388	candidate	own	K03388	ok	0.18894	0.55587	2.29	95.4	3/14	0.214	97.1	True	False	False		candidate	named
+1419699|K03388|candidate|negA	1419699	K03388	candidate	negA	K27986	ok	0.15971	0.3555	4.14	95.4	0/3	0.0	96.3	False	False	False		negA	
+56733|K03388|candidate|own	56733	K03388	candidate	own	K03388	ok	0.20941	0.40974	2.55	92.6	0/14	0.0	93.9	False	False	False		candidate	named
+56733|K03388|candidate|negA	56733	K03388	candidate	negA	K27986	ok	0.20905	0.34392	3.64	92.6	0/3	0.0	89.1	False	False	False		negA	
+1792661|K03388|candidate|own	1792661	K03388	candidate	own	K03388	ok	0.22326	0.39065	3.31	77.6	2/14	0.143	80.1	False	False	False		candidate	named
+1792661|K03388|candidate|negA	1792661	K03388	candidate	negA	K27986	ok	0.20407	0.29721	4.56	77.6	0/3	0.0	61.1	False	False	False		negA	
+2691456|K03388|candidate|own	2691456	K03388	candidate	own	K03388	ok	0.23075	0.3888	3.12	66.2	2/14	0.143	69.3	False	False	False		candidate	named
+2691456|K03388|candidate|negA	2691456	K03388	candidate	negA	K27986	ok	0.20941	0.28711	4.86	66.2	0/3	0.0	0.0	False	False	False		negA	
+2840671|K03427|candidate|own	2840671	K03427	candidate	own	K03427	ok	0.24536	0.15768	4.88	91.9	1/6	0.167	88.9	False	False	False	0.15128	candidate	named
+2840671|K03427|candidate|negA	2840671	K03427	candidate	negA	K27876	ok	0.385	0.23398	4.2	91.9	0/5	0.0	90.2	False	False	False	0.15128	negA	
+2486031|K03427|candidate|own	2486031	K03427	candidate	own	K03427	ok	0.29965	0.14587	5.53	52.6	0/6	0.0	46.3	False	False	False	0.15714	candidate	named
+2486031|K03427|candidate|negA	2486031	K03427	candidate	negA	K27876	ok	0.31792	0.1167	3.33	52.6	0/5	0.0	0.0	False	False	False	0.15714	negA	
+810304|K03427|candidate|own	810304	K03427	candidate	own	K03427	ok	0.21681	0.09836	4.81	52.4	0/6	0.0	58.3	False	False	False	0.1182	candidate	named
+810304|K03427|candidate|negA	810304	K03427	candidate	negA	K27876	ok	0.32841	0.11219	2.33	52.4	0/5	0.0	0.0	False	False	False	0.1182	negA	
+3054951|K03427|candidate|own	3054951	K03427	candidate	own	K03427	ok	0.21845	0.21335	6.83	93.5	0/6	0.0	94.2	False	False	False	0.21938	candidate	unannotated
+3054951|K03427|candidate|negA	3054951	K03427	candidate	negA	K27876	ok	0.24566	0.22816	5.35	93.5	0/5	0.0	99.0	False	False	False	0.21938	negA	
+535216|K03427|candidate|own	535216	K03427	candidate	own	K03427	ok	0.27085	0.23091	4.86	93.7	0/6	0.0	98.8	False	False	False	0.23579	candidate	unannotated
+535216|K03427|candidate|negA	535216	K03427	candidate	negA	K27876	ok	0.23366	0.19629	6.56	93.7	0/5	0.0	0.0	False	False	False	0.23579	negA	
+2311282|K03427|candidate|own	2311282	K03427	candidate	own	K03427	ok	0.41838	0.29533	5.16	56.3	0/6	0.0	57.1	False	False	False	0.28163	candidate	unannotated
+2311282|K03427|candidate|negA	2311282	K03427	candidate	negA	K27876	ok	0.31479	0.21369	5.38	56.3	0/5	0.0	47.5	False	False	False	0.28163	negA	
+1796680|K03427|candidate|own	1796680	K03427	candidate	own	K03427	ok	0.28413	0.17935	5.77	89.9	0/6	0.0	82.8	False	False	False	0.20319	candidate	unannotated
+1796680|K03427|candidate|negA	1796680	K03427	candidate	negA	K27876	ok	0.24704	0.1463	5.34	89.9	0/5	0.0	0.0	False	False	False	0.20319	negA	
+106133|K03427|candidate|own	106133	K03427	candidate	own	K03427	ok	0.30364	0.16709	5.42	90.7	0/6	0.0	90.8	False	False	False	0.14119	candidate	unannotated
+106133|K03427|candidate|negA	106133	K03427	candidate	negA	K27876	ok	0.21213	0.11868	6.08	90.7	0/5	0.0	96.5	False	False	False	0.14119	negA	
+1373786|K03605|candidate|own	1373786	K03605	candidate	own	K03605	ok	0.71253	0.69148	2.77	93.2	4/4	1.0	92.7	True	True	True		candidate	named
+1373786|K03605|candidate|negA	1373786	K03605	candidate	negA	K04069	ok	0.31911	0.30572	4.95	93.2	0/8	0.0	96.2	False	False	False		negA	
+3161371|K03605|candidate|own	3161371	K03605	candidate	own	K03605	ok	0.78341	0.75471	2.21	91.2	3/4	0.75	96.3	True	False	False		candidate	named
+3161371|K03605|candidate|negA	3161371	K03605	candidate	negA	K04069	ok	0.31131	0.29733	5.0	91.2	0/8	0.0	97.1	False	False	False		negA	
+991929|K03605|candidate|own	991929	K03605	candidate	own	K03605	ok	0.79626	0.73966	2.51	92.2	4/4	1.0	87.7	True	True	True		candidate	named
+991929|K03605|candidate|negA	991929	K03605	candidate	negA	K04069	ok	0.36286	0.33472	4.69	92.2	1/8	0.125	96.9	False	False	False		negA	
+291733|K03605|candidate|own	291733	K03605	candidate	own	K03605	ok	0.75325	0.68917	3.05	93.3	3/4	0.75	94.4	True	False	False		candidate	named
+291733|K03605|candidate|negA	291733	K03605	candidate	negA	K04069	ok	0.35221	0.32356	5.3	93.3	0/8	0.0	97.8	False	False	False		negA	
+2892930|K03605|candidate|own	2892930	K03605	candidate	own	K03605	ok	0.80963	0.69994	2.79	85.0	3/4	0.75	76.8	True	False	False		candidate	named
+2892930|K03605|candidate|negA	2892930	K03605	candidate	negA	K04069	ok	0.3359	0.29332	5.16	85.0	0/8	0.0	86.7	False	False	False		negA	
+1881373|K03605|candidate|own	1881373	K03605	candidate	own	K03605	ok	0.66096	0.51957	3.25	70.1	2/4	0.5	59.3	True	False	False		candidate	unannotated
+1881373|K03605|candidate|negA	1881373	K03605	candidate	negA	K04069	ok	0.3622	0.28513	4.57	70.1	0/8	0.0	73.7	False	False	False		negA	
+2444796|K04069|candidate|own	2444796	K04069	candidate	own	K04069	ok	0.50808	0.51088	0.54	97.4	3/8	0.375	98.0	True	False	False	0.47225	candidate	named
+2444796|K04069|candidate|negA	2444796	K04069	candidate	negA	K21216	ok	0.29828	0.29579	4.53	97.4	0/4	0.0	98.9	False	False	False	0.47225	negA	
+2220369|K04069|candidate|own	2220369	K04069	candidate	own	K04069	ok	0.39082	0.38028	4.9	94.4	0/8	0.0	94.1	False	False	False	0.36859	candidate	named
+2220369|K04069|candidate|negA	2220369	K04069	candidate	negA	K21216	ok	0.31423	0.29992	3.97	94.4	0/4	0.0	98.5	False	False	False	0.36859	negA	
+557747|K04069|candidate|own	557747	K04069	candidate	own	K04069	ok	0.21686	0.20636	5.42	87.3	0/8	0.0	82.7	False	False	False	0.1951	candidate	named
+557747|K04069|candidate|negA	557747	K04069	candidate	negA	K21216	ok	0.23138	0.2181	5.45	87.3	0/4	0.0	95.3	False	False	False	0.1951	negA	
+2101221|K04069|candidate|own	2101221	K04069	candidate	own	K04069	ok	0.27326	0.24663	5.41	90.1	0/8	0.0	91.5	False	False	False	0.20173	candidate	named
+2101221|K04069|candidate|negA	2101221	K04069	candidate	negA	K21216	ok	0.2699	0.23868	5.04	90.1	0/4	0.0	84.3	False	False	False	0.20173	negA	
+2572431|K04069|candidate|own	2572431	K04069	candidate	own	K04069	ok	0.39221	0.26826	4.39	63.9	0/8	0.0	52.5	False	False	False	0.3154	candidate	named
+2572431|K04069|candidate|negA	2572431	K04069	candidate	negA	K21216	ok	0.34484	0.2313	3.71	63.9	0/4	0.0	57.5	False	False	False	0.3154	negA	
+2883613|K04069|candidate|own	2883613	K04069	candidate	own	K04069	ok	0.2492	0.20496	5.77	84.2	0/8	0.0	80.3	False	False	False	0.19682	candidate	unannotated
+2883613|K04069|candidate|negA	2883613	K04069	candidate	negA	K21216	ok	0.278	0.21762	4.59	84.2	0/4	0.0	52.3	False	False	False	0.19682	negA	
+3109263|K06152|candidate|own	3109263	K06152	candidate	own	K06152	ok	0.50141	0.67824	3.24	88.9	1/3	0.333	90.8	True	False	False		candidate	named
+3109263|K06152|candidate|negA	3109263	K06152	candidate	negA	K15575	ok	0.2353	0.2964	5.76	88.9	0/3	0.0	96.2	False	False	False		negA	
+2766368|K06152|candidate|own	2766368	K06152	candidate	own	K06152	ok	0.6068	0.73266	2.76	86.0	2/3	0.667	94.4	True	False	False		candidate	named
+2766368|K06152|candidate|negA	2766368	K06152	candidate	negA	K15575	ok	0.26962	0.30699	5.09	86.0	0/3	0.0	94.2	False	False	False		negA	
+257777|K06152|candidate|own	257777	K06152	candidate	own	K06152	ok	0.53946	0.6343	2.79	83.6	1/3	0.333	90.6	True	False	False		candidate	named
+257777|K06152|candidate|negA	257777	K06152	candidate	negA	K15575	ok	0.25005	0.28148	5.11	83.6	0/3	0.0	98.9	False	False	False		negA	
+1505957|K06152|candidate|own	1505957	K06152	candidate	own	K06152	ok	0.54117	0.6102	3.28	87.3	1/3	0.333	89.0	True	False	False		candidate	named
+1505957|K06152|candidate|negA	1505957	K06152	candidate	negA	K15575	ok	0.23369	0.25278	6.05	87.3	0/3	0.0	98.5	False	False	False		negA	
+2632946|K06152|candidate|own	2632946	K06152	candidate	own	K06152	ok	0.65683	0.64201	2.62	92.9	0/3	0.0	95.9	True	False	False		candidate	named
+2632946|K06152|candidate|negA	2632946	K06152	candidate	negA	K15575	ok	0.27976	0.27098	5.37	92.9	0/3	0.0	90.6	False	False	False		negA	
+765888|K06152|candidate|own	765888	K06152	candidate	own	K06152	ok	0.49325	0.67283	3.27	83.0	2/3	0.667	91.4	True	False	False		candidate	unannotated
+765888|K06152|candidate|negA	765888	K06152	candidate	negA	K15575	ok	0.24028	0.30822	5.29	83.0	0/3	0.0	92.8	False	False	False		negA	
+185352|K06152|candidate|own	185352	K06152	candidate	own	K06152	ok	0.50742	0.68924	3.28	84.1	2/3	0.667	90.8	True	False	False		candidate	unannotated
+185352|K06152|candidate|negA	185352	K06152	candidate	negA	K15575	ok	0.23974	0.30477	5.2	84.1	0/3	0.0	90.1	False	False	False		negA	
+387602|K06152|candidate|own	387602	K06152	candidate	own	K06152	ok	0.49269	0.64322	3.23	76.4	0/3	0.0	67.1	True	False	False		candidate	unannotated
+387602|K06152|candidate|negA	387602	K06152	candidate	negA	K15575	ok	0.24877	0.29989	5.41	76.4	0/3	0.0	68.9	False	False	False		negA	
+1184429|K06152|candidate|own	1184429	K06152	candidate	own	K06152	ok	0.54711	0.67137	3.1	76.9	1/3	0.333	87.7	True	False	False		candidate	unannotated
+1184429|K06152|candidate|negA	1184429	K06152	candidate	negA	K15575	ok	0.26487	0.31013	5.21	76.9	0/3	0.0	92.4	False	False	False		negA	
+2867034|K06152|candidate|own	2867034	K06152	candidate	own	K06152	ok	0.58069	0.71416	2.87	82.9	1/3	0.333	87.8	True	False	False		candidate	unannotated
+2867034|K06152|candidate|negA	2867034	K06152	candidate	negA	K15575	ok	0.27335	0.31721	5.29	82.9	0/3	0.0	94.2	False	False	False		negA	
+556210|K06152|candidate|own	556210	K06152	candidate	own	K06152	ok	0.55585	0.67194	2.41	82.5	1/3	0.333	90.3	True	False	False		candidate	unannotated
+556210|K06152|candidate|negA	556210	K06152	candidate	negA	K15575	ok	0.23878	0.2711	5.48	82.5	0/3	0.0	98.5	False	False	False		negA	
+776312|K06152|candidate|own	776312	K06152	candidate	own	K06152	ok	0.5744	0.69215	3.07	80.8	1/3	0.333	86.1	True	False	False		candidate	unannotated
+776312|K06152|candidate|negA	776312	K06152	candidate	negA	K15575	ok	0.25088	0.28759	5.2	80.8	0/3	0.0	93.6	False	False	False		negA	
+1334792|K06152|candidate|own	1334792	K06152	candidate	own	K06152	ok	0.49449	0.58882	3.0	74.8	0/3	0.0	74.5	True	False	False		candidate	unannotated
+1334792|K06152|candidate|negA	1334792	K06152	candidate	negA	K15575	ok	0.29362	0.33217	5.37	74.8	0/3	0.0	74.2	False	False	False		negA	
+1758468|K06152|candidate|own	1758468	K06152	candidate	own	K06152	ok	0.62293	0.71426	2.57	90.8	2/3	0.667	91.7	True	False	False		candidate	unannotated
+1758468|K06152|candidate|negA	1758468	K06152	candidate	negA	K15575	ok	0.27046	0.29798	5.18	90.8	0/3	0.0	93.1	False	False	False		negA	
+2808853|K06152|candidate|own	2808853	K06152	candidate	own	K06152	ok	0.60595	0.69526	2.92	83.2	1/3	0.333	87.8	True	False	False		candidate	unannotated
+2808853|K06152|candidate|negA	2808853	K06152	candidate	negA	K15575	ok	0.26122	0.28796	4.93	83.2	0/3	0.0	95.4	False	False	False		negA	
+1024149|K06152|candidate|own	1024149	K06152	candidate	own	K06152	ok	0.62129	0.70446	2.59	88.4	2/3	0.667	88.2	True	False	False		candidate	unannotated
+1024149|K06152|candidate|negA	1024149	K06152	candidate	negA	K15575	ok	0.26042	0.28279	5.71	88.4	0/3	0.0	93.5	False	False	False		negA	
+2016963|K06152|candidate|own	2016963	K06152	candidate	own	K06152	ok	0.56326	0.63481	3.19	85.2	1/3	0.333	88.7	True	False	False		candidate	unannotated
+2016963|K06152|candidate|negA	2016963	K06152	candidate	negA	K15575	ok	0.28881	0.31533	5.09	85.2	0/3	0.0	74.8	False	False	False		negA	
+3140160|K06152|candidate|own	3140160	K06152	candidate	own	K06152	ok	0.65325	0.6496	2.76	94.4	0/3	0.0	96.6	True	False	False		candidate	unannotated
+3140160|K06152|candidate|negA	3140160	K06152	candidate	negA	K15575	ok	0.24453	0.2409	5.41	94.4	0/3	0.0	98.1	False	False	False		negA	
+3167768|K06152|candidate|own	3167768	K06152	candidate	own	K06152	ok	0.68007	0.66833	2.43	95.1	0/3	0.0	96.0	True	False	False		candidate	unannotated
+3167768|K06152|candidate|negA	3167768	K06152	candidate	negA	K15575	ok	0.26213	0.25543	5.41	95.1	0/3	0.0	98.8	False	False	False		negA	
+2687546|K06152|candidate|own	2687546	K06152	candidate	own	K06152	ok	0.68306	0.66766	2.86	95.1	0/3	0.0	97.0	True	False	False		candidate	unannotated
+2687546|K06152|candidate|negA	2687546	K06152	candidate	negA	K15575	ok	0.26728	0.25955	5.12	95.1	0/3	0.0	98.4	False	False	False		negA	
+3005064|K06152|candidate|own	3005064	K06152	candidate	own	K06152	ok	0.64738	0.6329	2.37	93.6	0/3	0.0	95.9	True	False	False		candidate	unannotated
+3005064|K06152|candidate|negA	3005064	K06152	candidate	negA	K15575	ok	0.27487	0.26615	5.27	93.6	0/3	0.0	89.4	False	False	False		negA	
+2959892|K06152|candidate|own	2959892	K06152	candidate	own	K06152	ok	0.67877	0.65143	2.2	94.9	0/3	0.0	95.7	True	False	False		candidate	unannotated
+2959892|K06152|candidate|negA	2959892	K06152	candidate	negA	K15575	ok	0.28278	0.26965	4.81	94.9	0/3	0.0	97.8	False	False	False		negA	
+1928596|K06152|candidate|own	1928596	K06152	candidate	own	K06152	ok	0.68154	0.63964	2.79	74.3	1/3	0.333	73.1	True	False	False		candidate	unannotated
+1928596|K06152|candidate|negA	1928596	K06152	candidate	negA	K15575	ok	0.29804	0.28067	5.26	74.3	0/3	0.0	74.3	False	False	False		negA	
+2628634|K06152|candidate|own	2628634	K06152	candidate	own	K06152	ok	0.66701	0.62562	2.6	94.6	0/3	0.0	97.2	True	False	False		candidate	unannotated
+2628634|K06152|candidate|negA	2628634	K06152	candidate	negA	K15575	ok	0.28192	0.26413	5.17	94.6	0/3	0.0	94.7	False	False	False		negA	
+141580|K07316|candidate|own	141580	K07316	candidate	own	K07316	ok	0.26191	0.22774	6.3	82.1	0/10	0.0	81.2	False	False	False	0.25503	candidate	named
+141580|K07316|candidate|negA	141580	K07316	candidate	negA	K00333	ok	0.2512	0.21292	5.82	82.1	0/26	0.0	80.7	False	False	False	0.25503	negA	
+1237486|K07316|candidate|own	1237486	K07316	candidate	own	K07316	ok	0.21247	0.18079	5.68	66.9	1/10	0.1	55.4	False	False	False	0.23929	candidate	named
+1237486|K07316|candidate|negA	1237486	K07316	candidate	negA	K00333	ok	0.27601	0.22893	5.47	66.9	1/26	0.038	68.3	False	False	False	0.23929	negA	
+3180559|K07316|candidate|own	3180559	K07316	candidate	own	K07316	ok	0.29951	0.20494	5.31	72.0	0/10	0.0	69.0	False	False	False	0.22775	candidate	named
+3180559|K07316|candidate|negA	3180559	K07316	candidate	negA	K00333	ok	0.28444	0.19451	5.89	72.0	1/26	0.038	75.6	False	False	False	0.22775	negA	
+3086695|K07316|candidate|own	3086695	K07316	candidate	own	K07316	ok	0.26174	0.17093	5.28	62.0	0/10	0.0	62.7	False	False	False	0.17201	candidate	named
+3086695|K07316|candidate|negA	3086695	K07316	candidate	negA	K00333	ok	0.27163	0.16696	4.94	62.0	0/26	0.0	63.6	False	False	False	0.17201	negA	
+2899506|K07316|candidate|own	2899506	K07316	candidate	own	K07316	ok	0.25882	0.16095	5.05	67.2	0/10	0.0	84.2	False	False	False	0.18504	candidate	named
+2899506|K07316|candidate|negA	2899506	K07316	candidate	negA	K00333	ok	0.29412	0.17183	4.66	67.2	0/26	0.0	75.1	False	False	False	0.18504	negA	
+2227036|K07316|candidate|own	2227036	K07316	candidate	own	K07316	ok	0.32286	0.23853	4.48	91.8	0/10	0.0	92.6	False	False	False	0.26836	candidate	unannotated
+2227036|K07316|candidate|negA	2227036	K07316	candidate	negA	K00333	ok	0.24614	0.17473	4.94	91.8	0/26	0.0	95.8	False	False	False	0.26836	negA	
+293071|K12628|candidate|own	293071	K12628	candidate	own	K12628	ok	0.27591	0.25216	5.67	90.1	0/4	0.0	86.9	False	False	False		candidate	unannotated
+293071|K12628|candidate|negA	293071	K12628	candidate	negA	K00283	ok	0.31732	0.2926	3.9	90.1	0/15	0.0	92.9	False	False	False		negA	
+1013509|K12628|candidate|own	1013509	K12628	candidate	own	K12628	ok	0.32612	0.28211	4.4	53.8	1/4	0.25	56.1	False	False	False		candidate	unannotated
+1013509|K12628|candidate|negA	1013509	K12628	candidate	negA	K00283	ok	0.29917	0.26322	4.77	53.8	0/15	0.0	56.4	False	False	False		negA	
+1809258|K12902|candidate|own	1809258	K12902	candidate	own	K12902	ok	0.33316	0.36153	4.64	87.1	0/4	0.0	91.2	False	False	False		candidate	named
+1809258|K12902|candidate|negA	1809258	K12902	candidate	negA	K13306	ok	0.37162	0.40574	4.13	87.1	1/4	0.25	77.4	False	False	False		negA	
+1809259|K12902|candidate|own	1809259	K12902	candidate	own	K12902	ok	0.6086	0.58118	1.99	89.4	3/4	0.75	96.2	True	False	False		candidate	named
+1809259|K12902|candidate|negA	1809259	K12902	candidate	negA	K13306	ok	0.37278	0.36078	4.57	89.4	0/4	0.0	83.8	False	False	False		negA	
+1402485|K12902|candidate|own	1402485	K12902	candidate	own	K12902	ok	0.40392	0.37794	3.7	92.5	0/4	0.0	97.2	False	False	False		candidate	named
+1402485|K12902|candidate|negA	1402485	K12902	candidate	negA	K13306	ok	0.39277	0.36792	3.26	92.5	0/4	0.0	93.4	False	False	False		negA	
+114124|K12902|candidate|own	114124	K12902	candidate	own	K12902	ok	0.2861	0.65652	2.95	77.7	0/4	0.0	85.4	True	False	False		candidate	unannotated
+114124|K12902|candidate|negA	114124	K12902	candidate	negA	K13306	ok	0.23299	0.51156	3.86	77.7	0/4	0.0	89.4	True	False	False		negA	
+1423614|K12902|candidate|own	1423614	K12902	candidate	own	K12902	ok	0.32303	0.31654	4.69	95.4	0/4	0.0	98.2	False	False	False		candidate	unannotated
+1423614|K12902|candidate|negA	1423614	K12902	candidate	negA	K13306	ok	0.33842	0.33288	5.12	95.4	0/4	0.0	97.8	False	False	False		negA	
+2153809|K13306|candidate|own	2153809	K13306	candidate	own	K13306	ok	0.29414	0.22771	5.31	64.8	0/4	0.0	74.1	False	False	False		candidate	unannotated
+2153809|K13306|candidate|negA	2153809	K13306	candidate	negA	K12902	ok	0.25352	0.19465	4.74	64.8	0/4	0.0	66.1	False	False	False		negA	
+2130479|K13306|candidate|own	2130479	K13306	candidate	own	K13306	ok	0.30476	0.21519	4.64	41.3	0/4	0.0	37.3	False	False	False		candidate	unannotated
+2130479|K13306|candidate|negA	2130479	K13306	candidate	negA	K12902	ok	0.25828	0.18692	5.22	41.3	0/4	0.0	33.0	False	False	False		negA	
+2958345|K15575|candidate|own	2958345	K15575	candidate	own	K15575	ok	0.42638	0.55591	3.29	90.2	0/3	0.0	97.4	True	False	False		candidate	named
+2958345|K15575|candidate|negA	2958345	K15575	candidate	negA	K06152	ok	0.20103	0.25782	4.64	90.2	1/3	0.333	95.0	False	False	False		negA	
+566123|K15575|candidate|own	566123	K15575	candidate	own	K15575	ok	0.43913	0.52848	3.18	90.7	1/3	0.333	97.6	True	False	False		candidate	named
+566123|K15575|candidate|negA	566123	K15575	candidate	negA	K06152	ok	0.25664	0.3034	5.02	90.7	1/3	0.333	74.2	False	False	False		negA	
+2814005|K15575|candidate|own	2814005	K15575	candidate	own	K15575	ok	0.27759	0.29292	5.48	74.4	0/3	0.0	58.8	False	False	False		candidate	named
+2814005|K15575|candidate|negA	2814005	K15575	candidate	negA	K06152	ok	0.24663	0.26576	5.17	74.4	0/3	0.0	88.3	False	False	False		negA	
+1820627|K15575|candidate|own	1820627	K15575	candidate	own	K15575	ok	0.41198	0.56852	3.18	71.7	0/3	0.0	95.8	True	False	False		candidate	unannotated
+1820627|K15575|candidate|negA	1820627	K15575	candidate	negA	K06152	ok	0.24233	0.32043	4.73	71.7	0/3	0.0	48.2	False	False	False		negA	
+994901|K15769|candidate|own	994901	K15769	candidate	own	K15769	ok	0.18342	0.37856	3.99	96.1	0/3	0.0	98.7	False	False	False		candidate	unannotated
+994901|K15769|candidate|negA	994901	K15769	candidate	negA	K03388	ok	0.20497	0.45838	2.88	96.1	2/14	0.143	97.2	False	False	False		negA	
+2974021|K15769|candidate|own	2974021	K15769	candidate	own	K15769	ok	0.21835	0.3951	3.38	67.3	0/3	0.0	75.4	False	False	False		candidate	unannotated
+2974021|K15769|candidate|negA	2974021	K15769	candidate	negA	K03388	ok	0.17781	0.26716	4.22	67.3	0/14	0.0	77.7	False	False	False		negA	
+2214120|K15857|candidate|own	2214120	K15857	candidate	own	K15857	ok	0.94046	0.81333	1.17	96.9	1/7	0.143	96.9	True	False	False		candidate	named
+2214120|K15857|candidate|negA	2214120	K15857	candidate	negA	K06152	ok	0.27807	0.25485	5.15	96.9	1/3	0.333	96.8	False	False	False		negA	
+1962033|K15857|candidate|own	1962033	K15857	candidate	own	K15857	ok	0.81453	0.64292	2.31	74.3	5/7	0.714	81.8	True	False	False		candidate	named
+1962033|K15857|candidate|negA	1962033	K15857	candidate	negA	K06152	ok	0.28326	0.23953	4.32	74.3	1/3	0.333	75.2	False	False	False		negA	
+2670195|K15857|candidate|own	2670195	K15857	candidate	own	K15857	ok	0.90416	0.81734	1.58	95.8	1/7	0.143	94.3	True	False	False		candidate	unannotated
+2670195|K15857|candidate|negA	2670195	K15857	candidate	negA	K06152	ok	0.24018	0.2273	5.66	95.8	0/3	0.0	94.4	False	False	False		negA	
+617786|K20571|candidate|own	617786	K20571	candidate	own	K20571	ok	0.21571	0.26466	5.17	85.8	0/4	0.0	85.3	False	False	False		candidate	named
+617786|K20571|candidate|negA	617786	K20571	candidate	negA	K00283	ok	0.25804	0.31603	5.21	85.8	1/15	0.067	86.9	False	False	False		negA	
+1031965|K20571|candidate|own	1031965	K20571	candidate	own	K20571	ok	0.21862	0.25868	5.66	78.4	0/4	0.0	0.0	False	False	False		candidate	named
+1031965|K20571|candidate|negA	1031965	K20571	candidate	negA	K00283	ok	0.24226	0.30155	4.91	78.4	1/15	0.067	87.4	False	False	False		negA	
+2857693|K20571|candidate|own	2857693	K20571	candidate	own	K20571	ok	0.29874	0.30343	6.2	88.9	0/4	0.0	89.0	False	False	False		candidate	named
+2857693|K20571|candidate|negA	2857693	K20571	candidate	negA	K00283	ok	0.27873	0.28163	5.01	88.9	1/15	0.067	88.1	False	False	False		negA	
+1445724|K20571|candidate|own	1445724	K20571	candidate	own	K20571	ok	0.25808	0.25452	5.48	91.4	0/4	0.0	89.3	False	False	False		candidate	named
+1445724|K20571|candidate|negA	1445724	K20571	candidate	negA	K00283	ok	0.2566	0.25013	4.58	91.4	2/15	0.133	90.0	False	False	False		negA	
+2086032|K20571|candidate|own	2086032	K20571	candidate	own	K20571	ok	0.24591	0.24103	5.04	50.5	1/4	0.25	57.3	False	False	False		candidate	named
+2086032|K20571|candidate|negA	2086032	K20571	candidate	negA	K00283	ok	0.34062	0.32986	4.66	50.5	0/15	0.0	46.9	False	False	False		negA	
+2725033|K20615|candidate|own	2725033	K20615	candidate	own	K20615	ok	0.58851	0.20277	3.08	93.6	0/8	0.0	88.6	False	False	False		candidate	unannotated
+2725033|K20615|candidate|negA	2725033	K20615	candidate	negA	K27876	ok	0.36381	0.1514	4.65	93.6	0/5	0.0	92.9	False	False	False		negA	
+661356|K20615|candidate|own	661356	K20615	candidate	own	K20615	ok	0.56679	0.19595	3.26	92.8	0/8	0.0	91.3	False	False	False		candidate	unannotated
+661356|K20615|candidate|negA	661356	K20615	candidate	negA	K27876	ok	0.29956	0.14	5.78	92.8	0/5	0.0	98.3	False	False	False		negA	
+227946|K20738|candidate|own	227946	K20738	candidate	own	K20738	ok	0.66894	0.6816	2.37	94.8	5/16	0.312	97.1	True	False	False	0.69206	candidate	named
+227946|K20738|candidate|negA	227946	K20738	candidate	negA	K21271	ok	0.25971	0.26425	6.34	94.8	0/5	0.0	98.4	False	False	False	0.69206	negA	
+2374904|K20738|candidate|own	2374904	K20738	candidate	own	K20738	ok	0.7283	0.71968	2.57	89.5	9/16	0.562	93.7	True	False	False	0.64984	candidate	unannotated
+2374904|K20738|candidate|negA	2374904	K20738	candidate	negA	K21271	ok	0.25276	0.25145	6.85	89.5	0/5	0.0	98.4	False	False	False	0.64984	negA	
+3037788|K20930|candidate|own	3037788	K20930	candidate	own	K20930	ok	0.56876	0.83749	1.8	96.1	2/9	0.222	92.1	True	False	False		candidate	named
+3037788|K20930|candidate|negA	3037788	K20930	candidate	negA	K20571	ok	0.3097	0.38828	4.46	96.1	0/4	0.0	96.9	False	False	False		negA	
+632856|K20930|candidate|own	632856	K20930	candidate	own	K20930	ok	0.60394	0.86731	1.65	95.1	2/9	0.222	85.4	True	False	False		candidate	named
+632856|K20930|candidate|negA	632856	K20930	candidate	negA	K20571	ok	0.32496	0.39474	4.01	95.1	0/4	0.0	93.6	False	False	False		negA	
+3102517|K20930|candidate|own	3102517	K20930	candidate	own	K20930	ok	0.51877	0.66711	2.65	65.3	5/9	0.556	53.8	True	False	False		candidate	named
+3102517|K20930|candidate|negA	3102517	K20930	candidate	negA	K20571	ok	0.33616	0.3797	4.25	65.3	0/4	0.0	71.2	False	False	False		negA	
+248446|K20930|candidate|own	248446	K20930	candidate	own	K20930	ok	0.56027	0.89217	1.48	94.9	2/9	0.222	94.5	True	False	False		candidate	unannotated
+248446|K20930|candidate|negA	248446	K20930	candidate	negA	K20571	ok	0.30437	0.4083	3.98	94.9	1/4	0.25	95.5	False	False	False		negA	
+76865|K20930|candidate|own	76865	K20930	candidate	own	K20930	ok	0.58923	0.90519	1.37	95.3	2/9	0.222	94.4	True	False	False		candidate	unannotated
+76865|K20930|candidate|negA	76865	K20930	candidate	negA	K20571	ok	0.30058	0.3831	4.34	95.3	1/4	0.25	96.8	False	False	False		negA	
+251346|K20930|candidate|own	251346	K20930	candidate	own	K20930	ok	0.58215	0.88022	1.54	95.3	1/9	0.111	88.7	True	False	False		candidate	unannotated
+251346|K20930|candidate|negA	251346	K20930	candidate	negA	K20571	ok	0.30647	0.38901	4.24	95.3	1/4	0.25	97.4	False	False	False		negA	
+2203486|K20930|candidate|own	2203486	K20930	candidate	own	K20930	ok	0.58191	0.87319	1.6	96.0	1/9	0.111	87.1	True	False	False		candidate	unannotated
+2203486|K20930|candidate|negA	2203486	K20930	candidate	negA	K20571	ok	0.30747	0.38668	4.32	96.0	1/4	0.25	90.8	False	False	False		negA	
+2861060|K20930|candidate|own	2861060	K20930	candidate	own	K20930	ok	0.35803	0.36619	4.17	47.3	0/9	0.0	53.7	False	False	False		candidate	unannotated
+2861060|K20930|candidate|negA	2861060	K20930	candidate	negA	K20571	ok	0.32207	0.303	4.59	47.3	0/4	0.0	58.7	False	False	False		negA	
+2692214|K21216|candidate|own	2692214	K21216	candidate	own	K21216	ok	0.6155	0.82503	2.53	94.0	1/4	0.25	92.1	True	False	False		candidate	named
+2692214|K21216|candidate|negA	2692214	K21216	candidate	negA	K04069	ok	0.2589	0.32432	5.67	94.0	0/8	0.0	92.9	False	False	False		negA	
+2763537|K21216|candidate|own	2763537	K21216	candidate	own	K21216	ok	0.38543	0.30315	2.43	87.8	1/4	0.25	89.2	False	False	False		candidate	named
+2763537|K21216|candidate|negA	2763537	K21216	candidate	negA	K04069	ok	0.28372	0.23398	4.94	87.8	0/8	0.0	85.7	False	False	False		negA	
+1101683|K21216|candidate|own	1101683	K21216	candidate	own	K21216	ok	0.38161	0.25029	1.88	55.6	0/4	0.0	0.0	False	False	False		candidate	named
+1101683|K21216|candidate|negA	1101683	K21216	candidate	negA	K04069	ok	0.30572	0.21571	3.82	55.6	0/8	0.0	56.3	False	False	False		negA	
+1474180|K21216|candidate|own	1474180	K21216	candidate	own	K21216	ok	0.40574	0.26037	2.55	52.3	0/4	0.0	0.0	False	False	False		candidate	named
+1474180|K21216|candidate|negA	1474180	K21216	candidate	negA	K04069	ok	0.28785	0.20118	4.62	52.3	0/8	0.0	0.0	False	False	False		negA	
+3080564|K21216|candidate|own	3080564	K21216	candidate	own	K21216	ok	0.43147	0.25992	1.63	50.7	0/4	0.0	0.0	False	False	False		candidate	named
+3080564|K21216|candidate|negA	3080564	K21216	candidate	negA	K04069	ok	0.30584	0.21177	4.44	50.7	0/8	0.0	43.1	False	False	False		negA	
+3116414|K21216|candidate|own	3116414	K21216	candidate	own	K21216	ok	0.25552	0.21044	4.49	84.5	0/4	0.0	89.6	False	False	False		candidate	unannotated
+3116414|K21216|candidate|negA	3116414	K21216	candidate	negA	K04069	ok	0.266	0.21923	4.43	84.5	0/8	0.0	88.0	False	False	False		negA	
+914629|K21216|candidate|own	914629	K21216	candidate	own	K21216	ok	0.3535	0.24859	2.77	55.5	0/4	0.0	0.0	False	False	False		candidate	unannotated
+914629|K21216|candidate|negA	914629	K21216	candidate	negA	K04069	ok	0.28357	0.21125	4.95	55.5	0/8	0.0	45.2	False	False	False		negA	
+938221|K21216|candidate|own	938221	K21216	candidate	own	K21216	ok	0.37426	0.23985	2.11	60.7	0/4	0.0	0.0	False	False	False		candidate	unannotated
+938221|K21216|candidate|negA	938221	K21216	candidate	negA	K04069	ok	0.32065	0.21322	4.24	60.7	0/8	0.0	56.1	False	False	False		negA	
+360319|K21271|candidate|own	360319	K21271	candidate	own	K21271	ok	0.47525	0.39695	2.31	97.1	4/5	0.8	98.3	False	False	False		candidate	named
+360319|K21271|candidate|negA	360319	K21271	candidate	negA	K20738	ok	0.26174	0.2286	6.18	97.1	0/16	0.0	96.7	False	False	False		negA	
+2953943|K21271|candidate|own	2953943	K21271	candidate	own	K21271	ok	0.33208	0.1875	4.46	52.4	0/5	0.0	0.0	False	False	False		candidate	unannotated
+2953943|K21271|candidate|negA	2953943	K21271	candidate	negA	K20738	ok	0.31	0.17359	4.48	52.4	0/16	0.0	42.7	False	False	False		negA	
+689314|K23103|candidate|own	689314	K23103	candidate	own	K23103	ok	0.19207	0.3169	5.74	94.3	0/3	0.0	0.0	False	False	False		candidate	unannotated
+689314|K23103|candidate|negA	689314	K23103	candidate	negA	K13306	ok	0.20982	0.33173	6.08	94.3	0/4	0.0	97.7	False	False	False		negA	
+3167376|K23103|candidate|own	3167376	K23103	candidate	own	K23103	ok	0.262	0.31757	2.53	80.1	0/3	0.0	0.0	False	False	False		candidate	unannotated
+3167376|K23103|candidate|negA	3167376	K23103	candidate	negA	K13306	ok	0.21176	0.24673	5.42	80.1	0/4	0.0	85.4	False	False	False		negA	
+1523879|K23103|candidate|own	1523879	K23103	candidate	own	K23103	ok	0.24592	0.27783	5.47	88.5	0/3	0.0	87.2	False	False	False		candidate	unannotated
+1523879|K23103|candidate|negA	1523879	K23103	candidate	negA	K13306	ok	0.19578	0.21764	6.3	88.5	0/4	0.0	96.4	False	False	False		negA	
+1865473|K23103|candidate|own	1865473	K23103	candidate	own	K23103	ok	0.26051	0.29195	5.95	77.3	0/3	0.0	83.4	False	False	False		candidate	unannotated
+1865473|K23103|candidate|negA	1865473	K23103	candidate	negA	K13306	ok	0.24792	0.27727	5.26	77.3	1/4	0.25	93.3	False	False	False		negA	
+1367267|K23103|candidate|own	1367267	K23103	candidate	own	K23103	ok	0.2626	0.2121	4.63	87.0	0/3	0.0	83.4	False	False	False		candidate	unannotated
+1367267|K23103|candidate|negA	1367267	K23103	candidate	negA	K13306	ok	0.31951	0.25963	5.65	87.0	0/4	0.0	96.3	False	False	False		negA	
+1176390|K23105|candidate|own	1176390	K23105	candidate	own	K23105	ok	0.5442	0.8586	2.17	95.2	4/5	0.8	98.5	True	False	False		candidate	named
+1176390|K23105|candidate|negA	1176390	K23105	candidate	negA	K04069	ok	0.26198	0.35926	5.97	95.2	1/8	0.125	98.4	False	False	False		negA	
+1316456|K23105|candidate|own	1316456	K23105	candidate	own	K23105	ok	0.54475	0.86709	1.96	90.9	1/5	0.2	93.3	True	False	False		candidate	named
+1316456|K23105|candidate|negA	1316456	K23105	candidate	negA	K04069	ok	0.26075	0.35722	5.99	90.9	0/8	0.0	93.2	False	False	False		negA	
+1851791|K23105|candidate|own	1851791	K23105	candidate	own	K23105	ok	0.55012	0.86658	1.94	89.8	2/5	0.4	87.7	True	False	False		candidate	unannotated
+1851791|K23105|candidate|negA	1851791	K23105	candidate	negA	K04069	ok	0.26167	0.35308	6.08	89.8	0/8	0.0	94.4	False	False	False		negA	
+963637|K23105|candidate|own	963637	K23105	candidate	own	K23105	ok	0.26376	0.27724	5.55	84.6	0/5	0.0	0.0	False	False	False		candidate	unannotated
+963637|K23105|candidate|negA	963637	K23105	candidate	negA	K04069	ok	0.28311	0.29132	5.14	84.6	0/8	0.0	91.8	False	False	False		negA	
+720570|K23105|candidate|own	720570	K23105	candidate	own	K23105	ok	0.34261	0.29193	4.87	73.7	0/5	0.0	91.7	False	False	False		candidate	unannotated
+720570|K23105|candidate|negA	720570	K23105	candidate	negA	K04069	ok	0.28817	0.24127	5.3	73.7	0/8	0.0	74.3	False	False	False		negA	
+1639926|K27876|candidate|own	1639926	K27876	candidate	own	K27876	ok	0.39271	0.2106	2.82	79.6	1/5	0.2	63.1	False	False	False		candidate	unannotated
+1639926|K27876|candidate|negA	1639926	K27876	candidate	negA	K20615	ok	0.2697	0.15771	5.56	79.6	0/8	0.0	81.7	False	False	False		negA	
+1473875|K27986|candidate|own	1473875	K27986	candidate	own	K27986	ok	0.19692	0.3352	4.4	94.3	0/3	0.0	0.0	False	False	False		candidate	named
+1473875|K27986|candidate|negA	1473875	K27986	candidate	negA	K03388	ok	0.17614	0.39295	3.24	94.3	4/14	0.286	97.9	False	False	False		negA	
+330986|K27986|candidate|own	330986	K27986	candidate	own	K27986	ok	0.19397	0.28123	4.12	89.5	0/3	0.0	86.2	False	False	False		candidate	named
+330986|K27986|candidate|negA	330986	K27986	candidate	negA	K03388	ok	0.17706	0.31405	3.64	89.5	1/14	0.071	94.8	False	False	False		negA	
+2640620|K27986|candidate|own	2640620	K27986	candidate	own	K27986	ok	0.23326	0.30633	3.46	56.4	0/3	0.0	62.7	False	False	False		candidate	unannotated
+2640620|K27986|candidate|negA	2640620	K27986	candidate	negA	K03388	ok	0.20514	0.26716	4.85	56.4	0/14	0.0	56.8	False	False	False		negA	
+1340532|K27986|candidate|own	1340532	K27986	candidate	own	K27986	ok	0.22339	0.27643	3.51	66.2	0/3	0.0	71.2	False	False	False		candidate	unannotated
+1340532|K27986|candidate|negA	1340532	K27986	candidate	negA	K03388	ok	0.23106	0.29567	4.61	66.2	1/14	0.071	65.3	False	False	False		negA	
+418100|K00283|positive|own	418100	K00283	positive	own	K00283	ok	0.26864	0.97699	0.55	94.5	15/15	1.0	96.6	True	True	True	0.85738	positive	
+652689|K00283|positive|own	652689	K00283	positive	own	K00283	ok	0.26192	0.97318	0.62	93.1	15/15	1.0	95.8	True	True	True	0.86367	positive	
+2135137|K00283|positive|own	2135137	K00283	positive	own	K00283	ok	0.26869	0.98406	0.4	95.1	15/15	1.0	97.2	True	True	True	0.85708	positive	
+2262292|K00283|positive|own	2262292	K00283	positive	own	K00283	ok	0.25261	0.95289	0.92	88.3	15/15	1.0	93.8	True	True	True	0.85262	positive	
+2371747|K00283|positive|own	2371747	K00283	positive	own	K00283	ok	0.25035	0.92642	1.26	88.6	13/15	0.867	86.7	True	False	False	0.83917	positive	
+136532|K00333|positive|own	136532	K00333	positive	own	K00333	ok	0.66755	0.92538	1.46	91.9	26/26	1.0	96.7	True	True	True	0.92882	positive	
+229335|K00333|positive|own	229335	K00333	positive	own	K00333	ok	0.68339	0.97634	0.98	94.4	25/26	0.962	96.7	True	True	True	0.97574	positive	
+750415|K00333|positive|own	750415	K00333	positive	own	K00333	ok	0.6958	0.9871	0.72	96.1	25/26	0.962	97.0	True	True	True	0.98328	positive	
+872786|K00333|positive|own	872786	K00333	positive	own	K00333	ok	0.67767	0.98166	0.9	92.3	26/26	1.0	97.2	True	True	True	0.97655	positive	
+1627939|K00333|positive|own	1627939	K00333	positive	own	K00333	ok	0.69567	0.97459	1.09	96.3	26/26	1.0	97.2	True	True	True	0.972	positive	
+416671|K00451|positive|own	416671	K00451	positive	own	K00451	ok	0.65059	0.9818	0.85	94.1	3/3	1.0	98.0	True	True	True	0.83267	positive	
+1056002|K00451|positive|own	1056002	K00451	positive	own	K00451	ok	0.65731	0.96522	1.19	94.6	3/3	1.0	98.2	True	True	True	0.82833	positive	
+2025811|K00451|positive|own	2025811	K00451	positive	own	K00451	ok	0.63207	0.91572	1.63	92.9	3/3	1.0	96.6	True	True	True	0.7969	positive	
+2038729|K00451|positive|own	2038729	K00451	positive	own	K00451	ok	0.47581	0.66825	2.2	93.3	2/3	0.667	95.9	True	False	False	0.63354	positive	
+2440359|K00451|positive|own	2440359	K00451	positive	own	K00451	ok	0.55874	0.86076	2.23	96.4	2/3	0.667	98.9	True	False	False	0.94564	positive	
+677617|K00903|positive|own	677617	K00903	positive	own	K00903	ok	0.24429	0.96091	1.14	93.4	11/11	1.0	98.5	True	True	True		positive	
+1169342|K00903|positive|own	1169342	K00903	positive	own	K00903	ok	0.24122	0.96448	1.06	90.0	11/11	1.0	98.3	True	True	True		positive	
+1488264|K00903|positive|own	1488264	K00903	positive	own	K00903	ok	0.57237	0.91418	1.72	89.6	10/11	0.909	97.1	True	True	True		positive	
+1804023|K00903|positive|own	1804023	K00903	positive	own	K00903	ok	0.24115	0.96357	1.06	90.7	11/11	1.0	98.0	True	True	True		positive	
+2284141|K00903|positive|own	2284141	K00903	positive	own	K00903	ok	0.74886	0.95588	1.16	93.7	11/11	1.0	98.0	True	True	True		positive	
+1969837|K00978|positive|own	1969837	K00978	positive	own	K00978	ok	0.86793	0.9321	1.74	94.4	26/27	0.963	97.8	True	True	True	0.90781	positive	
+2101862|K00978|positive|own	2101862	K00978	positive	own	K00978	ok	0.89452	0.94399	1.43	94.7	25/27	0.926	97.5	True	True	True	0.868	positive	
+2119937|K00978|positive|own	2119937	K00978	positive	own	K00978	ok	0.89291	0.9313	1.85	94.7	26/27	0.963	97.6	True	True	True	0.91478	positive	
+2215274|K00978|positive|own	2215274	K00978	positive	own	K00978	ok	0.9241	0.96454	1.13	94.7	27/27	1.0	97.8	True	True	True	0.89958	positive	
+3090203|K00978|positive|own	3090203	K00978	positive	own	K00978	ok	0.91398	0.94986	1.35	95.5	27/27	1.0	98.0	True	True	True	0.87429	positive	
+1196187|K03269|positive|own	1196187	K03269	positive	own	K03269	ok	0.59588	0.78073	2.01	88.6	11/13	0.846	93.7	True	False	False	0.60689	positive	
+1238946|K03269|positive|own	1238946	K03269	positive	own	K03269	ok	0.54705	0.61301	3.18	96.6	10/13	0.769	98.4	True	False	False	0.97671	positive	
+1409160|K03269|positive|own	1409160	K03269	positive	own	K03269	ok	0.55909	0.60584	3.54	96.4	10/13	0.769	98.0	True	False	False	0.96481	positive	
+1555586|K03269|positive|own	1555586	K03269	positive	own	K03269	ok	0.53228	0.60954	3.32	92.7	10/13	0.769	95.9	True	False	False	0.84122	positive	
+2050514|K03269|positive|own	2050514	K03269	positive	own	K03269	ok	0.54584	0.61035	3.2	93.6	10/13	0.769	95.4	True	False	False	0.86449	positive	
+1078492|K03388|positive|own	1078492	K03388	positive	own	K03388	ok	0.07181	0.91688	0.94	94.5	10/14	0.714	96.6	True	False	False		positive	
+1269699|K03388|positive|own	1269699	K03388	positive	own	K03388	ok	0.0874	0.95745	0.64	95.9	12/14	0.857	98.3	True	False	False		positive	
+1401947|K03388|positive|own	1401947	K03388	positive	own	K03388	ok	0.0709	0.90791	1.09	94.5	10/14	0.714	97.5	True	False	False		positive	
+1660965|K03388|positive|own	1660965	K03388	positive	own	K03388	ok	0.11358	0.93795	1.02	93.4	13/14	0.929	98.8	True	True	True		positive	
+2080607|K03388|positive|own	2080607	K03388	positive	own	K03388	ok	0.14462	0.89689	1.33	95.8	13/14	0.929	98.4	True	True	True		positive	
+866622|K03427|positive|own	866622	K03427	positive	own	K03427	ok	0.44043	0.83816	3.22	92.3	3/6	0.5	91.9	True	False	False	0.85045	positive	
+1896768|K03427|positive|own	1896768	K03427	positive	own	K03427	ok	0.36804	0.61891	3.02	69.8	3/6	0.5	87.7	True	False	False	0.63371	positive	
+1970271|K03427|positive|own	1970271	K03427	positive	own	K03427	ok	0.40486	0.79921	3.12	93.9	5/6	0.833	91.8	True	False	False	0.85821	positive	
+2466834|K03427|positive|own	2466834	K03427	positive	own	K03427	ok	0.42634	0.81262	3.16	95.2	5/6	0.833	91.0	True	False	False	0.84713	positive	
+2814407|K03427|positive|own	2814407	K03427	positive	own	K03427	ok	0.58978	0.86488	2.42	92.2	5/6	0.833	93.2	True	False	False	0.8066	positive	
+438378|K03605|positive|own	438378	K03605	positive	own	K03605	ok	0.82158	0.78832	2.56	88.3	4/4	1.0	79.1	True	True	True		positive	
+1829726|K03605|positive|own	1829726	K03605	positive	own	K03605	ok	0.73996	0.71704	2.47	85.7	3/4	0.75	93.9	True	False	False		positive	
+2155457|K03605|positive|own	2155457	K03605	positive	own	K03605	ok	0.78265	0.72947	2.46	93.0	3/4	0.75	91.5	True	False	False		positive	
+2280669|K03605|positive|own	2280669	K03605	positive	own	K03605	ok	0.81036	0.76369	1.98	94.1	3/4	0.75	91.5	True	False	False		positive	
+2490128|K03605|positive|own	2490128	K03605	positive	own	K03605	ok	0.87182	0.75631	1.9	93.2	3/4	0.75	96.1	True	False	False		positive	
+274132|K04069|positive|own	274132	K04069	positive	own	K04069	ok	0.47973	0.98856	0.54	94.9	8/8	1.0	97.1	True	True	True	0.84462	positive	
+509513|K04069|positive|own	509513	K04069	positive	own	K04069	ok	0.64671	0.69915	1.84	96.7	2/8	0.25	97.9	True	False	False	0.72776	positive	
+2252904|K04069|positive|own	2252904	K04069	positive	own	K04069	ok	0.49258	0.9584	1.07	95.1	8/8	1.0	97.0	True	True	True	0.83754	positive	
+2737467|K04069|positive|own	2737467	K04069	positive	own	K04069	ok	0.47298	0.99192	0.46	93.5	8/8	1.0	96.8	True	True	True	0.85444	positive	
+2798503|K04069|positive|own	2798503	K04069	positive	own	K04069	ok	0.50532	0.95805	1.25	95.3	8/8	1.0	96.3	True	True	True	0.84147	positive	
+1109902|K06152|positive|own	1109902	K06152	positive	own	K06152	ok	0.74188	0.89747	2.0	88.4	3/3	1.0	93.3	True	True	True		positive	
+1134845|K06152|positive|own	1134845	K06152	positive	own	K06152	ok	0.75057	0.91037	1.58	88.6	3/3	1.0	94.3	True	True	True		positive	
+1321032|K06152|positive|own	1321032	K06152	positive	own	K06152	ok	0.63019	0.82087	2.13	79.5	3/3	1.0	90.9	True	True	True		positive	
+1486044|K06152|positive|own	1486044	K06152	positive	own	K06152	ok	0.71236	0.87927	2.27	86.9	3/3	1.0	95.6	True	True	True		positive	
+1621550|K06152|positive|own	1621550	K06152	positive	own	K06152	ok	0.63585	0.93212	1.45	85.0	3/3	1.0	91.4	True	True	True		positive	
+384698|K07316|positive|own	384698	K07316	positive	own	K07316	ok	0.39631	0.79327	2.7	93.1	8/10	0.8	94.9	True	False	False	0.7803	positive	
+723301|K07316|positive|own	723301	K07316	positive	own	K07316	ok	0.38997	0.91332	2.01	90.7	10/10	1.0	94.0	True	True	True	0.79494	positive	
+1376362|K07316|positive|own	1376362	K07316	positive	own	K07316	ok	0.37517	0.87805	2.11	87.1	10/10	1.0	94.2	True	True	True	0.8042	positive	
+1498252|K07316|positive|own	1498252	K07316	positive	own	K07316	ok	0.27448	0.84624	2.81	82.9	9/10	0.9	93.4	True	True	True	0.78424	positive	
+2040992|K07316|positive|own	2040992	K07316	positive	own	K07316	ok	0.25793	0.85076	2.65	83.0	9/10	0.9	94.3	True	True	True	0.79437	positive	
+1239799|K12628|positive|own	1239799	K12628	positive	own	K12628	ok	0.37164	0.92034	0.58	94.9	4/4	1.0	98.6	True	True	True		positive	
+1389490|K12628|positive|own	1389490	K12628	positive	own	K12628	ok	0.39626	0.87274	1.67	97.2	4/4	1.0	98.9	True	True	True		positive	
+2051807|K12628|positive|own	2051807	K12628	positive	own	K12628	ok	0.38061	0.87779	1.08	96.3	4/4	1.0	98.7	True	True	True		positive	
+2089249|K12628|positive|own	2089249	K12628	positive	own	K12628	ok	0.33195	0.86618	1.43	94.0	4/4	1.0	97.5	True	True	True		positive	
+2236366|K12628|positive|own	2236366	K12628	positive	own	K12628	ok	0.37941	0.86242	1.16	96.5	4/4	1.0	98.9	True	True	True		positive	
+1158104|K12902|positive|own	1158104	K12902	positive	own	K12902	ok	0.38877	0.9721	0.88	93.0	4/4	1.0	95.1	True	True	True		positive	
+1322087|K12902|positive|own	1322087	K12902	positive	own	K12902	ok	0.34711	0.88677	1.91	93.7	4/4	1.0	95.7	True	True	True		positive	
+1328919|K12902|positive|own	1328919	K12902	positive	own	K12902	ok	0.3875	0.94369	1.54	96.1	4/4	1.0	97.9	True	True	True		positive	
+2144478|K12902|positive|own	2144478	K12902	positive	own	K12902	ok	0.28739	0.87545	1.99	88.3	4/4	1.0	96.4	True	True	True		positive	
+3172688|K12902|positive|own	3172688	K12902	positive	own	K12902	ok	0.38513	0.96284	1.09	94.2	4/4	1.0	97.6	True	True	True		positive	
+775004|K13306|positive|own	775004	K13306	positive	own	K13306	ok	0.49824	0.86278	2.31	96.5	4/4	1.0	98.7	True	True	True		positive	
+1096211|K13306|positive|own	1096211	K13306	positive	own	K13306	ok	0.50093	0.79853	2.28	94.7	4/4	1.0	98.8	True	True	True		positive	
+1662290|K13306|positive|own	1662290	K13306	positive	own	K13306	ok	0.48907	0.8606	1.98	97.8	4/4	1.0	98.8	True	True	True		positive	
+2501130|K13306|positive|own	2501130	K13306	positive	own	K13306	ok	0.46457	0.83064	2.32	96.6	4/4	1.0	98.2	True	True	True		positive	
+3036038|K13306|positive|own	3036038	K13306	positive	own	K13306	ok	0.49739	0.89177	1.91	97.2	4/4	1.0	98.9	True	True	True		positive	
+1330982|K15575|positive|own	1330982	K15575	positive	own	K15575	ok	0.39667	0.95182	0.84	94.3	3/3	1.0	99.0	True	True	True		positive	
+1437360|K15575|positive|own	1437360	K15575	positive	own	K15575	ok	0.37752	0.88538	1.68	94.4	3/3	1.0	99.0	True	True	True		positive	
+1895584|K15575|positive|own	1895584	K15575	positive	own	K15575	ok	0.37462	0.91453	1.4	93.7	3/3	1.0	98.9	True	True	True		positive	
+2617644|K15575|positive|own	2617644	K15575	positive	own	K15575	ok	0.30762	0.93451	1.31	90.2	2/3	0.667	97.0	True	False	False		positive	
+2812366|K15575|positive|own	2812366	K15575	positive	own	K15575	ok	0.37543	0.90537	1.96	91.2	3/3	1.0	98.9	True	True	True		positive	
+1212174|K15769|positive|own	1212174	K15769	positive	own	K15769	ok	0.20574	0.98168	0.35	97.6	3/3	1.0	97.9	True	True	True		positive	
+1333983|K15769|positive|own	1333983	K15769	positive	own	K15769	ok	0.18158	0.73366	1.16	96.9	3/3	1.0	98.4	True	True	True		positive	
+1360416|K15769|positive|own	1360416	K15769	positive	own	K15769	ok	0.20083	0.98397	0.33	95.6	3/3	1.0	97.7	True	True	True		positive	
+1946465|K15769|positive|own	1946465	K15769	positive	own	K15769	ok	0.20038	0.95598	0.77	97.3	3/3	1.0	97.7	True	True	True		positive	
+2842768|K15769|positive|own	2842768	K15769	positive	own	K15769	ok	0.20399	0.97407	0.43	97.8	3/3	1.0	98.4	True	True	True		positive	
+469779|K15857|positive|own	469779	K15857	positive	own	K15857	ok	0.82987	0.8547	1.78	93.8	6/7	0.857	97.3	True	False	False		positive	
+1075704|K15857|positive|own	1075704	K15857	positive	own	K15857	ok	0.90436	0.96114	1.22	93.0	7/7	1.0	95.3	True	True	True		positive	
+1629125|K15857|positive|own	1629125	K15857	positive	own	K15857	ok	0.85474	0.87027	1.74	96.2	7/7	1.0	97.5	True	True	True		positive	
+2347083|K15857|positive|own	2347083	K15857	positive	own	K15857	ok	0.8615	0.92584	1.72	93.9	7/7	1.0	95.6	True	True	True		positive	
+2411374|K15857|positive|own	2411374	K15857	positive	own	K15857	ok	0.95196	0.93384	0.95	96.1	7/7	1.0	96.4	True	True	True		positive	
+242494|K20571|positive|own	242494	K20571	positive	own	K20571	ok	0.28961	0.81087	2.32	95.8	2/4	0.5	96.2	True	False	False		positive	
+520403|K20571|positive|own	520403	K20571	positive	own	K20571	ok	0.31855	0.86126	1.81	93.7	4/4	1.0	98.8	True	True	True		positive	
+1555784|K20571|positive|own	1555784	K20571	positive	own	K20571	ok	0.37024	0.91653	1.18	96.5	4/4	1.0	98.9	True	True	True		positive	
+2037159|K20571|positive|own	2037159	K20571	positive	own	K20571	ok	0.38413	0.88455	1.48	97.4	4/4	1.0	98.9	True	True	True		positive	
+2089249|K20571|positive|own	2089249	K20571	positive	own	K20571	ok	0.33154	0.91905	1.46	94.0	4/4	1.0	97.5	True	True	True		positive	
+298659|K20615|positive|own	298659	K20615	positive	own	K20615	ok	0.92459	0.979	1.15	97.1	8/8	1.0	98.3	True	True	True		positive	
+553022|K20615|positive|own	553022	K20615	positive	own	K20615	ok	0.86808	0.93106	1.97	97.4	8/8	1.0	98.6	True	True	True		positive	
+2388860|K20615|positive|own	2388860	K20615	positive	own	K20615	ok	0.84905	0.91673	2.23	98.2	8/8	1.0	98.7	True	True	True		positive	
+2746084|K20615|positive|own	2746084	K20615	positive	own	K20615	ok	0.87619	0.95703	1.62	96.7	8/8	1.0	98.1	True	True	True		positive	
+2884137|K20615|positive|own	2884137	K20615	positive	own	K20615	ok	0.92963	0.97945	1.03	97.4	8/8	1.0	98.2	True	True	True		positive	
+686040|K20738|positive|own	686040	K20738	positive	own	K20738	ok	0.86463	0.94278	0.7	92.7	16/16	1.0	95.7	True	True	True	0.83362	positive	
+715443|K20738|positive|own	715443	K20738	positive	own	K20738	ok	0.83955	0.92163	1.12	94.2	16/16	1.0	97.1	True	True	True	0.83179	positive	
+1033546|K20738|positive|own	1033546	K20738	positive	own	K20738	ok	0.46718	0.45541	3.48	94.7	7/16	0.438	92.8	False	False	False	0.45881	positive	
+2317773|K20738|positive|own	2317773	K20738	positive	own	K20738	ok	0.87464	0.93912	0.8	94.1	16/16	1.0	97.7	True	True	True	0.83269	positive	
+967985|K20930|positive|own	967985	K20930	positive	own	K20930	ok	0.6457	0.92103	1.14	95.0	9/9	1.0	91.4	True	True	True		positive	
+1217890|K20930|positive|own	1217890	K20930	positive	own	K20930	ok	0.68887	0.96274	0.75	97.0	9/9	1.0	94.7	True	True	True		positive	
+1740509|K20930|positive|own	1740509	K20930	positive	own	K20930	ok	0.62691	0.96007	0.77	95.5	9/9	1.0	96.7	True	True	True		positive	
+2233454|K20930|positive|own	2233454	K20930	positive	own	K20930	ok	0.63601	0.94529	1.03	93.7	9/9	1.0	93.8	True	True	True		positive	
+3120365|K20930|positive|own	3120365	K20930	positive	own	K20930	ok	0.66244	0.9267	1.0	96.9	9/9	1.0	93.2	True	True	True		positive	
+366205|K21216|positive|own	366205	K21216	positive	own	K21216	ok	0.66802	0.83834	1.99	96.0	4/4	1.0	98.6	True	True	True		positive	
+764638|K21216|positive|own	764638	K21216	positive	own	K21216	ok	0.62586	0.81341	2.66	95.7	2/4	0.5	96.7	True	False	False		positive	
+1045026|K21216|positive|own	1045026	K21216	positive	own	K21216	ok	0.68891	0.88576	1.37	96.9	4/4	1.0	97.9	True	True	True		positive	
+1283742|K21216|positive|own	1283742	K21216	positive	own	K21216	ok	0.68407	0.8747	1.43	96.5	4/4	1.0	97.8	True	True	True		positive	
+1863644|K21216|positive|own	1863644	K21216	positive	own	K21216	ok	0.64719	0.81564	2.14	93.3	4/4	1.0	96.1	True	True	True		positive	
+186925|K21271|positive|own	186925	K21271	positive	own	K21271	ok	0.67743	0.87972	2.28	97.2	5/5	1.0	98.1	True	True	True		positive	
+306608|K21271|positive|own	306608	K21271	positive	own	K21271	ok	0.68969	0.97508	0.94	96.7	5/5	1.0	98.6	True	True	True		positive	
+1127940|K21271|positive|own	1127940	K21271	positive	own	K21271	ok	0.68784	0.97161	1.01	96.1	5/5	1.0	98.5	True	True	True		positive	
+1289439|K21271|positive|own	1289439	K21271	positive	own	K21271	ok	0.64175	0.86907	2.03	94.1	4/5	0.8	97.8	True	False	False		positive	
+2065657|K21271|positive|own	2065657	K21271	positive	own	K21271	ok	0.60699	0.78583	2.27	95.3	5/5	1.0	98.5	True	True	True		positive	
+835834|K23103|positive|own	835834	K23103	positive	own	K23103	ok	0.5843	0.69677	3.24	96.4	3/3	1.0	98.8	True	True	True		positive	
+1034629|K23103|positive|own	1034629	K23103	positive	own	K23103	ok	0.6652	0.87152	1.48	95.7	3/3	1.0	97.7	True	True	True		positive	
+1483217|K23103|positive|own	1483217	K23103	positive	own	K23103	ok	0.47352	0.7316	3.05	94.2	1/3	0.333	91.1	True	False	False		positive	
+2677945|K23103|positive|own	2677945	K23103	positive	own	K23103	ok	0.54305	0.92049	1.4	94.5	3/3	1.0	97.8	True	True	True		positive	
+2813787|K23103|positive|own	2813787	K23103	positive	own	K23103	ok	0.47894	0.86845	2.3	89.2	3/3	1.0	97.4	True	True	True		positive	
+236156|K23105|positive|own	236156	K23105	positive	own	K23105	ok	0.67548	0.95904	0.94	97.0	5/5	1.0	98.6	True	True	True		positive	
+418944|K23105|positive|own	418944	K23105	positive	own	K23105	ok	0.64902	0.96283	1.04	95.9	5/5	1.0	97.7	True	True	True		positive	
+669831|K23105|positive|own	669831	K23105	positive	own	K23105	ok	0.40758	0.81218	2.76	93.6	4/5	0.8	98.2	True	False	False		positive	
+1169124|K23105|positive|own	1169124	K23105	positive	own	K23105	ok	0.57768	0.74865	3.03	94.2	5/5	1.0	97.5	True	True	True		positive	
+1470538|K23105|positive|own	1470538	K23105	positive	own	K23105	ok	0.64973	0.95644	1.39	95.9	5/5	1.0	98.2	True	True	True		positive	
+238206|K27876|positive|own	238206	K27876	positive	own	K27876	ok	0.73097	0.93973	1.32	93.4	5/5	1.0	94.5	True	True	True		positive	
+1966783|K27876|positive|own	1966783	K27876	positive	own	K27876	ok	0.75109	0.94714	1.27	95.3	5/5	1.0	95.2	True	True	True		positive	
+2025064|K27876|positive|own	2025064	K27876	positive	own	K27876	ok	0.71571	0.53984	1.42	90.3	1/5	0.2	84.1	True	False	False		positive	
+2440964|K27876|positive|own	2440964	K27876	positive	own	K27876	ok	0.71089	0.78181	2.58	94.2	4/5	0.8	93.8	True	False	False		positive	
+2457067|K27876|positive|own	2457067	K27876	positive	own	K27876	ok	0.73616	0.84982	2.54	93.9	5/5	1.0	92.1	True	True	True		positive	
+1370226|K27986|positive|own	1370226	K27986	positive	own	K27986	ok	0.45181	0.90827	1.57	90.2	3/3	1.0	94.7	True	True	True		positive	
+1471616|K27986|positive|own	1471616	K27986	positive	own	K27986	ok	0.37507	0.8561	1.46	87.5	3/3	1.0	95.6	True	True	True		positive	
+1601551|K27986|positive|own	1601551	K27986	positive	own	K27986	ok	0.42993	0.90231	1.77	78.6	3/3	1.0	95.2	True	True	True		positive	
+2598959|K27986|positive|own	2598959	K27986	positive	own	K27986	ok	0.41949	0.88145	2.04	91.6	3/3	1.0	93.9	True	True	True		positive	
+3117973|K27986|positive|own	3117973	K27986	positive	own	K27986	ok	0.40945	0.86669	1.15	92.2	3/3	1.0	95.8	True	True	True		positive	
+333529|K00283|negB|own	333529	K00283	negB	own	K00283	ok	0.33058	0.29842	4.29	65.2	0/15	0.0	75.1	False	False	False		negB	
+6009|K00283|negB|own	6009	K00283	negB	own	K00283	ok	0.31195	0.33432	4.53	89.1	1/15	0.067	90.3	False	False	False		negB	
+603125|K00283|negB|own	603125	K00283	negB	own	K00283	ok	0.2549	0.2668	4.71	75.4	0/15	0.0	73.2	False	False	False		negB	
+44325|K00283|negB|own	44325	K00283	negB	own	K00283	ok	0.21507	0.27431	5.19	43.3	2/15	0.133	38.5	False	False	False		negB	
+348198|K00283|negB|own	348198	K00283	negB	own	K00283	ok	0.23657	0.29617	5.56	42.1	1/15	0.067	37.2	False	False	False		negB	
+333529|K00333|negB|own	333529	K00333	negB	own	K00333	ok	0.48098	0.22934	3.64	65.2	0/26	0.0	70.0	False	False	False		negB	
+462730|K00333|negB|own	462730	K00333	negB	own	K00333	ok	0.1847	0.09903	5.18	84.9	0/26	0.0	79.6	False	False	False		negB	
+162736|K00333|negB|own	162736	K00333	negB	own	K00333	ok	0.3303	0.1603	4.36	59.8	0/26	0.0	63.6	False	False	False		negB	
+21054|K00333|negB|own	21054	K00333	negB	own	K00333	ok	0.3059	0.14578	4.22	50.3	0/26	0.0	68.5	False	False	False		negB	
+603125|K00333|negB|own	603125	K00333	negB	own	K00333	ok	0.27092	0.1747	5.67	75.4	0/26	0.0	77.3	False	False	False		negB	
+6009|K00451|negB|own	6009	K00451	negB	own	K00451	ok	0.27951	0.18526	5.54	89.1	0/3	0.0	0.0	False	False	False		negB	
+228355|K00451|negB|own	228355	K00451	negB	own	K00451	ok	0.23326	0.21755	6.54	77.3	0/3	0.0	55.0	False	False	False		negB	
+229498|K00903|negB|own	229498	K00903	negB	own	K00903	ok	0.25542	0.36559	5.69	74.3	0/11	0.0	87.1	False	False	False		negB	
+44325|K00903|negB|own	44325	K00903	negB	own	K00903	ok	0.26394	0.26598	5.46	43.3	0/11	0.0	42.3	False	False	False		negB	
+1673897|K00903|negB|own	1673897	K00903	negB	own	K00903	ok	0.30472	0.45928	4.68	89.9	0/11	0.0	90.5	False	False	False		negB	
+92891|K00903|negB|own	92891	K00903	negB	own	K00903	ok	0.2235	0.29654	5.52	89.6	0/11	0.0	84.6	False	False	False		negB	
+6009|K00903|negB|own	6009	K00903	negB	own	K00903	ok	0.26828	0.22733	5.44	89.1	0/11	0.0	84.2	False	False	False		negB	
+48749|K00978|negB|own	48749	K00978	negB	own	K00978	ok	0.22643	0.18096	6.18	94.8	0/27	0.0	94.5	False	False	False		negB	
+92891|K00978|negB|own	92891	K00978	negB	own	K00978	ok	0.20109	0.21837	5.71	89.6	0/27	0.0	93.4	False	False	False		negB	
+229498|K00978|negB|own	229498	K00978	negB	own	K00978	ok	0.24297	0.28729	7.09	74.3	0/27	0.0	84.0	False	False	False		negB	
+308441|K00978|negB|own	308441	K00978	negB	own	K00978	ok	0.29159	0.31782	5.96	91.8	2/27	0.074	96.2	False	False	False		negB	
+228355|K00978|negB|own	228355	K00978	negB	own	K00978	ok	0.21214	0.20627	6.25	77.3	0/27	0.0	91.5	False	False	False		negB	
+228355|K03269|negB|own	228355	K03269	negB	own	K03269	ok	0.24988	0.2609	5.58	77.3	0/13	0.0	65.7	False	False	False		negB	
+92891|K03269|negB|own	92891	K03269	negB	own	K03269	ok	0.28007	0.32963	5.68	89.6	0/13	0.0	83.0	False	False	False		negB	
+308441|K03269|negB|own	308441	K03269	negB	own	K03269	ok	0.26488	0.30853	6.03	91.8	0/13	0.0	96.9	False	False	False		negB	
+48749|K03269|negB|own	48749	K03269	negB	own	K03269	ok	0.23489	0.19917	5.4	94.8	1/13	0.077	92.3	False	False	False		negB	
+21054|K03269|negB|own	21054	K03269	negB	own	K03269	ok	0.24788	0.15561	4.89	50.3	0/13	0.0	56.0	False	False	False		negB	
+603125|K03388|negB|own	603125	K03388	negB	own	K03388	ok	0.21773	0.33777	3.68	75.4	1/14	0.071	60.6	False	False	False		negB	
+92891|K03388|negB|own	92891	K03388	negB	own	K03388	ok	0.13613	0.37359	3.98	89.6	2/14	0.143	87.8	False	False	False		negB	
+48749|K03388|negB|own	48749	K03388	negB	own	K03388	ok	0.15261	0.30113	4.4	94.8	0/14	0.0	95.2	False	False	False		negB	
+6009|K03388|negB|own	6009	K03388	negB	own	K03388	ok	0.18872	0.30027	4.14	89.1	0/14	0.0	95.5	False	False	False		negB	
+228355|K03388|negB|own	228355	K03388	negB	own	K03388	ok	0.15625	0.33929	4.66	77.3	0/14	0.0	83.1	False	False	False		negB	
+92891|K03427|negB|own	92891	K03427	negB	own	K03427	ok	0.22118	0.19186	5.85	89.6	0/6	0.0	82.2	False	False	False		negB	
+44325|K03427|negB|own	44325	K03427	negB	own	K03427	ok	0.31885	0.21568	5.81	43.3	0/6	0.0	46.3	False	False	False		negB	
+78093|K03427|negB|own	78093	K03427	negB	own	K03427	ok	0.34875	0.34079	5.86	96.0	0/6	0.0	98.3	False	False	False		negB	
+6009|K03427|negB|own	6009	K03427	negB	own	K03427	ok	0.31285	0.16279	5.02	89.1	0/6	0.0	96.2	False	False	False		negB	
+48749|K03427|negB|own	48749	K03427	negB	own	K03427	ok	0.25837	0.15798	5.28	94.8	0/6	0.0	0.0	False	False	False		negB	
+162736|K03427|negB|own	162736	K03427	negB	own	K03427	ok	0.37644	0.17595	5.0	59.8	0/6	0.0	54.5	False	False	False		negB	
+21054|K03427|negB|own	21054	K03427	negB	own	K03427	ok	0.33608	0.14812	5.01	50.3	1/6	0.167	40.4	False	False	False		negB	
+348198|K03427|negB|own	348198	K03427	negB	own	K03427	ok	0.25474	0.16801	6.02	42.1	0/6	0.0	38.1	False	False	False		negB	
+603125|K03605|negB|own	603125	K03605	negB	own	K03605	ok	0.27706	0.24049	5.02	75.4	0/4	0.0	58.5	False	False	False		negB	
+6009|K03605|negB|own	6009	K03605	negB	own	K03605	ok	0.26789	0.23799	5.72	89.1	0/4	0.0	98.7	False	False	False		negB	
+48749|K03605|negB|own	48749	K03605	negB	own	K03605	ok	0.27859	0.27654	5.78	94.8	1/4	0.25	97.6	False	False	False		negB	
+488935|K03605|negB|own	488935	K03605	negB	own	K03605	ok	0.26877	0.27105	4.83	85.4	0/4	0.0	61.9	False	False	False		negB	
+348198|K03605|negB|own	348198	K03605	negB	own	K03605	ok	0.25349	0.25991	5.8	42.1	0/4	0.0	42.9	False	False	False		negB	
+5640|K03605|negB|own	5640	K03605	negB	own	K03605	ok	0.24707	0.23119	5.61	93.3	0/4	0.0	98.9	False	False	False		negB	
+333529|K04069|negB|own	333529	K04069	negB	own	K04069	ok	0.2781	0.20524	4.16	65.2	0/8	0.0	76.9	False	False	False		negB	
+48749|K04069|negB|own	48749	K04069	negB	own	K04069	ok	0.19313	0.18943	6.08	94.8	0/8	0.0	96.6	False	False	False		negB	
+5640|K04069|negB|own	5640	K04069	negB	own	K04069	ok	0.25226	0.23223	5.46	93.3	0/8	0.0	97.9	False	False	False		negB	
+488935|K04069|negB|own	488935	K04069	negB	own	K04069	ok	0.2382	0.23656	6.2	85.4	0/8	0.0	92.6	False	False	False		negB	
+348198|K04069|negB|own	348198	K04069	negB	own	K04069	ok	0.24656	0.24935	5.37	42.1	0/8	0.0	35.4	False	False	False		negB	
+21054|K04069|negB|own	21054	K04069	negB	own	K04069	ok	0.21532	0.15113	3.89	50.3	0/8	0.0	40.8	False	False	False		negB	
+228355|K06152|negB|own	228355	K06152	negB	own	K06152	ok	0.20126	0.27554	5.37	77.3	0/3	0.0	88.4	False	False	False		negB	
+488935|K06152|negB|own	488935	K06152	negB	own	K06152	ok	0.22901	0.25777	4.76	85.4	0/3	0.0	74.1	False	False	False		negB	
+44325|K06152|negB|own	44325	K06152	negB	own	K06152	ok	0.20205	0.23831	5.06	43.3	0/3	0.0	51.5	False	False	False		negB	
+603125|K06152|negB|own	603125	K06152	negB	own	K06152	ok	0.34734	0.33131	5.01	75.4	0/3	0.0	91.2	False	False	False		negB	
+6009|K06152|negB|own	6009	K06152	negB	own	K06152	ok	0.31124	0.30289	4.12	89.1	0/3	0.0	98.2	False	False	False		negB	
+48749|K06152|negB|own	48749	K06152	negB	own	K06152	ok	0.2236	0.24495	5.27	94.8	0/3	0.0	98.7	False	False	False		negB	
+5640|K06152|negB|own	5640	K06152	negB	own	K06152	ok	0.27544	0.28335	5.0	93.3	0/3	0.0	94.4	False	False	False		negB	
+348198|K06152|negB|own	348198	K06152	negB	own	K06152	ok	0.23552	0.26753	5.22	42.1	0/3	0.0	40.5	False	False	False		negB	
+234|K06152|negB|own	234	K06152	negB	own	K06152	ok	0.2192	0.25215	5.99	49.0	0/3	0.0	37.1	False	False	False		negB	
+310767|K06152|negB|own	310767	K06152	negB	own	K06152	ok	0.17472	0.21435	3.39	65.1	0/3	0.0	68.4	False	False	False		negB	
+284511|K06152|negB|own	284511	K06152	negB	own	K06152	ok	0.31244	0.34852	4.37	91.3	0/3	0.0	98.8	False	False	False		negB	
+288457|K06152|negB|own	288457	K06152	negB	own	K06152	ok	0.247	0.29493	4.72	86.1	0/3	0.0	96.1	False	False	False		negB	
+148483|K06152|negB|own	148483	K06152	negB	own	K06152	ok	0.2742	0.31596	5.18	93.9	0/3	0.0	91.0	False	False	False		negB	
+347289|K06152|negB|own	347289	K06152	negB	own	K06152	ok	0.2094	0.25995	5.16	60.3	0/3	0.0	47.9	False	False	False		negB	
+56596|K06152|negB|own	56596	K06152	negB	own	K06152	ok	0.33933	0.33429	4.54	89.4	0/3	0.0	96.3	False	False	False		negB	
+137103|K06152|negB|own	137103	K06152	negB	own	K06152	ok	0.26883	0.34651	5.11	81.4	1/3	0.333	79.7	False	False	False		negB	
+256017|K06152|negB|own	256017	K06152	negB	own	K06152	ok	0.28671	0.27277	5.23	41.8	0/3	0.0	35.1	False	False	False		negB	
+44717|K06152|negB|own	44717	K06152	negB	own	K06152	ok	0.27882	0.27089	5.68	45.8	0/3	0.0	56.3	False	False	False		negB	
+268261|K06152|negB|own	268261	K06152	negB	own	K06152	ok	0.28118	0.2763	4.86	91.7	0/3	0.0	0.0	False	False	False		negB	
+130287|K06152|negB|own	130287	K06152	negB	own	K06152	ok	0.20906	0.23541	5.66	78.3	0/3	0.0	79.0	False	False	False		negB	
+284302|K06152|negB|own	284302	K06152	negB	own	K06152	ok	0.28533	0.28027	4.71	71.7	0/3	0.0	68.9	False	False	False		negB	
+396864|K06152|negB|own	396864	K06152	negB	own	K06152	ok	0.30006	0.32965	4.67	94.9	0/3	0.0	95.3	False	False	False		negB	
+10915|K06152|negB|own	10915	K06152	negB	own	K06152	ok	0.2257	0.26125	5.63	83.1	0/3	0.0	94.2	False	False	False		negB	
+444306|K06152|negB|own	444306	K06152	negB	own	K06152	ok	0.26697	0.34276	5.22	95.5	0/3	0.0	98.2	False	False	False		negB	
+488935|K07316|negB|own	488935	K07316	negB	own	K07316	ok	0.23568	0.17411	5.66	85.4	0/10	0.0	88.3	False	False	False		negB	
+5640|K07316|negB|own	5640	K07316	negB	own	K07316	ok	0.27769	0.19115	5.71	93.3	1/10	0.1	97.9	False	False	False		negB	
+256017|K07316|negB|own	256017	K07316	negB	own	K07316	ok	0.32542	0.19908	5.13	41.8	0/10	0.0	40.2	False	False	False		negB	
+444306|K07316|negB|own	444306	K07316	negB	own	K07316	ok	0.27886	0.24068	6.67	95.5	0/10	0.0	97.7	False	False	False		negB	
+6009|K07316|negB|own	6009	K07316	negB	own	K07316	ok	0.3267	0.20457	4.95	89.1	0/10	0.0	94.5	False	False	False		negB	
+137103|K07316|negB|own	137103	K07316	negB	own	K07316	ok	0.30508	0.25725	5.55	81.4	0/10	0.0	91.5	False	False	False		negB	
+21054|K12628|negB|own	21054	K12628	negB	own	K12628	ok	0.23213	0.19663	4.73	50.3	0/4	0.0	38.9	False	False	False		negB	
+333529|K12628|negB|own	333529	K12628	negB	own	K12628	ok	0.27358	0.24114	4.44	65.2	0/4	0.0	65.1	False	False	False		negB	
+348198|K12902|negB|own	348198	K12902	negB	own	K12902	ok	0.25264	0.24909	5.48	42.1	0/4	0.0	42.0	False	False	False		negB	
+1645099|K12902|negB|own	1645099	K12902	negB	own	K12902	ok	0.17397	0.32735	5.4	85.1	0/4	0.0	86.9	False	False	False		negB	
+48749|K12902|negB|own	48749	K12902	negB	own	K12902	ok	0.23095	0.21968	5.65	94.8	0/4	0.0	94.9	False	False	False		negB	
+347289|K12902|negB|own	347289	K12902	negB	own	K12902	ok	0.21873	0.23458	5.8	60.3	0/4	0.0	60.5	False	False	False		negB	
+488935|K12902|negB|own	488935	K12902	negB	own	K12902	ok	0.23021	0.22331	5.93	85.4	0/4	0.0	96.4	False	False	False		negB	
+162736|K13306|negB|own	162736	K13306	negB	own	K13306	ok	0.29891	0.2155	5.02	59.8	0/4	0.0	61.9	False	False	False		negB	
+333529|K13306|negB|own	333529	K13306	negB	own	K13306	ok	0.33418	0.23424	4.31	65.2	0/4	0.0	74.8	False	False	False		negB	
+444306|K15575|negB|own	444306	K15575	negB	own	K15575	ok	0.25445	0.31668	5.99	95.5	0/3	0.0	98.3	False	False	False		negB	
+48749|K15575|negB|own	48749	K15575	negB	own	K15575	ok	0.23318	0.25141	5.49	94.8	0/3	0.0	96.0	False	False	False		negB	
+137103|K15575|negB|own	137103	K15575	negB	own	K15575	ok	0.22793	0.28316	5.7	81.4	0/3	0.0	80.0	False	False	False		negB	
+288457|K15575|negB|own	288457	K15575	negB	own	K15575	ok	0.24147	0.27994	5.1	86.1	0/3	0.0	83.2	False	False	False		negB	
+284511|K15769|negB|own	284511	K15769	negB	own	K15769	ok	0.17953	0.40396	3.23	91.3	0/3	0.0	98.5	False	False	False		negB	
+256017|K15769|negB|own	256017	K15769	negB	own	K15769	ok	0.18631	0.32993	3.53	41.8	0/3	0.0	33.2	False	False	False		negB	
+256017|K15857|negB|own	256017	K15857	negB	own	K15857	ok	0.26308	0.24653	5.0	41.8	0/7	0.0	39.0	False	False	False		negB	
+603125|K15857|negB|own	603125	K15857	negB	own	K15857	ok	0.24523	0.23235	5.42	75.4	0/7	0.0	48.0	False	False	False		negB	
+333529|K15857|negB|own	333529	K15857	negB	own	K15857	ok	0.24162	0.19804	4.97	65.2	0/7	0.0	62.1	False	False	False		negB	
+396864|K20571|negB|own	396864	K20571	negB	own	K20571	ok	0.28911	0.34956	5.13	94.9	0/4	0.0	97.6	False	False	False		negB	
+256017|K20571|negB|own	256017	K20571	negB	own	K20571	ok	0.25468	0.26652	5.75	41.8	0/4	0.0	30.2	False	False	False		negB	
+348198|K20571|negB|own	348198	K20571	negB	own	K20571	ok	0.21972	0.27531	4.92	42.1	0/4	0.0	33.0	False	False	False		negB	
+333529|K20571|negB|own	333529	K20571	negB	own	K20571	ok	0.21605	0.20206	5.64	65.2	0/4	0.0	0.0	False	False	False		negB	
+462730|K20571|negB|own	462730	K20571	negB	own	K20571	ok	0.15745	0.14554	4.22	84.9	0/4	0.0	0.0	False	False	False		negB	
+21054|K20615|negB|own	21054	K20615	negB	own	K20615	ok	0.2564	0.1038	4.74	50.3	0/8	0.0	0.0	False	False	False		negB	
+162736|K20615|negB|own	162736	K20615	negB	own	K20615	ok	0.37679	0.15657	4.42	59.8	0/8	0.0	57.1	False	False	False		negB	
+228355|K20738|negB|own	228355	K20738	negB	own	K20738	ok	0.2732	0.26845	5.85	77.3	0/16	0.0	67.3	False	False	False		negB	
+444306|K20738|negB|own	444306	K20738	negB	own	K20738	ok	0.26287	0.24586	5.85	95.5	0/16	0.0	97.5	False	False	False		negB	
+234|K20930|negB|own	234	K20930	negB	own	K20930	ok	0.2241	0.31416	4.78	49.0	0/9	0.0	46.6	False	False	False		negB	
+348198|K20930|negB|own	348198	K20930	negB	own	K20930	ok	0.18606	0.25889	4.8	42.1	0/9	0.0	35.2	False	False	False		negB	
+333529|K20930|negB|own	333529	K20930	negB	own	K20930	ok	0.25033	0.25174	4.9	65.2	0/9	0.0	75.9	False	False	False		negB	
+488935|K20930|negB|own	488935	K20930	negB	own	K20930	ok	0.1857	0.25368	4.35	85.4	0/9	0.0	92.3	False	False	False		negB	
+130287|K20930|negB|own	130287	K20930	negB	own	K20930	ok	0.18918	0.25254	5.1	78.3	0/9	0.0	70.5	False	False	False		negB	
+48749|K20930|negB|own	48749	K20930	negB	own	K20930	ok	0.20469	0.26453	5.17	94.8	0/9	0.0	97.0	False	False	False		negB	
+284511|K20930|negB|own	284511	K20930	negB	own	K20930	ok	0.23066	0.30805	4.63	91.3	1/9	0.111	97.4	False	False	False		negB	
+5640|K20930|negB|own	5640	K20930	negB	own	K20930	ok	0.1986	0.24413	4.23	93.3	0/9	0.0	95.0	False	False	False		negB	
+21054|K21216|negB|own	21054	K21216	negB	own	K21216	ok	0.21668	0.14909	4.61	50.3	1/4	0.25	40.4	False	False	False		negB	
+333529|K21216|negB|own	333529	K21216	negB	own	K21216	ok	0.29111	0.21813	5.1	65.2	0/4	0.0	74.0	False	False	False		negB	
+256017|K21216|negB|own	256017	K21216	negB	own	K21216	ok	0.28762	0.24019	4.43	41.8	0/4	0.0	41.8	False	False	False		negB	
+228355|K21216|negB|own	228355	K21216	negB	own	K21216	ok	0.2353	0.2804	5.56	77.3	0/4	0.0	77.4	False	False	False		negB	
+603125|K21216|negB|own	603125	K21216	negB	own	K21216	ok	0.29573	0.24794	5.03	75.4	0/4	0.0	67.7	False	False	False		negB	
+162736|K21216|negB|own	162736	K21216	negB	own	K21216	ok	0.32785	0.23999	4.81	59.8	0/4	0.0	0.0	False	False	False		negB	
+462730|K21216|negB|own	462730	K21216	negB	own	K21216	ok	0.18416	0.13874	4.99	84.9	0/4	0.0	0.0	False	False	False		negB	
+301039|K21216|negB|own	301039	K21216	negB	own	K21216	ok	0.37647	0.27432	4.83	43.7	0/4	0.0	38.4	False	False	False		negB	
+162736|K21271|negB|own	162736	K21271	negB	own	K21271	ok	0.38363	0.21593	4.9	59.8	0/5	0.0	0.0	False	False	False		negB	
+310767|K21271|negB|own	310767	K21271	negB	own	K21271	ok	0.20736	0.17932	5.42	65.1	0/5	0.0	52.1	False	False	False		negB	
+444306|K23103|negB|own	444306	K23103	negB	own	K23103	ok	0.2727	0.30782	5.59	95.5	0/3	0.0	98.9	False	False	False		negB	
+285185|K23103|negB|own	285185	K23103	negB	own	K23103	ok	0.18694	0.3108	6.28	93.0	0/3	0.0	92.4	False	False	False		negB	
+137103|K23103|negB|own	137103	K23103	negB	own	K23103	ok	0.23511	0.26129	5.63	81.4	0/3	0.0	86.7	False	False	False		negB	
+228355|K23103|negB|own	228355	K23103	negB	own	K23103	ok	0.22444	0.26577	5.12	77.3	0/3	0.0	48.5	False	False	False		negB	
+256017|K23103|negB|own	256017	K23103	negB	own	K23103	ok	0.28625	0.23698	5.18	41.8	0/3	0.0	47.5	False	False	False		negB	
+308441|K23105|negB|own	308441	K23105	negB	own	K23105	ok	0.23824	0.32603	5.78	91.8	0/5	0.0	97.2	False	False	False		negB	
+148483|K23105|negB|own	148483	K23105	negB	own	K23105	ok	0.31607	0.33224	5.09	93.9	0/5	0.0	97.0	False	False	False		negB	
+256017|K23105|negB|own	256017	K23105	negB	own	K23105	ok	0.30047	0.25938	5.12	41.8	0/5	0.0	29.9	False	False	False		negB	
+92891|K23105|negB|own	92891	K23105	negB	own	K23105	ok	0.22417	0.30706	5.53	89.6	0/5	0.0	98.0	False	False	False		negB	
+229498|K23105|negB|own	229498	K23105	negB	own	K23105	ok	0.19266	0.30892	4.96	74.3	1/5	0.2	72.5	False	False	False		negB	
+48749|K27876|negB|own	48749	K27876	negB	own	K27876	ok	0.29412	0.17785	5.58	94.8	0/5	0.0	96.7	False	False	False		negB	
+21054|K27986|negB|own	21054	K27986	negB	own	K27986	ok	0.19076	0.23354	4.23	50.3	0/3	0.0	33.1	False	False	False		negB	
+162736|K27986|negB|own	162736	K27986	negB	own	K27986	ok	0.19131	0.24003	3.99	59.8	0/3	0.0	64.3	False	False	False		negB	
+348198|K27986|negB|own	348198	K27986	negB	own	K27986	ok	0.22967	0.40624	4.04	42.1	0/3	0.0	29.9	False	False	False		negB	
+256017|K27986|negB|own	256017	K27986	negB	own	K27986	ok	0.21681	0.31224	4.56	41.8	0/3	0.0	47.8	False	False	False		negB	

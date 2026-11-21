@@ -1,0 +1,11 @@
+/Users/jacob/.pyenv/versions/miniconda3-latest/lib/python3.12/site-packages/Bio/Align/__init__.py:4414: BiopythonDeprecationWarning: The attribute 'target_end_gap_score' was renamed to 'end_insertion_score'. This was done to be consistent with the
+AlignmentCounts object returned by the .counts method of an Alignment object.
+  warnings.warn(
+/Users/jacob/.pyenv/versions/miniconda3-latest/lib/python3.12/site-packages/Bio/Align/__init__.py:4414: BiopythonDeprecationWarning: The attribute 'query_end_gap_score' was renamed to 'end_deletion_score'. This was done to be consistent with the
+AlignmentCounts object returned by the .counts method of an Alignment object.
+  warnings.warn(
+FAILED https://files.rcsb.org/download/9ieg.pdb HTTP Error 404: Not Found
+FAILED https://rest.uniprot.org/uniprotkb/search?query=%28ec%3A6.3.4.13%29+AND+reviewed%3Atrue+AND+structure_3d%3Atrue+AND+ft_act_site%3A%2A&fields=accession%2Cid%2Cprotein_name%2Corganism_name%2Clength%2Cec%2Cxref_pfam%2Cxref_pdb%2Cft_act_site%2Cft_binding%2Clineage&format=tsv&size=500 HTTP Error 429: Too Many Requests
+FAILED https://rest.uniprot.org/uniprotkb/search?query=%28ec%3A6.3.5.4%29+AND+reviewed%3Atrue+AND+structure_3d%3Atrue+AND+ft_act_site%3A%2A&fields=accession%2Cid%2Cprotein_name%2Corganism_name%2Clength%2Cec%2Cxref_pfam%2Cxref_pdb%2Cft_act_site%2Cft_binding%2Clineage&format=tsv&size=500 HTTP Error 429: Too Many Requests
+FAILED https://rest.uniprot.org/uniprotkb/P14080.json HTTP Error 429: Too Many Requests
+FAILED https://rest.uniprot.org/uniprotkb/search?query=%28ec%3A3.5.99.9%29+AND+reviewed%3Atrue+AND+structure_3d%3Atrue+AND+ft_act_site%3A%2A&fields=accession%2Cid%2Cprotein_name%2Corganism_name%2Clength%2Cec%2Cxref_pfam%2Cxref_pdb%2Cft_act_site%2Cft_binding%2Clineage&format=tsv&size=500 HTTP Error 429: Too Many Requests

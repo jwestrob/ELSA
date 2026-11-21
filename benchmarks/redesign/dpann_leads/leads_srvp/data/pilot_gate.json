@@ -1,0 +1,37 @@
+{
+ "counts": {
+  "candidate": [
+   9,
+   23
+  ],
+  "negA": [
+   0,
+   23
+  ],
+  "negB": [
+   0,
+   23
+  ],
+  "positive": [
+   6,
+   12
+  ]
+ },
+ "fisher_pos_vs_negA": 0.0005692599620493358,
+ "fisher_pos_vs_negB": 0.0005692599620493358,
+ "positive_share": 0.5,
+ "positives_per_family": {
+  "K00809": "0/2",
+  "K00965": "2/2",
+  "K01443": "2/2",
+  "K01921": "0/2",
+  "K16704": "0/2",
+  "K23370": "2/2"
+ },
+ "uninformative": [
+  "K00809",
+  "K01921",
+  "K16704"
+ ],
+ "gate_pass": true
+}

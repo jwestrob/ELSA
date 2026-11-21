@@ -1,0 +1,14 @@
+K00641 Abhydrolase_1 P45131 2B61_A_fam 323 3 2
+K05343 Alpha-amylase P06278 1VJS_A_fam 352 2 15
+K05366 Transpeptidase D0C8Z9 7ZG8_AAA_fam 341 1 4
+K07012 Cas3-like_C_2 P46063 2V1X_A_fam 188 1 7
+K21071 PFK P00512 4I7E_A_fam 285 1 35
+status
+no_reviewed_entry_with_EC_active_site_structure    155
+no_complete_EC                                      53
+no_experimental_chain_with_active_site              31
+ok                                                  24
+no_entry_in_label_family                            19
+ok_but_length_incompatible                          16
+Name: count, dtype: int64
+56 genes in 24 families with a reference

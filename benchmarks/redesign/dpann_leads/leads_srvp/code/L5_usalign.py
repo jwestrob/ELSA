@@ -11,6 +11,8 @@ import json
 C, MODE = sys.argv[1], sys.argv[2]
 _CFG = json.load(open(Path(__file__).resolve().parent / "collections_leads.json"))[C]
 H = Path(_CFG["local_out"].replace("R/", "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/"))
+# srvp: US-align output carries aligned SR-VP sequences -> kept under the git-ignored fold folder (UA), not data/
+UA = (Path(_CFG["fold_dir"]) if _CFG["fold_dir"] else H / "folds") / "usalign"; UA.mkdir(parents=True, exist_ok=True)
 RS = _CFG["remote"].replace("RD/", "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/") + "/usalign"
 SSH = ["ssh", "jwestrob@biotite.berkeley.edu"]
 S = pd.read_csv(H / f"data/selection_{MODE}.tsv", sep="\t")
@@ -35,7 +37,9 @@ subprocess.run(["rsync", "-a"] + [str(H / f) for f in REFS.ref_file] + [f"jwestr
 subprocess.run(["rsync", "-a", str(H / "code/s04_usalign_remote.py"), str(H / f"data/pairs_{MODE}.tsv"),
                 f"jwestrob@biotite.berkeley.edu:{RS}/code/"], check=True)
 subprocess.run(SSH + [f"cd {RS} && python3 code/s04_usalign_remote.py code/pairs_{MODE}.tsv usalign_raw_{MODE}.tsv"], check=True)
-subprocess.run(["rsync", "-a", f"jwestrob@biotite.berkeley.edu:{RS}/usalign_raw_{MODE}.tsv", str(H / "data/")], check=True)
-U = pd.read_csv(H / f"data/usalign_raw_{MODE}.tsv", sep="\t", keep_default_na=False)
-P.merge(U, on="pair_id", how="left").to_csv(H / f"data/usalign_{MODE}.tsv", sep="\t", index=False)
+subprocess.run(["rsync", "-a", f"jwestrob@biotite.berkeley.edu:{RS}/usalign_raw_{MODE}.tsv", str(UA) + "/"], check=True)
+U = pd.read_csv(UA / f"usalign_raw_{MODE}.tsv", sep="\t", keep_default_na=False)
+P.merge(U, on="pair_id", how="left").to_csv(UA / f"usalign_{MODE}.tsv", sep="\t", index=False)
+P.merge(U.drop(columns=["aln_model", "aln_marks", "aln_ref"], errors="ignore"), on="pair_id", how="left").to_csv(
+    H / f"data/usalign_scores_{MODE}.tsv", sep="\t", index=False)          # scores only, no sequence
 print(len(P), "pairs;", (U.TM2 != "").sum(), "scored")

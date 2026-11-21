@@ -1,0 +1,143 @@
+F17 MACHINE: WHAT THE MICRARCHAEOTA FAMILY-17 LOCUS ENCODES (2026-11-21 UTC)
+=============================================================================
+BOTTOM LINE
+Family 17 is two units. A pan-DPANN housekeeping pair (topoisomerase VI subunit B + KRR1-type KH protein) sits beside a
+separate co-directional operon that encodes the core of a Ced-type, T4SS-derived membrane apparatus: a VirB4/CedB-family
+ATPase split into two genes (the C-terminal motor, ATPase504, and its N-terminal domain as two paralogous 2-TM proteins,
+TM277a/TM278b), 1-6 paralogs of a CedA-type multi-pass channel protein (MP4610), and a VirB2-family pilin (pil129), plus
+lineage-specific accessories with no Ced counterpart (p102 ATPase partner, a Zn-ribbon 2-TM protein, a CdvB-like
+winged-helix protein, a basic 49-aa peptide, an N-anchored surface protein, a GT-C glycosyltransferase).
+- Every component call rests on profile-profile alignment against the characterized Sulfolobus/Aeropyrum Ced proteins
+  (CedB prob 95.5-100, CedA prob 94-96, VirB2 prob 96.4; 204/224 unrelated role-reference pairs score < 50, median 0.1),
+  confirmed by structure (AFDB-SwissProt top hit CedB for both halves of the split motor) and by a fusion test.
+- The "A2M-like" protein fails as an alpha-2-macroglobulin: thioester motif C.EQ in 0/555, no A2M profile hit, structure
+  similarity limited to Ig-like beta-sandwich domains (qTM 0.10-0.13). It is an N-anchored surface protein of unknown role.
+- Restricted to Micrarchaeota (708/1,146 genomes carry the motor; 0 ortholog-level hits in 2,418 other DPANN genomes, one
+  7-gene contig exception). The 125 Nanobdellota / 7 Aenigmatarchaeota "Top6B + DUF87" cases are unrelated DUF87 ATPases.
+- NAMED status: no curated secretion-system caller in the database emitted a call for this locus; the identity below is
+  "consistent with a Ced-type DNA-import apparatus", UNVERIFIED. Function (DNA import versus another cargo) is the open
+  question; composition and architecture are well supported.
+
+Q1. ONE UNIT OR TWO -> TWO
+- Strand: in 582 ATPase-oriented loci the run pil129-p244b-MP4610(n)-TM278b-TM277a-ATPase504-p102-TM132-wHTH244-p49-
+  A2Ml794 is co-directional (every role >= 99% same strand); Top6B (477/477) and KH171 (462/462) sit on the opposite strand,
+  convergent with A2Ml794 (median gap 9 bp); ArsR178 is divergent from KH171 (median 241 bp).
+- Spacing inside the machine is operon-like: ATPase504-p102 median 2 bp (p10 -7, overlapping), TM277a-TM278b 0 bp,
+  TM132-p102 6 bp, p49-wHTH244 5 bp, ATPase504-TM277a 32 bp.
+- The method's own bonds (Z bonds, d = 1): Top6B-KH171 lambda median 959 (n = 2,010 genomes, 399 groups); A2Ml794-Top6B is
+  the weakest junction (bonded in 186/464 adjacent pairs, lambda 8.7, n = 3); inside the motor ATPase504-TM277a lambda 98.5
+  (565/565 bonded, n = 542), TM132-wHTH244 35.3, ATPase504-p102 31.5. Tree nodes: the commonest nested nodes are
+  {ATPase504, TM132, TM277a, TM278b, p102, wHTH244} (523), {KH171, Top6B} (473), {MP4610, p244b, pil129} (350).
+- Top6B-KH adjacency is pan-DPANN and independent of the machine: KH within 2 genes of Top6B in Nanobdellota 803/1,162,
+  Aenigmatarchaeota 207/303, Iainarchaeota 133/182, Nanohalarchaeota 41/46; the canonical DPANN neighborhood is
+  KH-Top6B-Top6A (Top6A within 2 genes in 1,083/1,162 Nanobdellota). In Micrarchaeales Top6A is never within 2 genes of Top6B
+  (0/748); the machine occupies that side.
+- Co-occurrence (795 Micrarchaeota genomes, completeness >= 80): motor with Top6B-KH adjacency 402; motor without it 102;
+  adjacency without motor 125. Outside Micrarchaeales the motor never sits beside Top6B (Anstonellales 38/38,
+  Fermentimicrarchaeales 7/7, JAKAKT01 4/4 motor loci have no Top6B in the +-6 window; e.g. locus 26611 = TM277a-ATPase504-
+  p102-TM132-wHTH244-A2Ml794 alone). A2Ml794 travels with the motor (457 together; 35 + 47 discordant).
+- Topo VI is ordinary. Top6B (400 members vs S. shibatae O05207): GHKL N42, D76, K98, G109, G111 >= 99%, transducer K427
+  100%; model TM 0.74-0.85 to Top6B crystal structures. Top6A elsewhere (502/599 genomes; O05208): Y106, E209, D261, D263 100%.
+
+Q2. EACH CORE PROTEIN (full table: proteins.tsv; OBSERVED unless tagged)
+- ATPase504: VirB4-family C-terminal ATPase. HH 4AG5 (VirB4 CTD) E 4.5e-37 > HerA 4D2I E 1e-30 (positive control CedB:
+  1.2e-41 > 2.5e-30; control HerA reversed, 3.4e-49 > 1.9e-30); aligns to HerA only from residue 119 (no HAS barrel).
+  AFDB-SwissProt top hit DNA import protein CedB (E 2.3e-18, 3.4e-19; two lineages). USalign TM by reference: VirB4 CTD
+  0.84-0.85, CedB CTD 0.85, TedB CTD 0.83-0.84, HerA 0.61, Top6B control 0.21-0.30. Walker A at ~67 in 578/583, aligned
+  to CedB K292 (Q4JAQ5; K292 mutation abolishes DNA transfer) with K in 99%; Walker B (h)VVLDE in 576/583. Raw TXSScan
+  virb4 profile 115.7 vs HerA_DUF 40.5 (581/581 higher). Open: activity, oligomer.
+- TM277a / TM278b: the CedB/VirB4 N-terminal domain as two separate 2-TM proteins. CedB_2nd (PF31562) prob 97.1 / 96.8;
+  profile-profile vs CedB prob 95.5 (E 1.3e-8; TM277a 132-262 : CedB 106-222) / 88.7; vs VirB4 80.9 (VirB4 252-359);
+  TrsD-family (PF26593) and BXB0008_N 80-87. ATPase504 aligns to CedB 255-579, so TM277a + ATPase504 covers CedB 106-579.
+  Structure: AFDB top hit CedB (E 9e-9 to 1.6e-8, 3 models) then B. anthracis pXO2-10, the separate N-terminal partner of the
+  split VirB4 pXO2-09; TM vs CedB NTD 0.48-0.52 vs controls 0.18-0.31. The bacterial MPF_FATA analog (TrsD beside TrsE) has the
+  same split. Open: why two NTD copies.
+- MP4610 (5 paralog subfamilies, 8 TM, Sec/SPI signal peptide in 589/1,250): 4 of 5 subfamilies align to CedA (Q4JB69) at
+  prob 63-96 (s2: 95.5, E 1.4e-8, CedA 8-250 over 236 columns) and to A. pernix CedA at 75-94; TedA 2-10, VirB6 0-6.
+  Consistent with CedA (VirB6-like) channel paralogs; UNVERIFIED. Not folded (ILVFMAWC 0.53).
+- pil129: N-terminal hydrophobic segment + 2 helices; T4SS_pilin prob 98.4 (E 1.1e-9), TrbC/VirB2 96.8; vs VirB2 (P17792)
+  prob 96.4; vs CedA1 0, TedC 4. SignalP-6 calls a cleavable Sec/SPI peptide in 38/250, uncleaved in the rest. Consistent
+  with a VirB2-family pilin; UNVERIFIED.
+- p102 (soluble, helical, no PDB match), TM132 (N-terminal CxxC...CxxC Zn ribbon in 422/584 + 2 TM, i-o-i 581/584; VirB3
+  prob 0), wHTH244 (C-terminal CdvB-type winged helix, prob 98.2, residues 201-248; N-terminal 200 aa pLDDT 94, no match),
+  p49 (basic 44-49-aa peptide, no hit): no names; each open.
+- A2Ml794: 1 N-terminal TM helix (TMHMM i7-26o, 555/555; SignalP uncleaved 249/250), bulk predicted outside; Ig-like
+  beta-sandwich domains plus a C-terminal winged helix (IclR-like, prob ~70). Thioester C.EQ 0/555 (human A2M GCGEQ 972-975,
+  ECAM GCLEQ 1187-1190 by accession). The earlier lead's open question is answered: no thioester.
+- p244b: UPF0259 multi-pass (prob 98.5). p634 (139 loci, beside the pilin): GT-C glycosyltransferase (GT87 prob 98.7,
+  MptA/B, DolP-mannose mannosyltransferases). ArsR178: ArsR/SmtB-type regulator. KH171: universal archaeal KRR1-type KH.
+
+Q3. WHICH KNOWN MACHINE (machines.tsv)
+- Favored: Ced (Sulfolobales DNA import; CedA/CedA1/CedA2/CedB, PMID 26884154, 36750723). Present: CedB (split), CedA
+  (paralogs). Replaced: CedA1-family pilin -> VirB2-family pilin. Absent: CedA2 (p49 has 0 TM). Extra: six accessories.
+- Ted (Thermoproteales) is less likely: channel aligns to CedA (94-96) and not TedA (2-10); pilin aligns to VirB2, not TedC.
+- Monoderm conjugative T4SS (MPF_FATA; Patescibacteria T4SS, PMID 40408144) shares the split VirB4 (TrsD/TrsE) but its
+  VirB8 (0/611 loci), VirB1/SLT (0/611), VirD4 (TrwB_AAD_bind 2/611, TraG-D_C 0/611) and relaxase (0/611) are absent and the
+  channel is CedA-type, not VirB6/PrgH-type. Diderm T4SS, archaeal T4P/archaella, HerA-NurA (NurA/Rad50/Mre11 0/611),
+  FtsK/T7SS (FHA, WXG100 0/611) and Cdv division (one domain-level match) are disfavored. Margin: Ced 4/5 vs next 2/5.
+- A2M partner check: bacterial A2M works with PBP1C; transglycosylase is absent from Micrarchaeota (Transgly 0 genomes,
+  Transpeptidase 1/1,146). True A2M-Pfam proteins exist in 16 Micrarchaeota genomes and are unrelated to F17.
+
+Q4. WIDER THAN MICRARCHAEOTA -> NO
+- Ortholog-level homologs (family threshold = 5th percentile of member bitscores, coverage >= 0.5) of all 15 roles: 0
+  outside Micrarchaeota. Any-score homologs outside: ATPase504 1,115 DUF87 proteins at median 24% identity; p244b 113 (UPF0259
+  family); every other machine role 0-5; one Woesearchaeales 7-gene contig (QMQO01000051.1, bin contamination 3.9%) carries 5 roles at 49-60% identity.
+- The 132 Nanobdellota/Aenigmatarchaeota Top6B-near DUF87 proteins (4-8 genes from Top6B, median 441 aa, 21 with Zot):
+  1/132 hits the ATPase504 queries (23% identity); none has a nearby TM277a, CedA-type, pilin or A2Ml794 homolog; in the tree
+  they fall outside the VirB4 clade. Unrelated proteins sharing the DUF87 domain beside a conserved Top6B neighborhood.
+
+Q5. WHO HAS IT (Micrarchaeota, completeness >= 80, contamination <= 10: 795 genomes, 504 carriers)
+- Lineage: Micrarchaeales 433/539, Anstonellales 56/166, Fermentimicrarchaeales 11/14, JAKAKT01 4/6; Norongarragalinales
+  0/46, CABMEP01 0/9, CAILAH01 0/6. Genome size equal within completeness bins (80-90%: 0.832 vs 0.833 Mb, p = 0.19;
+  Micrarchaeales p >= 0.12 in every bin).
+- Gene content (KO + Pfam, Mantel-Haenszel within 5 families holding both states, 637 genomes): 97 features at |z| >= 5;
+  20 within-family x completeness permutations give 0 (max 0). Universal genes run 5-9 points higher in carriers (residual
+  assembly bias). Large effects: Y-family DNA polymerase IMS 83% vs 36%, tetraether lipid synthase K06937 79% vs 29%,
+  ParA/MipZ 77% vs 42%, UDG 78% vs 28% (flanking gene in 88 loci); depleted: chemotaxis MCP 0.2% vs 4.1%, CZB, FIST.
+
+Q6. ASSEMBLY (47 ESMFold2 folds: 18 monomers, 29 complexes; folds/fold_summary.tsv)
+- ATPase504 hexamer ipTM 0.19 / 0.21 (two lineages) = mismatched ThrRS hexamer 0.20; dimer 0.12: no oligomer call.
+- TM277a + TM278b heterodimer 0.61 / 0.53 (two lineages) vs TM277a + size-matched 2-TM control 0.09 / 0.12; interface spans
+  both TM helix pairs and the soluble domains.
+- ATPase504 + p102 0.61 / 0.59 / 0.13 (three lineages) vs controls 0.16-0.18; p102 sits on the ATPase C-terminal region.
+- ATPase504 + TM277a 0.40 / 0.14 and + TM278b 0.64 versus ATPase + non-partner 2-TM 0.61: not discriminating.
+- Fusion test (TM by full-length CedB): ATPase504 alone 0.537, + non-partner 2-TM 0.544, + TM277a 0.633 / 0.629 (two
+  lineages), + TM278b 0.552 (TrwK: 0.509 vs 0.380 alone). The cognate partner restores the VirB4-family N-terminal domain.
+- A2Ml794 with wHTH244 and/or p49: 0.11-0.13 = control 0.13. wHTH244 + p49 0.34 vs 0.14 (weak).
+
+Q7. ORIGIN
+- ATPase tree (37 sequences, 222 informative sites, LG+F+G4, 1,000 UFBoot; tree/): F17 ATPases sit inside the VirB4
+  superclade (UFBoot 88) with Sulfolobus CedB and a second Micrarchaeota VirB4-family protein (76), then A. pernix CedB, TedB
+  and TcpF (37). Bacterial VirB4s (diderm, monoderm, Saccharibacteria) and archaeal plasmid TraG-like, HerA and the DPANN
+  Top6B-near DUF87 proteins fall outside. Archaeal Ced branch, moderate support.
+- A2Ml794: no tree. No sequence-alignable relative outside Micrarchaeota (0 any-score hits; UniRef30 adds no family);
+  structure matches are single Ig-like domains. Origin unresolved.
+
+IDENTITY
+Most likely: a Ced-type DNA-import apparatus (domesticated T4SS) with a split CedB motor, CedA-type channel paralogs and a
+VirB2-family pilin, extended in Micrarchaeota by accessories including a surface Ig-like protein.
+- For: profile-profile homology to three Ced components with near-zero nulls; split exactly at the CedB domain boundary
+  (TM277a : CedB 106-222, ATPase504 : CedB 255-579) with the fusion test; CedB as top structural neighbor; tree beside CedB;
+  operon packing; chromosomal, conserved position in 599 genomes with no relaxase or VirD4, as in Ced.
+- Against: cargo and direction are untested by any of this; Ced function is characterized only in Sulfolobales; six genes
+  have no Ced counterpart; CedA2 is missing; co-folds give no motor oligomer or motor-membrane interface.
+Alternative 1: a T4SS-derived contact apparatus that exports protein or DNA into the Thermoplasmatales host (episymbiont
+  lifestyle; cf. Patescibacteria T4SS essential for epibiotic growth). Alternative 2: a conjugation-like apparatus for DNA
+  exchange between Micrarchaeota cells (Ted-like).
+Falsifier: carrier cells that express the operon (pil129 / ATPase504 detected) yet take up no labeled DNA, or operon
+  expression that tracks host attachment and ignores DNA-damage stress, would retire the import identity.
+Decisive experiment: in an enrichment with a carrier (e.g. a Micrarchaeales co-culture), add labeled DNA (EdU-tagged or
+  fluorescent) after UV, and image uptake with immunolocalized pil129 / ATPase504; the cheapest computational test is
+  metatranscriptomic co-expression of the operon with DNA-repair genes after stress in existing Micrarchaeota datasets.
+
+METHODS, FILES, LIMITS
+- Data: large_loci_dpann family 17 (611 loci); Sharur DPANN DB read-only; roles from MMseqs2 clustering of +-6-gene windows
+  (code/01-03). Profiles: role MSAs (MAFFT, <= 250 per role) -> HHblits UniRef30 2020_06 (2 iterations) -> HHsearch Pfam 39 +
+  PDB100, family-only MSA in parallel, hhalign role x reference matrix (code/hh_*.sh, hhalign_matrix.sh, hh_mp_fam.sh). The
+  multi-pass MP4610 groups stalled in HHblits (jobs 120627/120628/120637/120638 cancelled at 10-15 min) and use family MSAs.
+- Topology TMHMM 2.0c (8,911 members), SignalP 6 fast (4,637). Homolog census MMseqs2 -s 7.5 vs 3.4 M DPANN proteins.
+  Foldseek vs PDB / AFDB-SwissProt and USalign on biotite. No HMM search run (no Aksha needed); nothing written to Sharur.
+- Slurm (24 CPUs, all < 26 min): 120625 mm/topology 23 min, 120626 23 min, 120629 25 min, 120636 9 min, 120642 7 min,
+  120631 foldseek 0.5 min. Remote: $RD/dpann_leads/f17_machine/.
+- Files: proteins.tsv, machines.tsv, folds/ (models, fold_summary.tsv, complexes*.tsv), data/ (hh/*.hhr, hhalign matrix,
+  fs_*.tsv, usalign.tsv, fusion_test.tsv, enrichment_motor.tsv, role_orthologs.parquet, bonds_roles.tsv), tree/, refs/, code/.

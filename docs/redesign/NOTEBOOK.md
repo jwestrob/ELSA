@@ -3415,3 +3415,30 @@ label voters / all supporters and the label's annotated count in DPANN, (b) a na
 support level set by the verification, and "conserved unannotated family" below it. The structure
 check compares a gene with its annotated partner, so it tests homology to the partner and cannot
 detect a wrong partner name; the weak-profile check can.
+
+## 2026-11-21 00:52 UTC — `genome_center`: subtracting the genome mean gains nothing; removing a few global directions gains +0.010 to +0.012 AP
+
+Report `benchmarks/redesign/genome_center/REPORT.txt`; predeclaration sha256 8aa2763c…d088a, written
+before any arm. Search benchmark of REPORT3 (5-fold genome CV, 2,447 DefenseFinder queries); Z
+reproduces 0.7961.
+
+| Arm | AP | AP minus Z [95%] | Criterion (+0.010, interval above 0) |
+|---|---|---|---|
+| G1 subtract genome mean | 0.7960 | −0.0001 [−0.0011, +0.0011] | no |
+| G05 subtract half | 0.7964 | +0.0003 [−0.0000, +0.0007] | no |
+| B8 project out top 8 PCs of genome means | 0.8065 | +0.0104 [+0.0093, +0.0116] | yes |
+| B32 top 32 | 0.8079 | +0.0118 [+0.0104, +0.0134] | yes |
+
+- The reviewer's proposal as written (G1) is a negative result: genome means fall to 0.034% of
+  total variance and AP does not move.
+- B8 / B32 gain in every fold (B32 at least +0.0100 in all five; B8 +0.0089 in fold 1).
+  TXSScan AP +0.025 / +0.030. CRISPRCasTyper AP +0.003 / +0.004, wrong-subtype hits per query
+  17.38 to 17.61 / 17.83: the CRISPR-Cas argument finds no support.
+- Reading (UNVERIFIED): the top genome-mean directions are the dominant gene-level directions
+  (leading eigenvalue 0.128 to 0.026 after removing 8), so this is the removal of a few global
+  directions, a stronger whitening of the top of the spectrum. The control that would settle it
+  (remove the top gene-level PCs with no genome information) was not run.
+- Cost: 129 of 180 min of 24-CPU job time. One arm through the bond tree and seven DPANN bars
+  would cost about 19 A5000 GPU-minutes plus 27 min on a 64-CPU node.
+- Decision taken: no list rebuild. The gain is small, the CRISPR-Cas deficit that motivated it is
+  unchanged, and a new transform would reopen the configuration frozen on three untouched sets.

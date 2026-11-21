@@ -1,0 +1,22 @@
+{
+ "lists_seconds": 123.9,
+ "grid_vs_report3": {
+  "rows": 640,
+  "max_abs_diff": 0.0
+ },
+ "null_vs_report3": [
+  {
+   "ap": 0.0,
+   "recall_E0.01": 0.0,
+   "n_wrong_E0.01": 0.0,
+   "n_unlabelled_E0.01": 0.0
+  },
+  {
+   "ap": 0.0,
+   "recall_E0.01": 0.0,
+   "n_wrong_E0.01": 0.0,
+   "n_unlabelled_E0.01": 0.0
+  }
+ ],
+ "seconds": 160.0
+}

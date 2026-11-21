@@ -1,0 +1,69 @@
+{
+ "workstream": "genome_center (ELSA redesign, DPANN development collection)",
+ "written_utc": "2026-11-20 23:29 UTC, before any arm, list, grid or readout of this workstream was computed",
+ "question": "Does removing each genome's own component from the protein vectors before soft whitening (zca10) improve zca10 locus search on DPANN? Outside-review proposal: v'_i = zca10(v_i - alpha * mean of genome(i)), or project out the top-k principal directions of the genome-mean matrix and then whiten.",
+ "known_before": {
+  "REPORT3_M1z_heldout_AP": 0.7961079531037453,
+  "REPORT3_cells": "zca10 0.796, whitening alone 0.777, global centering alone 0.483, per-genome centering alone 0.513, raw L2 0.445 (locus_search/REPORT3.txt); per-genome centering followed by whitening never run",
+  "signals_prior": "genome means hold 2.18% of family-centered residual variance, 0.11% expected (signals/REPORT.txt S2.1)"
+ },
+ "data": {
+  "vectors": "ESM++ small residue-mean vectors, embed run dpann__esmpp_small__20261111, final/mean_raw_f32__uid.npy (2,547,528 unique sequences x 960), expanded to the 3,585,303 genes (rows, gid order) through uid_of_row.npy",
+  "genomes": "3,564 genome codes of the DPANN package (ls.Database: gid-contiguous ranges g_lo..g_hi)",
+  "queries_folds_relevance": "exactly REPORT3's (locus_search/out/queries.parquet, pairs.parquet, member genes out/topk/gids.npy = 18,414 genes; folds of criterion3.json)",
+  "genome_groups": "lineagefree emb_hom_average_t0.75 (642 groups; $RD/lineagefree/groups/emb_hom_average_t0.75.parquet), used only in secondary readouts S3/S4",
+  "families": "MMseqs2 rescue3 tokens ($RD/engine/dpann_tokens/mmseqs__seq__e3c50s75_rescue3__dpann.parquet), used only in secondary readouts S2-S4",
+  "taxonomy": "never used"
+ },
+ "arms": {
+  "common": "Every arm starts from the unit-L2 gene vectors v_i (rows). The arm's removal step gives y_i; then zca10 runs unchanged on y_i: L2 normalization, subtraction of the gene-weighted global mean, soft ZCA (lam = 0.9 * ev + 0.1 * mean(ev), embed_tokens.soft_zca alpha 0.1) of the gene-weighted covariance, application, L2 normalization, float16 storage read back as float32. Fit set = all 3,585,303 genes, which equals REPORT3's count-weighted 2,547,528 unique sequences (same weights). Genome means: unweighted mean of v_i over all genes of the genome, no labels.",
+  "Z": "y_i = v_i (zca10 exactly as REPORT3, recomputed through this pipeline)",
+  "G1": "y_i = v_i - 1.0 * m_g(i)",
+  "G05": "y_i = v_i - 0.5 * m_g(i)",
+  "B8": "M = matrix of the 3,564 genome means m_g, each genome weighted equally, centered on its unweighted column mean; P = top 8 right singular vectors of the centered M; y_i = v_i - P P^T v_i",
+  "B32": "as B8 with the top 32 right singular vectors"
+ },
+ "lists": "Per arm: exact cosine top 20,000 among genes outside the query genome for the 18,414 member genes (locus_search.topk_rows; s = log(N_db / tail rank)), the same construction as REPORT3's lists.",
+ "search_protocol": {
+  "family": "one list scanned alone (REPORT3's M1z family: no tokens, no MMseqs2 ranks)",
+  "grid": "W = query span + {0, 2, 4, 8} genes (cap 60) x tau {0, 1, 2, 3}; primary AP as REPORT3 (correct = covers >= 50% of the members of a same-type target with >= 2 members; wrong = overlaps a different-type instance; unlabelled and same-type-other ignored); strict AP counts unlabelled hits as wrong",
+  "cv": "DefenseFinder instances with >= 2 members and n_rel > 0 (2,447 queries, 1,384 genomes); folds identical to REPORT3 (genome codes permuted with numpy default_rng(17), fold = position mod 5; verified equal to locus_search/out3/selection3.json fold_of); per fold and arm the configuration with the highest mean AP on the other four folds (ties: smaller W extra, larger tau)",
+  "frozen_configuration": "per arm, the same rule applied to odd-genome DefenseFinder queries (REPORT3's frozen configuration rule)"
+ },
+ "reproduction_gate": {
+  "rule": "Z must reproduce REPORT3: (a) Z held-out mean AP over the 2,447 queries within +-0.002 of 0.79611, and (b) per-query |AP(Z) - AP(REPORT3 M1z held-out, out3/cv_heldout.parquet)| <= 0.01 for >= 99% of queries.",
+  "if_failed": "stop; no arm is reported as a result; the report states why (list differences against the stored head lists are recorded for every Z row)"
+ },
+ "primary": {
+  "statistic": "per held-out query AP(arm) - AP(Z); mean over the 2,447 queries; 95% interval from the paired genome bootstrap of REPORT3 (locus_search.boot_mean: query genomes resampled, 2,000 draws, seed 17)",
+  "criterion_helps": "95% interval lower bound > 0 AND mean difference >= +0.010",
+  "multiplicity": "no correction; all four arms (G1, G05, B8, B32) reported with intervals",
+  "also_reported": "held-out AP and strict AP per arm, even / odd / >= 3-member strata, per-fold differences, chosen configurations"
+ },
+ "secondary": {
+  "S1_other_callers": "Per arm at its frozen configuration, even-genome queries with n_rel > 0. TXSScan (404 queries, one type): AP and strict AP from the scan (no null; wrong hits are 0 by construction). CRISPRCasTyper (1,893 queries): 200-replicate circular-shift null (seed 17 + qid, REPORT3's run_one via search3.final_task): AP, strict AP, recall at E <= 0.01, wrong-subtype hits per query at E <= 0.01, unlabelled hits per query at E <= 0.01. DefenseFinder even (1,247): AP and strict AP from the scan. Paired arm - Z with the genome bootstrap. Descriptive only.",
+  "S2_variance_shares": {
+   "stages": "(a) unit-L2 input vectors (common to all arms); (b) the arm's zca10 input after its removal step and L2 normalization (G1, G05, B8, B32); (c) the arm's final stored vectors",
+   "total_share": "sum_g n_g |m_g - mu|^2 / sum_i |x_i - mu|^2 over all 3,585,303 genes (mu = global mean); expected without a genome component (G - 1) / (N - 1)",
+   "residual_share": "family-centered leave-one-out residual r_i = (m_F x_i - S_F) / (m_F - 1), families = rescue3 tokens holding >= 3 distinct uids (signals' eligibility), m_F and S_F over the family's genes; share = sum_g |sum_{i in g} r_i|^2 / n_g / sum_i |r_i|^2 over eligible genes; expected = genomes with eligible genes / eligible genes",
+   "reproduction": "signals' own definition (family sums and m_F over distinct uids) on Z's final vectors and on the input vectors; Z should give about 2.18%"
+  },
+  "S3_neighbor_composition": {
+   "genes": "the 18,414 member genes of curated instances with >= 2 members (DefenseFinder, TXSScan, CRISPRCasTyper); reported pooled and per caller",
+   "list_depth_note": "The frozen bond tree's PRIMARY lists have no fixed depth: z >= 10.6 lists, one best match per genome, own genome group excluded (long_loci/frozen3/FROZEN3.json; fz3.z_lists_sd; per-genome z = (best cosine - mean cosine over the genome's genes) / sd (n - 1 denominator, floor 1e-4)). S3a recomputes exactly that list for each arm on these genes (no rebuild of the bond-tree lists, no tree). S3b uses the configuration's fixed depth K = 1,000 (its homolog-exclusion masks and alignment lists): top 1,000 genes by cosine outside the query's genome group.",
+   "component": "same-component genes T_i of query gene i = genes outside i's genome group that are members of a curated instance (any size) of a (caller, label) pair among i's >= 2-member instances AND carry i's rescue3 token (label = DefenseFinder / TXSScan system_type, CRISPRCasTyper system_subtype). The gold tables carry no per-gene component names, so the MMseqs2 family stands in for the component. Genes with |T_i| = 0 leave the recall readouts.",
+   "S3a_readouts": "per gene: list length (genomes with z >= 10.6), distinct genome groups in the list, recall = genomes whose list entry is in T_i / genomes outside the own group holding >= 1 T_i gene",
+   "S3b_readouts": "per gene: distinct genome groups among the top 1,000, recall = |top 1,000 intersect T_i| / |T_i|",
+   "aggregation": "means over genes; paired arm - Z with the genome bootstrap (query gene's genome, 2,000 draws, seed 17)"
+  },
+  "S4_cas": {
+   "genes": "query genes that are members of CRISPRCasTyper instances with >= 2 members",
+   "readout": "in the S3b top-1,000 list (outside the own genome group): best rank = 1-based position of the first gene carrying the gene's own rescue3 token (1,001 when absent); genes whose family has >= 1 gene outside the own group. Reported: median, mean, q75, q90, share absent; plus capped family share (in-list family genes / min(1,000, family genes outside the own group)) and other-family Cas genes in the list (members of any CRISPRCasTyper instance with a different token).",
+   "reference_note": "The brief's reference (median 107, softrec/REPORT_cas.txt) is a pair-level statistic: best family-consistent supporting pair over lineages for 2,135 lost Cas pairs, on genus-excluded depth-1,000 lists. Its gene-level analog there was first family position median 0 (0-based), capped share .841, about 200 other-family Cas genes per list. Here Z's value under the definition above is the reference."
+  }
+ },
+ "not_done": "No rebuild of the bond-tree neighbor lists, no bond tree. If the primary criterion is met for an arm, the report states the cost of the rebuild and the seven DPANN bars.",
+ "seeds": "17 everywhere (folds, bootstrap, null replicates seed 17 + qid)",
+ "compute": "biotite standard / standard_expand, 24 CPUs per job (header of ribo_audit/mark7.sbatch), budget 3 h of 24-CPU job time, no job over 1 h, no GPU, no language-model inference",
+ "no_rescue": "No arm, grid or readout beyond these is added to rescue a negative result; anything added later is labeled POST HOC."
+}

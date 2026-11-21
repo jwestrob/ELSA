@@ -1,0 +1,81 @@
+{
+ "arm": "G1",
+ "query_genes": 18414,
+ "share_input": {
+  "total_share": 0.05473476040866774,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.8595333572952206,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.06929024571543206,
+   0.1028709418661955,
+   0.1681201709843748
+  ],
+  "resid_share_row": 0.11919238106573524,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "resid_share_uid": 0.1200293213844897,
+  "resid_expected_uid": 0.0011200886516854285,
+  "resid_eligible_genes_uid": 3181891,
+  "resid_families_uid": 75890,
+  "seconds": 7.5
+ },
+ "removal": {
+  "alpha": 1.0
+ },
+ "share_pre_whitening": {
+  "total_share": 0.0009188635987920834,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.05643345345483798,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.013525008155956352,
+   0.022559045064750545,
+   0.04361932861159468
+  ],
+  "resid_share_row": 0.01927405511707694,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "seconds": 2.5
+ },
+ "zca10": {
+  "global_mean_norm": 0.05643345414646295,
+  "eigenvalue_q0_50_90_100": [
+   1.6450670701992298e-17,
+   4.144590096013276e-05,
+   0.000516536522194378,
+   0.4278196686089664
+  ],
+  "participation_ratio_before": 4.988667201081036,
+  "seconds": {
+   "mean_cov": 25.7,
+   "apply": 11.4,
+   "f16": 0.8
+  }
+ },
+ "share_final": {
+  "total_share": 0.000343529254547815,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.021734420764926213,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.014334239582006315,
+   0.017065745414393943,
+   0.022596342365353402
+  ],
+  "resid_share_row": 0.003752264194967835,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "seconds": 2.6
+ },
+ "transform_seconds": 46.0,
+ "list_seconds": {
+  "matmul": 188.6,
+  "rows": 148.0,
+  "topk_rows_check": {
+   "idx_equal": true,
+   "max_abs_s": 0.0
+  }
+ },
+ "arm_seconds": 385.8
+}

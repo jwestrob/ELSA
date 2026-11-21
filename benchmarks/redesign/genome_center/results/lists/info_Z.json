@@ -1,0 +1,78 @@
+{
+ "arm": "Z",
+ "query_genes": 18414,
+ "share_input": {
+  "total_share": 0.05473476040866774,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.8595333572952206,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.06929024571543206,
+   0.1028709418661955,
+   0.1681201709843748
+  ],
+  "resid_share_row": 0.11919238106573524,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "resid_share_uid": 0.1200293213844897,
+  "resid_expected_uid": 0.0011200886516854285,
+  "resid_eligible_genes_uid": 3181891,
+  "resid_families_uid": 75890,
+  "seconds": 7.5
+ },
+ "zca10": {
+  "global_mean_norm": 0.8595333572952206,
+  "eigenvalue_q0_50_90_100": [
+   2.715856432647291e-18,
+   8.638023127536701e-06,
+   0.00011106528951072099,
+   0.12784994744403858
+  ],
+  "participation_ratio_before": 3.941565550518206,
+  "seconds": {
+   "mean_cov": 24.8,
+   "apply": 12.5,
+   "f16": 1.7
+  }
+ },
+ "share_final": {
+  "total_share": 0.015404265226172179,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.01750653390540709,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.08423352990511328,
+   0.1081011405321965,
+   0.16481024912362266
+  ],
+  "resid_share_row": 0.02178988746516426,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "resid_share_uid": 0.021801286089798387,
+  "resid_expected_uid": 0.0011200886516854285,
+  "resid_eligible_genes_uid": 3181891,
+  "resid_families_uid": 75890,
+  "seconds": 4.4
+ },
+ "transform_seconds": 48.9,
+ "list_seconds": {
+  "matmul": 187.5,
+  "rows": 168.9,
+  "topk_rows_check": {
+   "idx_equal": true,
+   "max_abs_s": 0.0
+  }
+ },
+ "vs_stored_head_lists": {
+  "rows": 18414,
+  "rows_identical": 0,
+  "share_identical": 0.0,
+  "max_abs_s_diff": 1.0986127853393555,
+  "overlap_of_differing_rows_q0_50": [
+   0.99935,
+   1.0
+  ],
+  "differing_rows_sampled": 1800
+ },
+ "arm_seconds": 419.9
+}

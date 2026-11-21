@@ -1,0 +1,90 @@
+{
+ "arm": "B32",
+ "query_genes": 18414,
+ "share_input": {
+  "total_share": 0.05473476040866774,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.8595333572952206,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.06929024571543206,
+   0.1028709418661955,
+   0.1681201709843748
+  ],
+  "resid_share_row": 0.11919238106573524,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "seconds": 6.2
+ },
+ "removal": {
+  "k": 32,
+  "genome_mean_variance_in_top_k": 0.9933263133078183,
+  "sv_share_top10": [
+   0.4283768352729993,
+   0.18529804927119742,
+   0.1540615228426091,
+   0.0757977799147428,
+   0.054276330731638234,
+   0.021083009862308842,
+   0.01346855161650653,
+   0.009360948914967155,
+   0.008189680723864416,
+   0.006437211598397383
+  ]
+ },
+ "share_pre_whitening": {
+  "total_share": 0.0027753960525586335,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.896499911983259,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.01629074215474523,
+   0.021220583096868223,
+   0.030048309156833646
+  ],
+  "resid_share_row": 0.0064759301857807835,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "seconds": 2.9
+ },
+ "zca10": {
+  "global_mean_norm": 0.8964999177751298,
+  "eigenvalue_q0_50_90_100": [
+   7.829964060087207e-19,
+   3.733908746352098e-05,
+   0.00036959693723509187,
+   0.008657884550067085
+  ],
+  "participation_ratio_before": 81.04879497873169,
+  "seconds": {
+   "mean_cov": 28.8,
+   "apply": 12.7,
+   "f16": 1.5
+  }
+ },
+ "share_final": {
+  "total_share": 0.0025653105604033547,
+  "total_expected": 0.0009937796035034148,
+  "global_mean_norm": 0.01195609280039969,
+  "genome_mean_dev_norm_q10_50_90": [
+   0.03682549980878286,
+   0.046029805248537434,
+   0.0651375938860632
+  ],
+  "resid_share_row": 0.004085363924837643,
+  "resid_expected_row": 0.0011200886516854285,
+  "resid_eligible_genes_row": 3181891,
+  "resid_families_row": 75890,
+  "seconds": 3.1
+ },
+ "transform_seconds": 75.7,
+ "list_seconds": {
+  "matmul": 231.5,
+  "rows": 216.1,
+  "topk_rows_check": {
+   "idx_equal": true,
+   "max_abs_s": 0.0
+  }
+ },
+ "arm_seconds": 526.7
+}

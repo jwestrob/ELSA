@@ -1,0 +1,1330 @@
+pair_id	protein_id	role	pair	ref_func	feature	uniprot_pos	ref_residue	ligand	model_residue	mark	model_pos	plddt	in_place
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Active site	55	H		H	:	53	86.93	True
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Active site	128	N		Q	:	138	90.58	False
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	52	R	heme b	R	:	50	84.44	True
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	92	R	heme b	R	:	96	94.41	True
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	141	F	heme b	F	:	151	95.16	True
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	174	H	NADPH	L	:	184	96.21	False
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	181	S	NADPH	-	 			False
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	183	R	NADPH	-	 			False
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	193	H	NADPH	R	:	200	98.34	False
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	283	W	NADPH	W	:	287	97.37	True
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	285	H	NADPH	E	:	289	96.75	False
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	338	Y	heme b	E	:	342	88.26	False
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	342	H	heme b	R	:	346	82.98	False
+1932210|K03781|candidate|own	1932210	candidate	own	K03781	Binding site	345	R	heme b	R	:	349	82.76	True
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Active site	261	D	Nucleophile	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Active site	289	E	Proton donor	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	54	D	Ca(2+)	V	.	33	93.34	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	56	D	Ca(2+)	L	.	35	93.73	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	59	N	Ca(2+)	T	.	38	89.47	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	60	N	Ca(2+)	D	:	39	88.16	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	81	G	Ca(2+)	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	83	D	Ca(2+)	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	109	D	Ca(2+)	S	.	100	91.8	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	110	N	Ca(2+)	D	.	101	90.23	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	112	D	Ca(2+)	H	.	103	84.9	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	126	W	substrate	N	.	139	97.84	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	134	E	Ca(2+)	V	.	157	98.14	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	135	E	Ca(2+)	I	.	158	90.58	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	164	N	Ca(2+)	Q	:	188	96.36	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	165	H	substrate	A	:	189	95.64	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	231	D	Ca(2+)	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	259	R	substrate	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	264	K	substrate	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	265	H	substrate	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	265	H	Ca(2+)	-	 			False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	292	G	substrate	I	.	257	98.71	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	362	D	substrate	Y	.	317	89.68	False
+1932210|K03781|candidate|negA	1932210	candidate	negA	K05992	Binding site	409	R	substrate	A	.	348	92.03	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Active site	55	H		N	:	110	92.11	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Active site	128	N		V	:	192	96.36	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	52	R	heme b	R	:	107	94.44	True
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	92	R	heme b	R	:	147	97.2	True
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	141	F	heme b	N	:	205	98.08	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	174	H	NADPH	D	:	231	96.56	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	181	S	NADPH	F	.	238	97.12	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	183	R	NADPH	I	:	239	93.58	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	193	H	NADPH	P	:	249	98.27	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	283	W	NADPH	W	:	327	98.85	True
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	285	H	NADPH	E	:	329	97.3	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	338	Y	heme b	Y	:	384	96.36	True
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	342	H	heme b	S	:	388	96.97	False
+4398518|K03781|candidate|own	4398518	candidate	own	K03781	Binding site	345	R	heme b	R	:	391	95.67	True
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Active site	261	D	Nucleophile	Y	:	250	98.7	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Active site	289	E	Proton donor	V	:	268	98.98	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	54	D	Ca(2+)	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	56	D	Ca(2+)	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	59	N	Ca(2+)	T	.	93	98.05	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	60	N	Ca(2+)	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	81	G	Ca(2+)	G	.	115	96.86	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	83	D	Ca(2+)	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	109	D	Ca(2+)	G	.	150	93.91	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	110	N	Ca(2+)	P	.	151	84.24	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	112	D	Ca(2+)	P	:	153	86.53	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	126	W	substrate	I	.	167	98.71	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	134	E	Ca(2+)	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	135	E	Ca(2+)	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	164	N	Ca(2+)	T	:	196	98.39	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	165	H	substrate	F	.	197	88.52	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	217	Q	Ca(2+)	Q	.	235	94.12	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	231	D	Ca(2+)	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	259	R	substrate	A	.	248	97.86	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	264	K	substrate	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	265	H	substrate	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	265	H	Ca(2+)	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	292	G	substrate	-	 			False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	362	D	substrate	A	.	293	97.75	False
+4398518|K03781|candidate|negA	4398518	candidate	negA	K05992	Binding site	409	R	substrate	Q	.	352	95.78	False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Active site	55	H		-	 			False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Active site	128	N		-	 			False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	52	R	heme b	-	 			False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	92	R	heme b	-	 			False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	141	F	heme b	N	:	11	93.48	False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	174	H	NADPH	D	:	37	88.02	False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	181	S	NADPH	L	:	43	90.18	False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	183	R	NADPH	A	:	45	88.11	False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	193	H	NADPH	S	:	55	95.75	False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	283	W	NADPH	W	:	133	98.3	True
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	285	H	NADPH	E	:	135	97.65	False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	338	Y	heme b	Y	:	190	91.77	True
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	342	H	heme b	S	:	194	89.5	False
+2464854|K03781|candidate|own	2464854	candidate	own	K03781	Binding site	345	R	heme b	R	:	197	86.1	True
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Active site	261	D	Nucleophile	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Active site	289	E	Proton donor	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	54	D	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	56	D	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	59	N	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	60	N	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	81	G	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	83	D	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	109	D	Ca(2+)	A	.	45	88.11	False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	110	N	Ca(2+)	R	.	46	73.99	False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	112	D	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	126	W	substrate	T	:	54	91.93	False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	134	E	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	135	E	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	164	N	Ca(2+)	I	:	74	90.94	False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	165	H	substrate	T	:	75	97.59	False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	231	D	Ca(2+)	F	:	111	98.09	False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	259	R	substrate	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	264	K	substrate	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	265	H	substrate	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	265	H	Ca(2+)	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	292	G	substrate	S	:	166	82.33	False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	362	D	substrate	-	 			False
+2464854|K03781|candidate|negA	2464854	candidate	negA	K05992	Binding site	409	R	substrate	-	 			False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Active site	55	H		H	:	53	86.21	True
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Active site	128	N		Q	:	138	89.59	False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	52	R	heme b	R	:	50	82.22	True
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	92	R	heme b	R	:	96	94.0	True
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	141	F	heme b	F	:	151	92.84	True
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	174	H	NADPH	L	:	184	92.94	False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	181	S	NADPH	-	 			False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	183	R	NADPH	Q	:	191	87.5	False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	193	H	NADPH	R	:	200	97.44	False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	283	W	NADPH	W	:	287	95.92	True
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	285	H	NADPH	E	:	289	95.17	False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	338	Y	heme b	E	:	341	83.96	False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	342	H	heme b	R	:	345	80.35	False
+2139606|K03781|candidate|own	2139606	candidate	own	K03781	Binding site	345	R	heme b	R	:	348	83.16	True
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Active site	261	D	Nucleophile	F	.	157	97.87	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Active site	289	E	Proton donor	L	.	182	96.6	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	54	D	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	56	D	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	59	N	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	60	N	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	81	G	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	83	D	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	109	D	Ca(2+)	A	.	38	92.96	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	110	N	Ca(2+)	K	:	39	91.72	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	112	D	Ca(2+)	A	.	41	90.89	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	126	W	substrate	A	.	54	88.0	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	134	E	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	135	E	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	164	N	Ca(2+)	A	.	100	93.12	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	165	H	substrate	D	.	101	90.36	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	217	Q	Ca(2+)	D	.	111	95.11	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	231	D	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	259	R	substrate	M	:	155	92.9	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	264	K	substrate	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	265	H	substrate	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	265	H	Ca(2+)	-	 			False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	292	G	substrate	E	.	186	92.81	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	362	D	substrate	V	.	315	87.11	False
+2139606|K03781|candidate|negA	2139606	candidate	negA	K05992	Binding site	409	R	substrate	R	:	345	80.35	True
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Active site	55	H		H	:	51	97.62	True
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Active site	128	N		A	:	133	98.24	False
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	52	R	heme b	R	:	48	94.88	True
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	92	R	heme b	R	:	88	98.33	True
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	141	F	heme b	F	:	146	97.37	True
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	174	H	NADPH	S	:	185	86.47	False
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	181	S	NADPH	G	.	192	93.7	False
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	183	R	NADPH	-	 			False
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	193	H	NADPH	A	:	202	97.82	False
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	283	W	NADPH	W	:	281	98.4	True
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	285	H	NADPH	E	:	283	97.71	False
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	338	Y	heme b	Y	:	339	97.36	True
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	342	H	heme b	S	:	343	97.82	False
+2331990|K03781|candidate|own	2331990	candidate	own	K03781	Binding site	345	R	heme b	R	:	346	94.24	True
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Active site	261	D	Nucleophile	D	.	201	96.9	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Active site	289	E	Proton donor	V	:	220	98.33	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	54	D	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	56	D	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	59	N	Ca(2+)	T	.	33	98.63	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	60	N	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	81	G	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	83	D	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	109	D	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	110	N	Ca(2+)	G	.	92	96.89	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	112	D	Ca(2+)	G	:	94	97.85	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	126	W	substrate	M	.	107	98.72	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	134	E	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	135	E	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	164	N	Ca(2+)	A	.	137	96.88	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	165	H	substrate	F	.	138	91.1	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	217	Q	Ca(2+)	S	:	185	86.47	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	231	D	Ca(2+)	H	.	193	91.34	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	259	R	substrate	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	264	K	substrate	F	.	204	98.21	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	265	H	substrate	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	265	H	Ca(2+)	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	292	G	substrate	-	 			False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	362	D	substrate	A	.	247	98.02	False
+2331990|K03781|candidate|negA	2331990	candidate	negA	K05992	Binding site	409	R	substrate	R	.	306	93.72	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Active site	55	H		N	:	94	91.61	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Active site	128	N		I	:	176	95.77	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	52	R	heme b	R	:	91	93.17	True
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	92	R	heme b	R	:	131	97.98	True
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	141	F	heme b	N	:	189	96.42	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	174	H	NADPH	D	:	215	94.99	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	181	S	NADPH	W	:	221	94.89	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	183	R	NADPH	N	.	223	91.9	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	193	H	NADPH	T	:	233	98.11	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	283	W	NADPH	W	:	311	98.39	True
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	285	H	NADPH	T	:	313	97.33	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	338	Y	heme b	Y	:	368	95.9	True
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	342	H	heme b	A	:	372	98.45	False
+891883|K03781|candidate|own	891883	candidate	own	K03781	Binding site	345	R	heme b	R	:	375	94.77	True
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Active site	261	D	Nucleophile	H	.	232	95.35	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Active site	289	E	Proton donor	F	:	252	98.95	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	54	D	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	56	D	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	59	N	Ca(2+)	R	.	77	92.71	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	60	N	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	81	G	Ca(2+)	G	.	99	98.39	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	83	D	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	109	D	Ca(2+)	G	.	134	94.82	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	110	N	Ca(2+)	P	.	135	87.66	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	112	D	Ca(2+)	P	:	137	87.59	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	126	W	substrate	I	.	151	98.31	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	134	E	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	135	E	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	164	N	Ca(2+)	T	:	178	95.07	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	165	H	substrate	T	.	180	97.22	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	231	D	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	259	R	substrate	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	264	K	substrate	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	265	H	substrate	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	265	H	Ca(2+)	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	292	G	substrate	R	:	255	93.61	False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	362	D	substrate	-	 			False
+891883|K03781|candidate|negA	891883	candidate	negA	K05992	Binding site	409	R	substrate	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Active site	261	D	Nucleophile	Y	:	26	45.2	False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Active site	289	E	Proton donor	A	.	31	48.77	False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	81	G	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	83	D	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	109	D	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	110	N	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	126	W	substrate	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	164	N	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	165	H	substrate	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	259	R	substrate	V	.	24	44.74	False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	264	K	substrate	R	:	29	44.9	False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	265	H	substrate	R	.	30	45.2	False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	265	H	Ca(2+)	R	.	30	45.2	False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	292	G	substrate	E	:	34	47.36	False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	362	D	substrate	-	 			False
+2229149|K05992|candidate|own	2229149	candidate	own	K05992	Binding site	409	R	substrate	-	 			False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Active site	55	H		-	 			False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Active site	128	N		F	:	10	36.82	False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	52	R	heme b	-	 			False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	92	R	heme b	-	 			False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	141	F	heme b	V	.	16	38.87	False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	174	H	NADPH	N	:	20	38.6	False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	181	S	NADPH	-	 			False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	183	R	NADPH	D	:	25	46.0	False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	193	H	NADPH	A	:	28	49.25	False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	283	W	NADPH	-	 			False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	285	H	NADPH	-	 			False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	338	Y	heme b	Q	:	95	44.06	False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	342	H	heme b	R	:	99	41.99	False
+2229149|K05992|candidate|negA	2229149	candidate	negA	K03781	Binding site	345	R	heme b	R	.	100	41.63	False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Active site	261	D	Nucleophile	D	:	134	91.9	True
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Active site	289	E	Proton donor	E	:	160	91.67	True
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	81	G	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	83	D	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	109	D	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	110	N	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	126	W	substrate	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	164	N	Ca(2+)	F	.	12	95.2	False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	165	H	substrate	D	.	13	91.52	False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	231	D	Ca(2+)	G	:	103	93.92	False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	259	R	substrate	R	:	132	92.81	True
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	264	K	substrate	D	:	137	80.76	False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	265	H	substrate	G	:	138	84.61	False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	265	H	Ca(2+)	G	:	138	84.61	False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	292	G	substrate	I	:	162	88.1	False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	362	D	substrate	-	 			False
+1987702|K05992|candidate|own	1987702	candidate	own	K05992	Binding site	409	R	substrate	-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Active site	55	H		-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Active site	128	N		-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	52	R	heme b	F	.	96	77.42	False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	92	R	heme b	-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	141	F	heme b	-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	174	H	NADPH	-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	181	S	NADPH	-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	183	R	NADPH	-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	193	H	NADPH	G	.	179	94.92	False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	283	W	NADPH	-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	285	H	NADPH	-	 			False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	338	Y	heme b	K	:	219	81.73	False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	342	H	heme b	L	:	223	83.17	False
+1987702|K05992|candidate|negA	1987702	candidate	negA	K03781	Binding site	345	R	heme b	N	:	226	87.3	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Active site	261	D	Nucleophile	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Active site	289	E	Proton donor	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	54	D	Ca(2+)	M	:	32	86.6	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	56	D	Ca(2+)	A	.	38	90.2	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	59	N	Ca(2+)	E	.	41	82.46	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	81	G	Ca(2+)	R	.	42	90.08	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	83	D	Ca(2+)	T	:	44	86.75	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	109	D	Ca(2+)	A	:	72	82.86	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	110	N	Ca(2+)	Y	:	73	77.62	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	112	D	Ca(2+)	A	:	75	75.42	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	126	W	substrate	N	:	91	72.6	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	134	E	Ca(2+)	E	:	99	80.56	True
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	135	E	Ca(2+)	P	:	100	80.73	False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	164	N	Ca(2+)	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	165	H	substrate	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	259	R	substrate	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	264	K	substrate	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	265	H	substrate	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	292	G	substrate	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	362	D	substrate	-	 			False
+2193657|K05992|candidate|own	2193657	candidate	own	K05992	Binding site	409	R	substrate	-	 			False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Active site	55	H		W	.	7	64.68	False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Active site	128	N		-	 			False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	52	R	heme b	F	:	5	62.17	False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	92	R	heme b	-	 			False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	141	F	heme b	-	 			False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	174	H	NADPH	T	.	44	86.75	False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	181	S	NADPH	D	.	55	83.14	False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	183	R	NADPH	L	:	57	86.72	False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	193	H	NADPH	I	:	65	80.02	False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	283	W	NADPH	W	:	88	69.69	True
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	285	H	NADPH	-	 			False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	338	Y	heme b	S	.	111	53.46	False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	342	H	heme b	-	 			False
+2193657|K05992|candidate|negA	2193657	candidate	negA	K03781	Binding site	345	R	heme b	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Active site	261	D	Nucleophile	S	.	179	97.11	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Active site	289	E	Proton donor	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	81	G	Ca(2+)	F	:	16	76.69	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	83	D	Ca(2+)	L	.	18	90.61	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	109	D	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	110	N	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	126	W	substrate	R	:	53	92.71	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	134	E	Ca(2+)	S	:	60	93.54	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	164	N	Ca(2+)	P	.	99	97.33	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	165	H	substrate	F	.	114	97.96	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	259	R	substrate	D	:	177	92.91	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	264	K	substrate	A	:	202	97.75	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	265	H	substrate	D	:	203	96.53	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	265	H	Ca(2+)	D	:	203	96.53	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	292	G	substrate	V	.	215	97.79	False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	362	D	substrate	-	 			False
+638417|K05992|candidate|own	638417	candidate	own	K05992	Binding site	409	R	substrate	-	 			False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Active site	55	H		L	:	6	86.18	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Active site	128	N		R	.	55	94.26	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	52	R	heme b	I	.	4	84.94	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	92	R	heme b	H	.	44	92.89	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	141	F	heme b	T	.	65	96.57	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	174	H	NADPH	Q	:	74	81.39	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	181	S	NADPH	A	.	84	91.89	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	183	R	NADPH	D	.	86	94.4	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	193	H	NADPH	T	.	93	96.63	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	283	W	NADPH	-	 			False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	285	H	NADPH	-	 			False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	338	Y	heme b	L	.	180	94.72	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	342	H	heme b	A	.	184	97.45	False
+638417|K05992|candidate|negA	638417	candidate	negA	K03781	Binding site	345	R	heme b	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Active site	261	D	Nucleophile	G	.	88	96.79	False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Active site	289	E	Proton donor	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	81	G	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	83	D	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	109	D	Ca(2+)	E	.	7	91.76	False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	110	N	Ca(2+)	H	.	8	91.53	False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	126	W	substrate	T	.	11	96.81	False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	164	N	Ca(2+)	P	.	19	95.02	False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	165	H	substrate	R	.	30	96.17	False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	259	R	substrate	R	:	86	84.13	True
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	264	K	substrate	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	265	H	substrate	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	292	G	substrate	E	:	113	93.16	False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	362	D	substrate	-	 			False
+290268|K05992|candidate|own	290268	candidate	own	K05992	Binding site	409	R	substrate	-	 			False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Active site	55	H		-	 			False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Active site	128	N		Y	:	34	97.82	False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	52	R	heme b	-	 			False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	92	R	heme b	D	:	24	97.12	False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	141	F	heme b	-	 			False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	174	H	NADPH	G	.	47	98.78	False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	181	S	NADPH	A	:	54	98.72	False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	183	R	NADPH	E	.	56	98.86	False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	193	H	NADPH	F	:	62	98.79	False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	283	W	NADPH	-	 			False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	285	H	NADPH	-	 			False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	338	Y	heme b	P	.	122	93.81	False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	342	H	heme b	R	.	126	88.77	False
+290268|K05992|candidate|negA	290268	candidate	negA	K03781	Binding site	345	R	heme b	V	:	128	97.14	False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Active site	261	D	Nucleophile	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Active site	289	E	Proton donor	S	:	226	93.79	False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	81	G	Ca(2+)	G	:	27	91.68	True
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	83	D	Ca(2+)	Y	:	29	86.76	False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	109	D	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	110	N	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	126	W	substrate	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	164	N	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	165	H	substrate	W	.	86	85.85	False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	217	Q	Ca(2+)	R	:	138	94.9	False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	231	D	Ca(2+)	F	:	171	98.22	False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	259	R	substrate	T	.	204	95.49	False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	264	K	substrate	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	265	H	substrate	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	292	G	substrate	P	:	230	92.68	False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	362	D	substrate	-	 			False
+3054329|K05992|candidate|own	3054329	candidate	own	K05992	Binding site	409	R	substrate	-	 			False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Active site	55	H		-	 			False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Active site	128	N		-	 			False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	52	R	heme b	-	 			False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	92	R	heme b	F	.	10	92.55	False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	141	F	heme b	S	:	73	95.94	False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	174	H	NADPH	R	:	81	91.86	False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	181	S	NADPH	G	.	91	96.18	False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	183	R	NADPH	D	:	104	97.81	False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	193	H	NADPH	L	.	112	95.56	False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	283	W	NADPH	-	 			False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	285	H	NADPH	-	 			False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	338	Y	heme b	S	:	200	93.82	False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	342	H	heme b	T	.	204	95.49	False
+3054329|K05992|candidate|negA	3054329	candidate	negA	K03781	Binding site	345	R	heme b	P	.	211	97.45	False
+2439257|K07258|candidate|own	2439257	candidate	own	K07258	Active site	64	S	Acyl-ester intermediate	-	 			False
+2439257|K07258|candidate|own	2439257	candidate	own	K07258	Active site	67	K	Proton acceptor	-	 			False
+2439257|K07258|candidate|own	2439257	candidate	own	K07258	Active site	125	S		-	 			False
+2439257|K07258|candidate|own	2439257	candidate	own	K07258	Binding site	242	K	substrate	L	:	147	89.11	False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Active site	90	H	Proton acceptor	-	 			False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Active site	145	D	Nucleophile	-	 			False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	24	R	substrate	-	 			False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	62	A	substrate	P	.	96	86.86	False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	63	G	substrate	C	.	97	86.92	False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	64	F	substrate	R	:	98	72.36	False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	65	Y	substrate	D	:	99	68.12	False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	66	L	substrate	K	.	100	59.46	False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	67	R	substrate	A	.	101	57.23	False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	114	G	substrate	-	 			False
+2439257|K07258|candidate|negA	2439257	candidate	negA	K14418	Binding site	257	R	substrate	-	 			False
+2403074|K07258|candidate|own	2403074	candidate	own	K07258	Active site	64	S	Acyl-ester intermediate	-	 			False
+2403074|K07258|candidate|own	2403074	candidate	own	K07258	Active site	67	K	Proton acceptor	-	 			False
+2403074|K07258|candidate|own	2403074	candidate	own	K07258	Active site	125	S		-	 			False
+2403074|K07258|candidate|own	2403074	candidate	own	K07258	Binding site	242	K	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Active site	90	H	Proton acceptor	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Active site	145	D	Nucleophile	A	:	26	76.07	False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	24	R	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	62	A	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	63	G	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	64	F	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	65	Y	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	66	L	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	67	R	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	114	G	substrate	-	 			False
+2403074|K07258|candidate|negA	2403074	candidate	negA	K14418	Binding site	257	R	substrate	L	.	183	89.22	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Active site	90	H	Proton acceptor	R	:	66	92.35	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Active site	145	D	Nucleophile	S	:	129	94.88	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	24	R	substrate	-	 			False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	62	A	substrate	T	.	41	97.41	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	63	G	substrate	L	:	42	95.03	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	64	F	substrate	L	.	43	97.15	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	65	Y	substrate	Q	.	44	97.55	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	66	L	substrate	I	:	45	98.09	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	67	R	substrate	T	.	46	97.91	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	114	G	substrate	I	:	92	97.15	False
+2365651|K14418|candidate|own	2365651	candidate	own	K14418	Binding site	257	R	substrate	K	.	251	89.99	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Active site	306	D	Proton acceptor	-	 			False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	151	V	ATP	L	:	72	89.4	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	152	Q	ATP	D	:	73	91.26	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	153	P	ATP	I	.	74	86.38	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	154	K	ATP	I	.	79	95.26	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	178	K	ATP	N	.	126	98.03	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	220	E	ATP	I	:	172	91.72	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	221	R	ATP	T	:	173	95.07	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	222	F	ATP	M	:	174	93.24	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	308	H	ATP	G	:	202	86.26	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	309	G	ATP	L	:	203	82.67	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	310	K	ATP	E	:	204	83.73	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	311	N	ATP	A	.	205	81.68	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	327	Y	ATP	L	.	207	77.49	False
+2365651|K14418|candidate|negA	2365651	candidate	negA	K07154	Binding site	328	D	ATP	R	:	208	79.18	False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Active site	90	H	Proton acceptor	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Active site	145	D	Nucleophile	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	24	R	substrate	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	62	A	substrate	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	63	G	substrate	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	64	F	substrate	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	65	Y	substrate	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	66	L	substrate	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	67	R	substrate	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	114	G	substrate	-	 			False
+2278976|K14418|candidate|own	2278976	candidate	own	K14418	Binding site	257	R	substrate	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Active site	306	D	Proton acceptor	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	151	V	ATP	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	152	Q	ATP	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	153	P	ATP	I	.	41	93.96	False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	154	K	ATP	T	.	42	91.25	False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	178	K	ATP	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	220	E	ATP	L	.	58	94.12	False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	221	R	ATP	E	:	59	94.77	False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	222	F	ATP	E	:	60	87.33	False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	308	H	ATP	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	309	G	ATP	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	310	K	ATP	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	311	N	ATP	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	327	Y	ATP	-	 			False
+2278976|K14418|candidate|negA	2278976	candidate	negA	K07154	Binding site	328	D	ATP	-	 			False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Active site	90	H	Proton acceptor	K	:	32	90.61	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Active site	145	D	Nucleophile	P	:	95	97.36	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	24	R	substrate	S	:	5	98.04	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	62	A	substrate	V	:	8	98.45	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	63	G	substrate	L	.	9	98.71	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	64	F	substrate	A	.	10	98.82	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	65	Y	substrate	Y	:	11	82.13	True
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	66	L	substrate	D	.	12	98.6	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	67	R	substrate	D	.	13	91.87	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	114	G	substrate	T	:	58	98.06	False
+232571|K14418|candidate|own	232571	candidate	own	K14418	Binding site	257	R	substrate	K	.	217	89.81	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Active site	306	D	Proton acceptor	-	 			False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	151	V	ATP	G	.	57	98.81	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	152	Q	ATP	T	.	58	98.06	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	153	P	ATP	L	:	59	98.27	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	154	K	ATP	A	:	60	98.79	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	178	K	ATP	L	.	88	98.76	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	220	E	ATP	T	:	139	97.47	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	221	R	ATP	F	:	140	97.35	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	222	F	ATP	A	.	141	98.81	False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	308	H	ATP	-	 			False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	309	G	ATP	-	 			False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	310	K	ATP	-	 			False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	311	N	ATP	-	 			False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	327	Y	ATP	-	 			False
+232571|K14418|candidate|negA	232571	candidate	negA	K07154	Binding site	328	D	ATP	-	 			False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Active site	90	H	Proton acceptor	R	:	57	87.95	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Active site	145	D	Nucleophile	P	:	118	97.74	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	24	R	substrate	-	 			False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	62	A	substrate	K	.	32	98.48	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	63	G	substrate	V	:	33	98.69	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	64	F	substrate	L	.	34	98.95	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	65	Y	substrate	A	.	35	98.88	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	66	L	substrate	Y	:	36	82.03	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	67	R	substrate	D	.	37	98.81	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	114	G	substrate	T	:	83	98.58	False
+2605565|K14418|candidate|own	2605565	candidate	own	K14418	Binding site	257	R	substrate	R	.	240	87.76	False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Active site	306	D	Proton acceptor	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	151	V	ATP	D	.	92	91.88	False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	152	Q	ATP	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	153	P	ATP	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	154	K	ATP	R	.	93	95.94	False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	178	K	ATP	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	220	E	ATP	F	:	163	98.24	False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	221	R	ATP	A	.	164	98.84	False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	222	F	ATP	P	.	165	98.51	False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	308	H	ATP	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	309	G	ATP	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	310	K	ATP	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	311	N	ATP	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	327	Y	ATP	-	 			False
+2605565|K14418|candidate|negA	2605565	candidate	negA	K07154	Binding site	328	D	ATP	-	 			False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Active site	90	H	Proton acceptor	K	:	35	88.97	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Active site	145	D	Nucleophile	G	:	98	93.62	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	24	R	substrate	-	 			False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	62	A	substrate	D	.	10	98.72	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	63	G	substrate	V	:	11	98.73	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	64	F	substrate	L	.	12	98.84	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	65	Y	substrate	S	.	13	96.7	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	66	L	substrate	Y	:	14	94.0	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	67	R	substrate	D	.	15	97.91	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	114	G	substrate	L	:	61	92.85	False
+164954|K14418|candidate|own	164954	candidate	own	K14418	Binding site	257	R	substrate	-	 			False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Active site	306	D	Proton acceptor	-	 			False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	151	V	ATP	G	.	60	98.7	False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	152	Q	ATP	L	:	61	92.85	False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	153	P	ATP	L	:	62	96.96	False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	154	K	ATP	C	:	63	98.45	False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	178	K	ATP	S	.	92	98.79	False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	220	E	ATP	V	:	141	98.67	False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	221	R	ATP	T	.	142	97.8	False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	222	F	ATP	F	:	143	96.44	True
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	308	H	ATP	-	 			False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	309	G	ATP	-	 			False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	310	K	ATP	-	 			False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	311	N	ATP	-	 			False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	327	Y	ATP	-	 			False
+164954|K14418|candidate|negA	164954	candidate	negA	K07154	Binding site	328	D	ATP	-	 			False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Active site	90	H	Proton acceptor	K	:	134	92.96	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Active site	145	D	Nucleophile	P	:	197	98.03	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	24	R	substrate	A	.	58	98.72	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	62	A	substrate	N	.	109	98.88	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	63	G	substrate	V	:	110	98.93	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	64	F	substrate	L	.	111	98.83	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	65	Y	substrate	A	.	112	98.92	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	66	L	substrate	C	:	113	98.89	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	67	R	substrate	D	.	114	98.41	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	114	G	substrate	T	:	160	98.84	False
+3879757|K14418|candidate|own	3879757	candidate	own	K14418	Binding site	257	R	substrate	K	.	319	88.37	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Active site	306	D	Proton acceptor	V	.	151	98.98	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	151	V	ATP	-	 			False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	152	Q	ATP	-	 			False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	153	P	ATP	S	:	30	98.21	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	154	K	ATP	G	:	31	98.75	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	178	K	ATP	D	:	40	98.75	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	220	E	ATP	-	 			False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	221	R	ATP	-	 			False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	222	F	ATP	-	 			False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	308	H	ATP	C	:	156	98.84	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	309	G	ATP	F	.	157	98.82	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	310	K	ATP	V	.	158	98.66	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	311	N	ATP	G	.	159	98.92	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	327	Y	ATP	L	.	164	98.79	False
+3879757|K14418|candidate|negA	3879757	candidate	negA	K07154	Binding site	328	D	ATP	V	.	165	98.78	False
+1789601|K22278|candidate|own	1789601	candidate	own	K22278	Active site	76	D	Proton acceptor	Y	.	15	91.95	False
+1789601|K22278|candidate|own	1789601	candidate	own	K22278	Binding site	77	D	Zn(2+)	-	 			False
+1789601|K22278|candidate|own	1789601	candidate	own	K22278	Binding site	126	H	Zn(2+)	D	:	43	95.48	False
+1789601|K22278|candidate|own	1789601	candidate	own	K22278	Binding site	130	H	Zn(2+)	P	:	46	94.35	False
+1789601|K22278|candidate|negA	1789601	candidate	negA	K00035	Active site	91	K	Proton donor	I	:	91	96.6	False
+1789601|K22278|candidate|negA	1789601	candidate	negA	K00035	Binding site	15	I	NADP(+)	-	 			False
+1789601|K22278|candidate|negA	1789601	candidate	negA	K00035	Binding site	37	S	NADP(+)	-	 			False
+1789601|K22278|candidate|negA	1789601	candidate	negA	K00035	Binding site	38	R	NADP(+)	-	 			False
+320412|K22278|candidate|own	320412	candidate	own	K22278	Active site	76	D	Proton acceptor	N	:	35	98.56	False
+320412|K22278|candidate|own	320412	candidate	own	K22278	Binding site	77	D	Zn(2+)	V	:	36	98.88	False
+320412|K22278|candidate|own	320412	candidate	own	K22278	Binding site	126	H	Zn(2+)	H	:	115	98.48	True
+320412|K22278|candidate|own	320412	candidate	own	K22278	Binding site	130	H	Zn(2+)	N	:	119	95.6	False
+320412|K22278|candidate|negA	320412	candidate	negA	K00035	Active site	91	K	Proton donor	W	.	179	97.22	False
+320412|K22278|candidate|negA	320412	candidate	negA	K00035	Binding site	15	I	NADP(+)	H	.	47	76.11	False
+320412|K22278|candidate|negA	320412	candidate	negA	K00035	Binding site	37	S	NADP(+)	A	.	93	98.67	False
+320412|K22278|candidate|negA	320412	candidate	negA	K00035	Binding site	38	R	NADP(+)	V	.	94	98.69	False
+395690|K22278|candidate|own	395690	candidate	own	K22278	Active site	76	D	Proton acceptor	-	 			False
+395690|K22278|candidate|own	395690	candidate	own	K22278	Binding site	77	D	Zn(2+)	-	 			False
+395690|K22278|candidate|own	395690	candidate	own	K22278	Binding site	126	H	Zn(2+)	D	:	21	89.81	False
+395690|K22278|candidate|own	395690	candidate	own	K22278	Binding site	130	H	Zn(2+)	P	:	24	84.71	False
+395690|K22278|candidate|negA	395690	candidate	negA	K00035	Active site	91	K	Proton donor	H	:	69	91.09	False
+395690|K22278|candidate|negA	395690	candidate	negA	K00035	Binding site	15	I	NADP(+)	-	 			False
+395690|K22278|candidate|negA	395690	candidate	negA	K00035	Binding site	37	S	NADP(+)	-	 			False
+395690|K22278|candidate|negA	395690	candidate	negA	K00035	Binding site	38	R	NADP(+)	-	 			False
+2096189|K22278|candidate|own	2096189	candidate	own	K22278	Active site	76	D	Proton acceptor	L	.	5	71.45	False
+2096189|K22278|candidate|own	2096189	candidate	own	K22278	Binding site	77	D	Zn(2+)	-	 			False
+2096189|K22278|candidate|own	2096189	candidate	own	K22278	Binding site	126	H	Zn(2+)	L	:	44	95.58	False
+2096189|K22278|candidate|own	2096189	candidate	own	K22278	Binding site	130	H	Zn(2+)	P	:	48	91.91	False
+2096189|K22278|candidate|negA	2096189	candidate	negA	K00035	Active site	91	K	Proton donor	P	:	95	97.21	False
+2096189|K22278|candidate|negA	2096189	candidate	negA	K00035	Binding site	15	I	NADP(+)	-	 			False
+2096189|K22278|candidate|negA	2096189	candidate	negA	K00035	Binding site	37	S	NADP(+)	-	 			False
+2096189|K22278|candidate|negA	2096189	candidate	negA	K00035	Binding site	38	R	NADP(+)	-	 			False
+4274460|K22278|candidate|own	4274460	candidate	own	K22278	Active site	76	D	Proton acceptor	-	 			False
+4274460|K22278|candidate|own	4274460	candidate	own	K22278	Binding site	77	D	Zn(2+)	-	 			False
+4274460|K22278|candidate|own	4274460	candidate	own	K22278	Binding site	126	H	Zn(2+)	D	:	18	51.38	False
+4274460|K22278|candidate|own	4274460	candidate	own	K22278	Binding site	130	H	Zn(2+)	P	:	21	51.57	False
+4274460|K22278|candidate|negA	4274460	candidate	negA	K00035	Active site	91	K	Proton donor	M	:	61	53.88	False
+4274460|K22278|candidate|negA	4274460	candidate	negA	K00035	Binding site	15	I	NADP(+)	-	 			False
+4274460|K22278|candidate|negA	4274460	candidate	negA	K00035	Binding site	37	S	NADP(+)	W	.	15	39.05	False
+4274460|K22278|candidate|negA	4274460	candidate	negA	K00035	Binding site	38	R	NADP(+)	-	 			False
+1967152|K22278|candidate|own	1967152	candidate	own	K22278	Active site	76	D	Proton acceptor	-	 			False
+1967152|K22278|candidate|own	1967152	candidate	own	K22278	Binding site	77	D	Zn(2+)	-	 			False
+1967152|K22278|candidate|own	1967152	candidate	own	K22278	Binding site	126	H	Zn(2+)	L	:	21	57.34	False
+1967152|K22278|candidate|own	1967152	candidate	own	K22278	Binding site	130	H	Zn(2+)	P	.	25	56.81	False
+1967152|K22278|candidate|negA	1967152	candidate	negA	K00035	Active site	91	K	Proton donor	H	:	70	59.95	False
+1967152|K22278|candidate|negA	1967152	candidate	negA	K00035	Binding site	15	I	NADP(+)	-	 			False
+1967152|K22278|candidate|negA	1967152	candidate	negA	K00035	Binding site	37	S	NADP(+)	-	 			False
+1967152|K22278|candidate|negA	1967152	candidate	negA	K00035	Binding site	38	R	NADP(+)	-	 			False
+2513574|K22342|candidate|own	2513574	candidate	own	K22342	Active site	224	R	Proton donor	-	 			False
+2513574|K22342|candidate|own	2513574	candidate	own	K22342	Binding site	194	H	heme b	-	 			False
+2513574|K22342|candidate|own	2513574	candidate	own	K22342	Binding site	226	N	heme b	-	 			False
+2513574|K22342|candidate|own	2513574	candidate	own	K22342	Binding site	266	E	dimethylamine	-	 			False
+2513574|K22342|candidate|own	2513574	candidate	own	K22342	Binding site	317	Y	heme b	L	:	325	34.15	False
+2513574|K22342|candidate|own	2513574	candidate	own	K22342	Binding site	318	K	heme b	F	:	326	34.25	False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Active site	133	H	Proton acceptor	F	.	175	19.33	False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	126	D	Ca(2+)	V	.	169	25.74	False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	128	Y	fumarate	V	.	171	21.92	False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	142	R	fumarate	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	199	E	Ca(2+)	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	201	E	Ca(2+)	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	233	D	Ca(2+)	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	233	D	Mg(2+)	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	240	Q	fumarate	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	244	Y	fumarate	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	253	K	Mg(2+)	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	257	T	Mg(2+)	-	 			False
+2513574|K22342|candidate|negA	2513574	candidate	negA	K01555	Binding site	350	T	acetoacetate	S	.	332	34.58	False
+485117|K22342|candidate|own	485117	candidate	own	K22342	Active site	224	R	Proton donor	-	 			False
+485117|K22342|candidate|own	485117	candidate	own	K22342	Binding site	194	H	heme b	-	 			False
+485117|K22342|candidate|own	485117	candidate	own	K22342	Binding site	226	N	heme b	-	 			False
+485117|K22342|candidate|own	485117	candidate	own	K22342	Binding site	266	E	dimethylamine	-	 			False
+485117|K22342|candidate|own	485117	candidate	own	K22342	Binding site	317	Y	heme b	-	 			False
+485117|K22342|candidate|own	485117	candidate	own	K22342	Binding site	318	K	heme b	-	 			False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Active site	133	H	Proton acceptor	D	:	25	39.84	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	126	D	Ca(2+)	-	 			False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	128	Y	fumarate	Q	.	19	39.67	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	142	R	fumarate	P	.	35	29.02	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	199	E	Ca(2+)	V	:	51	40.81	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	201	E	Ca(2+)	L	.	52	40.57	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	233	D	Ca(2+)	E	:	66	28.68	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	233	D	Mg(2+)	E	:	66	28.68	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	240	Q	fumarate	H	:	73	38.16	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	244	Y	fumarate	E	:	77	46.51	False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	253	K	Mg(2+)	-	 			False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	257	T	Mg(2+)	-	 			False
+485117|K22342|candidate|negA	485117	candidate	negA	K01555	Binding site	350	T	acetoacetate	L	:	104	39.44	False
+2052597|K22342|candidate|own	2052597	candidate	own	K22342	Active site	224	R	Proton donor	N	:	147	52.1	False
+2052597|K22342|candidate|own	2052597	candidate	own	K22342	Binding site	194	H	heme b	-	 			False
+2052597|K22342|candidate|own	2052597	candidate	own	K22342	Binding site	226	N	heme b	R	:	149	59.99	False
+2052597|K22342|candidate|own	2052597	candidate	own	K22342	Binding site	266	E	dimethylamine	Q	.	161	63.94	False
+2052597|K22342|candidate|own	2052597	candidate	own	K22342	Binding site	317	Y	heme b	-	 			False
+2052597|K22342|candidate|own	2052597	candidate	own	K22342	Binding site	318	K	heme b	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Active site	133	H	Proton acceptor	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	126	D	Ca(2+)	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	128	Y	fumarate	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	142	R	fumarate	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	199	E	Ca(2+)	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	201	E	Ca(2+)	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	233	D	Ca(2+)	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	233	D	Mg(2+)	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	240	Q	fumarate	S	:	13	47.95	False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	244	Y	fumarate	-	 			False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	253	K	Mg(2+)	H	:	16	45.97	False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	257	T	Mg(2+)	A	:	21	43.1	False
+2052597|K22342|candidate|negA	2052597	candidate	negA	K01555	Binding site	350	T	acetoacetate	E	:	100	54.79	False
+421148|K22342|candidate|own	421148	candidate	own	K22342	Active site	224	R	Proton donor	V	:	192	23.34	False
+421148|K22342|candidate|own	421148	candidate	own	K22342	Binding site	194	H	heme b	V	.	162	30.24	False
+421148|K22342|candidate|own	421148	candidate	own	K22342	Binding site	226	N	heme b	S	:	194	23.81	False
+421148|K22342|candidate|own	421148	candidate	own	K22342	Binding site	266	E	dimethylamine	F	:	195	24.57	False
+421148|K22342|candidate|own	421148	candidate	own	K22342	Binding site	317	Y	heme b	-	 			False
+421148|K22342|candidate|own	421148	candidate	own	K22342	Binding site	318	K	heme b	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Active site	133	H	Proton acceptor	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	126	D	Ca(2+)	Q	:	38	46.79	False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	128	Y	fumarate	R	:	42	43.68	False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	142	R	fumarate	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	199	E	Ca(2+)	S	:	70	34.43	False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	201	E	Ca(2+)	G	.	72	32.45	False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	233	D	Ca(2+)	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	233	D	Mg(2+)	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	240	Q	fumarate	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	244	Y	fumarate	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	253	K	Mg(2+)	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	257	T	Mg(2+)	-	 			False
+421148|K22342|candidate|negA	421148	candidate	negA	K01555	Binding site	350	T	acetoacetate	-	 			False
+2489339|K22342|candidate|own	2489339	candidate	own	K22342	Active site	224	R	Proton donor	-	 			False
+2489339|K22342|candidate|own	2489339	candidate	own	K22342	Binding site	194	H	heme b	D	:	121	51.91	False
+2489339|K22342|candidate|own	2489339	candidate	own	K22342	Binding site	226	N	heme b	N	.	138	28.15	False
+2489339|K22342|candidate|own	2489339	candidate	own	K22342	Binding site	266	E	dimethylamine	A	:	172	25.55	False
+2489339|K22342|candidate|own	2489339	candidate	own	K22342	Binding site	317	Y	heme b	-	 			False
+2489339|K22342|candidate|own	2489339	candidate	own	K22342	Binding site	318	K	heme b	-	 			False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Active site	133	H	Proton acceptor	-	 			False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	126	D	Ca(2+)	-	 			False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	128	Y	fumarate	-	 			False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	142	R	fumarate	-	 			False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	199	E	Ca(2+)	-	 			False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	201	E	Ca(2+)	-	 			False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	233	D	Ca(2+)	K	.	77	30.82	False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	233	D	Mg(2+)	K	.	77	30.82	False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	240	Q	fumarate	M	:	87	59.19	False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	244	Y	fumarate	M	:	91	59.12	False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	253	K	Mg(2+)	V	:	105	51.3	False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	257	T	Mg(2+)	G	:	111	37.96	False
+2489339|K22342|candidate|negA	2489339	candidate	negA	K01555	Binding site	350	T	acetoacetate	-	 			False
+2338837|K22342|candidate|own	2338837	candidate	own	K22342	Active site	224	R	Proton donor	V	.	86	33.1	False
+2338837|K22342|candidate|own	2338837	candidate	own	K22342	Binding site	194	H	heme b	G	:	42	34.22	False
+2338837|K22342|candidate|own	2338837	candidate	own	K22342	Binding site	226	N	heme b	L	:	88	29.67	False
+2338837|K22342|candidate|own	2338837	candidate	own	K22342	Binding site	266	E	dimethylamine	W	.	96	26.38	False
+2338837|K22342|candidate|own	2338837	candidate	own	K22342	Binding site	317	Y	heme b	I	:	148	36.05	False
+2338837|K22342|candidate|own	2338837	candidate	own	K22342	Binding site	318	K	heme b	R	:	149	37.84	False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Active site	133	H	Proton acceptor	G	:	42	34.22	False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	126	D	Ca(2+)	-	 			False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	128	Y	fumarate	-	 			False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	142	R	fumarate	D	.	50	44.43	False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	199	E	Ca(2+)	L	:	98	28.44	False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	201	E	Ca(2+)	Q	:	100	28.91	False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	233	D	Ca(2+)	L	:	112	29.03	False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	233	D	Mg(2+)	L	:	112	29.03	False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	240	Q	fumarate	-	 			False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	244	Y	fumarate	-	 			False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	253	K	Mg(2+)	-	 			False
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	257	T	Mg(2+)	T	:	122	30.14	True
+2338837|K22342|candidate|negA	2338837	candidate	negA	K01555	Binding site	350	T	acetoacetate	A	:	138	26.15	False
+3860248|K22342|positive|own	3860248	positive	own	K22342	Active site	224	R	Proton donor	R	:	223	92.79	True
+3860248|K22342|positive|own	3860248	positive	own	K22342	Binding site	194	H	heme b	H	:	193	95.9	True
+3860248|K22342|positive|own	3860248	positive	own	K22342	Binding site	226	N	heme b	N	:	225	95.84	True
+3860248|K22342|positive|own	3860248	positive	own	K22342	Binding site	266	E	dimethylamine	E	:	265	96.69	True
+3860248|K22342|positive|own	3860248	positive	own	K22342	Binding site	317	Y	heme b	Y	:	316	93.8	True
+3860248|K22342|positive|own	3860248	positive	own	K22342	Binding site	318	K	heme b	K	:	317	95.64	True
+2814916|K22342|positive|own	2814916	positive	own	K22342	Active site	224	R	Proton donor	R	:	223	92.99	True
+2814916|K22342|positive|own	2814916	positive	own	K22342	Binding site	194	H	heme b	H	:	193	93.48	True
+2814916|K22342|positive|own	2814916	positive	own	K22342	Binding site	226	N	heme b	N	:	225	96.02	True
+2814916|K22342|positive|own	2814916	positive	own	K22342	Binding site	266	E	dimethylamine	E	:	265	96.86	True
+2814916|K22342|positive|own	2814916	positive	own	K22342	Binding site	317	Y	heme b	Y	:	316	93.47	True
+2814916|K22342|positive|own	2814916	positive	own	K22342	Binding site	318	K	heme b	K	:	317	95.6	True
+1729154|K22342|positive|own	1729154	positive	own	K22342	Active site	224	R	Proton donor	R	:	223	92.02	True
+1729154|K22342|positive|own	1729154	positive	own	K22342	Binding site	194	H	heme b	H	:	193	94.93	True
+1729154|K22342|positive|own	1729154	positive	own	K22342	Binding site	226	N	heme b	N	:	225	94.86	True
+1729154|K22342|positive|own	1729154	positive	own	K22342	Binding site	266	E	dimethylamine	E	:	265	95.62	True
+1729154|K22342|positive|own	1729154	positive	own	K22342	Binding site	317	Y	heme b	Y	:	316	92.11	True
+1729154|K22342|positive|own	1729154	positive	own	K22342	Binding site	318	K	heme b	K	:	317	92.89	True
+1747637|K14418|positive|own	1747637	positive	own	K14418	Active site	90	H	Proton acceptor	K	:	354	95.63	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Active site	145	D	Nucleophile	P	:	409	98.55	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	24	R	substrate	V	.	279	97.85	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	62	A	substrate	Q	.	329	95.82	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	63	G	substrate	V	:	330	98.89	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	64	F	substrate	L	.	331	98.83	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	65	Y	substrate	A	.	332	98.83	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	66	L	substrate	A	:	333	98.87	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	67	R	substrate	D	.	334	98.83	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	114	G	substrate	S	:	380	98.15	False
+1747637|K14418|positive|own	1747637	positive	own	K14418	Binding site	257	R	substrate	R	.	531	94.95	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Active site	90	H	Proton acceptor	K	:	371	98.56	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Active site	145	D	Nucleophile	P	:	434	98.9	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	24	R	substrate	E	.	295	95.28	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	62	A	substrate	L	.	346	98.95	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	63	G	substrate	V	:	347	98.99	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	64	F	substrate	E	:	348	97.44	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	65	Y	substrate	A	.	349	98.97	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	66	L	substrate	A	:	350	98.99	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	67	R	substrate	D	.	351	98.94	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	114	G	substrate	A	:	397	98.98	False
+2651329|K14418|positive|own	2651329	positive	own	K14418	Binding site	257	R	substrate	K	.	556	90.25	False
+656108|K14418|positive|own	656108	positive	own	K14418	Active site	90	H	Proton acceptor	R	:	368	92.98	False
+656108|K14418|positive|own	656108	positive	own	K14418	Active site	145	D	Nucleophile	P	:	431	98.69	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	24	R	substrate	P	.	292	98.79	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	62	A	substrate	L	.	343	98.96	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	63	G	substrate	V	:	344	98.99	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	64	F	substrate	A	.	345	98.99	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	65	Y	substrate	A	.	346	98.99	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	66	L	substrate	Y	:	347	98.98	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	67	R	substrate	D	.	348	98.77	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	114	G	substrate	T	:	394	97.99	False
+656108|K14418|positive|own	656108	positive	own	K14418	Binding site	257	R	substrate	Q	.	553	89.74	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Active site	261	D	Nucleophile	A	:	322	78.18	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Active site	289	E	Proton donor	E	:	358	84.39	True
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	81	G	Ca(2+)	S	:	17	97.78	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	83	D	Ca(2+)	D	:	19	98.97	True
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	109	D	Ca(2+)	K	:	45	97.77	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	110	N	Ca(2+)	A	:	46	98.24	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	112	D	Ca(2+)	K	:	48	95.51	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	126	W	substrate	D	:	55	97.51	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	134	E	Ca(2+)	N	:	63	98.78	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	135	E	Ca(2+)	P	:	64	98.0	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	164	N	Ca(2+)	N	:	93	89.9	True
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	165	H	substrate	H	:	94	94.15	True
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	231	D	Ca(2+)	G	:	292	92.9	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	259	R	substrate	P	:	320	76.52	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	264	K	substrate	H	:	325	50.95	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	265	H	substrate	-	 			False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	292	G	substrate	I	:	360	84.1	False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	362	D	substrate	-	 			False
+2151344|K05992|positive|own	2151344	positive	own	K05992	Binding site	409	R	substrate	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Active site	261	D	Nucleophile	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Active site	289	E	Proton donor	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	60	N	Ca(2+)	R	:	20	87.87	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	81	G	Ca(2+)	D	:	21	97.76	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	83	D	Ca(2+)	T	:	23	98.77	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	109	D	Ca(2+)	K	:	49	95.21	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	110	N	Ca(2+)	A	:	50	96.86	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	112	D	Ca(2+)	A	:	52	96.54	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	126	W	substrate	D	:	59	93.64	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	134	E	Ca(2+)	N	:	67	97.37	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	135	E	Ca(2+)	P	:	68	97.37	False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	164	N	Ca(2+)	N	:	97	78.76	True
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	165	H	substrate	H	:	98	78.59	True
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	259	R	substrate	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	264	K	substrate	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	265	H	substrate	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	292	G	substrate	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	362	D	substrate	-	 			False
+866396|K05992|positive|own	866396	positive	own	K05992	Binding site	409	R	substrate	-	 			False
+2630954|K22278|positive|own	2630954	positive	own	K22278	Active site	76	D	Proton acceptor	D	:	15	98.92	True
+2630954|K22278|positive|own	2630954	positive	own	K22278	Binding site	77	D	Zn(2+)	D	:	17	98.83	True
+2630954|K22278|positive|own	2630954	positive	own	K22278	Binding site	126	H	Zn(2+)	H	:	90	98.94	True
+2630954|K22278|positive|own	2630954	positive	own	K22278	Binding site	130	H	Zn(2+)	H	:	94	98.69	True
+4070497|K22278|positive|own	4070497	positive	own	K22278	Active site	76	D	Proton acceptor	D	:	16	98.97	True
+4070497|K22278|positive|own	4070497	positive	own	K22278	Binding site	77	D	Zn(2+)	F	:	17	98.96	False
+4070497|K22278|positive|own	4070497	positive	own	K22278	Binding site	126	H	Zn(2+)	H	:	91	98.92	True
+4070497|K22278|positive|own	4070497	positive	own	K22278	Binding site	130	H	Zn(2+)	H	:	95	98.53	True
+3410830|K03781|positive|own	3410830	positive	own	K03781	Active site	55	H		H	:	31	96.9	True
+3410830|K03781|positive|own	3410830	positive	own	K03781	Active site	128	N		L	:	101	94.89	False
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	52	R	heme b	R	:	28	94.41	True
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	92	R	heme b	R	:	66	97.4	True
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	141	F	heme b	F	:	114	92.71	True
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	174	H	NADPH	N	:	147	89.73	False
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	181	S	NADPH	A	:	154	95.73	False
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	183	R	NADPH	Q	:	156	95.38	False
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	193	H	NADPH	E	:	165	97.06	False
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	283	W	NADPH	W	:	245	98.81	True
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	285	H	NADPH	E	:	247	96.22	False
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	338	Y	heme b	Y	:	299	94.25	True
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	342	H	heme b	A	:	303	92.17	False
+3410830|K03781|positive|own	3410830	positive	own	K03781	Binding site	345	R	heme b	R	:	306	85.34	True
+1003998|K03781|positive|own	1003998	positive	own	K03781	Active site	55	H		H	:	65	97.41	True
+1003998|K03781|positive|own	1003998	positive	own	K03781	Active site	128	N		I	:	137	98.79	False
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	52	R	heme b	R	:	63	90.72	True
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	92	R	heme b	R	:	100	97.21	True
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	141	F	heme b	F	:	150	98.65	True
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	174	H	NADPH	A	:	177	98.54	False
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	181	S	NADPH	S	:	184	97.86	True
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	183	R	NADPH	P	:	186	97.03	False
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	193	H	NADPH	R	:	195	94.72	False
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	283	W	NADPH	W	:	275	98.84	True
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	285	H	NADPH	D	:	277	97.92	False
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	338	Y	heme b	Y	:	329	95.52	True
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	342	H	heme b	Y	:	333	93.76	False
+1003998|K03781|positive|own	1003998	positive	own	K03781	Binding site	345	R	heme b	R	:	336	87.48	True
+462759|K07258|positive|own	462759	positive	own	K07258	Active site	64	S	Acyl-ester intermediate	S	:	47	98.68	True
+462759|K07258|positive|own	462759	positive	own	K07258	Active site	67	K	Proton acceptor	K	:	50	98.9	True
+462759|K07258|positive|own	462759	positive	own	K07258	Active site	125	S		S	:	107	98.31	True
+462759|K07258|positive|own	462759	positive	own	K07258	Binding site	242	K	substrate	K	:	209	98.65	True
+502460|K07258|positive|own	502460	positive	own	K07258	Active site	64	S	Acyl-ester intermediate	S	:	52	98.76	True
+502460|K07258|positive|own	502460	positive	own	K07258	Active site	67	K	Proton acceptor	K	:	55	98.95	True
+502460|K07258|positive|own	502460	positive	own	K07258	Active site	125	S		S	:	112	98.76	True
+502460|K07258|positive|own	502460	positive	own	K07258	Binding site	242	K	substrate	K	:	214	98.54	True
+1436549|K22342|negB|own	1436549	negB	own	K22342	Active site	224	R	Proton donor	W	.	144	92.57	False
+1436549|K22342|negB|own	1436549	negB	own	K22342	Binding site	194	H	heme b	L	.	125	97.74	False
+1436549|K22342|negB|own	1436549	negB	own	K22342	Binding site	226	N	heme b	P	:	146	84.76	False
+1436549|K22342|negB|own	1436549	negB	own	K22342	Binding site	266	E	dimethylamine	E	.	303	86.19	False
+1436549|K22342|negB|own	1436549	negB	own	K22342	Binding site	317	Y	heme b	-	 			False
+1436549|K22342|negB|own	1436549	negB	own	K22342	Binding site	318	K	heme b	-	 			False
+316152|K22342|negB|own	316152	negB	own	K22342	Active site	224	R	Proton donor	-	 			False
+316152|K22342|negB|own	316152	negB	own	K22342	Binding site	194	H	heme b	-	 			False
+316152|K22342|negB|own	316152	negB	own	K22342	Binding site	226	N	heme b	L	.	86	85.87	False
+316152|K22342|negB|own	316152	negB	own	K22342	Binding site	266	E	dimethylamine	-	 			False
+316152|K22342|negB|own	316152	negB	own	K22342	Binding site	317	Y	heme b	-	 			False
+316152|K22342|negB|own	316152	negB	own	K22342	Binding site	318	K	heme b	-	 			False
+831118|K22342|negB|own	831118	negB	own	K22342	Active site	224	R	Proton donor	G	:	154	88.92	False
+831118|K22342|negB|own	831118	negB	own	K22342	Binding site	194	H	heme b	L	:	132	92.08	False
+831118|K22342|negB|own	831118	negB	own	K22342	Binding site	226	N	heme b	P	.	156	93.5	False
+831118|K22342|negB|own	831118	negB	own	K22342	Binding site	266	E	dimethylamine	I	:	165	92.65	False
+831118|K22342|negB|own	831118	negB	own	K22342	Binding site	317	Y	heme b	Y	:	184	87.1	True
+831118|K22342|negB|own	831118	negB	own	K22342	Binding site	318	K	heme b	E	:	185	78.06	False
+126160|K22342|negB|own	126160	negB	own	K22342	Active site	224	R	Proton donor	-	 			False
+126160|K22342|negB|own	126160	negB	own	K22342	Binding site	194	H	heme b	K	:	117	92.25	False
+126160|K22342|negB|own	126160	negB	own	K22342	Binding site	226	N	heme b	R	.	124	90.53	False
+126160|K22342|negB|own	126160	negB	own	K22342	Binding site	266	E	dimethylamine	P	:	180	85.04	False
+126160|K22342|negB|own	126160	negB	own	K22342	Binding site	317	Y	heme b	-	 			False
+126160|K22342|negB|own	126160	negB	own	K22342	Binding site	318	K	heme b	-	 			False
+874459|K22342|negB|own	874459	negB	own	K22342	Active site	224	R	Proton donor	A	.	45	93.94	False
+874459|K22342|negB|own	874459	negB	own	K22342	Binding site	194	H	heme b	I	:	21	97.61	False
+874459|K22342|negB|own	874459	negB	own	K22342	Binding site	226	N	heme b	H	.	48	85.0	False
+874459|K22342|negB|own	874459	negB	own	K22342	Binding site	266	E	dimethylamine	G	.	151	87.11	False
+874459|K22342|negB|own	874459	negB	own	K22342	Binding site	317	Y	heme b	I	:	186	97.76	False
+874459|K22342|negB|own	874459	negB	own	K22342	Binding site	318	K	heme b	A	:	187	95.48	False
+180421|K22342|negB|own	180421	negB	own	K22342	Active site	224	R	Proton donor	G	.	111	74.33	False
+180421|K22342|negB|own	180421	negB	own	K22342	Binding site	194	H	heme b	-	 			False
+180421|K22342|negB|own	180421	negB	own	K22342	Binding site	226	N	heme b	G	:	113	66.66	False
+180421|K22342|negB|own	180421	negB	own	K22342	Binding site	266	E	dimethylamine	N	.	129	89.07	False
+180421|K22342|negB|own	180421	negB	own	K22342	Binding site	317	Y	heme b	P	:	168	56.0	False
+180421|K22342|negB|own	180421	negB	own	K22342	Binding site	318	K	heme b	E	.	169	53.76	False
+288350|K14418|negB|own	288350	negB	own	K14418	Active site	90	H	Proton acceptor	-	 			False
+288350|K14418|negB|own	288350	negB	own	K14418	Active site	145	D	Nucleophile	-	 			False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	24	R	substrate	-	 			False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	62	A	substrate	P	:	111	86.93	False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	63	G	substrate	T	:	112	84.62	False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	64	F	substrate	A	:	113	84.03	False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	65	Y	substrate	-	 			False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	66	L	substrate	-	 			False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	67	R	substrate	-	 			False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	114	G	substrate	-	 			False
+288350|K14418|negB|own	288350	negB	own	K14418	Binding site	257	R	substrate	-	 			False
+90494|K14418|negB|own	90494	negB	own	K14418	Active site	90	H	Proton acceptor	Y	:	66	88.91	False
+90494|K14418|negB|own	90494	negB	own	K14418	Active site	145	D	Nucleophile	-	 			False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	24	R	substrate	-	 			False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	62	A	substrate	-	 			False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	63	G	substrate	-	 			False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	64	F	substrate	V	:	40	90.92	False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	65	Y	substrate	L	:	41	93.55	False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	66	L	substrate	V	.	42	91.94	False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	67	R	substrate	G	.	43	90.49	False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	114	G	substrate	-	 			False
+90494|K14418|negB|own	90494	negB	own	K14418	Binding site	257	R	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Active site	90	H	Proton acceptor	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Active site	145	D	Nucleophile	D	:	91	80.5	True
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	24	R	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	62	A	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	63	G	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	64	F	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	65	Y	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	66	L	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	67	R	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	114	G	substrate	-	 			False
+874459|K14418|negB|own	874459	negB	own	K14418	Binding site	257	R	substrate	-	 			False
+673705|K14418|negB|own	673705	negB	own	K14418	Active site	90	H	Proton acceptor	V	:	48	85.79	False
+673705|K14418|negB|own	673705	negB	own	K14418	Active site	145	D	Nucleophile	-	 			False
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	24	R	substrate	G	.	15	86.05	False
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	62	A	substrate	L	.	20	86.06	False
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	63	G	substrate	G	.	21	83.87	False
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	64	F	substrate	L	:	22	82.37	False
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	65	Y	substrate	K	:	23	81.66	False
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	66	L	substrate	L	:	24	79.28	True
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	67	R	substrate	R	.	25	76.73	False
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	114	G	substrate	-	 			False
+673705|K14418|negB|own	673705	negB	own	K14418	Binding site	257	R	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Active site	90	H	Proton acceptor	R	:	83	92.87	False
+126160|K14418|negB|own	126160	negB	own	K14418	Active site	145	D	Nucleophile	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	24	R	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	62	A	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	63	G	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	64	F	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	65	Y	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	66	L	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	67	R	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	114	G	substrate	-	 			False
+126160|K14418|negB|own	126160	negB	own	K14418	Binding site	257	R	substrate	A	.	163	61.8	False
+95685|K14418|negB|own	95685	negB	own	K14418	Active site	90	H	Proton acceptor	G	:	38	95.29	False
+95685|K14418|negB|own	95685	negB	own	K14418	Active site	145	D	Nucleophile	-	 			False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	24	R	substrate	-	 			False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	62	A	substrate	-	 			False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	63	G	substrate	-	 			False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	64	F	substrate	-	 			False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	65	Y	substrate	-	 			False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	66	L	substrate	-	 			False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	67	R	substrate	-	 			False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	114	G	substrate	N	:	128	90.65	False
+95685|K14418|negB|own	95685	negB	own	K14418	Binding site	257	R	substrate	R	.	236	72.39	False
+68784|K05992|negB|own	68784	negB	own	K05992	Active site	261	D	Nucleophile	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Active site	289	E	Proton donor	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	81	G	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	83	D	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	109	D	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	110	N	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	126	W	substrate	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	164	N	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	165	H	substrate	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	259	R	substrate	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	264	K	substrate	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	265	H	substrate	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	292	G	substrate	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	362	D	substrate	-	 			False
+68784|K05992|negB|own	68784	negB	own	K05992	Binding site	409	R	substrate	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Active site	261	D	Nucleophile	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Active site	289	E	Proton donor	Q	.	245	83.64	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	56	D	Ca(2+)	I	.	7	91.87	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	59	N	Ca(2+)	C	:	10	96.04	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	60	N	Ca(2+)	P	:	11	95.34	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	81	G	Ca(2+)	E	:	43	94.63	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	83	D	Ca(2+)	A	:	46	92.86	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	109	D	Ca(2+)	P	:	65	93.66	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	110	N	Ca(2+)	Y	:	66	91.23	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	112	D	Ca(2+)	I	.	68	93.15	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	126	W	substrate	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	164	N	Ca(2+)	S	.	99	86.9	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	165	H	substrate	E	:	102	85.19	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	259	R	substrate	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	264	K	substrate	I	.	241	94.05	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	265	H	substrate	K	.	242	87.11	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	265	H	Ca(2+)	K	.	242	87.11	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	292	G	substrate	I	:	248	98.51	False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	362	D	substrate	-	 			False
+95685|K05992|negB|own	95685	negB	own	K05992	Binding site	409	R	substrate	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Active site	261	D	Nucleophile	Y	:	80	91.54	False
+90494|K05992|negB|own	90494	negB	own	K05992	Active site	289	E	Proton donor	A	:	93	94.16	False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	81	G	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	83	D	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	109	D	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	110	N	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	126	W	substrate	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	164	N	Ca(2+)	P	:	23	78.5	False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	165	H	substrate	N	:	24	67.99	False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	217	Q	Ca(2+)	K	:	74	59.79	False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	231	D	Ca(2+)	G	.	78	82.23	False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	259	R	substrate	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	264	K	substrate	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	265	H	substrate	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	292	G	substrate	Q	:	97	90.51	False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	362	D	substrate	S	.	114	92.72	False
+90494|K05992|negB|own	90494	negB	own	K05992	Binding site	409	R	substrate	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Active site	261	D	Nucleophile	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Active site	289	E	Proton donor	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	56	D	Ca(2+)	E	.	40	92.71	False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	59	N	Ca(2+)	R	:	43	92.55	False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	60	N	Ca(2+)	F	.	44	98.65	False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	81	G	Ca(2+)	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	83	D	Ca(2+)	S	:	50	98.11	False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	109	D	Ca(2+)	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	110	N	Ca(2+)	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	126	W	substrate	E	:	106	83.59	False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	134	E	Ca(2+)	T	.	109	97.48	False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	135	E	Ca(2+)	A	.	110	98.71	False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	164	N	Ca(2+)	C	.	149	67.49	False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	165	H	substrate	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	259	R	substrate	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	264	K	substrate	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	265	H	substrate	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	292	G	substrate	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	362	D	substrate	-	 			False
+1436549|K05992|negB|own	1436549	negB	own	K05992	Binding site	409	R	substrate	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Active site	261	D	Nucleophile	Q	.	229	79.31	False
+288350|K05992|negB|own	288350	negB	own	K05992	Active site	289	E	Proton donor	S	.	238	93.45	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	54	D	Ca(2+)	Y	.	28	92.07	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	56	D	Ca(2+)	L	.	30	93.99	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	81	G	Ca(2+)	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	83	D	Ca(2+)	V	.	51	92.63	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	109	D	Ca(2+)	D	:	69	89.44	True
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	110	N	Ca(2+)	L	:	70	92.31	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	112	D	Ca(2+)	I	:	72	91.4	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	126	W	substrate	G	.	92	85.45	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	135	E	Ca(2+)	N	.	99	90.44	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	164	N	Ca(2+)	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	165	H	substrate	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	217	Q	Ca(2+)	V	.	214	90.92	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	231	D	Ca(2+)	S	.	228	76.01	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	259	R	substrate	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	264	K	substrate	V	.	232	92.66	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	265	H	substrate	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	265	H	Ca(2+)	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	292	G	substrate	A	.	241	96.46	False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	362	D	substrate	-	 			False
+288350|K05992|negB|own	288350	negB	own	K05992	Binding site	409	R	substrate	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Active site	261	D	Nucleophile	M	:	174	90.62	False
+673705|K05992|negB|own	673705	negB	own	K05992	Active site	289	E	Proton donor	R	:	179	88.5	False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	54	D	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	56	D	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	59	N	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	60	N	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	81	G	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	83	D	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	109	D	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	110	N	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	112	D	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	126	W	substrate	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	134	E	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	135	E	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	164	N	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	165	H	substrate	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	217	Q	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	231	D	Ca(2+)	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	259	R	substrate	T	.	172	92.61	False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	264	K	substrate	E	.	177	90.06	False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	265	H	substrate	R	.	178	91.48	False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	265	H	Ca(2+)	R	.	178	91.48	False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	292	G	substrate	L	:	182	96.65	False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	362	D	substrate	-	 			False
+673705|K05992|negB|own	673705	negB	own	K05992	Binding site	409	R	substrate	-	 			False
+90494|K22278|negB|own	90494	negB	own	K22278	Active site	76	D	Proton acceptor	Q	.	22	80.64	False
+90494|K22278|negB|own	90494	negB	own	K22278	Binding site	77	D	Zn(2+)	P	.	23	78.5	False
+90494|K22278|negB|own	90494	negB	own	K22278	Binding site	126	H	Zn(2+)	L	:	79	82.76	False
+90494|K22278|negB|own	90494	negB	own	K22278	Binding site	130	H	Zn(2+)	I	:	81	92.37	False
+95685|K22278|negB|own	95685	negB	own	K22278	Active site	76	D	Proton acceptor	A	.	192	97.99	False
+95685|K22278|negB|own	95685	negB	own	K22278	Binding site	77	D	Zn(2+)	M	:	193	96.62	False
+95685|K22278|negB|own	95685	negB	own	K22278	Binding site	126	H	Zn(2+)	C	:	276	96.74	False
+95685|K22278|negB|own	95685	negB	own	K22278	Binding site	130	H	Zn(2+)	-	 			False
+436830|K22278|negB|own	436830	negB	own	K22278	Active site	76	D	Proton acceptor	T	:	19	33.19	False
+436830|K22278|negB|own	436830	negB	own	K22278	Binding site	77	D	Zn(2+)	D	:	21	35.47	True
+436830|K22278|negB|own	436830	negB	own	K22278	Binding site	126	H	Zn(2+)	-	 			False
+436830|K22278|negB|own	436830	negB	own	K22278	Binding site	130	H	Zn(2+)	M	:	78	48.25	False
+173746|K22278|negB|own	173746	negB	own	K22278	Active site	76	D	Proton acceptor	-	 			False
+173746|K22278|negB|own	173746	negB	own	K22278	Binding site	77	D	Zn(2+)	-	 			False
+173746|K22278|negB|own	173746	negB	own	K22278	Binding site	126	H	Zn(2+)	K	.	55	89.25	False
+173746|K22278|negB|own	173746	negB	own	K22278	Binding site	130	H	Zn(2+)	A	:	59	90.03	False
+68784|K22278|negB|own	68784	negB	own	K22278	Active site	76	D	Proton acceptor	V	.	8	44.26	False
+68784|K22278|negB|own	68784	negB	own	K22278	Binding site	77	D	Zn(2+)	V	:	9	47.02	False
+68784|K22278|negB|own	68784	negB	own	K22278	Binding site	126	H	Zn(2+)	-	 			False
+68784|K22278|negB|own	68784	negB	own	K22278	Binding site	130	H	Zn(2+)	L	:	58	37.1	False
+68786|K22278|negB|own	68786	negB	own	K22278	Active site	76	D	Proton acceptor	T	.	33	63.96	False
+68786|K22278|negB|own	68786	negB	own	K22278	Binding site	77	D	Zn(2+)	G	:	34	67.26	False
+68786|K22278|negB|own	68786	negB	own	K22278	Binding site	126	H	Zn(2+)	R	:	84	52.95	False
+68786|K22278|negB|own	68786	negB	own	K22278	Binding site	130	H	Zn(2+)	Y	:	88	36.92	False
+95685|K03781|negB|own	95685	negB	own	K03781	Active site	55	H		-	 			False
+95685|K03781|negB|own	95685	negB	own	K03781	Active site	128	N		-	 			False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	52	R	heme b	-	 			False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	92	R	heme b	-	 			False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	141	F	heme b	-	 			False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	174	H	NADPH	-	 			False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	181	S	NADPH	C	.	34	95.03	False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	183	R	NADPH	Y	.	36	89.2	False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	193	H	NADPH	I	.	64	89.94	False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	283	W	NADPH	-	 			False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	285	H	NADPH	-	 			False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	338	Y	heme b	K	.	213	92.64	False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	342	H	heme b	Y	:	217	91.66	False
+95685|K03781|negB|own	95685	negB	own	K03781	Binding site	345	R	heme b	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Active site	55	H		-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Active site	128	N		-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	52	R	heme b	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	92	R	heme b	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	141	F	heme b	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	174	H	NADPH	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	181	S	NADPH	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	183	R	NADPH	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	193	H	NADPH	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	283	W	NADPH	P	.	297	49.0	False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	285	H	NADPH	-	 			False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	338	Y	heme b	Y	:	309	93.82	True
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	342	H	heme b	I	.	313	92.85	False
+1436549|K03781|negB|own	1436549	negB	own	K03781	Binding site	345	R	heme b	S	.	316	98.11	False
+874459|K03781|negB|own	874459	negB	own	K03781	Active site	55	H		-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Active site	128	N		-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	52	R	heme b	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	92	R	heme b	A	:	55	74.7	False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	141	F	heme b	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	174	H	NADPH	A	:	140	54.22	False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	181	S	NADPH	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	183	R	NADPH	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	193	H	NADPH	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	283	W	NADPH	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	285	H	NADPH	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	338	Y	heme b	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	342	H	heme b	-	 			False
+874459|K03781|negB|own	874459	negB	own	K03781	Binding site	345	R	heme b	-	 			False
+213212|K03781|negB|own	213212	negB	own	K03781	Active site	55	H		-	 			False
+213212|K03781|negB|own	213212	negB	own	K03781	Active site	128	N		T	:	120	71.7	False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	52	R	heme b	-	 			False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	92	R	heme b	V	:	54	54.5	False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	141	F	heme b	K	.	127	85.46	False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	174	H	NADPH	K	:	143	90.62	False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	181	S	NADPH	-	 			False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	183	R	NADPH	-	 			False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	193	H	NADPH	-	 			False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	283	W	NADPH	-	 			False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	285	H	NADPH	-	 			False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	338	Y	heme b	T	.	256	28.73	False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	342	H	heme b	H	.	260	22.12	False
+213212|K03781|negB|own	213212	negB	own	K03781	Binding site	345	R	heme b	-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Active site	55	H		-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Active site	128	N		-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	52	R	heme b	-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	92	R	heme b	-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	141	F	heme b	A	:	198	77.53	False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	174	H	NADPH	-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	181	S	NADPH	-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	183	R	NADPH	I	.	217	72.93	False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	193	H	NADPH	A	.	230	86.34	False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	283	W	NADPH	-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	285	H	NADPH	-	 			False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	338	Y	heme b	L	:	326	92.69	False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	342	H	heme b	E	:	330	92.15	False
+264077|K03781|negB|own	264077	negB	own	K03781	Binding site	345	R	heme b	I	:	333	87.18	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Active site	55	H		W	.	97	87.66	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Active site	128	N		Q	:	142	95.83	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	52	R	heme b	M	.	95	94.92	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	92	R	heme b	A	.	114	97.47	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	141	F	heme b	-	 			False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	174	H	NADPH	-	 			False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	181	S	NADPH	-	 			False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	183	R	NADPH	-	 			False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	193	H	NADPH	A	.	156	96.25	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	283	W	NADPH	S	:	180	66.48	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	285	H	NADPH	G	.	182	67.78	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	338	Y	heme b	L	.	234	97.59	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	342	H	heme b	V	.	238	94.13	False
+2048478|K03781|negB|own	2048478	negB	own	K03781	Binding site	345	R	heme b	L	:	241	81.64	False
+316152|K07258|negB|own	316152	negB	own	K07258	Active site	64	S	Acyl-ester intermediate	T	:	50	84.62	False
+316152|K07258|negB|own	316152	negB	own	K07258	Active site	67	K	Proton acceptor	G	:	53	90.53	False
+316152|K07258|negB|own	316152	negB	own	K07258	Active site	125	S		-	 			False
+316152|K07258|negB|own	316152	negB	own	K07258	Binding site	242	K	substrate	-	 			False
+831118|K07258|negB|own	831118	negB	own	K07258	Active site	64	S	Acyl-ester intermediate	-	 			False
+831118|K07258|negB|own	831118	negB	own	K07258	Active site	67	K	Proton acceptor	-	 			False
+831118|K07258|negB|own	831118	negB	own	K07258	Active site	125	S		-	 			False
+831118|K07258|negB|own	831118	negB	own	K07258	Binding site	242	K	substrate	C	.	153	85.08	False

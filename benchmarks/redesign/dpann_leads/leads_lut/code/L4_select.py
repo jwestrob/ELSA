@@ -2,7 +2,8 @@
 """Leads pipeline step 4b (local): candidates, positive controls, negative-A references and negative-B proteins, following
 assay_rule.json (the DPANN rule file, unchanged) and dpann_leads/invisible/code/s03_select.py.
 usage: L4_select.py COLLECTION pilot|full
-  pilot: the 6 testable families with the most unannotated candidates, 6 unannotated candidates each.
+  pilot: the 6 testable families with the most unannotated candidates, 6 candidates each (lut: unannotated first, then
+         already named, to reach the rule's 6; positives counted from all full-run candidates; see the code comment).
   full : every testable family; per family and novelty stratum (unannotated, already named) one gene per 90%-identity
          cluster (cd-hit), round-robin over order x tier (seed 17), cap 40 (unannotated) and 10 (already named, scored as
          the second stratum); pilot genes keep their place; families found uninformative at the pilot keep their pilot genes.
@@ -103,15 +104,23 @@ RC = pd.DataFrame(rows).merge(pop.drop(columns=["stratum"]), on=["func", "protei
 RC.drop(columns=["sequence"]).to_csv(H / "data/candidate_ranking.tsv", sep="\t", index=False)
 nun = RC[RC.stratum == "unannotated"].groupby("func").size().rename("n_clusters_unannotated")
 REFS = REFS.merge(nun, left_on="func", right_index=True, how="left").fillna({"n_clusters_unannotated": 0})
+# lut, pilot at the upper end of the rule (coordinator 2026-11-21): 'candidates folded' for the positive count = every
+# candidate cluster the full run folds (unannotated <= 40 + already named <= 10); pilot = 6 candidates per family,
+# unannotated by rank first, then already named by rank (the rule says '6 candidates per family').
+nnm = RC[RC.stratum == "named"].groupby("func").size().rename("n_clusters_named")
+REFS = REFS.merge(nnm, left_on="func", right_index=True, how="left").fillna({"n_clusters_named": 0})
+REFS["n_full_candidates"] = REFS.n_clusters_unannotated.clip(upper=40) + REFS.n_clusters_named.clip(upper=10)
 REFS = REFS.sort_values(["n_clusters_unannotated", "genes", "func"], ascending=[False, False, True])
+RC["pilot_order"] = RC.stratum.map({"unannotated": 0, "named": 1}) * 1000 + RC["rank"]
 if MODE == "pilot":
     fams = list(REFS.func[:6])
-    sel = RC[RC.func.isin(fams) & (RC.stratum == "unannotated") & (RC["rank"] < 6)].copy()
+    sel = RC[RC.func.isin(fams)].sort_values(["func", "pilot_order"]).groupby("func").head(6).copy()
 else:
     fams = list(REFS.func)
     sel = RC[RC.func.isin(fams) & (((RC.stratum == "unannotated") & (RC["rank"] < 40)) | ((RC.stratum == "named") & (RC["rank"] < 10)))].copy()
     unin = json.load(open(H / "data/pilot_gate.json"))["uninformative"]
-    sel = sel[~sel.func.isin(unin) | ((sel.stratum == "unannotated") & (sel["rank"] < 6))]
+    pil_ids = set(pd.read_csv(H / "data/selection_pilot.tsv", sep="\t", dtype={"protein_id": str}).query("role == 'candidate'").protein_id)
+    sel = sel[~sel.func.isin(unin) | sel.protein_id.isin(pil_ids)]
 sel["role"] = "candidate"
 
 # negative-A reference
@@ -140,7 +149,7 @@ for r in REFS[REFS.func.isin(fams)].itertuples():
         for x in PIL[(PIL.func == r.func) & (PIL.role == "positive")].itertuples():
             pos_rows.append(dict(func=r.func, protein_id=str(x.protein_id), role="positive", length=x.length, order=x.order))
         continue
-    nc = int(min(r.n_clusters_unannotated, 40))
+    nc = int(r.n_full_candidates)
     npos = 2 if nc < 10 else 3 if nc < 30 else 4
     P = PP[PP.func == r.func].sample(frac=1, random_state=17)
     picked, seen = [], set()
@@ -194,4 +203,4 @@ need = out[~out.fold_path.apply(lambda p: Path(p).exists())].drop_duplicates("pr
 (FD / f"in/{MODE}_new.faa").write_text("".join(f">{p}\n{allseq[p]}\n" for p in need.protein_id))
 print(out.groupby(["func", "role"]).size().unstack(fill_value=0).to_string())
 print("new folds needed:", len(need), "| distinct negB proteins:", NEG.protein_id.nunique())
-print(REFS[["func", "label_name", "genes", "n_clusters_unannotated", "negA_func", "ref_fam_len"]].to_string())
+print(REFS[["func", "label_name", "genes", "n_clusters_unannotated", "n_clusters_named", "n_full_candidates", "negA_func", "ref_fam_len"]].to_string())

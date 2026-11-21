@@ -1,0 +1,383 @@
+func	label_name	ecs	fixed_status	status	genes	unannotated	n_members	n_reps	n_site	n_curated	curated_record	exp_chain	ref_member	positives	negA	negB	unannotated_folded	unannotated_fold	unannotated_site	unannotated_PASS	named_folded	named_PASS	cand_TM_median
+K28743	Lactamase_B	3.1.2.35	no_reviewed_entry_with_EC_active_site_structure	dropped: positives 1/3	1	1	23	17.0	5	0			1257142	1/3	0/1	0/1	1	0	0	0	0	0	0.194
+K01768	Guanylate_cyc	4.6.1.1	no_entry_in_label_family (1 with EC+structure+active site)	dropped: positives 2/3	1	1	18	16.0	7	0	Q96PN6	4CLF_A (Q96PN6)	2712103	2/3	0/1	0/1	1	0	0	0	0	0	0.263
+K03060	RNA_pol_Rpb6	2.7.7.6	no_entry_in_label_family (3 with EC+structure+active site)	dropped: positives 2/4	2	2	33	21.0	8	0		8FVW_H (P0A800)	299718	2/4	0/2	0/2	2	0	0	0	0	0	0.344
+K13270	Sulfotransfer_1	2.8.2.25	no_reviewed_entry_with_EC_active_site_structure	dropped: positives 3/4	1	1	24	19.0	18	0	P52836		1839467	3/4	0/1	0/1	1	0	0	0	0	0	0.32
+K20930	Aconitase_C	4.2.1.166	no_reviewed_entry_with_EC_active_site_structure	dropped: positives 3/5	21	9	63	46.0	4	0	D9XF46		689153	3/5	0/9	0/9	9	9	0	0	0	0	0.893
+K15575	Thiolase_C_1		no_complete_EC	dropped: positives 3/5	19	10	198	75.0	6	0			3302263	3/5	0/9	0/9	9	8	0	0	0	0	0.533
+K23103	Glycos_transf_2		no_complete_EC	dropped: positives 3/5	9	5	271	199.0	3	0			1761159	3/5	0/5	0/5	5	3	0	0	0	0	0.572
+K03427	N6_Mtase	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure	dropped: positives 3/5	8	5	58	30.0	5	0	P10484	7BTO_A (P10484)	1039982	3/5	0/5	0/5	5	0	0	0	0	0	0.174
+K07316	N6_N4_Mtase	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure	dropped: positives 3/5	5	1	36	35.0	10	0	P0CAW2	6PBD_A (P0CAW2)	1476934	3/5	0/1	0/1	1	0	0	0	0	0	0.222
+K11148	adh_short		no_complete_EC	dropped: positives 3/5	2	2	103	65.0	3	0			2844709	3/5	0/2	0/2	2	0	0	0	0	0	0.187
+K07171	PemK_toxin		no_complete_EC	kept	120	73	50	42.0	3	0			2021787	5/5	0/10	0/10	10	10	2	2	0	0	0.769
+K07451	HNH		no_complete_EC	kept	27	2	29	28.0	7	0			1347463	4/5	0/2	0/2	2	2	0	0	0	0	0.673
+K08309	SLT	4.2.2.29	no_reviewed_entry_with_EC_active_site_structure	kept	26	4	268	196.0	7	0			2333262	5/5	0/4	0/4	4	0	0	0	0	0	0.328
+K20542	Glyco_hydro_8	3.2.1.4	no_experimental_chain_with_active_site	kept	25	23	45	33.0	30	0	A3DC29	1KWF_A (A3DC29)	339011	5/5	0/10	0/10	10	10	0	0	0	0	0.699
+K06178	PseudoU_synth_2	5.4.99.22	no_experimental_chain_with_active_site	kept	20	13	126	86.0	33	0	P37765	4LGT_A (P37765)	3253840	4/5	0/10	0/10	10	0	0	0	0	0	0.151
+K06042	CbiC	5.4.99.60;5.4.99.61	no_reviewed_entry_with_EC_active_site_structure	kept	18	18	39	24.0	18	3	P21638	1F2V_A (P21638)	1232958	5/5	0/10	0/10	10	0	0	0	0	0	0.29
+K01358	CLP_protease	3.4.21.92	no_experimental_chain_with_active_site	kept	16	16	26	19.0	8	0	P0A6G7	6NB1_A (P0A6G7)	3719597	4/4	0/10	0/10	10	0	0	0	0	0	0.211
+K02316	Toprim_2	2.7.7.101	no_entry_in_label_family (1 with EC+structure+active site)	kept	10	5	52	41.0	9	0	P0ABS5	4EDK_A (O05338)	680171	5/5	0/5	0/5	5	0	0	0	0	0	0.384
+K20569	AlaDh_PNT_C		no_complete_EC	kept	10	2	41	27.0	16	0			526321	5/5	0/2	0/2	2	0	0	0	0	0	0.261
+K19304	Peptidase_M23		no_complete_EC	kept	9	7	55	39.0	13	0			543404	5/5	0/7	0/7	7	0	0	0	0	0	0.192
+K28919	YkuD		no_complete_EC	kept	8	1	58	52.0	23	0			3502741	5/5	0/1	0/1	1	0	0	0	0	0	0.222
+K21216	Glycos_transf_2		no_complete_EC	kept	7	5	133	90.0	6	0			1908628	5/5	0/5	0/5	5	0	0	0	0	0	0.261
+K11927	Helicase_C	5.6.2.7	no_reviewed_entry_with_EC_active_site_structure	kept	6	4	34	27.0	18	0			1966468	5/5	0/4	0/4	4	0	0	0	0	0	0.138
+K23105	Glycos_transf_2		no_complete_EC	kept	4	3	206	161.0	3	0			1455957	5/5	0/3	0/3	3	2	0	0	0	0	0.734
+K01160	RusA	3.1.21.10	no_entry_in_label_family (8 with EC+structure+active site)	kept	3	1	17	15.0	5	0	P0AG74	2H8E_A (P0AG74)	1472286	3/3	0/1	0/1	1	1	0	0	0	0	0.71
+K01423	Peptidase_M48		no_complete_EC	kept	3	2	25	16.0	12	0			3582	3/3	0/2	0/2	2	0	0	0	0	0	0.31
+K05394	Amidohydro_1	3.8.1.8	no_reviewed_entry_with_EC_active_site_structure	kept	3	2	106	42.0	3	0	P72156	4V1X_A (P72156)	816294	4/5	0/2	0/2	2	0	0	0	0	0	0.304
+K20615	Aminotran_1_2	4.2.1.145	no_reviewed_entry_with_EC_active_site_structure	kept	3	3	178	120.0	3	0			3389632	5/5	0/3	0/3	3	0	0	0	0	0	0.142
+K21929	UDG	3.2.2.27	no_experimental_chain_with_active_site	kept	3	2	95	77.0	4	0	P9WFQ9	4WPK_A (P9WFQ9)	3769449	5/5	0/2	0/2	2	0	0	0	0	0	0.159
+K12902	Radical_SAM	2.1.1.308	no_reviewed_entry_with_EC_active_site_structure	kept	1	1	92	19.0	7	0	Q56184		3070160	4/4	0/1	0/1	1	0	0	0	0	0	0.396
+K12922	p450	1.14.14.106	no_reviewed_entry_with_EC_active_site_structure	kept	1	1	43	24.0	8	0	A0AA38CBK4		654757	4/5	0/1	0/1	1	1	0	0	0	0	0.559
+K27875	Fer4	1.97.1.14	no_reviewed_entry_with_EC_active_site_structure	kept	1	1	182	52.0	3	0			1664919	5/5	0/1	0/1	1	0	0	0	0	0	0.334
+K00831	Aminotran_5	2.6.1.52	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	254	0	56	20.0			Q9RME2	1W23_A (Q9RME2)					0	0	0	0	0	0	
+K02340	DNA_pol3_delta	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)	not_assayed_budget	223	0	166	71.0				1JQL_B (P28630)					0	0	0	0	0	0	
+K17223	Cytochrom_C	2.8.5.2	no_entry_in_label_family (3 with EC+structure+active site)	not_assayed_budget	67	0	131	82.0									0	0	0	0	0	0	
+K02509	FAA_hydrolase		no_complete_EC	not_assayed_budget	47	0	40	18.0									0	0	0	0	0	0	
+K04102	NMT1	4.1.1.55	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	37	0	88	38.0									0	0	0	0	0	0	
+K01040	CoA_trans	2.8.3.12	no_experimental_chain_with_active_site	not_assayed_budget	19	0	85	38.0			Q59112	1POI_B (Q59112)					0	0	0	0	0	0	
+K24700	CDO_I	1.13.11.91	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	19	0	27	19.0			Q9I0N5	4TLF_A (Q9I0N5)					0	0	0	0	0	0	
+K00641	Abhydrolase_1	2.3.1.31;2.3.1.46	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	18	0	112	39.0			A0QSZ0	6IOG_A (A0QSZ0)					0	0	0	0	0	0	
+K03821	Abhydrolase_1	2.3.1.304	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	16	0	179	116.0									0	0	0	0	0	0	
+K16967	Bac_luciferase	1.14.13.131	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	14	0	144	67.0			E9JFX9	6AK1_A (E9JFX9)					0	0	0	0	0	0	
+K03651	Metallophos	3.1.4.53	no_entry_in_label_family (7 with EC+structure+active site)	not_assayed_budget	12	0	106	76.0			D4P095						0	0	0	0	0	0	
+K08296	His_Phos_1		no_complete_EC	not_assayed_budget	10	0	163	124.0									0	0	0	0	0	0	
+K01810	PGI	5.3.1.9	no_experimental_chain_with_active_site	not_assayed_budget	9	0	95	58.0			P06744	9FCW_A (P06744)					0	0	0	0	0	0	
+K18162	Methyltransf_11		no_complete_EC	not_assayed_budget	9	0	135	78.0									0	0	0	0	0	0	
+K00179	TPP_enzyme_C	1.2.7.8	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	8	0	67	26.0			O07835						0	0	0	0	0	0	
+K06952	YfbR-like	3.1.3.89	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	8	0	55	30.0			P76491	2PAQ_A (P76491)					0	0	0	0	0	0	
+K19291	PilZ	2.4.1.33	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	8	0	39	32.0				4RT1_A (Q9HY69)					0	0	0	0	0	0	
+K00762	Pribosyltran	2.4.2.10	no_experimental_chain_with_active_site	not_assayed_budget	7	0	91	45.0			P11172	4WML_A (P13298)					0	0	0	0	0	0	
+K05973	PHB_depo_C	3.1.1.75	no_entry_in_label_family (1 with EC+structure+active site)	not_assayed_budget	7	0	82	38.0									0	0	0	0	0	0	
+K06162	Amidohydro_1	3.6.1.63	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	7	0	114	65.0									0	0	0	0	0	0	
+K12976	PagL		no_complete_EC	not_assayed_budget	7	0	48	39.0									0	0	0	0	0	0	
+K16842	Polysacc_deac_1	3.5.2.5	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	7	0	79	44.0									0	0	0	0	0	0	
+K00147	Aldedh	1.2.1.41	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	6	0	47	16.0			P54886	8ZOK_A (P07004)					0	0	0	0	0	0	
+K01875	Seryl_tRNA_N	6.1.1.11	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	6	0	29	25.0			P34945	5EIU_A (P34945)					0	0	0	0	0	0	
+K17224	5_nucleotid_C	3.1.6.20	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	6	0	81	31.0									0	0	0	0	0	0	
+K00570	Methyltransf_25	2.1.1.17;2.1.1.71	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	5	0	48	30.0									0	0	0	0	0	0	
+K00992	NTP_transferase	2.7.7.99	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	5	0	73	43.0			Q88QT2	4Y7U_A (Q88QT2)					0	0	0	0	0	0	
+K03605	HycI		no_complete_EC	not_assayed_budget	5	0	42	35.0									0	0	0	0	0	0	
+K03769	Rotamase	5.2.1.8	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	5	0	108	85.0				2PV1_A (P0ABZ6)					0	0	0	0	0	0	
+K10026	Radical_SAM	4.3.99.3	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	5	0	81	19.0			O31677	5TH5_A (O31677)					0	0	0	0	0	0	
+K13075	Lactamase_B	3.1.1.81	no_entry_in_label_family (2 with EC+structure+active site)	not_assayed_budget	5	0	57	42.0			P0CJ63	3DHA_A (P0CJ63)					0	0	0	0	0	0	
+K00334	2Fe-2S_thioredx	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	4	0	41	25.0			P04394	9SMI_E (P04394)					0	0	0	0	0	0	
+K02533	SpoU_methylase		no_complete_EC	not_assayed_budget	4	0	39	27.0									0	0	0	0	0	0	
+K06941	Radical_SAM	2.1.1.192	no_experimental_chain_with_active_site	not_assayed_budget	4	0	63	21.0			P36979	3RFA_A (P36979)					0	0	0	0	0	0	
+K00700	Alpha-amylase_C	2.4.1.18	no_experimental_chain_with_active_site	not_assayed_budget	3	0	29	19.0			P07762	1M7X_A (P07762)					0	0	0	0	0	0	
+K00978	NTP_transferase	2.7.7.33	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	3	0	65	37.0			Q8Z5I4	1TZF_A (Q8Z5I4)					0	0	0	0	0	0	
+K01799	Amdase	5.2.1.1	no_experimental_chain_with_active_site	not_assayed_budget	3	0	48	36.0			Q5YXQ1	2XED_A (Q5YXQ1)					0	0	0	0	0	0	
+K01843	Radical_SAM	5.4.3.2	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	3	0	32	15.0			Q9XBQ8	2A5H_A (Q9XBQ8)					0	0	0	0	0	0	
+K02229	NIR_SIR_ferr	1.14.13.83	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	3	0	66	54.0			P21637						0	0	0	0	0	0	
+K04069	Radical_SAM	1.97.1.4	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	3	0	40	18.0			P0A9N4	8FSI_A (P0A9N4)					0	0	0	0	0	0	
+K04075	ATP_bind_3	6.3.4.19	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	3	0	77	60.0			O67728	1WY5_A (O67728)					0	0	0	0	0	0	
+K10027	Amino_oxidase	1.3.99.26;1.3.99.28;1.3.99.29;1.3.99.31	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	3	0	34	19.0			P21685	4DGK_A (P21685)					0	0	0	0	0	0	
+K14449	MC_hydratase	4.2.1.148	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	3	0	30	18.0			A9WC34	4E3E_A (A9WC34)					0	0	0	0	0	0	
+K22081	GATase_6	2.1.1.21	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	3	0	55	20.0									0	0	0	0	0	0	
+K00851	SKI	2.7.1.12	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	42	27.0			P46859	1KNQ_A (P46859)					0	0	0	0	0	0	
+K00969	CTP_transf_like	2.7.7.18	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	15	15.0			Q96T66	1NUP_A (Q96T66)					0	0	0	0	0	0	
+K01129	HD_assoc	3.1.5.1	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	39	27.0									0	0	0	0	0	0	
+K02527	Glycos_transf_N	2.4.99.12;2.4.99.13;2.4.99.14;2.4.99.15	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	78	39.0			O66663	2XCI_A (O66663)					0	0	0	0	0	0	
+K03269	Metallophos	3.6.1.54	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	103	46.0			A6T5R0	5B4B_A (Q9I2V0)					0	0	0	0	0	0	
+K03430	Aminotran_5	2.6.1.37	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	32	22.0			Q73MU2	6PD2_A (Q73MU2)					0	0	0	0	0	0	
+K04566	tRNA-synt_1f	6.1.1.6	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	31	20.0			O57963	1IRX_A (O57963)					0	0	0	0	0	0	
+K05555	Lactamase_B		no_complete_EC	not_assayed_budget	2	0	29	22.0									0	0	0	0	0	0	
+K05774	AAA_18	2.7.4.23	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	52	34.0			A1V0B1						0	0	0	0	0	0	
+K07062	PIN		no_complete_EC	not_assayed_budget	2	0	174	119.0									0	0	0	0	0	0	
+K07102	APH	2.7.1.221	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	33	20.0									0	0	0	0	0	0	
+K09691	ABC_tran	7.5.2.14	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	31	20.0									0	0	0	0	0	0	
+K11754	Mur_ligase_M	6.3.2.12;6.3.2.17	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	2	0	54	23.0			P15925	1JBW_A (P15925)					0	0	0	0	0	0	
+K12573	RNB	3.1.13.1	no_entry_in_label_family (1 with EC+structure+active site)	not_assayed_budget	2	0	23	18.0			E9QAM5	8CDU_C (O32231)					0	0	0	0	0	0	
+K14747	AMP-binding		no_complete_EC	not_assayed_budget	2	0	79	46.0									0	0	0	0	0	0	
+K15574	zf-ChsH2		no_complete_EC	not_assayed_budget	2	0	19	17.0									0	0	0	0	0	0	
+K20074	PP2C	3.1.3.16	no_entry_in_label_family (70 with EC+structure+active site)	not_assayed_budget	2	0	24	20.0			Q9CAJ0	9TB8_B (Q9CAJ0)					0	0	0	0	0	0	
+K20534	Glycos_transf_2		no_complete_EC	not_assayed_budget	2	0	107	61.0									0	0	0	0	0	0	
+K00096	Fe-ADH_2	1.1.1.261	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	22	15.0			Q58122	4RFL_A (Q58122)					0	0	0	0	0	0	
+K00428	CCP_MauG	1.11.1.5	no_entry_in_label_family (1 with EC+structure+active site)	not_assayed_budget	1	0	36	21.0			P14532	2VHD_A (P14532)					0	0	0	0	0	0	
+K00448	Dioxygenase_C	1.13.11.3	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	46	23.0			P00437						0	0	0	0	0	0	
+K00537	ArsC	1.20.4.1	no_experimental_chain_with_active_site	not_assayed_budget	1	0	56	23.0			P08692	1S3C_A (P08692)					0	0	0	0	0	0	
+K00595	TP_methylase	2.1.1.132;2.1.1.196;2.1.1.289	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	95	65.0			O87694						0	0	0	0	0	0	
+K00655	Acyltransferase	2.3.1.51	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	32	20.0			P0C1Q3						0	0	0	0	0	0	
+K00939	ADK	2.7.4.3	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	22	15.0			P69441	7APU_A (P69441)					0	0	0	0	0	0	
+K01011	Rhodanese	2.8.1.1;2.8.1.2	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	29	27.0			P55734	5HBP_A (P55734)					0	0	0	0	0	0	
+K01130	Sulfatase	3.1.6.1	no_experimental_chain_with_active_site	not_assayed_budget	1	0	45	19.0			P51691	1HDH_A (P51691)					0	0	0	0	0	0	
+K01247	HhH-GPD	3.2.2.21	no_experimental_chain_with_active_site	not_assayed_budget	1	0	47	33.0			P04395	1MPG_A (P04395)					0	0	0	0	0	0	
+K01800	GST_N	5.2.1.2	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	49	35.0			Q9WVL0	2CZ2_A (Q9WVL0)					0	0	0	0	0	0	
+K02275	COX2	7.1.1.9	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	23	16.0			P68530	7COH_B (P68530)					0	0	0	0	0	0	
+K02493	MTS	2.1.1.297	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	53	52.0			Q9WYV8	1NV8_A (Q9WYV8)					0	0	0	0	0	0	
+K03199	CagE_TrbE_VirB	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	29	23.0			Q48252						0	0	0	0	0	0	
+K03218	SpoU_methylase	2.1.1.185	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	15	15.0			P63177	1GZ0_A (P63177)					0	0	0	0	0	0	
+K03771	SurA_N_3	5.2.1.8	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	27	22.0									0	0	0	0	0	0	
+K03797	Peptidase_S41	3.4.21.102	no_experimental_chain_with_active_site	not_assayed_budget	1	0	34	28.0			O35002	4C2E_A (O35002)					0	0	0	0	0	0	
+K03799	Peptidase_M48		no_complete_EC	not_assayed_budget	1	0	50	33.0									0	0	0	0	0	0	
+K03824	Acetyltransf_1		no_complete_EC	not_assayed_budget	1	0	142	86.0									0	0	0	0	0	0	
+K04036	V4R		no_complete_EC	not_assayed_budget	1	0	25	20.0									0	0	0	0	0	0	
+K04518	PDT	4.2.1.51	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	51	26.0			A0A0M0ELU2	7ALZ_A (A0A0M0ELU2)					0	0	0	0	0	0	
+K04773	Peptidase_S49		no_complete_EC	not_assayed_budget	1	0	39	27.0									0	0	0	0	0	0	
+K06151	GMC_oxred_N	1.1.99.3	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	21	16.0			O34214						0	0	0	0	0	0	
+K06984	GHMP_kinases_N	2.4.2.54	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	23	16.0									0	0	0	0	0	0	
+K07147	Oxidored_molyb		no_complete_EC	not_assayed_budget	1	0	42	22.0									0	0	0	0	0	0	
+K09709	FAS1_DH_region	4.2.1.153	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	49	34.0									0	0	0	0	0	0	
+K10773	HhH-GPD		no_complete_EC	not_assayed_budget	1	0	35	18.0									0	0	0	0	0	0	
+K10960	NAD_binding_8	1.3.1.111;1.3.1.83	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	48	17.0									0	0	0	0	0	0	
+K11472	FAD_binding_4	1.1.99.14	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	73	46.0									0	0	0	0	0	0	
+K12574	Lactamase_B_2		no_complete_EC	not_assayed_budget	1	0	23	16.0									0	0	0	0	0	0	
+K12629	NUDIX		no_complete_EC	not_assayed_budget	1	0	36	25.0									0	0	0	0	0	0	
+K12721	Acyl-CoA_dh_M	1.3.8.14	no_experimental_chain_with_active_site	not_assayed_budget	1	0	75	32.0			Q5W271	5ZW7_A (Q5W271)					0	0	0	0	0	0	
+K13306	3Beta_HSD	1.1.1.266	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	142	85.0									0	0	0	0	0	0	
+K15513	ECH_1	4.1.2.44	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	62	22.0									0	0	0	0	0	0	
+K16653	FAD_binding_4	1.1.98.3	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	33	27.0			P9WJF1	4P8N_A (P9WJF1)					0	0	0	0	0	0	
+K16870	Glycos_transf_2	2.4.1.289	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	21	18.0									0	0	0	0	0	0	
+K19180	Epimerase	1.1.1.339	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	76	48.0			O66256						0	0	0	0	0	0	
+K20581	His_Phos_1		no_complete_EC	not_assayed_budget	1	0	24	18.0									0	0	0	0	0	0	
+K20583	PIG-L		no_complete_EC	not_assayed_budget	1	0	19	16.0									0	0	0	0	0	0	
+K22004	Lyase_1	4.1.1.113	no_experimental_chain_with_active_site	not_assayed_budget	1	0	43	28.0			A0A0U2UYC4	9H4H_A (A0A0U2UYC4)					0	0	0	0	0	0	
+K22310	Acetyltransf_5	2.3.2.30	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	40	32.0									0	0	0	0	0	0	
+K22578	GCV_T	2.1.5.1	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	21	17.0									0	0	0	0	0	0	
+K24217	Acetyltransf_1		no_complete_EC	not_assayed_budget	1	0	23	19.0									0	0	0	0	0	0	
+K27986	ACP_syn_III	2.3.1.328	no_reviewed_entry_with_EC_active_site_structure	not_assayed_budget	1	0	28	15.0									0	0	0	0	0	0	
+K28279	PIN		no_complete_EC	not_assayed_budget	1	0	104	94.0									0	0	0	0	0	0	
+K00386	Dehyd-heme_bind	1.8.2.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	51	0	8										0	0	0	0	0	0	
+K06864	Asn_synthase	4.4.1.37;4.4.1.45	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	42	0	6										0	0	0	0	0	0	
+K10794	GRDB	1.21.4.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	31	0	10										0	0	0	0	0	0	
+K22619	EF-hand_5	1.13.12.24	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	31	31	9										0	0	0	0	0	0	
+K01719	Mitofilin	4.2.1.75	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	17	16	9										0	0	0	0	0	0	
+K15512	PaaA_PaaC	1.14.13.208	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	13	0	8										0	0	0	0	0	0	
+K04090	POR	1.2.7.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	9	0	5										0	0	0	0	0	0	
+K03737	TPP_enzyme_C	1.2.7.1;1.2.8.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	5	0	7										0	0	0	0	0	0	
+K16558	Glyco_trans_4_4		no_complete_EC	out_of_scope: fewer than 15 annotated members	5	0	13										0	0	0	0	0	0	
+K20845	Glyco_hydro_26	3.2.1.32	no_entry_in_label_family (2 with EC+structure+active site)	out_of_scope: fewer than 15 annotated members	5	1	13										0	0	0	0	0	0	
+K12685	PATR		no_complete_EC	out_of_scope: fewer than 15 annotated members	4	4	1										0	0	0	0	0	0	
+K17733	Peptidase_M15_4		no_complete_EC	out_of_scope: fewer than 15 annotated members	4	0	5										0	0	0	0	0	0	
+K01045	Arylesterase	3.1.1.2;3.1.8.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	3	0	3										0	0	0	0	0	0	
+K05343	Malt_amylase_C	3.2.1.1;5.4.99.16	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	3	0	14										0	0	0	0	0	0	
+K06152	Gluconate_2-dh3	1.1.99.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	3	1	7										0	0	0	0	0	0	
+K09952	HNH_4		no_complete_EC	out_of_scope: fewer than 15 annotated members	3	0	1										0	0	0	0	0	0	
+K23274	FAD-SLDH	1.1.5.14	no_entry_in_label_family (1 with EC+structure+active site)	out_of_scope: fewer than 15 annotated members	3	2	12										0	0	0	0	0	0	
+K27979	Anticodon_1	2.3.2.39	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	3	1	12										0	0	0	0	0	0	
+K02170	Abhydrolase_6	3.1.1.85	no_entry_in_label_family (4 with EC+structure+active site)	out_of_scope: fewer than 15 annotated members	2	0	14										0	0	0	0	0	0	
+K02337	PHP	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)	out_of_scope: fewer than 15 annotated members	2	0	6										0	0	0	0	0	0	
+K02482	HAMP	2.7.13.3	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	2	2	10										0	0	0	0	0	0	
+K03412	CheB_methylest	3.1.1.61;3.5.1.44	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	2	2	11										0	0	0	0	0	0	
+K05366	Transpeptidase	2.4.99.28;3.4.16.4	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	2	0	7										0	0	0	0	0	0	
+K05915	HD	1.13.11.78;1.13.11.89	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	2	0	9										0	0	0	0	0	0	
+K06223	MethyltransfD12	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	2	0	14										0	0	0	0	0	0	
+K06897	Lactamase_B	2.5.1.105	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	2	0	13										0	0	0	0	0	0	
+K15857	dTDP_sugar_isom		no_complete_EC	out_of_scope: fewer than 15 annotated members	2	2	14										0	0	0	0	0	0	
+K15865	Radical_SAM	2.8.4.5	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	2	0	11										0	0	0	0	0	0	
+K16649	Glycos_transf_2	2.4.1.287	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	2	0	5										0	0	0	0	0	0	
+K22844	Glycos_transf_2	2.4.1.356	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	2	0	13										0	0	0	0	0	0	
+K00164	E1_dh	1.2.4.2	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K00200	Amidohydro_3	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	3										0	0	0	0	0	0	
+K00376	COX2	1.7.2.4	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	1	3										0	0	0	0	0	0	
+K00929	Acetate_kinase	2.7.2.7	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	4										0	0	0	0	0	0	
+K01039	CoA_trans	2.8.3.12	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	1	0	8										0	0	0	0	0	0	
+K01338	LON_substr_bdg	3.4.21.53	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	1	0	5										0	0	0	0	0	0	
+K01485	Amidohydro_3	3.5.4.1;3.5.4.21	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	10										0	0	0	0	0	0	
+K01556	Aminotran_5	3.7.1.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K01733	THR4_C	4.2.3.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K01815	KduI	5.3.1.17	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	14										0	0	0	0	0	0	
+K01858	Inos-1-P_synth	5.5.1.4	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	10										0	0	0	0	0	0	
+K01866	SYY_C-terminal	6.1.1.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	11										0	0	0	0	0	0	
+K01870	tRNA-synt_1	6.1.1.5	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K01885	Anticodon_2	6.1.1.17	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	7										0	0	0	0	0	0	
+K01887	tRNA-synt_1d	6.1.1.19	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K01953	Asn_synthase	6.3.5.4	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	1	0	13										0	0	0	0	0	0	
+K02045	ABC_tran	7.3.2.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	13										0	0	0	0	0	0	
+K02352	SGL		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	8										0	0	0	0	0	0	
+K02495	Radical_SAM	1.3.98.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	14										0	0	0	0	0	0	
+K03196	T2SSE	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	11										0	0	0	0	0	0	
+K03270	Hydrolase_3	3.1.3.45	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	3										0	0	0	0	0	0	
+K03273	Hydrolase	3.1.3.82;3.1.3.83	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	8										0	0	0	0	0	0	
+K03335	AP_endonuc_2	4.2.1.44	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K03379	FMO-like	1.14.13.22	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	11										0	0	0	0	0	0	
+K03396	GFA	4.4.1.22	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K03642	DPBB_1	4.2.2.29	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	1	5										0	0	0	0	0	0	
+K03734	ApbE	2.7.1.180	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	3										0	0	0	0	0	0	
+K04034	Radical_SAM	1.21.98.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K04094	GIDA	2.1.1.74	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	11										0	0	0	0	0	0	
+K05301	Oxidored_molyb	1.8.2.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	4										0	0	0	0	0	0	
+K05303	Methyltransf_24		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	13										0	0	0	0	0	0	
+K05367	Transpeptidase	2.4.99.28	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	1	0	10										0	0	0	0	0	0	
+K05518	SpoIIE	3.1.3.3	no_entry_in_label_family (6 with EC+structure+active site)	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K06015	Amidohydro_3	3.5.1.81	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	5										0	0	0	0	0	0	
+K06139	SPASM	1.21.98.4	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	6										0	0	0	0	0	0	
+K06876	DPRP	4.1.99.13	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K06920	QueC	6.3.4.20	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K06937	Radical_SAM	1.21.98.5	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K07072	Hydantoinase_A	2.5.1.131	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	11										0	0	0	0	0	0	
+K07452	AAA		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	3										0	0	0	0	0	0	
+K07516	ECH_1	1.1.1.35	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	1	0	8										0	0	0	0	0	0	
+K08355	Rieske	1.20.2.1;1.20.9.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K08590	CN_hydrolase	3.5.1.111	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	13										0	0	0	0	0	0	
+K08602	Peptidase_M3_N		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K10857	RNase_T		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	6										0	0	0	0	0	0	
+K11261	MoCF_biosynth	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	10										0	0	0	0	0	0	
+K12984	Glycos_transf_2		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	14										0	0	0	0	0	0	
+K12989	Glycos_transf_1		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	3										0	0	0	0	0	0	
+K12990	Glycos_transf_2		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	10										0	0	0	0	0	0	
+K13320	RMNT_CmcI	2.1.1.239	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	3										0	0	0	0	0	0	
+K13658	Glyco_trans_1_4	2.4.1.251	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	4										0	0	0	0	0	0	
+K13747	Orn_DAP_Arg_deC	4.1.1.96	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K13932	Carboxyl_trans	4.1.1.87	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K13995	Isochorismatase	3.5.1.107	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	9										0	0	0	0	0	0	
+K14162	DNA_pol3_finger	2.7.7.7	no_entry_in_label_family (61 with EC+structure+active site)	out_of_scope: fewer than 15 annotated members	1	0	2										0	0	0	0	0	0	
+K15257	Methyltransf_9		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K15899	CTP_transf_3	2.7.7.81	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	4										0	0	0	0	0	0	
+K16427	ECH_1	1.13.11.80	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	13										0	0	0	0	0	0	
+K17810	ATPgrasp_Ter	6.3.1.12	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	14										0	0	0	0	0	0	
+K18014	4HBT	4.3.1.14	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	3										0	0	0	0	0	0	
+K18199	DJ-1_PfpI	4.2.1.103	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K18247	FA_desaturase	1.14.19.5	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	1	13										0	0	0	0	0	0	
+K18372	Beta-lactamase	3.1.1.114	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K20137	Trypsin	3.4.21.74	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	1	11										0	0	0	0	0	0	
+K20144	Epimerase	1.3.1.122	no_entry_in_label_family (1 with EC+structure+active site)	out_of_scope: fewer than 15 annotated members	1	1	5										0	0	0	0	0	0	
+K20610	Polysacc_deac_1	4.2.2.25	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	6										0	0	0	0	0	0	
+K20761	NHase_beta_N	3.5.5.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	3										0	0	0	0	0	0	
+K20831	Glyco_hydro_88	3.2.1.179	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	1	0	5										0	0	0	0	0	0	
+K21018	COesterase	3.1.1.87	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 annotated members	1	0	4										0	0	0	0	0	0	
+K21062	DHDPS	3.5.4.22	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	11										0	0	0	0	0	0	
+K21298	SOGP_2nd	2.4.1.333	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	0										0	0	0	0	0	0	
+K21934	PYC_OADA	2.3.3.19	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	4										0	0	0	0	0	0	
+K22079	LCCL	3.4.21.84	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	1	3										0	0	0	0	0	0	
+K22083	Glu_synthase	2.1.1.21	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	8										0	0	0	0	0	0	
+K22622	Cytochrom_C	1.8.2.6	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	14										0	0	0	0	0	0	
+K22879	Pyr_redox_2	1.14.13.113	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	14										0	0	0	0	0	0	
+K22996	2OG-FeII_Oxy_3	1.14.20.14	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	1	3										0	0	0	0	0	0	
+K23464	Bac_luciferase		no_complete_EC	out_of_scope: fewer than 15 annotated members	1	0	10										0	0	0	0	0	0	
+K27684	Orn_DAP_Arg_deC	4.1.1.127	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K28885	Metallophos	3.1.4.14	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 annotated members	1	0	12										0	0	0	0	0	0	
+K09882	AAA_5	6.6.1.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	15	0	130	7.0									0	0	0	0	0	0	
+K16845	SAF	4.4.1.24	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	10	0	38	5.0									0	0	0	0	0	0	
+K00283	GcvP2_C	1.4.4.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	8	0	54	7.0									0	0	0	0	0	0	
+K00764	Pribosyltran	2.4.2.14	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	8	0	46	14.0									0	0	0	0	0	0	
+K20678	Amino_oxidase	5.4.99.59	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	8	6	61	11.0									0	0	0	0	0	0	
+K00763	QRPTase_N	6.3.4.21	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	7	0	48	12.0									0	0	0	0	0	0	
+K02283	T2SSE	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	7	0	37	11.0									0	0	0	0	0	0	
+K07215	Heme_oxygenase	1.14.99.58	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	7	0	15	13.0									0	0	0	0	0	0	
+K00333	Complex1_49kDa	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	6	0	47	6.0									0	0	0	0	0	0	
+K22082	GXGXG	2.1.1.21	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	6	0	32	8.0									0	0	0	0	0	0	
+K01026	CoA_trans	2.8.3.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	5	0	42	14.0									0	0	0	0	0	0	
+K15969	ABM	1.13.12.21	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	5	0	21	8.0									0	0	0	0	0	0	
+K00174	POR_N	1.2.7.11;1.2.7.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	4	0	23	3.0									0	0	0	0	0	0	
+K00175	TPP_enzyme_C	1.2.7.11;1.2.7.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	4	0	35	5.0									0	0	0	0	0	0	
+K01963	Carboxyl_trans	2.1.3.15;6.4.1.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	4	0	56	14.0									0	0	0	0	0	0	
+K22348	Cu-oxidase_2	1.16.3.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	4	2	31	9.0									0	0	0	0	0	0	
+K00163	Transketolase_N	1.2.4.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	31	14.0									0	0	0	0	0	0	
+K00450	Cupin_2	1.13.11.4	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	28	10.0									0	0	0	0	0	0	
+K00830	Aminotran_5	2.6.1.44;2.6.1.45;2.6.1.51	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	24	5.0									0	0	0	0	0	0	
+K00867	PRK	2.7.1.33	no_entry_in_label_family (14 with EC+structure+active site)	out_of_scope: fewer than 15 representatives at 70% identity	3	0	52	10.0									0	0	0	0	0	0	
+K01602	RuBisCO_small	4.1.1.39	no_entry_in_label_family (26 with EC+structure+active site)	out_of_scope: fewer than 15 representatives at 70% identity	3	3	31	10.0									0	0	0	0	0	0	
+K01881	tRNA-synt_2b	6.1.1.15	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	16	5.0									0	0	0	0	0	0	
+K01912	AMP-binding	6.2.1.30	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	34	14.0									0	0	0	0	0	0	
+K03106	SRP_SPB	3.6.5.4	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	2	22	5.0									0	0	0	0	0	0	
+K03644	Radical_SAM	2.8.1.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	36	8.0									0	0	0	0	0	0	
+K03809	FMN_red	1.6.5.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	30	5.0									0	0	0	0	0	0	
+K08356	Molybdopterin	1.20.2.1;1.20.9.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	25	9.0									0	0	0	0	0	0	
+K10215	FMO-like		no_complete_EC	out_of_scope: fewer than 15 representatives at 70% identity	3	0	22	10.0									0	0	0	0	0	0	
+K15240	Glyoxalase	1.13.11.66	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	27	9.0									0	0	0	0	0	0	
+K16147	GLGE_C	2.4.99.16	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	3	0	17	9.0									0	0	0	0	0	0	
+K20530	P-loop_TraG	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	3	0	40	8.0									0	0	0	0	0	0	
+K00368	Cu-oxidase_3	1.7.2.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	24	14.0									0	0	0	0	0	0	
+K00451	HgmA_N	1.13.11.5	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	2	0	22	14.0									0	0	0	0	0	0	
+K00571	N6_N4_Mtase	2.1.1.72	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	1	17	10.0									0	0	0	0	0	0	
+K01547	E1-E2_ATPase	7.2.2.6	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	2	0	25	10.0									0	0	0	0	0	0	
+K01696	PALP	4.2.1.20	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	2	0	20	2.0									0	0	0	0	0	0	
+K04564	Sod_Fe_C	1.15.1.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	21	12.0									0	0	0	0	0	0	
+K06163	PhnJ	4.7.1.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	2	19	1.0									0	0	0	0	0	0	
+K07281	NTP_transf_3	2.7.7.74	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	20	11.0									0	0	0	0	0	0	
+K07637	HAMP_PhoQ	2.7.13.3	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	2	0	17	14.0									0	0	0	0	0	0	
+K13371	Me-amine-dh_L	1.4.9.2	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	2	2	20	10.0									0	0	0	0	0	0	
+K15515	Aldedh	1.2.1.81	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	24	11.0									0	0	0	0	0	0	
+K16515	PIG-L	4.2.1.83	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	24	6.0									0	0	0	0	0	0	
+K17723	Dus	1.3.1.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	21	2.0									0	0	0	0	0	0	
+K20527	T2SSE	7.4.2.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	36	7.0									0	0	0	0	0	0	
+K20809	Fer2	1.18.1.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	2	28	14.0									0	0	0	0	0	0	
+K21677	Amino_oxidase	1.17.8.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	16	14.0									0	0	0	0	0	0	
+K23019	Cupin_2	1.13.11.86	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	1	49	14.0									0	0	0	0	0	0	
+K27188	Fer4_8	1.8.5.10	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	22	5.0									0	0	0	0	0	0	
+K28721	SGL	3.1.1.125	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	2	0	19	14.0									0	0	0	0	0	0	
+K00170	TPP_enzyme_C	1.2.7.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	18	3.0									0	0	0	0	0	0	
+K00331	Oxidored_q6	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	25	2.0									0	0	0	0	0	0	
+K00341	Proton_antipo_M	7.1.1.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	28	8.0									0	0	0	0	0	0	
+K00507	FA_desaturase	1.14.19.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	20	11.0									0	0	0	0	0	0	
+K00759	Pribosyltran	2.4.2.7	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	39	7.0									0	0	0	0	0	0	
+K00766	Glycos_trans_3N	2.4.2.18	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	1	0	17	11.0									0	0	0	0	0	0	
+K01709	Epimerase	4.2.1.45	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	21	14.0									0	0	0	0	0	0	
+K01867	tRNA-synt_1b	6.1.1.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	16	9.0									0	0	0	0	0	0	
+K02276	COX3	7.1.1.9	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	22	13.0									0	0	0	0	0	0	
+K02621	DNA_topoisoIV	5.6.2.2	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	1	0	18	11.0									0	0	0	0	0	0	
+K06016	Peptidase_M20	3.5.1.6;3.5.1.87	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	16	7.0									0	0	0	0	0	0	
+K06133	ACPS		no_complete_EC	out_of_scope: fewer than 15 representatives at 70% identity	1	0	16	14.0									0	0	0	0	0	0	
+K06898	AIRC	2.5.1.143	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	15	7.0									0	0	0	0	0	0	
+K07106	GKRP_SIS_N	4.2.1.126	no_experimental_chain_with_active_site	out_of_scope: fewer than 15 representatives at 70% identity	1	0	17	9.0									0	0	0	0	0	0	
+K08686	Ring_hydroxyl_A	1.14.12.13	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	23	12.0									0	0	0	0	0	0	
+K10210	Amino_oxidase	1.14.99.44	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	15	2.0									0	0	0	0	0	0	
+K15740	RimK	6.3.2.33	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	23	11.0									0	0	0	0	0	0	
+K15754	LigA		no_complete_EC	out_of_scope: fewer than 15 representatives at 70% identity	1	0	24	13.0									0	0	0	0	0	0	
+K18223	Phenol_Hydrox	1.14.13.227	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	1	21	1.0									0	0	0	0	0	0	
+K19191	GCV_T	1.5.3.19	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	1	17	13.0									0	0	0	0	0	0	
+K19670	Phosphodiest	3.11.1.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	21	10.0									0	0	0	0	0	0	
+K20592	NodS		no_complete_EC	out_of_scope: fewer than 15 representatives at 70% identity	1	0	16	14.0									0	0	0	0	0	0	
+K21281	Acyl-CoA_dh_N	1.14.14.30	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	32	13.0									0	0	0	0	0	0	
+K28386	CCG	1.8.4.17	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	22	2.0									0	0	0	0	0	0	
+K28641	Succ_CoA_lig		no_complete_EC	out_of_scope: fewer than 15 representatives at 70% identity	1	1	19	11.0									0	0	0	0	0	0	
+K28732	MR_MLE_C	4.2.1.185	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 15 representatives at 70% identity	1	0	24	12.0									0	0	0	0	0	0	
+K01154	Methylase_S	3.1.21.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	47	13	196	194.0									0	0	0	0	0	0	
+K00202	GXGXG	1.2.7.12	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	39	0	23	20.0									0	0	0	0	0	0	
+K20573	Glycos_transf_1	2.4.1.301	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	35	35	269	205.0									0	0	0	0	0	0	
+K01607	CMD	4.1.1.44	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	22	6	65	43.0									0	0	0	0	0	0	
+K00986	RVT_1	2.7.7.49	no_experimental_chain_with_active_site	out_of_scope: fewer than 3 site positions	17	0	76	65.0			P03366						0	0	0	0	0	0	
+K14375	Glyco_tran_28_C		no_complete_EC	out_of_scope: fewer than 3 site positions	11	11	31	19.0									0	0	0	0	0	0	
+K22087	SoxG	1.5.99.5	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	11	0	130	95.0									0	0	0	0	0	0	
+K21262	Glyco_tran_28_C		no_complete_EC	out_of_scope: fewer than 3 site positions	10	10	29	19.0									0	0	0	0	0	0	
+K03770	Rotamase_2	5.2.1.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	8	0	78	67.0				7L75_A (Q8CVC6)					0	0	0	0	0	0	
+K24122	Amino_oxidase	1.17.99.8	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	7	1	170	85.0									0	0	0	0	0	0	
+K14374	Methyltransf_11		no_complete_EC	out_of_scope: fewer than 3 site positions	6	3	281	229.0									0	0	0	0	0	0	
+K05914	AMP-binding	1.13.12.7	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	5	2	63	47.0				3RIX_A (P08659)					0	0	0	0	0	0	
+K12632	Acetyltransf_1		no_complete_EC	out_of_scope: fewer than 3 site positions	5	2	53	46.0									0	0	0	0	0	0	
+K13004	Glyco_trans_1_4		no_complete_EC	out_of_scope: fewer than 3 site positions	5	4	169	134.0									0	0	0	0	0	0	
+K14604	Abhydrolase_1		no_complete_EC	out_of_scope: fewer than 3 site positions	5	2	251	153.0									0	0	0	0	0	0	
+K22677	Abhydrolase_1		no_complete_EC	out_of_scope: fewer than 3 site positions	5	2	280	173.0									0	0	0	0	0	0	
+K01406	HemolysinCabind	3.4.24.40	no_experimental_chain_with_active_site	out_of_scope: fewer than 3 site positions	4	2	93	92.0			P16317	1K7I_A (P16317)					0	0	0	0	0	0	
+K10700	Molybdopterin	1.17.99.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	4	2	69	32.0									0	0	0	0	0	0	
+K19313	Hexapep		no_complete_EC	out_of_scope: fewer than 3 site positions	4	0	113	75.0									0	0	0	0	0	0	
+K19889	Methyltransf_11	2.1.1.164	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	4	3	373	304.0			Q8KZ94	3BUS_A (Q8KZ94)					0	0	0	0	0	0	
+K28367	AMP-binding_C	6.2.1.78	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	4	4	52	39.0			A0A0E3JHZ7						0	0	0	0	0	0	
+K00305	SoxG	1.5.3.1;1.5.3.24	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	3	0	156	119.0				1X31_C (Q50LE9)					0	0	0	0	0	0	
+K07263	Peptidase_M16_C		no_complete_EC	out_of_scope: fewer than 3 site positions	3	0	66	42.0									0	0	0	0	0	0	
+K12914	Radical_SAM	2.1.1.326	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	3	1	99	27.0									0	0	0	0	0	0	
+K19884	Amino_oxidase	1.4.3.23	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	3	3	72	48.0			Q9S3V1	5G3T_A (Q9S3V1)					0	0	0	0	0	0	
+K20571	GFO_IDH_MocA		no_complete_EC	out_of_scope: fewer than 3 site positions	3	0	121	71.0									0	0	0	0	0	0	
+K21673	MoCoBD_2	1.17.5.2	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	3	0	220	154.0			D7REY3						0	0	0	0	0	0	
+K21836	FAD_binding_4	1.1.99.6	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	3	1	142	97.0									0	0	0	0	0	0	
+K01861	adh_short	5.5.1.35	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	2	2	97	61.0									0	0	0	0	0	0	
+K02297	COX_ARM	7.1.1.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	2	0	66	35.0									0	0	0	0	0	0	
+K03391	FAD_binding_3	1.14.13.50	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	2	2	63	41.0			P42535						0	0	0	0	0	0	
+K12628	GFO_IDH_MocA		no_complete_EC	out_of_scope: fewer than 3 site positions	2	2	65	45.0									0	0	0	0	0	0	
+K14245	ketoacyl-synt		no_complete_EC	out_of_scope: fewer than 3 site positions	2	1	64	39.0									0	0	0	0	0	0	
+K20578	Glycos_transf_1		no_complete_EC	out_of_scope: fewer than 3 site positions	2	0	259	203.0									0	0	0	0	0	0	
+K20681	Hexapep	2.3.1.197	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	2	0	150	107.0									0	0	0	0	0	0	
+K01644	HpcH_HpaI	4.1.3.34	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	0	48	23.0			O53078						0	0	0	0	0	0	
+K06988	F420_oxidored	1.5.1.40	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	0	37	20.0			O29370	1JAY_A (O29370)					0	0	0	0	0	0	
+K12633	PrmA		no_complete_EC	out_of_scope: fewer than 3 site positions	1	0	45	44.0									0	0	0	0	0	0	
+K13552	GMC_oxred_N	1.1.3.43	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	0	79	41.0			Q53U15						0	0	0	0	0	0	
+K14577	ADH_zinc_N	4.1.2.46	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	0	117	32.0			P93243	7VB3_A (P93243)					0	0	0	0	0	0	
+K15393	FAD_binding_2	1.21.99.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	1	30	21.0									0	0	0	0	0	0	
+K17068	ADH_zinc_N	1.2.98.1	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	1	106	30.0									0	0	0	0	0	0	
+K19653	ADH_zinc_N	1.1.1.347	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	1	143	41.0			A0A2I7G3B3						0	0	0	0	0	0	
+K20565	GMC_oxred_N	1.1.3.43;1.1.3.44	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	0	96	51.0			Q53U15						0	0	0	0	0	0	
+K21271	Epimerase	1.1.1.394	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	0	174	123.0									0	0	0	0	0	0	
+K21272	FAD_binding_3	1.14.13.222	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	1	50	41.0			H1ZZA4						0	0	0	0	0	0	
+K21593	Amidohydro_1	3.5.4.45	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	0	104	39.0			Q9EYU0						0	0	0	0	0	0	
+K27844	Methyltransf_11	2.1.1.393	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: fewer than 3 site positions	1	0	234	183.0									0	0	0	0	0	0	
+K17675	Helicase_C	5.6.2.6	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: no definition member of 100-600 aa	40	39	89	56.0									0	0	0	0	0	0	
+K08300	RNase_E_G_Thio	3.1.26.12	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: no definition member of 100-600 aa	32	21	87	77.0									0	0	0	0	0	0	
+K16899	PDDEXK_1		no_complete_EC	out_of_scope: no definition member of 100-600 aa	16	2	84	69.0									0	0	0	0	0	0	
+K06044	Alpha-amylase	5.4.99.15	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: no definition member of 100-600 aa	12	0	131	84.0									0	0	0	0	0	0	
+K11717	Aminotran_1_2	2.8.1.7;4.4.1.16	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: no definition member of 100-600 aa	6	5	26	15.0									0	0	0	0	0	0	
+K16554	Wzz	2.7.10.3	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: no definition member of 100-600 aa	6	0	110	81.0									0	0	0	0	0	0	
+K01156	ResIII	3.1.21.5	no_reviewed_entry_with_EC_active_site_structure	out_of_scope: no definition member of 100-600 aa	3	0	22	17.0									0	0	0	0	0	0	
+K03722	Helicase_C_2	5.6.2.3	no_entry_in_label_family (3 with EC+structure+active site)	out_of_scope: no definition member of 100-600 aa	2	0	78	46.0									0	0	0	0	0	0	
+K01214	CBM_48	3.2.1.68	no_experimental_chain_with_active_site	out_of_scope: no definition member of 100-600 aa	1	0	54	28.0									0	0	0	0	0	0	

@@ -29,6 +29,9 @@ st = json.load(open(H / "data/stats.json"))
 inf = set(st["informative_families"])
 pop = pd.read_parquet(H / "data/population.parquet")
 GF = pd.read_parquet(H / "data/genes_function.parquet", columns=["gid", "func", "tier", "genome", "order"])
+GT = pd.read_csv(H / "data/genomes_tax.tsv", sep="\t", keep_default_na=False)   # lut: genus and family counts
+GF["genus"] = GF.genome.map(dict(zip(GT.genome, GT.genus)))
+GF["tfamily"] = GF.genome.map(dict(zip(GT.genome, GT.family)))
 RC = pd.read_csv(H / "data/candidate_ranking.tsv", sep="\t")
 REFS = pd.read_csv(H / "data/references_testable.tsv", sep="\t").set_index("func")
 S = pd.read_csv(H / "data/sets_per_function.tsv", sep="\t", keep_default_na=False)
@@ -83,7 +86,9 @@ for r in P.itertuples():
                      reference=f"{REFS.loc[f, 'ref_acc']} {REFS.loc[f, 'pdb_chain']}", named_detail=r.nov_detail if named else "",
                      own_kofam_cutga=r.own_kofam_cutga, other_kofam_cutga=r.other_kofam_cutga, other_pfam_ga=r.other_pfam_ga,
                      order_genomes_with_family_pfam=r.order_genomes_with_family_pfam,
-                     related_labeled=f"{len(rel)} genes / {rel.genome.nunique()} genomes",
+                     related_labeled=f"{len(rel)} genes / {rel.genome.nunique()} genomes / {rel.genus.nunique()} genera",
+                     related_labeled_same_family=(lambda d: f"{len(d)} genes / {d.genome.nunique()} genomes / {d.genus.nunique()} genera")(
+                         rel[rel.tfamily == r.family]),
                      cluster90_size=int(RC[(RC.protein_id == r.protein_id) & (RC.func == f)].cluster_size.iloc[0]),
                      completeness=r.completeness_ctx if hasattr(r, "completeness_ctx") else r.completeness, neighbors=r.neighbors,
                      ilvfmawc=r.ilvfmawc))

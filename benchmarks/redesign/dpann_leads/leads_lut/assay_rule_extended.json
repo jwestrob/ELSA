@@ -1,0 +1,41 @@
+{
+  "written_utc": "2026-11-21, after the fixed-assay pilot of testset3 was scored and before any extended-tier member, fold or comparison was selected or scored",
+  "name": "extended tier (conserved-core residues), a second assay reported apart from the fixed assay (assay_rule.json); results are never pooled with it",
+  "scope": {
+    "families": "population families (tiers T2, T2b, rest; function = STRONG partner-derived KO with an EC) whose fixed-rule reference status is not 'ok' and not 'ok_but_length_incompatible' (data/references.tsv)",
+    "family_label": "the most frequent proposed label (Pfam) among the family's population genes",
+    "annotated_members": "collection proteins with the family KO at its KOfam threshold (partner KOfam table, Aksha --cut_ga) AND a Pfam row at the gathering threshold for the family label (collection Pfam table); proteins of the labeled table excluded; 80-1000 aa",
+    "dereplication": "cd-hit -c 0.7 -n 5 on the annotated members; one representative per cluster (cd-hit representative)",
+    "minimum": "at least 15 representatives; otherwise the family is out of scope and listed"
+  },
+  "reference": {
+    "split": "representatives ordered by numpy default_rng(17) permutation; held-out set = min(5, max(3, round(0.2 x n))) representatives, the rest form the definition set",
+    "alignment": "mafft --auto of the definition set",
+    "consensus": "per column, the most frequent residue (gaps excluded) where at least 50% of rows have a residue",
+    "reference_member": "the definition-set member with the highest identity to the consensus over consensus columns, among members 100-600 aa; its ESMFold2 model (Biohub, esmfold2-fast-2026-05, single chain), trimmed to its label-Pfam envelope +-10 residues and renumbered from 1; if the trimmed model's mean pLDDT is below 70, the next member by identity is used (at most 2 tried)",
+    "experimental_structure": "where a reviewed UniProt entry with an EC of the family and the label Pfam has an X-ray/EM chain, that chain trimmed to the label-Pfam region (+-10) is compared with every model; TM to it is reported and not used for PASS"
+  },
+  "site": {
+    "invariant_positions": "definition-set alignment columns where >= 90% of rows (gaps count as non-matching) carry one residue, that residue is one of D E H K R C S T Y N Q W, the reference member carries it, and the reference position lies inside the trimmed region",
+    "curated_additions": "Active site and Binding site features of a reviewed UniProt entry with an EC of the family and the label Pfam (structure not required; most PDB entries first), mapped to the reference member by global pairwise alignment, added when the reference member carries the same residue inside the trimmed region; marked 'curated'",
+    "minimum": "at least 3 site positions in total; otherwise the family is listed as untestable"
+  },
+  "comparison": "US-align on the biotite login node, model = Structure_1, trimmed reference member model = Structure_2 (code/s04_usalign_remote.py, unchanged)",
+  "pass": {
+    "fold": "TM-score normalized by the trimmed reference member model >= 0.50 (fixed rule threshold)",
+    "site_in_place": "model residue identical to the reference residue at the structurally aligned position and marked ':' by US-align (C-alpha < 5.0 A), the fixed rule's distance criterion",
+    "site_share": ">= 90% of the site positions in place; all of them when there are 5 or fewer",
+    "site_confidence": "mean pLDDT of the model residues aligned to the site positions >= 70 (fixed rule threshold); a site position left unaligned counts as not in place",
+    "PASS": "fold AND site_share AND site_confidence"
+  },
+  "controls": {
+    "positive": "the held-out representatives (not used to define the site), folded and scored like candidates; the family is kept when >= 80% pass",
+    "negative_A": "every candidate scored against the reference member and site of a different in-scope family, closest trimmed-reference length, EC differing at the first three levels",
+    "negative_B": "per family, one length-matched (+-15%) protein per candidate from the collection's negative pool (random proteins with no Pfam row and no label, 100-600 aa, ILVFMAWC < 0.45; r4_pools.py negpool), without replacement inside the family, pool proteins already folded preferred",
+    "family_kept": "positives >= 80% pass AND negative A and negative B pass rates each <= 2% (with fewer than 50 negatives of a kind, no negative may pass); families failing a control are dropped and listed"
+  },
+  "candidates": "per in-scope family and novelty stratum one gene per 90%-identity cluster (cd-hit), round-robin over order x tier (seed 17); cap 40 unannotated and 5 already named",
+  "statistics": "Wilson 95% intervals; rates by tier and support bin (votes_for / supporting_genomes: < 0.05, 0.05-0.20, 0.20-0.50, >= 0.50) for the unannotated stratum in kept families; reported beside the fixed-assay rates and never added to them",
+  "wording": "a pass is 'conserved-core residues in place', weaker evidence than curated catalytic residues; an extended-tier lead is WEAK unless a curated record or the literature identifies its site residues as catalytic or binding, stated per lead",
+  "budget": "the folds remaining from the collection's 600"
+}

@@ -1,0 +1,17 @@
+group	level	n	PASS	rate	ci95	fold	site
+control_kept_families	positive	104	100	0.962	(0.905, 0.985)	103	100
+control_all_assayed_families	positive	148	126	0.851	(0.785, 0.9)	147	126
+control_kept_families	negA	96	0	0.0	(0, 0.038)	0	0
+control_all_assayed_families	negA	132	0	0.0	(0, 0.028)	0	0
+control_kept_families	negB	96	0	0.0	(0, 0.038)	0	0
+control_all_assayed_families	negB	132	0	0.0	(0, 0.028)	0	0
+control_kept_families	negA+negB	192	0	0.0	(0, 0.02)	0	0
+candidates	unannotated, kept families	96	2	0.021	(0.006, 0.073)	26	2
+candidates	already named, kept families	0	0		(nan, nan)	0	0
+tier (unannotated)	T2	61	0	0.0	(0, 0.059)	8	0
+tier (unannotated)	T2b	7	0	0.0	(0, 0.354)	5	0
+tier (unannotated)	rest	28	2	0.071	(0.02, 0.226)	13	2
+support (unannotated)	<5%	1	0	0.0	(0, 0.793)	1	0
+support (unannotated)	5-20%	22	2	0.091	(0.025, 0.278)	12	2
+support (unannotated)	20-50%	12	0	0.0	(0, 0.243)	5	0
+support (unannotated)	>=50%	61	0	0.0	(0, 0.059)	8	0

@@ -1,0 +1,109 @@
+{
+ "collection": "lut",
+ "informative_families": [
+  "K00035",
+  "K00690",
+  "K01079",
+  "K01443",
+  "K01493",
+  "K01555",
+  "K01561",
+  "K01785",
+  "K01790",
+  "K02342",
+  "K03215",
+  "K03500",
+  "K03655",
+  "K04095",
+  "K07130",
+  "K07154",
+  "K07258",
+  "K11066",
+  "K18981",
+  "K22278",
+  "K22342"
+ ],
+ "uninformative_families": [
+  "K00799",
+  "K01174",
+  "K01185",
+  "K01821",
+  "K03741",
+  "K03781",
+  "K04066",
+  "K04771",
+  "K05992",
+  "K07638",
+  "K08640",
+  "K13590",
+  "K13598",
+  "K14418",
+  "K18639",
+  "K18679",
+  "K18680",
+  "K21158"
+ ],
+ "candidates_unannotated_informative": "0/19",
+ "negatives_pooled": "0/118",
+ "fisher_unannotated_vs_negatives_one_sided": 1.0,
+ "fisher_vs_dpann_rate_two_sided": 0.04400613199114206,
+ "weighted_rate": 0.0,
+ "pass_by_family": {
+  "K01493": "0/1",
+  "K07258": "0/2",
+  "K22278": "0/6",
+  "K22342": "0/10"
+ },
+ "pilot_gate": {
+  "counts": {
+   "candidate": [
+    0,
+    32
+   ],
+   "negA": [
+    0,
+    32
+   ],
+   "negB": [
+    0,
+    32
+   ],
+   "positive": [
+    7,
+    14
+   ]
+  },
+  "fisher_pos_vs_negA": 6.411995363634121e-05,
+  "fisher_pos_vs_negB": 6.411995363634121e-05,
+  "positive_share": 0.5,
+  "positives_per_family": {
+   "K03781": "0/2",
+   "K05992": "0/2",
+   "K07258": "2/2",
+   "K14418": "0/3",
+   "K22278": "2/2",
+   "K22342": "3/3"
+  },
+  "uninformative": [
+   "K03781",
+   "K05992",
+   "K14418"
+  ],
+  "gate_pass": true
+ },
+ "absent_site_families": [
+  {
+   "func": "K02342",
+   "function": "DNA polymerase III subunit epsilon [EC:2.7.7.7]",
+   "label_name": "RNase_T",
+   "ref": "P03007 2GUI_A",
+   "candidates_folded": 10,
+   "fold_match": 10,
+   "all_catalytic_in_place": 0,
+   "fold_match_named": 10,
+   "TM_ref_median": 0.74,
+   "positives": "2/3",
+   "genes": 12
+  }
+ ]
+}

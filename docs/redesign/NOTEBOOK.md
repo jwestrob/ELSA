@@ -3543,3 +3543,10 @@ Report: `benchmarks/redesign/dpann_leads/invisible/REPORT.txt` (assay rule fixed
 - Labeling pass (jobs 119999 / 120000): 795,250 candidates without Pfam, 188,546 bonded, 69,701 labeled; T1 29,100, T1c 3,904, T2 11,819, T2b 7,346, contradicted 2,322, rest 15,210.
 - Label-carrying supporters of all labeled genes: 230,287 proteins (about 70 CPU-hours of KOfam), so the KOfam step is restricted to supporters of the genes without an own profile hit, under 60 CPU-hours.
 - Fresh Opus agent launched for `leads_srvp/` under BRIEF_collections.txt. Sequences unpublished: Biohub only, nothing into the repository.
+
+### 2026-11-21 07:58 UTC — lut annotated and labeled; two lut workstreams started; queue contention (coordinator)
+- Pfam annotation (jobs 119854 / 119855): 7,307,931 rows on 3,657,293 of 4,507,042 proteins. All three collections are annotated (Pfam only).
+- Labeling pass (jobs 120001 / 120002): 849,749 candidates without Pfam, 278,094 bonded, 122,421 labeled; T1 44,357, T1c 4,578, T2 22,952, T2b 13,680, contradicted 4,257, rest 32,597.
+- Partner KOfam for lut: label-carrying supporters of the 69,229 genes without an own hit number 463,931 proteins (142 CPU-hours); capped at the first 12 carriers per gene, 120,626 proteins (37 CPU-hours).
+- Launched `leads_lut` (the standard assay) and `lut_loci` (lanthanide-handling candidates at fixed positions in and beside lut loci: literature table first, metal-site tests with positive and negative controls fixed in advance, up to 300 folds).
+- The partner KOfam jobs of testset3 (120056) and SR-VP (120090) wait behind another session's Pfam arrays (hit_pfam12 / 24 / 64, 34 running jobs), which fill the per-user job limits. Those jobs were left alone.

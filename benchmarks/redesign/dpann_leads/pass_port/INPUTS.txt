@@ -1,0 +1,90 @@
+PASS_PORT: INPUTS OF THE POSITION-BASED LABELING PASS FOR LUT, SR-VP AND TESTSET3 (2026-11-21 UTC)
+================================================================================================
+RD = /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111   PP = RD/dpann_leads/pass_port
+Code: PP/code (copies in benchmarks/redesign/dpann_leads/pass_port/code). Configurations: code/collections.json.
+
+FROZEN CALL RULE (unchanged from the DPANN pass; slot_rescue/code/pass_run.py functions imported by code/cpass.py)
+  candidate = gene without a Pfam row; gate = inside a locus of the embedding-list tree (Z, L4b+ theta .02) and >= 1 stored Z
+  bond; supporters = per genome the best-ranked z >= 10.6 list partner (other genome groups) lying 1-3 genes from a list
+  partner of a bonded neighbor, pooled over the gene's bonds; label = plurality key (Pfam; KO -> proxy Pfams, else the KO)
+  with >= 2 votes. The pass reads the frozen run's lists, bonds and loci as built; nothing is rebuilt or re-tuned.
+
+WHAT THE PASS NEEDS, PER COLLECTION (all present unless marked MISSING)
+                        lut (frozen run 1)                         SR-VP genome bins (frozen run 2)          testset3 (frozen run 3)
+  package               RD/slice_lut/testset/package_k8            RD/ws_srvp_bins/package                   RD/testset3/package
+  gene table            <package>/universe/genes.parquet: gid, protein_id, genome, genome_code, contig, contig_code, position_index,
+                        strand, length, start, end (same schema in all three; gid = row index, contiguous per contig)
+    genes / genomes     4,507,042 / 1,032                          3,211,751 / 994                           2,557,405 / 842
+    contigs             161,964                                    146,107                                   1,176
+  protein FASTA         <package>/proteins_gid.faa                 <package>/universe/proteins.faa           <package>/proteins_gid.faa
+                                                                   (= long_loci/frozen2/pkg/proteins_gid.faa,
+                                                                   a symlink; byte-identical)
+    header scheme       '>gid' (integer, 0 .. n-1); sequence count equals the gene table in all three (4,507,042 / 3,211,751 /
+                        2,557,405). The annotation agent's protein_id must be this gid string; annot_prep.py maps it to gid.
+  unique-sequence map   RD/long_loci/frozen/emb/meta.npz 'uq'      .../frozen2/emb/meta.npz 'uq'             .../frozen3/emb/meta.npz 'uq'
+    (= <package>/embeddings/esmpp_small__uid_of_row.npy, asserted in the frozen smoke); uids 4,464,102 / 3,170,150 / 2,530,648
+  genome groups         RD/long_loci/frozen/groups/                .../frozen2/groups/                       .../frozen3/groups/
+                        emb_hom_average_t0.75.parquet: 179         277 groups                                353 groups
+  calibrated z table    RD/long_loci/frozen/gtable                 .../frozen2/gtable                        .../frozen3/gtable
+    (counts.npy, genome.bin, local.bin, z.bin, cos.bin; z >= 10.5 stored): 2,227,054,481 / 830,319,839 / 432,019,701 entries.
+    Z lists (z >= 10.6, best gene per genome, own group excluded) are built from it per gene, as in vl.z_lists.
+  Z bonds               RD/long_loci/frozen/nodes/lut_Z/           .../frozen2/nodes/srvp_Z/                 .../frozen3/nodes/gtdb3_Z/
+                        bonds_obs.npz (k, d, lam; list tau 8 by the frozen rule): 4,055,223 / 1,752,378 / 1,356,428 bonds
+  Z tree loci           RD/long_loci/frozen/loci/lut_Z/            .../frozen2/loci/srvp_Z/                  .../frozen3/loci/gtdb3_Z/
+                        L4bp_t0.02.parquet (frozen primary output): 2,010,875 / 1,013,801 / 769,433 loci
+  alignment lists       MISSING in all three (no RD/long_loci/frozen*/mm; the frozen runs built Z lists only)
+  A bonds / A tree      MISSING in all three (depend on the alignment lists)
+  whole-proteome Pfam   MISSING until RD/annot_gpu/<collection>/STATUS reads DONE (directory absent on 2026-11-21 04:45 UTC)
+  and KOfam
+  partial annotation    long_loci/frozen2/annot/genes_annot.parquet   gold/ribosomal_marked.parquet          ribo_audit/work6/testset3:
+  present today         (226 KOs, 20 Pfam models; 60,185 KO rows);     (ribosomal Pfam markers only)          ribosomal markers (121
+                        package/ribosomal/marked.parquet                                                      Pfam models), window_pfam,
+                                                                                                              selected KOs
+Differences from DPANN that the port handles: DPANN genes are keyed by Sharur protein_id, the others by gid; DPANN bonds
+store n and ng, the frozen bonds store Lambda only, so the bond gate recomputes Lambda from the lists with vl.pass_count's
+group-counting formula (exact; testset3 smoke: 17,260 / 17,260 bonds reproduced); DPANN list tau 6, frozen tau 8 (each
+collection's own rule); label tables and the KO -> Pfam proxy table are computed on each collection's own annotation.
+
+COST OF THE MISSING ALIGNMENT LISTS (only the list_type / alignment_label columns need them; the call does not)
+  MMseqs2 all-against-all of the unique sequences (-s 7.5 --max-seqs 1000, align -e 1e-3, the DPANN recipe), mm2knn to
+  aln__k1000 arrays, then the A list-bond arm and tree (long_loci lb.py arm A logic, about 15 min on 64 CPUs).
+  DPANN: 2.55 M unique sequences took 6.0 h on 64 CPUs. Estimates: testset3 2.53 M -> about 6 h; SR-VP 3.17 M -> about
+  9 h; lut 4.46 M -> about 16 h (long_loci REPORT2 estimate for 4.23 M). The campaign cap of 2 h per job means query
+  chunks: about 4 / 5 / 8 chunked 64-CPU jobs plus a merge. Without them list_type reads "no alignment lists".
+
+OUTPUTS OF ONE PASS (PP/out/<collection>/)
+  <collection>_slot_rescue_pass.parquet  the DPANN pass columns plus: support (votes_for / supporting_genomes),
+    label_annotated_count, label_amplification (labeled genes / annotated carriers of the label in the collection),
+    unannotated_supporters, partner function (n_carriers, n_carriers_ko, partner_ko, partner_ko_name, partner_ko_n,
+    partner_ko_share, partner_ko_second, partner_ko_second_n, partner_ko_counts, partner_function_strong = >= 3 carriers
+    and share >= 0.70), list_type (both / disagree / embedding-only / no alignment lists)
+  supporters/part_*.parquet  per called gene: gid, supporters (gids in rank order, one per supporting genome),
+    carries_label (bool per supporter); kept on biotite for structure and residue checks
+  calibration_cells.tsv, run.json (counts, bond gate, calibration, timing), STATUS
+  after weakhit_sbatch.txt: weakhit/weakhit_per_protein.parquet (rank, E, score, hit_labels, null), tiers.parquet
+
+TIERS (code/tiers.py): T1 / T2 / T2b / contradicted / rest as in slot_rescue verification, plus T1c = no hit to the
+  proposed model but a hit to a label family in the same Pfam clan (clans from the public Pfam-A.clans.tsv; Sharur snapshot
+  copy in PP/data). DPANN check: family-level tiers equal the verification tiers in 175,729 / 175,729 genes; 8,452 of the
+  14,016 'contradicted' genes move to T1c, 5,564 stay contradicted.
+
+VERIFICATION OF THE GENERALIZED CODE (2026-11-21)
+  DPANN regression, job 119816 (4 min 08 s, 24 CPUs): 175,729 / 175,729 rows; all 30 columns of the original pass table equal
+  (0 mismatches each); partner function equal to gapscreen/partner_ko.parquet in 175,729 rows (KO, count, carriers, KO-annotated
+  carriers: 0 mismatches); bond gate 1,281,005 bonds, n, ng and recomputed Lambda all equal (0 mismatches). New columns: partner
+  function strong 46,697; list_type both 125,548 / embedding-only 36,956 / disagree 13,225. Supporter file 768 parts, 331 MB.
+  testset3 smoke, job 119817 (15 s): PLUMBING ONLY, on the partial ribosomal-audit annotation (109,670 annotated genes; 6,278
+  Pfam labels, 149 KOs), first 3,000 eligible genes; 807 called; bond gate by recomputed Lambda 17,260 / 17,260 bonds equal.
+  No biology is read from it. Records: data/runs/*.json.
+
+EXPECTED RUN TIMES (24 CPUs): pass 4-10 min per collection (DPANN: 502,275 eligible genes in 2.3 min plus setup and calibration;
+  eligible genes scale with the annotation: testset3 has 1,040,465 bonded genes in total, lut and SR-VP proportionally more /
+  fewer); weak-hit job 5-15 min (DPANN: 175,729 labeled genes, Aksha 4 min 35 s).
+
+COMMANDS ONCE RD/annot_gpu/<collection>/STATUS READS DONE (run on the biotite login node; read the two rule files first)
+  cd RD/dpann_leads/pass_port
+  J=$(sbatch --parsable --export=ALL,COLL=testset3,PREP=gpu code/cpass_sbatch.txt)
+  sbatch --dependency=afterok:$J --export=ALL,COLL=testset3 code/weakhit_sbatch.txt
+  (same two lines with COLL=srvp and COLL=lut). Add PFAMGA=--pfam-ga to the first export list only if annot_gpu delivered
+  Pfam rows below the gathering threshold; annot_prep.json reports the count of delivered rows below GA either way.
+  Status files: out/<collection>/STATUS and out/<collection>/weakhit/STATUS.

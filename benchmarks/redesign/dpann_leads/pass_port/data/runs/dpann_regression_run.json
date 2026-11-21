@@ -1,0 +1,107 @@
+{
+ "collection": "dpann",
+ "threads": 24,
+ "smoke": 0,
+ "timing": {
+  "z_pass": 137.8,
+  "calibration": 22.4,
+  "a_support": 41.6,
+  "total": 244.8
+ },
+ "config": {
+  "genes": "RD/ws_dpann/package/universe/genes.parquet",
+  "annot_id": "protein_id",
+  "groups": "RD/lineagefree/groups/emb_hom_average_t0.75.parquet",
+  "uq": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/embed_queue/runs/dpann__esmpp_small__20261111/uid_of_row.npy",
+  "ztable": "RD/calib/table",
+  "bonds_Z": "RD/long_loci/nodes/dpann_Z/bonds_obs.npz",
+  "loci_Z": "RD/long_loci/loci/dpann_Z/L4bp_t0.02.parquet",
+  "aln_I": "RD/vocab_lists/mm/aln__k1000__I.npy",
+  "bonds_A": "RD/long_loci/nodes/dpann_A/bonds_obs.npz",
+  "loci_A": "RD/long_loci/loci/dpann_A/L4b_t0.02.parquet",
+  "annot": "RD/slot_rescue/data/annot.parquet",
+  "ko_proxy": "RD/slot_rescue/data/ko_proxy.tsv",
+  "label_names": "RD/slot_rescue/data/labels.tsv",
+  "pfam_nameonly": "RD/slot_rescue/data/pfam_nameonly.tsv",
+  "fasta": null,
+  "out": "RD/dpann_leads/pass_port/out/dpann",
+  "regression": {
+   "pass": "RD/slot_rescue/pass/dpann_slot_rescue_pass.parquet",
+   "partner_ko": "RD/dpann_leads/gapscreen/partner_ko.parquet"
+  }
+ },
+ "bond_gate": {
+  "bonds_checked": 1281005,
+  "mismatches": 0,
+  "mode": "n, ng and Lambda"
+ },
+ "calibration": {
+  "pool": 1337396,
+  "sample": 50000,
+  "called": 48418,
+  "agree": 0.9885166673551159
+ },
+ "counts": {
+  "genes": 3585303,
+  "candidates": 1444991,
+  "candidates_with_own_ko": 20042,
+  "z_bonded": 502275,
+  "in_z_locus": 637627,
+  "eligible": 502275,
+  "eligible_none_unannotated": 290498,
+  "eligible_other": 175729,
+  "eligible_none_lt2": 36048,
+  "called": 175729,
+  "partner_function_strong": 46697,
+  "list_type": {
+   "both": 125548,
+   "embedding-only": 36956,
+   "disagree": 13225
+  }
+ },
+ "regression": {
+  "rows_ref": 175729,
+  "rows_new": 175729,
+  "both": 175729,
+  "column_mismatches": {
+   "gid": 0,
+   "genome": 0,
+   "genome_code": 0,
+   "contig": 0,
+   "position_index": 0,
+   "strand": 0,
+   "length": 0,
+   "own_ko": 0,
+   "proposed_label_positional_homology": 0,
+   "proposed_label_name": 0,
+   "proposed_label_kind": 0,
+   "votes_for": 0,
+   "voters_annotated": 0,
+   "vote_share": 0,
+   "supporting_genomes": 0,
+   "supporting_groups": 0,
+   "runner_up_label": 0,
+   "runner_up_name": 0,
+   "runner_up_votes": 0,
+   "tied_keys": 0,
+   "locus_id": 0,
+   "locus_size": 0,
+   "n_bonds": 0,
+   "max_bond_lambda": 0,
+   "alignment_label": 0,
+   "alignment_lists_same_label": 0,
+   "confidence_bin": 0,
+   "calibration_agreement": 0,
+   "own_ko_agrees": 0,
+   "basis": 0
+  },
+  "partner_function_rows": 175729,
+  "partner_function_mismatches": {
+   "ko": 0,
+   "ko_n": 0,
+   "carriers": 0,
+   "carriers_ko": 0
+  },
+  "passed": true
+ }
+}

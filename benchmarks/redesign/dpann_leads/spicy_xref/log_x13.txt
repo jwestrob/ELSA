@@ -1,0 +1,106 @@
+PQQDH 2172
+
+== PQQDH typed K23995: n=582; chain length quantiles [3.0, 4.0, 6.0, 10.0]; >=5: 210
+ top chain-member Pfam: [('-', 606), ('Cytochrome_CBB3', 348), ('SBP_bac_3', 223), ('Cytochrom_C', 192), ('Rhodanese', 146), ('ABC_tran', 51), ('Lactamase_B', 43), ('COX2', 37), ('COX1', 36), ('[orf6-like]', 33), ('ADH_N', 33), ('COX3', 33), ('BPD_transp_1', 32), ('ADH_zinc_N', 31), ('Caa3_CtaG', 31), ('GFA', 27), ('SBP_bac_11', 23), ('NMT1', 23), ('Lactamase_B_2', 20), ('Lysine_decarbox', 19), ('LDcluster4', 19), ('Radical_SAM', 18), ('SoxY', 18), ('SoxZ', 18), ('Esterase', 17)]
+ top oriented chains (>=3 genes):
+    51 PQQ Cytochrome_CBB3 -
+    30 PQQ Cytochrome_CBB3 SBP_bac_3
+    24 PQQ Cytochrome_CBB3 SBP_bac_3 Rhodanese
+    15 PQQ - - Rhodanese
+    12 PQQ - -
+    11 PQQ Cytochrome_CBB3 - Rhodanese
+    10 PQQ Cytochrome_CBB3 SBP_bac_3 -
+    8 PQQ - SBP_bac_3 Rhodanese
+    7 PQQ - SBP_bac_3
+    7 [orf6-like] PQQ Cytochrome_CBB3 -
+    7 PQQ Cytochrome_CBB3 - YkuD
+    5 - PQQ Cytochrome_CBB3 SBP_bac_3 Rhodanese
+
+== PQQDH typed K00114: n=285; chain length quantiles [3.0, 5.0, 8.0, 11.0]; >=5: 158
+ top chain-member Pfam: [('-', 249), ('Cytochrome_CBB3', 170), ('Cytochrom_C', 144), ('Response_reg', 96), ('SBP_bac_3', 80), ('GerE', 75), ('Lactamase_B', 53), ('Rieske', 52), ('SoxY', 49), ('SoxZ', 39), ('ABC_tran', 24), ('MoCoBD_2', 24), ('MoCoBD_1', 22), ('Pentapeptide', 22), ('Fer2_2', 20), ('Fer2', 20), ('Lactamase_B_2', 17), ('HATPase_c', 17), ('Fer2_3', 17), ('HisKA', 15), ('Sigma70_r4_2', 15), ('PQQ_2', 15), ('PQQ', 15), ('TENA_THI-4', 13), ('PqqD', 12)]
+ top oriented chains (>=3 genes):
+    13 Cytochrome_CBB3 - PQQ
+    9 PQQ Cytochrome_CBB3 -
+    8 Cytochrome_CBB3 SBP_bac_3 PQQ Response_reg
+    5 - - SBP_bac_3 SoxY Lactamase_B PQQ Response_reg
+    4 Cytochrome_CBB3 SBP_bac_3 SoxY Lactamase_B PQQ Response_reg
+    4 Rieske PQQ -
+    4 Cytochrome_CBB3 SBP_bac_3 PQQ Response_reg MarR_2 FUSC DUF1656 BSH_RND -
+    4 PQQ Pentapeptide - Cytochrome_CBB3 - Ni_hydr_CYTB Rhodanese SoxY Lactamase_B
+    3 Cytochrome_CBB3 - PQQ Response_reg
+    3 PQQ Cytochrome_CBB3 - NMT1 BPD_transp_1 ABC_tran Rieske PQQ Fer2 MoCoBD_2
+    3 SBP_bac_3 SoxY Lactamase_B PQQ Cytochrome_CBB3 sCache_2 NMT1 BPD_transp_1 ABC_tran DUF2946 LpqE-like
+    3 Cytochrome_CBB3 SBP_bac_3 PQQ Response_reg - Peptidase_S8 Sigma70_r2 - Peptidase_C93 -
+
+== PQQDH typed K14028: n=110; chain length quantiles [12.0, 14.0, 14.0, 17.0]; >=5: 107
+ top chain-member Pfam: [('-', 249), ('VWA_2', 192), ('MDH', 107), ('AAA_5', 107), ('AAA_3', 107), ('AAA_lid_2', 106), ('Cytochrome_CBB3', 105), ('Cytochrom_C', 102), ('DUF58', 101), ('SBP_bac_3', 100), ('bpMoxR', 96), ('Polyketide_cyc2', 93), ('VWA', 90), ('MoxZ', 66), ('Response_reg', 66), ('GerE', 63), ('Cytochrom_D1', 59), ('YNCE', 48), ('Lactonase', 34), ('AAA', 27), ('Sdh_cyt', 16), ('NHL', 15), ('FAD_binding_2', 9), ('Na_sulph_symp', 8), ('CitMHS', 8)]
+ top oriented chains (>=3 genes):
+    8 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 YNCE MoxZ Response_reg
+    6 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 Lactonase MoxZ Response_reg
+    6 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 Cytochrom_D1 MoxZ Response_reg Na_sulph_symp Sdh_cyt Sdh_cyt FAD_binding_2 Fer2_3
+    6 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 Cytochrom_D1 MoxZ Response_reg
+    5 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 NHL MoxZ Response_reg
+    4 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 - MoxZ Response_reg
+    3 PQQ SBP_bac_3 Cytochrome_CBB3 MDH AAA_3 DUF58 - VWA - VWA_2 Polyketide_cyc2 Lactonase TraB_PrgY_gumN
+    2 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 Lactonase
+    2 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA_2 - VWA_2 Polyketide_cyc2 Cytochrom_D1 MoxZ Response_reg
+    2 PQQ - Cytochrom_C MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 MoxZ
+    2 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR
+    2 PQQ SBP_bac_3 Cytochrome_CBB3 MDH bpMoxR DUF58 - VWA - VWA_2 Polyketide_cyc2 MoxZ
+
+== PQQDH typed None: n=1195; chain length quantiles [2.0, 4.0, 6.0, 9.0]; >=5: 463
+ top chain-member Pfam: [('-', 890), ('Cytochrome_CBB3', 369), ('Cytochrom_C', 333), ('PQQ', 205), ('PQQ_2', 199), ('Ank_2', 93), ('Pentapeptide', 93), ('Ank', 91), ('Ank_5', 85), ('Ank_4', 84), ('ABC_tran', 83), ('Rieske', 71), ('Ank_3', 71), ('adh_short', 67), ('adh_short_C2', 66), ('Response_reg', 65), ('SBP_bac_3', 62), ('Peripla_BP_6', 58), ('GerE', 56), ('KR', 55), ('Lactonase', 47), ('BPD_transp_1', 46), ('4HBT', 44), ('Fer2', 39), ('4HBT_3', 39)]
+ top oriented chains (>=3 genes):
+    9 PQQ Cytochrome_CBB3 - -
+    8 PQQ Cytochrome_CBB3 Response_reg NMT1 BPD_transp_1 ABC_tran
+    8 PQQ Cytochrome_CBB3 -
+    7 PQQ Cytochrome_CBB3 SBP_bac_3
+    5 Methyltransf_2 adh_short Oxidored_molyb Cytochrome_CBB3 PQQ - Cytochrome_CBB3
+    5 ResIII Ank_2 PQQ
+    5 - PQQ - PQQ - PQQ - PQQ PQQ
+    4 Rieske PQQ - Fer2 MoCoBD_2
+    4 - PQQ -
+    4 SBP_bac_3 BPD_transp_1 ABC_tran - Cytochrome_CBB3 PQQ_2 PQQ PQQ_2 PQQ Pentapeptide GerE Bac_globin
+    4 SpoU_methylase Asp_Glu_race Ribosomal_S4 PQQ Pentapeptide Cytochrome_CBB3 PQQ Pentapeptide PQQ PQQ Pentapeptide -
+    4 - PQQ SoxE
+
+== xoxF chains holding CBB3 and SBP_bac_3: 399 genomes 328
+ chain lengths: [(np.int64(4), 70), (np.int64(3), 44), (np.int64(14), 44), (np.int64(5), 34), (np.int64(9), 28), (np.int64(8), 25), (np.int64(12), 21), (np.int64(7), 20), (np.int64(6), 18), (np.int64(13), 18)]
+ outside the chain, co-oriented (oriented offset, name): [(np.int8(-7), '-', 35), (np.int8(-11), '-', 32), (np.int8(-10), '-', 31), (np.int8(-5), '-', 31), (np.int8(12), '-', 27), (np.int8(-12), '-', 26), (np.int8(-3), '-', 23), (np.int8(-8), '-', 20), (np.int8(-9), '-', 19), (np.int8(-2), '-', 18), (np.int8(9), '-', 17), (np.int8(-4), '-', 17), (np.int8(10), '-', 15), (np.int8(11), '-', 15), (np.int8(6), '-', 14)]
+ outside the chain, opposite strand: [(np.int8(-1), '-', 49), (np.int8(-1), 'Trypsin_2', 44), (np.int8(-6), '-', 42), (np.int8(-2), '-', 39), (np.int8(4), '-', 37), (np.int8(-11), '-', 32), (np.int8(-7), '-', 30), (np.int8(-10), '-', 30), (np.int8(-3), '-', 30), (np.int8(-5), '-', 29), (np.int8(7), '-', 28), (np.int8(-4), '-', 26), (np.int8(8), '-', 25), (np.int8(12), '-', 24), (np.int8(9), '-', 24)]
+ inside chain (oriented offset, name): [((0, 'PQQ'), 382), ((1, 'Cytochrome_CBB3'), 180), ((2, 'SBP_bac_3'), 175), ((1, 'SBP_bac_3'), 147), ((2, 'Cytochrome_CBB3'), 134), ((6, '-'), 118), ((3, 'MDH'), 98), ((8, '-'), 93), ((5, 'DUF58'), 91), ((4, 'bpMoxR'), 88), ((10, 'Polyketide_cyc2'), 81), ((9, 'VWA_2'), 79), ((7, 'VWA'), 78), ((3, 'Rhodanese'), 58), ((12, 'MoxZ'), 55), ((13, 'Response_reg'), 55), ((3, '-'), 39), ((1, 'Response_reg'), 38), ((-2, 'Cytochrome_CBB3'), 37), ((-1, 'SBP_bac_3'), 36), ((-1, 'Lactamase_B'), 30), ((-2, 'SoxY'), 24), ((-3, 'SBP_bac_3'), 22), ((-1, '-'), 22), ((11, 'Cytochrom_D1'), 21)]
+ orf6-like vs nearest PQQDH: [((6, 'opp', 'other'), 57), ((-3, 'same', 'other'), 36), ((-1, 'same', 'samechain'), 22), ((-2, 'opp', 'other'), 20), ((-2, 'same', 'other'), 17), ((-4, 'same', 'other'), 15), ((-1, 'opp', 'other'), 13), ((7, 'opp', 'other'), 13)]
+ orf7-like vs nearest PQQDH: [((7, 'opp', 'other'), 57), ((-4, 'same', 'other'), 18), ((-3, 'same', 'other'), 13), ((8, 'opp', 'other'), 12), ((-1, 'opp', 'other'), 9), ((-5, 'same', 'other'), 8), ((6, 'opp', 'other'), 6), ((-2, 'opp', 'other'), 6)]
+ orf7 vs orf6: [((-1, 'same', 'samechain'), 244), ((-3, 'same', 'other'), 1)]
+
+== PqqC (TENA_THI-4): 1334 chain length quantiles [4.0, 6.0, 9.0, 14.0]
+ top chains: [('TENA_THI-4', 63), ('- Amidohydro_3 FTR - - HAMP Response_reg PqqA Lactamase_B TENA_THI-4 Radical_SAM [orf7-like] [orf6-like] Pterin_bind FolB HPPK', 40), ('Lactamase_B_2 TENA_THI-4 PqqD Fer4_12', 35), ('Lactamase_B_2 TENA_THI-4 PqqD Radical_SAM', 30), ('LapD_MoxY_N Response_reg TENA_THI-4 AA_permease_2', 18), ('Lactamase_B_2 TENA_THI-4', 18), ('LapD_MoxY_N Response_reg TENA_THI-4 DJ-1_PfpI TerB LrgA LrgB', 16), ('TENA_THI-4 -', 10), ('- TENA_THI-4', 9), ('PqqA Lactamase_B_2 TENA_THI-4 PqqD Fer4_12 Cytochrom_C', 9), ('Lactamase_B_2 TENA_THI-4 PqqD', 8), ('Aldose_epim TENA_THI-4', 8)]
+
+== Type A anchor Peptidase_S58: 885; chain length quantiles [2.0, 3.0, 6.0, 9.0]
+ top (oriented offset, strand, name): [((-1, 'o', 'DsbD_TM'), 135), ((-4, 's', 'ABC_tran'), 126), ((-2, 's', 'Peripla_BP_6'), 87), ((-5, 's', 'ABC_tran'), 82), ((-3, 's', 'ABC_tran'), 70), ((-6, 's', 'ABC_tran'), 64), ((1, 's', 'SBP_bac_5'), 64), ((-7, 's', 'BPD_transp_2'), 62), ((-1, 's', 'Peripla_BP_6'), 60), ((-3, 's', 'Peripla_BP_6'), 52), ((-3, 's', 'DUF6867'), 52)]
+ top chains: [('- EamA Peptidase_S58', 15), ('Peptidase_S58 KTSC -', 9), ('GntR Creatininase ApbA adh_short Polysacc_deac_1 Peptidase_S58 Asparaginase_2', 6), ('SBP_bac_3 BPD_transp_1 BPD_transp_1 ABC_tran - EamA Peptidase_S58', 6), ('ABC_tran BPD_transp_1 BPD_transp_1 Peptidase_S58', 5), ('Peptidase_S58 Ribul_P_3_epim Lyase_1 Ser_hydrolase', 5), ('Peptidase_S58 Peptidase_S58 -', 4), ('Fe-ADH Peptidase_S58 SH3_4', 4)]
+
+== Type B anchor Lysine_decarbox: 1469; chain length quantiles [1.0, 2.0, 4.0, 6.0]
+ top (oriented offset, strand, name): [((-1, 'o', 'LysM'), 318), ((-2, 'o', 'ABC_membrane'), 231), ((1, 's', 'Iso_dh'), 223), ((-3, 'o', 'PS_Dcarbxylase'), 160), ((-4, 'o', 'CDP-OH_P_transf'), 155), ((-1, 'o', 'ABC_membrane'), 152), ((-1, 'o', 'Cytochrom_C_2'), 131), ((-2, 'o', 'PS_Dcarbxylase'), 130), ((-3, 'o', 'CDP-OH_P_transf'), 122), ((2, 'o', 'HMGL-like'), 99)]
+ top chains: [('LDcluster4 Iso_dh Pro_isomerase', 12), ('ROS_MUCR LDcluster4 -', 9), ('LDcluster4 Iso_dh -', 7), ('LDcluster4 Iso_dh Pro_isomerase MS_channel_1st_1', 5), ('LDcluster4 - -', 5), ('- LDcluster4 YceI', 5), ('HSP70 DnaJ LDcluster4', 4), ('LDcluster4 Iso_dh Pro_isomerase Pro_isomerase', 4)]
+
+== R3P anchor Ribul_P_3_epim: 1180; chain length quantiles [3.0, 5.0, 8.0, 11.0]
+ top (oriented offset, strand, name): [((-1, 's', 'NusB'), 164), ((1, 's', 'Hepar_II_III_C'), 162), ((1, 's', 'Hydrolase'), 150), ((1, 's', 'Lyase_1'), 102), ((1, 's', 'Hepar_II_III_N'), 97), ((-1, 's', 'PRK'), 96), ((-2, 's', 'RuBisCO_small'), 93), ((-1, 's', 'AAA_5'), 91), ((-2, 's', 'FBPase'), 91), ((-3, 's', 'RuBisCO_large_N'), 89), ((-3, 'o', 'HTH_1'), 88), ((-4, 's', 'F_bP_aldolase'), 78)]
+ top chains: [('FBPase PRK Ribul_P_3_epim Hydrolase', 35), ('NusB Ribul_P_3_epim Hepar_II_III_C', 12), ('FBPase PRK Ribul_P_3_epim Hydrolase TACO1_YebC_N', 11), ('FBPase PRK DXP_synthase_N F_bP_aldolase RuBisCO_large_N RuBisCO_small AAA_5 Ribul_P_3_epim', 11), ('NusB Ribul_P_3_epim Hepar_II_III_N', 6), ('DXP_synthase_N F_bP_aldolase Ribul_P_3_epim', 6), ('Peptidase_M48 NusB Ribul_P_3_epim Hepar_II_III_C', 5), ('- Ribul_P_3_epim Lyase_1', 5)]
+
+== co-oriented chains >= 5 genes flanking lut spans: 925
+    31 DUF3280 4HFCP_synth AA_kinase DUF6513 DUF447_N Polyketide_cyc2 NHL
+    14 DUF3280 4HFCP_synth AA_kinase DUF6513 DUF447_N Polyketide_cyc2 Lactonase
+    13 CSD DUF192 - DLH Response_reg - Chlorophyllase -
+    11 4HFCP_synth AA_kinase Flavoprotein DUF6513 DUF447_N
+    11 DUF3280 4HFCP_synth AA_kinase DUF6513 DUF447_N Polyketide_cyc2 Polyketide_cyc2 Lactonase
+    11 GHMP_kinases_N Mpt_N ATP-grasp_3 MCH RimK CitG Fae
+    8 GHMP_kinases_N Mpt_N ATP-grasp_3 MCH ATP-grasp_3 CitG Fae
+    7 PQQ Cytochrome_CBB3 Response_reg NMT1 BPD_transp_1 ABC_tran
+    7 DUF3280 4HFCP_synth AA_kinase DUF6513 DUF447_N Polyketide_cyc2 Vgb_lyase
+    7 NMT1 BPD_transp_1 ABC_tran Pentapeptide -
+    6 CSD DUF192 - Chlorophyllase Response_reg - Chlorophyllase -
+    6 Virul_fac_BrkB Chlorophyllase Response_reg - Chlorophyllase -
+    5 DUF3280 4HFCP_synth - DUF6513 DUF447_N Polyketide_cyc2 NHL
+    5 DUF3280 4HFCP_synth AA_kinase Flavoprotein DUF6513 DUF447_N
+    5 TIM - SecG - CTP_synth_N

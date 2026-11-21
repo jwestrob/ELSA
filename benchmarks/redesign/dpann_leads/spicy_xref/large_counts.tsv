@@ -1,0 +1,16 @@
+module	family	instances	genomes	genera	genome_groups	largest_group_share	members_min_median_max	span_median_q90	one_chain_share	null_mean	null_max	null_reps	null_note
+X0_xoxF_CBB3	xoxF	637	437	212	86	0.118	2/2/3	2/2	1.0	6.88	12	50	element classes shifted
+X1_xoxF_CBB3_SBP3	xoxF	286	254	140	66	0.15	2/3/3	3/3	1.0	0.02	1	50	element classes shifted
+X2r_xoxF_CBB3_SBP3_Rhodanese	xoxF	64	64	44	25	0.141	3/4/4	4/4	1.0	0.0	0	50	element classes shifted
+X2t_xoxF_CBB3_ABCtransporter	xoxF	41	41	23	16	0.244	5/6/7	6/10	1.0	0.0	0	50	element classes shifted
+MX0_mxaF_J_G_I	mxa	100	100	21	11	0.64	4/4/4	4/4	1.0	0.0	0	50	element classes shifted
+MX1_mxa_cluster	mxa	102	102	22	10	0.618	7/10/10	13/13	1.0	0.0	0	50	element classes shifted
+PQ0_pqqBCDE	pqq	559	549	236	95	0.161	3/4/6	4/5	1.0	0.06	1	50	element classes shifted
+PQ1_pqq_orf7_orf6	pqq	97	97	9	6	0.856	5/6/8	6/7	1.0	0.0	0	50	element classes shifted
+H4_H4MPT_cluster	H4MPT	234	234	87	43	0.385	4/7/8	7/7	1.0	0.0	0	50	element classes shifted
+LF_lutA_flank_chain	lut flank	194	194	67	29	0.412	4/5/8	6/6	1.0	0.0	0	50	element classes shifted
+TA_typeA_ABC_S58	Type A/B	172	171	64	16	0.541	5/6/8	8/9	0.227	0.02	1	50	element classes shifted
+TB_typeB_core	Type A/B	14	14	11	3	0.643	5/5/7	10/12	0.0	0.0	0	50	element classes shifted
+LUT_T	lut	551	523	281	107	0.058	3/4/8	5/7	0.817	0.16	1	50	lut main rule on shifted reverse-best genes (all classes together; LUT_C = complete)
+LUT_RT	lut	92	92	36	16	0.424	3/5/9	5/9	0.38	0.16	1	50	lut main rule on shifted reverse-best genes (all classes together; LUT_C = complete)
+LUT_C	lut	80	80	1	1	1.0	9/9/10	9/10	0.725	0.0	0	50	lut main rule on shifted reverse-best genes (all classes together; LUT_C = complete)

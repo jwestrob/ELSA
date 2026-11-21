@@ -147,3 +147,76 @@ FILES inventory_*.tsv; lut module_*.tsv, element_counts.tsv, lanm_context_census
  database spicy_module_* (null from the first run, before 5 wide-anchor rules were added); overlap*; motif_*;
  score_modules.tsv, first_scoring_posthoc.tsv, groups_by_module.tsv, recovery_by_group_spread.tsv; code/x00-x12.
  Login-node Python only; no Slurm, HMM search, folding or method run; no workbook, protein map or outcome table opened.
+
+6. LARGER MODULES (follow-up, 2026-11-21). EVERYTHING HERE IS POST HOC. Rules: modules_large_rule.json, written after
+   the discovery tallies (code/x13, log_x13.txt) and before any scoring; code x14 (instances, null), x15 (scores, nesting,
+   boundaries), x16 (strata), x17 (PI table). No method output was read to choose a rule.
+ Bottom line
+ - In families held by >= 3 genome groups, the embedding-list tree resolves 1,972 of 2,481 instances of >= 3-gene modules
+   (chance 357); the family-bond tree 1,343 (358), DH 668 (202), synton 3 (5). In 1-group families both trees sit at chance
+   (8/90 and 8/90 vs 8.4 and 8.0; 80 of the 90 are the complete lut clusters, all in one genome group).
+ - Best resolved by the embedding-list tree: mxa cluster (10 genes) 95/102 (chance 9), pqqBCDE 533/559 (88), pqq + orf7 +
+   orf6 94/97 (11), H4MPT-type cluster (7 genes) 189/234 (29), Type A ABC importer + Peptidase_S58 130/172 (22), lut
+   transporter module 477/551 (101). Recovered but rarely resolved: complete lut cluster 6/80 (7; its holding loci run past
+   the cluster, as in the frozen test), receptor + transporter 18/92 (10), xoxF + ABC transporter 15/41 (5).
+ - Nesting (inner unit held as a node inside the locus holding the outer one; chance from 50 translations): embedding-list
+   tree lut transporter in complete 75/80 (3.3; reproduces the frozen 75), pqqBCDE in pqq+orf 97/97 (7.0), xoxF-G-J in
+   +Rhodanese 58/59 (4.0), xoxF+CBB3 in xoxF-G-J 105/184 (22), mxaFJGI in mxa cluster 31/94 (2.3). Family-bond tree 0/80,
+   20/97, 1/59, 24/184 and 94/94: it nests the mxa unit and little else (large_nested.tsv).
+ - orf6/orf7 do not extend the xoxF unit under the protocol: near an xoxF-G-J unit (within 10 genes) orf6-like sits in its
+   chain in 5/92 (opposite strand 55, same strand in another chain 32), orf7-like 3/57. Both chain with pqqA-E instead
+   (97 instances, 9 genera, 6 groups, 86% in one group). The xoxF unit's supported extensions are Rhodanese (64) and the
+   NMT1-BPD_transp_1-ABC_tran importer (41).
+ - The notes' failed claims cannot be tested on lut: LanM|xoxF head-to-head 3 instances and SBP_bac_5-LanM | trans-
+   glycosylase 27, each in 1 genome group and outside every locus; YcaO-TfuA|LanM 0; xoxF-Acyl-CoA_dh gap 0 (all 137 LanM|
+   xoxF pairs are in the earlier database, which has no method output). Strand breaks with power (added): lut | divergent
+   DUF3280 flank chain 212: embedding-list tree joins 162 (chance 27), separates 8 (1.4); xoxF-G-J | orf6-orf7 55: joins 21
+   (7.0), separates 27 (1.2); Rieske-xoxF | MoCoBD 12: joins 10 (1.2). The trees join conserved divergent flanks that the
+   co-orientation protocol splits (boundary_scores.tsv; family-bond tree joins 76, 13, 5).
+ Modules (large_counts.tsv; instances / genera / genome groups / members min-median-max / shift-null mean)
+   xoxF family  X0 +CBB3 637/212/86/2-2-3/6.9; X1 +SBP_bac_3 286/140/66/2-3-3/0.02; X2r +Rhodanese 64/44/25/3-4-4/0;
+                X2t +NMT1-BPD_transp_1-ABC_tran 41/23/16/5-6-7/0; X3 orf6/orf7 extension fails the protocol (above)
+   mxa          MX0 mxaF-J-G-I 100/21/11/4-4-4/0; MX1 cluster (MDH, bpMoxR, DUF58, VWA, Polyketide_cyc2, MoxZ) 102/22/10/7-10-10/0
+   pqq          PQ0 pqqA-E 559/236/95/3-4-6/0.06; PQ1 + orf7 + orf6 97/9/6/5-6-8/0
+   H4MPT        H4 MCH + Fae + >= 2 of GHMP/Mpt_N/ATP-grasp_3/CitG/RimK 234/87/43/4-7-8/0
+   lut flank    LF DUF3280-4HFCP_synth-AA_kinase-DUF6513-DUF447_N-Polyketide_cyc2 194/67/29/4-5-8/0
+   Type A/B     TA Peripla_BP_6 + >= 2 ABC_tran + BPD_transp_2 upstream of Peptidase_S58 172/64/16/5-6-8/0.02, one co-oriented
+                chain in 22.7% (fails the protocol as one unit; EF-hand gene absent from the rule); TB 14/11/3/5-5-7/0, 0% one
+                chain (fails; too rare)
+   lut          LUT_T 551/281/107/3-4-8; LUT_RT 92/36/16/3-5-9; LUT_C 80/1/1/9-9-10; null 0.16 for the main rule (50 shifts of
+                the reverse-best genes; the reimplemented rule reproduces 733 loci and 80 complete on the real genes)
+ PI TABLE (pi_summary_posthoc.tsv; recovered (chance) / resolved (chance); sorted by median genes)
+   module (genes, instances, groups)   embedding-list tree   family-bond tree      engine DH             synton
+   mxa cluster        (10, 102, 10)    102 (42) / 95 (9)     102 (49) / 97 (11)    102 (57) / 73 (10)     0 / 0
+   lut complete       ( 9,  80,  1)     80 (41) / 6 (7)       79 (44) / 6 (7)       80 (58) / 1 (6)       0 / 0
+   H4MPT-type cluster ( 7, 234, 43)    234 (158) / 189 (29)  234 (168) / 130 (30)  234 (181) / 17 (16)    0 / 0
+   Type A ABC + S58   ( 6, 172, 16)    166 (108) / 130 (22)  172 (121) / 69 (23)   166 (132) / 24 (13)    0 / 0
+   pqq + orf7 + orf6  ( 6,  97,  6)     97 (67) / 94 (11)     97 (67) / 16 (9)      97 (78) / 4 (6)       0 / 0
+   xoxF + ABC         ( 6,  41, 16)     41 (30) / 15 (5)      41 (30) / 14 (5)      41 (32) / 4 (3)       1 / 0
+   lutA flank chain   ( 5, 194, 29)    194 (142) / 96 (29)   194 (146) / 91 (26)   194 (159) / 16 (15)    7 / 0
+   lut receptor+trans ( 5,  92, 16)     90 (60) / 18 (10)     92 (63) / 26 (11)     92 (70) / 7 (7)       8 / 0
+   Type B core        ( 5,  14,  3)     14 (8) / 4 (1)        14 (10) / 1 (2)       14 (9) / 4 (1)        0 / 0
+   pqqBCDE            ( 4, 559, 95)    559 (439) / 533 (88)  558 (439) / 452 (89)  559 (469) / 279 (47)  35 / 0
+   lut transporter    ( 4, 551, 107)   551 (432) / 477 (101) 551 (444) / 193 (100) 551 (449) / 182 (62)  17 / 0
+   mxaF-J-G-I         ( 4, 100, 11)    100 (79) / 37 (11)    100 (74) / 100 (12)   100 (84) / 2 (6)      17 / 0
+   xoxF-G-J + Rhod    ( 4,  64, 25)     64 (53) / 63 (8)      64 (52) / 61 (8)      64 (54) / 2 (3)       2 / 0
+   xoxF-G-J           ( 3, 286, 66)    285 (209) / 231 (34)  286 (210) / 100 (34)  286 (223) / 56 (14)   15 / 3
+   xoxF + CBB3        ( 2, 637, 86)    624 (505) / 390 (121) 618 (497) / 157 (117) 627 (532) / 100 (34)  64 / 46
+   (two-gene references xoxF+Rieske, +Ankyrin, +Lactamase_B in the tsv; excess with 95% intervals in large_scores.tsv)
+ STRATA (strata_by_family_groups.tsv; family = same module with Jaccard >= .5 on member rescue3 tokens; resolved (chance))
+   genes   groups  n      embedding-list   family-bond   DH          synton
+   2       1       154    62 (24)          2 (22)        4 (7)       4 (3)
+   2       2        53    12 (8)           10 (7)        12 (3)      6 (1)
+   2       >= 3   1178    833 (209)        367 (202)     197 (58)    75 (21)
+   >= 3    1        90    8 (8)            8 (8)         1 (7)       0 (0)
+   >= 3    2        13    5 (2)            1 (1)         1 (1)       0 (0)
+   >= 3    >= 3   2481    1972 (357)       1343 (358)    668 (202)   3 (5)
+ What a benchmark built from these would and would not test. It would test whether a method recovers and resolves
+ conserved multi-gene units of 4-10 genes (mxa, pqq, H4MPT-type, Type A importer, lut, xoxF) and their nested sub-units
+ across many lineages, against shift and translation chance. It would not test recovery inside one lineage (1-group
+ families such as the complete lut cluster resolve at chance by construction), nor the notes' rejected LanM claims, which
+ lut does not contain in numbers. It also treats co-orientation as the unit boundary, whereas the trees join conserved
+ divergent flanks, so its resolved counts depend on that choice and should be reported beside the joined and separated rates.
+ Files added: modules_large_rule.json, large_counts.tsv, large_instances.tsv, large_scores.tsv, large_nested.tsv,
+ boundary_scores.tsv, boundary_instances.parquet, strata_by_family_groups.tsv (supersedes the x15 version), pi_summary_
+ posthoc.tsv, large_score_per_instance.parquet, x3_extension.json, large_misc.json, log_x13.txt; code/x13-x17.

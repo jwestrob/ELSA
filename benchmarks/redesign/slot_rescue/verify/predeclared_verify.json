@@ -1,0 +1,29 @@
+{
+ "workstream": "slot_rescue verify: two independent checks of the 175,729 proposed labels of the whole-DPANN pass",
+ "written_utc": "2026-11-21T00:38Z",
+ "status_when_written": "Pass finished (pass/dpann_slot_rescue_pass.parquet, sha256 b346af742df6529776c18f33523d321b32d4ba1bf25614154d7f21c258d182d7, left unchanged). No profile search, fold, structural comparison, sample or partner extraction of this verification has run.",
+ "check_A_weak_profile_hits": {
+  "proteins": "all 175,729 labeled proteins (sequences from the Sharur DPANN DB, read-only; trailing '*' stripped)",
+  "models": "every distinct proposed label: 1,761 Pfam accessions taken from the Aksha PFAM store's Pfam-A.hmm (27,481 models; matched by accession without version) and 52 KOs taken from the Aksha KOFAM store (<KO>.hmm), copied into one file (text copy, no search tool). Labels without a model in these stores are reported as 'no model'.",
+  "search": "aksha search --hmm_in <labels.hmm> --prot_in <labeled.faa> --evalue 10 --domE 10 --threads $SLURM_CPUS_ON_NODE, no --cut_* flag (/home/jwestrob/.local/bin/aksha 0.2.3 inside the sbatch script). Aksha reports below its gathering cut with these options (aksha search --help: --evalue, --domE).",
+  "per_protein": "hits = label models with full-sequence E <= 10. Rank of the proposed label among the protein's hits by full-sequence bit score (descending; ties by E-value, then model id). proposed_top = rank 1; proposed_any = a hit at E <= 10; secondary proposed_any_e3 = a hit at E <= 1e-3. E-value and score of the proposed-label hit; best other label (model, E, score); number of label models hit; no_hit_any = no label model hit at all.",
+  "null": "per protein one null label drawn uniformly from the labeled proteins in the same length decile (deciles of the 175,729 lengths) whose proposed label differs from the protein's own (numpy default_rng(20261121), proteins processed in pass row order). Same measures (null_top, null_any, null_any_e3) read from the same hit table.",
+  "strata": "overall; confidence_bin (12 cells); vote_share > 0.8 versus <= 0.8; the 30 most frequent proposed labels; also label kind (Pfam / KO).",
+  "interpretation": "the genes carry no Pfam row (Sharur's stored cut), so every Pfam hit here is below that cut: corroboration, not a call. KO-labeled genes that carry the KO themselves (own_ko_agrees) are reported separately. The count of proposed-label hits at E <= 1e-5 is reported as a consistency diagnostic.",
+  "expectations": "proposed_top 35-60% overall; proposed_any 45-70%; null_any 2-8%; null_top 1-4%; no_hit_any 25-50%; proposed_top higher by >= 15 points for vote_share > 0.8 than <= 0.8 and highest in v10+|s>0.80",
+  "budget": "1.5 h of 24-CPU job time; one smoke job on 2,000 proteins first; STATUS_A at $RD/slot_rescue/verify/STATUS_A written by the last step"
+ },
+ "check_B_structure": {
+  "population": "labeled proteins of length 40-600 aa",
+  "strata": "S1: votes_for >= 10 and vote_share > 0.8; S2: votes_for 2-9 and vote_share > 0.8; S3: vote_share <= 0.8",
+  "order": "one numpy default_rng(20261121) generator; permutation of each stratum's rows (gid order) drawn S1, then S2, then S3",
+  "partner": "the slot call's pooled supporting partners recomputed (pass code: per supporting genome the best-ranked embedding-list partner 1-3 genes from a list partner of a bonded neighbor) for the first 200 proteins of each stratum order; the protein's partner is the best-ranked supporter whose own stored rows carry the proposed label itself (Pfam accession row for a Pfam label, KO row for a KO label). Proteins without such a supporter are skipped and recorded; each stratum takes the first 100 proteins in its order that have one. Partner ids written to the sample table.",
+  "folding": "the 300 labeled proteins and their partners (unique sequences, <= 600 folds, cap 700) with ESMFold2 through the Biohub batch API only: ~/Documents/Sandbox/Sharur/Sharur/scripts/fold_biohub.py on the Mac (plain fold, default model esmfold2-fast-2026-05, ESM_API_KEY). No local folding, no GPU.",
+  "comparison": "US-align (/shared/software/bin/USalign, TM-align algorithm; Foldseek and TM-align are absent on the Mac) on the biotite login node as a single-threaded serial loop (cluster rule: serial work inline, never a 1-CPU Slurm job). Per pair: TM-score normalized by the labeled protein (primary) and by the partner, mean pLDDT of both models.",
+  "null": "each labeled protein against the partner of another sampled protein with a different proposed label whose partner length is within 20% of the protein's own partner length (uniform choice, numpy default_rng(20261121) after the sample is fixed; widened to 30% if none; else no null pair).",
+  "measures": "share of pairs with TM-score >= 0.5 (normalized by the labeled protein), true versus null, by stratum and overall. Primary: pairs whose two models both have mean pLDDT >= 70. Secondary: all pairs. Partner-normalized TM reported beside it. The 20 most frequent labels in the sample with their pair results.",
+  "expectations": "both models pLDDT >= 70 in 40-70% of true pairs; primary true TM >= 0.5: S1 70-90%, S2 55-80%, S3 35-65%; null 3-12% in every stratum",
+  "driver": "one detached driver on the Mac (nohup, PID file), writing tables and verify/STATUS_B (DONE or FAILED)"
+ },
+ "rules": "pass parquet unchanged; verification tables keyed by protein_id under verify/ and $RD/slot_rescue/verify/; nothing written into Sharur; DPANN only"
+}

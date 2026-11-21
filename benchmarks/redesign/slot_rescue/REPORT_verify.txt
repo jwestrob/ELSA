@@ -1,0 +1,74 @@
+SLOT_RESCUE: VERIFICATION OF THE 175,729 PROPOSED DPANN LABELS (2026-11-21 UTC)
+================================================================================
+Written by the coordinating session from its own inspection (inspect/insp1-4.py) and from the two checks the
+slot_rescue agent set up (verify/; predeclaration verify/predeclared_verify.json, sha256 72d13c1b..., written before
+either check ran). The pass table (pass/dpann_slot_rescue_pass.parquet) is unchanged. Nothing is loaded into Sharur.
+
+BOTTOM LINE
+1. The groups of related genes are real. A labeled gene has the same fold as its annotated partner in 87.4% of 223
+   pairs where both predicted structures are confident (81.9% of all 298 pairs); mismatched-label control pairs 1.0%
+   (2.7%). This holds at every support level (81.0% even where under 5% of partners carry the label).
+2. The NAME is only as good as the share of partners that carry it. The call counts annotated partners alone, so a
+   handful of annotated genes can name a family of hundreds. `vote_share` and the 98.85% calibration do not see this.
+3. Support = votes_for / supporting_genomes is the measure that tracks correctness:
+
+   support (partners      labeled   gene has its own weak   best weak hit is the      identical family by     same fold as
+   carrying the label)    genes     hit to the proposed     proposed family, among    CDD best hit (CDD hit   partner (both
+                                    family (check A)        genes with any weak hit   is a Pfam model)        pLDDT >= 70)
+   at least 50%           54,169    58.5%                   83.1%                     68.6%                   90.0% (40)
+   20-50%                 35,829    43.8%                   71.2%                     59.2%                   91.7% (48)
+   5-20%                  40,127    33.8%                   68.6%                     43.6%                   91.1% (56)
+   under 5%               45,604    10.7%                   55.7%                     25.2%                   81.0% (79)
+   random label (null)              0.1-0.2%
+
+   Exact-family matching counts related families as misses, so levels are lower bounds; the trend is the result.
+4. Tiers (verify/verification_per_protein.parquet, one row per labeled gene):
+   T1  gene has its own weak profile hit to the proposed family                      65,836 (37.5%)
+   T2  no weak hit; at least 50% of partners carry the label; vote share over 0.8    18,437 (10.5%)
+   T2b no weak hit; 20-50% of partners; vote share over 0.8                          14,338 ( 8.2%)
+   contradicted: weak hits to other label families only                              14,016 ( 8.0%)
+   rest: no weak hit, low support or split vote                                      63,102 (35.9%)
+   T1 is per-gene corroboration by an independent method. T2 rests on partner support alone. "Rest" should carry
+   family membership and no name.
+
+INSPECTION (Sharur DPANN database, read-only)
+- Label voters as a share of supporting genomes: under 5% for 45,604 rows (median 4 voters among 441 supporters).
+- 30 labels (18,483 rows) are proposed for at least 10x as many genes as carry that annotation anywhere in DPANN:
+  GM_CSF 1,626 rows from 2 annotated proteins (score 27.4, E 1e-7), Transcrip_act 1,576 from 3, Mis14 1,811 from 12,
+  LIM 1,456 from 17, UBA_3 414 from 3, Med9 209 from 5, BcsB 470 from 9. 154 labels (70,086 rows) exceed their
+  annotated count. The same regime holds real rescues (Ribosomal_S26e 873 from 276; the tested eL39 leads).
+- CDD best hits (protein_resemblance; 86,895 labeled proteins): signal peptidase I 3,067 of 3,168, L14e 1,714 of
+  1,719, L39e 262 of 266 agree; LIM-labeled proteins are rpl40e in 440 of 572. HTH labels hold at superfamily level.
+
+CHECK A, weak profile hits (job 119541, 4 min 35 s on 24 CPUs; Aksha `--evalue 10 --domE 10`, 1,812 of 1,813 label
+models; HMMER's speed filters stay on, so the weakest reportable hit is about P <= 1e-5 per comparison)
+- All rows: proposed family is the top hit 33.8%, any hit 37.5%; random label 0.08% / 0.14%; no hit to any label
+  model 54.6%; hits to other label families only 8.0%. Among genes with any hit, the top hit is the proposed family 74.3%.
+- Vote share over 0.8: any hit 41.8% (random 0.08%); at or below 0.8: 24.0%.
+- Per label, any hit: signal peptidase I 100%, K02107 90.5%, DUF7557 73.7%, Peptidase_M50 68.8%, L14e 68.3%,
+  tRNA_anti-codon 58.6%, PilA 56.2%, CARDB 53.7%, RNase_P_p30 51.7%, MazE 49.1%; GM_CSF 0.0%, Transcrip_act 0.5%,
+  Laminin_G_3 2.0%, Mis14 3.2%, TraF 5.0%, LIM 6.0%, DUF7287 6.7%. Ribosomal_L39 15.0% (85% no hit: proteins of
+  about 50 aa rarely give a weak hit, and the tested eL39 leads were right), HEPN 17.8%, ParE_toxin 21.8%.
+
+CHECK B, predicted structures (ESMFold2 through the Biohub API; US-align; 300 labeled genes in three strata, each with
+its best annotated partner, and a mismatched-label partner of similar length as control)
+- 562 of 564 folds returned. The API never returned JASHSJ010000028.1_8 and MEK6933182.1; after an hour the
+  coordinator wrote folds/summary.tsv from the 562 saved results and ended the folding step. 596 of 600 pairs scored.
+- TM-score >= 0.5 (larger normalization): own partner 81.9% of 298, control 2.7% of 298. Both pLDDT >= 70: 87.4% of
+  223 against 1.0% of 208. Vote share over 0.8: 92.1% of 139; at or below 0.8: 79.8% of 84.
+- GM_CSF-labeled genes match their GM_CSF-annotated partner in 7 of 7 pairs: the check confirms homology to the
+  partner and cannot detect a wrong partner name. Ribosomal_L39 0 of 4 (about 50 aa; median TM 0.34).
+- The driver's own summary table is empty: pandas read the pair types "true" / "null" as a boolean and a missing
+  value. inspect/insp4.py reads them as text; the numbers above come from it.
+
+WHAT A USABLE TABLE NEEDS
+- A support column (votes_for / supporting_genomes) and each label's annotated count in DPANN.
+- A name only for T1 and T2 (84,273 genes); T2b flagged as weaker; "conserved unannotated family" for the rest, with
+  the contradicted rows flagged. Or the same thing as a rule in the call: count unannotated partners in the vote.
+- For families whose few annotated members carry an implausible Pfam name, CDD names across the family are a better
+  source (LIM -> rpl40e).
+
+FILES
+  inspect/insp1.py-insp4.py, inspect/support.parquet; verify/A/checkA_per_protein.parquet, checkA_strata.tsv;
+  verify/B/checkB_pairs.tsv, usalign_pairs.tsv, folds/ (562 structures; local, git-ignored);
+  verify/verification_per_protein.parquet.

@@ -71,3 +71,24 @@ PASS (whole-DPANN slot-rescue pass; coordinator message: Jacob approved the step
                   copied locally. DuckDB read_parquet join on protein_id verified read-only on the Mac Sharur DB: all 175,729
                   rows join, bin / contig / gene_index equal, 0 with a Pfam row. REPORT_pass.txt written. Pass cost 3 min 41 s
                   of the 1 h budget.
+
+VERIFY (coordinator: two independent checks before any load into Sharur)
+2026-11-21T00:38:26Z  Tools checked: aksha 0.2.3 search reports below gathering cuts with --evalue / --domE; Aksha PFAM store
+                  Pfam-A.hmm 27,481 models, KOFAM per-KO files; Mac has no Foldseek / TM-align / US-align (pyenv shim only),
+                  biotite has /shared/software/bin/USalign (20231222) and foldseek. fold_biohub.py read (plain fold default
+                  esmfold2-fast-2026-05; strips trailing '*'); ESM_API_KEY set on the Mac. 1,761 Pfam + 52 KO labels.
+2026-11-21T00:38:26Z  verify/predeclared_verify.json written before either check computed anything. sha256 72d13c1b13ae97c8ccbbc30b25878830418d58fac028a48466ded5f71c81f64c
+2026-11-21T00:45:22Z  Check B prep: data/B_order.tsv (S1 86,250 / S2 41,478 / S3 38,103 proteins of 40-600 aa; first 200 of each
+                  order); partnersB.py run on the biotite login node as a serial script (50 s): 600 / 600 calls reproduced, 600
+                  with a supporter carrying the label as a stored row, bond gate 0 mismatches. Sample = first 100 per stratum;
+                  300 null pairs, none widened beyond 20%; 155 distinct labels; 564 unique sequences folded (max 861 aa).
+                  data/B_sample.tsv 9bea1fb4..., data/B_pairs.tsv 86c8c0be..., B/fold_input.faa bdb31355....
+2026-11-21T00:45:22Z  Check B driver launched on the Mac (nohup, PID 80263 in verify/B/driver.pid; log verify/B/driver.log,
+                  fold log verify/B/fold.log): Biohub batch API folds, then US-align on the biotite login node (serial), tables,
+                  verify/STATUS_B. 236 folds returned within 2 min.
+2026-11-21T00:45:22Z  Check A: data/labeled.faa (175,729 sequences, sha256 986460c3...) copied to biotite. Aksha output format
+                  checked on a 2,000 x 61 login-node test. Models: 1,812 of 1,813 labels (PF12676 absent from the Aksha PFAM
+                  store). Smoke job 119536 (2,000 proteins) DONE in 25 s. Note: Aksha exposes --evalue / --domE but no --max,
+                  so HMMER's acceleration filters stay on; the weakest reportable hit is bounded by the Forward filter
+                  (P <= 1e-5 per comparison). Full job 119541 (slot_verifyA, mark7 header, 24 CPUs) RUNNING; its last step
+                  writes $RD/slot_rescue/verify/STATUS_A. Preflight rule files read in this turn before both submissions.

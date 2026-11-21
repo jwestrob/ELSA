@@ -3442,3 +3442,29 @@ reproduces 0.7961.
   would cost about 19 A5000 GPU-minutes plus 27 min on a 64-CPU node.
 - Decision taken: no list rebuild. The gain is small, the CRISPR-Cas deficit that motivated it is
   unchanged, and a new transform would reopen the configuration frozen on three untouched sets.
+
+## 2026-11-21 01:52 UTC — Verification of the proposed DPANN labels: families real, names good only with partner support
+
+Report `benchmarks/redesign/slot_rescue/REPORT_verify.txt` (written by me from the two checks and
+my inspection; predeclaration `verify/predeclared_verify.json` sha256 72d13c1b…).
+
+| Support (partners carrying the label) | Labeled genes | Own weak profile hit to proposed family | Top weak hit is proposed, given any hit | CDD identical family | Same fold as partner (both pLDDT >= 70) |
+|---|---|---|---|---|---|
+| at least 50% | 54,169 | 58.5% | 83.1% | 68.6% | 90.0% (40) |
+| 20-50% | 35,829 | 43.8% | 71.2% | 59.2% | 91.7% (48) |
+| 5-20% | 40,127 | 33.8% | 68.6% | 43.6% | 91.1% (56) |
+| under 5% | 45,604 | 10.7% | 55.7% | 25.2% | 81.0% (79) |
+
+- Check A (weak profile hits through Aksha, job 119541, 4 min 35 s): proposed family is a hit for
+  37.5% of rows against 0.14% for a random label; 54.6% have no hit to any label model; 8.0% hit
+  other label families only. GM_CSF 0 of 1,626; signal peptidase I 3,238 of 3,238.
+- Check B (ESMFold2 via Biohub, US-align, 300 genes): gene against its annotated partner TM >= 0.5
+  in 87.4% of 223 confident pairs, mismatched-label control 1.0% of 208. GM_CSF-labeled genes
+  match their partner in 7 of 7: structure confirms the homology and cannot see a wrong name.
+- Tiers (`verify/verification_per_protein.parquet`): own weak hit to the proposed family 65,836;
+  no hit, at least 50% support, vote share over 0.8: 18,437; no hit, 20-50% support: 14,338;
+  contradicted 14,016; rest 63,102.
+- Incidents: the Biohub API never returned 2 of 564 folds and the fold script polls without a
+  limit, so the driver sat for an hour until my overdue alarm; I wrote summary.tsv from the 562
+  saved results and ended the folding step. The driver's own summary table was empty because
+  pandas read the pair types "true" / "null" as a boolean and a missing value.

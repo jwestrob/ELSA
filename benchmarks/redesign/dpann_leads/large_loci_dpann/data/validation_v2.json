@@ -1,0 +1,1770 @@
+{
+ "comp": {
+  "stats": {
+   "families": 406,
+   "loci_in_families": 30404,
+   "families_ge3_groups": 166,
+   "families_ge5_groups": 86,
+   "families_ge10_groups": 36,
+   "max_groups": 631,
+   "max_loci": 25277
+  },
+  "all": {
+   "ribo": {
+    "runs": 1686,
+    "units": 1,
+    "largest_share": 1.0,
+    "families_for_90pct": 1,
+    "largest_members": 25277,
+    "largest_purity": 0.202
+   },
+   "systems": {
+    "purity": 0.8023,
+    "families_ge3_called": 14,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 1.0,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.857,
+      "units_for_90pct": 4,
+      "in_families": 0.857
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 1.0,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.053,
+      "units_for_90pct": 58,
+      "in_families": 0.211
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 16,
+      "in_families": 0.536
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.231,
+      "units_for_90pct": 8,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.5,
+      "units_for_90pct": 6,
+      "in_families": 0.5
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.749,
+      "units_for_90pct": 2,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.949,
+      "units_for_90pct": 1,
+      "in_families": 0.974
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  },
+  "odd": {
+   "ribo": {
+    "runs": 848,
+    "units": 1,
+    "largest_share": 1.0,
+    "families_for_90pct": 1,
+    "largest_members": 25277,
+    "largest_purity": 0.202
+   },
+   "systems": {
+    "purity": 0.8043,
+    "families_ge3_called": 8,
+    "types": {
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.821,
+      "units_for_90pct": 4,
+      "in_families": 0.821
+     },
+     "DF:RM_Type_I": {
+      "loci": 40,
+      "largest_share": 0.075,
+      "units_for_90pct": 34,
+      "in_families": 0.175
+     },
+     "DF:RM_Type_II": {
+      "loci": 11,
+      "largest_share": 0.182,
+      "units_for_90pct": 9,
+      "in_families": 0.455
+     },
+     "HydDB:NiFe": {
+      "loci": 219,
+      "largest_share": 0.753,
+      "units_for_90pct": 2,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 311,
+      "largest_share": 0.952,
+      "units_for_90pct": 1,
+      "in_families": 0.971
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  },
+  "even": {
+   "ribo": {
+    "runs": 838,
+    "units": 1,
+    "largest_share": 1.0,
+    "families_for_90pct": 1,
+    "largest_members": 25277,
+    "largest_purity": 0.202
+   },
+   "systems": {
+    "purity": 0.7983,
+    "families_ge3_called": 8,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 17,
+      "largest_share": 0.824,
+      "units_for_90pct": 3,
+      "in_families": 0.824
+     },
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.893,
+      "units_for_90pct": 2,
+      "in_families": 0.893
+     },
+     "DF:RM_Type_I": {
+      "loci": 36,
+      "largest_share": 0.083,
+      "units_for_90pct": 28,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_II": {
+      "loci": 17,
+      "largest_share": 0.235,
+      "units_for_90pct": 10,
+      "in_families": 0.588
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 10,
+      "largest_share": 0.3,
+      "units_for_90pct": 6,
+      "in_families": 0.6
+     },
+     "HydDB:NiFe": {
+      "loci": 207,
+      "largest_share": 0.744,
+      "units_for_90pct": 2,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 302,
+      "largest_share": 0.947,
+      "units_for_90pct": 1,
+      "in_families": 0.977
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": false,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  }
+ },
+ "comp_sparse": {
+  "stats": {
+   "families": 407,
+   "loci_in_families": 30404,
+   "families_ge3_groups": 167,
+   "families_ge5_groups": 86,
+   "families_ge10_groups": 36,
+   "max_groups": 631,
+   "max_loci": 25241
+  },
+  "all": {
+   "ribo": {
+    "runs": 1686,
+    "units": 1,
+    "largest_share": 1.0,
+    "families_for_90pct": 1,
+    "largest_members": 25241,
+    "largest_purity": 0.2023
+   },
+   "systems": {
+    "purity": 0.8023,
+    "families_ge3_called": 14,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 1.0,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.857,
+      "units_for_90pct": 4,
+      "in_families": 0.857
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 1.0,
+      "units_for_90pct": 1,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.053,
+      "units_for_90pct": 58,
+      "in_families": 0.211
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 16,
+      "in_families": 0.536
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.231,
+      "units_for_90pct": 8,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.5,
+      "units_for_90pct": 6,
+      "in_families": 0.5
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.749,
+      "units_for_90pct": 2,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.949,
+      "units_for_90pct": 1,
+      "in_families": 0.974
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  },
+  "odd": {
+   "ribo": {
+    "runs": 848,
+    "units": 1,
+    "largest_share": 1.0,
+    "families_for_90pct": 1,
+    "largest_members": 25241,
+    "largest_purity": 0.2023
+   },
+   "systems": {
+    "purity": 0.8043,
+    "families_ge3_called": 8,
+    "types": {
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.821,
+      "units_for_90pct": 4,
+      "in_families": 0.821
+     },
+     "DF:RM_Type_I": {
+      "loci": 40,
+      "largest_share": 0.075,
+      "units_for_90pct": 34,
+      "in_families": 0.175
+     },
+     "DF:RM_Type_II": {
+      "loci": 11,
+      "largest_share": 0.182,
+      "units_for_90pct": 9,
+      "in_families": 0.455
+     },
+     "HydDB:NiFe": {
+      "loci": 219,
+      "largest_share": 0.753,
+      "units_for_90pct": 2,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 311,
+      "largest_share": 0.952,
+      "units_for_90pct": 1,
+      "in_families": 0.971
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  },
+  "even": {
+   "ribo": {
+    "runs": 838,
+    "units": 1,
+    "largest_share": 1.0,
+    "families_for_90pct": 1,
+    "largest_members": 25241,
+    "largest_purity": 0.2023
+   },
+   "systems": {
+    "purity": 0.7983,
+    "families_ge3_called": 8,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 17,
+      "largest_share": 0.824,
+      "units_for_90pct": 3,
+      "in_families": 0.824
+     },
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.893,
+      "units_for_90pct": 2,
+      "in_families": 0.893
+     },
+     "DF:RM_Type_I": {
+      "loci": 36,
+      "largest_share": 0.083,
+      "units_for_90pct": 28,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_II": {
+      "loci": 17,
+      "largest_share": 0.235,
+      "units_for_90pct": 10,
+      "in_families": 0.588
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 10,
+      "largest_share": 0.3,
+      "units_for_90pct": 6,
+      "in_families": 0.6
+     },
+     "HydDB:NiFe": {
+      "loci": 207,
+      "largest_share": 0.744,
+      "units_for_90pct": 2,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 302,
+      "largest_share": 0.947,
+      "units_for_90pct": 1,
+      "in_families": 0.977
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": true,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": false,
+    "sys_purity_ge80": false,
+    "t4p_largest_ge50": true
+   },
+   "pass": false
+  }
+ },
+ "g0.5": {
+  "stats": {
+   "families": 462,
+   "loci_in_families": 30404,
+   "families_ge3_groups": 222,
+   "families_ge5_groups": 141,
+   "families_ge10_groups": 89,
+   "max_groups": 382,
+   "max_loci": 1309
+  },
+  "all": {
+   "ribo": {
+    "runs": 1686,
+    "units": 7,
+    "largest_share": 0.7289,
+    "families_for_90pct": 3,
+    "largest_members": 1296,
+    "largest_purity": 0.9985
+   },
+   "systems": {
+    "purity": 0.9511,
+    "families_ge3_called": 32,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 0.333,
+      "units_for_90pct": 4,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.804,
+      "units_for_90pct": 5,
+      "in_families": 0.857
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 0.857,
+      "units_for_90pct": 2,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.053,
+      "units_for_90pct": 58,
+      "in_families": 0.211
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 20,
+      "in_families": 0.536
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.154,
+      "units_for_90pct": 10,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.333,
+      "units_for_90pct": 8,
+      "in_families": 0.5
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.62,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.339,
+      "units_for_90pct": 6,
+      "in_families": 0.974
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "odd": {
+   "ribo": {
+    "runs": 848,
+    "units": 6,
+    "largest_share": 0.737,
+    "families_for_90pct": 3,
+    "largest_members": 1296,
+    "largest_purity": 0.9985
+   },
+   "systems": {
+    "purity": 0.9505,
+    "families_ge3_called": 23,
+    "types": {
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.75,
+      "units_for_90pct": 5,
+      "in_families": 0.821
+     },
+     "DF:RM_Type_I": {
+      "loci": 40,
+      "largest_share": 0.075,
+      "units_for_90pct": 34,
+      "in_families": 0.175
+     },
+     "DF:RM_Type_II": {
+      "loci": 11,
+      "largest_share": 0.091,
+      "units_for_90pct": 10,
+      "in_families": 0.455
+     },
+     "HydDB:NiFe": {
+      "loci": 219,
+      "largest_share": 0.626,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 311,
+      "largest_share": 0.354,
+      "units_for_90pct": 7,
+      "in_families": 0.971
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "even": {
+   "ribo": {
+    "runs": 838,
+    "units": 6,
+    "largest_share": 0.7208,
+    "families_for_90pct": 3,
+    "largest_members": 1296,
+    "largest_purity": 0.9985
+   },
+   "systems": {
+    "purity": 0.9546,
+    "families_ge3_called": 21,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 17,
+      "largest_share": 0.824,
+      "units_for_90pct": 3,
+      "in_families": 0.824
+     },
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.857,
+      "units_for_90pct": 3,
+      "in_families": 0.893
+     },
+     "DF:RM_Type_I": {
+      "loci": 36,
+      "largest_share": 0.083,
+      "units_for_90pct": 28,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_II": {
+      "loci": 17,
+      "largest_share": 0.235,
+      "units_for_90pct": 12,
+      "in_families": 0.588
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 10,
+      "largest_share": 0.2,
+      "units_for_90pct": 8,
+      "in_families": 0.6
+     },
+     "HydDB:NiFe": {
+      "loci": 207,
+      "largest_share": 0.614,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 302,
+      "largest_share": 0.325,
+      "units_for_90pct": 6,
+      "in_families": 0.977
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  }
+ },
+ "g1": {
+  "stats": {
+   "families": 471,
+   "loci_in_families": 30404,
+   "families_ge3_groups": 231,
+   "families_ge5_groups": 150,
+   "families_ge10_groups": 98,
+   "max_groups": 371,
+   "max_loci": 1309
+  },
+  "all": {
+   "ribo": {
+    "runs": 1686,
+    "units": 7,
+    "largest_share": 0.7165,
+    "families_for_90pct": 3,
+    "largest_members": 1268,
+    "largest_purity": 0.9984
+   },
+   "systems": {
+    "purity": 0.9511,
+    "families_ge3_called": 32,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 0.333,
+      "units_for_90pct": 4,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.804,
+      "units_for_90pct": 5,
+      "in_families": 0.857
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 0.857,
+      "units_for_90pct": 2,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.053,
+      "units_for_90pct": 58,
+      "in_families": 0.211
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 20,
+      "in_families": 0.536
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.154,
+      "units_for_90pct": 10,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.333,
+      "units_for_90pct": 8,
+      "in_families": 0.5
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.62,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.339,
+      "units_for_90pct": 6,
+      "in_families": 0.974
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "odd": {
+   "ribo": {
+    "runs": 848,
+    "units": 6,
+    "largest_share": 0.7252,
+    "families_for_90pct": 3,
+    "largest_members": 1268,
+    "largest_purity": 0.9984
+   },
+   "systems": {
+    "purity": 0.952,
+    "families_ge3_called": 22,
+    "types": {
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.75,
+      "units_for_90pct": 5,
+      "in_families": 0.821
+     },
+     "DF:RM_Type_I": {
+      "loci": 40,
+      "largest_share": 0.075,
+      "units_for_90pct": 34,
+      "in_families": 0.175
+     },
+     "DF:RM_Type_II": {
+      "loci": 11,
+      "largest_share": 0.091,
+      "units_for_90pct": 10,
+      "in_families": 0.455
+     },
+     "HydDB:NiFe": {
+      "loci": 219,
+      "largest_share": 0.626,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 311,
+      "largest_share": 0.354,
+      "units_for_90pct": 7,
+      "in_families": 0.971
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "even": {
+   "ribo": {
+    "runs": 838,
+    "units": 6,
+    "largest_share": 0.7076,
+    "families_for_90pct": 3,
+    "largest_members": 1268,
+    "largest_purity": 0.9984
+   },
+   "systems": {
+    "purity": 0.9546,
+    "families_ge3_called": 21,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 17,
+      "largest_share": 0.824,
+      "units_for_90pct": 3,
+      "in_families": 0.824
+     },
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.857,
+      "units_for_90pct": 3,
+      "in_families": 0.893
+     },
+     "DF:RM_Type_I": {
+      "loci": 36,
+      "largest_share": 0.083,
+      "units_for_90pct": 28,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_II": {
+      "loci": 17,
+      "largest_share": 0.235,
+      "units_for_90pct": 12,
+      "in_families": 0.588
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 10,
+      "largest_share": 0.2,
+      "units_for_90pct": 8,
+      "in_families": 0.6
+     },
+     "HydDB:NiFe": {
+      "loci": 207,
+      "largest_share": 0.614,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 302,
+      "largest_share": 0.325,
+      "units_for_90pct": 6,
+      "in_families": 0.977
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  }
+ },
+ "g2": {
+  "stats": {
+   "families": 490,
+   "loci_in_families": 30404,
+   "families_ge3_groups": 250,
+   "families_ge5_groups": 169,
+   "families_ge10_groups": 116,
+   "max_groups": 290,
+   "max_loci": 932
+  },
+  "all": {
+   "ribo": {
+    "runs": 1686,
+    "units": 10,
+    "largest_share": 0.4941,
+    "families_for_90pct": 4,
+    "largest_members": 888,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9628,
+    "families_ge3_called": 36,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 0.25,
+      "units_for_90pct": 5,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.804,
+      "units_for_90pct": 5,
+      "in_families": 0.857
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 0.857,
+      "units_for_90pct": 2,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.053,
+      "units_for_90pct": 58,
+      "in_families": 0.211
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 20,
+      "in_families": 0.536
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.154,
+      "units_for_90pct": 10,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.333,
+      "units_for_90pct": 8,
+      "in_families": 0.5
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.62,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.339,
+      "units_for_90pct": 8,
+      "in_families": 0.974
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "odd": {
+   "ribo": {
+    "runs": 848,
+    "units": 7,
+    "largest_share": 0.4776,
+    "families_for_90pct": 4,
+    "largest_members": 888,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9638,
+    "families_ge3_called": 25,
+    "types": {
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.75,
+      "units_for_90pct": 5,
+      "in_families": 0.821
+     },
+     "DF:RM_Type_I": {
+      "loci": 40,
+      "largest_share": 0.075,
+      "units_for_90pct": 34,
+      "in_families": 0.175
+     },
+     "DF:RM_Type_II": {
+      "loci": 11,
+      "largest_share": 0.091,
+      "units_for_90pct": 10,
+      "in_families": 0.455
+     },
+     "HydDB:NiFe": {
+      "loci": 219,
+      "largest_share": 0.626,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 311,
+      "largest_share": 0.354,
+      "units_for_90pct": 8,
+      "in_families": 0.971
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "even": {
+   "ribo": {
+    "runs": 838,
+    "units": 9,
+    "largest_share": 0.5107,
+    "families_for_90pct": 4,
+    "largest_members": 888,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9669,
+    "families_ge3_called": 25,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 17,
+      "largest_share": 0.824,
+      "units_for_90pct": 3,
+      "in_families": 0.824
+     },
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.857,
+      "units_for_90pct": 3,
+      "in_families": 0.893
+     },
+     "DF:RM_Type_I": {
+      "loci": 36,
+      "largest_share": 0.083,
+      "units_for_90pct": 28,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_II": {
+      "loci": 17,
+      "largest_share": 0.235,
+      "units_for_90pct": 12,
+      "in_families": 0.588
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 10,
+      "largest_share": 0.2,
+      "units_for_90pct": 8,
+      "in_families": 0.6
+     },
+     "HydDB:NiFe": {
+      "loci": 207,
+      "largest_share": 0.614,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 302,
+      "largest_share": 0.325,
+      "units_for_90pct": 7,
+      "in_families": 0.977
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  }
+ },
+ "g4": {
+  "stats": {
+   "families": 516,
+   "loci_in_families": 30404,
+   "families_ge3_groups": 276,
+   "families_ge5_groups": 194,
+   "families_ge10_groups": 138,
+   "max_groups": 282,
+   "max_loci": 891
+  },
+  "all": {
+   "ribo": {
+    "runs": 1686,
+    "units": 11,
+    "largest_share": 0.4982,
+    "families_for_90pct": 4,
+    "largest_members": 891,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9644,
+    "families_ge3_called": 36,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 0.25,
+      "units_for_90pct": 5,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.786,
+      "units_for_90pct": 6,
+      "in_families": 0.857
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 0.857,
+      "units_for_90pct": 2,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.053,
+      "units_for_90pct": 58,
+      "in_families": 0.211
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 20,
+      "in_families": 0.536
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.154,
+      "units_for_90pct": 10,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.333,
+      "units_for_90pct": 8,
+      "in_families": 0.5
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.62,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.339,
+      "units_for_90pct": 8,
+      "in_families": 0.974
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "odd": {
+   "ribo": {
+    "runs": 848,
+    "units": 8,
+    "largest_share": 0.4835,
+    "families_for_90pct": 4,
+    "largest_members": 891,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9653,
+    "families_ge3_called": 24,
+    "types": {
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.75,
+      "units_for_90pct": 5,
+      "in_families": 0.821
+     },
+     "DF:RM_Type_I": {
+      "loci": 40,
+      "largest_share": 0.075,
+      "units_for_90pct": 34,
+      "in_families": 0.175
+     },
+     "DF:RM_Type_II": {
+      "loci": 11,
+      "largest_share": 0.091,
+      "units_for_90pct": 10,
+      "in_families": 0.455
+     },
+     "HydDB:NiFe": {
+      "loci": 219,
+      "largest_share": 0.626,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 311,
+      "largest_share": 0.354,
+      "units_for_90pct": 8,
+      "in_families": 0.971
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "even": {
+   "ribo": {
+    "runs": 838,
+    "units": 9,
+    "largest_share": 0.5131,
+    "families_for_90pct": 5,
+    "largest_members": 891,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9719,
+    "families_ge3_called": 24,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 17,
+      "largest_share": 0.824,
+      "units_for_90pct": 3,
+      "in_families": 0.824
+     },
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.821,
+      "units_for_90pct": 4,
+      "in_families": 0.893
+     },
+     "DF:RM_Type_I": {
+      "loci": 36,
+      "largest_share": 0.083,
+      "units_for_90pct": 28,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_II": {
+      "loci": 17,
+      "largest_share": 0.235,
+      "units_for_90pct": 12,
+      "in_families": 0.588
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 10,
+      "largest_share": 0.2,
+      "units_for_90pct": 8,
+      "in_families": 0.6
+     },
+     "HydDB:NiFe": {
+      "loci": 207,
+      "largest_share": 0.614,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 302,
+      "largest_share": 0.325,
+      "units_for_90pct": 7,
+      "in_families": 0.977
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": true,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  }
+ },
+ "g8": {
+  "stats": {
+   "families": 544,
+   "loci_in_families": 30404,
+   "families_ge3_groups": 304,
+   "families_ge5_groups": 221,
+   "families_ge10_groups": 163,
+   "max_groups": 190,
+   "max_loci": 551
+  },
+  "all": {
+   "ribo": {
+    "runs": 1686,
+    "units": 14,
+    "largest_share": 0.175,
+    "families_for_90pct": 7,
+    "largest_members": 330,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9693,
+    "families_ge3_called": 41,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 0.25,
+      "units_for_90pct": 5,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.786,
+      "units_for_90pct": 6,
+      "in_families": 0.857
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 0.857,
+      "units_for_90pct": 2,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.053,
+      "units_for_90pct": 58,
+      "in_families": 0.211
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 20,
+      "in_families": 0.536
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.154,
+      "units_for_90pct": 10,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.333,
+      "units_for_90pct": 8,
+      "in_families": 0.5
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.62,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.272,
+      "units_for_90pct": 11,
+      "in_families": 0.974
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": false,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "odd": {
+   "ribo": {
+    "runs": 848,
+    "units": 11,
+    "largest_share": 0.171,
+    "families_for_90pct": 7,
+    "largest_members": 330,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9702,
+    "families_ge3_called": 27,
+    "types": {
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.75,
+      "units_for_90pct": 5,
+      "in_families": 0.821
+     },
+     "DF:RM_Type_I": {
+      "loci": 40,
+      "largest_share": 0.075,
+      "units_for_90pct": 34,
+      "in_families": 0.175
+     },
+     "DF:RM_Type_II": {
+      "loci": 11,
+      "largest_share": 0.091,
+      "units_for_90pct": 10,
+      "in_families": 0.455
+     },
+     "HydDB:NiFe": {
+      "loci": 219,
+      "largest_share": 0.626,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 311,
+      "largest_share": 0.277,
+      "units_for_90pct": 11,
+      "in_families": 0.971
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": false,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "even": {
+   "ribo": {
+    "runs": 838,
+    "units": 12,
+    "largest_share": 0.179,
+    "families_for_90pct": 7,
+    "largest_members": 330,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.975,
+    "families_ge3_called": 25,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 17,
+      "largest_share": 0.824,
+      "units_for_90pct": 3,
+      "in_families": 0.824
+     },
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.821,
+      "units_for_90pct": 4,
+      "in_families": 0.893
+     },
+     "DF:RM_Type_I": {
+      "loci": 36,
+      "largest_share": 0.083,
+      "units_for_90pct": 28,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_II": {
+      "loci": 17,
+      "largest_share": 0.235,
+      "units_for_90pct": 12,
+      "in_families": 0.588
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 10,
+      "largest_share": 0.2,
+      "units_for_90pct": 8,
+      "in_families": 0.6
+     },
+     "HydDB:NiFe": {
+      "loci": 207,
+      "largest_share": 0.614,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 302,
+      "largest_share": 0.268,
+      "units_for_90pct": 10,
+      "in_families": 0.977
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": false,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  }
+ },
+ "g16": {
+  "stats": {
+   "families": 588,
+   "loci_in_families": 30404,
+   "families_ge3_groups": 348,
+   "families_ge5_groups": 263,
+   "families_ge10_groups": 202,
+   "max_groups": 145,
+   "max_loci": 551
+  },
+  "all": {
+   "ribo": {
+    "runs": 1686,
+    "units": 22,
+    "largest_share": 0.1471,
+    "families_for_90pct": 11,
+    "largest_members": 250,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9709,
+    "families_ge3_called": 47,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 26,
+      "largest_share": 0.885,
+      "units_for_90pct": 2,
+      "in_families": 0.885
+     },
+     "CRISPR-Cas:III-A": {
+      "loci": 12,
+      "largest_share": 0.833,
+      "units_for_90pct": 2,
+      "in_families": 0.833
+     },
+     "DF:Borvo": {
+      "loci": 12,
+      "largest_share": 0.25,
+      "units_for_90pct": 6,
+      "in_families": 1.0
+     },
+     "DF:Ceres": {
+      "loci": 56,
+      "largest_share": 0.75,
+      "units_for_90pct": 7,
+      "in_families": 0.857
+     },
+     "DF:Eleos": {
+      "loci": 14,
+      "largest_share": 0.857,
+      "units_for_90pct": 2,
+      "in_families": 1.0
+     },
+     "DF:RM_Type_I": {
+      "loci": 76,
+      "largest_share": 0.053,
+      "units_for_90pct": 58,
+      "in_families": 0.211
+     },
+     "DF:RM_Type_II": {
+      "loci": 28,
+      "largest_share": 0.179,
+      "units_for_90pct": 20,
+      "in_families": 0.536
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 13,
+      "largest_share": 0.154,
+      "units_for_90pct": 10,
+      "in_families": 0.615
+     },
+     "DF:dCTPdeaminase": {
+      "loci": 12,
+      "largest_share": 0.333,
+      "units_for_90pct": 8,
+      "in_families": 0.5
+     },
+     "HydDB:NiFe": {
+      "loci": 426,
+      "largest_share": 0.62,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 613,
+      "largest_share": 0.264,
+      "units_for_90pct": 16,
+      "in_families": 0.974
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": false,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "odd": {
+   "ribo": {
+    "runs": 848,
+    "units": 19,
+    "largest_share": 0.1639,
+    "families_for_90pct": 10,
+    "largest_members": 250,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9701,
+    "families_ge3_called": 32,
+    "types": {
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.714,
+      "units_for_90pct": 6,
+      "in_families": 0.821
+     },
+     "DF:RM_Type_I": {
+      "loci": 40,
+      "largest_share": 0.075,
+      "units_for_90pct": 34,
+      "in_families": 0.175
+     },
+     "DF:RM_Type_II": {
+      "loci": 11,
+      "largest_share": 0.091,
+      "units_for_90pct": 10,
+      "in_families": 0.455
+     },
+     "HydDB:NiFe": {
+      "loci": 219,
+      "largest_share": 0.626,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 311,
+      "largest_share": 0.27,
+      "units_for_90pct": 15,
+      "in_families": 0.971
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": false,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  },
+  "even": {
+   "ribo": {
+    "runs": 838,
+    "units": 18,
+    "largest_share": 0.1301,
+    "families_for_90pct": 11,
+    "largest_members": 250,
+    "largest_purity": 1.0
+   },
+   "systems": {
+    "purity": 0.9799,
+    "families_ge3_called": 27,
+    "types": {
+     "CRISPR-Cas:I-B": {
+      "loci": 17,
+      "largest_share": 0.824,
+      "units_for_90pct": 3,
+      "in_families": 0.824
+     },
+     "DF:Ceres": {
+      "loci": 28,
+      "largest_share": 0.786,
+      "units_for_90pct": 5,
+      "in_families": 0.893
+     },
+     "DF:RM_Type_I": {
+      "loci": 36,
+      "largest_share": 0.083,
+      "units_for_90pct": 28,
+      "in_families": 0.25
+     },
+     "DF:RM_Type_II": {
+      "loci": 17,
+      "largest_share": 0.235,
+      "units_for_90pct": 12,
+      "in_families": 0.588
+     },
+     "DF:RM_Type_IIG_2": {
+      "loci": 10,
+      "largest_share": 0.2,
+      "units_for_90pct": 8,
+      "in_families": 0.6
+     },
+     "HydDB:NiFe": {
+      "loci": 207,
+      "largest_share": 0.614,
+      "units_for_90pct": 3,
+      "in_families": 0.995
+     },
+     "TXSS:Archaeal-T4P": {
+      "loci": 302,
+      "largest_share": 0.258,
+      "units_for_90pct": 14,
+      "in_families": 0.977
+     }
+    }
+   },
+   "bars": {
+    "ribo_largest_ge80": false,
+    "ribo_le5_for90": false,
+    "ribo_purity_ge80": true,
+    "sys_purity_ge80": true,
+    "t4p_largest_ge50": false
+   },
+   "pass": false
+  }
+ }
+}

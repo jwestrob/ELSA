@@ -1,0 +1,97 @@
+{
+  "workstream": "large_loci_dpann",
+  "written_utc": "2026-11-21T11:48Z",
+  "written_before": "any locus-family computation, validation number or family statistic; only the outermost-locus size counts below were seen",
+  "seen_before_writing": {
+    "outermost_loci": "465,242 (= the L1 runs of RD/long_loci/loci/dpann_Z; outermost nodes of Z L4b+ theta .02)",
+    "outermost_size_bins": "2: 176,840; 3-5: 189,601; 6-9: 64,271; 10-19: 28,831; 20-49: 5,437; 50-99: 253; >=100: 9 (max 130)",
+    "nested_nodes_ge10_inside_larger": 44864
+  },
+  "units": {
+    "locus": "outermost node of the frozen DPANN Z L4b+ theta .02 tree (RD/long_loci/loci/dpann_Z/L4bp_t0.02.parquet; gid interval s..e inclusive); size = e - s + 1 genes",
+    "large": "size >= 10 (34,530 loci); side count 6-9",
+    "nested": "nodes of >= 10 genes nested inside a larger outermost locus are not separate units; each is represented by its outermost locus. Reported: how many large outermost loci contain >= 1 nested node of >= 10 genes, and the size of their largest nested node"
+  },
+  "gene_correspondence": "Z list of gene a = entries of the calibrated table RD/calib/table for a's unique sequence with z >= 10.6, genome group (lineagefree emb_hom_average_t0.75) different from a's, best gene per genome as stored; ranked by z. Code copied from slot_rescue/code/score.py z_chunk (no change).",
+  "locus_link_rule": {
+    "m(A->B)": "number of genes of locus A whose Z list holds a gene inside locus B",
+    "edge": "m(A->B) >= 5 and m(B->A) >= 5 and m(A->B) >= |A|/3 and m(B->A) >= |B|/3",
+    "family": "connected component of the edge graph over the 34,530 large loci; components of >= 2 loci are families (an edge always joins two genome groups because lists exclude the own group); loci with no edge are singletons",
+    "sensitivity_variants_for_validation_only": [
+      "fraction 1/4 (min 5 genes)",
+      "fraction 1/2 (min 5 genes)"
+    ],
+    "fallback": "if the primary rule fails a validation bar and a variant passes every bar, use the first passing variant in the order 1/2, 1/4, and say so"
+  },
+  "validation": {
+    "ribosomal": {
+      "runs": ">= 16 genes carrying a Pfam Ribosomal_* domain on one contig with gaps <= 2 (the package rule), recomputed from Sharur pfam rows; each run is mapped to the large outermost locus with the largest gene overlap",
+      "metrics": "families holding the mapped loci; share in the largest family; families needed for 90%; purity of that family = share of its member loci holding >= 5 ribosomal-protein genes",
+      "bars": "largest family holds >= 0.80 of mapped run loci; <= 5 families hold 90%; purity >= 0.80"
+    },
+    "curated_systems": {
+      "calls": "system_proteins joined to defense_systems (DefenseFinder, by system_type), secretion_systems (TXSScan, by system_type), crispr_cas_systems with status crispr_cas or cas (CCTyper, by best_type); hydrogenase_classifications (HydDB, by reference_class) as a per-gene curated call",
+      "metrics": "per type with >= 10 large loci overlapping a call: families holding them, share in the largest family, families for 90% (fragmentation); per family with >= 3 called member loci: share of called members whose dominant type equals the family's dominant type (purity)",
+      "bars": "loci-weighted mean purity >= 0.80; Archaeal-T4P largest-family share >= 0.50; fragmentation of other types reported without a bar (one system type can sit in different neighborhoods)"
+    }
+  },
+  "family_description": {
+    "gene_clusters": "within a family, genes of member loci joined by Z-list links whose partner lies in another member locus of the same family; connected components = gene clusters",
+    "core": "gene cluster present in >= 50% of member loci; variable = present in < 50%",
+    "order_conservation": "per member: longest collinear subsequence (either orientation) of core clusters in consensus order / core clusters present; family value = median",
+    "unannotated": "gene with no row in annotations (any source) and no CDD row (protein_resemblance); also reported: no Pfam/KOfam/KEGG row",
+    "edge": "member locus with fewer than 3 genes between it and either contig end",
+    "lineages": "genome groups (emb_hom_average_t0.75), GTDB phyla and orders from bins.taxonomy"
+  },
+  "classification": {
+    "covered_core_cluster": "core cluster with >= 50% of its genes inside a curated call, or whose genes carry (plurality) a housekeeping predicate (ribosomal_protein, rna_polymerase, atp_synthesis) or a KO of a KEGG module holding >= 3 core clusters of the family",
+    "KNOWN": ">= 2/3 of core clusters covered (basis named: curated type, or ribosomal / RNAP / ATPase / KEGG module id)",
+    "KNOWN-EXTENDED": ">= 2 covered core clusters and >= 3 uncovered core clusters and covered share < 2/3",
+    "MOBILE": "not KNOWN or KNOWN-EXTENDED and >= 10% of family genes carry a mobile tag (predicates mobile_element, transposase, integrase, phage_related) or a core cluster has a mobile-tag plurality",
+    "DARK": "otherwise, >= 50% of family genes unannotated by every source",
+    "COHERENT-UNNAMED": "otherwise, >= 50% of annotated core clusters share one process predicate from a fixed process list (carbohydrate_active/glycosyltransferase, transporter, secretion_component, defense_component, electron_transport/energy_metabolism, cofactor_biosynthesis, amino_acid_biosynthesis, lipid_metabolism, nucleotide_metabolism, dna_repair/replication, translation, cell_surface/adhesin, toxin/antitoxin)",
+    "MIXED": "residual: annotated, no single process (added because the five classes do not cover every family)",
+    "size_bins": "median member size 10-14, 15-24, >= 25"
+  },
+  "ranking": {
+    "eligible": "families not KNOWN with >= 3 genome groups, >= 2 GTDB orders and >= 5 member loci",
+    "score": "mean percentile rank over: genome groups, orders, median size, mean core presence, order conservation, annotated share of core clusters",
+    "top": 20
+  },
+  "controls": {
+    "lineage": "counts in genome groups and orders everywhere; raw genome counts only beside them",
+    "assembly": "edge rate per family; top families need >= 50% of members away from contig edges",
+    "null": "(a) gene identities shuffled within genomes: each locus keeps its size and genome, its genes replaced by random genes of the same genome (seed 17); the link rule and components are rerun on the shuffled loci; family count, largest group breadth and families with >= 3 groups compared with observed. (b) the method's own whole-locus test: share of large loci whose root node passes the L4b test (n >= 2, Lambda >= tau, i.e. present in L4b_t0.02)",
+    "hydrophobic": "fraction ILVFMAWC per core cluster (median); >= 0.47 or TMHMM >= 3 helices flagged membrane before any fold"
+  },
+  "amendment_1": {
+    "written_utc": "2026-11-21T12:12Z, before any family number was read (the families job was still running)",
+    "change": "the mobile tag excludes genes whose Pfam domains are only Hjc and/or Endonuc_Holl: Sharur's mobile_element predicate puts the archaeal Holliday-junction resolvase Hjc (2,796 + 949 genes), a housekeeping recombination enzyme, under mobile_element"
+  },
+  "amendment_2": {
+    "written_utc": "2026-11-21T12:25Z, after the primary rule failed validation (job 120545) and before any number under this amendment existed",
+    "failure": "primary rule and both variants chain: one component holds 28,829 (1/3), 30,165 (1/4), 19,437 (1/2) of 34,530 large loci; ribosomal family purity 0.18 / 0.17 / 0.26 (bar 0.80); system purity 0.54 / 0.54 / 0.94. 6.7 M edges at 1/3 (mean degree 389). Shuffled null: 0 edges at every fraction.",
+    "diagnosis_assumed": "two chaining sources: one-way list matches between paralog-rich loci (one gene of A matched to several genes of B over genomes) and concatenated outermost loci that link two neighborhoods (single linkage merges through them)",
+    "rule_v2": {
+      "correspondence": "reciprocal list pair: b in Z list of a and a in Z list of b (both lists as before)",
+      "m_col(A,B)": "longest collinear chain (either orientation) of reciprocal pairs between loci A and B",
+      "edge": "m_col >= 5 and m_col >= |A|/3 and m_col >= |B|/3",
+      "sparsify": "keep the union of each locus's 30 highest-weight edges, weight w = m_col / sqrt(|A| |B|)",
+      "partition": "Louvain (networkx louvain_communities, weight w, seed 17) at resolution gamma in {0.5, 1, 2, 4, 8, 16}; connected components also reported; communities of >= 2 loci are families",
+      "selection": "on loci of odd genome_code: the smallest gamma meeting all five validation bars; bars then reported on even-genome loci and on all loci. If no gamma meets all five on odd loci, the gamma with the most bars met (ties: smaller gamma), stated as a failure",
+      "gene_clusters": "reciprocal pairs whose two loci sit in the same family; connected components",
+      "null": "the same pipeline on the shuffled loci of the primary null"
+    }
+  },
+  "amendment_3": {
+    "written_utc": "2026-11-21T12:50Z, POST HOC: after reading the first classification table under rule v2",
+    "observation": "archaeal housekeeping clusters (exosome-proteasome, translation-factor, Sec/SRP, tRNA-modification, replication clusters) were classified MIXED / COHERENT-UNNAMED / KNOWN-EXTENDED because coverage only counted ribosomal / RNAP / ATPase tags, KEGG modules and curated calls",
+    "change": "a core cluster is also covered when >= 50% of its genes carry a housekeeping predicate (translation, translation_factor, trna_synthetase, replication, dna_polymerase, rna_processing, trna_modification, rrna_modification, sec_pathway, signal_recognition, chaperone, cell_division, divisome, topoisomerase, transcription) or a Proteasome Pfam domain; KNOWN families then carry a basis category (curated / textbook / housekeeping cluster). Both classifications are reported (column cls_predeclared beside cls).",
+    "change_2": "KNOWN at >= 1/2 of core clusters covered (amended rule only; the predeclared column keeps 2/3); ranking eligibility adds core >= 3 (a family with fewer than 3 core genes has no defined partner list). Both POST HOC."
+  },
+  "expectations": {
+    "families_ge3_groups": "500-3,000",
+    "KNOWN_share": "30-60% of families with >= 3 groups",
+    "ribosomal_largest_family_share": "0.6-0.95"
+  }
+}

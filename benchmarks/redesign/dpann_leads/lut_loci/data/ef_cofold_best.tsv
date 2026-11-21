@@ -1,0 +1,11 @@
+name	role	family	ion	ion_resi	protein_O	protein_ON	carboxylate_O	amide_O	backbone_O	hydroxyl_O	N	acid_res	chelating	mO_mean	mO_min	mO_max	donor_plddt	overlap_apo	acid_list	PASS_cofold_rule
+efcar__efcar_351841__3512381	efcar	efcar_351841	LA	1	6	6	5	0	1	0	0	4	1	2.41	2.24	2.9	75.0	0	A66;A68;A70;G77	False
+efcar__efcar_351841__3512381	efcar	efcar_351841	CA	1	6	6	5	0	1	0	0	4	1	2.42	2.29	2.58	74.6	0	A66;A68;A70;G77	False
+efcar__efq_248360__318825	efcar	efq_248360	LA	1	6	6	4	1	1	0	0	3	1	2.35	2.24	2.59	77.3	0	A62;A64;G73	False
+efcar__efq_248360__318825	efcar	efq_248360	CA	1	6	6	4	1	1	0	0	3	1	2.37	2.23	2.58	77.0	0	A62;A64;G73	False
+efq__efq_363245__3313558	efq	efq_363245	CA	1	3	4	3	0	0	0	1	2	1	2.34	2.08	2.56	54.8	0	A143;A172	False
+efq__efq_363245__3313558	efq	efq_363245	LA	1	2	2	2	0	0	0	0	2	0	2.24	2.09	2.38	91.3	2	A38;G97	False
+efq__efq_363245__2948522	efq	efq_363245	LA	1	2	2	2	0	0	0	0	2	0	2.68	2.64	2.72	55.4	0	G149;A150	False
+efq__efq_248360__3070531	efq	efq_248360	CA	1	2	2	2	0	0	0	0	1	1	2.4	1.99	2.8	89.5	1	A81	False
+efq__efq_248360__3070531	efq	efq_248360	LA	1	1	1	1	0	0	0	0	1	0	2.8	2.8	2.8	58.1	0	A149	False
+efq__efq_363245__2948522	efq	efq_363245	CA	1	1	1	1	0	0	0	0	1	0	2.04	2.04	2.04	87.7	0	G22	False

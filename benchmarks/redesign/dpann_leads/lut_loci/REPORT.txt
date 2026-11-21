@@ -1,6 +1,8 @@
 LUT_LOCI: LANTHANIDE-HANDLING CANDIDATES IN THE LUT AND XOXF NEIGHBORHOODS OF 1,032 GTDB GENOMES (2026-11-21)
 =============================================================================================================
 BOTTOM LINE
+0. Follow-ups at the end of this file: the 32 EF-hand_5-labeled genes are KILLED; the RLWNL 'beta-roll' family (token
+   275376) is SUPPORTED as a conserved carboxylate metal site at the 50% bar, with lanthanide over calcium UNVERIFIED.
 1. Nothing passes. Six periplasmic families at conserved positions (LutC, LutG, LutI, the DUF3280 protein beside lutA,
    and the orf6- and orf7-like proteins beside xoxF) carry no conserved carboxylate metal site: 0/32 representatives
    pass, against positives 11/14, unannotated negatives 0/30, calcium-binding negatives 3/16. All six: KILLED.
@@ -155,3 +157,42 @@ FOLLOW-UP (coordinator, 2026-11-21): 32 EF-HAND_5-LABELED GENES FROM LEADS_LUT (
    off the lut loci, partners are not lanmodulin), and they are not a distinct EF-hand family at lut loci. The position call
    hands the EF-hand_5 label of multi-EF-hand partners to a loop-less cytoplasmic relative beside a two-component system;
    K22619 follows the partners. Function UNVERIFIED. Folds this session: 207 in total (183 + 24).
+
+FOLLOW-UP 2 (coordinator, 2026-11-21): THE 'BETA-ROLL' RLWNL/LWNLT FAMILY (spicy_xref idea 10)   VERDICT: SUPPORTED (metal site)
+ Bottom line: by the fixed rule the family (rescue3 token 275376 = lut_loci family 52) carries a conserved carboxylate site:
+ PASS_site 5/10 representatives (exactly the 50% bar), PASS_cofold 2/2, context passes. Lanthanide over calcium, and
+ binding itself, stay UNVERIFIED: the CA co-folds coordinate the same site, and no lanthanide-specific feature exists for
+ this fold. It is not a beta-roll by structure. Code e07-e13; data/br_*; 15 folds (11 apo, 4 co-folds).
+ 1 Identity: of the 29 handed-over motif proteins, 17 belong to token 275376; the other 12 sit in 12 unrelated tokens (8 carry
+   other Pfam domains: DUF6460, DUF559, Porin_4, GGDEF, Ni_hydr_CYTB, FlaF, Phage_capsid, GTA_holin_3TM; 11/12 lack a signal
+   peptide) and share only the 5-residue motif. The family itself: 99 proteins, 91 genomes, 46 genera (Bradyrhizobium 16,
+   VAZQ01 8, Roseiarcus 7), 97-183 aa (median 116), no Pfam row, motif in 17/99, signal peptide 97/99 (SignalP 6.0; cleavage
+   at residue 21 median, the motif sits at the mature N-terminus). 94/99 in lut-carrying genomes.
+ 2 Conserved donors (family alignment, 91 one-per-genome members, D/E or N/Q >= .80, gaps <= .20; Bradyrhizobium 2924071
+   numbering): carboxylates D56, D58, D62, D64, E65, D78, D106 (an N55-DKDKEVDHDE-65 stretch); carbonyl/amide N29, Q52, N55;
+   Gly G44, G49, G75. The D56/D58/D62/D64/E65/D78 set is conserved in each genome group with >= 9 members (group 61 n=32,
+   63 n=14, 43 n=9); group 61 adds D106. Conserved acidic columns 5.4-6.2 per 100 residues (negatives B 2.7, LanM 11.9).
+ 3 Position: 42/99 within 10 genes of a lut locus (44 loci, 19 genera; 11 inside the span), at no fixed slot (lutG+9/+10 in
+   12, Bradyrhizobium; lutH+1 same strand in 4, BOG-931 'H . M F' loci, i.e. between lutH and lanM; lanM+1 in Rhodopila).
+   TonB-dependent receptor within 3 genes 16/99 (5 of them lutH). PQQ dehydrogenase within 10 genes 35/99 (K23995 18, K00114
+   7); within +-8 genes of 11/585 K23995 genes. Context: lut-carrying 86/676 vs lut-negative 5/355 genomes; same-genus MH OR
+   31 (46/206 vs 4/166, 30 genera, p .0005): PASS_context.
+ 4 Site test (tests_rule.json unchanged): 10 representatives over 10 genera (4 motif carriers). PASS_site 5/10: score_cons 4
+   at D56/D58/D62/E65 (reference numbering) in VAZQ01, Rhodopila, Rhodomicrobium, Pseudaminobacter, Alsobacter (site pLDDT
+   78-92); score_cons 3 in 4 (Bradyrhizobium, 62-47, Roseiarcus, BOG-931), 2 in RH-AL1. Motif carriers pass 1/4; genome
+   group 61 (the earlier notes' Bradyrhizobium source) passes 1/4. Family vs negatives B: Mann-Whitney p 1.2e-6. Co-folds
+   (top 2): LA ion with 6 protein O (5 carboxylate O from 3 Asp/Glu, 2 chelating, 1 backbone O; La-O 2.48 A; donor pLDDT 97)
+   on the apo site in 2/2; CA ion on the same site with 5 O in 2/2. This reproduces the earlier Protenix pattern (5 side-chain
+   O + 1 backbone O) and, as before, does not separate La from Ca.
+ 5 Fold: no PDB fold at E <= 1e-3 (weak cohesin and 2MCA hits, E 6e-4 to 8e-3); TM .29-.32 to the RTX beta-roll 1KAP,
+   .24-.30 to lanmodulin, .27-.34 to lanpepsy, .19-.22 to LanD (normalized by the model).
+ 6 Curated beta-roll calcium-binding control (serralysin AprA, UniProt Q03023, reviewed, 42 Ca binding-site features; PDB 1KAP):
+   crystal check 0/8 Ca sites recovered (each Ca holds 1-4 backbone O and 1-4 carboxylate O; capacity 1-3 within 2 A); model
+   score 3, fails. Collection RTX (HemolysinCabind) negatives 0/3. The rule is blind to carbonyl-dominated beta-roll calcium
+   sites; the token 275376 site is carboxylate-dominated, which the rule does see.
+ Restated controls: positives 11/14 (LanM 4/6, LanD 6/6, lanpepsy 1/1, Hans-LanM 0/1); negatives B 0/30; calcium-binding
+   negatives A 3/16; co-fold >= 5 O from >= 3 Asp/Glu: positives 3/6, calcium-binding negatives 7/16, negatives B 0/10.
+ Verdict, plainly: SUPPORTED as a conserved periplasmic carboxylate metal site in a lut-associated family (criterion A: single
+   soluble chain ~115 aa, pLDDT 80-93, ILVFMAWC .36-.44). It sits at the 50% bar. UNVERIFIED: lanthanide over calcium, any
+   binding at all, a beta-roll fold, and a role in uptake. Cheapest decisive test is wet: La/Tb vs Ca titration of one
+   VAZQ01 or Rhodomicrobium protein with the E65A (or D56A) variant. Folds this session: 222 in total.

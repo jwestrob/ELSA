@@ -1,0 +1,240 @@
+TOP 20 LARGE-LOCUS FAMILIES (not KNOWN; >= 3 genome groups, >= 2 orders, >= 5 loci), ranked by the predeclared score
+One line per core gene (present in >= 50% of member loci), in consensus order. strand = relative to the oriented
+locus (agree = share of members on that strand); aa = median length; annotation = plurality Pfam architecture,
+else KO, else CDD best hit, else DefenseFinder / TXSScan profile (OBSERVED rows, 'resembles' for CDD), share of
+the cluster's genes carrying it; unann = share with no row from any source; slot = position-based label of the
+slot-rescue pass and its tier (hypothesis from bonded partners); hyd = median fraction ILVFMAWC; tm = median
+TMHMM helices; pres = share of member loci carrying the gene. [class] = automatic class (amended rule, predeclared.json
+amendment_3); 'reading' = manual reading of the composition (OBSERVED domains; names are 'consistent with').
+
+#1 family 64 [COHERENT-UNNAMED] loci 74, genomes 73, genome groups 30, phyla 6, orders 8; size median 14.5 (10-31); core 14 of 108 clusters; order conservation 1.0; unannotated 0.099; edge rate 0.486; completeness median 88.4
+   reading: textbook: Mbh-type membrane-bound [NiFe]-hydrogenase / Mrp antiporter operon (HydDB call on the catalytic subunit in 74% of members); 109-aa 2-TM gene without annotation
+   phyla: p__Aenigmatarchaeota:24;p__Iainarchaeota:19;p__EX4484-52:13;p__Altiarchaeota:12; top order o__Iainarchaeales; curated overlap 0.743 (HydDB:NiFe); mobile genes 0.003; example GCA_002254405.1:OYT27653.1..OYT27663.1
+     1 - (1.00)   126 aa  pres 0.54  unann 0.00  hyd 0.40 tm 0  Fer4_10;Fer4;Fer4_7;Fer4_9;Fer4 (0.10)  slot: -
+     2 - (1.00)   324 aa  pres 0.70  unann 0.00  hyd 0.59 tm 8  NADHdh (0.96)  slot: -
+     3 - (1.00)   408 aa  pres 0.74  unann 0.00  hyd 0.41 tm 0  NiFeSe_Hases;Complex1_49kDa (0.50)  slot: -
+     4 - (1.00)   166 aa  pres 0.72  unann 0.00  hyd 0.36 tm 0  Complex1_30kDa (1.00)  slot: -
+     5 - (1.00)   145 aa  pres 0.92  unann 0.00  hyd 0.41 tm 0  Oxidored_q6 (0.99)  slot: -
+     6 - (1.00)   109 aa  pres 0.82  unann 1.00  hyd 0.53 tm 2  none (0.00)  slot: -
+     7 - (1.00)   493 aa  pres 1.00  unann 0.00  hyd 0.57 tm 15  Proton_antipo_M (0.49)  slot: -
+     8 - (1.00)   115 aa  pres 0.96  unann 0.00  hyd 0.55 tm 3  Oxidored_q2 (1.00)  slot: -
+     9 - (1.00)   153 aa  pres 0.95  unann 0.00  hyd 0.54 tm 4  MnhB (0.97)  slot: -
+    10 - (1.00)    91 aa  pres 0.88  unann 0.00  hyd 0.49 tm 2  MbhE (1.00)  slot: -
+    11 - (1.00)    80 aa  pres 0.92  unann 0.00  hyd 0.63 tm 3  MbhD (1.00)  slot: -
+    12 - (1.00)   110 aa  pres 0.88  unann 0.00  hyd 0.53 tm 3  PhaG_MnhG_YufB (1.00)  slot: -
+    13 - (1.00)    85 aa  pres 0.89  unann 0.05  hyd 0.62 tm 3  MrpF_PhaF (0.94)  slot: MrpF_PhaF T2
+    14 - (1.00)   165 aa  pres 0.88  unann 0.00  hyd 0.51 tm 3  MNHE (1.00)  slot: -
+
+#2 family 77 [KNOWN-EXTENDED] loci 38, genomes 38, genome groups 11, phyla 1, orders 7; size median 13 (10-25); core 11 of 89 clusters; order conservation 1.0; unannotated 0.162; edge rate 0.158; completeness median 91.2
+   reading: housekeeping mix: ScpAB condensin, Lon-like AAA+, TldD/PmbA pair, archaeosortase-like, ERCC4, DEAD helicase; one 280-aa unannotated gene
+   phyla: p__Nanobdellota:38; top order o__JAPDLS01; curated overlap 0.026 (TXSS:Archaeal-T4P); mobile genes 0.01; example GCA_002779795.1:PIU88409.1..PIU88425.1
+     1 + (1.00)   230 aa  pres 0.95  unann 0.00  hyd 0.41 tm 0  SMC_ScpA (0.58)  slot: -
+     2 + (1.00)   176 aa  pres 0.95  unann 0.00  hyd 0.38 tm 0  SMC_ScpB (0.94)  slot: -
+     3 + (1.00)    93 aa  pres 1.00  unann 0.08  hyd 0.39 tm 0  PRC (0.89)  slot: PRC T1
+     4 + (1.00)   631 aa  pres 1.00  unann 0.00  hyd 0.41 tm 2  Mg_chelatase;AAA_32;Sigma54_activat;AAA_5;LonB_AAA-LID;Lon_C;ChlI (0.34)  slot: -
+     5 + (1.00)   457 aa  pres 1.00  unann 0.00  hyd 0.37 tm 0  PmbA_TldD_1st;PmbA_TldD_3rd (0.47)  slot: -
+     6 + (1.00)   426 aa  pres 1.00  unann 0.00  hyd 0.39 tm 0  PmbA_TldD_1st;PmbA_TldD_2nd;PmbA_TldD_3rd (0.39)  slot: -
+     7 - (1.00)   280 aa  pres 0.97  unann 0.95  hyd 0.36 tm 0  Mrr_cat (0.03)  slot: -
+     8 + (1.00)   193 aa  pres 0.87  unann 0.00  hyd 0.41 tm 0  AMMECR1 (1.00)  slot: -
+     9 - (1.00)   181 aa  pres 0.84  unann 0.06  hyd 0.55 tm 4  Exosortase_EpsH (0.81)  slot: Exosortase_EpsH T1
+    10 - (1.00)   216 aa  pres 0.95  unann 0.00  hyd 0.41 tm 0  ERCC4;HHH_5;HHH_2 (0.47)  slot: -
+    11 - (1.00)   505 aa  pres 0.95  unann 0.00  hyd 0.39 tm 0  ResIII;DEAD;RNA_helicase_helical;Helicase_C (0.94)  slot: -
+
+#3 family 59 [MIXED] loci 102, genomes 99, genome groups 50, phyla 6, orders 16; size median 12 (10-30); core 3 of 209 clusters; order conservation 1.0; unannotated 0.128; edge rate 0.461; completeness median 89.6
+   reading: consistent with a metallocluster module: Nitro_FeMo-Co (NifX/NafY-type) + DUF134 + DUF5320 + COG1149 MinD-type ATPase + CcdA (UNVERIFIED); 3 core genes only
+   phyla: p__Nanobdellota:49;p__Aenigmatarchaeota:17;p__Iainarchaeota:16;p__Altiarchaeota:13; top order o__Woesearchaeales; curated overlap 0.0 (none); mobile genes 0.001; example GCA_002254405.1:OYT27868.1..OYT27879.1
+     1 - (0.66)   360 aa  pres 0.53  unann 0.20  hyd 0.52 tm 7  CDD:CcdA Cytochrome c biogenesis protein [Posttranslational modi (0.48)  slot: SfLAP T1
+     2 - (0.88)   286 aa  pres 0.81  unann 0.00  hyd 0.43 tm 0  AAA_31;ParA;ArsA_ATPase;CbiA;ParA (0.03)  slot: -
+     3 - (0.78)   124 aa  pres 0.99  unann 0.04  hyd 0.36 tm 0  Nitro_FeMo-Co (0.39)  slot: DUF5320 T1
+
+#4 family 50 [COHERENT-UNNAMED] loci 155, genomes 150, genome groups 64, phyla 2, orders 4; size median 14 (10-36); core 4 of 643 clusters; order conservation 1.0; unannotated 0.152; edge rate 0.561; completeness median 91.7
+   reading: textbook: archaeal N-glycosylation (AglB/STT3 oligosaccharyltransferase, GT2, DUF2304)
+   phyla: p__Nanobdellota:154;p__Micrarchaeota:1; top order o__Woesearchaeales; curated overlap 0.0 (none); mobile genes 0.002; example GCA_000806095.1:KHO46493.1..KHO46509.1
+     1 + (0.96)   363 aa  pres 0.51  unann 0.00  hyd 0.41 tm 0  FAD_binding_3;NAD_binding_8 (0.25)  slot: NAD_binding_8 contradicted
+     2 + (0.91)  1061 aa  pres 0.75  unann 0.00  hyd 0.43 tm 12  STT3 (0.38)  slot: -
+     3 + (0.95)   224 aa  pres 0.83  unann 0.00  hyd 0.40 tm 0  Glycos_transf_2 (0.92)  slot: -
+     4 + (0.99)   111 aa  pres 0.81  unann 0.00  hyd 0.56 tm 3  DUF2304 (1.00)  slot: -
+
+#5 family 29 [KNOWN-EXTENDED] loci 358, genomes 355, genome groups 82, phyla 2, orders 9; size median 13 (10-35); core 8 of 1058 clusters; order conservation 1.0; unannotated 0.359; edge rate 0.489; completeness median 87.6
+   reading: Orc1/Cdc6 + PolD (DP1, DP2) replication-origin module plus 3 conserved unannotated genes (folds: SecB-like chaperone, two winged HTH)
+   phyla: p__Nanobdellota:356;p__Undinarchaeota:2; top order o__Pacearchaeales; curated overlap 0.0 (none); mobile genes 0.065; example GCA_000380905.1:AQYW01000081.1_62..AQYW01000081.1_75
+     1 - (0.62)   212 aa  pres 0.80  unann 0.59  hyd 0.33 tm 0  DF:Eleos__LeoC (0.07)  slot: HTH_24 rest
+     2 - (0.80)    89 aa  pres 0.73  unann 0.82  hyd 0.36 tm 0  CDD:PRK14016 cyanophycin synthetase; Provisional. (0.08)  slot: HrcA_DNA-bdg rest
+     3 - (0.97)   142 aa  pres 0.89  unann 0.98  hyd 0.38 tm 0  CDD:A_deaminase_N Adenosine/AMP deaminase N-terminal.  This doma (0.01)  slot: -
+     4 - (0.98)    86 aa  pres 0.89  unann 0.00  hyd 0.40 tm 0  PRC (1.00)  slot: -
+     5 + (1.00)   403 aa  pres 0.87  unann 0.00  hyd 0.39 tm 0  AAA_16;TniB;AAA_22;AAA;Cdc6_lid;Cdc6_C (0.23)  slot: -
+     6 + (1.00)   527 aa  pres 0.87  unann 0.00  hyd 0.38 tm 0  Metallophos;DNA_pol_E_B (0.56)  slot: Metallophos contradicted
+     7 + (1.00)  1156 aa  pres 0.82  unann 0.00  hyd 0.38 tm 0  PolC_DP2_N;PolC_DP2_central;PolC_DP2_cat (0.75)  slot: -
+     8 - (1.00)   398 aa  pres 0.54  unann 0.00  hyd 0.56 tm 11  TctA (1.00)  slot: -
+
+#6 family 36 [COHERENT-UNNAMED] loci 246, genomes 227, genome groups 84, phyla 7, orders 19; size median 13 (10-32); core 7 of 787 clusters; order conservation 1.0; unannotated 0.357; edge rate 0.496; completeness median 87.6
+   reading: archaeal type IV pilus locus (T2SSE/T2SSF + pilin-like unannotated genes)
+   phyla: p__Aenigmatarchaeota:167;p__Nanohalarchaeota:29;p__Nanobdellota:23;p__Undinarchaeota:10; top order o__CG10238-14; curated overlap 0.224 (TXSS:Archaeal-T4P); mobile genes 0.006; example GCA_000220375.1:EGQ43600.1..EGQ43610.1
+     1 - (0.99)   170 aa  pres 0.68  unann 0.95  hyd 0.41 tm 1  TXSS:arCOG06117 (0.02)  slot: DUF7287 rest
+     2 - (1.00)   314 aa  pres 0.87  unann 0.00  hyd 0.48 tm 5  T2SSF (1.00)  slot: T2SSF T1
+     3 - (1.00)   290 aa  pres 0.87  unann 0.00  hyd 0.49 tm 4  T2SSF (1.00)  slot: -
+     4 - (1.00)   595 aa  pres 0.85  unann 0.00  hyd 0.38 tm 0  T2SSE (0.58)  slot: T2SSE T2
+     5 - (1.00)   191 aa  pres 0.83  unann 0.89  hyd 0.40 tm 1  DUF7289 (0.04)  slot: DUF7289 rest
+     6 - (0.99)   163 aa  pres 0.74  unann 0.68  hyd 0.36 tm 0  CDD:chromosome_segregation_protein_related_ptotein chromosome se (0.03)  slot: -
+     7 - (0.96)   547 aa  pres 0.65  unann 0.00  hyd 0.41 tm 0  Cpn60_TCP1 (0.99)  slot: -
+
+#7 family 15 [COHERENT-UNNAMED] loci 671, genomes 597, genome groups 240, phyla 8, orders 29; size median 12 (10-33); core 7 of 1524 clusters; order conservation 1.0; unannotated 0.493; edge rate 0.417; completeness median 89.6
+   reading: archaeal type IV pilus locus (T2SSE/T2SSF + class III signal pilins)
+   phyla: p__Nanobdellota:412;p__Iainarchaeota:99;p__Micrarchaeota:83;p__Aenigmatarchaeota:57; top order o__Woesearchaeales; curated overlap 0.082 (TXSS:Archaeal-T4P); mobile genes 0.004; example GCA_000405245.1:ASMQ01000004.1_10..ASMQ01000004.1_19
+     1 + (0.75)   136 aa  pres 0.77  unann 0.94  hyd 0.43 tm 1  Class_IIIsignal (0.01)  slot: Class_IIIsignal rest
+     2 + (0.85)   174 aa  pres 0.88  unann 0.75  hyd 0.40 tm 1  VWA (0.04)  slot: DUF7287 rest
+     3 + (0.88)   318 aa  pres 0.80  unann 0.98  hyd 0.39 tm 1  CDD:PHA03119 helicase-primase primase subunit; Provisional. (0.01)  slot: InhA-like_MAM rest
+     4 + (0.95)   518 aa  pres 0.89  unann 0.00  hyd 0.39 tm 0  T2SSE (0.93)  slot: T2SSE T1
+     5 + (0.95)   292 aa  pres 0.88  unann 0.00  hyd 0.51 tm 4  T2SSF (1.00)  slot: T2SSF T1
+     6 + (0.95)   335 aa  pres 0.88  unann 0.00  hyd 0.51 tm 5  T2SSF (0.99)  slot: T2SSF T1
+     7 + (0.73)   153 aa  pres 0.72  unann 0.94  hyd 0.42 tm 1  Class_IIIsignal (0.03)  slot: Class_IIIsignal rest
+
+#8 family 17 [DARK] loci 611, genomes 599, genome groups 36, phyla 1, orders 6; size median 16 (10-32); core 10 of 2825 clusters; order conservation 1.0; unannotated 0.667; edge rate 0.486; completeness median 87.4
+   reading: Micrarchaeota: topo VI B-anchored locus with ~795-aa membrane-anchored A2M-like protein + DUF87 (HerA/VirB4-family) ATPase + 5 unannotated membrane/soluble genes
+   phyla: p__Micrarchaeota:611; top order o__Micrarchaeales; curated overlap 0.0 (none); mobile genes 0.003; example GCA_001871475.1:OIO21802.1..OIO21811.1
+     1 + (0.99)   374 aa  pres 0.57  unann 0.97  hyd 0.53 tm 8  CDD:MSC Man1-Src1p-C-terminal domain.  MAN1 is an integral prote (0.02)  slot: T4SS_pilin rest
+     2 + (1.00)   277 aa  pres 0.94  unann 0.95  hyd 0.45 tm 2  CDD:COG5570 Uncharacterized small protein [Function unknown]. (0.01)  slot: -
+     3 + (1.00)   504 aa  pres 0.95  unann 0.00  hyd 0.41 tm 0  DUF87 (0.63)  slot: DUF87 T2
+     4 + (1.00)   102 aa  pres 0.89  unann 0.93  hyd 0.43 tm 0  CDD:P-type_ATPase_HM P-type heavy metal-transporting ATPase; unc (0.03)  slot: UBA_3 rest
+     5 + (1.00)   132 aa  pres 0.93  unann 0.92  hyd 0.44 tm 2  CDD:COG4291 Predicted membrane protein [Function unknown]. (0.02)  slot: -
+     6 + (1.00)   244 aa  pres 0.93  unann 0.44  hyd 0.39 tm 0  CDD:PRK13922 rod shape-determining protein MreC; Provisional. (0.31)  slot: PCI rest
+     7 + (0.98)    49 aa  pres 0.75  unann 0.98  hyd 0.37 tm 0  CDD:SNU13 U4/U6.U5 small nuclear ribonucleoprotein SNU13.  U4/U6 (0.02)  slot: -
+     8 - (1.00)   539 aa  pres 0.79  unann 0.00  hyd 0.36 tm 0  HATPase_c;HATPase_c_3;Topo-VIb_trans (0.82)  slot: -
+     9 - (1.00)   171 aa  pres 0.77  unann 0.00  hyd 0.39 tm 0  KH_KRR1_2nd (0.65)  slot: KH_KRR1_2nd T1
+    10 + (1.00)   178 aa  pres 0.50  unann 0.69  hyd 0.35 tm 0  CDD:HTH_ARSR Arsenical Resistance Operon Repressor and similar p (0.29)  slot: -
+
+#9 family 0 [DARK] loci 1309, genomes 998, genome groups 241, phyla 6, orders 20; size median 15 (10-86); core 5 of 5289 clusters; order conservation 1.0; unannotated 0.526; edge rate 0.539; completeness median 88.2
+   reading: archaeal type IV pilus loci (T2SSE + arCOG01814 platform), loose family (5 core genes in 1,309 loci)
+   phyla: p__Nanobdellota:1206;p__Aenigmatarchaeota:93;p__Nanohalarchaeota:6;p__Undinarchaeota:2; top order o__Pacearchaeales; curated overlap 0.121 (TXSS:Archaeal-T4P); mobile genes 0.016; example GCA_000380905.1:AQYW01000081.1_83..AQYW01000081.1_112
+     1 + (0.91)   183 aa  pres 0.63  unann 0.97  hyd 0.58 tm 5  CDD:PHA03231 glycoprotein BALF4; Provisional. (0.00)  slot: Acyl_transf_3 rest
+     2 - (0.98)   223 aa  pres 0.60  unann 0.74  hyd 0.31 tm 0  CDD:PRK10263 DNA translocase FtsK; Provisional. (0.05)  slot: Transcrip_act rest
+     3 - (1.00)   129 aa  pres 0.60  unann 0.83  hyd 0.35 tm 0  CDD:PRK12704 phosphodiesterase; Provisional. (0.02)  slot: GM_CSF rest
+     4 + (0.99)   760 aa  pres 0.59  unann 0.00  hyd 0.40 tm 0  T2SSE (0.91)  slot: T2SSE T1
+     5 + (0.86)   719 aa  pres 0.58  unann 0.05  hyd 0.46 tm 9  TXSS:arCOG01814 (0.76)  slot: T2SSF rest
+
+#10 family 75 [MIXED] loci 46, genomes 45, genome groups 19, phyla 4, orders 6; size median 12 (10-31); core 10 of 84 clusters; order conservation 0.9; unannotated 0.116; edge rate 0.478; completeness median 92.2
+   reading: textbook: LysW-mediated alpha-aminoadipate lysine (or arginine) biosynthesis (LysW, LysX, LysZ, LysY, LysJ, homoaconitase, HCS, HICDH)
+   phyla: p__Nanobdellota:24;p__Micrarchaeota:19;p__Iainarchaeota:2;p__Undinarchaeota:1; top order o__Woesearchaeales; curated overlap 0.0 (none); mobile genes 0.001; example GCA_000830295.1:AJF61676.1..AJF61686.1
+     1 - (1.00)   392 aa  pres 0.78  unann 0.00  hyd 0.42 tm 0  Aminotran_3 (0.69)  slot: -
+     2 - (1.00)   267 aa  pres 0.83  unann 0.00  hyd 0.42 tm 0  AA_kinase (1.00)  slot: -
+     3 - (1.00)   347 aa  pres 0.85  unann 0.00  hyd 0.39 tm 0  Semialdhyde_dh;Semialdhyde_dhC_1;Semialdhyde_dhC (0.85)  slot: -
+     4 - (1.00)   283 aa  pres 0.96  unann 0.00  hyd 0.40 tm 0  LysX_preATP_grasp;ATP-grasp_3;RimK;CPSase_L_D2;GSH-S_ATP (0.32)  slot: -
+     5 - (1.00)   336 aa  pres 0.87  unann 0.00  hyd 0.40 tm 0  Iso_dh (1.00)  slot: -
+     6 - (1.00)    54 aa  pres 0.98  unann 0.00  hyd 0.41 tm 0  Zn_ribbon_LysW (1.00)  slot: -
+     7 - (1.00)   166 aa  pres 0.89  unann 0.00  hyd 0.39 tm 0  Aconitase_C (1.00)  slot: -
+     8 - (1.00)   420 aa  pres 0.91  unann 0.00  hyd 0.41 tm 0  Aconitase;Aconitase (0.81)  slot: -
+     9 - (1.00)   381 aa  pres 0.91  unann 0.00  hyd 0.41 tm 0  HMGL-like;HCS_D2 (0.83)  slot: -
+    10 + (1.00)   219 aa  pres 0.61  unann 0.36  hyd 0.41 tm 0  CDD:NirB NAD(P)H-nitrite reductase [Energy production and conver (0.32)  slot: DUF7523 T1
+
+#11 family 49 [MIXED] loci 161, genomes 161, genome groups 39, phyla 4, orders 5; size median 12 (10-35); core 5 of 737 clusters; order conservation 1.0; unannotated 0.272; edge rate 0.323; completeness median 86.5
+   reading: textbook: GatCAB / GatDE tRNA-dependent amidotransferase with AspRS-type synthetase
+   phyla: p__Nanobdellota:122;p__Iainarchaeota:36;p__Aenigmatarchaeota:2;p__Micrarchaeota:1; top order o__Pacearchaeales; curated overlap 0.0 (none); mobile genes 0.002; example GCA_000402355.1:AQRS01000039.1_24..AQRS01000039.1_36
+     1 + (0.98)   427 aa  pres 0.52  unann 0.00  hyd 0.39 tm 0  GatD_N;Asparaginase;Asparaginase_C (0.96)  slot: -
+     2 + (1.00)   482 aa  pres 0.67  unann 0.00  hyd 0.39 tm 0  GatB_N (0.79)  slot: -
+     3 + (0.98)   438 aa  pres 0.82  unann 0.00  hyd 0.38 tm 0  tRNA_anti-codon;tRNA-synt_2 (0.80)  slot: -
+     4 + (1.00)    87 aa  pres 0.74  unann 0.42  hyd 0.34 tm 0  GatC (0.32)  slot: GatC T2
+     5 + (1.00)   444 aa  pres 0.73  unann 0.00  hyd 0.39 tm 0  Amidase (1.00)  slot: -
+
+#12 family 74 [COHERENT-UNNAMED] loci 53, genomes 53, genome groups 18, phyla 2, orders 5; size median 12 (10-26); core 6 of 212 clusters; order conservation 1.0; unannotated 0.372; edge rate 0.491; completeness median 88.3
+   reading: archaeal type IV pilus locus
+   phyla: p__Aenigmatarchaeota:46;p__EX4484-52:7; top order o__CG10238-14; curated overlap 0.132 (TXSS:Archaeal-T4P); mobile genes 0.006; example GCA_000806115.1:KHO48120.1..KHO48134.1
+     1 - (0.89)   126 aa  pres 0.51  unann 1.00  hyd 0.47 tm 1  none (0.00)  slot: -
+     2 + (0.76)   148 aa  pres 0.76  unann 0.54  hyd 0.41 tm 1  CDD:COG3430 Uncharacterized protein conserved in archaea [Functi (0.21)  slot: archaeal type IV pilus assembly protein 
+     3 - (1.00)   276 aa  pres 1.00  unann 0.00  hyd 0.48 tm 5  T2SSF (1.00)  slot: -
+     4 - (1.00)   291 aa  pres 1.00  unann 0.00  hyd 0.50 tm 4  T2SSF (1.00)  slot: -
+     5 - (0.96)   579 aa  pres 0.98  unann 0.00  hyd 0.38 tm 0  T2SSE (0.79)  slot: -
+     6 - (1.00)    94 aa  pres 0.85  unann 0.49  hyd 0.33 tm 0  CDD:PRK09335 30S ribosomal protein S26e; Provisional. (0.40)  slot: Ribosomal_S26e rest
+
+#13 family 33 [MIXED] loci 287, genomes 287, genome groups 30, phyla 2, orders 5; size median 12 (10-25); core 9 of 1127 clusters; order conservation 1.0; unannotated 0.23; edge rate 0.429; completeness median 89.1
+   reading: archaeal type IV pilus locus (Micrarchaeales) with TrkA_N and M50 peptidase
+   phyla: p__Micrarchaeota:286;p__Nanobdellota:1; top order o__Micrarchaeales; curated overlap 0.007 (TXSS:Archaeal-T4P); mobile genes 0.001; example GCA_001889985.1:OJI07500.1..OJI07511.1
+     1 + (1.00)   182 aa  pres 0.71  unann 1.00  hyd 0.42 tm 1  none (0.00)  slot: DUF7287 rest
+     2 - (1.00)   332 aa  pres 0.99  unann 0.00  hyd 0.51 tm 5  T2SSF (1.00)  slot: -
+     3 - (1.00)   345 aa  pres 1.00  unann 0.00  hyd 0.47 tm 4  T2SSF (1.00)  slot: -
+     4 - (0.76)   238 aa  pres 0.56  unann 0.81  hyd 0.35 tm 0  CDD:PTZ00121 MAEBL; Provisional. (0.07)  slot: -
+     5 - (1.00)   508 aa  pres 0.99  unann 0.00  hyd 0.40 tm 0  T2SSE (1.00)  slot: T2SSE T2
+     6 - (1.00)   429 aa  pres 0.98  unann 0.00  hyd 0.35 tm 0  CDD:Smc Chromosome segregation ATPases [Cell division and chromo (0.56)  slot: DUF3150 rest
+     7 - (0.83)   232 aa  pres 0.62  unann 0.00  hyd 0.58 tm 7  Peptidase_M50 (0.58)  slot: Peptidase_M50 T1
+     8 + (0.72)   142 aa  pres 0.59  unann 0.00  hyd 0.46 tm 0  TrkA_N (0.93)  slot: -
+     9 + (0.70)   256 aa  pres 0.58  unann 0.00  hyd 0.50 tm 3  TrkA_N (1.00)  slot: -
+
+#14 family 43 [MIXED] loci 180, genomes 177, genome groups 54, phyla 1, orders 8; size median 12 (10-26); core 6 of 799 clusters; order conservation 1.0; unannotated 0.456; edge rate 0.367; completeness median 87.8
+   reading: Pacearchaeales: AP_endonuc_2 (IolE-type sugar isomerase) + Polbeta-type NTase + 3 unannotated genes that fold poorly (pLDDT 37-72)
+   phyla: p__Nanobdellota:180; top order o__Pacearchaeales; curated overlap 0.0 (none); mobile genes 0.01; example GCA_000830315.1:AJF62996.1..AJF63009.1
+     1 - (0.99)   120 aa  pres 0.69  unann 0.86  hyd 0.30 tm 0  CDD:Cep57_MT_bd Centrosome microtubule-binding domain of Cep57.  (0.05)  slot: KxDL rest
+     2 + (1.00)   500 aa  pres 0.76  unann 0.98  hyd 0.36 tm 0  CDD:HSP70 Hsp70 protein.  Hsp70 chaperones help to fold many pro (0.01)  slot: -
+     3 + (1.00)   188 aa  pres 0.61  unann 0.98  hyd 0.26 tm 0  CDD:PRK12678 transcription termination factor Rho; Provisional. (0.01)  slot: -
+     4 + (0.99)   615 aa  pres 0.92  unann 0.00  hyd 0.33 tm 0  AP_endonuc_2 (0.66)  slot: AP_endonuc_2 T1
+     5 + (0.79)   293 aa  pres 0.97  unann 0.07  hyd 0.41 tm 0  NTP_transf_2;Polbeta (0.41)  slot: NTP_transf_2 T2
+     6 - (0.74)    86 aa  pres 0.51  unann 0.00  hyd 0.35 tm 0  Ribosomal_L35Ae (1.00)  slot: -
+
+#15 family 96 [MOBILE] loci 23, genomes 22, genome groups 21, phyla 4, orders 7; size median 14 (10-57); core 7 of 166 clusters; order conservation 0.845; unannotated 0.707; edge rate 0.696; completeness median 91.6
+   reading: MOBILE: head-tail provirus (HK97 capsid, connector, tail terminator, tail tube, tape measure; folds confirm), 16/23 on contig edges
+   phyla: p__Nanobdellota:16;p__Micrarchaeota:4;p__Iainarchaeota:2;p__Nanohalarchaeota:1; top order o__Woesearchaeales; curated overlap 0.0 (none); mobile genes 0.14; example GCA_002687825.1:MAF50794.1..MAF50805.1
+     1 + (1.00)   338 aa  pres 0.52  unann 0.08  hyd 0.43 tm 0  Phage_capsid (0.67)  slot: SU10_MCP rest
+     2 + (1.00)   134 aa  pres 0.87  unann 0.35  hyd 0.38 tm 0  HK97-gp10_like (0.35)  slot: HK97-gp10_like T2b
+     3 + (1.00)   209 aa  pres 0.91  unann 0.76  hyd 0.35 tm 0  Phage_connect_1 (0.14)  slot: Phage_Mu_Gp36 rest
+     4 + (1.00)   153 aa  pres 0.65  unann 1.00  hyd 0.36 tm 0  none (0.00)  slot: -
+     5 + (1.00)   201 aa  pres 0.96  unann 0.61  hyd 0.37 tm 0  Phage_tube_2 (0.35)  slot: Phage_tube_2 T2b
+     6 + (1.00)   111 aa  pres 0.83  unann 0.95  hyd 0.37 tm 0  DUF6848 (0.05)  slot: -
+     7 + (0.95)   518 aa  pres 0.96  unann 0.27  hyd 0.46 tm 4  PhageMin_Tail (0.32)  slot: PhageMin_Tail T2b
+
+#16 family 72 [MIXED] loci 57, genomes 57, genome groups 37, phyla 1, orders 4; size median 13 (10-20); core 9 of 128 clusters; order conservation 0.875; unannotated 0.192; edge rate 0.351; completeness median 88.6
+   reading: textbook: NAD salvage (PncA, PncB, NadM, NadE, NadK, NUDIX); pathway complete, 327-aa unannotated gene is extra
+   phyla: p__Nanobdellota:57; top order o__Woesearchaeales; curated overlap 0.0 (none); mobile genes 0.0; example GCA_000830295.1:AJF62045.1..AJF62060.1
+     1 + (0.94)   449 aa  pres 0.95  unann 0.00  hyd 0.37 tm 0  QRPTase_N (0.31)  slot: QRPTase_N rest
+     2 + (0.92)   228 aa  pres 0.90  unann 0.02  hyd 0.38 tm 0  Isochorismatase (0.92)  slot: Isochorismatase T1
+     3 + (0.97)   301 aa  pres 0.60  unann 0.00  hyd 0.36 tm 0  NAD_synthase;tRNA_Me_trans (0.47)  slot: -
+     4 + (1.00)   212 aa  pres 0.70  unann 0.00  hyd 0.37 tm 0  CTP_transf_like (0.80)  slot: CTP_transf_like T1
+     5 + (0.86)   182 aa  pres 1.00  unann 0.01  hyd 0.36 tm 0  NUDIX (0.50)  slot: NUDIX T1
+     6 + (1.00)   258 aa  pres 0.61  unann 0.00  hyd 0.37 tm 0  Pkinase;PK_Tyr_Ser-Thr;ABC1 (0.57)  slot: -
+     7 + (1.00)   327 aa  pres 0.61  unann 1.00  hyd 0.34 tm 0  none (0.00)  slot: -
+     8 + (1.00)   302 aa  pres 0.58  unann 0.00  hyd 0.40 tm 0  PK (1.00)  slot: -
+     9 + (0.89)   298 aa  pres 0.81  unann 0.00  hyd 0.35 tm 0  KO:K00858 GA (0.55)  slot: NAD_kinase_C T2
+
+#17 family 198 [MIXED] loci 5, genomes 5, genome groups 3, phyla 1, orders 2; size median 15 (10-19); core 8 of 49 clusters; order conservation 1.0; unannotated 0.13; edge rate 0.6; completeness median 89.4
+   reading: Aenigmatarchaeota thiol / Fe-S module (5 loci, 3 groups)
+   phyla: p__Aenigmatarchaeota:5; top order o__Aenigmatarchaeales; curated overlap 0.0 (none); mobile genes 0.0; example GCA_011773475.1:NIO44991.1..NIO45006.1
+     1 - (0.75)   185 aa  pres 0.80  unann 0.00  hyd 0.43 tm 0  Thioredoxin_4;DSBA (0.75)  slot: -
+     2 - (1.00)   402 aa  pres 0.80  unann 0.00  hyd 0.40 tm 0  Aminotran_5;DegT_DnrJ_EryC1 (0.75)  slot: -
+     3 - (1.00)   343 aa  pres 0.80  unann 0.75  hyd 0.41 tm 1  CDD:DsbG Protein-disulfide isomerase [Posttranslational modifica (0.25)  slot: VSR_TRX rest
+     4 - (0.80)    78 aa  pres 1.00  unann 0.00  hyd 0.41 tm 0  Glutaredoxin (0.60)  slot: -
+     5 - (0.75)   303 aa  pres 0.80  unann 0.00  hyd 0.43 tm 1  Pyr_redox_2;FAD_binding_2;Pyr_redox_3;Pyr_redox (1.00)  slot: -
+     6 - (1.00)    80 aa  pres 0.60  unann 0.00  hyd 0.51 tm 0  DUF1858 (1.00)  slot: -
+     7 - (1.00)   160 aa  pres 1.00  unann 0.00  hyd 0.39 tm 0  NifU_N (1.00)  slot: -
+     8 - (1.00)   385 aa  pres 1.00  unann 0.00  hyd 0.41 tm 0  Aminotran_5;DegT_DnrJ_EryC1 (0.60)  slot: -
+
+#18 family 39 [MIXED] loci 191, genomes 180, genome groups 60, phyla 4, orders 17; size median 13 (10-43); core 4 of 702 clusters; order conservation 0.75; unannotated 0.31; edge rate 0.366; completeness median 89.4
+   reading: S-layer protein + GT2 glycosylation + TruD
+   phyla: p__Aenigmatarchaeota:106;p__Nanobdellota:79;p__Nanohalarchaeota:3;p__EX4484-52:3; top order o__CG10238-14; curated overlap 0.01 (DF:ShosTA); mobile genes 0.001; example GCA_000405245.1:ASMQ01000002.1_40..ASMQ01000002.1_55
+     1 - (0.85)   220 aa  pres 0.79  unann 0.68  hyd 0.41 tm 1  CDD:TRX_family TRX family; composed of two groups: Group I, whic (0.08)  slot: TraF rest
+     2 - (0.76)   416 aa  pres 0.85  unann 0.00  hyd 0.46 tm 5  Glyco_tranf_2_3;Glycos_transf_2;Glyco_tranf_2_2;Glyco_transf_21;Glyco_ (0.69)  slot: -
+     3 - (0.66)   766 aa  pres 0.72  unann 0.02  hyd 0.38 tm 1  S_layer_C (0.93)  slot: S_layer_C T1
+     4 - (0.72)   384 aa  pres 0.53  unann 0.00  hyd 0.38 tm 0  TruD;TruD (0.93)  slot: -
+
+#19 family 118 [MIXED] loci 15, genomes 15, genome groups 13, phyla 3, orders 6; size median 17 (11-24); core 10 of 95 clusters; order conservation 0.8; unannotated 0.405; edge rate 0.667; completeness median 84.3
+   reading: textbook system in an unexpected clade: gas vesicle gvp cluster (GvpA, F/L, G, K, N, O, I-like) in 15 DPANN genomes
+   phyla: p__Nanobdellota:10;p__Altiarchaeota:3;p__Aenigmatarchaeota:2; top order o__Woesearchaeales; curated overlap 0.0 (none); mobile genes 0.0; example GCA_013331515.1:HIG98864.1..HIG98876.1
+     1 - (1.00)   258 aa  pres 1.00  unann 0.00  hyd 0.37 tm 0  GvpL_GvpF (0.67)  slot: -
+     2 - (1.00)   111 aa  pres 0.93  unann 0.00  hyd 0.41 tm 0  GvpK (1.00)  slot: -
+     3 - (1.00)   166 aa  pres 0.73  unann 0.58  hyd 0.33 tm 0  ArsA_HSP20 (0.17)  slot: ArsA_HSP20 rest
+     4 - (1.00)   116 aa  pres 0.73  unann 0.92  hyd 0.36 tm 0  DF:ShosTA__ShosT (0.08)  slot: -
+     5 - (1.00)   154 aa  pres 0.60  unann 0.67  hyd 0.27 tm 0  CDD:PRK00409 recombination and DNA strand exchange inhibitor pro (0.22)  slot: -
+     6 - (0.90)   111 aa  pres 1.00  unann 0.00  hyd 0.44 tm 0  Gas_vesicle (0.97)  slot: Gas_vesicle T1
+     7 - (1.00)    93 aa  pres 0.80  unann 0.00  hyd 0.41 tm 0  GvpG (1.00)  slot: -
+     8 - (1.00)    90 aa  pres 0.67  unann 0.00  hyd 0.37 tm 0  GvpO (1.00)  slot: -
+     9 - (1.00)   340 aa  pres 0.67  unann 0.00  hyd 0.38 tm 0  AAA_5;AAA (0.80)  slot: -
+    10 - (0.62)   122 aa  pres 0.53  unann 1.00  hyd 0.35 tm 0  none (0.00)  slot: -
+
+#20 family 150 [DARK] loci 10, genomes 10, genome groups 6, phyla 1, orders 3; size median 15 (11-22); core 8 of 72 clusters; order conservation 1.0; unannotated 0.555; edge rate 1.0; completeness median 88.7
+   reading: Aenigmatarchaeota: 4 unannotated genes + two ParA/MinD ATPases + ArsR; all 10 members on contig edges
+   phyla: p__Aenigmatarchaeota:10; top order o__CG10238-14; curated overlap 0.0 (none); mobile genes 0.0; example GCA_016933455.1:MBN2202758.1..MBN2202775.1
+     1 + (0.55)   295 aa  pres 0.80  unann 1.00  hyd 0.37 tm 1  none (0.00)  slot: -
+     2 + (1.00)   310 aa  pres 1.00  unann 1.00  hyd 0.42 tm 1  none (0.00)  slot: -
+     3 + (1.00)   171 aa  pres 0.80  unann 0.88  hyd 0.41 tm 1  CDD:ASH Abnormal spindle-like microcephaly-assoc'd, ASPM-SPD-2-H (0.12)  slot: HYDIN_VesB_CFA65-like_Ig T1
+     4 + (1.00)    71 aa  pres 1.00  unann 0.40  hyd 0.38 tm 0  CDD:HTH_ARSR helix_turn_helix, Arsenical Resistance Operon Repre (0.40)  slot: HTH_5 rest
+     5 + (1.00)   254 aa  pres 0.90  unann 0.00  hyd 0.44 tm 0  ParA;AAA_31;MipZ;ArsA_ATPase;CbiA;Fer4_NifH;CBP_BcsQ (0.33)  slot: -
+     6 + (1.00)   477 aa  pres 0.60  unann 1.00  hyd 0.37 tm 1  none (0.00)  slot: CARDB rest
+     7 + (0.75)    84 aa  pres 0.80  unann 1.00  hyd 0.34 tm 0  none (0.00)  slot: -
+     8 + (1.00)   254 aa  pres 0.80  unann 0.00  hyd 0.42 tm 0  ParA;AAA_31;MipZ;CbiA;ArsA_ATPase;Fer4_NifH;CBP_BcsQ (0.25)  slot: -
+

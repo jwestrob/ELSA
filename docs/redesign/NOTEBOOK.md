@@ -3382,3 +3382,36 @@ sha256 d8f2c33e…eb348, written before the pass. The slot call is unchanged fro
   into Sharur.
 - I re-read the parquet: 175,729 rows, the bin counts and the ten labels match the report.
 - Cost 3 min 41 s of 24-CPU job time (jobs 119513, 119515).
+
+## 2026-11-21 00:45 UTC — My own inspection of the 175,729 proposed labels: names are over-extended
+
+Jacob: nothing goes into Sharur "until we inspect the results and verify them", and "i would like
+*you* to look." Done against the Sharur DPANN database, read-only
+(`slot_rescue/inspect/insp1.py`, `insp2.py`).
+
+**Finding.** The call takes the plurality label among the ANNOTATED partners; unannotated partners
+do not count. `vote_share` therefore says nothing about how much of the family carries the name.
+- Label voters as a share of all supporting genomes: under 5% for 45,604 rows (26.0%; median 4
+  voters among 441 supporters), 5-20% for 40,127, 20-50% for 35,829, at least 50% for 54,169 (30.8%).
+- 30 labels (18,483 rows, 10.5%) are proposed for at least 10x as many genes as carry that
+  annotation anywhere in DPANN; 154 labels (70,086 rows) for more genes than carry it.
+  GM_CSF 1,626 rows from 2 annotated proteins (score 27.4, E 1e-7); Transcrip_act 1,576 from 3;
+  Mis14 1,811 from 12; LIM 1,456 from 17; UBA_3 414 from 3; Med9 209 from 5; BcsB 470 from 9.
+  These rows are real conserved families (median 900-1,650 supporting genomes) with a wrong name.
+  The same regime holds true rescues (the tested eL39 leads; Ribosomal_S26e 873 from 276).
+- Independent source already in Sharur: CDD best hits (`protein_resemblance`, 86,895 of the
+  labeled proteins). Where the CDD hit is a Pfam model and the label is a Pfam, identical family:
+  68.6% (label voters at least 50% of supporters), 59.2% (20-50%), 43.6% (5-20%), 25.2% (under 5%);
+  15.3% for the 10x labels. Exact-family matching counts related families as mismatches, so the
+  trend across bins is the result. CDD says rpl40e for 440 of the 572 LIM-labeled proteins with a hit.
+- Well-annotated families read correctly: K13280 signal peptidase I, 3,067 of 3,168 CDD hits are
+  the archaeal signal peptidase I model; L14e 1,714 of 1,719; L39e 262 of 266; Peptidase_M50,
+  RNase_P_p30, AbiEi_4, ParE/RelE, MazE/AbrB likewise. HTH labels hold at superfamily level only.
+
+**Consequence.** The 98.85% calibration and the 89% expectation overstate the output: calibration
+genes are annotated, so their families are well annotated, and the under-5% regime is unmeasured.
+The test's 81.5% stands for the screen's core genes. A usable table needs (a) a support column =
+label voters / all supporters and the label's annotated count in DPANN, (b) a name only above a
+support level set by the verification, and "conserved unannotated family" below it. The structure
+check compares a gene with its annotated partner, so it tests homology to the partner and cannot
+detect a wrong partner name; the weak-profile check can.

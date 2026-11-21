@@ -1,0 +1,119 @@
+INVISIBLE WORKSTREAM: DO PROFILE-INVISIBLE ENZYME CALLS CARRY THE CATALYTIC MACHINERY? (2026-11-21 UTC)
+=========================================================================================================
+BOTTOM LINE
+1. YES. Profile-invisible, unannotated enzyme calls pass a structure-and-residue assay at 25/132 = 18.9% (Wilson 95%
+   13.2-26.5%) in the 16 families whose positive controls work; the negatives pass at 0/354 (0-1.1%), so the expected
+   false passes among 132 genes are at most 1.4. One-sided Fisher p = 1.2e-15. Positive controls pass 35/38 (92.1%).
+2. The yield is concentrated: 15 of the 25 passes are one family (GalP_UDP_transf label, function K00965). Without it,
+   10/117 (8.5%) still beats the negatives (p = 6.6e-7). Passes sit in 6 of 16 informative families.
+3. The function source decides the outcome: partner-derived functions pass 22/33 (66.7%); the label-level fallback passes
+   3/99 (3.0%). By list type, embedding-only 15/49 (30.6%) vs both lists 9/70 (12.9%); every embedding-only pass is a
+   GalT-like gene (0/34 embedding-only passes outside that family).
+4. Best lead, SUPPORTED: a GalT-branch HIT nucleotidyltransferase in Woesearchaeales and QMZS01 glycogen loci, 15/15
+   folded unannotated genes pass (H186 equivalent, UDP-glucose residues, TM 0.63-0.64), function absent otherwise in
+   15/15 genomes, all embedding-only, 14/15 partner-derived; a homodimer co-fold puts UDP-glucose phosphorus 3.2-3.3 A
+   from the His exactly as in the positive control. Name: consistent with UDP-glucose:hexose-1-P uridylyltransferase;
+   substrate and pathway role UNVERIFIED (galactokinase is absent from 704/704 Woesearchaeales genomes).
+5. Second, SUPPORTED: two Amidase_3 Zn amidases (Woesearchaeales) with a complete Zn site; co-fold coordinates Zn like
+   the positive. Also passing: 4 ThyA and 2 PriS (housekeeping), 1 PRPP synthase and 1 M32 (genome already has one).
+6. One family keeps the fold and lacks the catalytic residue: PEPCK_GTP, 11/11 fold, catalytic Cys 0/11 (separate table).
+
+FUNNEL (code/s01_population.py, s01b_novelty_amend.py, s02_references.py; data/funnel_amended.json)
+  labeled genes 175,729 -> no own weak profile hit to the proposed family (T2 18,437, T2b 14,338, rest 63,102) 95,877
+  ('contradicted' 14,016 carried as a side population: those genes have weak hits to other label families, sister families
+  included, so profile methods see them; 30 survive every filter and stay out of the assay)
+  -> gene-level function (gap screen genes_function.parquet) 41,928 -> enzyme (KO with EC) 5,880
+  -> 100-600 aa and ILVFMAWC < 0.45: 3,134 (T2 1,561, T2b 628, rest 945)
+  -> novelty filter: dropped when any database source places the gene in the family or its function: own Pfam /
+     KOfam / KEGG rows; CDD best hits (Pfam-derived model, KEGG-linked COG, enzyme name in the model text, DPANN KO/Pfam
+     association, EC string); family HHsearch-Pfam / HHblits-PDB100 hits (prob >= 50; PDB chains by SIFTS EC/Pfam or
+     enzyme name); family_stats majority KO / Pfam. Placed (T2/T2b/rest): CDD 1,579, family_stats 816, HHsearch-Pfam
+     620, own 357, HHblits-PDB 12, name/COG amendment 89 more. Profile-invisible, unannotated population: 1,000 genes,
+     69 functions (T2 332, T2b 272, rest 396; embedding-only 303, both lists 651, lists disagree 21, no alignment list
+     25; partner-derived 242, label-level 758).
+  -> curated reference (reviewed UniProt entry with the EC, Active site + Binding site features in the label-Pfam region,
+     X-ray/EM chain resolving the active site): 23 functions; 3 length-incompatible (genes < 0.6x the reference domain);
+     19 testable (339 unannotated genes); 46 functions lack such a record (32 have no reviewed entry with EC, active site
+     and structure, incl. HycI 149 genes, TtuA_LIM_N 135, RNase P subunits 162, AP_endonuc_2 42, GH130 28).
+  -> positive control works (>= 50% pass): 16 informative families, 188 unannotated genes. Dropped as uninformative:
+     LacAB_rpiB (0/4: DPANN rpiB positives carry Met at the M. tuberculosis Glu75 base, E. coli-type site; see rpib
+     workstream, 0/287), Formyl_trans_N (0/2), LMWPc (0/2).
+  -> folded: one gene per 90%-identity cluster (cd-hit), embedding-only first, round-robin over order x tier, cap 40:
+     186 candidates (141 unannotated after the amendment, 132 of them in informative families).
+
+ASSAY (assay_rule.json, written before any fold; amendment recorded there)
+  ESMFold2 fast (Biohub) single chain; US-align on the biotite login node against the reference chain trimmed to the
+  label-Pfam region. PASS = TM normalized by the reference >= 0.50, every UniProt Active-site residue identical at the
+  structurally aligned position within 5 A (US-align ':'), >= 50% of Binding-site residues the same way, mean pLDDT of
+  the model residues at the catalytic positions >= 70. Accepted substitutions: none documented, identity required.
+  Controls: positive = DPANN proteins with the KO (KOfam) and the family Pfam at GA (2-4 per family); negative A = the same
+  candidates against the reference of a different family of closest length; negative B = length-matched (+-15%) DPANN
+  proteins with no Pfam row and without the label (140 reused check-B folds of the identical model, 18 new folds).
+  Pilot gate (6 families, 55 folds): positives 15/19, negative A 0/36, negative B 0/36, Fisher p = 3.3e-10: passed.
+  Amendment (after the full-run folds were requested, before scoring): the first novelty pass missed CDD models that
+  name the function in words (COG1085 'Galactose-1-phosphate uridylyltransferase' on 47/64 GalT-labeled genes); the
+  added COG/name rule moved 45 folded candidates into a 'named' stratum (25 GalT, 11 PEPCK, 4 Amidase_3, 2 RelA, 2 ThyA,
+  1 MTAP); each of the 45 placements was inspected and names the function. Named stratum passes 28/45 (62.2%).
+
+CONTROL RATES (families.tsv per family)
+  positive 35/46 overall (76.1%), 35/38 in informative families (92.1%); negative A 0/186; negative B 0/186.
+  Fold criterion alone: positives 46/46, negatives 0/372; catalytic criterion alone: negatives 1/372.
+  Per family (positive / negA / negB): GalT 4/4, 0/40, 0/40; Amidase_3 3/3, 0/25, 0/25; RelA_SpoT 3/3, 0/23, 0/23;
+  LTD->SNase 3/3, 0/29, 0/29; PRPP synthase 2/2, 0/9, 0/9; PEPCK 2/3, 0/11, 0/11; ThyX 1/2, 0/9, 0/9; Gmk 1/2, 0/3, 0/3;
+  PriS 2/2, 0/7, 0/7; ThyA 2/2, 0/7, 0/7; MTAP 2/2, 0/5, 0/5; topo VI-B 2/2, 0/4, 0/4; FBA-II 2/2; PgdA, EPSP, M32 2/2.
+
+PASS RATE, PROFILE-INVISIBLE UNANNOTATED CANDIDATES, INFORMATIVE FAMILIES (data/rates.tsv; base rate 0/354, <= 1.1%)
+  overall 25/132 18.9% (13.2-26.5)        cluster-size weighted 14.4%
+  tier: T2 11/39 28.2% (16.5-43.8)   T2b 10/62 16.1% (9.0-27.2)   rest 4/31 12.9% (5.1-28.9)
+  support: <5% 0/0 (79 such genes exist, none in testable families)   5-20% 2/26 7.7% (2.1-24.1)
+           20-50% 11/64 17.2% (9.9-28.2)   >=50% 12/42 28.6% (17.2-43.6)
+  list type: embedding-only 15/49 30.6% (19.5-44.5)   both 9/70 12.9% (6.9-22.7)   disagree 1/3   no list 0/10
+  function source: partners 22/33 66.7% (49.6-80.2)   label-level 3/99 3.0% (1.0-8.5)
+  Without the GalT family: 10/117; embedding-only 0/34, both 9/70; T2 4/32, T2b 4/56, rest 2/29.
+
+LEAD 1  GalT-branch HIT nucleotidyltransferase, label GalP_UDP_transf, function K00965   VERDICT: SUPPORTED
+  Genes: 15 folded unannotated = 15 pass (13 Woesearchaeales, 7 genera; 2 QMZS01); 17 unannotated, 76 labeled (all
+  tiers) in 74 genomes: Woesearchaeales 44, EX4484-52 17, CG10238-14 5, QMZS01 5, Aenigmatarchaeales 4. Representatives:
+  MBN2459053.1 (SM23-78, 363 aa, votes 60/90, T2), MBW2990626.1 (SM23-78, 83/113), MBC8495864.1 (71/100),
+  NQU98203.1, RLJ00828.1 and JAUXEA010000008.1_3 (QMZS01); all 15 in leads.tsv.
+  Slot call: support median 0.49 (0.11-0.74); T2 7, T2b 6, rest 2; embedding-only 15/15; partner-derived 14/15.
+  Residues (P07902 human GALT, region 13-206, 6GQD_A): catalytic H186 -> His in 15/15 (model 173-208); binding 5/8 in 12,
+  4/8 in 3 (positives 5-6/8); site pLDDT 97.7-98.9. TM by reference 0.63-0.64 (positives 0.73-0.82; negatives <= 0.37).
+  Genome: no other source gives the function in 15/15 genomes (KO, Pfam GA, CDD by model, COG1085 or name); the family by
+  any source sits in 364/704 Woesearchaeales and 8/14 QMZS01 genomes, so the calls fill holes in a common family.
+  Gap genomes median 86.1% complete (clade 90.9%).
+  Context (+-5 genes): Glycogen_syn 12/15, Glyco_hydro_57 12/15, Glyco_transf_5 10/15, Polysacc_deac_1 10/15 (fused to
+  GH57), DUF5752 7/15, NTP_transferase adjacent in 6; Leloir steps: galK 0/15 (0/704 clade), galM 0/15, galE 9/15
+  (357/704), glgC 6/15 (38/704). The galactose route is absent; the locus is a glucan locus (observation).
+  Criterion A: 343-381 aa, ILVFMAWC 0.36-0.43; characterized relative is a homodimer. Co-fold (homodimer + 2 UDP-glucose +
+  2 Zn, ESMFold2 all-atom): MBN2459053.1 ipTM 0.97, MBW2990626.1 0.95, His-UPG phosphorus 3.2-3.3 A in both chains; positive
+  MEW6295551.1 ipTM 0.90, 3.2 A. The curated structural Zn site is replaced (C75 -> A/S, E202 -> Y/D) and the positive's
+  Zn is also placed off-site, so Zn is uninformative. UNVERIFIED: substrate (GalT branch also holds ADP-sugar
+  phosphorylases), activity, pathway role.
+
+LEAD 2  Zn-dependent amidase, label Amidase_3, function K01448   VERDICT: SUPPORTED (substrate UNVERIFIED)
+  MBI2548370.1 (361 aa, JACPJR01) and JAFCDQ010000001.1_161 (318 aa), Woesearchaeales, T2b, both lists, partners, votes
+  4/11 and 5/11. I6Y4D2 (M. tuberculosis Rv3717, 9CUN_A): E200 -> E325 / E294; Zn ligands 3/3 and 2/3; TM 0.70 / 0.66;
+  site pLDDT 86-87. Family: 21 unannotated folded, fold 20/21, Glu 14/21, PASS 2/21 (Zn ligands lost in the rest).
+  Absent otherwise 2/2; family in 99/704 Woesearchaeales. No recurring neighbors (Peptidase_M23 at +3 in one).
+  Criterion A: monomeric relative; ILVFMAWC 0.42. Co-fold + Zn: H188/E210/H256 at 2.1-2.2 A, E325 4.4 A from Zn;
+  positive KYK24502.1 H47/E66/H157 2.1-2.2 A, E248 4.7 A.
+LEAD 3  ThyA, 4 Pacearchaeales genes   SUPPORTED-housekeeping: C201 4/4, binding 8/12, TM 0.60, dUTPase and dCMP deaminase
+  neighbors 4/4; ThyX by CDD in 2/4 genomes. Same family the thy workstream killed for criterion B.
+LEAD 4  PriS, MEK6925774.1 and HIH14467.1   SUPPORTED-housekeeping: D109/D111 in place, TM 0.53-0.57; heterodimer with PriL.
+LEAD 5  PRPP synthase MBI2112695.1 (TM 0.89, K188) and M32 carboxypeptidase MBW2985831.1 (TM 0.72, E270):
+  SUPPORTED-redundant, each genome carries an annotated copy.
+
+FOLD KEPT, CATALYTIC RESIDUE ABSENT (data/absent_site_families.tsv; observation only)
+  family              folded  fold match  all catalytic in place  catalytic residue seen          positives
+  PEPCK_GTP (K01596)  11      11 (TM 0.56) 0                      Cys273 -> Ala 6, Thr 4, Val 1  2/3 (C, S, C)
+  (all 11 are in the named stratum; 15 first-pass novel genes). Below the 20% line: Thy1 2/9 keep R184 (fold 9/9);
+  RelA_SpoT keeps E139 in 16/21 and fails binding in 21/21; Amidase_3 keeps Glu in 14/20, binding < 50% in 18/20.
+
+NOTES
+  Folds: 250 ESMFold2 single chains + 5 co-folds (1 item rejected by the API for length and replaced) of 600. US-align:
+  731 pairs, login node, serial. No Slurm job. Mac disk 115 MB. Taxonomy from bins.taxonomy.
+  Label-level functions often name the wrong enzyme: LTD -> micrococcal nuclease, 0/29 folds match SNase (TM 0.28).
+FILES  REPORT.txt, leads.tsv (53 passing genes: 25 unannotated, 28 named), families.tsv (70 functions), assay_rule.json,
+  code/ (s01-s10), data/ (funnel, selections, US-align, readouts, residues, rates, co-fold geometry), ref/ (UniProt
+  records, trimmed PDB chains, SIFTS maps), folds/, folds_cofold/. Remote: .../redesign_20261111/dpann_leads/invisible/

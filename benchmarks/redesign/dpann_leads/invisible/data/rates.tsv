@@ -1,0 +1,24 @@
+group	level	n	PASS	rate	ci95	fold_match	cat_all
+control_informative	positive	38	35	0.921	(0.792, 0.973)	38	36
+control_all_families	positive	46	35	0.761	(0.621, 0.861)	46	38
+control_informative	negA	177	0	0.0	(0, 0.021)	0	0
+control_all_families	negA	186	0	0.0	(0, 0.02)	0	0
+control_informative	negB	177	0	0.0	(0, 0.021)	0	1
+control_all_families	negB	186	0	0.0	(0, 0.02)	0	1
+control_informative	negA+negB	354	0	0.0	(0, 0.011)	0	1
+candidates	all informative	132	25	0.189	(0.132, 0.265)	81	65
+candidates	all families incl. uninformative (unannotated)	141	25	0.177	(0.123, 0.249)	90	67
+candidates	named by CDD/PDB text (amendment stratum), informative	45	28	0.622	(0.476, 0.749)	44	33
+tier	T2	39	11	0.282	(0.165, 0.438)	28	22
+tier	T2b	62	10	0.161	(0.09, 0.272)	36	28
+tier	rest	31	4	0.129	(0.051, 0.289)	17	15
+support	<5%	0	0		(nan, nan)	0	0
+support	5-20%	26	2	0.077	(0.021, 0.241)	15	11
+support	20-50%	64	11	0.172	(0.099, 0.282)	37	29
+support	>=50%	42	12	0.286	(0.172, 0.436)	29	25
+list_type	embedding_only	49	15	0.306	(0.195, 0.445)	41	35
+list_type	both	70	9	0.129	(0.069, 0.227)	28	20
+list_type	lists_disagree	3	1	0.333	(0.061, 0.792)	2	3
+list_type	no_alignment_list	10	0	0.0	(0, 0.278)	10	7
+func_source	partners	33	22	0.667	(0.496, 0.802)	33	29
+func_source	label	99	3	0.03	(0.01, 0.085)	48	36

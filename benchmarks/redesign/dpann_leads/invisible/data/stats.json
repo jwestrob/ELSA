@@ -1,0 +1,82 @@
+{
+ "informative_families": [
+  "K00560",
+  "K00772",
+  "K00800",
+  "K00942",
+  "K00948",
+  "K00965",
+  "K01174",
+  "K01299",
+  "K01448",
+  "K01596",
+  "K01624",
+  "K02683",
+  "K03167",
+  "K03465",
+  "K07816",
+  "K22278"
+ ],
+ "uninformative_families": [
+  "K01808",
+  "K03741",
+  "K11175"
+ ],
+ "candidates_informative": "25/132",
+ "negatives_pooled": "0/354",
+ "fisher_candidates_vs_negatives_one_sided": 1.1659014270963478e-15,
+ "weighted_candidate_rate": 0.144,
+ "pilot_gate": {
+  "counts": {
+   "candidate": [
+    7,
+    36
+   ],
+   "negA": [
+    0,
+    36
+   ],
+   "negB": [
+    0,
+    36
+   ],
+   "positive": [
+    15,
+    19
+   ]
+  },
+  "fisher_pos_vs_negA": 3.25722482813716e-10,
+  "fisher_pos_vs_negB": 3.25722482813716e-10,
+  "positive_share": 0.7894736842105263,
+  "positives_per_family": {
+   "K00948": "2/2",
+   "K00965": "4/4",
+   "K01174": "3/3",
+   "K01448": "3/3",
+   "K01808": "0/4",
+   "K07816": "3/3"
+  },
+  "uninformative": [
+   "K01808"
+  ],
+  "gate_pass": true
+ },
+ "absent_site_families": [
+  {
+   "func": "K01596",
+   "function": "phosphoenolpyruvate carboxykinase (GTP) [EC:4.1.1.32]",
+   "label_name": "PEPCK_GTP",
+   "ref": "A5TYT6 4WPT_A",
+   "stratum": "all folded candidates",
+   "candidates_folded": 11,
+   "fold_match": 11,
+   "fold_match_named_by_amendment": 11,
+   "all_catalytic_in_place": 0,
+   "TM_ref_median": 0.561,
+   "positives": "2/3",
+   "novel_genes": 0,
+   "novel_genes_first_pass": 15,
+   "novel_genomes": 0
+  }
+ ]
+}

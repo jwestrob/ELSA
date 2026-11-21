@@ -1,0 +1,116 @@
+{
+ "K00965": {
+  "passing_genes": 15,
+  "passing_by_order": {
+   "Woesearchaeales": 13,
+   "QMZS01": 2
+  },
+  "labeled_all": 76,
+  "labeled_by_order": {
+   "Woesearchaeales": 44,
+   "EX4484-52": 17,
+   "CG10238-14": 5,
+   "QMZS01": 5,
+   "Aenigmatarchaeales": 4,
+   "Parvarchaeales": 1
+  },
+  "neighbors_top": [
+   "Glyco_hydro_57 12/15 (all labeled 34/76)",
+   "Glycogen_syn 12/15 (all labeled 44/76)",
+   "Polysacc_deac_1 10/15 (all labeled 20/76)",
+   "Glyco_transf_5 10/15 (all labeled 34/76)",
+   "Glyco_trans_1_4 7/15 (all labeled 25/76)",
+   "GT4-conflict 7/15 (all labeled 29/76)",
+   "DUF5752 7/15 (all labeled 13/76)",
+   "Glycos_transf_1 7/15 (all labeled 27/76)"
+  ],
+  "function_rate_Woesearchaeales": "364/704 genomes carry the function by KO / Pfam GA / KEGG-linked COG",
+  "function_rate_QMZS01": "8/14 genomes carry the function by KO / Pfam GA / KEGG-linked COG",
+  "step galK K00849": "lead genomes 0/15; Woesearchaeales 0/704",
+  "step galE K01784": "lead genomes 9/15; Woesearchaeales 357/704",
+  "step galM K01785": "lead genomes 0/15; Woesearchaeales 14/704",
+  "step glgC K00975": "lead genomes 6/15; Woesearchaeales 38/704",
+  "step glycogen synthase K00703/K16148/K20812": "lead genomes 0/15; Woesearchaeales 11/704",
+  "step UGP K00963": "lead genomes 0/15; Woesearchaeales 35/704",
+  "step USP K12447": "lead genomes 0/15; Woesearchaeales 0/704"
+ },
+ "K01448": {
+  "passing_genes": 2,
+  "passing_by_order": {
+   "Woesearchaeales": 2
+  },
+  "labeled_all": 62,
+  "labeled_by_order": {
+   "Woesearchaeales": 61,
+   "Pacearchaeales": 1
+  },
+  "neighbors_top": [
+   "YdjM 1/2 (all labeled 16/62)",
+   "Rep_fac-A_C 1/2 (all labeled 22/62)",
+   "Zn_dep_PLPC 1/2 (all labeled 1/62)",
+   "tRNA_anti-codon 1/2 (all labeled 37/62)",
+   "Peptidase_M23 1/2 (all labeled 6/62)",
+   "Polbeta 1/2 (all labeled 1/62)",
+   "AAA 1/2 (all labeled 1/62)",
+   "SQHop_cyclase_C 1/2 (all labeled 1/62)"
+  ],
+  "function_rate_Woesearchaeales": "99/704 genomes carry the function by KO / Pfam GA / KEGG-linked COG"
+ },
+ "K00560": {
+  "passing_genes": 4,
+  "passing_by_order": {
+   "Pacearchaeales": 4
+  },
+  "labeled_all": 48,
+  "labeled_by_order": {
+   "Pacearchaeales": 37,
+   "SCGC-AAA011-G17": 8,
+   "Micrarchaeales": 1,
+   "QMZP01": 1,
+   "Woesearchaeales": 1
+  },
+  "neighbors_top": [
+   "MafB19-deam 4/4 (all labeled 22/48)",
+   "dUTPase 4/4 (all labeled 20/48)",
+   "dCMP_cyt_deam_1 4/4 (all labeled 22/48)",
+   "ATP-cone 3/4 (all labeled 24/48)",
+   "DCD 3/4 (all labeled 22/48)",
+   "Zn_ribbon_NrdR 2/4 (all labeled 19/48)",
+   "Thioredoxin 2/4 (all labeled 16/48)",
+   "RNA_pol_Rpb2_3 2/4 (all labeled 8/48)"
+  ],
+  "function_rate_Pacearchaeales": "195/487 genomes carry the function by KO / Pfam GA / KEGG-linked COG",
+  "step thyX K03465": "lead genomes 0/4; Pacearchaeales 23/487"
+ },
+ "K02683": {
+  "passing_genes": 2,
+  "passing_by_order": {
+   "Pacearchaeales": 1,
+   "UBA10117": 1
+  },
+  "labeled_all": 345,
+  "labeled_by_order": {
+   "Pacearchaeales": 202,
+   "SCGC-AAA011-G17": 42,
+   "CG10238-14": 18,
+   "QMZP01": 16,
+   "Nanosalinales": 15,
+   "JAPDLS01": 14,
+   "GW2011-AR5": 8,
+   "CSSed11-243R1": 6
+  },
+  "neighbors_top": [
+   "Helicase_C 1/2 (all labeled 5/345)",
+   "Gins51_C 1/2 (all labeled 72/345)",
+   "tRNA-synt_2d 1/2 (all labeled 6/345)",
+   "ResIII 1/2 (all labeled 5/345)",
+   "DEAD 1/2 (all labeled 5/345)",
+   "PHP 1/2 (all labeled 3/345)",
+   "tRNA-synt_His 1/2 (all labeled 6/345)",
+   "Ribosomal_S27e 1/2 (all labeled 48/345)"
+  ],
+  "function_rate_Pacearchaeales": "209/487 genomes carry the function by KO / Pfam GA / KEGG-linked COG",
+  "function_rate_UBA10117": "14/36 genomes carry the function by KO / Pfam GA / KEGG-linked COG",
+  "step priL K18882": "lead genomes 0/2; Pacearchaeales 0/487"
+ }
+}

@@ -1,0 +1,163 @@
+{
+ "labeled_genes": 175729,
+ "tier_counts_all": {
+  "T1": 65836,
+  "rest": 63102,
+  "T2": 18437,
+  "T2b": 14338,
+  "contradicted": 14016
+ },
+ "no_own_hit_T2_T2b_rest": 95877,
+ "contradicted_side_population": 14016,
+ "with_gene_function": {
+  "T2": 11803,
+  "T2b": 7780,
+  "rest": 22345,
+  "contradicted": 4614
+ },
+ "with_gene_function_by_source": {
+  "label": 23355,
+  "partners": 18040,
+  "label_is_ko": 533
+ },
+ "enzyme": {
+  "T2": 3158,
+  "T2b": 977,
+  "rest": 1745,
+  "contradicted": 716
+ },
+ "len100_600_soluble": {
+  "T2": 1561,
+  "T2b": 628,
+  "rest": 945,
+  "contradicted": 339
+ },
+ "novelty_placed_by_source": {
+  "nov_own": {
+   "T2": 354,
+   "T2b": 0,
+   "rest": 3,
+   "contradicted": 93
+  },
+  "nov_cdd": {
+   "T2": 1061,
+   "T2b": 216,
+   "rest": 302,
+   "contradicted": 295
+  },
+  "nov_hhs_pfam": {
+   "T2": 77,
+   "T2b": 169,
+   "rest": 374,
+   "contradicted": 2
+  },
+  "nov_hhb_pdb": {
+   "T2": 11,
+   "T2b": 1,
+   "rest": 0,
+   "contradicted": 0
+  },
+  "nov_famstats": {
+   "T2": 755,
+   "T2b": 32,
+   "rest": 29,
+   "contradicted": 205
+  }
+ },
+ "novelty_placed_any": {
+  "T2": 1173,
+  "T2b": 342,
+  "rest": 530,
+  "contradicted": 303
+ },
+ "novel_unannotated": {
+  "T2": 388,
+  "T2b": 286,
+  "rest": 415,
+  "contradicted": 36
+ },
+ "novel_main_genes": 1089,
+ "novel_main_functions": 70,
+ "novel_main_by_list_type": {
+  "both": 666,
+  "embedding_only": 372,
+  "no_alignment_list": 30,
+  "lists_disagree": 21
+ },
+ "novel_main_tier_x_list_type": {
+  "T2|both": 138,
+  "T2|embedding_only": 236,
+  "T2|lists_disagree": 4,
+  "T2|no_alignment_list": 10,
+  "T2b|both": 202,
+  "T2b|embedding_only": 71,
+  "T2b|lists_disagree": 1,
+  "T2b|no_alignment_list": 12,
+  "rest|both": 326,
+  "rest|embedding_only": 65,
+  "rest|lists_disagree": 16,
+  "rest|no_alignment_list": 8
+ },
+ "novel_main_by_func_source": {
+  "label": 781,
+  "partners": 308
+ },
+ "amendment_placed_by_new_source": {
+  "nov_cdd_cog": {
+   "T2": 375,
+   "T2b": 99,
+   "rest": 180,
+   "contradicted": 85
+  },
+  "nov_cdd_name": {
+   "T2": 544,
+   "T2b": 86,
+   "rest": 76,
+   "contradicted": 86
+  },
+  "nov_pdb_name": {
+   "T2": 104,
+   "T2b": 170,
+   "rest": 362,
+   "contradicted": 1
+  }
+ },
+ "amendment_newly_placed": {
+  "T2": 56,
+  "T2b": 14,
+  "rest": 19,
+  "contradicted": 6
+ },
+ "novel_unannotated_amended": {
+  "T2": 332,
+  "T2b": 272,
+  "rest": 396,
+  "contradicted": 30
+ },
+ "novel_main_genes_amended": 1000,
+ "novel_main_functions_amended": 69,
+ "novel_main_by_list_type_amended": {
+  "both": 651,
+  "embedding_only": 303,
+  "no_alignment_list": 25,
+  "lists_disagree": 21
+ },
+ "novel_main_tier_x_list_type_amended": {
+  "T2|both": 129,
+  "T2|embedding_only": 189,
+  "T2|lists_disagree": 4,
+  "T2|no_alignment_list": 10,
+  "T2b|both": 198,
+  "T2b|embedding_only": 63,
+  "T2b|lists_disagree": 1,
+  "T2b|no_alignment_list": 10,
+  "rest|both": 324,
+  "rest|embedding_only": 51,
+  "rest|lists_disagree": 16,
+  "rest|no_alignment_list": 5
+ },
+ "novel_main_by_func_source_amended": {
+  "label": 758,
+  "partners": 242
+ }
+}

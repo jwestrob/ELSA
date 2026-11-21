@@ -1,0 +1,99 @@
+SLOT_RESCUE WHOLE-DPANN PASS: THE TESTED SLOT CALL ON EVERY GENE WITHOUT A PFAM ROW (2026-11-21)
+=================================================================================================
+Approved by Jacob through the coordinator (step-5 sketch of REPORT.txt). Predeclaration predeclared_pass.json
+(2026-11-21T00:16Z, sha256 d8f2c33eb6287ba436c60b51a5b5b4832c38514fc161a12b1c50ddbd2b8eb348), written before any pass
+computation; predeclared.json unchanged. DPANN only; lut, SR-VP and testset3 untouched; nothing written into Sharur.
+
+CANDIDATES / BONDED / CALLED
+  candidates (no Pfam row)                      1,444,991   (20,042 carry a KO of their own)
+  bonded by an embedding-list bond (Z)            502,275   (34.8%); every bonded candidate sits in a Z L4b+ locus
+  in any Z locus                                  637,627
+  called (proposed label, >= 2 votes)             175,729   (12.2% of candidates, 35.0% of bonded)
+  bonded, no call: supporters unannotated         290,498;  < 2 votes 36,048
+  alignment lists on the called rows: same label 125,548 (71.4%), other label 13,225 (7.5%), no call 34,535 (19.7%),
+  no list 2,421 (1.4%); where both lists call, 90.5% agree.
+
+REGRESSION CHECK (predeclared stop condition) PASSED
+  a1, identity: the pass code on the 19,146 test rows reproduces calls.parquet in every row (class, label, supporting
+     genomes, bonds: 0 mismatches) -> 2,368 of 2,904 verified leads right, 11 of 8,474 controls naming a core gene.
+  a2, the definition applied to candidates (vote with no right-family set): 2,368 and 11 again; 0 verified genes change.
+  Bond gate: every bond processed (regression, 502,275 candidates, 50,000 calibration genes, A bonds of called rows)
+     reproduces its stored support exactly.
+
+CALIBRATION ON GENES WHOSE ANSWER IS KNOWN (50,000 random bonded genes with a Pfam, seed 20261120; the call reads only
+partners in other genome groups, never the gene's own rows). ANNOTATED GENES ARE EASIER THAN DARK ONES: these rates are
+upper references for the candidates.
+  called 48,418 of 50,000 (1,374 < 2 votes, 208 supporters unannotated); proposed label in the gene's own labels 98.85%
+  (own Pfam accessions only: 98.04%).
+  agreement by votes-for x vote share (calls / agreement):
+                 share < 0.60      0.60-0.80        > 0.80
+    votes 2      10 / 40.0%        22 / 40.9%       738 / 95.0%
+    votes 3-4    16 / 25.0%        50 / 64.0%     1,031 / 97.0%
+    votes 5-9    27 / 40.7%        62 / 69.4%     1,724 / 97.4%
+    votes 10+    60 / 58.3%       315 / 72.4%    44,363 / 99.4%
+  by gene length: < 80 aa 2,753 / 98.8%; 80-150 aa 10,123 / 98.9%; > 150 aa 35,542 / 98.8%.
+  The candidates sit in lower cells more often than the calibration genes: 50.5% of called candidates are in
+  votes 10+ / share > 0.80 (91.6% of calibration calls). Weighting the cell rates by the candidates' cells gives an
+  expected agreement of 89.3% (92.5% over the 165,794 rows outside sparse cells). On the test's dark truth set the
+  slot call was right in 2,368 of its 2,406 calls on verified leads (98.4%).
+  confidence_bin = cell; calibration_agreement = that cell's rate; cells with < 30 calibration calls carry '|sparse'
+  (9,935 rows: v2 below 0.80 share, v3-4 and v5-9 below 0.60).
+
+KO AGREEMENT (called candidates that carry their own KO: 12,831; KO -> Pfam proxy table of the test)
+  agree 12,537; disagree 82; unmapped (KO without a Pfam proxy, label a Pfam) 212 -> 99.35% of mapped agree; 1.7%
+  unmapped.
+
+TEN MOST FREQUENT PROPOSED LABELS (positional-homology hypotheses; counts of called candidates)
+  PF07705 CARDB 4,741; PF04014 MazE_antitoxin 4,268; PF05168 HEPN 4,255; PF05016 ParE_toxin 4,075; K13280 signal
+  peptidase I 3,238; PF04021 Class_IIIsignal 3,108; K23255 archaeal type IV pilus assembly protein PilA 2,999; PF13231
+  PMT_2 2,573; PF13412 HTH_24 2,549; PF00482 T2SSF 2,379. Top 50 in pass/labels_top50.tsv. Labels are Pfam accessions
+  (160,622 rows) or KOs without a Pfam proxy (15,107).
+  Supporting genome-group breadth (rows / median votes): 1 group 779 / 2; 2-4 7,571 / 3; 5-9 12,155 / 5;
+  10-49 59,248 / 15; >= 50 95,976 / 48.
+
+FILES (remote $RD/slot_rescue/pass/; local copy benchmarks/redesign/slot_rescue/pass/, same bytes)
+  dpann_slot_rescue_pass.parquet  8,725,195 B, 175,729 rows x 31 columns, sha256 b346af74...d182d7
+  counts.tsv 395 B; labels_top50.tsv 1,253 B; breadth.tsv 219 B; calibration_cells.tsv 594 B; calibration_length.tsv
+  170 B; confidence_bins.tsv 264 B; ko_agreement.tsv 59 B; regression.json 374 B; run.json 1,081 B; STATUS 134 B (DONE).
+  Columns: protein_id, gid, genome, genome_code, contig, position_index, strand, length, own_ko, own_ko_agrees,
+  proposed_label_positional_homology, proposed_label_name, proposed_label_kind, votes_for, voters_annotated, vote_share,
+  supporting_genomes, supporting_groups, runner_up_label, runner_up_name, runner_up_votes, tied_keys, locus_id,
+  locus_size, n_bonds, max_bond_lambda, alignment_label, alignment_lists_same_label, confidence_bin,
+  calibration_agreement, basis.
+  Code: code/pass_run.py (imports score.py unchanged), code/pass.sbatch; inputs data/pfam_nameonly.tsv,
+  data/regression_sets.json.
+
+READING IT FROM SHARUR (verified read-only on ~/Documents/Sandbox/Sharur/Sharur/data/dpann/sharur.duckdb)
+  ATTACH '/Users/jacob/Documents/Sandbox/Sharur/Sharur/data/dpann/sharur.duckdb' AS dpann (READ_ONLY);
+  SELECT p.protein_id, p.bin_id, p.contig_id, p.gene_index,
+         s.proposed_label_positional_homology, s.proposed_label_name, s.votes_for, s.voters_annotated, s.vote_share,
+         s.supporting_genomes, s.supporting_groups, s.confidence_bin, s.calibration_agreement, s.basis
+  FROM read_parquet('/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/slot_rescue/pass/dpann_slot_rescue_pass.parquet') s
+  JOIN dpann.proteins p USING (protein_id);
+  Join key: protein_id (Sharur proteins.protein_id). Checked on all 175,729 rows: every row joins; genome = bin_id,
+  contig = contig_id and position_index = gene_index in every row; 0 joined proteins carry a Pfam row. First rows:
+  AAR38875.1 GCA_000008085.1 AE017199.1 21 PF09704 Cas_Cas5d 57/60; AAR39068.1 ... 225 PF01992 vATP-synt_AC39 108/108;
+  AE017199.1_285 ... 286 PF09341 Pcc1 7/7. Read every label as 'consistent with', a hypothesis from bonded partners.
+
+COST
+  Smoke job 119513 (300 items per stage) 37 s; pass job 119515 3 min 04 s (regression 11 s, Z pass 88 s, calibration
+  17 s, A column 32 s); both -A banfield -p standard --qos=standard_expand -c 24, mark7 exclude list: 3 min 41 s of the
+  1 h budget. Peak RSS 4.5 GB per process; 1,656% CPU. No GPU, no model inference, no HMM search.
+
+EXPECTATIONS (predeclared_pass.json) AND OUTCOMES
+  Z-bonded 450,000-700,000: HELD (502,275). Eligible >= 85% of bonded: HELD (100%). Called 145,000-360,000: HELD
+  (175,729). Calibration 85-95% overall: ABOVE (98.85%); >= 95% at votes 10+ / share > 0.80: HELD (99.4%); < 70% at
+  votes 2 / share < 0.60: HELD (40%, 10 calls). KO agreement 85-97% of mapped: ABOVE (99.35%); unmapped 5-20%: BELOW
+  (1.7%). Alignment same label 60-85%: HELD (71.4%). Cost < 15 min: HELD.
+
+DIFFERENCES FROM THE MESSAGE
+- 'Total votes' is given as voters_annotated (supporting partners carrying any Pfam / KO; vote_share uses it) beside
+  supporting_genomes (all supporters, annotated or not). The runner-up is the top key among supporters that do not
+  carry the proposed key; keys that co-occur on the same supporters with an equal count are listed in tied_keys.
+- The call for a gene of unknown family is the tested vote() with an empty right-family set (the test merged a known
+  family's Pfam and KO into one vote); check a2 shows the two forms agree on every test row.
+- 2,798 proteins carry Pfam rows stored by name only (PQQ_3, TYW2_N_arc, Ribosomal_L2, DUF4162, ...). They have a Pfam
+  row, so they are outside the candidates and outside the calibration pool; as in the test, they cast no votes as
+  partners.
+- The confidence table has four sparse cells (< 30 calibration calls); their rates are shown and flagged.
+- locus_id uses ELSA DPANN gid intervals of Z L4b+ theta .02 ('Z_L4bp_t0.02:s-e').

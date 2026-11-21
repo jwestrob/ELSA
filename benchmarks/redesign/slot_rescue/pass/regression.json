@@ -1,0 +1,21 @@
+{
+ "a1": {
+  "rows": 19146,
+  "class_mismatch": 0,
+  "label_mismatch": 0,
+  "support_mismatch": 0,
+  "bonds_mismatch": 0,
+  "bond_gate_bad": 0,
+  "verified_right": 2368,
+  "controls_false": 11,
+  "passed": true
+ },
+ "a2": {
+  "verified_right": 2368,
+  "controls_false": 11,
+  "verified_n": 2904,
+  "controls_n": 8474,
+  "verified_changed_vs_tested": 0,
+  "passed": true
+ }
+}

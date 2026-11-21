@@ -3355,3 +3355,30 @@ same genome, outside conserved slots.
   11 match.
 - Cost: 1 min 49 s of 24-CPU job time (jobs 119461, 119468). A whole-collection pass is sketched
   in the report (about 15 min of one 24-CPU job on DPANN); nothing built.
+
+## 2026-11-21 00:26 UTC — `slot_rescue` pass over all DPANN genes without a Pfam row (Jacob: "ok. so go for it.")
+
+Report `benchmarks/redesign/slot_rescue/REPORT_pass.txt`; predeclaration `predeclared_pass.json`
+sha256 d8f2c33e…eb348, written before the pass. The slot call is unchanged from the test.
+
+- Candidates 1,444,991 (20,042 carry their own KO); bonded 502,275 (34.8%); proposed label for
+  175,729 (12.2% of candidates). Bonded without a call: supporters unannotated 290,498; fewer
+  than 2 votes 36,048.
+- Regression: the pass code reproduces the test row for row (2,368 of 2,904; 11 of 8,474).
+- Calibration on 50,000 bonded Pfam-annotated genes (seed 20261120): 48,418 called, 98.85% agree
+  with the gene's own labels (own Pfam only 98.04%); 98.8-98.9% in every length class. Agreement
+  is 95.0-99.4% where the label holds over 80% of the votes and 25-72% below that. Annotated
+  genes are the easier case. Called candidates: 132,950 (75.7%) hold over 80% of the votes;
+  weighting cell rates by the candidates' cells gives 89.3% expected agreement.
+- Own-KO cross-check: 12,831 called candidates carry a KO; 12,537 agree, 82 disagree, 212 not
+  comparable (99.35% of comparable).
+- Alignment lists: same label on 71.4% of called rows; 90.5% agreement where both call.
+- Most frequent labels: CARDB 4,741, MazE_antitoxin 4,268, HEPN 4,255, ParE_toxin 4,075, K13280
+  3,238, Class_IIIsignal 3,108, K23255 2,999, PMT_2 2,573, HTH_24 2,549, T2SSF 2,379.
+- Table (175,729 rows x 31 columns, 8.7 MB; label column `proposed_label_positional_homology`,
+  every row carries a `basis` string and a `confidence_bin`):
+  `benchmarks/redesign/slot_rescue/pass/dpann_slot_rescue_pass.parquet` (local, git-ignored) and
+  `$RD/slot_rescue/pass/`. Joins to Sharur's `proteins` on `protein_id`; nothing was written
+  into Sharur.
+- I re-read the parquet: 175,729 rows, the bin counts and the ten labels match the report.
+- Cost 3 min 41 s of 24-CPU job time (jobs 119513, 119515).

@@ -1,0 +1,40 @@
+{
+ "workstream": "slot_rescue whole-DPANN pass (step-5 sketch, approved by Jacob via the coordinator 2026-11-20)",
+ "written_utc": "2026-11-21T00:16Z",
+ "status_when_written": "The test (predeclared.json, REPORT.txt) is finished and unchanged. No pass computation has run; pass code not yet executed. lut, SR-VP and testset3 untouched.",
+ "candidates": "every DPANN gene (ELSA universe = Sharur proteins, 3,585,303) without any Pfam row in the Sharur DB (source 'pfam', any accession form): 1,444,991. The 2,798 proteins whose only Pfam rows are stored by name (data/pfam_nameonly.tsv, sha256 3e8e97c5...; PQQ_3, TYW2_N_arc, Ribosomal_L2, ...) have a Pfam row and are not candidates; as in the test, they cast no votes as partners (label tables use accession-form rows). Own KO recorded per candidate (kofam / kegg rows).",
+ "call": {
+  "definition": "the tested slot call with embedding lists (Z), code path unchanged: score.py support() and vote() imported. Gate: gene inside >= 1 locus of Z L4bp_t0.02 and >= 1 stored Z bond (nodes/dpann_Z/bonds_obs.npz, tau 6). Supporting partners: per genome the best-ranked list partner of the gene lying 1-3 positions from a list partner of a bonded neighbor, pooled over the gene's bonds. Vote: each supporting partner votes once per key (Pfam accession; a KO votes for its proxy Pfams, a KO without proxy for itself); call = the top key with >= 2 votes; keys tied at the top (co-occurring domains) resolve to the lowest label id. This is vote() with an empty right-family set, the only form defined for a gene of unknown family.",
+  "alignment_support_column": "the same call with alignment lists (A lists, nodes/dpann_A bonds, A L4b_t0.02 loci) for every called gene: yes (same key) / no (another key) / no call (A gate or vote fails) / no list (empty A list).",
+  "bond_gate": "for every bond processed (Z for every eligible candidate, calibration and regression gene; A for every called gene), support recomputed from the lists equals stored n - 1 and ng - 1. Any mismatch -> STATUS FAILED, no pass table."
+ },
+ "checks": {
+  "a_regression": {
+   "a1_code_identity": "the pass code run on the 19,146 test rows with each row's right-family set reproduces calls.parquet (sha256 57ba4cfb...) Z columns slot_pri_class, slotname_label, slot_n_support, n_bonds in every row, hence 2,368 of 2,904 verified lead_X right and 11 of 8,474 matched controls naming a core gene (data/regression_sets.json, sha256 37ed3f14...). Any row mismatch -> STOP (STATUS FAILED, no pass table).",
+   "a2_definition_applied": "the same rows with an empty right-family set (the definition applied to candidates): verified right = winning key in the row's right-family labels; control false = winning key in CORE. Acceptance: verified right in [2,330, 2,373] and control false <= 20; otherwise STOP and report (the tested rates would not transfer)."
+  },
+  "b_calibration": {
+   "sample": "50,000 genes drawn without replacement (numpy default_rng(20261120).choice over the sorted gid array) from genes that carry an accession-form Pfam and >= 1 stored Z bond.",
+   "call": "identical to the pass (locus gate included); the call reads only partners in other genome groups, never the gene's own rows.",
+   "agreement": "primary: proposed key in the gene's own labels (own Pfam accessions, own KOs, proxy Pfams of own KOs); secondary: proposed key in own Pfam accessions.",
+   "tables": "agreement among called sample genes overall; by votes-for (2, 3-4, 5-9, >= 10) x vote share = votes-for / annotated voters (< 0.60, 0.60-0.80 inclusive, > 0.80); by gene length (< 80, 80-150, > 150 aa). Annotated genes are easier than dark ones; stated beside every number.",
+   "confidence_bin": "each pass row gets its votes-for x share cell and that cell's calibration agreement (cells with < 30 calibration calls are marked 'sparse')."
+  },
+  "c_ko_crosscheck": "called candidates with own KO(s): per KO k, agree if label == k or label in proxy(k); disagree if k has a proxy without the label, or label is another KO; unmapped if k has no proxy and the label is a Pfam. Gene: agree if any k agrees, else disagree if any k disagrees, else unmapped. Same KO -> Pfam proxy table as the test (data/ko_proxy.tsv: Pfams on > 50% of the KO's proteins)."
+ },
+ "output": {
+  "table": "$RD/slot_rescue/pass/dpann_slot_rescue_pass.parquet, one row per candidate with a Z call; copied to benchmarks/redesign/slot_rescue/pass/ when < 100 MB.",
+  "columns": "protein_id, gid, genome, genome_code, contig, position_index, strand, length, own_ko, own_ko_agrees, proposed_label_positional_homology, proposed_label_name, proposed_label_kind, votes_for, voters_annotated, vote_share, supporting_genomes, supporting_groups, runner_up_label, runner_up_name, runner_up_votes (top key among supporting partners that do not carry the proposed key), tied_keys, locus_id (smallest containing Z L4bp_t0.02 locus, 'Z_L4bp_t0.02:s-e' in gids), locus_size, n_bonds, max_bond_lambda, alignment_lists_same_label, alignment_label, confidence_bin, calibration_agreement, basis (fixed string: hypothesis from bonded list partners, not a curated caller call)",
+  "counts": "candidates, with own KO, Z-bonded, in a Z locus, eligible (both), called; top 50 proposed labels; supporting-group breadth (1, 2-4, 5-9, 10-49, >= 50); confidence cells"
+ },
+ "expectations": {
+  "z_bonded_candidates": "450,000-700,000",
+  "eligible_share_of_bonded": ">= 85%",
+  "called": "145,000-360,000 (10-25% of candidates)",
+  "calibration_overall": "85-95% agreement; >= 95% in votes >= 10 with share > 0.80; < 70% in votes 2 with share < 0.60",
+  "ko_agreement": "85-97% of mapped; unmapped 5-20%",
+  "alignment_same_label": "60-85% of called rows yes",
+  "cost": "< 15 min of one 24-CPU job"
+ },
+ "budget": "1 h of 24-CPU job time; no GPU; no model inference; no HMM search; no write into any Sharur folder or DB"
+}

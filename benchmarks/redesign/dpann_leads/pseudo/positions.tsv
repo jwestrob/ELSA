@@ -1,0 +1,81 @@
+family	position	kind	canonical_residue	top_substitute	share_groups_top_substitute	n_groups	shift_rate	divergence_control_canonical_share	divergence_control_n_groups	share_groups_canonical_labeled	share_groups_gap	labeled_residue_counts_groups	canonical_share_groups	canonical_n_groups	verdict_position	lf_annotated_canonical_share	named_canonical_share	named_n_groups	structure_readout_labeled_genes	structure_readout_positive_controls	n_genes
+rpib	9	binding:aldehydo-D-ribose 5-	D	N	0.455	11	0.5	0.0	2	0.273	0.0	N:5;D:3;S:1;A:1;E:1	0.897	29	True	0.3			n=12 N:4,D:2,-:2,A:1,S:1,E:1		287
+rpib	10	binding:aldehydo-D-ribose 5-	H	V	0.364	11	0.0	0.0	2	0.091	0.0	V:4;S:2;D:2;N:2;H:1	0.862	29	True	0.0			n=12 D:3,S:3,V:2,-:2,I:1,A:1		287
+rpib	41	binding:aldehydo-D-ribose 5-	T	S	0.273	11	0.091	0.0	2	0.0	0.545	-:6;S:3;V:1;D:1	0.0	29	False	0.0					287
+rpib	66	active	C	S	0.273	11	0.0	0.0	2	0.0	0.0	S:3;A:2;T:2;N:2;V:1;P:1	0.759	29	True	0.1			n=12 S:5,T:2,P:1,A:1,N:1,C:1		287
+rpib	67	binding:aldehydo-D-ribose 5-	G	R	0.273	11	0.091	0.0	2	0.0	0.0	S:3;R:3;K:2;D:2;Q:1	0.793	29	True	0.1					287
+rpib	68	binding:aldehydo-D-ribose 5-	T	D	0.636	11	0.182	0.0	2	0.0	0.0	D:7;K:1;R:1;S:1;N:1	0.345	29	False	0.0					287
+rpib	69	binding:D-ribulose 5-phospha	G	P	0.636	11	0.0	0.0	2	0.0	0.0	P:7;Y:1;H:1;T:1;S:1	0.897	29	True	0.1					287
+rpib	71	binding:D-ribulose 5-phospha	G	A	0.273	11	0.273	0.5	2	0.0	0.0	A:3;K:2;D:2;E:2;L:1;Q:1	0.862	29	True	0.4					287
+rpib	72	binding:aldehydo-D-ribose 5-	I	A	0.636	11	0.818	0.0	2	0.0	0.0	A:7;V:1;D:1;F:1;L:1	0.069	29	False	0.0					287
+rpib	99	active	H		0.0	11	0.091	0.0	2	0.0	1.0	-:11	0.862	29	True	0.0			n=12 E:4,-:4,S:2,A:1,G:1		287
+rpib	100	binding:aldehydo-D-ribose 5-	N	A	0.273	11	1.0	0.5	2	0.364	0.0	N:4;A:3;S:2;R:1;C:1	0.517	29	False	0.5					287
+rpib	110	binding:aldehydo-D-ribose 5-	R	D	0.273	11	0.182	0.0	2	0.0	0.0	D:3;S:3;P:1;E:1;I:1;Y:1	0.69	29	False	0.0					287
+rpib	133	binding:aldehydo-D-ribose 5-	R	K	0.182	11	0.1	0.0	2	0.091	0.091	Q:2;K:2;E:1;S:1;M:1;R:1	0.724	29	True	0.1			n=12 -:11,F:1		287
+rpib	137	binding:aldehydo-D-ribose 5-	R	K	0.182	11	0.429	0.0	2	0.364	0.0	R:4;K:2;H:1;G:1;D:1;N:1	0.862	29	True	0.1			n=12 -:12		287
+pepck	81	binding:substrate	R	G	0.571	7	0.0		0	0.0	0.0	G:4;S:2;N:1	0.871	70	True						15
+pepck	220	binding:substrate	Y	F	0.571	7	0.75		0	0.429	0.0	F:4;Y:3	0.914	70	True						15
+pepck	221	binding:substrate	G	N	0.143	7	0.0		0	0.857	0.0	G:6;N:1	0.357	70	False						15
+pepck	222	binding:substrate	G	Y	0.857	7	0.857		0	0.0	0.0	Y:6;F:1	0.914	70	True						15
+pepck	229	binding:Mn(2+)	K		0.0	7	0.0		0	1.0	0.0	K:7	0.914	70	True						15
+pepck	249	binding:Mn(2+)	H		0.0	7	0.0		0	1.0	0.0	H:7	0.914	70	True				n=11 H:11		15
+pepck	271	binding:substrate	S	T	0.286	7	0.0		0	0.714	0.0	S:5;T:2	0.886	70	True				n=11 S:7,T:4		15
+pepck	272	binding:GTP	A	G	1.0	7	0.571		0	0.0	0.0	G:7	0.7	70	True				n=11 G:11		15
+pepck	273	active	C	A	0.857	7	0.0		0	0.0	0.0	A:6;T:1	0.857	70	True				n=11 A:6,T:4,V:1		15
+pepck	274	binding:GTP	G		0.0	7	0.0		0	1.0	0.0	G:7	0.914	70	True				n=11 G:11		15
+pepck	275	binding:GTP	K		0.0	7	0.0		0	1.0	0.0	K:7	0.914	70	True				n=11 K:11		15
+pepck	276	binding:GTP	T	S	1.0	7	0.571		0	0.0	0.0	S:7	0.914	70	True				n=11 S:11		15
+pepck	277	binding:GTP	N	E	1.0	7	0.143		0	0.0	0.0	E:7	0.186	70	False				n=11 E:11		15
+pepck	296	binding:Mn(2+)	D		0.0	7	0.0		0	1.0	0.0	D:7	0.914	70	True				n=11 D:11		15
+pepck	387	binding:substrate	N		0.0	7	0.0		0	1.0	0.0	N:7	0.943	70	True				n=11 N:8,-:3		15
+pepck	388	binding:substrate	S	A	1.0	7	0.0		0	0.0	0.0	A:7	0.243	70	False				n=11 A:11		15
+pepck	389	binding:substrate	R		0.0	7	0.0		0	1.0	0.0	R:7	0.943	70	True				n=11 R:11		15
+pepck	420	binding:GTP	R	E	1.0	7	0.0		0	0.0	0.0	E:7	0.971	70	True				n=11 N:11		15
+pepck	515	binding:GTP	F	G	0.429	7	0.857		0	0.0	0.0	G:3;K:2;N:1;D:1	0.143	70	False				n=11 P:11		15
+pepck	516	binding:GTP	G		0.0	7	0.286		0	0.0	1.0	-:7	0.143	70	False				n=11 E:6,Q:3,K:2		15
+pepck	517	binding:GTP	E		0.0	7	0.143		0	0.0	1.0	-:7	0.143	70	False				n=11 E:4,S:2,A:2,K:1,Q:1,D:1		15
+pepck	518	binding:GTP	N		0.0	7	0.143		0	0.0	1.0	-:7	0.186	70	False				n=11 A:10,S:1		15
+glucdh3	100	invariant	D	E	0.156	45	0.312	0.8	35	0.644	0.022	D:29;E:7;R:3;V:2;L:1;H:1	0.72	50	True		0.833	12.0	n=24 D:12,A:4,L:3,T:2,I:1,R:1	n=5 D:5	133
+glucdh3	185	invariant	N		0.0	45	0.0	0.0	35	0.0	1.0	-:45	0.38	50	False		0.0	12.0	n=24 D:9,Q:3,R:3,T:2,S:2,H:2	n=5 N:5	133
+glucdh3	191	invariant	W	A	0.067	45	0.0	0.371	35	0.356	0.156	W:16;-:7;M:3;A:3;C:3;Y:3	0.68	50	False		0.667	12.0	n=24 W:8,M:6,V:3,Y:1,K:1,C:1	n=5 W:5	133
+rela	21	binding:guanosine 3'-diphosp	K	L	0.533	30	0.103	0.0	17	0.033	0.033	L:16;R:4;F:2;K:1;P:1;Y:1	0.102	246	False						55
+rela	22	binding:guanosine 3'-diphosp	V	A	0.2	30	0.897	0.0	17	0.033	0.1	A:6;L:6;R:3;I:3;T:3;-:3	0.0	246	False						55
+rela	23	binding:guanosine 3'-diphosp	K	E	0.2	30	0.933	0.0	17	0.0	0.133	E:6;Q:5;-:4;L:3;V:3;Y:3	0.0	246	False						55
+rela	24	binding:guanosine 3'-diphosp	L	V	0.133	30	0.962	0.0	17	0.133	0.167	-:5;Y:4;L:4;V:4;G:3;F:3	0.004	246	False						55
+rela	25	binding:guanosine 3'-diphosp	K	R	0.133	30	0.952	0.0	17	0.3	0.033	K:9;R:4;D:3;E:2;A:2;S:2	0.329	246	False						55
+rela	26	binding:guanosine 3'-diphosp	G	E	0.1	30	0.852	0.0	17	0.1	0.067	T:3;R:3;E:3;G:3;K:2;S:2	0.016	246	False						55
+rela	27	binding:guanosine 3'-diphosp	I	L	0.2	30	0.778	0.118	17	0.4	0.0	I:12;L:6;V:5;F:4;M:1;G:1	0.415	246	False						55
+rela	28	binding:guanosine 3'-diphosp	R	E	0.2	30	0.345	0.118	17	0.033	0.0	E:6;V:4;K:3;S:3;D:3;I:3	0.049	246	False						55
+rela	41	binding:guanosine 3'-diphosp	E	A	0.167	30	0.552	0.0	17	0.033	0.2	-:6;A:5;I:4;L:4;Y:2;F:2	0.016	246	False				n=23 L:6,F:3,H:3,-:2,I:2,Y:2		55
+rela	42	binding:guanosine 3'-diphosp	F	L	0.133	30	0.552	0.0	17	0.033	0.2	-:6;L:4;R:4;Q:4;D:3;G:2	0.012	246	False				n=23 L:6,-:2,M:2,I:2,G:2,F:2		55
+rela	46	binding:ATP	R	K	0.267	30	0.4	0.647	17	0.667	0.0	R:20;K:8;N:2	0.866	246	True				n=23 R:10,K:5,G:3,N:2,L:1,-:1		55
+rela	47	binding:ATP	V	I	0.167	30	0.3	0.176	17	0.333	0.0	V:10;L:5;I:5;S:2;Y:2;E:1	0.085	246	False				n=23 V:6,I:2,L:2,Y:2,R:2,S:2		55
+rela	48	binding:ATP	K	D	0.033	30	0.333	0.647	17	0.9	0.0	K:27;D:1;S:1;Y:1	0.947	246	True				n=23 K:21,-:1,R:1		55
+rela	52	binding:ATP	S	R	0.367	30	0.304	0.235	17	0.233	0.0	R:11;S:7;K:4;T:3;G:2;P:1	0.707	246	True				n=23 S:9,R:9,Q:1,-:1,G:1,E:1		55
+rela	56	binding:ATP	K	Q	0.067	30	0.167	0.412	17	0.8	0.033	K:24;Q:2;R:1;E:1;N:1;-:1	0.923	246	True				n=23 K:19,L:1,Q:1,E:1,I:1		55
+rela	57	binding:ATP	A	I	0.433	30	0.467	0.059	17	0.0	0.033	I:13;L:9;F:2;V:2;T:1;M:1	0.012	246	False				n=23 L:8,I:7,F:2,N:1,Q:1,R:1		55
+rela	58	binding:ATP	R	A	0.267	30	0.536	0.059	17	0.067	0.0	A:8;L:5;T:5;I:3;S:2;R:2	0.02	246	False				n=23 A:6,L:3,I:2,V:2,T:2,R:2		55
+rela	59	binding:ATP	R	D	0.133	30	0.348	0.294	17	0.233	0.0	R:7;D:4;E:4;L:3;Q:2;G:2	0.301	246	False				n=23 D:6,I:3,R:3,C:2,L:2,K:2		55
+rela	72	binding:ATP	D		0.0	30	0.0	0.824	17	0.967	0.033	D:29;-:1	0.988	246	True				n=23 D:23		55
+rela	77	binding:ATP	R	K	0.3	30	0.278	0.176	17	0.4	0.033	R:12;K:9;Q:3;A:2;-:1;N:1	0.898	246	True				n=23 K:6,R:6,T:3,Q:3,S:1,N:1		55
+rela	105	binding:guanosine 3'-diphosp	R	K	0.2	30	0.483	0.118	17	0.033	0.1	K:6;E:4;D:4;-:3;L:2;G:2	0.041	246	False				n=23 E:7,D:6,I:3,G:2,K:1,M:1		55
+rela	112	binding:guanosine 3'-diphosp	K	R	0.167	30	0.556	0.529	17	0.4	0.0	K:12;R:5;V:2;A:2;H:1;N:1	0.882	246	True						55
+rela	113	binding:guanosine 3'-diphosp	E	D	0.167	30	0.214	0.059	17	0.067	0.0	K:5;D:5;P:4;R:3;T:2;E:2	0.142	246	False						55
+rela	114	binding:guanosine 3'-diphosp	S	N	0.233	30	0.3	0.118	17	0.0	0.1	N:7;G:5;K:4;T:3;-:3;D:3	0.02	246	False						55
+rela	120	binding:guanosine 3'-diphosp	H	K	0.2	30	0.095	0.706	17	0.3	0.167	H:9;K:6;-:5;R:3;E:2;L:2	0.976	246	True				n=23 H:10,Q:5,K:4,R:2,E:1,I:1		55
+rela	139	active	E	D	0.067	30	0.222	0.824	17	0.7	0.033	E:21;D:2;Q:2;S:1;-:1;G:1	0.959	246	True				n=23 E:18,D:2,G:2,A:1		55
+rela	148	binding:guanosine 3'-diphosp	N	F	0.167	30	0.333	0.0	17	0.0	0.067	L:5;F:5;Y:4;H:4;D:3;-:2	0.049	246	False				n=23 Y:6,L:5,E:2,Q:2,F:2,G:1		55
+rela	151	binding:guanosine 3'-diphosp	A	D	0.333	30	0.067	0.118	17	0.0	0.133	D:10;S:5;-:4;E:3;N:3;Y:2	0.772	246	True				n=23 D:8,S:4,K:3,Y:2,E:2,M:1		55
+rela	152	binding:guanosine 3'-diphosp	T	E	0.367	30	0.067	0.0	17	0.0	0.1	E:11;R:3;D:3;-:3;Y:2;L:2	0.146	246	False				n=23 E:7,Y:3,L:2,N:2,R:2,Q:1		55
+rela	153	binding:guanosine 3'-diphosp	I	F	0.267	30	0.071	0.0	17	0.067	0.133	F:8;L:5;-:4;D:3;A:2;R:2	0.033	246	False				n=23 F:8,L:4,A:2,K:2,G:1,H:1		55
+rela	154	binding:guanosine 3'-diphosp	E	G	0.267	30	0.517	0.0	17	0.033	0.233	G:8;-:7;F:5;N:3;S:2;H:1	0.041	246	False				n=23 S:5,D:4,N:3,G:3,F:2,L:2		55
+rela	155	binding:guanosine 3'-diphosp	H	P	0.2	30	0.821	0.0	17	0.067	0.267	-:8;P:6;S:3;K:3;E:2;D:2	0.012	246	False				n=23 H:10,R:4,Y:2,S:1,G:1,K:1		55
+pmmi	15	invariant	T	H	0.4	5	0.0	1.0	4	0.0	0.2	H:2;G:1;C:1;-:1	0.965	85	True		0.0	3.0	n=8 H:3,V:2,G:1,C:1,M:1	n=5 T:5	9
+pmmi	16	invariant	D	A	0.2	5	0.0	1.0	4	0.6	0.2	D:3;A:1;-:1	0.988	85	True		1.0	3.0	n=8 D:5,A:2,E:1	n=5 D:5	9
+pmmi	60	invariant	N	D	0.2	5	0.0	1.0	4	0.6	0.0	N:3;Y:1;D:1	0.941	85	True		0.667	3.0	n=8 N:6,Y:1,E:1	n=5 N:5	9
+pmmi	65	invariant	S	H	0.2	5	0.4	1.0	4	0.0	0.4	-:2;H:1;P:1;T:1	1.0	85	True		0.0	3.0	n=8 -:3,K:2,H:1,R:1,V:1	n=5 S:5	9
+pmmi	66	invariant	S	A	0.2	5	0.0	1.0	4	0.4	0.0	S:2;A:1;K:1;R:1	0.918	85	True		0.333	3.0	n=8 P:3,A:2,D:1,S:1,N:1	n=5 S:5	9
+pmmi	67	invariant	R	H	0.4	5	0.2	1.0	4	0.0	0.0	H:2;M:1;D:1;N:1	0.976	85	True		0.0	3.0	n=8 H:4,K:2,N:1,F:1	n=5 R:5	9
+pmmi	68	invariant	E	N	0.4	5	0.0	0.5	4	0.2	0.0	N:2;H:1;A:1;E:1	0.929	85	True		0.0	3.0	n=8 M:3,Y:1,-:1,A:1,P:1,N:1	n=5 E:5	9
+pmmi	89	invariant	R	F	0.4	5	0.0	0.25	4	0.4	0.0	F:2;R:2;E:1	0.929	85	True		0.667	3.0	n=8 F:4,R:2,P:1,Q:1	n=5 R:5	9
+pmmi	94	invariant	N	A	0.4	5	0.0	1.0	4	0.2	0.0	A:2;K:1;N:1;T:1	0.941	85	True		0.333	3.0	n=8 A:3,G:2,K:1,N:1,F:1	n=5 N:5	9

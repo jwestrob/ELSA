@@ -1,0 +1,59 @@
+{
+ "family": "glucdh3",
+ "title": "Gluconate 2-dehydrogenase gamma-subunit relatives (SR-VP), label Gluconate_2-dh3; extended-tier reference member",
+ "verdict": "MIXED",
+ "n_labeled_genes": 133,
+ "n_labeled_groups": 45,
+ "n_canonical_genes": 320,
+ "n_canonical_groups": 50,
+ "positions_total": 3,
+ "verdict_positions": 1,
+ "verdict_position_list": "D100",
+ "positions_top_sub_ge70": 0,
+ "positions_top_sub_lt50": 1,
+ "labeled_replaced_rate": 0.356,
+ "control_replaced_rate": 0.2,
+ "control_kind": "fallback: GA canonical, identity-matched",
+ "control_genes": 119,
+ "control_groups": 35,
+ "identity_window": [
+  0.143,
+  0.24
+ ],
+ "labeled_identity_median": 0.183,
+ "control_identity_median": 0.215,
+ "canonical_identity_median": 0.258,
+ "shift_rate_pooled": 0.312,
+ "control_keeps_canonical": true,
+ "paralog": {
+  "labeled_genomes": 96,
+  "labeled_genomes_with_intact": 29,
+  "clade_genomes_without_labeled": 219,
+  "without_labeled_with_intact": 56,
+  "labeled_groups": 43,
+  "labeled_groups_with_intact": 17,
+  "nonlabeled_groups": 10,
+  "nonlabeled_groups_with_intact": 4,
+  "clade": "ATCC43930;Acetobacterales;Acidiferrales;Binatales;Bryobacterales;Burkholderiales;Dongiales;GIF9;Gaiellales;Gemmatimonadales;Gp7-AA8;HRBIN30;Haliangiales;JAGRBM01;JAJPHL01;JAKEFK01;JAWLBW01;Longimicrobiales;Methylomirabilales;Myxococcales;Palsa-1295;Polyangiales;RBG-13-61-14;RBG-16-71-46;Reyranellales;Rokubacteriales;SAR324;Steroidobacterales;Tepidaquicellales;Terriglobales;Thermoanaerobaculales;Turneriellales;UBA10030;UBA2247;UBA5066;UBA9160;UTPRO1;Vicinamibacterales",
+  "canonical_members": 320,
+  "canonical_intact": 240,
+  "labeled_genomes_with_any_canonical": 35,
+  "without_labeled_with_any_canonical": 65,
+  "labeled_genomes_with_active_site_canonical": 35,
+  "without_labeled_with_active_site_canonical": 65
+ },
+ "own_invariant_n": 0,
+ "own_invariant_residues": "",
+ "own_invariant_same_pocket": 0,
+ "own_invariant_elsewhere": 0,
+ "own_invariant_unmapped": 0,
+ "structure": "K06152_ref.pdb: 1/1 verdict positions mapped",
+ "extra_roles": {
+  "named": {
+   "genes": 14,
+   "groups": 12,
+   "replaced_rate": 0.167,
+   "identity_median": 0.202
+  }
+ }
+}

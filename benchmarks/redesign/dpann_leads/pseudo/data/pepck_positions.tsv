@@ -1,0 +1,23 @@
+family	position	kind	canonical_residue	top_residue_labeled	top_substitute	share_groups_top_substitute	share_groups_canonical_labeled	share_groups_gap	n_groups	n_genes	labeled_residue_counts_groups	shift_rate	n_groups_noncanonical	canonical_share_groups	canonical_n_groups	divergence_control_canonical_share	divergence_control_n_groups	verdict_position
+pepck	81	binding:substrate	R	G	G	0.571	0.0	0.0	7	15	G:4;S:2;N:1	0.0	7	0.871	70		0	True
+pepck	220	binding:substrate	Y	F	F	0.571	0.429	0.0	7	15	F:4;Y:3	0.75	4	0.914	70		0	True
+pepck	221	binding:substrate	G	G	N	0.143	0.857	0.0	7	15	G:6;N:1	0.0	1	0.357	70		0	False
+pepck	222	binding:substrate	G	Y	Y	0.857	0.0	0.0	7	15	Y:6;F:1	0.857	7	0.914	70		0	True
+pepck	229	binding:Mn(2+)	K	K		0.0	1.0	0.0	7	15	K:7	0.0	0	0.914	70		0	True
+pepck	249	binding:Mn(2+)	H	H		0.0	1.0	0.0	7	15	H:7	0.0	0	0.914	70		0	True
+pepck	271	binding:substrate	S	S	T	0.286	0.714	0.0	7	15	S:5;T:2	0.0	2	0.886	70		0	True
+pepck	272	binding:GTP	A	G	G	1.0	0.0	0.0	7	15	G:7	0.571	7	0.7	70		0	True
+pepck	273	active	C	A	A	0.857	0.0	0.0	7	15	A:6;T:1	0.0	7	0.857	70		0	True
+pepck	274	binding:GTP	G	G		0.0	1.0	0.0	7	15	G:7	0.0	0	0.914	70		0	True
+pepck	275	binding:GTP	K	K		0.0	1.0	0.0	7	15	K:7	0.0	0	0.914	70		0	True
+pepck	276	binding:GTP	T	S	S	1.0	0.0	0.0	7	15	S:7	0.571	7	0.914	70		0	True
+pepck	277	binding:GTP	N	E	E	1.0	0.0	0.0	7	15	E:7	0.143	7	0.186	70		0	False
+pepck	296	binding:Mn(2+)	D	D		0.0	1.0	0.0	7	15	D:7	0.0	0	0.914	70		0	True
+pepck	387	binding:substrate	N	N		0.0	1.0	0.0	7	15	N:7	0.0	0	0.943	70		0	True
+pepck	388	binding:substrate	S	A	A	1.0	0.0	0.0	7	15	A:7	0.0	7	0.243	70		0	False
+pepck	389	binding:substrate	R	R		0.0	1.0	0.0	7	15	R:7	0.0	0	0.943	70		0	True
+pepck	420	binding:GTP	R	E	E	1.0	0.0	0.0	7	15	E:7	0.0	7	0.971	70		0	True
+pepck	515	binding:GTP	F	G	G	0.429	0.0	0.0	7	15	G:3;K:2;N:1;D:1	0.857	7	0.143	70		0	False
+pepck	516	binding:GTP	G	-		0.0	0.0	1.0	7	15	-:7	0.286	7	0.143	70		0	False
+pepck	517	binding:GTP	E	-		0.0	0.0	1.0	7	15	-:7	0.143	7	0.143	70		0	False
+pepck	518	binding:GTP	N	-		0.0	0.0	1.0	7	15	-:7	0.143	7	0.186	70		0	False

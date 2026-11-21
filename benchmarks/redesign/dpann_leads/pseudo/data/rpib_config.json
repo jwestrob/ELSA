@@ -1,0 +1,90 @@
+{
+ "fam": "rpib",
+ "title": "RpiB-fold LF family, Micrarchaeales (DPANN); ref P37351 RPIB_ECOLI",
+ "aln": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/rpib_aln.faa",
+ "meta": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/rpib_meta.tsv",
+ "ref_id": "P37351",
+ "positions": [
+  [
+   9,
+   "D",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   10,
+   "H",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   41,
+   "T",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   66,
+   "C",
+   "active"
+  ],
+  [
+   67,
+   "G",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   68,
+   "T",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   69,
+   "G",
+   "binding:D-ribulose 5-phospha"
+  ],
+  [
+   71,
+   "G",
+   "binding:D-ribulose 5-phospha"
+  ],
+  [
+   72,
+   "I",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   99,
+   "H",
+   "active"
+  ],
+  [
+   100,
+   "N",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   110,
+   "R",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   133,
+   "R",
+   "binding:aldehydo-D-ribose 5-"
+  ],
+  [
+   137,
+   "R",
+   "binding:aldehydo-D-ribose 5-"
+  ]
+ ],
+ "roles": {
+  "labeled": "labeled",
+  "canonical": "canonical",
+  "cdd_only": "cdd_only",
+  "extra": [
+   "lf_annotated"
+  ]
+ },
+ "genomes_tsv": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data/dpann_genomes.tsv",
+ "pdb": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/rpib/data/pdb/1NN4_A.pdb",
+ "out": "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/pseudo/data"
+}

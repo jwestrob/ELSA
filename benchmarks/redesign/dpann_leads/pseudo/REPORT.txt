@@ -1,0 +1,79 @@
+PSEUDO: DO "FOLD KEPT, SITE REPLACED" FAMILIES CARRY ONE SELECTED SUBSTITUTE PER FORMER CATALYTIC POSITION? (2026-11-21 UTC)
+=======================================================================================================================
+BOTTOM LINE
+The pseudoenzyme prediction FAILS. SELECTED SUBSTITUTE 0/5 families (prediction needs >= 3/5 with intact paralogs).
+Fixed-rule verdicts: MIXED 3 (PEPCK_GTP, gluconate 2-DH gamma, phosphinomethylmalate isomerase), ARTIFACT 2 (RpiB-fold LF,
+RelA_SpoT), INTERMEDIATE 0. Every sensitivity reading below also gives 0 SELECTED. An intact canonical paralog co-occurs
+at the clade background rate in 3 families and in 0 genomes in 2. The two families with power for the own-conservation
+test (>= 30 genome groups) have 0 new invariant positions. One family, PEPCK_GTP (7 genome groups), shows a consistent
+altered site (5 single substitutes in >= 6/7 groups, confirmed by structure, metal and P-loop residues kept) and occurs only in
+genomes lacking canonical PEPCK; it lacks a divergence control, so it stays INTERMEDIATE at best. Function UNVERIFIED.
+Correction to an earlier workstream: the RelA_SpoT family keeps its Mg/ATP residues (D72 in 29/30 groups; 23/23 by
+structure); the gapscreen 3/3 "D72 -> Q/T, R46 -> D/K" call (5-sequence alignment) fails to reproduce in either read-out.
+
+METHOD (test_rule.json written 09:48Z before any computation; operational addendum 09:51Z, also before computation)
+Positions: curated Active + Binding residues of the reference record (RpiB P37351, PEPCK A5TYT6, RelA O31611) or the
+extended-tier invariant positions (SR-VP). Verdict positions = those where canonical members carry the reference residue in
+>= 70% of genome groups. One vote per genome group (DPANN lineagefree groups t0.75, 642 groups; SR-VP frozen2 groups, 277).
+Alignments: RpiB = rpib L-INS-i MSA (709) + 9 CDD-only genes (mafft --add --keeplength); others = L-INS-i core (reference,
+<= 40 canonical, <= 20 labeled, one per group) + all others --add --keeplength (SR-VP run on biotite; sequences stayed there).
+Divergence control: identity-matched (10th-90th pct of labeled identity to the reference) CDD-only family members, fallback
+identity-matched GA canonical when < 5 groups. Structural residue maps of earlier workstreams are the shift arbiter.
+No folding, no HMM search, no Slurm job. Code: code/p1-p5. Per-position numbers: positions.tsv; per-family: data/summary_all.tsv.
+
+1. RpiB-fold LF family, Micrarchaeales (DPANN). 287 labeled genes in 11 groups; canonical other-slot PF02502 246 genes / 29 groups.
+   VERDICT ARTIFACT by the fixed rule (control = 2 genes in 2 groups, the only GA members at identity 0.15-0.21; 0 CDD-only).
+   Without that control the read-out is MIXED: top substitute < 50% of groups at 8/9 verdict positions, >= 70% at 0/9.
+   C66 -> S 3/11 groups (S,A,T,N,V,P); H99 gap 11/11; G69 -> P 7/11 (64%, the highest); D9 -> N 5/11; H10 -> V 4/11.
+   Replaced rate 0.91 (labeled) vs 0.94 (2-group control); the 165 GA-annotated LF orthologs 0.87. Shift 0.15 pooled.
+   Structure (12 LF models): C66 S5 T2 P1 A1 N1 C1; H99 E4 gap4 S2; R133/R137 absent (C-terminal helix missing) 11-12/12.
+   (d) Intact canonical RpiB in 31/287 LF genomes (10.8%) vs 45/539 other Micrarchaeales (8.3%); any copy 58/287 vs 122/539.
+   (e) 7 own invariant columns at 11 groups (M,D,A,C,K,G,G): 2 in the old pocket (A84, C87 at 5-7 A), 3 elsewhere (16-20 A),
+       2 in the C-terminal extension (the G-x5-K-x3-G motif region, unmapped).
+2. PEPCK_GTP relatives (DPANN). 15 labeled genes in 7 groups (Woesearchaeales, QMZP01); canonical GA 336 genes / 70 groups.
+   VERDICT MIXED by the fixed rule (top substitute < 50% at 8/15 verdict positions), no divergence control (0 family members at
+   the labeled identity 0.145-0.156; canonical median 0.44). 7 of those 8 positions KEEP the canonical residue: Mn ligands
+   K229, H249, D296 7/7; P-loop G274, K275 7/7; N387, R389, S271 (5/7). Single substitutes: C273 -> A 6/7 groups (genes by
+   structure A6 T4 V1 of 11), A272 -> G 7/7, T276 -> S 7/7, R420 -> E 7/7 (structure N 11/11), G222 -> Y 6/7; split R81, Y220.
+   Read over the replaced positions only (post hoc): 5/7 meet >= 70%; shift 0 at C273 and R420, structure confirms all five;
+   with no control the rule still blocks SELECTED -> INTERMEDIATE. Labeled replaced rate 0.46.
+   (d) Intact canonical PEPCK in 0/15 labeled genomes vs 41/751 clade genomes (5.5%); any canonical copy 0/15 vs 63/751.
+   (e) 119 own invariant columns, but at 7 groups the bar is 7/7; 16 lie in the old pocket (<= 12 A; incl. the substitutes and
+       P270D, G319V, V320R, P322D), 43 elsewhere, 60 outside the 4WPT region.
+3. Gluconate 2-dehydrogenase gamma-subunit relatives (SR-VP). 133 labeled genes in 45 groups; canonical PF13618 GA 320 / 50.
+   VERDICT MIXED. Only D100 passes the verdict-position rule: D in 64% of labeled groups, top substitute E 16%, control 80% D
+   (35 groups, identity-matched GA), shift 0.31. N185 is unreadable by alignment (gap in 45/45 labeled groups; canonical N
+   in 38% of groups); the structural map is the arbiter: N 0/24 folded labeled genes, top substitute D 9/24 (38%; Q3 R3 T2 S2 H2),
+   positives N 5/5. W191: W 16/45 groups; structure W 8/24, M 6. The earlier assay's named stratum (relaxed own hit / CDD)
+   carries N185 0/5 by structure, the same rate as the unannotated 0/19: read with that control, the family is ARTIFACT.
+   (d) Intact canonical member in 29/96 labeled genomes (30.2%) vs 56/219 clade genomes without (25.6%); groups 17/43 vs 4/10.
+   (e) 0 own invariant positions at 45 groups.
+4. RelA_SpoT small alarmone synthetase relatives (DPANN; 52 Woesearchaeales + 3). 55 labeled genes in 30 groups.
+   VERDICT ARTIFACT: CDD-only control (32 genes, 17 groups, identity 0.157) replaced rate 0.49 vs labeled 0.46.
+   The premise of replacement fails here: D72 (Mg) kept in 29/30 groups, K48 27/30, K56 24/30, E139 21/30, R46 20/30
+   (K 8/30); top substitute < 50% at 10/10 verdict positions. Structure (23 folded labeled genes, invisible map): D72 23/23,
+   K48 21/23, K56 19/23, E139 18/23. Gapscreen genes MDP7476554.1, HJO01506.1, RJQ15500.1 read R46 K56 D72 R77 E139 here.
+   (d) Intact canonical RelA_SpoT in 19/55 labeled genomes (34.5%) vs 340/1055 clade genomes (32.2%); groups 11/30 vs 100/276.
+   (e) 0 own invariant positions at 30 groups.
+5. Phosphinomethylmalate isomerase relatives (SR-VP; label Aconitase_C, partner function K20930). 9 genes in 5 groups.
+   VERDICT MIXED: top substitute < 50% at 9/9 invariant positions; replaced rate 0.73; control (identity-matched GA, 5 genes,
+   4 groups) replaced 0.14; shift 0.09. Structure (8 genes): T15 H3 V2; R67 H4 K2; E68 M3; R89 F4 R2; positives 5/5 each.
+   Named stratum (3 genes) replaced 0.67, within 15 points of 0.73: read with that control, ARTIFACT.
+   (d) Intact canonical member in 0/8 labeled genomes vs 19/127 clade genomes (15.0%); members known among label carriers only.
+   (e) 1 own invariant column (G52, 22 A from the site) at 5 groups.
+Families from the "fold kept, residues absent" tables with >= 10 genes beyond these five: none (invisible: PEPCK only;
+leads_srvp: Gluconate_2-dh3 24, the rest 3-8; leads_testset3: table empty).
+
+OVERALL
+Fixed rule: SELECTED 0, MIXED 3, ARTIFACT 2, INTERMEDIATE 0. Sensitivity: named-stratum control -> gluconate and PMMI ARTIFACT;
+RpiB without its 2-group control -> MIXED; MIXED counted over replaced positions only -> PEPCK INTERMEDIATE. SELECTED stays 0.
+Intact paralogs: at background in RpiB, gluconate, RelA (+2.5, +4.6, +2.3 points), absent in PEPCK and PMMI (0/15, 0/8).
+The pseudoenzyme prediction (>= 3/5 SELECTED with intact paralogs) fails. The data fit divergence with mixed substitution at
+the old site in four families (one of them, RelA, keeps most of the site), and a conserved altered site in PEPCK_GTP relatives
+that replace the canonical enzyme in their genomes (7 groups; UNVERIFIED whether active, inactive, or of another specificity).
+Power limits stated once: DPANN groups are coarse (RpiB 287 genes = 11 groups; PEPCK 7; PMMI 5), and identity-matched controls
+exist only for gluconate (35 groups) and RelA (17 groups).
+
+FILES test_rule.json, REPORT.txt, positions.tsv (80 rows), code/ (p1 DPANN prep, p2 read-out, p3 DPANN runner, p4a/p4 SR-VP
+inputs and biotite runner, p5 tables), data/ (DPANN alignments, meta, per-family positions / summary / own_invariant /
+genes tables; SR-VP tables only). SR-VP alignments and per-gene tables: biotite RD/dpann_leads/pseudo/srvp/.

@@ -1,0 +1,15 @@
+family	position	kind	canonical_residue	top_residue_labeled	top_substitute	share_groups_top_substitute	share_groups_canonical_labeled	share_groups_gap	n_groups	n_genes	labeled_residue_counts_groups	shift_rate	n_groups_noncanonical	canonical_share_groups	canonical_n_groups	divergence_control_canonical_share	divergence_control_n_groups	lf_annotated_canonical_share	lf_annotated_n_groups	verdict_position
+rpib	9	binding:aldehydo-D-ribose 5-	D	N	N	0.455	0.273	0.0	11	287	N:5;D:3;S:1;A:1;E:1	0.5	8	0.897	29	0.0	2	0.3	10	True
+rpib	10	binding:aldehydo-D-ribose 5-	H	V	V	0.364	0.091	0.0	11	287	V:4;S:2;D:2;N:2;H:1	0.0	10	0.862	29	0.0	2	0.0	10	True
+rpib	41	binding:aldehydo-D-ribose 5-	T	-	S	0.273	0.0	0.545	11	287	-:6;S:3;V:1;D:1	0.091	11	0.0	29	0.0	2	0.0	10	False
+rpib	66	active	C	S	S	0.273	0.0	0.0	11	287	S:3;A:2;T:2;N:2;V:1;P:1	0.0	11	0.759	29	0.0	2	0.1	10	True
+rpib	67	binding:aldehydo-D-ribose 5-	G	R	R	0.273	0.0	0.0	11	287	S:3;R:3;K:2;D:2;Q:1	0.091	11	0.793	29	0.0	2	0.1	10	True
+rpib	68	binding:aldehydo-D-ribose 5-	T	D	D	0.636	0.0	0.0	11	287	D:7;K:1;R:1;S:1;N:1	0.182	11	0.345	29	0.0	2	0.0	10	False
+rpib	69	binding:D-ribulose 5-phospha	G	P	P	0.636	0.0	0.0	11	287	P:7;Y:1;H:1;T:1;S:1	0.0	11	0.897	29	0.0	2	0.1	10	True
+rpib	71	binding:D-ribulose 5-phospha	G	A	A	0.273	0.0	0.0	11	287	A:3;K:2;D:2;E:2;L:1;Q:1	0.273	11	0.862	29	0.5	2	0.4	10	True
+rpib	72	binding:aldehydo-D-ribose 5-	I	A	A	0.636	0.0	0.0	11	287	A:7;V:1;D:1;F:1;L:1	0.818	11	0.069	29	0.0	2	0.0	10	False
+rpib	99	active	H	-		0.0	0.0	1.0	11	287	-:11	0.091	11	0.862	29	0.0	2	0.0	10	True
+rpib	100	binding:aldehydo-D-ribose 5-	N	N	A	0.273	0.364	0.0	11	287	N:4;A:3;S:2;R:1;C:1	1.0	7	0.517	29	0.5	2	0.5	10	False
+rpib	110	binding:aldehydo-D-ribose 5-	R	D	D	0.273	0.0	0.0	11	287	D:3;S:3;P:1;E:1;I:1;Y:1	0.182	11	0.69	29	0.0	2	0.0	10	False
+rpib	133	binding:aldehydo-D-ribose 5-	R	K	K	0.182	0.091	0.091	11	287	Q:2;K:2;E:1;S:1;M:1;R:1	0.1	10	0.724	29	0.0	2	0.1	10	True
+rpib	137	binding:aldehydo-D-ribose 5-	R	R	K	0.182	0.364	0.0	11	287	R:4;K:2;H:1;G:1;D:1;N:1	0.429	7	0.862	29	0.0	2	0.1	10	True

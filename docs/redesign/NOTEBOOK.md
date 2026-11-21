@@ -3531,3 +3531,9 @@ Report: `benchmarks/redesign/dpann_leads/invisible/REPORT.txt` (assay rule fixed
 
 ### 2026-11-21 06:06 UTC — Aksha pull request 9 merged (coordinator)
 - Jacob: "go ahead and merge". Merged jwestrob/aksha#9 into main with a merge commit (a849f41). No tag, release or PyPI upload. The production swap on biotite stays queued behind the running annotation jobs.
+
+### 2026-11-21 07:02 UTC — testset3 annotated and labeled; lead search started (coordinator)
+- Pfam annotation (Aksha CPU, 8 shards, jobs 119852 / 119853): 4,280,644 rows on 2,009,668 of 2,557,405 proteins.
+- Labeling pass (jobs 119997, 119998; `$RD/dpann_leads/pass_port/out/testset3/`): 547,737 candidates without Pfam, 111,977 bonded, 37,158 labeled; tiers T1 15,825, T1c (sister family in the same clan) 1,807, T2 6,403, T2b 3,682, contradicted 1,443, rest 7,998. Pfam labels only; no alignment lists.
+- Unique label-carrying supporters of the labeled genes: 90,320 proteins, so KOfam on the voting partners costs about 28 CPU-hours for this collection.
+- Shared brief for the three collections: `benchmarks/redesign/dpann_leads/BRIEF_collections.txt` (partner KOfam subset up to 60 CPU-hours per collection, novelty filter, the DPANN assay rule unchanged, up to 600 folds). The `invisible` agent resumed for testset3 (`leads_testset3/`). SR-VP and lut passes are chained behind their annotation merges (jobs 119999 / 120000 and 120001 / 120002).

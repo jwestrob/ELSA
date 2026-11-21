@@ -3537,3 +3537,9 @@ Report: `benchmarks/redesign/dpann_leads/invisible/REPORT.txt` (assay rule fixed
 - Labeling pass (jobs 119997, 119998; `$RD/dpann_leads/pass_port/out/testset3/`): 547,737 candidates without Pfam, 111,977 bonded, 37,158 labeled; tiers T1 15,825, T1c (sister family in the same clan) 1,807, T2 6,403, T2b 3,682, contradicted 1,443, rest 7,998. Pfam labels only; no alignment lists.
 - Unique label-carrying supporters of the labeled genes: 90,320 proteins, so KOfam on the voting partners costs about 28 CPU-hours for this collection.
 - Shared brief for the three collections: `benchmarks/redesign/dpann_leads/BRIEF_collections.txt` (partner KOfam subset up to 60 CPU-hours per collection, novelty filter, the DPANN assay rule unchanged, up to 600 folds). The `invisible` agent resumed for testset3 (`leads_testset3/`). SR-VP and lut passes are chained behind their annotation merges (jobs 119999 / 120000 and 120001 / 120002).
+
+### 2026-11-21 07:13 UTC — SR-VP bins annotated and labeled; lead search started (coordinator)
+- Pfam annotation (jobs 119850 / 119851): 5,358,475 rows on 2,416,501 of 3,211,751 proteins.
+- Labeling pass (jobs 119999 / 120000): 795,250 candidates without Pfam, 188,546 bonded, 69,701 labeled; T1 29,100, T1c 3,904, T2 11,819, T2b 7,346, contradicted 2,322, rest 15,210.
+- Label-carrying supporters of all labeled genes: 230,287 proteins (about 70 CPU-hours of KOfam), so the KOfam step is restricted to supporters of the genes without an own profile hit, under 60 CPU-hours.
+- Fresh Opus agent launched for `leads_srvp/` under BRIEF_collections.txt. Sequences unpublished: Biohub only, nothing into the repository.

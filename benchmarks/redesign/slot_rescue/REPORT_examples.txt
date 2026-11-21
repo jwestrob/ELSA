@@ -1,0 +1,48 @@
+SLOT_RESCUE: EXAMPLE GENES FROM THE 175,729 PROPOSED DPANN LABELS (2026-11-21 02:54 UTC)
+================================================================================
+Written by the coordinating session from inspect/insp5.py-insp7.py (Sharur DPANN database read-only; pass table,
+verification tiers and the structure-check pairs). Loci are gene order on the contig; [ ] marks the labeled gene.
+"support" = partners carrying the label / all supporting genomes. TM = US-align TM-score of the ESMFold2 models of the
+gene and its best annotated partner. Every name below is a slot call or an observed domain; none is a curated call
+except where TXSScan's system call is cited.
+
+NAMES THAT HOLD
+1. Pcc1, MEM2032468.1 (69 aa, Woesearchaeales). Locus: UPF0147 - Prefoldin_2 - [69 aa] - rpoP (44 aa, K03059) - L37ae.
+   Support 606 of 800. No profile hit of its own at E <= 10. TM 0.73 at 28% identity, pLDDT 77 / 73. Tier T2.
+2. RNase_P_p30, DAHXEF010000003.1_67 (173 aa, Micrarchaeales). Locus: proteasome - 97 aa - RNase_P_Rpp14 - [173 aa] -
+   Orc1/Cdc6. Support 156 of 734. No profile hit; CDD best hit RPP1 (1e-4). TM 0.79 at 14% identity. Tier T2b.
+3. EIF_2_alpha, MBS3076775.1 (233 aa, Pacearchaeales). Locus: S27e - [233 aa] - Nop10p (44 aa, slot call) - 130 aa.
+   Support 1,888 of 1,934. No Pfam hit at E <= 10; CDD PRK03987 (IF-2 alpha) 1.5e-27. TM 0.65 at 42% identity. Tier T2.
+4. V/A-type ATPase subunit G/H (K02107), JBFYLN010000177.1_6 (113 aa, Micrarchaeota). Locus: L15e - [113 aa] - 78 aa.
+   Support 9 of 95. Own weak hit E 1.2e-5. TM 0.71 at 10% identity. Tier T1.
+5. Ribosomal_L39, MBI4147890.1 (57 aa, Woesearchaeales). Locus: S19e - dsDNA_bind - [57 aa] - L31e. Support 1,039 of
+   2,621. Own weak hit E 4e-3; CDD rpl39e 3e-3. Structure check uninformative at this length (pLDDT 47, TM 0.31).
+6. DUF7521, MEI6731623.1 (234 aa, Pacearchaeales). Locus: HTH_45/DUF4364 - [234 aa] - GINS (K09723). Support 9 of 775
+   (the label is proposed for 103x its annotated count). Own weak hit E 2.3e-4; TM 0.88 at 17% identity. Tier T1.
+   A low-support name that an independent method confirms.
+
+NAMES THAT FAIL ON A REAL FAMILY
+7. "GM_CSF" (1,626 genes, median 131 aa) and "Transcrip_act" (1,576 genes, median 219 aa). Named from 2 and 3
+   annotated proteins (Pfam scores 27-29). The two families sit side by side in 1,326 loci. A gene with Pfam T2SSE
+   is within 3 genes of 1,150 of the 1,626 "GM_CSF" genes; neighbors carry TXSScan component profiles arCOG01817
+   (1,203) and arCOG01818 (1,202); TXSScan's curated Archaeal-T4P system call covers a neighbor at 94 ("GM_CSF") and
+   128 ("Transcrip_act") loci. Neither family has a TXSScan hit of its own, a Pfam hit, or (1,363 of 1,626; 1,139 of
+   1,576) a CDD hit. Genomes: Nanobdellota 1,296, Aenigmatarchaeota 243, Nanohalarchaeota 33, EX4484-52 29,
+   Undinarchaeota 10, Micrarchaeota 3 (of 3,564 DPANN genomes). Structures are confident (pLDDT 89-96); "GM_CSF"
+   genes match their partner in 7 of 7 pairs (TM 0.57-0.80), "Transcrip_act" in 2 of 5 (TM 0.42-0.65).
+   Reading: a conserved pair of unannotated genes at archaeal type IV pilus loci. UNVERIFIED as pilus components.
+   Example: MBI4018455.1 (225 aa) - [MBI4018456.1, 119 aa] - MBI4018457.1 (T2SSE, 598 aa), Aenigmatarchaeota.
+8. "Mis14" (1,811 genes, median 91 aa; named from 12 annotated proteins). A gene with the slot call ParE_toxin is
+   adjacent in 1,637 of 1,811. Reading: the partner gene of a ParE-like toxin (the antitoxin position). UNVERIFIED.
+   Example: NYZ77169.1 (113 aa, ParE_toxin slot call) - [NYZ77170.1, 73 aa] - Lrp, Micrarchaeota.
+9. "LIM" (1,456 genes, median 54 aa; named from 17 proteins of 211-214 aa). CDD best hit rpl40e for 440 of the 572
+   with any CDD hit. Example: Peptidase_M50 - 66 aa - [MCX6707026.1, 53 aa, CDD rpl40e 2e-3] - eIF-5A.
+
+THE "CONTRADICTED" TIER INCLUDES SISTER FAMILIES
+10. PIN_9, DAICMH010000013.1_19 (120 aa): support 164 of 170, TM 0.85; its own weak hit is PIN_4 (PF13638, E 1.4e-3).
+    Of the PIN_9 rows whose best hit is another label family, 67 hit PIN_4, 8 PIN_12, 7 PIN.
+11. CBFD_NFYB_HMF, MEM4071999.1 (81 aa): support 486 of 600, TM 0.73; own weak hit is Histone (PF00125); CDD HHT1.
+    The 14,016 "contradicted" rows therefore overstate disagreement; a clan-level comparison has not been run.
+
+FILES
+  inspect/insp5.py (candidates; inspect/examples_candidates.tsv), insp6.py (locus context), insp7.py (neighborhoods).

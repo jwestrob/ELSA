@@ -3468,3 +3468,9 @@ my inspection; predeclaration `verify/predeclared_verify.json` sha256 72d13c1bâ€
   limit, so the driver sat for an hour until my overdue alarm; I wrote summary.tsv from the 562
   saved results and ended the folding step. The driver's own summary table was empty because
   pandas read the pair types "true" / "null" as a boolean and a missing value.
+
+### 2026-11-21 02:54 UTC â€” slot_rescue: example genes (coordinator)
+- Pulled example loci for the proposed DPANN labels (`benchmarks/redesign/slot_rescue/REPORT_examples.txt`; scripts `inspect/insp5-7.py`).
+- Names that hold: Pcc1 (69 aa, beside rpoP and L37ae; 606 of 800 partners; TM 0.73), RNase_P_p30 (beside RNase_P_Rpp14; TM 0.79 at 14% identity), EIF_2_alpha (1,888 of 1,934; CDD 1.5e-27), eL39 (57 aa between S19e and L31e).
+- Names that fail on a real family: "GM_CSF" (1,626) and "Transcrip_act" (1,576) are adjacent in 1,326 loci and sit within 3 genes of a Pfam T2SSE gene in 1,150 of 1,626; TXSScan's Archaeal-T4P system call covers a neighbor at 94 / 128 loci. A conserved unannotated gene pair at archaeal type IV pilus loci in about 1,600 of 3,564 DPANN genomes (UNVERIFIED as pilus components). "Mis14" (1,811) is adjacent to a ParE_toxin slot call in 1,637. "LIM" 53-aa genes are rpl40e by CDD.
+- The "contradicted" tier includes sister-family hits (PIN_9 against PIN_4; CBFD_NFYB_HMF against Histone), so 14,016 overstates disagreement. Clan-level comparison not run.

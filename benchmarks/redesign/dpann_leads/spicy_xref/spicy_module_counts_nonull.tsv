@@ -1,0 +1,31 @@
+module	instances	genomes	genera	families	top_genera	earlier_record
+M01_pqqdh_cbb3	442	291	31	6	Bradyrhizobium:348;Hyphomicrobium_C:9;Hyphomicrobium_B:8;Microvirga:6;Alsobacter:5	xoxF + Cytochrome_CBB3: 450 xoxF / 296 genomes, mean 67 bp; validated co-oriented
+M02_pqqdh_sbp3	314	297	31	7	Bradyrhizobium:154;Methylobacterium:49;Ancylobacter:22;Mesorhizobium:17;Microvirga:7	xoxF + SBP_bac_3: 288 / 275 genomes, mean 282 bp; co-oriented neighbor
+M03_pqqdh_rieske	184	175	8	5	Bradyrhizobium:139;Methylobacterium:30;Hyphomicrobium_C:4;Hyphomicrobium_B:1;Methyloferula:1	xoxF + Rieske: 184 / 175 genomes, 111 bp; validated
+M04_pqqdh_lactamaseB	85	85	14	5	Ancylobacter:22;Methylobacterium:21;Bradyrhizobium:9;Xanthobacter:9;Hyphomicrobium_B:5	xoxF + Lactamase_B: 86 / 86, 344 bp; validated
+M05_pqqdh_peptidaseC14	78	78	1	1	Bradyrhizobium:75	xoxF + Peptidase_C14: 78 / 78, 73 bp; validated
+M06_pqqdh_ankyrin	67	59	10	4	Methylobacterium:31;Hyphomicrobium_B:13;Hyphomicrobium_C:8;Hyphomicrobium_A:2;JAGVSR01:1	xoxF + Ankyrin: 67 / 59, 114 bp; validated
+M07_pqqdh_coxg	58	58	1	1	Bradyrhizobium:54	xoxF + COXG: 58 / 58, 341 bp; validated
+M08_pqqdh_gfa	50	50	1	1	Bradyrhizobium:47	xoxF + GFA (CBB3-fused xoxF): 54 / 54, 180 bp; validated
+M09_pqqdh_dctMQP	39	39	1	1	Bradyrhizobium:38	xoxF + DctM-DctQ-DctP: 43 / 43, 341 bp; 41/43 complete; validated
+M10_pqqdh_mmsB	0	0	0	0		xoxF + mmsB (K00074): 90 genomes, 99% co-oriented
+M11_lanm_pqqdh_divergent	137	137	1	1	Bradyrhizobium:132	LanM | xoxF: opposite strands 150/151, ~340 bp; 209 genomes 99.1% divergent (REVISED from operon)
+M12_lanm_cnnm	21	21	1	1	Methylobacterium:20	LanM + CNNM/CorC: 18/18 adjacent, co-oriented, 110-200 bp; STRONGLY SURVIVES
+M13_sbp5_lanm	40	39	1	1	Methylobacterium:34	SBP_bac_5 + LanM: 33/34 co-oriented, 29/33 chain-operonic, 32 genomes; SURVIVES
+M14_duf2158_lanmW	86	86	1	1	Mesorhizobium:86	DUF2158 at -1 of LanM, co-oriented: 86 of 235 DUF2158 within +-5 of LanM; protocol not reported (wide EF anchor: the LanM here carries one EF-hand_5 row)
+M14t_duf2158_lanmW_sigma	82	82	1	1	Mesorhizobium:82	DUF2158 -> LanM -> ECF Sigma70 triplet
+M15_typeA_core	8	8	3	1	Tardiphaga:5;Bradyrhizobium:2;Rhodopseudomonas:1	Type A (EF-hand, Peptidase_S58, R3P, MASE4/PAS sensor, ABC): 325 genomes of 785; protocol not applied
+M15w_typeA_core_EF1	258	258	9	1	Bradyrhizobium:215;Afipia:12;Tardiphaga:9;Rhodopseudomonas:8;JARJEH01:2	Type A with any EF-hand protein (>= 1 loop) at the LanM position
+M15s_typeA_scaffold	310	310	43	3	Bradyrhizobium:149;Phyllobacterium:16;Shinella:12;Ensifer:12;Afipia:10	Type A scaffold without the EF-hand gene: Peptidase_S58 + R3P within 2 genes
+M16_typeB_core	267	267	18	1	Rhizobium:122;Allorhizobium:39;Neorhizobium:36;Ensifer:18;Hoeflea:16	Type B (EF-hand, Lysine_decarbox, THDPS/Hexapep, M20): 288 genomes; protocol not applied
+M17_metalresist_lanm_ccmE	0	0	0	0		EF-hand_5 -> Metal_resist -> CcmE: 10 Mesorhizobium genomes (ELSA cluster); protocol not applied
+M17w_metalresist_EF1_ccmE	0	0	0	0		M17 with any EF-hand protein
+M18_metallophos_lanm	0	0	0	0		Metallophos at -1 of LanM, co-oriented, 53-157 bp: 5 Methylopilaceae
+M19_duf6163_lanm	2	2	1	1	Methylobacterium:2	DUF6163 exactly 5 genes from LanM, co-oriented: 5 loci
+M20_tannase_lanm	2	2	1	1	Bradyrhizobium:2	Tannase + LanM cassette (ABC permease, DAO, adh_short, CRP): 2 unique genomes
+M21_duf4394_cassette	1	1	1	1	Tardiphaga:1	DUF4394 + ECF-sigma + anti-sigma + EF-hand_5 + GST + ResIII: 5 perfect of 10 bins
+M22_ycaO_tfuA_lanm	11	11	2	1	Sinorhizobium:9;Mesorhizobium:1	YcaO + TfuA near LanM: co-oriented 2/14, operonic 0/14; FAILS (proximity only)
+M11w_lanmW_pqqdh_divergent	148	148	1	1	Bradyrhizobium:142	sensitivity of M11 with the wide EF anchor
+M12w_lanmW_cnnm	21	21	1	1	Methylobacterium:20	sensitivity of M12 with the wide EF anchor
+M13w_sbp5_lanmW	41	39	1	1	Methylobacterium:34	sensitivity of M13 with the wide EF anchor
+M23_lanm_narL_tcs	18	18	4	3	Bradyrhizobium:8;Methylocystis:6;Methylosinus:3;Hyphomicrobium_B:1	HisKA_3 sensor kinase (12%) + GerE regulator (17%) flank the cassette; protocol not applied

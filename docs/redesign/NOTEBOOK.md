@@ -3587,3 +3587,8 @@ Report: `benchmarks/redesign/dpann_leads/leads_srvp/REPORT.txt` (467 folds; KOfa
 - Fold kept with the site absent: K02342 (10 of 10 fold, catalytic residues 0 of 10), K20542 GH8.
 - 31 unannotated genes in 31 genomes (7 genera) labeled EF-hand_5 with partner KO K22619 fall outside the enzyme assays; passed to lut_loci for its site test (EF-hand_5 is the lanmodulin family).
 - 541 folds; partner KOfam 133,951 proteins.
+
+### 2026-11-21 10:18 UTC — lut_loci follow-up: the EF-hand_5-labeled genes are KILLED
+- 32 genes (31 main population, 7 genera; 165-239 aa; support 0.19-0.28). Votes come from 10 multi-EF-hand partners, none of them lanmodulin. None lies in a lut neighborhood (nearest 267 genes away) or within 248 genes of xoxF; 31 of 32 sit beside a response regulator and sensor kinase pair.
+- 0 of 32 have an EF-hand loop or a signal peptide; lanmodulin in the same genomes has loops in 17 of 17. Site test (rule unchanged, 24 folds): 0 of 12 pass; TM 0.18-0.25 to lanmodulin and calmodulin crystals.
+- Reading: the label of a multi-EF-hand partner was passed to a cytoplasmic relative that has lost its loops. Another instance of the misplaced-label mechanism.

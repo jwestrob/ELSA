@@ -118,3 +118,40 @@ COSTS, RULES, FILES
  center/neighbors); parameters unchanged; rescoring reproduced every value. No vault capture (writes limited to here).
  Folder R/benchmarks/redesign/dpann_leads/lut_loci/ (remote $RD/dpann_leads/lut_loci/): REPORT.txt, candidates.tsv,
  tests_rule.json, code/ (n01-n07 biotite, s01-s06 Mac), data/, sel/, msa/, folds/, crystals/.
+
+FOLLOW-UP (coordinator, 2026-11-21): 32 EF-HAND_5-LABELED GENES FROM LEADS_LUT (partner KO K22619)    VERDICT: KILLED
+ Bottom line: not diverged lanmodulin copies and not an EF-hand family with metal sites. They are cytoplasmic relatives of
+ the C-terminal part of an ordinary multi-EF-hand family whose EF loops have decayed (0/32 carry an EF-hand loop), beside a
+ two-component system, away from lut and xoxF loci. Site test 0/12 representatives (code e01-e06; data/ef_*).
+ 1 Genes: 32 = 31 main population (T2b 29, rest 2; 31 genomes, 7 genera) + 1 contradicted (Roseibium). Methylobacterium 12,
+   Bradyrhizobium 9, Tardiphaga 5, Nitrobacter 2, Bradyrhizobium_A, Roseibium, Rhodoplanes, Rhodopseudomonas 1 each. 165-239
+   aa (median 192); support .19-.28 (7-9 votes over 27-48 supporting genomes); label amplification .085; 31 in rescue3 token
+   363245 (92 members collection-wide), 1 in token 248360. Partners: 53 distinct supporters; 37 are the genes' own
+   unannotated homologs (token 363245) and carry no label; the votes come from 10 label carriers in 10 other genera (7 vote
+   for 30-32 of the genes): multi-EF-hand proteins of 109-299 aa (median 244) with 2-7 EF-hand Pfam domains, tokens 351841
+   (5), 248360 (2) and 3 singletons, KO K22619 or K13974 in 6/10. Lanmodulin among them: 0/10; in a lut window: 0/10.
+ 2 Position: 0/32 in a lut window; 7/32 share a contig with a lut locus, 267-3,625 genes away; 7/32 share a contig with a
+   K23995 gene, >= 248 genes away. Their own conserved context: an OmpR-type response regulator and a HAMP sensor kinase
+   within 3 genes in 31/32 (7 genera); thiamine genes (ThiC, TMP-TENI, ThiG, ThiS, DAO/ThiO) within 10 genes in 17/32.
+   9/32 genomes are lut-negative. Annotated copies in the same genomes: a lanmodulin-token gene in 17/32 (inside the lut
+   locus in 5); any EF-hand_5 protein in 30/32.
+ 3 Sequence, loop by loop (site_cn.py loop patterns; lanmodulin features: Pro at loop position 2, ~24-residue loop spacing):
+     set                           proteins  with loop  loops  Pro2 loops  acidic/loop  spacing  signal peptide
+     the 32 genes                     32         0        0        -           -          -         0/32
+     lanmodulin, same genomes         17        17       56       43           5          24       17/17
+     other EF-hand, same genomes      31        31       76        0           4          34       10/31
+     label-carrying partners          10        10       38        0           4          37        1/10
+   The genes align to the partners' C-terminal two-thirds (identity 27-45%, gene coverage 66-92%), spanning 2-3 of the
+   partners' 4 loops, where they carry degenerate sequence (e.g. DSI-DSSMQADR, EQVSSGKLTSDQ: Asp1/Gly6/Glu12 lost). Best
+   local alignment score to same-genome lanmodulins 33-56, to the partners 101-197.
+ 4 Site test (tests_rule.json unchanged; 24 folds: 14 apo, 10 co-folds): 12 representatives across all 8 genera: PASS_site
+   0/12 (score_cons 1-2, score_struct <= 3, mean pLDDT 79-85, conserved acidic columns 1.1-3.6 per 100). Two partner models
+   (same pipeline): score_struct 4 at their EF loops, score_cons 3 and 1, fail. LA/CA co-folds: genes 1-3 protein O (like the
+   unannotated negatives); partners 6 O from 3-4 Asp/Glu (like the calcium-binding negatives and lanmodulin). Fold: TM .18-.25
+   to 8FNS, 8DQ2, 1CLL and .23-.31 to the partner models (normalized by the gene); Foldseek: no PDB hit at E <= .01 (partners
+   hit calmodulin-like 1GGZ). Restated controls: positives 11/14 (LanM 4/6, LanD 6/6, lanpepsy 1/1, Hans-LanM 0/1),
+   negatives B 0/30, calcium-binding negatives A 3/16; first-round candidates 0/32.
+ 5 Verdict KILLED (PASS_site 0/12). In plain words: neither. Diverged lanmodulin is excluded (no loops, no Pro2, cytoplasmic,
+   off the lut loci, partners are not lanmodulin), and they are not a distinct EF-hand family at lut loci. The position call
+   hands the EF-hand_5 label of multi-EF-hand partners to a loop-less cytoplasmic relative beside a two-component system;
+   K22619 follows the partners. Function UNVERIFIED. Folds this session: 207 in total (183 + 24).

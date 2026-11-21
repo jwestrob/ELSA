@@ -1,0 +1,76 @@
+{
+ "validation_tsv": "/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/annot_gpu/validation/cpu_pfam/PFAM_hits_df.tsv",
+ "validation_rows": 6872,
+ "validation_proteins_with_hit": 3164,
+ "smoke1": {
+  "rows": 6872,
+  "all_columns_identical": true,
+  "raw_tsv_bytes_identical": true,
+  "raw_tsv_sha256": "6d1b340ee2220eabcf61b03579a1421cf4501b588c59a0907a6b5a7d43ae8ffe",
+  "status": "DONE 2026-11-21T05:10:48Z rows 6872 proteins_with_hit 3164 shards 1 database PFAM only"
+ },
+ "smoke3": {
+  "rows": 6872,
+  "non_evalue_columns_identical": true,
+  "all_columns_identical": false,
+  "status": "DONE 2026-11-21T05:10:33Z rows 6872 proteins_with_hit 3164 shards 3 database PFAM only",
+  "joined_rows": 6872,
+  "per_shard_evalue_ratio": [
+   {
+    "shard": 0,
+    "proteins": 1334,
+    "rows": 2223,
+    "z_ratio_shard_over_all": 0.3335,
+    "evalue_ratio_median": 0.3333,
+    "evalue_ratio_min": 0.3317,
+    "evalue_ratio_max": 0.3355,
+    "evalue_rows_equal": 1,
+    "c_evalue_ratio_median": 0.5,
+    "c_evalue_ratio_min": 0.0718,
+    "c_evalue_ratio_max": 1.0,
+    "c_evalue_rows_equal": 539,
+    "i_evalue_ratio_median": 0.3333,
+    "i_evalue_ratio_min": 0.3318,
+    "i_evalue_ratio_max": 0.3355,
+    "i_evalue_rows_equal": 1
+   },
+   {
+    "shard": 1,
+    "proteins": 1333,
+    "rows": 2330,
+    "z_ratio_shard_over_all": 0.3332,
+    "evalue_ratio_median": 0.3333,
+    "evalue_ratio_min": 0.3313,
+    "evalue_ratio_max": 0.3351,
+    "evalue_rows_equal": 0,
+    "c_evalue_ratio_median": 0.5,
+    "c_evalue_ratio_min": 0.0588,
+    "c_evalue_ratio_max": 1.0,
+    "c_evalue_rows_equal": 636,
+    "i_evalue_ratio_median": 0.3333,
+    "i_evalue_ratio_min": 0.3311,
+    "i_evalue_ratio_max": 0.3352,
+    "i_evalue_rows_equal": 0
+   },
+   {
+    "shard": 2,
+    "proteins": 1333,
+    "rows": 2319,
+    "z_ratio_shard_over_all": 0.3332,
+    "evalue_ratio_median": 0.3333,
+    "evalue_ratio_min": 0.3311,
+    "evalue_ratio_max": 0.3353,
+    "evalue_rows_equal": 0,
+    "c_evalue_ratio_median": 0.5,
+    "c_evalue_ratio_min": 0.0478,
+    "c_evalue_ratio_max": 1.0,
+    "c_evalue_rows_equal": 701,
+    "i_evalue_ratio_median": 0.3333,
+    "i_evalue_ratio_min": 0.3313,
+    "i_evalue_ratio_max": 0.335,
+    "i_evalue_rows_equal": 0
+   }
+  ]
+ },
+ "rows_identical": true
+}

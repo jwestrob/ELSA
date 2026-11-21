@@ -3522,3 +3522,9 @@ Report: `benchmarks/redesign/dpann_leads/invisible/REPORT.txt` (assay rule fixed
 - Coordinator check on the 15: no annotation row from any source and no CDD row except one FHIT hit; 12 of 15 lie within 3 genes of a Pfam Glycogen_syn gene (GDE_C 7, NTP_transferase 6, Glyco_hydro_57 4). CDD names the same family (COG1085) in 47 of the 64 genes with this label, so the family is known in DPANN and the 15 are divergent copies only the embedding lists reach. Substrate UNVERIFIED.
 - Fold kept with the catalytic residue absent: PEPCK_GTP 11 of 11 (Cys273 replaced), all in the CDD-named group.
 - Consequence for the other collections: specific function must come from the voting partners' own KO, so KOfam is needed on the voting partners of enzyme-labeled genes (a subset), after the Pfam pass.
+
+### 2026-11-21 05:57 UTC — Aksha GPU mode repaired (annot_gpu agent; `benchmarks/redesign/annot_gpu/REPORT_fix.txt`)
+- Pull request jwestrob/aksha#9 (open, mergeable, not merged; coordinator confirmed with gh). Self-attestation: exhaustive GPU-versus-host `log` check over 2,139,095,039 floats, cached per environment identity; untrusted environments finish on the exact CPU path with one warning; `aksha gpu-check` readiness command.
+- Six gates passed on the 4,000-protein sample: tests (165 passed, 4 GPU tests on the H200); CPU path byte-identical to production (6,872 Pfam and 6,360 KOfam rows); GPU byte-identical to CPU; H200 first-1000 check 27,481 of 27,481 models; simulated untrusted environment identical; readiness check correct. 0.21 GPU-hours.
+- Promotion to `envs/aksha-0.2.4.dev0` is queued behind the running Aksha jobs (`$RD/aksha_check/deploy_20261121/`, ROLLBACK.sh there); production still reports 0.2.3 at the time of this entry.
+- Reported, not gated: 215,332 double-precision inputs differ by one unit in the last place between GPU and CPU `log`.

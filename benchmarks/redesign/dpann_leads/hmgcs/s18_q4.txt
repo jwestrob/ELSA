@@ -1,0 +1,45 @@
+# percent of lipid-step genomes (completeness >= 70) carrying each upstream step, by phylum
+                      genomes_c70  lipid_genomes  1_thiolase_AACT  HMGS_any  2_HMGCS_canonical  2b_HMGS_like_560fam  3_HMGCR  MVK_or_alt  decarb_any  6_IPK  7_IDI  8_GGPS
+phylum                                                                                                                                                                    
+p__Aenigmatarchaeota          286          170.0              1.0      21.0               21.0                  0.0     66.0        72.0        76.0   50.0   70.0     7.0
+p__Altiarchaeota               55           49.0              0.0      10.0               10.0                  0.0     94.0        96.0        96.0   73.0   24.0    63.0
+p__EX4484-52                   40           26.0              0.0      15.0               15.0                  0.0     88.0        81.0        96.0   85.0   23.0     4.0
+p__Huberarchaeota              10            0.0              0.0       0.0                0.0                  0.0      0.0         0.0         0.0    0.0    0.0     0.0
+p__Iainarchaeota              173          141.0              2.0      39.0               39.0                  0.0     76.0        74.0        74.0   50.0   62.0    10.0
+p__Micrarchaeota             1020          990.0             13.0      45.0               19.0                 26.0     56.0        60.0        67.0   52.0   50.0     1.0
+p__Nanobdellota              1634          182.0              0.0       7.0                7.0                  0.0     12.0        10.0        12.0    9.0   32.0     3.0
+p__Nanohalarchaeota            44            1.0              0.0       0.0                0.0                  0.0      0.0         0.0         0.0    0.0    0.0     0.0
+p__Undinarchaeota              14           14.0              0.0       0.0                0.0                  0.0     93.0       100.0        29.0   93.0    0.0     7.0
+
+# Micrarchaeota families with >= 20 genomes
+                     genomes_c70  lipid_genomes  1_thiolase_AACT  HMGS_any  2_HMGCS_canonical  2b_HMGS_like_560fam  3_HMGCR  MVK_or_alt  decarb_any  6_IPK  7_IDI  8_GGPS
+fam                                                                                                                                                                      
+f__Anstonellaceae             42             41              0.0      39.0               39.0                  0.0    100.0        54.0        98.0   73.0   20.0     2.0
+f__Bilamarchaeaceae           88             87              0.0      49.0               49.0                  0.0     95.0        93.0        86.0   66.0   26.0     0.0
+f__CABMGC01                  283            279             10.0      28.0               20.0                  9.0     60.0        56.0        65.0   39.0   80.0     0.0
+f__J096                       41             24              0.0      21.0               21.0                  0.0     88.0        92.0        96.0   25.0   62.0     0.0
+f__Micrarchaeaceae           434            430             24.0      63.0                8.0                 55.0     33.0        61.0        58.0   59.0   41.0     0.0
+
+# genomes where HMGS is blank by both groups / HMGCR blank, among lipid-step genomes (completeness >= 70)
+                        n  HMGS_blank  HMGCR_blank
+phylum                                            
+p__Aenigmatarchaeota  170         134           58
+p__Altiarchaeota       49          44            3
+p__EX4484-52           26          22            3
+p__Iainarchaeota      141          86           34
+p__Micrarchaeota      990         542          435
+p__Nanobdellota       182         169          161
+p__Nanohalarchaeota     1           1            1
+p__Undinarchaeota      14          14            1
+
+# completeness >= 90: HMGCR in genus Micrarchaeum_A and in 560-family genomes of Micrarchaeaceae
+Micrarchaeum_A: 0 / 10 | M3K route: 8
+
+# slot calls whose label maps to a step, in genomes where that step is otherwise blank (all completeness)
+            genes  genomes  in_blank_genomes  T1  len_med
+step                                                     
+10_GGGPS        3        3                 0   0     71.0
+1_thiolase     16       15                16   8     85.0
+2_HMGCS        17       17                17  17    581.0
+4_MVK/GHMP     47       47                13  22    116.0
+DUF35           8        6                 0   6     78.0

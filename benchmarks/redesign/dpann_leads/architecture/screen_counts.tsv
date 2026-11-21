@@ -1,0 +1,13 @@
+step	genes	genomes	labels	note
+labeled genes	175729	3564	1813	
+label has >= 5 DPANN carriers at GA	170927	3564	1756	stable carrier median
+pattern (a) length outlier	17006	3505	318	
+pattern (b) composite: label region + other-family region	4887	2469	308	
+pattern (c) proposed label twice in one chain	1954	1585	94	
+union of patterns	21921	3522	517	
+label region located (own weak hit or CDD model of the label)	10187	3286	419	
+complete gene (no partial flag)	10004	3269	404	
+  membrane-dominated (dropped)	2671	1871	80	
+composition: not membrane-dominated (ILVFMAWC < 0.47, < 3 KD TM segments, TM < 20% of length)	7333	2929	359	
+  repeat- or low-complexity-dominated (dropped)	417	377	68	
+composition: low complexity < 20%, exact repeats < 15%, < 4 copies of one family	6916	2847	347	

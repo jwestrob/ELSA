@@ -1,0 +1,99 @@
+
+### OJT94780.1
+ rel         protein_id strand  len            pfam            ko     cdd               slot                              pfam_id
+  -6         OJT94774.1      +  253            None          None COG4412               None fam:5ad133d455:DAHVGB010000002.1_279
+  -5         OJT94775.1      +  100            None          None    None               None          fam:5ad133d455:MCL5404462.1
+  -4         OJT94776.1      +  339            None          None    None               None   fam:5ad133d455:DAHWRH010000023.1_1
+  -3         OJT94777.1      +  138         DUF6036          None    None               None          fam:5ad133d455:MBR9692174.1
+  -2         OJT94778.1      -  204          DUF981 K08980:K08980  DUF981               None  fam:5ad133d455:JAJYRE010000019.1_47
+  -1         OJT94779.1      +  498 Cytochrom_B_N_2          None    QcrB               None        fam:5ad133d455:WP_258393181.1
+   0         OJT94780.1      +  580            None          None    PksG HMG_CoA_synt_C|1.0  fam:5ad133d455:DAIDBP010000029.1_20
+   1 JPUK01000001.1_327      -  155         DUF2666          None DUF2666               None fam:5ad133d455:JAKAUP010000003.1_163
+   2         OJT94781.1      -   72    HrcA_DNA-bdg          None    None               None  fam:5ad133d455:DAHXFV010000003.1_61
+   3         OJT94782.1      -   50            None          None  rpl40e Ribosomal_L40e|1.0          fam:5ad133d455:MBI5177442.1
+   4         OJT94783.1      -  102            None          None    None               None            fam:5ad133d455:OJI07179.1
+   5         OJT94784.1      +  131       AdoMet_dc K01611:K01611    SpeD               None          fam:5ad133d455:MBN2051941.1
+   6         OJT94785.1      +  154            None          None    None               None  fam:5ad133d455:JAKAWC010000010.1_26
+
+### MCL5680306.1
+ rel   protein_id strand  len                                         pfam                          ko              cdd               slot                              pfam_id
+  -6 MCL5680312.1      - 1050 tRNA-synt_1g,Anticodon_1,tRNA-synt_1,DUF5915 K27979:K27979,K01870:K01870             IleS               None          fam:5ad133d455:MBI2632634.1
+  -5 MCL5680311.1      -  188                            PLDc_2,RE_NgoFVII                        None PLDc_N_Snf2_like               None          fam:5ad133d455:MEM5828469.1
+  -4 MCL5680310.1      -  267                                         None                        None             None               None fam:5ad133d455:DAHVGB010000002.1_279
+  -3 MCL5680309.1      -  142                                        RHH_1                        None            RHH_1               None  fam:5ad133d455:JAJZZO010000004.1_31
+  -2 MCL5680308.1      -   98                                         None                        None             None               None          fam:5ad133d455:MCL5404462.1
+  -1 MCL5680307.1      -   76                                         None                        None             None               None  fam:5ad133d455:JAJZZO010000004.1_33
+   0 MCL5680306.1      -  581                                         None                        None             PksG HMG_CoA_synt_C|1.0  fam:5ad133d455:DAIDBP010000029.1_20
+   1 MCL5680305.1      -  513                                        PMT_2                        None             ArnT               None   fam:5ad133d455:DAHXHN010000067.1_9
+   2 MCL5680304.1      +  155                                      DUF2666                        None          DUF2666               None fam:5ad133d455:JAKAUP010000003.1_163
+   3 MCL5680303.1      +   72                                         None                        None             pheS        TrmB|0.9067  fam:5ad133d455:DAHXFV010000003.1_61
+   4 MCL5680302.1      +   50                                         None                        None           rpl40e Ribosomal_L40e|1.0          fam:5ad133d455:MBI5177442.1
+
+### JAJZNR010000018.1_8
+ rel          protein_id strand  len          pfam            ko         cdd                  slot                              pfam_id
+  -1 JAJZNR010000018.1_9      +  169 EPSP_synthase          None    PRK09369                  None  fam:5ad133d455:DAHXDO010000058.1_12
+   0 JAJZNR010000018.1_8      -  591          None          None        PksG    HMG_CoA_synt_C|1.0  fam:5ad133d455:DAIDBP010000029.1_20
+   1 JAJZNR010000018.1_7      +  156       DUF2666          None     DUF2666                  None fam:5ad133d455:JAKAUP010000003.1_163
+   2 JAJZNR010000018.1_6      +   74          TrmB          None        TrmB                  None  fam:5ad133d455:DAHXFV010000003.1_61
+   3 JAJZNR010000018.1_5      +   51          None          None      rpl40e Ribosomal_L40e|0.8571          fam:5ad133d455:MBI5177442.1
+   4 JAJZNR010000018.1_4      -  368          PALP K01733:K01733 Thr-synth_1                  None          fam:5ad133d455:MBS3054663.1
+   5 JAJZNR010000018.1_3      +  112          None          None        None                  None   fam:5ad133d455:JASHTL010000078.1_5
+   6 JAJZNR010000018.1_2      -  376  tRNA-synt_1b K01867:K01867    PRK12285                  None          fam:5ad133d455:MBI2564984.1
+
+### WP_203134402.1
+ rel     protein_id strand  len            pfam            ko     cdd               slot                              pfam_id
+  -6 WP_203134396.1      +  267            None          None COG4412               None fam:5ad133d455:DAHVGB010000002.1_279
+  -5 WP_203134397.1      +  100            None          None    None               None          fam:5ad133d455:MCL5404462.1
+  -4 WP_203134398.1      +  339            None          None    None               None   fam:5ad133d455:DAHWRH010000023.1_1
+  -3 WP_203134399.1      +  171         DUF6036          None DUF6036               None          fam:5ad133d455:MBR9692174.1
+  -2 WP_203134400.1      -  204          DUF981 K08980:K08980  DUF981               None  fam:5ad133d455:JAJYRE010000019.1_47
+  -1 WP_203134401.1      +  498 Cytochrom_B_N_2          None    QcrB               None        fam:5ad133d455:WP_258393181.1
+   0 WP_203134402.1      +  580            None          None    PksG HMG_CoA_synt_C|1.0  fam:5ad133d455:DAIDBP010000029.1_20
+   1 WP_203134403.1      -  155         DUF2666          None DUF2666               None fam:5ad133d455:JAKAUP010000003.1_163
+   2 WP_203134404.1      -   72    HrcA_DNA-bdg          None    None               None  fam:5ad133d455:DAHXFV010000003.1_61
+   3 WP_203134405.1      -   50            None          None  rpl40e Ribosomal_L40e|1.0          fam:5ad133d455:MBI5177442.1
+   4 WP_203134406.1      +  134       AdoMet_dc K01611:K01611    SpeD               None          fam:5ad133d455:MBN2051941.1
+   5 WP_226803550.1      +  154            None          None    None               None  fam:5ad133d455:JAKAWC010000010.1_26
+   6 WP_203134408.1      +   96        zf-CDGSH          None COG3369               None  fam:5ad133d455:DAHXCW010000028.1_22
+
+## 17 leads: 16 anchors; neighbor families (permissive rescue3c run) in >= 25% of anchors
+                                      anchors  rel_mode       rel_set  len_med                                                                               desc  frac
+pfam_id                                                                                                                                                                
+fam:5ad133d455:JAKAUP010000003.1_163       16         1        [1, 2]    156.0                                                               DUF2666 /  / DUF2666  1.00
+fam:5ad133d455:DAHXFV010000003.1_61        16         2        [2, 3]     73.0                                                                 HrcA_DNA-bdg /  /   1.00
+fam:5ad133d455:MBI5177442.1                13         3        [3, 4]     51.0                                                                        /  / rpl40e  0.81
+fam:5ad133d455:DAHVGB010000002.1_279       12        -6      [-6, -4]    268.0                                                                       /  / COG4412  0.75
+fam:5ad133d455:MCL5404462.1                12        -5  [-5, -3, -2]    100.0                                                                              /  /   0.75
+fam:5ad133d455:MBN2051941.1                11         4        [4, 5]    135.0                                                   AdoMet_dc / K01611:K01611 / SpeD  0.69
+fam:5ad133d455:WP_258393181.1               9        -1          [-1]    498.0                                                          Cytochrom_B_N_2 /  / QcrB  0.56
+fam:5ad133d455:DAHXCW010000028.1_22         9         6        [5, 6]     97.0                                                              zf-CDGSH /  / COG3369  0.56
+fam:5ad133d455:JAJYRE010000019.1_47         8        -2          [-2]    205.0                                                    DUF981 / K08980:K08980 / DUF981  0.50
+fam:5ad133d455:JAKAWC010000010.1_26         7         5        [5, 6]    155.0                                                                              /  /   0.44
+fam:5ad133d455:DAHWRH010000023.1_1          7        -4          [-4]    340.0                                                                              /  /   0.44
+fam:5ad133d455:MBR9692174.1                 7        -3          [-3]    188.0                                                               DUF6036 /  / DUF6036  0.44
+fam:5ad133d455:MEM5828469.1                 5        -5          [-5]    189.0                                            PLDc_2,RE_NgoFVII /  / PLDc_N_Snf2_like  0.31
+fam:5ad133d455:MBI2632634.1                 5        -6          [-6]   1051.0  DUF5915,tRNA-synt_1g,tRNA-synt_1,Anticodon_1 / K01870:K01870,K27979:K27979 / IleS  0.31
+fam:5ad133d455:JAJZZO010000004.1_33         4        -1          [-1]     77.0                                                                              /  /   0.25
+fam:5ad133d455:DAHXHN010000067.1_9          4         1           [1]    533.0                                                                    PMT_2 /  / ArnT  0.25
+fam:5ad133d455:JAJZZO010000004.1_31         4        -3          [-3]    198.0                                                                        RHH_1 /  /   0.25
+
+## other family members: 272 anchors; neighbor families (permissive rescue3c run) in >= 25% of anchors
+                                      anchors  rel_mode        rel_set  len_med                                     desc  frac
+pfam_id                                                                                                                       
+fam:5ad133d455:JAKAUP010000003.1_163      197         1  [-2, 1, 2, 3]    153.0                     DUF2666 /  / DUF2666  0.72
+fam:5ad133d455:DAHXFV010000003.1_61       192         2  [-3, 2, 3, 4]     73.0                                    /  /   0.71
+fam:5ad133d455:MBI5177442.1               164         3  [-4, 3, 4, 5]     51.0                              /  / rpl40e  0.60
+fam:5ad133d455:DAHXCW010000028.1_22        81         5      [4, 5, 6]     93.0                    zf-CDGSH /  / COG3369  0.30
+fam:5ad133d455:MBI2564984.1                75         5     [-1, 5, 6]    375.0  tRNA-synt_1b / K01867:K01867 / PRK12285  0.28
+fam:5ad133d455:MBN2051941.1                73         4   [3, 4, 5, 6]    134.0         AdoMet_dc / K01611:K01611 / SpeD  0.27
+
+## named partner families within +-6 genes (anchors with at least one): 16 leads, 272 others
+        partner  leads_with  others_with
+       thiolase           0           20
+ DUF35_scaffold           0            0
+            ACP           0            0
+             KS           0           20
+            ECH           0            0
+          HMGCR           0            2
+canonical_HMGCS           0            0
+           GHMP           0            0

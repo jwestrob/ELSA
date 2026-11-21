@@ -1,0 +1,20 @@
+              phylum  HMGS_blank  HMGS_blank_with_subthreshold_hit  hit_len_med  HMGCR_blank  HMGCR_blank_with_subthreshold_hit
+p__Aenigmatarchaeota         134                                95        346.0           58                                  0
+    p__Altiarchaeota          44                                41        351.0            3                                  0
+        p__EX4484-52          22                                19        350.0            3                                  0
+    p__Iainarchaeota          86                                52        349.0           34                                  0
+    p__Micrarchaeota         542                               323        349.0          435                                  0
+     p__Nanobdellota         169                                15        348.0          161                                  0
+ p__Nanohalarchaeota           1                                 0          NaN            1                                  0
+   p__Undinarchaeota          14                                12        348.0            1                                  0
+
+best HMGS-profile hit per HMGS-blank genome: E-value distribution
+count    5.570000e+02
+mean     3.824068e-14
+std      6.376602e-13
+min      1.550000e-68
+25%      1.230000e-61
+50%      9.170000e-59
+75%      6.460000e-56
+max      1.080000e-11
+Name: evalue, dtype: float64

@@ -1,0 +1,111 @@
+RPIB WORKSTREAM: THE LacAB_rpiB SLOT CALL IN MICRARCHAEOTA (2026-11-21 UTC)
+==========================================================================
+BOTTOM LINE
+KILLED as a sugar-phosphate isomerase (rung 3 fails; rung 5 fails). The 287 genes are one positional ortholog family,
+called LF ("long form") below, found only in o__Micrarchaeales. LF keeps the RpiB fold (TM 0.60-0.69 to the RPIB_MYCTU
+crystal structure) and replaces every curated catalytic and phosphate-binding residue: 0/287 carry the E. coli pair
+(Cys66 base + His99 donor) or the M. tuberculosis pair (Glu75 base + His102 donor). A dimer co-fold places ribose
+5-phosphate off-site at low confidence; the same protocol places it in the crystallographic site for both positive
+controls. The evidence supports no reaction. About 80% of Micrarchaeales genomes lack an annotated R5P isomerase with or
+without LF. The label is a correct family call (homology, fold) carrying a wrong function name.
+
+LEAD rpib_LF_Micrarchaeales   PF02502 LacAB_rpiB   287 genes in 287 genomes   VERDICT: KILLED
+--- Rung 1, slot call: votes_for median 101 of 236 supporting genomes; support median 0.420 (IQR 0.401-0.444; T2 1.0,
+    T1 0.412, T2b 0.421); vote_share 1.0 in all 287. Amplification 287 labeled / 1,185 PF02502-annotated DPANN proteins = 0.24.
+--- Rung 2, own weak hit (Aksha check A rows, PF02502 LENG 138, GA 24.7): T1 105/287 (36.6%); E 8.1e-5 to 7.1e-3
+    (median 8.7e-4); 19.5-25.8 bits (5 at or above GA by sequence score). Model coverage median 0.54 (HMM 37-109);
+    sequence coverage median 0.40 (residues 35-105). The hits miss the N-terminal phosphate-binding segment of the model.
+--- Rung 3, residues (FAILS). Curated records: P37351 RPIB_ECOLI (active sites Cys66 proton acceptor, His99 proton donor,
+    PubMed 18640127; binding Asp9, His10, Thr41, Gly67-Ile72, Asn100, Arg110, Arg133, Arg137); P9WKD7 RPIB_MYCTU (Glu75
+    acceptor, His102 donor; binding Asp11, His12, Asp44, Gly70-Gly74, Asn103, Arg113, Arg137, Arg141; PDB 2BES/2VVO-Q).
+    Family members with other substrates use the E. coli-type Cys: Q9ZB26 EryI and B9JN19 / A0QXE5 (D-erythrulose-4P
+    isomerase), J0MXJ0 SqwI (4-deoxy-4-sulfo-D-erythrose isomerase), P0CL19 (Cys76, 3SGW); P23494/P23495 LacA/LacB carry
+    no curated site. mafft L-INS-i of 709 sequences (11 curated + 287 LF + 165 annotated LF + 246 other Micrarchaeota PF02502):
+                       Cys66  Glu75(Mt) His99/102  His10  Asp9  Arg110  Arg133  Arg137  Pro at Gly69
+      LF labeled 287   0.13   0.00      0.00       0.05   0.27  0.06    0.05    0.20    0.73
+      LF annotated 165 0.10   0.00      0.00       0.02   0.30  0.00    0.09    0.25    0.68
+      canonical 246    0.87   0.04      0.61       0.75   0.90  0.41    0.72    0.83    0.00
+    E. coli-type pair 0/287 (canonical 0.56); Mt-type pair 0/287. With a +-2 column window: any base 0.26, His donor 0.06.
+    By structure (US-align of 13 LF models on 2VVP_A / 1NN4_A): Glu at Mt75 0/13, His at Mt102 0/13 (Glu in 3 by 2VVP,
+    4 by 1NN4; else Ser/Ala/Gly/gap), Cys at Ec66 1/13, Arg at Mt113/137/141 0/13 (the C-terminal helix carrying Arg137/Arg141 is absent).
+    Positive control JAJYYB010000017.1_66 (canonical Micrarchaeales RpiB, K01808): D11 H12 C68 H101 R136 R140 in place.
+--- Rung 4, structure (fold passes, site fails). ESMFold2 monomers, 12 LF genes from 12 genera, both families, all tiers:
+    TM to 2VVP_A 0.595-0.685 (median 0.643; 1NN4_A 0.585-0.664); normalized by LF length 0.46-0.60 because of a 42-95-residue
+    C-terminal segment past the RpiB core. pLDDT core 78-94 (median 87.8), tail median 77.8. LF vs LF median 0.57.
+    Controls: annotated same-slot LF MDE1856242.1 0.634; canonical DPANN RpiB 0.919; negatives Ribosomal_L6 0.263 and
+    thymidylate kinase 0.455 (P-loop alpha/beta). Reference pair 1NN4_A vs 2VVP_A 0.88.
+    Oligomer: characterized members are homodimers (P9WKD7; P37351 dimer/tetramer). 2VVP site of each R5P: chain A Asp11,
+    His12, Ala13, Tyr46, Gly69-Glu75, Arg113 plus partner chain His102, Asn103, Arg137, His138, Arg141 (two chains).
+    Dimer co-folds (--copies 2, --ligand R5P:2), distance of R5P to the site centroid / ligand pLDDT / ipTM:
+      RPIB_MYCTU (method control)  2.1-2.2 A / 87 / 0.97, contacts reproduce the crystal list (12 chain A + 5 chain B)
+      canonical DPANN RpiB         2.4 A / 95-96 / 0.95, D11 H12 C68 (A) + H101 D102 R136 R140 (B)
+      LF DAHWRM010000003.1_10      14.6 A / 45 / 0.61, one chain, surface near Mt35-52 plus tail residues
+      LF DAHXEZ010000002.1_75       6.7-6.9 A / 31 / 0.56, 5 residues chain A + 1 partner (Glu at Mt102)
+      LF DAHWRX010000014.1_34      22.4-22.6 A / 41-51 / 0.61, 4 surface residues, one chain
+    LF dimers superpose on the 2VVP dimer at TM 0.61-0.68 (controls 0.93, 0.997) with the chain A Mt70 to chain B Mt102
+    distance 14.1-14.6 A (crystal 10.1). Transplanted crystal R5P in LF models touches 5-11 residues, mostly one chain,
+    with no conserved His/Cys/Arg set.
+--- Rung 5, genome context (FAILS). Micrarchaeales genomes >=70% complete: any annotated R5P isomerase (K01807, K01808,
+    Pfam Rib_5-P_isom_A, canonical PF02502) in LF+ 74/404 (18.3%) vs LF- 71/313 (22.7%), Fisher p=0.16; >=90%: 17/131 vs
+    16/102. In the 287 labeled genomes, 229 carry no KO/Pfam isomerase; CDD adds weak hits on 2 other genes; family-level
+    HHsearch adds none: 227/287 have none by every source. RpiA (K01807) is in 1/826 Micrarchaeales (146/200 Anstonellales).
+    Routes annotated in Micrarchaeota (KO set built from every KEGG reaction on R5P, Ru5P, X5P, PRPP, R1P, R15P, RuBP, dR5P,
+    dR1P, ribose, 6PG, F6P, E4P, hexulose-6P; 64 of 153 KOs occur; data/pentose_ko_presence.tsv), Micrarchaeales n=826:
+    PRPP synthase 313, APRT 461, nudF 366, 6PGD 183 (G6PDH 1, 6PGL 0), RPE 88, transketolase 52, transaldolase 38,
+    RuBisCO 77, AMP phosphorylase 49, R15P isomerase 0, ribokinase 51, uridine phosphorylase 43, HPS/PHI 1,
+    phosphopentomutase 0. Micrarchaeota-wide (n=1,146; LF is Micrarchaeales-only): PRPP synthase 552, RpiA 181, RpiB
+    157, transketolase 266, transaldolase 217, RPE 105, 6PGD 202, RuBisCO 277, AMP phosphorylase 250, R15P isomerase 86.
+    For R5P <-> Ru5P in the 229 genomes lacking another isomerase: Ru5P source (6PGD, or RPE with
+    transketolase) 39, R5P sink (PRPP synthase) 92, both 3. A substrate source and a product sink co-occur in 3/229.
+    Pentose-phosphate genes sit within +-6 genes of the slot at 1/287 loci (a canonical rpiB, 3 genes away).
+    Observed association: LF+ genomes carry transketolase 10.6% vs 1.3%, transaldolase 7.2% vs 1.3%, RPE 15.1% vs 5.1%,
+    6PGD 16.8% vs 31.3% (all p <= 1e-4, held within both families); absolute rates stay at 7-17%.
+--- Rung 6, distribution: LF in 462/826 Micrarchaeales (287 labeled + 176 annotated; 1 genome has both), 1/320 other
+    Micrarchaeota, all 438 slot partners in Micrarchaeales. Carriage 55.9% / 56.3% / 56.2% at completeness >=0 / 70 / 90.
+    Labeled: f__CABMGC01 100/322, f__Micrarchaeaceae 187/504; 287/1,146 Micrarchaeota; 287/3,564 DPANN.
+--- Rung 7, alignment lists: same label 219/287 (76.3%), no call 68/287 -> embedding-only 23.7% (T1 29/105, T2 4/35,
+    T2b 35/147).
+
+Q2 ORTHOLOG OR PARALOG (slot recomputed on biotite, all 287 calls and supporter counts reproduced, 0 bond mismatches)
+- The matching position in partner genomes holds the same gene: 438 distinct partner genes in 435 Micrarchaeales genomes;
+  268 are other labeled LF genes, 165 carry PF02502 at GA (length median 206, E 2.5e-11 to 4.2e-7, 0/165 with K01808),
+  5 are unannotated, 0 carry any other Pfam or KO. The 165 annotated partners lack the catalytic residues as the 287 do.
+  This is one ortholog family whose members sit on both sides of the gathering threshold.
+- Neighbors (strand-aware, 287 loci): +1 co-directional (95%) ~114 aa gene, CDD COG2522 predicted HTH transcriptional
+  regulator 264/284; -1 divergent ribosomal protein S26e (CDD 207/278); -4 TsaD 38%; +2 glutamate dehydrogenase (85/279)
+  or a Translin/HAD-annotated gene; +3 HhH-GPD glycosylase (K03660 39%); +4 glycyl-tRNA synthetase (K01880 28%).
+- The 59 genomes with PF02502 elsewhere carry two genes: 61 second copies, length median 153, identity to the LF gene
+  0.16-0.38 (median 0.22), 51 with K01808, 60 at other loci (canonical RpiB). One genome carries a second LF (196 aa,
+  identity 0.38, other contig). Zero cases of one gene counted twice (identity >= 0.9: 0).
+- Where the length difference sits: characterized members 141-171 aa (P37351 149, P9WKD7 162); canonical Micrarchaeales
+  RpiB median 153. LF has 109 residues up to the E. coli Lys118 equivalent (E. coli 118) and 82 after it (E. coli 31):
+  the extra ~50 residues are C-terminal, K/E/Q/R/D/P-rich (55% of the last 60 vs 32% in references).
+
+CRITERION A: ILVFMAWC 0.354 (IQR 0.339-0.367, soluble range); length 189 (q10-q90 182-223); characterized relatives are
+homodimers with a two-chain active site; LF folds as a monomer with a confident core and a predicted RpiB-like dimer
+(ipTM 0.56-0.61). It folds as a defined unit; it has no inferable molecular function.
+
+UNVERIFIED: any LF function, ligand or partner. The name "ribose-5-phosphate isomerase" is unsupported for LF.
+
+FRAME CHALLENGE (gate tripped by rung 3: assumed active-site residues absent in 452/452 family members)
+Anomalies: conserved fold and dimer with a dismantled site; a C-terminal motif G-x5-K-x3-G conserved in 90-98% of 452
+sequences (most conserved part of LF with core Asn77 0.98 and Asn103 0.97); a co-directional COG2522 HTH gene in 93% of
+loci; association with transketolase/transaldolase/RPE. Orthogonal hypotheses, all UNVERIFIED: (a) catalytically dead
+sugar-phosphate sensor paired with the HTH regulator; (b) partner-binding module acting through the C-terminal motif;
+(c) translation-associated role (S26e, TsaD, GlyRS, SUI1/L29 within 6 genes).
+Cheapest test run: 1:1 co-folds of LF with its +1 COG2522 gene give ipTM 0.06-0.08 (4 loci), equal to same-genome
+Ribosomal_L7Ae controls 0.06-0.10: no predicted heterodimer.
+FRAME CRITIC (fresh-context subagent): strongest case against the class is the loss of both base and donor with variable
+replacements plus Pro in the phosphate loop (relaxed constraint, pseudoenzyme). Its test, run: column conservation over
+452 LF mapped on 13 models; the old pocket ranks in the top decile of size-matched surface patches in 0/13 (median
+empirical p 0.56; pocket 0.37-0.41 vs sequence mean 0.41-0.48): the pocket is unconstrained. Its artifact concerns,
+checked: the 165 above-threshold copies lack the residues too (table above); the conserved motif Lys sits 21.6-39.1 A
+from the transplanted pocket in all 6 dimer chains; genomes with transketolase + RPE keep a canonical R5P isomerase in
+32/35 LF carriers (3/3 non-carriers): where the pathway needs an isomerase, LF co-occurs with the canonical enzyme.
+
+FILES (all under this folder): code/01-21 (every script run, incl. remote 02, 10, 16), data/ (rpib_genes.tsv, supporters,
+carriers_class.tsv, msa_aln.faa, residue_table.tsv, residue_calls.tsv, struct_site_residues.tsv, cofold_*.tsv,
+transplant_site.tsv, conservation_pocket.tsv, usalign_out.tsv, gap_test.tsv, pentose_ko_presence.tsv, second_copy.tsv, hetero_pairs.tsv,
+ref/ UniProt JSON, pdb/ 2VVP 1NN4 2VVR, kegg/), folds/ (16 monomers, 5 ligand dimers, 8 heteromers; 29 of 120 folds).
+Remote scratch: /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/rpib/.
+Tools: Aksha rows from check A (no new HMM search); mafft; ESMFold2 via Biohub; US-align on the biotite login node.

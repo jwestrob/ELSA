@@ -1,0 +1,32 @@
+                     model H53 R78 H79 R80 S88 R90 R147 R174
+DAOVIF010000002.1_60_N.pdb   G   G   C   S   R   -    N    V
+          HJO15200.1_N.pdb   H   F   Q   P   S   R    R    A
+JACWAL010000022.1_32_N.pdb   H   G   H   P   S   R    R    M
+ JAFCEG010000023.1_4_N.pdb   G   G   L   C   S   R    N    V
+JAGVGF010000004.1_10_N.pdb   H   N   E   T   S   R    R    M
+ JAHFJQ010000034.1_2_N.pdb   H   G   H   P   S   R    R    M
+        MBU2497176.1_N.pdb   I   P   Y   S   S   R    R    N
+        MEK6947948.1_N.pdb   D   M   N   P   S   R    R    L
+        MEM4152697.1_N.pdb   G   G   L   V   S   R    S    L
+        MFA5724626.1_N.pdb   H   G   A   T   S   R    S    A
+          NMB66601.1_N.pdb   H   G   A   T   S   R    S    A
+          NYZ74576.1_N.pdb   D   D   S   R   S   R    R    L
+    PWLK01000080.1_2_N.pdb   H   N   A   T   S   R    R    L
+DAOVIF010000002.1_60_C.pdb   K   R   H   S   S   Y    L    R
+          HJO15200.1_C.pdb   Y   R   Q   R   L   -    V    R
+JACWAL010000022.1_32_C.pdb   -   R   H   R   L   -    E    R
+ JAFCEG010000023.1_4_C.pdb   R   R   H   A   S   Y    L    R
+JAGVGF010000004.1_10_C.pdb   -   R   H   R   A   Y    M    R
+ JAHFJQ010000034.1_2_C.pdb   -   R   H   R   L   -    E    R
+        MBU2497176.1_C.pdb   H   R   H   R   A   L    I    R
+        MEK6947948.1_C.pdb   D   R   H   R   L   -    Q    R
+        MEM4152697.1_C.pdb   D   R   H   A   S   Y    I    R
+        MFA5724626.1_C.pdb   D   R   H   R   S   Y    I    R
+          NMB66601.1_C.pdb   I   R   H   R   S   Y    I    R
+          NYZ74576.1_C.pdb   P   R   H   R   L   -    Q    R
+    PWLK01000080.1_2_C.pdb   -   R   H   R   L   L    Q    R
+_N.pdb {'H53': '7/13', 'R78': '0/13', 'H79': '2/13', 'R80': '1/13', 'S88': '12/13', 'R90': '12/13', 'R147': '8/13', 'R174': '0/13'}
+_C.pdb {'H53': '1/13', 'R78': '13/13', 'H79': '12/13', 'R80': '10/13', 'S88': '5/13', 'R90': '0/13', 'R147': '0/13', 'R174': '13/13'}
+structure-vs-sequence residue assignment agreement: 133 / 167
+halves vs 1O26_A, TM by reference: lead N median 0.75941 range 0.68612 0.78584 | lead C median 0.71047 range 0.594 0.77068
+N vs C within chain: TM (max of two normalizations) median 0.58831 range 0.48574 0.68404

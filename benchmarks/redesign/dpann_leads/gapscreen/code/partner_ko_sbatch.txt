@@ -1,0 +1,25 @@
+#!/bin/bash
+#SBATCH -A banfield
+#SBATCH -p standard
+#SBATCH --qos=standard_expand
+#SBATCH -c 24
+#SBATCH -J gapscreen_pko
+#SBATCH --exclude=node-48-256g-2,node-48-256g-3,node-48-256g-8,node-48-256g-9,node-48-256g-12,node-48-256g-13,node-48-256g-14
+#SBATCH -o /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/gapscreen/logs/pko_%j.log
+
+# gapscreen step 1: supporters' own KOs for every labeled gene (pass slot code, Z lists; Pool of $SLURM_CPUS_ON_NODE).
+# SMOKE=N runs the first N genes into smoke/; the full run writes partner_ko.parquet and STATUS (DONE or FAILED).
+set -uo pipefail
+export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+W=/groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/gapscreen
+cd $W
+N=${SMOKE:-0}
+if [[ $N -gt 0 ]]; then OUT=$W/smoke; ST=$W/smoke/STATUS; else OUT=$W; ST=$W/STATUS; fi
+mkdir -p $OUT; rm -f $ST
+echo "CPUs $SLURM_CPUS_ON_NODE host $(hostname) start $(date -u +%FT%TZ) smoke $N"
+/usr/bin/time -v /home/jwestrob/miniconda3/envs/elsa/bin/python -u code/partner_ko.py --threads "$SLURM_CPUS_ON_NODE" --out $OUT --smoke $N
+rc=$?
+if [[ $rc -eq 0 && -s $OUT/partner_ko.parquet ]]; then echo "DONE $(date -u +%FT%TZ) job $SLURM_JOB_ID smoke $N partner_ko.parquet" > $ST
+else echo "FAILED $(date -u +%FT%TZ) job $SLURM_JOB_ID rc $rc" > $ST; fi
+cat $ST
+[[ $rc -eq 0 ]]

@@ -1,0 +1,46 @@
+reference residues at these columns:
+Q9FD71 E79:E C111:C H233:H D29:D T152:T S201:S P199:P K238:K K242:K N275:N S308:S
+A0A384E143 E79:E C111:C H233:H D29:D T152:S S201:T P199:R K238:K K242:- N275:N S308:S
+Q01581 E79:E C111:C H233:H D29:D T152:T S201:S P199:K K238:K K242:K N275:N S308:S
+P40830 E79:E C111:C H233:H D29:D T152:S S201:S P199:D K238:G K242:G N275:N S308:S
+Q6DNE9 E79:E C111:C H233:H D29:D T152:S S201:S P199:D K238:G K242:G N275:N S308:S
+
+# residue composition at each position, all members, split by genome HMGCR status
+E79_cat                  HMGCR+ (n=87): {'E': 87}   HMGCR- (n=183): {'E': 183}
+C111_cat                 HMGCR+ (n=87): {'C': 87}   HMGCR- (n=183): {'C': 183}
+H233_cat                 HMGCR+ (n=87): {'H': 87}   HMGCR- (n=183): {'H': 183}
+D29_hmg                  HMGCR+ (n=87): {'D': 55, 'N': 14, 'P': 7, 'S': 6}   HMGCR- (n=183): {'E': 69, 'D': 59, 'K': 25, 'S': 12}
+T152_hmg                 HMGCR+ (n=87): {'T': 85, 'S': 2}   HMGCR- (n=183): {'T': 179, 'S': 4}
+S201_hmg                 HMGCR+ (n=87): {'S': 87}   HMGCR- (n=183): {'S': 183}
+P199_CoA(=arch R203)     HMGCR+ (n=87): {'K': 51, 'G': 14, 'V': 11, 'M': 3}   HMGCR- (n=183): {'K': 67, 'E': 35, 'P': 22, 'R': 21}
+K238_CoA(=arch K243)     HMGCR+ (n=87): {'K': 82, 'E': 3, 'S': 2}   HMGCR- (n=183): {'K': 168, 'S': 4, 'A': 4, 'Q': 3}
+K242_hmg(=arch K247)     HMGCR+ (n=87): {'Y': 65, 'E': 14, 'V': 3, 'K': 3}   HMGCR- (n=183): {'Y': 116, 'E': 30, 'M': 21, 'I': 7}
+N275_hmg                 HMGCR+ (n=87): {'N': 86, 'T': 1}   HMGCR- (n=183): {'N': 183}
+S308_hmg                 HMGCR+ (n=87): {'S': 87}   HMGCR- (n=183): {'S': 183}
+
+# per genus (>= 5 members): modal residue at each position, HMGCR genomes / members
+                   members  HMGCR   E79  C111  H233   D29  T152  S201  P199  K238  K242  N275  S308
+genus                                                                                              
+g__JAJYXL01             33     26  E100  C100  H100  D100  T100  S100   G55  K100   E55  N100  S100
+g__Micrarchaeum_A       33      0  E100  C100  H100   E91  T100  S100   K97  K100  Y100  N100  S100
+g__JAJZAB01             30      0  E100  C100  H100   E87   T87  S100   E87   K87   E87  N100  S100
+g__JAJZYD01             29      7  E100  C100  H100   D52  T100  S100   K38   K86  Y100  N100  S100
+g__JAMCYB01             28      0  E100  C100  H100   K75  T100  S100   P79  K100   M75  N100  S100
+g__JAKARM01             19     18  E100  C100  H100  D100  T100  S100  K100  K100  Y100  N100  S100
+g__JAMCYW01             17      0  E100  C100  H100  D100  T100  S100  R100   K82  Y100  N100  S100
+g__JAKATK01             13     13  E100  C100  H100  N100  T100  S100  K100  K100  Y100  N100  S100
+g__JAMCYM01             13      0  E100  C100  H100   S77  T100  S100   K77  K100  Y100  N100  S100
+g__JAJZYW01             11      0  E100  C100  H100   E91  T100  S100   T91  K100  Y100  N100  S100
+g__JAKAWW01             10      0  E100  C100  H100  D100  T100  S100  K100  K100  Y100  N100  S100
+
+# thiolase step among lipid genomes (completeness >= 70): K00626 vs Pfam Thiolase_N (GA), percent
+                        n  K00626  Thiolase_N
+phylum                                       
+p__Aenigmatarchaeota  170       1          69
+p__Altiarchaeota       49       0          94
+p__EX4484-52           26       0          88
+p__Iainarchaeota      141       2          74
+p__Micrarchaeota      990      13          65
+p__Nanobdellota       182       0          43
+p__Nanohalarchaeota     1       0           0
+p__Undinarchaeota      14       0          86

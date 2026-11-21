@@ -1,0 +1,15 @@
+2P8U_A CoA contact residues: 19 [(43, 'ASP'), (44, 'ALA'), (45, 'GLY'), (46, 'LYS'), (49, 'ILE'), (50, 'GLY'), (163, 'TYR'), (167, 'ASN'), (168, 'ALA'), (171, 'THR'), (216, 'VAL'), (218, 'GLY'), (221, 'SER'), (222, 'ILE'), (266, 'PRO'), (267, 'TYR'), (269, 'LYS'), (270, 'LEU'), (273, 'LYS')]
+2P8U_A SCY129 SG to CoA S1P: 6.26 A
+               model ligand_chain contact_chains main_chain  n_contacts  d_CysSG  d_HisNE2  d_GluOE  ref_contacts_mapped  overlap_with_ref  frac_ref_recovered  plddt_lig
+          OJT94780.1            C              A          A          26      2.3       3.5      4.4                   19                14                0.74        0.9
+          OJT94780.1            D              B          B          27      2.3       3.5      4.4                   19                15                0.79        0.9
+ JAJZNR010000018.1_8            C              A          A          27      2.6       3.2      4.3                   19                14                0.74        0.9
+ JAJZNR010000018.1_8            D              B          B          27      2.6       3.1      4.4                   19                14                0.74        0.9
+CAISET010000016.1_25            C              A          A          23      2.5       3.0      4.5                   19                 9                0.47        0.8
+CAISET010000016.1_25            D              B          B          23      2.5       3.0      4.5                   19                 9                0.47        0.8
+OJT94780.1 C GLU60,GLY62,LYS63,GLY67,LEU68,GLU120,CYS168,PRO210,ASP211,ALA212,PHE250,VAL260,GLY262,LYS263,SER265,GLU266,HIS330,PRO332,PHE333,LYS335,TYR339,ARG416,ASN442,TYR444,PHE472,SER474
+OJT94780.1 D GLU60,GLY62,LYS63,GLY67,LEU68,GLU120,CYS168,PRO210,ASP211,ALA212,THR215,PHE250,VAL260,GLY262,LYS263,SER265,GLU266,HIS330,PRO332,PHE333,LYS335,TYR339,ARG416,ASN442,TYR444,PHE472,SER474
+JAJZNR010000018.1_8 C ASP85,GLY88,LYS89,GLY93,LEU94,GLU146,ALA193,CYS194,PRO236,GLY237,ALA238,PHE274,VAL284,GLY286,ARG287,SER289,GLU290,HIS332,PRO334,PHE335,LYS337,TYR341,LYS421,ARG424,TYR483,GLY484,SER485
+JAJZNR010000018.1_8 D ASP85,GLY88,LYS89,GLY93,LEU94,GLU146,ALA193,CYS194,PRO236,GLY237,ALA238,PHE274,VAL284,GLY286,ARG287,SER289,GLU290,HIS332,PRO334,PHE335,LYS337,TYR341,LYS421,ARG424,TYR483,GLY484,SER485
+CAISET010000016.1_25 C ARG35,VAL36,GLY39,LEU40,GLU84,ALA115,CYS116,ALA153,LEU154,TYR156,PHE189,GLY202,ARG203,THR205,HIS238,PRO240,ASN241,PHE244,ASN270,TYR272,PHE298,GLY299,SER300
+CAISET010000016.1_25 D ARG35,VAL36,GLY39,LEU40,GLU84,ALA115,CYS116,ALA153,LEU154,TYR156,PHE189,GLY202,ARG203,THR205,HIS238,PRO240,ASN241,PHE244,ASN270,TYR272,PHE298,GLY299,SER300

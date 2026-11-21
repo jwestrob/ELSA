@@ -1,0 +1,114 @@
+GAPSCREEN: ENZYME CALLS THAT FILL GAPS IN DPANN METABOLISM (workstream gapscreen, 2026-11-21 UTC)
+=================================================================================================
+BOTTOM LINE
+- The screen rediscovers all three known families and finds one new lead that passes rungs 2-5 and changes what a
+  clade can do: a dihydroorotase-like enzyme (PyrC family, label Amidohydro_1) in 18 Micrarchaeales genomes that carry
+  ATCase (17/17) and DHODH (17/17) and no dihydroorotase by any annotation source (rate among the other 808 Micrarchaeales
+  genomes 0.000). Its Zn site matches E. coli PyrC residue for residue and its predicted fold superposes on 1J79
+  (TM 0.79 / 0.76).
+- Second SUPPORTED lead: beta-carbonic anhydrase in Micrarchaeales (Zn ligands 4/4; 17 of 18 calls embedding-only).
+  Third: ADP-dependent L-serine kinase in Anstonellales (SUPPORTED, low novelty: 79/101 genes already carry the KO).
+  KILLED: small alarmone synthetase (catalytic Mg / ATP residues absent). WEAK: GCS2 ligase (no curated residues).
+- Global: 31,558 genome-by-function gaps filled, against 28,639 with functions shuffled within each order. The gap
+  count by itself reflects how rarely DPANN genes carry KOs. Gaps inside an otherwise present KEGG pathway are 34
+  (null 16.8, 95th percentile 20.2); at >= 50% of the other steps present, 197 (null 93.8, 95th percentile 108.5).
+- The coordinator's step 1 (function from partners' KOs) alone misses rpiB and HMGCS: their partners carry no KO
+  (0 KO-annotated carriers in 287 and 17 genes). A label-level fallback (KO distribution of all DPANN carriers of the
+  label) recovers them. Both function sources are reported.
+
+STEP 1: GENE-LEVEL FUNCTION (code/partner_ko.py, Slurm 119697 smoke 32 s + 119698 1 min 28 s, 24 CPUs; code/label_ko.py)
+- Supporters recomputed with the pass code: 175,729 / 175,729 calls reproduced, bond gate 0 mismatches.
+- Partner function = plurality KO among supporting partners that carried the winning label; STRONG at >= 3 partners and
+  share >= 0.70 of the KO-annotated carriers. 54,551 genes have >= 1 KO-annotated carrier; 46,697 are STRONG (733 KOs).
+- Label fallback (only where partners give no strong function): top KO among all DPANN proteins with a row for the
+  label, >= 5 KO-annotated carriers and share >= 0.80: 38,261 genes; KO labels taken as given: 858. Total 85,816 genes
+  (48.8% of 175,729), 17,672 of them enzymes with an EC.
+- Calibration against the gene's own KO: partner function 12,477 / 12,508 (99.75%); label fallback 92 / 119 (77.3%);
+  KO labels 86 / 87.
+
+STEPS 2-4: GAPS, CONTEXT, CONTROLS (code/screen.py; KEGG modules and KO-EC from Sharur's local KEGG snapshot,
+ko 2026/09/24, module 2026/09/11, built from KEGG by sharur setup-kegg; read only)
+- Gap = the genome holds no gene with the KO (kofam / kegg), no KO sharing a complete EC number, no satisfied alternative
+  for any module step containing the KO, and no Pfam row for the label (accession or name form). Context = share of the
+  module's other top-level steps satisfied by annotated KOs; otherwise present = >= 2 other steps and share >= 0.8.
+- Gaps: 34,840 genes, 31,558 genome x function pairs; 5,845 are enzymes; 1,017 sit in a KEGG module; 34 inside an
+  otherwise present pathway (197 at >= 0.5).
+  by tier (gaps / in pathway): T1 13,838 / 20; T2 4,453 / 11; T2b 3,862 / 0; contradicted 1,833 / 1; rest 7,572 / 2
+  by list type: embedding-only 8,967 / 16; both lists 22,591 / 18. Genomes >= 90% complete: 10,298 / 16.
+- Null (KOs and labels shuffled among STRONG genes of the same order, 20 permutations): gaps 28,639; with module 1,015;
+  in pathway 16.8 (q95 20.2); at >= 0.5, 93.8 (q95 108.5). Pathway context is 2.0x null and a small absolute number:
+  KEGG modules cover 3% of the gaps.
+- Completeness control: gap rate 46.4% in genomes < 70% complete, 42.3% at 70-80, 41.6% at 80-90, 39.2% at 90-95,
+  34.6% at >= 95. Every worked-up lead's gap genomes sit at the clade's completeness (context.tsv).
+- Ranked table: screen_leads.tsv and leads.tsv, 4,919 (KO, order) leads (1,597 enzymes, 2,485 with a gap genome, 13
+  with an in-pathway gap). Prefilter for criteria A and B (enzyme, non-housekeeping, ILVFMAWC < 0.45, 100-600 aa,
+  >= 3 gap genomes, >= 2 T1 genes): 80 leads, 54 KOs.
+- Rediscovery: HMGCS (K01641) rank 3, Micrarchaeales, 17/17 gap genomes, 6 in pathway; thymidylate synthase ThyA
+  (K00560) rank 14 and ThyX (K03465) rank 15, Pacearchaeales; rpiB (K01808) rank 38, Micrarchaeales, 228/287 gap.
+- New enzyme leads in the prefilter beyond these: dihydroorotase (K01465; Micrarchaeales rank 2, also Woesearchaeales,
+  Pacearchaeales, Iainarchaeales), mevalonate-3-phosphate 5-kinase (K18690, rank 4, same pathway as HMGCS), dTMP kinase
+  (K00943, rank 16, same pathway as Thy), uridylate kinase, GAR transformylase, glucose-6-phosphate isomerase, IDI-2,
+  AMP phosphorylase, pyruvate kinase, OPRT (UNVERIFIED, screen only).
+
+LEADS THROUGH THE LADDER (rung 2 Aksha check A; rung 3 mafft with the curated UniProt record; rung 4 ESMFold2 via
+Biohub, 19 folds, US-align on the biotite login node, TM normalized by model / by reference; residues in place = same
+residue within 5 A in the structural alignment; controls = DPANN protein with the family row at its threshold (+) and a
+DPANN protein of similar length from an unrelated family (-))
+
+L1 dihydroorotase-like, label Amidohydro_1, Micrarchaeales: SUPPORTED (activity UNVERIFIED)
+  1  18 genes in 18 of 826 genomes; support median 0.25; partner function K01465, share 1.00; T1 12, T2 1, T2b 4.
+  2  own weak hit to Amidohydro_1 in 12/18: E 8.7e-4, model coverage 0.72, sequence coverage 0.95. CDD best hit
+     DHOase_IIb or PyrC in 52/54 labeled genes (observed).
+  3  P05020 (E. coli PyrC): Zn ligands H17, H19, K103, H140, H178 and active-site D251 identical in 3/3 genes; substrate
+     N45, H255 identical; L223 -> N and A267 -> gap, as in the DPANN positive control.
+  4  vs 1J79 chain A: TM 0.79 / 0.76, pLDDT 95-96; H17 H19 H140 H178 D251 in place (K103 is KCX in 1J79, unresolved).
+     + control 0.68 / 0.64; - control (Glycos_transf_1, 362 aa) 0.34 / 0.36, 0/12 residues.
+  5  absent by every source in 17/18 genomes; in those 17: ATCase catalytic K00609 17/17 (clade 18%), DHODH K00254
+     17/17 (12%), DHO_dh Pfam 17/17 (24%), OMPDC Pfam 14/17 (17%); CPSase absent from all Micrarchaeales. Gap genomes
+     83.9% complete (clade median 84.7%; 3 genomes >= 90%).
+  6  also Woesearchaeales 11/704, GW2011-AR5 8/60, Pacearchaeales 7/487, Iainarchaeales 3/135, 5 more orders (54 genes).
+  7  embedding-only 0/18: the alignment lists give the same label.
+  A  328 aa, ILVFMAWC 0.36; PyrC relative is a homodimer (P05020). Reading: these genomes keep the ATCase -> DHOase ->
+     DHODH -> OMPDC chain; the source of carbamoyl phosphate stays unexplained.
+
+L2 beta-carbonic anhydrase, label Pro_CA, Micrarchaeales: SUPPORTED (rung 5 pathway part does not apply)
+  1  18 genes in 18 of 826 genomes; support median 0.98; partner function K01673, share 1.00; T1 10, T2 8.
+  2  own weak hit in 10/18: E 1.9e-4, model coverage 0.79, sequence coverage 0.82; CDD beta_CA_cladeD 9, CynT 6.
+  3  P61517 (E. coli Can): Zn ligands C42, D44, H98, C101 identical in 3/3 genes.
+  4  vs 1I6P chain A: TM 0.45 / 0.51, pLDDT 88.5, Zn ligands 4/4 in place; + control 0.44 / 0.50 (same level),
+     - control 0.31 / 0.33, 0/4.
+  5  absent otherwise in 14/18 genomes (4 carry the CA KO themselves); CA annotated in 42.1% of the other Micrarchaeales,
+     so the calls fill holes in a common function; single-step enzyme, no module. Gap genomes 87.1% complete (84.7%).
+  7  embedding-only 17/18 (94%): the alignment lists make no call.
+  A  248 aa, ILVFMAWC 0.39; relative is a homodimer.
+
+L3 ADP-dependent L-serine kinase, KO label K23370, Anstonellales: SUPPORTED, low novelty
+  1  101 genes in 101 of 200 genomes; support median 0.75; 79/101 already carry K23370 (KOfam).
+  2  T1 101/101: E 8.1e-32, model coverage 0.93, sequence coverage 0.92.
+  3  Q5JD03 (T. kodakarensis SerK): active-site E30 and Mg / ADP D69 identical; 12/19 curated residues identical; the
+     ADP-contact positions 43, 49, 51, 52, 68, 71 differ in every DPANN copy including the + control.
+  4  vs 5X0B chain A: TM 0.67-0.72 / 0.75-0.78, pLDDT 93-95; + control 0.74 / 0.81; - control 0.29 / 0.28.
+  5  22 genomes gain the function; SerK annotated in 17.2% of the other 99 Anstonellales; no module.
+  7  embedding-only 34%.  A  266 aa, ILVFMAWC 0.38.
+
+L4 small alarmone synthetase, label RelA_SpoT (label-level K07816), Woesearchaeales: KILLED at rung 3
+  52 genes (T1 12); O31611 (B. subtilis YjbM): proton-acceptor E139 present, Mg-binding D72 -> Q / T and ATP-binding
+  R46 -> D / K, K56 -> W / L, R77 -> T / H in 3/3 genes, while the DPANN + control keeps all four. RelA_SpoT relatives
+  without the synthetase site; no function inferred. (Embedding-only 94%.)
+
+L5 YbdK-family ligase (GCS2), Woesearchaeales: WEAK
+  23 genes (T1 18; model coverage 0.48); fold vs 1R8G TM 0.66-0.70 / 0.83-0.86 (+ 0.70 / 0.88, - 0.25 / 0.28);
+  absent in 17/23 genomes, GCS2 annotated in 2.1% of other Woesearchaeales. Rung 3 untestable: P77213 is a putative
+  ligase with no curated residues, so the specific function stays UNVERIFIED.
+Not worked up: M3P5K (K18690) has a reviewed record (Q9HK44) without residues or structure; dTMP kinase and the
+pyrimidine / purine kinases sit beside the thy and pyrimidine leads.
+
+DIFFERENCES FROM THE MESSAGE
+- Label-level fallback added (rpiB and HMGCS have no KO-annotated partners); its calibration is 77.3%.
+- CDD (protein_resemblance) is reported as observation only; the gap test reads the annotations table.
+- No pending job. Folds used 19 of 120. Mac disk 52 MB.
+
+FILES: REPORT.txt, leads.tsv (4,919 rows, brief columns first), screen_leads.tsv, global.json, code/, data/
+(genes_function.parquet, partner_ko.parquet, label_ko.tsv, context.tsv, distribution.tsv, rung2.tsv, rung3_residues.tsv,
+rung4_summary.tsv, rung4_residues.tsv, workup_genes.tsv), folds/ (19 models), ref/ (UniProt records, PDB chains).
+Remote scratch: /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/gapscreen/

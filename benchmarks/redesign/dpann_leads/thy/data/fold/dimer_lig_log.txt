@@ -1,0 +1,16 @@
+  NMB66601.1: L=535 x 2 copies + FADx4, UMPx4
+  MEM4152697.1: L=553 x 2 copies + FADx4, UMPx4
+  JAGVGF010000004.1_10: L=586 x 2 copies + FADx4, UMPx4
+  HJO15200.1: L=463 x 2 copies + FADx4, UMPx4
+  MBU2497176.1: L=545 x 2 copies + FADx4, UMPx4
+  NYZ74576.1: L=552 x 2 copies + FADx4, UMPx4
+  DAHVAY010000002.1_53: L=537 x 2 copies + FADx4, UMPx4
+batch a00ade22-8434-49c6-91bc-603e83256aca: 7 items, endpoint fold_all_atom, model esmfold2-2026-05
+done NMB66601.1  L=535  pLDDT=89.5  pTM=0.84  ipTM=0.74
+done MEM4152697.1  L=553  pLDDT=88.7  pTM=0.85  ipTM=0.76
+done JAGVGF010000004.1_10  L=586  pLDDT=77.1  pTM=0.76  ipTM=0.69
+done HJO15200.1  L=463  pLDDT=89.7  pTM=0.87  ipTM=0.78
+done MBU2497176.1  L=545  pLDDT=71.5  pTM=0.63  ipTM=0.56
+done NYZ74576.1  L=552  pLDDT=86.9  pTM=0.89  ipTM=0.82
+done DAHVAY010000002.1_53  L=537  pLDDT=92.2  pTM=0.86  ipTM=0.76
+7 structures, 0 failed -> data/fold/dimer_lig

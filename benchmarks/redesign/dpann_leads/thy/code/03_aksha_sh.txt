@@ -1,0 +1,9 @@
+# bash script as run (saved as .txt to keep to the workstream file types)
+#!/bin/bash
+# Aksha searches on the Mac (4 threads): (a) the two picked Pfam profiles against both leads at E <= 10 per sequence and
+# per domain (weak hits with coordinates); (b) all of Pfam against lead 1 at E <= 10 (any second family on the long form).
+set -euo pipefail
+cd /Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/thy
+AK=~/.local/bin/aksha
+$AK search --hmm_in data/hmm/picked_hmm.txt --prot_in data/leads12.faa --outdir data/aksha_picked --evalue 10 --domE 10 --threads 4
+$AK search --hmm_in ~/.config/Astra/PFAM/Pfam-A.hmm --prot_in data/lead1.faa --outdir data/aksha_pfam_lead1 --evalue 10 --domE 10 --threads 4

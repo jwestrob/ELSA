@@ -1,0 +1,137 @@
+# (a) KO calls in the 17 lead genomes (genomes with the KO, and protein lengths)
+accession source  genomes  len_med     nm
+   K00626  kofam       10    408.0 K00626
+   K00869  kofam        2    350.0 K00869
+   K01597  kofam        4    354.0 K01597
+   K01823  kofam       14    372.5 K01823
+   K06981  kofam       14    273.0 K06981
+   K17104  kofam       12    268.0 K17104
+   K17105  kofam       17    298.0 K17105
+   K17830  kofam       17    483.0 K17830
+   K18689  kofam       11    328.0 K18689
+   K18690  kofam       10    209.0 K18690
+   K19664  kofam       16    172.0 K19664
+   K22813  kofam        9    369.0 K22813
+
+# Pfam calls (GA) in the 17 lead genomes
+           name  genomes  genes  len_med
+      AA_kinase       17     45    272.0
+   CTP_transf_1       14     14    172.0
+  FAD_binding_3        2      2    370.0
+         FMN_dh       14     28    373.0
+ GHMP_kinases_C        5      6    350.0
+ GHMP_kinases_N        5     10    350.0
+          NUDIX       17    115    170.0
+           PcrB       13     13    268.0
+    Pyr_redox_2       17     60    449.5
+     Thiolase_C       12     12    408.0
+     Thiolase_N       12     14    408.0
+           UbiA       17     22    298.0
+polyprenyl_synt       16     33    356.0
+
+# (b) slot calls with step labels, DPANN-wide: genes by step, label, phylum, tier; and whether the genome lacks the step otherwise
+                                                genes  genomes blank_genomes  T1  emb_only  len_med
+step       lname          phylum                                                                   
+10_GGGPS   PcrB           p__Micrarchaeota          3        3             0   0         0     71.0
+1_thiolase Thiolase_N     p__Aenigmatarchaeota      2        2             2   1         0     43.5
+                          p__Iainarchaeota          1        1          True   0         0     49.0
+                          p__Micrarchaeota          2        2             2   0         0     53.5
+                          p__Nanobdellota          10        9            10   7         0    111.0
+                          p__Undinarchaeota         1        1          True   0         0     41.0
+2_HMGCS    HMG_CoA_synt_C p__Micrarchaeota         17       17            17  17        13    581.0
+4_MVK/GHMP GHMP_kinases_C p__Aenigmatarchaeota      1        1         False   0         1     54.0
+           GHMP_kinases_N p__Aenigmatarchaeota      4        4             2   0         1     77.0
+                          p__Altiarchaeota          1        1         False   1         0    316.0
+                          p__Iainarchaeota          3        3             0   1         0    101.0
+                          p__Micrarchaeota         15       15             4   4         1    109.0
+                          p__Nanobdellota           7        7             6   0         0    101.0
+           K18690         p__Aenigmatarchaeota      1        1         False   1         0    289.0
+                          p__Micrarchaeota         15       15             1  15         1    204.0
+DUF35      OB_ChsH2_C     p__Aenigmatarchaeota      1        1             0   1         0    137.0
+                          p__Iainarchaeota          3        2             0   1         0     73.0
+                          p__Micrarchaeota          3        2             0   3         0     78.0
+           zf-ChsH2       p__Aenigmatarchaeota      1        1             0   1         1    203.0
+
+# (c) slot calls with step labels inside the 17 lead genomes
+          protein_id          bin_id    step          lname  vote_share  votes_for tier  len alignment_lists_same_label step_blank_in_genome
+   DAKF01000034.1_99 GCA_002499095.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  581                    no call                 True
+    DARC01000020.1_9 GCA_002503145.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  581                    no call                 True
+DAHXDO010000058.1_11 GCA_027353875.1 2_HMGCS HMG_CoA_synt_C         1.0          3   T1  591                    no call                 True
+DAHXHL010000007.1_27 GCA_027332775.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  582                        yes                 True
+    DAUN01000032.1_9 GCA_002505145.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  581                    no call                 True
+          OJT94780.1 GCA_001896515.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  580                    no call                 True
+ JAJZNR010000018.1_8 GCA_021811605.1 2_HMGCS HMG_CoA_synt_C         1.0          3   T1  591                    no call                 True
+        MCL5680306.1 GCA_023484695.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  581                        yes                 True
+ JAJZWZ010000028.1_6 GCA_021846375.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  581                    no call                 True
+ DAHXDP010000001.1_8 GCA_027353825.1 2_HMGCS HMG_CoA_synt_C         1.0          3   T1  591                    no call                 True
+JAJZZO010000004.1_34 GCA_021797495.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  582                        yes                 True
+DAHVGA010000004.1_47 GCA_027316705.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  581                    no call                 True
+ DAIDNJ010000063.1_6 GCA_027448505.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  581                    no call                 True
+      WP_203134402.1 GCF_016806735.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  580                    no call                 True
+          OWP53669.1 GCA_002204695.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  580                    no call                 True
+DAHVGB010000005.1_47 GCA_027316665.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  581                    no call                 True
+DAHWMA010000022.1_31 GCA_027343445.1 2_HMGCS HMG_CoA_synt_C         1.0         24   T1  582                        yes                 True
+
+# every slot call in the 17 lead genomes: label counts
+95 labels; 763 genes
+                                          lname kind  genes  genomes  len_med
+                                          HTH_3 pfam     21       17    112.0
+                                 MazE_antitoxin pfam     20       17    284.0
+                                 HMG_CoA_synt_C pfam     17       17    581.0
+                                 Ribosomal_L31e pfam     17       17    133.0
+                               CEPT76_peptidase pfam     17       17    198.0
+                                    RNase_P_p30 pfam     17       17    174.0
+                                         HTH_24 pfam     26       16    458.0
+                                  phytol kinase   ko     16       16    309.0
+                             signal peptidase I   ko     16       16    340.0
+                                       Gins51_C pfam     16       16    170.0
+                                        DUF3150 pfam     16       15    431.0
+V/A-type H+/Na+-transporting ATPase subunit G/H   ko     15       15    109.0
+                                         HTH_27 pfam     15       15    100.0
+                                     ParE_toxin pfam     15       14    122.0
+                                            PCI pfam     15       14    243.0
+                                 Ribosomal_S26e pfam     14       14     78.0
+                                           KH_6 pfam     14       14    208.0
+                                     T4SS_pilin pfam     14       14    135.0
+                                 Ribosomal_L40e pfam     14       14     51.0
+                                          PHP_C pfam     14       14    423.5
+                                           TrbC pfam     14       14    129.0
+           large subunit ribosomal protein L14e   ko     14       14     89.0
+                                            V4R pfam     14       14    391.0
+                                 AsnC_trans_reg pfam     21       13    112.0
+                                          Mis14 pfam     13       13     89.0
+                                     LacAB_rpiB pfam     13       13    183.0
+                                        Histone pfam     13       13    110.0
+                                          RMMBL pfam     13       13    318.0
+                                        AbiEi_4 pfam     27       12    207.0
+                                          CARDB pfam     20       12    552.5
+                                         Pro_dh pfam     12       12    297.0
+                                Class_IIIsignal pfam     12       12     80.0
+                                        DUF5320 pfam     12       11     98.0
+                                            SLT pfam     11       11   2011.0
+                                  Peptidase_A24 pfam     11       11    294.0
+                                          HTH_5 pfam     11       11    272.0
+                                        CGI-121 pfam     10       10    142.0
+                                          RHH_1 pfam     10       10     80.0
+                                  Peptidase_M50 pfam     10       10    232.0
+                                         HTH_12 pfam     10       10    154.0
+                                         AAA_17 pfam     10       10    209.0
+                                           SecE pfam      9        9    117.0
+                                    Oxidored_q3 pfam      9        9    162.0
+                                Zn_ribbon_RPAB4 pfam      8        8     44.0
+                 mercuric ion transport protein   ko      7        7    172.0
+                                          PMT_2 pfam      7        7    433.0
+                                   VAPB_antitox pfam      6        5     88.5
+                                           CcdA pfam      7        4     76.0
+                                        DUF6036 pfam      5        4    211.0
+                                           Pcc1 pfam      4        4     85.0
+                                   RNA_pol_Rpb4 pfam      4        4    112.0
+                                  CBFD_NFYB_HMF pfam      5        3     68.0
+                                           EamA pfam      4        3    275.0
+                                 Ribosomal_L27A pfam      3        3    121.0
+                                            DHH pfam      3        3    466.0
+                                   HrcA_DNA-bdg pfam      3        3     73.0
+                                         PPDK_N pfam      3        3    655.0
+                                        DUF6155 pfam      3        3    172.0
+                                        DUF6159 pfam      3        3    357.0
+                                  FAD_binding_3 pfam      3        3    364.0

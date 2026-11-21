@@ -1,0 +1,131 @@
+{
+ "labeled": 175729,
+ "with_carrier_ko": 54551,
+ "strong_partner": 46697,
+ "strong_partner_kos": 733,
+ "calibration_partner": {
+  "own_ko_genes": 12831,
+  "any_function": 12750,
+  "match_any": 0.9966,
+  "strong": 12508,
+  "match_strong": 0.9975
+ },
+ "calibration_by_source": {
+  "partners": {
+   "n": 12508,
+   "match": 0.9975
+  },
+  "label": {
+   "n": 119,
+   "match": 0.7731
+  },
+  "label_is_ko": {
+   "n": 87,
+   "match": 0.9885
+  }
+ },
+ "strong": 85816,
+ "strong_by_source": {
+  "partners": 46697,
+  "label": 38261,
+  "label_is_ko": 858
+ },
+ "strong_kos": 931,
+ "strong_with_ec": 17672,
+ "gaps": {
+  "strong_genes": 85816,
+  "gap_genes": 34840,
+  "gap_ko_genes": 49506,
+  "genome_function_gaps": 31558,
+  "with_module": 1017,
+  "in_context": 34,
+  "in_ctx50": 197,
+  "by_source": {
+   "partners": 18377,
+   "label": 12615,
+   "label_is_ko": 566
+  },
+  "enzyme_gaps": 5845,
+  "by_tier": {
+   "T1": {
+    "gaps": 13838,
+    "in_context": 20
+   },
+   "T2": {
+    "gaps": 4453,
+    "in_context": 11
+   },
+   "T2b": {
+    "gaps": 3862,
+    "in_context": 0
+   },
+   "contradicted": {
+    "gaps": 1833,
+    "in_context": 1
+   },
+   "rest": {
+    "gaps": 7572,
+    "in_context": 2
+   }
+  },
+  "embedding_only": {
+   "gaps": 8967,
+   "in_context": 16
+  },
+  "both_lists": {
+   "gaps": 22591,
+   "in_context": 18
+  },
+  "complete_ge90": {
+   "gaps": 10298,
+   "in_context": 16
+  },
+  "in_context_share_of_module_gaps": 0.0334,
+  "in_ctx50_share_of_module_gaps": 0.1937
+ },
+ "gap_rate_by_completeness": {
+  "[0, 70)": {
+   "n": 5171,
+   "gap": 0.4637,
+   "in_context": 0.0006
+  },
+  "[70, 80)": {
+   "n": 13283,
+   "gap": 0.423,
+   "in_context": 0.0002
+  },
+  "[80, 90)": {
+   "n": 36706,
+   "gap": 0.4163,
+   "in_context": 0.0003
+  },
+  "[90, 95)": {
+   "n": 20220,
+   "gap": 0.3924,
+   "in_context": 0.0006
+  },
+  "[95, 101)": {
+   "n": 10436,
+   "gap": 0.3459,
+   "in_context": 0.0004
+  }
+ },
+ "null": {
+  "permutations": 20,
+  "gap_genes_mean": 36780.65,
+  "genome_function_gaps_mean": 28638.9,
+  "in_context_mean": 16.8,
+  "in_context_q95": 20.150000000000002,
+  "with_module_mean": 1014.8,
+  "in_ctx50_mean": 93.75,
+  "in_ctx50_q95": 108.45,
+  "in_ctx50_share_of_module_gaps_mean": 0.09236611303854546,
+  "in_context_share_of_module_gaps_mean": 0.016541885038398527
+ },
+ "leads": {
+  "total": 4919,
+  "enzyme": 1597,
+  "with_gap": 2485,
+  "with_in_context": 13
+ }
+}

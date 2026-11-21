@@ -1,0 +1,116 @@
+SYSTEMS WORKSTREAM: CURATED SYSTEM CALLS AS CONTEXT FOR SLOT-LABELED DPANN GENES (2026-11-21)
+=================================================================================================
+BOTTOM LINE
+One lead holds, at system level. The slot call supplies the missing antitoxin of AbiE (AbiEii nucleotidyltransferase
+toxin + AbiEi antitoxin, a defined two-protein abortive-infection / toxin-antitoxin system) at 2,319 AbiEii-toxin loci
+that DefenseFinder left uncalled, in 1,280 genomes (609 species, 33 orders). The caller's own AbiEi profiles hit
+1,127/2,314 of these genes below GA and 1/2,214 length-matched slot genes with other labels; gene order matches the 336
+called systems; folds superpose on the Streptococcus agalactiae AbiEi crystal structure as closely as a
+GA-annotated DPANN AbiEi. AbiE genomes rise from 290 to 1,377 of 3,564 (RM Type II, the most frequent called
+system, sits in 630). The system call stays UNVERIFIED (0 completing genes pass GA): write "components consistent
+with AbiE". The gene-level role (antitoxin beside its toxin) is readable from context; the new content is the scale
+and the caller-profile support.
+Embedding-only share is 149/2,319 loci (6.4%); the alignment lists give the same label for 1,982 (85.5%).
+Screen (a), model components missing from called systems, gives 5 gains in 4,495 calls (Type I RM fragments). Six
+further candidates are KILLED below. Folds used: 28 of 120 (18 single chains, 10 co-folds).
+
+GLOBAL NUMBERS (paper)
+Called systems examined: DefenseFinder 2.0.2 (Sharur colocation engine) 4,495 calls, 158 models, 2,029 genomes;
+CRISPR-Cas (CCTyper port 1.9.0) 448 complete calls (51,558 single-gene cas_putative loci counted apart); TXSScan 809
+(804 Archaeal-T4P, a many-subunit machine, counts only; 5 T5SS). Class = DefenseFinder category x size (small <= 4
+mandatory+accessory components).
+  class                systems  lacking>=1 comp  slot inside/adj  slot in window  gain (window)  gain (adjacent)
+  RM / small             2,103              654              170             603              5                2
+  RM / large               203              203                5              30              0                0
+  other / small          2,132              134              173             611              0                0
+  other / large             57               42                1              11              0                0
+  all                    4,495            1,033              349           1,255              5                2
+  Slot genes inside/adjacent: 382 (T1 127, T2 76, T2b 36, contradicted 30, rest 113; both lists 244, embedding-only
+  118, lists disagree 20). Gain genes: 5 (T2 4, T1 1; both 4, embedding-only 1).
+  CRISPR-Cas complete calls: 271/448 lack an interference or adaptation gene; slot gene within 3 genes 57, inside or
+  adjacent 47; gains 3 (Cas5 1, Csm4 2: effector-complex subunits, out of scope).
+Uncalled loci completed (screen b): 432,159 partial clusters of multi-gene models (mostly single generic hits: Lamassu
+  SMC, BREX, Dodola); 152,544 with a slot gene in window; 3,788 gain a missing component; 3,421 cluster-model pairs
+  become complete = 2,663 unique slot genes, all in small systems (large: 0). By model: AbiE 2,346 (SanaTA 801 on the
+  same loci), RM_Type_II 98, MazEF 49, PrrC 29, RosmerTA 25, RM_Type_I 25, 19 more models with 1-6 each.
+  Completing genes: rest 1,911, T1 593, T2 64, contradicted 59, T2b 36; both lists 2,188, embedding-only 269,
+  lists disagree 206.
+Controls for (b): around called systems of unrelated models in the same genome (no shared component family), expected
+  453.9 vs observed 2,196 on 571,643 (cluster, missing component) pairs (4.8x); AbiE alone 83.9 vs 1,356 (16x), and
+  51.6 vs 2,346 against random windows of the same width (45x).
+Caller profiles rerun (Aksha --hmm_in, 259 picked DefenseFinder profiles, E <= 10, then GA / i-Evalue <= 1e-3 rescaled
+  to the genome proteome / coverage >= 0.4): 2,798 completing or gaining genes: sub-threshold hit 1,247 (44.6%), GA
+  pass 0. Controls: length-matched other-label slot genes 1/2,798; same label away from the model 31/253 (12.3%), GA 0;
+  called members rescored 1,865/1,875 GA (99.5%).
+Label agreement where a curated caller already named the gene: DefenseFinder members 135/152 (88.8%); complete CRISPR
+  call members 72/92 (78.3%); cas_putative members 583/2,061 (28.3%).
+Pattern (c) (family at a fixed place in one system type): 811 (model, label) pairs; 77 with >= 3 species tested; 41
+  enriched within the model window and 25 inside/adjacent at BH q < 0.05 against the larger of the unrelated-system and
+  random-window expectations. Most top pairs sit beside single-gene models (Ceres, Esos, SoFic, CapRel).
+Method notes: definitions ~/.macsyfinder/models/defense-finder-models 2.0.2 (556 XMLs; DefenseFinder_rules.tsv md5
+identical on biotite); family map = Pfam/KO domains overlapping a DefenseFinder hit by >= 50% on >= 3 and >= 20% of the
+profile's DPANN proteins; window = member span +/- (inter_gene_max_space + 1); quorum from each XML.
+
+LEAD 1  AbiEi antitoxin completes AbiEii-toxin loci (PF13338 AbiEi_4 2,150; PF09407 AbiEi_1 159; PF09952 AbiEi_2 10)
+Verdict: SUPPORTED at system level (rung 3 not applicable); system call UNVERIFIED.
+  1 Slot call: support median 0.124 (votes_for 84 median); amplification PF13338 2,247/338 = 6.65, PF09407 1.09,
+    PF09952 2.30. Adjacency 16x over unrelated systems, 45x over random windows.
+  2 Own weak hit to the proposed Pfam (T1) 511/2,319 loci (22.0%). Caller AbiEi profiles: 1,127/2,314 (48.7%) below GA,
+    median 18.8 bits (GA 25 for AbiEi_4, 22.2 for AbiEi_1; best AbiEi_4 840, AbiEi_1 282); controls 1/2,214.
+  3 Not applicable: non-enzymatic antitoxin; the characterized AbiEi record (UniProt Q8DZ36) carries no residue
+    features. Toxin side: the locus toxins superpose on the characterized AbiEii (9HLO chain B) at TM 0.60-0.79.
+  4 ESMFold2, 5 slot AbiEi from 4 phyla (4 T1, 1 embedding-only without profile hit): TM (by query) 0.54-0.60 to 6Y8Q A,
+    0.57-0.65 to 9HLO A, 0.64-0.72 to 1ZEL A (M. tuberculosis Rv2827c). Positive control OIO20792.1 (AbiEi_4 at GA,
+    called system) 0.59 / 0.60 / 0.68; negative JAJYTZ010000018.1_15 (Methyltransf_11, 228 aa) 0.24 / 0.24 / 0.30.
+  5 Locus level: 2,266/2,319 loci carry no annotated antitoxin (Pfam AbiEi families, DefenseFinder AbiEi/SanaA hits)
+    within 3 genes of the toxin. Gene order: same strand 99.4% (called 99.7%), antitoxin 5' of toxin 71.2% (67.5%),
+    adjacent 98.7% (98.8%). Toxins flagged by CCTyper 0/2,373; within 10 genes of a complete CRISPR-Cas call 6/2,373.
+    Completion genomes: completeness median 87.8%.
+  6 Genomes with called -> called or completed AbiE / phylum genomes: Micrarchaeota 150 -> 675 / 1,146; Nanobdellota
+    68 -> 484 / 1,738; Aenigmatarchaeota 29 -> 85 / 315; Iainarchaeota 25 -> 86 / 185; Altiarchaeota 9 -> 28 / 63;
+    EX4484-52 6 -> 12 / 44; Nanohalarchaeota 3 -> 6 / 46; Undinarchaeota 0 -> 1 / 16. 469 genomes gain their first
+    defense-system call.
+  7 Both lists 1,982; embedding-only 149; lists disagree 188.
+  Criterion A: 208 aa median (IQR 196-228), ILVFMAWC 0.390 (soluble); the characterized relative is an AbiEi-AbiEii
+    heterodimer (9HLO). Co-fold with the toxin from the same locus: ipTM 0.33-0.81 (median 0.68); positive 0.83;
+    non-cognate negative 0.12. Complex arrangement matches 9HLO in 2/5 (complex TM 0.63-0.64) and differs in 3/5 and in
+    the positive control (0.47-0.48; negative 0.33).
+  UNVERIFIED: the AbiE system call; the antitoxin mechanism; the 9HLO binding mode for DPANN pairs.
+
+LEAD 2  MazE completes MazF loci (PF04014; 49 loci, 45 genomes, 40 species) - KILLED (criterion B)
+  Routine antitoxin named from context. Adjacency 49 vs 20.5 random (2.4x), 30 vs 13.1 unrelated systems. Caller MazE
+  profile hits 5/50 below GA, the same rate as same-label genes away from MazF (5/50). T1 24/50; embedding-only 10/50.
+  Structure: free MazE disordered (pLDDT 57, positive 53); MazF2:MazE co-fold ipTM 0.81-0.84 (positive 0.78), complex
+  TM to 1UB4 0.59-0.60 (positive 0.63). Rung 3 uninformative: E. coli R8/R16 (P0AE72) absent in slot and positive genes.
+
+LEAD 3  Type II REase completes orphan MTase (R-HINP1I 26 genes / 17 species; ThaI 26 / 22; RE_HaeIII 11 / 6) - KILLED
+  Rung 2 fails: own weak hit 0/26, 0/26, 1/11; caller REase profiles 0/26, 0/26, 6/11 below GA. 62/63 embedding-only.
+  Observed fold: TM 0.41-0.56 to HinP1I (1YNM) and 0.40-0.52 to ThaI (3NDH) for 4 models, with no family preference
+  (positives 0.88 to 1YNM, 0.93 to 3NDH; negative 0.24-0.27); 1 of 2 R-HINP1I models carries E and D at HinP1I E18/D62.
+  Consistent with a PD-(D/E)XK-like nuclease fold; the family names are unsupported.
+
+LEAD 4  HEPN at a fixed place inside Type I RM operons (38 genes, 33 genomes, 22 species) - KILLED (rung 3)
+  Real pattern: 25/38 genes inside the member span, 34/38 beside an MNT-like nucleotidyltransferase (NTP_transf_2 /
+  Polbeta), inside/adjacent enrichment 5.0x (q 1.1e-8). The HEPN RNase motif RX4-6H is present in 3/38 (DPANN GA HEPN
+  domains 21% of 3,804; shuffled sequences 31%). Support median 0.034; T1 11/38; embedding-only 0/38.
+
+LEAD 5  K08982 / DUF5676 beside Ceres (25 / 15 species; adjacency 68x / 238x) - KILLED (criteria A and B)
+  The Ceres model is one gene (CrsA), so the neighbor has no defined partner; K08982 is a KEGG putative membrane
+  protein (ILVFMAWC 0.44) and DUF5676 has ILVFMAWC 0.60.
+LEAD 6  MazE-like gene beside CapRel (14 genomes, 8 species; adjacency 17x) - KILLED (criteria A and B)
+  CapRel is one fused toxin-antitoxin gene in its model, so the neighbor has no defined partner; AbrB-fold regulator.
+LEAD 7  Screen (a) gains (5 genes; HsdS/HsdR pieces 43-88 aa at contig ends, one N6 MTase by a Type IIG call) - KILLED
+  Fragments of routine RM subunits.
+
+FILES (systems/)
+  leads.tsv; code/01-14 (context, screens a/b/c, CRISPR/TXSS, profile rerun, leads, folds, US-align, residue map, global
+  numbers), ctx.py (locus printer), cofold_pair.py; data/*_summary.txt, global_numbers.txt, lead_abie_loci.tsv,
+  rerun/ (Aksha hits, scores, profiles_used.txt), usalign_out.tsv, residue_map.txt, refs/ (PDB, UniProt JSON);
+  folds/singles, folds/complexes (pdb + json + summary.tsv).
+COMPUTE NOTES
+  fold_biohub.py folds one protein or N copies of it; it has no hetero-complex input. cofold_pair.py imports that
+  script's own helpers and sends multi-entity items to the same Biohub endpoint (fold_all_atom, esmfold2-2026-05).
+  US-align ran on the biotite login node (63 pairs); remote scratch
+  /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/systems/. No Slurm jobs.
+  Reference data downloaded by accession: PDB 6Y8Q, 9HLO, 1ZEL, 1UB4, 1YNM, 3NDH; UniProt Q8DZ36, Q8DZ35, Q8ECH6,
+  Q8ECH7, A0A0B0QJR1, A0A0B0QJN8, Q5I6E6, Q9HJY3, P0AE72, P0AE70.

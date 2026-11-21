@@ -1,0 +1,24 @@
+
+ ********************************************************************
+ * US-align (Version 20231222)                                      *
+ * Universal Structure Alignment of Proteins and Nucleic Acids      *
+ * Reference: C Zhang, M Shine, AM Pyle, Y Zhang. (2022) Nat Methods*
+ * Please email comments and suggestions to zhang@zhanggroup.org    *
+ ********************************************************************
+
+Name of Structure_1: /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/hmgcs/models/cofold/OJT94780.1.pdb:A:B (to be superimposed onto Structure_2)
+Name of Structure_2: /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/hmgcs/refchains/1YSL_AB.pdb:A:B
+Length of Structure_1: 1160 residues
+Length of Structure_2: 765 residues
+
+Aligned length= 761, RMSD=   2.57, Seq_ID=n_identical/n_aligned= 0.233
+TM-score= 0.62765 (normalized by length of Structure_1: L=1160, d0=11.17)
+TM-score= 0.93827 (normalized by length of Structure_2: L=765, d0=9.47)
+(You should use TM-score normalized by length of the reference structure)
+
+(":" denotes residue pairs of d < 5.0 Angstrom, "." denotes other aligned residues)
+MMAYKSTLEQLESESEAMRVRIDPKIGISKLIVEAPQTYFSYVELANALNAKDTKGRKVEPGKIKDGLGIEKARLPTYSQSNVTMAANAVYAFIKNIDSNPYDREKFFSEKPVSIYYATESNPDFSRPEAEIALGLVYSRLLKEDEKRYRPYVEALKNTGLQQNTFACAGAGLALSSALSEIYSNSSFGMGSSAVIISADTAVYDSKRAPDAETTQGSAATLMWITTDPELVSINYKGSYGRFNVPFPDFTKFG-VDTPFVHGKFSEKGYVYAVAMALGNMESKLAMQKRMVFEEDYAGMNPDADTYRSMKLNKIMDSSEYRENMKFFISHVPFPKQAIYFASFLFEHYLKNYERDTFNAMQQRESLGKSPLGDKSLAELFTGKLTGFRGEHDTDIVAYIESDRDINAYWEWLGKLRKQPEFEKFLDEMHIRDALALPSQVGNSYTGSTVVAIASLLKNGK-VYPGDTGACAFFGSGMVALAYQMEITATQESIARNLVIGMERKEELPLEAQDYEPLHEKLILGDAKRSMIGEGKSLIDMDAEMLRGKLPEGFLIRRRNVDGTWEAEFVEDGQRSVIKPRL*MMAYKSTLEQLESESEAMRVRIDPKIGISKLIVEAPQTYFSYVELANALNAKDTKGRKVEPGKIKDGLGIEKARLPTYSQSNVTMAANAVYAFIKNIDSNPYDREKFFSEKPVSIYYATESNPDFSRPEAEIALGLVYSRLLKEDEKRYRPYVEALKNTGLQQNTFACAGAGLALSSALSEIYSNSSFGMGSSAVIISADTAVYDSKRAPDAETTQGSAATLMWITTDPELVSINYKGSYGRFNVPFPDFTKFG-VDTPFVHGKFSEKGYVYAVAMALGNMESKLAMQKRMVFEEDYAGMNPDADTYRSMKLNKIMDSSEYRENMKFFISHVPFPKQAIYFASFLFEHYLKNYERDTFNAMQQRESLGKSPLGDKSLAELFTGKLTGFRGEHDTDIVAYIESDRDINAYWEWLGKLRKQPEFEKFLDEMHIRDALALPSQVGNSYTGSTVVAIASLLKNGK-VYPGDTGACAFFGSGMVALAYQMEITATQESIARNLVIGMERKEELPLEAQDYEPLHEKLILGDAKRSMIGEGKSLIDMDAEMLRGKLPEGFLIRRRNVDGTWEAEFVEDGQRSVIKPRL*
+                       ::::::::::::::::::::::::: :       :::::::::::::::::::::::::::::::::::::  ::     : ..:  ::::::::::::::::::::::::::::              : : ::::::::::: ::::::::::::::::::    :::::::::::::::..  :::::::::::::::::::::::::::  :::::::::::::::: ::::::::::::::::::::::::::::::.                             .    :..:::::::::::::::::::::::: .:   .  .                                                              ..::::::  :::::::::::::::::::::::::::::::: ::::::::::::::::::::::::::.:.::::....:..:..::::::::::::::::.     :::::::  :::  .       : :::::::::::::: :::             *                       ::::::::::::::::::::::::: :       :::::::::::::::::::::::::::::::::::::  ::     : ..:  ::::::::::::::::::::::::: :.              : ::::::::::::::::::::::::::::::::    :::::::::::::::..  :::::::::::::::::::::::::: : :::::::::::::::: ::::::::::::::::::::::::::::::.                             . .  .: ::::::::::::::::::::::::  :   :  .                                                             ...::::::  :::::::::::::::::::::::::::::::: ::::::::::::::::::::::::::.:.::::....:..:..::::::::::::::::  .   :::::::  :::  .       : :::::::::::::: :::             *
+-----------------------MTIGIDKISFFVPPYYIDMTALAEA-R-------NVDPGKFHIGIGQDQMAVNPISQDIVTFAANAAEAIL--TK-----E-DKE--AIDMVIVGTESSIDESKAAAVVLHRLMG--------------I-Q-PFARSFEIKEA-YGATAGLQLAKNHVALHP----DKKVLVVAADIAKYGLN--SGGEPTQGAGAVAMLVASEPRILALKE--DNVMLTQDIYDFWRPTGHPYPMVDGPLSNETYIQSFAQVWDEHKKRTG-----------------------------L----DFADYDALAFHIPYTKMGKKALLAKIS-DQ---T--E--------------------------------------------------------------AEQERILA--RYEESIIYSRRVGNLYTGSLYLGLISLLENATTLTAGNQIGLFSYGSGAVAEFFTGELVAGYQNHLQKETHLALLDNRTELSIAEYEAMFAET-----LDTDIDQ--TLE--D-------E-LKYSISAINNTVRS-YRN-------------*-----------------------MTIGIDKISFFVPPYYIDMTALAEA-R-------NVDPGKFHIGIGQDQMAVNPISQDIVTFAANAAEAIL--TK-----E-DKE--AIDMVIVGTESSIDESKAAAVVLHR-LM--------------G-IQPFARSFEIKEACYGATAGLQLAKNHVALHP----DKKVLVVAADIAKYGLN--SGGEPTQGAGAVAMLVASEPRILALK-E-DNVMLTQDIYDFWRPTGHPYPMVDGPLSNETYIQSFAQVWDEHKKRTG-----------------------------L-D--FA-DYDALAFHIPYTKMGKKALLAKIS--D---Q--T-------------------------------------------------------------EAEQERILA--RYEESIIYSRRVGNLYTGSLYLGLISLLENATTLTAGNQIGLFSYGSGAVAEFFTGELVAGYQNHLQKETHLALLDNRTELSIAEYEAMFAE--T---LDTDIDQ--TLE--D-------E-LKYSISAINNTVRS-YRN-------------*
+
+#Total CPU time is  2.66 seconds

@@ -1,0 +1,181 @@
+17 lead rows
+              protein_id           genome             contig  position_index  strand  length own_ko proposed_label_positional_homology  votes_for  voters_annotated  vote_share  supporting_genomes  supporting_groups runner_up_name  runner_up_votes                      locus_id  locus_size  n_bonds  max_bond_lambda alignment_label alignment_lists_same_label confidence_bin own_ko_agrees                                                                                                                                                                                                                                                 basis tier     vfrac       amp  annotated  proposed_evalue best_other_label  best_other_evalue
+0       DAUN01000032.1_9  GCA_002505145.1     DAUN01000032.1               8      -1     581                                   PF08540         24                24         1.0                  35                  5                               0    Z_L4bp_t0.02:107453-107456           4        1             6.43                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.685714  0.065134        261     2.020000e-07             None                NaN
+1   JAJZZO010000004.1_34  GCA_021797495.1  JAJZZO010000004.1              33       1     582                                   PF08540         24                24         1.0                  43                  5                               0  Z_L4bp_t0.02:1489323-1489326           4        1             6.19         PF08540                        yes    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.558140  0.065134        261     1.240000e-05             None                NaN
+2    JAJZNR010000018.1_8  GCA_021811605.1  JAJZNR010000018.1               7      -1     591                                   PF08540          3                 3         1.0                   3                  1                               0  Z_L4bp_t0.02:1525842-1525845           4        1             6.15                                    no call    v3-4|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  1.000000  0.065134        261     9.180000e-10             None                NaN
+3    JAJZWZ010000028.1_6  GCA_021846375.1  JAJZWZ010000028.1               5      -1     581                                   PF08540         24                24         1.0                  36                  5                               0  Z_L4bp_t0.02:1580756-1580759           4        1             6.32                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.666667  0.065134        261     1.270000e-07             None                NaN
+4           MCL5680306.1  GCA_023484695.1  JAMDAO010000021.1               4      -1     581                                   PF08540         24                24         1.0                  43                  5                               0  Z_L4bp_t0.02:1739784-1739788           5        1             6.18         PF08540                        yes    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.558140  0.065134        261     1.240000e-05             None                NaN
+5   DAHVGB010000005.1_47  GCA_027316665.1  DAHVGB010000005.1              46      -1     581                                   PF08540         24                24         1.0                  35                  5                               0  Z_L4bp_t0.02:1894864-1894867           4        1             6.43                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.685714  0.065134        261     2.020000e-07             None                NaN
+6   DAHVGA010000004.1_47  GCA_027316705.1  DAHVGA010000004.1              46      -1     581                                   PF08540         24                24         1.0                  35                  5                               0  Z_L4bp_t0.02:1895847-1895850           4        1             6.43                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.685714  0.065134        261     2.020000e-07             None                NaN
+7   DAHXHL010000007.1_27  GCA_027332775.1  DAHXHL010000007.1              26      -1     582                                   PF08540         24                24         1.0                  43                  5                               0  Z_L4bp_t0.02:2007633-2007636           4        1             6.17         PF08540                        yes    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.558140  0.065134        261     1.240000e-05             None                NaN
+8   DAHWMA010000022.1_31  GCA_027343445.1  DAHWMA010000022.1              30      -1     582                                   PF08540         24                24         1.0                  43                  5                               0  Z_L4bp_t0.02:2162214-2162217           4        1             6.19         PF08540                        yes    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.558140  0.065134        261     1.240000e-05             None                NaN
+9    DAHXDP010000001.1_8  GCA_027353825.1  DAHXDP010000001.1               7      -1     591                                   PF08540          3                 3         1.0                   3                  1                               0  Z_L4bp_t0.02:2200099-2200102           4        1             6.21                                    no call    v3-4|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  1.000000  0.065134        261     9.180000e-10             None                NaN
+10  DAHXDO010000058.1_11  GCA_027353875.1  DAHXDO010000058.1              10      -1     591                                   PF08540          3                 3         1.0                   3                  1                               0  Z_L4bp_t0.02:2203328-2203331           4        1             6.12                                    no call    v3-4|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  1.000000  0.065134        261     9.930000e-10             None                NaN
+11   DAIDNJ010000063.1_6  GCA_027448505.1  DAIDNJ010000063.1               5      -1     581                                   PF08540         24                24         1.0                  33                  5                               0  Z_L4bp_t0.02:2420903-2420906           4        1             6.49                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.727273  0.065134        261     2.080000e-07             None                NaN
+12        WP_203134402.1  GCF_016806735.1      NZ_CP060530.1             789       1     580                                   PF08540         24                24         1.0                  35                  5                               0  Z_L4bp_t0.02:3582070-3582073           4        1             6.43                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.685714  0.065134        261     2.020000e-07             None                NaN
+13            OJT94780.1  GCA_001896515.1     JPUK01000001.1             328       1     580                                   PF08540         24                24         1.0                  35                  5                               0      Z_L4bp_t0.02:63728-63731           4        1             6.43                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.685714  0.065134        261     2.020000e-07             None                NaN
+14            OWP53669.1  GCA_002204695.1     MWKQ01000005.1              47      -1     580                                   PF08540         24                24         1.0                  35                  5                               0      Z_L4bp_t0.02:68409-68412           4        1             6.43                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.685714  0.065134        261     2.020000e-07             None                NaN
+15     DAKF01000034.1_99  GCA_002499095.1     DAKF01000034.1              98       1     581                                   PF08540         24                24         1.0                  35                  5                               0      Z_L4bp_t0.02:84246-84249           4        1             6.42                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.685714  0.065134        261     2.020000e-07             None                NaN
+16      DARC01000020.1_9  GCA_002503145.1     DARC01000020.1               8      -1     581                                   PF08540         24                24         1.0                  35                  5                               0      Z_L4bp_t0.02:95320-95323           4        1             6.43                                    no call    v10+|s>0.80         no_ko  hypothesis: plurality Pfam/KO key among the best-ranked embedding-list partners (one per genome, other genome groups only) that lie 1-3 genes from a list partner of a bonded neighbor (ELSA slot call, slot_rescue test); not a curated caller call   T1  0.685714  0.065134        261     2.020000e-07             None                NaN
+
+taxonomy:
+ taxonomy
+d__Archaea;p__Micrarchaeota;c__Micrarchaeia;o__Micrarchaeales;f__Micrarchaeaceae;g__Micrarchaeum_A;s__Micrarchaeum_A acidiphilum_A    10
+d__Archaea;p__Micrarchaeota;c__Micrarchaeia;o__Micrarchaeales;f__Micrarchaeaceae;g__Micrarchaeum_A;s__Micrarchaeum_A sp021797495       4
+d__Archaea;p__Micrarchaeota;c__Micrarchaeia;o__Micrarchaeales;f__Micrarchaeaceae;g__JAJZYD01;s__JAJZYD01 sp021811605                   3
+
+# annotations table rows for the 17
+Empty DataFrame
+Columns: [protein_id, source, accession, name, evalue, score, start_aa, end_aa]
+Index: []
+
+# CDD (protein_resemblance) hits for the 17
+              protein_id accession  name                                                        descr        evalue  score  start_aa  end_aa
+0   DAHVGA010000004.1_47   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  8.620000e-33  129.0        25     518
+1   DAHVGB010000005.1_47   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  8.620000e-33  129.0        25     518
+2   DAHWMA010000022.1_31   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  1.250000e-28  117.0        25     518
+3   DAHXDO010000058.1_11   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  1.820000e-26  111.0        84     528
+4    DAHXDP010000001.1_8   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  2.420000e-26  110.0        84     528
+5   DAHXHL010000007.1_27   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  1.250000e-28  117.0        25     518
+6    DAIDNJ010000063.1_6   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  4.530000e-33  130.0        25     518
+7      DAKF01000034.1_99   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  8.620000e-33  129.0        25     518
+8       DARC01000020.1_9   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  8.620000e-33  129.0        25     518
+9       DAUN01000032.1_9   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  8.620000e-33  129.0        25     518
+10   JAJZNR010000018.1_8   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  2.420000e-26  110.0        84     528
+11   JAJZWZ010000028.1_6   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  3.330000e-32  127.0        25     518
+12  JAJZZO010000004.1_34   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  1.250000e-28  117.0        25     518
+13          MCL5680306.1   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  1.250000e-28  117.0        25     518
+14            OJT94780.1   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  8.620000e-33  129.0        25     518
+15            OWP53669.1   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  8.620000e-33  129.0        25     518
+16        WP_203134402.1   COG3425  PksG  3-hydroxy-3-methylglutaryl CoA synthase [Lipid metabolism].  8.620000e-33  129.0        25     518
+
+# checkA weak-hit summary
+              protein_id    label proposed_label_kind  length confidence_bin  vote_share  votes_for own_ko_agrees null_label  length_decile  has_model  n_label_hits  proposed_rank  proposed_evalue  proposed_bitscore  null_rank  null_evalue  null_has_model best_other_label  best_other_evalue  best_other_bitscore  proposed_top  proposed_any  proposed_any_e3  proposed_e5  null_top  null_any  null_any_e3  no_hit_any  share_gt_0.8
+0             OJT94780.1  PF08540                pfam     580    v10+|s>0.80         1.0         24         no_ko    PF01061              9       True             1            1.0     2.020000e-07              34.16        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+1             OWP53669.1  PF08540                pfam     580    v10+|s>0.80         1.0         24         no_ko    PF00050              9       True             1            1.0     2.020000e-07              34.16        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+2      DAKF01000034.1_99  PF08540                pfam     581    v10+|s>0.80         1.0         24         no_ko    PF00437              9       True             1            1.0     2.020000e-07              34.16        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+3       DARC01000020.1_9  PF08540                pfam     581    v10+|s>0.80         1.0         24         no_ko    PF13231              9       True             1            1.0     2.020000e-07              34.16        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+4       DAUN01000032.1_9  PF08540                pfam     581    v10+|s>0.80         1.0         24         no_ko    PF00482              9       True             1            1.0     2.020000e-07              34.16        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+5   JAJZZO010000004.1_34  PF08540                pfam     582    v10+|s>0.80         1.0         24         no_ko    PF01464              9       True             1            1.0     1.240000e-05              28.30        NaN          NaN            True             None                NaN                  NaN          True          True             True        False     False     False        False       False          True
+6    JAJZNR010000018.1_8  PF08540                pfam     591    v3-4|s>0.80         1.0          3         no_ko    PF13231              9       True             1            1.0     9.180000e-10              41.85        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+7    JAJZWZ010000028.1_6  PF08540                pfam     581    v10+|s>0.80         1.0         24         no_ko    PF13385              9       True             1            1.0     1.270000e-07              34.82        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+8           MCL5680306.1  PF08540                pfam     581    v10+|s>0.80         1.0         24         no_ko    PF17963              9       True             1            1.0     1.240000e-05              28.30        NaN          NaN            True             None                NaN                  NaN          True          True             True        False     False     False        False       False          True
+9   DAHVGB010000005.1_47  PF08540                pfam     581    v10+|s>0.80         1.0         24         no_ko    PF13231              9       True             1            1.0     2.020000e-07              34.16        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+10  DAHVGA010000004.1_47  PF08540                pfam     581    v10+|s>0.80         1.0         24         no_ko    PF20176              9       True             1            1.0     2.020000e-07              34.16        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+11  DAHXHL010000007.1_27  PF08540                pfam     582    v10+|s>0.80         1.0         24         no_ko    PF00482              9       True             1            1.0     1.240000e-05              28.30        NaN          NaN            True             None                NaN                  NaN          True          True             True        False     False     False        False       False          True
+12  DAHWMA010000022.1_31  PF08540                pfam     582    v10+|s>0.80         1.0         24         no_ko    PF13231              9       True             1            1.0     1.240000e-05              28.30        NaN          NaN            True             None                NaN                  NaN          True          True             True        False     False     False        False       False          True
+13   DAHXDP010000001.1_8  PF08540                pfam     591    v3-4|s>0.80         1.0          3         no_ko    PF11614              9       True             1            1.0     9.180000e-10              41.85        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+14  DAHXDO010000058.1_11  PF08540                pfam     591    v3-4|s>0.80         1.0          3         no_ko    PF00482              9       True             1            1.0     9.930000e-10              41.74        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+15   DAIDNJ010000063.1_6  PF08540                pfam     581    v10+|s>0.80         1.0         24         no_ko    PF05124              9       True             1            1.0     2.080000e-07              34.12        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+16        WP_203134402.1  PF08540                pfam     580    v10+|s>0.80         1.0         24         no_ko    PF09369              9       True             1            1.0     2.020000e-07              34.16        NaN          NaN            True             None                NaN                  NaN          True          True             True         True     False     False        False       False          True
+
+# protein families and family-level HHsearch hits
+              protein_id                             family_id                clustering_run assignment
+0       DAUN01000032.1_9  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+1           MCL5680306.1  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+2             OJT94780.1   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+3             OWP53669.1   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+4             OJT94780.1   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+5             OWP53669.1   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+6       DARC01000020.1_9   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+7       DAUN01000032.1_9    fam:0746177997:DAHWNI010000033.1_6   permissive-e3c50s75-rescue3     import
+8   DAHVGB010000005.1_47  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+9   DAHWMA010000022.1_31  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+10   JAJZNR010000018.1_8   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+11   JAJZWZ010000028.1_6   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+12  JAJZZO010000004.1_34   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+13        WP_203134402.1   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+14        WP_203134402.1   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+15   JAJZNR010000018.1_8   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+16   JAJZWZ010000028.1_6   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+17  JAJZZO010000004.1_34   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+18      DARC01000020.1_9   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+19      DAUN01000032.1_9    fam:4472b6ad41:DAHWNI010000033.1_6           permissive-e3c50s75     import
+20            OJT94780.1  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+21     DAKF01000034.1_99  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+22     DAKF01000034.1_99   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+23   JAJZWZ010000028.1_6  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+24            OJT94780.1   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+25            OWP53669.1   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+26   DAHXDP010000001.1_8    fam:8a31f5747e:DAIDBM010000026.1_5         pfr-8a31f5747e-family    cluster
+27   JAJZNR010000018.1_8    fam:8a31f5747e:DAIDBM010000026.1_5         pfr-8a31f5747e-family    cluster
+28      DARC01000020.1_9   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+29      DAUN01000032.1_9    fam:5ad133d455:DAHWNI010000033.1_6  permissive-e3c50s75-rescue3c     import
+30  DAHXDO010000058.1_11   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+31   DAHXDP010000001.1_8   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+32  DAHVGA010000004.1_47   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+33  DAHVGB010000005.1_47   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+34  DAHWMA010000022.1_31   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+35  DAHVGB010000005.1_47   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+36      DARC01000020.1_9   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+37   DAIDNJ010000063.1_6   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+38   JAJZWZ010000028.1_6   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+39            OJT94780.1   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+40        WP_203134402.1   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+41          MCL5680306.1   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+42            OWP53669.1   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+43  JAJZZO010000004.1_34   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+44     DAKF01000034.1_99   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+45  DAHVGA010000004.1_47   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+46      DAUN01000032.1_9   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+47  DAHXHL010000007.1_27   sub:8a31f5747e:DAHWMA010000022.1_31      pfr-8a31f5747e-subfamily    cluster
+48          MCL5680306.1   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+49        WP_203134402.1  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+50          MCL5680306.1   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+51  DAHVGA010000004.1_47  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+52   DAIDNJ010000063.1_6  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+53     DAKF01000034.1_99   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+54   DAIDNJ010000063.1_6   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+55     DAKF01000034.1_99   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+56  DAHVGA010000004.1_47   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+57  DAHVGB010000005.1_47   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+58  DAHWMA010000022.1_31   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+59          MCL5680306.1   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+60  DAHVGA010000004.1_47   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+61  DAHVGB010000005.1_47   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+62  DAHWMA010000022.1_31   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+63            OWP53669.1  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+64      DARC01000020.1_9  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+65  DAHXHL010000007.1_27   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+66  DAHXDO010000058.1_11    fam:8a31f5747e:DAIDBM010000026.1_5         pfr-8a31f5747e-family    cluster
+67  DAHXHL010000007.1_27  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+68   DAIDNJ010000063.1_6   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+69   DAIDNJ010000063.1_6   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+70  DAHXDO010000058.1_11   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+71   DAHXDP010000001.1_8   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+72  JAJZZO010000004.1_34  fam:8a31f5747e:DAHVLD010000001.1_183         pfr-8a31f5747e-family    cluster
+73  DAHXDO010000058.1_11    sub:8a31f5747e:DAIDBM010000026.1_5      pfr-8a31f5747e-subfamily    cluster
+74   DAHXDP010000001.1_8    sub:8a31f5747e:DAIDBM010000026.1_5      pfr-8a31f5747e-subfamily    cluster
+75   JAJZNR010000018.1_8    sub:8a31f5747e:DAIDBM010000026.1_5      pfr-8a31f5747e-subfamily    cluster
+76  DAHXHL010000007.1_27   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+77  DAHXHL010000007.1_27   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+78   JAJZNR010000018.1_8   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+79   JAJZWZ010000028.1_6   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+80  JAJZZO010000004.1_34   fam:4472b6ad41:DAIDBP010000029.1_20           permissive-e3c50s75     import
+81        WP_203134402.1   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+82  DAHXDO010000058.1_11   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+83   DAHXDP010000001.1_8   fam:0746177997:DAIDBP010000029.1_20   permissive-e3c50s75-rescue3     import
+84  DAHWMA010000022.1_31   fam:5ad133d455:DAIDBP010000029.1_20  permissive-e3c50s75-rescue3c     import
+Empty DataFrame
+Columns: [family_id, source, db_name, hit_rank, hit_accession, hit_name, probability, evalue, q_start, q_end, q_length, t_start, t_end, t_length]
+Index: []
+
+# predicates
+              protein_id            predicates
+0   DAHVGA010000004.1_47  [large, unannotated]
+1   DAHVGB010000005.1_47  [large, unannotated]
+2   DAHWMA010000022.1_31  [large, unannotated]
+3   DAHXDO010000058.1_11  [large, unannotated]
+4    DAHXDP010000001.1_8  [large, unannotated]
+5   DAHXHL010000007.1_27  [large, unannotated]
+6    DAIDNJ010000063.1_6  [large, unannotated]
+7      DAKF01000034.1_99  [large, unannotated]
+8       DARC01000020.1_9  [large, unannotated]
+9       DAUN01000032.1_9  [large, unannotated]
+10   JAJZNR010000018.1_8  [large, unannotated]
+11   JAJZWZ010000028.1_6  [large, unannotated]
+12  JAJZZO010000004.1_34  [large, unannotated]
+13          MCL5680306.1  [large, unannotated]
+14            OJT94780.1  [large, unannotated]
+15            OWP53669.1  [large, unannotated]
+16        WP_203134402.1  [large, unannotated]

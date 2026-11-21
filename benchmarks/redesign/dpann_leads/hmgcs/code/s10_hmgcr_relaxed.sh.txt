@@ -1,0 +1,36 @@
+#!/bin/bash
+# bash script (saved as .txt because the campaign allows only .txt/.tsv/.json/.py/.parquet/.faa/.pdb); run with: bash FILE
+# Relaxed search (E <= 10) for the blank steps in the genus-level lead genomes (Micrarchaeum_A + JAJZYD01, 90 genomes):
+# HMG-CoA reductase (Pfam HMG-CoA_red, KOfam K00021/K00054), HMG-CoA synthase (KOfam K01641, Pfam N/C), mevalonate kinase
+# (K00869), GGPS (K13787), DUF35 scaffold (OB_ChsH2_C, zf-ChsH2). Profiles copied into picked_hmm/ and run through Aksha.
+set -e
+W=/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/hmgcs
+cd $W
+python - <<'PY'
+import os
+names = {"HMG-CoA_red", "HMG_CoA_synt_N", "HMG_CoA_synt_C", "OB_ChsH2_C", "zf-ChsH2"}
+out = open("picked_hmm/picked.hmm", "w"); buf = []; keep = False
+for line in open(os.path.expanduser("~/.config/Astra/PFAM/Pfam-A.hmm")):
+    buf.append(line)
+    if line.startswith("NAME "):
+        keep = line.split()[1] in names
+    if line.startswith("//"):
+        if keep: out.write("".join(buf))
+        buf = []; keep = False
+for k in ["K00021", "K00054", "K01641", "K00869", "K13787"]:
+    out.write(open(os.path.expanduser(f"~/.config/Astra/KOFAM/{k}.hmm")).read())
+out.close()
+PY
+grep -c "^NAME" picked_hmm/picked.hmm
+python - <<'PY'
+import duckdb
+con = duckdb.connect()
+con.execute("ATTACH '/Users/jacob/Documents/Sandbox/Sharur/Sharur/data/dpann/sharur.duckdb' AS d (READ_ONLY)")
+df = con.execute("""SELECT pr.protein_id, pr.sequence FROM d.proteins pr JOIN d.bins b USING (bin_id)
+                    WHERE split_part(b.taxonomy,';',6) IN ('g__Micrarchaeum_A','g__JAJZYD01')""").df()
+with open("genus_prot.faa", "w") as fh:
+    for r in df.itertuples():
+        fh.write(f">{r.protein_id}\n{r.sequence.rstrip('*')}\n")
+print(len(df), "proteins")
+PY
+~/.local/bin/aksha search --hmm_in picked_hmm/picked.hmm --prot_in genus_prot.faa --outdir aksha_relaxed_genus --evalue 10 --threads 4

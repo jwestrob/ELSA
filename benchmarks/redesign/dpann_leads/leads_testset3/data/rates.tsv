@@ -1,0 +1,18 @@
+group	level	n	PASS	rate	ci95	fold_match	cat_all
+control_informative	positive	10	7	0.7	(0.397, 0.892)	10	9
+control_all_families	positive	12	7	0.583	(0.32, 0.807)	12	9
+control_informative	negA	3	0	0.0	(0, 0.562)	0	0
+control_all_families	negA	5	0	0.0	(0, 0.434)	0	0
+control_informative	negB	3	0	0.0	(0, 0.562)	0	0
+control_all_families	negB	5	0	0.0	(0, 0.434)	0	0
+control_informative	negA+negB	6	0	0.0	(0, 0.39)	0	0
+candidates	unannotated, informative families	3	0	0.0	(0, 0.562)	1	1
+candidates	already named, informative families	0	0		(nan, nan)	0	0
+candidates	unannotated, all families	5	0	0.0	(0, 0.434)	3	1
+tier (unannotated)	T2	1	0	0.0	(0, 0.793)	1	1
+tier (unannotated)	T2b	1	0	0.0	(0, 0.793)	0	0
+tier (unannotated)	rest	1	0	0.0	(0, 0.793)	0	0
+support (unannotated)	<5%	0	0		(nan, nan)	0	0
+support (unannotated)	5-20%	1	0	0.0	(0, 0.793)	0	0
+support (unannotated)	20-50%	1	0	0.0	(0, 0.793)	0	0
+support (unannotated)	>=50%	1	0	0.0	(0, 0.793)	1	1

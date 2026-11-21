@@ -2,16 +2,17 @@
 """Leads pipeline step 7 (local): control rates, pass rates of the unannotated and the already-named strata (overall, tier,
 support bin) with Wilson 95% intervals, family table (families.tsv) and the 'fold kept, catalytic residues absent' table,
 following dpann_leads/invisible/code/s06_stats.py (no list-type split: the collections have no alignment lists).
-usage: L7_stats.py COLLECTION   writes families.tsv, data/rates.tsv, data/absent_site_families.tsv, data/stats.json"""
+usage: L7_stats.py COLLECTION [full|pilot]   writes families.tsv, data/rates.tsv, data/absent_site_families.tsv, data/stats.json"""
 import json, math, sys
 from pathlib import Path
 import pandas as pd
 from scipy.stats import fisher_exact
 
 C = sys.argv[1]
+MODE = sys.argv[2] if len(sys.argv) > 2 else "full"   # 'pilot' when the fixed assay stopped at the pilot gate
 H = Path(json.load(open(Path(__file__).resolve().parent / "collections_leads.json"))[C]["local_out"].replace(
     "R/", "/Users/jacob/Documents/Sandbox/elsa_test/ELSA/"))
-O = pd.read_csv(H / "data/readout_full.tsv", sep="\t")
+O = pd.read_csv(H / f"data/readout_{MODE}.tsv", sep="\t")
 RC = pd.read_csv(H / "data/candidate_ranking.tsv", sep="\t")
 REFALL = pd.read_csv(H / "data/references.tsv", sep="\t")
 pop = pd.read_parquet(H / "data/population.parquet")
@@ -62,7 +63,7 @@ RT = pd.DataFrame(rows)
 RT.to_csv(H / "data/rates.tsv", sep="\t", index=False)
 k1, n1 = int(ci.PASS.sum()), len(ci)
 k0, n0 = int(negpool.PASS.sum()), len(negpool)
-st = dict(collection=C, informative_families=inf, uninformative_families=sorted(set(pos.index) - inf_set),
+st = dict(collection=C, mode=MODE, informative_families=inf, uninformative_families=sorted(set(pos.index) - inf_set),
           candidates_unannotated_informative=f"{k1}/{n1}", negatives_pooled=f"{k0}/{n0}",
           fisher_unannotated_vs_negatives_one_sided=fisher_exact([[k1, n1 - k1], [k0, n0 - k0]], alternative="greater")[1] if n1 and n0 else None,
           fisher_vs_dpann_rate_two_sided=fisher_exact([[k1, n1 - k1], [25, 107]])[1] if n1 else None,

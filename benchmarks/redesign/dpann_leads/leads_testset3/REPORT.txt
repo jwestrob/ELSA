@@ -1,0 +1,27 @@
+LEADS_TESTSET3: STRUCTURE-AND-RESIDUE LEAD SEARCH ON TESTSET3 (842 complete GTDB genomes)   STATUS: WAITING ON SLURM
+====================================================================================================================
+STATE (2026-11-21 07:35 UTC)
+  Step 1, partner KOfam: 90,320 unique label-carrying supporters of the 37,158 labeled genes (26,272,168 residues), est.
+  27.6 CPU-hours at 1.1 CPU-s per protein (approved cap 60). Submitted as Slurm array 120056 (5 x 24 CPUs, Aksha 0.2.3,
+  installed KOFAM, --cut_ga; about 15 min per task once running). Pending since 06:13 UTC behind the account's
+  standard_expand job limit (20 running; hit_pfam24 / hit_pfam64 arrays of another project ahead).
+    status files: RD/dpann_leads/leads_testset3/partners/out_NN.done (or .failed), NN = 00-04
+    logs: RD/dpann_leads/logs/leads_kofam_120056_N.log
+  Step 2 + 3, merge and novelty searches: job 120108 (--dependency=afterok:120056, 24 CPUs, MERGE=1): r1_partners.py merge
+  (partner function, population, candidates.faa), then Aksha full Pfam-A and full KOfam at E <= 0.01 and rpsblast CDD on
+  the candidate set; expected 10-20 min.
+    status file: RD/dpann_leads/leads_testset3/novelty/STATUS (DONE / FAILED <step>); log RD/dpann_leads/logs/leads_novelty_120108.log
+  Negative-B pool built (4,000 random proteins with no Pfam row and no label, 100-600 aa, ILVFMAWC < 0.45, of 326,357
+  eligible; RD/dpann_leads/leads_testset3/data/negpool.tsv).
+  Next on resume (local, about 1-2 h plus folding): L0_sync pull -> L2_population -> L3_references -> L4_select pilot ->
+  fold -> L5_usalign -> L6_readout -> L6b_pilot_gate -> L4_select full -> fold -> L5/L6 full -> L7_stats -> L8_leads ->
+  co-folds (L9_cofold) -> REPORT.
+
+ASSAY RULE: assay_rule.json, byte-identical to dpann_leads/invisible/assay_rule.json,
+  sha256 f41709ef7c50a1bd42a1a2aa632dec1320a409068caf37bccc966fc3fdd9124d.
+
+CODE (code/, collection-parameterized; collections_leads.json holds testset3, srvp, lut)
+  remote (biotite):  r1_partners.py prep|merge, r1_partners_sbatch.txt, r3_novelty_sbatch.txt, r3_novelty.py, r4_pools.py,
+                     r5_context.py, s04_usalign_remote.py (byte copy of the DPANN file)
+  local (Mac):       L0_sync.py, L2_population.py, L3_references.py, L4_select.py, L5_usalign.py, L6_readout.py,
+                     L6b_pilot_gate.py, L7_stats.py, L8_leads.py, L9_cofold.py (L3/L5/L6/L6b: DPANN scripts with paths only changed)

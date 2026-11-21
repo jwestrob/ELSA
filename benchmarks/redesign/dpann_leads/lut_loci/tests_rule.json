@@ -1,0 +1,60 @@
+{
+ "written": "2026-11-21, before any fold, alignment or structure readout of the tested proteins; selection by code/n07_select.py (seed 17)",
+ "question": "Does a candidate protein of the lut / xoxF neighborhoods carry a conserved multidentate carboxylate metal site of the kind the known lanthanide-binding proteins carry, at positive-control rates and above the negative-control rates?",
+ "prior_facts_used_to_fix_the_rule": [
+  "Lanthanide-binding project, PDB benchmark of 879 lanthanide sites (2026-11-09): the fraction of candidate centers holding a lanthanide is 0.10 at three reachable Asp/Glu, 0.46 at four, 0.65 at five; on ESMFold2 models the count ranks sites and fails as a hard cutoff at pLDDT < 70; lanmodulin, lanpepsy and LanD model sites hold 4-6, XoxF and PedH sites hold 3 (cofactor-assisted).",
+  "Same project (2026-11-09): a protein-wide maximum of the acidic count ranks composition (median percentile 0.66 in a composition-matched null); the site-level score is the informative one.",
+  "Same project (2026-11-09): ESMFold2 co-folds give identical donor counts for La and Ca in 49 of 55 EF-hand proteins, lanmodulin crystal controls included; co-fold coordination carries no lanthanide-versus-calcium information. The Biohub API accepts CCD ions LA and CA."
+ ],
+ "proteins": {
+  "families": "rescue3 tokens (MMseqs2 families of the frozen run) for every tested protein",
+  "candidates": {"orf6_like": [298295], "orf7_like": [361272], "DUF3280": [220448], "lutC": [253719, 136200], "lutG": [92541], "lutI": [327650]},
+  "positives_collection": {"lanM": [358533], "lutD_LanD": [349040], "xoxF_K23995": [278478]},
+  "positives_reference": {"lanpepsy_Q1H2G7": "Methylobacillus flagellatus, public sequence (experimental_ln_proteins_2026-11-09/ln_proteins.faa); structure test only (no collection family)", "Hans_LanM_A0A4V2JDD3": "Hansschlegelia quercus, public sequence; structure test only"},
+  "negatives_A_calcium": "Pfam calcium-binding classes (EF-hand, Excalibur, TSP_3, hemolysin-type Ca-binding, Calx-beta, dockerin, FG-GAP/VCBS), 80-320 aa, lut-carrying genomes, lanM token excluded; up to 3 tokens per class",
+  "negatives_B_unannotated": "no Pfam row in the protein or its token, no slot label, outside every lut and xoxF window, lut-carrying genomes, 10 tokens per length bin 90-140 / 140-190 / 190-300 aa",
+  "representatives": "up to 6 per candidate or collection-positive family (M. extorquens representative first, then one per genus by genus member count, length 0.8-1.25x family median; xoxF 3), 1 per negative family",
+  "family_alignment": "one member per genome, at most 150, mafft --auto; columns mapped to the representative"
+ },
+ "tests": {
+  "T_seq": {
+   "conserved_acidic_column": "gap fraction <= 0.20 and D or E in >= 0.80 of the non-gap residues",
+   "report": "conserved acidic columns per 100 representative residues; family D+E fraction; EF-hand loop patterns (site_cn.py regexes of the lanthanide project: strict and relaxed 12-residue loops), lanmodulin-type Pro at loop position 2 and loop spacing; PepSY domains (Pfam); XoxF Ln-coordinating Asp (AM1 XoxF1 Asp320 equivalent) for the dehydrogenase only",
+   "role": "descriptive plus input to T_struct conservation"
+  },
+  "T_struct": {
+   "model": "ESMFold2 fast (Biohub, fold endpoint), single chain, full-length sequence including any signal peptide",
+   "centers": "0.7 A grid points with no protein heavy atom within 2.0 A and >= 2 carboxylate oxygens within 3.2 A",
+   "reach": "Asp or Glu reaches a center if its carboxyl carbon (Asp CG, Glu CD) lies within 4.2 A, or its preceding carbon (Asp CB, Glu CG) within 5.2 A",
+   "site_pLDDT": "minimum CA pLDDT of the reaching residues",
+   "score_struct": "max over centers with site_pLDDT >= 70 of the number of distinct reaching Asp/Glu",
+   "score_cons": "max over centers with site_pLDDT >= 70 of the number of reaching residues at conserved acidic columns (T_seq)",
+   "PASS_site": "score_cons >= 4",
+   "also_reported": "Asn/Gln side-chain O and backbone O within 3.0 A of the best center; fold neighbors by Foldseek (local PDB copy) and TM-score (US-align, biotite login node) to experimental lanthanide-protein structures 8FNS (Mex-LanM, Nd), 8DQ2 (Hans-LanM, La), 9VY4 (lanpepsy), 6OC5 (XoxF1, La) and 1CLL (calmodulin, Ca)"
+  },
+  "T_crystal_check": "the center finder (pLDDT criterion dropped, all residues treated as conserved) on 8FNS, 8DQ2, 1CLL and 9VY4 with metals removed must place a center of capacity >= 4 within 2.0 A of >= 50% of the protein-bound metal positions",
+  "T_cofold": {
+   "model": "ESMFold2 all-atom (Biohub fold_all_atom), --ligand LA:2 and separately --ligand CA:2",
+   "who": "top 2 representatives per candidate family by score_cons (then score_struct), 2 per collection-positive family (lanM, LanD), both public references, every negative A, the 10 negatives B with the highest score_struct; xoxF is excluded (its site needs PQQ)",
+   "readout": "per ion: protein O/N donors within 3.0 A, chelating carboxylates (both O within 3.0 A), distinct carboxylate residues, metal-O distances, mean pLDDT of donor residues; overlap of its carboxylate residues with the apo best center's reaching residues",
+   "PASS_cofold": "in the LA co-fold one ion has >= 5 protein O donors from >= 3 distinct Asp/Glu, and >= 3 of those Asp/Glu are reaching residues of the apo best center",
+   "lanthanide_vs_calcium": "LA and CA co-folds compared descriptively only; no co-fold metric calls lanthanide preference"
+  },
+  "T_context": {
+   "source": "code/n05_context.py (presence by rescue3 tokens; lut-carrying vs same-genus lut-negative genomes; Mantel-Haenszel OR over genera; permutation of lut status within genus, 2,000 draws) and code/n06_xoxf_neighborhood.py (+-8 genes of K23995 genes)",
+   "PASS_context": "matched-genus MH OR >= 5 with permutation p <= 0.01, or the family lies within +-8 genes of >= 20% of K23995 genes"
+  }
+ },
+ "pilot_gate": {
+  "evaluated_before_candidate_results_are_read": true,
+  "criteria": ["positives lanM + LanD representatives and the two public references: PASS_site in >= 2/3", "T_crystal_check passes for >= 3 of 4 crystals", "negatives B: PASS_site in <= 20%"],
+  "on_failure": "the assay is reported uninformative; no candidate verdict rests on it (Frame-Challenge Gate)",
+  "known_blind_spot": "xoxF (cofactor-assisted site with three carboxylates) is expected to fail PASS_site; it is reported, not gated"
+ },
+ "verdicts": {
+  "SUPPORTED_metal_site": "PASS_site in >= 50% of the family's representatives, PASS_cofold in >= 1, PASS_context, family score_cons above negatives B (one-sided Mann-Whitney p <= 0.05), and the pilot gate passed. Lanthanide over calcium stays UNVERIFIED unless a class-specific lanthanide feature is present (lanmodulin loop features; XoxF Ln-Asp); if negatives A pass PASS_site at >= 50%, the reading is 'conserved metal site, consistent with Ca or Ln'.",
+  "WEAK": "PASS_site in >= 1 but < 50% of representatives, or PASS_site without PASS_cofold, or PASS_context fails",
+  "KILLED": "PASS_site in 0 representatives (no conserved center of >= 4 carboxylates at pLDDT >= 70)"
+ },
+ "naming": "OBSERVED (sites, residues, counts, co-occurrence) is kept apart from NAMED; a passing candidate is 'consistent with a metal-binding periplasmic protein'; no lanthanide-binding name without a measured binding constant in the literature"
+}

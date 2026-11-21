@@ -1,0 +1,120 @@
+LUT_LOCI: LANTHANIDE-HANDLING CANDIDATES IN THE LUT AND XOXF NEIGHBORHOODS OF 1,032 GTDB GENOMES (2026-11-21)
+=============================================================================================================
+BOTTOM LINE
+1. Nothing passes. Six periplasmic families at conserved positions (LutC, LutG, LutI, the DUF3280 protein beside lutA,
+   and the orf6- and orf7-like proteins beside xoxF) carry no conserved carboxylate metal site: 0/32 representatives
+   pass, against positives 11/14, unannotated negatives 0/30, calcium-binding negatives 3/16. All six: KILLED.
+2. The assay recovers what it can see: 26/26 lanthanide sites in 8FNS, 8DQ2 and 9VY4, and the LanD site in 6/6 collection
+   LanD proteins. Blind spots: cofactor-assisted sites (XoxF 0/3, 6OC5 0/2) and La-versus-Ca preference (Ca-binding
+   negatives reach positive-level co-fold coordination in 7/16, matching the lanthanide project's 2026-11-09 finding).
+3. The one unannotated lut component with a lanthanide role is LutD, already named LanD in the literature (Eu Kd 340 nM).
+   Of 14 diverged LanD-family copies, 6 keep its site and 8 (CAIVPW01, Labrys, SHVS01) lose it (observation).
+4. Observations without interpretation: LutC has a cupredoxin fold with no conserved His or Cys (no type-1 Cu site) and a
+   conserved Glu-Glu-Asp triad (3 carboxylates, below the rule); orf7 has a LolA/LprG lipoprotein-carrier fold; DUF3280 a
+   TolB-N/LpoB fold. orf6, LutG and LutI match no PDB fold.
+5. Literature: the search subagent was stopped by a safeguard flag; I did not repeat the search. The table uses the
+   lanthanide project's reference set (105 rows from opened sources, 2026-11-09; ~/Documents/Berkeley/Lanthanides/
+   experimental_ln_proteins_2026-11-09/tables/ln_proteins.tsv) and the slice_lut REPORT.
+
+LITERATURE (AM1 locus: function; evidence class E1 binding, E3 genetic; source as recorded in the reference set)
+ lutA 1778: periplasmic binding protein; deletion 0.02 h-1 with La, periplasmic La deposits (E3)      PMC7391723
+ lutB 1779: exported beta-propeller (Lactonase/YncE Pfam); deletion 0.02 h-1 (E3)                    PMC7391723
+ lutC 1780, lutI 1787: no experimental record: UNCHARACTERIZED
+ lutD 1781: = LanD; Eu Kd 340 nM (ITC), binds LanM Kd 4.0 uM, prefers Nd/Sm (E1); apo crystal 9C8W   PMC11551332
+ lutE 1782, lutF 1783: ABC ATPase, permease; deletions do not grow (E3)                              PMC7391723
+ lutG 1784: exported; deletion 12 h lag, 0.03 h-1 (E3); no biochemistry                              PMC7391723
+ lutH 1785: TonB-dependent receptor (E3); PA1 Mext_1853, M. buryatense LanA alike  PMC7391723, PMC6850437, PMID 31085692
+ lanM 1786: lanmodulin; picomolar Ln vs near-mM Ca (E1); 8FNS (Nd), Hans-LanM 8DQ2 (La), 6MI5  PMID 30351021, PMC10232371
+ flank 1777 (DUF3280, exported): no record, UNCHARACTERIZED. orf6 1746, orf7 1747, MxaD homolog 1771: needed for
+   Ln-dependent growth in a transposon screen (0.03 h-1, 9 h lag, 0.11 h-1), function unknown (E3)   PMC7391723
+ Other classes: XoxF (Asp320 binds La in AM1 XoxF1, 6OC5; Ce 4MAE; Eu 6FKW) PMID 32366463; ExaF (La over Ca, D319) PMID
+   27573017; PedH (Pr, 6ZCV); XoxG (cytochrome acceptor, Ln binding not shown) PMID 31017712; XoxJ (periplasmic binding
+   protein, deletion 0.04 h-1); lanpepsy (PepSY, Kd ~1.1 uM, N ~6; 9VY4-9VYA) PMC9988556; methylolanthanin mll/mlu
+   (META1p4129-4138) PMC11317620; DUF3828 Mfla_1724 (Ln-repressed) PMC9988556; AdhD REE site 10.1016/j.jmb.2026.169956.
+
+NEIGHBORHOOD MAP (code n01-n06; data/families_summary.tsv, data/xoxf_tokens.tsv)
+ 733 main lut loci, 676 genomes, 300 genera, 108 families. The method's Z L4b+ locus matches the locus span at median
+ F1 1.00 (>= 0.8 for 681/733). Window = span +-10 genes: 16,144 genes, 3,348 without Pfam, 690 of these labeled.
+ Families = mutual Z-list partners or a shared rescue3 token (one-way edges chained lutB, lutD, lutI): 2,955 families;
+ each component falls in exactly one. Fixed positions (modal slot share; genes/loci/genera; Pfam share):
+   lutA .89; 697/687/288; .75     lutB .69; 825/701/291; .92    lutF .95; 654/647/274; .99    lutH .70; 211/202/46; .96
+   lutG .95; 389/387/162; 0       lutC .91; 316/309/133; 0      lutD .87; 106/106/8; 0       lutI .97; 89/89/2; 0
+   lanM .94; 51/50/12; 1.0        DUF3280 at lutA-1, opposite strand, .80; 241/243/83; DUF3280 Pfam only
+ Upstream of lutA, opposite strand, Pfam-annotated: NMT1 + BPD_transp_1 ABC transporter (151 genera), SoxYZ (84), and a
+ Methylobacterium-rich run AA_kinase (42), DUF6513 (29), DUF447 (28), Polyketide_cyc2 (26) (AM1 META1_1771-1776). PQQ
+ dehydrogenase family in 359 windows (194 genera), SBP_bac_3 in 306 (163). Unannotated families at variable positions:
+ orf6-like 149 genes / 92 genera (modal share .09), fam28 77/46 (70 aa), orf7-like 52/40, fam55/57 38-39/25-27.
+ Slot call: unannotated lutA 147/636 -> Peripla_BP_6 138 (T1 126, T2 10, T1c 2; support median .74); unannotated lutB
+ 40/579 -> Lactonase 40 (T1 32, T1c 7, T2 1). Dark families (lutC, lutG, lutD, lutI, orf6, orf7) get no label: their
+ partners carry no Pfam row. lutI is nearly invisible (5/89 Z-bonded): 86/89 carriers are Methylobacterium in one genome
+ group, and lists exclude the own group. No alignment lists exist for lut, so embedding-only versus both is unavailable.
+ Diverged copies (family member without a homology call, in a locus lacking that component): lutB 124 in 124 loci (75
+ genera; 92 inside the span; 113 Z-bonded to members); lutA 58 in 57 loci (36 genera; 26 without Pfam, 24 labeled
+ Peripla_BP_6); LanD 14 (below); lutG 12 and lutC 11 (all outside the span, no Pfam).
+ xoxF neighborhoods: 585 K23995 genes, 446 genomes, 194 genera (572 in lut-carrying genomes). Within +-8 genes: XoxJ-like
+ SBP_bac_3 426 (178 genera; 186/187 unannotated members labeled SBP_bac_3, support .55); XoxG-like cytochrome 396 (171;
+ 101/104 labeled Cytochrome_CBB3, .76); Rhodanese 204; orf6-like 244 (110 genera; Z-bonded to xoxF .49; modal +6,
+ opposite strand, as META1_1746 from xoxF1 META1_1740); orf7-like 148 (56); lutG-like 157; pqqBCDE.
+ K23995 in 434/676 lut-carrying vs 12/355 lut-negative genomes; same-genus (30 genera) MH OR 96, p .0005.
+
+ASSAY (tests_rule.json, written before any fold; code s01-s05; families = rescue3 tokens; representatives by rule)
+ Apo ESMFold2 model; 0.7 A grid centers reached by Asp/Glu; score_cons = Asp/Glu at conserved acidic columns (D/E >= .8,
+ gaps <= .2) converging on one center at pLDDT >= 70; PASS_site = score_cons >= 4 (the lanthanide project's crystal
+ capacity curve: .10 of centers hold a lanthanide at three reachable Asp/Glu, .46 at four).
+ Pilot gate (controls read first): crystals 8FNS 4/4 Nd, 8DQ2 12/12 La, 9VY4 10/10 Yb, 1CLL 3/4 Ca (6OC5 XoxF 0/2,
+ capacity 3, expected); positives LanM 4/6, LanD 6/6, lanpepsy 1/1, Hans-LanM 0/1 (pLDDT 69) = 11/14; negatives B (30
+ unannotated families, 3 length bins) 0/30. Gate PASSED. Calcium-binding negatives A 3/16 (Calx-beta 2, FG-GAP 1).
+ Crystal geometry: Ln sites 5-10 protein O, M-O 2.17-2.83 A; Ca (1CLL) 6 protein O, 2.13-2.59 A.
+ Co-folds (LA:2, CA:2; 44 proteins): best ion with >= 5 protein O from >= 3 Asp/Glu: positives 3/6 (LanM 6 O/4 acid,
+ La-O 2.40-2.46 A; Hans-LanM 8 O/4/2 chelating; LanD 3-4 O; lanpepsy 3 O), Ca-binding negatives 7/16, unannotated
+ negatives 0/10, candidates 0/12 (max 4 O, median 2). LA and CA gave identical donor counts in 20/44.
+ Sequence: conserved acidic columns per 100 residues: LanM 11.9, LanD 12.9, negatives B 2.7, candidates 1.3-4.2.
+
+CANDIDATES (candidates.tsv; context = lut-carrying vs lut-negative genomes; matched = same 30 genera)
+ orf6-like (token 298295; AM1 META1_1746, 55% median identity)                                     VERDICT: KILLED
+   120 aa, signal peptide 6/6 (SignalP 6.0), no Pfam. Near xoxF in 244/585 (110 genera); lut 452/676 vs 11/355, matched
+   169/206 vs 7/166. score_cons 1-2 in 6/6 (pLDDT 89-93); its acidic columns (4.2/100, above negatives B, p .01) never
+   converge on one center; co-fold 1-2 O. No PDB fold (Foldseek); TM <= .37 to Ln crystals. Growth requirement stands,
+   by a mechanism other than a carboxylate site; function UNVERIFIED.
+ orf7-like (361272; META1_1747, 40%)                                                                VERDICT: KILLED
+   229 aa, signal peptide 5/6; near xoxF 148/585 (56 genera); lut 257/676 vs 6/355, matched OR 390. score_cons 1 in 6/6;
+   co-fold <= 4 O. Fold: LolA/LprG lipoprotein carrier (3MH8, E 1.9e-5, 6/6 representatives), observation only.
+ DUF3280 protein (220448; META1_1777)                                                               VERDICT: KILLED
+   lutA-1, divergent, in .80 of its 243 loci; 239 genomes, 83 genera; Z-bonded to lut members .93; 173 aa, signal peptide
+   6/6; Pfam DUF3280 only (clan TolB_N, no structure). Fold: LpoB C-terminal domain 4Q6V (E 7.7e-8, TM .70), TolB-N,FlgT,
+   PelC. score_cons 1 in 6/6; co-fold 2 O. Context: lut 364/676 vs 8/355, matched OR 33 (p .0005).
+ LutC (253719 + 136200; META1_1780)                                                                 VERDICT: KILLED
+   143 aa, signal peptide 6/6; lutC slot in .91 of 309 loci (133 genera); lut 343/676 vs 2/355. Cupredoxin fold (1OV8
+   auracyanin; Cu-cupredoxin 4HCF TM .52-.56; 6/6); no His, Cys or Met column conserved in 154 members beyond the start
+   Met; 4HCF's His/Cys/His Cu-ligand positions hold Tyr/Leu/Ala/Val/Ile/Gln/Thr (one unconserved His). A conserved
+   E72/E106/D108 triad (M. extorquens numbering) converges in 4/6 (score_cons 3; above negatives B, p .0014; below the
+   rule), 10-13 A from the cupredoxin Cu position; LA and CA co-folds put an ion on it with 3-4 O. Observation only.
+ LutG (92541; META1_1784)                                                                           VERDICT: KILLED
+   209 aa, signal peptide 5/6; lutG slot .95 of 387 loci (162 genera); lut 445/676 vs 8/355, matched OR 315. No PDB fold;
+   score_cons 1 in 6/6 (pLDDT 89-96); co-fold <= 3 O. Deletion phenotype stands; mechanism UNVERIFIED.
+ LutI (327650; META1_1787)                                                                          VERDICT: KILLED
+   ~125 aa, signal peptide 2/2; 89 genes, 2 genera (fails breadth); no PDB fold (TM .44 to apo LanD 9C8W); score_cons 1;
+   co-fold 2 O; matched OR 113, p .03 (fails the context bar).
+ Criterion A: all six fold as single soluble chains (pLDDT 78-95, ILVFMAWC .39-.46, no family member >= 2 TM); B fails.
+
+COMPONENTS WITHOUT PFAM (step 5)
+ LutD = LanD: conserved E70/E75/D77/E78 site (M. extorquens numbering) recovered in 6/6 representatives, 11 conserved
+ acidic positions. Diverged LanD-family copies: 6 keep the site and 8-10/11 acidic positions (Methylopila 4, Ancylobacter
+ 1, Methylobacterium 1 fragment; 7-8 genes upstream of lutA, outside the homology locus); 8 lose it (site AQAD, ARQR,
+ ALDR, ALEG, -DDG; 3-5/11 acidic positions): CAIVPW01 3 at the lutD slot of 'E . . . C C B A F' loci, Labrys 4,
+ SHVS01 1. Observation only; none folded. LutC: cupredoxin fold without the copper site. LutG, LutI: no fold match.
+
+ANOMALIES AND NEXT TEST (not run)
+ Six periplasmic families track lut or xoxF tightly (matched OR 33 to >300), two carry growth phenotypes, none has a
+ conserved carboxylate site: any lanthanide role they have works through something other than free-ion chelation by
+ carboxylates. Orthogonal hypotheses: (a) a metallophore-Ln complex bound in a cavity (orf7 fold); (b) a protein relay
+ with LanM/LanD/LutA (precedent LanD-LanM Kd 4 uM; fails criterion A); (c) envelope or transporter accessory roles
+ (DUF3280 TolB-N/LpoB fold). Cheapest discriminating test: pairwise co-folds (ipTM) of LutC, LutG, DUF3280 and orf6 with
+ LanM, LanD and LutA against non-cognate periplasmic partners (about 60 folds).
+COSTS, RULES, FILES
+ 183 folds (95 apo + 88 co-folds), Biohub ESMFold2 only, public GTDB and public reference sequences. No Slurm job, no HMM
+ search (Aksha not needed). Biotite login node: Python, TMHMM (16,144), SignalP 6.0 fast (95), US-align (259 pairs).
+ Mac: mafft, Foldseek on the local PDB copy. tests_rule.json got spelling-only edits after scoring (centre/neighbours to
+ center/neighbors); parameters unchanged; rescoring reproduced every value. No vault capture (writes limited to here).
+ Folder R/benchmarks/redesign/dpann_leads/lut_loci/ (remote $RD/dpann_leads/lut_loci/): REPORT.txt, candidates.tsv,
+ tests_rule.json, code/ (n01-n07 biotite, s01-s06 Mac), data/, sel/, msa/, folds/, crystals/.

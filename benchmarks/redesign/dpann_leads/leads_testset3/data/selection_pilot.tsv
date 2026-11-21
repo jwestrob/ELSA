@@ -1,0 +1,23 @@
+func	protein_id	role	stratum	length	rank	tier	order	support	matched_to	ref_file	negA_func	fold_path
+K08640	471786	candidate	unannotated	141	1.0	rest	Rhodospirillales	0.3636		ref/1LBU_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/471786.pdb
+K08640	1052927	candidate	unannotated	137	0.0	T2	CACIAM-22H2	0.5		ref/1LBU_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1052927.pdb
+K18639	1883357	candidate	unannotated	562	0.0	rest	Bacillales	0.1111		ref/2H34_A_fam.pdb	K00965	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1883357.pdb
+K22278	1188566	candidate	unannotated	325	0.0	T2	Cytophagales	0.8		ref/4L1G_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1188566.pdb
+K23518	1992814	candidate	unannotated	172	0.0	T2b	Lachnospirales	0.375		ref/5CB3_A_fam.pdb	K22278	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1992814.pdb
+K08640	1979423	positive		178			Sphingomonadales			ref/1LBU_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1979423.pdb
+K08640	555319	positive		151			Caulobacterales			ref/1LBU_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/555319.pdb
+K18639	427622	positive		437			Peptostreptococcales			ref/2H34_A_fam.pdb	K00965	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/427622.pdb
+K18639	1812471	positive		460			Thiotrichales			ref/2H34_A_fam.pdb	K00965	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1812471.pdb
+K22278	1840382	positive		279			Thiotrichales			ref/4L1G_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1840382.pdb
+K22278	2313627	positive		284			Verrucomicrobiales			ref/4L1G_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/2313627.pdb
+K23518	1901978	positive		328			Bacillales			ref/5CB3_A_fam.pdb	K22278	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1901978.pdb
+K23518	2503975	positive		354			Synergistales			ref/5CB3_A_fam.pdb	K22278	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/2503975.pdb
+K00965	1178008	positive		338			Nitrososphaerales			ref/6GQD_A_fam.pdb	K18639	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1178008.pdb
+K00965	569104	positive		331			Methanotrichales			ref/6GQD_A_fam.pdb	K18639	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/569104.pdb
+K04095	5626	positive		200			Bdellovibrionales			ref/6I7H_A_fam.pdb	K00869	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/5626.pdb
+K04095	1031757	positive		195			Chitinophagales			ref/6I7H_A_fam.pdb	K00869	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1031757.pdb
+K08640	111812	negB		137					1052927	ref/1LBU_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/111812.pdb
+K08640	220984	negB		141					471786	ref/1LBU_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/220984.pdb
+K18639	1369307	negB		562					1883357	ref/2H34_A_fam.pdb	K00965	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/1369307.pdb
+K22278	67177	negB		325					1188566	ref/4L1G_A_fam.pdb	K23518	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/67177.pdb
+K23518	80243	negB		172					1992814	ref/5CB3_A_fam.pdb	K22278	/Users/jacob/Documents/Sandbox/elsa_test/ELSA/benchmarks/redesign/dpann_leads/leads_testset3/folds/models/80243.pdb

@@ -1,0 +1,45 @@
+LEADS_LUT: STRUCTURE-AND-RESIDUE LEAD SEARCH ON LUT (1,032 GTDB representatives)   STATUS: WAITING ON SLURM
+====================================================================================================================
+STATE (2026-11-21 08:10 UTC)
+  Step 1, partner KOfam, with the coordinator's CAP: the carriers of each labeled gene are the first 12 label-carrying
+  supporters in list (rank) order; the partner function comes from those capped carriers with the unchanged STRONG rule
+  (>= 3 KO-annotated carriers, share >= 0.70). Measured on biotite (code/r1_partners.py count; reproduces the coordinator):
+    main population T2 + T2b + rest: 69,229 genes, median 11 carriers; unique carriers 463,931 uncapped (141.8 CPU-h) ->
+      120,626 capped (36.9 CPU-h)
+    side populations T1c + contradicted: 8,835 genes, median 16 carriers; 129,137 uncapped -> 27,851 capped (8.5 CPU-h)
+    KOfam input (both, capped): 78,064 genes, 133,951 unique proteins, 43,017,449 residues, est. 40.9 CPU-h at 1.1 CPU-s
+      per protein (approved cap 60). T1 genes (44,357, own profile hit) are outside the KOfam scope and get no function.
+  Submitted 08:04 UTC as Slurm array 120132 (8 tasks x 24 CPUs, 16,744 proteins each, Aksha 0.2.3, installed KOFAM,
+  --cut_ga; about 13 min per task at the stated rate, under 45 min even at 3x). PENDING on QOSMaxJobsPerUserLimit
+  (standard_expand 20 running: hit_pfam24/64/12 arrays of another project; testset3 120056 and srvp 120090 ahead).
+    status files: RD/dpann_leads/leads_lut/partners/out_NN.done (or .failed), NN = 00-07
+    logs: RD/dpann_leads/logs/leads_kofam_120132_N.log
+  Step 2 + 3, merge and novelty searches: job 120133 (--dependency=afterok:120132, 24 CPUs, MERGE=1): r1_partners.py merge
+  (capped partner function, population, candidates.faa, KO table -> RD/annot_gpu/lut/KOFAM_partners.parquet), then Aksha
+  full Pfam-A and full KOfam at E <= 0.01 and rpsblast CDD 3.20 on the candidate set; expected 10-30 min.
+    status file: RD/dpann_leads/leads_lut/novelty/STATUS (DONE / FAILED <step>); log RD/dpann_leads/logs/leads_novelty_120133.log
+  Merge smoke test passed before submission (code/r1_smoke.py, scratch folder, fake KOfam rows on real carrier gids):
+  122,421 rows, 78,064 in scope, capped carriers <= 12, 0 STRONG calls outside the scope.
+  Negative-B pool built: 4,000 random proteins with no Pfam row and no label, 100-600 aa, ILVFMAWC < 0.45, of 395,637
+  eligible (seed 17; data/negpool.tsv).
+
+ISSUE IN THE SHARED CODE (fixed in this copy only)
+  r1_partners.py merge globbed partners/out_*, which also matches the out_NN.done status files the array writes; the
+  merge then exits "missing .../out_00.done/KOFAM_hits_df.tsv". The testset3 and srvp copies on biotite carry the
+  original line (testset3 code line 87, srvp line 106), so their novelty jobs 120108 and 120091 will fail at the merge
+  step after their KOfam arrays finish; the KOfam outputs stay intact and a rerun of the merge with the one-line fix
+  (directories only) recovers them.
+
+ASSAY RULE: assay_rule.json, byte-identical to dpann_leads/invisible/assay_rule.json,
+  sha256 f41709ef7c50a1bd42a1a2aa632dec1320a409068caf37bccc966fc3fdd9124d.
+
+CHANGES FROM THE TESTSET3 CODE (copied 2026-11-21 07:55 UTC; theirs untouched)
+  r1_partners.py   carrier cap and tier scope (count / prep / merge read the same cap; prep.json records it); merge reads
+                   output directories only; new columns kofam_scope, n_carriers_all.
+  L4_select.py     round-robin buckets are genera (data/genomes_tax.tsv) instead of order x tier, positives one per genus
+                   first: the collection is a dense sample of one order, so picks within a family spread across genera.
+  r1_smoke.py      new (merge smoke test).
+
+NEXT ON RESUME (local, about 1-2 h plus folding)
+  L0_sync pull -> L2_population -> L3_references -> L4_select pilot -> fold -> L5_usalign -> L6_readout -> L6b_pilot_gate
+  -> L4_select full -> fold -> L5/L6 full -> L7_stats -> L8_leads -> co-folds (L9_cofold) -> REPORT.

@@ -1,0 +1,25 @@
+#!/bin/bash
+#SBATCH -A banfield
+#SBATCH -p standard
+#SBATCH --qos=standard_expand
+#SBATCH -c 24
+#SBATCH -J leads_kofam
+#SBATCH --exclude=node-48-256g-2,node-48-256g-3,node-48-256g-8,node-48-256g-9,node-48-256g-12,node-48-256g-13,node-48-256g-14
+#SBATCH -o /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/logs/leads_kofam_%A_%a.log
+
+# Leads pipeline step 1, partner KOfam: one array task per shard of the label-carrying supporters (r1_partners.py prep).
+# usage: sbatch --array=0-(N-1) --export=ALL,COLL=<collection>,RS=<remote leads dir> code/r1_partners_sbatch.txt
+# Aksha 0.2.3, installed KOFAM, --cut_ga (each KO's ko_list threshold on the score type ko_list names), all allocated CPUs.
+set -uo pipefail
+export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1
+AKSHA=/home/jwestrob/.local/bin/aksha
+COLL=${COLL:?}; RS=${RS:?}
+I=$(printf "%02d" "$SLURM_ARRAY_TASK_ID")
+cd $RS/partners
+echo "CPUs $SLURM_CPUS_ON_NODE host $(hostname) start $(date -u +%FT%TZ) coll $COLL shard $I"
+rm -f out_$I.done
+/usr/bin/time -v $AKSHA search --installed_hmms KOFAM --cut_ga --prot_in shard_$I.faa --outdir out_$I \
+    --threads "$SLURM_CPUS_ON_NODE" || { echo "FAILED shard $I" > out_$I.failed; exit 1; }
+[[ -s out_$I/KOFAM_hits_df.tsv ]] || { echo "FAILED shard $I no hits file" > out_$I.failed; exit 1; }
+echo "DONE $(date -u +%FT%TZ) job $SLURM_JOB_ID shard $I" > out_$I.done
+cat out_$I.done

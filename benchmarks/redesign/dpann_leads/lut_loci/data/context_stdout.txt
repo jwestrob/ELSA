@@ -1,0 +1,407 @@
+{
+ "DUF3280": {
+  "all_lut": "364/676",
+  "all_neg": "8/355",
+  "genera_present": 148,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 147,
+   "present_neg": 5,
+   "mh_or": 33.02,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "204/676",
+  "with_K23995_lut": "339/364",
+  "with_K23995_neg": "4/8",
+  "in_lut_genomes_cand_x_K23995": [
+   339,
+   25,
+   95,
+   217
+  ]
+ },
+ "lutC": {
+  "all_lut": "343/676",
+  "all_neg": "2/355",
+  "genera_present": 150,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 95,
+   "present_neg": 0,
+   "mh_or": null,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "61/676",
+  "with_K23995_lut": "231/343",
+  "with_K23995_neg": "1/2",
+  "in_lut_genomes_cand_x_K23995": [
+   231,
+   112,
+   203,
+   130
+  ]
+ },
+ "lutG": {
+  "all_lut": "445/676",
+  "all_neg": "8/355",
+  "genera_present": 186,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 171,
+   "present_neg": 5,
+   "mh_or": 315.5,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "66/676",
+  "with_K23995_lut": "401/445",
+  "with_K23995_neg": "6/8",
+  "in_lut_genomes_cand_x_K23995": [
+   401,
+   44,
+   33,
+   198
+  ]
+ },
+ "lutI": {
+  "all_lut": "91/676",
+  "all_neg": "6/355",
+  "genera_present": 2,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 91,
+   "present_neg": 6,
+   "mh_or": 113.25,
+   "perm_p": 0.03248
+  },
+  "offlocus_in_lut": "53/676",
+  "with_K23995_lut": "81/91",
+  "with_K23995_neg": "0/6",
+  "in_lut_genomes_cand_x_K23995": [
+   81,
+   10,
+   353,
+   232
+  ]
+ },
+ "lutD_LanD": {
+  "all_lut": "110/676",
+  "all_neg": "0/355",
+  "genera_present": 7,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 93,
+   "present_neg": 0,
+   "mh_or": null,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "12/676",
+  "with_K23995_lut": "99/110",
+  "with_K23995_neg": "0/0",
+  "in_lut_genomes_cand_x_K23995": [
+   99,
+   11,
+   335,
+   231
+  ]
+ },
+ "lanM": {
+  "all_lut": "168/676",
+  "all_neg": "7/355",
+  "genera_present": 39,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 133,
+   "present_neg": 6,
+   "mh_or": 44.1,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "133/676",
+  "with_K23995_lut": "147/168",
+  "with_K23995_neg": "3/7",
+  "in_lut_genomes_cand_x_K23995": [
+   147,
+   21,
+   287,
+   221
+  ]
+ },
+ "fam55": {
+  "all_lut": "138/676",
+  "all_neg": "7/355",
+  "genera_present": 78,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 28,
+   "present_neg": 3,
+   "mh_or": 9.05,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "102/676",
+  "with_K23995_lut": "77/138",
+  "with_K23995_neg": "1/7",
+  "in_lut_genomes_cand_x_K23995": [
+   77,
+   61,
+   357,
+   181
+  ]
+ },
+ "fam57": {
+  "all_lut": "197/676",
+  "all_neg": "25/355",
+  "genera_present": 134,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 30,
+   "present_neg": 7,
+   "mh_or": 6.14,
+   "perm_p": 0.001
+  },
+  "offlocus_in_lut": "168/676",
+  "with_K23995_lut": "116/197",
+  "with_K23995_neg": "4/25",
+  "in_lut_genomes_cand_x_K23995": [
+   116,
+   81,
+   318,
+   161
+  ]
+ },
+ "fam28": {
+  "all_lut": "340/676",
+  "all_neg": "10/355",
+  "genera_present": 131,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 158,
+   "present_neg": 7,
+   "mh_or": 20.77,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "291/676",
+  "with_K23995_lut": "312/340",
+  "with_K23995_neg": "6/10",
+  "in_lut_genomes_cand_x_K23995": [
+   312,
+   28,
+   122,
+   214
+  ]
+ },
+ "fam42": {
+  "all_lut": "257/676",
+  "all_neg": "6/355",
+  "genera_present": 102,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 106,
+   "present_neg": 4,
+   "mh_or": 390.44,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "205/676",
+  "with_K23995_lut": "235/257",
+  "with_K23995_neg": "3/6",
+  "in_lut_genomes_cand_x_K23995": [
+   235,
+   22,
+   199,
+   220
+  ]
+ },
+ "fam19": {
+  "all_lut": "452/676",
+  "all_neg": "11/355",
+  "genera_present": 193,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 169,
+   "present_neg": 7,
+   "mh_or": null,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "306/676",
+  "with_K23995_lut": "414/452",
+  "with_K23995_neg": "8/11",
+  "in_lut_genomes_cand_x_K23995": [
+   414,
+   38,
+   20,
+   204
+  ]
+ },
+ "lutA": {
+  "all_lut": "658/676",
+  "all_neg": "16/355",
+  "genera_present": 299,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 203,
+   "present_neg": 7,
+   "mh_or": 990.82,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "119/676",
+  "with_K23995_lut": "426/658",
+  "with_K23995_neg": "5/16",
+  "in_lut_genomes_cand_x_K23995": [
+   426,
+   232,
+   8,
+   10
+  ]
+ },
+ "lutB": {
+  "all_lut": "668/676",
+  "all_neg": "120/355",
+  "genera_present": 342,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 206,
+   "present_neg": 73,
+   "mh_or": null,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "382/676",
+  "with_K23995_lut": "433/668",
+  "with_K23995_neg": "9/120",
+  "in_lut_genomes_cand_x_K23995": [
+   433,
+   235,
+   1,
+   7
+  ]
+ },
+ "lutE": {
+  "all_lut": "676/676",
+  "all_neg": "354/355",
+  "genera_present": 489,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 206,
+   "present_neg": 166,
+   "mh_or": null,
+   "perm_p": 1.0
+  },
+  "offlocus_in_lut": "676/676",
+  "with_K23995_lut": "434/676",
+  "with_K23995_neg": "12/354",
+  "in_lut_genomes_cand_x_K23995": [
+   434,
+   242,
+   0,
+   0
+  ]
+ },
+ "lutF": {
+  "all_lut": "662/676",
+  "all_neg": "18/355",
+  "genera_present": 305,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 202,
+   "present_neg": 6,
+   "mh_or": null,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "49/676",
+  "with_K23995_lut": "429/662",
+  "with_K23995_neg": "5/18",
+  "in_lut_genomes_cand_x_K23995": [
+   429,
+   233,
+   5,
+   9
+  ]
+ },
+ "lutH": {
+  "all_lut": "323/676",
+  "all_neg": "15/355",
+  "genera_present": 112,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 195,
+   "present_neg": 10,
+   "mh_or": 238.94,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "184/676",
+  "with_K23995_lut": "240/323",
+  "with_K23995_neg": "0/15",
+  "in_lut_genomes_cand_x_K23995": [
+   240,
+   83,
+   194,
+   159
+  ]
+ },
+ "PQQ_fam6": {
+  "all_lut": "662/676",
+  "all_neg": "116/355",
+  "genera_present": 351,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 205,
+   "present_neg": 60,
+   "mh_or": 147.49,
+   "perm_p": 0.0005
+  },
+  "offlocus_in_lut": "521/676",
+  "with_K23995_lut": "434/662",
+  "with_K23995_neg": "12/116",
+  "in_lut_genomes_cand_x_K23995": [
+   434,
+   228,
+   0,
+   14
+  ]
+ },
+ "K23995": {
+  "all_lut": "434/676",
+  "all_neg": "12/355",
+  "genera_present": 194,
+  "matched_genus": {
+   "genera": 30,
+   "lut_genomes": 206,
+   "neg_genomes": 166,
+   "present_lut": 156,
+   "present_neg": 7,
+   "mh_or": 96.32,
+   "perm_p": 0.0005
+  }
+ }
+}

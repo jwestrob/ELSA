@@ -1,0 +1,34 @@
+LEADS_SRVP: LEAD SEARCH ON THE SR-VP GENOME BINS (994 genomes, unpublished)  -- STATUS 2026-11-21 07:20 UTC
+==========================================================================================================
+STATE: step 1 (partner KOfam) submitted and waiting on the Slurm queue. No result yet.
+
+JOBS (biotite; remote folder RS = $RD/dpann_leads/leads_srvp, RD = .../srvp2020/Jacob/ELSA/redesign_20261111)
+  120090_[0-5]  leads_kofam    Aksha 0.2.3 KOFAM --cut_ga on 6 shards of the label-carrying supporters, 24 CPUs each,
+                               standard_expand. Status files: RS/partners/out_NN.done (or out_NN.failed), NN = 00..05.
+                               Expected: about 20 min per shard once running (7.8 CPU-h per shard); at submission the
+                               account's 20 standard_expand slots were full, 6 tasks of other workstreams ahead.
+  120091        leads_novelty  afterok:120090. r1_partners.py merge (partner function per labeled gene, KO table
+                               $RD/annot_gpu/srvp/KOFAM_partners.parquet, population FASTA), then Aksha relaxed Pfam-A and
+                               KOfam (E <= 0.01) and rpsblast CDD (E <= 0.01) on the candidate set. Status file:
+                               RS/novelty/STATUS (DONE / FAILED <step>). Expected: about 15 min after 120090 ends.
+  Logs: $RD/dpann_leads/logs/leads_kofam_120090_<task>.log, leads_novelty_120091.log
+
+KOFAM SCOPE (step 1; code/r1_partners.py prep, RS/partners/prep.json)
+  Unique label-carrying supporters by tier scope (1.1 CPU-s per protein):
+    T2 + T2b + rest                         34,375 labeled genes   133,331 proteins   40.7 CPU-h
+    + T1c                                   38,279                 144,498            44.2 CPU-h
+    + contradicted  (CHOSEN)                40,601                 152,832            46.7 CPU-h
+    all labeled genes (T1 included)         69,701                 230,287            70.4 CPU-h (over the ceiling)
+  Novelty searches add about 2-5 CPU-h; total stays under 60 CPU-h.
+
+SETUP
+  assay_rule.json copied unchanged from dpann_leads/invisible: sha256 f41709ef7c50a1bd42a1a2aa632dec1320a409068caf37bccc966fc3fdd9124d
+  code/: copied from dpann_leads/leads_testset3/code (generalized from invisible/code) and adapted: tier-scoped KOfam
+    prep, merge restricted to the scope, merge chained in front of the novelty job, fold folder = leads_srvp/folds/
+    (git-ignored by leads_srvp/.gitignore; SR-VP sequences and models stay there or on biotite).
+  CDD check: rpsblast + /shared/db/cdd/04_03_2023 matches Sharur src/ingest/10_remote_homology_cdd.py / remote_homology
+    runner (rpsblast -evalue 0.01, best model per region at 0.5 overlap); used for novelty source (ii).
+  Negative-B pool built: RS/data/negpool.tsv (4,000 proteins, 435,457 eligible: no Pfam row, unlabeled, 100-600 aa,
+    ILVFMAWC < 0.45, seed 17).
+  Curated callers available for step 5: $RD/ws_srvp_bins/package/gold/instances.parquet (8,698 DefenseFinder / TXSScan
+    systems) and members.parquet (28,716 member genes).

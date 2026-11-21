@@ -1,0 +1,37 @@
+#!/bin/bash
+#SBATCH -A banfield
+#SBATCH -p standard
+#SBATCH --qos=standard_expand
+#SBATCH -c 24
+#SBATCH -J leads_novelty
+#SBATCH --exclude=node-48-256g-2,node-48-256g-3,node-48-256g-8,node-48-256g-9,node-48-256g-12,node-48-256g-13,node-48-256g-14
+#SBATCH -o /groups/banfield/projects/environmental/sr/srvp2020/Jacob/ELSA/redesign_20261111/dpann_leads/logs/leads_novelty_%j.log
+
+# Leads pipeline step 3, novelty searches on the candidate set only (REMOTE/novelty/candidates.faa from r1_partners.py merge):
+#  (i)  Aksha full Pfam-A and full KOfam at a relaxed threshold (--evalue 0.01, no --cut_*);
+#  (ii) rpsblast against CDD 3.20 (/shared/db/cdd/04_03_2023/blast/Cdd), -evalue 0.01, the Sharur remote_homology
+#       outfmt ("6 qseqid sseqid qlen qstart qend slen sstart send evalue bitscore stitle"); rpsblast is not an HMM search.
+# Then r3_novelty.py parse writes the per-gene hit tables.
+# usage: sbatch [--dependency=afterok:<kofam array>] --export=ALL,COLL=<c>,RS=<remote leads dir>[,MERGE=1] code/r3_novelty_sbatch.txt
+set -uo pipefail
+export PYTHONDONTWRITEBYTECODE=1 OMP_NUM_THREADS=1
+AKSHA=/home/jwestrob/.local/bin/aksha
+PY=/home/jwestrob/miniconda3/envs/elsa/bin/python
+COLL=${COLL:?}; RS=${RS:?}
+N=$RS/novelty; cd $N; rm -f STATUS
+fail() { echo "FAILED $(date -u +%FT%TZ) job $SLURM_JOB_ID step $1" > STATUS; cat STATUS; exit 1; }
+# optional: MERGE=1 runs the partner-function merge (r1_partners.py merge, writes candidates.faa) first, so this job can be
+# queued with --dependency=afterok:<KOfam array> and no separate step is needed in between.
+if [[ "${MERGE:-0}" == 1 ]]; then $PY -u $RS/code/r1_partners.py merge --collection $COLL || fail merge; fi
+echo "CPUs $SLURM_CPUS_ON_NODE host $(hostname) start $(date -u +%FT%TZ) coll $COLL proteins $(grep -c '>' candidates.faa)"
+/usr/bin/time -v $AKSHA search --installed_hmms PFAM --evalue 0.01 --prot_in candidates.faa --outdir pfam_relaxed \
+    --threads "$SLURM_CPUS_ON_NODE" || fail pfam
+/usr/bin/time -v $AKSHA search --installed_hmms KOFAM --evalue 0.01 --prot_in candidates.faa --outdir kofam_relaxed \
+    --threads "$SLURM_CPUS_ON_NODE" || fail kofam
+/usr/bin/time -v /shared/software/bin/rpsblast -query candidates.faa -db /shared/db/cdd/04_03_2023/blast/Cdd -evalue 0.01 \
+    -num_threads "$SLURM_CPUS_ON_NODE" -outfmt "6 qseqid sseqid qlen qstart qend slen sstart send evalue bitscore stitle" \
+    -out cdd_raw.tsv || fail rpsblast
+/shared/software/bin/rpsblast -version > rpsblast_version.txt
+grep -E "^(NAME|ACC) " /home/jwestrob/.config/Astra/PFAM/Pfam-A.hmm > pfam_name_acc.txt || fail pfam_names
+$PY -u $RS/code/r3_novelty.py --collection $COLL || fail parse
+echo "DONE $(date -u +%FT%TZ) job $SLURM_JOB_ID" > STATUS; cat STATUS

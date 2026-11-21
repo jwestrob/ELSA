@@ -1,0 +1,120 @@
+SYSTEMS_SRVP: CURATED SYSTEM CALLS AS CONTEXT FOR POSITION-LABELED SR-VP GENES (994 genomes, unpublished)  2026-11-21
+=====================================================================================================================
+BOTTOM LINE
+1. The locus-level result reproduces on srvp. 420 position-labeled genes complete 421 strictly uncalled loci of small
+   multi-gene systems in 311/994 genomes. On strictly uncalled partial loci the label sits in the caller's window 1,061
+   times against 459.1 expected around unrelated called systems in the same genomes (2.3x) and 68.9 in random windows
+   (15x). The callers' own profiles hit 206/420 completing genes below threshold (0 pass GA + coverage) against 0/1,193
+   length-matched slot genes with other labels; called members rescored pass GA 7,851/7,874.
+2. AbiE reproduces the DPANN lead: 136 antitoxin genes complete 137 toxin loci and 42 toxin genes complete 40
+   antitoxin loci. AbiE genomes 173 -> 272 of 994 (archaeal 33 -> 64 of 214). Routine biology; the reproduction on an
+   independent, unpublished collection is the result for the paper.
+3. Best lead, the one that changes a lineage's inventory: three CD-NTase (CBASS cyclase) genes invisible to Pfam and
+   to the caller's cyclase profile complete CBASS effector loci. They superpose on characterized cyclases (TM
+   0.63-0.86), carry the Mg-binding Asp triad, and hold two Mg 1.9-2.1 A from it (ATP + Mg co-folds, 2/2 run). One in
+   a Brocadiia genome (Planctomycetota: 0/17 genomes with a called CBASS), one in Bathyarchaeia. Components consistent
+   with CBASS; the system call stays UNVERIFIED.
+4. Second lead: HamA completes six HamB loci (Hachiman, a defined HamA:HamB heterodimer); 5/6 keep the HamA fold and
+   the Glu of the E138/K140 pair mutated in the DNA-bound structure 8VXY (Lys too in 4/6). Hachiman genomes 25 -> 31.
+5. Screen (a), components missing from called systems: 28 small-system gains in 8,698 calls, all RM pieces (Type I
+   S subunits, split Type IIG genes); 0 in 3,711 small DefenseFinder calls. TXSScan machines (1,932 calls, 436 gains)
+   and large DefenseFinder systems are counted only. Type II REase completions are KILLED (caller profiles 2/108).
+Folds: 33 of 80 used (28 co-folds, 5 ATP + Mg co-folds; 32 returned). Slurm: 1 array, 15.3 CPU-h; none pending.
+
+GLOBAL NUMBERS (global_numbers.tsv; class = caller x size: RM = DefenseFinder RM family, DF = other DefenseFinder)
+Called systems (screen a; callers' best_solution, DefenseFinder 3.1.0 + TXSScan 1.1.1, MacSyFinder 2.1.4):
+  class       systems  lacking>=1 comp  slot inside/adj  slot in window  gain window  gain adjacent  obs/exp window
+  DF/small      3,711              171              163             708            0              0  0 / 0.1
+  RM/small      2,588            1,045              177             548           28             20  69 / 12.4
+  TXSS/small      371                0               25              50            0              0  -
+  DF/large         96               81               18              32            9              9  10 / 0.6
+  TXSS/large    1,932            1,800              993           1,164          436            412  749 / 6.8
+  all           8,698            3,097            1,376           2,502          473            441  828 / 19.9
+  Every lacking component of a called system is optional (the call meets its quorum). Slot genes inside/adjacent
+  11,471 (T1 4,678, rest 2,828, T2 1,590, T2b 1,298, T1c 714, contradicted 363); gaining 535, small-system 32.
+Uncalled loci (screen b; small multi-gene models, 238 of them; strict = no hit protein is a member of any call):
+  class       clusters  partial (strict)  completed strict loci  genes  genomes  obs / exp unrelated / exp random
+  DF/small      71,930    71,514 (66,246)                    228    227      183  649 / 211.4 / 39.6
+  RM/small      32,235    32,094 (20,381)                    192    192      165  307 / 151.9 / 9.0
+  T1SS           7,536     7,536 (7,536)                       1      1        1  100 / 95.8 / 20.2
+  all          111,701  111,144 (94,163)                    421    420      311  1,061 / 459.1 / 68.9
+  Completing genes by tier: T1 144, rest 121, T2 80, T2b 41, T1c 18, contradicted 16. Quorum-met uncalled clusters
+  (reimplementation residue) 557, strict 130, left out of the completions. Large models, the callers'
+  own rejected candidates: DefenseFinder large 982 (206 with a slot gene inside/adjacent), TXSScan 23,715 (15,860).
+Genomes with a system of each type, called -> called or completed (new genomes' phyla in global_numbers.tsv):
+  AbiE 173 -> 272; RM Type II 484 -> 529; RM Type III 135 -> 154; MazEF 162 -> 174; RM Type I 443 -> 454; Hachiman
+  25 -> 31; CBASS 85 -> 89; PhiR5.1_HipAD 41 -> 45; SanaTA 10 -> 14; PARIS 23 -> 25; DS-6, Gao_Iet, Wadjet +2 each;
+  Gabija, Hailong, PD-T7-2, PfiAT, PsyrTA, Pycsar, ShosTA, Thoeris, T1SS +1 each.
+Caller-profile rerun (Aksha --hmm_in, the components' own profiles, E <= 10): small-system test genes 691: any hit
+  304 (44.0%), GA by bit score 99, GA + coverage + P 3; strict completing genes 420: 206 / 42 / 0. Controls: other
+  labels 0/1,193; same label away from the model's loci 327/563 any, 267 GA (the hit rate is a family property, the
+  position supplies the system context, as on DPANN); called members 7,851/7,874 GA.
+Embedding-only versus both: not reportable (srvp has no alignment lists). CRISPR-Cas: srvp has no caller output (the
+  callers ran DefenseFinder and RM families only; the CCTyper port is installed on the Mac only).
+
+METHOD NOTES
+- The callers deleted their per-protein hmmer output, and single-hit partial loci never reach rejected_candidates.
+  Per-protein hits were rebuilt with the callers' own 743 profiles of small multi-gene models (Aksha --cut_ga, whole
+  proteome, array 120279) and MacSyFinder's selection (i-Evalue <= 1e-3 at the genome's own domZ; profile coverage
+  >= 0.4 / 0.5). They reproduce 7,869/7,875 caller member hits and 7,616/7,632 rejected-candidate hits.
+- Size: TXSScan small = T1SS, T5a/b/c; RM family small (1-3 defined proteins; its models list alternative profiles as
+  separate components); DefenseFinder small when the model lists <= 4 mandatory + accessory genes.
+- Family map: Pfam families overlapping a selected caller hit by >= 50% on >= 3 proteins and >= 20% of the profile's
+  proteins (DPANN rule; srvp proteins). Components per cluster by matching (one protein fills one component). Window =
+  span +/- (inter_gene_max_space + 1). Gene order: slot gene against the nearest hit gene, compared with called systems.
+
+LEAD 1  CBASS cyclase (PF18144 SMODS label) completes CBASS effector loci: 4 genes, 4 genomes  SUPPORTED (gene level)
+  1 Slot call: support 0.57-0.86 (median 0.692); tiers T1 1, T1c 1, T2 1, rest 1. Label control 6 vs 1.01 / 0.12.
+  2 No Pfam row of their own; the caller's cyclase profiles hit 1/4 (27.6 bits, GA 20, coverage < 0.4), 3/4 no hit.
+  3 Mg-binding Asp triad (CdnE G2SLH8 D60/D62/D129; DncV Q9KVG7 D131/D133/D193) at aligned positions in 3/4 (D63/D65/
+    D113, D65/D67/D124, D64/D66/D118); called-system cyclases 2/2; mismatched protein 0/2.
+  4 ESMFold2: TM (by query) 0.63-0.74 to 6E0K A, 0.76-0.86 to 4TY0 A for the three; 4th (196 aa, pLDDT 66, no triad
+    aligned) 0.60 / 0.68; called cyclases 0.61-0.86; mismatched 0.26-0.28; CdnE vs DncV 0.70. ATP + Mg co-folds:
+    Mg-Asp 1.9-2.1 A, nearest ATP alpha-P 4.1-4.2 A, ligand pLDDT 76-82, 2/2 run (called 2.0-2.2; mismatched 3.4-5.9).
+  5 None of the 4 genomes has a called CBASS. Loci: cyclase + DUF6602 'Endonuc_small' effector (Brocadiia JAUVVP01;
+    Bathyarchaeia); cyclase between a Cap2-like E2 and a SAVED-HNH effector (Terriglobia JAIQET01); cyclase + 2TM
+    effector between transposases (Terriglobia, the triad-less gene). Lineages: Planctomycetota 0/17 with CBASS;
+    Bathyarchaeia 7/108 -> 8/108; Terriglobia 15/117 -> 17/117. Effector co-fold ipTM 0.08-0.39 (called 0.57-0.72):
+    the pair need not bind, as CBASS signals through a diffusible cyclic nucleotide.
+  Criterion A: 253-300 aa, ILVFMAWC 0.36-0.43, single soluble domain; characterized CD-NTases (CdnE, DncV) act as
+    monomers. Testable: NTP turnover to a cyclic oligonucleotide and activation of the neighboring effector in vitro.
+  UNVERIFIED: the CBASS call, the product nucleotide, effector activation. Changes lineage content: yes (Brocadiia).
+
+LEAD 2  Hachiman HamA (PF08878) completes HamB loci: 6 genes, 6 genomes  SUPPORTED (gene level, 5/6)
+  1 Support 0.29-0.74 (median 0.619); T1 1/6. Label control 6 vs 1.22 / 0.04. Order: HamA 1 gene 5' of HamB on the same
+    strand in 6/6, as in 25/25 called Hachiman systems. HamB partners: caller HamB hits 176-282 bits, 971-1,084 aa.
+  2 Caller HamA profile 1/6 below GA (18.8 bits, GA 20). No Pfam row of their own.
+  3 E138 equivalent (PDB 8VXY entity 3, HamA E138A,K140A; Q6XGE5 numbering) in 5/6, K140 in 4/6; called HamA 2/2;
+    mismatched 0/2. The Bathyarchaeia gene has neither (pLDDT 51, ipTM 0.14) and is excluded.
+  4 TM 0.64-0.71 to 8VX9 A for the five (Bathyarchaeia 0.57); called 0.56-0.61; mismatched 0.28. HamA:HamB co-fold
+    ipTM 0.84-0.94 for the five, but the mismatched pair reaches 0.84 and HamB dominates complex TM: uninformative.
+  5 None of the 6 genomes has a called Hachiman. Dehalococcoidia 3 (2/60 -> 5/60), Nitrospiria 1 (0/10 -> 1/10),
+    UBA9217 1 (1/18 -> 2/18). Criterion A: HamA 253-292 aa, ILVFMAWC 0.36-0.44; 8VX9 is a 1:1 HamA:HamB heterodimer.
+  UNVERIFIED: the Hachiman call and HamA activity for these genes.
+
+LEAD 3  AbiE: AbiEi antitoxin completes toxin loci (136 genes) and AbiEii toxin completes antitoxin loci (42)
+  SUPPORTED at system level; AbiE call UNVERIFIED (0 completing genes pass GA); routine biology.
+  1 Antitoxin labels AbiEi_4 120, AbiEi_1 6, AbiEi_3 5, AbiEi_2 5; support median 0.232 (toxin 0.297). Label controls
+    AbiEi_4 121 vs 3.88 unrelated (31x) / 0.76 random; AbiEii 40 vs 1.12 / 0.16. 110 + 37 genomes in 31 + 8 phyla.
+  2 Caller AbiEi profiles 84/136 below GA (median 19.7 bits, GA 25); AbiEii 20/42 (21.3, GA 22.5); other labels 0/178.
+  3 Not applicable (Q8DZ36 / Q8DZ35 carry no residue features).
+  4 Antitoxin TM 0.67-0.71 to 9HLO A (called 0.53, mismatched 0.28), co-fold ipTM 0.35-0.77 (called 0.92, mismatched
+    0.07); toxin 0.53-0.55 to 9HLO B (called 0.58, mismatched 0.23).
+  5 Order: antitoxin same strand 99.3%, 5' of the toxin 87.6%, adjacent 97.8% (217 called pairs: 99.5, 96.8, 98.2%);
+    toxin 5' of the antitoxin 0% (called 3.2%). Genomes 173 -> 272; archaeal 33 -> 64 of 214.
+  Criterion A: 210 / 272 aa, ILVFMAWC 0.37-0.44; 9HLO is a 1:1 heterodimer. New content: scale and archaeal spread.
+LEAD 4  PARIS AriB (PF14491 DUF4435) completes AriA loci: 2 genes  WEAK
+  Caller AriB profiles 2/2 below GA (34.5-46.7 bits; GA 50 / 70); label control 3 vs 0.00. TM 0.60-0.66 to 8UX9 A
+  (mismatched 0.26) but 0.27-0.28 to 8V46 D (the two AriB references 0.30 to each other); ipTM uninformative (mismatched
+  0.80). Both loci sit 2 genes from a contig end. Two loci are too few to call.
+ROUTINE OR KILLED: Type I RM S subunit (27 genes; same-label genes away from RM loci hit as often, 5/6), Type III RM Res
+  (19; caller profile 13/19 at GA by bits, coverage < 0.4), MazE (16; adjacency 2.8x), SanaA (4; caller profile 0/4):
+  routine, KILLED on criterion B. Type II REases (108 genes, 98 genomes): caller REase profiles 2/108, KILLED on rung 2.
+  HipA_2 beside HipD (4 genes): caller HipA profiles 4/4 below GA at 184-272 aa (HipA is ~440 aa); WEAK, observed only.
+FILES  REPORT.txt, leads.tsv, global_numbers.tsv; code/01-19 + cofold_pair.py (copy of systems/code); data/
+  (git-ignored by the repo's data/ rule: summaries, rerun tables, residue_map.tsv, ligand_cofold.tsv, refs/ with PDB
+  9HLO 8VX9 8V46 8UX9 6E0K 4TY0 and UniProt Q6XGE5 A0A426EXV0 Q9KVG7 G2SLH8 Q8DZ36 Q8DZ35); folds/ (git-ignored: SR-VP
+  inputs, models, US-align alignments). Remote: $RD/dpann_leads/systems_srvp/ (hits, events, sequences).
+COMPUTE  Array 120269 (8 x 24 CPUs) failed in 6-21 s (one file mixed HMMER3/b and /f profiles); 120279 (8 x 24 CPUs,
+  5.7-6.5 min each, 15.3 CPU-h user) completed. Login node: Aksha rerun (8 threads), serial pandas, US-align 61 pairs.
+  Biohub ESMFold2: 33 folds requested, 32 returned (the Brocadiia cyclase ATP + Mg co-fold never returned).

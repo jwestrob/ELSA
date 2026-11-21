@@ -1,0 +1,71 @@
+all test genes 1193: any hit 491 (0.412); GA 231 (0.194); GA + coverage + P 94 (0.079)
+small-system test genes 691: any hit 304 (0.440); GA 99 (0.143); GA + coverage + P 3 (0.004)
+  neg_other: n 1193; any 0 (0.000); GA 0 (0.000); all 0 (0.000)
+  neg_same: n 563; any 327 (0.581); GA 267 (0.474); all 219 (0.389)
+  pos: n 7874; any 7851 (0.997); GA 7851 (0.997); all 7851 (0.997)
+
+per (model, component, label) for small-system test events; controls matched by label:
+                                 model_key                                        component   label        label_name   n  any_hit  ga  allp  med_bits   GA1  med_len  ns_n  ns_any  ns_ga  no_n  no_any  no_ga
+                   DefenseFinder/AbiE/AbiE                                  AbiEii__AbiEi_1 PF13338           AbiEi_4 120       71   0     0     19.66  25.0    210.0   1.0     1.0    0.0   120       0      0
+              TXSScan/bacteria/diderm/T1SS                                         T1SS_mfp PF25954 Beta-barrel_RND_2  57       19  15     0     28.68  16.2    354.0  53.0    21.0   14.0    57       0      0
+                   DefenseFinder/AbiE/AbiE                                   AbiEii__AbiEii PF08843            AbiEii  42       20   0     0     21.26  22.5    272.5  14.0     6.0    0.0    42       0      0
+ DefenseFinder/CBASS/CBASS_II_Endonuclease                                       CBASS__Jab PF14464          Prok-JAB  37        0   0     0       NaN   NaN    179.0   1.0     0.0    0.0    37       0      0
+          DefenseFinder/CBASS/CBASS_II_HNH                                       CBASS__Jab PF14464          Prok-JAB  37        0   0     0       NaN   NaN    179.0   1.0     0.0    0.0    37       0      0
+          DefenseFinder/CBASS/CBASS_II_PNP                                       CBASS__Jab PF14464          Prok-JAB  37        0   0     0       NaN   NaN    179.0   1.0     0.0    0.0    37       0      0
+          DefenseFinder/CBASS/CBASS_II_TIR                                       CBASS__Jab PF14464          Prok-JAB  37        0   0     0       NaN   NaN    179.0   1.0     0.0    0.0    37       0      0
+DefenseFinder/CBASS/CBASS_II_Phospholipase                                       CBASS__Jab PF14464          Prok-JAB  37        0   0     0       NaN   NaN    179.0   1.0     0.0    0.0    37       0      0
+           DefenseFinder/CBASS/CBASS_II_TM                                       CBASS__Jab PF14464          Prok-JAB  37        0   0     0       NaN   NaN    179.0   1.0     0.0    0.0    37       0      0
+         DefenseFinder/CBASS/CBASS_II_Cap4                                       CBASS__Jab PF14464          Prok-JAB  37        0   0     0       NaN   NaN    179.0   1.0     0.0    0.0    37       0      0
+                 RM/RM_Type_I/N6_RM_Type_I                                  RM__Type_I_S_01 PF01420       Methylase_S  34       31   4     0     55.86  75.0    148.5   6.0     5.0    0.0    34       0      0
+            RM/RM_Type_II/N6_N4_RM_Type_II                      RM_Type_II__Type_II_REase06 PF13589       HATPase_c_3  30        1   0     0     14.94  30.0    701.0  11.0     1.0    0.0    48       0      0
+    RM/RM_Type_II/N6_N4_RM_Type_II_HATPase                      RM_Type_II__Type_II_REase01 PF13589       HATPase_c_3  29        1   0     0     14.94  30.0    754.0  11.0     1.0    0.0    48       0      0
+              TXSScan/bacteria/diderm/T1SS                                         T1SS_mfp PF25917           BSH_RND  29       17  13     0     30.33  16.2    342.0  24.0    15.0    9.0    29       0      0
+          RM/RM_Type_III/N6_N4_RM_Type_III RM_Type_III__Type_III_REases_FAM_0.einsi_trimmed PF04851            ResIII  19       18  13     0     62.20  22.0   1032.0   NaN     NaN    NaN    23       0      0
+                 DefenseFinder/MazEF/MazEF                                      MazEF__MazE PF04014    MazE_antitoxin  16        9   0     0     17.09  20.0     85.0  16.0     3.0    0.0    16       0      0
+          RM/RM_Type_II/DNA_met_RM_Type_II                      RM_Type_II__Type_II_REase06 PF13589       HATPase_c_3  16        1   1     0     76.45  30.0    612.0  11.0     1.0    0.0    48       0      0
+            RM/RM_Type_II/N6_N4_RM_Type_II                      RM_Type_II__Type_II_REase16 PF09566           RE_SacI  16        0   0     0       NaN   NaN    281.5   NaN     NaN    NaN    19       0      0
+     RM/RM_Type_II/N6_N4_RM_Type_II_PDDEXK                      RM_Type_II__Type_II_REase02 PF09566           RE_SacI  15        0   0     0       NaN   NaN    286.0   NaN     NaN    NaN    19       0      0
+     RM/RM_Type_II/N6_N4_RM_Type_II_PDDEXK                      RM_Type_II__Type_II_REase02 PF04555              XhoI  14        0   0     0       NaN   NaN    229.5   NaN     NaN    NaN    22       0      0
+            RM/RM_Type_II/N6_N4_RM_Type_II                      RM_Type_II__Type_II_REase29 PF04555              XhoI  14        0   0     0       NaN   NaN    229.5   NaN     NaN    NaN    22       0      0
+                     DefenseFinder/Bil/Bil                                        Bil__BilB PF24702           DUF7665  13        3   3     3     16.92  10.0    151.0   NaN     NaN    NaN    13       0      0
+  RM/RM_Type_II/DNA_met_RM_Type_II_HATPase                      RM_Type_II__Type_II_REase01 PF13589       HATPase_c_3  13        1   1     0     76.45  30.0    627.0  11.0     1.0    0.0    48       0      0
+                 RM/RM_Type_I/N6_RM_Type_I                          RM__Type_I_MTases_FAM_0 PF02384          N6_Mtase  12       11   0     0     44.78 150.0    133.5   5.0     5.0    2.0    28       0      0
+        RM/RM_Type_II/N6_RM_Type_II_PDDEXK                RM_Type_II__Type_II_MTases_FAM_10 PF02384          N6_Mtase  11       10  10     0     41.58  20.0    496.0   5.0     5.0    2.0    28       0      0
+             DefenseFinder/Wadjet/Wadjet_I                                   Wadjet__JetB_I PF21980              MksE  10        1   0     0     18.73  20.0    227.0   NaN     NaN    NaN    10       0      0
+              TXSScan/bacteria/diderm/T1SS                                         T1SS_omf PF02321               OEP   9        6   6     0     27.28  15.1    119.0   8.0     2.0    2.0     9       0      0
+        RM/RM_Type_II/N6_RM_Type_II_PDDEXK                      RM_Type_II__Type_II_REase02 PF04555              XhoI   8        0   0     0       NaN   NaN    242.5   NaN     NaN    NaN    22       0      0
+   RM/RM_Type_II/DNA_met_RM_Type_II_PDDEXK                      RM_Type_II__Type_II_REase02 PF14511       RE_EcoO109I   7        0   0     0       NaN   NaN    384.0   NaN     NaN    NaN     7       0      0
+             DefenseFinder/Wadjet/Wadjet_I                                   Wadjet__JetD_I PF09983            JetD_C   7        0   0     0       NaN   NaN    392.0   NaN     NaN    NaN     7       0      0
+     RM/RM_Type_II/N6_N4_RM_Type_II_PDDEXK                      RM_Type_II__Type_II_REase02 PF04556             DpnII   7        1   0     0     18.59  20.0    321.0   NaN     NaN    NaN     7       0      0
+          RM/RM_Type_II/DNA_met_RM_Type_II                      RM_Type_II__Type_II_REase18 PF14511       RE_EcoO109I   7        0   0     0       NaN   NaN    384.0   NaN     NaN    NaN     7       0      0
+             RM/RM_Type_IIG/N6_RM_Type_IIG                          RM_Type_IIG__Type_IIG_3 PF20473        MmeI_Mtase   6        6   0     0     42.66 300.0    219.5   NaN     NaN    NaN     6       0      0
+             RM/RM_Type_IIG/N6_RM_Type_IIG        RM_Type_IIG__Type_IIG_FAM_0.einsi_trimmed PF20473        MmeI_Mtase   6        6   0     0     33.08 300.0    219.5   NaN     NaN    NaN     6       0      0
+           DefenseFinder/Hachiman/Hachiman                                 Hachiman__HamA_1 PF08878              HamA   6        1   0     0     18.81  20.0    265.5   NaN     NaN    NaN     6       0      0
+                   DefenseFinder/AbiE/AbiE                                  AbiEii__AbiEi_1 PF09407           AbiEi_1   6        6   0     0     19.63  22.2    211.0   NaN     NaN    NaN     6       0      0
+        DefenseFinder/Hachiman/Hachiman_II                                 Hachiman__HamA_1 PF08878              HamA   6        1   0     0     18.81  20.0    265.5   NaN     NaN    NaN     6       0      0
+            RM/RM_Type_II/N6_N4_RM_Type_II                      RM_Type_II__Type_II_REase32 PF04556             DpnII   6        1   0     0     18.59  20.0    316.0   NaN     NaN    NaN     7       0      0
+             RM/RM_Type_IIG/N6_RM_Type_IIG        RM_Type_IIG__Type_IIG_FAM_1.einsi_trimmed PF20473        MmeI_Mtase   6        5   0     0     18.02 300.0    219.5   NaN     NaN    NaN     6       0      0
+      RM/RM_Type_II/DNA_met_RM_Type_II_HNH                      RM_Type_II__Type_II_REase08 PF01844               HNH   6        0   0     0       NaN   NaN    179.0   3.0     0.0    0.0    15       0      0
+           RM/RM_Type_II/N6_RM_Type_II_HNH                RM_Type_II__Type_II_MTases_FAM_10 PF20473        MmeI_Mtase   5        5   5     0     36.81  20.0    218.0   NaN     NaN    NaN     6       0      0
+             RM/RM_Type_IIG/N6_RM_Type_IIG        RM_Type_IIG__Type_IIG_FAM_1.einsi_trimmed PF07669            Eco57I   5        0   0     0       NaN   NaN    302.0   2.0     2.0    0.0    13       0      0
+             RM/RM_Type_IIG/N6_RM_Type_IIG                          RM_Type_IIG__Type_IIG_5 PF20473        MmeI_Mtase   5        5   0     0     21.60 300.0    218.0   NaN     NaN    NaN     6       0      0
+             RM/RM_Type_IIG/N6_RM_Type_IIG                          RM_Type_IIG__Type_IIG_5 PF07669            Eco57I   5        1   0     0     40.91 300.0    302.0   2.0     2.0    0.0    13       0      0
+       RM/RM_Type_II/N6_RM_Type_II_HATPase                      RM_Type_II__Type_II_REase01 PF13589       HATPase_c_3   5        1   1     0     41.32  30.0    669.0  11.0     1.0    0.0    48       0      0
+                   DefenseFinder/AbiE/AbiE                                  AbiEii__AbiEi_1 PF09952           AbiEi_2   5        3   0     0     16.17  20.1    374.0   4.0     0.0    0.0     5       0      0
+                   DefenseFinder/AbiE/AbiE                                  AbiEii__AbiEi_1 PF11459           AbiEi_3   5        4   0     0     22.58  25.0    194.0   NaN     NaN    NaN     5       0      0
+           DefenseFinder/CBASS/CBASS_II_TM                             CBASS__Cyclase_SMODS PF01909      NTP_transf_2   5        0   0     0       NaN   NaN    252.0   6.0     1.0    1.0     6       0      0
+        DefenseFinder/Armada/Armada_Type_I                        Armada_type_I__ArmB1_redo PF07669            Eco57I   5        5   5     0     63.79  20.0    474.0   2.0     2.0    0.0    13       0      0
+          DefenseFinder/CBASS/CBASS_II_PNP                             CBASS__Cyclase_SMODS PF01909      NTP_transf_2   5        0   0     0       NaN   NaN    252.0   6.0     1.0    1.0     6       0      0
+
+positive controls (called members rescored), lowest GA rates:                                                                                n   ga  allp
+test_label                                                                                 
+DefenseFinder/DpnI/DpnI:DpnI__DpnI                                             6  0.0   0.0
+DefenseFinder/PhiR12.1_MorcDcm/PhiR12.1_MorcDcm:PhiR12.1_MorcDcm__paraMORC3   15  0.0   0.0
+DefenseFinder/Armada/Armada_Type_I:Armada_type_I__ArmB1_redo                   8  1.0   1.0
+DefenseFinder/AbiE/AbiE:AbiEii__AbiEi_1                                      150  1.0   1.0
+DefenseFinder/Azaca/Azaca:Azaca__ZacA                                          8  1.0   1.0
+DefenseFinder/BREX/BREX_I:BREX__brxA_DUF1819                                   7  1.0   1.0
+DefenseFinder/BREX/BREX_I:BREX__brxB_DUF1788                                  10  1.0   1.0
+DefenseFinder/AbiE/AbiE:AbiEii__AbiEii                                       150  1.0   1.0
+DefenseFinder/Bil/Bil:Bil__BilB                                                7  1.0   1.0
+DefenseFinder/CBASS/CBASS_III_Endonuclease:CBASS__Cyclase_SMODS                7  1.0   1.0

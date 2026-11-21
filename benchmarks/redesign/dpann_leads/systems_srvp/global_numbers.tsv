@@ -1,0 +1,46 @@
+section	key	systems	genomes	lacking_component	slot_inside_adjacent	slot_in_window	gain_window	gain_adjacent	lacking_pairs_mappable	observed_window	expected_window_unrelated	observed_adjacent	expected_adjacent_unrelated	genes	tier_T1	tier_rest	tier_T2	tier_T2b	tier_T1c	tier_contradicted	clusters	partial	partial_strict	quorum_met_uncalled	partial_gaining	completed_strict_loci	completed_strict_cluster_model_pairs	completing_genes	pairs_with_family_set	observed	expected_random	pairs_with_unrelated_call	observed_on_those	expected_unrelated	rejected_candidates	with_slot_inside_adjacent	cls	completed_loci	genomes_called	genomes_after	new_genomes	new_genome_phyla	components	n	any_hit	ga	ga_cov_p
+a_called	DF/large	96.0	88.0	81.0	18.0	32.0	9.0	9.0	143.0	10.0	0.6	9.0	0.5																																		
+a_called	DF/small	3711.0	855.0	171.0	163.0	708.0	0.0	0.0	96.0	0.0	0.1	0.0	0.1																																		
+a_called	RM/small	2588.0	807.0	1045.0	177.0	548.0	28.0	20.0	5531.0	69.0	12.4	52.0	7.7																																		
+a_called	TXSS/large	1932.0	772.0	1800.0	993.0	1164.0	436.0	412.0	9764.0	749.0	6.8	699.0	3.0																																		
+a_called	TXSS/small	371.0	170.0	0.0	25.0	50.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0																																		
+a_called	all	8698.0	972.0	3097.0	1376.0	2502.0	473.0	441.0	15534.0	828.0	19.9	760.0	11.3																																		
+a_tier	inside_adjacent													11471.0	4678.0	2828.0	1590.0	1298.0	714.0	363.0																											
+a_tier	gaining													535.0	131.0	172.0	121.0	78.0	14.0	19.0																											
+a_tier	gaining_small													32.0	11.0	2.0	12.0	2.0	1.0	4.0																											
+b_uncalled	DF/small		183.0																		71930.0	71514.0	66246.0	416.0	658.0	228.0	240.0	227.0	111539.0	651.0	39.6	109949.0	649.0	211.4													
+b_uncalled	RM/small		165.0																		32235.0	32094.0	20381.0	141.0	354.0	192.0	199.0	192.0	140236.0	310.0	9.0	137897.0	307.0	151.9													
+b_uncalled	TXSS/small		1.0																		7536.0	7536.0	7536.0	0.0	100.0	1.0	1.0	1.0	14538.0	100.0	20.2	14484.0	100.0	95.8													
+b_uncalled	all		311.0																		111701.0	111144.0	94163.0	557.0	1112.0	421.0	440.0	420.0	266313.0	1061.0	68.9	262330.0	1056.0	459.1													
+b_large	DF/large																																		982.0	206.0											
+b_large	TXSS/large																																		23715.0	15860.0											
+b_tier	completing_strict													420.0	144.0	121.0	80.0	41.0	18.0	16.0																											
+b_tier	completing_strict_small													420.0	144.0	121.0	80.0	41.0	18.0	16.0																											
+type	AbiE													178.0																							DF/small	178.0	173.0	272.0	99.0	Acidobacteriota:16;Thermoproteota:15;Patescibacteriota:10;Bacteroidota:9;Halobacteriota:7;Thermoplasmatota:5;Nitrospirota:4;Planctomycetota:4;Desulfobacterota:4;Chloroflexota:3;Zixibacteria:2;Sysuimicrobiota:2;Verrucomicrobiota:2;Micrarchaeota:2;Babelota:1;Nanobdellota:1;Pseudomonadota:1;J088:1;Edwardsbacteria:1;Asgardarchaeota:1;Sumerlaeota:1;Actinomycetota:1;Margulisbacteria:1;Omnitrophota:1;Myxococcota:1;Myxococcota_A:1;Campylobacterota:1;Chlamydiota:1	AbiEii__AbiEi_1;AbiEii__AbiEii				
+type	CBASS													4.0																							DF/small	4.0	85.0	89.0	4.0	Acidobacteriota:2;Thermoproteota:1;Planctomycetota:1	CBASS__Cyclase_SMODS				
+type	DS-6													2.0																							DF/small	2.0	13.0	15.0	2.0	Acidobacteriota:2	DS-6__DS-6A				
+type	Gabija													1.0																							DF/small	1.0	43.0	44.0	1.0	Pseudomonadota:1	Gabija__GajA				
+type	Gao_Iet													2.0																							DF/small	2.0	7.0	9.0	2.0	Pseudomonadota:1;Planctomycetota:1	Gao_Iet__IetS				
+type	Hachiman													6.0																							DF/small	6.0	25.0	31.0	6.0	Chloroflexota:3;Nitrospirota:2;Thermoproteota:1	Hachiman__HamA_1				
+type	Hailong													1.0																							DF/small	1.0	6.0	7.0	1.0	Desulfobacterota:1	Hailong__HalB				
+type	MazEF													17.0																							DF/small	17.0	162.0	174.0	12.0	Acidobacteriota:6;Halobacteriota:1;Methylomirabilota:1;Bacteroidota:1;Pseudomonadota:1;Chloroflexota:1;Gemmatimonadota:1	MazEF__MazE;MazEF__MazF				
+type	PD-T7-2													1.0																							DF/small	1.0	25.0	26.0	1.0	Thermoproteota:1	PD-T7-2__PD-T7-2_B				
+type	Paris													2.0																							DF/small	2.0	23.0	25.0	2.0	Chloroflexota:1;RBG-13-61-14:1	Paris_II__AriB_DUF4435_II;Paris_I__AriB_DUF4435_I				
+type	PfiAT													1.0																							DF/small	1.0	31.0	32.0	1.0	Planctomycetota:1	PfiAT__PfiT				
+type	PhiR5.1_HipAD													4.0																							DF/small	4.0	41.0	45.0	4.0	Acidobacteriota:2;Pseudomonadota:1;Desulfobacterota:1	PhiR5.1_HipAD__HipA				
+type	PsyrTA													1.0																							DF/small	1.0	26.0	27.0	1.0	Acidobacteriota:1	PsyrTA__PsyrT				
+type	Pycsar													1.0																							DF/small	1.0	25.0	26.0	1.0	Acidobacteriota:1	CBASS__Effector_2TM_S_2TMBeta				
+type	RM_Type_I													38.0																							RM/small	38.0	443.0	454.0	11.0	Bacteroidota:2;Thermoproteota:2;Planctomycetota:1;Methanobacteriota_B:1;Nitrospirota:1;Acidobacteriota:1;Halobacteriota:1;Desulfobacterota:1;Pseudomonadota:1	RM__Type_I_MTases_FAM_0;RM__Type_I_S_01				
+type	RM_Type_II													131.0																							RM/small	131.0	484.0	529.0	45.0	Thermoproteota:8;Chloroflexota:7;Acidobacteriota:7;Thermoplasmatota:4;Pseudomonadota:3;Bacteroidota:3;Patescibacteriota:3;Desulfobacterota:2;Electryoneota:1;Verrucomicrobiota:1;Halobacteriota:1;Zixibacteria:1;Armatimonadota:1;Nanobdellota:1;Hadarchaeota:1;Aenigmatarchaeota:1	RM_Type_II__Type_II_MTases_FAM_1;RM_Type_II__Type_II_MTases_FAM_10;RM_Type_II__Type_II_MTases_FAM_11;RM_Type_II__Type_II_REase01;RM_Type_II__Type_II_REase02;RM_Type_II__Type_II_REase08				
+type	RM_Type_III													23.0																							RM/small	23.0	135.0	154.0	19.0	Acidobacteriota:6;Chloroflexota:3;Desulfobacterota:2;Nitrospirota:2;Pseudomonadota:1;Patescibacteriota:1;Methylomirabilota:1;Verrucomicrobiota:1;Electryoneota:1;Planctomycetota:1	RM_Type_III__Type_III_MTases_FAM_0;RM_Type_III__Type_III_REases_FAM_0.einsi_trimmed				
+type	SanaTA													4.0																							DF/small	4.0	10.0	14.0	4.0	Myxococcota:3;Pseudomonadota:1	SanaTA__SanaA				
+type	ShosTA													1.0																							DF/small	1.0	29.0	30.0	1.0	Electryoneota:1	ShosTA__ShosT				
+type	T1SS													1.0																							TXSS/small	1.0	73.0	74.0	1.0	Eisenbacteria:1	T1SS_abc				
+type	Thoeris													1.0																							DF/small	1.0	61.0	62.0	1.0	Chloroflexota:1	Thoeris__ThsF_DUF2270_like				
+type	Wadjet													2.0																							DF/small	2.0	27.0	29.0	2.0	Halobacteriota:1;Pseudomonadota:1	Wadjet__JetB_I;Wadjet__JetC_II				
+rerun	test_all																																											1193.0	491.0	231.0	94.0
+rerun	test_small																																											691.0	304.0	99.0	3.0
+rerun	test_small_strict_complete																																											420.0	206.0	42.0	0.0
+rerun	neg_other																																											1193.0	0.0	0.0	0.0
+rerun	neg_same																																											563.0	327.0	267.0	219.0
+rerun	pos																																											7874.0	7851.0	7851.0	7851.0

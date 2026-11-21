@@ -1,0 +1,49 @@
+model_key	component	loci	genes	genomes	same_strand	upstream_of_same	adjacent	called_n	called_same	called_upstream	called_adjacent
+DefenseFinder/AbiE/AbiE	AbiEii__AbiEi_1	137	136	110	0.993	0.876	0.978	217.0	0.995	0.968	0.982
+DefenseFinder/AbiE/AbiE	AbiEii__AbiEii	40	40	37	1.0	0.0	0.95	217.0	0.995	0.032	0.972
+DefenseFinder/CBASS/CBASS_III_TM	CBASS__Cyclase_SMODS	1	1	1	1.0	1.0	1.0				
+DefenseFinder/CBASS/CBASS_II_HNH	CBASS__Cyclase_SMODS	1	1	1	1.0	1.0	1.0	7.0	1.0	0.571	0.857
+DefenseFinder/CBASS/CBASS_II_Other	CBASS__Cyclase_SMODS	1	1	1	1.0	1.0	1.0	3.0	1.0	0.667	1.0
+DefenseFinder/CBASS/CBASS_I_Endonuclease	CBASS__Cyclase_SMODS	2	2	2	1.0	1.0	1.0	8.0	0.875	0.625	0.75
+DefenseFinder/CBASS/CBASS_I_HNH	CBASS__Cyclase_SMODS	1	1	1	1.0	0.0	1.0				
+DefenseFinder/CBASS/CBASS_I_Other	CBASS__Cyclase_SMODS	1	1	1	1.0	0.0	1.0				
+DefenseFinder/CBASS/CBASS_I_TM	CBASS__Cyclase_SMODS	2	2	2	1.0	1.0	0.5	29.0	1.0	0.759	1.0
+DefenseFinder/DS-6/DS-6	DS-6__DS-6A	2	2	2	1.0	1.0	1.0	13.0	1.0	1.0	0.923
+DefenseFinder/Gabija/Gabija	Gabija__GajA	1	1	1	0.0	1.0	0.0	44.0	1.0	0.977	0.886
+DefenseFinder/Gao_Iet/Gao_Iet	Gao_Iet__IetS	2	2	2	1.0	0.0	1.0	7.0	1.0	0.0	1.0
+DefenseFinder/Hachiman/Hachiman	Hachiman__HamA_1	6	6	6	1.0	1.0	1.0	25.0	1.0	1.0	1.0
+DefenseFinder/Hachiman/Hachiman_II	Hachiman__HamA_1	6	6	6	1.0	1.0	1.0				
+DefenseFinder/Hailong/Hailong	Hailong__HalB	1	1	1	1.0	1.0	0.0	6.0	1.0	0.0	1.0
+DefenseFinder/MazEF/MazEF	MazEF__MazE	16	16	16	0.812	0.75	0.75	203.0	0.995	0.995	0.99
+DefenseFinder/MazEF/MazEF	MazEF__MazF	1	1	1	1.0	0.0	1.0	203.0	1.0	0.005	0.985
+DefenseFinder/PD-T7-2/PD-T7-2	PD-T7-2__PD-T7-2_B	1	1	1	1.0	1.0	0.0	27.0	1.0	0.0	0.963
+DefenseFinder/Paris/PARIS_I	Paris_I__AriB_DUF4435_I	1	1	1	1.0	0.0	1.0	8.0	1.0	0.0	1.0
+DefenseFinder/Paris/PARIS_II	Paris_II__AriB_DUF4435_II	2	2	2	1.0	0.0	1.0				
+DefenseFinder/PfiAT/PfiAT	PfiAT__PfiT	1	1	1	1.0	0.0	1.0	34.0	1.0	0.0	1.0
+DefenseFinder/PhiR5.1_HipAD/PhiR5.1_HipAD	PhiR5.1_HipAD__HipA	4	4	4	1.0	1.0	1.0	41.0	1.0	1.0	0.976
+DefenseFinder/PsyrTA/PsyrTA	PsyrTA__PsyrT	1	1	1	1.0	1.0	1.0	26.0	1.0	1.0	0.808
+DefenseFinder/Pycsar/Pycsar_TM	CBASS__Effector_2TM_S_2TMBeta	1	1	1	1.0	1.0	1.0	18.0	0.778	0.667	0.722
+DefenseFinder/SanaTA/SanaTA	SanaTA__SanaA	4	4	4	1.0	1.0	1.0	10.0	1.0	1.0	0.9
+DefenseFinder/ShosTA/ShosTA	ShosTA__ShosT	1	1	1	1.0	1.0	1.0	29.0	1.0	0.517	1.0
+DefenseFinder/Thoeris/Thoeris_V_2	Thoeris__ThsF_DUF2270_like	1	1	1	1.0	0.0	1.0	12.0	0.917	0.083	0.917
+DefenseFinder/Wadjet/Wadjet_I	Wadjet__JetB_I	1	1	1	1.0	1.0	1.0	16.0	1.0	0.625	1.0
+DefenseFinder/Wadjet/Wadjet_II	Wadjet__JetC_II	1	1	1	1.0	0.0	0.0	10.0	1.0	0.5	1.0
+RM/RM_Type_I/N6_RM_Type_I	RM__Type_I_MTases_FAM_0	11	11	11	0.909	0.727	0.636	695.0	0.997	0.715	0.649
+RM/RM_Type_I/N6_RM_Type_I	RM__Type_I_S_01	29	27	27	0.966	0.138	0.69	700.0	1.0	0.231	0.713
+RM/RM_Type_II/D12_RM_Type_II_PDDEXK	RM_Type_II__Type_II_MTases_FAM_11	1	1	1	0.0	1.0	1.0	62.0	0.661	0.629	0.806
+RM/RM_Type_II/DNA_met_RM_Type_II_HATPase	RM_Type_II__Type_II_REase01	13	13	13	0.692	0.385	0.231	70.0	0.9	0.314	0.743
+RM/RM_Type_II/DNA_met_RM_Type_II_HNH	RM_Type_II__Type_II_REase08	2	2	2	1.0	0.0	1.0	11.0	0.727	0.818	0.909
+RM/RM_Type_II/DNA_met_RM_Type_II_PDDEXK	RM_Type_II__Type_II_REase02	12	12	12	0.833	0.083	1.0	85.0	0.906	0.071	0.882
+RM/RM_Type_II/N6_N4_RM_Type_II_HATPase	RM_Type_II__Type_II_REase01	26	26	26	0.577	0.115	0.731	61.0	0.541	0.115	0.852
+RM/RM_Type_II/N6_N4_RM_Type_II_HNH	RM_Type_II__Type_II_REase08	1	1	1	0.0	0.0	1.0	10.0	1.0	0.5	1.0
+RM/RM_Type_II/N6_N4_RM_Type_II_PDDEXK	RM_Type_II__Type_II_MTases_FAM_1	2	2	2	1.0	1.0	1.0	371.0	0.857	0.687	0.919
+RM/RM_Type_II/N6_N4_RM_Type_II_PDDEXK	RM_Type_II__Type_II_REase02	42	42	39	0.619	0.333	0.976	371.0	0.863	0.226	0.93
+RM/RM_Type_II/N6_RM_Type_II_HATPase	RM_Type_II__Type_II_MTases_FAM_10	2	2	2	1.0	1.0	1.0	4.0	0.75	0.5	0.25
+RM/RM_Type_II/N6_RM_Type_II_HATPase	RM_Type_II__Type_II_REase01	1	1	1	0.0	1.0	1.0	4.0	0.75	0.25	0.25
+RM/RM_Type_II/N6_RM_Type_II_HNH	RM_Type_II__Type_II_MTases_FAM_10	5	5	5	1.0	0.8	1.0	3.0	0.333	0.0	0.0
+RM/RM_Type_II/N6_RM_Type_II_HNH	RM_Type_II__Type_II_REase08	5	5	5	1.0	0.6	0.8	3.0	0.333	0.333	0.0
+RM/RM_Type_II/N6_RM_Type_II_PDDEXK	RM_Type_II__Type_II_MTases_FAM_10	12	12	12	1.0	0.167	0.917	99.0	0.98	0.667	0.98
+RM/RM_Type_II/N6_RM_Type_II_PDDEXK	RM_Type_II__Type_II_REase02	12	12	12	0.917	0.167	0.833	99.0	0.98	0.313	0.96
+RM/RM_Type_III/N6_N4_RM_Type_III	RM_Type_III__Type_III_MTases_FAM_0	4	4	4	1.0	1.0	0.5	149.0	1.0	0.96	0.718
+RM/RM_Type_III/N6_N4_RM_Type_III	RM_Type_III__Type_III_REases_FAM_0.einsi_trimmed	19	19	19	1.0	0.263	0.474	149.0	1.0	0.04	0.725
+TXSScan/bacteria/diderm/T1SS	T1SS_abc	1	1	1	1.0	0.0	0.0	102.0	0.931	0.775	0.755

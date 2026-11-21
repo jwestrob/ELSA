@@ -3528,3 +3528,6 @@ Report: `benchmarks/redesign/dpann_leads/invisible/REPORT.txt` (assay rule fixed
 - Six gates passed on the 4,000-protein sample: tests (165 passed, 4 GPU tests on the H200); CPU path byte-identical to production (6,872 Pfam and 6,360 KOfam rows); GPU byte-identical to CPU; H200 first-1000 check 27,481 of 27,481 models; simulated untrusted environment identical; readiness check correct. 0.21 GPU-hours.
 - Promotion to `envs/aksha-0.2.4.dev0` is queued behind the running Aksha jobs (`$RD/aksha_check/deploy_20261121/`, ROLLBACK.sh there); production still reports 0.2.3 at the time of this entry.
 - Reported, not gated: 215,332 double-precision inputs differ by one unit in the last place between GPU and CPU `log`.
+
+### 2026-11-21 06:06 UTC — Aksha pull request 9 merged (coordinator)
+- Jacob: "go ahead and merge". Merged jwestrob/aksha#9 into main with a merge commit (a849f41). No tag, release or PyPI upload. The production swap on biotite stays queued behind the running annotation jobs.
